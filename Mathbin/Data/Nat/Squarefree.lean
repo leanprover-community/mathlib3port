@@ -287,12 +287,6 @@ theorem squarefree_two : Squarefree 2 := by rw [squarefree_iff_nodup_factors] <;
 
 open UniqueFactorizationMonoid
 
-/- warning: nat.divisors_filter_squarefree -> Nat.divisors_filter_squarefree is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Multiset.{0} Nat) (Finset.val.{0} Nat (Finset.filter.{0} Nat (Squarefree.{0} Nat Nat.monoid) (fun (a : Nat) => Nat.Squarefree.decidablePred a) (Nat.divisors n))) (Multiset.map.{0, 0} (Finset.{0} Nat) Nat (fun (x : Finset.{0} Nat) => Multiset.prod.{0} Nat Nat.commMonoid (Finset.val.{0} Nat x)) (Finset.val.{0} (Finset.{0} Nat) (Finset.powerset.{0} Nat (Multiset.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (UniqueFactorizationMonoid.normalizedFactors.{0} Nat Nat.cancelCommMonoidWithZero (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (normalizationMonoidOfUniqueUnits.{0} Nat Nat.cancelCommMonoidWithZero Nat.unique_units) Nat.uniqueFactorizationMonoid n))))))
-but is expected to have type
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Multiset.{0} Nat) (Finset.val.{0} Nat (Finset.filter.{0} Nat (Squarefree.{0} Nat Nat.monoid) (fun (a : Nat) => Nat.instDecidablePredNatSquarefreeMonoid a) (Nat.divisors n))) (Multiset.map.{0, 0} (Finset.{0} Nat) Nat (fun (x : Finset.{0} Nat) => Multiset.prod.{0} Nat Nat.commMonoid (Finset.val.{0} Nat x)) (Finset.val.{0} (Finset.{0} Nat) (Finset.powerset.{0} Nat (Multiset.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (UniqueFactorizationMonoid.normalizedFactors.{0} Nat Nat.cancelCommMonoidWithZero (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (NormalizedGCDMonoid.toNormalizationMonoid.{0} Nat Nat.cancelCommMonoidWithZero instNormalizedGCDMonoidNatCancelCommMonoidWithZero) Nat.instUniqueFactorizationMonoidNatCancelCommMonoidWithZero n))))))
-Case conversion may be inaccurate. Consider using '#align nat.divisors_filter_squarefree Nat.divisors_filter_squarefreeₓ'. -/
 theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
     (n.divisors.filterₓ Squarefree).val =
       (UniqueFactorizationMonoid.normalizedFactors n).toFinset.powerset.val.map fun x =>
@@ -349,12 +343,6 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
 
 open BigOperators
 
-/- warning: nat.sum_divisors_filter_squarefree -> Nat.sum_divisors_filter_squarefree is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] {f : Nat -> α}, Eq.{succ u1} α (Finset.sum.{u1, 0} α Nat _inst_1 (Finset.filter.{0} Nat (Squarefree.{0} Nat Nat.monoid) (fun (a : Nat) => Nat.Squarefree.decidablePred a) (Nat.divisors n)) (fun (i : Nat) => f i)) (Finset.sum.{u1, 0} α (Finset.{0} Nat) _inst_1 (Finset.powerset.{0} Nat (Multiset.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (UniqueFactorizationMonoid.normalizedFactors.{0} Nat Nat.cancelCommMonoidWithZero (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (normalizationMonoidOfUniqueUnits.{0} Nat Nat.cancelCommMonoidWithZero Nat.unique_units) Nat.uniqueFactorizationMonoid n))) (fun (i : Finset.{0} Nat) => f (Multiset.prod.{0} Nat Nat.commMonoid (Finset.val.{0} Nat i)))))
-but is expected to have type
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] {f : Nat -> α}, Eq.{succ u1} α (Finset.sum.{u1, 0} α Nat _inst_1 (Finset.filter.{0} Nat (Squarefree.{0} Nat Nat.monoid) (fun (a : Nat) => Nat.instDecidablePredNatSquarefreeMonoid a) (Nat.divisors n)) (fun (i : Nat) => f i)) (Finset.sum.{u1, 0} α (Finset.{0} Nat) _inst_1 (Finset.powerset.{0} Nat (Multiset.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (UniqueFactorizationMonoid.normalizedFactors.{0} Nat Nat.cancelCommMonoidWithZero (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (NormalizedGCDMonoid.toNormalizationMonoid.{0} Nat Nat.cancelCommMonoidWithZero instNormalizedGCDMonoidNatCancelCommMonoidWithZero) Nat.instUniqueFactorizationMonoidNatCancelCommMonoidWithZero n))) (fun (i : Finset.{0} Nat) => f (Multiset.prod.{0} Nat Nat.commMonoid (Finset.val.{0} Nat i)))))
-Case conversion may be inaccurate. Consider using '#align nat.sum_divisors_filter_squarefree Nat.sum_divisors_filter_squarefreeₓ'. -/
 theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [AddCommMonoid α]
     {f : ℕ → α} :
     (∑ i in n.divisors.filterₓ Squarefree, f i) =

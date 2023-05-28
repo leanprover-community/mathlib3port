@@ -47,12 +47,6 @@ protected def Nonneg (r : ℚ) : Prop :=
 #align rat.nonneg Rat.Nonneg
 -/
 
-/- warning: rat.mk_nonneg -> Rat.divInt_nonneg is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (Iff (Rat.Nonneg (Rat.mk a b)) (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a))
-but is expected to have type
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Iff (Rat.Nonneg (Rat.divInt a b)) (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a))
-Case conversion may be inaccurate. Consider using '#align rat.mk_nonneg Rat.divInt_nonnegₓ'. -/
 @[simp]
 theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 ≤ a :=
   by
@@ -128,12 +122,6 @@ instance decidableLe : DecidableRel ((· ≤ ·) : ℚ → ℚ → Prop)
   | a, b => show Decidable (Rat.Nonneg (b - a)) by infer_instance
 #align rat.decidable_le Rat.decidableLe
 
-/- warning: rat.le_def -> Rat.le_def is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int} {d : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) d) -> (Iff (LE.le.{0} Rat Rat.hasLe (Rat.mk a b) (Rat.mk c d)) (LE.le.{0} Int Int.hasLe (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a d) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)))
-but is expected to have type
-  forall {a : Int} {b : Int} {c : Int} {d : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) -> (Iff (LE.le.{0} Rat Rat.instLERat (Rat.divInt a b) (Rat.divInt c d)) (LE.le.{0} Int Int.instLEInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a d) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)))
-Case conversion may be inaccurate. Consider using '#align rat.le_def Rat.le_defₓ'. -/
 protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) :
     a /. b ≤ c /. d ↔ a * d ≤ c * b := by
   show Rat.Nonneg _ ↔ _
@@ -141,44 +129,20 @@ protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) :
   simp [sub_eq_add_neg, ne_of_gt b0, ne_of_gt d0, mul_pos d0 b0]
 #align rat.le_def Rat.le_def
 
-/- warning: rat.le_refl -> Rat.le_refl is a dubious translation:
-lean 3 declaration is
-  forall (a : Rat), LE.le.{0} Rat Rat.hasLe a a
-but is expected to have type
-  forall (a : Rat), LE.le.{0} Rat Rat.instLERat a a
-Case conversion may be inaccurate. Consider using '#align rat.le_refl Rat.le_reflₓ'. -/
 protected theorem le_refl : a ≤ a :=
   show Rat.Nonneg (a - a) by rw [sub_self] <;> exact le_refl (0 : ℤ)
 #align rat.le_refl Rat.le_refl
 
-/- warning: rat.le_total -> Rat.le_total is a dubious translation:
-lean 3 declaration is
-  forall (a : Rat) (b : Rat), Or (LE.le.{0} Rat Rat.hasLe a b) (LE.le.{0} Rat Rat.hasLe b a)
-but is expected to have type
-  forall (a : Rat) (b : Rat), Or (LE.le.{0} Rat Rat.instLERat a b) (LE.le.{0} Rat Rat.instLERat b a)
-Case conversion may be inaccurate. Consider using '#align rat.le_total Rat.le_totalₓ'. -/
 protected theorem le_total : a ≤ b ∨ b ≤ a := by
   have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this
 #align rat.le_total Rat.le_total
 
-/- warning: rat.le_antisymm -> Rat.le_antisymm is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat} {b : Rat}, (LE.le.{0} Rat Rat.hasLe a b) -> (LE.le.{0} Rat Rat.hasLe b a) -> (Eq.{1} Rat a b)
-but is expected to have type
-  forall {a : Rat} {b : Rat}, (LE.le.{0} Rat Rat.instLERat a b) -> (LE.le.{0} Rat Rat.instLERat b a) -> (Eq.{1} Rat a b)
-Case conversion may be inaccurate. Consider using '#align rat.le_antisymm Rat.le_antisymmₓ'. -/
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b :=
   by
   have := eq_neg_of_add_eq_zero_left (Rat.nonneg_antisymm hba <| by rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_neg] at this
 #align rat.le_antisymm Rat.le_antisymm
 
-/- warning: rat.le_trans -> Rat.le_trans is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat} {b : Rat} {c : Rat}, (LE.le.{0} Rat Rat.hasLe a b) -> (LE.le.{0} Rat Rat.hasLe b c) -> (LE.le.{0} Rat Rat.hasLe a c)
-but is expected to have type
-  forall {a : Rat} {b : Rat} {c : Rat}, (LE.le.{0} Rat Rat.instLERat a b) -> (LE.le.{0} Rat Rat.instLERat b c) -> (LE.le.{0} Rat Rat.instLERat a c)
-Case conversion may be inaccurate. Consider using '#align rat.le_trans Rat.le_transₓ'. -/
 protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c :=
   by
   have : Rat.Nonneg (b - a + (c - b)) := Rat.nonneg_add hab hbc
@@ -213,12 +177,6 @@ instance : PartialOrder ℚ := by infer_instance
 
 instance : Preorder ℚ := by infer_instance
 
-/- warning: rat.le_def' -> Rat.le_def' is a dubious translation:
-lean 3 declaration is
-  forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.hasLe p q) (LE.le.{0} Int Int.hasLe (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den p))))
-but is expected to have type
-  forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.instLERat p q) (LE.le.{0} Int Int.instLEInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den p))))
-Case conversion may be inaccurate. Consider using '#align rat.le_def' Rat.le_def'ₓ'. -/
 protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.den :=
   by
   rw [← @num_denom q, ← @num_denom p]
@@ -226,12 +184,6 @@ protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.
   exact Rat.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 #align rat.le_def' Rat.le_def'
 
-/- warning: rat.lt_def -> Rat.lt_def is a dubious translation:
-lean 3 declaration is
-  forall {p : Rat} {q : Rat}, Iff (LT.lt.{0} Rat Rat.hasLt p q) (LT.lt.{0} Int Int.hasLt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den p))))
-but is expected to have type
-  forall {p : Rat} {q : Rat}, Iff (LT.lt.{0} Rat Rat.instLTRat_1 p q) (LT.lt.{0} Int Int.instLTInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den p))))
-Case conversion may be inaccurate. Consider using '#align rat.lt_def Rat.lt_defₓ'. -/
 protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :=
   by
   rw [lt_iff_le_and_ne, Rat.le_def']
@@ -243,42 +195,18 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :
   exact not_iff_not.elim_right eq_iff_mul_eq_mul
 #align rat.lt_def Rat.lt_def
 
-/- warning: rat.nonneg_iff_zero_le -> Rat.nonneg_iff_zero_le is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat}, Iff (Rat.Nonneg a) (LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) a)
-but is expected to have type
-  forall {a : Rat}, Iff (Rat.Nonneg a) (LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) a)
-Case conversion may be inaccurate. Consider using '#align rat.nonneg_iff_zero_le Rat.nonneg_iff_zero_leₓ'. -/
 theorem nonneg_iff_zero_le {a} : Rat.Nonneg a ↔ 0 ≤ a :=
   show Rat.Nonneg a ↔ Rat.Nonneg (a - 0) by simp
 #align rat.nonneg_iff_zero_le Rat.nonneg_iff_zero_le
 
-/- warning: rat.num_nonneg_iff_zero_le -> Rat.num_nonneg_iff_zero_le is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat}, Iff (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (Rat.num a)) (LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) a)
-but is expected to have type
-  forall {a : Rat}, Iff (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Rat.num a)) (LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) a)
-Case conversion may be inaccurate. Consider using '#align rat.num_nonneg_iff_zero_le Rat.num_nonneg_iff_zero_leₓ'. -/
 theorem num_nonneg_iff_zero_le : ∀ {a : ℚ}, 0 ≤ a.num ↔ 0 ≤ a
   | ⟨n, d, h, c⟩ => @nonneg_iff_zero_le ⟨n, d, h, c⟩
 #align rat.num_nonneg_iff_zero_le Rat.num_nonneg_iff_zero_le
 
-/- warning: rat.add_le_add_left -> Rat.add_le_add_left is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat} {b : Rat} {c : Rat}, Iff (LE.le.{0} Rat Rat.hasLe (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) c a) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) c b)) (LE.le.{0} Rat Rat.hasLe a b)
-but is expected to have type
-  forall {a : Rat} {b : Rat} {c : Rat}, Iff (LE.le.{0} Rat Rat.instLERat (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) c a) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) c b)) (LE.le.{0} Rat Rat.instLERat a b)
-Case conversion may be inaccurate. Consider using '#align rat.add_le_add_left Rat.add_le_add_leftₓ'. -/
 protected theorem add_le_add_left {a b c : ℚ} : c + a ≤ c + b ↔ a ≤ b := by
   unfold LE.le Rat.le' <;> rw [add_sub_add_left_eq_sub]
 #align rat.add_le_add_left Rat.add_le_add_left
 
-/- warning: rat.mul_nonneg -> Rat.mul_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat} {b : Rat}, (LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) a) -> (LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) b) -> (LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) a b))
-but is expected to have type
-  forall {a : Rat} {b : Rat}, (LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) a) -> (LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) b) -> (LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) a b))
-Case conversion may be inaccurate. Consider using '#align rat.mul_nonneg Rat.mul_nonnegₓ'. -/
 protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
   rw [← nonneg_iff_zero_le] at ha hb⊢ <;> exact Rat.nonneg_mul ha hb
 #align rat.mul_nonneg Rat.mul_nonneg
@@ -311,23 +239,11 @@ instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 
 instance : OrderedAddCommMonoid ℚ := by infer_instance
 
-/- warning: rat.num_pos_iff_pos -> Rat.num_pos_iff_pos is a dubious translation:
-lean 3 declaration is
-  forall {a : Rat}, Iff (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (Rat.num a)) (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) a)
-but is expected to have type
-  forall {a : Rat}, Iff (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Rat.num a)) (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) a)
-Case conversion may be inaccurate. Consider using '#align rat.num_pos_iff_pos Rat.num_pos_iff_posₓ'. -/
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le <| by
     simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
 #align rat.num_pos_iff_pos Rat.num_pos_iff_pos
 
-/- warning: rat.div_lt_div_iff_mul_lt_mul -> Rat.div_lt_div_iff_mul_lt_mul is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int} {d : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) d) -> (Iff (LT.lt.{0} Rat Rat.hasLt (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) d))) (LT.lt.{0} Int Int.hasLt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a d) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)))
-but is expected to have type
-  forall {a : Int} {b : Int} {c : Int} {d : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) -> (Iff (LT.lt.{0} Rat Rat.instLTRat_1 (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat a) (Int.cast.{0} Rat Rat.instIntCastRat b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat c) (Int.cast.{0} Rat Rat.instIntCastRat d))) (LT.lt.{0} Int Int.instLTInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a d) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)))
-Case conversion may be inaccurate. Consider using '#align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mulₓ'. -/
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) :
     (a : ℚ) / b < c / d ↔ a * d < c * b :=
   by
@@ -337,21 +253,9 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
   · apply not_congr; simp [div_num_denom, Rat.le_def d_pos b_pos]
 #align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mul
 
-/- warning: rat.lt_one_iff_num_lt_denom -> Rat.lt_one_iff_num_lt_denom is a dubious translation:
-lean 3 declaration is
-  forall {q : Rat}, Iff (LT.lt.{0} Rat Rat.hasLt q (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne)))) (LT.lt.{0} Int Int.hasLt (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)))
-but is expected to have type
-  forall {q : Rat}, Iff (LT.lt.{0} Rat Rat.instLTRat_1 q (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))) (LT.lt.{0} Int Int.instLTInt (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den q)))
-Case conversion may be inaccurate. Consider using '#align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denomₓ'. -/
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [Rat.lt_def]
 #align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denom
 
-/- warning: rat.abs_def -> Rat.abs_def is a dubious translation:
-lean 3 declaration is
-  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) q) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs (Rat.num q))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)))
-but is expected to have type
-  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) q) (Rat.divInt (Nat.cast.{0} Int instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int instNatCastInt (Rat.den q)))
-Case conversion may be inaccurate. Consider using '#align rat.abs_def Rat.abs_defₓ'. -/
 theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by
   cases' le_total q 0 with hq hq

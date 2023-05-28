@@ -121,41 +121,26 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 instance : TopologicalSpace (WeakBilin B) :=
   TopologicalSpace.induced (fun x y => B x y) Pi.topologicalSpace
 
-/- warning: weak_bilin.coe_fn_continuous -> WeakBilin.coeFn_continuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_bilin.coe_fn_continuous WeakBilin.coeFn_continuousₓ'. -/
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is continuous. -/
 theorem coeFn_continuous : Continuous fun (x : WeakBilin B) y => B x y :=
   continuous_induced_dom
 #align weak_bilin.coe_fn_continuous WeakBilin.coeFn_continuous
 
-/- warning: weak_bilin.eval_continuous -> WeakBilin.eval_continuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_bilin.eval_continuous WeakBilin.eval_continuousₓ'. -/
 theorem eval_continuous (y : F) : Continuous fun x : WeakBilin B => B x y :=
   (continuous_pi_iff.mp (coeFn_continuous B)) y
 #align weak_bilin.eval_continuous WeakBilin.eval_continuous
 
-/- warning: weak_bilin.continuous_of_continuous_eval -> WeakBilin.continuous_of_continuous_eval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_bilin.continuous_of_continuous_eval WeakBilin.continuous_of_continuous_evalₓ'. -/
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakBilin B}
     (h : ∀ y, Continuous fun a => B (g a) y) : Continuous g :=
   continuous_induced_rng.2 (continuous_pi_iff.mpr h)
 #align weak_bilin.continuous_of_continuous_eval WeakBilin.continuous_of_continuous_eval
 
-/- warning: weak_bilin.embedding -> WeakBilin.embedding is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_bilin.embedding WeakBilin.embeddingₓ'. -/
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is an embedding. -/
 theorem embedding {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} (hB : Function.Injective B) :
     Embedding fun (x : WeakBilin B) y => B x y :=
   Function.Injective.embedding_induced <| LinearMap.coe_injective.comp hB
 #align weak_bilin.embedding WeakBilin.embedding
 
-/- warning: weak_bilin.tendsto_iff_forall_eval_tendsto -> WeakBilin.tendsto_iff_forall_eval_tendsto is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_bilin.tendsto_iff_forall_eval_tendsto WeakBilin.tendsto_iff_forall_eval_tendstoₓ'. -/
 theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B} {x : WeakBilin B}
     (hB : Function.Injective B) :
     Tendsto f l (𝓝 x) ↔ ∀ y, Tendsto (fun i => B (f i) y) l (𝓝 (B x y)) := by
@@ -213,12 +198,6 @@ end WeakTopology
 
 section WeakStarTopology
 
-/- warning: top_dual_pairing -> topDualPairing is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_1 : CommSemiring.{u1} 𝕜] [_inst_2 : TopologicalSpace.{u1} 𝕜] [_inst_3 : ContinuousAdd.{u1} 𝕜 _inst_2 (Distrib.toHasAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))] [_inst_4 : AddCommMonoid.{u2} E] [_inst_5 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_4] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_2 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))], LinearMap.{u1, u1, max u2 u1, max u2 u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (ContinuousLinearMap.{u1, u1, u2, u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) E _inst_6 _inst_4 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (LinearMap.{u1, u1, u2, u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) E 𝕜 _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (ContinuousLinearMap.addCommMonoid.{u1, u1, u2, u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) E _inst_6 _inst_4 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) _inst_3) (LinearMap.addCommMonoid.{u1, u1, u2, u1} 𝕜 𝕜 E 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) (ContinuousLinearMap.module.{u1, u1, u1, u2, u1} 𝕜 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) E _inst_6 _inst_4 _inst_5 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (topDualPairing._proof_1.{u1} 𝕜 _inst_1) _inst_7 (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) _inst_3) (LinearMap.module.{u1, u1, u1, u2, u1} 𝕜 𝕜 𝕜 E 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (topDualPairing._proof_2.{u1} 𝕜 _inst_1))
-but is expected to have type
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_1 : CommSemiring.{u1} 𝕜] [_inst_2 : TopologicalSpace.{u1} 𝕜] [_inst_3 : ContinuousAdd.{u1} 𝕜 _inst_2 (Distrib.toAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))] [_inst_4 : AddCommMonoid.{u2} E] [_inst_5 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_4] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_2 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 _inst_1 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (Algebra.id.{u1} 𝕜 _inst_1))], LinearMap.{u1, u1, max u1 u2, max u1 u2} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (ContinuousLinearMap.{u1, u1, u2, u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) E _inst_6 _inst_4 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (LinearMap.{u1, u1, u2, u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) E 𝕜 _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (ContinuousLinearMap.addCommMonoid.{u1, u1, u2, u1} 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) E _inst_6 _inst_4 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) _inst_3) (LinearMap.addCommMonoid.{u1, u1, u2, u1} 𝕜 𝕜 E 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) (ContinuousLinearMap.module.{u1, u1, u1, u2, u1} 𝕜 𝕜 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) E _inst_6 _inst_4 _inst_5 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (smulCommClass_self.{u1, u1} 𝕜 𝕜 (CommSemiring.toCommMonoid.{u1} 𝕜 _inst_1) (MulActionWithZero.toMulAction.{u1, u1} 𝕜 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (MonoidWithZero.toMulActionWithZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))) _inst_7 (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) _inst_3) (LinearMap.instModuleLinearMapAddCommMonoid.{u1, u1, u1, u2, u1} 𝕜 𝕜 𝕜 E 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_5 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))) (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (smulCommClass_self.{u1, u1} 𝕜 𝕜 (CommSemiring.toCommMonoid.{u1} 𝕜 _inst_1) (MulActionWithZero.toMulAction.{u1, u1} 𝕜 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)) (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (MonoidWithZero.toMulActionWithZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align top_dual_pairing topDualPairingₓ'. -/
 /-- The canonical pairing of a vector space and its topological dual. -/
 def topDualPairing (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [AddCommMonoid E]
     [Module 𝕜 E] [TopologicalSpace E] [ContinuousConstSMul 𝕜 𝕜] : (E →L[𝕜] 𝕜) →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
@@ -231,20 +210,11 @@ variable [ContinuousConstSMul 𝕜 𝕜]
 
 variable [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 
-/- warning: dual_pairing_apply -> topDualPairing_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dual_pairing_apply topDualPairing_applyₓ'. -/
 theorem topDualPairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing 𝕜 E v x = v x :=
   rfl
 #align dual_pairing_apply topDualPairing_apply
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜 -/
-/- warning: weak_dual -> WeakDual is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_8 : CommSemiring.{u1} 𝕜] [_inst_9 : TopologicalSpace.{u1} 𝕜] [_inst_10 : ContinuousAdd.{u1} 𝕜 _inst_9 (Distrib.toHasAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8)))))] [_inst_11 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_9 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8))))))] [_inst_12 : AddCommMonoid.{u2} E] [_inst_13 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_8) _inst_12] [_inst_14 : TopologicalSpace.{u2} E], Type.{max u2 u1}
-but is expected to have type
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_8 : CommSemiring.{u1} 𝕜] [_inst_9 : TopologicalSpace.{u1} 𝕜] [_inst_10 : ContinuousAdd.{u1} 𝕜 _inst_9 (Distrib.toAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8)))))] [_inst_11 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_9 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 _inst_8 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8) (Algebra.id.{u1} 𝕜 _inst_8))] [_inst_12 : AddCommMonoid.{u2} E] [_inst_13 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_8) _inst_12] [_inst_14 : TopologicalSpace.{u2} E], Type.{max u1 u2}
-Case conversion may be inaccurate. Consider using '#align weak_dual WeakDualₓ'. -/
 /-- The weak star topology is the topology coarsest topology on `E →L[𝕜] 𝕜` such that all
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
 def WeakDual (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
@@ -259,12 +229,6 @@ namespace WeakDual
 instance : Inhabited (WeakDual 𝕜 E) :=
   ContinuousLinearMap.inhabited
 
-/- warning: weak_dual.weak_dual.continuous_linear_map_class -> WeakDual.instContinuousLinearMapClass is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : CommSemiring.{u1} 𝕜] [_inst_2 : TopologicalSpace.{u1} 𝕜] [_inst_3 : ContinuousAdd.{u1} 𝕜 _inst_2 (Distrib.toHasAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))] [_inst_4 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_2 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))] [_inst_5 : AddCommMonoid.{u2} E] [_inst_6 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_5] [_inst_7 : TopologicalSpace.{u2} E], ContinuousLinearMapClass.{max u2 u1, u1, u2, u1} (WeakDual.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) E _inst_7 _inst_5 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_6 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : CommSemiring.{u1} 𝕜] [_inst_2 : TopologicalSpace.{u1} 𝕜] [_inst_3 : ContinuousAdd.{u1} 𝕜 _inst_2 (Distrib.toAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))] [_inst_4 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_2 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 _inst_1 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (Algebra.id.{u1} 𝕜 _inst_1))] [_inst_5 : AddCommMonoid.{u2} E] [_inst_6 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_5] [_inst_7 : TopologicalSpace.{u2} E], ContinuousLinearMapClass.{max u2 u1, u1, u2, u1} (WeakDual.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) E _inst_7 _inst_5 𝕜 _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_6 (Semiring.toModule.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))
-Case conversion may be inaccurate. Consider using '#align weak_dual.weak_dual.continuous_linear_map_class WeakDual.instContinuousLinearMapClassₓ'. -/
 instance WeakDual.instContinuousLinearMapClass : ContinuousLinearMapClass (WeakDual 𝕜 E) 𝕜 E 𝕜 :=
   ContinuousLinearMap.continuousSemilinearMapClass
 #align weak_dual.weak_dual.continuous_linear_map_class WeakDual.instContinuousLinearMapClass
@@ -286,12 +250,6 @@ instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [C
     DistribMulAction M (WeakDual 𝕜 E) :=
   ContinuousLinearMap.distribMulAction
 
-/- warning: weak_dual.module' -> WeakDual.instModule' is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : CommSemiring.{u1} 𝕜] [_inst_2 : TopologicalSpace.{u1} 𝕜] [_inst_3 : ContinuousAdd.{u1} 𝕜 _inst_2 (Distrib.toHasAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))] [_inst_4 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_2 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))] [_inst_5 : AddCommMonoid.{u2} E] [_inst_6 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_5] [_inst_7 : TopologicalSpace.{u2} E] (R : Type.{u3}) [_inst_8 : Semiring.{u3} R] [_inst_9 : Module.{u3, u1} R 𝕜 _inst_8 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))] [_inst_10 : SMulCommClass.{u1, u3, u1} 𝕜 R 𝕜 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))) (SMulZeroClass.toHasSmul.{u3, u1} R 𝕜 (AddZeroClass.toHasZero.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))) (SMulWithZero.toSmulZeroClass.{u3, u1} R 𝕜 (MulZeroClass.toHasZero.{u3} R (MulZeroOneClass.toMulZeroClass.{u3} R (MonoidWithZero.toMulZeroOneClass.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_8)))) (AddZeroClass.toHasZero.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))) (MulActionWithZero.toSMulWithZero.{u3, u1} R 𝕜 (Semiring.toMonoidWithZero.{u3} R _inst_8) (AddZeroClass.toHasZero.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))) (Module.toMulActionWithZero.{u3, u1} R 𝕜 _inst_8 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_9))))] [_inst_11 : ContinuousConstSMul.{u3, u1} R 𝕜 _inst_2 (SMulZeroClass.toHasSmul.{u3, u1} R 𝕜 (AddZeroClass.toHasZero.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))) (SMulWithZero.toSmulZeroClass.{u3, u1} R 𝕜 (MulZeroClass.toHasZero.{u3} R (MulZeroOneClass.toMulZeroClass.{u3} R (MonoidWithZero.toMulZeroOneClass.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_8)))) (AddZeroClass.toHasZero.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))) (MulActionWithZero.toSMulWithZero.{u3, u1} R 𝕜 (Semiring.toMonoidWithZero.{u3} R _inst_8) (AddZeroClass.toHasZero.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))))) (Module.toMulActionWithZero.{u3, u1} R 𝕜 _inst_8 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_9))))], Module.{u3, max u2 u1} R (WeakDual.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) _inst_8 (WeakDual.addCommMonoid.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)
-but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : CommSemiring.{u1} 𝕜] [_inst_2 : TopologicalSpace.{u1} 𝕜] [_inst_3 : ContinuousAdd.{u1} 𝕜 _inst_2 (Distrib.toAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))))] [_inst_4 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_2 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 _inst_1 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (Algebra.id.{u1} 𝕜 _inst_1))] [_inst_5 : AddCommMonoid.{u2} E] [_inst_6 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_5] [_inst_7 : TopologicalSpace.{u2} E] (R : Type.{u3}) [_inst_8 : Semiring.{u3} R] [_inst_9 : Module.{u3, u1} R 𝕜 _inst_8 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1))))] [_inst_10 : SMulCommClass.{u1, u3, u1} 𝕜 R 𝕜 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 _inst_1 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1) (Algebra.id.{u1} 𝕜 _inst_1)) (SMulZeroClass.toSMul.{u3, u1} R 𝕜 (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (SMulWithZero.toSMulZeroClass.{u3, u1} R 𝕜 (MonoidWithZero.toZero.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_8)) (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (MulActionWithZero.toSMulWithZero.{u3, u1} R 𝕜 (Semiring.toMonoidWithZero.{u3} R _inst_8) (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (Module.toMulActionWithZero.{u3, u1} R 𝕜 _inst_8 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_9))))] [_inst_11 : ContinuousConstSMul.{u3, u1} R 𝕜 _inst_2 (SMulZeroClass.toSMul.{u3, u1} R 𝕜 (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (SMulWithZero.toSMulZeroClass.{u3, u1} R 𝕜 (MonoidWithZero.toZero.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_8)) (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (MulActionWithZero.toSMulWithZero.{u3, u1} R 𝕜 (Semiring.toMonoidWithZero.{u3} R _inst_8) (CommMonoidWithZero.toZero.{u1} 𝕜 (CommSemiring.toCommMonoidWithZero.{u1} 𝕜 _inst_1)) (Module.toMulActionWithZero.{u3, u1} R 𝕜 _inst_8 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_1)))) _inst_9))))], Module.{u3, max u2 u1} R (WeakDual.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) _inst_8 (WeakDual.instAddCommMonoid.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)
-Case conversion may be inaccurate. Consider using '#align weak_dual.module' WeakDual.instModule'ₓ'. -/
 /-- If `𝕜` is a topological module over a semiring `R` and scalar multiplication commutes with the
 multiplication on `𝕜`, then `weak_dual 𝕜 E` is a module over `R`. -/
 instance instModule' (R) [Semiring R] [Module R 𝕜] [SMulCommClass 𝕜 R 𝕜] [ContinuousConstSMul R 𝕜] :
@@ -311,23 +269,14 @@ instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [T
   ⟨continuous_induced_rng.2 <|
       continuous_fst.smul ((WeakBilin.coeFn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
 
-/- warning: weak_dual.coe_fn_continuous -> WeakDual.coeFn_continuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.coe_fn_continuous WeakDual.coeFn_continuousₓ'. -/
 theorem coeFn_continuous : Continuous fun (x : WeakDual 𝕜 E) y => x y :=
   continuous_induced_dom
 #align weak_dual.coe_fn_continuous WeakDual.coeFn_continuous
 
-/- warning: weak_dual.eval_continuous -> WeakDual.eval_continuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.eval_continuous WeakDual.eval_continuousₓ'. -/
 theorem eval_continuous (y : E) : Continuous fun x : WeakDual 𝕜 E => x y :=
   continuous_pi_iff.mp coeFn_continuous y
 #align weak_dual.eval_continuous WeakDual.eval_continuous
 
-/- warning: weak_dual.continuous_of_continuous_eval -> WeakDual.continuous_of_continuous_eval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.continuous_of_continuous_eval WeakDual.continuous_of_continuous_evalₓ'. -/
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual 𝕜 E}
     (h : ∀ y, Continuous fun a => (g a) y) : Continuous g :=
   continuous_induced_rng.2 (continuous_pi_iff.mpr h)
@@ -341,12 +290,6 @@ instance [T2Space 𝕜] : T2Space (WeakDual 𝕜 E) :=
 end WeakDual
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜 -/
-/- warning: weak_space -> WeakSpace is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_8 : CommSemiring.{u1} 𝕜] [_inst_9 : TopologicalSpace.{u1} 𝕜] [_inst_10 : ContinuousAdd.{u1} 𝕜 _inst_9 (Distrib.toHasAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8)))))] [_inst_11 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_9 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8))))))] [_inst_12 : AddCommMonoid.{u2} E] [_inst_13 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_8) _inst_12] [_inst_14 : TopologicalSpace.{u2} E], Type.{u2}
-but is expected to have type
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_8 : CommSemiring.{u1} 𝕜] [_inst_9 : TopologicalSpace.{u1} 𝕜] [_inst_10 : ContinuousAdd.{u1} 𝕜 _inst_9 (Distrib.toAdd.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8)))))] [_inst_11 : ContinuousConstSMul.{u1, u1} 𝕜 𝕜 _inst_9 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 _inst_8 (CommSemiring.toSemiring.{u1} 𝕜 _inst_8) (Algebra.id.{u1} 𝕜 _inst_8))] [_inst_12 : AddCommMonoid.{u2} E] [_inst_13 : Module.{u1, u2} 𝕜 E (CommSemiring.toSemiring.{u1} 𝕜 _inst_8) _inst_12] [_inst_14 : TopologicalSpace.{u2} E], Type.{u2}
-Case conversion may be inaccurate. Consider using '#align weak_space WeakSpaceₓ'. -/
 /-- The weak topology is the topology coarsest topology on `E` such that all
 functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
 @[nolint has_nonempty_instance]
@@ -361,9 +304,6 @@ namespace WeakSpace
 
 variable {𝕜 E F} [AddCommMonoid F] [Module 𝕜 F] [TopologicalSpace F]
 
-/- warning: weak_space.map -> WeakSpace.map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_space.map WeakSpace.mapₓ'. -/
 /-- A continuous linear map from `E` to `F` is still continuous when `E` and `F` are equipped with
 their weak topologies. -/
 def map (f : E →L[𝕜] F) : WeakSpace 𝕜 E →L[𝕜] WeakSpace 𝕜 F :=
@@ -372,16 +312,10 @@ def map (f : E →L[𝕜] F) : WeakSpace 𝕜 E →L[𝕜] WeakSpace 𝕜 F :=
       WeakBilin.continuous_of_continuous_eval _ fun l => WeakBilin.eval_continuous _ (l ∘L f) }
 #align weak_space.map WeakSpace.map
 
-/- warning: weak_space.map_apply -> WeakSpace.map_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_space.map_apply WeakSpace.map_applyₓ'. -/
 theorem map_apply (f : E →L[𝕜] F) (x : E) : WeakSpace.map f x = f x :=
   rfl
 #align weak_space.map_apply WeakSpace.map_apply
 
-/- warning: weak_space.coe_map -> WeakSpace.coe_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_space.coe_map WeakSpace.coe_mapₓ'. -/
 @[simp]
 theorem coe_map (f : E →L[𝕜] F) : (WeakSpace.map f : E → F) = f :=
   rfl
@@ -389,9 +323,6 @@ theorem coe_map (f : E →L[𝕜] F) : (WeakSpace.map f : E → F) = f :=
 
 end WeakSpace
 
-/- warning: tendsto_iff_forall_eval_tendsto_top_dual_pairing -> tendsto_iff_forall_eval_tendsto_topDualPairing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tendsto_iff_forall_eval_tendsto_top_dual_pairing tendsto_iff_forall_eval_tendsto_topDualPairingₓ'. -/
 theorem tendsto_iff_forall_eval_tendsto_topDualPairing {l : Filter α} {f : α → WeakDual 𝕜 E}
     {x : WeakDual 𝕜 E} :
     Tendsto f l (𝓝 x) ↔

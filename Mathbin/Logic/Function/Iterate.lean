@@ -255,12 +255,6 @@ def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a))
 #align function.iterate.rec Function.Iterate.rec
 -/
 
-/- warning: function.iterate.rec_zero -> Function.Iterate.rec_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Sort.{u2}) {f : α -> α} (h : forall (a : α), (p a) -> (p (f a))) {a : α} (ha : p a), Eq.{u2} (p (Nat.iterate.{succ u1} α (fun (a : α) => f a) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a)) (Function.Iterate.rec.{u1, u2} α p (fun (a : α) => f a) h a ha (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) ha
-but is expected to have type
-  forall {α : Type.{u2}} (p : α -> Sort.{u1}) {f : α -> α} (h : forall (a : α), (p a) -> (p (f a))) {a : α} (ha : p a), Eq.{u1} (p (Nat.iterate.{succ u2} α (fun (a : α) => f a) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a)) (Function.Iterate.rec.{u2, u1} α p (fun (a : α) => f a) h a ha (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) ha
-Case conversion may be inaccurate. Consider using '#align function.iterate.rec_zero Function.Iterate.rec_zeroₓ'. -/
 theorem Iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) :
     Iterate.rec p h ha 0 = ha :=
   rfl

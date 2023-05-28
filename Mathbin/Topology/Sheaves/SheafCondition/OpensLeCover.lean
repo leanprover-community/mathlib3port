@@ -78,12 +78,6 @@ def index (V : OpensLeCover U) : ι :=
 #align Top.presheaf.sheaf_condition.opens_le_cover.index TopCat.Presheaf.SheafCondition.OpensLeCover.index
 -/
 
-/- warning: Top.presheaf.sheaf_condition.opens_le_cover.hom_to_index -> TopCat.Presheaf.SheafCondition.OpensLeCover.homToIndex is a dubious translation:
-lean 3 declaration is
-  forall {X : TopCat.{u1}} {ι : Type.{u1}} {U : ι -> (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))} (V : TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U), Quiver.Hom.{succ u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (SetLike.partialOrder.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopologicalSpace.Opens.setLike.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))))))) (CategoryTheory.FullSubcategoryₓ.obj.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (SetLike.partialOrder.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopologicalSpace.Opens.setLike.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))))) (fun (V : TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) => Exists.{succ u1} ι (fun (i : ι) => LE.le.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (Preorder.toHasLe.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (SetLike.partialOrder.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopologicalSpace.Opens.setLike.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))))) V (U i))) V) (U (TopCat.Presheaf.SheafCondition.OpensLeCover.index.{u1} X ι U V))
-but is expected to have type
-  forall {X : TopCat.{u1}} {ι : Type.{u1}} {U : ι -> (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))} (V : TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U), Quiver.Hom.{succ u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)))))))) (CategoryTheory.FullSubcategory.obj.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (fun (V : TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) => Exists.{succ u1} ι (fun (i : ι) => LE.le.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.toLE.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)))))) V (U i))) V) (U (TopCat.Presheaf.SheafCondition.OpensLeCover.index.{u1} X ι U V))
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.opens_le_cover.hom_to_index TopCat.Presheaf.SheafCondition.OpensLeCover.homToIndexₓ'. -/
 /-- The morphism from `V` to `U i` for some `i`.
 -/
 def homToIndex (V : OpensLeCover U) : V.obj ⟶ U (index V) :=
@@ -92,9 +86,6 @@ def homToIndex (V : OpensLeCover U) : V.obj ⟶ U (index V) :=
 
 end OpensLeCover
 
-/- warning: Top.presheaf.sheaf_condition.opens_le_cover_cocone -> TopCat.Presheaf.SheafCondition.opensLeCoverCocone is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.opens_le_cover_cocone TopCat.Presheaf.SheafCondition.opensLeCoverCoconeₓ'. -/
 /-- `supr U` as a cocone over the opens sets contained in some element of the cover.
 
 (In fact this is a colimit cocone.)
@@ -127,9 +118,6 @@ section
 
 variable {Y : Opens X} (hY : Y = iSup U)
 
-/- warning: Top.presheaf.generate_equivalence_opens_le -> TopCat.Presheaf.generateEquivalenceOpensLe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.generate_equivalence_opens_le TopCat.Presheaf.generateEquivalenceOpensLeₓ'. -/
 /-- Given a family of opens `U` and an open `Y` equal to the union of opens in `U`, we may
     take the presieve on `Y` associated to `U` and the sieve generated by it, and form the
     full subcategory (subposet) of opens contained in `Y` (`over Y`) consisting of arrows
@@ -161,9 +149,6 @@ def generateEquivalenceOpensLe :
   counitIso := eqToIso <| CategoryTheory.Functor.hext (by intro ; ext; rfl) (by intros ; rfl)
 #align Top.presheaf.generate_equivalence_opens_le TopCat.Presheaf.generateEquivalenceOpensLe
 
-/- warning: Top.presheaf.whisker_iso_map_generate_cocone -> TopCat.Presheaf.whiskerIsoMapGenerateCocone is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.whisker_iso_map_generate_cocone TopCat.Presheaf.whiskerIsoMapGenerateCoconeₓ'. -/
 /-- Given a family of opens `opens_le_cover_cocone U` is essentially the natural cocone
     associated to the sieve generated by the presieve associated to `U` with indexing
     category changed using the above equivalence. -/
@@ -182,9 +167,6 @@ def whiskerIsoMapGenerateCocone :
   inv_hom_id' := by ext; simp [eq_to_hom_map]
 #align Top.presheaf.whisker_iso_map_generate_cocone TopCat.Presheaf.whiskerIsoMapGenerateCocone
 
-/- warning: Top.presheaf.is_limit_opens_le_equiv_generate₁ -> TopCat.Presheaf.isLimitOpensLeEquivGenerate₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_limit_opens_le_equiv_generate₁ TopCat.Presheaf.isLimitOpensLeEquivGenerate₁ₓ'. -/
 /-- Given a presheaf `F` on the topological space `X` and a family of opens `U` of `X`,
     the natural cone associated to `F` and `U` used in the definition of
     `F.is_sheaf_opens_le_cover` is a limit cone iff the natural cone associated to `F`
@@ -196,9 +178,6 @@ def isLimitOpensLeEquivGenerate₁ :
     (IsLimit.equivIsoLimit (whiskerIsoMapGenerateCocone F U hY))
 #align Top.presheaf.is_limit_opens_le_equiv_generate₁ TopCat.Presheaf.isLimitOpensLeEquivGenerate₁
 
-/- warning: Top.presheaf.is_limit_opens_le_equiv_generate₂ -> TopCat.Presheaf.isLimitOpensLeEquivGenerate₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_limit_opens_le_equiv_generate₂ TopCat.Presheaf.isLimitOpensLeEquivGenerate₂ₓ'. -/
 /-- Given a presheaf `F` on the topological space `X` and a presieve `R` whose generated sieve
     is covering for the associated Grothendieck topology (equivalently, the presieve is covering
     for the associated pretopology), the natural cone associated to `F` and the family of opens

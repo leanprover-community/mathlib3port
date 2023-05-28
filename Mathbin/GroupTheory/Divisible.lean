@@ -115,12 +115,6 @@ class RootableBy where
 #align divisible_by DivisibleBy
 -/
 
-/- warning: pow_left_surj_of_rootable_by -> pow_left_surj_of_rootableBy is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) (α : Type.{u2}) [_inst_1 : Monoid.{u1} A] [_inst_2 : Pow.{u1, u2} A α] [_inst_3 : Zero.{u2} α] [_inst_4 : RootableBy.{u1, u2} A α _inst_1 _inst_2 _inst_3] {n : α}, (Ne.{succ u2} α n (OfNat.ofNat.{u2} α 0 (OfNat.mk.{u2} α 0 (Zero.zero.{u2} α _inst_3)))) -> (Function.Surjective.{succ u1, succ u1} A A (fun (a : A) => HPow.hPow.{u1, u2, u1} A α A (instHPow.{u1, u2} A α _inst_2) a n))
-but is expected to have type
-  forall (A : Type.{u2}) (α : Type.{u1}) [_inst_1 : Monoid.{u2} A] [_inst_2 : Pow.{u2, u1} A α] [_inst_3 : Zero.{u1} α] [_inst_4 : RootableBy.{u2, u1} A α _inst_1 _inst_2 _inst_3] {n : α}, (Ne.{succ u1} α n (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_3))) -> (Function.Surjective.{succ u2, succ u2} A A (fun (a : A) => HPow.hPow.{u2, u1, u2} A α A (instHPow.{u2, u1} A α _inst_2) a n))
-Case conversion may be inaccurate. Consider using '#align pow_left_surj_of_rootable_by pow_left_surj_of_rootableByₓ'. -/
 @[to_additive smul_right_surj_of_divisibleBy]
 theorem pow_left_surj_of_rootableBy [RootableBy A α] {n : α} (hn : n ≠ 0) :
     Function.Surjective (fun a => pow a n : A → A) := fun x =>
@@ -173,12 +167,6 @@ variable {β B B' : Type _} [Pow B β] [Pow B' β]
 
 variable [Zero β] [Monoid B] [Monoid B'] [RootableBy B β] [RootableBy B' β]
 
-/- warning: prod.rootable_by -> Prod.rootableBy is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {B : Type.{u2}} {B' : Type.{u3}} [_inst_4 : Pow.{u2, u1} B β] [_inst_5 : Pow.{u3, u1} B' β] [_inst_6 : Zero.{u1} β] [_inst_7 : Monoid.{u2} B] [_inst_8 : Monoid.{u3} B'] [_inst_9 : RootableBy.{u2, u1} B β _inst_7 _inst_4 _inst_6] [_inst_10 : RootableBy.{u3, u1} B' β _inst_8 _inst_5 _inst_6], RootableBy.{max u2 u3, u1} (Prod.{u2, u3} B B') β (Prod.monoid.{u2, u3} B B' _inst_7 _inst_8) (Prod.pow.{u1, u2, u3} β B B' _inst_4 _inst_5) _inst_6
-but is expected to have type
-  forall {β : Type.{u1}} {B : Type.{u2}} {B' : Type.{u3}} [_inst_4 : Pow.{u2, u1} B β] [_inst_5 : Pow.{u3, u1} B' β] [_inst_6 : Zero.{u1} β] [_inst_7 : Monoid.{u2} B] [_inst_8 : Monoid.{u3} B'] [_inst_9 : RootableBy.{u2, u1} B β _inst_7 _inst_4 _inst_6] [_inst_10 : RootableBy.{u3, u1} B' β _inst_8 _inst_5 _inst_6], RootableBy.{max u3 u2, u1} (Prod.{u2, u3} B B') β (Prod.instMonoidProd.{u2, u3} B B' _inst_7 _inst_8) (Prod.pow.{u1, u2, u3} β B B' _inst_4 _inst_5) _inst_6
-Case conversion may be inaccurate. Consider using '#align prod.rootable_by Prod.rootableByₓ'. -/
 @[to_additive]
 instance Prod.rootableBy : RootableBy (B × B') β
     where
@@ -196,23 +184,11 @@ namespace AddCommGroup
 
 variable (A : Type _) [AddCommGroup A]
 
-/- warning: add_comm_group.smul_top_eq_top_of_divisible_by_int -> AddCommGroup.smul_top_eq_top_of_divisibleBy_int is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) [_inst_1 : AddCommGroup.{u1} A] [_inst_2 : DivisibleBy.{u1, 0} A Int (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) (SubNegMonoid.SMulInt.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) Int.hasZero] {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{succ u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (SMul.smul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (MulAction.toHasSmul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (MonoidWithZero.toMonoid.{0} Int (Semiring.toMonoidWithZero.{0} Int Int.semiring)) (AddSubgroup.pointwiseMulAction.{0, u1} Int A (AddCommGroup.toAddGroup.{u1} A _inst_1) (MonoidWithZero.toMonoid.{0} Int (Semiring.toMonoidWithZero.{0} Int Int.semiring)) (Module.toDistribMulAction.{0, u1} Int A Int.semiring (AddCommGroup.toAddCommMonoid.{u1} A _inst_1) (AddCommGroup.intModule.{u1} A _inst_1)))) n (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.hasTop.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)))) (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.hasTop.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))))
-but is expected to have type
-  forall (A : Type.{u1}) [_inst_1 : AddCommGroup.{u1} A] [_inst_2 : DivisibleBy.{u1, 0} A Int (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) (SubNegMonoid.SMulInt.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))))] {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{succ u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (HSMul.hSMul.{0, u1, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (instHSMul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (MulAction.toSMul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) Int.instMonoidInt (AddSubgroup.pointwiseMulAction.{0, u1} Int A (AddCommGroup.toAddGroup.{u1} A _inst_1) Int.instMonoidInt (Module.toDistribMulAction.{0, u1} Int A (CommSemiring.toSemiring.{0} Int (CommRing.toCommSemiring.{0} Int Int.instCommRingInt)) (AddCommGroup.toAddCommMonoid.{u1} A _inst_1) (AddCommGroup.intModule.{u1} A _inst_1))))) n (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.instTopAddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)))) (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.instTopAddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))))
-Case conversion may be inaccurate. Consider using '#align add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisibleBy_intₓ'. -/
 theorem smul_top_eq_top_of_divisibleBy_int [DivisibleBy A ℤ] {n : ℤ} (hn : n ≠ 0) :
     n • (⊤ : AddSubgroup A) = ⊤ :=
   AddSubgroup.map_top_of_surjective _ fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
 #align add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisibleBy_int
 
-/- warning: add_comm_group.divisible_by_int_of_smul_top_eq_top -> AddCommGroup.divisibleByIntOfSmulTopEqTop is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) [_inst_1 : AddCommGroup.{u1} A], (forall {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{succ u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (SMul.smul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (MulAction.toHasSmul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (MonoidWithZero.toMonoid.{0} Int (Semiring.toMonoidWithZero.{0} Int Int.semiring)) (AddSubgroup.pointwiseMulAction.{0, u1} Int A (AddCommGroup.toAddGroup.{u1} A _inst_1) (MonoidWithZero.toMonoid.{0} Int (Semiring.toMonoidWithZero.{0} Int Int.semiring)) (Module.toDistribMulAction.{0, u1} Int A Int.semiring (AddCommGroup.toAddCommMonoid.{u1} A _inst_1) (AddCommGroup.intModule.{u1} A _inst_1)))) n (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.hasTop.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)))) (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.hasTop.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))))) -> (DivisibleBy.{u1, 0} A Int (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) (SubNegMonoid.SMulInt.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) Int.hasZero)
-but is expected to have type
-  forall (A : Type.{u1}) [_inst_1 : AddCommGroup.{u1} A], (forall {n : Int}, (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{succ u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (HSMul.hSMul.{0, u1, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (instHSMul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (MulAction.toSMul.{0, u1} Int (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) Int.instMonoidInt (AddSubgroup.pointwiseMulAction.{0, u1} Int A (AddCommGroup.toAddGroup.{u1} A _inst_1) Int.instMonoidInt (Module.toDistribMulAction.{0, u1} Int A (CommSemiring.toSemiring.{0} Int (CommRing.toCommSemiring.{0} Int Int.instCommRingInt)) (AddCommGroup.toAddCommMonoid.{u1} A _inst_1) (AddCommGroup.intModule.{u1} A _inst_1))))) n (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.instTopAddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)))) (Top.top.{u1} (AddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1)) (AddSubgroup.instTopAddSubgroup.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))))) -> (DivisibleBy.{u1, 0} A Int (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) (SubNegMonoid.SMulInt.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddCommGroup.toAddGroup.{u1} A _inst_1))) (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))))
-Case conversion may be inaccurate. Consider using '#align add_comm_group.divisible_by_int_of_smul_top_eq_top AddCommGroup.divisibleByIntOfSmulTopEqTopₓ'. -/
 /-- If for all `n ≠ 0 ∈ ℤ`, `n • A = A`, then `A` is divisible.
 -/
 noncomputable def divisibleByIntOfSmulTopEqTop
@@ -229,12 +205,6 @@ noncomputable def divisibleByIntOfSmulTopEqTop
 
 end AddCommGroup
 
-/- warning: divisible_by_int_of_char_zero -> divisibleByIntOfCharZero is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : DivisionRing.{u1} 𝕜] [_inst_2 : CharZero.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1))))], DivisibleBy.{u1, 0} 𝕜 Int (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1))))) (SubNegMonoid.SMulInt.{u1} 𝕜 (AddGroup.toSubNegMonoid.{u1} 𝕜 (AddGroupWithOne.toAddGroup.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1)))))) Int.hasZero
-but is expected to have type
-  forall {𝕜 : Type.{u1}} [_inst_1 : DivisionRing.{u1} 𝕜] [_inst_2 : CharZero.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (Ring.toAddGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1)))], DivisibleBy.{u1, 0} 𝕜 Int (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (Ring.toAddGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1)))) (SubNegMonoid.SMulInt.{u1} 𝕜 (AddGroup.toSubNegMonoid.{u1} 𝕜 (AddGroupWithOne.toAddGroup.{u1} 𝕜 (Ring.toAddGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1))))) (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))))
-Case conversion may be inaccurate. Consider using '#align divisible_by_int_of_char_zero divisibleByIntOfCharZeroₓ'. -/
 instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [CharZero 𝕜] :
     DivisibleBy 𝕜 ℤ where
   div q n := q / n
@@ -316,12 +286,6 @@ noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
 #align function.surjective.rootable_by Function.Surjective.rootableByₓ
 #align function.surjective.divisible_by Function.Surjective.divisibleByₓ
 
-/- warning: rootable_by.surjective_pow -> RootableBy.surjective_pow is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) (α : Type.{u2}) [_inst_7 : Monoid.{u1} A] [_inst_8 : Pow.{u1, u2} A α] [_inst_9 : Zero.{u2} α] [_inst_10 : RootableBy.{u1, u2} A α _inst_7 _inst_8 _inst_9] {n : α}, (Ne.{succ u2} α n (OfNat.ofNat.{u2} α 0 (OfNat.mk.{u2} α 0 (Zero.zero.{u2} α _inst_9)))) -> (Function.Surjective.{succ u1, succ u1} A A (fun (a : A) => HPow.hPow.{u1, u2, u1} A α A (instHPow.{u1, u2} A α _inst_8) a n))
-but is expected to have type
-  forall (A : Type.{u2}) (α : Type.{u1}) [_inst_7 : Monoid.{u2} A] [_inst_8 : Pow.{u2, u1} A α] [_inst_9 : Zero.{u1} α] [_inst_10 : RootableBy.{u2, u1} A α _inst_7 _inst_8 _inst_9] {n : α}, (Ne.{succ u1} α n (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_9))) -> (Function.Surjective.{succ u2, succ u2} A A (fun (a : A) => HPow.hPow.{u2, u1, u2} A α A (instHPow.{u2, u1} A α _inst_8) a n))
-Case conversion may be inaccurate. Consider using '#align rootable_by.surjective_pow RootableBy.surjective_powₓ'. -/
 @[to_additive DivisibleBy.surjective_smul]
 theorem RootableBy.surjective_pow (A α : Type _) [Monoid A] [Pow A α] [Zero α] [RootableBy A α]
     {n : α} (hn : n ≠ 0) : Function.Surjective fun a : A => a ^ n := fun a =>

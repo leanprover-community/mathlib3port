@@ -90,9 +90,6 @@ instance counit_isIso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunct
 #align category_theory.counit_is_iso_of_R_fully_faithful CategoryTheory.counit_isIso_of_R_fully_faithful
 -/
 
-/- warning: category_theory.inv_map_unit -> CategoryTheory.inv_map_unit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.inv_map_unit CategoryTheory.inv_map_unitₓ'. -/
 /-- If the unit of an adjunction is an isomorphism, then its inverse on the image of L is given
 by L whiskered with the counit. -/
 @[simp]
@@ -109,9 +106,6 @@ noncomputable def whiskerLeftLCounitIsoOfIsIsoUnit [IsIso h.Unit] : L ⋙ R ⋙ 
 #align category_theory.whisker_left_L_counit_iso_of_is_iso_unit CategoryTheory.whiskerLeftLCounitIsoOfIsIsoUnit
 -/
 
-/- warning: category_theory.inv_counit_map -> CategoryTheory.inv_counit_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.inv_counit_map CategoryTheory.inv_counit_mapₓ'. -/
 /-- If the counit of an adjunction is an isomorphism, then its inverse on the image of R is given
 by R whiskered with the unit. -/
 @[simp]

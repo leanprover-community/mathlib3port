@@ -136,12 +136,6 @@ def bind {α β} (a : Erased α) (f : α → Erased β) : Erased β :=
 #align erased.bind Erased.bind
 -/
 
-/- warning: erased.bind_eq_out -> Erased.bind_eq_out is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (a : Erased.{u1} α) (f : α -> (Erased.{u2} β)), Eq.{max 1 u2} (Erased.{u2} β) (Erased.bind.{u1, u2} α β a f) (f (Erased.out.{u1} α a))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} (a : Erased.{u2} α) (f : α -> (Erased.{u1} β)), Eq.{max 1 u1} (Erased.{u1} β) (Erased.bind.{u2, u1} α β a f) (f (Erased.out.{u2} α a))
-Case conversion may be inaccurate. Consider using '#align erased.bind_eq_out Erased.bind_eq_outₓ'. -/
 @[simp]
 theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by
   delta bind bind._proof_1 <;> cases f a.out <;> rfl
@@ -173,12 +167,6 @@ def map {α β} (f : α → β) (a : Erased α) : Erased β :=
 #align erased.map Erased.map
 -/
 
-/- warning: erased.map_out -> Erased.map_out is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β} (a : Erased.{u1} α), Eq.{u2} β (Erased.out.{u2} β (Erased.map.{u1, u2} α β f a)) (f (Erased.out.{u1} α a))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β} (a : Erased.{u2} α), Eq.{u1} β (Erased.out.{u1} β (Erased.map.{u2, u1} α β f a)) (f (Erased.out.{u2} α a))
-Case conversion may be inaccurate. Consider using '#align erased.map_out Erased.map_outₓ'. -/
 @[simp]
 theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by simp [map]
 #align erased.map_out Erased.map_out

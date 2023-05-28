@@ -70,9 +70,6 @@ section
 variable {α : Type _} [TopologicalSpace α] [CommSemiring R] [TopologicalSpace R]
   [TopologicalSemiring R]
 
-/- warning: polynomial.aeval_continuous_map_apply -> Polynomial.aeval_continuousMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.aeval_continuous_map_apply Polynomial.aeval_continuousMap_applyₓ'. -/
 @[simp]
 theorem aeval_continuousMap_apply (g : R[X]) (f : C(α, R)) (x : α) :
     ((Polynomial.aeval f) g) x = g.eval (f x) :=
@@ -90,12 +87,6 @@ noncomputable section
 
 variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
-/- warning: polynomial.to_continuous_map_alg_hom -> Polynomial.toContinuousMapAlgHom is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalSemiring.{u1} R _inst_2 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))], AlgHom.{u1, u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.{u1, u1} R R _inst_2 _inst_2) _inst_1 (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.semiring.{u1, u1} R R _inst_2 _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3) (Polynomial.algebraOfAlgebra.{u1, u1} R R _inst_1 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1)) (ContinuousMap.algebra.{u1, u1, u1} R _inst_2 R _inst_1 R _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalSemiring.{u1} R _inst_2 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))], AlgHom.{u1, u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.{u1, u1} R R _inst_2 _inst_2) _inst_1 (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.instSemiringContinuousMap.{u1, u1} R R _inst_2 _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3) (Polynomial.algebraOfAlgebra.{u1, u1} R R _inst_1 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1)) (ContinuousMap.algebra.{u1, u1, u1} R _inst_2 R _inst_1 R _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) _inst_3)
-Case conversion may be inaccurate. Consider using '#align polynomial.to_continuous_map_alg_hom Polynomial.toContinuousMapAlgHomₓ'. -/
 /-- The algebra map from `R[X]` to continuous functions `C(R, R)`.
 -/
 @[simps]
@@ -109,12 +100,6 @@ def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R)
   commutes' := by intros ; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_alg_hom Polynomial.toContinuousMapAlgHom
 
-/- warning: polynomial.to_continuous_map_on_alg_hom -> Polynomial.toContinuousMapOnAlgHom is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalSemiring.{u1} R _inst_2 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))] (X : Set.{u1} R), AlgHom.{u1, u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} R) Type.{u1} (Set.hasCoeToSort.{u1} R) X) R (Subtype.topologicalSpace.{u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Set.{u1} R) (Set.hasMem.{u1} R) x X) _inst_2) _inst_2) _inst_1 (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.semiring.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} R) Type.{u1} (Set.hasCoeToSort.{u1} R) X) R (Subtype.topologicalSpace.{u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Set.{u1} R) (Set.hasMem.{u1} R) x X) _inst_2) _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3) (Polynomial.algebraOfAlgebra.{u1, u1} R R _inst_1 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1)) (ContinuousMap.algebra.{u1, u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} R) Type.{u1} (Set.hasCoeToSort.{u1} R) X) (Subtype.topologicalSpace.{u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Set.{u1} R) (Set.hasMem.{u1} R) x X) _inst_2) R _inst_1 R _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalSemiring.{u1} R _inst_2 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))] (X : Set.{u1} R), AlgHom.{u1, u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.{u1, u1} (Set.Elem.{u1} R X) R (instTopologicalSpaceSubtype.{u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x X) _inst_2) _inst_2) _inst_1 (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ContinuousMap.instSemiringContinuousMap.{u1, u1} (Set.Elem.{u1} R X) R (instTopologicalSpaceSubtype.{u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x X) _inst_2) _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3) (Polynomial.algebraOfAlgebra.{u1, u1} R R _inst_1 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1)) (ContinuousMap.algebra.{u1, u1, u1} (Set.Elem.{u1} R X) (instTopologicalSpaceSubtype.{u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x X) _inst_2) R _inst_1 R _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) _inst_3)
-Case conversion may be inaccurate. Consider using '#align polynomial.to_continuous_map_on_alg_hom Polynomial.toContinuousMapOnAlgHomₓ'. -/
 /-- The algebra map from `R[X]` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
 @[simps]
@@ -136,12 +121,6 @@ section
 
 variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
-/- warning: polynomial_functions -> polynomialFunctions is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalSemiring.{u1} R _inst_2 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))] (X : Set.{u1} R), Subalgebra.{u1, u1} R (ContinuousMap.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} R) Type.{u1} (Set.hasCoeToSort.{u1} R) X) R (Subtype.topologicalSpace.{u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Set.{u1} R) (Set.hasMem.{u1} R) x X) _inst_2) _inst_2) _inst_1 (ContinuousMap.semiring.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} R) Type.{u1} (Set.hasCoeToSort.{u1} R) X) R (Subtype.topologicalSpace.{u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Set.{u1} R) (Set.hasMem.{u1} R) x X) _inst_2) _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3) (ContinuousMap.algebra.{u1, u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} R) Type.{u1} (Set.hasCoeToSort.{u1} R) X) (Subtype.topologicalSpace.{u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Set.{u1} R) (Set.hasMem.{u1} R) x X) _inst_2) R _inst_1 R _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalSemiring.{u1} R _inst_2 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))] (X : Set.{u1} R), Subalgebra.{u1, u1} R (ContinuousMap.{u1, u1} (Set.Elem.{u1} R X) R (instTopologicalSpaceSubtype.{u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x X) _inst_2) _inst_2) _inst_1 (ContinuousMap.instSemiringContinuousMap.{u1, u1} (Set.Elem.{u1} R X) R (instTopologicalSpaceSubtype.{u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x X) _inst_2) _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3) (ContinuousMap.algebra.{u1, u1, u1} (Set.Elem.{u1} R X) (instTopologicalSpaceSubtype.{u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x X) _inst_2) R _inst_1 R _inst_2 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) _inst_3)
-Case conversion may be inaccurate. Consider using '#align polynomial_functions polynomialFunctionsₓ'. -/
 /--
 The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological semiring
 `R`.
@@ -150,9 +129,6 @@ def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
   (⊤ : Subalgebra R R[X]).map (Polynomial.toContinuousMapOnAlgHom X)
 #align polynomial_functions polynomialFunctions
 
-/- warning: polynomial_functions_coe -> polynomialFunctions_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial_functions_coe polynomialFunctions_coeₓ'. -/
 @[simp]
 theorem polynomialFunctions_coe (X : Set R) :
     (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) := by
@@ -178,9 +154,6 @@ open unitInterval
 
 open ContinuousMap
 
-/- warning: polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I -> polynomialFunctions.comap_compRightAlgHom_iccHomeoI is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I polynomialFunctions.comap_compRightAlgHom_iccHomeoIₓ'. -/
 /-- The preimage of polynomials on `[0,1]` under the pullback map by `x ↦ (b-a) * x + a`
 is the polynomials on `[a,b]`. -/
 theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a < b) :

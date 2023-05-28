@@ -164,12 +164,6 @@ end Fold
 
 section Order
 
-/- warning: multiset.max_le_of_forall_le -> Multiset.max_le_of_forall_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedAddMonoid.{u1} α] (l : Multiset.{u1} α) (n : α), (forall (x : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) x l) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) x n)) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) (Multiset.fold.{u1} α (LinearOrder.max.{u1} α (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{u1} α _inst_1)) (sup_isCommutative.{u1} α (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{u1} α _inst_1)) (sup_isAssociative.{u1} α (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{u1} α _inst_1)) (Bot.bot.{u1} α (CanonicallyOrderedAddMonoid.toHasBot.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))) l) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedAddMonoid.{u1} α] (l : Multiset.{u1} α) (n : α), (forall (x : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) x l) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) x n)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) (Multiset.fold.{u1} α (Max.max.{u1} α (LinearOrder.toMax.{u1} α (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{u1} α _inst_1))) (instIsCommutativeMaxToMax.{u1} α (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{u1} α _inst_1)) (instIsAssociativeMaxToMax.{u1} α (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{u1} α _inst_1)) (Bot.bot.{u1} α (CanonicallyOrderedAddMonoid.toBot.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))) l) n)
-Case conversion may be inaccurate. Consider using '#align multiset.max_le_of_forall_le Multiset.max_le_of_forall_leₓ'. -/
 theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddMonoid α] (l : Multiset α)
     (n : α) (h : ∀ x ∈ l, x ≤ n) : l.fold max ⊥ ≤ n :=
   by
@@ -177,12 +171,6 @@ theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddMonoid α]
   simpa using List.max_le_of_forall_le _ _ h
 #align multiset.max_le_of_forall_le Multiset.max_le_of_forall_le
 
-/- warning: multiset.max_nat_le_of_forall_le -> Multiset.max_nat_le_of_forall_le is a dubious translation:
-lean 3 declaration is
-  forall (l : Multiset.{0} Nat) (n : Nat), (forall (x : Nat), (Membership.Mem.{0, 0} Nat (Multiset.{0} Nat) (Multiset.hasMem.{0} Nat) x l) -> (LE.le.{0} Nat Nat.hasLe x n)) -> (LE.le.{0} Nat Nat.hasLe (Multiset.fold.{0} Nat (LinearOrder.max.{0} Nat Nat.linearOrder) (sup_isCommutative.{0} Nat (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid)) (sup_isAssociative.{0} Nat (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) l) n)
-but is expected to have type
-  forall (l : Multiset.{0} Nat) (n : Nat), (forall (x : Nat), (Membership.mem.{0, 0} Nat (Multiset.{0} Nat) (Multiset.instMembershipMultiset.{0} Nat) x l) -> (LE.le.{0} Nat instLENat x n)) -> (LE.le.{0} Nat instLENat (Multiset.fold.{0} Nat (Max.max.{0} Nat (LinearOrder.toMax.{0} Nat Nat.linearOrder)) (instIsCommutativeMaxToMax.{0} Nat Nat.linearOrder) (instIsAssociativeMaxToMax.{0} Nat Nat.linearOrder) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) l) n)
-Case conversion may be inaccurate. Consider using '#align multiset.max_nat_le_of_forall_le Multiset.max_nat_le_of_forall_leₓ'. -/
 theorem max_nat_le_of_forall_le (l : Multiset ℕ) (n : ℕ) (h : ∀ x ∈ l, x ≤ n) : l.fold max 0 ≤ n :=
   max_le_of_forall_le l n h
 #align multiset.max_nat_le_of_forall_le Multiset.max_nat_le_of_forall_le
@@ -191,12 +179,6 @@ end Order
 
 open Nat
 
-/- warning: multiset.le_smul_dedup -> Multiset.le_smul_dedup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α), Exists.{1} Nat (fun (n : Nat) => LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (SMul.smul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) n (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α), Exists.{1} Nat (fun (n : Nat) => LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (HSMul.hSMul.{0, u1, u1} Nat (Multiset.{u1} α) (Multiset.{u1} α) (instHSMul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) n (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s)))
-Case conversion may be inaccurate. Consider using '#align multiset.le_smul_dedup Multiset.le_smul_dedupₓ'. -/
 theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • dedup s :=
   ⟨(s.map fun a => count a s).fold max 0,
     le_iff_count.2 fun a => by

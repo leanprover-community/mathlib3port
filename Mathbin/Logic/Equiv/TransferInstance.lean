@@ -122,12 +122,6 @@ protected def SMul (R : Type _) [SMul R β] : SMul R α :=
 #align equiv.has_smul Equiv.SMul
 -/
 
-/- warning: equiv.smul_def -> Equiv.smul_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) {R : Type.{u3}} [_inst_1 : SMul.{u3, u2} R β] (r : R) (x : α), Eq.{succ u1} α (SMul.smul.{u3, u1} R α (Equiv.SMul.{u1, u2, u3} α β e R _inst_1) r x) (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} β α) (fun (_x : Equiv.{succ u2, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u2, succ u1} β α) (Equiv.symm.{succ u1, succ u2} α β e) (SMul.smul.{u3, u2} R β _inst_1 r (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} (e : Equiv.{succ u2, succ u3} α β) {R : Type.{u1}} [_inst_1 : SMul.{u1, u3} R β] (r : R) (x : α), Eq.{succ u2} α (HSMul.hSMul.{u1, u2, u2} R α α (instHSMul.{u1, u2} R α (Equiv.SMul.{u2, u3, u1} α β e R _inst_1)) r x) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (Equiv.{succ u3, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u2} β α) (Equiv.symm.{succ u2, succ u3} α β e) (HSMul.hSMul.{u1, u3, u3} R ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) (instHSMul.{u1, u3} R ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) _inst_1) r (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Equiv.{succ u2, succ u3} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u3} α β) e x)))
-Case conversion may be inaccurate. Consider using '#align equiv.smul_def Equiv.smul_defₓ'. -/
 theorem smul_def {R : Type _} [SMul R β] (r : R) (x : α) :
     @SMul.smul _ _ (e.SMul R) r x = e.symm (r • e x) :=
   rfl
@@ -142,12 +136,6 @@ protected def Pow (N : Type _) [Pow β N] : Pow α N :=
 #align equiv.has_smul Equiv.SMul
 -/
 
-/- warning: equiv.pow_def -> Equiv.pow_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) {N : Type.{u3}} [_inst_1 : Pow.{u2, u3} β N] (n : N) (x : α), Eq.{succ u1} α (HPow.hPow.{u1, u3, u1} α N α (instHPow.{u1, u3} α N (Equiv.Pow.{u1, u2, u3} α β e N _inst_1)) x n) (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} β α) (fun (_x : Equiv.{succ u2, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u2, succ u1} β α) (Equiv.symm.{succ u1, succ u2} α β e) (HPow.hPow.{u2, u3, u2} β N β (instHPow.{u2, u3} β N _inst_1) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e x) n))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} (e : Equiv.{succ u2, succ u3} α β) {N : Type.{u1}} [_inst_1 : Pow.{u3, u1} β N] (n : N) (x : α), Eq.{succ u2} α (HPow.hPow.{u2, u1, u2} α N α (instHPow.{u2, u1} α N (Equiv.Pow.{u2, u3, u1} α β e N _inst_1)) x n) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (Equiv.{succ u3, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u2} β α) (Equiv.symm.{succ u2, succ u3} α β e) (HPow.hPow.{u3, u1, u3} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) N ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) (instHPow.{u3, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) N _inst_1) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Equiv.{succ u2, succ u3} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u3} α β) e x) n))
-Case conversion may be inaccurate. Consider using '#align equiv.pow_def Equiv.pow_defₓ'. -/
 theorem pow_def {N : Type _} [Pow β N] (n : N) (x : α) :
     @Pow.pow _ _ (e.Pow N) x n = e.symm (e x ^ n) :=
   rfl
@@ -170,24 +158,12 @@ def mulEquiv (e : α ≃ β) [Mul β] :
 #align equiv.add_equiv Equiv.addEquiv
 -/
 
-/- warning: equiv.mul_equiv_apply -> Equiv.mulEquiv_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) [_inst_1 : Mul.{u2} β] (a : α), Eq.{succ u2} β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (let _inst : Mul.{u1} α := Equiv.Mul.{u1, u2} α β e _inst_1; MulEquiv.{u1, u2} α β _inst _inst_1) (fun (_x : MulEquiv.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1) => α -> β) (MulEquiv.hasCoeToFun.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1) (Equiv.mulEquiv.{u1, u2} α β e _inst_1) a) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) [_inst_1 : Mul.{u2} β] (a : α), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MulEquiv.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (MulEquiv.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1) α β (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (MulEquiv.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1) α β (MulEquivClass.toEquivLike.{max u1 u2, u1, u2} (MulEquiv.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1) α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1 (MulEquiv.instMulEquivClassMulEquiv.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1)))) (Equiv.mulEquiv.{u1, u2} α β e _inst_1) a) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Equiv.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u2} α β) e a)
-Case conversion may be inaccurate. Consider using '#align equiv.mul_equiv_apply Equiv.mulEquiv_applyₓ'. -/
 @[simp, to_additive]
 theorem mulEquiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a :=
   rfl
 #align equiv.mul_equiv_apply Equiv.mulEquiv_apply
 #align equiv.add_equiv_apply Equiv.addEquiv_apply
 
-/- warning: equiv.mul_equiv_symm_apply -> Equiv.mulEquiv_symm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) [_inst_1 : Mul.{u2} β] (b : β), let _inst : Mul.{u1} α := Equiv.Mul.{u1, u2} α β e _inst_1; Eq.{succ u1} α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) (fun (_x : MulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) => β -> α) (MulEquiv.hasCoeToFun.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) (MulEquiv.symm.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1 (Equiv.mulEquiv.{u1, u2} α β e _inst_1)) b) (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} β α) (fun (_x : Equiv.{succ u2, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u2, succ u1} β α) (Equiv.symm.{succ u1, succ u2} α β e) b)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) [_inst_1 : Mul.{u2} β] (b : β), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => α) b) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) β (fun (a : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => α) a) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) β α (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) β α (MulEquivClass.toEquivLike.{max u2 u1, u2, u1} (MulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1)) β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1) (MulEquiv.instMulEquivClassMulEquiv.{u2, u1} β α _inst_1 (Equiv.Mul.{u1, u2} α β e _inst_1))))) (MulEquiv.symm.{u1, u2} α β (Equiv.Mul.{u1, u2} α β e _inst_1) _inst_1 (Equiv.mulEquiv.{u1, u2} α β e _inst_1)) b) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} β α) β (fun (a : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) a) (Equiv.instFunLikeEquiv.{succ u2, succ u1} β α) (Equiv.symm.{succ u1, succ u2} α β e) b)
-Case conversion may be inaccurate. Consider using '#align equiv.mul_equiv_symm_apply Equiv.mulEquiv_symm_applyₓ'. -/
 @[to_additive]
 theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     letI := Equiv.Mul e
@@ -196,12 +172,6 @@ theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
 #align equiv.mul_equiv_symm_apply Equiv.mulEquiv_symm_apply
 #align equiv.add_equiv_symm_apply Equiv.addEquiv_symm_apply
 
-/- warning: equiv.ring_equiv -> Equiv.ringEquiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) [_inst_1 : Add.{u2} β] [_inst_2 : Mul.{u2} β], let _inst : Add.{u1} α := Equiv.Add.{u1, u2} α β e _inst_1; let _inst_3 : Mul.{u1} α := Equiv.Mul.{u1, u2} α β e _inst_2; RingEquiv.{u1, u2} α β _inst_3 _inst _inst_2 _inst_1
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) [_inst_1 : Add.{u2} β] [_inst_2 : Mul.{u2} β], let _inst : Add.{u1} α := Equiv.Add.{u1, u2} α β e _inst_1; let _inst_3 : Mul.{u1} α := Equiv.Mul.{u1, u2} α β e _inst_2; RingEquiv.{u1, u2} α β _inst_3 _inst_2 _inst _inst_1
-Case conversion may be inaccurate. Consider using '#align equiv.ring_equiv Equiv.ringEquivₓ'. -/
 /-- An equivalence `e : α ≃ β` gives a ring equivalence `α ≃+* β`
 where the ring structure on `α` is
 the one obtained by transporting a ring structure on `β` back along `e`.
@@ -543,24 +513,12 @@ protected theorem nontrivial [Nontrivial β] : Nontrivial α :=
 #align equiv.nontrivial Equiv.nontrivial
 -/
 
-/- warning: equiv.is_domain -> Equiv.isDomain is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] [_inst_3 : IsDomain.{u2} β (Ring.toSemiring.{u2} β _inst_2)], (RingEquiv.{u1, u2} α β (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (Distrib.toHasMul.{u2} β (Ring.toDistrib.{u2} β _inst_2)) (Distrib.toHasAdd.{u2} β (Ring.toDistrib.{u2} β _inst_2))) -> (IsDomain.{u1} α (Ring.toSemiring.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] [_inst_3 : IsDomain.{u2} β (Ring.toSemiring.{u2} β _inst_2)], (RingEquiv.{u1, u2} α β (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (NonUnitalNonAssocRing.toMul.{u2} β (NonAssocRing.toNonUnitalNonAssocRing.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) (Distrib.toAdd.{u2} β (NonUnitalNonAssocSemiring.toDistrib.{u2} β (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} β (NonAssocRing.toNonUnitalNonAssocRing.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)))))) -> (IsDomain.{u1} α (Ring.toSemiring.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align equiv.is_domain Equiv.isDomainₓ'. -/
 /-- Transfer `is_domain` across an `equiv` -/
 @[reducible]
 protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
   Function.Injective.isDomain e.toRingHom e.Injective
 #align equiv.is_domain Equiv.isDomain
 
-/- warning: equiv.has_rat_cast -> Equiv.RatCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Equiv.{succ u1, succ u2} α β) -> (forall [_inst_1 : HasRatCast.{u2} β], HasRatCast.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Equiv.{succ u1, succ u2} α β) -> (forall [_inst_1 : RatCast.{u2} β], RatCast.{u1} α)
-Case conversion may be inaccurate. Consider using '#align equiv.has_rat_cast Equiv.RatCastₓ'. -/
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
 protected def RatCast [HasRatCast β] : HasRatCast α where ratCast n := e.symm n

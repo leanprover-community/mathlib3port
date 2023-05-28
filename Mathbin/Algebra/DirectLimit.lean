@@ -50,12 +50,6 @@ variable [dec_ι : DecidableEq ι] [Preorder ι]
 
 variable (G : ι → Type w)
 
-/- warning: directed_system -> DirectedSystem is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}), (forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)) -> Prop
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}), (forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)) -> Prop
-Case conversion may be inaccurate. Consider using '#align directed_system DirectedSystemₓ'. -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
 /-- A directed system is a functor from a category (directed poset) to another category. -/
@@ -70,18 +64,12 @@ variable [∀ i, AddCommGroup (G i)] [∀ i, Module R (G i)]
 
 variable {G} (f : ∀ i j, i ≤ j → G i →ₗ[R] G j)
 
-/- warning: module.directed_system.map_self -> Module.DirectedSystem.map_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.directed_system.map_self Module.DirectedSystem.map_selfₓ'. -/
 /-- A copy of `directed_system.map_self` specialized to linear maps, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
 theorem DirectedSystem.map_self [DirectedSystem G fun i j h => f i j h] (i x h) : f i i h x = x :=
   DirectedSystem.map_self (fun i j h => f i j h) i x h
 #align module.directed_system.map_self Module.DirectedSystem.map_self
 
-/- warning: module.directed_system.map_map -> Module.DirectedSystem.map_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.directed_system.map_map Module.DirectedSystem.map_mapₓ'. -/
 /-- A copy of `directed_system.map_map` specialized to linear maps, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
 theorem DirectedSystem.map_map [DirectedSystem G fun i j h => f i j h] {i j k} (hij hjk x) :
@@ -93,12 +81,6 @@ variable (G)
 
 include dec_ι
 
-/- warning: module.direct_limit -> Module.DirectLimit is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [dec_ι : DecidableEq.{succ u2} ι] [_inst_2 : Preorder.{u2} ι] (G : ι -> Type.{u3}) [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))], (forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toHasLe.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))) -> Type.{max u2 u3}
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [dec_ι : DecidableEq.{succ u2} ι] [_inst_2 : Preorder.{u2} ι] (G : ι -> Type.{u3}) [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))], (forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toLE.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))) -> Type.{max u2 u3}
-Case conversion may be inaccurate. Consider using '#align module.direct_limit Module.DirectLimitₓ'. -/
 /-- The direct limit of a directed system is the modules glued together along the maps. -/
 def DirectLimit : Type max v w :=
   DirectSum ι G ⧸
@@ -121,9 +103,6 @@ instance : Inhabited (DirectLimit G f) :=
 
 variable (R ι)
 
-/- warning: module.direct_limit.of -> Module.DirectLimit.of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.of Module.DirectLimit.ofₓ'. -/
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →ₗ[R] DirectLimit G f :=
   (mkQ _).comp <| DirectSum.lof R ι G i
@@ -131,17 +110,11 @@ def of (i) : G i →ₗ[R] DirectLimit G f :=
 
 variable {R ι G f}
 
-/- warning: module.direct_limit.of_f -> Module.DirectLimit.of_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.of_f Module.DirectLimit.of_fₓ'. -/
 @[simp]
 theorem of_f {i j hij x} : of R ι G f j (f i j hij x) = of R ι G f i x :=
   Eq.symm <| (Submodule.Quotient.eq _).2 <| subset_span ⟨i, j, hij, x, rfl⟩
 #align module.direct_limit.of_f Module.DirectLimit.of_f
 
-/- warning: module.direct_limit.exists_of -> Module.DirectLimit.exists_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.exists_of Module.DirectLimit.exists_ofₓ'. -/
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
 theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) :
@@ -154,9 +127,6 @@ theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f
         ⟨k, f i k hik x + f j k hjk y, by rw [LinearMap.map_add, of_f, of_f, ihx, ihy] <;> rfl⟩
 #align module.direct_limit.exists_of Module.DirectLimit.exists_of
 
-/- warning: module.direct_limit.induction_on -> Module.DirectLimit.induction_on is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.induction_on Module.DirectLimit.induction_onₓ'. -/
 @[elab_as_elim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop}
     (z : DirectLimit G f) (ih : ∀ i x, C (of R ι G f i x)) : C z :=
@@ -172,9 +142,6 @@ include Hg
 
 variable (R ι G f)
 
-/- warning: module.direct_limit.lift -> Module.DirectLimit.lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.lift Module.DirectLimit.liftₓ'. -/
 /-- The universal property of the direct limit: maps from the components to another module
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
@@ -189,16 +156,10 @@ variable {R ι G f}
 
 omit Hg
 
-/- warning: module.direct_limit.lift_of -> Module.DirectLimit.lift_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.lift_of Module.DirectLimit.lift_ofₓ'. -/
 theorem lift_of {i} (x) : lift R ι G f g Hg (of R ι G f i x) = g i x :=
   DirectSum.toModule_lof R _ _
 #align module.direct_limit.lift_of Module.DirectLimit.lift_of
 
-/- warning: module.direct_limit.lift_unique -> Module.DirectLimit.lift_unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.lift_unique Module.DirectLimit.lift_uniqueₓ'. -/
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) (x) :
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i)
@@ -214,12 +175,6 @@ variable (G f)
 
 omit dec_ι
 
-/- warning: module.direct_limit.totalize -> Module.DirectLimit.totalize is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [_inst_2 : Preorder.{u2} ι] (G : ι -> Type.{u3}) [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))], (forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toHasLe.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))) -> (forall (i : ι) (j : ι), LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [_inst_2 : Preorder.{u2} ι] (G : ι -> Type.{u3}) [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))], (forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toLE.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))) -> (forall (i : ι) (j : ι), LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.totalize Module.DirectLimit.totalizeₓ'. -/
 /-- `totalize G f i j` is a linear map from `G i` to `G j`, for *every* `i` and `j`.
 If `i ≤ j`, then it is the map `f i j` that comes with the directed system `G`,
 and otherwise it is the zero map. -/
@@ -229,22 +184,10 @@ noncomputable def totalize (i j) : G i →ₗ[R] G j :=
 
 variable {G f}
 
-/- warning: module.direct_limit.totalize_of_le -> Module.DirectLimit.totalize_of_le is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [_inst_2 : Preorder.{u2} ι] {G : ι -> Type.{u3}} [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))] {f : forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toHasLe.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))} {i : ι} {j : ι} (h : LE.le.{u2} ι (Preorder.toHasLe.{u2} ι _inst_2) i j), Eq.{succ u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) (Module.DirectLimit.totalize.{u1, u2, u3} R _inst_1 ι _inst_2 G (fun (i : ι) => _inst_3 i) (fun (i : ι) => _inst_4 i) f i j) (f i j h)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [_inst_2 : Preorder.{u2} ι] {G : ι -> Type.{u3}} [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))] {f : forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toLE.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))} {i : ι} {j : ι} (h : LE.le.{u2} ι (Preorder.toLE.{u2} ι _inst_2) i j), Eq.{succ u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) (Module.DirectLimit.totalize.{u1, u2, u3} R _inst_1 ι _inst_2 G (fun (i : ι) => _inst_3 i) (fun (i : ι) => _inst_4 i) f i j) (f i j h)
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.totalize_of_le Module.DirectLimit.totalize_of_leₓ'. -/
 theorem totalize_of_le {i j} (h : i ≤ j) : totalize G f i j = f i j h :=
   dif_pos h
 #align module.direct_limit.totalize_of_le Module.DirectLimit.totalize_of_le
 
-/- warning: module.direct_limit.totalize_of_not_le -> Module.DirectLimit.totalize_of_not_le is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [_inst_2 : Preorder.{u2} ι] {G : ι -> Type.{u3}} [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))] {f : forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toHasLe.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))} {i : ι} {j : ι}, (Not (LE.le.{u2} ι (Preorder.toHasLe.{u2} ι _inst_2) i j)) -> (Eq.{succ u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) (Module.DirectLimit.totalize.{u1, u2, u3} R _inst_1 ι _inst_2 G (fun (i : ι) => _inst_3 i) (fun (i : ι) => _inst_4 i) f i j) (OfNat.ofNat.{u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) 0 (OfNat.mk.{u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) 0 (Zero.zero.{u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) (LinearMap.hasZero.{u1, u1, u3, u3} R R (G i) (G j) (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [_inst_2 : Preorder.{u2} ι] {G : ι -> Type.{u3}} [_inst_3 : forall (i : ι), AddCommGroup.{u3} (G i)] [_inst_4 : forall (i : ι), Module.{u1, u3} R (G i) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i))] {f : forall (i : ι) (j : ι), (LE.le.{u2} ι (Preorder.toLE.{u2} ι _inst_2) i j) -> (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j))} {i : ι} {j : ι}, (Not (LE.le.{u2} ι (Preorder.toLE.{u2} ι _inst_2) i j)) -> (Eq.{succ u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) (Module.DirectLimit.totalize.{u1, u2, u3} R _inst_1 ι _inst_2 G (fun (i : ι) => _inst_3 i) (fun (i : ι) => _inst_4 i) f i j) (OfNat.ofNat.{u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) 0 (Zero.toOfNat0.{u3} (LinearMap.{u1, u1, u3, u3} R R (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j)) (LinearMap.instZeroLinearMap.{u1, u1, u3, u3} R R (G i) (G j) (Ring.toSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u3} (G j) (_inst_3 j)) (_inst_4 i) (_inst_4 j) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.totalize_of_not_le Module.DirectLimit.totalize_of_not_leₓ'. -/
 theorem totalize_of_not_le {i j} (h : ¬i ≤ j) : totalize G f i j = 0 :=
   dif_neg h
 #align module.direct_limit.totalize_of_not_le Module.DirectLimit.totalize_of_not_le
@@ -255,9 +198,6 @@ variable [DirectedSystem G fun i j h => f i j h]
 
 open Classical
 
-/- warning: module.direct_limit.to_module_totalize_of_le -> Module.DirectLimit.toModule_totalize_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.to_module_totalize_of_le Module.DirectLimit.toModule_totalize_of_leₓ'. -/
 theorem toModule_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     (hx : ∀ k ∈ x.support, k ≤ i) :
     DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
@@ -271,9 +211,6 @@ theorem toModule_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     totalize_of_le (hx k hk), totalize_of_le (le_trans (hx k hk) hij), DirectedSystem.map_map]
 #align module.direct_limit.to_module_totalize_of_le Module.DirectLimit.toModule_totalize_of_le
 
-/- warning: module.direct_limit.of.zero_exact_aux -> Module.DirectLimit.of.zero_exact_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.of.zero_exact_aux Module.DirectLimit.of.zero_exact_auxₓ'. -/
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectSum ι G}
     (H : Submodule.Quotient.mk x = (0 : DirectLimit G f)) :
     ∃ j,
@@ -307,9 +244,6 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
       ⟨i, fun k hk => hi k (DirectSum.support_smul _ _ hk), by simp [LinearMap.map_smul, hxi]⟩
 #align module.direct_limit.of.zero_exact_aux Module.DirectLimit.of.zero_exact_aux
 
-/- warning: module.direct_limit.of.zero_exact -> Module.DirectLimit.of.zero_exact is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.direct_limit.of.zero_exact Module.DirectLimit.of.zero_exactₓ'. -/
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0) :
@@ -332,12 +266,6 @@ variable [∀ i, AddCommGroup (G i)]
 
 include dec_ι
 
-/- warning: add_comm_group.direct_limit -> AddCommGroup.DirectLimit is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [dec_ι : DecidableEq.{succ u1} ι] [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), AddCommGroup.{u2} (G i)], (forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j))))))) -> Type.{max u1 u2}
-but is expected to have type
-  forall {ι : Type.{u1}} [dec_ι : DecidableEq.{succ u1} ι] [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), AddCommGroup.{u2} (G i)], (forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j))))))) -> Type.{max u2 u1}
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit AddCommGroup.DirectLimitₓ'. -/
 /-- The direct limit of a directed system is the abelian groups glued together along the maps. -/
 def DirectLimit (f : ∀ i j, i ≤ j → G i →+ G j) : Type _ :=
   @Module.DirectLimit ℤ _ ι _ _ G _ _ fun i j hij => (f i j hij).toIntLinearMap
@@ -349,12 +277,6 @@ variable (f : ∀ i j, i ≤ j → G i →+ G j)
 
 omit dec_ι
 
-/- warning: add_comm_group.direct_limit.directed_system -> AddCommGroup.DirectLimit.directedSystem is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), AddCommGroup.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j))))))) [h : DirectedSystem.{u1, u2} ι _inst_2 G (fun (i : ι) (j : ι) (h : LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) => coeFn.{succ u2, succ u2} (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) (fun (_x : AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) => (G i) -> (G j)) (AddMonoidHom.hasCoeToFun.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) (f i j h))], DirectedSystem.{u1, u2} ι _inst_2 G (fun (i : ι) (j : ι) (hij : LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) => coeFn.{succ u2, succ u2} (LinearMap.{0, 0, u2, u2} Int Int Int.semiring Int.semiring (RingHom.id.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.semiring)) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u2} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u2} (G j) (_inst_3 j)) (AddCommGroup.intModule.{u2} (G i) (_inst_3 i)) (AddCommGroup.intModule.{u2} (G j) (_inst_3 j))) (fun (_x : LinearMap.{0, 0, u2, u2} Int Int Int.semiring Int.semiring (RingHom.id.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.semiring)) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u2} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u2} (G j) (_inst_3 j)) (AddCommGroup.intModule.{u2} (G i) (_inst_3 i)) (AddCommGroup.intModule.{u2} (G j) (_inst_3 j))) => (G i) -> (G j)) (LinearMap.hasCoeToFun.{0, 0, u2, u2} Int Int (G i) (G j) Int.semiring Int.semiring (AddCommGroup.toAddCommMonoid.{u2} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u2} (G j) (_inst_3 j)) (AddCommGroup.intModule.{u2} (G i) (_inst_3 i)) (AddCommGroup.intModule.{u2} (G j) (_inst_3 j)) (RingHom.id.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.semiring))) (AddMonoidHom.toIntLinearMap.{u2, u2} (G i) (G j) (_inst_3 i) (_inst_3 j) (f i j hij)))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), AddCommGroup.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j))))))) [h : DirectedSystem.{u1, u2} ι _inst_2 G (fun (i : ι) (j : ι) (h : LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) => FunLike.coe.{succ u2, succ u2, succ u2} (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) (G i) (fun (_x : G i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : G i) => G j) _x) (AddHomClass.toFunLike.{u2, u2, u2} (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) (G i) (G j) (AddZeroClass.toAdd.{u2} (G i) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i)))))) (AddZeroClass.toAdd.{u2} (G j) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) (AddMonoidHomClass.toAddHomClass.{u2, u2, u2} (AddMonoidHom.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))) (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j))))) (AddMonoidHom.addMonoidHomClass.{u2, u2} (G i) (G j) (AddMonoid.toAddZeroClass.{u2} (G i) (SubNegMonoid.toAddMonoid.{u2} (G i) (AddGroup.toSubNegMonoid.{u2} (G i) (AddCommGroup.toAddGroup.{u2} (G i) (_inst_3 i))))) (AddMonoid.toAddZeroClass.{u2} (G j) (SubNegMonoid.toAddMonoid.{u2} (G j) (AddGroup.toSubNegMonoid.{u2} (G j) (AddCommGroup.toAddGroup.{u2} (G j) (_inst_3 j)))))))) (f i j h))], DirectedSystem.{u1, u2} ι _inst_2 G (fun (i : ι) (j : ι) (hij : LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) => FunLike.coe.{succ u2, succ u2, succ u2} (LinearMap.{0, 0, u2, u2} Int Int Int.instSemiringInt Int.instSemiringInt (RingHom.id.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt)) (G i) (G j) (AddCommGroup.toAddCommMonoid.{u2} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u2} (G j) (_inst_3 j)) (AddCommGroup.intModule.{u2} (G i) (_inst_3 i)) (AddCommGroup.intModule.{u2} (G j) (_inst_3 j))) (G i) (fun (_x : G i) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : G i) => G j) _x) (LinearMap.instFunLikeLinearMap.{0, 0, u2, u2} Int Int (G i) (G j) Int.instSemiringInt Int.instSemiringInt (AddCommGroup.toAddCommMonoid.{u2} (G i) (_inst_3 i)) (AddCommGroup.toAddCommMonoid.{u2} (G j) (_inst_3 j)) (AddCommGroup.intModule.{u2} (G i) (_inst_3 i)) (AddCommGroup.intModule.{u2} (G j) (_inst_3 j)) (RingHom.id.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt))) (AddMonoidHom.toIntLinearMap.{u2, u2} (G i) (G j) (_inst_3 i) (_inst_3 j) (f i j hij)))
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.directed_system AddCommGroup.DirectLimit.directedSystemₓ'. -/
 protected theorem directedSystem [h : DirectedSystem G fun i j h => f i j h] :
     DirectedSystem G fun i j hij => (f i j hij).toIntLinearMap :=
   h
@@ -370,9 +292,6 @@ instance : AddCommGroup (DirectLimit G f) :=
 instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
-/- warning: add_comm_group.direct_limit.of -> AddCommGroup.DirectLimit.of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.of AddCommGroup.DirectLimit.ofₓ'. -/
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →ₗ[ℤ] DirectLimit G f :=
   Module.DirectLimit.of ℤ ι G (fun i j hij => (f i j hij).toIntLinearMap) i
@@ -380,26 +299,17 @@ def of (i) : G i →ₗ[ℤ] DirectLimit G f :=
 
 variable {G f}
 
-/- warning: add_comm_group.direct_limit.of_f -> AddCommGroup.DirectLimit.of_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.of_f AddCommGroup.DirectLimit.of_fₓ'. -/
 @[simp]
 theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
   Module.DirectLimit.of_f
 #align add_comm_group.direct_limit.of_f AddCommGroup.DirectLimit.of_f
 
-/- warning: add_comm_group.direct_limit.induction_on -> AddCommGroup.DirectLimit.induction_on is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.induction_on AddCommGroup.DirectLimit.induction_onₓ'. -/
 @[elab_as_elim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop}
     (z : DirectLimit G f) (ih : ∀ i x, C (of G f i x)) : C z :=
   Module.DirectLimit.induction_on z ih
 #align add_comm_group.direct_limit.induction_on AddCommGroup.DirectLimit.induction_on
 
-/- warning: add_comm_group.direct_limit.of.zero_exact -> AddCommGroup.DirectLimit.of.zero_exact is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.of.zero_exact AddCommGroup.DirectLimit.of.zero_exactₓ'. -/
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f i j h] (i x)
@@ -415,9 +325,6 @@ variable (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 
 variable (G f)
 
-/- warning: add_comm_group.direct_limit.lift -> AddCommGroup.DirectLimit.lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.lift AddCommGroup.DirectLimit.liftₓ'. -/
 /-- The universal property of the direct limit: maps from the components to another abelian group
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
@@ -428,17 +335,11 @@ def lift : DirectLimit G f →ₗ[ℤ] P :=
 
 variable {G f}
 
-/- warning: add_comm_group.direct_limit.lift_of -> AddCommGroup.DirectLimit.lift_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.lift_of AddCommGroup.DirectLimit.lift_ofₓ'. -/
 @[simp]
 theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
   Module.DirectLimit.lift_of _ _ _
 #align add_comm_group.direct_limit.lift_of AddCommGroup.DirectLimit.lift_of
 
-/- warning: add_comm_group.direct_limit.lift_unique -> AddCommGroup.DirectLimit.lift_unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_comm_group.direct_limit.lift_unique AddCommGroup.DirectLimit.lift_uniqueₓ'. -/
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) (x) :
     F x = lift G f P (fun i => F.comp (of G f i).toAddMonoidHom) (fun i j hij x => by simp) x :=
   DirectLimit.induction_on x fun i x => by simp
@@ -458,12 +359,6 @@ variable (f : ∀ i j, i ≤ j → G i → G j)
 
 open FreeCommRing
 
-/- warning: ring.direct_limit -> Ring.DirectLimit is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), CommRing.{u2} (G i)], (forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)) -> Type.{max u1 u2}
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), CommRing.{u2} (G i)], (forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)) -> Type.{max u1 u2}
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit Ring.DirectLimitₓ'. -/
 /-- The direct limit of a directed system is the rings glued together along the maps. -/
 def DirectLimit : Type max v w :=
   FreeCommRing (Σi, G i) ⧸
@@ -486,12 +381,6 @@ instance : Ring (DirectLimit G f) :=
 instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
-/- warning: ring.direct_limit.of -> Ring.DirectLimit.of is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), CommRing.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)) (i : ι), RingHom.{u2, max u1 u2} (G i) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (NonAssocRing.toNonAssocSemiring.{u2} (G i) (Ring.toNonAssocRing.{u2} (G i) (CommRing.toRing.{u2} (G i) (_inst_3 i)))) (NonAssocRing.toNonAssocSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f)))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : forall (i : ι), CommRing.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)) (i : ι), RingHom.{u2, max u2 u1} (G i) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (Semiring.toNonAssocSemiring.{u2} (G i) (CommSemiring.toSemiring.{u2} (G i) (CommRing.toCommSemiring.{u2} (G i) (_inst_3 i)))) (Semiring.toNonAssocSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (CommSemiring.toSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (CommRing.toCommSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f) (Ring.DirectLimit.commRing.{u1, u2} ι _inst_2 G (fun (i : ι) => _inst_3 i) f))))
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.of Ring.DirectLimit.ofₓ'. -/
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →+* DirectLimit G f :=
   RingHom.mk'
@@ -504,17 +393,11 @@ def of (i) : G i →+* DirectLimit G f :=
 
 variable {G f}
 
-/- warning: ring.direct_limit.of_f -> Ring.DirectLimit.of_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.of_f Ring.DirectLimit.of_fₓ'. -/
 @[simp]
 theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
   Ideal.Quotient.eq.2 <| subset_span <| Or.inl ⟨i, j, hij, x, rfl⟩
 #align ring.direct_limit.of_f Ring.DirectLimit.of_f
 
-/- warning: ring.direct_limit.exists_of -> Ring.DirectLimit.exists_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.exists_of Ring.DirectLimit.exists_ofₓ'. -/
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
 theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) :
@@ -542,9 +425,6 @@ open Polynomial
 
 variable {f' : ∀ i j, i ≤ j → G i →+* G j}
 
-/- warning: ring.direct_limit.polynomial.exists_of -> Ring.DirectLimit.Polynomial.exists_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.polynomial.exists_of Ring.DirectLimit.Polynomial.exists_ofₓ'. -/
 theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
     (q : Polynomial (DirectLimit G fun i j h => f' i j h)) :
     ∃ i p, Polynomial.map (of G (fun i j h => f' i j h) i) p = q :=
@@ -565,9 +445,6 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
 
 end
 
-/- warning: ring.direct_limit.induction_on -> Ring.DirectLimit.induction_on is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.induction_on Ring.DirectLimit.induction_onₓ'. -/
 @[elab_as_elim]
 theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop}
     (z : DirectLimit G f) (ih : ∀ i x, C (of G f i x)) : C z :=
@@ -585,9 +462,6 @@ variable [DirectedSystem G fun i j h => f' i j h]
 
 variable (G f)
 
-/- warning: ring.direct_limit.of.zero_exact_aux2 -> Ring.DirectLimit.of.zero_exact_aux2 is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.of.zero_exact_aux2 Ring.DirectLimit.of.zero_exact_aux2ₓ'. -/
 theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupported x s) {j k}
     (hj : ∀ z : Σi, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σi, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k)
     (hst : s ⊆ t) :
@@ -618,9 +492,6 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
 
 variable {G f f'}
 
-/- warning: ring.direct_limit.of.zero_exact_aux -> Ring.DirectLimit.of.zero_exact_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.of.zero_exact_aux Ring.DirectLimit.of.zero_exact_auxₓ'. -/
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCommRing (Σi, G i)}
     (H : Ideal.Quotient.mk _ x = (0 : DirectLimit G fun i j h => f' i j h)) :
     ∃ j s,
@@ -706,9 +577,6 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       (f' j k hjk).map_zero, MulZeroClass.mul_zero]
 #align ring.direct_limit.of.zero_exact_aux Ring.DirectLimit.of.zero_exact_aux
 
-/- warning: ring.direct_limit.of.zero_exact -> Ring.DirectLimit.of.zero_exact is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.of.zero_exact Ring.DirectLimit.of.zero_exactₓ'. -/
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (hix : of G (fun i j h => f' i j h) i x = 0) :
@@ -723,9 +591,6 @@ end OfZeroExact
 
 variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 
-/- warning: ring.direct_limit.of_injective -> Ring.DirectLimit.of_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.of_injective Ring.DirectLimit.of_injectiveₓ'. -/
 /-- If the maps in the directed system are injective, then the canonical maps
 from the components to the direct limits are injective. -/
 theorem of_injective [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f' i j h]
@@ -752,9 +617,6 @@ open FreeCommRing
 
 variable (G f)
 
-/- warning: ring.direct_limit.lift -> Ring.DirectLimit.lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.lift Ring.DirectLimit.liftₓ'. -/
 /-- The universal property of the direct limit: maps from the components to another ring
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit.
@@ -775,17 +637,11 @@ variable {G f}
 
 omit Hg
 
-/- warning: ring.direct_limit.lift_of -> Ring.DirectLimit.lift_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.lift_of Ring.DirectLimit.lift_ofₓ'. -/
 @[simp]
 theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
   FreeCommRing.lift_of _ _
 #align ring.direct_limit.lift_of Ring.DirectLimit.lift_of
 
-/- warning: ring.direct_limit.lift_unique -> Ring.DirectLimit.lift_unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring.direct_limit.lift_unique Ring.DirectLimit.lift_uniqueₓ'. -/
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) (x) :
     F x = lift G f P (fun i => F.comp <| of G f i) (fun i j hij x => by simp) x :=
   DirectLimit.induction_on x fun i x => by simp
@@ -807,9 +663,6 @@ variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 
 namespace DirectLimit
 
-/- warning: field.direct_limit.nontrivial -> Field.DirectLimit.nontrivial is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align field.direct_limit.nontrivial Field.DirectLimit.nontrivialₓ'. -/
 instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
     Nontrivial (Ring.DirectLimit G fun i j h => f' i j h) :=
   ⟨⟨0, 1,
@@ -822,12 +675,6 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
         exact one_ne_zero hf⟩⟩
 #align field.direct_limit.nontrivial Field.DirectLimit.nontrivial
 
-/- warning: field.direct_limit.exists_inv -> Field.DirectLimit.exists_inv is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2))] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)) {p : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f}, (Ne.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) p (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (OfNat.mk.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (Zero.zero.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (MulZeroClass.toHasZero.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocSemiring.toMulZeroClass.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonAssocRing.toNonUnitalNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))))) -> (Exists.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (fun (y : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) => Eq.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (instHMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Distrib.toHasMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toDistrib.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))) p y) (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (OfNat.mk.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (One.one.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddMonoidWithOne.toOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddGroupWithOne.toAddMonoidWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddCommGroupWithOne.toAddGroupWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toAddCommGroupWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f))))))))))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (fun (x._@.Mathlib.Algebra.DirectLimit._hyg.12791 : ι) (x._@.Mathlib.Algebra.DirectLimit._hyg.12793 : ι) => LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) x._@.Mathlib.Algebra.DirectLimit._hyg.12791 x._@.Mathlib.Algebra.DirectLimit._hyg.12793)] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)) {p : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f}, (Ne.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) p (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (Zero.toOfNat0.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.zero.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))) -> (Exists.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (fun (y : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) => Eq.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (instHMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocRing.toMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonAssocRing.toNonUnitalNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f))))) p y) (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (One.toOfNat1.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Semiring.toOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (CommSemiring.toSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (CommRing.toCommSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.commRing.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f))))))))
-Case conversion may be inaccurate. Consider using '#align field.direct_limit.exists_inv Field.DirectLimit.exists_invₓ'. -/
 theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
   Ring.DirectLimit.induction_on p fun i x H =>
     ⟨Ring.DirectLimit.of G f i x⁻¹, by
@@ -840,40 +687,19 @@ section
 
 open Classical
 
-/- warning: field.direct_limit.inv -> Field.DirectLimit.inv is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2))] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)), (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) -> (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (fun (x._@.Mathlib.Algebra.DirectLimit._hyg.13011 : ι) (x._@.Mathlib.Algebra.DirectLimit._hyg.13013 : ι) => LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) x._@.Mathlib.Algebra.DirectLimit._hyg.13011 x._@.Mathlib.Algebra.DirectLimit._hyg.13013)] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)), (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) -> (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)
-Case conversion may be inaccurate. Consider using '#align field.direct_limit.inv Field.DirectLimit.invₓ'. -/
 /-- Noncomputable multiplicative inverse in a direct limit of fields. -/
 noncomputable def inv (p : Ring.DirectLimit G f) : Ring.DirectLimit G f :=
   if H : p = 0 then 0 else Classical.choose (DirectLimit.exists_inv G f H)
 #align field.direct_limit.inv Field.DirectLimit.inv
 
-/- warning: field.direct_limit.mul_inv_cancel -> Field.DirectLimit.mul_inv_cancel is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2))] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)) {p : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f}, (Ne.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) p (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (OfNat.mk.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (Zero.zero.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (MulZeroClass.toHasZero.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocSemiring.toMulZeroClass.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonAssocRing.toNonUnitalNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))))) -> (Eq.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (instHMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Distrib.toHasMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toDistrib.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))) p (Field.DirectLimit.inv.{u1, u2} ι _inst_2 G _inst_3 _inst_4 (fun (i : ι) => _inst_5 i) f p)) (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (OfNat.mk.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (One.one.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddMonoidWithOne.toOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddGroupWithOne.toAddMonoidWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddCommGroupWithOne.toAddGroupWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toAddCommGroupWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (fun (x._@.Mathlib.Algebra.DirectLimit._hyg.13123 : ι) (x._@.Mathlib.Algebra.DirectLimit._hyg.13125 : ι) => LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) x._@.Mathlib.Algebra.DirectLimit._hyg.13123 x._@.Mathlib.Algebra.DirectLimit._hyg.13125)] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)) {p : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f}, (Ne.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) p (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (Zero.toOfNat0.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.zero.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))) -> (Eq.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (instHMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocRing.toMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonAssocRing.toNonUnitalNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f))))) p (Field.DirectLimit.inv.{u1, u2} ι _inst_2 G _inst_3 _inst_4 (fun (i : ι) => _inst_5 i) f p)) (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (One.toOfNat1.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Semiring.toOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (CommSemiring.toSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (CommRing.toCommSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.commRing.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))
-Case conversion may be inaccurate. Consider using '#align field.direct_limit.mul_inv_cancel Field.DirectLimit.mul_inv_cancelₓ'. -/
 protected theorem mul_inv_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
   rw [inv, dif_neg hp, Classical.choose_spec (direct_limit.exists_inv G f hp)]
 #align field.direct_limit.mul_inv_cancel Field.DirectLimit.mul_inv_cancel
 
-/- warning: field.direct_limit.inv_mul_cancel -> Field.DirectLimit.inv_mul_cancel is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2))] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toHasLe.{u1} ι _inst_2) i j) -> (G i) -> (G j)) {p : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f}, (Ne.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) p (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (OfNat.mk.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (Zero.zero.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (MulZeroClass.toHasZero.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocSemiring.toMulZeroClass.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonAssocRing.toNonUnitalNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))))) -> (Eq.{succ (max u1 u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (instHMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Distrib.toHasMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toDistrib.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))) (Field.DirectLimit.inv.{u1, u2} ι _inst_2 G _inst_3 _inst_4 (fun (i : ι) => _inst_5 i) f p) p) (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (OfNat.mk.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (One.one.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddMonoidWithOne.toOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddGroupWithOne.toAddMonoidWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (AddCommGroupWithOne.toAddGroupWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toAddCommGroupWithOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_2 : Preorder.{u1} ι] (G : ι -> Type.{u2}) [_inst_3 : Nonempty.{succ u1} ι] [_inst_4 : IsDirected.{u1} ι (fun (x._@.Mathlib.Algebra.DirectLimit._hyg.13256 : ι) (x._@.Mathlib.Algebra.DirectLimit._hyg.13258 : ι) => LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) x._@.Mathlib.Algebra.DirectLimit._hyg.13256 x._@.Mathlib.Algebra.DirectLimit._hyg.13258)] [_inst_5 : forall (i : ι), Field.{u2} (G i)] (f : forall (i : ι) (j : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι _inst_2) i j) -> (G i) -> (G j)) {p : Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f}, (Ne.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) p (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 0 (Zero.toOfNat0.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.zero.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))) -> (Eq.{max (succ u1) (succ u2)} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (instHMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonUnitalNonAssocRing.toMul.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (NonAssocRing.toNonUnitalNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.toNonAssocRing.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.ring.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f))))) (Field.DirectLimit.inv.{u1, u2} ι _inst_2 G _inst_3 _inst_4 (fun (i : ι) => _inst_5 i) f p) p) (OfNat.ofNat.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) 1 (One.toOfNat1.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Semiring.toOne.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (CommSemiring.toSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (CommRing.toCommSemiring.{max u1 u2} (Ring.DirectLimit.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f) (Ring.DirectLimit.commRing.{u1, u2} ι _inst_2 G (fun (i : ι) => Field.toCommRing.{u2} (G i) (_inst_5 i)) f)))))))
-Case conversion may be inaccurate. Consider using '#align field.direct_limit.inv_mul_cancel Field.DirectLimit.inv_mul_cancelₓ'. -/
 protected theorem inv_mul_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : inv G f p * p = 1 := by
   rw [_root_.mul_comm, direct_limit.mul_inv_cancel G f hp]
 #align field.direct_limit.inv_mul_cancel Field.DirectLimit.inv_mul_cancel
 
-/- warning: field.direct_limit.field -> Field.DirectLimit.field is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align field.direct_limit.field Field.DirectLimit.fieldₓ'. -/
 /-- Noncomputable field structure on the direct limit of fields.
 See note [reducible non-instances]. -/
 @[reducible]

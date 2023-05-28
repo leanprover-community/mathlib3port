@@ -27,9 +27,6 @@ variable {ι α β : Type _}
 
 namespace Function
 
-/- warning: function.injective.linear_ordered_semifield -> Function.Injective.linearOrderedSemifield is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.linear_ordered_semifield Function.Injective.linearOrderedSemifieldₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_semifield` under an injective map. -/
 @[reducible]
@@ -45,9 +42,6 @@ def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One 
     hf.Semifield f zero one add mul inv div nsmul npow zpow nat_cast with }
 #align function.injective.linear_ordered_semifield Function.Injective.linearOrderedSemifield
 
-/- warning: function.injective.linear_ordered_field -> Function.Injective.linearOrderedField is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.linear_ordered_field Function.Injective.linearOrderedFieldₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_field` under an injective map. -/
 @[reducible]

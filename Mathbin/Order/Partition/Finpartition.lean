@@ -66,12 +66,6 @@ open BigOperators
 
 variable {α : Type _}
 
-/- warning: finpartition -> Finpartition is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], α -> Type.{u1}
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], α -> Type.{u1}
-Case conversion may be inaccurate. Consider using '#align finpartition Finpartitionₓ'. -/
 /-- A finite partition of `a : α` is a pairwise disjoint finite set of elements whose supremum is
 `a`. We forbid `⊥` as a part. -/
 @[ext]
@@ -91,12 +85,6 @@ section Lattice
 
 variable [Lattice α] [OrderBot α]
 
-/- warning: finpartition.of_erase -> Finpartition.ofErase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (parts : Finset.{u1} α), (Finset.SupIndep.{u1, u1} α α _inst_1 _inst_2 parts (id.{succ u1} α)) -> (Eq.{succ u1} α (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 parts (id.{succ u1} α)) a) -> (Finpartition.{u1} α _inst_1 _inst_2 a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (parts : Finset.{u1} α), (Finset.SupIndep.{u1, u1} α α _inst_1 _inst_2 parts (id.{succ u1} α)) -> (Eq.{succ u1} α (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 parts (id.{succ u1} α)) a) -> (Finpartition.{u1} α _inst_1 _inst_2 a)
-Case conversion may be inaccurate. Consider using '#align finpartition.of_erase Finpartition.ofEraseₓ'. -/
 /-- A `finpartition` constructor which does not insist on `⊥` not being a part. -/
 @[simps]
 def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.SupIndep id)
@@ -108,12 +96,6 @@ def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.Sup
   not_bot_mem := not_mem_erase _ _
 #align finpartition.of_erase Finpartition.ofErase
 
-/- warning: finpartition.of_subset -> Finpartition.ofSubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {b : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a) {parts : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) parts (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) -> (Eq.{succ u1} α (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 parts (id.{succ u1} α)) b) -> (Finpartition.{u1} α _inst_1 _inst_2 b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {b : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a) {parts : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) parts (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) -> (Eq.{succ u1} α (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 parts (id.{succ u1} α)) b) -> (Finpartition.{u1} α _inst_1 _inst_2 b)
-Case conversion may be inaccurate. Consider using '#align finpartition.of_subset Finpartition.ofSubsetₓ'. -/
 /-- A `finpartition` constructor from a bigger existing finpartition. -/
 @[simps]
 def ofSubset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts ⊆ P.parts)
@@ -124,12 +106,6 @@ def ofSubset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts
     not_bot_mem := fun h => P.not_bot_mem (subset h) }
 #align finpartition.of_subset Finpartition.ofSubset
 
-/- warning: finpartition.copy -> Finpartition.copy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {b : α}, (Finpartition.{u1} α _inst_1 _inst_2 a) -> (Eq.{succ u1} α a b) -> (Finpartition.{u1} α _inst_1 _inst_2 b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {b : α}, (Finpartition.{u1} α _inst_1 _inst_2 a) -> (Eq.{succ u1} α a b) -> (Finpartition.{u1} α _inst_1 _inst_2 b)
-Case conversion may be inaccurate. Consider using '#align finpartition.copy Finpartition.copyₓ'. -/
 /-- Changes the type of a finpartition to an equal one. -/
 @[simps]
 def copy {a b : α} (P : Finpartition a) (h : a = b) : Finpartition b
@@ -142,12 +118,6 @@ def copy {a b : α} (P : Finpartition a) (h : a = b) : Finpartition b
 
 variable (α)
 
-/- warning: finpartition.empty -> Finpartition.empty is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], Finpartition.{u1} α _inst_1 _inst_2 (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], Finpartition.{u1} α _inst_1 _inst_2 (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))
-Case conversion may be inaccurate. Consider using '#align finpartition.empty Finpartition.emptyₓ'. -/
 /-- The empty finpartition. -/
 @[simps]
 protected def empty : Finpartition (⊥ : α)
@@ -161,12 +131,6 @@ protected def empty : Finpartition (⊥ : α)
 instance : Inhabited (Finpartition (⊥ : α)) :=
   ⟨Finpartition.empty α⟩
 
-/- warning: finpartition.default_eq_empty -> Finpartition.default_eq_empty is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], Eq.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) (Inhabited.default.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) (Finpartition.inhabited.{u1} α _inst_1 _inst_2)) (Finpartition.empty.{u1} α _inst_1 _inst_2)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], Eq.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) (Inhabited.default.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) (Finpartition.instInhabitedFinpartitionBotToBotToLEToPreorderToPartialOrderToSemilatticeInf.{u1} α _inst_1 _inst_2)) (Finpartition.empty.{u1} α _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align finpartition.default_eq_empty Finpartition.default_eq_emptyₓ'. -/
 @[simp]
 theorem default_eq_empty : (default : Finpartition (⊥ : α)) = Finpartition.empty α :=
   rfl
@@ -174,12 +138,6 @@ theorem default_eq_empty : (default : Finpartition (⊥ : α)) = Finpartition.em
 
 variable {α} {a : α}
 
-/- warning: finpartition.indiscrete -> Finpartition.indiscrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α}, (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) -> (Finpartition.{u1} α _inst_1 _inst_2 a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α}, (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) -> (Finpartition.{u1} α _inst_1 _inst_2 a)
-Case conversion may be inaccurate. Consider using '#align finpartition.indiscrete Finpartition.indiscreteₓ'. -/
 /-- The finpartition in one part, aka indiscrete finpartition. -/
 @[simps]
 def indiscrete (ha : a ≠ ⊥) : Finpartition a
@@ -192,43 +150,19 @@ def indiscrete (ha : a ≠ ⊥) : Finpartition a
 
 variable (P : Finpartition a)
 
-/- warning: finpartition.le -> Finpartition.le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a) {b : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) b a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a) {b : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) b a)
-Case conversion may be inaccurate. Consider using '#align finpartition.le Finpartition.leₓ'. -/
 protected theorem le {b : α} (hb : b ∈ P.parts) : b ≤ a :=
   (le_sup hb).trans P.supParts.le
 #align finpartition.le Finpartition.le
 
-/- warning: finpartition.ne_bot -> Finpartition.ne_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a) {b : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) -> (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a) {b : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) -> (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))
-Case conversion may be inaccurate. Consider using '#align finpartition.ne_bot Finpartition.ne_botₓ'. -/
 theorem ne_bot {b : α} (hb : b ∈ P.parts) : b ≠ ⊥ := fun h => P.not_bot_mem <| h.subst hb
 #align finpartition.ne_bot Finpartition.ne_bot
 
-/- warning: finpartition.disjoint -> Finpartition.disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a), Set.PairwiseDisjoint.{u1, u1} α α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) (id.{succ u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a), Set.PairwiseDisjoint.{u1, u1} α α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (Finset.toSet.{u1} α (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) (id.{succ u1} α)
-Case conversion may be inaccurate. Consider using '#align finpartition.disjoint Finpartition.disjointₓ'. -/
 protected theorem disjoint : (P.parts : Set α).PairwiseDisjoint id :=
   P.SupIndep.PairwiseDisjoint
 #align finpartition.disjoint Finpartition.disjoint
 
 variable {P}
 
-/- warning: finpartition.parts_eq_empty_iff -> Finpartition.parts_eq_empty_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {P : Finpartition.{u1} α _inst_1 _inst_2 a}, Iff (Eq.{succ u1} (Finset.{u1} α) (Finpartition.parts.{u1} α _inst_1 _inst_2 a P) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {P : Finpartition.{u1} α _inst_1 _inst_2 a}, Iff (Eq.{succ u1} (Finset.{u1} α) (Finpartition.parts.{u1} α _inst_1 _inst_2 a P) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))
-Case conversion may be inaccurate. Consider using '#align finpartition.parts_eq_empty_iff Finpartition.parts_eq_empty_iffₓ'. -/
 theorem parts_eq_empty_iff : P.parts = ∅ ↔ a = ⊥ :=
   by
   simp_rw [← P.sup_parts]
@@ -238,22 +172,10 @@ theorem parts_eq_empty_iff : P.parts = ∅ ↔ a = ⊥ :=
   · rwa [← le_bot_iff.1 ((le_sup hb).trans h.le)]
 #align finpartition.parts_eq_empty_iff Finpartition.parts_eq_empty_iff
 
-/- warning: finpartition.parts_nonempty_iff -> Finpartition.parts_nonempty_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {P : Finpartition.{u1} α _inst_1 _inst_2 a}, Iff (Finset.Nonempty.{u1} α (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {P : Finpartition.{u1} α _inst_1 _inst_2 a}, Iff (Finset.Nonempty.{u1} α (Finpartition.parts.{u1} α _inst_1 _inst_2 a P)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))
-Case conversion may be inaccurate. Consider using '#align finpartition.parts_nonempty_iff Finpartition.parts_nonempty_iffₓ'. -/
 theorem parts_nonempty_iff : P.parts.Nonempty ↔ a ≠ ⊥ := by
   rw [nonempty_iff_ne_empty, not_iff_not, parts_eq_empty_iff]
 #align finpartition.parts_nonempty_iff Finpartition.parts_nonempty_iff
 
-/- warning: finpartition.parts_nonempty -> Finpartition.parts_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a), (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) -> (Finset.Nonempty.{u1} α (Finpartition.parts.{u1} α _inst_1 _inst_2 a P))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} (P : Finpartition.{u1} α _inst_1 _inst_2 a), (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))) -> (Finset.Nonempty.{u1} α (Finpartition.parts.{u1} α _inst_1 _inst_2 a P))
-Case conversion may be inaccurate. Consider using '#align finpartition.parts_nonempty Finpartition.parts_nonemptyₓ'. -/
 theorem parts_nonempty (P : Finpartition a) (ha : a ≠ ⊥) : P.parts.Nonempty :=
   parts_nonempty_iff.2 ha
 #align finpartition.parts_nonempty Finpartition.parts_nonempty
@@ -263,12 +185,6 @@ instance : Unique (Finpartition (⊥ : α)) :=
     uniq := fun P => by ext a;
       exact iff_of_false (fun h => P.ne_bot h <| le_bot_iff.1 <| P.le h) (not_mem_empty a) }
 
-/- warning: is_atom.unique_finpartition -> IsAtom.uniqueFinpartition is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) _inst_2 a) -> (Unique.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {ha : Finpartition.{u1} α _inst_1 _inst_2 a}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) _inst_2 a) -> (Unique.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 a))
-Case conversion may be inaccurate. Consider using '#align is_atom.unique_finpartition IsAtom.uniqueFinpartitionₓ'. -/
 -- See note [reducible non instances]
 /-- There's a unique partition of an atom. -/
 @[reducible]
@@ -330,12 +246,6 @@ instance [Decidable (a = ⊥)] : OrderTop (Finpartition a)
       simpa [h, P.ne_bot hx] using P.le hx
     · exact fun b hb => ⟨a, mem_singleton_self _, P.le hb⟩
 
-/- warning: finpartition.parts_top_subset -> Finpartition.parts_top_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (a : α) [_inst_3 : Decidable (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))], HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finpartition.parts.{u1} α _inst_1 _inst_2 a (Top.top.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (OrderTop.toHasTop.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (Finpartition.hasLe.{u1} α _inst_1 _inst_2 a) (Finpartition.orderTop.{u1} α _inst_1 _inst_2 a _inst_3)))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (a : α) [_inst_3 : Decidable (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))], HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finpartition.parts.{u1} α _inst_1 _inst_2 a (Top.top.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (OrderTop.toTop.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (Finpartition.instLEFinpartition.{u1} α _inst_1 _inst_2 a) (Finpartition.instOrderTopFinpartitionInstLEFinpartition.{u1} α _inst_1 _inst_2 a _inst_3)))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)
-Case conversion may be inaccurate. Consider using '#align finpartition.parts_top_subset Finpartition.parts_top_subsetₓ'. -/
 theorem parts_top_subset (a : α) [Decidable (a = ⊥)] : (⊤ : Finpartition a).parts ⊆ {a} :=
   by
   intro b hb
@@ -346,12 +256,6 @@ theorem parts_top_subset (a : α) [Decidable (a = ⊥)] : (⊤ : Finpartition a)
   · exact hb
 #align finpartition.parts_top_subset Finpartition.parts_top_subset
 
-/- warning: finpartition.parts_top_subsingleton -> Finpartition.parts_top_subsingleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (a : α) [_inst_3 : Decidable (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))], Set.Subsingleton.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Finpartition.parts.{u1} α _inst_1 _inst_2 a (Top.top.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (OrderTop.toHasTop.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (Finpartition.hasLe.{u1} α _inst_1 _inst_2 a) (Finpartition.orderTop.{u1} α _inst_1 _inst_2 a _inst_3)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (a : α) [_inst_3 : Decidable (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)))], Set.Subsingleton.{u1} α (Finset.toSet.{u1} α (Finpartition.parts.{u1} α _inst_1 _inst_2 a (Top.top.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (OrderTop.toTop.{u1} (Finpartition.{u1} α _inst_1 _inst_2 a) (Finpartition.instLEFinpartition.{u1} α _inst_1 _inst_2 a) (Finpartition.instOrderTopFinpartitionInstLEFinpartition.{u1} α _inst_1 _inst_2 a _inst_3)))))
-Case conversion may be inaccurate. Consider using '#align finpartition.parts_top_subsingleton Finpartition.parts_top_subsingletonₓ'. -/
 theorem parts_top_subsingleton (a : α) [Decidable (a = ⊥)] :
     ((⊤ : Finpartition a).parts : Set α).Subsingleton :=
   Set.subsingleton_of_subset_singleton fun b hb => mem_singleton.1 <| parts_top_subset _ hb
@@ -390,12 +294,6 @@ instance : Inf (Finpartition a) :=
           rfl
         · rw [P.sup_parts, Q.sup_parts, inf_idem])⟩
 
-/- warning: finpartition.parts_inf -> Finpartition.parts_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Q : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a), Eq.{succ u1} (Finset.{u1} α) (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a (Inf.inf.{u1} (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Finpartition.hasInf.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a) P Q)) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_3 a b) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) α (fun (a : α) (b : α) => _inst_3 a b) (fun (bc : Prod.{u1, u1} α α) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) (Prod.fst.{u1, u1} α α bc) (Prod.snd.{u1, u1} α α bc)) (Finset.product.{u1, u1} α α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P) (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a Q))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Q : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a), Eq.{succ u1} (Finset.{u1} α) (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a (Inf.inf.{u1} (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Finpartition.instInfFinpartitionToLattice.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a) P Q)) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_3 a b) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) α (fun (a : α) (b : α) => _inst_3 a b) (fun (bc : Prod.{u1, u1} α α) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) (Prod.fst.{u1, u1} α α bc) (Prod.snd.{u1, u1} α α bc)) (Finset.product.{u1, u1} α α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P) (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a Q))) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2)))
-Case conversion may be inaccurate. Consider using '#align finpartition.parts_inf Finpartition.parts_infₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
@@ -429,12 +327,6 @@ instance : SemilatticeInf (Finpartition a) :=
 
 end Inf
 
-/- warning: finpartition.exists_le_of_le -> Finpartition.exists_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {a : α} {b : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} {Q : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a}, (LE.le.{u1} (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Finpartition.hasLe.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) P Q) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a Q)) -> (Exists.{succ u1} α (fun (c : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) c b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {a : α} {b : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} {Q : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a}, (LE.le.{u1} (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Finpartition.instLEFinpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) P Q) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a Q)) -> (Exists.{succ u1} α (fun (c : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) c (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) c b)))
-Case conversion may be inaccurate. Consider using '#align finpartition.exists_le_of_le Finpartition.exists_le_of_leₓ'. -/
 theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b ∈ Q.parts) :
     ∃ c ∈ P.parts, c ≤ b := by
   by_contra' H
@@ -447,12 +339,6 @@ theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b 
   exact H _ hc hcd
 #align finpartition.exists_le_of_le Finpartition.exists_le_of_le
 
-/- warning: finpartition.card_mono -> Finpartition.card_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {a : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} {Q : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a}, (LE.le.{u1} (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Finpartition.hasLe.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) P Q) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a Q)) (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {a : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} {Q : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a}, (LE.le.{u1} (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (Finpartition.instLEFinpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) P Q) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a Q)) (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)))
-Case conversion may be inaccurate. Consider using '#align finpartition.card_mono Finpartition.card_monoₓ'. -/
 theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card ≤ P.parts.card := by
   classical
     have : ∀ b ∈ Q.parts, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h
@@ -471,12 +357,6 @@ section Bind
 
 variable {P : Finpartition a} {Q : ∀ i ∈ P.parts, Finpartition i}
 
-/- warning: finpartition.bind -> Finpartition.bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a), (forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 i)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a), (forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 i)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a)
-Case conversion may be inaccurate. Consider using '#align finpartition.bind Finpartition.bindₓ'. -/
 /-- Given a finpartition `P` of `a` and finpartitions of each part of `P`, this yields the
 finpartition of `a` obtained by juxtaposing all the subpartitions. -/
 @[simps]
@@ -502,12 +382,6 @@ def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finparti
     exact (Q A hA).not_bot_mem h
 #align finpartition.bind Finpartition.bind
 
-/- warning: finpartition.mem_bind -> Finpartition.mem_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} {b : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} {Q : forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 i)}, Iff (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a (Finpartition.bind.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a P Q))) (Exists.{succ u1} α (fun (A : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) A (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (fun (hA : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) A (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 A (Q A hA)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} {b : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} {Q : forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 i)}, Iff (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a (Finpartition.bind.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a P Q))) (Exists.{succ u1} α (fun (A : α) => Exists.{0} (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) A (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (fun (hA : Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) A (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 A (Q A hA)))))
-Case conversion may be inaccurate. Consider using '#align finpartition.mem_bind Finpartition.mem_bindₓ'. -/
 theorem mem_bind : b ∈ (P.bind Q).parts ↔ ∃ A hA, b ∈ (Q A hA).parts :=
   by
   rw [bind, mem_bUnion]
@@ -518,12 +392,6 @@ theorem mem_bind : b ∈ (P.bind Q).parts ↔ ∃ A hA, b ∈ (Q A hA).parts :=
     exact ⟨⟨A, hA⟩, mem_attach _ ⟨A, hA⟩, h⟩
 #align finpartition.mem_bind Finpartition.mem_bind
 
-/- warning: finpartition.card_bind -> Finpartition.card_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} (Q : forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 i)), Eq.{1} Nat (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a (Finpartition.bind.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a P Q))) (Finset.sum.{0, u1} Nat (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P))) Nat.addCommMonoid (Finset.attach.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (fun (A : Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P))) => Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (Subtype.val.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) A) (Q (Subtype.val.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) A) (Subtype.property.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) A)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} {P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a} (Q : forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 i)), Eq.{1} Nat (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a (Finpartition.bind.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a P Q))) (Finset.sum.{0, u1} Nat (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P))) Nat.addCommMonoid (Finset.attach.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (fun (A : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P))) => Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) A) (Q (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) A) (Subtype.property.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) A)))))
-Case conversion may be inaccurate. Consider using '#align finpartition.card_bind Finpartition.card_bindₓ'. -/
 theorem card_bind (Q : ∀ i ∈ P.parts, Finpartition i) :
     (P.bind Q).parts.card = ∑ A in P.parts.attach, (Q _ A.2).parts.card :=
   by
@@ -540,12 +408,6 @@ theorem card_bind (Q : ∀ i ∈ P.parts, Finpartition i) :
 
 end Bind
 
-/- warning: finpartition.extend -> Finpartition.extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} {b : α} {c : α}, (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) -> (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2))) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) a b) c) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 c)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} {b : α} {c : α}, (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) -> (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2))) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) a b) c) -> (Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 c)
-Case conversion may be inaccurate. Consider using '#align finpartition.extend Finpartition.extendₓ'. -/
 /-- Adds `b` to a finpartition of `a` to make a finpartition of `a ⊔ b`. -/
 @[simps]
 def extend (P : Finpartition a) (hb : b ≠ ⊥) (hab : Disjoint a b) (hc : a ⊔ b = c) : Finpartition c
@@ -558,12 +420,6 @@ def extend (P : Finpartition a) (hb : b ≠ ⊥) (hab : Disjoint a b) (hc : a �
   not_bot_mem h := (mem_insert.1 h).elim hb.symm P.not_bot_mem
 #align finpartition.extend Finpartition.extend
 
-/- warning: finpartition.card_extend -> Finpartition.card_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (b : α) (c : α) {hb : Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2))} {hab : Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a b} {hc : Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) a b) c}, Eq.{1} Nat (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 c (Finpartition.extend.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a b c P hb hab hc))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u1} α] {a : α} (P : Finpartition.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a) (b : α) (c : α) {hb : Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2))} {hab : Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a b} {hc : Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) a b) c}, Eq.{1} Nat (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 c (Finpartition.extend.{u1} α _inst_1 _inst_2 (fun (a : α) (b : α) => _inst_3 a b) a b c P hb hab hc))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Finpartition.parts.{u1} α (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 a P)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align finpartition.card_extend Finpartition.card_extendₓ'. -/
 theorem card_extend (P : Finpartition a) (b c : α) {hb : b ≠ ⊥} {hab : Disjoint a b}
     {hc : a ⊔ b = c} : (P.extend hb hab hc).parts.card = P.parts.card + 1 :=
   card_insert_of_not_mem fun h => hb <| hab.symm.eq_bot_of_le <| P.le h
@@ -575,12 +431,6 @@ section GeneralizedBooleanAlgebra
 
 variable [GeneralizedBooleanAlgebra α] [DecidableEq α] {a b c : α} (P : Finpartition a)
 
-/- warning: finpartition.avoid -> Finpartition.avoid is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {a : α}, (Finpartition.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a) -> (forall (b : α), Finpartition.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {a : α}, (Finpartition.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a) -> (forall (b : α), Finpartition.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align finpartition.avoid Finpartition.avoidₓ'. -/
 /-- Restricts a finpartition to avoid a given element. -/
 @[simps]
 def avoid (b : α) : Finpartition (a \ b) :=
@@ -588,12 +438,6 @@ def avoid (b : α) : Finpartition (a \ b) :=
     (by rw [sup_image, comp.left_id, Finset.sup_sdiff_right, ← id_def, P.sup_parts])
 #align finpartition.avoid Finpartition.avoid
 
-/- warning: finpartition.mem_avoid -> Finpartition.mem_avoid is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {a : α} {b : α} {c : α} (P : Finpartition.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a), Iff (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finpartition.parts.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) a b) (Finpartition.avoid.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) a P b))) (Exists.{succ u1} α (fun (d : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) d (Finpartition.parts.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a P)) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) d (Finpartition.parts.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a P)) => And (Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) d b)) (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) d b) c))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {a : α} {b : α} {c : α} (P : Finpartition.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a), Iff (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) c (Finpartition.parts.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) a b) (Finpartition.avoid.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) a P b))) (Exists.{succ u1} α (fun (d : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) d (Finpartition.parts.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a P)) (And (Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) d b)) (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) d b) c))))
-Case conversion may be inaccurate. Consider using '#align finpartition.mem_avoid Finpartition.mem_avoidₓ'. -/
 @[simp]
 theorem mem_avoid : c ∈ (P.avoid b).parts ↔ ∃ d ∈ P.parts, ¬d ≤ b ∧ d \ b = c :=
   by
@@ -615,42 +459,18 @@ namespace Finpartition
 
 variable [DecidableEq α] {s t : Finset α} (P : Finpartition s)
 
-/- warning: finpartition.nonempty_of_mem_parts -> Finpartition.nonempty_of_mem_parts is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s) {a : Finset.{u1} α}, (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) a (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P)) -> (Finset.Nonempty.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) {a : Finset.{u1} α}, (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) a (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) -> (Finset.Nonempty.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align finpartition.nonempty_of_mem_parts Finpartition.nonempty_of_mem_partsₓ'. -/
 theorem nonempty_of_mem_parts {a : Finset α} (ha : a ∈ P.parts) : a.Nonempty :=
   nonempty_iff_ne_empty.2 <| P.ne_bot ha
 #align finpartition.nonempty_of_mem_parts Finpartition.nonempty_of_mem_parts
 
-/- warning: finpartition.exists_mem -> Finpartition.exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s) {a : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P)) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P)) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) {a : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)))
-Case conversion may be inaccurate. Consider using '#align finpartition.exists_mem Finpartition.exists_memₓ'. -/
 theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t := by simp_rw [← P.sup_parts] at ha;
   exact mem_sup.1 ha
 #align finpartition.exists_mem Finpartition.exists_mem
 
-/- warning: finpartition.bUnion_parts -> Finpartition.biUnion_parts is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P) (id.{succ u1} (Finset.{u1} α))) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P) (id.{succ u1} (Finset.{u1} α))) s
-Case conversion may be inaccurate. Consider using '#align finpartition.bUnion_parts Finpartition.biUnion_partsₓ'. -/
 theorem biUnion_parts : P.parts.biUnion id = s :=
   (sup_eq_biUnion _ _).symm.trans P.supParts
 #align finpartition.bUnion_parts Finpartition.biUnion_parts
 
-/- warning: finpartition.sum_card_parts -> Finpartition.sum_card_parts is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s), Eq.{1} Nat (Finset.sum.{0, u1} Nat (Finset.{u1} α) Nat.addCommMonoid (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P) (fun (i : Finset.{u1} α) => Finset.card.{u1} α i)) (Finset.card.{u1} α s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s), Eq.{1} Nat (Finset.sum.{0, u1} Nat (Finset.{u1} α) Nat.addCommMonoid (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P) (fun (i : Finset.{u1} α) => Finset.card.{u1} α i)) (Finset.card.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align finpartition.sum_card_parts Finpartition.sum_card_partsₓ'. -/
 theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card :=
   by
   convert congr_arg Finset.card P.bUnion_parts
@@ -697,24 +517,12 @@ instance (s : Finset α) : OrderBot (Finpartition s) :=
       obtain ⟨t, ht, hat⟩ := P.exists_mem ha
       exact ⟨t, ht, singleton_subset_iff.2 hat⟩ }
 
-/- warning: finpartition.card_parts_le_card -> Finpartition.card_parts_le_card is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} (Finset.{u1} α) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P)) (Finset.card.{u1} α s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s), LE.le.{0} Nat instLENat (Finset.card.{u1} (Finset.{u1} α) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) (Finset.card.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align finpartition.card_parts_le_card Finpartition.card_parts_le_cardₓ'. -/
 theorem card_parts_le_card (P : Finpartition s) : P.parts.card ≤ s.card := by rw [← card_bot s];
   exact card_mono bot_le
 #align finpartition.card_parts_le_card Finpartition.card_parts_le_card
 
 section Atomise
 
-/- warning: finpartition.atomise -> Finpartition.atomise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), (Finset.{u1} (Finset.{u1} α)) -> (Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), (Finset.{u1} (Finset.{u1} α)) -> (Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s)
-Case conversion may be inaccurate. Consider using '#align finpartition.atomise Finpartition.atomiseₓ'. -/
 /-- Cuts `s` along the finsets in `F`: Two elements of `s` will be in the same part if they are
 in the same finsets of `F`. -/
 def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=

@@ -74,42 +74,18 @@ def totalSpaceMk (b : B) (a : E b) : Bundle.TotalSpace E :=
 #align bundle.total_space_mk Bundle.totalSpaceMk
 -/
 
-/- warning: bundle.total_space.proj_mk -> Bundle.TotalSpace.proj_mk is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} {x : B} {y : E x}, Eq.{succ u1} B (Bundle.TotalSpace.proj.{u1, u2} B (fun {x : B} => E x) (Bundle.totalSpaceMk.{u1, u2} B (fun {x : B} => E x) x y)) x
-but is expected to have type
-  forall {B : Type.{u2}} {E : B -> Type.{u1}} {x : B} {y : E x}, Eq.{succ u2} B (Bundle.TotalSpace.proj.{u2, u1} B E (Bundle.totalSpaceMk.{u2, u1} B E x y)) x
-Case conversion may be inaccurate. Consider using '#align bundle.total_space.proj_mk Bundle.TotalSpace.proj_mkₓ'. -/
 theorem TotalSpace.proj_mk {x : B} {y : E x} : (totalSpaceMk x y).proj = x :=
   rfl
 #align bundle.total_space.proj_mk Bundle.TotalSpace.proj_mk
 
-/- warning: bundle.sigma_mk_eq_total_space_mk -> Bundle.sigma_mk_eq_totalSpaceMk is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} {x : B} {y : E x}, Eq.{max (succ u1) (succ u2)} (Sigma.{u1, u2} B (fun {x : B} => E x)) (Sigma.mk.{u1, u2} B (fun {x : B} => E x) x y) (Bundle.totalSpaceMk.{u1, u2} B (fun (x : B) => E x) x y)
-but is expected to have type
-  forall {B : Type.{u2}} {E : B -> Type.{u1}} {x : B} {y : E x}, Eq.{max (succ u2) (succ u1)} (Sigma.{u2, u1} B E) (Sigma.mk.{u2, u1} B E x y) (Bundle.totalSpaceMk.{u2, u1} B E x y)
-Case conversion may be inaccurate. Consider using '#align bundle.sigma_mk_eq_total_space_mk Bundle.sigma_mk_eq_totalSpaceMkₓ'. -/
 theorem sigma_mk_eq_totalSpaceMk {x : B} {y : E x} : Sigma.mk x y = totalSpaceMk x y :=
   rfl
 #align bundle.sigma_mk_eq_total_space_mk Bundle.sigma_mk_eq_totalSpaceMk
 
-/- warning: bundle.total_space.mk_cast -> Bundle.TotalSpace.mk_cast is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} {x : B} {x' : B} (h : Eq.{succ u1} B x x') (b : E x), Eq.{max (succ u1) (succ u2)} (Bundle.TotalSpace.{u1, u2} B E) (Bundle.totalSpaceMk.{u1, u2} B E x' (cast.{succ u2} (E x) (E x') (congr_arg.{succ u1, succ (succ u2)} B Type.{u2} x x' E h) b)) (Bundle.totalSpaceMk.{u1, u2} B E x b)
-but is expected to have type
-  forall {B : Type.{u2}} {E : B -> Type.{u1}} {x : B} {x' : B} (h : Eq.{succ u2} B x x') (b : E x), Eq.{max (succ u2) (succ u1)} (Bundle.TotalSpace.{u2, u1} B E) (Bundle.totalSpaceMk.{u2, u1} B E x' (cast.{succ u1} (E x) (E x') (congr_arg.{succ u2, succ (succ u1)} B Type.{u1} x x' E h) b)) (Bundle.totalSpaceMk.{u2, u1} B E x b)
-Case conversion may be inaccurate. Consider using '#align bundle.total_space.mk_cast Bundle.TotalSpace.mk_castₓ'. -/
 theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
     totalSpaceMk x' (cast (congr_arg E h) b) = totalSpaceMk x b := by subst h; rfl
 #align bundle.total_space.mk_cast Bundle.TotalSpace.mk_cast
 
-/- warning: bundle.total_space.eta -> Bundle.TotalSpace.eta is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} (z : Bundle.TotalSpace.{u1, u2} B E), Eq.{max (succ u1) (succ u2)} (Bundle.TotalSpace.{u1, u2} B E) (Bundle.totalSpaceMk.{u1, u2} B E (Bundle.TotalSpace.proj.{u1, u2} B E z) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) z)) z
-but is expected to have type
-  forall {B : Type.{u2}} {E : B -> Type.{u1}} (z : Bundle.TotalSpace.{u2, u1} B E), Eq.{max (succ u2) (succ u1)} (Bundle.TotalSpace.{u2, u1} B E) (Bundle.totalSpaceMk.{u2, u1} B E (Bundle.TotalSpace.proj.{u2, u1} B E z) (Sigma.snd.{u2, u1} B (fun (x : B) => E x) z)) z
-Case conversion may be inaccurate. Consider using '#align bundle.total_space.eta Bundle.TotalSpace.etaₓ'. -/
 theorem TotalSpace.eta (z : TotalSpace E) : totalSpaceMk z.proj z.2 = z :=
   Sigma.eta z
 #align bundle.total_space.eta Bundle.TotalSpace.eta
@@ -117,12 +93,6 @@ theorem TotalSpace.eta (z : TotalSpace E) : totalSpaceMk z.proj z.2 = z :=
 instance {x : B} : CoeTC (E x) (TotalSpace E) :=
   ⟨totalSpaceMk x⟩
 
-/- warning: bundle.coe_fst -> Bundle.coe_fst is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} (x : B) (v : E x), Eq.{succ u1} B (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) v)) x
-but is expected to have type
-  forall {B : Type.{u2}} {E : B -> Type.{u1}} (x : B) (v : E x), Eq.{succ u2} B (Sigma.fst.{u2, u1} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u2, u1} B E x v)) x
-Case conversion may be inaccurate. Consider using '#align bundle.coe_fst Bundle.coe_fstₓ'. -/
 @[simp]
 theorem coe_fst (x : B) (v : E x) : (v : TotalSpace E).fst = x :=
   rfl
@@ -136,11 +106,6 @@ theorem coe_snd {x : B} {y : E x} : (y : TotalSpace E).snd = y :=
 -/
 
 /- warning: bundle.to_total_space_coe clashes with [anonymous] -> [anonymous]
-warning: bundle.to_total_space_coe -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} {x : B} (v : E x), Eq.{max (succ u1) (succ u2)} (Bundle.TotalSpace.{u1, u2} B E) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) v) (Bundle.totalSpaceMk.{u1, u2} B E x v)
-but is expected to have type
-  forall {B : Type.{u1}} {E : Type.{u2}}, (Nat -> B -> E) -> Nat -> (List.{u1} B) -> (List.{u2} E)
 Case conversion may be inaccurate. Consider using '#align bundle.to_total_space_coe [anonymous]ₓ'. -/
 theorem [anonymous] {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk x v :=
   rfl
@@ -205,12 +170,6 @@ theorem Pullback.proj_lift (f : B' → B) (x : TotalSpace (f *ᵖ E)) :
 #align bundle.pullback.proj_lift Bundle.Pullback.proj_lift
 -/
 
-/- warning: bundle.pullback.lift_mk -> Bundle.Pullback.lift_mk is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} {B' : Type.{u3}} (f : B' -> B) (x : B') (y : E (f x)), Eq.{max (succ u1) (succ u2)} (Bundle.TotalSpace.{u1, u2} B E) (Bundle.Pullback.lift.{u1, u2, u3} B E B' f (Bundle.totalSpaceMk.{u3, u2} B' (Bundle.Pullback.{u1, u3, u2} B B' f E) x y)) (Bundle.totalSpaceMk.{u1, u2} B E (f x) y)
-but is expected to have type
-  forall {B : Type.{u3}} {E : B -> Type.{u2}} {B' : Type.{u1}} (f : B' -> B) (x : B') (y : E (f x)), Eq.{max (succ u3) (succ u2)} (Bundle.TotalSpace.{u3, u2} B E) (Bundle.Pullback.lift.{u3, u2, u1} B E B' f (Bundle.totalSpaceMk.{u1, u2} B' (Bundle.Pullback.{u3, u1, u2} B B' f E) x y)) (Bundle.totalSpaceMk.{u3, u2} B E (f x) y)
-Case conversion may be inaccurate. Consider using '#align bundle.pullback.lift_mk Bundle.Pullback.lift_mkₓ'. -/
 @[simp]
 theorem Pullback.lift_mk (f : B' → B) (x : B') (y : E (f x)) :
     Pullback.lift f (totalSpaceMk x y) = totalSpaceMk (f x) y :=
@@ -230,12 +189,6 @@ section FiberStructures
 
 variable [∀ x, AddCommMonoid (E x)]
 
-/- warning: bundle.coe_snd_map_apply -> Bundle.coe_snd_map_apply is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} [_inst_1 : forall (x : B), AddCommMonoid.{u2} (E x)] (x : B) (v : E x) (w : E x), Eq.{succ u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w))) (HAdd.hAdd.{u2, u2, u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (instHAdd.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (AddZeroClass.toHasAdd.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (AddMonoid.toAddZeroClass.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (AddCommMonoid.toAddMonoid.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (_inst_1 (Sigma.fst.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toHasAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))))))) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) v)) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) w)))
-but is expected to have type
-  forall {B : Type.{u1}} {E : B -> Type.{u2}} [_inst_1 : forall (x : B), AddCommMonoid.{u2} (E x)] (x : B) (v : E x) (w : E x), Eq.{succ u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w)))) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x (HAdd.hAdd.{u2, u2, u2} (E x) (E x) (E x) (instHAdd.{u2} (E x) (AddZeroClass.toAdd.{u2} (E x) (AddMonoid.toAddZeroClass.{u2} (E x) (AddCommMonoid.toAddMonoid.{u2} (E x) (_inst_1 x))))) v w))) (HAdd.hAdd.{u2, u2, u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))) (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x w))) (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))) (instHAdd.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))) (AddZeroClass.toAdd.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))) (AddMonoid.toAddZeroClass.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))) (AddCommMonoid.toAddMonoid.{u2} (E (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))) (_inst_1 (Sigma.fst.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v))))))) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x v)) (Sigma.snd.{u1, u2} B (fun (x : B) => E x) (Bundle.totalSpaceMk.{u1, u2} B E x w)))
-Case conversion may be inaccurate. Consider using '#align bundle.coe_snd_map_apply Bundle.coe_snd_map_applyₓ'. -/
 @[simp]
 theorem coe_snd_map_apply (x : B) (v w : E x) :
     (↑(v + w) : TotalSpace E).snd = (v : TotalSpace E).snd + (w : TotalSpace E).snd :=
@@ -244,9 +197,6 @@ theorem coe_snd_map_apply (x : B) (v w : E x) :
 
 variable (R : Type _) [Semiring R] [∀ x, Module R (E x)]
 
-/- warning: bundle.coe_snd_map_smul -> Bundle.coe_snd_map_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align bundle.coe_snd_map_smul Bundle.coe_snd_map_smulₓ'. -/
 @[simp]
 theorem coe_snd_map_smul (x : B) (r : R) (v : E x) :
     (↑(r • v) : TotalSpace E).snd = r • (v : TotalSpace E).snd :=

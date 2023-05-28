@@ -436,12 +436,6 @@ theorem right_mem_cIcc (a b : α) : b ∈ cIcc a b :=
 #align set.right_mem_cIcc Set.right_mem_cIcc
 -/
 
-/- warning: set.compl_cIcc -> Set.compl_cIcc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CircularOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Set.cIcc.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) a b)) (Set.cIoo.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) b a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CircularOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.cIcc.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) a b)) (Set.cIoo.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) b a)
-Case conversion may be inaccurate. Consider using '#align set.compl_cIcc Set.compl_cIccₓ'. -/
 theorem compl_cIcc {a b : α} : cIcc a bᶜ = cIoo b a :=
   by
   ext
@@ -449,12 +443,6 @@ theorem compl_cIcc {a b : α} : cIcc a bᶜ = cIoo b a :=
   rfl
 #align set.compl_cIcc Set.compl_cIcc
 
-/- warning: set.compl_cIoo -> Set.compl_cIoo is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CircularOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Set.cIoo.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) a b)) (Set.cIcc.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) b a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CircularOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.cIoo.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) a b)) (Set.cIcc.{u1} α (CircularPartialOrder.toCircularPreorder.{u1} α (CircularOrder.toCircularPartialOrder.{u1} α _inst_1)) b a)
-Case conversion may be inaccurate. Consider using '#align set.compl_cIoo Set.compl_cIooₓ'. -/
 theorem compl_cIoo {a b : α} : cIoo a bᶜ = cIcc b a :=
   by
   ext

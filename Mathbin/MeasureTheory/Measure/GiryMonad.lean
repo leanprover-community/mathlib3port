@@ -60,12 +60,6 @@ theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ :
 #align measure_theory.measure.measurable_coe MeasureTheory.Measure.measurable_coe
 -/
 
-/- warning: measure_theory.measure.measurable_of_measurable_coe -> MeasureTheory.Measure.measurable_of_measurable_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] (f : β -> (MeasureTheory.Measure.{u1} α _inst_1)), (forall (s : Set.{u1} α), (MeasurableSet.{u1} α _inst_1 s) -> (Measurable.{u2, 0} β ENNReal _inst_2 ENNReal.measurableSpace (fun (b : β) => coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_1) (fun (_x : MeasureTheory.Measure.{u1} α _inst_1) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_1) (f b) s))) -> (Measurable.{u2, u1} β (MeasureTheory.Measure.{u1} α _inst_1) _inst_2 (MeasureTheory.Measure.instMeasurableSpace.{u1} α _inst_1) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] (f : β -> (MeasureTheory.Measure.{u2} α _inst_1)), (forall (s : Set.{u2} α), (MeasurableSet.{u2} α _inst_1 s) -> (Measurable.{u1, 0} β ENNReal _inst_2 ENNReal.measurableSpace (fun (b : β) => MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α _inst_1 (f b)) s))) -> (Measurable.{u1, u2} β (MeasureTheory.Measure.{u2} α _inst_1) _inst_2 (MeasureTheory.Measure.instMeasurableSpace.{u2} α _inst_1) f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurable_of_measurable_coeₓ'. -/
 theorem measurable_of_measurable_coe (f : β → Measure α)
     (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
   Measurable.of_le_map <|
@@ -88,12 +82,6 @@ theorem measurable_measure {μ : α → Measure β} :
 #align measure_theory.measure.measurable_measure MeasureTheory.Measure.measurable_measure
 -/
 
-/- warning: measure_theory.measure.measurable_map -> MeasureTheory.Measure.measurable_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] (f : α -> β), (Measurable.{u1, u2} α β _inst_1 _inst_2 f) -> (Measurable.{u1, u2} (MeasureTheory.Measure.{u1} α _inst_1) (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.instMeasurableSpace.{u1} α _inst_1) (MeasureTheory.Measure.instMeasurableSpace.{u2} β _inst_2) (fun (μ : MeasureTheory.Measure.{u1} α _inst_1) => MeasureTheory.Measure.map.{u1, u2} α β _inst_2 _inst_1 f μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] (f : α -> β), (Measurable.{u2, u1} α β _inst_1 _inst_2 f) -> (Measurable.{u2, u1} (MeasureTheory.Measure.{u2} α _inst_1) (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.instMeasurableSpace.{u2} α _inst_1) (MeasureTheory.Measure.instMeasurableSpace.{u1} β _inst_2) (fun (μ : MeasureTheory.Measure.{u2} α _inst_1) => MeasureTheory.Measure.map.{u2, u1} α β _inst_2 _inst_1 f μ))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.measurable_map MeasureTheory.Measure.measurable_mapₓ'. -/
 theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
   by
   refine' measurable_of_measurable_coe _ fun s hs => _
@@ -198,12 +186,6 @@ theorem bind_zero_left (f : α → Measure β) : bind 0 f = 0 := by simp [bind]
 #align measure_theory.measure.bind_zero_left MeasureTheory.Measure.bind_zero_left
 -/
 
-/- warning: measure_theory.measure.bind_zero_right -> MeasureTheory.Measure.bind_zero_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] (m : MeasureTheory.Measure.{u1} α _inst_1), Eq.{succ u2} (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.bind.{u1, u2} α β _inst_1 _inst_2 m (OfNat.ofNat.{max u1 u2} (α -> (MeasureTheory.Measure.{u2} β _inst_2)) 0 (OfNat.mk.{max u1 u2} (α -> (MeasureTheory.Measure.{u2} β _inst_2)) 0 (Zero.zero.{max u1 u2} (α -> (MeasureTheory.Measure.{u2} β _inst_2)) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => MeasureTheory.Measure.{u2} β _inst_2) (fun (i : α) => MeasureTheory.Measure.instZero.{u2} β _inst_2)))))) (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} β _inst_2) 0 (OfNat.mk.{u2} (MeasureTheory.Measure.{u2} β _inst_2) 0 (Zero.zero.{u2} (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.instZero.{u2} β _inst_2))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] (m : MeasureTheory.Measure.{u2} α _inst_1), Eq.{succ u1} (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.bind.{u2, u1} α β _inst_1 _inst_2 m (OfNat.ofNat.{max u2 u1} (α -> (MeasureTheory.Measure.{u1} β _inst_2)) 0 (Zero.toOfNat0.{max u2 u1} (α -> (MeasureTheory.Measure.{u1} β _inst_2)) (Pi.instZero.{u2, u1} α (fun (a._@.Mathlib.MeasureTheory.Measure.GiryMonad._hyg.1222 : α) => MeasureTheory.Measure.{u1} β _inst_2) (fun (i : α) => MeasureTheory.Measure.instZero.{u1} β _inst_2))))) (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} β _inst_2) 0 (Zero.toOfNat0.{u1} (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.instZero.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.bind_zero_right MeasureTheory.Measure.bind_zero_rightₓ'. -/
 @[simp]
 theorem bind_zero_right (m : Measure α) : bind m (0 : α → Measure β) = 0 :=
   by
@@ -213,23 +195,11 @@ theorem bind_zero_right (m : Measure α) : bind m (0 : α → Measure β) = 0 :=
   simp only [Pi.zero_apply, coe_zero, lintegral_const, MulZeroClass.zero_mul]
 #align measure_theory.measure.bind_zero_right MeasureTheory.Measure.bind_zero_right
 
-/- warning: measure_theory.measure.bind_zero_right' -> MeasureTheory.Measure.bind_zero_right' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] (m : MeasureTheory.Measure.{u1} α _inst_1), Eq.{succ u2} (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.bind.{u1, u2} α β _inst_1 _inst_2 m (fun (_x : α) => OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} β _inst_2) 0 (OfNat.mk.{u2} (MeasureTheory.Measure.{u2} β _inst_2) 0 (Zero.zero.{u2} (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.instZero.{u2} β _inst_2))))) (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} β _inst_2) 0 (OfNat.mk.{u2} (MeasureTheory.Measure.{u2} β _inst_2) 0 (Zero.zero.{u2} (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.instZero.{u2} β _inst_2))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] (m : MeasureTheory.Measure.{u2} α _inst_1), Eq.{succ u1} (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.bind.{u2, u1} α β _inst_1 _inst_2 m (fun (_x : α) => OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} β _inst_2) 0 (Zero.toOfNat0.{u1} (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.instZero.{u1} β _inst_2)))) (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} β _inst_2) 0 (Zero.toOfNat0.{u1} (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.instZero.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.bind_zero_right' MeasureTheory.Measure.bind_zero_right'ₓ'. -/
 @[simp]
 theorem bind_zero_right' (m : Measure α) : bind m (fun _ => 0 : α → Measure β) = 0 :=
   bind_zero_right m
 #align measure_theory.measure.bind_zero_right' MeasureTheory.Measure.bind_zero_right'
 
-/- warning: measure_theory.measure.bind_apply -> MeasureTheory.Measure.bind_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {m : MeasureTheory.Measure.{u1} α _inst_1} {f : α -> (MeasureTheory.Measure.{u2} β _inst_2)} {s : Set.{u2} β}, (MeasurableSet.{u2} β _inst_2 s) -> (Measurable.{u1, u2} α (MeasureTheory.Measure.{u2} β _inst_2) _inst_1 (MeasureTheory.Measure.instMeasurableSpace.{u2} β _inst_2) f) -> (Eq.{1} ENNReal (coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} β _inst_2) (fun (_x : MeasureTheory.Measure.{u2} β _inst_2) => (Set.{u2} β) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} β _inst_2) (MeasureTheory.Measure.bind.{u1, u2} α β _inst_1 _inst_2 m f) s) (MeasureTheory.lintegral.{u1} α _inst_1 m (fun (a : α) => coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} β _inst_2) (fun (_x : MeasureTheory.Measure.{u2} β _inst_2) => (Set.{u2} β) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} β _inst_2) (f a) s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {m : MeasureTheory.Measure.{u2} α _inst_1} {f : α -> (MeasureTheory.Measure.{u1} β _inst_2)} {s : Set.{u1} β}, (MeasurableSet.{u1} β _inst_2 s) -> (Measurable.{u2, u1} α (MeasureTheory.Measure.{u1} β _inst_2) _inst_1 (MeasureTheory.Measure.instMeasurableSpace.{u1} β _inst_2) f) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} β (MeasureTheory.Measure.toOuterMeasure.{u1} β _inst_2 (MeasureTheory.Measure.bind.{u2, u1} α β _inst_1 _inst_2 m f)) s) (MeasureTheory.lintegral.{u2} α _inst_1 m (fun (a : α) => MeasureTheory.OuterMeasure.measureOf.{u1} β (MeasureTheory.Measure.toOuterMeasure.{u1} β _inst_2 (f a)) s)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.bind_apply MeasureTheory.Measure.bind_applyₓ'. -/
 @[simp]
 theorem bind_apply {m : Measure α} {f : α → Measure β} {s : Set β} (hs : MeasurableSet s)
     (hf : Measurable f) : bind m f s = ∫⁻ a, f a s ∂m := by
@@ -242,23 +212,11 @@ theorem measurable_bind' {g : α → Measure β} (hg : Measurable g) : Measurabl
 #align measure_theory.measure.measurable_bind' MeasureTheory.Measure.measurable_bind'
 -/
 
-/- warning: measure_theory.measure.lintegral_bind -> MeasureTheory.Measure.lintegral_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {m : MeasureTheory.Measure.{u1} α _inst_1} {μ : α -> (MeasureTheory.Measure.{u2} β _inst_2)} {f : β -> ENNReal}, (Measurable.{u1, u2} α (MeasureTheory.Measure.{u2} β _inst_2) _inst_1 (MeasureTheory.Measure.instMeasurableSpace.{u2} β _inst_2) μ) -> (Measurable.{u2, 0} β ENNReal _inst_2 ENNReal.measurableSpace f) -> (Eq.{1} ENNReal (MeasureTheory.lintegral.{u2} β _inst_2 (MeasureTheory.Measure.bind.{u1, u2} α β _inst_1 _inst_2 m μ) (fun (x : β) => f x)) (MeasureTheory.lintegral.{u1} α _inst_1 m (fun (a : α) => MeasureTheory.lintegral.{u2} β _inst_2 (μ a) (fun (x : β) => f x))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {m : MeasureTheory.Measure.{u2} α _inst_1} {μ : α -> (MeasureTheory.Measure.{u1} β _inst_2)} {f : β -> ENNReal}, (Measurable.{u2, u1} α (MeasureTheory.Measure.{u1} β _inst_2) _inst_1 (MeasureTheory.Measure.instMeasurableSpace.{u1} β _inst_2) μ) -> (Measurable.{u1, 0} β ENNReal _inst_2 ENNReal.measurableSpace f) -> (Eq.{1} ENNReal (MeasureTheory.lintegral.{u1} β _inst_2 (MeasureTheory.Measure.bind.{u2, u1} α β _inst_1 _inst_2 m μ) (fun (x : β) => f x)) (MeasureTheory.lintegral.{u2} α _inst_1 m (fun (a : α) => MeasureTheory.lintegral.{u1} β _inst_2 (μ a) (fun (x : β) => f x))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.lintegral_bind MeasureTheory.Measure.lintegral_bindₓ'. -/
 theorem lintegral_bind {m : Measure α} {μ : α → Measure β} {f : β → ℝ≥0∞} (hμ : Measurable μ)
     (hf : Measurable f) : (∫⁻ x, f x ∂bind m μ) = ∫⁻ a, ∫⁻ x, f x ∂μ a ∂m :=
   (lintegral_join hf).trans (lintegral_map (measurable_lintegral hf) hμ)
 #align measure_theory.measure.lintegral_bind MeasureTheory.Measure.lintegral_bind
 
-/- warning: measure_theory.measure.bind_bind -> MeasureTheory.Measure.bind_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : MeasurableSpace.{u3} γ] {m : MeasureTheory.Measure.{u1} α _inst_1} {f : α -> (MeasureTheory.Measure.{u2} β _inst_2)} {g : β -> (MeasureTheory.Measure.{u3} γ _inst_3)}, (Measurable.{u1, u2} α (MeasureTheory.Measure.{u2} β _inst_2) _inst_1 (MeasureTheory.Measure.instMeasurableSpace.{u2} β _inst_2) f) -> (Measurable.{u2, u3} β (MeasureTheory.Measure.{u3} γ _inst_3) _inst_2 (MeasureTheory.Measure.instMeasurableSpace.{u3} γ _inst_3) g) -> (Eq.{succ u3} (MeasureTheory.Measure.{u3} γ _inst_3) (MeasureTheory.Measure.bind.{u2, u3} β γ _inst_2 _inst_3 (MeasureTheory.Measure.bind.{u1, u2} α β _inst_1 _inst_2 m f) g) (MeasureTheory.Measure.bind.{u1, u3} α γ _inst_1 _inst_3 m (fun (a : α) => MeasureTheory.Measure.bind.{u2, u3} β γ _inst_2 _inst_3 (f a) g)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {γ : Type.{u3}} [_inst_3 : MeasurableSpace.{u3} γ] {m : MeasureTheory.Measure.{u2} α _inst_1} {f : α -> (MeasureTheory.Measure.{u1} β _inst_2)} {g : β -> (MeasureTheory.Measure.{u3} γ _inst_3)}, (Measurable.{u2, u1} α (MeasureTheory.Measure.{u1} β _inst_2) _inst_1 (MeasureTheory.Measure.instMeasurableSpace.{u1} β _inst_2) f) -> (Measurable.{u1, u3} β (MeasureTheory.Measure.{u3} γ _inst_3) _inst_2 (MeasureTheory.Measure.instMeasurableSpace.{u3} γ _inst_3) g) -> (Eq.{succ u3} (MeasureTheory.Measure.{u3} γ _inst_3) (MeasureTheory.Measure.bind.{u1, u3} β γ _inst_2 _inst_3 (MeasureTheory.Measure.bind.{u2, u1} α β _inst_1 _inst_2 m f) g) (MeasureTheory.Measure.bind.{u2, u3} α γ _inst_1 _inst_3 m (fun (a : α) => MeasureTheory.Measure.bind.{u1, u3} β γ _inst_2 _inst_3 (f a) g)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.bind_bind MeasureTheory.Measure.bind_bindₓ'. -/
 theorem bind_bind {γ} [MeasurableSpace γ] {m : Measure α} {f : α → Measure β} {g : β → Measure γ}
     (hf : Measurable f) (hg : Measurable g) : bind (bind m f) g = bind m fun a => bind (f a) g :=
   by
@@ -287,12 +245,6 @@ theorem join_eq_bind (μ : Measure (Measure α)) : join μ = bind μ id := by rw
 #align measure_theory.measure.join_eq_bind MeasureTheory.Measure.join_eq_bind
 -/
 
-/- warning: measure_theory.measure.join_map_map -> MeasureTheory.Measure.join_map_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {f : α -> β}, (Measurable.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (μ : MeasureTheory.Measure.{u1} (MeasureTheory.Measure.{u1} α _inst_1) (MeasureTheory.Measure.instMeasurableSpace.{u1} α _inst_1)), Eq.{succ u2} (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.join.{u2} β _inst_2 (MeasureTheory.Measure.map.{u1, u2} (MeasureTheory.Measure.{u1} α _inst_1) (MeasureTheory.Measure.{u2} β _inst_2) (MeasureTheory.Measure.instMeasurableSpace.{u2} β _inst_2) (MeasureTheory.Measure.instMeasurableSpace.{u1} α _inst_1) (MeasureTheory.Measure.map.{u1, u2} α β _inst_2 _inst_1 f) μ)) (MeasureTheory.Measure.map.{u1, u2} α β _inst_2 _inst_1 f (MeasureTheory.Measure.join.{u1} α _inst_1 μ)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : α -> β}, (Measurable.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (μ : MeasureTheory.Measure.{u2} (MeasureTheory.Measure.{u2} α _inst_1) (MeasureTheory.Measure.instMeasurableSpace.{u2} α _inst_1)), Eq.{succ u1} (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.join.{u1} β _inst_2 (MeasureTheory.Measure.map.{u2, u1} (MeasureTheory.Measure.{u2} α _inst_1) (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.instMeasurableSpace.{u1} β _inst_2) (MeasureTheory.Measure.instMeasurableSpace.{u2} α _inst_1) (MeasureTheory.Measure.map.{u2, u1} α β _inst_2 _inst_1 f) μ)) (MeasureTheory.Measure.map.{u2, u1} α β _inst_2 _inst_1 f (MeasureTheory.Measure.join.{u2} α _inst_1 μ)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.join_map_map MeasureTheory.Measure.join_map_mapₓ'. -/
 theorem join_map_map {f : α → β} (hf : Measurable f) (μ : Measure (Measure α)) :
     join (map (map f) μ) = map f (join μ) := by
   ext1 s hs

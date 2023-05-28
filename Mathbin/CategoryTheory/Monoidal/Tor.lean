@@ -71,17 +71,11 @@ def Tor' (n : ℕ) : C ⥤ C ⥤ C :=
 
 open ZeroObject
 
-/- warning: category_theory.Tor_succ_of_projective -> CategoryTheory.torSuccOfProjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.Tor_succ_of_projective CategoryTheory.torSuccOfProjectiveₓ'. -/
 /-- The higher `Tor` groups for `X` and `Y` are zero if `Y` is projective. -/
 def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((Tor C (n + 1)).obj X).obj Y ≅ 0 :=
   ((tensoringLeft C).obj X).leftDerivedObjProjectiveSucc n Y
 #align category_theory.Tor_succ_of_projective CategoryTheory.torSuccOfProjective
 
-/- warning: category_theory.Tor'_succ_of_projective -> CategoryTheory.tor'SuccOfProjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.Tor'_succ_of_projective CategoryTheory.tor'SuccOfProjectiveₓ'. -/
 /-- The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
 def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((Tor' C (n + 1)).obj X).obj Y ≅ 0 :=
   by

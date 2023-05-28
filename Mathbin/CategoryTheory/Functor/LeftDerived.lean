@@ -73,9 +73,6 @@ def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
 #align category_theory.functor.left_derived CategoryTheory.Functor.leftDerived
 -/
 
-/- warning: category_theory.functor.left_derived_obj_iso -> CategoryTheory.Functor.leftDerivedObjIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.left_derived_obj_iso CategoryTheory.Functor.leftDerivedObjIsoₓ'. -/
 -- TODO the left derived functors are additive (and linear when `F` is linear)
 /-- We can compute a left derived functor using a chosen projective resolution. -/
 @[simps]
@@ -93,9 +90,6 @@ section
 
 variable [HasZeroObject D]
 
-/- warning: category_theory.functor.left_derived_obj_projective_zero -> CategoryTheory.Functor.leftDerivedObjProjectiveZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.left_derived_obj_projective_zero CategoryTheory.Functor.leftDerivedObjProjectiveZeroₓ'. -/
 /-- The 0-th derived functor of `F` on a projective object `X` is just `F.obj X`. -/
 @[simps]
 def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Projective X] :
@@ -107,9 +101,6 @@ def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Pro
 
 open ZeroObject
 
-/- warning: category_theory.functor.left_derived_obj_projective_succ -> CategoryTheory.Functor.leftDerivedObjProjectiveSucc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.left_derived_obj_projective_succ CategoryTheory.Functor.leftDerivedObjProjectiveSuccₓ'. -/
 /-- The higher derived functors vanish on projective objects. -/
 @[simps inv]
 def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X : C) [Projective X] :
@@ -121,9 +112,6 @@ def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X
 
 end
 
-/- warning: category_theory.functor.left_derived_map_eq -> CategoryTheory.Functor.leftDerived_map_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.left_derived_map_eq CategoryTheory.Functor.leftDerived_map_eqₓ'. -/
 /-- We can compute a left derived functor on a morphism using a lift of that morphism
 to a chain map between chosen projective resolutions.
 -/
@@ -159,17 +147,11 @@ def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G
 #align category_theory.nat_trans.left_derived CategoryTheory.NatTrans.leftDerived
 -/
 
-/- warning: category_theory.nat_trans.left_derived_id -> CategoryTheory.NatTrans.leftDerived_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.leftDerived_idₓ'. -/
 @[simp]
 theorem NatTrans.leftDerived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
     NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) := by simp [nat_trans.left_derived]; rfl
 #align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.leftDerived_id
 
-/- warning: category_theory.nat_trans.left_derived_comp -> CategoryTheory.NatTrans.leftDerived_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.left_derived_comp CategoryTheory.NatTrans.leftDerived_compₓ'. -/
 -- The `simp_nf` linter times out here, so we disable it.
 @[simp, nolint simp_nf]
 theorem NatTrans.leftDerived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive] (α : F ⟶ G)
@@ -178,9 +160,6 @@ theorem NatTrans.leftDerived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H
   simp [nat_trans.left_derived]
 #align category_theory.nat_trans.left_derived_comp CategoryTheory.NatTrans.leftDerived_comp
 
-/- warning: category_theory.nat_trans.left_derived_eq -> CategoryTheory.NatTrans.leftDerived_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.left_derived_eq CategoryTheory.NatTrans.leftDerived_eqₓ'. -/
 /-- A component of the natural transformation between left-derived functors can be computed
 using a chosen projective resolution.
 -/

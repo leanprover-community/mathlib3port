@@ -42,12 +42,6 @@ namespace Cat
 
 namespace HasLimits
 
-/- warning: category_theory.Cat.has_limits.category_objects -> CategoryTheory.Cat.HasLimits.categoryObjects is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] {F : CategoryTheory.Functor.{u1, u2, u1, succ u2} J _inst_1 CategoryTheory.Cat.{u2, u2} CategoryTheory.Cat.category.{u2, u2}} {j : J}, CategoryTheory.SmallCategory.{u2} (CategoryTheory.Functor.obj.{u1, u2, u1, succ u2} J _inst_1 Type.{u2} CategoryTheory.types.{u2} (CategoryTheory.Functor.comp.{u1, u2, u2, u1, succ u2, succ u2} J _inst_1 CategoryTheory.Cat.{u2, u2} CategoryTheory.Cat.category.{u2, u2} Type.{u2} CategoryTheory.types.{u2} F CategoryTheory.Cat.objects.{u2, u2}) j)
-but is expected to have type
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] {F : CategoryTheory.Functor.{u1, u2, u1, succ u2} J _inst_1 CategoryTheory.Cat.{u2, u2} CategoryTheory.Cat.category.{u2, u2}} {j : J}, CategoryTheory.SmallCategory.{u2} (Prefunctor.obj.{succ u1, succ u2, u1, succ u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{u2} (CategoryTheory.CategoryStruct.toQuiver.{u2, succ u2} Type.{u2} (CategoryTheory.Category.toCategoryStruct.{u2, succ u2} Type.{u2} CategoryTheory.types.{u2})) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u1, succ u2} J _inst_1 Type.{u2} CategoryTheory.types.{u2} (CategoryTheory.Functor.comp.{u1, u2, u2, u1, succ u2, succ u2} J _inst_1 CategoryTheory.Cat.{u2, u2} CategoryTheory.Cat.category.{u2, u2} Type.{u2} CategoryTheory.types.{u2} F CategoryTheory.Cat.objects.{u2, u2})) j)
-Case conversion may be inaccurate. Consider using '#align category_theory.Cat.has_limits.category_objects CategoryTheory.Cat.HasLimits.categoryObjectsₓ'. -/
 instance categoryObjects {F : J ⥤ Cat.{u, u}} {j} :
     SmallCategory ((F ⋙ Cat.objects.{u, u}).obj j) :=
   (F.obj j).str
@@ -145,9 +139,6 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.pt ⟶ limitConeX F
 #align category_theory.Cat.has_limits.limit_cone_lift CategoryTheory.Cat.HasLimits.limitConeLift
 -/
 
-/- warning: category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom -> CategoryTheory.Cat.HasLimits.limit_π_homDiagram_eqToHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.Cat.HasLimits.limit_π_homDiagram_eqToHomₓ'. -/
 @[simp]
 theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v}))
     (j : J) (h : X = Y) :

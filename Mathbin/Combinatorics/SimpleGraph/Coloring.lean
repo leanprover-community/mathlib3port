@@ -277,12 +277,6 @@ noncomputable def Colorable.toColoring [Fintype α] {n : ℕ} (hc : G.Colorable 
 #align simple_graph.colorable.to_coloring SimpleGraph.Colorable.toColoring
 -/
 
-/- warning: simple_graph.colorable.of_embedding -> SimpleGraph.Colorable.of_embedding is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {V' : Type.{u2}} {G' : SimpleGraph.{u2} V'}, (SimpleGraph.Embedding.{u1, u2} V V' G G') -> (forall {n : Nat}, (SimpleGraph.Colorable.{u2} V' G' n) -> (SimpleGraph.Colorable.{u1} V G n))
-but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {V' : Type.{u1}} {G' : SimpleGraph.{u1} V'}, (SimpleGraph.Embedding.{u2, u1} V V' G G') -> (forall {n : Nat}, (SimpleGraph.Colorable.{u1} V' G' n) -> (SimpleGraph.Colorable.{u2} V G n))
-Case conversion may be inaccurate. Consider using '#align simple_graph.colorable.of_embedding SimpleGraph.Colorable.of_embeddingₓ'. -/
 theorem Colorable.of_embedding {V' : Type _} {G' : SimpleGraph V'} (f : G ↪g G') {n : ℕ}
     (h : G'.Colorable n) : G.Colorable n :=
   ⟨(h.toColoring (by simp)).comp f⟩
@@ -417,12 +411,6 @@ theorem Colorable.mono_left {G' : SimpleGraph V} (h : G ≤ G') {n : ℕ} (hc : 
 #align simple_graph.colorable.mono_left SimpleGraph.Colorable.mono_left
 -/
 
-/- warning: simple_graph.colorable.chromatic_number_le_of_forall_imp -> SimpleGraph.Colorable.chromaticNumber_le_of_forall_imp is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {V' : Type.{u2}} {G' : SimpleGraph.{u2} V'} {m : Nat}, (SimpleGraph.Colorable.{u2} V' G' m) -> (forall (n : Nat), (SimpleGraph.Colorable.{u2} V' G' n) -> (SimpleGraph.Colorable.{u1} V G n)) -> (LE.le.{0} Nat Nat.hasLe (SimpleGraph.chromaticNumber.{u1} V G) (SimpleGraph.chromaticNumber.{u2} V' G'))
-but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {V' : Type.{u1}} {G' : SimpleGraph.{u1} V'} {m : Nat}, (SimpleGraph.Colorable.{u1} V' G' m) -> (forall (n : Nat), (SimpleGraph.Colorable.{u1} V' G' n) -> (SimpleGraph.Colorable.{u2} V G n)) -> (LE.le.{0} Nat instLENat (SimpleGraph.chromaticNumber.{u2} V G) (SimpleGraph.chromaticNumber.{u1} V' G'))
-Case conversion may be inaccurate. Consider using '#align simple_graph.colorable.chromatic_number_le_of_forall_imp SimpleGraph.Colorable.chromaticNumber_le_of_forall_impₓ'. -/
 theorem Colorable.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGraph V'} {m : ℕ}
     (hc : G'.Colorable m) (h : ∀ n, G'.Colorable n → G.Colorable n) :
     G.chromaticNumber ≤ G'.chromaticNumber :=
@@ -439,12 +427,6 @@ theorem Colorable.chromaticNumber_mono (G' : SimpleGraph V) {m : ℕ} (hc : G'.C
 #align simple_graph.colorable.chromatic_number_mono SimpleGraph.Colorable.chromaticNumber_mono
 -/
 
-/- warning: simple_graph.colorable.chromatic_number_mono_of_embedding -> SimpleGraph.Colorable.chromaticNumber_mono_of_embedding is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {V' : Type.{u2}} {G' : SimpleGraph.{u2} V'} {n : Nat}, (SimpleGraph.Colorable.{u2} V' G' n) -> (SimpleGraph.Embedding.{u1, u2} V V' G G') -> (LE.le.{0} Nat Nat.hasLe (SimpleGraph.chromaticNumber.{u1} V G) (SimpleGraph.chromaticNumber.{u2} V' G'))
-but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {V' : Type.{u1}} {G' : SimpleGraph.{u1} V'} {n : Nat}, (SimpleGraph.Colorable.{u1} V' G' n) -> (SimpleGraph.Embedding.{u2, u1} V V' G G') -> (LE.le.{0} Nat instLENat (SimpleGraph.chromaticNumber.{u2} V G) (SimpleGraph.chromaticNumber.{u1} V' G'))
-Case conversion may be inaccurate. Consider using '#align simple_graph.colorable.chromatic_number_mono_of_embedding SimpleGraph.Colorable.chromaticNumber_mono_of_embeddingₓ'. -/
 theorem Colorable.chromaticNumber_mono_of_embedding {V' : Type _} {G' : SimpleGraph V'} {n : ℕ}
     (h : G'.Colorable n) (f : G ↪g G') : G.chromaticNumber ≤ G'.chromaticNumber :=
   h.chromaticNumber_le_of_forall_imp fun _ => Colorable.of_embedding f
@@ -471,12 +453,6 @@ theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
 #align simple_graph.chromatic_number_eq_card_of_forall_surj SimpleGraph.chromaticNumber_eq_card_of_forall_surj
 -/
 
-/- warning: simple_graph.chromatic_number_bot -> SimpleGraph.chromaticNumber_bot is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Nonempty.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
-but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Nonempty.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
-Case conversion may be inaccurate. Consider using '#align simple_graph.chromatic_number_bot SimpleGraph.chromaticNumber_botₓ'. -/
 theorem chromaticNumber_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumber = 1 :=
   by
   let C : (⊥ : SimpleGraph V).Coloring (Fin 1) := coloring.mk (fun _ => 0) fun v w h => False.elim h
@@ -485,12 +461,6 @@ theorem chromaticNumber_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumber
   · exact chromatic_number_pos C.to_colorable
 #align simple_graph.chromatic_number_bot SimpleGraph.chromaticNumber_bot
 
-/- warning: simple_graph.chromatic_number_top -> SimpleGraph.chromaticNumber_top is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (Fintype.card.{u1} V _inst_1)
-but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (Fintype.card.{u1} V _inst_1)
-Case conversion may be inaccurate. Consider using '#align simple_graph.chromatic_number_top SimpleGraph.chromaticNumber_topₓ'. -/
 @[simp]
 theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber = Fintype.card V :=
   by
@@ -503,12 +473,6 @@ theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber 
   exact C.valid h
 #align simple_graph.chromatic_number_top SimpleGraph.chromaticNumber_top
 
-/- warning: simple_graph.chromatic_number_top_eq_zero_of_infinite -> SimpleGraph.chromaticNumber_top_eq_zero_of_infinite is a dubious translation:
-lean 3 declaration is
-  forall (V : Type.{u1}) [_inst_1 : Infinite.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
-but is expected to have type
-  forall (V : Type.{u1}) [_inst_1 : Infinite.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
-Case conversion may be inaccurate. Consider using '#align simple_graph.chromatic_number_top_eq_zero_of_infinite SimpleGraph.chromaticNumber_top_eq_zero_of_infiniteₓ'. -/
 theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
     (⊤ : SimpleGraph V).chromaticNumber = 0 :=
   by
@@ -534,12 +498,6 @@ def CompleteBipartiteGraph.bicoloring (V W : Type _) : (completeBipartiteGraph V
 #align simple_graph.complete_bipartite_graph.bicoloring SimpleGraph.CompleteBipartiteGraph.bicoloring
 -/
 
-/- warning: simple_graph.complete_bipartite_graph.chromatic_number -> SimpleGraph.CompleteBipartiteGraph.chromaticNumber is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} [_inst_1 : Nonempty.{succ u1} V] [_inst_2 : Nonempty.{succ u2} W], Eq.{1} Nat (SimpleGraph.chromaticNumber.{max u1 u2} (Sum.{u1, u2} V W) (completeBipartiteGraph.{u1, u2} V W)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall {V : Type.{u2}} {W : Type.{u1}} [_inst_1 : Nonempty.{succ u2} V] [_inst_2 : Nonempty.{succ u1} W], Eq.{1} Nat (SimpleGraph.chromaticNumber.{max u2 u1} (Sum.{u2, u1} V W) (completeBipartiteGraph.{u2, u1} V W)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))
-Case conversion may be inaccurate. Consider using '#align simple_graph.complete_bipartite_graph.chromatic_number SimpleGraph.CompleteBipartiteGraph.chromaticNumberₓ'. -/
 theorem CompleteBipartiteGraph.chromaticNumber {V W : Type _} [Nonempty V] [Nonempty W] :
     (completeBipartiteGraph V W).chromaticNumber = 2 :=
   by

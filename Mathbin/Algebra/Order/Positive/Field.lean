@@ -29,9 +29,6 @@ namespace Positive
 instance : Inv { x : K // 0 < x } :=
   ⟨fun x => ⟨x⁻¹, inv_pos.2 x.2⟩⟩
 
-/- warning: positive.coe_inv -> Positive.coe_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align positive.coe_inv Positive.coe_invₓ'. -/
 @[simp]
 theorem coe_inv (x : { x : K // 0 < x }) : ↑x⁻¹ = (x⁻¹ : K) :=
   rfl
@@ -40,9 +37,6 @@ theorem coe_inv (x : { x : K // 0 < x }) : ↑x⁻¹ = (x⁻¹ : K) :=
 instance : Pow { x : K // 0 < x } ℤ :=
   ⟨fun x n => ⟨x ^ n, zpow_pos_of_pos x.2 _⟩⟩
 
-/- warning: positive.coe_zpow -> Positive.coe_zpow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align positive.coe_zpow Positive.coe_zpowₓ'. -/
 @[simp]
 theorem coe_zpow (x : { x : K // 0 < x }) (n : ℤ) : ↑(x ^ n) = (x ^ n : K) :=
   rfl

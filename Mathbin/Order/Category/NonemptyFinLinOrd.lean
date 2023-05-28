@@ -42,12 +42,6 @@ class NonemptyFinLinOrd (α : Type _) extends Fintype α, LinearOrder α where
 
 attribute [instance] NonemptyFinLinOrd.nonempty
 
-/- warning: nonempty_fin_lin_ord.to_bounded_order -> NonemptyFinLinOrd.toBoundedOrder is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : NonemptyFinLinOrd.{u1} α], BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α (NonemptyFinLinOrd.toLinearOrder.{u1} α _inst_1))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : NonemptyFinLinOrd.{u1} α], BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (NonemptyFinLinOrd.toLinearOrder.{u1} α _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align nonempty_fin_lin_ord.to_bounded_order NonemptyFinLinOrd.toBoundedOrderₓ'. -/
 instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] :
     BoundedOrder α :=
   Fintype.toBoundedOrder α
@@ -122,12 +116,6 @@ instance hasForgetToFinPartOrd : HasForget₂ NonemptyFinLinOrdCat FinPartOrd
       map := fun X Y => id }
 #align NonemptyFinLinOrd.has_forget_to_FinPartOrd NonemptyFinLinOrdCat.hasForgetToFinPartOrd
 
-/- warning: NonemptyFinLinOrd.iso.mk -> NonemptyFinLinOrdCat.Iso.mk is a dubious translation:
-lean 3 declaration is
-  forall {α : NonemptyFinLinOrdCat.{u1}} {β : NonemptyFinLinOrdCat.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (Lattice.toSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (LinearOrder.toLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (NonemptyFinLinOrd.toLinearOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} α) (NonemptyFinLinOrdCat.nonemptyFinLinOrd.{u1} α))))))) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (Lattice.toSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (LinearOrder.toLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (NonemptyFinLinOrd.toLinearOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} NonemptyFinLinOrdCat.{u1} Type.{u1} NonemptyFinLinOrdCat.hasCoeToSort.{u1} β) (NonemptyFinLinOrdCat.nonemptyFinLinOrd.{u1} β)))))))) -> (CategoryTheory.Iso.{u1, succ u1} NonemptyFinLinOrdCat.{u1} NonemptyFinLinOrdCat.largeCategory.{u1} α β)
-but is expected to have type
-  forall {α : NonemptyFinLinOrdCat.{u1}} {β : NonemptyFinLinOrdCat.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (Lattice.toSemilatticeInf.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (DistribLattice.toLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (instDistribLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (NonemptyFinLinOrd.toLinearOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} α) (NonemptyFinLinOrdCat.instNonemptyFinLinOrdα.{u1} α)))))))) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (Lattice.toSemilatticeInf.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (DistribLattice.toLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (instDistribLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (NonemptyFinLinOrd.toLinearOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} NonemptyFinLinOrd.{u1} β) (NonemptyFinLinOrdCat.instNonemptyFinLinOrdα.{u1} β))))))))) -> (CategoryTheory.Iso.{u1, succ u1} NonemptyFinLinOrdCat.{u1} instNonemptyFinLinOrdCatLargeCategory.{u1} α β)
-Case conversion may be inaccurate. Consider using '#align NonemptyFinLinOrd.iso.mk NonemptyFinLinOrdCat.Iso.mkₓ'. -/
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
 between them. -/
 @[simps]
@@ -149,12 +137,6 @@ def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat
 #align NonemptyFinLinOrd.dual NonemptyFinLinOrdCat.dual
 -/
 
-/- warning: NonemptyFinLinOrd.dual_equiv -> NonemptyFinLinOrdCat.dualEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} NonemptyFinLinOrdCat.{u1} NonemptyFinLinOrdCat.largeCategory.{u1} NonemptyFinLinOrdCat.{u1} NonemptyFinLinOrdCat.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} NonemptyFinLinOrdCat.{u1} NonemptyFinLinOrdCat.{u1} instNonemptyFinLinOrdCatLargeCategory.{u1} instNonemptyFinLinOrdCatLargeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align NonemptyFinLinOrd.dual_equiv NonemptyFinLinOrdCat.dualEquivₓ'. -/
 /-- The equivalence between `NonemptyFinLinOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=

@@ -115,23 +115,11 @@ namespace Function
 
 variable (β) [One α] [Preorder α] {a : α}
 
-/- warning: function.one_le_const_of_one_le -> Function.one_le_const_of_one_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (β : Type.{u2}) [_inst_1 : One.{u1} α] [_inst_2 : Preorder.{u1} α] {a : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) a) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_2)) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (OfNat.mk.{max u2 u1} (β -> α) 1 (One.one.{max u2 u1} (β -> α) (Pi.instOne.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1))))) (Function.const.{succ u1, succ u2} α β a))
-but is expected to have type
-  forall {α : Type.{u2}} (β : Type.{u1}) [_inst_1 : One.{u2} α] [_inst_2 : Preorder.{u2} α] {a : α}, (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1)) a) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_2)) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (One.toOfNat1.{max u2 u1} (β -> α) (Pi.instOne.{u1, u2} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => _inst_1)))) (Function.const.{succ u2, succ u1} α β a))
-Case conversion may be inaccurate. Consider using '#align function.one_le_const_of_one_le Function.one_le_const_of_one_leₓ'. -/
 @[to_additive const_nonneg_of_nonneg]
 theorem one_le_const_of_one_le (ha : 1 ≤ a) : 1 ≤ const β a := fun _ => ha
 #align function.one_le_const_of_one_le Function.one_le_const_of_one_le
 #align function.const_nonneg_of_nonneg Function.const_nonneg_of_nonneg
 
-/- warning: function.const_le_one_of_le_one -> Function.const_le_one_of_le_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (β : Type.{u2}) [_inst_1 : One.{u1} α] [_inst_2 : Preorder.{u1} α] {a : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1)))) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_2)) (Function.const.{succ u1, succ u2} α β a) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (OfNat.mk.{max u2 u1} (β -> α) 1 (One.one.{max u2 u1} (β -> α) (Pi.instOne.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1))))))
-but is expected to have type
-  forall {α : Type.{u2}} (β : Type.{u1}) [_inst_1 : One.{u2} α] [_inst_2 : Preorder.{u2} α] {a : α}, (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) a (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1))) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_2)) (Function.const.{succ u2, succ u1} α β a) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (One.toOfNat1.{max u2 u1} (β -> α) (Pi.instOne.{u1, u2} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align function.const_le_one_of_le_one Function.const_le_one_of_le_oneₓ'. -/
 @[to_additive]
 theorem const_le_one_of_le_one (ha : a ≤ 1) : const β a ≤ 1 := fun _ => ha
 #align function.const_le_one_of_le_one Function.const_le_one_of_le_one
@@ -139,48 +127,24 @@ theorem const_le_one_of_le_one (ha : a ≤ 1) : const β a ≤ 1 := fun _ => ha
 
 variable {β} [Nonempty β]
 
-/- warning: function.one_le_const -> Function.one_le_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : One.{u1} α] [_inst_2 : Preorder.{u1} α] {a : α} [_inst_3 : Nonempty.{succ u2} β], Iff (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_2)) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (OfNat.mk.{max u2 u1} (β -> α) 1 (One.one.{max u2 u1} (β -> α) (Pi.instOne.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1))))) (Function.const.{succ u1, succ u2} α β a)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) a)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u2} α] [_inst_2 : Preorder.{u2} α] {a : α} [_inst_3 : Nonempty.{succ u1} β], Iff (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_2)) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (One.toOfNat1.{max u2 u1} (β -> α) (Pi.instOne.{u1, u2} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => _inst_1)))) (Function.const.{succ u2, succ u1} α β a)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1)) a)
-Case conversion may be inaccurate. Consider using '#align function.one_le_const Function.one_le_constₓ'. -/
 @[simp, to_additive const_nonneg]
 theorem one_le_const : 1 ≤ const β a ↔ 1 ≤ a :=
   @const_le_const _ _ _ _ 1 _
 #align function.one_le_const Function.one_le_const
 #align function.const_nonneg Function.const_nonneg
 
-/- warning: function.one_lt_const -> Function.one_lt_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : One.{u1} α] [_inst_2 : Preorder.{u1} α] {a : α} [_inst_3 : Nonempty.{succ u2} β], Iff (LT.lt.{max u2 u1} (β -> α) (Preorder.toHasLt.{max u2 u1} (β -> α) (Pi.preorder.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_2))) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (OfNat.mk.{max u2 u1} (β -> α) 1 (One.one.{max u2 u1} (β -> α) (Pi.instOne.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1))))) (Function.const.{succ u1, succ u2} α β a)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_2) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) a)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u2} α] [_inst_2 : Preorder.{u2} α] {a : α} [_inst_3 : Nonempty.{succ u1} β], Iff (LT.lt.{max u2 u1} (β -> α) (Preorder.toLT.{max u2 u1} (β -> α) (Pi.preorder.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_2))) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (One.toOfNat1.{max u2 u1} (β -> α) (Pi.instOne.{u1, u2} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => _inst_1)))) (Function.const.{succ u2, succ u1} α β a)) (LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1)) a)
-Case conversion may be inaccurate. Consider using '#align function.one_lt_const Function.one_lt_constₓ'. -/
 @[simp, to_additive const_pos]
 theorem one_lt_const : 1 < const β a ↔ 1 < a :=
   @const_lt_const _ _ _ _ 1 a
 #align function.one_lt_const Function.one_lt_const
 #align function.const_pos Function.const_pos
 
-/- warning: function.const_le_one -> Function.const_le_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : One.{u1} α] [_inst_2 : Preorder.{u1} α] {a : α} [_inst_3 : Nonempty.{succ u2} β], Iff (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_2)) (Function.const.{succ u1, succ u2} α β a) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (OfNat.mk.{max u2 u1} (β -> α) 1 (One.one.{max u2 u1} (β -> α) (Pi.instOne.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)))))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u2} α] [_inst_2 : Preorder.{u2} α] {a : α} [_inst_3 : Nonempty.{succ u1} β], Iff (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_2)) (Function.const.{succ u2, succ u1} α β a) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (One.toOfNat1.{max u2 u1} (β -> α) (Pi.instOne.{u1, u2} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => _inst_1))))) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) a (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align function.const_le_one Function.const_le_oneₓ'. -/
 @[simp, to_additive]
 theorem const_le_one : const β a ≤ 1 ↔ a ≤ 1 :=
   @const_le_const _ _ _ _ _ 1
 #align function.const_le_one Function.const_le_one
 #align function.const_nonpos Function.const_nonpos
 
-/- warning: function.const_lt_one -> Function.const_lt_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : One.{u1} α] [_inst_2 : Preorder.{u1} α] {a : α} [_inst_3 : Nonempty.{succ u2} β], Iff (LT.lt.{max u2 u1} (β -> α) (Preorder.toHasLt.{max u2 u1} (β -> α) (Pi.preorder.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_2))) (Function.const.{succ u1, succ u2} α β a) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (OfNat.mk.{max u2 u1} (β -> α) 1 (One.one.{max u2 u1} (β -> α) (Pi.instOne.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)))))) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_2) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u2} α] [_inst_2 : Preorder.{u2} α] {a : α} [_inst_3 : Nonempty.{succ u1} β], Iff (LT.lt.{max u2 u1} (β -> α) (Preorder.toLT.{max u2 u1} (β -> α) (Pi.preorder.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_2))) (Function.const.{succ u2, succ u1} α β a) (OfNat.ofNat.{max u2 u1} (β -> α) 1 (One.toOfNat1.{max u2 u1} (β -> α) (Pi.instOne.{u1, u2} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => _inst_1))))) (LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) a (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align function.const_lt_one Function.const_lt_oneₓ'. -/
 @[simp, to_additive]
 theorem const_lt_one : const β a < 1 ↔ a < 1 :=
   @const_lt_const _ _ _ _ _ 1

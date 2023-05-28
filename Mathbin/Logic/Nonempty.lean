@@ -68,12 +68,6 @@ theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ 
 #align nonempty_sigma nonempty_sigma
 -/
 
-/- warning: nonempty_psigma -> nonempty_psigma is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : α -> Sort.{u2}}, Iff (Nonempty.{max 1 u1 u2} (PSigma.{u1, u2} α β)) (Exists.{u1} α (fun (a : α) => Nonempty.{u2} (β a)))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : α -> Sort.{u1}}, Iff (Nonempty.{max (max 1 u1) u2} (PSigma.{u2, u1} α β)) (Exists.{u2} α (fun (a : α) => Nonempty.{u1} (β a)))
-Case conversion may be inaccurate. Consider using '#align nonempty_psigma nonempty_psigmaₓ'. -/
 @[simp]
 theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
@@ -93,12 +87,6 @@ theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
 #align nonempty_prod nonempty_prod
 -/
 
-/- warning: nonempty_pprod -> nonempty_pprod is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, Iff (Nonempty.{max 1 u1 u2} (PProd.{u1, u2} α β)) (And (Nonempty.{u1} α) (Nonempty.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, Iff (Nonempty.{max (max 1 u1) u2} (PProd.{u2, u1} α β)) (And (Nonempty.{u2} α) (Nonempty.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nonempty_pprod nonempty_pprodₓ'. -/
 @[simp]
 theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
@@ -119,12 +107,6 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
 #align nonempty_sum nonempty_sum
 -/
 
-/- warning: nonempty_psum -> nonempty_psum is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, Iff (Nonempty.{max 1 u1 u2} (PSum.{u1, u2} α β)) (Or (Nonempty.{u1} α) (Nonempty.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, Iff (Nonempty.{max (max 1 u1) u2} (PSum.{u2, u1} α β)) (Or (Nonempty.{u2} α) (Nonempty.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nonempty_psum nonempty_psumₓ'. -/
 @[simp]
 theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
@@ -142,12 +124,6 @@ theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonemp
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 #align nonempty_empty nonempty_empty
 
-/- warning: nonempty_ulift -> nonempty_ulift is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Iff (Nonempty.{succ (max u1 u2)} (ULift.{u2, u1} α)) (Nonempty.{succ u1} α)
-but is expected to have type
-  forall {α : Type.{u2}}, Iff (Nonempty.{max (succ u2) (succ u1)} (ULift.{u1, u2} α)) (Nonempty.{succ u2} α)
-Case conversion may be inaccurate. Consider using '#align nonempty_ulift nonempty_uliftₓ'. -/
 @[simp]
 theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
@@ -200,35 +176,17 @@ protected noncomputable def Classical.arbitrary (α) [h : Nonempty α] : α :=
 #align classical.arbitrary Classical.arbitrary
 -/
 
-/- warning: nonempty.map -> Nonempty.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, (α -> β) -> (Nonempty.{u1} α) -> (Nonempty.{u2} β)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, (α -> β) -> (Nonempty.{u2} α) -> (Nonempty.{u1} β)
-Case conversion may be inaccurate. Consider using '#align nonempty.map Nonempty.mapₓ'. -/
 /-- Given `f : α → β`, if `α` is nonempty then `β` is also nonempty.
   `nonempty` cannot be a `functor`, because `functor` is restricted to `Type`. -/
 theorem Nonempty.map {α β} (f : α → β) : Nonempty α → Nonempty β
   | ⟨h⟩ => ⟨f h⟩
 #align nonempty.map Nonempty.map
 
-/- warning: nonempty.map2 -> Nonempty.map2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}}, (α -> β -> γ) -> (Nonempty.{u1} α) -> (Nonempty.{u2} β) -> (Nonempty.{u3} γ)
-but is expected to have type
-  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}}, (α -> β -> γ) -> (Nonempty.{u3} α) -> (Nonempty.{u2} β) -> (Nonempty.{u1} γ)
-Case conversion may be inaccurate. Consider using '#align nonempty.map2 Nonempty.map2ₓ'. -/
 protected theorem Nonempty.map2 {α β γ : Sort _} (f : α → β → γ) :
     Nonempty α → Nonempty β → Nonempty γ
   | ⟨x⟩, ⟨y⟩ => ⟨f x y⟩
 #align nonempty.map2 Nonempty.map2
 
-/- warning: nonempty.congr -> Nonempty.congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, (α -> β) -> (β -> α) -> (Iff (Nonempty.{u1} α) (Nonempty.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, (α -> β) -> (β -> α) -> (Iff (Nonempty.{u2} α) (Nonempty.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nonempty.congr Nonempty.congrₓ'. -/
 protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonempty α ↔ Nonempty β :=
   ⟨Nonempty.map f, Nonempty.map g⟩
 #align nonempty.congr Nonempty.congr
@@ -246,12 +204,6 @@ instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
 instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty (∀ i, α i) :=
   ⟨fun _ => Classical.arbitrary _⟩
 
-/- warning: classical.nonempty_pi -> Classical.nonempty_pi is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : ι -> Sort.{u2}}, Iff (Nonempty.{imax u1 u2} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u2} (α i))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : ι -> Sort.{u1}}, Iff (Nonempty.{imax u2 u1} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u1} (α i))
-Case conversion may be inaccurate. Consider using '#align classical.nonempty_pi Classical.nonempty_piₓ'. -/
 theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
   ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
 #align classical.nonempty_pi Classical.nonempty_pi

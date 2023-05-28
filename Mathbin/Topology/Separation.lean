@@ -113,12 +113,6 @@ def SeparatedNhds : Set α → Set α → Prop := fun s t : Set α =>
 #align separated_nhds SeparatedNhds
 -/
 
-/- warning: separated_nhds_iff_disjoint -> separatedNhds_iff_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (SeparatedNhds.{u1} α _inst_1 s t) (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (SeparatedNhds.{u1} α _inst_1 s t) (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
-Case conversion may be inaccurate. Consider using '#align separated_nhds_iff_disjoint separatedNhds_iff_disjointₓ'. -/
 theorem separatedNhds_iff_disjoint {s t : Set α} : SeparatedNhds s t ↔ Disjoint (𝓝ˢ s) (𝓝ˢ t) := by
   simp only [(hasBasis_nhdsSet s).disjoint_iff (hasBasis_nhdsSet t), SeparatedNhds, exists_prop, ←
     exists_and_left, and_assoc, and_comm, and_left_comm]
@@ -150,34 +144,16 @@ theorem preimage [TopologicalSpace β] {f : α → β} {s t : Set β} (h : Separ
 #align separated_nhds.preimage SeparatedNhds.preimage
 -/
 
-/- warning: separated_nhds.disjoint -> SeparatedNhds.disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t)
-Case conversion may be inaccurate. Consider using '#align separated_nhds.disjoint SeparatedNhds.disjointₓ'. -/
 protected theorem disjoint (h : SeparatedNhds s t) : Disjoint s t :=
   let ⟨U, V, hU, hV, hsU, htV, hd⟩ := h
   hd.mono hsU htV
 #align separated_nhds.disjoint SeparatedNhds.disjoint
 
-/- warning: separated_nhds.disjoint_closure_left -> SeparatedNhds.disjoint_closure_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (closure.{u1} α _inst_1 s) t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (closure.{u1} α _inst_1 s) t)
-Case conversion may be inaccurate. Consider using '#align separated_nhds.disjoint_closure_left SeparatedNhds.disjoint_closure_leftₓ'. -/
 theorem disjoint_closure_left (h : SeparatedNhds s t) : Disjoint (closure s) t :=
   let ⟨U, V, hU, hV, hsU, htV, hd⟩ := h
   (hd.closure_left hV).mono (closure_mono hsU) htV
 #align separated_nhds.disjoint_closure_left SeparatedNhds.disjoint_closure_left
 
-/- warning: separated_nhds.disjoint_closure_right -> SeparatedNhds.disjoint_closure_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s (closure.{u1} α _inst_1 t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s (closure.{u1} α _inst_1 t))
-Case conversion may be inaccurate. Consider using '#align separated_nhds.disjoint_closure_right SeparatedNhds.disjoint_closure_rightₓ'. -/
 theorem disjoint_closure_right (h : SeparatedNhds s t) : Disjoint s (closure t) :=
   h.symm.disjoint_closure_left.symm
 #align separated_nhds.disjoint_closure_right SeparatedNhds.disjoint_closure_right
@@ -201,22 +177,10 @@ theorem mono (h : SeparatedNhds s₂ t₂) (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t
 #align separated_nhds.mono SeparatedNhds.mono
 -/
 
-/- warning: separated_nhds.union_left -> SeparatedNhds.union_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s u) -> (SeparatedNhds.{u1} α _inst_1 t u) -> (SeparatedNhds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) u)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s u) -> (SeparatedNhds.{u1} α _inst_1 t u) -> (SeparatedNhds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) u)
-Case conversion may be inaccurate. Consider using '#align separated_nhds.union_left SeparatedNhds.union_leftₓ'. -/
 theorem union_left : SeparatedNhds s u → SeparatedNhds t u → SeparatedNhds (s ∪ t) u := by
   simpa only [separatedNhds_iff_disjoint, nhdsSet_union, disjoint_sup_left] using And.intro
 #align separated_nhds.union_left SeparatedNhds.union_left
 
-/- warning: separated_nhds.union_right -> SeparatedNhds.union_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (SeparatedNhds.{u1} α _inst_1 s u) -> (SeparatedNhds.{u1} α _inst_1 s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t u))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (SeparatedNhds.{u1} α _inst_1 s t) -> (SeparatedNhds.{u1} α _inst_1 s u) -> (SeparatedNhds.{u1} α _inst_1 s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t u))
-Case conversion may be inaccurate. Consider using '#align separated_nhds.union_right SeparatedNhds.union_rightₓ'. -/
 theorem union_right (ht : SeparatedNhds s t) (hu : SeparatedNhds s u) : SeparatedNhds s (t ∪ u) :=
   (ht.symm.union_left hu.symm).symm
 #align separated_nhds.union_right SeparatedNhds.union_right
@@ -393,12 +357,6 @@ theorem minimal_nonempty_open_eq_singleton [T0Space α] {s : Set α} (hs : IsOpe
 #align minimal_nonempty_open_eq_singleton minimal_nonempty_open_eq_singleton
 -/
 
-/- warning: exists_open_singleton_of_open_finite -> exists_open_singleton_of_open_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.Nonempty.{u1} α s) -> (IsOpen.{u1} α _inst_1 s) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => IsOpen.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.Nonempty.{u1} α s) -> (IsOpen.{u1} α _inst_1 s) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (IsOpen.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))))
-Case conversion may be inaccurate. Consider using '#align exists_open_singleton_of_open_finite exists_open_singleton_of_open_finiteₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Given an open finite set `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
 theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s.Finite)
@@ -492,12 +450,6 @@ theorem isClosed_singleton [T1Space α] {x : α} : IsClosed ({x} : Set α) :=
 #align is_closed_singleton isClosed_singleton
 -/
 
-/- warning: is_open_compl_singleton -> isOpen_compl_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α}, IsOpen.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α}, IsOpen.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))
-Case conversion may be inaccurate. Consider using '#align is_open_compl_singleton isOpen_compl_singletonₓ'. -/
 theorem isOpen_compl_singleton [T1Space α] {x : α} : IsOpen ({x}ᶜ : Set α) :=
   isClosed_singleton.isOpen_compl
 #align is_open_compl_singleton isOpen_compl_singleton
@@ -517,22 +469,10 @@ theorem Continuous.isOpen_mulSupport [T1Space α] [One α] [TopologicalSpace β]
 #align continuous.is_open_support Continuous.isOpen_support
 -/
 
-/- warning: ne.nhds_within_compl_singleton -> Ne.nhdsWithin_compl_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) y))) (nhds.{u1} α _inst_1 x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) y))) (nhds.{u1} α _inst_1 x))
-Case conversion may be inaccurate. Consider using '#align ne.nhds_within_compl_singleton Ne.nhdsWithin_compl_singletonₓ'. -/
 theorem Ne.nhdsWithin_compl_singleton [T1Space α] {x y : α} (h : x ≠ y) : 𝓝[{y}ᶜ] x = 𝓝 x :=
   isOpen_ne.nhdsWithin_eq h
 #align ne.nhds_within_compl_singleton Ne.nhdsWithin_compl_singleton
 
-/- warning: ne.nhds_within_diff_singleton -> Ne.nhdsWithin_diff_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 x (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) y))) (nhdsWithin.{u1} α _inst_1 x s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 x (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) y))) (nhdsWithin.{u1} α _inst_1 x s))
-Case conversion may be inaccurate. Consider using '#align ne.nhds_within_diff_singleton Ne.nhdsWithin_diff_singletonₓ'. -/
 theorem Ne.nhdsWithin_diff_singleton [T1Space α] {x y : α} (h : x ≠ y) (s : Set α) :
     𝓝[s \ {y}] x = 𝓝[s] x :=
   by
@@ -540,12 +480,6 @@ theorem Ne.nhdsWithin_diff_singleton [T1Space α] {x y : α} (h : x ≠ y) (s : 
   exact mem_nhdsWithin_of_mem_nhds (is_open_ne.mem_nhds h)
 #align ne.nhds_within_diff_singleton Ne.nhdsWithin_diff_singleton
 
-/- warning: is_open_set_of_eventually_nhds_within -> isOpen_setOf_eventually_nhdsWithin is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {p : α -> Prop}, IsOpen.{u1} α _inst_1 (setOf.{u1} α (fun (x : α) => Filter.Eventually.{u1} α (fun (y : α) => p y) (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {p : α -> Prop}, IsOpen.{u1} α _inst_1 (setOf.{u1} α (fun (x : α) => Filter.Eventually.{u1} α (fun (y : α) => p y) (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))))
-Case conversion may be inaccurate. Consider using '#align is_open_set_of_eventually_nhds_within isOpen_setOf_eventually_nhdsWithinₓ'. -/
 theorem isOpen_setOf_eventually_nhdsWithin [T1Space α] {p : α → Prop} :
     IsOpen { x | ∀ᶠ y in 𝓝[≠] x, p y } :=
   by
@@ -565,12 +499,6 @@ protected theorem Set.Finite.isClosed [T1Space α] {s : Set α} (hs : Set.Finite
 #align set.finite.is_closed Set.Finite.isClosed
 -/
 
-/- warning: topological_space.is_topological_basis.exists_mem_of_ne -> TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α _inst_1 b) -> (forall {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (a : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) a b) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) a b) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x a) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y a))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α _inst_1 b) -> (forall {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (a : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a b) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x a) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y a))))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.exists_mem_of_ne TopologicalSpace.IsTopologicalBasis.exists_mem_of_neₓ'. -/
 theorem TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne [T1Space α] {b : Set (Set α)}
     (hb : IsTopologicalBasis b) {x y : α} (h : x ≠ y) : ∃ a ∈ b, x ∈ a ∧ y ∉ a :=
   by
@@ -578,12 +506,6 @@ theorem TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne [T1Space α] {b : S
   exact ⟨a, ab, xa, fun h => ha h rfl⟩
 #align topological_space.is_topological_basis.exists_mem_of_ne TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne
 
-/- warning: filter.coclosed_compact_le_cofinite -> Filter.coclosedCompact_le_cofinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1], LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.coclosedCompact.{u1} α _inst_1) (Filter.cofinite.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1], LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.coclosedCompact.{u1} α _inst_1) (Filter.cofinite.{u1} α)
-Case conversion may be inaccurate. Consider using '#align filter.coclosed_compact_le_cofinite Filter.coclosedCompact_le_cofiniteₓ'. -/
 theorem Filter.coclosedCompact_le_cofinite [T1Space α] :
     Filter.coclosedCompact α ≤ Filter.cofinite := fun s hs =>
   compl_compl s ▸ hs.IsCompact.compl_mem_coclosedCompact_of_isClosed hs.IsClosed
@@ -625,12 +547,6 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
 #align finset.is_closed Finset.isClosed
 -/
 
-/- warning: t1_space_tfae -> t1Space_TFAE is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : TopologicalSpace.{u1} α], List.TFAE (List.cons.{0} Prop (T1Space.{u1} α _inst_2) (List.cons.{0} Prop (forall (x : α), IsClosed.{u1} α _inst_2 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)) (List.cons.{0} Prop (forall (x : α), IsOpen.{u1} α _inst_2 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))) (List.cons.{0} Prop (Continuous.{u1, u1} α (CofiniteTopology.{u1} α) _inst_2 (CofiniteTopology.topologicalSpace.{u1} α) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) => α -> (CofiniteTopology.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (CofiniteTopology.of.{u1} α))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) y)) (nhds.{u1} α _inst_2 x))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_2 x)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_2 x)) => Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s))))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (IsOpen.{u1} α _inst_2 U) (fun (hU : IsOpen.{u1} α _inst_2 U) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y U)))))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_2 x) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α y))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α x) (nhds.{u1} α _inst_2 y))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Specializes.{u1} α _inst_2 x y) -> (Eq.{succ u1} α x y)) (List.nil.{0} Prop)))))))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : TopologicalSpace.{u1} α], List.TFAE (List.cons.{0} Prop (T1Space.{u1} α _inst_2) (List.cons.{0} Prop (forall (x : α), IsClosed.{u1} α _inst_2 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) (List.cons.{0} Prop (forall (x : α), IsOpen.{u1} α _inst_2 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))) (List.cons.{0} Prop (Continuous.{u1, u1} α (CofiniteTopology.{u1} α) _inst_2 (CofiniteTopology.instTopologicalSpaceCofiniteTopology.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => CofiniteTopology.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (CofiniteTopology.of.{u1} α))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) y)) (nhds.{u1} α _inst_2 x))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_2 x)) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s))))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsOpen.{u1} α _inst_2 U) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y U)))))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_2 x) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α y))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α x) (nhds.{u1} α _inst_2 y))) (List.cons.{0} Prop (forall {{x : α}} {{y : α}}, (Specializes.{u1} α _inst_2 x y) -> (Eq.{succ u1} α x y)) (List.nil.{0} Prop)))))))))))
-Case conversion may be inaccurate. Consider using '#align t1_space_tfae t1Space_TFAEₓ'. -/
 theorem t1Space_TFAE (α : Type u) [TopologicalSpace α] :
     TFAE
       [T1Space α, ∀ x, IsClosed ({x} : Set α), ∀ x, IsOpen ({x}ᶜ : Set α),
@@ -667,54 +583,24 @@ theorem t1Space_TFAE (α : Type u) [TopologicalSpace α] :
   tfae_finish
 #align t1_space_tfae t1Space_TFAE
 
-/- warning: t1_space_iff_continuous_cofinite_of -> t1Space_iff_continuous_cofinite_of is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_2) (Continuous.{u1, u1} α (CofiniteTopology.{u1} α) _inst_2 (CofiniteTopology.topologicalSpace.{u1} α) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) => α -> (CofiniteTopology.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (CofiniteTopology.of.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_2) (Continuous.{u1, u1} α (CofiniteTopology.{u1} α) _inst_2 (CofiniteTopology.instTopologicalSpaceCofiniteTopology.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => CofiniteTopology.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (CofiniteTopology.of.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align t1_space_iff_continuous_cofinite_of t1Space_iff_continuous_cofinite_ofₓ'. -/
 theorem t1Space_iff_continuous_cofinite_of {α : Type _} [TopologicalSpace α] :
     T1Space α ↔ Continuous (@CofiniteTopology.of α) :=
   (t1Space_TFAE α).out 0 3
 #align t1_space_iff_continuous_cofinite_of t1Space_iff_continuous_cofinite_of
 
-/- warning: cofinite_topology.continuous_of -> CofiniteTopology.continuous_of is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1], Continuous.{u1, u1} α (CofiniteTopology.{u1} α) _inst_1 (CofiniteTopology.topologicalSpace.{u1} α) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) => α -> (CofiniteTopology.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (CofiniteTopology.of.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1], Continuous.{u1, u1} α (CofiniteTopology.{u1} α) _inst_1 (CofiniteTopology.instTopologicalSpaceCofiniteTopology.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => CofiniteTopology.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (CofiniteTopology.{u1} α)) (CofiniteTopology.of.{u1} α))
-Case conversion may be inaccurate. Consider using '#align cofinite_topology.continuous_of CofiniteTopology.continuous_ofₓ'. -/
 theorem CofiniteTopology.continuous_of [T1Space α] : Continuous (@CofiniteTopology.of α) :=
   t1Space_iff_continuous_cofinite_of.mp ‹_›
 #align cofinite_topology.continuous_of CofiniteTopology.continuous_of
 
-/- warning: t1_space_iff_exists_open -> t1Space_iff_exists_open is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_1) (forall (x : α) (y : α), (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (IsOpen.{u1} α _inst_1 U) (fun (hU : IsOpen.{u1} α _inst_1 U) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y U))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_1) (forall (x : α) (y : α), (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsOpen.{u1} α _inst_1 U) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y U))))))
-Case conversion may be inaccurate. Consider using '#align t1_space_iff_exists_open t1Space_iff_exists_openₓ'. -/
 theorem t1Space_iff_exists_open :
     T1Space α ↔ ∀ x y, x ≠ y → ∃ (U : Set α)(hU : IsOpen U), x ∈ U ∧ y ∉ U :=
   (t1Space_TFAE α).out 0 6
 #align t1_space_iff_exists_open t1Space_iff_exists_open
 
-/- warning: t1_space_iff_disjoint_pure_nhds -> t1Space_iff_disjoint_pure_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_1) (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α x) (nhds.{u1} α _inst_1 y)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_1) (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α x) (nhds.{u1} α _inst_1 y)))
-Case conversion may be inaccurate. Consider using '#align t1_space_iff_disjoint_pure_nhds t1Space_iff_disjoint_pure_nhdsₓ'. -/
 theorem t1Space_iff_disjoint_pure_nhds : T1Space α ↔ ∀ ⦃x y : α⦄, x ≠ y → Disjoint (pure x) (𝓝 y) :=
   (t1Space_TFAE α).out 0 8
 #align t1_space_iff_disjoint_pure_nhds t1Space_iff_disjoint_pure_nhds
 
-/- warning: t1_space_iff_disjoint_nhds_pure -> t1Space_iff_disjoint_nhds_pure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_1) (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 x) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α y)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T1Space.{u1} α _inst_1) (forall {{x : α}} {{y : α}}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α y)))
-Case conversion may be inaccurate. Consider using '#align t1_space_iff_disjoint_nhds_pure t1Space_iff_disjoint_nhds_pureₓ'. -/
 theorem t1Space_iff_disjoint_nhds_pure : T1Space α ↔ ∀ ⦃x y : α⦄, x ≠ y → Disjoint (𝓝 x) (pure y) :=
   (t1Space_TFAE α).out 0 7
 #align t1_space_iff_disjoint_nhds_pure t1Space_iff_disjoint_nhds_pure
@@ -725,22 +611,10 @@ theorem t1Space_iff_specializes_imp_eq : T1Space α ↔ ∀ ⦃x y : α⦄, x �
 #align t1_space_iff_specializes_imp_eq t1Space_iff_specializes_imp_eq
 -/
 
-/- warning: disjoint_pure_nhds -> disjoint_pure_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α x) (nhds.{u1} α _inst_1 y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α x) (nhds.{u1} α _inst_1 y))
-Case conversion may be inaccurate. Consider using '#align disjoint_pure_nhds disjoint_pure_nhdsₓ'. -/
 theorem disjoint_pure_nhds [T1Space α] {x y : α} (h : x ≠ y) : Disjoint (pure x) (𝓝 y) :=
   t1Space_iff_disjoint_pure_nhds.mp ‹_› h
 #align disjoint_pure_nhds disjoint_pure_nhds
 
-/- warning: disjoint_nhds_pure -> disjoint_nhds_pure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 x) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α y))
-Case conversion may be inaccurate. Consider using '#align disjoint_nhds_pure disjoint_nhds_pureₓ'. -/
 theorem disjoint_nhds_pure [T1Space α] {x y : α} (h : x ≠ y) : Disjoint (𝓝 x) (pure y) :=
   t1Space_iff_disjoint_nhds_pure.mp ‹_› h
 #align disjoint_nhds_pure disjoint_nhds_pure
@@ -764,23 +638,11 @@ theorem specializes_eq_eq [T1Space α] : (· ⤳ ·) = @Eq α :=
 #align specializes_eq_eq specializes_eq_eq
 -/
 
-/- warning: pure_le_nhds_iff -> pure_le_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {a : α} {b : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α a) (nhds.{u1} α _inst_1 b)) (Eq.{succ u1} α a b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {a : α} {b : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a) (nhds.{u1} α _inst_1 b)) (Eq.{succ u1} α a b)
-Case conversion may be inaccurate. Consider using '#align pure_le_nhds_iff pure_le_nhds_iffₓ'. -/
 @[simp]
 theorem pure_le_nhds_iff [T1Space α] {a b : α} : pure a ≤ 𝓝 b ↔ a = b :=
   specializes_iff_pure.symm.trans specializes_iff_eq
 #align pure_le_nhds_iff pure_le_nhds_iff
 
-/- warning: nhds_le_nhds_iff -> nhds_le_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {a : α} {b : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhds.{u1} α _inst_1 a) (nhds.{u1} α _inst_1 b)) (Eq.{succ u1} α a b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {a : α} {b : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α _inst_1 a) (nhds.{u1} α _inst_1 b)) (Eq.{succ u1} α a b)
-Case conversion may be inaccurate. Consider using '#align nhds_le_nhds_iff nhds_le_nhds_iffₓ'. -/
 @[simp]
 theorem nhds_le_nhds_iff [T1Space α] {a b : α} : 𝓝 a ≤ 𝓝 b ↔ a = b :=
   specializes_iff_eq
@@ -789,12 +651,6 @@ theorem nhds_le_nhds_iff [T1Space α] {a b : α} : 𝓝 a ≤ 𝓝 b ↔ a = b :
 instance {α : Type _} : T1Space (CofiniteTopology α) :=
   t1Space_iff_continuous_cofinite_of.mpr continuous_id
 
-/- warning: t1_space_antitone -> t1Space_antitone is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Antitone.{u1, 0} (TopologicalSpace.{u1} α) Prop (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.partialOrder.{u1} α)) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) (T1Space.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, Antitone.{u1, 0} (TopologicalSpace.{u1} α) Prop (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α)) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) (T1Space.{u1} α)
-Case conversion may be inaccurate. Consider using '#align t1_space_antitone t1Space_antitoneₓ'. -/
 theorem t1Space_antitone {α : Type _} : Antitone (@T1Space α) :=
   by
   simp only [Antitone, t1Space_iff_continuous_cofinite_of, continuous_iff_le_induced]
@@ -819,12 +675,6 @@ theorem continuousAt_update_of_ne [T1Space α] [DecidableEq α] [TopologicalSpac
 #align continuous_at_update_of_ne continuousAt_update_of_ne
 -/
 
-/- warning: continuous_on_update_iff -> continuousOn_update_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α} {x : α} {y : β}, Iff (ContinuousOn.{u1, u2} α β _inst_1 _inst_4 (Function.update.{succ u1, succ u2} α (fun (ᾰ : α) => β) (fun (a : α) (b : α) => _inst_3 a b) f x y) s) (And (ContinuousOn.{u1, u2} α β _inst_1 _inst_4 f (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))) ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Filter.Tendsto.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 x (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))) (nhds.{u2} β _inst_4 y))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α} {x : α} {y : β}, Iff (ContinuousOn.{u1, u2} α β _inst_1 _inst_4 (Function.update.{succ u1, succ u2} α (fun (ᾰ : α) => β) (fun (a : α) (b : α) => _inst_3 a b) f x y) s) (And (ContinuousOn.{u1, u2} α β _inst_1 _inst_4 f (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))) ((Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Filter.Tendsto.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 x (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))) (nhds.{u2} β _inst_4 y))))
-Case conversion may be inaccurate. Consider using '#align continuous_on_update_iff continuousOn_update_iffₓ'. -/
 theorem continuousOn_update_iff [T1Space α] [DecidableEq α] [TopologicalSpace β] {f : α → β}
     {s : Set α} {x : α} {y : β} :
     ContinuousOn (Function.update f x y) s ↔
@@ -876,23 +726,11 @@ instance (priority := 100) T1Space.t0Space [T1Space α] : T0Space α :=
 #align t1_space.t0_space T1Space.t0Space
 -/
 
-/- warning: compl_singleton_mem_nhds_iff -> compl_singleton_mem_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)) (nhds.{u1} α _inst_1 y)) (Ne.{succ u1} α y x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) (nhds.{u1} α _inst_1 y)) (Ne.{succ u1} α y x)
-Case conversion may be inaccurate. Consider using '#align compl_singleton_mem_nhds_iff compl_singleton_mem_nhds_iffₓ'. -/
 @[simp]
 theorem compl_singleton_mem_nhds_iff [T1Space α] {x y : α} : {x}ᶜ ∈ 𝓝 y ↔ y ≠ x :=
   isOpen_compl_singleton.mem_nhds_iffₓ
 #align compl_singleton_mem_nhds_iff compl_singleton_mem_nhds_iff
 
-/- warning: compl_singleton_mem_nhds -> compl_singleton_mem_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α y x) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)) (nhds.{u1} α _inst_1 y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α y x) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) (nhds.{u1} α _inst_1 y))
-Case conversion may be inaccurate. Consider using '#align compl_singleton_mem_nhds compl_singleton_mem_nhdsₓ'. -/
 theorem compl_singleton_mem_nhds [T1Space α] {x y : α} (h : y ≠ x) : {x}ᶜ ∈ 𝓝 y :=
   compl_singleton_mem_nhds_iff.mpr h
 #align compl_singleton_mem_nhds compl_singleton_mem_nhds
@@ -918,12 +756,6 @@ theorem subsingleton_closure [T1Space α] {s : Set α} : (closure s).Subsingleto
 #align subsingleton_closure subsingleton_closure
 -/
 
-/- warning: is_closed_map_const -> isClosedMap_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : T1Space.{u2} β _inst_3] {y : β}, IsClosedMap.{u1, u2} α β _inst_2 _inst_3 (Function.const.{succ u2, succ u1} β α y)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u2} α] [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : T1Space.{u1} β _inst_3] {y : β}, IsClosedMap.{u2, u1} α β _inst_2 _inst_3 (Function.const.{succ u1, succ u2} β α y)
-Case conversion may be inaccurate. Consider using '#align is_closed_map_const isClosedMap_constₓ'. -/
 theorem isClosedMap_const {α β} [TopologicalSpace α] [TopologicalSpace β] [T1Space β] {y : β} :
     IsClosedMap (Function.const α y) :=
   IsClosedMap.of_nonempty fun s hs h2s => by simp_rw [h2s.image_const, isClosed_singleton]
@@ -955,12 +787,6 @@ theorem insert_mem_nhdsWithin_of_subset_insert [T1Space α] {x y : α} {s t : Se
 #align insert_mem_nhds_within_of_subset_insert insert_mem_nhdsWithin_of_subset_insert
 -/
 
-/- warning: bInter_basis_nhds -> biInter_basis_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} α)} {x : α}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α _inst_1 x) p s) -> (Eq.{succ u1} (Set.{u1} α) (Set.iInter.{u1, u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (p i) (fun (h : p i) => s i))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : T1Space.{u2} α _inst_1] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} {x : α}, (Filter.HasBasis.{u2, u1} α ι (nhds.{u2} α _inst_1 x) p s) -> (Eq.{succ u2} (Set.{u2} α) (Set.iInter.{u2, u1} α ι (fun (i : ι) => Set.iInter.{u2, 0} α (p i) (fun (h : p i) => s i))) (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) x))
-Case conversion may be inaccurate. Consider using '#align bInter_basis_nhds biInter_basis_nhdsₓ'. -/
 theorem biInter_basis_nhds [T1Space α] {ι : Sort _} {p : ι → Prop} {s : ι → Set α} {x : α}
     (h : (𝓝 x).HasBasis p s) : (⋂ (i) (h : p i), s i) = {x} :=
   by
@@ -971,23 +797,11 @@ theorem biInter_basis_nhds [T1Space α] {ι : Sort _} {p : ι → Prop} {s : ι 
   exact ⟨i, hi, fun h => hsub h rfl⟩
 #align bInter_basis_nhds biInter_basis_nhds
 
-/- warning: compl_singleton_mem_nhds_set_iff -> compl_singleton_mem_nhdsSet_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)) (nhdsSet.{u1} α _inst_1 s)) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {x : α} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) (nhdsSet.{u1} α _inst_1 s)) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))
-Case conversion may be inaccurate. Consider using '#align compl_singleton_mem_nhds_set_iff compl_singleton_mem_nhdsSet_iffₓ'. -/
 @[simp]
 theorem compl_singleton_mem_nhdsSet_iff [T1Space α] {x : α} {s : Set α} : {x}ᶜ ∈ 𝓝ˢ s ↔ x ∉ s := by
   rwa [is_open_compl_singleton.mem_nhds_set, subset_compl_singleton_iff]
 #align compl_singleton_mem_nhds_set_iff compl_singleton_mem_nhdsSet_iff
 
-/- warning: nhds_set_le_iff -> nhdsSet_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align nhds_set_le_iff nhdsSet_le_iffₓ'. -/
 @[simp]
 theorem nhdsSet_le_iff [T1Space α] {s t : Set α} : 𝓝ˢ s ≤ 𝓝ˢ t ↔ s ⊆ t :=
   by
@@ -1012,45 +826,21 @@ theorem injective_nhdsSet [T1Space α] : Function.Injective (𝓝ˢ : Set α →
 #align injective_nhds_set injective_nhdsSet
 -/
 
-/- warning: strict_mono_nhds_set -> strictMono_nhdsSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1], StrictMono.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (nhdsSet.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1], StrictMono.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (nhdsSet.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align strict_mono_nhds_set strictMono_nhdsSetₓ'. -/
 theorem strictMono_nhdsSet [T1Space α] : StrictMono (𝓝ˢ : Set α → Filter α) :=
   monotone_nhdsSet.strictMono_of_injective injective_nhdsSet
 #align strict_mono_nhds_set strictMono_nhdsSet
 
-/- warning: nhds_le_nhds_set_iff -> nhds_le_nhdsSet_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α} {x : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α} {x : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)
-Case conversion may be inaccurate. Consider using '#align nhds_le_nhds_set_iff nhds_le_nhdsSet_iffₓ'. -/
 @[simp]
 theorem nhds_le_nhdsSet_iff [T1Space α] {s : Set α} {x : α} : 𝓝 x ≤ 𝓝ˢ s ↔ x ∈ s := by
   rw [← nhdsSet_singleton, nhdsSet_le_iff, singleton_subset_iff]
 #align nhds_le_nhds_set_iff nhds_le_nhdsSet_iff
 
-/- warning: dense.diff_singleton -> Dense.diff_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Dense.{u1} α _inst_1 s) -> (forall (x : α) [_inst_3 : Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))], Dense.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Dense.{u1} α _inst_1 s) -> (forall (x : α) [_inst_3 : Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))], Dense.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))
-Case conversion may be inaccurate. Consider using '#align dense.diff_singleton Dense.diff_singletonₓ'. -/
 /-- Removing a non-isolated point from a dense set, one still obtains a dense set. -/
 theorem Dense.diff_singleton [T1Space α] {s : Set α} (hs : Dense s) (x : α) [NeBot (𝓝[≠] x)] :
     Dense (s \ {x}) :=
   hs.inter_of_open_right (dense_compl_singleton x) isOpen_compl_singleton
 #align dense.diff_singleton Dense.diff_singleton
 
-/- warning: dense.diff_finset -> Dense.diff_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : forall (x : α), Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))] {s : Set.{u1} α}, (Dense.{u1} α _inst_1 s) -> (forall (t : Finset.{u1} α), Dense.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : forall (x : α), Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))] {s : Set.{u1} α}, (Dense.{u1} α _inst_1 s) -> (forall (t : Finset.{u1} α), Dense.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Finset.toSet.{u1} α t)))
-Case conversion may be inaccurate. Consider using '#align dense.diff_finset Dense.diff_finsetₓ'. -/
 /-- Removing a finset from a dense set in a space without isolated points, one still
 obtains a dense set. -/
 theorem Dense.diff_finset [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Set α} (hs : Dense s)
@@ -1062,12 +852,6 @@ theorem Dense.diff_finset [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Se
     exact ih.diff_singleton _
 #align dense.diff_finset Dense.diff_finset
 
-/- warning: dense.diff_finite -> Dense.diff_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : forall (x : α), Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))] {s : Set.{u1} α}, (Dense.{u1} α _inst_1 s) -> (forall {t : Set.{u1} α}, (Set.Finite.{u1} α t) -> (Dense.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : forall (x : α), Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))] {s : Set.{u1} α}, (Dense.{u1} α _inst_1 s) -> (forall {t : Set.{u1} α}, (Set.Finite.{u1} α t) -> (Dense.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t)))
-Case conversion may be inaccurate. Consider using '#align dense.diff_finite Dense.diff_finiteₓ'. -/
 /-- Removing a finite set from a dense set in a space without isolated points, one still
 obtains a dense set. -/
 theorem Dense.diff_finite [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Set α} (hs : Dense s)
@@ -1089,12 +873,6 @@ theorem eq_of_tendsto_nhds [TopologicalSpace β] [T1Space β] {f : α → β} {a
 #align eq_of_tendsto_nhds eq_of_tendsto_nhds
 -/
 
-/- warning: filter.tendsto.eventually_ne -> Filter.Tendsto.eventually_ne is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : T1Space.{u1} β _inst_2] {α : Type.{u2}} {g : α -> β} {l : Filter.{u2} α} {b₁ : β} {b₂ : β}, (Filter.Tendsto.{u2, u1} α β g l (nhds.{u1} β _inst_2 b₁)) -> (Ne.{succ u1} β b₁ b₂) -> (Filter.Eventually.{u2} α (fun (z : α) => Ne.{succ u1} β (g z) b₂) l)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : T1Space.{u2} β _inst_2] {α : Type.{u1}} {g : α -> β} {l : Filter.{u1} α} {b₁ : β} {b₂ : β}, (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_2 b₁)) -> (Ne.{succ u2} β b₁ b₂) -> (Filter.Eventually.{u1} α (fun (z : α) => Ne.{succ u2} β (g z) b₂) l)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.eventually_ne Filter.Tendsto.eventually_neₓ'. -/
 theorem Filter.Tendsto.eventually_ne [TopologicalSpace β] [T1Space β] {α : Type _} {g : α → β}
     {l : Filter α} {b₁ b₂ : β} (hg : Tendsto g l (𝓝 b₁)) (hb : b₁ ≠ b₂) : ∀ᶠ z in l, g z ≠ b₂ :=
   hg.Eventually (isOpen_compl_singleton.eventually_mem hb)
@@ -1136,12 +914,6 @@ theorem isOpen_singleton_of_finite_mem_nhds {α : Type _} [TopologicalSpace α] 
 #align is_open_singleton_of_finite_mem_nhds isOpen_singleton_of_finite_mem_nhds
 -/
 
-/- warning: infinite_of_mem_nhds -> infinite_of_mem_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : T1Space.{u1} α _inst_2] (x : α) [hx : Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_2 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))] {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_2 x)) -> (Set.Infinite.{u1} α s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : T1Space.{u1} α _inst_2] (x : α) [hx : Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_2 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))] {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_2 x)) -> (Set.Infinite.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align infinite_of_mem_nhds infinite_of_mem_nhdsₓ'. -/
 /-- If the punctured neighborhoods of a point form a nontrivial filter, then any neighborhood is
 infinite. -/
 theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [hx : NeBot (𝓝[≠] x)]
@@ -1207,12 +979,6 @@ theorem nhdsWithin_of_mem_discrete {s : Set α} [DiscreteTopology s] {x : α} (h
 #align nhds_within_of_mem_discrete nhdsWithin_of_mem_discrete
 -/
 
-/- warning: filter.has_basis.exists_inter_eq_singleton_of_mem_discrete -> Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {p : ι -> Prop} {t : ι -> (Set.{u1} α)} {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1)] {x : α}, (Filter.HasBasis.{u1, succ u2} α ι (nhds.{u1} α _inst_1 x) p t) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u2} ι (fun (i : ι) => Exists.{0} (p i) (fun (hi : p i) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (t i) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {p : ι -> Prop} {t : ι -> (Set.{u2} α)} {s : Set.{u2} α} [_inst_2 : DiscreteTopology.{u2} (Set.Elem.{u2} α s) (instTopologicalSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) _inst_1)] {x : α}, (Filter.HasBasis.{u2, succ u1} α ι (nhds.{u2} α _inst_1 x) p t) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Exists.{succ u1} ι (fun (i : ι) => And (p i) (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (t i) s) (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) x))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.exists_inter_eq_singleton_of_mem_discrete Filter.HasBasis.exists_inter_eq_singleton_of_mem_discreteₓ'. -/
 theorem Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete {ι : Type _} {p : ι → Prop}
     {t : ι → Set α} {s : Set α} [DiscreteTopology s] {x : α} (hb : (𝓝 x).HasBasis p t)
     (hx : x ∈ s) : ∃ (i : _)(hi : p i), t i ∩ s = {x} :=
@@ -1223,12 +989,6 @@ theorem Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete {ι : Type _} 
     ⟨i, hi, subset.antisymm hix <| singleton_subset_iff.2 ⟨mem_of_mem_nhds <| hb.mem_of_mem hi, hx⟩⟩
 #align filter.has_basis.exists_inter_eq_singleton_of_mem_discrete Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete
 
-/- warning: nhds_inter_eq_singleton_of_mem_discrete -> nhds_inter_eq_singleton_of_mem_discrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1)] {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1)] {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α _inst_1 x)) (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))))
-Case conversion may be inaccurate. Consider using '#align nhds_inter_eq_singleton_of_mem_discrete nhds_inter_eq_singleton_of_mem_discreteₓ'. -/
 /-- A point `x` in a discrete subset `s` of a topological space admits a neighbourhood
 that only meets `s` at `x`.  -/
 theorem nhds_inter_eq_singleton_of_mem_discrete {s : Set α} [DiscreteTopology s] {x : α}
@@ -1236,12 +996,6 @@ theorem nhds_inter_eq_singleton_of_mem_discrete {s : Set α} [DiscreteTopology s
   simpa using (𝓝 x).basis_sets.exists_inter_eq_singleton_of_mem_discrete hx
 #align nhds_inter_eq_singleton_of_mem_discrete nhds_inter_eq_singleton_of_mem_discrete
 
-/- warning: disjoint_nhds_within_of_mem_discrete -> disjoint_nhdsWithin_of_mem_discrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1)] {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)))) => Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) U s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1)] {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhdsWithin.{u1} α _inst_1 x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)))) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) U s)))
-Case conversion may be inaccurate. Consider using '#align disjoint_nhds_within_of_mem_discrete disjoint_nhdsWithin_of_mem_discreteₓ'. -/
 /-- For point `x` in a discrete subset `s` of a topological space, there is a set `U`
 such that
 1. `U` is a punctured neighborhood of `x` (ie. `U ∪ {x}` is a neighbourhood of `x`),
@@ -1280,24 +1034,12 @@ class T2Space (α : Type u) [TopologicalSpace α] : Prop where
 #align t2_space T2Space
 -/
 
-/- warning: t2_separation -> t2_separation is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (IsOpen.{u1} α _inst_1 u) (And (IsOpen.{u1} α _inst_1 v) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x u) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y v) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (IsOpen.{u1} α _inst_1 u) (And (IsOpen.{u1} α _inst_1 v) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x u) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y v) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v)))))))
-Case conversion may be inaccurate. Consider using '#align t2_separation t2_separationₓ'. -/
 /-- Two different points can be separated by open sets. -/
 theorem t2_separation [T2Space α] {x y : α} (h : x ≠ y) :
     ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ Disjoint u v :=
   T2Space.t2 x y h
 #align t2_separation t2_separation
 
-/- warning: t2_space_iff_disjoint_nhds -> t2Space_iff_disjoint_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall (x : α) (y : α), (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall (x : α) (y : α), (Ne.{succ u1} α x y) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y)))
-Case conversion may be inaccurate. Consider using '#align t2_space_iff_disjoint_nhds t2Space_iff_disjoint_nhdsₓ'. -/
 theorem t2Space_iff_disjoint_nhds : T2Space α ↔ ∀ x y : α, x ≠ y → Disjoint (𝓝 x) (𝓝 y) :=
   by
   refine' (t2Space_iff α).trans (forall₃_congr fun x y hne => _)
@@ -1305,55 +1047,25 @@ theorem t2Space_iff_disjoint_nhds : T2Space α ↔ ∀ x y : α, x ≠ y → Dis
     and_assoc, and_comm', and_left_comm]
 #align t2_space_iff_disjoint_nhds t2Space_iff_disjoint_nhds
 
-/- warning: disjoint_nhds_nhds -> disjoint_nhds_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y)) (Ne.{succ u1} α x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y)) (Ne.{succ u1} α x y)
-Case conversion may be inaccurate. Consider using '#align disjoint_nhds_nhds disjoint_nhds_nhdsₓ'. -/
 @[simp]
 theorem disjoint_nhds_nhds [T2Space α] {x y : α} : Disjoint (𝓝 x) (𝓝 y) ↔ x ≠ y :=
   ⟨fun hd he => by simpa [he, nhds_ne_bot.ne] using hd, t2Space_iff_disjoint_nhds.mp ‹_› x y⟩
 #align disjoint_nhds_nhds disjoint_nhds_nhds
 
-/- warning: pairwise_disjoint_nhds -> pairwise_disjoint_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1], Pairwise.{u1} α (Function.onFun.{succ u1, succ u1, 1} α (Filter.{u1} α) Prop (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (nhds.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1], Pairwise.{u1} α (Function.onFun.{succ u1, succ u1, 1} α (Filter.{u1} α) Prop (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (nhds.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align pairwise_disjoint_nhds pairwise_disjoint_nhdsₓ'. -/
 theorem pairwise_disjoint_nhds [T2Space α] : Pairwise (Disjoint on (𝓝 : α → Filter α)) := fun x y =>
   disjoint_nhds_nhds.2
 #align pairwise_disjoint_nhds pairwise_disjoint_nhds
 
-/- warning: set.pairwise_disjoint_nhds -> Set.pairwiseDisjoint_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] (s : Set.{u1} α), Set.PairwiseDisjoint.{u1, u1} (Filter.{u1} α) α (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s (nhds.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] (s : Set.{u1} α), Set.PairwiseDisjoint.{u1, u1} (Filter.{u1} α) α (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) s (nhds.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_nhds Set.pairwiseDisjoint_nhdsₓ'. -/
 protected theorem Set.pairwiseDisjoint_nhds [T2Space α] (s : Set α) : s.PairwiseDisjoint 𝓝 :=
   pairwise_disjoint_nhds.set_pairwise s
 #align set.pairwise_disjoint_nhds Set.pairwiseDisjoint_nhds
 
-/- warning: set.finite.t2_separation -> Set.Finite.t2_separation is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Exists.{succ u1} (α -> (Set.{u1} α)) (fun (U : α -> (Set.{u1} α)) => And (forall (x : α), And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (U x)) (IsOpen.{u1} α _inst_1 (U x))) (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) α (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s U)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Exists.{succ u1} (α -> (Set.{u1} α)) (fun (U : α -> (Set.{u1} α)) => And (forall (x : α), And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (U x)) (IsOpen.{u1} α _inst_1 (U x))) (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) α (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s U)))
-Case conversion may be inaccurate. Consider using '#align set.finite.t2_separation Set.Finite.t2_separationₓ'. -/
 /-- Points of a finite set can be separated by open sets from each other. -/
 theorem Set.Finite.t2_separation [T2Space α] {s : Set α} (hs : s.Finite) :
     ∃ U : α → Set α, (∀ x, x ∈ U x ∧ IsOpen (U x)) ∧ s.PairwiseDisjoint U :=
   s.pairwise_disjoint_nhds.exists_mem_filter_basisₓ hs nhds_basis_opens
 #align set.finite.t2_separation Set.Finite.t2_separation
 
-/- warning: is_open_set_of_disjoint_nhds_nhds -> isOpen_setOf_disjoint_nhds_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], IsOpen.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α _inst_1 _inst_1) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p)) (nhds.{u1} α _inst_1 (Prod.snd.{u1, u1} α α p))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], IsOpen.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α _inst_1 _inst_1) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p)) (nhds.{u1} α _inst_1 (Prod.snd.{u1, u1} α α p))))
-Case conversion may be inaccurate. Consider using '#align is_open_set_of_disjoint_nhds_nhds isOpen_setOf_disjoint_nhds_nhdsₓ'. -/
 theorem isOpen_setOf_disjoint_nhds_nhds : IsOpen { p : α × α | Disjoint (𝓝 p.1) (𝓝 p.2) } :=
   by
   simp only [isOpen_iff_mem_nhds, Prod.forall, mem_set_of_eq]
@@ -1373,89 +1085,41 @@ instance (priority := 100) T2Space.t1Space [T2Space α] : T1Space α :=
 #align t2_space.t1_space T2Space.t1Space
 -/
 
-/- warning: t2_iff_nhds -> t2_iff_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y))
-Case conversion may be inaccurate. Consider using '#align t2_iff_nhds t2_iff_nhdsₓ'. -/
 /-- A space is T₂ iff the neighbourhoods of distinct points generate the bottom filter. -/
 theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, NeBot (𝓝 x ⊓ 𝓝 y) → x = y := by
   simp only [t2Space_iff_disjoint_nhds, disjoint_iff, ne_bot_iff, Ne.def, not_imp_comm]
 #align t2_iff_nhds t2_iff_nhds
 
-/- warning: eq_of_nhds_ne_bot -> eq_of_nhds_neBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y)
-Case conversion may be inaccurate. Consider using '#align eq_of_nhds_ne_bot eq_of_nhds_neBotₓ'. -/
 theorem eq_of_nhds_neBot [T2Space α] {x y : α} (h : NeBot (𝓝 x ⊓ 𝓝 y)) : x = y :=
   t2_iff_nhds.mp ‹_› h
 #align eq_of_nhds_ne_bot eq_of_nhds_neBot
 
-/- warning: t2_space_iff_nhds -> t2Space_iff_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) => Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V (nhds.{u1} α _inst_1 y)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V (nhds.{u1} α _inst_1 y)) => Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) U V))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α _inst_1 x)) (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) V (nhds.{u1} α _inst_1 y)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) U V))))))
-Case conversion may be inaccurate. Consider using '#align t2_space_iff_nhds t2Space_iff_nhdsₓ'. -/
 theorem t2Space_iff_nhds : T2Space α ↔ ∀ {x y : α}, x ≠ y → ∃ U ∈ 𝓝 x, ∃ V ∈ 𝓝 y, Disjoint U V := by
   simp only [t2Space_iff_disjoint_nhds, Filter.disjoint_iff]
 #align t2_space_iff_nhds t2Space_iff_nhds
 
-/- warning: t2_separation_nhds -> t2_separation_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u (nhds.{u1} α _inst_1 x)) (And (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) v (nhds.{u1} α _inst_1 y)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u (nhds.{u1} α _inst_1 x)) (And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) v (nhds.{u1} α _inst_1 y)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v)))))
-Case conversion may be inaccurate. Consider using '#align t2_separation_nhds t2_separation_nhdsₓ'. -/
 theorem t2_separation_nhds [T2Space α] {x y : α} (h : x ≠ y) :
     ∃ u v, u ∈ 𝓝 x ∧ v ∈ 𝓝 y ∧ Disjoint u v :=
   let ⟨u, v, open_u, open_v, x_in, y_in, huv⟩ := t2_separation h
   ⟨u, v, open_u.mem_nhds x_in, open_v.mem_nhds y_in, huv⟩
 #align t2_separation_nhds t2_separation_nhds
 
-/- warning: t2_separation_compact_nhds -> t2_separation_compact_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LocallyCompactSpace.{u1} α _inst_1] [_inst_3 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u (nhds.{u1} α _inst_1 x)) (And (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) v (nhds.{u1} α _inst_1 y)) (And (IsCompact.{u1} α _inst_1 u) (And (IsCompact.{u1} α _inst_1 v) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LocallyCompactSpace.{u1} α _inst_1] [_inst_3 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u (nhds.{u1} α _inst_1 x)) (And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) v (nhds.{u1} α _inst_1 y)) (And (IsCompact.{u1} α _inst_1 u) (And (IsCompact.{u1} α _inst_1 v) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v)))))))
-Case conversion may be inaccurate. Consider using '#align t2_separation_compact_nhds t2_separation_compact_nhdsₓ'. -/
 theorem t2_separation_compact_nhds [LocallyCompactSpace α] [T2Space α] {x y : α} (h : x ≠ y) :
     ∃ u v, u ∈ 𝓝 x ∧ v ∈ 𝓝 y ∧ IsCompact u ∧ IsCompact v ∧ Disjoint u v := by
   simpa only [exists_prop, ← exists_and_left, and_comm', and_assoc, and_left_comm] using
     ((compact_basis_nhds x).disjoint_iff (compact_basis_nhds y)).1 (disjoint_nhds_nhds.2 h)
 #align t2_separation_compact_nhds t2_separation_compact_nhds
 
-/- warning: t2_iff_ultrafilter -> t2_iff_ultrafilter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α} (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (nhds.{u1} α _inst_1 x)) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (nhds.{u1} α _inst_1 y)) -> (Eq.{succ u1} α x y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α} (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (nhds.{u1} α _inst_1 x)) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (nhds.{u1} α _inst_1 y)) -> (Eq.{succ u1} α x y))
-Case conversion may be inaccurate. Consider using '#align t2_iff_ultrafilter t2_iff_ultrafilterₓ'. -/
 theorem t2_iff_ultrafilter :
     T2Space α ↔ ∀ {x y : α} (f : Ultrafilter α), ↑f ≤ 𝓝 x → ↑f ≤ 𝓝 y → x = y :=
   t2_iff_nhds.trans <| by simp only [← exists_ultrafilter_iff, and_imp, le_inf_iff, exists_imp]
 #align t2_iff_ultrafilter t2_iff_ultrafilter
 
-/- warning: t2_iff_is_closed_diagonal -> t2_iff_isClosed_diagonal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (IsClosed.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α _inst_1 _inst_1) (Set.diagonal.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (IsClosed.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α _inst_1 _inst_1) (Set.diagonal.{u1} α))
-Case conversion may be inaccurate. Consider using '#align t2_iff_is_closed_diagonal t2_iff_isClosed_diagonalₓ'. -/
 theorem t2_iff_isClosed_diagonal : T2Space α ↔ IsClosed (diagonal α) := by
   simp only [t2Space_iff_disjoint_nhds, ← isOpen_compl_iff, isOpen_iff_mem_nhds, Prod.forall,
     nhds_prod_eq, compl_diagonal_mem_prod, mem_compl_iff, mem_diagonal_iff]
 #align t2_iff_is_closed_diagonal t2_iff_isClosed_diagonal
 
-/- warning: is_closed_diagonal -> isClosed_diagonal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1], IsClosed.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α _inst_1 _inst_1) (Set.diagonal.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1], IsClosed.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α _inst_1 _inst_1) (Set.diagonal.{u1} α)
-Case conversion may be inaccurate. Consider using '#align is_closed_diagonal isClosed_diagonalₓ'. -/
 theorem isClosed_diagonal [T2Space α] : IsClosed (diagonal α) :=
   t2_iff_isClosed_diagonal.mp ‹_›
 #align is_closed_diagonal isClosed_diagonal
@@ -1464,12 +1128,6 @@ section Separated
 
 open SeparatedNhds Finset
 
-/- warning: finset_disjoint_finset_opens_of_t2 -> finset_disjoint_finset_opens_of_t2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] (s : Finset.{u1} α) (t : Finset.{u1} α), (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (SeparatedNhds.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] (s : Finset.{u1} α) (t : Finset.{u1} α), (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (SeparatedNhds.{u1} α _inst_1 (Finset.toSet.{u1} α s) (Finset.toSet.{u1} α t))
-Case conversion may be inaccurate. Consider using '#align finset_disjoint_finset_opens_of_t2 finset_disjoint_finset_opens_of_t2ₓ'. -/
 theorem finset_disjoint_finset_opens_of_t2 [T2Space α] :
     ∀ s t : Finset α, Disjoint s t → SeparatedNhds (s : Set α) t :=
   by
@@ -1530,12 +1188,6 @@ class T25Space (α : Type u) [TopologicalSpace α] : Prop where
 #align t2_5_space T25Space
 -/
 
-/- warning: disjoint_lift'_closure_nhds -> disjoint_lift'_closure_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T25Space.{u1} α _inst_1] {x : α} {y : α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Filter.lift'.{u1, u1} α α (nhds.{u1} α _inst_1 x) (closure.{u1} α _inst_1)) (Filter.lift'.{u1, u1} α α (nhds.{u1} α _inst_1 y) (closure.{u1} α _inst_1))) (Ne.{succ u1} α x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T25Space.{u1} α _inst_1] {x : α} {y : α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Filter.lift'.{u1, u1} α α (nhds.{u1} α _inst_1 x) (closure.{u1} α _inst_1)) (Filter.lift'.{u1, u1} α α (nhds.{u1} α _inst_1 y) (closure.{u1} α _inst_1))) (Ne.{succ u1} α x y)
-Case conversion may be inaccurate. Consider using '#align disjoint_lift'_closure_nhds disjoint_lift'_closure_nhdsₓ'. -/
 @[simp]
 theorem disjoint_lift'_closure_nhds [T25Space α] {x y : α} :
     Disjoint ((𝓝 x).lift' closure) ((𝓝 y).lift' closure) ↔ x ≠ y :=
@@ -1550,24 +1202,12 @@ instance (priority := 100) T25Space.t2Space [T25Space α] : T2Space α :=
 #align t2_5_space.t2_space T25Space.t2Space
 -/
 
-/- warning: exists_nhds_disjoint_closure -> exists_nhds_disjoint_closure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T25Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 x)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 x)) => Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhds.{u1} α _inst_1 y)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhds.{u1} α _inst_1 y)) => Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (closure.{u1} α _inst_1 s) (closure.{u1} α _inst_1 t))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T25Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 x)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhds.{u1} α _inst_1 y)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (closure.{u1} α _inst_1 s) (closure.{u1} α _inst_1 t))))))
-Case conversion may be inaccurate. Consider using '#align exists_nhds_disjoint_closure exists_nhds_disjoint_closureₓ'. -/
 theorem exists_nhds_disjoint_closure [T25Space α] {x y : α} (h : x ≠ y) :
     ∃ s ∈ 𝓝 x, ∃ t ∈ 𝓝 y, Disjoint (closure s) (closure t) :=
   ((𝓝 x).basis_sets.lift'_closure.disjoint_iff (𝓝 y).basis_sets.lift'_closure).1 <|
     disjoint_lift'_closure_nhds.2 h
 #align exists_nhds_disjoint_closure exists_nhds_disjoint_closure
 
-/- warning: exists_open_nhds_disjoint_closure -> exists_open_nhds_disjoint_closure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T25Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x u) (And (IsOpen.{u1} α _inst_1 u) (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y v) (And (IsOpen.{u1} α _inst_1 v) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (closure.{u1} α _inst_1 u) (closure.{u1} α _inst_1 v))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T25Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x u) (And (IsOpen.{u1} α _inst_1 u) (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y v) (And (IsOpen.{u1} α _inst_1 v) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (closure.{u1} α _inst_1 u) (closure.{u1} α _inst_1 v))))))))
-Case conversion may be inaccurate. Consider using '#align exists_open_nhds_disjoint_closure exists_open_nhds_disjoint_closureₓ'. -/
 theorem exists_open_nhds_disjoint_closure [T25Space α] {x y : α} (h : x ≠ y) :
     ∃ u : Set α,
       x ∈ u ∧ IsOpen u ∧ ∃ v : Set α, y ∈ v ∧ IsOpen v ∧ Disjoint (closure u) (closure v) :=
@@ -1589,32 +1229,14 @@ are useful without a `nonempty α` instance.
 -/
 
 
-/- warning: Lim_eq -> lim_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {f : Filter.{u1} α} {a : α} [_inst_3 : Filter.NeBot.{u1} α f], (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α _inst_1 a)) -> (Eq.{succ u1} α (lim.{u1} α _inst_1 (Nonempty.intro.{succ u1} α a) f) a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {f : Filter.{u1} α} {a : α} [_inst_3 : Filter.NeBot.{u1} α f], (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α _inst_1 a)) -> (Eq.{succ u1} α (lim.{u1} α _inst_1 (Nonempty.intro.{succ u1} α a) f) a)
-Case conversion may be inaccurate. Consider using '#align Lim_eq lim_eqₓ'. -/
 theorem lim_eq {a : α} [NeBot f] (h : f ≤ 𝓝 a) : @lim _ _ ⟨a⟩ f = a :=
   tendsto_nhds_unique (le_nhds_lim ⟨a, h⟩) h
 #align Lim_eq lim_eq
 
-/- warning: Lim_eq_iff -> lim_eq_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {f : Filter.{u1} α} [_inst_3 : Filter.NeBot.{u1} α f], (Exists.{succ u1} α (fun (a : α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α _inst_1 a))) -> (forall {a : α}, Iff (Eq.{succ u1} α (lim.{u1} α _inst_1 (Nonempty.intro.{succ u1} α a) f) a) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α _inst_1 a)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {f : Filter.{u1} α} [_inst_3 : Filter.NeBot.{u1} α f], (Exists.{succ u1} α (fun (a : α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α _inst_1 a))) -> (forall {a : α}, Iff (Eq.{succ u1} α (lim.{u1} α _inst_1 (Nonempty.intro.{succ u1} α a) f) a) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α _inst_1 a)))
-Case conversion may be inaccurate. Consider using '#align Lim_eq_iff lim_eq_iffₓ'. -/
 theorem lim_eq_iff [NeBot f] (h : ∃ a : α, f ≤ nhds a) {a} : @lim _ _ ⟨a⟩ f = a ↔ f ≤ 𝓝 a :=
   ⟨fun c => c ▸ le_nhds_lim h, lim_eq⟩
 #align Lim_eq_iff lim_eq_iff
 
-/- warning: ultrafilter.Lim_eq_iff_le_nhds -> Ultrafilter.lim_eq_iff_le_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : CompactSpace.{u1} α _inst_1] {x : α} {F : Ultrafilter.{u1} α}, Iff (Eq.{succ u1} α (Ultrafilter.lim.{u1} α _inst_1 F) x) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) F) (nhds.{u1} α _inst_1 x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : CompactSpace.{u1} α _inst_1] {x : α} {F : Ultrafilter.{u1} α}, Iff (Eq.{succ u1} α (Ultrafilter.lim.{u1} α _inst_1 F) x) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α F) (nhds.{u1} α _inst_1 x))
-Case conversion may be inaccurate. Consider using '#align ultrafilter.Lim_eq_iff_le_nhds Ultrafilter.lim_eq_iff_le_nhdsₓ'. -/
 theorem Ultrafilter.lim_eq_iff_le_nhds [CompactSpace α] {x : α} {F : Ultrafilter α} :
     F.lim = x ↔ ↑F ≤ 𝓝 x :=
   ⟨fun h => h ▸ F.le_nhds_lim, lim_eq⟩
@@ -1710,9 +1332,6 @@ instance (priority := 100) DiscreteTopology.toT2Space {α : Type _} [Topological
 #align discrete_topology.to_t2_space DiscreteTopology.toT2Space
 -/
 
-/- warning: separated_by_continuous -> separated_by_continuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align separated_by_continuous separated_by_continuousₓ'. -/
 theorem separated_by_continuous {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     [T2Space β] {f : α → β} (hf : Continuous f) {x y : α} (h : f x ≠ f y) :
     ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ Disjoint u v :=
@@ -1720,9 +1339,6 @@ theorem separated_by_continuous {α : Type _} {β : Type _} [TopologicalSpace α
   ⟨f ⁻¹' u, f ⁻¹' v, uo.Preimage hf, vo.Preimage hf, xu, yv, uv.Preimage _⟩
 #align separated_by_continuous separated_by_continuous
 
-/- warning: separated_by_open_embedding -> separated_by_openEmbedding is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align separated_by_open_embedding separated_by_openEmbeddingₓ'. -/
 theorem separated_by_openEmbedding {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     [T2Space α] {f : α → β} (hf : OpenEmbedding f) {x y : α} (h : x ≠ y) :
     ∃ u v : Set β, IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ f y ∈ v ∧ Disjoint u v :=
@@ -1774,12 +1390,6 @@ instance Pi.t2Space {α : Type _} {β : α → Type v} [t₂ : ∀ a, Topologica
 #align Pi.t2_space Pi.t2Space
 -/
 
-/- warning: sigma.t2_space -> Sigma.t2Space is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (α i)] [_inst_3 : forall (a : ι), T2Space.{u2} (α a) (_inst_2 a)], T2Space.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i)) (Sigma.topologicalSpace.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) => _inst_2 a))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (α i)] [_inst_3 : forall (a : ι), T2Space.{u2} (α a) (_inst_2 a)], T2Space.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i)) (instTopologicalSpaceSigma.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) => _inst_2 a))
-Case conversion may be inaccurate. Consider using '#align sigma.t2_space Sigma.t2Spaceₓ'. -/
 instance Sigma.t2Space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)]
     [∀ a, T2Space (α a)] : T2Space (Σi, α i) :=
   by
@@ -1827,12 +1437,6 @@ theorem Continuous.ext_on [T2Space α] {s : Set β} (hs : Dense s) {f g : β →
 #align continuous.ext_on Continuous.ext_on
 -/
 
-/- warning: eq_on_closure₂' -> eqOn_closure₂' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {γ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u2} β} {t : Set.{u3} γ} {f : β -> γ -> α} {g : β -> γ -> α}, (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (forall (y : γ), (Membership.Mem.{u3, u3} γ (Set.{u3} γ) (Set.hasMem.{u3} γ) y t) -> (Eq.{succ u1} α (f x y) (g x y)))) -> (forall (x : β), Continuous.{u3, u1} γ α _inst_3 _inst_1 (f x)) -> (forall (y : γ), Continuous.{u2, u1} β α _inst_2 _inst_1 (fun (x : β) => f x y)) -> (forall (x : β), Continuous.{u3, u1} γ α _inst_3 _inst_1 (g x)) -> (forall (y : γ), Continuous.{u2, u1} β α _inst_2 _inst_1 (fun (x : β) => g x y)) -> (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (closure.{u2} β _inst_2 s)) -> (forall (y : γ), (Membership.Mem.{u3, u3} γ (Set.{u3} γ) (Set.hasMem.{u3} γ) y (closure.{u3} γ _inst_3 t)) -> (Eq.{succ u1} α (f x y) (g x y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} α] {γ : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u1} γ] [_inst_4 : T2Space.{u2} α _inst_1] {s : Set.{u3} β} {t : Set.{u1} γ} {f : β -> γ -> α} {g : β -> γ -> α}, (forall (x : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x s) -> (forall (y : γ), (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) y t) -> (Eq.{succ u2} α (f x y) (g x y)))) -> (forall (x : β), Continuous.{u1, u2} γ α _inst_3 _inst_1 (f x)) -> (forall (y : γ), Continuous.{u3, u2} β α _inst_2 _inst_1 (fun (x : β) => f x y)) -> (forall (x : β), Continuous.{u1, u2} γ α _inst_3 _inst_1 (g x)) -> (forall (y : γ), Continuous.{u3, u2} β α _inst_2 _inst_1 (fun (x : β) => g x y)) -> (forall (x : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x (closure.{u3} β _inst_2 s)) -> (forall (y : γ), (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) y (closure.{u1} γ _inst_3 t)) -> (Eq.{succ u2} α (f x y) (g x y))))
-Case conversion may be inaccurate. Consider using '#align eq_on_closure₂' eqOn_closure₂'ₓ'. -/
 theorem eqOn_closure₂' [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ → α}
     (h : ∀ x ∈ s, ∀ y ∈ t, f x y = g x y) (hf₁ : ∀ x, Continuous (f x))
     (hf₂ : ∀ y, Continuous fun x => f x y) (hg₁ : ∀ x, Continuous (g x))
@@ -1842,12 +1446,6 @@ theorem eqOn_closure₂' [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ
     isClosed_biInter fun y hy => isClosed_eq (hf₂ _) (hg₂ _)
 #align eq_on_closure₂' eqOn_closure₂'
 
-/- warning: eq_on_closure₂ -> eqOn_closure₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {γ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u2} β} {t : Set.{u3} γ} {f : β -> γ -> α} {g : β -> γ -> α}, (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (forall (y : γ), (Membership.Mem.{u3, u3} γ (Set.{u3} γ) (Set.hasMem.{u3} γ) y t) -> (Eq.{succ u1} α (f x y) (g x y)))) -> (Continuous.{max u2 u3, u1} (Prod.{u2, u3} β γ) α (Prod.topologicalSpace.{u2, u3} β γ _inst_2 _inst_3) _inst_1 (Function.uncurry.{u2, u3, u1} β γ α f)) -> (Continuous.{max u2 u3, u1} (Prod.{u2, u3} β γ) α (Prod.topologicalSpace.{u2, u3} β γ _inst_2 _inst_3) _inst_1 (Function.uncurry.{u2, u3, u1} β γ α g)) -> (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (closure.{u2} β _inst_2 s)) -> (forall (y : γ), (Membership.Mem.{u3, u3} γ (Set.{u3} γ) (Set.hasMem.{u3} γ) y (closure.{u3} γ _inst_3 t)) -> (Eq.{succ u1} α (f x y) (g x y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} α] {γ : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u1} γ] [_inst_4 : T2Space.{u2} α _inst_1] {s : Set.{u3} β} {t : Set.{u1} γ} {f : β -> γ -> α} {g : β -> γ -> α}, (forall (x : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x s) -> (forall (y : γ), (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) y t) -> (Eq.{succ u2} α (f x y) (g x y)))) -> (Continuous.{max u1 u3, u2} (Prod.{u3, u1} β γ) α (instTopologicalSpaceProd.{u3, u1} β γ _inst_2 _inst_3) _inst_1 (Function.uncurry.{u3, u1, u2} β γ α f)) -> (Continuous.{max u1 u3, u2} (Prod.{u3, u1} β γ) α (instTopologicalSpaceProd.{u3, u1} β γ _inst_2 _inst_3) _inst_1 (Function.uncurry.{u3, u1, u2} β γ α g)) -> (forall (x : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x (closure.{u3} β _inst_2 s)) -> (forall (y : γ), (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) y (closure.{u1} γ _inst_3 t)) -> (Eq.{succ u2} α (f x y) (g x y))))
-Case conversion may be inaccurate. Consider using '#align eq_on_closure₂ eqOn_closure₂ₓ'. -/
 theorem eqOn_closure₂ [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ → α}
     (h : ∀ x ∈ s, ∀ y ∈ t, f x y = g x y) (hf : Continuous (uncurry f))
     (hg : Continuous (uncurry g)) : ∀ x ∈ closure s, ∀ y ∈ closure t, f x y = g x y :=
@@ -1889,12 +1487,6 @@ theorem Function.LeftInverse.closedEmbedding [T2Space α] {f : α → β} {g : �
 #align function.left_inverse.closed_embedding Function.LeftInverse.closedEmbedding
 -/
 
-/- warning: is_compact_is_compact_separated -> isCompact_isCompact_separated is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (SeparatedNhds.{u1} α _inst_1 s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t) -> (SeparatedNhds.{u1} α _inst_1 s t)
-Case conversion may be inaccurate. Consider using '#align is_compact_is_compact_separated isCompact_isCompact_separatedₓ'. -/
 theorem isCompact_isCompact_separated [T2Space α] {s t : Set α} (hs : IsCompact s)
     (ht : IsCompact t) (hst : Disjoint s t) : SeparatedNhds s t := by
   simp only [SeparatedNhds, prod_subset_compl_diagonal_iff_disjoint.symm] at hst⊢ <;>
@@ -1927,12 +1519,6 @@ theorem Bornology.relativelyCompact_eq_inCompact [T2Space α] :
 #align bornology.relatively_compact_eq_in_compact Bornology.relativelyCompact_eq_inCompact
 -/
 
-/- warning: exists_subset_nhds_of_is_compact -> exists_subset_nhds_of_isCompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {ι : Type.{u2}} [_inst_5 : Nonempty.{succ u2} ι] {V : ι -> (Set.{u1} α)}, (Directed.{u1, succ u2} (Set.{u1} α) ι (Superset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) V) -> (forall (i : ι), IsCompact.{u1} α _inst_1 (V i)) -> (forall {U : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => V i))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x))) -> (Exists.{succ u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (V i) U)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_4 : T2Space.{u2} α _inst_1] {ι : Type.{u1}} [_inst_5 : Nonempty.{succ u1} ι] {V : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Topology.Separation._hyg.13055 : Set.{u2} α) (x._@.Mathlib.Topology.Separation._hyg.13057 : Set.{u2} α) => Superset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Topology.Separation._hyg.13055 x._@.Mathlib.Topology.Separation._hyg.13057) V) -> (forall (i : ι), IsCompact.{u2} α _inst_1 (V i)) -> (forall {U : Set.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => V i))) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (nhds.{u2} α _inst_1 x))) -> (Exists.{succ u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (V i) U)))
-Case conversion may be inaccurate. Consider using '#align exists_subset_nhds_of_is_compact exists_subset_nhds_of_isCompactₓ'. -/
 /-- If `V : ι → set α` is a decreasing family of compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. This is a version of `exists_subset_nhd_of_compact'` where we
 don't need to assume each `V i` closed because it follows from compactness since `α` is
@@ -1949,12 +1535,6 @@ theorem CompactExhaustion.isClosed [T2Space α] (K : CompactExhaustion α) (n : 
 #align compact_exhaustion.is_closed CompactExhaustion.isClosed
 -/
 
-/- warning: is_compact.inter -> IsCompact.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_compact.inter IsCompact.interₓ'. -/
 theorem IsCompact.inter [T2Space α] {s t : Set α} (hs : IsCompact s) (ht : IsCompact t) :
     IsCompact (s ∩ t) :=
   hs.inter_right <| ht.IsClosed
@@ -1984,12 +1564,6 @@ theorem image_closure_of_isCompact [T2Space β] {s : Set α} (hs : IsCompact (cl
 #align image_closure_of_is_compact image_closure_of_isCompact
 -/
 
-/- warning: is_compact.binary_compact_cover -> IsCompact.binary_compact_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {K : Set.{u1} α} {U : Set.{u1} α} {V : Set.{u1} α}, (IsCompact.{u1} α _inst_1 K) -> (IsOpen.{u1} α _inst_1 U) -> (IsOpen.{u1} α _inst_1 V) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) K (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) U V)) -> (Exists.{succ u1} (Set.{u1} α) (fun (K₁ : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (K₂ : Set.{u1} α) => And (IsCompact.{u1} α _inst_1 K₁) (And (IsCompact.{u1} α _inst_1 K₂) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) K₁ U) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) K₂ V) (Eq.{succ u1} (Set.{u1} α) K (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) K₁ K₂))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {K : Set.{u1} α} {U : Set.{u1} α} {V : Set.{u1} α}, (IsCompact.{u1} α _inst_1 K) -> (IsOpen.{u1} α _inst_1 U) -> (IsOpen.{u1} α _inst_1 V) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) K (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) U V)) -> (Exists.{succ u1} (Set.{u1} α) (fun (K₁ : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (K₂ : Set.{u1} α) => And (IsCompact.{u1} α _inst_1 K₁) (And (IsCompact.{u1} α _inst_1 K₂) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) K₁ U) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) K₂ V) (Eq.{succ u1} (Set.{u1} α) K (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) K₁ K₂))))))))
-Case conversion may be inaccurate. Consider using '#align is_compact.binary_compact_cover IsCompact.binary_compact_coverₓ'. -/
 /-- If a compact set is covered by two open sets, then we can cover it by two compact subsets. -/
 theorem IsCompact.binary_compact_cover [T2Space α] {K U V : Set α} (hK : IsCompact K)
     (hU : IsOpen U) (hV : IsOpen V) (h2K : K ⊆ U ∪ V) :
@@ -2028,12 +1602,6 @@ section
 
 open Finset Function
 
-/- warning: is_compact.finite_compact_cover -> IsCompact.finite_compact_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {ι : Type.{u2}} (t : Finset.{u2} ι) (U : ι -> (Set.{u1} α)), (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) -> (IsOpen.{u1} α _inst_1 (U i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => U i)))) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (K : ι -> (Set.{u1} α)) => And (forall (i : ι), IsCompact.{u1} α _inst_1 (K i)) (And (forall (i : ι), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (K i) (U i)) (Eq.{succ u1} (Set.{u1} α) s (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => K i))))))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_4 : T2Space.{u2} α _inst_1] {s : Set.{u2} α}, (IsCompact.{u2} α _inst_1 s) -> (forall {ι : Type.{u1}} (t : Finset.{u1} ι) (U : ι -> (Set.{u2} α)), (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) -> (IsOpen.{u2} α _inst_1 (U i))) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => U i)))) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u2} α)) (fun (K : ι -> (Set.{u2} α)) => And (forall (i : ι), IsCompact.{u2} α _inst_1 (K i)) (And (forall (i : ι), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (K i) (U i)) (Eq.{succ u2} (Set.{u2} α) s (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => K i))))))))
-Case conversion may be inaccurate. Consider using '#align is_compact.finite_compact_cover IsCompact.finite_compact_coverₓ'. -/
 /-- For every finite open cover `Uᵢ` of a compact set, there exists a compact cover `Kᵢ ⊆ Uᵢ`. -/
 theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact s) {ι} (t : Finset ι)
     (U : ι → Set α) (hU : ∀ i ∈ t, IsOpen (U i)) (hsC : s ⊆ ⋃ i ∈ t, U i) :
@@ -2170,12 +1738,6 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
 #align regular_space RegularSpace
 -/
 
-/- warning: regular_space_tfae -> regularSpace_TFAE is a dubious translation:
-lean 3 declaration is
-  forall (X : Type.{u1}) [_inst_2 : TopologicalSpace.{u1} X], List.TFAE (List.cons.{0} Prop (RegularSpace.{u1} X _inst_2) (List.cons.{0} Prop (forall (s : Set.{u1} X) (a : X), (Not (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a (closure.{u1} X _inst_2 s))) -> (Disjoint.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} X) (Preorder.toHasLe.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} X) (Filter.completeLattice.{u1} X))) (nhdsSet.{u1} X _inst_2 s) (nhds.{u1} X _inst_2 a))) (List.cons.{0} Prop (forall (a : X) (s : Set.{u1} X), Iff (Disjoint.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} X) (Preorder.toHasLe.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} X) (Filter.completeLattice.{u1} X))) (nhdsSet.{u1} X _inst_2 s) (nhds.{u1} X _inst_2 a)) (Not (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a (closure.{u1} X _inst_2 s)))) (List.cons.{0} Prop (forall (a : X) (s : Set.{u1} X), (Membership.Mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (Filter.hasMem.{u1} X) s (nhds.{u1} X _inst_2 a)) -> (Exists.{succ u1} (Set.{u1} X) (fun (t : Set.{u1} X) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (Filter.hasMem.{u1} X) t (nhds.{u1} X _inst_2 a)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (Filter.hasMem.{u1} X) t (nhds.{u1} X _inst_2 a)) => And (IsClosed.{u1} X _inst_2 t) (HasSubset.Subset.{u1} (Set.{u1} X) (Set.hasSubset.{u1} X) t s))))) (List.cons.{0} Prop (forall (a : X), LE.le.{u1} (Filter.{u1} X) (Preorder.toHasLe.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X))) (Filter.lift'.{u1, u1} X X (nhds.{u1} X _inst_2 a) (closure.{u1} X _inst_2)) (nhds.{u1} X _inst_2 a)) (List.cons.{0} Prop (forall (a : X), Eq.{succ u1} (Filter.{u1} X) (Filter.lift'.{u1, u1} X X (nhds.{u1} X _inst_2 a) (closure.{u1} X _inst_2)) (nhds.{u1} X _inst_2 a)) (List.nil.{0} Prop)))))))
-but is expected to have type
-  forall (X : Type.{u1}) [_inst_2 : TopologicalSpace.{u1} X], List.TFAE (List.cons.{0} Prop (RegularSpace.{u1} X _inst_2) (List.cons.{0} Prop (forall (s : Set.{u1} X) (a : X), (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a (closure.{u1} X _inst_2 s))) -> (Disjoint.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} X) (Preorder.toLE.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} X) (Filter.instCompleteLatticeFilter.{u1} X))) (nhdsSet.{u1} X _inst_2 s) (nhds.{u1} X _inst_2 a))) (List.cons.{0} Prop (forall (a : X) (s : Set.{u1} X), Iff (Disjoint.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} X) (Preorder.toLE.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} X) (Filter.instCompleteLatticeFilter.{u1} X))) (nhdsSet.{u1} X _inst_2 s) (nhds.{u1} X _inst_2 a)) (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a (closure.{u1} X _inst_2 s)))) (List.cons.{0} Prop (forall (a : X) (s : Set.{u1} X), (Membership.mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (instMembershipSetFilter.{u1} X) s (nhds.{u1} X _inst_2 a)) -> (Exists.{succ u1} (Set.{u1} X) (fun (t : Set.{u1} X) => And (Membership.mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (instMembershipSetFilter.{u1} X) t (nhds.{u1} X _inst_2 a)) (And (IsClosed.{u1} X _inst_2 t) (HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) t s))))) (List.cons.{0} Prop (forall (a : X), LE.le.{u1} (Filter.{u1} X) (Preorder.toLE.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X))) (Filter.lift'.{u1, u1} X X (nhds.{u1} X _inst_2 a) (closure.{u1} X _inst_2)) (nhds.{u1} X _inst_2 a)) (List.cons.{0} Prop (forall (a : X), Eq.{succ u1} (Filter.{u1} X) (Filter.lift'.{u1, u1} X X (nhds.{u1} X _inst_2 a) (closure.{u1} X _inst_2)) (nhds.{u1} X _inst_2 a)) (List.nil.{0} Prop)))))))
-Case conversion may be inaccurate. Consider using '#align regular_space_tfae regularSpace_TFAEₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » closure[closure] s) -/
 theorem regularSpace_TFAE (X : Type u) [TopologicalSpace X] :
     TFAE
@@ -2215,24 +1777,12 @@ theorem RegularSpace.ofLift'_closure (h : ∀ a : α, (𝓝 a).lift' closure = �
 #align regular_space.of_lift'_closure RegularSpace.ofLift'_closure
 -/
 
-/- warning: regular_space.of_basis -> RegularSpace.ofBasis is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : α -> Sort.{u2}} {p : forall (a : α), (ι a) -> Prop} {s : forall (a : α), (ι a) -> (Set.{u1} α)}, (forall (a : α), Filter.HasBasis.{u1, u2} α (ι a) (nhds.{u1} α _inst_1 a) (p a) (s a)) -> (forall (a : α) (i : ι a), (p a i) -> (IsClosed.{u1} α _inst_1 (s a i))) -> (RegularSpace.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : α -> Sort.{u1}} {p : forall (a : α), (ι a) -> Prop} {s : forall (a : α), (ι a) -> (Set.{u2} α)}, (forall (a : α), Filter.HasBasis.{u2, u1} α (ι a) (nhds.{u2} α _inst_1 a) (p a) (s a)) -> (forall (a : α) (i : ι a), (p a i) -> (IsClosed.{u2} α _inst_1 (s a i))) -> (RegularSpace.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align regular_space.of_basis RegularSpace.ofBasisₓ'. -/
 theorem RegularSpace.ofBasis {ι : α → Sort _} {p : ∀ a, ι a → Prop} {s : ∀ a, ι a → Set α}
     (h₁ : ∀ a, (𝓝 a).HasBasis (p a) (s a)) (h₂ : ∀ a i, p a i → IsClosed (s a i)) :
     RegularSpace α :=
   RegularSpace.ofLift'_closure fun a => (h₁ a).lift'_closure_eq_self (h₂ a)
 #align regular_space.of_basis RegularSpace.ofBasis
 
-/- warning: regular_space.of_exists_mem_nhds_is_closed_subset -> RegularSpace.ofExistsMemNhdsIsClosedSubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], (forall (a : α) (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 a)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhds.{u1} α _inst_1 a)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhds.{u1} α _inst_1 a)) => And (IsClosed.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s))))) -> (RegularSpace.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], (forall (a : α) (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 a)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhds.{u1} α _inst_1 a)) (And (IsClosed.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s))))) -> (RegularSpace.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align regular_space.of_exists_mem_nhds_is_closed_subset RegularSpace.ofExistsMemNhdsIsClosedSubsetₓ'. -/
 theorem RegularSpace.ofExistsMemNhdsIsClosedSubset
     (h : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 a, IsClosed t ∧ t ⊆ s) : RegularSpace α :=
   Iff.mpr ((regularSpace_TFAE α).out 0 3) h
@@ -2240,32 +1790,14 @@ theorem RegularSpace.ofExistsMemNhdsIsClosedSubset
 
 variable [RegularSpace α] {a : α} {s : Set α}
 
-/- warning: disjoint_nhds_set_nhds -> disjoint_nhdsSet_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhds.{u1} α _inst_1 a)) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α _inst_1 s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhds.{u1} α _inst_1 a)) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α _inst_1 s)))
-Case conversion may be inaccurate. Consider using '#align disjoint_nhds_set_nhds disjoint_nhdsSet_nhdsₓ'. -/
 theorem disjoint_nhdsSet_nhds : Disjoint (𝓝ˢ s) (𝓝 a) ↔ a ∉ closure s :=
   Iff.mp ((regularSpace_TFAE α).out 0 2) ‹_› _ _
 #align disjoint_nhds_set_nhds disjoint_nhdsSet_nhds
 
-/- warning: disjoint_nhds_nhds_set -> disjoint_nhds_nhdsSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 a) (nhdsSet.{u1} α _inst_1 s)) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α _inst_1 s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 a) (nhdsSet.{u1} α _inst_1 s)) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α _inst_1 s)))
-Case conversion may be inaccurate. Consider using '#align disjoint_nhds_nhds_set disjoint_nhds_nhdsSetₓ'. -/
 theorem disjoint_nhds_nhdsSet : Disjoint (𝓝 a) (𝓝ˢ s) ↔ a ∉ closure s :=
   disjoint_comm.trans disjoint_nhdsSet_nhds
 #align disjoint_nhds_nhds_set disjoint_nhds_nhdsSet
 
-/- warning: exists_mem_nhds_is_closed_subset -> exists_mem_nhds_isClosed_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 a)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhds.{u1} α _inst_1 a)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhds.{u1} α _inst_1 a)) => And (IsClosed.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 a)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhds.{u1} α _inst_1 a)) (And (IsClosed.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s))))
-Case conversion may be inaccurate. Consider using '#align exists_mem_nhds_is_closed_subset exists_mem_nhds_isClosed_subsetₓ'. -/
 theorem exists_mem_nhds_isClosed_subset {a : α} {s : Set α} (h : s ∈ 𝓝 a) :
     ∃ t ∈ 𝓝 a, IsClosed t ∧ t ⊆ s :=
   Iff.mp ((regularSpace_TFAE α).out 0 3) ‹_› _ _ h
@@ -2283,12 +1815,6 @@ theorem lift'_nhds_closure (a : α) : (𝓝 a).lift' closure = 𝓝 a :=
 #align lift'_nhds_closure lift'_nhds_closure
 -/
 
-/- warning: filter.has_basis.nhds_closure -> Filter.HasBasis.nhds_closure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {ι : Sort.{u2}} {a : α} {p : ι -> Prop} {s : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α _inst_1 a) p s) -> (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α _inst_1 a) p (fun (i : ι) => closure.{u1} α _inst_1 (s i)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : RegularSpace.{u2} α _inst_1] {ι : Sort.{u1}} {a : α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι (nhds.{u2} α _inst_1 a) p s) -> (Filter.HasBasis.{u2, u1} α ι (nhds.{u2} α _inst_1 a) p (fun (i : ι) => closure.{u2} α _inst_1 (s i)))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.nhds_closure Filter.HasBasis.nhds_closureₓ'. -/
 theorem Filter.HasBasis.nhds_closure {ι : Sort _} {a : α} {p : ι → Prop} {s : ι → Set α}
     (h : (𝓝 a).HasBasis p s) : (𝓝 a).HasBasis p fun i => closure (s i) :=
   lift'_nhds_closure a ▸ h.lift'_closure
@@ -2314,24 +1840,12 @@ theorem TopologicalSpace.IsTopologicalBasis.nhds_basis_closure {B : Set (Set α)
 #align topological_space.is_topological_basis.nhds_basis_closure TopologicalSpace.IsTopologicalBasis.nhds_basis_closure
 -/
 
-/- warning: topological_space.is_topological_basis.exists_closure_subset -> TopologicalSpace.IsTopologicalBasis.exists_closure_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α _inst_1 B) -> (forall {a : α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 a)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t B) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (closure.{u1} α _inst_1 t) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α _inst_1 B) -> (forall {a : α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 a)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t B) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (closure.{u1} α _inst_1 t) s)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.exists_closure_subset TopologicalSpace.IsTopologicalBasis.exists_closure_subsetₓ'. -/
 theorem TopologicalSpace.IsTopologicalBasis.exists_closure_subset {B : Set (Set α)}
     (hB : TopologicalSpace.IsTopologicalBasis B) {a : α} {s : Set α} (h : s ∈ 𝓝 a) :
     ∃ t ∈ B, a ∈ t ∧ closure t ⊆ s := by
   simpa only [exists_prop, and_assoc] using hB.nhds_has_basis.nhds_closure.mem_iff.mp h
 #align topological_space.is_topological_basis.exists_closure_subset TopologicalSpace.IsTopologicalBasis.exists_closure_subset
 
-/- warning: disjoint_nhds_nhds_iff_not_specializes -> disjoint_nhds_nhds_iff_not_specializes is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {b : α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 a) (nhds.{u1} α _inst_1 b)) (Not (Specializes.{u1} α _inst_1 a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1] {a : α} {b : α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 a) (nhds.{u1} α _inst_1 b)) (Not (Specializes.{u1} α _inst_1 a b))
-Case conversion may be inaccurate. Consider using '#align disjoint_nhds_nhds_iff_not_specializes disjoint_nhds_nhds_iff_not_specializesₓ'. -/
 theorem disjoint_nhds_nhds_iff_not_specializes {a b : α} : Disjoint (𝓝 a) (𝓝 b) ↔ ¬a ⤳ b := by
   rw [← nhdsSet_singleton, disjoint_nhdsSet_nhds, specializes_iff_mem_closure]
 #align disjoint_nhds_nhds_iff_not_specializes disjoint_nhds_nhds_iff_not_specializes
@@ -2351,23 +1865,11 @@ theorem specializes_iff_inseparable {a b : α} : a ⤳ b ↔ Inseparable a b :=
 #align specializes_iff_inseparable specializes_iff_inseparable
 -/
 
-/- warning: is_closed_set_of_specializes -> isClosed_setOf_specializes is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1], IsClosed.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α _inst_1 _inst_1) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Specializes.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1], IsClosed.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α _inst_1 _inst_1) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Specializes.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-Case conversion may be inaccurate. Consider using '#align is_closed_set_of_specializes isClosed_setOf_specializesₓ'. -/
 theorem isClosed_setOf_specializes : IsClosed { p : α × α | p.1 ⤳ p.2 } := by
   simp only [← isOpen_compl_iff, compl_set_of, ← disjoint_nhds_nhds_iff_not_specializes,
     isOpen_setOf_disjoint_nhds_nhds]
 #align is_closed_set_of_specializes isClosed_setOf_specializes
 
-/- warning: is_closed_set_of_inseparable -> isClosed_setOf_inseparable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1], IsClosed.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α _inst_1 _inst_1) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Inseparable.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : RegularSpace.{u1} α _inst_1], IsClosed.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α _inst_1 _inst_1) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Inseparable.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-Case conversion may be inaccurate. Consider using '#align is_closed_set_of_inseparable isClosed_setOf_inseparableₓ'. -/
 theorem isClosed_setOf_inseparable : IsClosed { p : α × α | Inseparable p.1 p.2 } := by
   simp only [← specializes_iff_inseparable, isClosed_setOf_specializes]
 #align is_closed_set_of_inseparable isClosed_setOf_inseparable
@@ -2387,12 +1889,6 @@ theorem regularSpace_induced (f : β → α) : @RegularSpace β (induced f ‹_�
 #align regular_space_induced regularSpace_induced
 -/
 
-/- warning: regular_space_Inf -> regularSpace_sInf is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {T : Set.{u1} (TopologicalSpace.{u1} X)}, (forall (t : TopologicalSpace.{u1} X), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} X) (Set.{u1} (TopologicalSpace.{u1} X)) (Set.hasMem.{u1} (TopologicalSpace.{u1} X)) t T) -> (RegularSpace.{u1} X t)) -> (RegularSpace.{u1} X (InfSet.sInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.completeLattice.{u1} X))) T))
-but is expected to have type
-  forall {X : Type.{u1}} {T : Set.{u1} (TopologicalSpace.{u1} X)}, (forall (t : TopologicalSpace.{u1} X), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} X) (Set.{u1} (TopologicalSpace.{u1} X)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} X)) t T) -> (RegularSpace.{u1} X t)) -> (RegularSpace.{u1} X (InfSet.sInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X))) T))
-Case conversion may be inaccurate. Consider using '#align regular_space_Inf regularSpace_sInfₓ'. -/
 theorem regularSpace_sInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @RegularSpace X t) :
     @RegularSpace X (sInf T) := by
   letI := Inf T
@@ -2410,23 +1906,11 @@ theorem regularSpace_sInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @
   exact (hIf.2 i).2.mono (sInf_le (i : T).2)
 #align regular_space_Inf regularSpace_sInf
 
-/- warning: regular_space_infi -> regularSpace_iInf is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {X : Type.{u2}} {t : ι -> (TopologicalSpace.{u2} X)}, (forall (i : ι), RegularSpace.{u2} X (t i)) -> (RegularSpace.{u2} X (iInf.{u2, u1} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.completeLattice.{u2} X))) ι t))
-but is expected to have type
-  forall {ι : Sort.{u2}} {X : Type.{u1}} {t : ι -> (TopologicalSpace.{u1} X)}, (forall (i : ι), RegularSpace.{u1} X (t i)) -> (RegularSpace.{u1} X (iInf.{u1, u2} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X))) ι t))
-Case conversion may be inaccurate. Consider using '#align regular_space_infi regularSpace_iInfₓ'. -/
 theorem regularSpace_iInf {ι X} {t : ι → TopologicalSpace X} (h : ∀ i, @RegularSpace X (t i)) :
     @RegularSpace X (iInf t) :=
   regularSpace_sInf <| forall_range_iff.mpr h
 #align regular_space_infi regularSpace_iInf
 
-/- warning: regular_space.inf -> RegularSpace.inf is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (Inf.inf.{u1} (TopologicalSpace.{u1} X) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} X) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.completeLattice.{u1} X))))) t₁ t₂))
-but is expected to have type
-  forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (Inf.inf.{u1} (TopologicalSpace.{u1} X) (Lattice.toInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X)))) t₁ t₂))
-Case conversion may be inaccurate. Consider using '#align regular_space.inf RegularSpace.infₓ'. -/
 theorem RegularSpace.inf {X} {t₁ t₂ : TopologicalSpace X} (h₁ : @RegularSpace X t₁)
     (h₂ : @RegularSpace X t₂) : @RegularSpace X (t₁ ⊓ t₂) := by rw [inf_eq_iInf];
   exact regularSpace_iInf (Bool.forall_bool.2 ⟨h₂, h₁⟩)
@@ -2488,9 +1972,6 @@ instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [�
     T3Space (∀ i, π i) :=
   ⟨⟩
 
-/- warning: disjoint_nested_nhds -> disjoint_nested_nhds is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align disjoint_nested_nhds disjoint_nested_nhdsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » nhds() x) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » nhds() y) -/
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
@@ -2530,12 +2011,6 @@ class NormalSpace (α : Type u) [TopologicalSpace α] extends T1Space α : Prop 
 #align normal_space NormalSpace
 -/
 
-/- warning: normal_separation -> normal_separation is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : NormalSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClosed.{u1} α _inst_1 s) -> (IsClosed.{u1} α _inst_1 t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (SeparatedNhds.{u1} α _inst_1 s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : NormalSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClosed.{u1} α _inst_1 s) -> (IsClosed.{u1} α _inst_1 t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t) -> (SeparatedNhds.{u1} α _inst_1 s t)
-Case conversion may be inaccurate. Consider using '#align normal_separation normal_separationₓ'. -/
 theorem normal_separation [NormalSpace α] {s t : Set α} (H1 : IsClosed s) (H2 : IsClosed t)
     (H3 : Disjoint s t) : SeparatedNhds s t :=
   NormalSpace.normal s t H1 H2 H3
@@ -2890,12 +2365,6 @@ theorem isTopologicalBasis_clopen : IsTopologicalBasis { s : Set α | IsClopen s
 #align is_topological_basis_clopen isTopologicalBasis_clopen
 -/
 
-/- warning: compact_exists_clopen_in_open -> compact_exists_clopen_in_open is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : CompactSpace.{u1} α _inst_1] [_inst_4 : TotallyDisconnectedSpace.{u1} α _inst_1] {x : α} {U : Set.{u1} α}, (IsOpen.{u1} α _inst_1 U) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{0} (IsClopen.{u1} α _inst_1 V) (fun (hV : IsClopen.{u1} α _inst_1 V) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x V) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) V U))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : CompactSpace.{u1} α _inst_1] [_inst_4 : TotallyDisconnectedSpace.{u1} α _inst_1] {x : α} {U : Set.{u1} α}, (IsOpen.{u1} α _inst_1 U) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 V) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x V) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) V U))))
-Case conversion may be inaccurate. Consider using '#align compact_exists_clopen_in_open compact_exists_clopen_in_openₓ'. -/
 /-- Every member of an open set in a compact Hausdorff totally disconnected space
   is contained in a clopen set contained in the open set.  -/
 theorem compact_exists_clopen_in_open {x : α} {U : Set α} (is_open : IsOpen U) (memU : x ∈ U) :

@@ -32,23 +32,11 @@ namespace ULift
 instance [HasRatCast α] : HasRatCast (ULift α) :=
   ⟨fun a => up a⟩
 
-/- warning: ulift.up_rat_cast -> ULift.up_ratCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : HasRatCast.{u1} α] (q : Rat), Eq.{succ (max u1 u2)} (ULift.{u2, u1} α) (ULift.up.{u2, u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat α (HasLiftT.mk.{1, succ u1} Rat α (CoeTCₓ.coe.{1, succ u1} Rat α (Rat.castCoe.{u1} α _inst_1))) q)) ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Rat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (Rat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.hasRatCast.{u1, u2} α _inst_1)))) q)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : RatCast.{u2} α] (q : Rat), Eq.{max (succ u2) (succ u1)} (ULift.{u1, u2} α) (ULift.up.{u1, u2} α (Rat.cast.{u2} α _inst_1 q)) (Rat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.instRatCastULift.{u2, u1} α _inst_1) q)
-Case conversion may be inaccurate. Consider using '#align ulift.up_rat_cast ULift.up_ratCastₓ'. -/
 @[simp, norm_cast]
 theorem up_ratCast [HasRatCast α] (q : ℚ) : up (q : α) = q :=
   rfl
 #align ulift.up_rat_cast ULift.up_ratCast
 
-/- warning: ulift.down_rat_cast -> ULift.down_ratCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : HasRatCast.{u1} α] (q : Rat), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Rat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (Rat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.hasRatCast.{u1, u2} α _inst_1)))) q)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat α (HasLiftT.mk.{1, succ u1} Rat α (CoeTCₓ.coe.{1, succ u1} Rat α (Rat.castCoe.{u1} α _inst_1))) q)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : RatCast.{u2} α] (q : Rat), Eq.{succ u2} α (ULift.down.{u1, u2} α (Rat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.instRatCastULift.{u2, u1} α _inst_1) q)) (Rat.cast.{u2} α _inst_1 q)
-Case conversion may be inaccurate. Consider using '#align ulift.down_rat_cast ULift.down_ratCastₓ'. -/
 @[simp, norm_cast]
 theorem down_ratCast [HasRatCast α] (q : ℚ) : down (q : ULift α) = q :=
   rfl

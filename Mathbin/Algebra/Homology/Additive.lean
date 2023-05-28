@@ -71,52 +71,31 @@ instance hasIntScalar : SMul ℤ (C ⟶ D) :=
 #align homological_complex.has_int_scalar HomologicalComplex.hasIntScalar
 -/
 
-/- warning: homological_complex.zero_f_apply -> HomologicalComplex.zero_f_apply is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} {C : HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c} {D : HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c} (i : ι), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} V (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} V (CategoryTheory.Category.toCategoryStruct.{u1, u2} V _inst_1)) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c C i) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c D i)) (HomologicalComplex.Hom.f.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c C D (OfNat.ofNat.{max u3 u1} (Quiver.Hom.{succ (max u3 u1), max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c))) C D) 0 (OfNat.mk.{max u3 u1} (Quiver.Hom.{succ (max u3 u1), max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c))) C D) 0 (Zero.zero.{max u3 u1} (Quiver.Hom.{succ (max u3 u1), max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c))) C D) (HomologicalComplex.Quiver.Hom.hasZero.{u1, u2, u3} ι V _inst_1 _inst_2 c C D)))) i) (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} V (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} V (CategoryTheory.Category.toCategoryStruct.{u1, u2} V _inst_1)) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c C i) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c D i)) 0 (OfNat.mk.{u1} (Quiver.Hom.{succ u1, u2} V (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} V (CategoryTheory.Category.toCategoryStruct.{u1, u2} V _inst_1)) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c C i) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c D i)) 0 (Zero.zero.{u1} (Quiver.Hom.{succ u1, u2} V (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} V (CategoryTheory.Category.toCategoryStruct.{u1, u2} V _inst_1)) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c C i) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c D i)) (CategoryTheory.Limits.HasZeroMorphisms.hasZero.{u1, u2} V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c C i) (HomologicalComplex.x.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c D i)))))
-but is expected to have type
-  forall {ι : Type.{u1}} {V : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} V] [_inst_2 : CategoryTheory.Preadditive.{u2, u3} V _inst_1] {c : ComplexShape.{u1} ι} {C : HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c} {D : HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c} (i : ι), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} V (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} V (CategoryTheory.Category.toCategoryStruct.{u2, u3} V _inst_1)) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c C i) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c D i)) (HomologicalComplex.Hom.f.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c C D (OfNat.ofNat.{max u2 u1} (Quiver.Hom.{max (succ u2) (succ u1), max (max u3 u2) u1} (HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (max u3 u2) u1} (HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (max u3 u2) u1} (HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c) (HomologicalComplex.instCategoryHomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c))) C D) 0 (Zero.toOfNat0.{max u2 u1} (Quiver.Hom.{max (succ u2) (succ u1), max (max u3 u2) u1} (HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (max u3 u2) u1} (HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (max u3 u2) u1} (HomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c) (HomologicalComplex.instCategoryHomologicalComplex.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c))) C D) (HomologicalComplex.instZeroHomHomologicalComplexPreadditiveHasZeroMorphismsToQuiverToCategoryStructInstCategoryHomologicalComplex.{u2, u3, u1} ι V _inst_1 _inst_2 c C D))) i) (OfNat.ofNat.{u2} (Quiver.Hom.{succ u2, u3} V (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} V (CategoryTheory.Category.toCategoryStruct.{u2, u3} V _inst_1)) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c C i) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c D i)) 0 (Zero.toOfNat0.{u2} (Quiver.Hom.{succ u2, u3} V (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} V (CategoryTheory.Category.toCategoryStruct.{u2, u3} V _inst_1)) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c C i) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c D i)) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u2, u3} V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c C i) (HomologicalComplex.X.{u2, u3, u1} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} V _inst_1 _inst_2) c D i))))
-Case conversion may be inaccurate. Consider using '#align homological_complex.zero_f_apply HomologicalComplex.zero_f_applyₓ'. -/
 @[simp]
 theorem zero_f_apply (i : ι) : (0 : C ⟶ D).f i = 0 :=
   rfl
 #align homological_complex.zero_f_apply HomologicalComplex.zero_f_apply
 
-/- warning: homological_complex.add_f_apply -> HomologicalComplex.add_f_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.add_f_apply HomologicalComplex.add_f_applyₓ'. -/
 @[simp]
 theorem add_f_apply (f g : C ⟶ D) (i : ι) : (f + g).f i = f.f i + g.f i :=
   rfl
 #align homological_complex.add_f_apply HomologicalComplex.add_f_apply
 
-/- warning: homological_complex.neg_f_apply -> HomologicalComplex.neg_f_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.neg_f_apply HomologicalComplex.neg_f_applyₓ'. -/
 @[simp]
 theorem neg_f_apply (f : C ⟶ D) (i : ι) : (-f).f i = -f.f i :=
   rfl
 #align homological_complex.neg_f_apply HomologicalComplex.neg_f_apply
 
-/- warning: homological_complex.sub_f_apply -> HomologicalComplex.sub_f_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.sub_f_apply HomologicalComplex.sub_f_applyₓ'. -/
 @[simp]
 theorem sub_f_apply (f g : C ⟶ D) (i : ι) : (f - g).f i = f.f i - g.f i :=
   rfl
 #align homological_complex.sub_f_apply HomologicalComplex.sub_f_apply
 
-/- warning: homological_complex.nsmul_f_apply -> HomologicalComplex.nsmul_f_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.nsmul_f_apply HomologicalComplex.nsmul_f_applyₓ'. -/
 @[simp]
 theorem nsmul_f_apply (n : ℕ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f.f i :=
   rfl
 #align homological_complex.nsmul_f_apply HomologicalComplex.nsmul_f_apply
 
-/- warning: homological_complex.zsmul_f_apply -> HomologicalComplex.zsmul_f_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.zsmul_f_apply HomologicalComplex.zsmul_f_applyₓ'. -/
 @[simp]
 theorem zsmul_f_apply (n : ℤ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f.f i :=
   rfl
@@ -128,9 +107,6 @@ instance : AddCommGroup (C ⟶ D) :=
 
 instance : Preadditive (HomologicalComplex V c) where
 
-/- warning: homological_complex.hom.f_add_monoid_hom -> HomologicalComplex.Hom.fAddMonoidHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.f_add_monoid_hom HomologicalComplex.Hom.fAddMonoidHomₓ'. -/
 /-- The `i`-th component of a chain map, as an additive map from chain maps to morphisms. -/
 @[simps]
 def Hom.fAddMonoidHom {C₁ C₂ : HomologicalComplex V c} (i : ι) : (C₁ ⟶ C₂) →+ (C₁.pt i ⟶ C₂.pt i) :=
@@ -141,43 +117,19 @@ end HomologicalComplex
 
 namespace HomologicalComplex
 
-/- warning: homological_complex.eval_additive -> HomologicalComplex.eval_additive is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι), CategoryTheory.Functor.Additive.{max u2 u3 u1, u2, max u3 u1, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.CategoryTheory.preadditive.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (HomologicalComplex.eval.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c i)
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι), CategoryTheory.Functor.Additive.{max (max u2 u1) u3, u2, max u1 u3, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.instPreadditiveHomologicalComplexPreadditiveHasZeroMorphismsInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (HomologicalComplex.eval.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c i)
-Case conversion may be inaccurate. Consider using '#align homological_complex.eval_additive HomologicalComplex.eval_additiveₓ'. -/
 instance eval_additive (i : ι) : (eval V c i).Additive where
 #align homological_complex.eval_additive HomologicalComplex.eval_additive
 
-/- warning: homological_complex.cycles_additive -> HomologicalComplex.cycles_additive is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι) [_inst_3 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1], CategoryTheory.Functor.Additive.{max u2 u3 u1, u2, max u3 u1, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.CategoryTheory.preadditive.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (cyclesFunctor.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c (CategoryTheory.Limits.hasKernels_of_hasEqualizers.{u1, u2} V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) _inst_3) i)
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι) [_inst_3 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1], CategoryTheory.Functor.Additive.{max (max u2 u1) u3, u2, max u1 u3, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.instPreadditiveHomologicalComplexPreadditiveHasZeroMorphismsInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (cyclesFunctor.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c (CategoryTheory.Limits.hasKernels_of_hasEqualizers.{u1, u2} V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) _inst_3) i)
-Case conversion may be inaccurate. Consider using '#align homological_complex.cycles_additive HomologicalComplex.cycles_additiveₓ'. -/
 instance cycles_additive [HasEqualizers V] : (cyclesFunctor V c i).Additive where
 #align homological_complex.cycles_additive HomologicalComplex.cycles_additive
 
 variable [HasImages V] [HasImageMaps V]
 
-/- warning: homological_complex.boundaries_additive -> HomologicalComplex.boundaries_additive is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι) [_inst_3 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_3], CategoryTheory.Functor.Additive.{max u2 u3 u1, u2, max u3 u1, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.CategoryTheory.preadditive.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (boundariesFunctor.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c _inst_3 _inst_4 i)
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι) [_inst_3 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_3], CategoryTheory.Functor.Additive.{max (max u2 u1) u3, u2, max u1 u3, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.instPreadditiveHomologicalComplexPreadditiveHasZeroMorphismsInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (boundariesFunctor.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c _inst_3 _inst_4 i)
-Case conversion may be inaccurate. Consider using '#align homological_complex.boundaries_additive HomologicalComplex.boundaries_additiveₓ'. -/
 instance boundaries_additive : (boundariesFunctor V c i).Additive where
 #align homological_complex.boundaries_additive HomologicalComplex.boundaries_additive
 
 variable [HasEqualizers V] [HasCokernels V]
 
-/- warning: homological_complex.homology_additive -> HomologicalComplex.homology_additive is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι) [_inst_3 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_3] [_inst_5 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1] [_inst_6 : CategoryTheory.Limits.HasCokernels.{u1, u2} V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2)], CategoryTheory.Functor.Additive.{max u2 u3 u1, u2, max u3 u1, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.CategoryTheory.preadditive.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (homologyFunctor.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c _inst_5 _inst_3 _inst_4 _inst_6 i)
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {c : ComplexShape.{u3} ι} (i : ι) [_inst_3 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_3] [_inst_5 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1] [_inst_6 : CategoryTheory.Limits.HasCokernels.{u1, u2} V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2)], CategoryTheory.Functor.Additive.{max (max u2 u1) u3, u2, max u1 u3, u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) V (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) _inst_1 (HomologicalComplex.instPreadditiveHomologicalComplexPreadditiveHasZeroMorphismsInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) _inst_2 (homologyFunctor.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c _inst_5 _inst_3 _inst_4 _inst_6 i)
-Case conversion may be inaccurate. Consider using '#align homological_complex.homology_additive HomologicalComplex.homology_additiveₓ'. -/
 instance homology_additive : (homologyFunctor V c i).Additive
     where map_add' C D f g := by
     dsimp [homologyFunctor]
@@ -225,12 +177,6 @@ def Functor.mapHomologicalComplexIdIso (c : ComplexShape ι) : (𝟭 V).mapHomol
 
 variable {V}
 
-/- warning: category_theory.functor.map_homogical_complex_additive -> CategoryTheory.Functor.map_homogical_complex_additive is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {W : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u5, u4} W] [_inst_4 : CategoryTheory.Preadditive.{u5, u4} W _inst_3] (F : CategoryTheory.Functor.{u1, u5, u2, u4} V _inst_1 W _inst_3) [_inst_5 : CategoryTheory.Functor.Additive.{u2, u4, u1, u5} V W _inst_1 _inst_3 _inst_2 _inst_4 F] (c : ComplexShape.{u3} ι), CategoryTheory.Functor.Additive.{max u2 u3 u1, max u4 u3 u5, max u3 u1, max u3 u5} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.CategoryTheory.category.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c) (HomologicalComplex.CategoryTheory.preadditive.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.preadditive.{u5, u4, u3} ι W _inst_3 _inst_4 c) (CategoryTheory.Functor.mapHomologicalComplex.{u1, u2, u3, u4, u5} ι V _inst_1 _inst_2 W _inst_3 _inst_4 F _inst_5 c)
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {W : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u5, u4} W] [_inst_4 : CategoryTheory.Preadditive.{u5, u4} W _inst_3] (F : CategoryTheory.Functor.{u1, u5, u2, u4} V _inst_1 W _inst_3) [_inst_5 : CategoryTheory.Functor.Additive.{u2, u4, u1, u5} V W _inst_1 _inst_3 _inst_2 _inst_4 F] (c : ComplexShape.{u3} ι), CategoryTheory.Functor.Additive.{max (max u2 u1) u3, max (max u3 u4) u5, max u1 u3, max u3 u5} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.instCategoryHomologicalComplex.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c) (HomologicalComplex.instPreadditiveHomologicalComplexPreadditiveHasZeroMorphismsInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.instPreadditiveHomologicalComplexPreadditiveHasZeroMorphismsInstCategoryHomologicalComplex.{u5, u4, u3} ι W _inst_3 _inst_4 c) (CategoryTheory.Functor.mapHomologicalComplex.{u1, u2, u3, u4, u5} ι V _inst_1 _inst_2 W _inst_3 _inst_4 F _inst_5 c)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additiveₓ'. -/
 instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     (F.mapHomologicalComplex c).Additive where
 #align category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
@@ -260,17 +206,11 @@ def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α
 #align category_theory.nat_trans.map_homological_complex CategoryTheory.NatTrans.mapHomologicalComplex
 -/
 
-/- warning: category_theory.nat_trans.map_homological_complex_id -> CategoryTheory.NatTrans.mapHomologicalComplex_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.map_homological_complex_id CategoryTheory.NatTrans.mapHomologicalComplex_idₓ'. -/
 @[simp]
 theorem NatTrans.mapHomologicalComplex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     NatTrans.mapHomologicalComplex (𝟙 F) c = 𝟙 (F.mapHomologicalComplex c) := by tidy
 #align category_theory.nat_trans.map_homological_complex_id CategoryTheory.NatTrans.mapHomologicalComplex_id
 
-/- warning: category_theory.nat_trans.map_homological_complex_comp -> CategoryTheory.NatTrans.mapHomologicalComplex_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.mapHomologicalComplex_compₓ'. -/
 @[simp]
 theorem NatTrans.mapHomologicalComplex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive]
     [G.Additive] [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
@@ -279,9 +219,6 @@ theorem NatTrans.mapHomologicalComplex_comp (c : ComplexShape ι) {F G H : V ⥤
   by tidy
 #align category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.mapHomologicalComplex_comp
 
-/- warning: category_theory.nat_trans.map_homological_complex_naturality -> CategoryTheory.NatTrans.mapHomologicalComplex_naturality is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.map_homological_complex_naturality CategoryTheory.NatTrans.mapHomologicalComplex_naturalityₓ'. -/
 @[simp, reassoc]
 theorem NatTrans.mapHomologicalComplex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive]
     [G.Additive] (α : F ⟶ G) {C D : HomologicalComplex V c} (f : C ⟶ D) :
@@ -305,12 +242,6 @@ def NatIso.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α :
 #align category_theory.nat_iso.map_homological_complex CategoryTheory.NatIso.mapHomologicalComplex
 -/
 
-/- warning: category_theory.equivalence.map_homological_complex -> CategoryTheory.Equivalence.mapHomologicalComplex is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {W : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u5, u4} W] [_inst_4 : CategoryTheory.Preadditive.{u5, u4} W _inst_3] (e : CategoryTheory.Equivalence.{u1, u5, u2, u4} V _inst_1 W _inst_3) [_inst_5 : CategoryTheory.Functor.Additive.{u2, u4, u1, u5} V W _inst_1 _inst_3 _inst_2 _inst_4 (CategoryTheory.Equivalence.functor.{u1, u5, u2, u4} V _inst_1 W _inst_3 e)] (c : ComplexShape.{u3} ι), CategoryTheory.Equivalence.{max u3 u1, max u3 u5, max u2 u3 u1, max u4 u3 u5} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c) (HomologicalComplex.CategoryTheory.category.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c)
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} V _inst_1] {W : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u5, u4} W] [_inst_4 : CategoryTheory.Preadditive.{u5, u4} W _inst_3] (e : CategoryTheory.Equivalence.{u1, u5, u2, u4} V W _inst_1 _inst_3) [_inst_5 : CategoryTheory.Functor.Additive.{u2, u4, u1, u5} V W _inst_1 _inst_3 _inst_2 _inst_4 (CategoryTheory.Equivalence.functor.{u1, u5, u2, u4} V W _inst_1 _inst_3 e)] (c : ComplexShape.{u3} ι), CategoryTheory.Equivalence.{max u1 u3, max u3 u5, max (max u3 u2) u1, max (max u3 u4) u5} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} V _inst_1 _inst_2) c) (HomologicalComplex.instCategoryHomologicalComplex.{u5, u4, u3} ι W _inst_3 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u5, u4} W _inst_3 _inst_4) c)
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.map_homological_complex CategoryTheory.Equivalence.mapHomologicalComplexₓ'. -/
 /-- An equivalence of categories induces an equivalences between the respective categories
 of homological complex.
 -/
@@ -333,9 +264,6 @@ variable {W : Type _} [Category W] [Preadditive W]
 
 variable {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
-/- warning: chain_complex.map_chain_complex_of -> ChainComplex.map_chain_complex_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.map_chain_complex_of ChainComplex.map_chain_complex_ofₓ'. -/
 theorem map_chain_complex_of (F : V ⥤ W) [F.Additive] (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n)
     (sq : ∀ n, d (n + 1) ≫ d n = 0) :
     (F.mapHomologicalComplex _).obj (ChainComplex.of X d sq) =
@@ -389,36 +317,24 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
 
 variable (F : V ⥤ W) [Functor.Additive F] (c)
 
-/- warning: homological_complex.single_map_homological_complex_hom_app_self -> HomologicalComplex.singleMapHomologicalComplex_hom_app_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.single_map_homological_complex_hom_app_self HomologicalComplex.singleMapHomologicalComplex_hom_app_selfₓ'. -/
 @[simp]
 theorem singleMapHomologicalComplex_hom_app_self (j : ι) (X : V) :
     ((singleMapHomologicalComplex F c j).Hom.app X).f j = eqToHom (by simp) := by
   simp [single_map_homological_complex]
 #align homological_complex.single_map_homological_complex_hom_app_self HomologicalComplex.singleMapHomologicalComplex_hom_app_self
 
-/- warning: homological_complex.single_map_homological_complex_hom_app_ne -> HomologicalComplex.singleMapHomologicalComplex_hom_app_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.single_map_homological_complex_hom_app_ne HomologicalComplex.singleMapHomologicalComplex_hom_app_neₓ'. -/
 @[simp]
 theorem singleMapHomologicalComplex_hom_app_ne {i j : ι} (h : i ≠ j) (X : V) :
     ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by
   simp [single_map_homological_complex, h]
 #align homological_complex.single_map_homological_complex_hom_app_ne HomologicalComplex.singleMapHomologicalComplex_hom_app_ne
 
-/- warning: homological_complex.single_map_homological_complex_inv_app_self -> HomologicalComplex.singleMapHomologicalComplex_inv_app_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.single_map_homological_complex_inv_app_self HomologicalComplex.singleMapHomologicalComplex_inv_app_selfₓ'. -/
 @[simp]
 theorem singleMapHomologicalComplex_inv_app_self (j : ι) (X : V) :
     ((singleMapHomologicalComplex F c j).inv.app X).f j = eqToHom (by simp) := by
   simp [single_map_homological_complex]
 #align homological_complex.single_map_homological_complex_inv_app_self HomologicalComplex.singleMapHomologicalComplex_inv_app_self
 
-/- warning: homological_complex.single_map_homological_complex_inv_app_ne -> HomologicalComplex.singleMapHomologicalComplex_inv_app_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.single_map_homological_complex_inv_app_ne HomologicalComplex.singleMapHomologicalComplex_inv_app_neₓ'. -/
 @[simp]
 theorem singleMapHomologicalComplex_inv_app_ne {i j : ι} (h : i ≠ j) (X : V) :
     ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by
@@ -461,36 +377,24 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
 #align chain_complex.single₀_map_homological_complex ChainComplex.single₀MapHomologicalComplex
 -/
 
-/- warning: chain_complex.single₀_map_homological_complex_hom_app_zero -> ChainComplex.single₀MapHomologicalComplex_hom_app_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.single₀_map_homological_complex_hom_app_zero ChainComplex.single₀MapHomologicalComplex_hom_app_zeroₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
   rfl
 #align chain_complex.single₀_map_homological_complex_hom_app_zero ChainComplex.single₀MapHomologicalComplex_hom_app_zero
 
-/- warning: chain_complex.single₀_map_homological_complex_hom_app_succ -> ChainComplex.single₀MapHomologicalComplex_hom_app_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.single₀_map_homological_complex_hom_app_succ ChainComplex.single₀MapHomologicalComplex_hom_app_succₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
   rfl
 #align chain_complex.single₀_map_homological_complex_hom_app_succ ChainComplex.single₀MapHomologicalComplex_hom_app_succ
 
-/- warning: chain_complex.single₀_map_homological_complex_inv_app_zero -> ChainComplex.single₀MapHomologicalComplex_inv_app_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.single₀_map_homological_complex_inv_app_zero ChainComplex.single₀MapHomologicalComplex_inv_app_zeroₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
   rfl
 #align chain_complex.single₀_map_homological_complex_inv_app_zero ChainComplex.single₀MapHomologicalComplex_inv_app_zero
 
-/- warning: chain_complex.single₀_map_homological_complex_inv_app_succ -> ChainComplex.single₀MapHomologicalComplex_inv_app_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.single₀_map_homological_complex_inv_app_succ ChainComplex.single₀MapHomologicalComplex_inv_app_succₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=
@@ -533,36 +437,24 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
 #align cochain_complex.single₀_map_homological_complex CochainComplex.single₀MapHomologicalComplex
 -/
 
-/- warning: cochain_complex.single₀_map_homological_complex_hom_app_zero -> CochainComplex.single₀MapHomologicalComplex_hom_app_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.single₀_map_homological_complex_hom_app_zero CochainComplex.single₀MapHomologicalComplex_hom_app_zeroₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_hom_app_zero CochainComplex.single₀MapHomologicalComplex_hom_app_zero
 
-/- warning: cochain_complex.single₀_map_homological_complex_hom_app_succ -> CochainComplex.single₀MapHomologicalComplex_hom_app_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.single₀_map_homological_complex_hom_app_succ CochainComplex.single₀MapHomologicalComplex_hom_app_succₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_hom_app_succ CochainComplex.single₀MapHomologicalComplex_hom_app_succ
 
-/- warning: cochain_complex.single₀_map_homological_complex_inv_app_zero -> CochainComplex.single₀MapHomologicalComplex_inv_app_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.single₀_map_homological_complex_inv_app_zero CochainComplex.single₀MapHomologicalComplex_inv_app_zeroₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_inv_app_zero CochainComplex.single₀MapHomologicalComplex_inv_app_zero
 
-/- warning: cochain_complex.single₀_map_homological_complex_inv_app_succ -> CochainComplex.single₀MapHomologicalComplex_inv_app_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.single₀_map_homological_complex_inv_app_succ CochainComplex.single₀MapHomologicalComplex_inv_app_succₓ'. -/
 @[simp]
 theorem single₀MapHomologicalComplex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=

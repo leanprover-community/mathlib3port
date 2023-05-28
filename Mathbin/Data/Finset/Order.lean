@@ -22,12 +22,6 @@ universe u v w
 
 variable {α : Type u}
 
-/- warning: directed.finset_le -> Directed.finset_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsTrans.{u1} α r] {ι : Type.{u2}} [hι : Nonempty.{succ u2} ι] {f : ι -> α}, (Directed.{u1, succ u2} α ι r f) -> (forall (s : Finset.{u2} ι), Exists.{succ u2} ι (fun (z : ι) => forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (r (f i) (f z))))
-but is expected to have type
-  forall {α : Type.{u2}} {r : α -> α -> Prop} [_inst_1 : IsTrans.{u2} α r] {ι : Type.{u1}} [hι : Nonempty.{succ u1} ι] {f : ι -> α}, (Directed.{u2, succ u1} α ι r f) -> (forall (s : Finset.{u1} ι), Exists.{succ u1} ι (fun (z : ι) => forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) -> (r (f i) (f z))))
-Case conversion may be inaccurate. Consider using '#align directed.finset_le Directed.finset_leₓ'. -/
 theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : Nonempty ι] {f : ι → α}
     (D : Directed r f) (s : Finset ι) : ∃ z, ∀ i ∈ s, r (f i) (f z) :=
   show ∃ z, ∀ i ∈ s.1, r (f i) (f z) from
@@ -40,12 +34,6 @@ theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : N
         Or.cases_on (Multiset.mem_cons.1 h) (fun h => h.symm ▸ h₁) fun h => trans (H _ h) h₂⟩
 #align directed.finset_le Directed.finset_le
 
-/- warning: finset.exists_le -> Finset.exists_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] (s : Finset.{u1} α), Exists.{succ u1} α (fun (M : α) => forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) i M))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.Data.Finset.Order._hyg.225 : α) (x._@.Mathlib.Data.Finset.Order._hyg.227 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.Data.Finset.Order._hyg.225 x._@.Mathlib.Data.Finset.Order._hyg.227)] (s : Finset.{u1} α), Exists.{succ u1} α (fun (M : α) => forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) i M))
-Case conversion may be inaccurate. Consider using '#align finset.exists_le Finset.exists_leₓ'. -/
 theorem Finset.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] (s : Finset α) :
     ∃ M, ∀ i ∈ s, i ≤ M :=
   directed_id.finset_le _

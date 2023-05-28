@@ -80,9 +80,6 @@ theorem pushoutCocone_inr :
 #align CommRing.pushout_cocone_inr CommRingCat.pushoutCocone_inr
 -/
 
-/- warning: CommRing.pushout_cocone_X -> CommRingCat.pushoutCocone_pt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align CommRing.pushout_cocone_X CommRingCat.pushoutCocone_ptₓ'. -/
 @[simp]
 theorem pushoutCocone_pt :
     (pushoutCocone f g).pt = by
@@ -165,12 +162,6 @@ theorem subsingleton_of_isTerminal {X : CommRingCat} (hX : IsTerminal X) : Subsi
 #align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_isTerminal
 -/
 
-/- warning: CommRing.Z_is_initial -> CommRingCat.zIsInitial is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Limits.IsInitial.{0, 1} CommRingCat.{0} CommRingCat.largeCategory.{0} (CommRingCat.of.{0} Int Int.commRing)
-but is expected to have type
-  CategoryTheory.Limits.IsInitial.{0, 1} CommRingCat.{0} instCommRingCatLargeCategory.{0} (CommRingCat.of.{0} Int Int.instCommRingInt)
-Case conversion may be inaccurate. Consider using '#align CommRing.Z_is_initial CommRingCat.zIsInitialₓ'. -/
 /-- `ℤ` is the initial object of `CommRing`. -/
 def zIsInitial : IsInitial (CommRingCat.of ℤ) :=
   by
@@ -244,9 +235,6 @@ instance : IsLocalRingHom (equalizerFork f g).ι :=
   rw [isUnit_iff_exists_inv]
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
-/- warning: CommRing.equalizer_ι_is_local_ring_hom -> CommRingCat.equalizer_ι_isLocalRingHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align CommRing.equalizer_ι_is_local_ring_hom CommRingCat.equalizer_ι_isLocalRingHomₓ'. -/
 instance equalizer_ι_isLocalRingHom (F : WalkingParallelPair ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F WalkingParallelPair.zero) :=
   by
@@ -267,9 +255,6 @@ open CategoryTheory.Limits.WalkingParallelPair Opposite
 
 open CategoryTheory.Limits.WalkingParallelPairHom
 
-/- warning: CommRing.equalizer_ι_is_local_ring_hom' -> CommRingCat.equalizer_ι_is_local_ring_hom' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align CommRing.equalizer_ι_is_local_ring_hom' CommRingCat.equalizer_ι_is_local_ring_hom'ₓ'. -/
 instance equalizer_ι_is_local_ring_hom' (F : WalkingParallelPairᵒᵖ ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) :=
   by

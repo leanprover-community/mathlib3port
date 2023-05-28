@@ -28,31 +28,16 @@ section Add
 
 variable [Preorder α] [Add α] [Sub α] [OrderedSub α] {a b c d : α}
 
-/- warning: add_hom.le_map_tsub -> AddHom.le_map_tsub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_hom.le_map_tsub AddHom.le_map_tsubₓ'. -/
 theorem AddHom.le_map_tsub [Preorder β] [Add β] [Sub β] [OrderedSub β] (f : AddHom α β)
     (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) := by rw [tsub_le_iff_right, ← f.map_add];
   exact hf le_tsub_add
 #align add_hom.le_map_tsub AddHom.le_map_tsub
 
-/- warning: le_mul_tsub -> le_mul_tsub is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_5 : Distrib.{u1} R] [_inst_6 : Preorder.{u1} R] [_inst_7 : Sub.{u1} R] [_inst_8 : OrderedSub.{u1} R (Preorder.toHasLe.{u1} R _inst_6) (Distrib.toHasAdd.{u1} R _inst_5) _inst_7] [_inst_9 : CovariantClass.{u1, u1} R R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R _inst_5))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_6))] {a : R} {b : R} {c : R}, LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_6) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R _inst_5)) a b) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R _inst_5)) a c)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R _inst_5)) a (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) b c))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_5 : Distrib.{u1} R] [_inst_6 : Preorder.{u1} R] [_inst_7 : Sub.{u1} R] [_inst_8 : OrderedSub.{u1} R (Preorder.toLE.{u1} R _inst_6) (Distrib.toAdd.{u1} R _inst_5) _inst_7] [_inst_9 : CovariantClass.{u1, u1} R R (fun (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.174 : R) (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.176 : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toMul.{u1} R _inst_5)) x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.174 x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.176) (fun (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.189 : R) (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.191 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_6) x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.189 x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.191)] {a : R} {b : R} {c : R}, LE.le.{u1} R (Preorder.toLE.{u1} R _inst_6) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toMul.{u1} R _inst_5)) a b) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toMul.{u1} R _inst_5)) a c)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toMul.{u1} R _inst_5)) a (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) b c))
-Case conversion may be inaccurate. Consider using '#align le_mul_tsub le_mul_tsubₓ'. -/
 theorem le_mul_tsub {R : Type _} [Distrib R] [Preorder R] [Sub R] [OrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * b - a * c ≤ a * (b - c) :=
   (AddHom.mulLeft a).le_map_tsub (monotone_id.const_mul' a) _ _
 #align le_mul_tsub le_mul_tsub
 
-/- warning: le_tsub_mul -> le_tsub_mul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_5 : CommSemiring.{u1} R] [_inst_6 : Preorder.{u1} R] [_inst_7 : Sub.{u1} R] [_inst_8 : OrderedSub.{u1} R (Preorder.toHasLe.{u1} R _inst_6) (Distrib.toHasAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))) _inst_7] [_inst_9 : CovariantClass.{u1, u1} R R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_6))] {a : R} {b : R} {c : R}, LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_6) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5)))))) a c) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5)))))) b c)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5)))))) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) a b) c)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_5 : CommSemiring.{u1} R] [_inst_6 : Preorder.{u1} R] [_inst_7 : Sub.{u1} R] [_inst_8 : OrderedSub.{u1} R (Preorder.toLE.{u1} R _inst_6) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))) _inst_7] [_inst_9 : CovariantClass.{u1, u1} R R (fun (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.270 : R) (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.272 : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))) x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.270 x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.272) (fun (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.285 : R) (x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.287 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_6) x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.285 x._@.Mathlib.Algebra.Order.Sub.Basic._hyg.287)] {a : R} {b : R} {c : R}, LE.le.{u1} R (Preorder.toLE.{u1} R _inst_6) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))) a c) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))) b c)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_5))))) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R _inst_7) a b) c)
-Case conversion may be inaccurate. Consider using '#align le_tsub_mul le_tsub_mulₓ'. -/
 theorem le_tsub_mul {R : Type _} [CommSemiring R] [Preorder R] [Sub R] [OrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * c - b * c ≤ (a - b) * c := by
   simpa only [mul_comm _ c] using le_mul_tsub
@@ -60,9 +45,6 @@ theorem le_tsub_mul {R : Type _} [CommSemiring R] [Preorder R] [Sub R] [OrderedS
 
 end Add
 
-/- warning: order_iso.map_tsub -> OrderIso.map_tsub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align order_iso.map_tsub OrderIso.map_tsubₓ'. -/
 /-- An order isomorphism between types with ordered subtraction preserves subtraction provided that
 it preserves addition. -/
 theorem OrderIso.map_tsub {M N : Type _} [Preorder M] [Add M] [Sub M] [OrderedSub M]
@@ -84,9 +66,6 @@ variable [Preorder α]
 
 variable [AddCommMonoid α] [Sub α] [OrderedSub α] {a b c d : α}
 
-/- warning: add_monoid_hom.le_map_tsub -> AddMonoidHom.le_map_tsub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.le_map_tsub AddMonoidHom.le_map_tsubₓ'. -/
 theorem AddMonoidHom.le_map_tsub [Preorder β] [AddCommMonoid β] [Sub β] [OrderedSub β] (f : α →+ β)
     (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) :=
   f.toAddHom.le_map_tsub hf a b

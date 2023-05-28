@@ -27,9 +27,6 @@ universe u
 
 open CategoryTheory
 
-/- warning: ring_equiv_End_forget₂ -> ringEquivEndForget₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv_End_forget₂ ringEquivEndForget₂ₓ'. -/
 /-- An ingredient of Tannaka duality for rings:
 A ring `R` is equivalent to
 the endomorphisms of the additive forgetful functor `Module R ⥤ AddCommGroup`.

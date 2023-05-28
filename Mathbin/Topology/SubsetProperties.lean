@@ -79,12 +79,6 @@ def IsCompact (s : Set α) :=
 #align is_compact IsCompact
 -/
 
-/- warning: is_compact.compl_mem_sets -> IsCompact.compl_mem_sets is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {f : Filter.{u1} α}, (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 a) f))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {f : Filter.{u1} α}, (forall (a : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 a) f))) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) f))
-Case conversion may be inaccurate. Consider using '#align is_compact.compl_mem_sets IsCompact.compl_mem_setsₓ'. -/
 /-- The complement to a compact set belongs to a filter `f` if it belongs to each filter
 `𝓝 a ⊓ f`, `a ∈ s`. -/
 theorem IsCompact.compl_mem_sets (hs : IsCompact s) {f : Filter α} (hf : ∀ a ∈ s, sᶜ ∈ 𝓝 a ⊓ f) :
@@ -94,12 +88,6 @@ theorem IsCompact.compl_mem_sets (hs : IsCompact s) {f : Filter α} (hf : ∀ a 
   exact @hs _ hf inf_le_right
 #align is_compact.compl_mem_sets IsCompact.compl_mem_sets
 
-/- warning: is_compact.compl_mem_sets_of_nhds_within -> IsCompact.compl_mem_sets_of_nhdsWithin is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {f : Filter.{u1} α}, (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhdsWithin.{u1} α _inst_1 a s)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhdsWithin.{u1} α _inst_1 a s)) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) f)))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {f : Filter.{u1} α}, (forall (a : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhdsWithin.{u1} α _inst_1 a s)) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) f)))) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) f))
-Case conversion may be inaccurate. Consider using '#align is_compact.compl_mem_sets_of_nhds_within IsCompact.compl_mem_sets_of_nhdsWithinₓ'. -/
 /-- The complement to a compact set belongs to a filter `f` if each `a ∈ s` has a neighborhood `t`
 within `s` such that `tᶜ` belongs to `f`. -/
 theorem IsCompact.compl_mem_sets_of_nhdsWithin (hs : IsCompact s) {f : Filter α}
@@ -113,12 +101,6 @@ theorem IsCompact.compl_mem_sets_of_nhdsWithin (hs : IsCompact s) {f : Filter α
   exact h₂ (h₁ hs)
 #align is_compact.compl_mem_sets_of_nhds_within IsCompact.compl_mem_sets_of_nhdsWithin
 
-/- warning: is_compact.induction_on -> IsCompact.induction_on is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {p : (Set.{u1} α) -> Prop}, (p (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (forall {{s : Set.{u1} α}} {{t : Set.{u1} α}}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (p t) -> (p s)) -> (forall {{s : Set.{u1} α}} {{t : Set.{u1} α}}, (p s) -> (p t) -> (p (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhdsWithin.{u1} α _inst_1 x s)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (nhdsWithin.{u1} α _inst_1 x s)) => p t)))) -> (p s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {p : (Set.{u1} α) -> Prop}, (p (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (forall {{s : Set.{u1} α}} {{t : Set.{u1} α}}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (p t) -> (p s)) -> (forall {{s : Set.{u1} α}} {{t : Set.{u1} α}}, (p s) -> (p t) -> (p (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhdsWithin.{u1} α _inst_1 x s)) (p t)))) -> (p s))
-Case conversion may be inaccurate. Consider using '#align is_compact.induction_on IsCompact.induction_onₓ'. -/
 /-- If `p : set α → Prop` is stable under restriction and union, and each point `x`
   of a compact set `s` has a neighborhood `t` within `s` such that `p t`, then `p s` holds. -/
 @[elab_as_elim]
@@ -135,12 +117,6 @@ theorem IsCompact.induction_on {s : Set α} (hs : IsCompact s) {p : Set α → P
   simpa
 #align is_compact.induction_on IsCompact.induction_on
 
-/- warning: is_compact.inter_right -> IsCompact.inter_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsClosed.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsClosed.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_compact.inter_right IsCompact.inter_rightₓ'. -/
 /-- The intersection of a compact set and a closed set is a compact set. -/
 theorem IsCompact.inter_right (hs : IsCompact s) (ht : IsClosed t) : IsCompact (s ∩ t) :=
   by
@@ -153,23 +129,11 @@ theorem IsCompact.inter_right (hs : IsCompact s) (ht : IsClosed t) : IsCompact (
   exact ⟨a, ⟨hsa, this⟩, ha⟩
 #align is_compact.inter_right IsCompact.inter_right
 
-/- warning: is_compact.inter_left -> IsCompact.inter_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 t) -> (IsClosed.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 t) -> (IsClosed.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_compact.inter_left IsCompact.inter_leftₓ'. -/
 /-- The intersection of a closed set and a compact set is a compact set. -/
 theorem IsCompact.inter_left (ht : IsCompact t) (hs : IsClosed s) : IsCompact (s ∩ t) :=
   inter_comm t s ▸ ht.inter_right hs
 #align is_compact.inter_left IsCompact.inter_left
 
-/- warning: is_compact.diff -> IsCompact.diff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_compact.diff IsCompact.diffₓ'. -/
 /-- The set difference of a compact set and an open set is a compact set. -/
 theorem IsCompact.diff (hs : IsCompact s) (ht : IsOpen t) : IsCompact (s \ t) :=
   hs.inter_right (isClosed_compl_iff.mpr ht)
@@ -206,12 +170,6 @@ theorem IsCompact.image {f : α → β} (hs : IsCompact s) (hf : Continuous f) :
 #align is_compact.image IsCompact.image
 -/
 
-/- warning: is_compact.adherence_nhdset -> IsCompact.adherence_nhdset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {f : Filter.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.principal.{u1} α s)) -> (IsOpen.{u1} α _inst_1 t) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (ClusterPt.{u1} α _inst_1 a f) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a t)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {f : Filter.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.principal.{u1} α s)) -> (IsOpen.{u1} α _inst_1 t) -> (forall (a : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (ClusterPt.{u1} α _inst_1 a f) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f)
-Case conversion may be inaccurate. Consider using '#align is_compact.adherence_nhdset IsCompact.adherence_nhdsetₓ'. -/
 theorem IsCompact.adherence_nhdset {f : Filter α} (hs : IsCompact s) (hf₂ : f ≤ 𝓟 s)
     (ht₁ : IsOpen t) (ht₂ : ∀ a ∈ s, ClusterPt a f → a ∈ t) : t ∈ f :=
   by_cases mem_of_eq_bot fun this : f ⊓ 𝓟 (tᶜ) ≠ ⊥ =>
@@ -223,12 +181,6 @@ theorem IsCompact.adherence_nhdset {f : Filter α} (hs : IsCompact s) (hf₂ : f
     absurd A this
 #align is_compact.adherence_nhdset IsCompact.adherence_nhdset
 
-/- warning: is_compact_iff_ultrafilter_le_nhds -> isCompact_iff_ultrafilter_le_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsCompact.{u1} α _inst_1 s) (forall (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (nhds.{u1} α _inst_1 a)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsCompact.{u1} α _inst_1 s) (forall (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (nhds.{u1} α _inst_1 a)))))
-Case conversion may be inaccurate. Consider using '#align is_compact_iff_ultrafilter_le_nhds isCompact_iff_ultrafilter_le_nhdsₓ'. -/
 theorem isCompact_iff_ultrafilter_le_nhds :
     IsCompact s ↔ ∀ f : Ultrafilter α, ↑f ≤ 𝓟 s → ∃ a ∈ s, ↑f ≤ 𝓝 a :=
   by
@@ -238,12 +190,6 @@ theorem isCompact_iff_ultrafilter_le_nhds :
   · simp only [Ultrafilter.clusterPt_iff]
 #align is_compact_iff_ultrafilter_le_nhds isCompact_iff_ultrafilter_le_nhds
 
-/- warning: is_compact.ultrafilter_le_nhds -> IsCompact.ultrafilter_le_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (nhds.{u1} α _inst_1 a)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (nhds.{u1} α _inst_1 a)))))
-Case conversion may be inaccurate. Consider using '#align is_compact.ultrafilter_le_nhds IsCompact.ultrafilter_le_nhdsₓ'. -/
 alias isCompact_iff_ultrafilter_le_nhds ↔ IsCompact.ultrafilter_le_nhds _
 #align is_compact.ultrafilter_le_nhds IsCompact.ultrafilter_le_nhds
 
@@ -293,12 +239,6 @@ theorem IsCompact.elim_nhds_subcover (hs : IsCompact s) (U : α → Set α) (hU 
 #align is_compact.elim_nhds_subcover IsCompact.elim_nhds_subcover
 -/
 
-/- warning: is_compact.disjoint_nhds_set_left -> IsCompact.disjoint_nhdsSet_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {l : Filter.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhdsSet.{u1} α _inst_1 s) l) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (nhds.{u1} α _inst_1 x) l)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {l : Filter.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhdsSet.{u1} α _inst_1 s) l) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (nhds.{u1} α _inst_1 x) l)))
-Case conversion may be inaccurate. Consider using '#align is_compact.disjoint_nhds_set_left IsCompact.disjoint_nhdsSet_leftₓ'. -/
 /-- The neighborhood filter of a compact set is disjoint with a filter `l` if and only if the
 neighborhood filter of each point of this set is disjoint with `l`. -/
 theorem IsCompact.disjoint_nhdsSet_left {l : Filter α} (hs : IsCompact s) :
@@ -315,12 +255,6 @@ theorem IsCompact.disjoint_nhdsSet_left {l : Filter α} (hs : IsCompact s) :
   exact fun x hx => hUl x (hts x hx)
 #align is_compact.disjoint_nhds_set_left IsCompact.disjoint_nhdsSet_left
 
-/- warning: is_compact.disjoint_nhds_set_right -> IsCompact.disjoint_nhdsSet_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {l : Filter.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) l (nhdsSet.{u1} α _inst_1 s)) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) l (nhds.{u1} α _inst_1 x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {l : Filter.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) l (nhdsSet.{u1} α _inst_1 s)) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) l (nhds.{u1} α _inst_1 x))))
-Case conversion may be inaccurate. Consider using '#align is_compact.disjoint_nhds_set_right IsCompact.disjoint_nhdsSet_rightₓ'. -/
 /-- A filter `l` is disjoint with the neighborhood filter of a compact set if and only if it is
 disjoint with the neighborhood filter of each point of this set. -/
 theorem IsCompact.disjoint_nhdsSet_right {l : Filter α} (hs : IsCompact s) :
@@ -328,12 +262,6 @@ theorem IsCompact.disjoint_nhdsSet_right {l : Filter α} (hs : IsCompact s) :
   simpa only [disjoint_comm] using hs.disjoint_nhds_set_left
 #align is_compact.disjoint_nhds_set_right IsCompact.disjoint_nhdsSet_right
 
-/- warning: is_compact.elim_finite_subfamily_closed -> IsCompact.elim_finite_subfamily_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Type.{u2}}, (IsCompact.{u1} α _inst_1 s) -> (forall (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Z i))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (Exists.{succ u2} (Finset.{u2} ι) (fun (t : Finset.{u2} ι) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => Z i)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Type.{u2}}, (IsCompact.{u1} α _inst_1 s) -> (forall (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Z i))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Exists.{succ u2} (Finset.{u2} ι) (fun (t : Finset.{u2} ι) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i t) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i t) => Z i)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align is_compact.elim_finite_subfamily_closed IsCompact.elim_finite_subfamily_closedₓ'. -/
 /-- For every family of closed sets whose intersection avoids a compact set,
 there exists a finite subfamily whose intersection avoids this compact set. -/
 theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : IsCompact s)
@@ -349,12 +277,6 @@ theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : 
       mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
 #align is_compact.elim_finite_subfamily_closed IsCompact.elim_finite_subfamily_closed
 
-/- warning: locally_finite.finite_nonempty_inter_compact -> LocallyFinite.finite_nonempty_inter_compact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {f : ι -> (Set.{u1} α)}, (LocallyFinite.{u2, u1} ι α _inst_1 f) -> (forall {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Set.Finite.{u2} ι (setOf.{u2} ι (fun (i : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (f i) s)))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {f : ι -> (Set.{u2} α)}, (LocallyFinite.{u1, u2} ι α _inst_1 f) -> (forall {s : Set.{u2} α}, (IsCompact.{u2} α _inst_1 s) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (f i) s)))))
-Case conversion may be inaccurate. Consider using '#align locally_finite.finite_nonempty_inter_compact LocallyFinite.finite_nonempty_inter_compactₓ'. -/
 /-- If `s` is a compact set in a topological space `α` and `f : ι → set α` is a locally finite
 family of sets, then `f i ∩ s` is nonempty only for a finitely many `i`. -/
 theorem LocallyFinite.finite_nonempty_inter_compact {ι : Type _} {f : ι → Set α}
@@ -368,12 +290,6 @@ theorem LocallyFinite.finite_nonempty_inter_compact {ι : Type _} {f : ι → Se
   exact mem_bUnion hct ⟨x, hx.1, hcx⟩
 #align locally_finite.finite_nonempty_inter_compact LocallyFinite.finite_nonempty_inter_compact
 
-/- warning: is_compact.inter_Inter_nonempty -> IsCompact.inter_iInter_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Type.{u2}}, (IsCompact.{u1} α _inst_1 s) -> (forall (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (forall (t : Finset.{u2} ι), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => Z i))))) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Z i)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Type.{u2}}, (IsCompact.{u1} α _inst_1 s) -> (forall (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (forall (t : Finset.{u2} ι), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i t) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i t) => Z i))))) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Z i)))))
-Case conversion may be inaccurate. Consider using '#align is_compact.inter_Inter_nonempty IsCompact.inter_iInter_nonemptyₓ'. -/
 /-- To show that a compact set intersects the intersection of a family of closed sets,
   it is sufficient to show that it intersects every finite subfamily. -/
 theorem IsCompact.inter_iInter_nonempty {s : Set α} {ι : Type v} (hs : IsCompact s) (Z : ι → Set α)
@@ -441,12 +357,6 @@ theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (h
   · rwa [Finset.coe_image, bUnion_image]
 #align is_compact.elim_finite_subcover_image IsCompact.elim_finite_subcover_imageₓ
 
-/- warning: is_compact_of_finite_subfamily_closed -> isCompact_of_finite_subfamily_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (forall {ι : Type.{u1}} (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Z i))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) => Z i)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))))) -> (IsCompact.{u1} α _inst_1 s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (forall {ι : Type.{u1}} (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Z i))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => Z i)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))) -> (IsCompact.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align is_compact_of_finite_subfamily_closed isCompact_of_finite_subfamily_closedₓ'. -/
 /-- A set `s` is compact if for every family of closed sets whose intersection avoids `s`,
 there exists a finite subfamily whose intersection avoids `s`. -/
 theorem isCompact_of_finite_subfamily_closed
@@ -509,12 +419,6 @@ theorem isCompact_iff_finite_subcover :
 #align is_compact_iff_finite_subcover isCompact_iff_finite_subcover
 -/
 
-/- warning: is_compact_iff_finite_subfamily_closed -> isCompact_iff_finite_subfamily_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsCompact.{u1} α _inst_1 s) (forall {ι : Type.{u1}} (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Z i))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) => Z i)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsCompact.{u1} α _inst_1 s) (forall {ι : Type.{u1}} (Z : ι -> (Set.{u1} α)), (forall (i : ι), IsClosed.{u1} α _inst_1 (Z i)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Z i))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.iInter.{u1, succ u1} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => Z i)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align is_compact_iff_finite_subfamily_closed isCompact_iff_finite_subfamily_closedₓ'. -/
 /-- A set `s` is compact if and only if
 for every family of closed sets whose intersection avoids `s`,
 there exists a finite subfamily whose intersection avoids `s`. -/
@@ -525,12 +429,6 @@ theorem isCompact_iff_finite_subfamily_closed :
   ⟨fun hs ι => hs.elim_finite_subfamily_closed, isCompact_of_finite_subfamily_closed⟩
 #align is_compact_iff_finite_subfamily_closed isCompact_iff_finite_subfamily_closed
 
-/- warning: is_compact.eventually_forall_of_forall_eventually -> IsCompact.eventually_forall_of_forall_eventually is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {x₀ : α} {K : Set.{u2} β}, (IsCompact.{u2} β _inst_2 K) -> (forall {P : α -> β -> Prop}, (forall (y : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) y K) -> (Filter.Eventually.{max u1 u2} (Prod.{u1, u2} α β) (fun (z : Prod.{u1, u2} α β) => P (Prod.fst.{u1, u2} α β z) (Prod.snd.{u1, u2} α β z)) (nhds.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) (Prod.mk.{u1, u2} α β x₀ y)))) -> (Filter.Eventually.{u1} α (fun (x : α) => forall (y : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) y K) -> (P x y)) (nhds.{u1} α _inst_1 x₀)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {x₀ : α} {K : Set.{u2} β}, (IsCompact.{u2} β _inst_2 K) -> (forall {P : α -> β -> Prop}, (forall (y : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) y K) -> (Filter.Eventually.{max u1 u2} (Prod.{u1, u2} α β) (fun (z : Prod.{u1, u2} α β) => P (Prod.fst.{u1, u2} α β z) (Prod.snd.{u1, u2} α β z)) (nhds.{max u1 u2} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Prod.mk.{u1, u2} α β x₀ y)))) -> (Filter.Eventually.{u1} α (fun (x : α) => forall (y : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) y K) -> (P x y)) (nhds.{u1} α _inst_1 x₀)))
-Case conversion may be inaccurate. Consider using '#align is_compact.eventually_forall_of_forall_eventually IsCompact.eventually_forall_of_forall_eventuallyₓ'. -/
 /-- To show that `∀ y ∈ K, P x y` holds for `x` close enough to `x₀` when `K` is compact,
 it is sufficient to show that for all `y₀ ∈ K` there `P x y` holds for `(x, y)` close enough
 to `(x₀, y₀)`.
@@ -573,12 +471,6 @@ theorem Set.Subsingleton.isCompact {s : Set α} (hs : s.Subsingleton) : IsCompac
 #align set.subsingleton.is_compact Set.Subsingleton.isCompact
 -/
 
-/- warning: set.finite.is_compact_bUnion -> Set.Finite.isCompact_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.Finite.{u2} ι s) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (IsCompact.{u1} α _inst_1 (f i))) -> (IsCompact.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] {s : Set.{u1} ι} {f : ι -> (Set.{u2} α)}, (Set.Finite.{u1} ι s) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (IsCompact.{u2} α _inst_1 (f i))) -> (IsCompact.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align set.finite.is_compact_bUnion Set.Finite.isCompact_biUnionₓ'. -/
 theorem Set.Finite.isCompact_biUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite)
     (hf : ∀ i ∈ s, IsCompact (f i)) : IsCompact (⋃ i ∈ s, f i) :=
   isCompact_of_finite_subcover fun ι U hUo hsU =>
@@ -601,12 +493,6 @@ theorem Set.Finite.isCompact_biUnion {s : Set ι} {f : ι → Set α} (hs : s.Fi
     ⟨t, this⟩
 #align set.finite.is_compact_bUnion Set.Finite.isCompact_biUnion
 
-/- warning: finset.is_compact_bUnion -> Finset.isCompact_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (IsCompact.{u1} α _inst_1 (f i))) -> (IsCompact.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) -> (IsCompact.{u2} α _inst_1 (f i))) -> (IsCompact.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align finset.is_compact_bUnion Finset.isCompact_biUnionₓ'. -/
 theorem Finset.isCompact_biUnion (s : Finset ι) {f : ι → Set α} (hf : ∀ i ∈ s, IsCompact (f i)) :
     IsCompact (⋃ i ∈ s, f i) :=
   s.finite_toSet.isCompact_biUnion hf
@@ -619,12 +505,6 @@ theorem isCompact_accumulate {K : ℕ → Set α} (hK : ∀ n, IsCompact (K n)) 
 #align is_compact_accumulate isCompact_accumulate
 -/
 
-/- warning: is_compact_Union -> isCompact_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {f : ι -> (Set.{u1} α)} [_inst_3 : Finite.{succ u2} ι], (forall (i : ι), IsCompact.{u1} α _inst_1 (f i)) -> (IsCompact.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u2}} [ι : TopologicalSpace.{u2} α] {_inst_1 : Sort.{u1}} {f : _inst_1 -> (Set.{u2} α)} [_inst_3 : Finite.{u1} _inst_1], (forall (i : _inst_1), IsCompact.{u2} α ι (f i)) -> (IsCompact.{u2} α ι (Set.iUnion.{u2, u1} α _inst_1 (fun (i : _inst_1) => f i)))
-Case conversion may be inaccurate. Consider using '#align is_compact_Union isCompact_iUnionₓ'. -/
 theorem isCompact_iUnion {f : ι → Set α} [Finite ι] (h : ∀ i, IsCompact (f i)) :
     IsCompact (⋃ i, f i) := by
   rw [← bUnion_univ] <;> exact finite_univ.is_compact_bUnion fun i _ => h i
@@ -652,12 +532,6 @@ theorem isCompact_iff_finite [DiscreteTopology α] {s : Set α} : IsCompact s �
 #align is_compact_iff_finite isCompact_iff_finite
 -/
 
-/- warning: is_compact.union -> IsCompact.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u1} α _inst_1 t) -> (IsCompact.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_compact.union IsCompact.unionₓ'. -/
 theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪ t) := by
   rw [union_eq_Union] <;> exact isCompact_iUnion fun b => by cases b <;> assumption
 #align is_compact.union IsCompact.union
@@ -668,12 +542,6 @@ theorem IsCompact.insert (hs : IsCompact s) (a) : IsCompact (insert a s) :=
 #align is_compact.insert IsCompact.insert
 -/
 
-/- warning: exists_subset_nhds_of_is_compact' -> exists_subset_nhds_of_isCompact' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_3 : Nonempty.{succ u2} ι] {V : ι -> (Set.{u1} α)}, (Directed.{u1, succ u2} (Set.{u1} α) ι (Superset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) V) -> (forall (i : ι), IsCompact.{u1} α _inst_1 (V i)) -> (forall (i : ι), IsClosed.{u1} α _inst_1 (V i)) -> (forall {U : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => V i))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x))) -> (Exists.{succ u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (V i) U)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_3 : Nonempty.{succ u1} ι] {V : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Topology.SubsetProperties._hyg.5731 : Set.{u2} α) (x._@.Mathlib.Topology.SubsetProperties._hyg.5733 : Set.{u2} α) => Superset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Topology.SubsetProperties._hyg.5731 x._@.Mathlib.Topology.SubsetProperties._hyg.5733) V) -> (forall (i : ι), IsCompact.{u2} α _inst_1 (V i)) -> (forall (i : ι), IsClosed.{u2} α _inst_1 (V i)) -> (forall {U : Set.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => V i))) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (nhds.{u2} α _inst_1 x))) -> (Exists.{succ u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (V i) U)))
-Case conversion may be inaccurate. Consider using '#align exists_subset_nhds_of_is_compact' exists_subset_nhds_of_isCompact'ₓ'. -/
 /-- If `V : ι → set α` is a decreasing family of closed compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. We assume each `V i` is compact *and* closed because `α` is
 not assumed to be Hausdorff. See `exists_subset_nhd_of_compact` for version assuming this. -/
@@ -699,12 +567,6 @@ theorem exists_subset_nhds_of_isCompact' {ι : Type _} [Nonempty ι] {V : ι →
   contradiction
 #align exists_subset_nhds_of_is_compact' exists_subset_nhds_of_isCompact'
 
-/- warning: is_compact_open_iff_eq_finite_Union_of_is_topological_basis -> isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] (b : ι -> (Set.{u1} α)), (TopologicalSpace.IsTopologicalBasis.{u1} α _inst_1 (Set.range.{u1, succ u2} (Set.{u1} α) ι b)) -> (forall (i : ι), IsCompact.{u1} α _inst_1 (b i)) -> (forall (U : Set.{u1} α), Iff (And (IsCompact.{u1} α _inst_1 U) (IsOpen.{u1} α _inst_1 U)) (Exists.{succ u2} (Set.{u2} ι) (fun (s : Set.{u2} ι) => And (Set.Finite.{u2} ι s) (Eq.{succ u1} (Set.{u1} α) U (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => b i)))))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] (b : ι -> (Set.{u2} α)), (TopologicalSpace.IsTopologicalBasis.{u2} α _inst_1 (Set.range.{u2, succ u1} (Set.{u2} α) ι b)) -> (forall (i : ι), IsCompact.{u2} α _inst_1 (b i)) -> (forall (U : Set.{u2} α), Iff (And (IsCompact.{u2} α _inst_1 U) (IsOpen.{u2} α _inst_1 U)) (Exists.{succ u1} (Set.{u1} ι) (fun (s : Set.{u1} ι) => And (Set.Finite.{u1} ι s) (Eq.{succ u2} (Set.{u2} α) U (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) => b i)))))))
-Case conversion may be inaccurate. Consider using '#align is_compact_open_iff_eq_finite_Union_of_is_topological_basis isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasisₓ'. -/
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
   it is a finite union of some elements in the basis -/
 theorem isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis (b : ι → Set α)
@@ -744,12 +606,6 @@ def cocompact (α : Type _) [TopologicalSpace α] : Filter α :=
 #align filter.cocompact Filter.cocompact
 -/
 
-/- warning: filter.has_basis_cocompact -> Filter.hasBasis_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Filter.HasBasis.{u1, succ u1} α (Set.{u1} α) (Filter.cocompact.{u1} α _inst_1) (IsCompact.{u1} α _inst_1) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Filter.HasBasis.{u1, succ u1} α (Set.{u1} α) (Filter.cocompact.{u1} α _inst_1) (IsCompact.{u1} α _inst_1) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis_cocompact Filter.hasBasis_cocompactₓ'. -/
 theorem hasBasis_cocompact : (cocompact α).HasBasis IsCompact compl :=
   hasBasis_biInf_principal'
     (fun s hs t ht =>
@@ -758,42 +614,18 @@ theorem hasBasis_cocompact : (cocompact α).HasBasis IsCompact compl :=
     ⟨∅, isCompact_empty⟩
 #align filter.has_basis_cocompact Filter.hasBasis_cocompact
 
-/- warning: filter.mem_cocompact -> Filter.mem_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.cocompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.cocompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) s)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_cocompact Filter.mem_cocompactₓ'. -/
 theorem mem_cocompact : s ∈ cocompact α ↔ ∃ t, IsCompact t ∧ tᶜ ⊆ s :=
   hasBasis_cocompact.mem_iff.trans <| exists_congr fun t => exists_prop
 #align filter.mem_cocompact Filter.mem_cocompact
 
-/- warning: filter.mem_cocompact' -> Filter.mem_cocompact' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.cocompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.cocompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) t)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_cocompact' Filter.mem_cocompact'ₓ'. -/
 theorem mem_cocompact' : s ∈ cocompact α ↔ ∃ t, IsCompact t ∧ sᶜ ⊆ t :=
   mem_cocompact.trans <| exists_congr fun t => and_congr_right fun ht => compl_subset_comm
 #align filter.mem_cocompact' Filter.mem_cocompact'
 
-/- warning: is_compact.compl_mem_cocompact -> IsCompact.compl_mem_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (Filter.cocompact.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (Filter.cocompact.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align is_compact.compl_mem_cocompact IsCompact.compl_mem_cocompactₓ'. -/
 theorem IsCompact.compl_mem_cocompact (hs : IsCompact s) : sᶜ ∈ Filter.cocompact α :=
   hasBasis_cocompact.mem_of_mem hs
 #align is_compact.compl_mem_cocompact IsCompact.compl_mem_cocompact
 
-/- warning: filter.cocompact_le_cofinite -> Filter.cocompact_le_cofinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.cocompact.{u1} α _inst_1) (Filter.cofinite.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.cocompact.{u1} α _inst_1) (Filter.cofinite.{u1} α)
-Case conversion may be inaccurate. Consider using '#align filter.cocompact_le_cofinite Filter.cocompact_le_cofiniteₓ'. -/
 theorem cocompact_le_cofinite : cocompact α ≤ cofinite := fun s hs =>
   compl_compl s ▸ hs.IsCompact.compl_mem_cocompact
 #align filter.cocompact_le_cofinite Filter.cocompact_le_cofinite
@@ -833,12 +665,6 @@ theorem Tendsto.isCompact_insert_range_of_cocompact {f : α → β} {b}
 #align filter.tendsto.is_compact_insert_range_of_cocompact Filter.Tendsto.isCompact_insert_range_of_cocompact
 -/
 
-/- warning: filter.tendsto.is_compact_insert_range_of_cofinite -> Filter.Tendsto.isCompact_insert_range_of_cofinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {f : ι -> α} {a : α}, (Filter.Tendsto.{u2, u1} ι α f (Filter.cofinite.{u2} ι) (nhds.{u1} α _inst_1 a)) -> (IsCompact.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a (Set.range.{u1, succ u2} α ι f)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] {f : ι -> α} {a : α}, (Filter.Tendsto.{u1, u2} ι α f (Filter.cofinite.{u1} ι) (nhds.{u2} α _inst_1 a)) -> (IsCompact.{u2} α _inst_1 (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) a (Set.range.{u2, succ u1} α ι f)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.is_compact_insert_range_of_cofinite Filter.Tendsto.isCompact_insert_range_of_cofiniteₓ'. -/
 theorem Tendsto.isCompact_insert_range_of_cofinite {f : ι → α} {a} (hf : Tendsto f cofinite (𝓝 a)) :
     IsCompact (insert a (range f)) :=
   by
@@ -862,12 +688,6 @@ def coclosedCompact (α : Type _) [TopologicalSpace α] : Filter α :=
 #align filter.coclosed_compact Filter.coclosedCompact
 -/
 
-/- warning: filter.has_basis_coclosed_compact -> Filter.hasBasis_coclosedCompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Filter.HasBasis.{u1, succ u1} α (Set.{u1} α) (Filter.coclosedCompact.{u1} α _inst_1) (fun (s : Set.{u1} α) => And (IsClosed.{u1} α _inst_1 s) (IsCompact.{u1} α _inst_1 s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Filter.HasBasis.{u1, succ u1} α (Set.{u1} α) (Filter.coclosedCompact.{u1} α _inst_1) (fun (s : Set.{u1} α) => And (IsClosed.{u1} α _inst_1 s) (IsCompact.{u1} α _inst_1 s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis_coclosed_compact Filter.hasBasis_coclosedCompactₓ'. -/
 theorem hasBasis_coclosedCompact :
     (Filter.coclosedCompact α).HasBasis (fun s => IsClosed s ∧ IsCompact s) compl :=
   by
@@ -880,42 +700,18 @@ theorem hasBasis_coclosedCompact :
         compl_subset_compl.2 (subset_union_right _ _)⟩⟩
 #align filter.has_basis_coclosed_compact Filter.hasBasis_coclosedCompact
 
-/- warning: filter.mem_coclosed_compact -> Filter.mem_coclosedCompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.coclosedCompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsClosed.{u1} α _inst_1 t) (And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.coclosedCompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsClosed.{u1} α _inst_1 t) (And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) s))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_coclosed_compact Filter.mem_coclosedCompactₓ'. -/
 theorem mem_coclosedCompact : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t ∧ IsCompact t ∧ tᶜ ⊆ s := by
   simp [has_basis_coclosed_compact.mem_iff, and_assoc']
 #align filter.mem_coclosed_compact Filter.mem_coclosedCompact
 
-/- warning: filter.mem_coclosed_compact' -> Filter.mem_coclosed_compact' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.coclosedCompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsClosed.{u1} α _inst_1 t) (And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) t))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.coclosedCompact.{u1} α _inst_1)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsClosed.{u1} α _inst_1 t) (And (IsCompact.{u1} α _inst_1 t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) t))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_coclosed_compact' Filter.mem_coclosed_compact'ₓ'. -/
 theorem mem_coclosed_compact' : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t ∧ IsCompact t ∧ sᶜ ⊆ t := by
   simp only [mem_coclosed_compact, compl_subset_comm]
 #align filter.mem_coclosed_compact' Filter.mem_coclosed_compact'
 
-/- warning: filter.cocompact_le_coclosed_compact -> Filter.cocompact_le_coclosedCompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.cocompact.{u1} α _inst_1) (Filter.coclosedCompact.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.cocompact.{u1} α _inst_1) (Filter.coclosedCompact.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align filter.cocompact_le_coclosed_compact Filter.cocompact_le_coclosedCompactₓ'. -/
 theorem cocompact_le_coclosedCompact : cocompact α ≤ coclosedCompact α :=
   iInf_mono fun s => le_iInf fun _ => le_rfl
 #align filter.cocompact_le_coclosed_compact Filter.cocompact_le_coclosedCompact
 
-/- warning: is_compact.compl_mem_coclosed_compact_of_is_closed -> IsCompact.compl_mem_coclosedCompact_of_isClosed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsClosed.{u1} α _inst_1 s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (Filter.coclosedCompact.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (IsClosed.{u1} α _inst_1 s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (Filter.coclosedCompact.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align is_compact.compl_mem_coclosed_compact_of_is_closed IsCompact.compl_mem_coclosedCompact_of_isClosedₓ'. -/
 theorem IsCompact.compl_mem_coclosedCompact_of_isClosed (hs : IsCompact s) (hs' : IsClosed s) :
     sᶜ ∈ Filter.coclosedCompact α :=
   hasBasis_coclosedCompact.mem_of_mem ⟨hs', hs⟩
@@ -1018,12 +814,6 @@ theorem nhdsContainBoxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set β)
 #align nhds_contain_boxes_of_compact nhdsContainBoxes_of_compact
 -/
 
-/- warning: generalized_tube_lemma -> generalized_tube_lemma is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {t : Set.{u2} β}, (IsCompact.{u2} β _inst_2 t) -> (forall {n : Set.{max u1 u2} (Prod.{u1, u2} α β)}, (IsOpen.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) n) -> (HasSubset.Subset.{max u1 u2} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.hasSubset.{max u1 u2} (Prod.{u1, u2} α β)) (Set.prod.{u1, u2} α β s t) n) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u2} (Set.{u2} β) (fun (v : Set.{u2} β) => And (IsOpen.{u1} α _inst_1 u) (And (IsOpen.{u2} β _inst_2 v) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) (And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t v) (HasSubset.Subset.{max u1 u2} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.hasSubset.{max u1 u2} (Prod.{u1, u2} α β)) (Set.prod.{u1, u2} α β u v) n)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (forall {t : Set.{u2} β}, (IsCompact.{u2} β _inst_2 t) -> (forall {n : Set.{max u2 u1} (Prod.{u1, u2} α β)}, (IsOpen.{max u1 u2} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) n) -> (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (Prod.{u1, u2} α β)) (Set.instHasSubsetSet.{max u1 u2} (Prod.{u1, u2} α β)) (Set.prod.{u1, u2} α β s t) n) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{succ u2} (Set.{u2} β) (fun (v : Set.{u2} β) => And (IsOpen.{u1} α _inst_1 u) (And (IsOpen.{u2} β _inst_2 v) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u) (And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) t v) (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (Prod.{u1, u2} α β)) (Set.instHasSubsetSet.{max u1 u2} (Prod.{u1, u2} α β)) (Set.prod.{u1, u2} α β u v) n)))))))))
-Case conversion may be inaccurate. Consider using '#align generalized_tube_lemma generalized_tube_lemmaₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- If `s` and `t` are compact sets and `n` is an open neighborhood of `s × t`, then there exist
@@ -1073,12 +863,6 @@ theorem cluster_point_of_compact [CompactSpace α] (f : Filter α) [NeBot f] : �
 #align cluster_point_of_compact cluster_point_of_compact
 -/
 
-/- warning: compact_space.elim_nhds_subcover -> CompactSpace.elim_nhds_subcover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1] (U : α -> (Set.{u1} α)), (forall (x : α), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (U x) (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x t) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x t) => U x))) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toHasTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1] (U : α -> (Set.{u1} α)), (forall (x : α), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (U x) (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x t) (fun (H : Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x t) => U x))) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))))
-Case conversion may be inaccurate. Consider using '#align compact_space.elim_nhds_subcover CompactSpace.elim_nhds_subcoverₓ'. -/
 theorem CompactSpace.elim_nhds_subcover [CompactSpace α] (U : α → Set α) (hU : ∀ x, U x ∈ 𝓝 x) :
     ∃ t : Finset α, (⋃ x ∈ t, U x) = ⊤ :=
   by
@@ -1128,12 +912,6 @@ instance [NoncompactSpace α] : NeBot (Filter.cocompact α) :=
   contrapose hs; rw [not_nonempty_iff_eq_empty, compl_empty_iff] at hs
   rw [hs]; exact noncompact_univ α
 
-/- warning: filter.cocompact_eq_bot -> Filter.cocompact_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1], Eq.{succ u1} (Filter.{u1} α) (Filter.cocompact.{u1} α _inst_1) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1], Eq.{succ u1} (Filter.{u1} α) (Filter.cocompact.{u1} α _inst_1) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.cocompact_eq_bot Filter.cocompact_eq_botₓ'. -/
 @[simp]
 theorem Filter.cocompact_eq_bot [CompactSpace α] : Filter.cocompact α = ⊥ :=
   Filter.hasBasis_cocompact.eq_bot_iff.mpr ⟨Set.univ, isCompact_univ, Set.compl_univ⟩
@@ -1171,12 +949,6 @@ theorem finite_of_compact_of_discrete [CompactSpace α] [DiscreteTopology α] : 
 #align finite_of_compact_of_discrete finite_of_compact_of_discrete
 -/
 
-/- warning: exists_nhds_ne_ne_bot -> exists_nhds_ne_neBot is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : CompactSpace.{u1} α _inst_3] [_inst_5 : Infinite.{succ u1} α], Exists.{succ u1} α (fun (z : α) => Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_3 z (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) z))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : CompactSpace.{u1} α _inst_3] [_inst_5 : Infinite.{succ u1} α], Exists.{succ u1} α (fun (z : α) => Filter.NeBot.{u1} α (nhdsWithin.{u1} α _inst_3 z (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) z))))
-Case conversion may be inaccurate. Consider using '#align exists_nhds_ne_ne_bot exists_nhds_ne_neBotₓ'. -/
 theorem exists_nhds_ne_neBot (α : Type _) [TopologicalSpace α] [CompactSpace α] [Infinite α] :
     ∃ z : α, (𝓝[≠] z).ne_bot := by
   by_contra' H
@@ -1203,12 +975,6 @@ theorem finite_cover_nhds [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x
 #align finite_cover_nhds finite_cover_nhds
 -/
 
-/- warning: locally_finite.finite_nonempty_of_compact -> LocallyFinite.finite_nonempty_of_compact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_3 : CompactSpace.{u1} α _inst_1] {f : ι -> (Set.{u1} α)}, (LocallyFinite.{u2, u1} ι α _inst_1 f) -> (Set.Finite.{u2} ι (setOf.{u2} ι (fun (i : ι) => Set.Nonempty.{u1} α (f i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_3 : CompactSpace.{u2} α _inst_1] {f : ι -> (Set.{u2} α)}, (LocallyFinite.{u1, u2} ι α _inst_1 f) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Set.Nonempty.{u2} α (f i))))
-Case conversion may be inaccurate. Consider using '#align locally_finite.finite_nonempty_of_compact LocallyFinite.finite_nonempty_of_compactₓ'. -/
 /-- If `α` is a compact space, then a locally finite family of sets of `α` can have only finitely
 many nonempty elements. -/
 theorem LocallyFinite.finite_nonempty_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α}
@@ -1216,12 +982,6 @@ theorem LocallyFinite.finite_nonempty_of_compact {ι : Type _} [CompactSpace α]
   simpa only [inter_univ] using hf.finite_nonempty_inter_compact isCompact_univ
 #align locally_finite.finite_nonempty_of_compact LocallyFinite.finite_nonempty_of_compact
 
-/- warning: locally_finite.finite_of_compact -> LocallyFinite.finite_of_compact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_3 : CompactSpace.{u1} α _inst_1] {f : ι -> (Set.{u1} α)}, (LocallyFinite.{u2, u1} ι α _inst_1 f) -> (forall (i : ι), Set.Nonempty.{u1} α (f i)) -> (Set.Finite.{u2} ι (Set.univ.{u2} ι))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_3 : CompactSpace.{u2} α _inst_1] {f : ι -> (Set.{u2} α)}, (LocallyFinite.{u1, u2} ι α _inst_1 f) -> (forall (i : ι), Set.Nonempty.{u2} α (f i)) -> (Set.Finite.{u1} ι (Set.univ.{u1} ι))
-Case conversion may be inaccurate. Consider using '#align locally_finite.finite_of_compact LocallyFinite.finite_of_compactₓ'. -/
 /-- If `α` is a compact space, then a locally finite family of nonempty sets of `α` can have only
 finitely many elements, `set.finite` version. -/
 theorem LocallyFinite.finite_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α}
@@ -1238,12 +998,6 @@ noncomputable def LocallyFinite.fintypeOfCompact {ι : Type _} [CompactSpace α]
 #align locally_finite.fintype_of_compact LocallyFinite.fintypeOfCompact
 -/
 
-/- warning: filter.comap_cocompact_le -> Filter.comap_cocompact_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (Continuous.{u1, u2} α β _inst_1 _inst_2 f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.comap.{u1, u2} α β f (Filter.cocompact.{u2} β _inst_2)) (Filter.cocompact.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (Continuous.{u1, u2} α β _inst_1 _inst_2 f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.comap.{u1, u2} α β f (Filter.cocompact.{u2} β _inst_2)) (Filter.cocompact.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align filter.comap_cocompact_le Filter.comap_cocompact_leₓ'. -/
 /-- The comap of the cocompact filter on `β` by a continuous function `f : α → β` is less than or
 equal to the cocompact filter on `α`.
 This is a reformulation of the fact that images of compact sets are compact. -/
@@ -1262,22 +1016,10 @@ theorem isCompact_range [CompactSpace α] {f : α → β} (hf : Continuous f) : 
 #align is_compact_range isCompact_range
 -/
 
-/- warning: is_compact_diagonal -> isCompact_diagonal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1], IsCompact.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α _inst_1 _inst_1) (Set.diagonal.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1], IsCompact.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α _inst_1 _inst_1) (Set.diagonal.{u1} α)
-Case conversion may be inaccurate. Consider using '#align is_compact_diagonal isCompact_diagonalₓ'. -/
 theorem isCompact_diagonal [CompactSpace α] : IsCompact (diagonal α) :=
   @range_diag α ▸ isCompact_range (continuous_id.prod_mk continuous_id)
 #align is_compact_diagonal isCompact_diagonal
 
-/- warning: is_closed_proj_of_is_compact -> isClosedMap_snd_of_compactSpace is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] [_inst_4 : CompactSpace.{u1} X _inst_3] {Y : Type.{u2}} [_inst_5 : TopologicalSpace.{u2} Y], IsClosedMap.{max u1 u2, u2} (Prod.{u1, u2} X Y) Y (Prod.topologicalSpace.{u1, u2} X Y _inst_3 _inst_5) _inst_5 (Prod.snd.{u1, u2} X Y)
-but is expected to have type
-  forall {X : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} X] [_inst_4 : CompactSpace.{u2} X _inst_3] {Y : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} Y], IsClosedMap.{max u2 u1, u1} (Prod.{u2, u1} X Y) Y (instTopologicalSpaceProd.{u2, u1} X Y _inst_3 _inst_5) _inst_5 (Prod.snd.{u2, u1} X Y)
-Case conversion may be inaccurate. Consider using '#align is_closed_proj_of_is_compact isClosedMap_snd_of_compactSpaceₓ'. -/
 /-- If X is is_compact then pr₂ : X × Y → Y is a closed map -/
 theorem isClosedMap_snd_of_compactSpace {X : Type _} [TopologicalSpace X] [CompactSpace X]
     {Y : Type _} [TopologicalSpace Y] : IsClosedMap (Prod.snd : X × Y → Y) :=
@@ -1310,12 +1052,6 @@ theorem isClosedMap_snd_of_compactSpace {X : Type _} [TopologicalSpace X] [Compa
     
 #align is_closed_proj_of_is_compact isClosedMap_snd_of_compactSpace
 
-/- warning: exists_subset_nhds_of_compact_space -> exists_subset_nhds_of_compactSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1] {ι : Type.{u2}} [_inst_4 : Nonempty.{succ u2} ι] {V : ι -> (Set.{u1} α)}, (Directed.{u1, succ u2} (Set.{u1} α) ι (Superset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) V) -> (forall (i : ι), IsClosed.{u1} α _inst_1 (V i)) -> (forall {U : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => V i))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x))) -> (Exists.{succ u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (V i) U)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_3 : CompactSpace.{u2} α _inst_1] {ι : Type.{u1}} [_inst_4 : Nonempty.{succ u1} ι] {V : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Topology.SubsetProperties._hyg.11225 : Set.{u2} α) (x._@.Mathlib.Topology.SubsetProperties._hyg.11227 : Set.{u2} α) => Superset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Topology.SubsetProperties._hyg.11225 x._@.Mathlib.Topology.SubsetProperties._hyg.11227) V) -> (forall (i : ι), IsClosed.{u2} α _inst_1 (V i)) -> (forall {U : Set.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => V i))) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (nhds.{u2} α _inst_1 x))) -> (Exists.{succ u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (V i) U)))
-Case conversion may be inaccurate. Consider using '#align exists_subset_nhds_of_compact_space exists_subset_nhds_of_compactSpaceₓ'. -/
 theorem exists_subset_nhds_of_compactSpace [CompactSpace α] {ι : Type _} [Nonempty ι]
     {V : ι → Set α} (hV : Directed (· ⊇ ·) V) (hV_closed : ∀ i, IsClosed (V i)) {U : Set α}
     (hU : ∀ x ∈ ⋂ i, V i, U ∈ 𝓝 x) : ∃ i, V i ⊆ U :=
@@ -1400,12 +1136,6 @@ theorem IsCompact.finite {s : Set α} (hs : IsCompact s) (hs' : DiscreteTopology
 #align is_compact.finite IsCompact.finite
 -/
 
-/- warning: exists_nhds_ne_inf_principal_ne_bot -> exists_nhds_ne_inf_principal_neBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Set.Infinite.{u1} α s) -> (Exists.{succ u1} α (fun (z : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z s) => Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhdsWithin.{u1} α _inst_1 z (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) z))) (Filter.principal.{u1} α s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_1 s) -> (Set.Infinite.{u1} α s) -> (Exists.{succ u1} α (fun (z : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhdsWithin.{u1} α _inst_1 z (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) z))) (Filter.principal.{u1} α s)))))
-Case conversion may be inaccurate. Consider using '#align exists_nhds_ne_inf_principal_ne_bot exists_nhds_ne_inf_principal_neBotₓ'. -/
 theorem exists_nhds_ne_inf_principal_neBot {s : Set α} (hs : IsCompact s) (hs' : s.Infinite) :
     ∃ z ∈ s, (𝓝[≠] z ⊓ 𝓟 s).ne_bot := by
   by_contra' H
@@ -1427,12 +1157,6 @@ protected theorem ClosedEmbedding.compactSpace [h : CompactSpace β] {f : α →
 #align closed_embedding.compact_space ClosedEmbedding.compactSpace
 -/
 
-/- warning: is_compact.prod -> IsCompact.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u2} β _inst_2 t) -> (IsCompact.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsCompact.{u1} α _inst_1 s) -> (IsCompact.{u2} β _inst_2 t) -> (IsCompact.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
-Case conversion may be inaccurate. Consider using '#align is_compact.prod IsCompact.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsCompact.prod {s : Set α} {t : Set β} (hs : IsCompact s) (ht : IsCompact t) :
     IsCompact (s ×ˢ t) :=
@@ -1503,35 +1227,17 @@ theorem Filter.coprod_cocompact :
 #align filter.coprod_cocompact Filter.coprod_cocompact
 -/
 
-/- warning: prod.noncompact_space_iff -> Prod.noncompactSpace_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β], Iff (NoncompactSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2)) (Or (And (NoncompactSpace.{u1} α _inst_1) (Nonempty.{succ u2} β)) (And (Nonempty.{succ u1} α) (NoncompactSpace.{u2} β _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β], Iff (NoncompactSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2)) (Or (And (NoncompactSpace.{u1} α _inst_1) (Nonempty.{succ u2} β)) (And (Nonempty.{succ u1} α) (NoncompactSpace.{u2} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align prod.noncompact_space_iff Prod.noncompactSpace_iffₓ'. -/
 theorem Prod.noncompactSpace_iff :
     NoncompactSpace (α × β) ↔ NoncompactSpace α ∧ Nonempty β ∨ Nonempty α ∧ NoncompactSpace β := by
   simp [← Filter.cocompact_neBot_iff, ← Filter.coprod_cocompact, Filter.coprod_neBot_iff]
 #align prod.noncompact_space_iff Prod.noncompactSpace_iff
 
-/- warning: prod.noncompact_space_left -> Prod.noncompactSpace_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : NoncompactSpace.{u1} α _inst_1] [_inst_4 : Nonempty.{succ u2} β], NoncompactSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : NoncompactSpace.{u1} α _inst_1] [_inst_4 : Nonempty.{succ u2} β], NoncompactSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align prod.noncompact_space_left Prod.noncompactSpace_leftₓ'. -/
 -- See Note [lower instance priority]
 instance (priority := 100) Prod.noncompactSpace_left [NoncompactSpace α] [Nonempty β] :
     NoncompactSpace (α × β) :=
   Prod.noncompactSpace_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
 #align prod.noncompact_space_left Prod.noncompactSpace_left
 
-/- warning: prod.noncompact_space_right -> Prod.noncompactSpace_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : NoncompactSpace.{u2} β _inst_2], NoncompactSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : NoncompactSpace.{u2} β _inst_2], NoncompactSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align prod.noncompact_space_right Prod.noncompactSpace_rightₓ'. -/
 -- See Note [lower instance priority]
 instance (priority := 100) Prod.noncompactSpace_right [Nonempty α] [NoncompactSpace β] :
     NoncompactSpace (α × β) :=
@@ -1572,12 +1278,6 @@ instance Pi.compactSpace [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π 
 #align pi.compact_space Pi.compactSpace
 -/
 
-/- warning: filter.Coprod_cocompact -> Filter.coprodᵢ_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {δ : Type.{u1}} {κ : δ -> Type.{u2}} [_inst_4 : forall (d : δ), TopologicalSpace.{u2} (κ d)], Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (forall (i : δ), κ i)) (Filter.coprodᵢ.{u1, u2} δ (fun (d : δ) => κ d) (fun (d : δ) => Filter.cocompact.{u2} (κ d) (_inst_4 d))) (Filter.cocompact.{max u1 u2} (forall (d : δ), κ d) (Pi.topologicalSpace.{u1, u2} δ (fun (i : δ) => κ i) (fun (a : δ) => _inst_4 a)))
-but is expected to have type
-  forall {δ : Type.{u2}} {κ : δ -> Type.{u1}} [_inst_4 : forall (d : δ), TopologicalSpace.{u1} (κ d)], Eq.{max (succ u2) (succ u1)} (Filter.{max u2 u1} (forall (i : δ), κ i)) (Filter.coprodᵢ.{u2, u1} δ (fun (d : δ) => κ d) (fun (d : δ) => Filter.cocompact.{u1} (κ d) (_inst_4 d))) (Filter.cocompact.{max u2 u1} (forall (d : δ), κ d) (Pi.topologicalSpace.{u2, u1} δ (fun (i : δ) => κ i) (fun (a : δ) => _inst_4 a)))
-Case conversion may be inaccurate. Consider using '#align filter.Coprod_cocompact Filter.coprodᵢ_cocompactₓ'. -/
 /-- **Tychonoff's theorem** formulated in terms of filters: `filter.cocompact` on an indexed product
 type `Π d, κ d` the `filter.Coprod` of filters `filter.cocompact` on `κ d`. -/
 theorem Filter.coprodᵢ_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, TopologicalSpace (κ d)] :
@@ -1621,23 +1321,11 @@ theorem compact_basis_nhds [LocallyCompactSpace α] (x : α) :
 #align compact_basis_nhds compact_basis_nhds
 -/
 
-/- warning: local_compact_nhds -> local_compact_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : LocallyCompactSpace.{u1} α _inst_1] {x : α} {n : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) n (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 x)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 x)) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s n) (IsCompact.{u1} α _inst_1 s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : LocallyCompactSpace.{u1} α _inst_1] {x : α} {n : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) n (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 x)) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s n) (IsCompact.{u1} α _inst_1 s))))
-Case conversion may be inaccurate. Consider using '#align local_compact_nhds local_compact_nhdsₓ'. -/
 theorem local_compact_nhds [LocallyCompactSpace α] {x : α} {n : Set α} (h : n ∈ 𝓝 x) :
     ∃ s ∈ 𝓝 x, s ⊆ n ∧ IsCompact s :=
   LocallyCompactSpace.local_compact_nhds _ _ h
 #align local_compact_nhds local_compact_nhds
 
-/- warning: locally_compact_space_of_has_basis -> locallyCompactSpace_of_hasBasis is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : α -> Type.{u2}} {p : forall (x : α), (ι x) -> Prop} {s : forall (x : α), (ι x) -> (Set.{u1} α)}, (forall (x : α), Filter.HasBasis.{u1, succ u2} α (ι x) (nhds.{u1} α _inst_1 x) (p x) (s x)) -> (forall (x : α) (i : ι x), (p x i) -> (IsCompact.{u1} α _inst_1 (s x i))) -> (LocallyCompactSpace.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : α -> Type.{u1}} {p : forall (x : α), (ι x) -> Prop} {s : forall (x : α), (ι x) -> (Set.{u2} α)}, (forall (x : α), Filter.HasBasis.{u2, succ u1} α (ι x) (nhds.{u2} α _inst_1 x) (p x) (s x)) -> (forall (x : α) (i : ι x), (p x i) -> (IsCompact.{u2} α _inst_1 (s x i))) -> (LocallyCompactSpace.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align locally_compact_space_of_has_basis locallyCompactSpace_of_hasBasisₓ'. -/
 theorem locallyCompactSpace_of_hasBasis {ι : α → Type _} {p : ∀ x, ι x → Prop}
     {s : ∀ x, ι x → Set α} (h : ∀ x, (𝓝 x).HasBasis (p x) (s x))
     (hc : ∀ x i, p x i → IsCompact (s x i)) : LocallyCompactSpace α :=
@@ -1646,12 +1334,6 @@ theorem locallyCompactSpace_of_hasBasis {ι : α → Type _} {p : ∀ x, ι x �
     ⟨s x i, (h x).mem_of_mem hp, ht, hc x i hp⟩⟩
 #align locally_compact_space_of_has_basis locallyCompactSpace_of_hasBasis
 
-/- warning: locally_compact_space.prod -> LocallyCompactSpace.prod is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : LocallyCompactSpace.{u1} α _inst_3] [_inst_6 : LocallyCompactSpace.{u2} β _inst_4], LocallyCompactSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_3 _inst_4)
-but is expected to have type
-  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : LocallyCompactSpace.{u1} α _inst_3] [_inst_6 : LocallyCompactSpace.{u2} β _inst_4], LocallyCompactSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_3 _inst_4)
-Case conversion may be inaccurate. Consider using '#align locally_compact_space.prod LocallyCompactSpace.prodₓ'. -/
 instance LocallyCompactSpace.prod (α : Type _) (β : Type _) [TopologicalSpace α]
     [TopologicalSpace β] [LocallyCompactSpace α] [LocallyCompactSpace β] :
     LocallyCompactSpace (α × β) :=
@@ -1787,12 +1469,6 @@ protected theorem IsOpen.locallyCompactSpace [LocallyCompactSpace α] {s : Set �
 #align is_open.locally_compact_space IsOpen.locallyCompactSpace
 -/
 
-/- warning: ultrafilter.le_nhds_Lim -> Ultrafilter.le_nhds_lim is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1] (F : Ultrafilter.{u1} α), LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) F) (nhds.{u1} α _inst_1 (lim.{u1} α _inst_1 (Filter.nonempty_of_neBot.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) F) (Ultrafilter.neBot.{u1} α F)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) F)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α _inst_1] (F : Ultrafilter.{u1} α), LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α F) (nhds.{u1} α _inst_1 (Ultrafilter.lim.{u1} α _inst_1 F))
-Case conversion may be inaccurate. Consider using '#align ultrafilter.le_nhds_Lim Ultrafilter.le_nhds_limₓ'. -/
 theorem Ultrafilter.le_nhds_lim [CompactSpace α] (F : Ultrafilter α) :
     ↑F ≤ 𝓝 (@lim _ _ (F : Filter α).nonempty_of_neBot F) :=
   by
@@ -1967,12 +1643,6 @@ protected theorem ClosedEmbedding.sigmaCompactSpace {e : β → α} (he : Closed
 instance [SigmaCompactSpace β] : SigmaCompactSpace (ULift.{u} β) :=
   ULift.closedEmbedding_down.SigmaCompactSpace
 
-/- warning: locally_finite.countable_univ -> LocallyFinite.countable_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : SigmaCompactSpace.{u1} α _inst_1] {ι : Type.{u2}} {f : ι -> (Set.{u1} α)}, (LocallyFinite.{u2, u1} ι α _inst_1 f) -> (forall (i : ι), Set.Nonempty.{u1} α (f i)) -> (Set.Countable.{u2} ι (Set.univ.{u2} ι))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_3 : SigmaCompactSpace.{u2} α _inst_1] {ι : Type.{u1}} {f : ι -> (Set.{u2} α)}, (LocallyFinite.{u1, u2} ι α _inst_1 f) -> (forall (i : ι), Set.Nonempty.{u2} α (f i)) -> (Set.Countable.{u1} ι (Set.univ.{u1} ι))
-Case conversion may be inaccurate. Consider using '#align locally_finite.countable_univ LocallyFinite.countable_univₓ'. -/
 /-- If `α` is a `σ`-compact space, then a locally finite family of nonempty sets of `α` can have
 only countably many elements, `set.countable` version. -/
 protected theorem LocallyFinite.countable_univ {ι : Type _} {f : ι → Set α} (hf : LocallyFinite f)
@@ -2133,12 +1803,6 @@ theorem find_shiftr (x : α) : K.shiftr.find x = K.find x + 1 :=
 #align compact_exhaustion.find_shiftr CompactExhaustion.find_shiftr
 -/
 
-/- warning: compact_exhaustion.mem_diff_shiftr_find -> CompactExhaustion.mem_diff_shiftr_find is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (K : CompactExhaustion.{u1} α _inst_1) (x : α), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (coeFn.{succ u1, succ u1} (CompactExhaustion.{u1} α _inst_1) (fun (_x : CompactExhaustion.{u1} α _inst_1) => Nat -> (Set.{u1} α)) (CompactExhaustion.hasCoeToFun.{u1} α _inst_1) (CompactExhaustion.shiftr.{u1} α _inst_1 K) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompactExhaustion.find.{u1} α _inst_1 K x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (coeFn.{succ u1, succ u1} (CompactExhaustion.{u1} α _inst_1) (fun (_x : CompactExhaustion.{u1} α _inst_1) => Nat -> (Set.{u1} α)) (CompactExhaustion.hasCoeToFun.{u1} α _inst_1) (CompactExhaustion.shiftr.{u1} α _inst_1 K) (CompactExhaustion.find.{u1} α _inst_1 K x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (K : CompactExhaustion.{u1} α _inst_1) (x : α), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (CompactExhaustion.toFun.{u1} α _inst_1 (CompactExhaustion.shiftr.{u1} α _inst_1 K) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompactExhaustion.find.{u1} α _inst_1 K x) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CompactExhaustion.toFun.{u1} α _inst_1 (CompactExhaustion.shiftr.{u1} α _inst_1 K) (CompactExhaustion.find.{u1} α _inst_1 K x)))
-Case conversion may be inaccurate. Consider using '#align compact_exhaustion.mem_diff_shiftr_find CompactExhaustion.mem_diff_shiftr_findₓ'. -/
 theorem mem_diff_shiftr_find (x : α) : x ∈ K.shiftr (K.find x + 1) \ K.shiftr (K.find x) :=
   ⟨K.mem_find _,
     mt K.shiftr.mem_iff_find_le.1 <| by simp only [find_shiftr, not_le, Nat.lt_succ_self]⟩
@@ -2207,22 +1871,10 @@ theorem isClopen_iff_frontier_eq_empty {s : Set α} : IsClopen s ↔ frontier s 
 alias isClopen_iff_frontier_eq_empty ↔ IsClopen.frontier_eq _
 #align is_clopen.frontier_eq IsClopen.frontier_eq
 
-/- warning: is_clopen.union -> IsClopen.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (IsClopen.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (IsClopen.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_clopen.union IsClopen.unionₓ'. -/
 theorem IsClopen.union {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∪ t) :=
   ⟨hs.1.union ht.1, hs.2.union ht.2⟩
 #align is_clopen.union IsClopen.union
 
-/- warning: is_clopen.inter -> IsClopen.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (IsClopen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (IsClopen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_clopen.inter IsClopen.interₓ'. -/
 theorem IsClopen.inter {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∩ t) :=
   ⟨hs.1.inter ht.1, hs.2.inter ht.2⟩
 #align is_clopen.inter IsClopen.inter
@@ -2241,110 +1893,50 @@ theorem isClopen_univ : IsClopen (univ : Set α) :=
 #align is_clopen_univ isClopen_univ
 -/
 
-/- warning: is_clopen.compl -> IsClopen.compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align is_clopen.compl IsClopen.complₓ'. -/
 theorem IsClopen.compl {s : Set α} (hs : IsClopen s) : IsClopen (sᶜ) :=
   ⟨hs.2.isOpen_compl, hs.1.isClosed_compl⟩
 #align is_clopen.compl IsClopen.compl
 
-/- warning: is_clopen_compl_iff -> isClopen_compl_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsClopen.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (IsClopen.{u1} α _inst_1 s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsClopen.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (IsClopen.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align is_clopen_compl_iff isClopen_compl_iffₓ'. -/
 @[simp]
 theorem isClopen_compl_iff {s : Set α} : IsClopen (sᶜ) ↔ IsClopen s :=
   ⟨fun h => compl_compl s ▸ IsClopen.compl h, IsClopen.compl⟩
 #align is_clopen_compl_iff isClopen_compl_iff
 
-/- warning: is_clopen.diff -> IsClopen.diff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (IsClopen.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (IsClopen.{u1} α _inst_1 (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_clopen.diff IsClopen.diffₓ'. -/
 theorem IsClopen.diff {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s \ t) :=
   hs.inter ht.compl
 #align is_clopen.diff IsClopen.diff
 
-/- warning: is_clopen.prod -> IsClopen.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u2} β _inst_2 t) -> (IsClopen.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u2} β _inst_2 t) -> (IsClopen.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
-Case conversion may be inaccurate. Consider using '#align is_clopen.prod IsClopen.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsClopen.prod {s : Set α} {t : Set β} (hs : IsClopen s) (ht : IsClopen t) :
     IsClopen (s ×ˢ t) :=
   ⟨hs.1.Prod ht.1, hs.2.Prod ht.2⟩
 #align is_clopen.prod IsClopen.prod
 
-/- warning: is_clopen_Union -> isClopen_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_3 : Finite.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (i : β), IsClopen.{u1} α _inst_1 (s i)) -> (IsClopen.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (i : β) => s i)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {s : β -> (Set.{u2} α)}, (forall (i : β), IsClopen.{u2} α _inst_1 (s i)) -> (IsClopen.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α β (fun (i : β) => s i)))
-Case conversion may be inaccurate. Consider using '#align is_clopen_Union isClopen_iUnionₓ'. -/
 theorem isClopen_iUnion {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) :
     IsClopen (⋃ i, s i) :=
   ⟨isOpen_iUnion (forall_and.1 h).1, isClosed_iUnion (forall_and.1 h).2⟩
 #align is_clopen_Union isClopen_iUnion
 
-/- warning: is_clopen_bUnion -> isClopen_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} {s : Set.{u2} β} {f : β -> (Set.{u1} α)}, (Set.Finite.{u2} β s) -> (forall (i : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) -> (IsClopen.{u1} α _inst_1 (f i))) -> (IsClopen.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (i : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} {s : Set.{u1} β} {f : β -> (Set.{u2} α)}, (Set.Finite.{u1} β s) -> (forall (i : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) -> (IsClopen.{u2} α _inst_1 (f i))) -> (IsClopen.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α β (fun (i : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align is_clopen_bUnion isClopen_biUnionₓ'. -/
 theorem isClopen_biUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite)
     (h : ∀ i ∈ s, IsClopen <| f i) : IsClopen (⋃ i ∈ s, f i) :=
   ⟨isOpen_biUnion fun i hi => (h i hi).1, isClosed_biUnion hs fun i hi => (h i hi).2⟩
 #align is_clopen_bUnion isClopen_biUnion
 
-/- warning: is_clopen_bUnion_finset -> isClopen_biUnion_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} {s : Finset.{u2} β} {f : β -> (Set.{u1} α)}, (forall (i : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) -> (IsClopen.{u1} α _inst_1 (f i))) -> (IsClopen.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (i : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} {s : Finset.{u1} β} {f : β -> (Set.{u2} α)}, (forall (i : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) -> (IsClopen.{u2} α _inst_1 (f i))) -> (IsClopen.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α β (fun (i : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align is_clopen_bUnion_finset isClopen_biUnion_finsetₓ'. -/
 theorem isClopen_biUnion_finset {β : Type _} {s : Finset β} {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen <| f i) : IsClopen (⋃ i ∈ s, f i) :=
   isClopen_biUnion s.finite_toSet h
 #align is_clopen_bUnion_finset isClopen_biUnion_finset
 
-/- warning: is_clopen_Inter -> isClopen_iInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_3 : Finite.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (i : β), IsClopen.{u1} α _inst_1 (s i)) -> (IsClopen.{u1} α _inst_1 (Set.iInter.{u1, succ u2} α β (fun (i : β) => s i)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {s : β -> (Set.{u2} α)}, (forall (i : β), IsClopen.{u2} α _inst_1 (s i)) -> (IsClopen.{u2} α _inst_1 (Set.iInter.{u2, succ u1} α β (fun (i : β) => s i)))
-Case conversion may be inaccurate. Consider using '#align is_clopen_Inter isClopen_iInterₓ'. -/
 theorem isClopen_iInter {β : Type _} [Finite β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) :
     IsClopen (⋂ i, s i) :=
   ⟨isOpen_iInter (forall_and.1 h).1, isClosed_iInter (forall_and.1 h).2⟩
 #align is_clopen_Inter isClopen_iInter
 
-/- warning: is_clopen_bInter -> isClopen_biInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} {s : Set.{u2} β}, (Set.Finite.{u2} β s) -> (forall {f : β -> (Set.{u1} α)}, (forall (i : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) -> (IsClopen.{u1} α _inst_1 (f i))) -> (IsClopen.{u1} α _inst_1 (Set.iInter.{u1, succ u2} α β (fun (i : β) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) => f i)))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} {s : Set.{u1} β}, (Set.Finite.{u1} β s) -> (forall {f : β -> (Set.{u2} α)}, (forall (i : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) -> (IsClopen.{u2} α _inst_1 (f i))) -> (IsClopen.{u2} α _inst_1 (Set.iInter.{u2, succ u1} α β (fun (i : β) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) => f i)))))
-Case conversion may be inaccurate. Consider using '#align is_clopen_bInter isClopen_biInterₓ'. -/
 theorem isClopen_biInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen (f i)) : IsClopen (⋂ i ∈ s, f i) :=
   ⟨isOpen_biInter hs fun i hi => (h i hi).1, isClosed_biInter fun i hi => (h i hi).2⟩
 #align is_clopen_bInter isClopen_biInter
 
-/- warning: is_clopen_bInter_finset -> isClopen_biInter_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} {s : Finset.{u2} β} {f : β -> (Set.{u1} α)}, (forall (i : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) -> (IsClopen.{u1} α _inst_1 (f i))) -> (IsClopen.{u1} α _inst_1 (Set.iInter.{u1, succ u2} α β (fun (i : β) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} {s : Finset.{u1} β} {f : β -> (Set.{u2} α)}, (forall (i : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) -> (IsClopen.{u2} α _inst_1 (f i))) -> (IsClopen.{u2} α _inst_1 (Set.iInter.{u2, succ u1} α β (fun (i : β) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align is_clopen_bInter_finset isClopen_biInter_finsetₓ'. -/
 theorem isClopen_biInter_finset {β : Type _} {s : Finset β} {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen (f i)) : IsClopen (⋂ i ∈ s, f i) :=
   isClopen_biInter s.finite_toSet h
@@ -2357,24 +1949,12 @@ theorem IsClopen.preimage {s : Set β} (h : IsClopen s) {f : α → β} (hf : Co
 #align is_clopen.preimage IsClopen.preimage
 -/
 
-/- warning: continuous_on.preimage_clopen_of_clopen -> ContinuousOn.preimage_clopen_of_clopen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u2} β}, (ContinuousOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u2} β _inst_2 t) -> (IsClopen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.preimage.{u1, u2} α β f t)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u2} β}, (ContinuousOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (IsClopen.{u1} α _inst_1 s) -> (IsClopen.{u2} β _inst_2 t) -> (IsClopen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.preimage.{u1, u2} α β f t)))
-Case conversion may be inaccurate. Consider using '#align continuous_on.preimage_clopen_of_clopen ContinuousOn.preimage_clopen_of_clopenₓ'. -/
 theorem ContinuousOn.preimage_clopen_of_clopen {f : α → β} {s : Set α} {t : Set β}
     (hf : ContinuousOn f s) (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∩ f ⁻¹' t) :=
   ⟨ContinuousOn.preimage_open_of_open hf hs.1 ht.1,
     ContinuousOn.preimage_closed_of_closed hf hs.2 ht.2⟩
 #align continuous_on.preimage_clopen_of_clopen ContinuousOn.preimage_clopen_of_clopen
 
-/- warning: is_clopen_inter_of_disjoint_cover_clopen -> isClopen_inter_of_disjoint_cover_clopen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {Z : Set.{u1} α} {a : Set.{u1} α} {b : Set.{u1} α}, (IsClopen.{u1} α _inst_1 Z) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) Z (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) a b)) -> (IsOpen.{u1} α _inst_1 a) -> (IsOpen.{u1} α _inst_1 b) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) a b) -> (IsClopen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) Z a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {Z : Set.{u1} α} {a : Set.{u1} α} {b : Set.{u1} α}, (IsClopen.{u1} α _inst_1 Z) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) Z (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) a b)) -> (IsOpen.{u1} α _inst_1 a) -> (IsOpen.{u1} α _inst_1 b) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) a b) -> (IsClopen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) Z a))
-Case conversion may be inaccurate. Consider using '#align is_clopen_inter_of_disjoint_cover_clopen isClopen_inter_of_disjoint_cover_clopenₓ'. -/
 /-- The intersection of a disjoint covering by two open sets of a clopen set will be clopen. -/
 theorem isClopen_inter_of_disjoint_cover_clopen {Z a b : Set α} (h : IsClopen Z) (cover : Z ⊆ a ∪ b)
     (ha : IsOpen a) (hb : IsOpen b) (hab : Disjoint a b) : IsClopen (Z ∩ a) :=
@@ -2394,12 +1974,6 @@ theorem isClopen_discrete [DiscreteTopology α] (x : Set α) : IsClopen x :=
 #align is_clopen_discrete isClopen_discrete
 -/
 
-/- warning: clopen_range_sigma_mk -> isClopen_range_sigmaMk is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {σ : ι -> Type.{u2}} [_inst_3 : forall (i : ι), TopologicalSpace.{u2} (σ i)] {i : ι}, IsClopen.{max u1 u2} (Sigma.{u1, u2} ι σ) (Sigma.topologicalSpace.{u1, u2} ι σ (fun (a : ι) => _inst_3 a)) (Set.range.{max u1 u2, succ u2} (Sigma.{u1, u2} ι σ) (σ i) (Sigma.mk.{u1, u2} ι σ i))
-but is expected to have type
-  forall {ι : Type.{u2}} {σ : ι -> Type.{u1}} [_inst_3 : forall (i : ι), TopologicalSpace.{u1} (σ i)] {i : ι}, IsClopen.{max u2 u1} (Sigma.{u2, u1} ι σ) (instTopologicalSpaceSigma.{u2, u1} ι σ (fun (a : ι) => _inst_3 a)) (Set.range.{max u2 u1, succ u1} (Sigma.{u2, u1} ι σ) (σ i) (Sigma.mk.{u2, u1} ι σ i))
-Case conversion may be inaccurate. Consider using '#align clopen_range_sigma_mk isClopen_range_sigmaMkₓ'. -/
 theorem isClopen_range_sigmaMk {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)] {i : ι} :
     IsClopen (Set.range (@Sigma.mk ι σ i)) :=
   ⟨openEmbedding_sigmaMk.open_range, closedEmbedding_sigmaMk.closed_range⟩
@@ -2414,12 +1988,6 @@ protected theorem QuotientMap.isClopen_preimage {f : α → β} (hf : QuotientMa
 
 variable {X : Type _} [TopologicalSpace X]
 
-/- warning: continuous_bool_indicator_iff_clopen -> continuous_boolIndicator_iff_clopen is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] (U : Set.{u1} X), Iff (Continuous.{u1, 0} X Bool _inst_3 Bool.topologicalSpace (Set.boolIndicator.{u1} X U)) (IsClopen.{u1} X _inst_3 U)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] (U : Set.{u1} X), Iff (Continuous.{u1, 0} X Bool _inst_3 instTopologicalSpaceBool (Set.boolIndicator.{u1} X U)) (IsClopen.{u1} X _inst_3 U)
-Case conversion may be inaccurate. Consider using '#align continuous_bool_indicator_iff_clopen continuous_boolIndicator_iff_clopenₓ'. -/
 theorem continuous_boolIndicator_iff_clopen (U : Set X) : Continuous U.boolIndicator ↔ IsClopen U :=
   by
   constructor
@@ -2431,12 +1999,6 @@ theorem continuous_boolIndicator_iff_clopen (U : Set X) : Continuous U.boolIndic
     exacts[isOpen_univ, hU.1, hU.2.isOpen_compl, isOpen_empty]
 #align continuous_bool_indicator_iff_clopen continuous_boolIndicator_iff_clopen
 
-/- warning: continuous_on_indicator_iff_clopen -> continuousOn_boolIndicator_iff_clopen is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] (s : Set.{u1} X) (U : Set.{u1} X), Iff (ContinuousOn.{u1, 0} X Bool _inst_3 Bool.topologicalSpace (Set.boolIndicator.{u1} X U) s) (IsClopen.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} X) Type.{u1} (Set.hasCoeToSort.{u1} X) s) (Subtype.topologicalSpace.{u1} X (fun (x : X) => Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) _inst_3) (Set.preimage.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} X) Type.{u1} (Set.hasCoeToSort.{u1} X) s) X ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} X) Type.{u1} (Set.hasCoeToSort.{u1} X) s) X (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} X) Type.{u1} (Set.hasCoeToSort.{u1} X) s) X (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} X) Type.{u1} (Set.hasCoeToSort.{u1} X) s) X (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} X) Type.{u1} (Set.hasCoeToSort.{u1} X) s) X (coeSubtype.{succ u1} X (fun (x : X) => Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s)))))) U))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] (s : Set.{u1} X) (U : Set.{u1} X), Iff (ContinuousOn.{u1, 0} X Bool _inst_3 instTopologicalSpaceBool (Set.boolIndicator.{u1} X U) s) (IsClopen.{u1} (Subtype.{succ u1} X (fun (x : X) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s)) (instTopologicalSpaceSubtype.{u1} X (fun (x : X) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) _inst_3) (Set.preimage.{u1, u1} (Subtype.{succ u1} X (fun (x : X) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s)) X (Subtype.val.{succ u1} X (fun (x : X) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s)) U))
-Case conversion may be inaccurate. Consider using '#align continuous_on_indicator_iff_clopen continuousOn_boolIndicator_iff_clopenₓ'. -/
 theorem continuousOn_boolIndicator_iff_clopen (s U : Set X) :
     ContinuousOn U.boolIndicator s ↔ IsClopen ((coe : s → X) ⁻¹' U) :=
   by
@@ -2633,23 +2195,11 @@ class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends Preirreducibl
 -- see Note [lower instance priority]
 attribute [instance 50] IrreducibleSpace.to_nonempty
 
-/- warning: irreducible_space.is_irreducible_univ -> IrreducibleSpace.isIrreducible_univ is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : IrreducibleSpace.{u1} α _inst_3], IsIrreducible.{u1} α _inst_3 (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toHasTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : IrreducibleSpace.{u1} α _inst_3], IsIrreducible.{u1} α _inst_3 (Set.univ.{u1} α)
-Case conversion may be inaccurate. Consider using '#align irreducible_space.is_irreducible_univ IrreducibleSpace.isIrreducible_univₓ'. -/
 theorem IrreducibleSpace.isIrreducible_univ (α : Type u) [TopologicalSpace α] [IrreducibleSpace α] :
     IsIrreducible (⊤ : Set α) :=
   ⟨by simp, PreirreducibleSpace.isPreirreducible_univ α⟩
 #align irreducible_space.is_irreducible_univ IrreducibleSpace.isIrreducible_univ
 
-/- warning: irreducible_space_def -> irreducibleSpace_def is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} α], Iff (IrreducibleSpace.{u1} α _inst_3) (IsIrreducible.{u1} α _inst_3 (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toHasTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} α], Iff (IrreducibleSpace.{u1} α _inst_3) (IsIrreducible.{u1} α _inst_3 (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))
-Case conversion may be inaccurate. Consider using '#align irreducible_space_def irreducibleSpace_defₓ'. -/
 theorem irreducibleSpace_def (α : Type u) [TopologicalSpace α] :
     IrreducibleSpace α ↔ IsIrreducible (⊤ : Set α) :=
   ⟨@IrreducibleSpace.isIrreducible_univ α _, fun h =>
@@ -2657,12 +2207,6 @@ theorem irreducibleSpace_def (α : Type u) [TopologicalSpace α] :
     ⟨⟨h.1.some⟩⟩⟩
 #align irreducible_space_def irreducibleSpace_def
 
-/- warning: nonempty_preirreducible_inter -> nonempty_preirreducible_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : PreirreducibleSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 t) -> (Set.Nonempty.{u1} α s) -> (Set.Nonempty.{u1} α t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : PreirreducibleSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 t) -> (Set.Nonempty.{u1} α s) -> (Set.Nonempty.{u1} α t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align nonempty_preirreducible_inter nonempty_preirreducible_interₓ'. -/
 theorem nonempty_preirreducible_inter [PreirreducibleSpace α] {s t : Set α} :
     IsOpen s → IsOpen t → s.Nonempty → t.Nonempty → (s ∩ t).Nonempty := by
   simpa only [univ_inter, univ_subset_iff] using
@@ -2738,12 +2282,6 @@ instance (priority := 100) {α} [Infinite α] : IrreducibleSpace (CofiniteTopolo
     simpa only [compl_union, compl_compl] using ((hu hu').union (hv hv')).infinite_compl.Nonempty
   to_nonempty := (inferInstance : Nonempty α)
 
-/- warning: is_irreducible_iff_sInter -> isIrreducible_iff_sInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsIrreducible.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s u))) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.sInter.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (Finset.Set.hasCoeT.{u1} (Set.{u1} α)))) U)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsIrreducible.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s u))) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.sInter.{u1} α (Finset.toSet.{u1} (Set.{u1} α) U)))))
-Case conversion may be inaccurate. Consider using '#align is_irreducible_iff_sInter isIrreducible_iff_sInterₓ'. -/
 /-- A set `s` is irreducible if and only if
 for every finite collection of open sets all of whose members intersect `s`,
 `s` also intersects the intersection of the entire collection
@@ -2775,12 +2313,6 @@ theorem isIrreducible_iff_sInter {s : Set α} :
       rintro (rfl | rfl) <;> assumption
 #align is_irreducible_iff_sInter isIrreducible_iff_sInter
 
-/- warning: is_preirreducible_iff_closed_union_closed -> isPreirreducible_iff_closed_union_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreirreducible.{u1} α _inst_1 s) (forall (z₁ : Set.{u1} α) (z₂ : Set.{u1} α), (IsClosed.{u1} α _inst_1 z₁) -> (IsClosed.{u1} α _inst_1 z₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) z₁ z₂)) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s z₁) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s z₂)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreirreducible.{u1} α _inst_1 s) (forall (z₁ : Set.{u1} α) (z₂ : Set.{u1} α), (IsClosed.{u1} α _inst_1 z₁) -> (IsClosed.{u1} α _inst_1 z₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) z₁ z₂)) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s z₁) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s z₂)))
-Case conversion may be inaccurate. Consider using '#align is_preirreducible_iff_closed_union_closed isPreirreducible_iff_closed_union_closedₓ'. -/
 /-- A set is preirreducible if and only if
 for every cover by two closed sets, it is contained in one of the two covering sets. -/
 theorem isPreirreducible_iff_closed_union_closed {s : Set α} :
@@ -2808,12 +2340,6 @@ theorem isPreirreducible_iff_closed_union_closed {s : Set α} :
     · constructor <;> intro H <;> refine' H _ ‹_› <;> assumption
 #align is_preirreducible_iff_closed_union_closed isPreirreducible_iff_closed_union_closed
 
-/- warning: is_irreducible_iff_sUnion_closed -> isIrreducible_iff_sUnion_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsIrreducible.{u1} α _inst_1 s) (forall (Z : Finset.{u1} (Set.{u1} α)), (forall (z : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) z Z) -> (IsClosed.{u1} α _inst_1 z)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.sUnion.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (Finset.Set.hasCoeT.{u1} (Set.{u1} α)))) Z))) -> (Exists.{succ u1} (Set.{u1} α) (fun (z : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) z Z) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) z Z) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s z))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsIrreducible.{u1} α _inst_1 s) (forall (Z : Finset.{u1} (Set.{u1} α)), (forall (z : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) z Z) -> (IsClosed.{u1} α _inst_1 z)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.sUnion.{u1} α (Finset.toSet.{u1} (Set.{u1} α) Z))) -> (Exists.{succ u1} (Set.{u1} α) (fun (z : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) z Z) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s z))))
-Case conversion may be inaccurate. Consider using '#align is_irreducible_iff_sUnion_closed isIrreducible_iff_sUnion_closedₓ'. -/
 /-- A set is irreducible if and only if
 for every cover by a finite collection of closed sets,
 it is contained in one of the members of the collection. -/
@@ -2853,12 +2379,6 @@ theorem isIrreducible_iff_sUnion_closed {s : Set α} :
     · simpa using H
 #align is_irreducible_iff_sUnion_closed isIrreducible_iff_sUnion_closed
 
-/- warning: subset_closure_inter_of_is_preirreducible_of_is_open -> subset_closure_inter_of_isPreirreducible_of_isOpen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {S : Set.{u1} α} {U : Set.{u1} α}, (IsPreirreducible.{u1} α _inst_1 S) -> (IsOpen.{u1} α _inst_1 U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) S U)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) S (closure.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) S U)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {S : Set.{u1} α} {U : Set.{u1} α}, (IsPreirreducible.{u1} α _inst_1 S) -> (IsOpen.{u1} α _inst_1 U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) S U)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) S (closure.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) S U)))
-Case conversion may be inaccurate. Consider using '#align subset_closure_inter_of_is_preirreducible_of_is_open subset_closure_inter_of_isPreirreducible_of_isOpenₓ'. -/
 /-- A nonemtpy open subset of a preirreducible subspace is dense in the subspace. -/
 theorem subset_closure_inter_of_isPreirreducible_of_isOpen {S U : Set α} (hS : IsPreirreducible S)
     (hU : IsOpen U) (h : (S ∩ U).Nonempty) : S ⊆ closure (S ∩ U) :=

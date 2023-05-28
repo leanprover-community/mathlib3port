@@ -84,12 +84,6 @@ instance GSmul.toSMul [Add ι] [GSmul A M] : SMul (GradedMonoid A) (GradedMonoid
 #align graded_monoid.ghas_smul.to_has_smul GradedMonoid.GSmul.toSMul
 -/
 
-/- warning: graded_monoid.mk_smul_mk -> GradedMonoid.mk_smul_mk is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} (A : ι -> Type.{u2}) (M : ι -> Type.{u3}) [_inst_1 : Add.{u1} ι] [_inst_2 : GradedMonoid.GSmul.{u1, u2, u3} ι A M _inst_1] {i : ι} {j : ι} (a : A i) (b : M j), Eq.{succ (max u1 u3)} (GradedMonoid.{u1, u3} ι (fun {j : ι} => M j)) (SMul.smul.{max u1 u2, max u1 u3} (GradedMonoid.{u1, u2} ι (fun {i : ι} => A i)) (GradedMonoid.{u1, u3} ι (fun {j : ι} => M j)) (GradedMonoid.GSmul.toSMul.{u1, u2, u3} ι (fun {i : ι} => A i) (fun {j : ι} => M j) _inst_1 _inst_2) (GradedMonoid.mk.{u1, u2} ι (fun {i : ι} => A i) i a) (GradedMonoid.mk.{u1, u3} ι (fun {j : ι} => M j) j b)) (GradedMonoid.mk.{u1, u3} ι (fun {j : ι} => M j) (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_1) i j) (GradedMonoid.GSmul.smul.{u1, u2, u3} ι (fun {i : ι} => A i) M _inst_1 _inst_2 i j a b))
-but is expected to have type
-  forall {ι : Type.{u3}} (A : ι -> Type.{u2}) (M : ι -> Type.{u1}) [_inst_1 : Add.{u3} ι] [_inst_2 : GradedMonoid.GSmul.{u3, u2, u1} ι A M _inst_1] {i : ι} {j : ι} (a : A i) (b : M j), Eq.{max (succ u3) (succ u1)} (GradedMonoid.{u3, u1} ι M) (HSMul.hSMul.{max u2 u3, max u1 u3, max u3 u1} (GradedMonoid.{u3, u2} ι A) (GradedMonoid.{u3, u1} ι M) (GradedMonoid.{u3, u1} ι M) (instHSMul.{max u3 u2, max u3 u1} (GradedMonoid.{u3, u2} ι A) (GradedMonoid.{u3, u1} ι M) (GradedMonoid.GSmul.toSMul.{u3, u2, u1} ι A M _inst_1 _inst_2)) (GradedMonoid.mk.{u3, u2} ι A i a) (GradedMonoid.mk.{u3, u1} ι M j b)) (GradedMonoid.mk.{u3, u1} ι M (HAdd.hAdd.{u3, u3, u3} ι ι ι (instHAdd.{u3} ι _inst_1) i j) (GradedMonoid.GSmul.smul.{u3, u2, u1} ι A M _inst_1 _inst_2 i j a b))
-Case conversion may be inaccurate. Consider using '#align graded_monoid.mk_smul_mk GradedMonoid.mk_smul_mkₓ'. -/
 theorem mk_smul_mk [Add ι] [GSmul A M] {i j} (a : A i) (b : M j) :
     mk i a • mk j b = mk (i + j) (GSmul.smul a b) :=
   rfl
@@ -148,9 +142,6 @@ instance SetLike.toGSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R 
 #align set_like.ghas_smul SetLike.toGSmul
 -/
 
-/- warning: set_like.coe_ghas_smul -> SetLike.coe_GSmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align set_like.coe_ghas_smul SetLike.coe_GSmulₓ'. -/
 @[simp]
 theorem SetLike.coe_GSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R M] [Add ι]
     (A : ι → S) (B : ι → N) [SetLike.GradedSmul A B] {i j : ι} (x : A i) (y : B j) :
@@ -158,12 +149,6 @@ theorem SetLike.coe_GSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R
   rfl
 #align set_like.coe_ghas_smul SetLike.coe_GSmul
 
-/- warning: set_like.has_graded_mul.to_has_graded_smul -> SetLike.GradedMul.toGradedSmul is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : AddMonoid.{u1} ι] [_inst_2 : Monoid.{u2} R] {S : Type.{u3}} [_inst_3 : SetLike.{u3, u2} S R] (A : ι -> S) [_inst_4 : SetLike.GradedMonoid.{u1, u2, u3} ι R S _inst_3 _inst_2 _inst_1 A], SetLike.GradedSmul.{u1, u3, u2, u3, u2} ι S R S R _inst_3 _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toHasMul.{u2} R (Monoid.toMulOneClass.{u2} R _inst_2))) (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1)) A A
-but is expected to have type
-  forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : AddMonoid.{u1} ι] [_inst_2 : Monoid.{u2} R] {S : Type.{u3}} [_inst_3 : SetLike.{u3, u2} S R] (A : ι -> S) [_inst_4 : SetLike.GradedMonoid.{u1, u2, u3} ι R S _inst_3 _inst_2 _inst_1 A], SetLike.GradedSmul.{u1, u3, u2, u3, u2} ι S R S R _inst_3 _inst_3 (MulAction.toSMul.{u2, u2} R R _inst_2 (Monoid.toMulAction.{u2} R _inst_2)) (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1)) A A
-Case conversion may be inaccurate. Consider using '#align set_like.has_graded_mul.to_has_graded_smul SetLike.GradedMul.toGradedSmulₓ'. -/
 /-- Internally graded version of `has_mul.to_has_smul`. -/
 instance SetLike.GradedMul.toGradedSmul [AddMonoid ι] [Monoid R] {S : Type _} [SetLike S R]
     (A : ι → S) [SetLike.GradedMonoid A] : SetLike.GradedSmul A A
@@ -176,12 +161,6 @@ section HomogeneousElements
 
 variable {S R N M : Type _} [SetLike S R] [SetLike N M]
 
-/- warning: set_like.is_homogeneous.graded_smul -> SetLike.Homogeneous.graded_smul is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {S : Type.{u2}} {R : Type.{u3}} {N : Type.{u4}} {M : Type.{u5}} [_inst_1 : SetLike.{u2, u3} S R] [_inst_2 : SetLike.{u4, u5} N M] [_inst_3 : Add.{u1} ι] [_inst_4 : SMul.{u3, u5} R M] {A : ι -> S} {B : ι -> N} [_inst_5 : SetLike.GradedSmul.{u1, u2, u3, u4, u5} ι S R N M _inst_1 _inst_2 _inst_4 _inst_3 A B] {a : R} {b : M}, (SetLike.Homogeneous.{u1, u3, u2} ι R S _inst_1 A a) -> (SetLike.Homogeneous.{u1, u5, u4} ι M N _inst_2 B b) -> (SetLike.Homogeneous.{u1, u5, u4} ι M N _inst_2 B (SMul.smul.{u3, u5} R M _inst_4 a b))
-but is expected to have type
-  forall {ι : Type.{u5}} {S : Type.{u2}} {R : Type.{u4}} {N : Type.{u1}} {M : Type.{u3}} [_inst_1 : SetLike.{u2, u4} S R] [_inst_2 : SetLike.{u1, u3} N M] [_inst_3 : Add.{u5} ι] [_inst_4 : SMul.{u4, u3} R M] {A : ι -> S} {B : ι -> N} [_inst_5 : SetLike.GradedSmul.{u5, u2, u4, u1, u3} ι S R N M _inst_1 _inst_2 _inst_4 _inst_3 A B] {a : R} {b : M}, (SetLike.Homogeneous.{u5, u4, u2} ι R S _inst_1 A a) -> (SetLike.Homogeneous.{u5, u3, u1} ι M N _inst_2 B b) -> (SetLike.Homogeneous.{u5, u3, u1} ι M N _inst_2 B (HSMul.hSMul.{u4, u3, u3} R M M (instHSMul.{u4, u3} R M _inst_4) a b))
-Case conversion may be inaccurate. Consider using '#align set_like.is_homogeneous.graded_smul SetLike.Homogeneous.graded_smulₓ'. -/
 theorem SetLike.Homogeneous.graded_smul [Add ι] [SMul R M] {A : ι → S} {B : ι → N}
     [SetLike.GradedSmul A B] {a : R} {b : M} :
     SetLike.Homogeneous A a → SetLike.Homogeneous B b → SetLike.Homogeneous B (a • b)

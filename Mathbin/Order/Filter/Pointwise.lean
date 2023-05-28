@@ -136,24 +136,12 @@ protected theorem map_one' (f : α → β) : (1 : Filter α).map f = pure (f 1) 
 #align filter.map_zero' Filter.map_zero'
 -/
 
-/- warning: filter.le_one_iff -> Filter.le_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1))))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (OfNat.mk.{u1} (Set.{u1} α) 1 (One.one.{u1} (Set.{u1} α) (Set.one.{u1} α _inst_1)))) f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1)))) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (One.toOfNat1.{u1} (Set.{u1} α) (Set.one.{u1} α _inst_1))) f)
-Case conversion may be inaccurate. Consider using '#align filter.le_one_iff Filter.le_one_iffₓ'. -/
 @[simp, to_additive]
 theorem le_one_iff : f ≤ 1 ↔ (1 : Set α) ∈ f :=
   le_pure_iff
 #align filter.le_one_iff Filter.le_one_iff
 #align filter.nonpos_iff Filter.nonpos_iff
 
-/- warning: filter.ne_bot.le_one_iff -> Filter.NeBot.le_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1))))) (Eq.{succ u1} (Filter.{u1} α) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1)))) (Eq.{succ u1} (Filter.{u1} α) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.le_one_iff Filter.NeBot.le_one_iffₓ'. -/
 @[to_additive]
 protected theorem NeBot.le_one_iff (h : f.ne_bot) : f ≤ 1 ↔ f = 1 :=
   h.le_pure_iff
@@ -211,12 +199,6 @@ theorem pureOneHom_apply (a : α) : pureOneHom a = pure a :=
 
 variable [One β]
 
-/- warning: filter.map_one -> Filter.map_one is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : One.{u2} α] [_inst_2 : One.{u3} β] [_inst_3 : OneHomClass.{u1, u2, u3} F α β _inst_1 _inst_2] (φ : F), Eq.{succ u3} (Filter.{u3} β) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (OneHomClass.toFunLike.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) φ) (OfNat.ofNat.{u2} (Filter.{u2} α) 1 (OfNat.mk.{u2} (Filter.{u2} α) 1 (One.one.{u2} (Filter.{u2} α) (Filter.instOne.{u2} α _inst_1))))) (OfNat.ofNat.{u3} (Filter.{u3} β) 1 (OfNat.mk.{u3} (Filter.{u3} β) 1 (One.one.{u3} (Filter.{u3} β) (Filter.instOne.{u3} β _inst_2))))
-but is expected to have type
-  forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u2} α] [_inst_2 : One.{u1} β] [_inst_3 : OneHomClass.{u3, u2, u1} F α β _inst_1 _inst_2] (φ : F), Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.1264 : α) => β) _x) (OneHomClass.toFunLike.{u3, u2, u1} F α β _inst_1 _inst_2 _inst_3) φ) (OfNat.ofNat.{u2} (Filter.{u2} α) 1 (One.toOfNat1.{u2} (Filter.{u2} α) (Filter.instOne.{u2} α _inst_1)))) (OfNat.ofNat.{u1} (Filter.{u1} β) 1 (One.toOfNat1.{u1} (Filter.{u1} β) (Filter.instOne.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align filter.map_one Filter.map_oneₓ'. -/
 @[simp, to_additive]
 protected theorem map_one [OneHomClass F α β] (φ : F) : map φ 1 = 1 := by
   rw [Filter.map_one', map_one, pure_one]
@@ -253,12 +235,6 @@ theorem mem_inv : s ∈ f⁻¹ ↔ Inv.inv ⁻¹' s ∈ f :=
 #align filter.mem_neg Filter.mem_neg
 -/
 
-/- warning: filter.inv_le_inv -> Filter.inv_le_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inv.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α _inst_1) f) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α _inst_1) g))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inv.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α _inst_1) f) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α _inst_1) g))
-Case conversion may be inaccurate. Consider using '#align filter.inv_le_inv Filter.inv_le_invₓ'. -/
 @[to_additive]
 protected theorem inv_le_inv (hf : f ≤ g) : f⁻¹ ≤ g⁻¹ :=
   map_mono hf
@@ -273,12 +249,6 @@ theorem inv_pure : (pure a : Filter α)⁻¹ = pure a⁻¹ :=
 #align filter.neg_pure Filter.neg_pure
 -/
 
-/- warning: filter.inv_eq_bot_iff -> Filter.inv_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inv.{u1} α] {f : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α _inst_1) f) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inv.{u1} α] {f : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α _inst_1) f) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.inv_eq_bot_iff Filter.inv_eq_bot_iffₓ'. -/
 @[simp, to_additive]
 theorem inv_eq_bot_iff : f⁻¹ = ⊥ ↔ f = ⊥ :=
   map_eq_bot_iff
@@ -306,12 +276,6 @@ section InvolutiveInv
 
 variable [InvolutiveInv α] {f g : Filter α} {s : Set α}
 
-/- warning: filter.inv_mem_inv -> Filter.inv_mem_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) s) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) s) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) f))
-Case conversion may be inaccurate. Consider using '#align filter.inv_mem_inv Filter.inv_mem_invₓ'. -/
 @[to_additive]
 theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by rwa [mem_inv, inv_preimage, inv_inv]
 #align filter.inv_mem_inv Filter.inv_mem_inv
@@ -329,35 +293,17 @@ protected def instInvolutiveInv : InvolutiveInv (Filter α) :=
 
 scoped[Pointwise] attribute [instance] Filter.instInvolutiveInv Filter.instInvolutiveNeg
 
-/- warning: filter.inv_le_inv_iff -> Filter.inv_le_inv_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) f) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) g)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) f) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) g)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g)
-Case conversion may be inaccurate. Consider using '#align filter.inv_le_inv_iff Filter.inv_le_inv_iffₓ'. -/
 @[simp, to_additive]
 protected theorem inv_le_inv_iff : f⁻¹ ≤ g⁻¹ ↔ f ≤ g :=
   ⟨fun h => inv_inv f ▸ inv_inv g ▸ Filter.inv_le_inv h, Filter.inv_le_inv⟩
 #align filter.inv_le_inv_iff Filter.inv_le_inv_iff
 #align filter.neg_le_neg_iff Filter.neg_le_neg_iff
 
-/- warning: filter.inv_le_iff_le_inv -> Filter.inv_le_iff_le_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) f) g) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) g))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) f) g) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) g))
-Case conversion may be inaccurate. Consider using '#align filter.inv_le_iff_le_inv Filter.inv_le_iff_le_invₓ'. -/
 @[to_additive]
 theorem inv_le_iff_le_inv : f⁻¹ ≤ g ↔ f ≤ g⁻¹ := by rw [← Filter.inv_le_inv_iff, inv_inv]
 #align filter.inv_le_iff_le_inv Filter.inv_le_iff_le_inv
 #align filter.neg_le_iff_le_neg Filter.neg_le_iff_le_neg
 
-/- warning: filter.inv_le_self -> Filter.inv_le_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) f) f) (Eq.{succ u1} (Filter.{u1} α) (Inv.inv.{u1} (Filter.{u1} α) (Filter.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) f) f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) f) f) (Eq.{succ u1} (Filter.{u1} α) (Inv.inv.{u1} (Filter.{u1} α) (Filter.instInv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) f) f)
-Case conversion may be inaccurate. Consider using '#align filter.inv_le_self Filter.inv_le_selfₓ'. -/
 @[simp, to_additive]
 theorem inv_le_self : f⁻¹ ≤ f ↔ f⁻¹ = f :=
   ⟨fun h => h.antisymm <| inv_le_iff_le_inv.1 h, Eq.le⟩
@@ -410,36 +356,18 @@ theorem mul_mem_mul : s ∈ f → t ∈ g → s * t ∈ f * g :=
 #align filter.add_mem_add Filter.add_mem_add
 -/
 
-/- warning: filter.bot_mul -> Filter.bot_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {g : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {g : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.bot_mul Filter.bot_mulₓ'. -/
 @[simp, to_additive]
 theorem bot_mul : ⊥ * g = ⊥ :=
   map₂_bot_left
 #align filter.bot_mul Filter.bot_mul
 #align filter.bot_add Filter.bot_add
 
-/- warning: filter.mul_bot -> Filter.mul_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {f : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {f : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.mul_bot Filter.mul_botₓ'. -/
 @[simp, to_additive]
 theorem mul_bot : f * ⊥ = ⊥ :=
   map₂_bot_right
 #align filter.mul_bot Filter.mul_bot
 #align filter.add_bot Filter.add_bot
 
-/- warning: filter.mul_eq_bot_iff -> Filter.mul_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) g (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) g (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align filter.mul_eq_bot_iff Filter.mul_eq_bot_iffₓ'. -/
 @[simp, to_additive]
 theorem mul_eq_bot_iff : f * g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
@@ -502,48 +430,24 @@ theorem pure_mul_pure : (pure a : Filter α) * pure b = pure (a * b) :=
 #align filter.pure_add_pure Filter.pure_add_pure
 -/
 
-/- warning: filter.le_mul_iff -> Filter.le_mul_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) h (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) f g)) (forall {{s : Set.{u1} α}}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (forall {{t : Set.{u1} α}}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α _inst_1)) s t) h)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) h (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) f g)) (forall {{s : Set.{u1} α}}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (forall {{t : Set.{u1} α}}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α _inst_1)) s t) h)))
-Case conversion may be inaccurate. Consider using '#align filter.le_mul_iff Filter.le_mul_iffₓ'. -/
 @[simp, to_additive]
 theorem le_mul_iff : h ≤ f * g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s * t ∈ h :=
   le_map₂_iff
 #align filter.le_mul_iff Filter.le_mul_iff
 #align filter.le_add_iff Filter.le_add_iff
 
-/- warning: filter.covariant_mul -> Filter.covariant_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.2294 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.2296 : Filter.{u1} α) => HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) x._@.Mathlib.Order.Filter.Pointwise._hyg.2294 x._@.Mathlib.Order.Filter.Pointwise._hyg.2296) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.2309 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.2311 : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Pointwise._hyg.2309 x._@.Mathlib.Order.Filter.Pointwise._hyg.2311)
-Case conversion may be inaccurate. Consider using '#align filter.covariant_mul Filter.covariant_mulₓ'. -/
 @[to_additive]
 instance covariant_mul : CovariantClass (Filter α) (Filter α) (· * ·) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_left⟩
 #align filter.covariant_mul Filter.covariant_mul
 #align filter.covariant_add Filter.covariant_add
 
-/- warning: filter.covariant_swap_mul -> Filter.covariant_swap_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (Filter.{u1} α) (Filter.{u1} α) (fun (ᾰ : Filter.{u1} α) (ᾰ : Filter.{u1} α) => Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (Filter.{u1} α) (Filter.{u1} α) (fun (ᾰ : Filter.{u1} α) (ᾰ : Filter.{u1} α) => Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.2382 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.2384 : Filter.{u1} α) => HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α _inst_1)) x._@.Mathlib.Order.Filter.Pointwise._hyg.2382 x._@.Mathlib.Order.Filter.Pointwise._hyg.2384)) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.2397 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.2399 : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Pointwise._hyg.2397 x._@.Mathlib.Order.Filter.Pointwise._hyg.2399)
-Case conversion may be inaccurate. Consider using '#align filter.covariant_swap_mul Filter.covariant_swap_mulₓ'. -/
 @[to_additive]
 instance covariant_swap_mul : CovariantClass (Filter α) (Filter α) (swap (· * ·)) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_right⟩
 #align filter.covariant_swap_mul Filter.covariant_swap_mul
 #align filter.covariant_swap_add Filter.covariant_swap_add
 
-/- warning: filter.map_mul -> Filter.map_mul is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Mul.{u2} α] [_inst_2 : Mul.{u3} β] {f₁ : Filter.{u2} α} {f₂ : Filter.{u2} α} [_inst_3 : MulHomClass.{u1, u2, u3} F α β _inst_1 _inst_2] (m : F), Eq.{succ u3} (Filter.{u3} β) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) m) (HMul.hMul.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHMul.{u2} (Filter.{u2} α) (Filter.instMul.{u2} α _inst_1)) f₁ f₂)) (HMul.hMul.{u3, u3, u3} (Filter.{u3} β) (Filter.{u3} β) (Filter.{u3} β) (instHMul.{u3} (Filter.{u3} β) (Filter.instMul.{u3} β _inst_2)) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) m) f₁) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) m) f₂))
-but is expected to have type
-  forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Mul.{u2} α] [_inst_2 : Mul.{u1} β] {f₁ : Filter.{u2} α} {f₂ : Filter.{u2} α} [_inst_3 : MulHomClass.{u3, u2, u1} F α β _inst_1 _inst_2] (m : F), Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β _inst_1 _inst_2 _inst_3) m) (HMul.hMul.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHMul.{u2} (Filter.{u2} α) (Filter.instMul.{u2} α _inst_1)) f₁ f₂)) (HMul.hMul.{u1, u1, u1} (Filter.{u1} β) (Filter.{u1} β) (Filter.{u1} β) (instHMul.{u1} (Filter.{u1} β) (Filter.instMul.{u1} β _inst_2)) (Filter.map.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β _inst_1 _inst_2 _inst_3) m) f₁) (Filter.map.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β _inst_1 _inst_2 _inst_3) m) f₂))
-Case conversion may be inaccurate. Consider using '#align filter.map_mul Filter.map_mulₓ'. -/
 @[to_additive]
 protected theorem map_mul [MulHomClass F α β] (m : F) : (f₁ * f₂).map m = f₁.map m * f₂.map m :=
   map_map₂_distrib <| map_mul m
@@ -619,36 +523,18 @@ theorem div_mem_div : s ∈ f → t ∈ g → s / t ∈ f / g :=
 #align filter.sub_mem_sub Filter.sub_mem_sub
 -/
 
-/- warning: filter.bot_div -> Filter.bot_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {g : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {g : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.bot_div Filter.bot_divₓ'. -/
 @[simp, to_additive]
 theorem bot_div : ⊥ / g = ⊥ :=
   map₂_bot_left
 #align filter.bot_div Filter.bot_div
 #align filter.bot_sub Filter.bot_sub
 
-/- warning: filter.div_bot -> Filter.div_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.div_bot Filter.div_botₓ'. -/
 @[simp, to_additive]
 theorem div_bot : f / ⊥ = ⊥ :=
   map₂_bot_right
 #align filter.div_bot Filter.div_bot
 #align filter.sub_bot Filter.sub_bot
 
-/- warning: filter.div_eq_bot_iff -> Filter.div_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) g (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) g (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align filter.div_eq_bot_iff Filter.div_eq_bot_iffₓ'. -/
 @[simp, to_additive]
 theorem div_eq_bot_iff : f / g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
@@ -711,72 +597,36 @@ theorem pure_div_pure : (pure a : Filter α) / pure b = pure (a / b) :=
 #align filter.pure_sub_pure Filter.pure_sub_pure
 -/
 
-/- warning: filter.div_le_div -> Filter.div_le_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : Filter.{u1} α} {g₂ : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₁ g₁) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : Filter.{u1} α} {g₂ : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₁ g₁) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.div_le_div Filter.div_le_divₓ'. -/
 @[to_additive]
 protected theorem div_le_div : f₁ ≤ f₂ → g₁ ≤ g₂ → f₁ / g₁ ≤ f₂ / g₂ :=
   map₂_mono
 #align filter.div_le_div Filter.div_le_div
 #align filter.sub_le_sub Filter.sub_le_sub
 
-/- warning: filter.div_le_div_left -> Filter.div_le_div_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α} {g₁ : Filter.{u1} α} {g₂ : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g₁) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α} {g₁ : Filter.{u1} α} {g₂ : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g₁) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g₂))
-Case conversion may be inaccurate. Consider using '#align filter.div_le_div_left Filter.div_le_div_leftₓ'. -/
 @[to_additive]
 protected theorem div_le_div_left : g₁ ≤ g₂ → f / g₁ ≤ f / g₂ :=
   map₂_mono_left
 #align filter.div_le_div_left Filter.div_le_div_left
 #align filter.sub_le_sub_left Filter.sub_le_sub_left
 
-/- warning: filter.div_le_div_right -> Filter.div_le_div_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₁ g) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₂ g))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₁ g) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f₂ g))
-Case conversion may be inaccurate. Consider using '#align filter.div_le_div_right Filter.div_le_div_rightₓ'. -/
 @[to_additive]
 protected theorem div_le_div_right : f₁ ≤ f₂ → f₁ / g ≤ f₂ / g :=
   map₂_mono_right
 #align filter.div_le_div_right Filter.div_le_div_right
 #align filter.sub_le_sub_right Filter.sub_le_sub_right
 
-/- warning: filter.le_div_iff -> Filter.le_div_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) h (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g)) (forall {{s : Set.{u1} α}}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (forall {{t : Set.{u1} α}}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α _inst_1)) s t) h)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) h (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) f g)) (forall {{s : Set.{u1} α}}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (forall {{t : Set.{u1} α}}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α _inst_1)) s t) h)))
-Case conversion may be inaccurate. Consider using '#align filter.le_div_iff Filter.le_div_iffₓ'. -/
 @[simp, to_additive]
 protected theorem le_div_iff : h ≤ f / g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s / t ∈ h :=
   le_map₂_iff
 #align filter.le_div_iff Filter.le_div_iff
 #align filter.le_sub_iff Filter.le_sub_iff
 
-/- warning: filter.covariant_div -> Filter.covariant_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.3763 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.3765 : Filter.{u1} α) => HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) x._@.Mathlib.Order.Filter.Pointwise._hyg.3763 x._@.Mathlib.Order.Filter.Pointwise._hyg.3765) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.3778 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.3780 : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Pointwise._hyg.3778 x._@.Mathlib.Order.Filter.Pointwise._hyg.3780)
-Case conversion may be inaccurate. Consider using '#align filter.covariant_div Filter.covariant_divₓ'. -/
 @[to_additive]
 instance covariant_div : CovariantClass (Filter α) (Filter α) (· / ·) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_left⟩
 #align filter.covariant_div Filter.covariant_div
 #align filter.covariant_sub Filter.covariant_sub
 
-/- warning: filter.covariant_swap_div -> Filter.covariant_swap_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (Filter.{u1} α) (Filter.{u1} α) (fun (ᾰ : Filter.{u1} α) (ᾰ : Filter.{u1} α) => Filter.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α], CovariantClass.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (Filter.{u1} α) (Filter.{u1} α) (fun (ᾰ : Filter.{u1} α) (ᾰ : Filter.{u1} α) => Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.3848 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.3850 : Filter.{u1} α) => HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α _inst_1)) x._@.Mathlib.Order.Filter.Pointwise._hyg.3848 x._@.Mathlib.Order.Filter.Pointwise._hyg.3850)) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.3863 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.3865 : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Pointwise._hyg.3863 x._@.Mathlib.Order.Filter.Pointwise._hyg.3865)
-Case conversion may be inaccurate. Consider using '#align filter.covariant_swap_div Filter.covariant_swap_divₓ'. -/
 @[to_additive]
 instance covariant_swap_div : CovariantClass (Filter α) (Filter α) (swap (· / ·)) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_right⟩
@@ -881,12 +731,6 @@ def mapMonoidHom [MonoidHomClass F α β] (φ : F) : Filter α →* Filter β
 #align filter.map_add_monoid_hom Filter.mapAddMonoidHom
 -/
 
-/- warning: filter.comap_mul_comap_le -> Filter.comap_mul_comap_le is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MulOneClass.{u2} α] [_inst_2 : MulOneClass.{u3} β] [_inst_3 : MulHomClass.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2)] (m : F) {f : Filter.{u3} β} {g : Filter.{u3} β}, LE.le.{u2} (Filter.{u2} α) (Preorder.toHasLe.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.partialOrder.{u2} α))) (HMul.hMul.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHMul.{u2} (Filter.{u2} α) (Filter.instMul.{u2} α (MulOneClass.toHasMul.{u2} α _inst_1))) (Filter.comap.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) _inst_3)) m) f) (Filter.comap.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) _inst_3)) m) g)) (Filter.comap.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) _inst_3)) m) (HMul.hMul.{u3, u3, u3} (Filter.{u3} β) (Filter.{u3} β) (Filter.{u3} β) (instHMul.{u3} (Filter.{u3} β) (Filter.instMul.{u3} β (MulOneClass.toHasMul.{u3} β _inst_2))) f g))
-but is expected to have type
-  forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MulOneClass.{u2} α] [_inst_2 : MulOneClass.{u1} β] [_inst_3 : MulHomClass.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2)] (m : F) {f : Filter.{u1} β} {g : Filter.{u1} β}, LE.le.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) (HMul.hMul.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHMul.{u2} (Filter.{u2} α) (Filter.instMul.{u2} α (MulOneClass.toMul.{u2} α _inst_1))) (Filter.comap.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2) _inst_3) m) f) (Filter.comap.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2) _inst_3) m) g)) (Filter.comap.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2) _inst_3) m) (HMul.hMul.{u1, u1, u1} (Filter.{u1} β) (Filter.{u1} β) (Filter.{u1} β) (instHMul.{u1} (Filter.{u1} β) (Filter.instMul.{u1} β (MulOneClass.toMul.{u1} β _inst_2))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.comap_mul_comap_le Filter.comap_mul_comap_leₓ'. -/
 -- The other direction does not hold in general
 @[to_additive]
 theorem comap_mul_comap_le [MulHomClass F α β] (m : F) {f g : Filter β} :
@@ -896,12 +740,6 @@ theorem comap_mul_comap_le [MulHomClass F α β] (m : F) {f g : Filter β} :
 #align filter.comap_mul_comap_le Filter.comap_mul_comap_le
 #align filter.comap_add_comap_le Filter.comap_add_comap_le
 
-/- warning: filter.tendsto.mul_mul -> Filter.Tendsto.mul_mul is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MulOneClass.{u2} α] [_inst_2 : MulOneClass.{u3} β] [_inst_3 : MulHomClass.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2)] (m : F) {f₁ : Filter.{u2} α} {g₁ : Filter.{u2} α} {f₂ : Filter.{u3} β} {g₂ : Filter.{u3} β}, (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) _inst_3)) m) f₁ f₂) -> (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) _inst_3)) m) g₁ g₂) -> (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) _inst_3)) m) (HMul.hMul.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHMul.{u2} (Filter.{u2} α) (Filter.instMul.{u2} α (MulOneClass.toHasMul.{u2} α _inst_1))) f₁ g₁) (HMul.hMul.{u3, u3, u3} (Filter.{u3} β) (Filter.{u3} β) (Filter.{u3} β) (instHMul.{u3} (Filter.{u3} β) (Filter.instMul.{u3} β (MulOneClass.toHasMul.{u3} β _inst_2))) f₂ g₂))
-but is expected to have type
-  forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MulOneClass.{u2} α] [_inst_2 : MulOneClass.{u1} β] [_inst_3 : MulHomClass.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2)] (m : F) {f₁ : Filter.{u2} α} {g₁ : Filter.{u2} α} {f₂ : Filter.{u1} β} {g₂ : Filter.{u1} β}, (Filter.Tendsto.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2) _inst_3) m) f₁ f₂) -> (Filter.Tendsto.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2) _inst_3) m) g₁ g₂) -> (Filter.Tendsto.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (MulOneClass.toMul.{u2} α _inst_1) (MulOneClass.toMul.{u1} β _inst_2) _inst_3) m) (HMul.hMul.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHMul.{u2} (Filter.{u2} α) (Filter.instMul.{u2} α (MulOneClass.toMul.{u2} α _inst_1))) f₁ g₁) (HMul.hMul.{u1, u1, u1} (Filter.{u1} β) (Filter.{u1} β) (Filter.{u1} β) (instHMul.{u1} (Filter.{u1} β) (Filter.instMul.{u1} β (MulOneClass.toMul.{u1} β _inst_2))) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.mul_mul Filter.Tendsto.mul_mulₓ'. -/
 @[to_additive]
 theorem Tendsto.mul_mul [MulHomClass F α β] (m : F) {f₁ g₁ : Filter α} {f₂ g₂ : Filter β} :
     Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendsto m (f₁ * g₁) (f₂ * g₂) := fun hf hg =>
@@ -918,24 +756,12 @@ def pureMonoidHom : α →* Filter α :=
 #align filter.pure_add_monoid_hom Filter.pureAddMonoidHom
 -/
 
-/- warning: filter.coe_pure_monoid_hom -> Filter.coe_pureMonoidHom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α], Eq.{succ u1} ((fun (_x : MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) => α -> (Filter.{u1} α)) (Filter.pureMonoidHom.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) (fun (_x : MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) => α -> (Filter.{u1} α)) (MonoidHom.hasCoeToFun.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) (Filter.pureMonoidHom.{u1} α _inst_1)) (Pure.pure.{u1, u1} (fun {α : Type.{u1}} => Filter.{u1} α) Filter.hasPure.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α], Eq.{succ u1} (forall (a : α), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => Filter.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => Filter.{u1} α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) α (Filter.{u1} α) (MulOneClass.toMul.{u1} α _inst_1) (MulOneClass.toMul.{u1} (Filter.{u1} α) (Filter.mulOneClass.{u1} α _inst_1)) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1) (MonoidHom.monoidHomClass.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)))) (Filter.pureMonoidHom.{u1} α _inst_1)) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α)
-Case conversion may be inaccurate. Consider using '#align filter.coe_pure_monoid_hom Filter.coe_pureMonoidHomₓ'. -/
 @[simp, to_additive]
 theorem coe_pureMonoidHom : (pureMonoidHom : α → Filter α) = pure :=
   rfl
 #align filter.coe_pure_monoid_hom Filter.coe_pureMonoidHom
 #align filter.coe_pure_add_monoid_hom Filter.coe_pureAddMonoidHom
 
-/- warning: filter.pure_monoid_hom_apply -> Filter.pureMonoidHom_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] (a : α), Eq.{succ u1} (Filter.{u1} α) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) (fun (_x : MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) => α -> (Filter.{u1} α)) (MonoidHom.hasCoeToFun.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) (Filter.pureMonoidHom.{u1} α _inst_1) a) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => Filter.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => Filter.{u1} α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) α (Filter.{u1} α) (MulOneClass.toMul.{u1} α _inst_1) (MulOneClass.toMul.{u1} (Filter.{u1} α) (Filter.mulOneClass.{u1} α _inst_1)) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)) α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1) (MonoidHom.monoidHomClass.{u1, u1} α (Filter.{u1} α) _inst_1 (Filter.mulOneClass.{u1} α _inst_1)))) (Filter.pureMonoidHom.{u1} α _inst_1) a) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align filter.pure_monoid_hom_apply Filter.pureMonoidHom_applyₓ'. -/
 @[simp, to_additive]
 theorem pureMonoidHom_apply (a : α) : pureMonoidHom a = pure a :=
   rfl
@@ -959,12 +785,6 @@ protected def monoid : Monoid (Filter α) :=
 
 scoped[Pointwise] attribute [instance] Filter.monoid Filter.addMonoid
 
-/- warning: filter.pow_mem_pow -> Filter.pow_mem_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {f : Filter.{u1} α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (forall (n : Nat), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HPow.hPow.{u1, 0, u1} (Set.{u1} α) Nat (Set.{u1} α) (instHPow.{u1, 0} (Set.{u1} α) Nat (Set.NPow.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) s n) (HPow.hPow.{u1, 0, u1} (Filter.{u1} α) Nat (Filter.{u1} α) (instHPow.{u1, 0} (Filter.{u1} α) Nat (Filter.instNPow.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) f n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {f : Filter.{u1} α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (forall (n : Nat), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HPow.hPow.{u1, 0, u1} (Set.{u1} α) Nat (Set.{u1} α) (instHPow.{u1, 0} (Set.{u1} α) Nat (Set.NPow.{u1} α (Monoid.toOne.{u1} α _inst_1) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) s n) (HPow.hPow.{u1, 0, u1} (Filter.{u1} α) Nat (Filter.{u1} α) (instHPow.{u1, 0} (Filter.{u1} α) Nat (Filter.instNPow.{u1} α (Monoid.toOne.{u1} α _inst_1) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) f n))
-Case conversion may be inaccurate. Consider using '#align filter.pow_mem_pow Filter.pow_mem_powₓ'. -/
 @[to_additive]
 theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
   | 0 => by rw [pow_zero]; exact one_mem_one
@@ -972,24 +792,12 @@ theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
 #align filter.pow_mem_pow Filter.pow_mem_pow
 #align filter.nsmul_mem_nsmul Filter.nsmul_mem_nsmul
 
-/- warning: filter.bot_pow -> Filter.bot_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} (Filter.{u1} α) (HPow.hPow.{u1, 0, u1} (Filter.{u1} α) Nat (Filter.{u1} α) (instHPow.{u1, 0} (Filter.{u1} α) Nat (Filter.instNPow.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) n) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u1} (Filter.{u1} α) (HPow.hPow.{u1, 0, u1} (Filter.{u1} α) Nat (Filter.{u1} α) (instHPow.{u1, 0} (Filter.{u1} α) Nat (Filter.instNPow.{u1} α (Monoid.toOne.{u1} α _inst_1) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) n) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.bot_pow Filter.bot_powₓ'. -/
 @[simp, to_additive nsmul_bot]
 theorem bot_pow {n : ℕ} (hn : n ≠ 0) : (⊥ : Filter α) ^ n = ⊥ := by
   rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, bot_mul]
 #align filter.bot_pow Filter.bot_pow
 #align filter.nsmul_bot Filter.nsmul_bot
 
-/- warning: filter.mul_top_of_one_le -> Filter.mul_top_of_one_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {f : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))))) f) -> (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) f (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {f : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (Monoid.toOne.{u1} α _inst_1)))) f) -> (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) f (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.mul_top_of_one_le Filter.mul_top_of_one_leₓ'. -/
 @[to_additive]
 theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ :=
   by
@@ -1000,12 +808,6 @@ theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ :=
 #align filter.mul_top_of_one_le Filter.mul_top_of_one_le
 #align filter.add_top_of_nonneg Filter.add_top_of_nonneg
 
-/- warning: filter.top_mul_of_one_le -> Filter.top_mul_of_one_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {f : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))))) f) -> (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)) f) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {f : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (Monoid.toOne.{u1} α _inst_1)))) f) -> (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)) f) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.top_mul_of_one_le Filter.top_mul_of_one_leₓ'. -/
 @[to_additive]
 theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ :=
   by
@@ -1016,24 +818,12 @@ theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ :=
 #align filter.top_mul_of_one_le Filter.top_mul_of_one_le
 #align filter.top_add_of_nonneg Filter.top_add_of_nonneg
 
-/- warning: filter.top_mul_top -> Filter.top_mul_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α], Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α], Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.top_mul_top Filter.top_mul_topₓ'. -/
 @[simp, to_additive]
 theorem top_mul_top : (⊤ : Filter α) * ⊤ = ⊤ :=
   mul_top_of_one_le le_top
 #align filter.top_mul_top Filter.top_mul_top
 #align filter.top_add_top Filter.top_add_top
 
-/- warning: filter.nsmul_top -> Filter.nsmul_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : AddMonoid.{u1} α] {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} (Filter.{u1} α) (SMul.smul.{0, u1} Nat (Filter.{u1} α) (Filter.instNSMul.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_2)) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_2))) n (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : AddMonoid.{u1} α] {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u1} (Filter.{u1} α) (HSMul.hSMul.{0, u1, u1} Nat (Filter.{u1} α) (Filter.{u1} α) (instHSMul.{0, u1} Nat (Filter.{u1} α) (Filter.instNSMul.{u1} α (AddMonoid.toZero.{u1} α _inst_2) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_2)))) n (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.nsmul_top Filter.nsmul_topₓ'. -/
 --TODO: `to_additive` trips up on the `1 : ℕ` used in the pattern-matching.
 theorem nsmul_top {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (⊤ : Filter α) = ⊤
   | 0 => fun h => (h rfl).elim
@@ -1041,12 +831,6 @@ theorem nsmul_top {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n �
   | n + 2 => fun _ => by rw [succ_nsmul, nsmul_top n.succ_ne_zero, top_add_top]
 #align filter.nsmul_top Filter.nsmul_top
 
-/- warning: filter.top_pow -> Filter.top_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} (Filter.{u1} α) (HPow.hPow.{u1, 0, u1} (Filter.{u1} α) Nat (Filter.{u1} α) (instHPow.{u1, 0} (Filter.{u1} α) Nat (Filter.instNPow.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)) n) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u1} (Filter.{u1} α) (HPow.hPow.{u1, 0, u1} (Filter.{u1} α) Nat (Filter.{u1} α) (instHPow.{u1, 0} (Filter.{u1} α) Nat (Filter.instNPow.{u1} α (Monoid.toOne.{u1} α _inst_1) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)) n) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.top_pow Filter.top_powₓ'. -/
 @[to_additive nsmul_top]
 theorem top_pow : ∀ {n : ℕ}, n ≠ 0 → (⊤ : Filter α) ^ n = ⊤
   | 0 => fun h => (h rfl).elim
@@ -1080,12 +864,6 @@ section DivisionMonoid
 
 variable [DivisionMonoid α] {f g : Filter α}
 
-/- warning: filter.mul_eq_one_iff -> Filter.mul_eq_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))))) f g) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))))))))) (Exists.{succ u1} α (fun (a : α) => Exists.{succ u1} α (fun (b : α) => And (Eq.{succ u1} (Filter.{u1} α) f (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α a)) (And (Eq.{succ u1} (Filter.{u1} α) g (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α b)) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))))) a b) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))))))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))))) f g) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α _inst_1))))))) (Exists.{succ u1} α (fun (a : α) => Exists.{succ u1} α (fun (b : α) => And (Eq.{succ u1} (Filter.{u1} α) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)) (And (Eq.{succ u1} (Filter.{u1} α) g (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α b)) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))))) a b) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α _inst_1))))))))))
-Case conversion may be inaccurate. Consider using '#align filter.mul_eq_one_iff Filter.mul_eq_one_iffₓ'. -/
 @[to_additive]
 protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pure b ∧ a * b = 1 :=
   by
@@ -1170,22 +948,10 @@ lacks.
 -/
 
 
-/- warning: filter.mul_add_subset -> Filter.mul_add_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) f (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) g h)) (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) f g) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) f h))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toMul.{u1} α _inst_1))) f (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toAdd.{u1} α _inst_1))) g h)) (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toMul.{u1} α _inst_1))) f g) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toMul.{u1} α _inst_1))) f h))
-Case conversion may be inaccurate. Consider using '#align filter.mul_add_subset Filter.mul_add_subsetₓ'. -/
 theorem mul_add_subset : f * (g + h) ≤ f * g + f * h :=
   map₂_distrib_le_left mul_add
 #align filter.mul_add_subset Filter.mul_add_subset
 
-/- warning: filter.add_mul_subset -> Filter.add_mul_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) f g) h) (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) f h) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) g h))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} {h : Filter.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toMul.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toAdd.{u1} α _inst_1))) f g) h) (HAdd.hAdd.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHAdd.{u1} (Filter.{u1} α) (Filter.instAdd.{u1} α (Distrib.toAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toMul.{u1} α _inst_1))) f h) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (Distrib.toMul.{u1} α _inst_1))) g h))
-Case conversion may be inaccurate. Consider using '#align filter.add_mul_subset Filter.add_mul_subsetₓ'. -/
 theorem add_mul_subset : (f + g) * h ≤ f * h + g * h :=
   map₂_distrib_le_right add_mul
 #align filter.add_mul_subset Filter.add_mul_subset
@@ -1199,24 +965,12 @@ variable [MulZeroClass α] {f g : Filter α}
 /-! Note that `filter` is not a `mul_zero_class` because `0 * ⊥ ≠ 0`. -/
 
 
-/- warning: filter.ne_bot.mul_zero_nonneg -> Filter.NeBot.mul_zero_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.mul_zero_nonneg Filter.NeBot.mul_zero_nonnegₓ'. -/
 theorem NeBot.mul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f * 0 :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, MulZeroClass.mul_zero _⟩
 #align filter.ne_bot.mul_zero_nonneg Filter.NeBot.mul_zero_nonneg
 
-/- warning: filter.ne_bot.zero_mul_nonneg -> Filter.NeBot.zero_mul_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {g : Filter.{u1} α}, (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) g))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {g : Filter.{u1} α}, (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) g))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_mul_nonneg Filter.NeBot.zero_mul_nonnegₓ'. -/
 theorem NeBot.zero_mul_nonneg (hg : g.ne_bot) : 0 ≤ 0 * g :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
@@ -1233,12 +987,6 @@ variable [Group α] [DivisionMonoid β] [MonoidHomClass F α β] (m : F) {f g f�
 /-! Note that `filter α` is not a group because `f / f ≠ 1` in general -/
 
 
-/- warning: filter.one_le_div_iff -> Filter.one_le_div_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f g)) (Not (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) f g))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f g)) (Not (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.one_le_div_iff Filter.one_le_div_iffₓ'. -/
 @[simp, to_additive]
 protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g :=
   by
@@ -1250,24 +998,12 @@ protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g :=
 #align filter.one_le_div_iff Filter.one_le_div_iff
 #align filter.nonneg_sub_iff Filter.nonneg_sub_iff
 
-/- warning: filter.not_one_le_div_iff -> Filter.not_one_le_div_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Not (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f g))) (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) f g)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Not (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f g))) (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) f g)
-Case conversion may be inaccurate. Consider using '#align filter.not_one_le_div_iff Filter.not_one_le_div_iffₓ'. -/
 @[to_additive]
 theorem not_one_le_div_iff : ¬1 ≤ f / g ↔ Disjoint f g :=
   Filter.one_le_div_iff.not_left
 #align filter.not_one_le_div_iff Filter.not_one_le_div_iff
 #align filter.not_nonneg_sub_iff Filter.not_nonneg_sub_iff
 
-/- warning: filter.ne_bot.one_le_div -> Filter.NeBot.one_le_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (OfNat.mk.{u1} (Filter.{u1} α) 1 (One.one.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f f))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.one_le_div Filter.NeBot.one_le_divₓ'. -/
 @[to_additive]
 theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
   by
@@ -1295,48 +1031,24 @@ theorem isUnit_iff_singleton : IsUnit f ↔ ∃ a, f = pure a := by
 
 include β
 
-/- warning: filter.map_inv' -> Filter.map_inv' is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {f : Filter.{u2} α}, Eq.{succ u3} (Filter.{u3} β) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) (Inv.inv.{u2} (Filter.{u2} α) (Filter.hasInv.{u2} α (DivInvMonoid.toHasInv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) f)) (Inv.inv.{u3} (Filter.{u3} β) (Filter.hasInv.{u3} β (DivInvMonoid.toHasInv.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) f))
-but is expected to have type
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {f : Filter.{u2} α}, Eq.{succ u3} (Filter.{u3} β) (Filter.map.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) (Inv.inv.{u2} (Filter.{u2} α) (Filter.instInv.{u2} α (InvOneClass.toInv.{u2} α (DivInvOneMonoid.toInvOneClass.{u2} α (DivisionMonoid.toDivInvOneMonoid.{u2} α (Group.toDivisionMonoid.{u2} α _inst_1))))) f)) (Inv.inv.{u3} (Filter.{u3} β) (Filter.instInv.{u3} β (InvOneClass.toInv.{u3} β (DivInvOneMonoid.toInvOneClass.{u3} β (DivisionMonoid.toDivInvOneMonoid.{u3} β _inst_2)))) (Filter.map.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) f))
-Case conversion may be inaccurate. Consider using '#align filter.map_inv' Filter.map_inv'ₓ'. -/
 @[to_additive]
 theorem map_inv' : f⁻¹.map m = (f.map m)⁻¹ :=
   Semiconj.filter_map (map_inv m) f
 #align filter.map_inv' Filter.map_inv'
 #align filter.map_neg' Filter.map_neg'
 
-/- warning: filter.tendsto.inv_inv -> Filter.Tendsto.inv_inv is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {f₁ : Filter.{u2} α} {f₂ : Filter.{u3} β}, (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) f₁ f₂) -> (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) (Inv.inv.{u2} (Filter.{u2} α) (Filter.hasInv.{u2} α (DivInvMonoid.toHasInv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) f₁) (Inv.inv.{u3} (Filter.{u3} β) (Filter.hasInv.{u3} β (DivInvMonoid.toHasInv.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) f₂))
-but is expected to have type
-  forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : Group.{u3} α] [_inst_2 : DivisionMonoid.{u2} β] [_inst_3 : MonoidHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))] (m : F) {f₁ : Filter.{u3} α} {f₂ : Filter.{u2} β}, (Filter.Tendsto.{u3, u2} α β (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2))) _inst_3)) m) f₁ f₂) -> (Filter.Tendsto.{u3, u2} α β (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2))) _inst_3)) m) (Inv.inv.{u3} (Filter.{u3} α) (Filter.instInv.{u3} α (InvOneClass.toInv.{u3} α (DivInvOneMonoid.toInvOneClass.{u3} α (DivisionMonoid.toDivInvOneMonoid.{u3} α (Group.toDivisionMonoid.{u3} α _inst_1))))) f₁) (Inv.inv.{u2} (Filter.{u2} β) (Filter.instInv.{u2} β (InvOneClass.toInv.{u2} β (DivInvOneMonoid.toInvOneClass.{u2} β (DivisionMonoid.toDivInvOneMonoid.{u2} β _inst_2)))) f₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.inv_inv Filter.Tendsto.inv_invₓ'. -/
 @[to_additive]
 theorem Tendsto.inv_inv : Tendsto m f₁ f₂ → Tendsto m f₁⁻¹ f₂⁻¹ := fun hf =>
   (Filter.map_inv' m).trans_le <| Filter.inv_le_inv hf
 #align filter.tendsto.inv_inv Filter.Tendsto.inv_inv
 #align filter.tendsto.neg_neg Filter.Tendsto.neg_neg
 
-/- warning: filter.map_div -> Filter.map_div is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {f : Filter.{u2} α} {g : Filter.{u2} α}, Eq.{succ u3} (Filter.{u3} β) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) (HDiv.hDiv.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHDiv.{u2} (Filter.{u2} α) (Filter.instDiv.{u2} α (DivInvMonoid.toHasDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) f g)) (HDiv.hDiv.{u3, u3, u3} (Filter.{u3} β) (Filter.{u3} β) (Filter.{u3} β) (instHDiv.{u3} (Filter.{u3} β) (Filter.instDiv.{u3} β (DivInvMonoid.toHasDiv.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) f) (Filter.map.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) g))
-but is expected to have type
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {f : Filter.{u2} α} {g : Filter.{u2} α}, Eq.{succ u3} (Filter.{u3} β) (Filter.map.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) (HDiv.hDiv.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHDiv.{u2} (Filter.{u2} α) (Filter.instDiv.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) f g)) (HDiv.hDiv.{u3, u3, u3} (Filter.{u3} β) (Filter.{u3} β) (Filter.{u3} β) (instHDiv.{u3} (Filter.{u3} β) (Filter.instDiv.{u3} β (DivInvMonoid.toDiv.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (Filter.map.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) f) (Filter.map.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) g))
-Case conversion may be inaccurate. Consider using '#align filter.map_div Filter.map_divₓ'. -/
 @[to_additive]
 protected theorem map_div : (f / g).map m = f.map m / g.map m :=
   map_map₂_distrib <| map_div m
 #align filter.map_div Filter.map_div
 #align filter.map_sub Filter.map_sub
 
-/- warning: filter.tendsto.div_div -> Filter.Tendsto.div_div is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {f₁ : Filter.{u2} α} {g₁ : Filter.{u2} α} {f₂ : Filter.{u3} β} {g₂ : Filter.{u3} β}, (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) f₁ f₂) -> (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) g₁ g₂) -> (Filter.Tendsto.{u2, u3} α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toHasMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3))) m) (HDiv.hDiv.{u2, u2, u2} (Filter.{u2} α) (Filter.{u2} α) (Filter.{u2} α) (instHDiv.{u2} (Filter.{u2} α) (Filter.instDiv.{u2} α (DivInvMonoid.toHasDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) f₁ g₁) (HDiv.hDiv.{u3, u3, u3} (Filter.{u3} β) (Filter.{u3} β) (Filter.{u3} β) (instHDiv.{u3} (Filter.{u3} β) (Filter.instDiv.{u3} β (DivInvMonoid.toHasDiv.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) f₂ g₂))
-but is expected to have type
-  forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : Group.{u3} α] [_inst_2 : DivisionMonoid.{u2} β] [_inst_3 : MonoidHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))] (m : F) {f₁ : Filter.{u3} α} {g₁ : Filter.{u3} α} {f₂ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (Filter.Tendsto.{u3, u2} α β (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2))) _inst_3)) m) f₁ f₂) -> (Filter.Tendsto.{u3, u2} α β (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2))) _inst_3)) m) g₁ g₂) -> (Filter.Tendsto.{u3, u2} α β (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β (Monoid.toMulOneClass.{u3} α (DivInvMonoid.toMonoid.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2))) _inst_3)) m) (HDiv.hDiv.{u3, u3, u3} (Filter.{u3} α) (Filter.{u3} α) (Filter.{u3} α) (instHDiv.{u3} (Filter.{u3} α) (Filter.instDiv.{u3} α (DivInvMonoid.toDiv.{u3} α (Group.toDivInvMonoid.{u3} α _inst_1)))) f₁ g₁) (HDiv.hDiv.{u2, u2, u2} (Filter.{u2} β) (Filter.{u2} β) (Filter.{u2} β) (instHDiv.{u2} (Filter.{u2} β) (Filter.instDiv.{u2} β (DivInvMonoid.toDiv.{u2} β (DivisionMonoid.toDivInvMonoid.{u2} β _inst_2)))) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.div_div Filter.Tendsto.div_divₓ'. -/
 @[to_additive]
 theorem Tendsto.div_div : Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendsto m (f₁ / g₁) (f₂ / g₂) :=
   fun hf hg => (Filter.map_div m).trans_le <| Filter.div_le_div hf hg
@@ -1351,24 +1063,12 @@ section GroupWithZero
 
 variable [GroupWithZero α] {f g : Filter α}
 
-/- warning: filter.ne_bot.div_zero_nonneg -> Filter.NeBot.div_zero_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.div_zero_nonneg Filter.NeBot.div_zero_nonnegₓ'. -/
 theorem NeBot.div_zero_nonneg (hf : f.ne_bot) : 0 ≤ f / 0 :=
   Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, div_zero _⟩
 #align filter.ne_bot.div_zero_nonneg Filter.NeBot.div_zero_nonneg
 
-/- warning: filter.ne_bot.zero_div_nonneg -> Filter.NeBot.zero_div_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {g : Filter.{u1} α}, (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) g))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {g : Filter.{u1} α}, (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) g))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_div_nonneg Filter.NeBot.zero_div_nonnegₓ'. -/
 theorem NeBot.zero_div_nonneg (hg : g.ne_bot) : 0 ≤ 0 / g :=
   Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
@@ -1415,48 +1115,24 @@ theorem mem_smul : t ∈ f • g ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g �
 #align filter.mem_vadd Filter.mem_vadd
 -/
 
-/- warning: filter.smul_mem_smul -> Filter.smul_mem_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g : Filter.{u2} β} {s : Set.{u1} α} {t : Set.{u2} β}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s t) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] {f : Filter.{u2} α} {g : Filter.{u1} β} {s : Set.{u2} α} {t : Set.{u1} β}, (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) t g) -> (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) (HSMul.hSMul.{u2, u1, u1} (Set.{u2} α) (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.smul.{u2, u1} α β _inst_1)) s t) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β _inst_1)) f g))
-Case conversion may be inaccurate. Consider using '#align filter.smul_mem_smul Filter.smul_mem_smulₓ'. -/
 @[to_additive]
 theorem smul_mem_smul : s ∈ f → t ∈ g → s • t ∈ f • g :=
   image2_mem_map₂
 #align filter.smul_mem_smul Filter.smul_mem_smul
 #align filter.vadd_mem_vadd Filter.vadd_mem_vadd
 
-/- warning: filter.bot_smul -> Filter.bot_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {g : Filter.{u2} β}, Eq.{succ u2} (Filter.{u2} β) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) g) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {g : Filter.{u2} β}, Eq.{succ u2} (Filter.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) g) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align filter.bot_smul Filter.bot_smulₓ'. -/
 @[simp, to_additive]
 theorem bot_smul : (⊥ : Filter α) • g = ⊥ :=
   map₂_bot_left
 #align filter.bot_smul Filter.bot_smul
 #align filter.bot_vadd Filter.bot_vadd
 
-/- warning: filter.smul_bot -> Filter.smul_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α}, Eq.{succ u2} (Filter.{u2} β) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α}, Eq.{succ u2} (Filter.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align filter.smul_bot Filter.smul_botₓ'. -/
 @[simp, to_additive]
 theorem smul_bot : f • (⊥ : Filter β) = ⊥ :=
   map₂_bot_right
 #align filter.smul_bot Filter.smul_bot
 #align filter.vadd_bot Filter.vadd_bot
 
-/- warning: filter.smul_eq_bot_iff -> Filter.smul_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g : Filter.{u2} β}, Iff (Eq.{succ u2} (Filter.{u2} β) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f g) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u2} (Filter.{u2} β) g (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g : Filter.{u2} β}, Iff (Eq.{succ u2} (Filter.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) f g) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u2} (Filter.{u2} β) g (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))))
-Case conversion may be inaccurate. Consider using '#align filter.smul_eq_bot_iff Filter.smul_eq_bot_iffₓ'. -/
 @[simp, to_additive]
 theorem smul_eq_bot_iff : f • g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
@@ -1471,12 +1147,6 @@ theorem smul_neBot_iff : (f • g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
 #align filter.vadd_ne_bot_iff Filter.vadd_neBot_iff
 -/
 
-/- warning: filter.ne_bot.smul -> Filter.NeBot.smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g : Filter.{u2} β}, (Filter.NeBot.{u1} α f) -> (Filter.NeBot.{u2} β g) -> (Filter.NeBot.{u2} β (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] {f : Filter.{u2} α} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α f) -> (Filter.NeBot.{u1} β g) -> (Filter.NeBot.{u1} β (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β _inst_1)) f g))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.smul Filter.NeBot.smulₓ'. -/
 @[to_additive]
 theorem NeBot.smul : NeBot f → NeBot g → NeBot (f • g) :=
   NeBot.map₂
@@ -1523,60 +1193,30 @@ theorem pure_smul_pure : (pure a : Filter α) • (pure b : Filter β) = pure (a
 #align filter.pure_vadd_pure Filter.pure_vadd_pure
 -/
 
-/- warning: filter.smul_le_smul -> Filter.smul_le_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f₁ g₁) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] {f₁ : Filter.{u2} α} {f₂ : Filter.{u2} α} {g₁ : Filter.{u1} β} {g₂ : Filter.{u1} β}, (LE.le.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β _inst_1)) f₁ g₁) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β _inst_1)) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.smul_le_smul Filter.smul_le_smulₓ'. -/
 @[to_additive]
 theorem smul_le_smul : f₁ ≤ f₂ → g₁ ≤ g₂ → f₁ • g₁ ≤ f₂ • g₂ :=
   map₂_mono
 #align filter.smul_le_smul Filter.smul_le_smul
 #align filter.vadd_le_vadd Filter.vadd_le_vadd
 
-/- warning: filter.smul_le_smul_left -> Filter.smul_le_smul_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f g₁) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) f g₁) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) f g₂))
-Case conversion may be inaccurate. Consider using '#align filter.smul_le_smul_left Filter.smul_le_smul_leftₓ'. -/
 @[to_additive]
 theorem smul_le_smul_left : g₁ ≤ g₂ → f • g₁ ≤ f • g₂ :=
   map₂_mono_left
 #align filter.smul_le_smul_left Filter.smul_le_smul_left
 #align filter.vadd_le_vadd_left Filter.vadd_le_vadd_left
 
-/- warning: filter.smul_le_smul_right -> Filter.smul_le_smul_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g : Filter.{u2} β}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f₁ g) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f₂ g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] {f₁ : Filter.{u2} α} {f₂ : Filter.{u2} α} {g : Filter.{u1} β}, (LE.le.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β _inst_1)) f₁ g) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β _inst_1)) f₂ g))
-Case conversion may be inaccurate. Consider using '#align filter.smul_le_smul_right Filter.smul_le_smul_rightₓ'. -/
 @[to_additive]
 theorem smul_le_smul_right : f₁ ≤ f₂ → f₁ • g ≤ f₂ • g :=
   map₂_mono_right
 #align filter.smul_le_smul_right Filter.smul_le_smul_right
 #align filter.vadd_le_vadd_right Filter.vadd_le_vadd_right
 
-/- warning: filter.le_smul_iff -> Filter.le_smul_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g : Filter.{u2} β} {h : Filter.{u2} β}, Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) h (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1) f g)) (forall {{s : Set.{u1} α}}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (forall {{t : Set.{u2} β}}, (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s t) h)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u1} α} {g : Filter.{u2} β} {h : Filter.{u2} β}, Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) h (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) f g)) (forall {{s : Set.{u1} α}}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (forall {{t : Set.{u2} β}}, (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t g) -> (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Set.{u1} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1)) s t) h)))
-Case conversion may be inaccurate. Consider using '#align filter.le_smul_iff Filter.le_smul_iffₓ'. -/
 @[simp, to_additive]
 theorem le_smul_iff : h ≤ f • g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s • t ∈ h :=
   le_map₂_iff
 #align filter.le_smul_iff Filter.le_smul_iff
 #align filter.le_vadd_iff Filter.le_vadd_iff
 
-/- warning: filter.covariant_smul -> Filter.covariant_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β], CovariantClass.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β], CovariantClass.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.8279 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.8281 : Filter.{u2} β) => HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β _inst_1)) x._@.Mathlib.Order.Filter.Pointwise._hyg.8279 x._@.Mathlib.Order.Filter.Pointwise._hyg.8281) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.8294 : Filter.{u2} β) (x._@.Mathlib.Order.Filter.Pointwise._hyg.8296 : Filter.{u2} β) => LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) x._@.Mathlib.Order.Filter.Pointwise._hyg.8294 x._@.Mathlib.Order.Filter.Pointwise._hyg.8296)
-Case conversion may be inaccurate. Consider using '#align filter.covariant_smul Filter.covariant_smulₓ'. -/
 @[to_additive]
 instance covariant_smul : CovariantClass (Filter α) (Filter β) (· • ·) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_left⟩
@@ -1605,23 +1245,11 @@ protected def instVSub : VSub (Filter α) (Filter β) :=
 
 scoped[Pointwise] attribute [instance] Filter.instVSub
 
-/- warning: filter.map₂_vsub -> Filter.map₂_vsub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β}, Eq.{succ u1} (Filter.{u1} α) (Filter.map₂.{u2, u2, u1} β β α (VSub.vsub.{u1, u2} α β _inst_1) f g) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, Eq.{succ u2} (Filter.{u2} α) (Filter.map₂.{u1, u1, u2} β β α (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.8531 : β) (x._@.Mathlib.Order.Filter.Pointwise._hyg.8533 : β) => VSub.vsub.{u2, u1} α β _inst_1 x._@.Mathlib.Order.Filter.Pointwise._hyg.8531 x._@.Mathlib.Order.Filter.Pointwise._hyg.8533) f g) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)
-Case conversion may be inaccurate. Consider using '#align filter.map₂_vsub Filter.map₂_vsubₓ'. -/
 @[simp]
 theorem map₂_vsub : map₂ (· -ᵥ ·) f g = f -ᵥ g :=
   rfl
 #align filter.map₂_vsub Filter.map₂_vsub
 
-/- warning: filter.mem_vsub -> Filter.mem_vsub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g)) (Exists.{succ u2} (Set.{u2} β) (fun (t₁ : Set.{u2} β) => Exists.{succ u2} (Set.{u2} β) (fun (t₂ : Set.{u2} β) => And (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t₁ f) (And (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t₂ g) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) t₁ t₂) s)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β} {s : Set.{u2} α}, Iff (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) (Exists.{succ u1} (Set.{u1} β) (fun (t₁ : Set.{u1} β) => Exists.{succ u1} (Set.{u1} β) (fun (t₂ : Set.{u1} β) => And (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) t₁ f) (And (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) t₂ g) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) t₁ t₂) s)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_vsub Filter.mem_vsubₓ'. -/
 theorem mem_vsub {s : Set α} : s ∈ f -ᵥ g ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ -ᵥ t₂ ⊆ s :=
   Iff.rfl
 #align filter.mem_vsub Filter.mem_vsub
@@ -1632,45 +1260,21 @@ theorem vsub_mem_vsub : s ∈ f → t ∈ g → s -ᵥ t ∈ f -ᵥ g :=
 #align filter.vsub_mem_vsub Filter.vsub_mem_vsub
 -/
 
-/- warning: filter.bot_vsub -> Filter.bot_vsub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {g : Filter.{u2} β}, Eq.{succ u1} (Filter.{u1} α) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {g : Filter.{u1} β}, Eq.{succ u2} (Filter.{u2} α) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) (Bot.bot.{u1} (Filter.{u1} β) (CompleteLattice.toBot.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β))) g) (Bot.bot.{u2} (Filter.{u2} α) (CompleteLattice.toBot.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)))
-Case conversion may be inaccurate. Consider using '#align filter.bot_vsub Filter.bot_vsubₓ'. -/
 @[simp]
 theorem bot_vsub : (⊥ : Filter β) -ᵥ g = ⊥ :=
   map₂_bot_left
 #align filter.bot_vsub Filter.bot_vsub
 
-/- warning: filter.vsub_bot -> Filter.vsub_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β}, Eq.{succ u1} (Filter.{u1} α) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β}, Eq.{succ u2} (Filter.{u2} α) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f (Bot.bot.{u1} (Filter.{u1} β) (CompleteLattice.toBot.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β)))) (Bot.bot.{u2} (Filter.{u2} α) (CompleteLattice.toBot.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)))
-Case conversion may be inaccurate. Consider using '#align filter.vsub_bot Filter.vsub_botₓ'. -/
 @[simp]
 theorem vsub_bot : f -ᵥ (⊥ : Filter β) = ⊥ :=
   map₂_bot_right
 #align filter.vsub_bot Filter.vsub_bot
 
-/- warning: filter.vsub_eq_bot_iff -> Filter.vsub_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β}, Iff (Eq.{succ u1} (Filter.{u1} α) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Or (Eq.{succ u2} (Filter.{u2} β) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Eq.{succ u2} (Filter.{u2} β) g (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, Iff (Eq.{succ u2} (Filter.{u2} α) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g) (Bot.bot.{u2} (Filter.{u2} α) (CompleteLattice.toBot.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)))) (Or (Eq.{succ u1} (Filter.{u1} β) f (Bot.bot.{u1} (Filter.{u1} β) (CompleteLattice.toBot.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β)))) (Eq.{succ u1} (Filter.{u1} β) g (Bot.bot.{u1} (Filter.{u1} β) (CompleteLattice.toBot.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β)))))
-Case conversion may be inaccurate. Consider using '#align filter.vsub_eq_bot_iff Filter.vsub_eq_bot_iffₓ'. -/
 @[simp]
 theorem vsub_eq_bot_iff : f -ᵥ g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
 #align filter.vsub_eq_bot_iff Filter.vsub_eq_bot_iff
 
-/- warning: filter.vsub_ne_bot_iff -> Filter.vsub_neBot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β}, Iff (Filter.NeBot.{u1} α (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g)) (And (Filter.NeBot.{u2} β f) (Filter.NeBot.{u2} β g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, Iff (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) (And (Filter.NeBot.{u1} β f) (Filter.NeBot.{u1} β g))
-Case conversion may be inaccurate. Consider using '#align filter.vsub_ne_bot_iff Filter.vsub_neBot_iffₓ'. -/
 @[simp]
 theorem vsub_neBot_iff : (f -ᵥ g : Filter α).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
   map₂_neBot_iff
@@ -1682,95 +1286,41 @@ theorem NeBot.vsub : NeBot f → NeBot g → NeBot (f -ᵥ g) :=
 #align filter.ne_bot.vsub Filter.NeBot.vsub
 -/
 
-/- warning: filter.ne_bot.of_vsub_left -> Filter.NeBot.of_vsub_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β}, (Filter.NeBot.{u1} α (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g)) -> (Filter.NeBot.{u2} β f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) -> (Filter.NeBot.{u1} β f)
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_leftₓ'. -/
 theorem NeBot.of_vsub_left : (f -ᵥ g : Filter α).ne_bot → f.ne_bot :=
   NeBot.of_map₂_left
 #align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_left
 
-/- warning: filter.ne_bot.of_vsub_right -> Filter.NeBot.of_vsub_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β}, (Filter.NeBot.{u1} α (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g)) -> (Filter.NeBot.{u2} β g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) -> (Filter.NeBot.{u1} β g)
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_rightₓ'. -/
 theorem NeBot.of_vsub_right : (f -ᵥ g : Filter α).ne_bot → g.ne_bot :=
   NeBot.of_map₂_right
 #align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_right
 
-/- warning: filter.pure_vsub -> Filter.pure_vsub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {g : Filter.{u2} β} {a : β}, Eq.{succ u1} (Filter.{u1} α) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) (Pure.pure.{u2, u2} Filter.{u2} Filter.hasPure.{u2} β a) g) (Filter.map.{u2, u1} β α (VSub.vsub.{u1, u2} α β _inst_1 a) g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {g : Filter.{u1} β} {a : β}, Eq.{succ u2} (Filter.{u2} α) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} β a) g) (Filter.map.{u1, u2} β α ((fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.9097 : β) (x._@.Mathlib.Order.Filter.Pointwise._hyg.9099 : β) => VSub.vsub.{u2, u1} α β _inst_1 x._@.Mathlib.Order.Filter.Pointwise._hyg.9097 x._@.Mathlib.Order.Filter.Pointwise._hyg.9099) a) g)
-Case conversion may be inaccurate. Consider using '#align filter.pure_vsub Filter.pure_vsubₓ'. -/
 @[simp]
 theorem pure_vsub : (pure a : Filter β) -ᵥ g = g.map ((· -ᵥ ·) a) :=
   map₂_pure_left
 #align filter.pure_vsub Filter.pure_vsub
 
-/- warning: filter.vsub_pure -> Filter.vsub_pure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {b : β}, Eq.{succ u1} (Filter.{u1} α) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f (Pure.pure.{u2, u2} Filter.{u2} Filter.hasPure.{u2} β b)) (Filter.map.{u2, u1} β α (fun (_x : β) => VSub.vsub.{u1, u2} α β _inst_1 _x b) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {b : β}, Eq.{succ u2} (Filter.{u2} α) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} β b)) (Filter.map.{u1, u2} β α (fun (_x : β) => VSub.vsub.{u2, u1} α β _inst_1 _x b) f)
-Case conversion may be inaccurate. Consider using '#align filter.vsub_pure Filter.vsub_pureₓ'. -/
 @[simp]
 theorem vsub_pure : f -ᵥ pure b = f.map (· -ᵥ b) :=
   map₂_pure_right
 #align filter.vsub_pure Filter.vsub_pure
 
-/- warning: filter.pure_vsub_pure -> Filter.pure_vsub_pure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {a : β} {b : β}, Eq.{succ u1} (Filter.{u1} α) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) (Pure.pure.{u2, u2} Filter.{u2} Filter.hasPure.{u2} β a) (Pure.pure.{u2, u2} Filter.{u2} Filter.hasPure.{u2} β b)) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α (VSub.vsub.{u1, u2} α β _inst_1 a b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {a : β} {b : β}, Eq.{succ u2} (Filter.{u2} α) (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} β a) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} β b)) (Pure.pure.{u2, u2} Filter.{u2} Filter.instPureFilter.{u2} α (VSub.vsub.{u2, u1} α β _inst_1 a b))
-Case conversion may be inaccurate. Consider using '#align filter.pure_vsub_pure Filter.pure_vsub_pureₓ'. -/
 @[simp]
 theorem pure_vsub_pure : (pure a : Filter β) -ᵥ pure b = (pure (a -ᵥ b) : Filter α) :=
   map₂_pure
 #align filter.pure_vsub_pure Filter.pure_vsub_pure
 
-/- warning: filter.vsub_le_vsub -> Filter.vsub_le_vsub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f₁ : Filter.{u2} β} {f₂ : Filter.{u2} β} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f₁ f₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₁ g₁) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f₁ : Filter.{u2} β} {f₂ : Filter.{u2} β} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f₁ f₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₁ g₁) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.vsub_le_vsub Filter.vsub_le_vsubₓ'. -/
 theorem vsub_le_vsub : f₁ ≤ f₂ → g₁ ≤ g₂ → f₁ -ᵥ g₁ ≤ f₂ -ᵥ g₂ :=
   map₂_mono
 #align filter.vsub_le_vsub Filter.vsub_le_vsub
 
-/- warning: filter.vsub_le_vsub_left -> Filter.vsub_le_vsub_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g₁) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) g₁ g₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g₁) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g₂))
-Case conversion may be inaccurate. Consider using '#align filter.vsub_le_vsub_left Filter.vsub_le_vsub_leftₓ'. -/
 theorem vsub_le_vsub_left : g₁ ≤ g₂ → f -ᵥ g₁ ≤ f -ᵥ g₂ :=
   map₂_mono_left
 #align filter.vsub_le_vsub_left Filter.vsub_le_vsub_left
 
-/- warning: filter.vsub_le_vsub_right -> Filter.vsub_le_vsub_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f₁ : Filter.{u2} β} {f₂ : Filter.{u2} β} {g : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₁ g) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₂ g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f₁ : Filter.{u2} β} {f₂ : Filter.{u2} β} {g : Filter.{u2} β}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₁ g) (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f₂ g))
-Case conversion may be inaccurate. Consider using '#align filter.vsub_le_vsub_right Filter.vsub_le_vsub_rightₓ'. -/
 theorem vsub_le_vsub_right : f₁ ≤ f₂ → f₁ -ᵥ g ≤ f₂ -ᵥ g :=
   map₂_mono_right
 #align filter.vsub_le_vsub_right Filter.vsub_le_vsub_right
 
-/- warning: filter.le_vsub_iff -> Filter.le_vsub_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {f : Filter.{u2} β} {g : Filter.{u2} β} {h : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) h (VSub.vsub.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instVSub.{u1, u2} α β _inst_1) f g)) (forall {{s : Set.{u2} β}}, (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s f) -> (forall {{t : Set.{u2} β}}, (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s t) h)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β} {h : Filter.{u2} α}, Iff (LE.le.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) h (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) (forall {{s : Set.{u1} β}}, (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s f) -> (forall {{t : Set.{u1} β}}, (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) t g) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t) h)))
-Case conversion may be inaccurate. Consider using '#align filter.le_vsub_iff Filter.le_vsub_iffₓ'. -/
 @[simp]
 theorem le_vsub_iff : h ≤ f -ᵥ g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s -ᵥ t ∈ h :=
   le_map₂_iff
@@ -1821,24 +1371,12 @@ theorem smul_set_mem_smul_filter : s ∈ f → a • s ∈ a • f :=
 #align filter.vadd_set_mem_vadd_filter Filter.vadd_set_mem_vadd_filter
 -/
 
-/- warning: filter.smul_filter_bot -> Filter.smul_filter_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {a : α}, Eq.{succ u2} (Filter.{u2} β) (SMul.smul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1) a (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {a : α}, Eq.{succ u2} (Filter.{u2} β) (HSMul.hSMul.{u1, u2, u2} α (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1)) a (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align filter.smul_filter_bot Filter.smul_filter_botₓ'. -/
 @[simp, to_additive]
 theorem smul_filter_bot : a • (⊥ : Filter β) = ⊥ :=
   map_bot
 #align filter.smul_filter_bot Filter.smul_filter_bot
 #align filter.vadd_filter_bot Filter.vadd_filter_bot
 
-/- warning: filter.smul_filter_eq_bot_iff -> Filter.smul_filter_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u2} β} {a : α}, Iff (Eq.{succ u2} (Filter.{u2} β) (SMul.smul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1) a f) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Eq.{succ u2} (Filter.{u2} β) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f : Filter.{u2} β} {a : α}, Iff (Eq.{succ u2} (Filter.{u2} β) (HSMul.hSMul.{u1, u2, u2} α (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1)) a f) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Eq.{succ u2} (Filter.{u2} β) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β))))
-Case conversion may be inaccurate. Consider using '#align filter.smul_filter_eq_bot_iff Filter.smul_filter_eq_bot_iffₓ'. -/
 @[simp, to_additive]
 theorem smul_filter_eq_bot_iff : a • f = ⊥ ↔ f = ⊥ :=
   map_eq_bot_iff
@@ -1868,24 +1406,12 @@ theorem NeBot.of_smul_filter : (a • f).ne_bot → f.ne_bot :=
 #align filter.ne_bot.of_vadd_filter Filter.NeBot.of_vadd_filter
 -/
 
-/- warning: filter.smul_filter_le_smul_filter -> Filter.smul_filter_le_smul_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f₁ : Filter.{u2} β} {f₂ : Filter.{u2} β} {a : α}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f₁ f₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (SMul.smul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1) a f₁) (SMul.smul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1) a f₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] {f₁ : Filter.{u2} β} {f₂ : Filter.{u2} β} {a : α}, (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f₁ f₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (HSMul.hSMul.{u1, u2, u2} α (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1)) a f₁) (HSMul.hSMul.{u1, u2, u2} α (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1)) a f₂))
-Case conversion may be inaccurate. Consider using '#align filter.smul_filter_le_smul_filter Filter.smul_filter_le_smul_filterₓ'. -/
 @[to_additive]
 theorem smul_filter_le_smul_filter (hf : f₁ ≤ f₂) : a • f₁ ≤ a • f₂ :=
   map_mono hf
 #align filter.smul_filter_le_smul_filter Filter.smul_filter_le_smul_filter
 #align filter.vadd_filter_le_vadd_filter Filter.vadd_filter_le_vadd_filter
 
-/- warning: filter.covariant_smul_filter -> Filter.covariant_smul_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β], CovariantClass.{u1, u2} α (Filter.{u2} β) (SMul.smul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1)) (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β], CovariantClass.{u1, u2} α (Filter.{u2} β) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.9944 : α) (x._@.Mathlib.Order.Filter.Pointwise._hyg.9946 : Filter.{u2} β) => HSMul.hSMul.{u1, u2, u2} α (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β _inst_1)) x._@.Mathlib.Order.Filter.Pointwise._hyg.9944 x._@.Mathlib.Order.Filter.Pointwise._hyg.9946) (fun (x._@.Mathlib.Order.Filter.Pointwise._hyg.9959 : Filter.{u2} β) (x._@.Mathlib.Order.Filter.Pointwise._hyg.9961 : Filter.{u2} β) => LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) x._@.Mathlib.Order.Filter.Pointwise._hyg.9959 x._@.Mathlib.Order.Filter.Pointwise._hyg.9961)
-Case conversion may be inaccurate. Consider using '#align filter.covariant_smul_filter Filter.covariant_smul_filterₓ'. -/
 @[to_additive]
 instance covariant_smul_filter : CovariantClass α (Filter β) (· • ·) (· ≤ ·) :=
   ⟨fun f => map_mono⟩
@@ -2033,36 +1559,18 @@ because `0 * ⊥ ≠ 0`.
 -/
 
 
-/- warning: filter.ne_bot.smul_zero_nonneg -> Filter.NeBot.smul_zero_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : Zero.{u2} β] [_inst_3 : SMulWithZero.{u1, u2} α β _inst_1 _inst_2] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (OfNat.mk.{u2} (Filter.{u2} β) 0 (Zero.zero.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2)))) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β (SMulZeroClass.toHasSmul.{u1, u2} α β _inst_2 (SMulWithZero.toSmulZeroClass.{u1, u2} α β _inst_1 _inst_2 _inst_3))) f (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (OfNat.mk.{u2} (Filter.{u2} β) 0 (Zero.zero.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Zero.{u2} α] [_inst_2 : Zero.{u1} β] [_inst_3 : SMulWithZero.{u2, u1} α β _inst_1 _inst_2] {f : Filter.{u2} α}, (Filter.NeBot.{u2} α f) -> (LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) (OfNat.ofNat.{u1} (Filter.{u1} β) 0 (Zero.toOfNat0.{u1} (Filter.{u1} β) (Filter.instZero.{u1} β _inst_2))) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β (SMulZeroClass.toSMul.{u2, u1} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u2, u1} α β _inst_1 _inst_2 _inst_3)))) f (OfNat.ofNat.{u1} (Filter.{u1} β) 0 (Zero.toOfNat0.{u1} (Filter.{u1} β) (Filter.instZero.{u1} β _inst_2)))))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.smul_zero_nonneg Filter.NeBot.smul_zero_nonnegₓ'. -/
 theorem NeBot.smul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f • (0 : Filter β) :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, smul_zero _⟩
 #align filter.ne_bot.smul_zero_nonneg Filter.NeBot.smul_zero_nonneg
 
-/- warning: filter.ne_bot.zero_smul_nonneg -> Filter.NeBot.zero_smul_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : Zero.{u2} β] [_inst_3 : SMulWithZero.{u1, u2} α β _inst_1 _inst_2] {g : Filter.{u2} β}, (Filter.NeBot.{u2} β g) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (OfNat.mk.{u2} (Filter.{u2} β) 0 (Zero.zero.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2)))) (SMul.smul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β (SMulZeroClass.toHasSmul.{u1, u2} α β _inst_2 (SMulWithZero.toSmulZeroClass.{u1, u2} α β _inst_1 _inst_2 _inst_3))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (OfNat.mk.{u1} (Filter.{u1} α) 0 (Zero.zero.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α _inst_1)))) g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : Zero.{u2} β] [_inst_3 : SMulWithZero.{u1, u2} α β _inst_1 _inst_2] {g : Filter.{u2} β}, (Filter.NeBot.{u2} β g) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (Zero.toOfNat0.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2))) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u1, u2} α β _inst_1 _inst_2 _inst_3)))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α _inst_1))) g))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_smul_nonneg Filter.NeBot.zero_smul_nonnegₓ'. -/
 theorem NeBot.zero_smul_nonneg (hg : g.ne_bot) : 0 ≤ (0 : Filter α) • g :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, zero_smul _ _⟩
 #align filter.ne_bot.zero_smul_nonneg Filter.NeBot.zero_smul_nonneg
 
-/- warning: filter.zero_smul_filter_nonpos -> Filter.zero_smul_filter_nonpos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : Zero.{u2} β] [_inst_3 : SMulWithZero.{u1, u2} α β _inst_1 _inst_2] {g : Filter.{u2} β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (SMul.smul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β (SMulZeroClass.toHasSmul.{u1, u2} α β _inst_2 (SMulWithZero.toSmulZeroClass.{u1, u2} α β _inst_1 _inst_2 _inst_3))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1))) g) (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (OfNat.mk.{u2} (Filter.{u2} β) 0 (Zero.zero.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : Zero.{u2} β] [_inst_3 : SMulWithZero.{u1, u2} α β _inst_1 _inst_2] {g : Filter.{u2} β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (HSMul.hSMul.{u1, u2, u2} α (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} α (Filter.{u2} β) (Filter.instSMulFilter.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u1, u2} α β _inst_1 _inst_2 _inst_3)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) g) (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (Zero.toOfNat0.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align filter.zero_smul_filter_nonpos Filter.zero_smul_filter_nonposₓ'. -/
 theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 :=
   by
   refine' fun s hs => mem_smul_filter.2 _

@@ -84,9 +84,6 @@ variable (π : W →ₗ[k] V)
 
 include π
 
-/- warning: linear_map.conjugate -> LinearMap.conjugate is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.conjugate LinearMap.conjugateₓ'. -/
 /-- We define the conjugate of `π` by `g`, as a `k`-linear map.
 -/
 def conjugate (g : G) : W →ₗ[k] V :=
@@ -99,9 +96,6 @@ section
 
 include h
 
-/- warning: linear_map.conjugate_i -> LinearMap.conjugate_i is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.conjugate_i LinearMap.conjugate_iₓ'. -/
 theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v :=
   by
   dsimp [conjugate]
@@ -114,9 +108,6 @@ end
 
 variable (G) [Fintype G]
 
-/- warning: linear_map.sum_of_conjugates -> LinearMap.sumOfConjugates is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.sum_of_conjugates LinearMap.sumOfConjugatesₓ'. -/
 /-- The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
 
 (We postpone dividing by the size of the group as long as possible.)
@@ -125,9 +116,6 @@ def sumOfConjugates : W →ₗ[k] V :=
   ∑ g : G, π.conjugate g
 #align linear_map.sum_of_conjugates LinearMap.sumOfConjugates
 
-/- warning: linear_map.sum_of_conjugates_equivariant -> LinearMap.sumOfConjugatesEquivariant is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.sum_of_conjugates_equivariant LinearMap.sumOfConjugatesEquivariantₓ'. -/
 /-- In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
 -/
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
@@ -152,9 +140,6 @@ variable [inv : Invertible (Fintype.card G : k)]
 
 include inv
 
-/- warning: linear_map.equivariant_projection -> LinearMap.equivariantProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.equivariant_projection LinearMap.equivariantProjectionₓ'. -/
 /-- We construct our `k[G]`-linear retraction of `i` as
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
@@ -164,9 +149,6 @@ def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
 
 include h
 
-/- warning: linear_map.equivariant_projection_condition -> LinearMap.equivariantProjection_condition is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.equivariant_projection_condition LinearMap.equivariantProjection_conditionₓ'. -/
 theorem equivariantProjection_condition (v : V) : (π.equivariantProjection G) (i v) = v :=
   by
   rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
@@ -207,9 +189,6 @@ variable {W : Type u} [AddCommGroup W] [Module k W] [Module (MonoidAlgebra k G) 
 
 variable [IsScalarTower k (MonoidAlgebra k G) W]
 
-/- warning: monoid_algebra.exists_left_inverse_of_injective -> MonoidAlgebra.exists_leftInverse_of_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_algebra.exists_left_inverse_of_injective MonoidAlgebra.exists_leftInverse_of_injectiveₓ'. -/
 theorem exists_leftInverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf : f.ker = ⊥) :
     ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id :=
   by
@@ -228,18 +207,12 @@ theorem exists_leftInverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf 
 
 namespace Submodule
 
-/- warning: monoid_algebra.submodule.exists_is_compl -> MonoidAlgebra.Submodule.exists_isCompl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_isComplₓ'. -/
 theorem exists_isCompl (p : Submodule (MonoidAlgebra k G) V) :
     ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
   let ⟨f, hf⟩ := MonoidAlgebra.exists_leftInverse_of_injective p.Subtype p.ker_subtype
   ⟨f.ker, LinearMap.isCompl_of_proj <| LinearMap.ext_iff.1 hf⟩
 #align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_isCompl
 
-/- warning: monoid_algebra.submodule.complemented_lattice -> MonoidAlgebra.Submodule.complementedLattice is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_algebra.submodule.complemented_lattice MonoidAlgebra.Submodule.complementedLatticeₓ'. -/
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
 instance complementedLattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
   ⟨exists_isCompl⟩

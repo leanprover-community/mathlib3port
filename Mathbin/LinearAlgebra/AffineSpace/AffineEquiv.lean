@@ -77,29 +77,17 @@ def toAffineMap (e : P₁ ≃ᵃ[k] P₂) : P₁ →ᵃ[k] P₂ :=
 #align affine_equiv.to_affine_map AffineEquiv.toAffineMap
 -/
 
-/- warning: affine_equiv.to_affine_map_mk -> AffineEquiv.toAffineMap_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_affine_map_mk AffineEquiv.toAffineMap_mkₓ'. -/
 @[simp]
 theorem toAffineMap_mk (f : P₁ ≃ P₂) (f' : V₁ ≃ₗ[k] V₂) (h) :
     toAffineMap (mk f f' h) = ⟨f, f', h⟩ :=
   rfl
 #align affine_equiv.to_affine_map_mk AffineEquiv.toAffineMap_mk
 
-/- warning: affine_equiv.linear_to_affine_map -> AffineEquiv.linear_toAffineMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.linear_to_affine_map AffineEquiv.linear_toAffineMapₓ'. -/
 @[simp]
 theorem linear_toAffineMap (e : P₁ ≃ᵃ[k] P₂) : e.toAffineMap.linear = e.linear :=
   rfl
 #align affine_equiv.linear_to_affine_map AffineEquiv.linear_toAffineMap
 
-/- warning: affine_equiv.to_affine_map_injective -> AffineEquiv.toAffineMap_injective is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {P₂ : Type.{u3}} {V₁ : Type.{u4}} {V₂ : Type.{u5}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u4} V₁] [_inst_3 : Module.{u1, u4} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2)] [_inst_4 : AddTorsor.{u4, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u4} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u5} V₂] [_inst_6 : Module.{u1, u5} k V₂ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u5} V₂ _inst_5)] [_inst_7 : AddTorsor.{u5, u3} V₂ P₂ (AddCommGroup.toAddGroup.{u5} V₂ _inst_5)], Function.Injective.{max (succ u2) (succ u3) (succ u4) (succ u5), max (succ u4) (succ u2) (succ u5) (succ u3)} (AffineEquiv.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (AffineMap.{u1, u4, u2, u5, u3} k V₁ P₁ V₂ P₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (AffineEquiv.toAffineMap.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)
-but is expected to have type
-  forall {k : Type.{u1}} {P₁ : Type.{u5}} {P₂ : Type.{u4}} {V₁ : Type.{u3}} {V₂ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u5} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u2} V₂] [_inst_6 : Module.{u1, u2} k V₂ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₂ _inst_5)] [_inst_7 : AddTorsor.{u2, u4} V₂ P₂ (AddCommGroup.toAddGroup.{u2} V₂ _inst_5)], Function.Injective.{max (max (max (succ u5) (succ u4)) (succ u3)) (succ u2), max (max (max (succ u5) (succ u4)) (succ u3)) (succ u2)} (AffineEquiv.{u1, u5, u4, u3, u2} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (AffineMap.{u1, u3, u5, u2, u4} k V₁ P₁ V₂ P₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (AffineEquiv.toAffineMap.{u1, u5, u4, u3, u2} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_affine_map_injective AffineEquiv.toAffineMap_injectiveₓ'. -/
 theorem toAffineMap_injective : Injective (toAffineMap : (P₁ ≃ᵃ[k] P₂) → P₁ →ᵃ[k] P₂) :=
   by
   rintro ⟨e, el, h⟩ ⟨e', el', h'⟩ H
@@ -108,9 +96,6 @@ theorem toAffineMap_injective : Injective (toAffineMap : (P₁ ≃ᵃ[k] P₂) �
   exacts[H.1, H.2]
 #align affine_equiv.to_affine_map_injective AffineEquiv.toAffineMap_injective
 
-/- warning: affine_equiv.to_affine_map_inj -> AffineEquiv.toAffineMap_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_affine_map_inj AffineEquiv.toAffineMap_injₓ'. -/
 @[simp]
 theorem toAffineMap_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.toAffineMap = e'.toAffineMap ↔ e = e' :=
   toAffineMap_injective.eq_iff
@@ -135,17 +120,11 @@ instance : Coe (P₁ ≃ᵃ[k] P₂) (P₁ ≃ P₂) :=
 
 variable {k P₁}
 
-/- warning: affine_equiv.map_vadd -> AffineEquiv.map_vadd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.map_vadd AffineEquiv.map_vaddₓ'. -/
 @[simp]
 theorem map_vadd (e : P₁ ≃ᵃ[k] P₂) (p : P₁) (v : V₁) : e (v +ᵥ p) = e.linear v +ᵥ e p :=
   e.map_vadd' p v
 #align affine_equiv.map_vadd AffineEquiv.map_vadd
 
-/- warning: affine_equiv.coe_to_equiv -> AffineEquiv.coe_toEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_to_equiv AffineEquiv.coe_toEquivₓ'. -/
 @[simp]
 theorem coe_toEquiv (e : P₁ ≃ᵃ[k] P₂) : ⇑e.toEquiv = e :=
   rfl
@@ -154,33 +133,21 @@ theorem coe_toEquiv (e : P₁ ≃ᵃ[k] P₂) : ⇑e.toEquiv = e :=
 instance : Coe (P₁ ≃ᵃ[k] P₂) (P₁ →ᵃ[k] P₂) :=
   ⟨toAffineMap⟩
 
-/- warning: affine_equiv.coe_to_affine_map -> AffineEquiv.coe_toAffineMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_to_affine_map AffineEquiv.coe_toAffineMapₓ'. -/
 @[simp]
 theorem coe_toAffineMap (e : P₁ ≃ᵃ[k] P₂) : (e.toAffineMap : P₁ → P₂) = (e : P₁ → P₂) :=
   rfl
 #align affine_equiv.coe_to_affine_map AffineEquiv.coe_toAffineMap
 
-/- warning: affine_equiv.coe_coe -> AffineEquiv.coe_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_coe AffineEquiv.coe_coeₓ'. -/
 @[norm_cast, simp]
 theorem coe_coe (e : P₁ ≃ᵃ[k] P₂) : ((e : P₁ →ᵃ[k] P₂) : P₁ → P₂) = e :=
   rfl
 #align affine_equiv.coe_coe AffineEquiv.coe_coe
 
-/- warning: affine_equiv.coe_linear -> AffineEquiv.coe_linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_linear AffineEquiv.coe_linearₓ'. -/
 @[simp]
 theorem coe_linear (e : P₁ ≃ᵃ[k] P₂) : (e : P₁ →ᵃ[k] P₂).linear = e.linear :=
   rfl
 #align affine_equiv.coe_linear AffineEquiv.coe_linear
 
-/- warning: affine_equiv.ext -> AffineEquiv.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.ext AffineEquiv.extₓ'. -/
 @[ext]
 theorem ext {e e' : P₁ ≃ᵃ[k] P₂} (h : ∀ x, e x = e' x) : e = e' :=
   FunLike.ext _ _ h
@@ -192,43 +159,25 @@ theorem coeFn_injective : @Injective (P₁ ≃ᵃ[k] P₂) (P₁ → P₂) coeFn
 #align affine_equiv.coe_fn_injective AffineEquiv.coeFn_injective
 -/
 
-/- warning: affine_equiv.coe_fn_inj -> AffineEquiv.coeFn_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_fn_inj AffineEquiv.coeFn_injₓ'. -/
 @[simp, norm_cast]
 theorem coeFn_inj {e e' : P₁ ≃ᵃ[k] P₂} : (e : P₁ → P₂) = e' ↔ e = e' :=
   coeFn_injective.eq_iff
 #align affine_equiv.coe_fn_inj AffineEquiv.coeFn_inj
 
-/- warning: affine_equiv.to_equiv_injective -> AffineEquiv.toEquiv_injective is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {P₂ : Type.{u3}} {V₁ : Type.{u4}} {V₂ : Type.{u5}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u4} V₁] [_inst_3 : Module.{u1, u4} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2)] [_inst_4 : AddTorsor.{u4, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u4} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u5} V₂] [_inst_6 : Module.{u1, u5} k V₂ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u5} V₂ _inst_5)] [_inst_7 : AddTorsor.{u5, u3} V₂ P₂ (AddCommGroup.toAddGroup.{u5} V₂ _inst_5)], Function.Injective.{max (succ u2) (succ u3) (succ u4) (succ u5), max 1 (max (succ u2) (succ u3)) (succ u3) (succ u2)} (AffineEquiv.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (Equiv.{succ u2, succ u3} P₁ P₂) (AffineEquiv.toEquiv.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)
-but is expected to have type
-  forall {k : Type.{u1}} {P₁ : Type.{u5}} {P₂ : Type.{u4}} {V₁ : Type.{u3}} {V₂ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u5} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u2} V₂] [_inst_6 : Module.{u1, u2} k V₂ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₂ _inst_5)] [_inst_7 : AddTorsor.{u2, u4} V₂ P₂ (AddCommGroup.toAddGroup.{u2} V₂ _inst_5)], Function.Injective.{max (max (max (succ u5) (succ u4)) (succ u3)) (succ u2), max (succ u5) (succ u4)} (AffineEquiv.{u1, u5, u4, u3, u2} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (Equiv.{succ u5, succ u4} P₁ P₂) (AffineEquiv.toEquiv.{u1, u5, u4, u3, u2} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_equiv_injective AffineEquiv.toEquiv_injectiveₓ'. -/
 theorem toEquiv_injective : Injective (toEquiv : (P₁ ≃ᵃ[k] P₂) → P₁ ≃ P₂) := fun e e' H =>
   ext <| Equiv.ext_iff.1 H
 #align affine_equiv.to_equiv_injective AffineEquiv.toEquiv_injective
 
-/- warning: affine_equiv.to_equiv_inj -> AffineEquiv.toEquiv_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_equiv_inj AffineEquiv.toEquiv_injₓ'. -/
 @[simp]
 theorem toEquiv_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.toEquiv = e'.toEquiv ↔ e = e' :=
   toEquiv_injective.eq_iff
 #align affine_equiv.to_equiv_inj AffineEquiv.toEquiv_inj
 
-/- warning: affine_equiv.coe_mk -> AffineEquiv.coe_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_mk AffineEquiv.coe_mkₓ'. -/
 @[simp]
 theorem coe_mk (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (h) : ((⟨e, e', h⟩ : P₁ ≃ᵃ[k] P₂) : P₁ → P₂) = e :=
   rfl
 #align affine_equiv.coe_mk AffineEquiv.coe_mk
 
-/- warning: affine_equiv.mk' -> AffineEquiv.mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.mk' AffineEquiv.mk'ₓ'. -/
 /-- Construct an affine equivalence by verifying the relation between the map and its linear part at
 one base point. Namely, this function takes a map `e : P₁ → P₂`, a linear equivalence
 `e' : V₁ ≃ₗ[k] V₂`, and a point `p` such that for any other point `p'` we have
@@ -243,17 +192,11 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : 
   map_vadd' p' v := by simp [h p', h (v +ᵥ p'), vadd_vsub_assoc, vadd_vadd]
 #align affine_equiv.mk' AffineEquiv.mk'
 
-/- warning: affine_equiv.coe_mk' -> AffineEquiv.coe_mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_mk' AffineEquiv.coe_mk'ₓ'. -/
 @[simp]
 theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : ⇑(mk' e e' p h) = e :=
   rfl
 #align affine_equiv.coe_mk' AffineEquiv.coe_mk'
 
-/- warning: affine_equiv.linear_mk' -> AffineEquiv.linear_mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.linear_mk' AffineEquiv.linear_mk'ₓ'. -/
 @[simp]
 theorem linear_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : (mk' e e' p h).linear = e' :=
   rfl
@@ -272,23 +215,11 @@ def symm (e : P₁ ≃ᵃ[k] P₂) : P₂ ≃ᵃ[k] P₁
 #align affine_equiv.symm AffineEquiv.symm
 -/
 
-/- warning: affine_equiv.symm_to_equiv -> AffineEquiv.symm_toEquiv is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {P₂ : Type.{u3}} {V₁ : Type.{u4}} {V₂ : Type.{u5}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u4} V₁] [_inst_3 : Module.{u1, u4} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2)] [_inst_4 : AddTorsor.{u4, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u4} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u5} V₂] [_inst_6 : Module.{u1, u5} k V₂ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u5} V₂ _inst_5)] [_inst_7 : AddTorsor.{u5, u3} V₂ P₂ (AddCommGroup.toAddGroup.{u5} V₂ _inst_5)] (e : AffineEquiv.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max 1 (max (succ u3) (succ u2)) (succ u2) (succ u3)} (Equiv.{succ u3, succ u2} P₂ P₁) (Equiv.symm.{succ u2, succ u3} P₁ P₂ (AffineEquiv.toEquiv.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e)) (AffineEquiv.toEquiv.{u1, u3, u2, u5, u4} k P₂ P₁ V₂ V₁ _inst_1 _inst_5 _inst_6 _inst_7 _inst_2 _inst_3 _inst_4 (AffineEquiv.symm.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e))
-but is expected to have type
-  forall {k : Type.{u5}} {P₁ : Type.{u4}} {P₂ : Type.{u3}} {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_1 : Ring.{u5} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u5, u2} k V₁ (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u4} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u1} V₂] [_inst_6 : Module.{u5, u1} k V₂ (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V₂ _inst_5)] [_inst_7 : AddTorsor.{u1, u3} V₂ P₂ (AddCommGroup.toAddGroup.{u1} V₂ _inst_5)] (e : AffineEquiv.{u5, u4, u3, u2, u1} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u4) (succ u3)} (Equiv.{succ u3, succ u4} P₂ P₁) (Equiv.symm.{succ u4, succ u3} P₁ P₂ (AffineEquiv.toEquiv.{u5, u4, u3, u2, u1} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e)) (AffineEquiv.toEquiv.{u5, u3, u4, u1, u2} k P₂ P₁ V₂ V₁ _inst_1 _inst_5 _inst_6 _inst_7 _inst_2 _inst_3 _inst_4 (AffineEquiv.symm.{u5, u4, u3, u2, u1} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.symm_to_equiv AffineEquiv.symm_toEquivₓ'. -/
 @[simp]
 theorem symm_toEquiv (e : P₁ ≃ᵃ[k] P₂) : e.toEquiv.symm = e.symm.toEquiv :=
   rfl
 #align affine_equiv.symm_to_equiv AffineEquiv.symm_toEquiv
 
-/- warning: affine_equiv.symm_linear -> AffineEquiv.symm_linear is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {P₂ : Type.{u3}} {V₁ : Type.{u4}} {V₂ : Type.{u5}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u4} V₁] [_inst_3 : Module.{u1, u4} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2)] [_inst_4 : AddTorsor.{u4, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u4} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u5} V₂] [_inst_6 : Module.{u1, u5} k V₂ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u5} V₂ _inst_5)] [_inst_7 : AddTorsor.{u5, u3} V₂ P₂ (AddCommGroup.toAddGroup.{u5} V₂ _inst_5)] (e : AffineEquiv.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u5) (succ u4)} (LinearEquiv.{u1, u1, u5, u4} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (RingHomInvPair.ids.{u1} k (Ring.toSemiring.{u1} k _inst_1)) (RingHomInvPair.ids.{u1} k (Ring.toSemiring.{u1} k _inst_1)) V₂ V₁ (AddCommGroup.toAddCommMonoid.{u5} V₂ _inst_5) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2) _inst_6 _inst_3) (LinearEquiv.symm.{u1, u1, u4, u5} k k V₁ V₂ (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2) (AddCommGroup.toAddCommMonoid.{u5} V₂ _inst_5) _inst_3 _inst_6 (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (RingHomInvPair.ids.{u1} k (Ring.toSemiring.{u1} k _inst_1)) (RingHomInvPair.ids.{u1} k (Ring.toSemiring.{u1} k _inst_1)) (AffineEquiv.linear.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e)) (AffineEquiv.linear.{u1, u3, u2, u5, u4} k P₂ P₁ V₂ V₁ _inst_1 _inst_5 _inst_6 _inst_7 _inst_2 _inst_3 _inst_4 (AffineEquiv.symm.{u1, u2, u3, u4, u5} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e))
-but is expected to have type
-  forall {k : Type.{u5}} {P₁ : Type.{u4}} {P₂ : Type.{u3}} {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_1 : Ring.{u5} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u5, u2} k V₁ (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u4} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u1} V₂] [_inst_6 : Module.{u5, u1} k V₂ (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V₂ _inst_5)] [_inst_7 : AddTorsor.{u1, u3} V₂ P₂ (AddCommGroup.toAddGroup.{u1} V₂ _inst_5)] (e : AffineEquiv.{u5, u4, u3, u2, u1} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u1)} (LinearEquiv.{u5, u5, u1, u2} k k (Ring.toSemiring.{u5} k _inst_1) (Ring.toSemiring.{u5} k _inst_1) (RingHom.id.{u5} k (Semiring.toNonAssocSemiring.{u5} k (Ring.toSemiring.{u5} k _inst_1))) (RingHom.id.{u5} k (Semiring.toNonAssocSemiring.{u5} k (Ring.toSemiring.{u5} k _inst_1))) (RingHomInvPair.ids.{u5} k (Ring.toSemiring.{u5} k _inst_1)) (RingHomInvPair.ids.{u5} k (Ring.toSemiring.{u5} k _inst_1)) V₂ V₁ (AddCommGroup.toAddCommMonoid.{u1} V₂ _inst_5) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2) _inst_6 _inst_3) (LinearEquiv.symm.{u5, u5, u2, u1} k k V₁ V₂ (Ring.toSemiring.{u5} k _inst_1) (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2) (AddCommGroup.toAddCommMonoid.{u1} V₂ _inst_5) _inst_3 _inst_6 (RingHom.id.{u5} k (Semiring.toNonAssocSemiring.{u5} k (Ring.toSemiring.{u5} k _inst_1))) (RingHom.id.{u5} k (Semiring.toNonAssocSemiring.{u5} k (Ring.toSemiring.{u5} k _inst_1))) (RingHomInvPair.ids.{u5} k (Ring.toSemiring.{u5} k _inst_1)) (RingHomInvPair.ids.{u5} k (Ring.toSemiring.{u5} k _inst_1)) (AffineEquiv.linear.{u5, u4, u3, u2, u1} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e)) (AffineEquiv.linear.{u5, u3, u4, u1, u2} k P₂ P₁ V₂ V₁ _inst_1 _inst_5 _inst_6 _inst_7 _inst_2 _inst_3 _inst_4 (AffineEquiv.symm.{u5, u4, u3, u2, u1} k P₁ P₂ V₁ V₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 e))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.symm_linear AffineEquiv.symm_linearₓ'. -/
 @[simp]
 theorem symm_linear (e : P₁ ≃ᵃ[k] P₂) : e.linear.symm = e.symm.linear :=
   rfl
@@ -311,23 +242,14 @@ def Simps.symm_apply (e : P₁ ≃ᵃ[k] P₂) : P₂ → P₁ :=
 initialize_simps_projections AffineEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply,
   linear → linear, as_prefix linear, -toEquiv)
 
-/- warning: affine_equiv.bijective -> AffineEquiv.bijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.bijective AffineEquiv.bijectiveₓ'. -/
 protected theorem bijective (e : P₁ ≃ᵃ[k] P₂) : Bijective e :=
   e.toEquiv.Bijective
 #align affine_equiv.bijective AffineEquiv.bijective
 
-/- warning: affine_equiv.surjective -> AffineEquiv.surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.surjective AffineEquiv.surjectiveₓ'. -/
 protected theorem surjective (e : P₁ ≃ᵃ[k] P₂) : Surjective e :=
   e.toEquiv.Surjective
 #align affine_equiv.surjective AffineEquiv.surjective
 
-/- warning: affine_equiv.injective -> AffineEquiv.injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.injective AffineEquiv.injectiveₓ'. -/
 protected theorem injective (e : P₁ ≃ᵃ[k] P₂) : Injective e :=
   e.toEquiv.Injective
 #align affine_equiv.injective AffineEquiv.injective
@@ -344,64 +266,40 @@ noncomputable def ofBijective {φ : P₁ →ᵃ[k] P₂} (hφ : Function.Bijecti
 #align affine_equiv.of_bijective AffineEquiv.ofBijective
 -/
 
-/- warning: affine_equiv.of_bijective.symm_eq -> AffineEquiv.ofBijective.symm_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.of_bijective.symm_eq AffineEquiv.ofBijective.symm_eqₓ'. -/
 theorem ofBijective.symm_eq {φ : P₁ →ᵃ[k] P₂} (hφ : Function.Bijective φ) :
     (ofBijective hφ).symm.toEquiv = (Equiv.ofBijective _ hφ).symm :=
   rfl
 #align affine_equiv.of_bijective.symm_eq AffineEquiv.ofBijective.symm_eq
 
-/- warning: affine_equiv.range_eq -> AffineEquiv.range_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.range_eq AffineEquiv.range_eqₓ'. -/
 @[simp]
 theorem range_eq (e : P₁ ≃ᵃ[k] P₂) : range e = univ :=
   e.Surjective.range_eq
 #align affine_equiv.range_eq AffineEquiv.range_eq
 
-/- warning: affine_equiv.apply_symm_apply -> AffineEquiv.apply_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.apply_symm_apply AffineEquiv.apply_symm_applyₓ'. -/
 @[simp]
 theorem apply_symm_apply (e : P₁ ≃ᵃ[k] P₂) (p : P₂) : e (e.symm p) = p :=
   e.toEquiv.apply_symm_apply p
 #align affine_equiv.apply_symm_apply AffineEquiv.apply_symm_apply
 
-/- warning: affine_equiv.symm_apply_apply -> AffineEquiv.symm_apply_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.symm_apply_apply AffineEquiv.symm_apply_applyₓ'. -/
 @[simp]
 theorem symm_apply_apply (e : P₁ ≃ᵃ[k] P₂) (p : P₁) : e.symm (e p) = p :=
   e.toEquiv.symm_apply_apply p
 #align affine_equiv.symm_apply_apply AffineEquiv.symm_apply_apply
 
-/- warning: affine_equiv.apply_eq_iff_eq_symm_apply -> AffineEquiv.apply_eq_iff_eq_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.apply_eq_iff_eq_symm_apply AffineEquiv.apply_eq_iff_eq_symm_applyₓ'. -/
 theorem apply_eq_iff_eq_symm_apply (e : P₁ ≃ᵃ[k] P₂) {p₁ p₂} : e p₁ = p₂ ↔ p₁ = e.symm p₂ :=
   e.toEquiv.apply_eq_iff_eq_symm_apply
 #align affine_equiv.apply_eq_iff_eq_symm_apply AffineEquiv.apply_eq_iff_eq_symm_apply
 
-/- warning: affine_equiv.apply_eq_iff_eq -> AffineEquiv.apply_eq_iff_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.apply_eq_iff_eq AffineEquiv.apply_eq_iff_eqₓ'. -/
 @[simp]
 theorem apply_eq_iff_eq (e : P₁ ≃ᵃ[k] P₂) {p₁ p₂ : P₁} : e p₁ = e p₂ ↔ p₁ = p₂ :=
   e.toEquiv.apply_eq_iff_eq
 #align affine_equiv.apply_eq_iff_eq AffineEquiv.apply_eq_iff_eq
 
-/- warning: affine_equiv.image_symm -> AffineEquiv.image_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.image_symm AffineEquiv.image_symmₓ'. -/
 @[simp]
 theorem image_symm (f : P₁ ≃ᵃ[k] P₂) (s : Set P₂) : f.symm '' s = f ⁻¹' s :=
   f.symm.toEquiv.image_eq_preimage _
 #align affine_equiv.image_symm AffineEquiv.image_symm
 
-/- warning: affine_equiv.preimage_symm -> AffineEquiv.preimage_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.preimage_symm AffineEquiv.preimage_symmₓ'. -/
 @[simp]
 theorem preimage_symm (f : P₁ ≃ᵃ[k] P₂) (s : Set P₁) : f.symm ⁻¹' s = f '' s :=
   (f.symm.image_symm _).symm
@@ -421,67 +319,31 @@ def refl : P₁ ≃ᵃ[k] P₁ where
 #align affine_equiv.refl AffineEquiv.refl
 -/
 
-/- warning: affine_equiv.coe_refl -> AffineEquiv.coe_refl is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{succ u2} (P₁ -> P₁) (coeFn.{max (succ u2) (succ u3), succ u2} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (fun (_x : AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) => P₁ -> P₁) (AffineEquiv.hasCoeToFun.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (id.{succ u2} P₁)
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)], Eq.{succ u3} (forall (ᾰ : P₁), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) ᾰ) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (AffineEquiv.equivLike.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4))) (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (id.{succ u3} P₁)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_refl AffineEquiv.coe_reflₓ'. -/
 @[simp]
 theorem coe_refl : ⇑(refl k P₁) = id :=
   rfl
 #align affine_equiv.coe_refl AffineEquiv.coe_refl
 
-/- warning: affine_equiv.coe_refl_to_affine_map -> AffineEquiv.coe_refl_to_affineMap is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{max (succ u3) (succ u2)} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) ((fun (a : Sort.{max (succ u2) (succ u3)}) (b : Sort.{max (succ u3) (succ u2)}) [self : HasLiftT.{max (succ u2) (succ u3), max (succ u3) (succ u2)} a b] => self.0) (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (HasLiftT.mk.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (CoeTCₓ.coe.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (coeBase.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.AffineMap.hasCoe.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4)))) (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (AffineMap.id.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)], Eq.{max (succ u3) (succ u2)} (AffineMap.{u1, u2, u3, u2, u3} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.toAffineMap.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (AffineMap.id.{u1, u2, u3} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_refl_to_affine_map AffineEquiv.coe_refl_to_affineMapₓ'. -/
 @[simp]
 theorem coe_refl_to_affineMap : ↑(refl k P₁) = AffineMap.id k P₁ :=
   rfl
 #align affine_equiv.coe_refl_to_affine_map AffineEquiv.coe_refl_to_affineMap
 
-/- warning: affine_equiv.refl_apply -> AffineEquiv.refl_apply is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (x : P₁), Eq.{succ u2} P₁ (coeFn.{max (succ u2) (succ u3), succ u2} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (fun (_x : AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) => P₁ -> P₁) (AffineEquiv.hasCoeToFun.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4) x) x
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (x : P₁), Eq.{succ u3} ((fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) x) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (AffineEquiv.equivLike.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4))) (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4) x) x
-Case conversion may be inaccurate. Consider using '#align affine_equiv.refl_apply AffineEquiv.refl_applyₓ'. -/
 @[simp]
 theorem refl_apply (x : P₁) : refl k P₁ x = x :=
   rfl
 #align affine_equiv.refl_apply AffineEquiv.refl_apply
 
-/- warning: affine_equiv.to_equiv_refl -> AffineEquiv.toEquiv_refl is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{succ u2} (Equiv.{succ u2, succ u2} P₁ P₁) (AffineEquiv.toEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (Equiv.refl.{succ u2} P₁)
-but is expected to have type
-  forall (k : Type.{u2}) (P₁ : Type.{u3}) {V₁ : Type.{u1}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u1} V₁] [_inst_3 : Module.{u2, u1} k V₁ (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V₁ _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u1} V₁ _inst_2)], Eq.{succ u3} (Equiv.{succ u3, succ u3} P₁ P₁) (AffineEquiv.toEquiv.{u2, u3, u3, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u2, u3, u1} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (Equiv.refl.{succ u3} P₁)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_equiv_refl AffineEquiv.toEquiv_reflₓ'. -/
 @[simp]
 theorem toEquiv_refl : (refl k P₁).toEquiv = Equiv.refl P₁ :=
   rfl
 #align affine_equiv.to_equiv_refl AffineEquiv.toEquiv_refl
 
-/- warning: affine_equiv.linear_refl -> AffineEquiv.linear_refl is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{succ u3} (LinearEquiv.{u1, u1, u3, u3} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (RingHomInvPair.ids.{u1} k (Ring.toSemiring.{u1} k _inst_1)) (RingHomInvPair.ids.{u1} k (Ring.toSemiring.{u1} k _inst_1)) V₁ V₁ (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2) _inst_3 _inst_3) (AffineEquiv.linear.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (LinearEquiv.refl.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2) _inst_3)
-but is expected to have type
-  forall (k : Type.{u2}) (P₁ : Type.{u1}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u2, u3} k V₁ (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u1} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{succ u3} (LinearEquiv.{u2, u2, u3, u3} k k (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (RingHomInvPair.ids.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (RingHomInvPair.ids.{u2} k (Ring.toSemiring.{u2} k _inst_1)) V₁ V₁ (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2) _inst_3 _inst_3) (AffineEquiv.linear.{u2, u1, u1, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u2, u1, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (LinearEquiv.refl.{u2, u3} k V₁ (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2) _inst_3)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.linear_refl AffineEquiv.linear_reflₓ'. -/
 @[simp]
 theorem linear_refl : (refl k P₁).linear = LinearEquiv.refl k V₁ :=
   rfl
 #align affine_equiv.linear_refl AffineEquiv.linear_refl
 
-/- warning: affine_equiv.symm_refl -> AffineEquiv.symm_refl is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)], Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)) (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.symm_refl AffineEquiv.symm_reflₓ'. -/
 @[simp]
 theorem symm_refl : (refl k P₁).symm = refl k P₁ :=
   rfl
@@ -503,26 +365,17 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
 #align affine_equiv.trans AffineEquiv.trans
 -/
 
-/- warning: affine_equiv.coe_trans -> AffineEquiv.coe_trans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_trans AffineEquiv.coe_transₓ'. -/
 @[simp]
 theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑(e.trans e') = e' ∘ e :=
   rfl
 #align affine_equiv.coe_trans AffineEquiv.coe_trans
 
-/- warning: affine_equiv.coe_trans_to_affine_map -> AffineEquiv.coe_trans_to_affineMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_trans_to_affine_map AffineEquiv.coe_trans_to_affineMapₓ'. -/
 @[simp]
 theorem coe_trans_to_affineMap (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) :
     (e.trans e' : P₁ →ᵃ[k] P₃) = (e' : P₂ →ᵃ[k] P₃).comp e :=
   rfl
 #align affine_equiv.coe_trans_to_affine_map AffineEquiv.coe_trans_to_affineMap
 
-/- warning: affine_equiv.trans_apply -> AffineEquiv.trans_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.trans_apply AffineEquiv.trans_applyₓ'. -/
 @[simp]
 theorem trans_apply (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) (p : P₁) : e.trans e' p = e' (e p) :=
   rfl
@@ -530,9 +383,6 @@ theorem trans_apply (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) (p : P�
 
 include V₄
 
-/- warning: affine_equiv.trans_assoc -> AffineEquiv.trans_assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.trans_assoc AffineEquiv.trans_assocₓ'. -/
 theorem trans_assoc (e₁ : P₁ ≃ᵃ[k] P₂) (e₂ : P₂ ≃ᵃ[k] P₃) (e₃ : P₃ ≃ᵃ[k] P₄) :
     (e₁.trans e₂).trans e₃ = e₁.trans (e₂.trans e₃) :=
   ext fun _ => rfl
@@ -540,41 +390,26 @@ theorem trans_assoc (e₁ : P₁ ≃ᵃ[k] P₂) (e₂ : P₂ ≃ᵃ[k] P₃) (e
 
 omit V₃ V₄
 
-/- warning: affine_equiv.trans_refl -> AffineEquiv.trans_refl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.trans_refl AffineEquiv.trans_reflₓ'. -/
 @[simp]
 theorem trans_refl (e : P₁ ≃ᵃ[k] P₂) : e.trans (refl k P₂) = e :=
   ext fun _ => rfl
 #align affine_equiv.trans_refl AffineEquiv.trans_refl
 
-/- warning: affine_equiv.refl_trans -> AffineEquiv.refl_trans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.refl_trans AffineEquiv.refl_transₓ'. -/
 @[simp]
 theorem refl_trans (e : P₁ ≃ᵃ[k] P₂) : (refl k P₁).trans e = e :=
   ext fun _ => rfl
 #align affine_equiv.refl_trans AffineEquiv.refl_trans
 
-/- warning: affine_equiv.self_trans_symm -> AffineEquiv.self_trans_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.self_trans_symm AffineEquiv.self_trans_symmₓ'. -/
 @[simp]
 theorem self_trans_symm (e : P₁ ≃ᵃ[k] P₂) : e.trans e.symm = refl k P₁ :=
   ext e.symm_apply_apply
 #align affine_equiv.self_trans_symm AffineEquiv.self_trans_symm
 
-/- warning: affine_equiv.symm_trans_self -> AffineEquiv.symm_trans_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.symm_trans_self AffineEquiv.symm_trans_selfₓ'. -/
 @[simp]
 theorem symm_trans_self (e : P₁ ≃ᵃ[k] P₂) : e.symm.trans e = refl k P₂ :=
   ext e.apply_symm_apply
 #align affine_equiv.symm_trans_self AffineEquiv.symm_trans_self
 
-/- warning: affine_equiv.apply_line_map -> AffineEquiv.apply_lineMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.apply_line_map AffineEquiv.apply_lineMapₓ'. -/
 @[simp]
 theorem apply_lineMap (e : P₁ ≃ᵃ[k] P₂) (a b : P₁) (c : k) :
     e (AffineMap.lineMap a b c) = AffineMap.lineMap (e a) (e b) c :=
@@ -592,48 +427,24 @@ instance : Group (P₁ ≃ᵃ[k] P₁) where
   mul_one := refl_trans
   mul_left_inv := self_trans_symm
 
-/- warning: affine_equiv.one_def -> AffineEquiv.one_def is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (OfNat.ofNat.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) 1 (OfNat.mk.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) 1 (One.one.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (MulOneClass.toHasOne.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Monoid.toMulOneClass.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)))))))) (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)
-but is expected to have type
-  forall {k : Type.{u1}} {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)], Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (OfNat.ofNat.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) 1 (One.toOfNat1.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (InvOneClass.toOne.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvOneMonoid.toInvOneClass.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivisionMonoid.toDivInvOneMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivisionMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))))) (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.one_def AffineEquiv.one_defₓ'. -/
 theorem one_def : (1 : P₁ ≃ᵃ[k] P₁) = refl k P₁ :=
   rfl
 #align affine_equiv.one_def AffineEquiv.one_def
 
-/- warning: affine_equiv.coe_one -> AffineEquiv.coe_one is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{succ u2} (P₁ -> P₁) (coeFn.{max (succ u2) (succ u3), succ u2} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (fun (_x : AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) => P₁ -> P₁) (AffineEquiv.hasCoeToFun.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (OfNat.ofNat.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) 1 (OfNat.mk.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) 1 (One.one.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (MulOneClass.toHasOne.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Monoid.toMulOneClass.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))))))) (id.{succ u2} P₁)
-but is expected to have type
-  forall {k : Type.{u1}} {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)], Eq.{succ u3} (forall (ᾰ : P₁), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) ᾰ) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (AffineEquiv.equivLike.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4))) (OfNat.ofNat.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) 1 (One.toOfNat1.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (InvOneClass.toOne.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvOneMonoid.toInvOneClass.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivisionMonoid.toDivInvOneMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivisionMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)))))))) (id.{succ u3} P₁)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_one AffineEquiv.coe_oneₓ'. -/
 @[simp]
 theorem coe_one : ⇑(1 : P₁ ≃ᵃ[k] P₁) = id :=
   rfl
 #align affine_equiv.coe_one AffineEquiv.coe_one
 
-/- warning: affine_equiv.mul_def -> AffineEquiv.mul_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.mul_def AffineEquiv.mul_defₓ'. -/
 theorem mul_def (e e' : P₁ ≃ᵃ[k] P₁) : e * e' = e'.trans e :=
   rfl
 #align affine_equiv.mul_def AffineEquiv.mul_def
 
-/- warning: affine_equiv.coe_mul -> AffineEquiv.coe_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_mul AffineEquiv.coe_mulₓ'. -/
 @[simp]
 theorem coe_mul (e e' : P₁ ≃ᵃ[k] P₁) : ⇑(e * e') = e ∘ e' :=
   rfl
 #align affine_equiv.coe_mul AffineEquiv.coe_mul
 
-/- warning: affine_equiv.inv_def -> AffineEquiv.inv_def is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (e : AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4), Eq.{succ (max u2 u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Inv.inv.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toHasInv.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))) e) (AffineEquiv.symm.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 e)
-but is expected to have type
-  forall {k : Type.{u3}} {P₁ : Type.{u2}} {V₁ : Type.{u1}} [_inst_1 : Ring.{u3} k] [_inst_2 : AddCommGroup.{u1} V₁] [_inst_3 : Module.{u3, u1} k V₁ (Ring.toSemiring.{u3} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V₁ _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u1} V₁ _inst_2)] (e : AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4), Eq.{max (succ u2) (succ u1)} (AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Inv.inv.{max u2 u1} (AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (InvOneClass.toInv.{max u2 u1} (AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvOneMonoid.toInvOneClass.{max u2 u1} (AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivisionMonoid.toDivInvOneMonoid.{max u2 u1} (AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivisionMonoid.{max u2 u1} (AffineEquiv.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u3, u2, u1} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))) e) (AffineEquiv.symm.{u3, u2, u2, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 e)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.inv_def AffineEquiv.inv_defₓ'. -/
 theorem inv_def (e : P₁ ≃ᵃ[k] P₁) : e⁻¹ = e.symm :=
   rfl
 #align affine_equiv.inv_def AffineEquiv.inv_def
@@ -649,12 +460,6 @@ def linearHom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁
 #align affine_equiv.linear_hom AffineEquiv.linearHom
 -/
 
-/- warning: affine_equiv.equiv_units_affine_map -> AffineEquiv.equivUnitsAffineMap is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], MulEquiv.{max u2 u3, max u3 u2} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Units.{max u3 u2} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.monoid.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)) (MulOneClass.toHasMul.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Monoid.toMulOneClass.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))) (MulOneClass.toHasMul.{max u3 u2} (Units.{max u3 u2} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.monoid.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)) (Units.mulOneClass.{max u3 u2} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.monoid.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)))
-but is expected to have type
-  forall {k : Type.{u1}} {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], MulEquiv.{max u3 u2, max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Units.{max u2 u3} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.instMonoidAffineMap.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)) (MulOneClass.toMul.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Monoid.toMulOneClass.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))) (MulOneClass.toMul.{max u2 u3} (Units.{max u2 u3} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.instMonoidAffineMap.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)) (Units.instMulOneClassUnits.{max u2 u3} (AffineMap.{u1, u3, u2, u3, u2} k V₁ P₁ V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineMap.instMonoidAffineMap.{u1, u3, u2} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.equiv_units_affine_map AffineEquiv.equivUnitsAffineMapₓ'. -/
 /-- The group of `affine_equiv`s are equivalent to the group of units of `affine_map`.
 
 This is the affine version of `linear_map.general_linear_group.general_linear_equiv`. -/
@@ -699,23 +504,11 @@ def constVSub (p : P₁) : P₁ ≃ᵃ[k] V₁
 #align affine_equiv.const_vsub AffineEquiv.constVSub
 -/
 
-/- warning: affine_equiv.coe_const_vsub -> AffineEquiv.coe_constVSub is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (p : P₁), Eq.{max (succ u2) (succ u3)} (P₁ -> V₁) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u3, u3, u3} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) (fun (_x : AffineEquiv.{u1, u2, u3, u3, u3} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) => P₁ -> V₁) (AffineEquiv.hasCoeToFun.{u1, u2, u3, u3, u3} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) (AffineEquiv.constVSub.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 p)) (VSub.vsub.{u3, u2} V₁ P₁ (AddTorsor.toHasVsub.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2) _inst_4) p)
-but is expected to have type
-  forall (k : Type.{u1}) {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (p : P₁), Eq.{max (succ u3) (succ u2)} (forall (ᾰ : P₁), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => V₁) ᾰ) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (AffineEquiv.{u1, u3, u2, u2, u2} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2))) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => V₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u2} (AffineEquiv.{u1, u3, u2, u2, u2} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2))) P₁ V₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u2} (AffineEquiv.{u1, u3, u2, u2, u2} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2))) P₁ V₁ (AffineEquiv.equivLike.{u1, u3, u2, u2, u2} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2))))) (AffineEquiv.constVSub.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 p)) ((fun (x._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.6943 : P₁) (x._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.6945 : P₁) => VSub.vsub.{u2, u3} V₁ P₁ (AddTorsor.toVSub.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2) _inst_4) x._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.6943 x._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.6945) p)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_const_vsub AffineEquiv.coe_constVSubₓ'. -/
 @[simp]
 theorem coe_constVSub (p : P₁) : ⇑(constVSub k p) = (· -ᵥ ·) p :=
   rfl
 #align affine_equiv.coe_const_vsub AffineEquiv.coe_constVSub
 
-/- warning: affine_equiv.coe_const_vsub_symm -> AffineEquiv.coe_constVSub_symm is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (p : P₁), Eq.{max (succ u3) (succ u2)} (V₁ -> P₁) (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u2, u3, u3} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)) _inst_2 _inst_3 _inst_4) (fun (_x : AffineEquiv.{u1, u3, u2, u3, u3} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)) _inst_2 _inst_3 _inst_4) => V₁ -> P₁) (AffineEquiv.hasCoeToFun.{u1, u3, u2, u3, u3} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)) _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u2, u3, u3, u3} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)) (AffineEquiv.constVSub.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 p))) (fun (v : V₁) => VAdd.vadd.{u3, u2} V₁ P₁ (AddAction.toHasVadd.{u3, u2} V₁ P₁ (SubNegMonoid.toAddMonoid.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) (AddTorsor.toAddAction.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2) _inst_4)) (Neg.neg.{u3} V₁ (SubNegMonoid.toHasNeg.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) v) p)
-but is expected to have type
-  forall (k : Type.{u1}) {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (p : P₁), Eq.{max (succ u3) (succ u2)} (forall (ᾰ : V₁), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : V₁) => P₁) ᾰ) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AffineEquiv.{u1, u2, u3, u2, u2} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)) _inst_2 _inst_3 _inst_4) V₁ (fun (_x : V₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : V₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (AffineEquiv.{u1, u2, u3, u2, u2} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)) _inst_2 _inst_3 _inst_4) V₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u2) (succ u3), succ u2, succ u3} (AffineEquiv.{u1, u2, u3, u2, u2} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)) _inst_2 _inst_3 _inst_4) V₁ P₁ (AffineEquiv.equivLike.{u1, u2, u3, u2, u2} k V₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)) _inst_2 _inst_3 _inst_4))) (AffineEquiv.symm.{u1, u3, u2, u2, u2} k P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)) (AffineEquiv.constVSub.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 p))) (fun (v : V₁) => HVAdd.hVAdd.{u2, u3, u3} V₁ P₁ P₁ (instHVAdd.{u2, u3} V₁ P₁ (AddAction.toVAdd.{u2, u3} V₁ P₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2))) (AddTorsor.toAddAction.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2) _inst_4))) (Neg.neg.{u2} V₁ (NegZeroClass.toNeg.{u2} V₁ (SubNegZeroMonoid.toNegZeroClass.{u2} V₁ (SubtractionMonoid.toSubNegZeroMonoid.{u2} V₁ (SubtractionCommMonoid.toSubtractionMonoid.{u2} V₁ (AddCommGroup.toDivisionAddCommMonoid.{u2} V₁ _inst_2))))) v) p)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_const_vsub_symm AffineEquiv.coe_constVSub_symmₓ'. -/
 @[simp]
 theorem coe_constVSub_symm (p : P₁) : ⇑(constVSub k p).symm = fun v => -v +ᵥ p :=
   rfl
@@ -737,35 +530,17 @@ def constVAdd (v : V₁) : P₁ ≃ᵃ[k] P₁
 #align affine_equiv.const_vadd AffineEquiv.constVAdd
 -/
 
-/- warning: affine_equiv.const_vadd_zero -> AffineEquiv.constVAdd_zero is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)], Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (OfNat.ofNat.{u3} V₁ 0 (OfNat.mk.{u3} V₁ 0 (Zero.zero.{u3} V₁ (AddZeroClass.toHasZero.{u3} V₁ (AddMonoid.toAddZeroClass.{u3} V₁ (SubNegMonoid.toAddMonoid.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))))))))) (AffineEquiv.refl.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)], Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (OfNat.ofNat.{u2} V₁ 0 (Zero.toOfNat0.{u2} V₁ (NegZeroClass.toZero.{u2} V₁ (SubNegZeroMonoid.toNegZeroClass.{u2} V₁ (SubtractionMonoid.toSubNegZeroMonoid.{u2} V₁ (SubtractionCommMonoid.toSubtractionMonoid.{u2} V₁ (AddCommGroup.toDivisionAddCommMonoid.{u2} V₁ _inst_2)))))))) (AffineEquiv.refl.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.const_vadd_zero AffineEquiv.constVAdd_zeroₓ'. -/
 @[simp]
 theorem constVAdd_zero : constVAdd k P₁ 0 = AffineEquiv.refl _ _ :=
   ext <| zero_vadd _
 #align affine_equiv.const_vadd_zero AffineEquiv.constVAdd_zero
 
-/- warning: affine_equiv.const_vadd_add -> AffineEquiv.constVAdd_add is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (v : V₁) (w : V₁), Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (HAdd.hAdd.{u3, u3, u3} V₁ V₁ V₁ (instHAdd.{u3} V₁ (AddZeroClass.toHasAdd.{u3} V₁ (AddMonoid.toAddZeroClass.{u3} V₁ (SubNegMonoid.toAddMonoid.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)))))) v w)) (AffineEquiv.trans.{u1, u2, u2, u2, u3, u3, u3} k P₁ P₁ P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 w) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v))
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (v : V₁) (w : V₁), Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (HAdd.hAdd.{u2, u2, u2} V₁ V₁ V₁ (instHAdd.{u2} V₁ (AddZeroClass.toAdd.{u2} V₁ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)))))) v w)) (AffineEquiv.trans.{u1, u3, u3, u3, u2, u2, u2} k P₁ P₁ P₁ V₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 w) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.const_vadd_add AffineEquiv.constVAdd_addₓ'. -/
 @[simp]
 theorem constVAdd_add (v w : V₁) :
     constVAdd k P₁ (v + w) = (constVAdd k P₁ w).trans (constVAdd k P₁ v) :=
   ext <| add_vadd _ _
 #align affine_equiv.const_vadd_add AffineEquiv.constVAdd_add
 
-/- warning: affine_equiv.const_vadd_symm -> AffineEquiv.constVAdd_symm is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (v : V₁), Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v)) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (Neg.neg.{u3} V₁ (SubNegMonoid.toHasNeg.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) v))
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (v : V₁), Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v)) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (Neg.neg.{u2} V₁ (NegZeroClass.toNeg.{u2} V₁ (SubNegZeroMonoid.toNegZeroClass.{u2} V₁ (SubtractionMonoid.toSubNegZeroMonoid.{u2} V₁ (SubtractionCommMonoid.toSubtractionMonoid.{u2} V₁ (AddCommGroup.toDivisionAddCommMonoid.{u2} V₁ _inst_2))))) v))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.const_vadd_symm AffineEquiv.constVAdd_symmₓ'. -/
 @[simp]
 theorem constVAdd_symm (v : V₁) : (constVAdd k P₁ v).symm = constVAdd k P₁ (-v) :=
   ext fun _ => rfl
@@ -782,22 +557,10 @@ def constVAddHom : Multiplicative V₁ →* P₁ ≃ᵃ[k] P₁
 #align affine_equiv.const_vadd_hom AffineEquiv.constVAddHom
 -/
 
-/- warning: affine_equiv.const_vadd_nsmul -> AffineEquiv.constVAdd_nsmul is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (n : Nat) (v : V₁), Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (SMul.smul.{0, u3} Nat V₁ (AddMonoid.SMul.{u3} V₁ (SubNegMonoid.toAddMonoid.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)))) n v)) (HPow.hPow.{max u2 u3, 0, max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Nat (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (instHPow.{max u2 u3, 0} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Nat (Monoid.Pow.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v) n)
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (n : Nat) (v : V₁), Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (HSMul.hSMul.{0, u2, u2} Nat V₁ V₁ (instHSMul.{0, u2} Nat V₁ (AddMonoid.SMul.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2))))) n v)) (HPow.hPow.{max u3 u2, 0, max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Nat (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (instHPow.{max u3 u2, 0} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Nat (Monoid.Pow.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (DivInvMonoid.toMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4))))) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v) n)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.const_vadd_nsmul AffineEquiv.constVAdd_nsmulₓ'. -/
 theorem constVAdd_nsmul (n : ℕ) (v : V₁) : constVAdd k P₁ (n • v) = constVAdd k P₁ v ^ n :=
   (constVAddHom k P₁).map_pow _ _
 #align affine_equiv.const_vadd_nsmul AffineEquiv.constVAdd_nsmul
 
-/- warning: affine_equiv.const_vadd_zsmul -> AffineEquiv.constVAdd_zsmul is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) (P₁ : Type.{u2}) {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (z : Int) (v : V₁), Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (SMul.smul.{0, u3} Int V₁ (SubNegMonoid.SMulInt.{u3} V₁ (AddGroup.toSubNegMonoid.{u3} V₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2))) z v)) (HPow.hPow.{max u2 u3, 0, max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Int (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (instHPow.{max u2 u3, 0} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Int (DivInvMonoid.Pow.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)))) (AffineEquiv.constVAdd.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v) z)
-but is expected to have type
-  forall (k : Type.{u1}) (P₁ : Type.{u3}) {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (z : Int) (v : V₁), Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 (HSMul.hSMul.{0, u2, u2} Int V₁ V₁ (instHSMul.{0, u2} Int V₁ (SubNegMonoid.SMulInt.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)))) z v)) (HPow.hPow.{max u3 u2, 0, max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Int (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (instHPow.{max u3 u2, 0} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) Int (DivInvMonoid.Pow.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (Group.toDivInvMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.group.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4)))) (AffineEquiv.constVAdd.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 v) z)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.const_vadd_zsmul AffineEquiv.constVAdd_zsmulₓ'. -/
 theorem constVAdd_zsmul (z : ℤ) (v : V₁) : constVAdd k P₁ (z • v) = constVAdd k P₁ v ^ z :=
   (constVAddHom k P₁).map_zpow _ _
 #align affine_equiv.const_vadd_zsmul AffineEquiv.constVAdd_zsmul
@@ -810,39 +573,24 @@ variable {R V P : Type _} [CommRing R] [AddCommGroup V] [Module R V] [affine_spa
 
 include V
 
-/- warning: affine_equiv.homothety_units_mul_hom -> AffineEquiv.homothetyUnitsMulHom is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {V : Type.{u2}} {P : Type.{u3}} [_inst_14 : CommRing.{u1} R] [_inst_15 : AddCommGroup.{u2} V] [_inst_16 : Module.{u1, u2} R V (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_14)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_15)] [_inst_17 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_15)], P -> (MonoidHom.{u1, max u3 u2} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_14))) (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (Units.mulOneClass.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_14))) (Monoid.toMulOneClass.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (DivInvMonoid.toMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (Group.toDivInvMonoid.{max u3 u2} (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (AffineEquiv.group.{u1, u3, u2} R P V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17)))))
-but is expected to have type
-  forall {R : Type.{u1}} {V : Type.{u2}} {P : Type.{u3}} [_inst_14 : CommRing.{u1} R] [_inst_15 : AddCommGroup.{u2} V] [_inst_16 : Module.{u1, u2} R V (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_14)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_15)] [_inst_17 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_15)], P -> (MonoidHom.{u1, max u2 u3} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_14))))) (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (Units.instMulOneClassUnits.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_14))))) (Monoid.toMulOneClass.{max u2 u3} (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (DivInvMonoid.toMonoid.{max u2 u3} (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (Group.toDivInvMonoid.{max u2 u3} (AffineEquiv.{u1, u3, u3, u2, u2} R P P V V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17 _inst_15 _inst_16 _inst_17) (AffineEquiv.group.{u1, u3, u2} R P V (CommRing.toRing.{u1} R _inst_14) _inst_15 _inst_16 _inst_17)))))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.homothety_units_mul_hom AffineEquiv.homothetyUnitsMulHomₓ'. -/
 /-- Fixing a point in affine space, homothety about this point gives a group homomorphism from (the
 centre of) the units of the scalars into the group of affine equivalences. -/
 def homothetyUnitsMulHom (p : P) : Rˣ →* P ≃ᵃ[R] P :=
   equivUnitsAffineMap.symm.toMonoidHom.comp <| Units.map (AffineMap.homothetyHom p)
 #align affine_equiv.homothety_units_mul_hom AffineEquiv.homothetyUnitsMulHom
 
-/- warning: affine_equiv.coe_homothety_units_mul_hom_apply -> AffineEquiv.coe_homothetyUnitsMulHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_homothety_units_mul_hom_apply AffineEquiv.coe_homothetyUnitsMulHom_applyₓ'. -/
 @[simp]
 theorem coe_homothetyUnitsMulHom_apply (p : P) (t : Rˣ) :
     (homothetyUnitsMulHom p t : P → P) = AffineMap.homothety p (t : R) :=
   rfl
 #align affine_equiv.coe_homothety_units_mul_hom_apply AffineEquiv.coe_homothetyUnitsMulHom_apply
 
-/- warning: affine_equiv.coe_homothety_units_mul_hom_apply_symm -> AffineEquiv.coe_homothetyUnitsMulHom_apply_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_homothety_units_mul_hom_apply_symm AffineEquiv.coe_homothetyUnitsMulHom_apply_symmₓ'. -/
 @[simp]
 theorem coe_homothetyUnitsMulHom_apply_symm (p : P) (t : Rˣ) :
     ((homothetyUnitsMulHom p t).symm : P → P) = AffineMap.homothety p (↑t⁻¹ : R) :=
   rfl
 #align affine_equiv.coe_homothety_units_mul_hom_apply_symm AffineEquiv.coe_homothetyUnitsMulHom_apply_symm
 
-/- warning: affine_equiv.coe_homothety_units_mul_hom_eq_homothety_hom_coe -> AffineEquiv.coe_homothetyUnitsMulHom_eq_homothetyHom_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.coe_homothety_units_mul_hom_eq_homothety_hom_coe AffineEquiv.coe_homothetyUnitsMulHom_eq_homothetyHom_coeₓ'. -/
 @[simp]
 theorem coe_homothetyUnitsMulHom_eq_homothetyHom_coe (p : P) :
     (coe : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothetyUnitsMulHom p =
@@ -863,60 +611,30 @@ def pointReflection (x : P₁) : P₁ ≃ᵃ[k] P₁ :=
 #align affine_equiv.point_reflection AffineEquiv.pointReflection
 -/
 
-/- warning: affine_equiv.point_reflection_apply -> AffineEquiv.pointReflection_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.point_reflection_apply AffineEquiv.pointReflection_applyₓ'. -/
 theorem pointReflection_apply (x y : P₁) : pointReflection k x y = x -ᵥ y +ᵥ x :=
   rfl
 #align affine_equiv.point_reflection_apply AffineEquiv.pointReflection_apply
 
-/- warning: affine_equiv.point_reflection_symm -> AffineEquiv.pointReflection_symm is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (x : P₁), Eq.{max (succ u2) (succ u3)} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.pointReflection.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x)) (AffineEquiv.pointReflection.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x)
-but is expected to have type
-  forall (k : Type.{u1}) {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (x : P₁), Eq.{max (succ u3) (succ u2)} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.symm.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.pointReflection.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x)) (AffineEquiv.pointReflection.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.point_reflection_symm AffineEquiv.pointReflection_symmₓ'. -/
 @[simp]
 theorem pointReflection_symm (x : P₁) : (pointReflection k x).symm = pointReflection k x :=
   toEquiv_injective <| Equiv.pointReflection_symm x
 #align affine_equiv.point_reflection_symm AffineEquiv.pointReflection_symm
 
-/- warning: affine_equiv.to_equiv_point_reflection -> AffineEquiv.toEquiv_pointReflection is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (x : P₁), Eq.{succ u2} (Equiv.{succ u2, succ u2} P₁ P₁) (AffineEquiv.toEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.pointReflection.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x)) (Equiv.pointReflection.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2) _inst_4 x)
-but is expected to have type
-  forall (k : Type.{u2}) {P₁ : Type.{u3}} {V₁ : Type.{u1}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u1} V₁] [_inst_3 : Module.{u2, u1} k V₁ (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V₁ _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u1} V₁ _inst_2)] (x : P₁), Eq.{succ u3} (Equiv.{succ u3, succ u3} P₁ P₁) (AffineEquiv.toEquiv.{u2, u3, u3, u1, u1} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 (AffineEquiv.pointReflection.{u2, u3, u1} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x)) (Equiv.pointReflection.{u1, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u1} V₁ _inst_2) _inst_4 x)
-Case conversion may be inaccurate. Consider using '#align affine_equiv.to_equiv_point_reflection AffineEquiv.toEquiv_pointReflectionₓ'. -/
 @[simp]
 theorem toEquiv_pointReflection (x : P₁) :
     (pointReflection k x).toEquiv = Equiv.pointReflection x :=
   rfl
 #align affine_equiv.to_equiv_point_reflection AffineEquiv.toEquiv_pointReflection
 
-/- warning: affine_equiv.point_reflection_self -> AffineEquiv.pointReflection_self is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (x : P₁), Eq.{succ u2} P₁ (coeFn.{max (succ u2) (succ u3), succ u2} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (fun (_x : AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) => P₁ -> P₁) (AffineEquiv.hasCoeToFun.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.pointReflection.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x) x) x
-but is expected to have type
-  forall (k : Type.{u1}) {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (x : P₁), Eq.{succ u3} ((fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) x) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (AffineEquiv.equivLike.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4))) (AffineEquiv.pointReflection.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x) x) x
-Case conversion may be inaccurate. Consider using '#align affine_equiv.point_reflection_self AffineEquiv.pointReflection_selfₓ'. -/
 @[simp]
 theorem pointReflection_self (x : P₁) : pointReflection k x x = x :=
   vsub_vadd _ _
 #align affine_equiv.point_reflection_self AffineEquiv.pointReflection_self
 
-/- warning: affine_equiv.point_reflection_involutive -> AffineEquiv.pointReflection_involutive is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {P₁ : Type.{u2}} {V₁ : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u3} V₁] [_inst_3 : Module.{u1, u3} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V₁ _inst_2)] [_inst_4 : AddTorsor.{u3, u2} V₁ P₁ (AddCommGroup.toAddGroup.{u3} V₁ _inst_2)] (x : P₁), Function.Involutive.{succ u2} P₁ (coeFn.{max (succ u2) (succ u3), succ u2} (AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (fun (_x : AffineEquiv.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) => P₁ -> P₁) (AffineEquiv.hasCoeToFun.{u1, u2, u2, u3, u3} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) (AffineEquiv.pointReflection.{u1, u2, u3} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x))
-but is expected to have type
-  forall (k : Type.{u1}) {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V₁] [_inst_3 : Module.{u1, u2} k V₁ (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] (x : P₁), Function.Involutive.{succ u3} P₁ (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4) P₁ P₁ (AffineEquiv.equivLike.{u1, u3, u3, u2, u2} k P₁ P₁ V₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4))) (AffineEquiv.pointReflection.{u1, u3, u2} k P₁ V₁ _inst_1 _inst_2 _inst_3 _inst_4 x))
-Case conversion may be inaccurate. Consider using '#align affine_equiv.point_reflection_involutive AffineEquiv.pointReflection_involutiveₓ'. -/
 theorem pointReflection_involutive (x : P₁) : Involutive (pointReflection k x : P₁ → P₁) :=
   Equiv.pointReflection_involutive x
 #align affine_equiv.point_reflection_involutive AffineEquiv.pointReflection_involutive
 
-/- warning: affine_equiv.point_reflection_fixed_iff_of_injective_bit0 -> AffineEquiv.pointReflection_fixed_iff_of_injective_bit0 is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.point_reflection_fixed_iff_of_injective_bit0 AffineEquiv.pointReflection_fixed_iff_of_injective_bit0ₓ'. -/
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/
 theorem pointReflection_fixed_iff_of_injective_bit0 {x y : P₁} (h : Injective (bit0 : V₁ → V₁)) :
@@ -924,17 +642,11 @@ theorem pointReflection_fixed_iff_of_injective_bit0 {x y : P₁} (h : Injective 
   Equiv.pointReflection_fixed_iff_of_injective_bit0 h
 #align affine_equiv.point_reflection_fixed_iff_of_injective_bit0 AffineEquiv.pointReflection_fixed_iff_of_injective_bit0
 
-/- warning: affine_equiv.injective_point_reflection_left_of_injective_bit0 -> AffineEquiv.injective_pointReflection_left_of_injective_bit0 is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.injective_point_reflection_left_of_injective_bit0 AffineEquiv.injective_pointReflection_left_of_injective_bit0ₓ'. -/
 theorem injective_pointReflection_left_of_injective_bit0 (h : Injective (bit0 : V₁ → V₁)) (y : P₁) :
     Injective fun x : P₁ => pointReflection k x y :=
   Equiv.injective_pointReflection_left_of_injective_bit0 h y
 #align affine_equiv.injective_point_reflection_left_of_injective_bit0 AffineEquiv.injective_pointReflection_left_of_injective_bit0
 
-/- warning: affine_equiv.injective_point_reflection_left_of_module -> AffineEquiv.injective_pointReflection_left_of_module is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.injective_point_reflection_left_of_module AffineEquiv.injective_pointReflection_left_of_moduleₓ'. -/
 theorem injective_pointReflection_left_of_module [Invertible (2 : k)] :
     ∀ y, Injective fun x : P₁ => pointReflection k x y :=
   injective_pointReflection_left_of_injective_bit0 k fun x y h => by
@@ -942,9 +654,6 @@ theorem injective_pointReflection_left_of_module [Invertible (2 : k)] :
       (isUnit_of_invertible (2 : k)).smul_left_cancel] at h
 #align affine_equiv.injective_point_reflection_left_of_module AffineEquiv.injective_pointReflection_left_of_module
 
-/- warning: affine_equiv.point_reflection_fixed_iff_of_module -> AffineEquiv.pointReflection_fixed_iff_of_module is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_equiv.point_reflection_fixed_iff_of_module AffineEquiv.pointReflection_fixed_iff_of_moduleₓ'. -/
 theorem pointReflection_fixed_iff_of_module [Invertible (2 : k)] {x y : P₁} :
     pointReflection k x y = y ↔ y = x :=
   ((injective_pointReflection_left_of_module k y).eq_iff' (pointReflection_self k y)).trans eq_comm
@@ -964,9 +673,6 @@ def toAffineEquiv (e : V₁ ≃ₗ[k] V₂) : V₁ ≃ᵃ[k] V₂
 #align linear_equiv.to_affine_equiv LinearEquiv.toAffineEquiv
 -/
 
-/- warning: linear_equiv.coe_to_affine_equiv -> LinearEquiv.coe_toAffineEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.coe_to_affine_equiv LinearEquiv.coe_toAffineEquivₓ'. -/
 @[simp]
 theorem coe_toAffineEquiv (e : V₁ ≃ₗ[k] V₂) : ⇑e.toAffineEquiv = e :=
   rfl
@@ -980,9 +686,6 @@ open AffineEquiv
 
 include V₁
 
-/- warning: affine_map.line_map_vadd -> AffineMap.lineMap_vadd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.line_map_vadd AffineMap.lineMap_vaddₓ'. -/
 theorem lineMap_vadd (v v' : V₁) (p : P₁) (c : k) :
     lineMap v v' c +ᵥ p = lineMap (v +ᵥ p) (v' +ᵥ p) c :=
   (vaddConst k p).apply_lineMap v v' c
@@ -1002,9 +705,6 @@ theorem vsub_lineMap (p₁ p₂ p₃ : P₁) (c : k) :
 #align affine_map.vsub_line_map AffineMap.vsub_lineMap
 -/
 
-/- warning: affine_map.vadd_line_map -> AffineMap.vadd_lineMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.vadd_line_map AffineMap.vadd_lineMapₓ'. -/
 theorem vadd_lineMap (v : V₁) (p₁ p₂ : P₁) (c : k) :
     v +ᵥ lineMap p₁ p₂ c = lineMap (v +ᵥ p₁) (v +ᵥ p₂) c :=
   (constVAdd k P₁ v).apply_lineMap p₁ p₂ c
@@ -1012,12 +712,6 @@ theorem vadd_lineMap (v : V₁) (p₁ p₂ : P₁) (c : k) :
 
 variable {R' : Type _} [CommRing R'] [Module R' V₁]
 
-/- warning: affine_map.homothety_neg_one_apply -> AffineMap.homothety_neg_one_apply is a dubious translation:
-lean 3 declaration is
-  forall {P₁ : Type.{u1}} {V₁ : Type.{u2}} [_inst_2 : AddCommGroup.{u2} V₁] [_inst_4 : AddTorsor.{u2, u1} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] {R' : Type.{u3}} [_inst_14 : CommRing.{u3} R'] [_inst_15 : Module.{u3, u2} R' V₁ (Ring.toSemiring.{u3} R' (CommRing.toRing.{u3} R' _inst_14)) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] (c : P₁) (p : P₁), Eq.{succ u1} P₁ (coeFn.{max (succ u2) (succ u1), succ u1} (AffineMap.{u3, u2, u1, u2, u1} R' V₁ P₁ V₁ P₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) (fun (_x : AffineMap.{u3, u2, u1, u2, u1} R' V₁ P₁ V₁ P₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) => P₁ -> P₁) (AffineMap.hasCoeToFun.{u3, u2, u1, u2, u1} R' V₁ P₁ V₁ P₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) (AffineMap.homothety.{u3, u2, u1} R' V₁ P₁ _inst_14 _inst_2 _inst_4 _inst_15 c (Neg.neg.{u3} R' (SubNegMonoid.toHasNeg.{u3} R' (AddGroup.toSubNegMonoid.{u3} R' (AddGroupWithOne.toAddGroup.{u3} R' (AddCommGroupWithOne.toAddGroupWithOne.{u3} R' (Ring.toAddCommGroupWithOne.{u3} R' (CommRing.toRing.{u3} R' _inst_14)))))) (OfNat.ofNat.{u3} R' 1 (OfNat.mk.{u3} R' 1 (One.one.{u3} R' (AddMonoidWithOne.toOne.{u3} R' (AddGroupWithOne.toAddMonoidWithOne.{u3} R' (AddCommGroupWithOne.toAddGroupWithOne.{u3} R' (Ring.toAddCommGroupWithOne.{u3} R' (CommRing.toRing.{u3} R' _inst_14)))))))))) p) (coeFn.{max (succ u1) (succ u2), succ u1} (AffineEquiv.{u3, u1, u1, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) (fun (_x : AffineEquiv.{u3, u1, u1, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) => P₁ -> P₁) (AffineEquiv.hasCoeToFun.{u3, u1, u1, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) (AffineEquiv.pointReflection.{u3, u1, u2} R' P₁ V₁ (CommRing.toRing.{u3} R' _inst_14) _inst_2 _inst_15 _inst_4 c) p)
-but is expected to have type
-  forall {P₁ : Type.{u3}} {V₁ : Type.{u2}} [_inst_2 : AddCommGroup.{u2} V₁] [_inst_4 : AddTorsor.{u2, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u2} V₁ _inst_2)] {R' : Type.{u1}} [_inst_14 : CommRing.{u1} R'] [_inst_15 : Module.{u1, u2} R' V₁ (CommSemiring.toSemiring.{u1} R' (CommRing.toCommSemiring.{u1} R' _inst_14)) (AddCommGroup.toAddCommMonoid.{u2} V₁ _inst_2)] (c : P₁) (p : P₁), Eq.{succ u3} ((fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P₁) => P₁) p) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u3} (AffineMap.{u1, u2, u3, u2, u3} R' V₁ P₁ V₁ P₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P₁) => P₁) _x) (AffineMap.funLike.{u1, u2, u3, u2, u3} R' V₁ P₁ V₁ P₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) (AffineMap.homothety.{u1, u2, u3} R' V₁ P₁ _inst_14 _inst_2 _inst_4 _inst_15 c (Neg.neg.{u1} R' (Ring.toNeg.{u1} R' (CommRing.toRing.{u1} R' _inst_14)) (OfNat.ofNat.{u1} R' 1 (One.toOfNat1.{u1} R' (Semiring.toOne.{u1} R' (CommSemiring.toSemiring.{u1} R' (CommRing.toCommSemiring.{u1} R' _inst_14))))))) p) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) P₁ (fun (_x : P₁) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineEquiv._hyg.1470 : P₁) => P₁) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) P₁ P₁ (EquivLike.toEmbeddingLike.{max (succ u3) (succ u2), succ u3, succ u3} (AffineEquiv.{u1, u3, u3, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4) P₁ P₁ (AffineEquiv.equivLike.{u1, u3, u3, u2, u2} R' P₁ P₁ V₁ V₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 _inst_2 _inst_15 _inst_4))) (AffineEquiv.pointReflection.{u1, u3, u2} R' P₁ V₁ (CommRing.toRing.{u1} R' _inst_14) _inst_2 _inst_15 _inst_4 c) p)
-Case conversion may be inaccurate. Consider using '#align affine_map.homothety_neg_one_apply AffineMap.homothety_neg_one_applyₓ'. -/
 theorem homothety_neg_one_apply (c p : P₁) : homothety c (-1 : R') p = pointReflection R' c p := by
   simp [homothety_apply, point_reflection_apply]
 #align affine_map.homothety_neg_one_apply AffineMap.homothety_neg_one_apply

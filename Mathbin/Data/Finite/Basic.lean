@@ -151,12 +151,6 @@ instance Quotient.finite {α : Sort _} [Finite α] (s : Setoid α) : Finite (Quo
 #align quotient.finite Quotient.finite
 -/
 
-/- warning: function.embedding.finite -> Function.Embedding.finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max 1 (imax u1 u2)} (Function.Embedding.{u1, u2} α β)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max (max 1 u2) u1} (Function.Embedding.{u1, u2} α β)
-Case conversion may be inaccurate. Consider using '#align function.embedding.finite Function.Embedding.finiteₓ'. -/
 instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪ β) :=
   by
   cases' isEmpty_or_nonempty (α ↪ β) with _ h
@@ -166,22 +160,10 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
     exact Finite.of_injective _ FunLike.coe_injective
 #align function.embedding.finite Function.Embedding.finite
 
-/- warning: equiv.finite_right -> Equiv.finite_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max (max 1 u2) u1} (Equiv.{u1, u2} α β)
-Case conversion may be inaccurate. Consider using '#align equiv.finite_right Equiv.finite_rightₓ'. -/
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
   Finite.of_injective Equiv.toEmbedding fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
 #align equiv.finite_right Equiv.finite_right
 
-/- warning: equiv.finite_left -> Equiv.finite_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α], Finite.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α], Finite.{max (max 1 u2) u1} (Equiv.{u1, u2} α β)
-Case conversion may be inaccurate. Consider using '#align equiv.finite_left Equiv.finite_leftₓ'. -/
 instance Equiv.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=
   Finite.of_equiv _ ⟨Equiv.symm, Equiv.symm, Equiv.symm_symm, Equiv.symm_symm⟩
 #align equiv.finite_left Equiv.finite_left

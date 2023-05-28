@@ -43,12 +43,6 @@ open Classical
 
 namespace Order
 
-/- warning: order.exists_between_finsets -> Order.exists_between_finsets is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [nonem : Nonempty.{succ u1} α] (lo : Finset.{u1} α) (hi : Finset.{u1} α), (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x lo) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) y hi) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x y))) -> (Exists.{succ u1} α (fun (m : α) => And (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x lo) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x m)) (forall (y : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) y hi) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) m y))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] [nonem : Nonempty.{succ u1} α] (lo : Finset.{u1} α) (hi : Finset.{u1} α), (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x lo) -> (forall (y : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y hi) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x y))) -> (Exists.{succ u1} α (fun (m : α) => And (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x lo) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x m)) (forall (y : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y hi) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) m y))))
-Case conversion may be inaccurate. Consider using '#align order.exists_between_finsets Order.exists_between_finsetsₓ'. -/
 /-- Suppose `α` is a nonempty dense linear order without endpoints, and
     suppose `lo`, `hi`, are finite subssets with all of `lo` strictly
     before `hi`. Then there is an element of `α` strictly between `lo`
@@ -102,9 +96,6 @@ instance : Preorder (PartialIso α β) :=
 
 variable {α β}
 
-/- warning: order.partial_iso.exists_across -> Order.PartialIso.exists_across is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align order.partial_iso.exists_across Order.PartialIso.exists_acrossₓ'. -/
 /-- For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
 the domain of `f` is `b`'s relation to the image of `f`.
 
@@ -155,12 +146,6 @@ protected def comm : PartialIso α β → PartialIso β α :=
 
 variable (β)
 
-/- warning: order.partial_iso.defined_at_left -> Order.PartialIso.definedAtLeft is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (β : Type.{u2}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : DenselyOrdered.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_4 : NoMinOrder.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_5 : NoMaxOrder.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_6 : Nonempty.{succ u2} β], α -> (Order.Cofinal.{max u1 u2} (Order.PartialIso.{u1, u2} α β _inst_1 _inst_2) (Order.PartialIso.preorder.{u1, u2} α β _inst_1 _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} (β : Type.{u2}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : DenselyOrdered.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))))] [_inst_4 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))))] [_inst_5 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))))] [_inst_6 : Nonempty.{succ u2} β], α -> (Order.Cofinal.{max u2 u1} (Order.PartialIso.{u1, u2} α β _inst_1 _inst_2) (Order.PartialIso.instPreorderPartialIso.{u1, u2} α β _inst_1 _inst_2))
-Case conversion may be inaccurate. Consider using '#align order.partial_iso.defined_at_left Order.PartialIso.definedAtLeftₓ'. -/
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) :
@@ -182,12 +167,6 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
 
 variable (α) {β}
 
-/- warning: order.partial_iso.defined_at_right -> Order.PartialIso.definedAtRight is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : DenselyOrdered.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_4 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_5 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_6 : Nonempty.{succ u1} α], β -> (Order.Cofinal.{max u1 u2} (Order.PartialIso.{u1, u2} α β _inst_1 _inst_2) (Order.PartialIso.preorder.{u1, u2} α β _inst_1 _inst_2))
-but is expected to have type
-  forall (α : Type.{u1}) {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] [_inst_4 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] [_inst_5 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] [_inst_6 : Nonempty.{succ u1} α], β -> (Order.Cofinal.{max u2 u1} (Order.PartialIso.{u1, u2} α β _inst_1 _inst_2) (Order.PartialIso.instPreorderPartialIso.{u1, u2} α β _inst_1 _inst_2))
-Case conversion may be inaccurate. Consider using '#align order.partial_iso.defined_at_right Order.PartialIso.definedAtRightₓ'. -/
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
@@ -206,9 +185,6 @@ def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty
 
 variable {α}
 
-/- warning: order.partial_iso.fun_of_ideal -> Order.PartialIso.funOfIdeal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align order.partial_iso.fun_of_ideal Order.PartialIso.funOfIdealₓ'. -/
 /-- Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
     some partial function in the ideal maps `a` to `b`. -/
 def funOfIdeal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α)
@@ -217,9 +193,6 @@ def funOfIdeal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β]
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨b, hb⟩, hf⟩ => ⟨b, f, hf, hb⟩
 #align order.partial_iso.fun_of_ideal Order.PartialIso.funOfIdeal
 
-/- warning: order.partial_iso.inv_of_ideal -> Order.PartialIso.invOfIdeal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align order.partial_iso.inv_of_ideal Order.PartialIso.invOfIdealₓ'. -/
 /-- Given an ideal which intersects `defined_at_right α b`, pick `a : α` such that
     some partial function in the ideal maps `a` to `b`. -/
 def invOfIdeal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β)
@@ -234,12 +207,6 @@ open PartialIso
 
 variable (α β)
 
-/- warning: order.embedding_from_countable_to_dense -> Order.embedding_from_countable_to_dense is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : Encodable.{u1} α] [_inst_4 : DenselyOrdered.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_5 : Nontrivial.{u2} β], Nonempty.{max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))))
-but is expected to have type
-  forall (α : Type.{u2}) (β : Type.{u1}) [_inst_1 : LinearOrder.{u2} α] [_inst_2 : LinearOrder.{u1} β] [_inst_3 : Encodable.{u2} α] [_inst_4 : DenselyOrdered.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))))] [_inst_5 : Nontrivial.{u1} β], Nonempty.{max (succ u1) (succ u2)} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1)))))) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align order.embedding_from_countable_to_dense Order.embedding_from_countable_to_denseₓ'. -/
 /-- Any countable linear order embeds in any nontrivial dense linear order. -/
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] :
     Nonempty (α ↪o β) := by
@@ -258,12 +225,6 @@ theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [No
   exact (lt_iff_lt_of_cmp_eq_cmp <| m.prop (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp
 #align order.embedding_from_countable_to_dense Order.embedding_from_countable_to_dense
 
-/- warning: order.iso_of_countable_dense -> Order.iso_of_countable_dense is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : Encodable.{u1} α] [_inst_4 : DenselyOrdered.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_5 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_6 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] [_inst_7 : Nonempty.{succ u1} α] [_inst_8 : Encodable.{u2} β] [_inst_9 : DenselyOrdered.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_10 : NoMinOrder.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_11 : NoMaxOrder.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))] [_inst_12 : Nonempty.{succ u2} β], Nonempty.{max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))))
-but is expected to have type
-  forall (α : Type.{u2}) (β : Type.{u1}) [_inst_1 : LinearOrder.{u2} α] [_inst_2 : LinearOrder.{u1} β] [_inst_3 : Encodable.{u2} α] [_inst_4 : DenselyOrdered.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))))] [_inst_5 : NoMinOrder.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))))] [_inst_6 : NoMaxOrder.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))))] [_inst_7 : Nonempty.{succ u2} α] [_inst_8 : Encodable.{u1} β] [_inst_9 : DenselyOrdered.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))))] [_inst_10 : NoMinOrder.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))))] [_inst_11 : NoMaxOrder.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))))] [_inst_12 : Nonempty.{succ u1} β], Nonempty.{max (succ u1) (succ u2)} (OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1)))))) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align order.iso_of_countable_dense Order.iso_of_countable_denseₓ'. -/
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
 theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α]
     [Nonempty α] [Encodable β] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :

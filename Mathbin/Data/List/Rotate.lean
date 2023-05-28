@@ -226,12 +226,6 @@ theorem rotate_length_mul (l : List α) (n : ℕ) : l.rotate (l.length * n) = l 
 #align list.rotate_length_mul List.rotate_length_mul
 -/
 
-/- warning: list.prod_rotate_eq_one_of_prod_eq_one -> List.prod_rotate_eq_one_of_prod_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {l : List.{u1} α}, (Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) l) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) -> (forall (n : Nat), Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (List.rotate.{u1} α l n)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {l : List.{u1} α}, (Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) l) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) -> (forall (n : Nat), Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) (List.rotate.{u1} α l n)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align list.prod_rotate_eq_one_of_prod_eq_one List.prod_rotate_eq_one_of_prod_eq_oneₓ'. -/
 theorem prod_rotate_eq_one_of_prod_eq_one [Group α] :
     ∀ {l : List α} (hl : l.Prod = 1) (n : ℕ), (l.rotate n).Prod = 1
   | [], _, _ => by simp
@@ -289,12 +283,6 @@ theorem rotate_singleton (x : α) (n : ℕ) : [x].rotate n = [x] :=
 #align list.rotate_singleton List.rotate_singleton
 -/
 
-/- warning: list.zip_with_rotate_distrib -> List.zipWith_rotate_distrib is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β -> γ) (l : List.{u1} α) (l' : List.{u2} β) (n : Nat), (Eq.{1} Nat (List.length.{u1} α l) (List.length.{u2} β l')) -> (Eq.{succ u3} (List.{u3} γ) (List.rotate.{u3} γ (List.zipWith.{u1, u2, u3} α β γ f l l') n) (List.zipWith.{u1, u2, u3} α β γ f (List.rotate.{u1} α l n) (List.rotate.{u2} β l' n)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> β -> γ) (l : List.{u3} α) (l' : List.{u2} β) (n : Nat), (Eq.{1} Nat (List.length.{u3} α l) (List.length.{u2} β l')) -> (Eq.{succ u1} (List.{u1} γ) (List.rotate.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l l') n) (List.zipWith.{u3, u2, u1} α β γ f (List.rotate.{u3} α l n) (List.rotate.{u2} β l' n)))
-Case conversion may be inaccurate. Consider using '#align list.zip_with_rotate_distrib List.zipWith_rotate_distribₓ'. -/
 theorem zipWith_rotate_distrib {α β γ : Type _} (f : α → β → γ) (l : List α) (l' : List β) (n : ℕ)
     (h : l.length = l'.length) : (zipWith f l l').rotate n = zipWith f (l.rotate n) (l'.rotate n) :=
   by
@@ -306,12 +294,6 @@ theorem zipWith_rotate_distrib {α β γ : Type _} (f : α → β → γ) (l : L
 
 attribute [local simp] rotate_cons_succ
 
-/- warning: list.zip_with_rotate_one -> List.zipWith_rotate_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> α -> β) (x : α) (y : α) (l : List.{u1} α), Eq.{succ u2} (List.{u2} β) (List.zipWith.{u1, u1, u2} α α β f (List.cons.{u1} α x (List.cons.{u1} α y l)) (List.rotate.{u1} α (List.cons.{u1} α x (List.cons.{u1} α y l)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (List.cons.{u2} β (f x y) (List.zipWith.{u1, u1, u2} α α β f (List.cons.{u1} α y l) (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l (List.cons.{u1} α x (List.nil.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> α -> β) (x : α) (y : α) (l : List.{u2} α), Eq.{succ u1} (List.{u1} β) (List.zipWith.{u2, u2, u1} α α β f (List.cons.{u2} α x (List.cons.{u2} α y l)) (List.rotate.{u2} α (List.cons.{u2} α x (List.cons.{u2} α y l)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (List.cons.{u1} β (f x y) (List.zipWith.{u2, u2, u1} α α β f (List.cons.{u2} α y l) (HAppend.hAppend.{u2, u2, u2} (List.{u2} α) (List.{u2} α) (List.{u2} α) (instHAppend.{u2} (List.{u2} α) (List.instAppendList.{u2} α)) l (List.cons.{u2} α x (List.nil.{u2} α)))))
-Case conversion may be inaccurate. Consider using '#align list.zip_with_rotate_one List.zipWith_rotate_oneₓ'. -/
 @[simp]
 theorem zipWith_rotate_one {β : Type _} (f : α → α → β) (x y : α) (l : List α) :
     zipWith f (x :: y :: l) ((x :: y :: l).rotate 1) = f x y :: zipWith f (y :: l) (l ++ [x]) := by
@@ -486,12 +468,6 @@ theorem rotate_reverse (l : List α) (n : ℕ) :
 #align list.rotate_reverse List.rotate_reverse
 -/
 
-/- warning: list.map_rotate -> List.map_rotate is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (l : List.{u1} α) (n : Nat), Eq.{succ u2} (List.{u2} β) (List.map.{u1, u2} α β f (List.rotate.{u1} α l n)) (List.rotate.{u2} β (List.map.{u1, u2} α β f l) n)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (l : List.{u2} α) (n : Nat), Eq.{succ u1} (List.{u1} β) (List.map.{u2, u1} α β f (List.rotate.{u2} α l n)) (List.rotate.{u1} β (List.map.{u2, u1} α β f l) n)
-Case conversion may be inaccurate. Consider using '#align list.map_rotate List.map_rotateₓ'. -/
 theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) :
     map f (l.rotate n) = (map f l).rotate n :=
   by
@@ -687,12 +663,6 @@ theorem isRotated_reverse_iff : l.reverse ~r l'.reverse ↔ l ~r l' := by
 #align list.is_rotated_reverse_iff List.isRotated_reverse_iff
 -/
 
-/- warning: list.is_rotated_iff_mod -> List.isRotated_iff_mod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α}, Iff (List.IsRotated.{u1} α l l') (Exists.{1} Nat (fun (n : Nat) => Exists.{0} (LE.le.{0} Nat Nat.hasLe n (List.length.{u1} α l)) (fun (H : LE.le.{0} Nat Nat.hasLe n (List.length.{u1} α l)) => Eq.{succ u1} (List.{u1} α) (List.rotate.{u1} α l n) l')))
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α}, Iff (List.IsRotated.{u1} α l l') (Exists.{1} Nat (fun (n : Nat) => And (LE.le.{0} Nat instLENat n (List.length.{u1} α l)) (Eq.{succ u1} (List.{u1} α) (List.rotate.{u1} α l n) l')))
-Case conversion may be inaccurate. Consider using '#align list.is_rotated_iff_mod List.isRotated_iff_modₓ'. -/
 theorem isRotated_iff_mod : l ~r l' ↔ ∃ n ≤ l.length, l.rotate n = l' :=
   by
   refine' ⟨fun h => _, fun ⟨n, _, h⟩ => ⟨n, h⟩⟩
@@ -713,12 +683,6 @@ theorem isRotated_iff_mem_map_range : l ~r l' ↔ l' ∈ (List.range (l.length +
 #align list.is_rotated_iff_mem_map_range List.isRotated_iff_mem_map_range
 -/
 
-/- warning: list.is_rotated.map -> List.IsRotated.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.IsRotated.{u1} α l₁ l₂) -> (forall (f : α -> β), List.IsRotated.{u2} β (List.map.{u1, u2} α β f l₁) (List.map.{u1, u2} α β f l₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {l₁ : List.{u2} α} {l₂ : List.{u2} α}, (List.IsRotated.{u2} α l₁ l₂) -> (forall (f : α -> β), List.IsRotated.{u1} β (List.map.{u2, u1} α β f l₁) (List.map.{u2, u1} α β f l₂))
-Case conversion may be inaccurate. Consider using '#align list.is_rotated.map List.IsRotated.mapₓ'. -/
 @[congr]
 theorem IsRotated.map {β : Type _} {l₁ l₂ : List α} (h : l₁ ~r l₂) (f : α → β) :
     map f l₁ ~r map f l₂ := by

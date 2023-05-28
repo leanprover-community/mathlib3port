@@ -36,12 +36,6 @@ theorem hasInitial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C]
 #align category_theory.has_initial_of_equivalence CategoryTheory.hasInitial_of_equivalence
 -/
 
-/- warning: category_theory.equivalence.has_initial_iff -> CategoryTheory.Equivalence.hasInitial_iff is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_2) -> (Iff (CategoryTheory.Limits.HasInitial.{u1, u3} C _inst_1) (CategoryTheory.Limits.HasInitial.{u2, u4} D _inst_2))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_2) -> (Iff (CategoryTheory.Limits.HasInitial.{u1, u3} C _inst_1) (CategoryTheory.Limits.HasInitial.{u2, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.hasInitial_iffₓ'. -/
 theorem Equivalence.hasInitial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
   ⟨fun h => has_initial_of_equivalence e.inverse, fun h => has_initial_of_equivalence e.functor⟩
 #align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.hasInitial_iff
@@ -52,12 +46,6 @@ theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal 
 #align category_theory.has_terminal_of_equivalence CategoryTheory.hasTerminal_of_equivalence
 -/
 
-/- warning: category_theory.equivalence.has_terminal_iff -> CategoryTheory.Equivalence.hasTerminal_iff is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_2) -> (Iff (CategoryTheory.Limits.HasTerminal.{u1, u3} C _inst_1) (CategoryTheory.Limits.HasTerminal.{u2, u4} D _inst_2))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_2) -> (Iff (CategoryTheory.Limits.HasTerminal.{u1, u3} C _inst_1) (CategoryTheory.Limits.HasTerminal.{u2, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.hasTerminal_iffₓ'. -/
 theorem Equivalence.hasTerminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=
   ⟨fun h => has_terminal_of_equivalence e.inverse, fun h => has_terminal_of_equivalence e.functor⟩
 #align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.hasTerminal_iff

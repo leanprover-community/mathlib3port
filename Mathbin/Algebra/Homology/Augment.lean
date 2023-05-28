@@ -47,9 +47,6 @@ def truncate [HasZeroMorphisms V] : ChainComplex V ℕ ⥤ ChainComplex V ℕ
 #align chain_complex.truncate ChainComplex.truncate
 -/
 
-/- warning: chain_complex.truncate_to -> ChainComplex.truncateTo is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.truncate_to ChainComplex.truncateToₓ'. -/
 /-- There is a canonical chain map from the truncation of a chain map `C` to
 the "single object" chain complex consisting of the truncated object `C.X 0` in degree 0.
 The components of this chain map are `C.d 1 0` in degree 0, and zero otherwise.
@@ -125,9 +122,6 @@ theorem augment_d_succ_succ (C : ChainComplex V ℕ) {X : V} (f : C.pt 0 ⟶ X) 
 #align chain_complex.augment_d_succ_succ ChainComplex.augment_d_succ_succ
 -/
 
-/- warning: chain_complex.truncate_augment -> ChainComplex.truncateAugment is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.truncate_augment ChainComplex.truncateAugmentₓ'. -/
 /-- Truncating an augmented chain complex is isomorphic (with components the identity)
 to the original complex.
 -/
@@ -142,18 +136,12 @@ def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.pt 0 ⟶ X) (w : C.d
   inv_hom_id' := by ext i; cases i <;> · dsimp; simp
 #align chain_complex.truncate_augment ChainComplex.truncateAugment
 
-/- warning: chain_complex.truncate_augment_hom_f -> ChainComplex.truncateAugment_hom_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.truncate_augment_hom_f ChainComplex.truncateAugment_hom_fₓ'. -/
 @[simp]
 theorem truncateAugment_hom_f (C : ChainComplex V ℕ) {X : V} (f : C.pt 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
     (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.pt i) :=
   rfl
 #align chain_complex.truncate_augment_hom_f ChainComplex.truncateAugment_hom_f
 
-/- warning: chain_complex.truncate_augment_inv_f -> ChainComplex.truncateAugment_inv_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.truncate_augment_inv_f ChainComplex.truncateAugment_inv_fₓ'. -/
 @[simp]
 theorem truncateAugment_inv_f (C : ChainComplex V ℕ) {X : V} (f : C.pt 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
     (i : ℕ) : (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).pt i) :=
@@ -167,9 +155,6 @@ theorem chainComplex_d_succ_succ_zero (C : ChainComplex V ℕ) (i : ℕ) : C.d (
 #align chain_complex.chain_complex_d_succ_succ_zero ChainComplex.chainComplex_d_succ_succ_zero
 -/
 
-/- warning: chain_complex.augment_truncate -> ChainComplex.augmentTruncate is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.augment_truncate ChainComplex.augmentTruncateₓ'. -/
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.
 -/
@@ -194,9 +179,6 @@ theorem augmentTruncate_hom_f_zero (C : ChainComplex V ℕ) :
 #align chain_complex.augment_truncate_hom_f_zero ChainComplex.augmentTruncate_hom_f_zero
 -/
 
-/- warning: chain_complex.augment_truncate_hom_f_succ -> ChainComplex.augmentTruncate_hom_f_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.augment_truncate_hom_f_succ ChainComplex.augmentTruncate_hom_f_succₓ'. -/
 @[simp]
 theorem augmentTruncate_hom_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).Hom.f (i + 1) = 𝟙 (C.pt (i + 1)) :=
@@ -211,21 +193,12 @@ theorem augmentTruncate_inv_f_zero (C : ChainComplex V ℕ) :
 #align chain_complex.augment_truncate_inv_f_zero ChainComplex.augmentTruncate_inv_f_zero
 -/
 
-/- warning: chain_complex.augment_truncate_inv_f_succ -> ChainComplex.augmentTruncate_inv_f_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align chain_complex.augment_truncate_inv_f_succ ChainComplex.augmentTruncate_inv_f_succₓ'. -/
 @[simp]
 theorem augmentTruncate_inv_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).inv.f (i + 1) = 𝟙 (C.pt (i + 1)) :=
   rfl
 #align chain_complex.augment_truncate_inv_f_succ ChainComplex.augmentTruncate_inv_f_succ
 
-/- warning: chain_complex.to_single₀_as_complex -> ChainComplex.toSingle₀AsComplex is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} V _inst_1] (C : ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (X : V), (Quiver.Hom.{succ u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)))) C (CategoryTheory.Functor.obj.{u1, u1, u2, max u2 u1} V _inst_1 (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (ChainComplex.single₀.{u1, u2} V _inst_1 _inst_2 _inst_3) X)) -> (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)
-but is expected to have type
-  forall {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} V _inst_1] (C : ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (X : V), (Quiver.Hom.{succ u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) C (Prefunctor.obj.{succ u1, succ u1, u2, max u2 u1} V (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} V (CategoryTheory.Category.toCategoryStruct.{u1, u2} V _inst_1)) (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} V _inst_1 (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))) (ChainComplex.single₀.{u1, u2} V _inst_1 _inst_2 _inst_3)) X)) -> (ChainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))
-Case conversion may be inaccurate. Consider using '#align chain_complex.to_single₀_as_complex ChainComplex.toSingle₀AsComplexₓ'. -/
 /-- A chain map from a chain complex to a single object chain complex in degree zero
 can be reinterpreted as a chain complex.
 
@@ -256,9 +229,6 @@ def truncate [HasZeroMorphisms V] : CochainComplex V ℕ ⥤ CochainComplex V �
 #align cochain_complex.truncate CochainComplex.truncate
 -/
 
-/- warning: cochain_complex.to_truncate -> CochainComplex.toTruncate is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.to_truncate CochainComplex.toTruncateₓ'. -/
 /-- There is a canonical chain map from the truncation of a cochain complex `C` to
 the "single object" cochain complex consisting of the truncated object `C.X 0` in degree 0.
 The components of this chain map are `C.d 0 1` in degree 0, and zero otherwise.
@@ -334,9 +304,6 @@ theorem augment_d_succ_succ (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.pt 0
 #align cochain_complex.augment_d_succ_succ CochainComplex.augment_d_succ_succ
 -/
 
-/- warning: cochain_complex.truncate_augment -> CochainComplex.truncateAugment is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.truncate_augment CochainComplex.truncateAugmentₓ'. -/
 /-- Truncating an augmented cochain complex is isomorphic (with components the identity)
 to the original complex.
 -/
@@ -351,18 +318,12 @@ def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.pt 0) (w : f
   inv_hom_id' := by ext i; cases i <;> · dsimp; simp
 #align cochain_complex.truncate_augment CochainComplex.truncateAugment
 
-/- warning: cochain_complex.truncate_augment_hom_f -> CochainComplex.truncateAugment_hom_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.truncate_augment_hom_f CochainComplex.truncateAugment_hom_fₓ'. -/
 @[simp]
 theorem truncateAugment_hom_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.pt 0)
     (w : f ≫ C.d 0 1 = 0) (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.pt i) :=
   rfl
 #align cochain_complex.truncate_augment_hom_f CochainComplex.truncateAugment_hom_f
 
-/- warning: cochain_complex.truncate_augment_inv_f -> CochainComplex.truncateAugment_inv_f is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.truncate_augment_inv_f CochainComplex.truncateAugment_inv_fₓ'. -/
 @[simp]
 theorem truncateAugment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.pt 0)
     (w : f ≫ C.d 0 1 = 0) (i : ℕ) :
@@ -377,9 +338,6 @@ theorem cochainComplex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C
 #align cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochainComplex_d_succ_succ_zero
 -/
 
-/- warning: cochain_complex.augment_truncate -> CochainComplex.augmentTruncate is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.augment_truncate CochainComplex.augmentTruncateₓ'. -/
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.
 -/
@@ -404,9 +362,6 @@ theorem augmentTruncate_hom_f_zero (C : CochainComplex V ℕ) :
 #align cochain_complex.augment_truncate_hom_f_zero CochainComplex.augmentTruncate_hom_f_zero
 -/
 
-/- warning: cochain_complex.augment_truncate_hom_f_succ -> CochainComplex.augmentTruncate_hom_f_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.augment_truncate_hom_f_succ CochainComplex.augmentTruncate_hom_f_succₓ'. -/
 @[simp]
 theorem augmentTruncate_hom_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).Hom.f (i + 1) = 𝟙 (C.pt (i + 1)) :=
@@ -421,21 +376,12 @@ theorem augmentTruncate_inv_f_zero (C : CochainComplex V ℕ) :
 #align cochain_complex.augment_truncate_inv_f_zero CochainComplex.augmentTruncate_inv_f_zero
 -/
 
-/- warning: cochain_complex.augment_truncate_inv_f_succ -> CochainComplex.augmentTruncate_inv_f_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cochain_complex.augment_truncate_inv_f_succ CochainComplex.augmentTruncate_inv_f_succₓ'. -/
 @[simp]
 theorem augmentTruncate_inv_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).inv.f (i + 1) = 𝟙 (C.pt (i + 1)) :=
   rfl
 #align cochain_complex.augment_truncate_inv_f_succ CochainComplex.augmentTruncate_inv_f_succ
 
-/- warning: cochain_complex.from_single₀_as_complex -> CochainComplex.fromSingle₀AsComplex is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} V _inst_1] (C : CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (X : V), (Quiver.Hom.{succ u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.up.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)))) (CategoryTheory.Functor.obj.{u1, u1, u2, max u2 u1} V _inst_1 (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.up.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (CochainComplex.single₀.{u1, u2} V _inst_1 _inst_2 _inst_3) X) C) -> (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)
-but is expected to have type
-  forall {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} V _inst_1] (C : CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (X : V), (Quiver.Hom.{succ u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.up.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) (Prefunctor.obj.{succ u1, succ u1, u2, max u2 u1} V (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} V (CategoryTheory.Category.toCategoryStruct.{u1, u2} V _inst_1)) (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.up.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} V _inst_1 (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat V _inst_1 _inst_2 (ComplexShape.up.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))) (CochainComplex.single₀.{u1, u2} V _inst_1 _inst_2 _inst_3)) X) C) -> (CochainComplex.{u1, u2, 0} V _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))
-Case conversion may be inaccurate. Consider using '#align cochain_complex.from_single₀_as_complex CochainComplex.fromSingle₀AsComplexₓ'. -/
 /-- A chain map from a single object cochain complex in degree zero to a cochain complex
 can be reinterpreted as a cochain complex.
 

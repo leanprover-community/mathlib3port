@@ -63,12 +63,6 @@ section Basic
 
 variable {α : Type _} [TopologicalSpace α] {C : Set α}
 
-/- warning: acc_pt.nhds_inter -> AccPt.nhds_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} {x : α} {U : Set.{u1} α}, (AccPt.{u1} α _inst_1 x (Filter.principal.{u1} α C)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (AccPt.{u1} α _inst_1 x (Filter.principal.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U C)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} {x : α} {U : Set.{u1} α}, (AccPt.{u1} α _inst_1 x (Filter.principal.{u1} α C)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (AccPt.{u1} α _inst_1 x (Filter.principal.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U C)))
-Case conversion may be inaccurate. Consider using '#align acc_pt.nhds_inter AccPt.nhds_interₓ'. -/
 /-- If `x` is an accumulation point of a set `C` and `U` is a neighborhood of `x`,
 then `x` is an accumulation point of `U ∩ C`. -/
 theorem AccPt.nhds_inter {x : α} {U : Set α} (h_acc : AccPt x (𝓟 C)) (hU : U ∈ 𝓝 x) :
@@ -100,22 +94,10 @@ structure Perfect (C : Set α) : Prop where
 #align perfect Perfect
 -/
 
-/- warning: preperfect_iff_nhds -> preperfect_iff_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α}, Iff (Preperfect.{u1} α _inst_1 C) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x C) -> (forall (U : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U C)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U C)) => Ne.{succ u1} α y x)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α}, Iff (Preperfect.{u1} α _inst_1 C) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x C) -> (forall (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U C)) (Ne.{succ u1} α y x)))))
-Case conversion may be inaccurate. Consider using '#align preperfect_iff_nhds preperfect_iff_nhdsₓ'. -/
 theorem preperfect_iff_nhds : Preperfect C ↔ ∀ x ∈ C, ∀ U ∈ 𝓝 x, ∃ y ∈ U ∩ C, y ≠ x := by
   simp only [Preperfect, accPt_iff_nhds]
 #align preperfect_iff_nhds preperfect_iff_nhds
 
-/- warning: preperfect.open_inter -> Preperfect.open_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} {U : Set.{u1} α}, (Preperfect.{u1} α _inst_1 C) -> (IsOpen.{u1} α _inst_1 U) -> (Preperfect.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U C))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} {U : Set.{u1} α}, (Preperfect.{u1} α _inst_1 C) -> (IsOpen.{u1} α _inst_1 U) -> (Preperfect.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U C))
-Case conversion may be inaccurate. Consider using '#align preperfect.open_inter Preperfect.open_interₓ'. -/
 /-- The intersection of a preperfect set and an open set is preperfect-/
 theorem Preperfect.open_inter {U : Set α} (hC : Preperfect C) (hU : IsOpen U) :
     Preperfect (U ∩ C) := by
@@ -159,12 +141,6 @@ theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (
 #align preperfect_iff_perfect_closure preperfect_iff_perfect_closure
 -/
 
-/- warning: perfect.closure_nhds_inter -> Perfect.closure_nhds_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} {U : Set.{u1} α}, (Perfect.{u1} α _inst_1 C) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x C) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) -> (IsOpen.{u1} α _inst_1 U) -> (And (Perfect.{u1} α _inst_1 (closure.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U C))) (Set.Nonempty.{u1} α (closure.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U C)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} {U : Set.{u1} α}, (Perfect.{u1} α _inst_1 C) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x C) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) -> (IsOpen.{u1} α _inst_1 U) -> (And (Perfect.{u1} α _inst_1 (closure.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U C))) (Set.Nonempty.{u1} α (closure.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U C)))))
-Case conversion may be inaccurate. Consider using '#align perfect.closure_nhds_inter Perfect.closure_nhds_interₓ'. -/
 theorem Perfect.closure_nhds_inter {U : Set α} (hC : Perfect C) (x : α) (xC : x ∈ C) (xU : x ∈ U)
     (Uop : IsOpen U) : Perfect (closure (U ∩ C)) ∧ (closure (U ∩ C)).Nonempty :=
   by
@@ -175,12 +151,6 @@ theorem Perfect.closure_nhds_inter {U : Set α} (hC : Perfect C) (x : α) (xC : 
   exact ⟨x, ⟨xU, xC⟩⟩
 #align perfect.closure_nhds_inter Perfect.closure_nhds_inter
 
-/- warning: perfect.splitting -> Perfect.splitting is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} [_inst_2 : T25Space.{u1} α _inst_1], (Perfect.{u1} α _inst_1 C) -> (Set.Nonempty.{u1} α C) -> (Exists.{succ u1} (Set.{u1} α) (fun (C₀ : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (C₁ : Set.{u1} α) => And (And (Perfect.{u1} α _inst_1 C₀) (And (Set.Nonempty.{u1} α C₀) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) C₀ C))) (And (And (Perfect.{u1} α _inst_1 C₁) (And (Set.Nonempty.{u1} α C₁) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) C₁ C))) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) C₀ C₁)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} [_inst_2 : T25Space.{u1} α _inst_1], (Perfect.{u1} α _inst_1 C) -> (Set.Nonempty.{u1} α C) -> (Exists.{succ u1} (Set.{u1} α) (fun (C₀ : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (C₁ : Set.{u1} α) => And (And (Perfect.{u1} α _inst_1 C₀) (And (Set.Nonempty.{u1} α C₀) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) C₀ C))) (And (And (Perfect.{u1} α _inst_1 C₁) (And (Set.Nonempty.{u1} α C₁) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) C₁ C))) (Disjoint.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) C₀ C₁)))))
-Case conversion may be inaccurate. Consider using '#align perfect.splitting Perfect.splittingₓ'. -/
 /-- Given a perfect nonempty set in a T2.5 space, we can find two disjoint perfect subsets
 This is the main inductive step in the proof of the Cantor-Bendixson Theorem-/
 theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty) :
@@ -209,12 +179,6 @@ theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty
 
 section Kernel
 
-/- warning: exists_countable_union_perfect_of_is_closed -> exists_countable_union_perfect_of_isClosed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} [_inst_2 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1], (IsClosed.{u1} α _inst_1 C) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (D : Set.{u1} α) => And (Set.Countable.{u1} α V) (And (Perfect.{u1} α _inst_1 D) (Eq.{succ u1} (Set.{u1} α) C (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) V D))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {C : Set.{u1} α} [_inst_2 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1], (IsClosed.{u1} α _inst_1 C) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (D : Set.{u1} α) => And (Set.Countable.{u1} α V) (And (Perfect.{u1} α _inst_1 D) (Eq.{succ u1} (Set.{u1} α) C (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) V D))))))
-Case conversion may be inaccurate. Consider using '#align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_isClosedₓ'. -/
 /-- The **Cantor-Bendixson Theorem**: Any closed subset of a second countable space
 can be written as the union of a countable set and a perfect set.-/
 theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
@@ -310,12 +274,6 @@ variable (hnonempty : C.Nonempty)
 
 include hnonempty
 
-/- warning: perfect.small_diam_splitting -> Perfect.small_diam_splitting is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] {C : Set.{u1} α}, (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C) -> (forall {ε : ENNReal}, (Set.Nonempty.{u1} α C) -> (LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))) ε) -> (Exists.{succ u1} (Set.{u1} α) (fun (C₀ : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (C₁ : Set.{u1} α) => And (And (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C₀) (And (Set.Nonempty.{u1} α C₀) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) C₀ C) (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) C₀) ε)))) (And (And (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C₁) (And (Set.Nonempty.{u1} α C₁) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) C₁ C) (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) C₁) ε)))) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) C₀ C₁))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] {C : Set.{u1} α}, (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C) -> (forall {ε : ENNReal}, (Set.Nonempty.{u1} α C) -> (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) ε) -> (Exists.{succ u1} (Set.{u1} α) (fun (C₀ : Set.{u1} α) => Exists.{succ u1} (Set.{u1} α) (fun (C₁ : Set.{u1} α) => And (And (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C₀) (And (Set.Nonempty.{u1} α C₀) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) C₀ C) (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EMetric.diam.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1)) C₀) ε)))) (And (And (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C₁) (And (Set.Nonempty.{u1} α C₁) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) C₁ C) (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EMetric.diam.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1)) C₁) ε)))) (Disjoint.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) C₀ C₁))))))
-Case conversion may be inaccurate. Consider using '#align perfect.small_diam_splitting Perfect.small_diam_splittingₓ'. -/
 /-- A refinement of `perfect.splitting` for metric spaces, where we also control
 the diameter of the new perfect sets. -/
 theorem Perfect.small_diam_splitting (ε_pos : 0 < ε) :
@@ -336,12 +294,6 @@ theorem Perfect.small_diam_splitting (ε_pos : 0 < ε) :
 
 open CantorScheme
 
-/- warning: perfect.exists_nat_bool_injection -> Perfect.exists_nat_bool_injection is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] {C : Set.{u1} α}, (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C) -> (Set.Nonempty.{u1} α C) -> (forall [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))], Exists.{succ u1} ((Nat -> Bool) -> α) (fun (f : (Nat -> Bool) -> α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.range.{u1, 1} α (Nat -> Bool) f) C) (And (Continuous.{0, u1} (Nat -> Bool) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => Bool.topologicalSpace)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) f) (Function.Injective.{1, succ u1} (Nat -> Bool) α f))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] {C : Set.{u1} α}, (Perfect.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) C) -> (Set.Nonempty.{u1} α C) -> (forall [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))], Exists.{succ u1} ((Nat -> Bool) -> α) (fun (f : (Nat -> Bool) -> α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.range.{u1, 1} α (Nat -> Bool) f) C) (And (Continuous.{0, u1} (Nat -> Bool) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => instTopologicalSpaceBool)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) f) (Function.Injective.{1, succ u1} (Nat -> Bool) α f))))
-Case conversion may be inaccurate. Consider using '#align perfect.exists_nat_bool_injection Perfect.exists_nat_bool_injectionₓ'. -/
 /-- Any nonempty perfect set in a complete metric space admits a continuous injection
 from the cantor space, `ℕ → bool`. -/
 theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
@@ -400,12 +352,6 @@ theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
 
 end CantorInjMetric
 
-/- warning: is_closed.exists_nat_bool_injection_of_not_countable -> IsClosed.exists_nat_bool_injection_of_not_countable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] {C : Set.{u1} α}, (IsClosed.{u1} α _inst_1 C) -> (Not (Set.Countable.{u1} α C)) -> (Exists.{succ u1} ((Nat -> Bool) -> α) (fun (f : (Nat -> Bool) -> α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.range.{u1, 1} α (Nat -> Bool) f) C) (And (Continuous.{0, u1} (Nat -> Bool) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => Bool.topologicalSpace)) _inst_1 f) (Function.Injective.{1, succ u1} (Nat -> Bool) α f))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] {C : Set.{u1} α}, (IsClosed.{u1} α _inst_1 C) -> (Not (Set.Countable.{u1} α C)) -> (Exists.{succ u1} ((Nat -> Bool) -> α) (fun (f : (Nat -> Bool) -> α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.range.{u1, 1} α (Nat -> Bool) f) C) (And (Continuous.{0, u1} (Nat -> Bool) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => instTopologicalSpaceBool)) _inst_1 f) (Function.Injective.{1, succ u1} (Nat -> Bool) α f))))
-Case conversion may be inaccurate. Consider using '#align is_closed.exists_nat_bool_injection_of_not_countable IsClosed.exists_nat_bool_injection_of_not_countableₓ'. -/
 /-- Any closed uncountable subset of a Polish space admits a continuous injection
 from the Cantor space `ℕ → bool`.-/
 theorem IsClosed.exists_nat_bool_injection_of_not_countable {α : Type _} [TopologicalSpace α]

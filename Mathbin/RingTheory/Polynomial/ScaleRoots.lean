@@ -37,12 +37,6 @@ noncomputable def scaleRoots (p : R[X]) (s : R) : R[X] :=
 #align polynomial.scale_roots Polynomial.scaleRoots
 -/
 
-/- warning: polynomial.coeff_scale_roots -> Polynomial.coeff_scaleRoots is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4))) (s : R) (i : Nat), Eq.{succ u1} R (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s) i) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_4)))) (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) p i) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_4)))) s (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) p) i)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))) (s : R) (i : Nat), Eq.{succ u1} R (Polynomial.coeff.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s) i) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_4))))) (Polynomial.coeff.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) p i) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)))))) s (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Polynomial.natDegree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) p) i)))
-Case conversion may be inaccurate. Consider using '#align polynomial.coeff_scale_roots Polynomial.coeff_scaleRootsₓ'. -/
 @[simp]
 theorem coeff_scaleRoots (p : R[X]) (s : R) (i : ℕ) :
     (scaleRoots p s).coeff i = coeff p i * s ^ (p.natDegree - i) := by
@@ -74,22 +68,10 @@ theorem scaleRoots_ne_zero {p : R[X]} (hp : p ≠ 0) (s : R) : scaleRoots p s �
 #align polynomial.scale_roots_ne_zero Polynomial.scaleRoots_ne_zero
 -/
 
-/- warning: polynomial.support_scale_roots_le -> Polynomial.support_scaleRoots_le is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4))) (s : R), LE.le.{0} (Finset.{0} Nat) (Preorder.toHasLe.{0} (Finset.{0} Nat) (PartialOrder.toPreorder.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat))) (Polynomial.support.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) p)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))) (s : R), LE.le.{0} (Finset.{0} Nat) (Preorder.toLE.{0} (Finset.{0} Nat) (PartialOrder.toPreorder.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat))) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) p)
-Case conversion may be inaccurate. Consider using '#align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_leₓ'. -/
 theorem support_scaleRoots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤ p.support := by
   intro ; simpa using left_ne_zero_of_mul
 #align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_le
 
-/- warning: polynomial.support_scale_roots_eq -> Polynomial.support_scaleRoots_eq is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4))) {s : R}, (Membership.Mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)))))) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4))))))) s (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4))))) -> (Eq.{1} (Finset.{0} Nat) (Polynomial.support.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) p))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))) {s : R}, (Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))))))) s (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))))) -> (Eq.{1} (Finset.{0} Nat) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) p))
-Case conversion may be inaccurate. Consider using '#align polynomial.support_scale_roots_eq Polynomial.support_scaleRoots_eqₓ'. -/
 theorem support_scaleRoots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) :
     (scaleRoots p s).support = p.support :=
   le_antisymm (support_scaleRoots_le p s)
@@ -130,9 +112,6 @@ theorem monic_scaleRoots_iff {p : R[X]} (s : R) : Monic (scaleRoots p s) ↔ Mon
 #align polynomial.monic_scale_roots_iff Polynomial.monic_scaleRoots_iff
 -/
 
-/- warning: polynomial.scale_roots_eval₂_mul -> Polynomial.scaleRoots_eval₂_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.scale_roots_eval₂_mul Polynomial.scaleRoots_eval₂_mulₓ'. -/
 theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     eval₂ f (f s * r) (scaleRoots p s) = f s ^ p.natDegree * eval₂ f r p :=
   calc
@@ -158,9 +137,6 @@ theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     
 #align polynomial.scale_roots_eval₂_mul Polynomial.scaleRoots_eval₂_mul
 
-/- warning: polynomial.scale_roots_eval₂_eq_zero -> Polynomial.scaleRoots_eval₂_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.scale_roots_eval₂_eq_zero Polynomial.scaleRoots_eval₂_eq_zeroₓ'. -/
 theorem scaleRoots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (hr : eval₂ f r p = 0) :
     eval₂ f (f s * r) (scaleRoots p s) = 0 := by rw [scale_roots_eval₂_mul, hr, _root_.mul_zero]
 #align polynomial.scale_roots_eval₂_eq_zero Polynomial.scaleRoots_eval₂_eq_zero
@@ -172,9 +148,6 @@ theorem scaleRoots_aeval_eq_zero [Algebra S R] {p : S[X]} {r : R} {s : S} (hr : 
 #align polynomial.scale_roots_aeval_eq_zero Polynomial.scaleRoots_aeval_eq_zero
 -/
 
-/- warning: polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero -> Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zeroₓ'. -/
 theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+* K}
     (hf : Function.Injective f) {r s : A} (hr : eval₂ f (f r / f s) p = 0)
     (hs : s ∈ nonZeroDivisors A) : eval₂ f (f r) (scaleRoots p s) = 0 :=
@@ -184,9 +157,6 @@ theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+
   exact map_ne_zero_of_mem_nonZeroDivisors _ hf hs
 #align polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero
 
-/- warning: polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero -> Polynomial.scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero Polynomial.scaleRoots_aeval_eq_zero_of_aeval_div_eq_zeroₓ'. -/
 theorem scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K]
     (inj : Function.Injective (algebraMap A K)) {p : A[X]} {r s : A}
     (hr : aeval (algebraMap A K r / algebraMap A K s) p = 0) (hs : s ∈ nonZeroDivisors A) :
@@ -194,9 +164,6 @@ theorem scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K]
   scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero inj hr hs
 #align polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero Polynomial.scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero
 
-/- warning: polynomial.map_scale_roots -> Polynomial.map_scaleRoots is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.map_scale_roots Polynomial.map_scaleRootsₓ'. -/
 theorem map_scaleRoots (p : R[X]) (x : R) (f : R →+* S) (h : f p.leadingCoeff ≠ 0) :
     (p.scaleRoots x).map f = (p.map f).scaleRoots (f x) :=
   by

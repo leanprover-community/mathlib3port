@@ -39,9 +39,6 @@ open TensorProduct
 
 open TensorProduct Classical
 
-/- warning: finsupp_tensor_finsupp -> finsuppTensorFinsupp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp finsuppTensorFinsuppₓ'. -/
 /-- The tensor product of ι →₀ M and κ →₀ N is linearly equivalent to (ι × κ) →₀ (M ⊗ N). -/
 def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
     [AddCommGroup N] [Module R N] : (ι →₀ M) ⊗[R] (κ →₀ N) ≃ₗ[R] ι × κ →₀ M ⊗[R] N :=
@@ -50,9 +47,6 @@ def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [M
       (finsuppLEquivDirectSum R (M ⊗[R] N) (ι × κ)).symm)
 #align finsupp_tensor_finsupp finsuppTensorFinsupp
 
-/- warning: finsupp_tensor_finsupp_single -> finsuppTensorFinsupp_single is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp_single finsuppTensorFinsupp_singleₓ'. -/
 @[simp]
 theorem finsuppTensorFinsupp_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
     [AddCommGroup N] [Module R N] (i : ι) (m : M) (k : κ) (n : N) :
@@ -61,9 +55,6 @@ theorem finsuppTensorFinsupp_single (R M N ι κ : Sort _) [CommRing R] [AddComm
   by simp [finsuppTensorFinsupp]
 #align finsupp_tensor_finsupp_single finsuppTensorFinsupp_single
 
-/- warning: finsupp_tensor_finsupp_apply -> finsuppTensorFinsupp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp_apply finsuppTensorFinsupp_applyₓ'. -/
 @[simp]
 theorem finsuppTensorFinsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
     [AddCommGroup N] [Module R N] (f : ι →₀ M) (g : κ →₀ N) (i : ι) (k : κ) :
@@ -87,9 +78,6 @@ theorem finsuppTensorFinsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCommG
         cases h1 <;> simp [h1]
 #align finsupp_tensor_finsupp_apply finsuppTensorFinsupp_apply
 
-/- warning: finsupp_tensor_finsupp_symm_single -> finsuppTensorFinsupp_symm_single is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp_symm_single finsuppTensorFinsupp_symm_singleₓ'. -/
 @[simp]
 theorem finsuppTensorFinsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M]
     [Module R M] [AddCommGroup N] [Module R N] (i : ι × κ) (m : M) (n : N) :
@@ -101,26 +89,17 @@ theorem finsuppTensorFinsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [Ad
 
 variable (S : Type _) [CommRing S] (α β : Type _)
 
-/- warning: finsupp_tensor_finsupp' -> finsuppTensorFinsupp' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp' finsuppTensorFinsupp'ₓ'. -/
 /-- A variant of `finsupp_tensor_finsupp` where both modules are the ground ring.
 -/
 def finsuppTensorFinsupp' : (α →₀ S) ⊗[S] (β →₀ S) ≃ₗ[S] α × β →₀ S :=
   (finsuppTensorFinsupp S S S α β).trans (Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid S S))
 #align finsupp_tensor_finsupp' finsuppTensorFinsupp'
 
-/- warning: finsupp_tensor_finsupp'_apply_apply -> finsuppTensorFinsupp'_apply_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp'_apply_apply finsuppTensorFinsupp'_apply_applyₓ'. -/
 @[simp]
 theorem finsuppTensorFinsupp'_apply_apply (f : α →₀ S) (g : β →₀ S) (a : α) (b : β) :
     finsuppTensorFinsupp' S α β (f ⊗ₜ[S] g) (a, b) = f a * g b := by simp [finsuppTensorFinsupp']
 #align finsupp_tensor_finsupp'_apply_apply finsuppTensorFinsupp'_apply_apply
 
-/- warning: finsupp_tensor_finsupp'_single_tmul_single -> finsuppTensorFinsupp'_single_tmul_single is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp'_single_tmul_single finsuppTensorFinsupp'_single_tmul_singleₓ'. -/
 @[simp]
 theorem finsuppTensorFinsupp'_single_tmul_single (a : α) (b : β) (r₁ r₂ : S) :
     finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) =

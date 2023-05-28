@@ -89,9 +89,6 @@ def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F
 #align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
 -/
 
-/- warning: category_theory.structured_arrow_cone.to_cone -> CategoryTheory.StructuredArrowCone.toCone is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow_cone.to_cone CategoryTheory.StructuredArrowCone.toConeₓ'. -/
 /-- Given a cone `c : cone K` and a map `f : X ⟶ F.obj c.X`, we can construct a cone of structured
 arrows over `X` with `f` as the cone point.
 -/
@@ -234,12 +231,6 @@ variable (F : C ⥤ D) [RepresentablyFlat F] {c : Cone K} (hc : IsLimit c) (s : 
 
 include hc
 
-/- warning: category_theory.preserves_finite_limits_of_flat.lift -> CategoryTheory.PreservesFiniteLimitsOfFlat.lift is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} D] {J : Type.{u1}} [_inst_3 : CategoryTheory.SmallCategory.{u1} J] [_inst_4 : CategoryTheory.FinCategory.{u1} J _inst_3] {K : CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.RepresentablyFlat.{u1, u1, u2, u3} C _inst_1 D _inst_2 F] {c : CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 K c) -> (forall (s : CategoryTheory.Limits.Cone.{u1, u1, u1, u3} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u2, u3} J _inst_3 C _inst_1 D _inst_2 K F)), Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_2)) (CategoryTheory.Limits.Cone.pt.{u1, u1, u1, u3} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u2, u3} J _inst_3 C _inst_1 D _inst_2 K F) s) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_2 F (CategoryTheory.Limits.Cone.pt.{u1, u1, u1, u2} J _inst_3 C _inst_1 K c)))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} D] {J : Type.{u1}} [_inst_3 : CategoryTheory.SmallCategory.{u1} J] [_inst_4 : CategoryTheory.FinCategory.{u1} J _inst_3] {K : CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.RepresentablyFlat.{u1, u1, u2, u3} C _inst_1 D _inst_2 F] {c : CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 K c) -> (forall (s : CategoryTheory.Limits.Cone.{u1, u1, u1, u3} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u2, u3} J _inst_3 C _inst_1 D _inst_2 K F)), Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_2)) (CategoryTheory.Limits.Cone.pt.{u1, u1, u1, u3} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u2, u3} J _inst_3 C _inst_1 D _inst_2 K F) s) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_2 F) (CategoryTheory.Limits.Cone.pt.{u1, u1, u1, u2} J _inst_3 C _inst_1 K c)))
-Case conversion may be inaccurate. Consider using '#align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.liftₓ'. -/
 /-- (Implementation).
 Given a limit cone `c : cone K` and a cone `s : cone (K ⋙ F)` with `F` representably flat,
 `s` can factor through `F.map_cone c`.
@@ -255,18 +246,12 @@ noncomputable def lift : s.pt ⟶ F.obj c.pt :=
           (StructuredArrow.proj s.pt F).mapCone s')
 #align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
 
-/- warning: category_theory.preserves_finite_limits_of_flat.fac -> CategoryTheory.PreservesFiniteLimitsOfFlat.fac is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.preserves_finite_limits_of_flat.fac CategoryTheory.PreservesFiniteLimitsOfFlat.facₓ'. -/
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
   simpa [lift, ← functor.map_comp]
 #align category_theory.preserves_finite_limits_of_flat.fac CategoryTheory.PreservesFiniteLimitsOfFlat.fac
 
 attribute [local simp] eq_to_hom_map
 
-/- warning: category_theory.preserves_finite_limits_of_flat.uniq -> CategoryTheory.PreservesFiniteLimitsOfFlat.uniq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.preserves_finite_limits_of_flat.uniq CategoryTheory.PreservesFiniteLimitsOfFlat.uniqₓ'. -/
 theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
     (f₁ f₂ : s.pt ⟶ F.obj c.pt) (h₁ : ∀ j : J, f₁ ≫ (F.mapCone c).π.app j = s.π.app j)
     (h₂ : ∀ j : J, f₂ ≫ (F.mapCone c).π.app j = s.π.app j) : f₁ = f₂ :=
@@ -355,9 +340,6 @@ section SmallCategory
 
 variable {C D : Type u₁} [SmallCategory C] [SmallCategory D] (E : Type u₂) [Category.{u₁} E]
 
-/- warning: category_theory.Lan_evaluation_iso_colim -> CategoryTheory.lanEvaluationIsoColim is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.Lan_evaluation_iso_colim CategoryTheory.lanEvaluationIsoColimₓ'. -/
 /-- (Implementation)
 The evaluation of `Lan F` at `X` is the colimit over the costructured arrows over `X`.
 -/

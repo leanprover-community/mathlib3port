@@ -80,9 +80,6 @@ def ofHom {X Y : Type u} [Group X] [Group Y] (f : X →* Y) : of X ⟶ of Y :=
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddGroup`. -/
 add_decl_doc AddGroupCat.ofHom
 
-/- warning: Group.of_hom_apply -> GroupCat.ofHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Group.of_hom_apply GroupCat.ofHom_applyₓ'. -/
 @[simp, to_additive]
 theorem ofHom_apply {X Y : Type _} [Group X] [Group Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -113,18 +110,12 @@ instance ofUnique (G : Type _) [Group G] [i : Unique G] : Unique (GroupCat.of G)
 #align AddGroup.of_unique AddGroupCat.ofUnique
 -/
 
-/- warning: Group.one_apply -> GroupCat.one_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Group.one_apply GroupCat.one_applyₓ'. -/
 @[simp, to_additive]
 theorem one_apply (G H : GroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
   rfl
 #align Group.one_apply GroupCat.one_apply
 #align AddGroup.zero_apply AddGroupCat.zero_apply
 
-/- warning: Group.ext -> GroupCat.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Group.ext GroupCat.extₓ'. -/
 @[ext, to_additive]
 theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by ext1; apply w
 #align Group.ext GroupCat.ext
@@ -200,9 +191,6 @@ def ofHom {X Y : Type u} [CommGroup X] [CommGroup Y] (f : X →* Y) : of X ⟶ o
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddCommGroup`. -/
 add_decl_doc AddCommGroupCat.ofHom
 
-/- warning: CommGroup.of_hom_apply -> CommGroupCat.ofHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align CommGroup.of_hom_apply CommGroupCat.ofHom_applyₓ'. -/
 @[simp, to_additive]
 theorem ofHom_apply {X Y : Type _} [CommGroup X] [CommGroup Y] (f : X →* Y) (x : X) :
     ofHom f x = f x :=
@@ -238,18 +226,12 @@ instance ofUnique (G : Type _) [CommGroup G] [i : Unique G] : Unique (CommGroupC
 #align AddCommGroup.of_unique AddCommGroupCat.ofUnique
 -/
 
-/- warning: CommGroup.one_apply -> CommGroupCat.one_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align CommGroup.one_apply CommGroupCat.one_applyₓ'. -/
 @[simp, to_additive]
 theorem one_apply (G H : CommGroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
   rfl
 #align CommGroup.one_apply CommGroupCat.one_apply
 #align AddCommGroup.zero_apply AddCommGroupCat.zero_apply
 
-/- warning: CommGroup.ext -> CommGroupCat.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align CommGroup.ext CommGroupCat.extₓ'. -/
 @[ext, to_additive]
 theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by ext1;
   apply w
@@ -289,12 +271,6 @@ example {R S : CommGroupCat} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 := by s
 
 namespace AddCommGroupCat
 
-/- warning: AddCommGroup.as_hom -> AddCommGroupCat.asHom is a dubious translation:
-lean 3 declaration is
-  forall {G : AddCommGroupCat.{0}}, (coeSort.{2, 2} AddCommGroupCat.{0} Type AddCommGroupCat.hasCoeToSort.{0} G) -> (Quiver.Hom.{1, 1} AddCommGroupCat.{0} (CategoryTheory.CategoryStruct.toQuiver.{0, 1} AddCommGroupCat.{0} (CategoryTheory.Category.toCategoryStruct.{0, 1} AddCommGroupCat.{0} AddCommGroupCat.largeCategory.{0})) (AddCommGroupCat.of.{0} Int Int.addCommGroup) G)
-but is expected to have type
-  forall {G : AddCommGroupCat.{0}}, (CategoryTheory.Bundled.α.{0, 0} AddCommGroup.{0} G) -> (Quiver.Hom.{1, 1} AddCommGroupCat.{0} (CategoryTheory.CategoryStruct.toQuiver.{0, 1} AddCommGroupCat.{0} (CategoryTheory.Category.toCategoryStruct.{0, 1} AddCommGroupCat.{0} instAddCommGroupCatLargeCategory.{0})) (AddCommGroupCat.of.{0} Int Int.instAddCommGroupInt) G)
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.as_hom AddCommGroupCat.asHomₓ'. -/
 -- Note that because `ℤ : Type 0`, this forces `G : AddCommGroup.{0}`,
 -- so we write this explicitly to be clear.
 -- TODO generalize this, requiring a `ulift_instances.lean` file
@@ -304,36 +280,21 @@ def asHom {G : AddCommGroupCat.{0}} (g : G) : AddCommGroupCat.of ℤ ⟶ G :=
   zmultiplesHom G g
 #align AddCommGroup.as_hom AddCommGroupCat.asHom
 
-/- warning: AddCommGroup.as_hom_apply -> AddCommGroupCat.asHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.as_hom_apply AddCommGroupCat.asHom_applyₓ'. -/
 @[simp]
 theorem asHom_apply {G : AddCommGroupCat.{0}} (g : G) (i : ℤ) : (asHom g) i = i • g :=
   rfl
 #align AddCommGroup.as_hom_apply AddCommGroupCat.asHom_apply
 
-/- warning: AddCommGroup.as_hom_injective -> AddCommGroupCat.asHom_injective is a dubious translation:
-lean 3 declaration is
-  forall {G : AddCommGroupCat.{0}}, Function.Injective.{1, 1} (coeSort.{2, 2} AddCommGroupCat.{0} Type AddCommGroupCat.hasCoeToSort.{0} G) (Quiver.Hom.{1, 1} AddCommGroupCat.{0} (CategoryTheory.CategoryStruct.toQuiver.{0, 1} AddCommGroupCat.{0} (CategoryTheory.Category.toCategoryStruct.{0, 1} AddCommGroupCat.{0} AddCommGroupCat.largeCategory.{0})) (AddCommGroupCat.of.{0} Int Int.addCommGroup) G) (AddCommGroupCat.asHom G)
-but is expected to have type
-  forall {G : AddCommGroupCat.{0}}, Function.Injective.{1, 1} (CategoryTheory.Bundled.α.{0, 0} AddCommGroup.{0} G) (Quiver.Hom.{1, 1} AddCommGroupCat.{0} (CategoryTheory.CategoryStruct.toQuiver.{0, 1} AddCommGroupCat.{0} (CategoryTheory.Category.toCategoryStruct.{0, 1} AddCommGroupCat.{0} instAddCommGroupCatLargeCategory.{0})) (AddCommGroupCat.of.{0} Int Int.instAddCommGroupInt) G) (AddCommGroupCat.asHom G)
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.as_hom_injective AddCommGroupCat.asHom_injectiveₓ'. -/
 theorem asHom_injective {G : AddCommGroupCat.{0}} : Function.Injective (@asHom G) := fun h k w => by
   convert congr_arg (fun k : AddCommGroupCat.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
 #align AddCommGroup.as_hom_injective AddCommGroupCat.asHom_injective
 
-/- warning: AddCommGroup.int_hom_ext -> AddCommGroupCat.int_hom_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.int_hom_ext AddCommGroupCat.int_hom_extₓ'. -/
 @[ext]
 theorem int_hom_ext {G : AddCommGroupCat.{0}} (f g : AddCommGroupCat.of ℤ ⟶ G)
     (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
   AddMonoidHom.ext_int w
 #align AddCommGroup.int_hom_ext AddCommGroupCat.int_hom_ext
 
-/- warning: AddCommGroup.injective_of_mono -> AddCommGroupCat.injective_of_mono is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.injective_of_mono AddCommGroupCat.injective_of_monoₓ'. -/
 -- TODO: this argument should be generalised to the situation where
 -- the forgetful functor is representable.
 theorem injective_of_mono {G H : AddCommGroupCat.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
@@ -348,12 +309,6 @@ theorem injective_of_mono {G H : AddCommGroupCat.{0}} (f : G ⟶ H) [Mono f] : F
 
 end AddCommGroupCat
 
-/- warning: mul_equiv.to_Group_iso -> MulEquiv.toGroupCatIso is a dubious translation:
-lean 3 declaration is
-  forall {X : GroupCat.{u1}} {Y : GroupCat.{u1}}, (MulEquiv.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (GroupCat.group.{u1} X))))) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (GroupCat.group.{u1} Y)))))) -> (CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} GroupCat.largeCategory.{u1} X Y)
-but is expected to have type
-  forall {X : GroupCat.{u1}} {Y : GroupCat.{u1}}, (MulEquiv.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (GroupCat.instGroupα.{u1} X))))) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (GroupCat.instGroupα.{u1} Y)))))) -> (CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} instGroupCatLargeCategory.{u1} X Y)
-Case conversion may be inaccurate. Consider using '#align mul_equiv.to_Group_iso MulEquiv.toGroupCatIsoₓ'. -/
 /-- Build an isomorphism in the category `Group` from a `mul_equiv` between `group`s. -/
 @[to_additive AddEquiv.toAddGroupCatIso, simps]
 def MulEquiv.toGroupCatIso {X Y : GroupCat} (e : X ≃* Y) : X ≅ Y
@@ -366,12 +321,6 @@ def MulEquiv.toGroupCatIso {X Y : GroupCat} (e : X ≃* Y) : X ≅ Y
 /-- Build an isomorphism in the category `AddGroup` from an `add_equiv` between `add_group`s. -/
 add_decl_doc AddEquiv.toAddGroupCatIso
 
-/- warning: mul_equiv.to_CommGroup_iso -> MulEquiv.toCommGroupCatIso is a dubious translation:
-lean 3 declaration is
-  forall {X : CommGroupCat.{u1}} {Y : CommGroupCat.{u1}}, (MulEquiv.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (CommGroup.toGroup.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (CommGroupCat.commGroupInstance.{u1} X)))))) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (CommGroup.toGroup.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (CommGroupCat.commGroupInstance.{u1} Y))))))) -> (CategoryTheory.Iso.{u1, succ u1} CommGroupCat.{u1} CommGroupCat.largeCategory.{u1} X Y)
-but is expected to have type
-  forall {X : CommGroupCat.{u1}} {Y : CommGroupCat.{u1}}, (MulEquiv.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CommGroup.toGroup.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CommGroupCat.commGroupInstance.{u1} X)))))) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (CommGroup.toGroup.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (CommGroupCat.commGroupInstance.{u1} Y))))))) -> (CategoryTheory.Iso.{u1, succ u1} CommGroupCat.{u1} instCommGroupCatLargeCategory.{u1} X Y)
-Case conversion may be inaccurate. Consider using '#align mul_equiv.to_CommGroup_iso MulEquiv.toCommGroupCatIsoₓ'. -/
 /-- Build an isomorphism in the category `CommGroup` from a `mul_equiv` between `comm_group`s. -/
 @[to_additive AddEquiv.toAddCommGroupCatIso, simps]
 def MulEquiv.toCommGroupCatIso {X Y : CommGroupCat} (e : X ≃* Y) : X ≅ Y
@@ -387,12 +336,6 @@ add_decl_doc AddEquiv.toAddCommGroupCatIso
 
 namespace CategoryTheory.Iso
 
-/- warning: category_theory.iso.Group_iso_to_mul_equiv -> CategoryTheory.Iso.groupIsoToMulEquiv is a dubious translation:
-lean 3 declaration is
-  forall {X : GroupCat.{u1}} {Y : GroupCat.{u1}}, (CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} GroupCat.largeCategory.{u1} X Y) -> (MulEquiv.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (GroupCat.group.{u1} X))))) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (GroupCat.group.{u1} Y))))))
-but is expected to have type
-  forall {X : GroupCat.{u1}} {Y : GroupCat.{u1}}, (CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} instGroupCatLargeCategory.{u1} X Y) -> (MulEquiv.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (GroupCat.instGroupα.{u1} X))))) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (GroupCat.instGroupα.{u1} Y))))))
-Case conversion may be inaccurate. Consider using '#align category_theory.iso.Group_iso_to_mul_equiv CategoryTheory.Iso.groupIsoToMulEquivₓ'. -/
 /-- Build a `mul_equiv` from an isomorphism in the category `Group`. -/
 @[to_additive AddGroup_iso_to_add_equiv
       "Build an `add_equiv` from an isomorphism in the category\n`AddGroup`.",
@@ -402,12 +345,6 @@ def groupIsoToMulEquiv {X Y : GroupCat} (i : X ≅ Y) : X ≃* Y :=
 #align category_theory.iso.Group_iso_to_mul_equiv CategoryTheory.Iso.groupIsoToMulEquiv
 #align category_theory.iso.AddGroup_iso_to_add_equiv CategoryTheory.Iso.addGroupIsoToAddEquiv
 
-/- warning: category_theory.iso.CommGroup_iso_to_mul_equiv -> CategoryTheory.Iso.commGroupIsoToMulEquiv is a dubious translation:
-lean 3 declaration is
-  forall {X : CommGroupCat.{u1}} {Y : CommGroupCat.{u1}}, (CategoryTheory.Iso.{u1, succ u1} CommGroupCat.{u1} CommGroupCat.largeCategory.{u1} X Y) -> (MulEquiv.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (CommGroup.toGroup.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (CommGroupCat.commGroupInstance.{u1} X)))))) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (CommGroup.toGroup.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (CommGroupCat.commGroupInstance.{u1} Y)))))))
-but is expected to have type
-  forall {X : CommGroupCat.{u1}} {Y : CommGroupCat.{u1}}, (CategoryTheory.Iso.{u1, succ u1} CommGroupCat.{u1} instCommGroupCatLargeCategory.{u1} X Y) -> (MulEquiv.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CommGroup.toGroup.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CommGroupCat.commGroupInstance.{u1} X)))))) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (CommGroup.toGroup.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (CommGroupCat.commGroupInstance.{u1} Y)))))))
-Case conversion may be inaccurate. Consider using '#align category_theory.iso.CommGroup_iso_to_mul_equiv CategoryTheory.Iso.commGroupIsoToMulEquivₓ'. -/
 /-- Build a `mul_equiv` from an isomorphism in the category `CommGroup`. -/
 @[to_additive AddCommGroup_iso_to_add_equiv
       "Build an `add_equiv` from an isomorphism\nin the category `AddCommGroup`.",
@@ -419,12 +356,6 @@ def commGroupIsoToMulEquiv {X Y : CommGroupCat} (i : X ≅ Y) : X ≃* Y :=
 
 end CategoryTheory.Iso
 
-/- warning: mul_equiv_iso_Group_iso -> mulEquivIsoGroupIso is a dubious translation:
-lean 3 declaration is
-  forall {X : GroupCat.{u1}} {Y : GroupCat.{u1}}, CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (MulEquiv.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} X) (GroupCat.group.{u1} X))))) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} Y) (GroupCat.group.{u1} Y)))))) (CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} GroupCat.largeCategory.{u1} X Y)
-but is expected to have type
-  forall {X : GroupCat.{u1}} {Y : GroupCat.{u1}}, CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (MulEquiv.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} X) (GroupCat.instGroupα.{u1} X))))) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} Group.{u1} Y) (GroupCat.instGroupα.{u1} Y)))))) (CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} instGroupCatLargeCategory.{u1} X Y)
-Case conversion may be inaccurate. Consider using '#align mul_equiv_iso_Group_iso mulEquivIsoGroupIsoₓ'. -/
 /-- multiplicative equivalences between `group`s are the same as (isomorphic to) isomorphisms
 in `Group` -/
 @[to_additive addEquivIsoAddGroupIso
@@ -436,12 +367,6 @@ def mulEquivIsoGroupIso {X Y : GroupCat.{u}} : X ≃* Y ≅ X ≅ Y
 #align mul_equiv_iso_Group_iso mulEquivIsoGroupIso
 #align add_equiv_iso_AddGroup_iso addEquivIsoAddGroupIso
 
-/- warning: mul_equiv_iso_CommGroup_iso -> mulEquivIsoCommGroupIso is a dubious translation:
-lean 3 declaration is
-  forall {X : CommGroupCat.{u1}} {Y : CommGroupCat.{u1}}, CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (MulEquiv.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (CommGroup.toGroup.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} X) (CommGroupCat.commGroupInstance.{u1} X)))))) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (CommGroup.toGroup.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommGroupCat.{u1} Type.{u1} CommGroupCat.hasCoeToSort.{u1} Y) (CommGroupCat.commGroupInstance.{u1} Y))))))) (CategoryTheory.Iso.{u1, succ u1} CommGroupCat.{u1} CommGroupCat.largeCategory.{u1} X Y)
-but is expected to have type
-  forall {X : CommGroupCat.{u1}} {Y : CommGroupCat.{u1}}, CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (MulEquiv.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CommGroup.toGroup.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} X) (CommGroupCat.commGroupInstance.{u1} X)))))) (MulOneClass.toMul.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (Monoid.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (Group.toDivInvMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (CommGroup.toGroup.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommGroup.{u1} Y) (CommGroupCat.commGroupInstance.{u1} Y))))))) (CategoryTheory.Iso.{u1, succ u1} CommGroupCat.{u1} instCommGroupCatLargeCategory.{u1} X Y)
-Case conversion may be inaccurate. Consider using '#align mul_equiv_iso_CommGroup_iso mulEquivIsoCommGroupIsoₓ'. -/
 /-- multiplicative equivalences between `comm_group`s are the same as (isomorphic to) isomorphisms
 in `CommGroup` -/
 @[to_additive addEquivIsoAddCommGroupIso
@@ -455,12 +380,6 @@ def mulEquivIsoCommGroupIso {X Y : CommGroupCat.{u}} : X ≃* Y ≅ X ≅ Y
 
 namespace CategoryTheory.Aut
 
-/- warning: category_theory.Aut.iso_perm -> CategoryTheory.Aut.isoPerm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} GroupCat.largeCategory.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.group.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α)) (GroupCat.of.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, CategoryTheory.Iso.{u1, succ u1} GroupCat.{u1} instGroupCatLargeCategory.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.instGroupAut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α)) (GroupCat.of.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))
-Case conversion may be inaccurate. Consider using '#align category_theory.Aut.iso_perm CategoryTheory.Aut.isoPermₓ'. -/
 /-- The (bundled) group of automorphisms of a type is isomorphic to the (bundled) group
 of permutations. -/
 def isoPerm {α : Type u} : GroupCat.of (Aut α) ≅ GroupCat.of (Equiv.Perm α)
@@ -469,12 +388,6 @@ def isoPerm {α : Type u} : GroupCat.of (Aut α) ≅ GroupCat.of (Equiv.Perm α)
   inv := ⟨fun g => g.toIso, by tidy, by tidy⟩
 #align category_theory.Aut.iso_perm CategoryTheory.Aut.isoPerm
 
-/- warning: category_theory.Aut.mul_equiv_perm -> CategoryTheory.Aut.mulEquivPerm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, MulEquiv.{u1, u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.group.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))) (Monoid.toMulOneClass.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.group.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.group.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))) (Group.toDivInvMonoid.{u1} (coeSort.{succ (succ u1), succ (succ u1)} GroupCat.{u1} Type.{u1} GroupCat.hasCoeToSort.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.group.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))) (GroupCat.group.{u1} (GroupCat.of.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.group.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))))))) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}}, MulEquiv.{u1, u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Monoid.toMulOneClass.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (DivInvMonoid.toMonoid.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Group.toDivInvMonoid.{u1} (CategoryTheory.Aut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.Aut.instGroupAut.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))))) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align category_theory.Aut.mul_equiv_perm CategoryTheory.Aut.mulEquivPermₓ'. -/
 /-- The (unbundled) group of automorphisms of a type is `mul_equiv` to the (unbundled) group
 of permutations. -/
 def mulEquivPerm {α : Type u} : Aut α ≃* Equiv.Perm α :=

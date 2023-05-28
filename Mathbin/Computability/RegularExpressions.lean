@@ -142,12 +142,6 @@ theorem matches'_char (a : α) : (char a).matches' = {[a]} :=
 #align regular_expression.matches_char RegularExpression.matches'_char
 -/
 
-/- warning: regular_expression.matches_add -> RegularExpression.matches'_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (Q : RegularExpression.{u1} α), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HAdd.hAdd.{u1, u1, u1} (RegularExpression.{u1} α) (RegularExpression.{u1} α) (RegularExpression.{u1} α) (instHAdd.{u1} (RegularExpression.{u1} α) (RegularExpression.hasAdd.{u1} α)) P Q)) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) (RegularExpression.matches'.{u1} α P) (RegularExpression.matches'.{u1} α Q))
-but is expected to have type
-  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (Q : RegularExpression.{u1} α), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HAdd.hAdd.{u1, u1, u1} (RegularExpression.{u1} α) (RegularExpression.{u1} α) (RegularExpression.{u1} α) (instHAdd.{u1} (RegularExpression.{u1} α) (RegularExpression.instAddRegularExpression.{u1} α)) P Q)) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (RegularExpression.matches'.{u1} α P) (RegularExpression.matches'.{u1} α Q))
-Case conversion may be inaccurate. Consider using '#align regular_expression.matches_add RegularExpression.matches'_addₓ'. -/
 @[simp]
 theorem matches'_add (P Q : RegularExpression α) : (P + Q).matches' = P.matches' + Q.matches' :=
   rfl
@@ -160,12 +154,6 @@ theorem matches'_mul (P Q : RegularExpression α) : (P * Q).matches' = P.matches
 #align regular_expression.matches_mul RegularExpression.matches'_mul
 -/
 
-/- warning: regular_expression.matches_pow -> RegularExpression.matches'_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (n : Nat), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} α) Nat (RegularExpression.{u1} α) (instHPow.{u1, 0} (RegularExpression.{u1} α) Nat (RegularExpression.Nat.hasPow.{u1} α)) P n)) (HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.semiring.{u1} α))))) (RegularExpression.matches'.{u1} α P) n)
-but is expected to have type
-  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (n : Nat), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} α) Nat (RegularExpression.{u1} α) (instHPow.{u1, 0} (RegularExpression.{u1} α) Nat (RegularExpression.instPowRegularExpressionNat.{u1} α)) P n)) (HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))))) (RegularExpression.matches'.{u1} α P) n)
-Case conversion may be inaccurate. Consider using '#align regular_expression.matches_pow RegularExpression.matches'_powₓ'. -/
 @[simp]
 theorem matches'_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches' = P.matches' ^ n
   | 0 => matches'_epsilon
@@ -484,12 +472,6 @@ def map (f : α → β) : RegularExpression α → RegularExpression β
 #align regular_expression.map RegularExpression.map
 -/
 
-/- warning: regular_expression.map_pow -> RegularExpression.map_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (P : RegularExpression.{u1} α) (n : Nat), Eq.{succ u2} (RegularExpression.{u2} β) (RegularExpression.map.{u1, u2} α β f (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} α) Nat (RegularExpression.{u1} α) (instHPow.{u1, 0} (RegularExpression.{u1} α) Nat (RegularExpression.Nat.hasPow.{u1} α)) P n)) (HPow.hPow.{u2, 0, u2} (RegularExpression.{u2} β) Nat (RegularExpression.{u2} β) (instHPow.{u2, 0} (RegularExpression.{u2} β) Nat (RegularExpression.Nat.hasPow.{u2} β)) (RegularExpression.map.{u1, u2} α β f P) n)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (P : RegularExpression.{u2} α) (n : Nat), Eq.{succ u1} (RegularExpression.{u1} β) (RegularExpression.map.{u2, u1} α β f (HPow.hPow.{u2, 0, u2} (RegularExpression.{u2} α) Nat (RegularExpression.{u2} α) (instHPow.{u2, 0} (RegularExpression.{u2} α) Nat (RegularExpression.instPowRegularExpressionNat.{u2} α)) P n)) (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} β) Nat (RegularExpression.{u1} β) (instHPow.{u1, 0} (RegularExpression.{u1} β) Nat (RegularExpression.instPowRegularExpressionNat.{u1} β)) (RegularExpression.map.{u2, u1} α β f P) n)
-Case conversion may be inaccurate. Consider using '#align regular_expression.map_pow RegularExpression.map_powₓ'. -/
 @[simp]
 protected theorem map_pow (f : α → β) (P : RegularExpression α) :
     ∀ n : ℕ, map f (P ^ n) = map f P ^ n
@@ -509,12 +491,6 @@ theorem map_id : ∀ P : RegularExpression α, P.map id = P
 #align regular_expression.map_id RegularExpression.map_id
 -/
 
-/- warning: regular_expression.map_map -> RegularExpression.map_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (g : β -> γ) (f : α -> β) (P : RegularExpression.{u1} α), Eq.{succ u3} (RegularExpression.{u3} γ) (RegularExpression.map.{u2, u3} β γ g (RegularExpression.map.{u1, u2} α β f P)) (RegularExpression.map.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) P)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} (g : β -> γ) (f : α -> β) (P : RegularExpression.{u3} α), Eq.{succ u2} (RegularExpression.{u2} γ) (RegularExpression.map.{u1, u2} β γ g (RegularExpression.map.{u3, u1} α β f P)) (RegularExpression.map.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f) P)
-Case conversion may be inaccurate. Consider using '#align regular_expression.map_map RegularExpression.map_mapₓ'. -/
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, (P.map f).map g = P.map (g ∘ f)
   | 0 => rfl
@@ -525,12 +501,6 @@ theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, 
   | star R => by simp_rw [map, map_map]
 #align regular_expression.map_map RegularExpression.map_map
 
-/- warning: regular_expression.matches_map -> RegularExpression.matches'_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (P : RegularExpression.{u1} α), Eq.{succ u2} (Language.{u2} β) (RegularExpression.matches'.{u2} β (RegularExpression.map.{u1, u2} α β f P)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (fun (_x : RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) => (Language.{u1} α) -> (Language.{u2} β)) (RingHom.hasCoeToFun.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (Language.map.{u1, u2} α β f) (RegularExpression.matches'.{u1} α P))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (P : RegularExpression.{u2} α), Eq.{succ u1} (Language.{u1} β) (RegularExpression.matches'.{u1} β (RegularExpression.map.{u2, u1} α β f P)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (fun (_x : Language.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Language.{u2} α) => Language.{u1} β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonUnitalNonAssocSemiring.toMul.{u2} (Language.{u2} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (RingHom.instRingHomClassRingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))))) (Language.map.{u2, u1} α β f) (RegularExpression.matches'.{u2} α P))
-Case conversion may be inaccurate. Consider using '#align regular_expression.matches_map RegularExpression.matches'_mapₓ'. -/
 /-- The language of the map is the map of the language. -/
 @[simp]
 theorem matches'_map (f : α → β) :

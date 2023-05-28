@@ -43,9 +43,6 @@ def convexJoin (s t : Set E) : Set E :=
 
 variable {𝕜}
 
-/- warning: mem_convex_join -> mem_convexJoin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mem_convex_join mem_convexJoinₓ'. -/
 theorem mem_convexJoin : x ∈ convexJoin 𝕜 s t ↔ ∃ a ∈ s, ∃ b ∈ t, x ∈ segment 𝕜 a b := by
   simp [convexJoin]
 #align mem_convex_join mem_convexJoin
@@ -106,24 +103,12 @@ theorem convexJoin_singletons (x : E) : convexJoin 𝕜 {x} {y} = segment 𝕜 x
 #align convex_join_singletons convexJoin_singletons
 -/
 
-/- warning: convex_join_union_left -> convexJoin_union_left is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] (s₁ : Set.{u2} E) (s₂ : Set.{u2} E) (t : Set.{u2} E), Eq.{succ u2} (Set.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 (Union.union.{u2} (Set.{u2} E) (Set.hasUnion.{u2} E) s₁ s₂) t) (Union.union.{u2} (Set.{u2} E) (Set.hasUnion.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s₁ t) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s₂ t))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] (s₁ : Set.{u2} E) (s₂ : Set.{u2} E) (t : Set.{u2} E), Eq.{succ u2} (Set.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 (Union.union.{u2} (Set.{u2} E) (Set.instUnionSet.{u2} E) s₁ s₂) t) (Union.union.{u2} (Set.{u2} E) (Set.instUnionSet.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s₁ t) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s₂ t))
-Case conversion may be inaccurate. Consider using '#align convex_join_union_left convexJoin_union_leftₓ'. -/
 @[simp]
 theorem convexJoin_union_left (s₁ s₂ t : Set E) :
     convexJoin 𝕜 (s₁ ∪ s₂) t = convexJoin 𝕜 s₁ t ∪ convexJoin 𝕜 s₂ t := by
   simp_rw [convexJoin, mem_union, Union_or, Union_union_distrib]
 #align convex_join_union_left convexJoin_union_left
 
-/- warning: convex_join_union_right -> convexJoin_union_right is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] (s : Set.{u2} E) (t₁ : Set.{u2} E) (t₂ : Set.{u2} E), Eq.{succ u2} (Set.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s (Union.union.{u2} (Set.{u2} E) (Set.hasUnion.{u2} E) t₁ t₂)) (Union.union.{u2} (Set.{u2} E) (Set.hasUnion.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s t₁) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s t₂))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] (s : Set.{u2} E) (t₁ : Set.{u2} E) (t₂ : Set.{u2} E), Eq.{succ u2} (Set.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s (Union.union.{u2} (Set.{u2} E) (Set.instUnionSet.{u2} E) t₁ t₂)) (Union.union.{u2} (Set.{u2} E) (Set.instUnionSet.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s t₁) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s t₂))
-Case conversion may be inaccurate. Consider using '#align convex_join_union_right convexJoin_union_rightₓ'. -/
 @[simp]
 theorem convexJoin_union_right (s t₁ t₂ : Set E) :
     convexJoin 𝕜 s (t₁ ∪ t₂) = convexJoin 𝕜 s t₁ ∪ convexJoin 𝕜 s t₂ := by
@@ -172,12 +157,6 @@ theorem convexJoin_subset (hs : s ⊆ u) (ht : t ⊆ u) (hu : Convex 𝕜 u) : c
 #align convex_join_subset convexJoin_subset
 -/
 
-/- warning: convex_join_subset_convex_hull -> convexJoin_subset_convexHull is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] (s : Set.{u2} E) (t : Set.{u2} E), HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s t) (coeFn.{succ u2, succ u2} (ClosureOperator.{u2} (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.completeBooleanAlgebra.{u2} E)))))))) (fun (_x : ClosureOperator.{u2} (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.completeBooleanAlgebra.{u2} E)))))))) => (Set.{u2} E) -> (Set.{u2} E)) (ClosureOperator.hasCoeToFun.{u2} (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.completeBooleanAlgebra.{u2} E)))))))) (convexHull.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3) (Union.union.{u2} (Set.{u2} E) (Set.hasUnion.{u2} E) s t))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] (s : Set.{u2} E) (t : Set.{u2} E), HasSubset.Subset.{u2} (Set.{u2} E) (Set.instHasSubsetSet.{u2} E) (convexJoin.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 s t) (OrderHom.toFun.{u2, u2} (Set.{u2} E) (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (ClosureOperator.toOrderHom.{u2} (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (convexHull.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3)) (Union.union.{u2} (Set.{u2} E) (Set.instUnionSet.{u2} E) s t))
-Case conversion may be inaccurate. Consider using '#align convex_join_subset_convex_hull convexJoin_subset_convexHullₓ'. -/
 theorem convexJoin_subset_convexHull (s t : Set E) : convexJoin 𝕜 s t ⊆ convexHull 𝕜 (s ∪ t) :=
   convexJoin_subset ((subset_union_left _ _).trans <| subset_convexHull _ _)
       ((subset_union_right _ _).trans <| subset_convexHull _ _) <|
@@ -310,9 +289,6 @@ theorem convexJoin_singleton_segment (a b c : E) :
 #align convex_join_singleton_segment convexJoin_singleton_segment
 -/
 
-/- warning: convex.convex_join -> Convex.convexJoin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.convex_join Convex.convexJoinₓ'. -/
 protected theorem Convex.convexJoin (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
     Convex 𝕜 (convexJoin 𝕜 s t) :=
   by
@@ -325,9 +301,6 @@ protected theorem Convex.convexJoin (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
   exact convexJoin_mono (hs hxa hya) (ht hxb hyb)
 #align convex.convex_join Convex.convexJoin
 
-/- warning: convex.convex_hull_union -> Convex.convexHull_union is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.convex_hull_union Convex.convexHull_unionₓ'. -/
 protected theorem Convex.convexHull_union (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hs₀ : s.Nonempty)
     (ht₀ : t.Nonempty) : convexHull 𝕜 (s ∪ t) = convexJoin 𝕜 s t :=
   (convexHull_min (union_subset (subset_convexJoin_left ht₀) <| subset_convexJoin_right hs₀) <|
@@ -335,9 +308,6 @@ protected theorem Convex.convexHull_union (hs : Convex 𝕜 s) (ht : Convex 𝕜
     convexJoin_subset_convexHull _ _
 #align convex.convex_hull_union Convex.convexHull_union
 
-/- warning: convex_hull_union -> convexHull_union is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_hull_union convexHull_unionₓ'. -/
 theorem convexHull_union (hs : s.Nonempty) (ht : t.Nonempty) :
     convexHull 𝕜 (s ∪ t) = convexJoin 𝕜 (convexHull 𝕜 s) (convexHull 𝕜 t) :=
   by

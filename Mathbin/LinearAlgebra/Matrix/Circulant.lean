@@ -63,22 +63,10 @@ theorem circulant_apply [Sub n] (v : n → α) (i j) : circulant v i j = v (i - 
 #align matrix.circulant_apply Matrix.circulant_apply
 -/
 
-/- warning: matrix.circulant_col_zero_eq -> Matrix.circulant_col_zero_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] (v : n -> α) (i : n), Eq.{succ u1} α (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v i (OfNat.ofNat.{u2} n 0 (OfNat.mk.{u2} n 0 (Zero.zero.{u2} n (AddZeroClass.toHasZero.{u2} n (AddMonoid.toAddZeroClass.{u2} n (SubNegMonoid.toAddMonoid.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)))))))) (v i)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] (v : n -> α) (i : n), Eq.{succ u1} α (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v i (OfNat.ofNat.{u2} n 0 (Zero.toOfNat0.{u2} n (NegZeroClass.toZero.{u2} n (SubNegZeroMonoid.toNegZeroClass.{u2} n (SubtractionMonoid.toSubNegZeroMonoid.{u2} n (AddGroup.toSubtractionMonoid.{u2} n _inst_1))))))) (v i)
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_col_zero_eq Matrix.circulant_col_zero_eqₓ'. -/
 theorem circulant_col_zero_eq [AddGroup n] (v : n → α) (i : n) : circulant v i 0 = v i :=
   congr_arg v (sub_zero _)
 #align matrix.circulant_col_zero_eq Matrix.circulant_col_zero_eq
 
-/- warning: matrix.circulant_injective -> Matrix.circulant_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n], Function.Injective.{max (succ u2) (succ u1), succ (max u2 u1)} (n -> α) (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n], Function.Injective.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (n -> α) (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_injective Matrix.circulant_injectiveₓ'. -/
 theorem circulant_injective [AddGroup n] : Injective (circulant : (n → α) → Matrix n n α) :=
   by
   intro v w h
@@ -93,12 +81,6 @@ theorem Fin.circulant_injective : ∀ n, Injective fun v : Fin n → α => circu
 #align matrix.fin.circulant_injective Matrix.Fin.circulant_injective
 -/
 
-/- warning: matrix.circulant_inj -> Matrix.circulant_inj is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] {v : n -> α} {w : n -> α}, Iff (Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) w)) (Eq.{max (succ u2) (succ u1)} (n -> α) v w)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] {v : n -> α} {w : n -> α}, Iff (Eq.{max (succ u1) (succ u2)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) w)) (Eq.{max (succ u1) (succ u2)} (n -> α) v w)
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_inj Matrix.circulant_injₓ'. -/
 @[simp]
 theorem circulant_inj [AddGroup n] {v w : n → α} : circulant v = circulant w ↔ v = w :=
   circulant_injective.eq_iff
@@ -111,43 +93,19 @@ theorem Fin.circulant_inj {n} {v w : Fin n → α} : circulant v = circulant w �
 #align matrix.fin.circulant_inj Matrix.Fin.circulant_inj
 -/
 
-/- warning: matrix.transpose_circulant -> Matrix.transpose_circulant is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] (v : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.transpose.{u1, u2, u2} n n α (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v)) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) (fun (i : n) => v (Neg.neg.{u2} n (SubNegMonoid.toHasNeg.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) i)))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] (v : n -> α), Eq.{max (succ u1) (succ u2)} (Matrix.{u2, u2, u1} n n α) (Matrix.transpose.{u1, u2, u2} n n α (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v)) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) (fun (i : n) => v (Neg.neg.{u2} n (NegZeroClass.toNeg.{u2} n (SubNegZeroMonoid.toNegZeroClass.{u2} n (SubtractionMonoid.toSubNegZeroMonoid.{u2} n (AddGroup.toSubtractionMonoid.{u2} n _inst_1)))) i)))
-Case conversion may be inaccurate. Consider using '#align matrix.transpose_circulant Matrix.transpose_circulantₓ'. -/
 theorem transpose_circulant [AddGroup n] (v : n → α) : (circulant v)ᵀ = circulant fun i => v (-i) :=
   by ext <;> simp
 #align matrix.transpose_circulant Matrix.transpose_circulant
 
-/- warning: matrix.conj_transpose_circulant -> Matrix.conjTranspose_circulant is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : Star.{u1} α] [_inst_2 : AddGroup.{u2} n] (v : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.conjTranspose.{u1, u2, u2} n n α _inst_1 (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_2)) v)) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_2)) (Star.star.{max u2 u1} (n -> α) (Pi.hasStar.{u2, u1} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1)) (fun (i : n) => v (Neg.neg.{u2} n (SubNegMonoid.toHasNeg.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_2)) i))))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : Star.{u2} α] [_inst_2 : AddGroup.{u1} n] (v : n -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.conjTranspose.{u2, u1, u1} n n α _inst_1 (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_2)) v)) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_2)) (Star.star.{max u1 u2} (n -> α) (Pi.instStarForAll.{u1, u2} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1)) (fun (i : n) => v (Neg.neg.{u1} n (NegZeroClass.toNeg.{u1} n (SubNegZeroMonoid.toNegZeroClass.{u1} n (SubtractionMonoid.toSubNegZeroMonoid.{u1} n (AddGroup.toSubtractionMonoid.{u1} n _inst_2)))) i))))
-Case conversion may be inaccurate. Consider using '#align matrix.conj_transpose_circulant Matrix.conjTranspose_circulantₓ'. -/
 theorem conjTranspose_circulant [Star α] [AddGroup n] (v : n → α) :
     (circulant v)ᴴ = circulant (star fun i => v (-i)) := by ext <;> simp
 #align matrix.conj_transpose_circulant Matrix.conjTranspose_circulant
 
-/- warning: matrix.fin.transpose_circulant -> Matrix.Fin.transpose_circulant is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (v : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.transpose.{u1, 0, 0} (Fin n) (Fin n) α (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v)) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) (fun (i : Fin n) => v (Neg.neg.{0} (Fin n) (Fin.hasNeg n) i)))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (v : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.transpose.{u1, 0, 0} (Fin n) (Fin n) α (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v)) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) (fun (i : Fin n) => v (Neg.neg.{0} (Fin n) (Fin.neg n) i)))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.transpose_circulant Matrix.Fin.transpose_circulantₓ'. -/
 theorem Fin.transpose_circulant : ∀ {n} (v : Fin n → α), (circulant v)ᵀ = circulant fun i => v (-i)
   | 0 => by decide
   | n + 1 => transpose_circulant
 #align matrix.fin.transpose_circulant Matrix.Fin.transpose_circulant
 
-/- warning: matrix.fin.conj_transpose_circulant -> Matrix.Fin.conjTranspose_circulant is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Star.{u1} α] {n : Nat} (v : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.conjTranspose.{u1, 0, 0} (Fin n) (Fin n) α _inst_1 (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v)) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) (Star.star.{u1} ((Fin n) -> α) (Pi.hasStar.{0, u1} (Fin n) (fun (ᾰ : Fin n) => α) (fun (i : Fin n) => _inst_1)) (fun (i : Fin n) => v (Neg.neg.{0} (Fin n) (Fin.hasNeg n) i))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Star.{u1} α] {n : Nat} (v : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.conjTranspose.{u1, 0, 0} (Fin n) (Fin n) α _inst_1 (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v)) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) (Star.star.{u1} ((Fin n) -> α) (Pi.instStarForAll.{0, u1} (Fin n) (fun (ᾰ : Fin n) => α) (fun (i : Fin n) => _inst_1)) (fun (i : Fin n) => v (Neg.neg.{0} (Fin n) (Fin.neg n) i))))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.conj_transpose_circulant Matrix.Fin.conjTranspose_circulantₓ'. -/
 theorem Fin.conjTranspose_circulant [Star α] :
     ∀ {n} (v : Fin n → α), (circulant v)ᴴ = circulant (star fun i => v (-i))
   | 0 => by decide
@@ -161,55 +119,25 @@ theorem map_circulant [Sub n] (v : n → α) (f : α → β) :
 #align matrix.map_circulant Matrix.map_circulant
 -/
 
-/- warning: matrix.circulant_neg -> Matrix.circulant_neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : Neg.{u1} α] [_inst_2 : Sub.{u2} n] (v : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n _inst_2 (Neg.neg.{max u2 u1} (n -> α) (Pi.instNeg.{u2, u1} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1)) v)) (Neg.neg.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.hasNeg.{u1, u2, u2} n n α _inst_1) (Matrix.circulant.{u1, u2} α n _inst_2 v))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : Neg.{u2} α] [_inst_2 : Sub.{u1} n] (v : n -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.circulant.{u2, u1} α n _inst_2 (Neg.neg.{max u2 u1} (n -> α) (Pi.instNeg.{u1, u2} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1)) v)) (Neg.neg.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.neg.{u2, u1, u1} n n α _inst_1) (Matrix.circulant.{u2, u1} α n _inst_2 v))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_neg Matrix.circulant_negₓ'. -/
 theorem circulant_neg [Neg α] [Sub n] (v : n → α) : circulant (-v) = -circulant v :=
   ext fun _ _ => rfl
 #align matrix.circulant_neg Matrix.circulant_neg
 
-/- warning: matrix.circulant_zero -> Matrix.circulant_zero is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (n : Type.{u2}) [_inst_1 : Zero.{u1} α] [_inst_2 : Sub.{u2} n], Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n _inst_2 (OfNat.ofNat.{max u2 u1} (n -> α) 0 (OfNat.mk.{max u2 u1} (n -> α) 0 (Zero.zero.{max u2 u1} (n -> α) (Pi.instZero.{u2, u1} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1)))))) (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} n n α) 0 (OfNat.mk.{max u2 u1} (Matrix.{u2, u2, u1} n n α) 0 (Zero.zero.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.hasZero.{u1, u2, u2} n n α _inst_1))))
-but is expected to have type
-  forall (α : Type.{u2}) (n : Type.{u1}) [_inst_1 : Zero.{u2} α] [_inst_2 : Sub.{u1} n], Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.circulant.{u2, u1} α n _inst_2 (OfNat.ofNat.{max u1 u2} (n -> α) 0 (Zero.toOfNat0.{max u2 u1} (n -> α) (Pi.instZero.{u1, u2} n (fun (a._@.Mathlib.LinearAlgebra.Matrix.Circulant._hyg.26 : n) => α) (fun (i : n) => _inst_1))))) (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n α) 0 (Zero.toOfNat0.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.zero.{u2, u1, u1} n n α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_zero Matrix.circulant_zeroₓ'. -/
 @[simp]
 theorem circulant_zero (α n) [Zero α] [Sub n] : circulant 0 = (0 : Matrix n n α) :=
   ext fun _ _ => rfl
 #align matrix.circulant_zero Matrix.circulant_zero
 
-/- warning: matrix.circulant_add -> Matrix.circulant_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : Add.{u1} α] [_inst_2 : Sub.{u2} n] (v : n -> α) (w : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n _inst_2 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (n -> α) (n -> α) (n -> α) (instHAdd.{max u2 u1} (n -> α) (Pi.instAdd.{u2, u1} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1))) v w)) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.{u2, u2, u1} n n α) (Matrix.{u2, u2, u1} n n α) (instHAdd.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.hasAdd.{u1, u2, u2} n n α _inst_1)) (Matrix.circulant.{u1, u2} α n _inst_2 v) (Matrix.circulant.{u1, u2} α n _inst_2 w))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : Add.{u2} α] [_inst_2 : Sub.{u1} n] (v : n -> α) (w : n -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.circulant.{u2, u1} α n _inst_2 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (n -> α) (n -> α) (n -> α) (instHAdd.{max u2 u1} (n -> α) (Pi.instAdd.{u1, u2} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1))) v w)) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (instHAdd.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.add.{u2, u1, u1} n n α _inst_1)) (Matrix.circulant.{u2, u1} α n _inst_2 v) (Matrix.circulant.{u2, u1} α n _inst_2 w))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_add Matrix.circulant_addₓ'. -/
 theorem circulant_add [Add α] [Sub n] (v w : n → α) :
     circulant (v + w) = circulant v + circulant w :=
   ext fun _ _ => rfl
 #align matrix.circulant_add Matrix.circulant_add
 
-/- warning: matrix.circulant_sub -> Matrix.circulant_sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : Sub.{u1} α] [_inst_2 : Sub.{u2} n] (v : n -> α) (w : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n _inst_2 (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (n -> α) (n -> α) (n -> α) (instHSub.{max u2 u1} (n -> α) (Pi.instSub.{u2, u1} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1))) v w)) (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.{u2, u2, u1} n n α) (Matrix.{u2, u2, u1} n n α) (instHSub.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.hasSub.{u1, u2, u2} n n α _inst_1)) (Matrix.circulant.{u1, u2} α n _inst_2 v) (Matrix.circulant.{u1, u2} α n _inst_2 w))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : Sub.{u2} α] [_inst_2 : Sub.{u1} n] (v : n -> α) (w : n -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.circulant.{u2, u1} α n _inst_2 (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (n -> α) (n -> α) (n -> α) (instHSub.{max u2 u1} (n -> α) (Pi.instSub.{u1, u2} n (fun (ᾰ : n) => α) (fun (i : n) => _inst_1))) v w)) (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (instHSub.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.sub.{u2, u1, u1} n n α _inst_1)) (Matrix.circulant.{u2, u1} α n _inst_2 v) (Matrix.circulant.{u2, u1} α n _inst_2 w))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_sub Matrix.circulant_subₓ'. -/
 theorem circulant_sub [Sub α] [Sub n] (v w : n → α) :
     circulant (v - w) = circulant v - circulant w :=
   ext fun _ _ => rfl
 #align matrix.circulant_sub Matrix.circulant_sub
 
-/- warning: matrix.circulant_mul -> Matrix.circulant_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : Semiring.{u1} α] [_inst_2 : Fintype.{u2} n] [_inst_3 : AddGroup.{u2} n] (v : n -> α) (w : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.mul.{u1, u2, u2, u2} n n n α _inst_2 (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3)) v) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3)) w)) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3)) (Matrix.mulVec.{u1, u2, u2} n n α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3)) v) w))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : Semiring.{u2} α] [_inst_2 : Fintype.{u1} n] [_inst_3 : AddGroup.{u1} n] (v : n -> α) (w : n -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.mul.{u2, u1, u1, u1} n n n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_3)) v) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_3)) w)) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_3)) (Matrix.mulVec.{u2, u1, u1} n n α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)) _inst_2 (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_3)) v) w))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_mul Matrix.circulant_mulₓ'. -/
 /-- The product of two circulant matrices `circulant v` and `circulant w` is
     the circulant matrix generated by `mul_vec (circulant v) w`. -/
 theorem circulant_mul [Semiring α] [Fintype n] [AddGroup n] (v w : n → α) :
@@ -222,24 +150,12 @@ theorem circulant_mul [Semiring α] [Fintype n] [AddGroup n] (v w : n → α) :
   simp only [Equiv.subRight_apply, sub_sub_sub_cancel_right]
 #align matrix.circulant_mul Matrix.circulant_mul
 
-/- warning: matrix.fin.circulant_mul -> Matrix.Fin.circulant_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {n : Nat} (v : (Fin n) -> α) (w : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.mul.{u1, 0, 0, 0} (Fin n) (Fin n) (Fin n) α (Fin.fintype n) (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) w)) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) (Matrix.mulVec.{u1, 0, 0} (Fin n) (Fin n) α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)) (Fin.fintype n) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v) w))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {n : Nat} (v : (Fin n) -> α) (w : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.mul.{u1, 0, 0, 0} (Fin n) (Fin n) (Fin n) α (Fin.fintype n) (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) w)) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) (Matrix.mulVec.{u1, 0, 0} (Fin n) (Fin n) α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)) (Fin.fintype n) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v) w))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.circulant_mul Matrix.Fin.circulant_mulₓ'. -/
 theorem Fin.circulant_mul [Semiring α] :
     ∀ {n} (v w : Fin n → α), circulant v ⬝ circulant w = circulant (mulVec (circulant v) w)
   | 0 => by decide
   | n + 1 => circulant_mul
 #align matrix.fin.circulant_mul Matrix.Fin.circulant_mul
 
-/- warning: matrix.circulant_mul_comm -> Matrix.circulant_mul_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : CommSemigroup.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] [_inst_3 : Fintype.{u2} n] [_inst_4 : AddCommGroup.{u2} n] (v : n -> α) (w : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.mul.{u1, u2, u2, u2} n n n α _inst_3 (Semigroup.toHasMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n (AddCommGroup.toAddGroup.{u2} n _inst_4))) v) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n (AddCommGroup.toAddGroup.{u2} n _inst_4))) w)) (Matrix.mul.{u1, u2, u2, u2} n n n α _inst_3 (Semigroup.toHasMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n (AddCommGroup.toAddGroup.{u2} n _inst_4))) w) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n (AddCommGroup.toAddGroup.{u2} n _inst_4))) v))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : CommSemigroup.{u2} α] [_inst_2 : AddCommMonoid.{u2} α] [_inst_3 : Fintype.{u1} n] [_inst_4 : AddCommGroup.{u1} n] (v : n -> α) (w : n -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.mul.{u2, u1, u1, u1} n n n α _inst_3 (Semigroup.toMul.{u2} α (CommSemigroup.toSemigroup.{u2} α _inst_1)) _inst_2 (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n (AddCommGroup.toAddGroup.{u1} n _inst_4))) v) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n (AddCommGroup.toAddGroup.{u1} n _inst_4))) w)) (Matrix.mul.{u2, u1, u1, u1} n n n α _inst_3 (Semigroup.toMul.{u2} α (CommSemigroup.toSemigroup.{u2} α _inst_1)) _inst_2 (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n (AddCommGroup.toAddGroup.{u1} n _inst_4))) w) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n (AddCommGroup.toAddGroup.{u1} n _inst_4))) v))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_mul_comm Matrix.circulant_mul_commₓ'. -/
 /-- Multiplication of circulant matrices commutes when the elements do. -/
 theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [AddCommGroup n]
     (v w : n → α) : circulant v ⬝ circulant w = circulant w ⬝ circulant v :=
@@ -254,47 +170,23 @@ theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [Ad
     abel
 #align matrix.circulant_mul_comm Matrix.circulant_mul_comm
 
-/- warning: matrix.fin.circulant_mul_comm -> Matrix.Fin.circulant_mul_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommSemigroup.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] {n : Nat} (v : (Fin n) -> α) (w : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.mul.{u1, 0, 0, 0} (Fin n) (Fin n) (Fin n) α (Fin.fintype n) (Semigroup.toHasMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) w)) (Matrix.mul.{u1, 0, 0, 0} (Fin n) (Fin n) (Fin n) α (Fin.fintype n) (Semigroup.toHasMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) w) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommSemigroup.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] {n : Nat} (v : (Fin n) -> α) (w : (Fin n) -> α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.mul.{u1, 0, 0, 0} (Fin n) (Fin n) (Fin n) α (Fin.fintype n) (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) w)) (Matrix.mul.{u1, 0, 0, 0} (Fin n) (Fin n) (Fin n) α (Fin.fintype n) (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) _inst_2 (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) w) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.circulant_mul_comm Matrix.Fin.circulant_mul_commₓ'. -/
 theorem Fin.circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] :
     ∀ {n} (v w : Fin n → α), circulant v ⬝ circulant w = circulant w ⬝ circulant v
   | 0 => by decide
   | n + 1 => circulant_mul_comm
 #align matrix.fin.circulant_mul_comm Matrix.Fin.circulant_mul_comm
 
-/- warning: matrix.circulant_smul -> Matrix.circulant_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Sub.{u2} n] [_inst_2 : SMul.{u3, u1} R α] (k : R) (v : n -> α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n _inst_1 (SMul.smul.{u3, max u2 u1} R (n -> α) (Function.hasSMul.{u2, u3, u1} n R α _inst_2) k v)) (SMul.smul.{u3, max u2 u1} R (Matrix.{u2, u2, u1} n n α) (Matrix.hasSmul.{u1, u2, u2, u3} n n R α _inst_2) k (Matrix.circulant.{u1, u2} α n _inst_1 v))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u3}} {R : Type.{u2}} [_inst_1 : Sub.{u3} n] [_inst_2 : SMul.{u2, u1} R α] (k : R) (v : n -> α), Eq.{max (succ u1) (succ u3)} (Matrix.{u3, u3, u1} n n α) (Matrix.circulant.{u1, u3} α n _inst_1 (HSMul.hSMul.{u2, max u1 u3, max u1 u3} R (n -> α) (n -> α) (instHSMul.{u2, max u1 u3} R (n -> α) (Pi.instSMul.{u3, u1, u2} n R (fun (a._@.Mathlib.LinearAlgebra.Matrix.Circulant._hyg.1017 : n) => α) (fun (i : n) => _inst_2))) k v)) (HSMul.hSMul.{u2, max u3 u1, max u1 u3} R (Matrix.{u3, u3, u1} n n α) (Matrix.{u3, u3, u1} n n α) (instHSMul.{u2, max u1 u3} R (Matrix.{u3, u3, u1} n n α) (Matrix.smul.{u1, u3, u3, u2} n n R α _inst_2)) k (Matrix.circulant.{u1, u3} α n _inst_1 v))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_smul Matrix.circulant_smulₓ'. -/
 /-- `k • circulant v` is another circulant matrix `circulant (k • v)`. -/
 theorem circulant_smul [Sub n] [SMul R α] (k : R) (v : n → α) :
     circulant (k • v) = k • circulant v := by ext <;> simp
 #align matrix.circulant_smul Matrix.circulant_smul
 
-/- warning: matrix.circulant_single_one -> Matrix.circulant_single_one is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (n : Type.{u2}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : DecidableEq.{succ u2} n] [_inst_4 : AddGroup.{u2} n], Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_4)) (Pi.single.{u2, u1} n (fun (ᾰ : n) => α) (fun (a : n) (b : n) => _inst_3 a b) (fun (i : n) => _inst_1) (OfNat.ofNat.{u2} n 0 (OfNat.mk.{u2} n 0 (Zero.zero.{u2} n (AddZeroClass.toHasZero.{u2} n (AddMonoid.toAddZeroClass.{u2} n (SubNegMonoid.toAddMonoid.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_4))))))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2))))) (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} n n α) 1 (OfNat.mk.{max u2 u1} (Matrix.{u2, u2, u1} n n α) 1 (One.one.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.hasOne.{u1, u2} n α (fun (a : n) (b : n) => _inst_3 a b) _inst_1 _inst_2))))
-but is expected to have type
-  forall (α : Type.{u2}) (n : Type.{u1}) [_inst_1 : Zero.{u2} α] [_inst_2 : One.{u2} α] [_inst_3 : DecidableEq.{succ u1} n] [_inst_4 : AddGroup.{u1} n], Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.circulant.{u2, u1} α n (SubNegMonoid.toSub.{u1} n (AddGroup.toSubNegMonoid.{u1} n _inst_4)) (Pi.single.{u1, u2} n (fun (ᾰ : n) => α) (fun (a : n) (b : n) => _inst_3 a b) (fun (i : n) => _inst_1) (OfNat.ofNat.{u1} n 0 (Zero.toOfNat0.{u1} n (NegZeroClass.toZero.{u1} n (SubNegZeroMonoid.toNegZeroClass.{u1} n (SubtractionMonoid.toSubNegZeroMonoid.{u1} n (AddGroup.toSubtractionMonoid.{u1} n _inst_4)))))) (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_2)))) (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_3 a b) _inst_1 _inst_2)))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_single_one Matrix.circulant_single_oneₓ'. -/
 @[simp]
 theorem circulant_single_one (α n) [Zero α] [One α] [DecidableEq n] [AddGroup n] :
     circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) := by ext (i j);
   simp [one_apply, Pi.single_apply, sub_eq_zero]
 #align matrix.circulant_single_one Matrix.circulant_single_one
 
-/- warning: matrix.circulant_single -> Matrix.circulant_single is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (n : Type.{u2}) [_inst_1 : Semiring.{u1} α] [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : AddGroup.{u2} n] [_inst_4 : Fintype.{u2} n] (a : α), Eq.{succ (max u2 u1)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3)) (Pi.single.{u2, u1} n (fun (ᾰ : n) => α) (fun (a : n) (b : n) => _inst_2 a b) (fun (i : n) => MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u2} n 0 (OfNat.mk.{u2} n 0 (Zero.zero.{u2} n (AddZeroClass.toHasZero.{u2} n (AddMonoid.toAddZeroClass.{u2} n (SubNegMonoid.toAddMonoid.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3))))))) a)) (coeFn.{max (succ u1) (succ (max u2 u1)), max (succ u1) (succ (max u2 u1))} (RingHom.{u1, max u2 u1} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => (fun (a : n) (b : n) => _inst_2 a b) a b))) (fun (_x : RingHom.{u1, max u2 u1} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => (fun (a : n) (b : n) => _inst_2 a b) a b))) => α -> (Matrix.{u2, u2, u1} n n α)) (RingHom.hasCoeToFun.{u1, max u2 u1} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => (fun (a : n) (b : n) => _inst_2 a b) a b))) (Matrix.scalar.{u2, u1} α _inst_1 n (fun (a : n) (b : n) => _inst_2 a b) _inst_4) a)
-but is expected to have type
-  forall {α : Type.{u1}} (n : Type.{u2}) [_inst_1 : Semiring.{u1} α] [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : AddGroup.{u2} n] [_inst_4 : Fintype.{u2} n] (a : α), Eq.{max (succ u1) (succ u2)} (Matrix.{u2, u2, u1} n n α) (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_3)) (Pi.single.{u2, u1} n (fun (ᾰ : n) => α) (fun (a : n) (b : n) => _inst_2 a b) (fun (i : n) => MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)) (OfNat.ofNat.{u2} n 0 (Zero.toOfNat0.{u2} n (NegZeroClass.toZero.{u2} n (SubNegZeroMonoid.toNegZeroClass.{u2} n (SubtractionMonoid.toSubNegZeroMonoid.{u2} n (AddGroup.toSubtractionMonoid.{u2} n _inst_3)))))) a)) (FunLike.coe.{max (succ u2) (succ u1), succ u1, max (succ u2) (succ u1)} (RingHom.{u1, max u1 u2} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => Matrix.{u2, u2, u1} n n α) _x) (MulHomClass.toFunLike.{max u2 u1, u1, max u2 u1} (RingHom.{u1, max u1 u2} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b))) α (Matrix.{u2, u2, u1} n n α) (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u1, max u2 u1} (RingHom.{u1, max u1 u2} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b))) α (Matrix.{u2, u2, u1} n n α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (Matrix.{u2, u2, u1} n n α) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u1, max u2 u1} (RingHom.{u1, max u1 u2} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b))) α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b)) (RingHom.instRingHomClassRingHom.{u1, max u2 u1} α (Matrix.{u2, u2, u1} n n α) (Semiring.toNonAssocSemiring.{u1} α _inst_1) (Matrix.nonAssocSemiring.{u1, u2} n α (Semiring.toNonAssocSemiring.{u1} α _inst_1) _inst_4 (fun (a : n) (b : n) => _inst_2 a b)))))) (Matrix.scalar.{u2, u1} α _inst_1 n (fun (a : n) (b : n) => _inst_2 a b) _inst_4) a)
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_single Matrix.circulant_singleₓ'. -/
 @[simp]
 theorem circulant_single (n) [Semiring α] [DecidableEq n] [AddGroup n] [Fintype n] (a : α) :
     circulant (Pi.single 0 a : n → α) = scalar n a :=
@@ -303,12 +195,6 @@ theorem circulant_single (n) [Semiring α] [DecidableEq n] [AddGroup n] [Fintype
   simp [Pi.single_apply, one_apply, sub_eq_zero]
 #align matrix.circulant_single Matrix.circulant_single
 
-/- warning: matrix.fin.circulant_ite -> Matrix.Fin.circulant_ite is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] (n : Nat), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) (fun (i : Fin n) => ite.{succ u1} α (Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) i) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) i) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1))))) (OfNat.ofNat.{u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) 1 (OfNat.mk.{u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) 1 (One.one.{u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.hasOne.{u1, 0} (Fin n) α (fun (a : Fin n) (b : Fin n) => Fin.decidableEq n a b) _inst_1 _inst_2))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] (n : Nat), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) (fun (i : Fin n) => ite.{succ u1} α (Eq.{1} Nat (Fin.val n i) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (Fin.val n i) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)))) (OfNat.ofNat.{u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) 1 (One.toOfNat1.{u1} (Matrix.{0, 0, u1} (Fin n) (Fin n) α) (Matrix.one.{u1, 0} (Fin n) α (fun (a : Fin n) (b : Fin n) => instDecidableEqFin n a b) _inst_1 _inst_2)))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.circulant_ite Matrix.Fin.circulant_iteₓ'. -/
 /-- Note we use `↑i = 0` instead of `i = 0` as `fin 0` has no `0`.
 This means that we cannot state this with `pi.single` as we did with `matrix.circulant_single`. -/
 theorem Fin.circulant_ite (α) [Zero α] [One α] :
@@ -321,46 +207,22 @@ theorem Fin.circulant_ite (α) [Zero α] [One α] :
     congr
 #align matrix.fin.circulant_ite Matrix.Fin.circulant_ite
 
-/- warning: matrix.circulant_is_symm_iff -> Matrix.circulant_isSymm_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] {v : n -> α}, Iff (Matrix.IsSymm.{u1, u2} α n (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v)) (forall (i : n), Eq.{succ u1} α (v (Neg.neg.{u2} n (SubNegMonoid.toHasNeg.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) i)) (v i))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] {v : n -> α}, Iff (Matrix.IsSymm.{u1, u2} α n (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v)) (forall (i : n), Eq.{succ u1} α (v (Neg.neg.{u2} n (NegZeroClass.toNeg.{u2} n (SubNegZeroMonoid.toNegZeroClass.{u2} n (SubtractionMonoid.toSubNegZeroMonoid.{u2} n (AddGroup.toSubtractionMonoid.{u2} n _inst_1)))) i)) (v i))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_is_symm_iff Matrix.circulant_isSymm_iffₓ'. -/
 /-- A circulant of `v` is symmetric iff `v` equals its reverse. -/
 theorem circulant_isSymm_iff [AddGroup n] {v : n → α} : (circulant v).IsSymm ↔ ∀ i, v (-i) = v i :=
   by rw [IsSymm, transpose_circulant, circulant_inj, funext_iff]
 #align matrix.circulant_is_symm_iff Matrix.circulant_isSymm_iff
 
-/- warning: matrix.fin.circulant_is_symm_iff -> Matrix.Fin.circulant_isSymm_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {v : (Fin n) -> α}, Iff (Matrix.IsSymm.{u1, 0} α (Fin n) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v)) (forall (i : Fin n), Eq.{succ u1} α (v (Neg.neg.{0} (Fin n) (Fin.hasNeg n) i)) (v i))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {v : (Fin n) -> α}, Iff (Matrix.IsSymm.{u1, 0} α (Fin n) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v)) (forall (i : Fin n), Eq.{succ u1} α (v (Neg.neg.{0} (Fin n) (Fin.neg n) i)) (v i))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.circulant_is_symm_iff Matrix.Fin.circulant_isSymm_iffₓ'. -/
 theorem Fin.circulant_isSymm_iff : ∀ {n} {v : Fin n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
   | 0 => fun v => by simp [is_symm.ext_iff, IsEmpty.forall_iff]
   | n + 1 => fun v => circulant_isSymm_iff
 #align matrix.fin.circulant_is_symm_iff Matrix.Fin.circulant_isSymm_iff
 
-/- warning: matrix.circulant_is_symm_apply -> Matrix.circulant_isSymm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] {v : n -> α}, (Matrix.IsSymm.{u1, u2} α n (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toHasSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v)) -> (forall (i : n), Eq.{succ u1} α (v (Neg.neg.{u2} n (SubNegMonoid.toHasNeg.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) i)) (v i))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Type.{u2}} [_inst_1 : AddGroup.{u2} n] {v : n -> α}, (Matrix.IsSymm.{u1, u2} α n (Matrix.circulant.{u1, u2} α n (SubNegMonoid.toSub.{u2} n (AddGroup.toSubNegMonoid.{u2} n _inst_1)) v)) -> (forall (i : n), Eq.{succ u1} α (v (Neg.neg.{u2} n (NegZeroClass.toNeg.{u2} n (SubNegZeroMonoid.toNegZeroClass.{u2} n (SubtractionMonoid.toSubNegZeroMonoid.{u2} n (AddGroup.toSubtractionMonoid.{u2} n _inst_1)))) i)) (v i))
-Case conversion may be inaccurate. Consider using '#align matrix.circulant_is_symm_apply Matrix.circulant_isSymm_applyₓ'. -/
 /-- If `circulant v` is symmetric, `∀ i j : I, v (- i) = v i`. -/
 theorem circulant_isSymm_apply [AddGroup n] {v : n → α} (h : (circulant v).IsSymm) (i : n) :
     v (-i) = v i :=
   circulant_isSymm_iff.1 h i
 #align matrix.circulant_is_symm_apply Matrix.circulant_isSymm_apply
 
-/- warning: matrix.fin.circulant_is_symm_apply -> Matrix.Fin.circulant_isSymm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {v : (Fin n) -> α}, (Matrix.IsSymm.{u1, 0} α (Fin n) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.hasSub n) v)) -> (forall (i : Fin n), Eq.{succ u1} α (v (Neg.neg.{0} (Fin n) (Fin.hasNeg n) i)) (v i))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {v : (Fin n) -> α}, (Matrix.IsSymm.{u1, 0} α (Fin n) (Matrix.circulant.{u1, 0} α (Fin n) (Fin.instSubFin n) v)) -> (forall (i : Fin n), Eq.{succ u1} α (v (Neg.neg.{0} (Fin n) (Fin.neg n) i)) (v i))
-Case conversion may be inaccurate. Consider using '#align matrix.fin.circulant_is_symm_apply Matrix.Fin.circulant_isSymm_applyₓ'. -/
 theorem Fin.circulant_isSymm_apply {n} {v : Fin n → α} (h : (circulant v).IsSymm) (i : Fin n) :
     v (-i) = v i :=
   Fin.circulant_isSymm_iff.1 h i

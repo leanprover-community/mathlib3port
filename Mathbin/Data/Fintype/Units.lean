@@ -22,22 +22,10 @@ import Mathbin.Data.Int.Units
 
 variable {α : Type _}
 
-/- warning: units_int.fintype -> UnitsInt.fintype is a dubious translation:
-lean 3 declaration is
-  Fintype.{0} (Units.{0} Int Int.monoid)
-but is expected to have type
-  Fintype.{0} (Units.{0} Int Int.instMonoidInt)
-Case conversion may be inaccurate. Consider using '#align units_int.fintype UnitsInt.fintypeₓ'. -/
 instance UnitsInt.fintype : Fintype ℤˣ :=
   ⟨{1, -1}, fun x => by cases Int.units_eq_one_or x <;> simp [*]⟩
 #align units_int.fintype UnitsInt.fintype
 
-/- warning: units_int.univ -> UnitsInt.univ is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Finset.{0} (Units.{0} Int Int.monoid)) (Finset.univ.{0} (Units.{0} Int Int.monoid) UnitsInt.fintype) (Insert.insert.{0, 0} (Units.{0} Int Int.monoid) (Finset.{0} (Units.{0} Int Int.monoid)) (Finset.hasInsert.{0} (Units.{0} Int Int.monoid) (fun (a : Units.{0} Int Int.monoid) (b : Units.{0} Int Int.monoid) => Units.decidableEq.{0} Int Int.monoid (fun (a : Int) (b : Int) => Int.decidableEq a b) a b)) (OfNat.ofNat.{0} (Units.{0} Int Int.monoid) 1 (OfNat.mk.{0} (Units.{0} Int Int.monoid) 1 (One.one.{0} (Units.{0} Int Int.monoid) (MulOneClass.toHasOne.{0} (Units.{0} Int Int.monoid) (Units.mulOneClass.{0} Int Int.monoid))))) (Singleton.singleton.{0, 0} (Units.{0} Int Int.monoid) (Finset.{0} (Units.{0} Int Int.monoid)) (Finset.hasSingleton.{0} (Units.{0} Int Int.monoid)) (Neg.neg.{0} (Units.{0} Int Int.monoid) (Units.hasNeg.{0} Int Int.monoid (NonUnitalNonAssocRing.toHasDistribNeg.{0} Int (NonAssocRing.toNonUnitalNonAssocRing.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))) (OfNat.ofNat.{0} (Units.{0} Int Int.monoid) 1 (OfNat.mk.{0} (Units.{0} Int Int.monoid) 1 (One.one.{0} (Units.{0} Int Int.monoid) (MulOneClass.toHasOne.{0} (Units.{0} Int Int.monoid) (Units.mulOneClass.{0} Int Int.monoid))))))))
-but is expected to have type
-  Eq.{1} (Finset.{0} (Units.{0} Int Int.instMonoidInt)) (Finset.univ.{0} (Units.{0} Int Int.instMonoidInt) UnitsInt.fintype) (Insert.insert.{0, 0} (Units.{0} Int Int.instMonoidInt) (Finset.{0} (Units.{0} Int Int.instMonoidInt)) (Finset.instInsertFinset.{0} (Units.{0} Int Int.instMonoidInt) (fun (a : Units.{0} Int Int.instMonoidInt) (b : Units.{0} Int Int.instMonoidInt) => Units.instDecidableEqUnits.{0} Int Int.instMonoidInt (fun (a : Int) (b : Int) => Int.instDecidableEqInt a b) a b)) (OfNat.ofNat.{0} (Units.{0} Int Int.instMonoidInt) 1 (One.toOfNat1.{0} (Units.{0} Int Int.instMonoidInt) (InvOneClass.toOne.{0} (Units.{0} Int Int.instMonoidInt) (DivInvOneMonoid.toInvOneClass.{0} (Units.{0} Int Int.instMonoidInt) (DivisionMonoid.toDivInvOneMonoid.{0} (Units.{0} Int Int.instMonoidInt) (DivisionCommMonoid.toDivisionMonoid.{0} (Units.{0} Int Int.instMonoidInt) (CommGroup.toDivisionCommMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Units.instCommGroupUnitsToMonoid.{0} Int Int.instCommMonoidInt)))))))) (Singleton.singleton.{0, 0} (Units.{0} Int Int.instMonoidInt) (Finset.{0} (Units.{0} Int Int.instMonoidInt)) (Finset.instSingletonFinset.{0} (Units.{0} Int Int.instMonoidInt)) (Neg.neg.{0} (Units.{0} Int Int.instMonoidInt) (Units.instNegUnits.{0} Int Int.instMonoidInt (NonUnitalNonAssocRing.toHasDistribNeg.{0} Int (NonAssocRing.toNonUnitalNonAssocRing.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)))) (OfNat.ofNat.{0} (Units.{0} Int Int.instMonoidInt) 1 (One.toOfNat1.{0} (Units.{0} Int Int.instMonoidInt) (InvOneClass.toOne.{0} (Units.{0} Int Int.instMonoidInt) (DivInvOneMonoid.toInvOneClass.{0} (Units.{0} Int Int.instMonoidInt) (DivisionMonoid.toDivInvOneMonoid.{0} (Units.{0} Int Int.instMonoidInt) (DivisionCommMonoid.toDivisionMonoid.{0} (Units.{0} Int Int.instMonoidInt) (CommGroup.toDivisionCommMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Units.instCommGroupUnitsToMonoid.{0} Int Int.instCommMonoidInt)))))))))))
-Case conversion may be inaccurate. Consider using '#align units_int.univ UnitsInt.univₓ'. -/
 @[simp]
 theorem UnitsInt.univ : (Finset.univ : Finset ℤˣ) = {1, -1} :=
   rfl

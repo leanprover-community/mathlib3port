@@ -33,9 +33,6 @@ open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
 variable {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D] (F : C ⥤ D)
 
-/- warning: is_binary_product_of_is_terminal_is_pullback -> isBinaryProductOfIsTerminalIsPullback is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_binary_product_of_is_terminal_is_pullback isBinaryProductOfIsTerminalIsPullbackₓ'. -/
 /-- If a span is the pullback span over the terminal object, then it is a binary product. -/
 def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : Cone F) {X : C}
     (hX : IsTerminal X) (f : F.obj ⟨WalkingPair.left⟩ ⟶ X) (g : F.obj ⟨WalkingPair.right⟩ ⟶ X)
@@ -147,9 +144,6 @@ noncomputable def prodIsoPullback [HasTerminal C] [HasPullbacks C] (X Y : C)
 #align prod_iso_pullback prodIsoPullback
 -/
 
-/- warning: is_binary_coproduct_of_is_initial_is_pushout -> isBinaryCoproductOfIsInitialIsPushout is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_binary_coproduct_of_is_initial_is_pushout isBinaryCoproductOfIsInitialIsPushoutₓ'. -/
 /-- If a cospan is the pushout cospan under the initial object, then it is a binary coproduct. -/
 def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : Cocone F) {X : C}
     (hX : IsInitial X) (f : X ⟶ F.obj ⟨WalkingPair.left⟩) (g : X ⟶ F.obj ⟨WalkingPair.right⟩)

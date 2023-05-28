@@ -35,9 +35,6 @@ variable [CommSemiring R] [AddCommMonoid M₂] [AddCommMonoid M₃] [∀ i, AddC
 
 variable [∀ i, Module R (M i)] [Module R M₂] [Module R M₃]
 
-/- warning: basis.ext_multilinear_fin -> Basis.ext_multilinear_fin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.ext_multilinear_fin Basis.ext_multilinear_finₓ'. -/
 /-- Two multilinear maps indexed by `fin n` are equal if they are equal when all arguments are
 basis vectors. -/
 theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n → Type _}
@@ -61,9 +58,6 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
       rw [Fin.cons_succ, Fin.cons_succ]
 #align basis.ext_multilinear_fin Basis.ext_multilinear_fin
 
-/- warning: basis.ext_multilinear -> Basis.ext_multilinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.ext_multilinear Basis.ext_multilinearₓ'. -/
 /-- Two multilinear maps indexed by a `fintype` are equal if they are equal when all arguments
 are basis vectors. Unlike `basis.ext_multilinear_fin`, this only uses a single basis; a
 dependently-typed version would still be true, but the proof would need a dependently-typed

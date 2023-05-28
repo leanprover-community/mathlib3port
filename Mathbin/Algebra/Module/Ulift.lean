@@ -44,12 +44,6 @@ instance smulLeft [SMul R M] : SMul (ULift R) M :=
 #align ulift.has_vadd_left ULift.vaddLeft
 -/
 
-/- warning: ulift.smul_def -> ULift.smul_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : SMul.{u1, u2} R M] (s : ULift.{u3, u1} R) (x : M), Eq.{succ u2} M (SMul.smul.{max u1 u3, u2} (ULift.{u3, u1} R) M (ULift.smulLeft.{u1, u2, u3} R M _inst_1) s x) (SMul.smul.{u1, u2} R M _inst_1 (ULift.down.{u3, u1} R s) x)
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u3}} [_inst_1 : SMul.{u2, u3} R M] (s : ULift.{u1, u2} R) (x : M), Eq.{succ u3} M (HSMul.hSMul.{max u2 u1, u3, u3} (ULift.{u1, u2} R) M M (instHSMul.{max u2 u1, u3} (ULift.{u1, u2} R) M (ULift.smulLeft.{u2, u3, u1} R M _inst_1)) s x) (HSMul.hSMul.{u2, u3, u3} R M M (instHSMul.{u2, u3} R M _inst_1) (ULift.down.{u1, u2} R s) x)
-Case conversion may be inaccurate. Consider using '#align ulift.smul_def ULift.smul_defₓ'. -/
 @[simp, to_additive]
 theorem smul_def [SMul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
   rfl

@@ -79,12 +79,6 @@ theorem disjoint_of_subset_left (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoi
   d (ss m)
 #align list.disjoint_of_subset_left List.disjoint_of_subset_leftₓ
 
-/- warning: list.disjoint_of_subset_right -> List.disjoint_of_subset_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (HasSubset.Subset.{u1} (List.{u1} α) (List.hasSubset.{u1} α) l₂ l) -> (List.Disjoint.{u1} α l₁ l) -> (List.Disjoint.{u1} α l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (HasSubset.Subset.{u1} (List.{u1} α) (List.instHasSubsetList.{u1} α) l l₁) -> (List.Disjoint.{u1} α l₂ l₁) -> (List.Disjoint.{u1} α l₂ l)
-Case conversion may be inaccurate. Consider using '#align list.disjoint_of_subset_right List.disjoint_of_subset_rightₓ'. -/
 theorem disjoint_of_subset_right (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ =>
   d m (ss m₁)
 #align list.disjoint_of_subset_right List.disjoint_of_subset_right
@@ -142,12 +136,6 @@ theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoi
   (@disjoint_append_left _ l₂ [a] l₁).trans <| by simp only [singleton_disjoint]
 #align list.disjoint_cons_left List.disjoint_cons_leftₓ
 
-/- warning: list.disjoint_cons_right -> List.disjoint_cons_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {a : α}, Iff (List.Disjoint.{u1} α l₁ (List.cons.{u1} α a l₂)) (And (Not (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l₁)) (List.Disjoint.{u1} α l₁ l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : α} {a : List.{u1} α}, Iff (List.Disjoint.{u1} α l₁ (List.cons.{u1} α l₂ a)) (And (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l₂ l₁)) (List.Disjoint.{u1} α l₁ a))
-Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_right List.disjoint_cons_rightₓ'. -/
 @[simp]
 theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjoint l₁ l₂ :=
   disjoint_comm.trans <| by simp only [disjoint_comm, disjoint_cons_left]
@@ -378,43 +366,19 @@ end Inter
 
 section BagInter
 
-/- warning: list.nil_bag_inter -> List.nil_bagInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.nil.{u1} α) l) (List.nil.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.nil.{u1} α) l) (List.nil.{u1} α)
-Case conversion may be inaccurate. Consider using '#align list.nil_bag_inter List.nil_bagInterₓ'. -/
 @[simp]
 theorem nil_bagInter (l : List α) : [].bagInterₓ l = [] := by cases l <;> rfl
 #align list.nil_bag_inter List.nil_bagInter
 
-/- warning: list.bag_inter_nil -> List.bagInter_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l (List.nil.{u1} α)) (List.nil.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l (List.nil.{u1} α)) (List.nil.{u1} α)
-Case conversion may be inaccurate. Consider using '#align list.bag_inter_nil List.bagInter_nilₓ'. -/
 @[simp]
 theorem bagInter_nil (l : List α) : l.bagInterₓ [] = [] := by cases l <;> rfl
 #align list.bag_inter_nil List.bagInter_nil
 
-/- warning: list.cons_bag_inter_of_pos -> List.cons_bagInter_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₂ : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l₂) -> (Eq.{succ u1} (List.{u1} α) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α a l₁) l₂) (List.cons.{u1} α a (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ (List.eraseₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₂ a))))
-but is expected to have type
-  forall {α : Type.{u1}} {l₂ : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α), (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂) -> (Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.cons.{u1} α a l₁) l₂) (List.cons.{u1} α a (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₂ a))))
-Case conversion may be inaccurate. Consider using '#align list.cons_bag_inter_of_pos List.cons_bagInter_of_posₓ'. -/
 @[simp]
 theorem cons_bagInter_of_pos (l₁ : List α) (h : a ∈ l₂) :
     (a :: l₁).bagInterₓ l₂ = a :: l₁.bagInterₓ (l₂.eraseₓ a) := by cases l₂ <;> exact if_pos h
 #align list.cons_bag_inter_of_pos List.cons_bagInter_of_pos
 
-/- warning: list.cons_bag_inter_of_neg -> List.cons_bagInter_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₂ : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α), (Not (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l₂)) -> (Eq.{succ u1} (List.{u1} α) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α a l₁) l₂) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {l₂ : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α), (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂)) -> (Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.cons.{u1} α a l₁) l₂) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂))
-Case conversion may be inaccurate. Consider using '#align list.cons_bag_inter_of_neg List.cons_bagInter_of_negₓ'. -/
 @[simp]
 theorem cons_bagInter_of_neg (l₁ : List α) (h : a ∉ l₂) :
     (a :: l₁).bagInterₓ l₂ = l₁.bagInterₓ l₂ :=
@@ -423,12 +387,6 @@ theorem cons_bagInter_of_neg (l₁ : List α) (h : a ∉ l₂) :
   simp only [erase_of_not_mem h, List.bagInter, if_neg h]
 #align list.cons_bag_inter_of_neg List.cons_bagInter_of_neg
 
-/- warning: list.mem_bag_inter -> List.mem_bagInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, Iff (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ l₂)) (And (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l₁) (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, Iff (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂)) (And (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₁) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂))
-Case conversion may be inaccurate. Consider using '#align list.mem_bag_inter List.mem_bagInterₓ'. -/
 @[simp]
 theorem mem_bagInter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInterₓ l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
   | [], l₂ => by simp only [nil_bag_inter, not_mem_nil, false_and_iff]
@@ -464,12 +422,6 @@ theorem count_bagInter {a : α} :
 #align list.count_bag_inter List.count_bagInter
 -/
 
-/- warning: list.bag_inter_sublist_left -> List.bagInter_sublist_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α) (l₂ : List.{u1} α), List.Sublist.{u1} α (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ l₂) l₁
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α) (l₂ : List.{u1} α), List.Sublist.{u1} α (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) l₁
-Case conversion may be inaccurate. Consider using '#align list.bag_inter_sublist_left List.bagInter_sublist_leftₓ'. -/
 theorem bagInter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInterₓ l₂ <+ l₁
   | [], l₂ => by simp
   | b :: l₁, l₂ =>
@@ -479,12 +431,6 @@ theorem bagInter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInterₓ l₂ <
     · apply sublist_cons_of_sublist; apply bag_inter_sublist_left
 #align list.bag_inter_sublist_left List.bagInter_sublist_left
 
-/- warning: list.bag_inter_nil_iff_inter_nil -> List.bagInter_nil_iff_inter_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α) (l₂ : List.{u1} α), Iff (Eq.{succ u1} (List.{u1} α) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ l₂) (List.nil.{u1} α)) (Eq.{succ u1} (List.{u1} α) (Inter.inter.{u1} (List.{u1} α) (List.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) (List.nil.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α) (l₂ : List.{u1} α), Iff (Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) (List.nil.{u1} α)) (Eq.{succ u1} (List.{u1} α) (Inter.inter.{u1} (List.{u1} α) (List.instInterList.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) (List.nil.{u1} α))
-Case conversion may be inaccurate. Consider using '#align list.bag_inter_nil_iff_inter_nil List.bagInter_nil_iff_inter_nilₓ'. -/
 theorem bagInter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInterₓ l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by simp
   | b :: l₁, l₂ => by

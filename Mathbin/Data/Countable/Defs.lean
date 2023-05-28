@@ -77,12 +77,6 @@ theorem countable_iff_exists_surjective [Nonempty α] : Countable α ↔ ∃ f :
 #align countable_iff_exists_surjective countable_iff_exists_surjective
 -/
 
-/- warning: countable.of_equiv -> Countable.of_equiv is a dubious translation:
-lean 3 declaration is
-  forall {β : Sort.{u1}} (α : Sort.{u2}) [_inst_1 : Countable.{u2} α], (Equiv.{u2, u1} α β) -> (Countable.{u1} β)
-but is expected to have type
-  forall {β : Sort.{u2}} (α : Sort.{u1}) [_inst_1 : Countable.{u1} α], (Equiv.{u1, u2} α β) -> (Countable.{u2} β)
-Case conversion may be inaccurate. Consider using '#align countable.of_equiv Countable.of_equivₓ'. -/
 theorem Countable.of_equiv (α : Sort _) [Countable α] (e : α ≃ β) : Countable β :=
   e.symm.Injective.Countable
 #align countable.of_equiv Countable.of_equiv

@@ -117,33 +117,15 @@ instance (L' : LieSubalgebra R L) : LieAlgebra R L'
 
 variable {R L} (L' : LieSubalgebra R L)
 
-/- warning: lie_subalgebra.zero_mem -> LieSubalgebra.zero_mem is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (AddZeroClass.toHasZero.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))))) L'
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (OfNat.ofNat.{u2} L 0 (Zero.toOfNat0.{u2} L (NegZeroClass.toZero.{u2} L (SubNegZeroMonoid.toNegZeroClass.{u2} L (SubtractionMonoid.toSubNegZeroMonoid.{u2} L (SubtractionCommMonoid.toSubtractionMonoid.{u2} L (AddCommGroup.toDivisionAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))))))) L'
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.zero_mem LieSubalgebra.zero_memₓ'. -/
 @[simp]
 protected theorem zero_mem : (0 : L) ∈ L' :=
   zero_mem L'
 #align lie_subalgebra.zero_mem LieSubalgebra.zero_mem
 
-/- warning: lie_subalgebra.add_mem -> LieSubalgebra.add_mem is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) {x : L} {y : L}, (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L') -> (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) y L') -> (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HAdd.hAdd.{u2, u2, u2} L L L (instHAdd.{u2} L (AddZeroClass.toHasAdd.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))) x y) L')
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) {x : L} {y : L}, (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L') -> (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) y L') -> (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HAdd.hAdd.{u2, u2, u2} L L L (instHAdd.{u2} L (AddZeroClass.toAdd.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))) x y) L')
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.add_mem LieSubalgebra.add_memₓ'. -/
 protected theorem add_mem {x y : L} : x ∈ L' → y ∈ L' → (x + y : L) ∈ L' :=
   add_mem
 #align lie_subalgebra.add_mem LieSubalgebra.add_mem
 
-/- warning: lie_subalgebra.sub_mem -> LieSubalgebra.sub_mem is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) {x : L} {y : L}, (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L') -> (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) y L') -> (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HSub.hSub.{u2, u2, u2} L L L (instHSub.{u2} L (SubNegMonoid.toHasSub.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))) x y) L')
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) {x : L} {y : L}, (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L') -> (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) y L') -> (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HSub.hSub.{u2, u2, u2} L L L (instHSub.{u2} L (SubNegMonoid.toSub.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))) x y) L')
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.sub_mem LieSubalgebra.sub_memₓ'. -/
 protected theorem sub_mem {x y : L} : x ∈ L' → y ∈ L' → (x - y : L) ∈ L' :=
   sub_mem
 #align lie_subalgebra.sub_mem LieSubalgebra.sub_mem
@@ -160,20 +142,11 @@ theorem lie_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (⁅x, y⁆ : L) ∈
 #align lie_subalgebra.lie_mem LieSubalgebra.lie_mem
 -/
 
-/- warning: lie_subalgebra.mem_carrier -> LieSubalgebra.mem_carrier is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) {x : L}, Iff (Membership.Mem.{u2, u2} L (Set.{u2} L) (Set.hasMem.{u2} L) x (Submodule.carrier.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 L'))) (Membership.Mem.{u2, u2} L (Set.{u2} L) (Set.hasMem.{u2} L) x ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) L'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) {x : L}, Iff (Membership.mem.{u2, u2} L (Set.{u2} L) (Set.instMembershipSet.{u2} L) x (AddSubsemigroup.carrier.{u2} L (AddZeroClass.toAdd.{u2} L (AddMonoid.toAddZeroClass.{u2} L (AddCommMonoid.toAddMonoid.{u2} L (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))) (AddSubmonoid.toAddSubsemigroup.{u2} L (AddMonoid.toAddZeroClass.{u2} L (AddCommMonoid.toAddMonoid.{u2} L (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))) (Submodule.toAddSubmonoid.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 L'))))) (Membership.mem.{u2, u2} L (Set.{u2} L) (Set.instMembershipSet.{u2} L) x (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_carrier LieSubalgebra.mem_carrierₓ'. -/
 @[simp]
 theorem mem_carrier {x : L} : x ∈ L'.carrier ↔ x ∈ (L' : Set L) :=
   Iff.rfl
 #align lie_subalgebra.mem_carrier LieSubalgebra.mem_carrier
 
-/- warning: lie_subalgebra.mem_mk_iff -> LieSubalgebra.mem_mk_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_mk_iff LieSubalgebra.mem_mk_iffₓ'. -/
 @[simp]
 theorem mem_mk_iff (S : Set L) (h₁ h₂ h₃ h₄) {x : L} :
     x ∈ (⟨⟨S, h₁, h₂, h₃⟩, h₄⟩ : LieSubalgebra R L) ↔ x ∈ S :=
@@ -193,9 +166,6 @@ theorem mem_coe {x : L} : x ∈ (L' : Set L) ↔ x ∈ L' :=
 #align lie_subalgebra.mem_coe LieSubalgebra.mem_coe
 -/
 
-/- warning: lie_subalgebra.coe_bracket -> LieSubalgebra.coe_bracket is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_bracket LieSubalgebra.coe_bracketₓ'. -/
 @[simp, norm_cast]
 theorem coe_bracket (x y : L') : (↑⁅x, y⁆ : L) = ⁅(↑x : L), ↑y⁆ :=
   rfl
@@ -207,12 +177,6 @@ theorem ext_iff (x y : L') : x = y ↔ (x : L) = y :=
 #align lie_subalgebra.ext_iff LieSubalgebra.ext_iff
 -/
 
-/- warning: lie_subalgebra.coe_zero_iff_zero -> LieSubalgebra.coe_zero_iff_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (x : coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L'), Iff (Eq.{succ u2} L ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') L (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') L (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') L (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') L (coeSubtype.{succ u2} L (fun (x : L) => Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L'))))) x) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (AddZeroClass.toHasZero.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))))))))) (Eq.{succ u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') x (OfNat.ofNat.{u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') 0 (OfNat.mk.{u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') 0 (Zero.zero.{u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') (ZeroMemClass.zero.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddZeroClass.toHasZero.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))))) (AddSubmonoidClass.to_zeroMemClass.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))) (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddSubgroupClass.to_addSubmonoidClass.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))) (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.addSubgroupClass.{u1, u2} R L _inst_1 _inst_2 _inst_3))) L')))))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (x : Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L')), Iff (Eq.{succ u2} L (Subtype.val.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (Set.{u2} L) (Set.instMembershipSet.{u2} L) x (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L')) x) (OfNat.ofNat.{u2} L 0 (Zero.toOfNat0.{u2} L (NegZeroClass.toZero.{u2} L (SubNegZeroMonoid.toNegZeroClass.{u2} L (SubtractionMonoid.toSubNegZeroMonoid.{u2} L (SubtractionCommMonoid.toSubtractionMonoid.{u2} L (AddCommGroup.toDivisionAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))))) (Eq.{succ u2} (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L')) x (OfNat.ofNat.{u2} (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L')) 0 (Zero.toOfNat0.{u2} (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L')) (Submodule.zero.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 L')))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_zero_iff_zero LieSubalgebra.coe_zero_iff_zeroₓ'. -/
 theorem coe_zero_iff_zero (x : L') : (x : L) = 0 ↔ x = 0 :=
   (ext_iff L' x 0).symm
 #align lie_subalgebra.coe_zero_iff_zero LieSubalgebra.coe_zero_iff_zero
@@ -230,18 +194,12 @@ theorem ext_iff' (L₁' L₂' : LieSubalgebra R L) : L₁' = L₂' ↔ ∀ x, x 
 #align lie_subalgebra.ext_iff' LieSubalgebra.ext_iff'
 -/
 
-/- warning: lie_subalgebra.mk_coe -> LieSubalgebra.mk_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mk_coe LieSubalgebra.mk_coeₓ'. -/
 @[simp]
 theorem mk_coe (S : Set L) (h₁ h₂ h₃ h₄) :
     ((⟨⟨S, h₁, h₂, h₃⟩, h₄⟩ : LieSubalgebra R L) : Set L) = S :=
   rfl
 #align lie_subalgebra.mk_coe LieSubalgebra.mk_coe
 
-/- warning: lie_subalgebra.coe_to_submodule_mk -> LieSubalgebra.coe_to_submodule_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_to_submodule_mk LieSubalgebra.coe_to_submodule_mkₓ'. -/
 @[simp]
 theorem coe_to_submodule_mk (p : Submodule R L) (h) :
     (({ p with lie_mem' := h } : LieSubalgebra R L) : Submodule R L) = p := by cases p; rfl
@@ -295,9 +253,6 @@ instance : LieRingModule L' M where
   lie_add x y m := lie_add x y m
   leibniz_lie x y m := leibniz_lie x y m
 
-/- warning: lie_subalgebra.coe_bracket_of_module -> LieSubalgebra.coe_bracket_of_module is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_bracket_of_module LieSubalgebra.coe_bracket_of_moduleₓ'. -/
 @[simp]
 theorem coe_bracket_of_module (x : L') (m : M) : ⁅x, m⁆ = ⁅(x : L), m⁆ :=
   rfl
@@ -312,18 +267,12 @@ instance : LieModule R L' M
   smul_lie t x m := by simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
   lie_smul t x m := by simp only [coe_bracket_of_module, lie_smul]
 
-/- warning: lie_module_hom.restrict_lie -> LieModuleHom.restrictLie is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_module_hom.restrict_lie LieModuleHom.restrictLieₓ'. -/
 /-- An `L`-equivariant map of Lie modules `M → N` is `L'`-equivariant for any Lie subalgebra
 `L' ⊆ L`. -/
 def LieModuleHom.restrictLie (f : M →ₗ⁅R,L⁆ N) (L' : LieSubalgebra R L) : M →ₗ⁅R,L'⁆ N :=
   { (f : M →ₗ[R] N) with map_lie' := fun x m => f.map_lie (↑x) m }
 #align lie_module_hom.restrict_lie LieModuleHom.restrictLie
 
-/- warning: lie_module_hom.coe_restrict_lie -> LieModuleHom.coe_restrictLie is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_module_hom.coe_restrict_lie LieModuleHom.coe_restrictLieₓ'. -/
 @[simp]
 theorem LieModuleHom.coe_restrictLie (f : M →ₗ⁅R,L⁆ N) : ⇑(f.restrictLie L') = f :=
   rfl
@@ -331,21 +280,12 @@ theorem LieModuleHom.coe_restrictLie (f : M →ₗ⁅R,L⁆ N) : ⇑(f.restrictL
 
 end LieModule
 
-/- warning: lie_subalgebra.incl -> LieSubalgebra.incl is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), LieHom.{u1, u2, u2} R (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) L') L _inst_1 (LieSubalgebra.lieRing.{u1, u2} R L _inst_1 _inst_2 _inst_3 L') (LieSubalgebra.lieAlgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 L') _inst_2 _inst_3
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (L' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), LieHom.{u1, u2, u2} R (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x L')) L _inst_1 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 L') (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 L') _inst_2 _inst_3
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.incl LieSubalgebra.inclₓ'. -/
 /-- The embedding of a Lie subalgebra into the ambient space as a morphism of Lie algebras. -/
 def incl : L' →ₗ⁅R⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by simp only [LinearMap.toFun_eq_coe, Submodule.subtype_apply]; rfl }
 #align lie_subalgebra.incl LieSubalgebra.incl
 
-/- warning: lie_subalgebra.coe_incl -> LieSubalgebra.coe_incl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_incl LieSubalgebra.coe_inclₓ'. -/
 @[simp]
 theorem coe_incl : ⇑L'.incl = coe :=
   rfl
@@ -388,61 +328,31 @@ def range : LieSubalgebra R L₂ :=
 #align lie_hom.range LieHom.range
 -/
 
-/- warning: lie_hom.range_coe -> LieHom.range_coe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), Eq.{succ u3} (Set.{u3} L₂) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (Set.{u3} L₂) (HasLiftT.mk.{succ u3, succ u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (Set.{u3} L₂) (CoeTCₓ.coe.{succ u3, succ u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (Set.{u3} L₂) (SetLike.Set.hasCoeT.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.setLike.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)))) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (Set.range.{u3, succ u2} L₂ L (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (fun (_x : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) => L -> L₂) (LieHom.hasCoeToFun.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), Eq.{succ u3} (Set.{u3} L₂) (SetLike.coe.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (Set.range.{u3, succ u2} L₂ L (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) L (fun (_x : L) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f))
-Case conversion may be inaccurate. Consider using '#align lie_hom.range_coe LieHom.range_coeₓ'. -/
 @[simp]
 theorem range_coe : (f.range : Set L₂) = Set.range f :=
   LinearMap.range_coe ↑f
 #align lie_hom.range_coe LieHom.range_coe
 
-/- warning: lie_hom.mem_range -> LieHom.mem_range is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (x : L₂), Iff (Membership.Mem.{u3, u3} L₂ (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (SetLike.hasMem.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.setLike.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) x (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (Exists.{succ u2} L (fun (y : L) => Eq.{succ u3} L₂ (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (fun (_x : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) => L -> L₂) (LieHom.hasCoeToFun.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f y) x))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (x : L₂), Iff (Membership.mem.{u3, u3} L₂ (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (SetLike.instMembership.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) x (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (Exists.{succ u2} L (fun (y : L) => Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L) => L₂) y) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) L (fun (_x : L) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f y) x))
-Case conversion may be inaccurate. Consider using '#align lie_hom.mem_range LieHom.mem_rangeₓ'. -/
 @[simp]
 theorem mem_range (x : L₂) : x ∈ f.range ↔ ∃ y : L, f y = x :=
   LinearMap.mem_range
 #align lie_hom.mem_range LieHom.mem_range
 
-/- warning: lie_hom.mem_range_self -> LieHom.mem_range_self is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (x : L), Membership.Mem.{u3, u3} L₂ (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (SetLike.hasMem.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.setLike.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (fun (_x : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) => L -> L₂) (LieHom.hasCoeToFun.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f x) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (x : L), Membership.mem.{u3, u3} ((fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L) => L₂) x) (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (SetLike.instMembership.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) L (fun (_x : L) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f x) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align lie_hom.mem_range_self LieHom.mem_range_selfₓ'. -/
 theorem mem_range_self (x : L) : f x ∈ f.range :=
   LinearMap.mem_range_self f x
 #align lie_hom.mem_range_self LieHom.mem_range_self
 
-/- warning: lie_hom.range_restrict -> LieHom.rangeRestrict is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), LieHom.{u1, u2, u3} R L (coeSort.{succ u3, succ (succ u3)} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) Type.{u3} (SetLike.hasCoeToSort.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.setLike.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) _inst_1 _inst_2 _inst_3 (LieSubalgebra.lieRing.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (LieSubalgebra.lieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), LieHom.{u1, u2, u3} R L (Subtype.{succ u3} L₂ (fun (x : L₂) => Membership.mem.{u3, u3} L₂ (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (SetLike.instMembership.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) x (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f))) _inst_1 _inst_2 _inst_3 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f))
-Case conversion may be inaccurate. Consider using '#align lie_hom.range_restrict LieHom.rangeRestrictₓ'. -/
 /-- We can restrict a morphism to a (surjective) map to its range. -/
 def rangeRestrict : L →ₗ⁅R⁆ f.range :=
   { (f : L →ₗ[R] L₂).range_restrict with
     map_lie' := fun x y => by apply Subtype.ext; exact f.map_lie x y }
 #align lie_hom.range_restrict LieHom.rangeRestrict
 
-/- warning: lie_hom.range_restrict_apply -> LieHom.rangeRestrict_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_hom.range_restrict_apply LieHom.rangeRestrict_applyₓ'. -/
 @[simp]
 theorem rangeRestrict_apply (x : L) : f.range_restrict x = ⟨f x, f.mem_range_self x⟩ :=
   rfl
 #align lie_hom.range_restrict_apply LieHom.rangeRestrict_apply
 
-/- warning: lie_hom.surjective_range_restrict -> LieHom.surjective_rangeRestrict is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_hom.surjective_range_restrict LieHom.surjective_rangeRestrictₓ'. -/
 theorem surjective_rangeRestrict : Function.Surjective f.range_restrict :=
   by
   rintro ⟨y, hy⟩
@@ -451,12 +361,6 @@ theorem surjective_rangeRestrict : Function.Surjective f.range_restrict :=
   simp only [Subtype.mk_eq_mk, range_restrict_apply]
 #align lie_hom.surjective_range_restrict LieHom.surjective_rangeRestrict
 
-/- warning: lie_hom.equiv_range_of_injective -> LieHom.equivRangeOfInjective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), (Function.Injective.{succ u2, succ u3} L L₂ (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (fun (_x : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) => L -> L₂) (LieHom.hasCoeToFun.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f)) -> (LieEquiv.{u1, u2, u3} R L (coeSort.{succ u3, succ (succ u3)} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) Type.{u3} (SetLike.hasCoeToSort.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.setLike.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) _inst_1 _inst_2 _inst_3 (LieSubalgebra.lieRing.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (LieSubalgebra.lieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), (Function.Injective.{succ u2, succ u3} L L₂ (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) L (fun (_x : L) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f)) -> (LieEquiv.{u1, u2, u3} R L (Subtype.{succ u3} L₂ (fun (x : L₂) => Membership.mem.{u3, u3} L₂ (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (SetLike.instMembership.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) L₂ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) x (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f))) _inst_1 _inst_2 _inst_3 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)) (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5 (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)))
-Case conversion may be inaccurate. Consider using '#align lie_hom.equiv_range_of_injective LieHom.equivRangeOfInjectiveₓ'. -/
 /-- A Lie algebra is equivalent to its range under an injective Lie algebra morphism. -/
 noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
   LieEquiv.ofBijective f.range_restrict
@@ -465,9 +369,6 @@ noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅
       exact h hxy, f.surjective_rangeRestrict⟩
 #align lie_hom.equiv_range_of_injective LieHom.equivRangeOfInjective
 
-/- warning: lie_hom.equiv_range_of_injective_apply -> LieHom.equivRangeOfInjective_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_hom.equiv_range_of_injective_apply LieHom.equivRangeOfInjective_applyₓ'. -/
 @[simp]
 theorem equivRangeOfInjective_apply (h : Function.Injective f) (x : L) :
     f.equivRangeOfInjective h x = ⟨f x, mem_range_self f x⟩ :=
@@ -510,9 +411,6 @@ def map : LieSubalgebra R L₂ :=
 #align lie_subalgebra.map LieSubalgebra.map
 -/
 
-/- warning: lie_subalgebra.mem_map -> LieSubalgebra.mem_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_map LieSubalgebra.mem_mapₓ'. -/
 @[simp]
 theorem mem_map (x : L₂) : x ∈ K.map f ↔ ∃ y : L, y ∈ K ∧ f y = x :=
   Submodule.mem_map
@@ -547,22 +445,10 @@ instance : PartialOrder (LieSubalgebra R L) :=
       (coe : LieSubalgebra R L → Set L) coe_injective with
     le := fun N N' => ∀ ⦃x⦄, x ∈ N → x ∈ N' }
 
-/- warning: lie_subalgebra.le_def -> LieSubalgebra.le_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Iff (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K') (HasSubset.Subset.{u2} (Set.{u2} L) (Set.hasSubset.{u2} L) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Iff (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K') (HasSubset.Subset.{u2} (Set.{u2} L) (Set.instHasSubsetSet.{u2} L) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.le_def LieSubalgebra.le_defₓ'. -/
 theorem le_def : K ≤ K' ↔ (K : Set L) ⊆ K' :=
   Iff.rfl
 #align lie_subalgebra.le_def LieSubalgebra.le_def
 
-/- warning: lie_subalgebra.coe_submodule_le_coe_submodule -> LieSubalgebra.coe_submodule_le_coe_submodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Iff (LE.le.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Preorder.toHasLe.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.completeLattice.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))))) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K')) (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K')
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Iff (LE.le.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Preorder.toLE.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.completeLattice.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))))) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 K) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 K')) (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K')
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_submodule_le_coe_submodule LieSubalgebra.coe_submodule_le_coe_submoduleₓ'. -/
 @[simp, norm_cast]
 theorem coe_submodule_le_coe_submodule : (K : Submodule R L) ≤ K' ↔ K ≤ K' :=
   Iff.rfl
@@ -571,34 +457,16 @@ theorem coe_submodule_le_coe_submodule : (K : Submodule R L) ≤ K' ↔ K ≤ K'
 instance : Bot (LieSubalgebra R L) :=
   ⟨0⟩
 
-/- warning: lie_subalgebra.bot_coe -> LieSubalgebra.bot_coe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Set.{u2} L) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Singleton.singleton.{u2, u2} L (Set.{u2} L) (Set.hasSingleton.{u2} L) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (AddZeroClass.toHasZero.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Set.{u2} L) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Singleton.singleton.{u2, u2} L (Set.{u2} L) (Set.instSingletonSet.{u2} L) (OfNat.ofNat.{u2} L 0 (Zero.toOfNat0.{u2} L (NegZeroClass.toZero.{u2} L (SubNegZeroMonoid.toNegZeroClass.{u2} L (SubtractionMonoid.toSubNegZeroMonoid.{u2} L (SubtractionCommMonoid.toSubtractionMonoid.{u2} L (AddCommGroup.toDivisionAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))))))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.bot_coe LieSubalgebra.bot_coeₓ'. -/
 @[simp]
 theorem bot_coe : ((⊥ : LieSubalgebra R L) : Set L) = {0} :=
   rfl
 #align lie_subalgebra.bot_coe LieSubalgebra.bot_coe
 
-/- warning: lie_subalgebra.bot_coe_submodule -> LieSubalgebra.bot_coe_submodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Bot.bot.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasBot.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Bot.bot.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.instBotSubmodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.bot_coe_submodule LieSubalgebra.bot_coe_submoduleₓ'. -/
 @[simp]
 theorem bot_coe_submodule : ((⊥ : LieSubalgebra R L) : Submodule R L) = ⊥ :=
   rfl
 #align lie_subalgebra.bot_coe_submodule LieSubalgebra.bot_coe_submodule
 
-/- warning: lie_subalgebra.mem_bot -> LieSubalgebra.mem_bot is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (x : L), Iff (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Eq.{succ u2} L x (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (AddZeroClass.toHasZero.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (x : L), Iff (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Eq.{succ u2} L x (OfNat.ofNat.{u2} L 0 (Zero.toOfNat0.{u2} L (NegZeroClass.toZero.{u2} L (SubNegZeroMonoid.toNegZeroClass.{u2} L (SubtractionMonoid.toSubNegZeroMonoid.{u2} L (SubtractionCommMonoid.toSubtractionMonoid.{u2} L (AddCommGroup.toDivisionAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))))))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_bot LieSubalgebra.mem_botₓ'. -/
 @[simp]
 theorem mem_bot (x : L) : x ∈ (⊥ : LieSubalgebra R L) ↔ x = 0 :=
   mem_singleton_iff
@@ -607,45 +475,21 @@ theorem mem_bot (x : L) : x ∈ (⊥ : LieSubalgebra R L) ↔ x = 0 :=
 instance : Top (LieSubalgebra R L) :=
   ⟨{ (⊤ : Submodule R L) with lie_mem' := fun x y hx hy => mem_univ ⁅x, y⁆ }⟩
 
-/- warning: lie_subalgebra.top_coe -> LieSubalgebra.top_coe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Set.{u2} L) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasTop.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Set.univ.{u2} L)
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Set.{u2} L) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instTopLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Set.univ.{u2} L)
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.top_coe LieSubalgebra.top_coeₓ'. -/
 @[simp]
 theorem top_coe : ((⊤ : LieSubalgebra R L) : Set L) = univ :=
   rfl
 #align lie_subalgebra.top_coe LieSubalgebra.top_coe
 
-/- warning: lie_subalgebra.top_coe_submodule -> LieSubalgebra.top_coe_submodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasTop.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Top.top.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasTop.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instTopLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (Top.top.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.instTopSubmodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.top_coe_submodule LieSubalgebra.top_coe_submoduleₓ'. -/
 @[simp]
 theorem top_coe_submodule : ((⊤ : LieSubalgebra R L) : Submodule R L) = ⊤ :=
   rfl
 #align lie_subalgebra.top_coe_submodule LieSubalgebra.top_coe_submodule
 
-/- warning: lie_subalgebra.mem_top -> LieSubalgebra.mem_top is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (x : L), Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasTop.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (x : L), Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instTopLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_top LieSubalgebra.mem_topₓ'. -/
 @[simp]
 theorem mem_top (x : L) : x ∈ (⊤ : LieSubalgebra R L) :=
   mem_univ x
 #align lie_subalgebra.mem_top LieSubalgebra.mem_top
 
-/- warning: lie_hom.range_eq_map -> LieHom.range_eq_map is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), Eq.{succ u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f) (LieSubalgebra.map.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasTop.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] (f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5), Eq.{succ u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieHom.range.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f) (LieSubalgebra.map.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instTopLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-Case conversion may be inaccurate. Consider using '#align lie_hom.range_eq_map LieHom.range_eq_mapₓ'. -/
 theorem LieHom.range_eq_map : f.range = map f ⊤ := by ext; simp
 #align lie_hom.range_eq_map LieHom.range_eq_map
 
@@ -666,23 +510,11 @@ instance : InfSet (LieSubalgebra R L) :=
           forall_apply_eq_imp_iff₂, exists_imp] at *
         intro K hK; exact K.lie_mem (hx K hK) (hy K hK) }⟩
 
-/- warning: lie_subalgebra.inf_coe -> LieSubalgebra.inf_coe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Eq.{succ u2} (Set.{u2} L) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (Inf.inf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasInf.{u1, u2} R L _inst_1 _inst_2 _inst_3) K K')) (Inter.inter.{u2} (Set.{u2} L) (Set.hasInter.{u2} L) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Eq.{succ u2} (Set.{u2} L) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Inf.inf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instInfLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K K')) (Inter.inter.{u2} (Set.{u2} L) (Set.instInterSet.{u2} L) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.inf_coe LieSubalgebra.inf_coeₓ'. -/
 @[simp]
 theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
   rfl
 #align lie_subalgebra.inf_coe LieSubalgebra.inf_coe
 
-/- warning: lie_subalgebra.Inf_coe_to_submodule -> LieSubalgebra.sInf_coe_to_submodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (S : Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)), Eq.{succ u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (InfSet.sInf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasInf.{u1, u2} R L _inst_1 _inst_2 _inst_3) S)) (InfSet.sInf.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasInf.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (setOf.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (fun (_x : Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) => Exists.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (fun (s : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) => Exists.{0} (Membership.Mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) (fun (H : Membership.Mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) => Eq.{succ u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) s) _x)))))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (S : Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)), Eq.{succ u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 (InfSet.sInf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instInfSetLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) S)) (InfSet.sInf.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.instInfSetSubmodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (setOf.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (fun (_x : Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) => Exists.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (fun (s : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) => And (Membership.mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.instMembershipSet.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) (Eq.{succ u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) _x)))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.sInf_coe_to_submoduleₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 @[simp]
 theorem sInf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
@@ -692,12 +524,6 @@ theorem sInf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
   rfl
 #align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.sInf_coe_to_submodule
 
-/- warning: lie_subalgebra.Inf_coe -> LieSubalgebra.sInf_coe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (S : Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)), Eq.{succ u2} (Set.{u2} L) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (InfSet.sInf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasInf.{u1, u2} R L _inst_1 _inst_2 _inst_3) S)) (Set.iInter.{u2, succ u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (fun (s : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) => Set.iInter.{u2, 0} L (Membership.Mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) (fun (H : Membership.Mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) s)))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (S : Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)), Eq.{succ u2} (Set.{u2} L) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (InfSet.sInf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instInfSetLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) S)) (Set.iInter.{u2, succ u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (fun (s : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) => Set.iInter.{u2, 0} L (Membership.mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.instMembershipSet.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) (fun (H : Membership.mem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Set.instMembershipSet.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) s S) => SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) s)))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.Inf_coe LieSubalgebra.sInf_coeₓ'. -/
 @[simp]
 theorem sInf_coe (S : Set (LieSubalgebra R L)) : (↑(sInf S) : Set L) = ⋂ s ∈ S, (s : Set L) :=
   by
@@ -747,56 +573,26 @@ instance : CanonicallyOrderedAddMonoid (LieSubalgebra R L) :=
     exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩
     le_self_add := fun a b => le_sup_left }
 
-/- warning: lie_subalgebra.add_eq_sup -> LieSubalgebra.add_eq_sup is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (HAdd.hAdd.{u2, u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (instHAdd.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddZeroClass.toHasAdd.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddMonoid.toAddZeroClass.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddCommMonoid.toAddMonoid.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.addCommMonoid.{u1, u2} R L _inst_1 _inst_2 _inst_3))))) K K') (Sup.sup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SemilatticeSup.toHasSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Lattice.toSemilatticeSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.completeLattice.{u1, u2} R L _inst_1 _inst_2 _inst_3))))) K K')
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (HAdd.hAdd.{u2, u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (instHAdd.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddZeroClass.toAdd.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddMonoid.toAddZeroClass.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (AddCommMonoid.toAddMonoid.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.addCommMonoid.{u1, u2} R L _inst_1 _inst_2 _inst_3))))) K K') (Sup.sup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SemilatticeSup.toSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Lattice.toSemilatticeSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.completeLattice.{u1, u2} R L _inst_1 _inst_2 _inst_3))))) K K')
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.add_eq_sup LieSubalgebra.add_eq_supₓ'. -/
 @[simp]
 theorem add_eq_sup : K + K' = K ⊔ K' :=
   rfl
 #align lie_subalgebra.add_eq_sup LieSubalgebra.add_eq_sup
 
-/- warning: lie_subalgebra.inf_coe_to_submodule -> LieSubalgebra.inf_coe_to_submodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Eq.{succ u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (Inf.inf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasInf.{u1, u2} R L _inst_1 _inst_2 _inst_3) K K')) (Inf.inf.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasInf.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Eq.{succ u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Inf.inf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instInfLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K K')) (Inf.inf.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.instInfSubmodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 K) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.inf_coe_to_submodule LieSubalgebra.inf_coe_to_submoduleₓ'. -/
 @[norm_cast, simp]
 theorem inf_coe_to_submodule :
     (↑(K ⊓ K') : Submodule R L) = (K : Submodule R L) ⊓ (K' : Submodule R L) :=
   rfl
 #align lie_subalgebra.inf_coe_to_submodule LieSubalgebra.inf_coe_to_submodule
 
-/- warning: lie_subalgebra.mem_inf -> LieSubalgebra.mem_inf is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (x : L), Iff (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Inf.inf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasInf.{u1, u2} R L _inst_1 _inst_2 _inst_3) K K')) (And (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K) (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (x : L), Iff (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Inf.inf.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instInfLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K K')) (And (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K) (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_inf LieSubalgebra.mem_infₓ'. -/
 @[simp]
 theorem mem_inf (x : L) : x ∈ K ⊓ K' ↔ x ∈ K ∧ x ∈ K' := by
   rw [← mem_coe_submodule, ← mem_coe_submodule, ← mem_coe_submodule, inf_coe_to_submodule,
     Submodule.mem_inf]
 #align lie_subalgebra.mem_inf LieSubalgebra.mem_inf
 
-/- warning: lie_subalgebra.eq_bot_iff -> LieSubalgebra.eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Iff (Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (forall (x : L), (Membership.Mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.hasMem.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K) -> (Eq.{succ u2} L x (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (AddZeroClass.toHasZero.{u2} L (AddMonoid.toAddZeroClass.{u2} L (SubNegMonoid.toAddMonoid.{u2} L (AddGroup.toSubNegMonoid.{u2} L (AddCommGroup.toAddGroup.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3), Iff (Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (forall (x : L), (Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K) -> (Eq.{succ u2} L x (OfNat.ofNat.{u2} L 0 (Zero.toOfNat0.{u2} L (NegZeroClass.toZero.{u2} L (SubNegZeroMonoid.toNegZeroClass.{u2} L (SubtractionMonoid.toSubNegZeroMonoid.{u2} L (SubtractionCommMonoid.toSubtractionMonoid.{u2} L (AddCommGroup.toDivisionAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2))))))))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.eq_bot_iff LieSubalgebra.eq_bot_iffₓ'. -/
 theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 := by rw [eq_bot_iff]; exact Iff.rfl
 #align lie_subalgebra.eq_bot_iff LieSubalgebra.eq_bot_iff
 
-/- warning: lie_subalgebra.subsingleton_of_bot -> LieSubalgebra.subsingleton_of_bot is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Subsingleton.{succ u2} (LieSubalgebra.{u1, u2} R (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))) _inst_1 (LieSubalgebra.lieRing.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (LieSubalgebra.lieAlgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Subsingleton.{succ u2} (LieSubalgebra.{u1, u2} R (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) _inst_1 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.subsingleton_of_bot LieSubalgebra.subsingleton_of_botₓ'. -/
 instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalgebra R L)) :=
   by
   apply subsingleton_of_bot_eq_top
@@ -804,24 +600,12 @@ instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalg
   simp only [true_iff_iff, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
 #align lie_subalgebra.subsingleton_of_bot LieSubalgebra.subsingleton_of_bot
 
-/- warning: lie_subalgebra.subsingleton_bot -> LieSubalgebra.subsingleton_bot is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Subsingleton.{succ u2} (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3)))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Subsingleton.{succ u2} (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.subsingleton_bot LieSubalgebra.subsingleton_botₓ'. -/
 theorem subsingleton_bot : Subsingleton ↥(⊥ : LieSubalgebra R L) :=
   show Subsingleton ((⊥ : LieSubalgebra R L) : Set L) by simp
 #align lie_subalgebra.subsingleton_bot LieSubalgebra.subsingleton_bot
 
 variable (R L)
 
-/- warning: lie_subalgebra.well_founded_of_noetherian -> LieSubalgebra.wellFounded_of_noetherian is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] [_inst_6 : IsNoetherian.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)], WellFounded.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (GT.gt.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLt.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))))
-but is expected to have type
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] [_inst_6 : IsNoetherian.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)], WellFounded.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (fun (x._@.Mathlib.Algebra.Lie.Subalgebra._hyg.6166 : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (x._@.Mathlib.Algebra.Lie.Subalgebra._hyg.6168 : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) => GT.gt.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLT.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) x._@.Mathlib.Algebra.Lie.Subalgebra._hyg.6166 x._@.Mathlib.Algebra.Lie.Subalgebra._hyg.6168)
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.well_founded_of_noetherian LieSubalgebra.wellFounded_of_noetherianₓ'. -/
 theorem wellFounded_of_noetherian [IsNoetherian R L] :
     WellFounded ((· > ·) : LieSubalgebra R L → LieSubalgebra R L → Prop) :=
   let f :
@@ -838,55 +622,31 @@ section NestedSubalgebras
 
 variable (h : K ≤ K')
 
-/- warning: lie_subalgebra.hom_of_le -> LieSubalgebra.homOfLe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3} {K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3}, (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K') -> (LieHom.{u1, u2, u2} R (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) K) (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) K') _inst_1 (LieSubalgebra.lieRing.{u1, u2} R L _inst_1 _inst_2 _inst_3 K) (LieSubalgebra.lieAlgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K) (LieSubalgebra.lieRing.{u1, u2} R L _inst_1 _inst_2 _inst_3 K') (LieSubalgebra.lieAlgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3} {K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3}, (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K') -> (LieHom.{u1, u2, u2} R (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K)) (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K')) _inst_1 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K) (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K) (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K') (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.hom_of_le LieSubalgebra.homOfLeₓ'. -/
 /-- Given two nested Lie subalgebras `K ⊆ K'`, the inclusion `K ↪ K'` is a morphism of Lie
 algebras. -/
 def homOfLe : K →ₗ⁅R⁆ K' :=
   { Submodule.ofLe h with map_lie' := fun x y => rfl }
 #align lie_subalgebra.hom_of_le LieSubalgebra.homOfLe
 
-/- warning: lie_subalgebra.coe_hom_of_le -> LieSubalgebra.coe_homOfLe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_hom_of_le LieSubalgebra.coe_homOfLeₓ'. -/
 @[simp]
 theorem coe_homOfLe (x : K) : (homOfLe h x : L) = x :=
   rfl
 #align lie_subalgebra.coe_hom_of_le LieSubalgebra.coe_homOfLe
 
-/- warning: lie_subalgebra.hom_of_le_apply -> LieSubalgebra.homOfLe_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.hom_of_le_apply LieSubalgebra.homOfLe_applyₓ'. -/
 theorem homOfLe_apply (x : K) : homOfLe h x = ⟨x.1, h x.2⟩ :=
   rfl
 #align lie_subalgebra.hom_of_le_apply LieSubalgebra.homOfLe_apply
 
-/- warning: lie_subalgebra.hom_of_le_injective -> LieSubalgebra.homOfLe_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.hom_of_le_injective LieSubalgebra.homOfLe_injectiveₓ'. -/
 theorem homOfLe_injective : Function.Injective (homOfLe h) := fun x y => by
   simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
 #align lie_subalgebra.hom_of_le_injective LieSubalgebra.homOfLe_injective
 
-/- warning: lie_subalgebra.of_le -> LieSubalgebra.ofLe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3} {K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3}, (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K') -> (LieSubalgebra.{u1, u2} R (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)) K') _inst_1 (LieSubalgebra.lieRing.{u1, u2} R L _inst_1 _inst_2 _inst_3 K') (LieSubalgebra.lieAlgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3} {K' : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3}, (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K K') -> (LieSubalgebra.{u1, u2} R (Subtype.{succ u2} L (fun (x : L) => Membership.mem.{u2, u2} L (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) x K')) _inst_1 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K') (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3 K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.of_le LieSubalgebra.ofLeₓ'. -/
 /-- Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
 regarded as Lie algebra in its own right. -/
 def ofLe : LieSubalgebra R K' :=
   (homOfLe h).range
 #align lie_subalgebra.of_le LieSubalgebra.ofLe
 
-/- warning: lie_subalgebra.mem_of_le -> LieSubalgebra.mem_ofLe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.mem_of_le LieSubalgebra.mem_ofLeₓ'. -/
 @[simp]
 theorem mem_ofLe (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K :=
   by
@@ -896,32 +656,20 @@ theorem mem_ofLe (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K :=
   · intro h; use ⟨(x : L), h⟩; simp
 #align lie_subalgebra.mem_of_le LieSubalgebra.mem_ofLe
 
-/- warning: lie_subalgebra.of_le_eq_comap_incl -> LieSubalgebra.ofLe_eq_comap_incl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.of_le_eq_comap_incl LieSubalgebra.ofLe_eq_comap_inclₓ'. -/
 theorem ofLe_eq_comap_incl : ofLe h = K.comap K'.incl := by ext; rw [mem_of_le]; rfl
 #align lie_subalgebra.of_le_eq_comap_incl LieSubalgebra.ofLe_eq_comap_incl
 
-/- warning: lie_subalgebra.coe_of_le -> LieSubalgebra.coe_ofLe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.coe_of_le LieSubalgebra.coe_ofLeₓ'. -/
 @[simp]
 theorem coe_ofLe : (ofLe h : Submodule R K') = (Submodule.ofLe h).range :=
   rfl
 #align lie_subalgebra.coe_of_le LieSubalgebra.coe_ofLe
 
-/- warning: lie_subalgebra.equiv_of_le -> LieSubalgebra.equivOfLe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.equiv_of_le LieSubalgebra.equivOfLeₓ'. -/
 /-- Given nested Lie subalgebras `K ⊆ K'`, there is a natural equivalence from `K` to its image in
 `K'`.  -/
 noncomputable def equivOfLe : K ≃ₗ⁅R⁆ ofLe h :=
   (homOfLe h).equivRangeOfInjective (homOfLe_injective h)
 #align lie_subalgebra.equiv_of_le LieSubalgebra.equivOfLe
 
-/- warning: lie_subalgebra.equiv_of_le_apply -> LieSubalgebra.equivOfLe_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.equiv_of_le_apply LieSubalgebra.equivOfLe_applyₓ'. -/
 @[simp]
 theorem equivOfLe_apply (x : K) : equivOfLe h x = ⟨homOfLe h x, (homOfLe h).mem_range_self x⟩ :=
   rfl
@@ -929,23 +677,11 @@ theorem equivOfLe_apply (x : K) : equivOfLe h x = ⟨homOfLe h x, (homOfLe h).me
 
 end NestedSubalgebras
 
-/- warning: lie_subalgebra.map_le_iff_le_comap -> LieSubalgebra.map_le_iff_le_comap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] {f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5} {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3} {K' : LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5}, Iff (LE.le.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (Preorder.toHasLe.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (PartialOrder.toPreorder.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieSubalgebra.partialOrder.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5))) (LieSubalgebra.map.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f K) K') (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K (LieSubalgebra.comap.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f K'))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] {f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5} {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3} {K' : LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5}, Iff (LE.le.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (Preorder.toLE.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (PartialOrder.toPreorder.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5))) (LieSubalgebra.map.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f K) K') (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) K (LieSubalgebra.comap.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f K'))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.map_le_iff_le_comap LieSubalgebra.map_le_iff_le_comapₓ'. -/
 theorem map_le_iff_le_comap {K : LieSubalgebra R L} {K' : LieSubalgebra R L₂} :
     map f K ≤ K' ↔ K ≤ comap f K' :=
   Set.image_subset_iff
 #align lie_subalgebra.map_le_iff_le_comap LieSubalgebra.map_le_iff_le_comap
 
-/- warning: lie_subalgebra.gc_map_comap -> LieSubalgebra.gc_map_comap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] {f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5}, GaloisConnection.{u2, u3} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (PartialOrder.toPreorder.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieSubalgebra.partialOrder.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) (LieSubalgebra.map.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f) (LieSubalgebra.comap.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {L₂ : Type.{u3}} [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] {f : LieHom.{u1, u2, u3} R L L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5}, GaloisConnection.{u2, u3} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (PartialOrder.toPreorder.{u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_4 _inst_5)) (LieSubalgebra.map.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f) (LieSubalgebra.comap.{u1, u2, u3} R L _inst_1 _inst_2 _inst_3 L₂ _inst_4 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.gc_map_comap LieSubalgebra.gc_map_comapₓ'. -/
 theorem gc_map_comap : GaloisConnection (map f) (comap f) := fun K K' => map_le_iff_le_comap
 #align lie_subalgebra.gc_map_comap LieSubalgebra.gc_map_comap
 
@@ -976,22 +712,10 @@ theorem subset_lieSpan : s ⊆ lieSpan R L s := by intro m hm; erw [mem_lie_span
 #align lie_subalgebra.subset_lie_span LieSubalgebra.subset_lieSpan
 -/
 
-/- warning: lie_subalgebra.submodule_span_le_lie_span -> LieSubalgebra.submodule_span_le_lieSpan is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {s : Set.{u2} L}, LE.le.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Preorder.toHasLe.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.completeLattice.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))))) (Submodule.span.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3) s) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (coeBase.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Submodule.{u1, u2} R L (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.hasCoe.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {s : Set.{u2} L}, LE.le.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Preorder.toLE.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Submodule.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (Submodule.completeLattice.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3)))))) (Submodule.span.{u1, u2} R L (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} L (LieRing.toAddCommGroup.{u2} L _inst_2)) (LieAlgebra.toModule.{u1, u2} R L _inst_1 _inst_2 _inst_3) s) (LieSubalgebra.toSubmodule.{u1, u2} R L _inst_1 _inst_2 _inst_3 (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.submodule_span_le_lie_span LieSubalgebra.submodule_span_le_lieSpanₓ'. -/
 theorem submodule_span_le_lieSpan : Submodule.span R s ≤ lieSpan R L s := by rw [Submodule.span_le];
   apply subset_lie_span
 #align lie_subalgebra.submodule_span_le_lie_span LieSubalgebra.submodule_span_le_lieSpan
 
-/- warning: lie_subalgebra.lie_span_le -> LieSubalgebra.lieSpan_le is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {s : Set.{u2} L} {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3}, Iff (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) K) (HasSubset.Subset.{u2} (Set.{u2} L) (Set.hasSubset.{u2} L) s ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))) K))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {s : Set.{u2} L} {K : LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3}, Iff (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) K) (HasSubset.Subset.{u2} (Set.{u2} L) (Set.instHasSubsetSet.{u2} L) s (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) K))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.lie_span_le LieSubalgebra.lieSpan_leₓ'. -/
 theorem lieSpan_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K :=
   by
   constructor
@@ -999,12 +723,6 @@ theorem lieSpan_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K :=
   · intro hs m hm; rw [mem_lie_span] at hm; exact hm _ hs
 #align lie_subalgebra.lie_span_le LieSubalgebra.lieSpan_le
 
-/- warning: lie_subalgebra.lie_span_mono -> LieSubalgebra.lieSpan_mono is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {s : Set.{u2} L} {t : Set.{u2} L}, (HasSubset.Subset.{u2} (Set.{u2} L) (Set.hasSubset.{u2} L) s t) -> (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toHasLe.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 t))
-but is expected to have type
-  forall {R : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {s : Set.{u2} L} {t : Set.{u2} L}, (HasSubset.Subset.{u2} (Set.{u2} L) (Set.instHasSubsetSet.{u2} L) s t) -> (LE.le.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 t))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.lie_span_mono LieSubalgebra.lieSpan_monoₓ'. -/
 theorem lieSpan_mono {t : Set L} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L t := by rw [lie_span_le];
   exact Set.Subset.trans h subset_lie_span
 #align lie_subalgebra.lie_span_mono LieSubalgebra.lieSpan_mono
@@ -1027,12 +745,6 @@ theorem coe_lieSpan_submodule_eq_iff {p : Submodule R L} :
 
 variable (R L)
 
-/- warning: lie_subalgebra.gi -> LieSubalgebra.gi is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], GaloisInsertion.{u2, u2} (Set.{u2} L) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Set.{u2} L) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} L) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} L) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} L) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} L) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} L) (Set.completeBooleanAlgebra.{u2} L))))))) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.partialOrder.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Set.{u2} L) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.setLike.{u1, u2} R L _inst_1 _inst_2 _inst_3)))))
-but is expected to have type
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], GaloisInsertion.{u2, u2} (Set.{u2} L) (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Set.{u2} L) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} L) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} L) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} L) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} L) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} L) (Set.instCompleteBooleanAlgebraSet.{u2} L))))))) (PartialOrder.toPreorder.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instPartialOrderLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3)) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) L (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.gi LieSubalgebra.giₓ'. -/
 /-- `lie_span` forms a Galois insertion with the coercion from `lie_subalgebra` to `set`. -/
 protected def gi : GaloisInsertion (lieSpan R L : Set L → LieSubalgebra R L) coe
     where
@@ -1042,23 +754,11 @@ protected def gi : GaloisInsertion (lieSpan R L : Set L → LieSubalgebra R L) c
   choice_eq s h := rfl
 #align lie_subalgebra.gi LieSubalgebra.gi
 
-/- warning: lie_subalgebra.span_empty -> LieSubalgebra.span_empty is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (EmptyCollection.emptyCollection.{u2} (Set.{u2} L) (Set.hasEmptyc.{u2} L))) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasBot.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-but is expected to have type
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (EmptyCollection.emptyCollection.{u2} (Set.{u2} L) (Set.instEmptyCollectionSet.{u2} L))) (Bot.bot.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instBotLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.span_empty LieSubalgebra.span_emptyₓ'. -/
 @[simp]
 theorem span_empty : lieSpan R L (∅ : Set L) = ⊥ :=
   (LieSubalgebra.gi R L).gc.l_bot
 #align lie_subalgebra.span_empty LieSubalgebra.span_empty
 
-/- warning: lie_subalgebra.span_univ -> LieSubalgebra.span_univ is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Set.univ.{u2} L)) (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.hasTop.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-but is expected to have type
-  forall (R : Type.{u1}) (L : Type.{u2}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2], Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Set.univ.{u2} L)) (Top.top.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.instTopLieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.span_univ LieSubalgebra.span_univₓ'. -/
 @[simp]
 theorem span_univ : lieSpan R L (Set.univ : Set L) = ⊤ :=
   eq_top_iff.2 <| SetLike.le_def.2 <| subset_lieSpan
@@ -1066,22 +766,10 @@ theorem span_univ : lieSpan R L (Set.univ : Set L) = ⊤ :=
 
 variable {L}
 
-/- warning: lie_subalgebra.span_union -> LieSubalgebra.span_union is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (s : Set.{u2} L) (t : Set.{u2} L), Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Union.union.{u2} (Set.{u2} L) (Set.hasUnion.{u2} L) s t)) (Sup.sup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SemilatticeSup.toHasSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Lattice.toSemilatticeSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.completeLattice.{u1, u2} R L _inst_1 _inst_2 _inst_3))))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 t))
-but is expected to have type
-  forall (R : Type.{u1}) {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] (s : Set.{u2} L) (t : Set.{u2} L), Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Union.union.{u2} (Set.{u2} L) (Set.instUnionSet.{u2} L) s t)) (Sup.sup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (SemilatticeSup.toSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (Lattice.toSemilatticeSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.completeLattice.{u1, u2} R L _inst_1 _inst_2 _inst_3))))) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 s) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 t))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.span_union LieSubalgebra.span_unionₓ'. -/
 theorem span_union (s t : Set L) : lieSpan R L (s ∪ t) = lieSpan R L s ⊔ lieSpan R L t :=
   (LieSubalgebra.gi R L).gc.l_sup
 #align lie_subalgebra.span_union LieSubalgebra.span_union
 
-/- warning: lie_subalgebra.span_Union -> LieSubalgebra.span_iUnion is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) {L : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L] [_inst_3 : LieAlgebra.{u1, u2} R L _inst_1 _inst_2] {ι : Sort.{u3}} (s : ι -> (Set.{u2} L)), Eq.{succ u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (Set.iUnion.{u2, u3} L ι (fun (i : ι) => s i))) (iSup.{u2, u3} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toHasSup.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u2} (LieSubalgebra.{u1, u2} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.completeLattice.{u1, u2} R L _inst_1 _inst_2 _inst_3))) ι (fun (i : ι) => LieSubalgebra.lieSpan.{u1, u2} R L _inst_1 _inst_2 _inst_3 (s i)))
-but is expected to have type
-  forall (R : Type.{u2}) {L : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : LieRing.{u3} L] [_inst_3 : LieAlgebra.{u2, u3} R L _inst_1 _inst_2] {ι : Sort.{u1}} (s : ι -> (Set.{u3} L)), Eq.{succ u3} (LieSubalgebra.{u2, u3} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.lieSpan.{u2, u3} R L _inst_1 _inst_2 _inst_3 (Set.iUnion.{u3, u1} L ι (fun (i : ι) => s i))) (iSup.{u3, u1} (LieSubalgebra.{u2, u3} R L _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toSupSet.{u3} (LieSubalgebra.{u2, u3} R L _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u3} (LieSubalgebra.{u2, u3} R L _inst_1 _inst_2 _inst_3) (LieSubalgebra.completeLattice.{u2, u3} R L _inst_1 _inst_2 _inst_3))) ι (fun (i : ι) => LieSubalgebra.lieSpan.{u2, u3} R L _inst_1 _inst_2 _inst_3 (s i)))
-Case conversion may be inaccurate. Consider using '#align lie_subalgebra.span_Union LieSubalgebra.span_iUnionₓ'. -/
 theorem span_iUnion {ι} (s : ι → Set L) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
   (LieSubalgebra.gi R L).gc.l_iSup
 #align lie_subalgebra.span_Union LieSubalgebra.span_iUnion
@@ -1098,21 +786,12 @@ variable {R : Type u} {L₁ : Type v} {L₂ : Type w}
 
 variable [CommRing R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂]
 
-/- warning: lie_equiv.of_injective -> LieEquiv.ofInjective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L₁ : Type.{u2}} {L₂ : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L₁] [_inst_3 : LieRing.{u3} L₂] [_inst_4 : LieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_3] (f : LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5), (Function.Injective.{succ u2, succ u3} L₁ L₂ (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5) (fun (_x : LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5) => L₁ -> L₂) (LieHom.hasCoeToFun.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5) f)) -> (LieEquiv.{u1, u2, u3} R L₁ (coeSort.{succ u3, succ (succ u3)} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5) Type.{u3} (SetLike.hasCoeToSort.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5) L₂ (LieSubalgebra.setLike.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5)) (LieHom.range.{u1, u2, u3} R L₁ _inst_1 _inst_2 _inst_4 L₂ _inst_3 _inst_5 f)) _inst_1 _inst_2 _inst_4 (LieSubalgebra.lieRing.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5 (LieHom.range.{u1, u2, u3} R L₁ _inst_1 _inst_2 _inst_4 L₂ _inst_3 _inst_5 f)) (LieSubalgebra.lieAlgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5 (LieHom.range.{u1, u2, u3} R L₁ _inst_1 _inst_2 _inst_4 L₂ _inst_3 _inst_5 f)))
-but is expected to have type
-  forall {R : Type.{u1}} {L₁ : Type.{u2}} {L₂ : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L₁] [_inst_3 : LieRing.{u3} L₂] [_inst_4 : LieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_3] (f : LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5), (Function.Injective.{succ u2, succ u3} L₁ L₂ (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5) L₁ (fun (_x : L₁) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L₁) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_4 _inst_3 _inst_5) f)) -> (LieEquiv.{u1, u2, u3} R L₁ (Subtype.{succ u3} L₂ (fun (x : L₂) => Membership.mem.{u3, u3} L₂ (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5) (SetLike.instMembership.{u3, u3} (LieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5) L₂ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5)) x (LieHom.range.{u1, u2, u3} R L₁ _inst_1 _inst_2 _inst_4 L₂ _inst_3 _inst_5 f))) _inst_1 _inst_2 _inst_4 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5 (LieHom.range.{u1, u2, u3} R L₁ _inst_1 _inst_2 _inst_4 L₂ _inst_3 _inst_5 f)) (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u3} R L₂ _inst_1 _inst_3 _inst_5 (LieHom.range.{u1, u2, u3} R L₁ _inst_1 _inst_2 _inst_4 L₂ _inst_3 _inst_5 f)))
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_injective LieEquiv.ofInjectiveₓ'. -/
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
   { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by rwa [LieHom.coe_toLinearMap] with
     map_lie' := fun x y => by apply SetCoe.ext; simpa }
 #align lie_equiv.of_injective LieEquiv.ofInjective
 
-/- warning: lie_equiv.of_injective_apply -> LieEquiv.ofInjective_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_injective_apply LieEquiv.ofInjective_applyₓ'. -/
 @[simp]
 theorem ofInjective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) (x : L₁) :
     ↑(ofInjective f h x) = f x :=
@@ -1121,12 +800,6 @@ theorem ofInjective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective 
 
 variable (L₁' L₁'' : LieSubalgebra R L₁) (L₂' : LieSubalgebra R L₂)
 
-/- warning: lie_equiv.of_eq -> LieEquiv.ofEq is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {L₁ : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L₁] [_inst_4 : LieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2] (L₁' : LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (L₁'' : LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4), (Eq.{succ u2} (Set.{u2} L₁) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (Set.{u2} L₁) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (Set.{u2} L₁) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (Set.{u2} L₁) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.setLike.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4)))) L₁') ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (Set.{u2} L₁) (HasLiftT.mk.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (Set.{u2} L₁) (CoeTCₓ.coe.{succ u2, succ u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (Set.{u2} L₁) (SetLike.Set.hasCoeT.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.setLike.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4)))) L₁'')) -> (LieEquiv.{u1, u2, u2} R (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.setLike.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4)) L₁') (coeSort.{succ u2, succ (succ u2)} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.setLike.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4)) L₁'') _inst_1 (LieSubalgebra.lieRing.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁') (LieSubalgebra.lieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁') (LieSubalgebra.lieRing.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁'') (LieSubalgebra.lieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁''))
-but is expected to have type
-  forall {R : Type.{u1}} {L₁ : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L₁] [_inst_4 : LieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2] (L₁' : LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (L₁'' : LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4), (Eq.{succ u2} (Set.{u2} L₁) (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁') (SetLike.coe.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁'')) -> (LieEquiv.{u1, u2, u2} R (Subtype.{succ u2} L₁ (fun (x : L₁) => Membership.mem.{u2, u2} L₁ (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4)) x L₁')) (Subtype.{succ u2} L₁ (fun (x : L₁) => Membership.mem.{u2, u2} L₁ (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) (SetLike.instMembership.{u2, u2} (LieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4) L₁ (LieSubalgebra.instSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4)) x L₁'')) _inst_1 (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁') (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁') (LieSubalgebra.instLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁'') (LieSubalgebra.instLieAlgebraSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebraInstLieRingSubtypeMemLieSubalgebraInstMembershipInstSetLikeLieSubalgebra.{u1, u2} R L₁ _inst_1 _inst_2 _inst_4 L₁''))
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_eq LieEquiv.ofEqₓ'. -/
 /-- Lie subalgebras that are equal as sets are equivalent as Lie algebras. -/
 def ofEq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
   {
@@ -1135,9 +808,6 @@ def ofEq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
     map_lie' := fun x y => by apply SetCoe.ext; simp }
 #align lie_equiv.of_eq LieEquiv.ofEq
 
-/- warning: lie_equiv.of_eq_apply -> LieEquiv.ofEq_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_eq_apply LieEquiv.ofEq_applyₓ'. -/
 @[simp]
 theorem ofEq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x : L) :
     (↑(ofEq L L' h x) : L₁) = x :=
@@ -1146,9 +816,6 @@ theorem ofEq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x : 
 
 variable (e : L₁ ≃ₗ⁅R⁆ L₂)
 
-/- warning: lie_equiv.lie_subalgebra_map -> LieEquiv.lieSubalgebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.lie_subalgebra_map LieEquiv.lieSubalgebraMapₓ'. -/
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
 def lieSubalgebraMap : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂) :=
@@ -1156,17 +823,11 @@ def lieSubalgebraMap : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂
     map_lie' := fun x y => by apply SetCoe.ext; exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
 #align lie_equiv.lie_subalgebra_map LieEquiv.lieSubalgebraMap
 
-/- warning: lie_equiv.lie_subalgebra_map_apply -> LieEquiv.lieSubalgebraMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.lie_subalgebra_map_apply LieEquiv.lieSubalgebraMap_applyₓ'. -/
 @[simp]
 theorem lieSubalgebraMap_apply (x : L₁'') : ↑(e.lieSubalgebraMap _ x) = e x :=
   rfl
 #align lie_equiv.lie_subalgebra_map_apply LieEquiv.lieSubalgebraMap_apply
 
-/- warning: lie_equiv.of_subalgebras -> LieEquiv.ofSubalgebras is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_subalgebras LieEquiv.ofSubalgebrasₓ'. -/
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
 def ofSubalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
@@ -1174,17 +835,11 @@ def ofSubalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
     map_lie' := fun x y => by apply SetCoe.ext; exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
 #align lie_equiv.of_subalgebras LieEquiv.ofSubalgebras
 
-/- warning: lie_equiv.of_subalgebras_apply -> LieEquiv.ofSubalgebras_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_subalgebras_apply LieEquiv.ofSubalgebras_applyₓ'. -/
 @[simp]
 theorem ofSubalgebras_apply (h : L₁'.map ↑e = L₂') (x : L₁') : ↑(e.ofSubalgebras _ _ h x) = e x :=
   rfl
 #align lie_equiv.of_subalgebras_apply LieEquiv.ofSubalgebras_apply
 
-/- warning: lie_equiv.of_subalgebras_symm_apply -> LieEquiv.ofSubalgebras_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lie_equiv.of_subalgebras_symm_apply LieEquiv.ofSubalgebras_symm_applyₓ'. -/
 @[simp]
 theorem ofSubalgebras_symm_apply (h : L₁'.map ↑e = L₂') (x : L₂') :
     ↑((e.ofSubalgebras _ _ h).symm x) = e.symm x :=

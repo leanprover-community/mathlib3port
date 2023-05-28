@@ -49,12 +49,6 @@ def nerve (C : Type u) [Category.{v} C] : SSet.{max u v}
 instance {C : Type _} [Category C] {Δ : SimplexCategoryᵒᵖ} : Category ((nerve C).obj Δ) :=
   (inferInstance : Category (SimplexCategory.toCat.obj Δ.unop ⥤ C))
 
-/- warning: category_theory.nerve_functor -> CategoryTheory.nerveFunctor is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Functor.{max u1 u2, max u2 u1, max (succ u2) u2 (succ u1), succ (max u2 u1)} CategoryTheory.Cat.{u1, u2} CategoryTheory.Cat.category.{u1, u2} SSet.{max u2 u1} SSet.largeCategory.{max u2 u1}
-but is expected to have type
-  CategoryTheory.Functor.{max u1 u2, max u1 u2, max (succ u1) (succ u2), succ (max u1 u2)} CategoryTheory.Cat.{u2, u1} CategoryTheory.Cat.category.{u2, u1} SSet.{max u1 u2} SSet.largeCategory.{max u1 u2}
-Case conversion may be inaccurate. Consider using '#align category_theory.nerve_functor CategoryTheory.nerveFunctorₓ'. -/
 /-- The nerve of a category, as a functor `Cat ⥤ sSet` -/
 @[simps]
 def nerveFunctor : Cat ⥤ SSet where

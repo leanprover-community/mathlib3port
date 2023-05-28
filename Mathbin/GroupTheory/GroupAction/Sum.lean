@@ -39,48 +39,24 @@ variable [SMul M α] [SMul M β] [SMul N α] [SMul N β] (a : M) (b : α) (c : �
 instance : SMul M (Sum α β) :=
   ⟨fun a => Sum.map ((· • ·) a) ((· • ·) a)⟩
 
-/- warning: sum.smul_def -> Sum.smul_def is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : SMul.{u1, u3} M β] (a : M) (x : Sum.{u2, u3} α β), Eq.{succ (max u2 u3)} (Sum.{u2, u3} α β) (SMul.smul.{u1, max u2 u3} M (Sum.{u2, u3} α β) (Sum.hasSmul.{u1, u2, u3} M α β _inst_1 _inst_2) a x) (Sum.map.{u2, u3, u2, u3} α α β β (SMul.smul.{u1, u2} M α _inst_1 a) (SMul.smul.{u1, u3} M β _inst_2 a) x)
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u2} M β] (a : M) (x : Sum.{u3, u2} α β), Eq.{max (succ u3) (succ u2)} (Sum.{u3, u2} α β) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u3, u2} α β) (Sum.{u3, u2} α β) (instHSMul.{u1, max u3 u2} M (Sum.{u3, u2} α β) (Sum.instSMulSum.{u1, u3, u2} M α β _inst_1 _inst_2)) a x) (Sum.map.{u3, u2, u3, u2} α α β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.199 : M) (x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.201 : α) => HSMul.hSMul.{u1, u3, u3} M α α (instHSMul.{u1, u3} M α _inst_1) x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.199 x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.201) a) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.218 : M) (x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.220 : β) => HSMul.hSMul.{u1, u2, u2} M β β (instHSMul.{u1, u2} M β _inst_2) x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.218 x._@.Mathlib.GroupTheory.GroupAction.Sum._hyg.220) a) x)
-Case conversion may be inaccurate. Consider using '#align sum.smul_def Sum.smul_defₓ'. -/
 @[to_additive]
 theorem smul_def : a • x = x.map ((· • ·) a) ((· • ·) a) :=
   rfl
 #align sum.smul_def Sum.smul_def
 #align sum.vadd_def Sum.vadd_def
 
-/- warning: sum.smul_inl -> Sum.smul_inl is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : SMul.{u1, u3} M β] (a : M) (b : α), Eq.{succ (max u2 u3)} (Sum.{u2, u3} α β) (SMul.smul.{u1, max u2 u3} M (Sum.{u2, u3} α β) (Sum.hasSmul.{u1, u2, u3} M α β _inst_1 _inst_2) a (Sum.inl.{u2, u3} α β b)) (Sum.inl.{u2, u3} α β (SMul.smul.{u1, u2} M α _inst_1 a b))
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u2} M β] (a : M) (b : α), Eq.{max (succ u3) (succ u2)} (Sum.{u3, u2} α β) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u3, u2} α β) (Sum.{u3, u2} α β) (instHSMul.{u1, max u3 u2} M (Sum.{u3, u2} α β) (Sum.instSMulSum.{u1, u3, u2} M α β _inst_1 _inst_2)) a (Sum.inl.{u3, u2} α β b)) (Sum.inl.{u3, u2} α β (HSMul.hSMul.{u1, u3, u3} M α α (instHSMul.{u1, u3} M α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align sum.smul_inl Sum.smul_inlₓ'. -/
 @[simp, to_additive]
 theorem smul_inl : a • (inl b : Sum α β) = inl (a • b) :=
   rfl
 #align sum.smul_inl Sum.smul_inl
 #align sum.vadd_inl Sum.vadd_inl
 
-/- warning: sum.smul_inr -> Sum.smul_inr is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : SMul.{u1, u3} M β] (a : M) (c : β), Eq.{succ (max u2 u3)} (Sum.{u2, u3} α β) (SMul.smul.{u1, max u2 u3} M (Sum.{u2, u3} α β) (Sum.hasSmul.{u1, u2, u3} M α β _inst_1 _inst_2) a (Sum.inr.{u2, u3} α β c)) (Sum.inr.{u2, u3} α β (SMul.smul.{u1, u3} M β _inst_2 a c))
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u2} M β] (a : M) (c : β), Eq.{max (succ u3) (succ u2)} (Sum.{u3, u2} α β) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u3, u2} α β) (Sum.{u3, u2} α β) (instHSMul.{u1, max u3 u2} M (Sum.{u3, u2} α β) (Sum.instSMulSum.{u1, u3, u2} M α β _inst_1 _inst_2)) a (Sum.inr.{u3, u2} α β c)) (Sum.inr.{u3, u2} α β (HSMul.hSMul.{u1, u2, u2} M β β (instHSMul.{u1, u2} M β _inst_2) a c))
-Case conversion may be inaccurate. Consider using '#align sum.smul_inr Sum.smul_inrₓ'. -/
 @[simp, to_additive]
 theorem smul_inr : a • (inr c : Sum α β) = inr (a • c) :=
   rfl
 #align sum.smul_inr Sum.smul_inr
 #align sum.vadd_inr Sum.vadd_inr
 
-/- warning: sum.smul_swap -> Sum.smul_swap is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : SMul.{u1, u3} M β] (a : M) (x : Sum.{u2, u3} α β), Eq.{max (succ u3) (succ u2)} (Sum.{u3, u2} β α) (Sum.swap.{u2, u3} α β (SMul.smul.{u1, max u2 u3} M (Sum.{u2, u3} α β) (Sum.hasSmul.{u1, u2, u3} M α β _inst_1 _inst_2) a x)) (SMul.smul.{u1, max u3 u2} M (Sum.{u3, u2} β α) (Sum.hasSmul.{u1, u3, u2} M β α _inst_2 _inst_1) a (Sum.swap.{u2, u3} α β x))
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u2} M β] (a : M) (x : Sum.{u3, u2} α β), Eq.{max (succ u3) (succ u2)} (Sum.{u2, u3} β α) (Sum.swap.{u3, u2} α β (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u3, u2} α β) (Sum.{u3, u2} α β) (instHSMul.{u1, max u3 u2} M (Sum.{u3, u2} α β) (Sum.instSMulSum.{u1, u3, u2} M α β _inst_1 _inst_2)) a x)) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u2, u3} β α) (Sum.{u2, u3} β α) (instHSMul.{u1, max u3 u2} M (Sum.{u2, u3} β α) (Sum.instSMulSum.{u1, u2, u3} M β α _inst_2 _inst_1)) a (Sum.swap.{u3, u2} α β x))
-Case conversion may be inaccurate. Consider using '#align sum.smul_swap Sum.smul_swapₓ'. -/
 @[simp, to_additive]
 theorem smul_swap : (a • x).symm = a • x.symm := by cases x <;> rfl
 #align sum.smul_swap Sum.smul_swap

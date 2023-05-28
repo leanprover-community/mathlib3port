@@ -48,9 +48,6 @@ open Kronecker
 
 open Matrix LinearMap
 
-/- warning: tensor_product.to_matrix_map -> TensorProduct.toMatrix_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.to_matrix_map TensorProduct.toMatrix_mapₓ'. -/
 /-- The linear map built from `tensor_product.map` corresponds to the matrix built from
 `matrix.kronecker`. -/
 theorem TensorProduct.toMatrix_map (f : M →ₗ[R] M') (g : N →ₗ[R] N') :
@@ -62,9 +59,6 @@ theorem TensorProduct.toMatrix_map (f : M →ₗ[R] M') (g : N →ₗ[R] N') :
     TensorProduct.map_tmul, Basis.tensorProduct_repr_tmul_apply]
 #align tensor_product.to_matrix_map TensorProduct.toMatrix_map
 
-/- warning: matrix.to_lin_kronecker -> Matrix.toLin_kronecker is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_lin_kronecker Matrix.toLin_kroneckerₓ'. -/
 /-- The matrix built from `matrix.kronecker` corresponds to the linear map built from
 `tensor_product.map`. -/
 theorem Matrix.toLin_kronecker (A : Matrix ι' ι R) (B : Matrix κ' κ R) :
@@ -75,9 +69,6 @@ theorem Matrix.toLin_kronecker (A : Matrix ι' ι R) (B : Matrix κ' κ R) :
     to_matrix_to_lin]
 #align matrix.to_lin_kronecker Matrix.toLin_kronecker
 
-/- warning: tensor_product.to_matrix_comm -> TensorProduct.toMatrix_comm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.to_matrix_comm TensorProduct.toMatrix_commₓ'. -/
 /-- `tensor_product.comm` corresponds to a permutation of the identity matrix. -/
 theorem TensorProduct.toMatrix_comm :
     toMatrix (bM.TensorProduct bN) (bN.TensorProduct bM) (TensorProduct.comm R M N) =
@@ -90,9 +81,6 @@ theorem TensorProduct.toMatrix_comm :
   split_ifs <;> simp
 #align tensor_product.to_matrix_comm TensorProduct.toMatrix_comm
 
-/- warning: tensor_product.to_matrix_assoc -> TensorProduct.toMatrix_assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.to_matrix_assoc TensorProduct.toMatrix_assocₓ'. -/
 /-- `tensor_product.assoc` corresponds to a permutation of the identity matrix. -/
 theorem TensorProduct.toMatrix_assoc :
     toMatrix ((bM.TensorProduct bN).TensorProduct bP) (bM.TensorProduct (bN.TensorProduct bP))

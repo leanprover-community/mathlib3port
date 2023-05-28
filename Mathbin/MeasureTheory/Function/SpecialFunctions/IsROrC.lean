@@ -28,23 +28,11 @@ namespace IsROrC
 
 variable {𝕜 : Type _} [IsROrC 𝕜]
 
-/- warning: is_R_or_C.measurable_re -> IsROrC.measurable_re is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : IsROrC.{u1} 𝕜], Measurable.{u1, 0} 𝕜 Real (IsROrC.measurableSpace.{u1} 𝕜 _inst_1) Real.measurableSpace (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.addMonoid)) => 𝕜 -> Real) (AddMonoidHom.hasCoeToFun.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.addMonoid)) (IsROrC.re.{u1} 𝕜 _inst_1))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} [_inst_1 : IsROrC.{u1} 𝕜], Measurable.{u1, 0} 𝕜 Real (IsROrC.measurableSpace.{u1} 𝕜 _inst_1) Real.measurableSpace (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) 𝕜 (fun (_x : 𝕜) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : 𝕜) => Real) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) 𝕜 Real (AddZeroClass.toAdd.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))))) (AddZeroClass.toAdd.{0} Real (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal) (AddMonoidHom.addMonoidHomClass.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)))) (IsROrC.re.{u1} 𝕜 _inst_1))
-Case conversion may be inaccurate. Consider using '#align is_R_or_C.measurable_re IsROrC.measurable_reₓ'. -/
 @[measurability]
 theorem measurable_re : Measurable (re : 𝕜 → ℝ) :=
   continuous_re.Measurable
 #align is_R_or_C.measurable_re IsROrC.measurable_re
 
-/- warning: is_R_or_C.measurable_im -> IsROrC.measurable_im is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : IsROrC.{u1} 𝕜], Measurable.{u1, 0} 𝕜 Real (IsROrC.measurableSpace.{u1} 𝕜 _inst_1) Real.measurableSpace (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.addMonoid)) => 𝕜 -> Real) (AddMonoidHom.hasCoeToFun.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.addMonoid)) (IsROrC.im.{u1} 𝕜 _inst_1))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} [_inst_1 : IsROrC.{u1} 𝕜], Measurable.{u1, 0} 𝕜 Real (IsROrC.measurableSpace.{u1} 𝕜 _inst_1) Real.measurableSpace (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) 𝕜 (fun (_x : 𝕜) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : 𝕜) => Real) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) 𝕜 Real (AddZeroClass.toAdd.{u1} 𝕜 (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))))))))) (AddZeroClass.toAdd.{0} Real (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)) 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal) (AddMonoidHom.addMonoidHomClass.{u1, 0} 𝕜 Real (AddMonoid.toAddZeroClass.{u1} 𝕜 (AddCommMonoid.toAddMonoid.{u1} 𝕜 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonUnitalSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (CommRing.toRing.{u1} 𝕜 (Field.toCommRing.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1))))))))))) (AddMonoid.toAddZeroClass.{0} Real Real.instAddMonoidReal)))) (IsROrC.im.{u1} 𝕜 _inst_1))
-Case conversion may be inaccurate. Consider using '#align is_R_or_C.measurable_im IsROrC.measurable_imₓ'. -/
 @[measurability]
 theorem measurable_im : Measurable (im : 𝕜 → ℝ) :=
   continuous_im.Measurable
@@ -58,33 +46,21 @@ variable {α 𝕜 : Type _} [IsROrC 𝕜] {m : MeasurableSpace α} {f : α → �
 
 include m
 
-/- warning: measurable.re -> Measurable.re is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measurable.re Measurable.reₓ'. -/
 @[measurability]
 theorem Measurable.re (hf : Measurable f) : Measurable fun x => IsROrC.re (f x) :=
   IsROrC.measurable_re.comp hf
 #align measurable.re Measurable.re
 
-/- warning: ae_measurable.re -> AEMeasurable.re is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_measurable.re AEMeasurable.reₓ'. -/
 @[measurability]
 theorem AEMeasurable.re (hf : AEMeasurable f μ) : AEMeasurable (fun x => IsROrC.re (f x)) μ :=
   IsROrC.measurable_re.comp_aemeasurable hf
 #align ae_measurable.re AEMeasurable.re
 
-/- warning: measurable.im -> Measurable.im is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measurable.im Measurable.imₓ'. -/
 @[measurability]
 theorem Measurable.im (hf : Measurable f) : Measurable fun x => IsROrC.im (f x) :=
   IsROrC.measurable_im.comp hf
 #align measurable.im Measurable.im
 
-/- warning: ae_measurable.im -> AEMeasurable.im is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_measurable.im AEMeasurable.imₓ'. -/
 @[measurability]
 theorem AEMeasurable.im (hf : AEMeasurable f μ) : AEMeasurable (fun x => IsROrC.im (f x)) μ :=
   IsROrC.measurable_im.comp_aemeasurable hf
@@ -105,9 +81,6 @@ theorem IsROrC.measurable_ofReal : Measurable (coe : ℝ → 𝕜) :=
 #align is_R_or_C.measurable_of_real IsROrC.measurable_ofReal
 -/
 
-/- warning: measurable_of_re_im -> measurable_of_re_im is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measurable_of_re_im measurable_of_re_imₓ'. -/
 theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x))
     (him : Measurable fun x => IsROrC.im (f x)) : Measurable f :=
   by
@@ -118,9 +91,6 @@ theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x))
   all_goals infer_instance
 #align measurable_of_re_im measurable_of_re_im
 
-/- warning: ae_measurable_of_re_im -> aemeasurable_of_re_im is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_measurable_of_re_im aemeasurable_of_re_imₓ'. -/
 theorem aemeasurable_of_re_im (hre : AEMeasurable (fun x => IsROrC.re (f x)) μ)
     (him : AEMeasurable (fun x => IsROrC.im (f x)) μ) : AEMeasurable f μ :=
   by

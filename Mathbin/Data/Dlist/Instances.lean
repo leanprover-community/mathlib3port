@@ -28,12 +28,6 @@ namespace Dlist
 
 variable (α : Type _)
 
-/- warning: dlist.list_equiv_dlist -> Std.DList.listEquivDList is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (List.{u1} α) (Dlist.{u1} α)
-but is expected to have type
-  forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (List.{u1} α) (Std.DList.{u1} α)
-Case conversion may be inaccurate. Consider using '#align dlist.list_equiv_dlist Std.DList.listEquivDListₓ'. -/
 /-- The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
 def Std.DList.listEquivDList : List α ≃ Dlist α := by

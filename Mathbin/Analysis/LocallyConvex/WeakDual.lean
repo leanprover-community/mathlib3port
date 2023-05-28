@@ -64,32 +64,20 @@ def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E :=
 #align linear_map.to_seminorm LinearMap.toSeminorm
 -/
 
-/- warning: linear_map.coe_to_seminorm -> LinearMap.coe_toSeminorm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_to_seminorm LinearMap.coe_toSeminormₓ'. -/
 theorem coe_toSeminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ‖f x‖ :=
   rfl
 #align linear_map.coe_to_seminorm LinearMap.coe_toSeminorm
 
-/- warning: linear_map.to_seminorm_apply -> LinearMap.toSeminorm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_seminorm_apply LinearMap.toSeminorm_applyₓ'. -/
 @[simp]
 theorem toSeminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = ‖f x‖ :=
   rfl
 #align linear_map.to_seminorm_apply LinearMap.toSeminorm_apply
 
-/- warning: linear_map.to_seminorm_ball_zero -> LinearMap.toSeminorm_ball_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_seminorm_ball_zero LinearMap.toSeminorm_ball_zeroₓ'. -/
 theorem toSeminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} :
     Seminorm.ball f.toSeminorm 0 r = { x : E | ‖f x‖ < r } := by
   simp only [Seminorm.ball_zero_eq, to_seminorm_apply]
 #align linear_map.to_seminorm_ball_zero LinearMap.toSeminorm_ball_zero
 
-/- warning: linear_map.to_seminorm_comp -> LinearMap.toSeminorm_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_seminorm_comp LinearMap.toSeminorm_compₓ'. -/
 theorem toSeminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) :
     f.toSeminorm.comp g = (f.comp g).toSeminorm := by ext;
   simp only [Seminorm.comp_apply, to_seminorm_apply, coe_comp]
@@ -102,9 +90,6 @@ def toSeminormFamily (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) : SeminormFamily �
 #align linear_map.to_seminorm_family LinearMap.toSeminormFamily
 -/
 
-/- warning: linear_map.to_seminorm_family_apply -> LinearMap.toSeminormFamily_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_seminorm_family_apply LinearMap.toSeminormFamily_applyₓ'. -/
 @[simp]
 theorem toSeminormFamily_apply {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} {x y} : (B.toSeminormFamily y) x = ‖B x y‖ :=
   rfl
@@ -122,9 +107,6 @@ variable [Nonempty ι]
 
 variable {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜}
 
-/- warning: linear_map.has_basis_weak_bilin -> LinearMap.hasBasis_weakBilin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.has_basis_weak_bilin LinearMap.hasBasis_weakBilinₓ'. -/
 theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     (𝓝 (0 : WeakBilin B)).HasBasis B.toSeminormFamily.basis_sets id :=
   by
@@ -168,9 +150,6 @@ theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
   exact hx y hy
 #align linear_map.has_basis_weak_bilin LinearMap.hasBasis_weakBilin
 
-/- warning: linear_map.weak_bilin_with_seminorms -> LinearMap.weakBilin_withSeminorms is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.weak_bilin_with_seminorms LinearMap.weakBilin_withSeminormsₓ'. -/
 theorem LinearMap.weakBilin_withSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     WithSeminorms (LinearMap.toSeminormFamily B : F → Seminorm 𝕜 (WeakBilin B)) :=
   SeminormFamily.withSeminorms_of_hasBasis _ B.hasBasis_weakBilin

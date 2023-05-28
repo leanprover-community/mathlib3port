@@ -77,12 +77,6 @@ open Nat.Partrec (code)
 
 open Nat.Partrec.Code
 
-/- warning: partrec.merge' -> Partrec.merge' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {f : PFun.{u1, u2} α σ} {g : PFun.{u1, u2} α σ}, (Partrec.{u1, u2} α σ _inst_1 _inst_4 f) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 g) -> (Exists.{max (succ u1) (succ u2)} (PFun.{u1, u2} α σ) (fun (k : PFun.{u1, u2} α σ) => And (Partrec.{u1, u2} α σ _inst_1 _inst_4 k) (forall (a : α), And (forall (x : σ), (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (k a)) -> (Or (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (f a)) (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (g a)))) (Iff (Part.Dom.{u2} σ (k a)) (Or (Part.Dom.{u2} σ (f a)) (Part.Dom.{u2} σ (g a)))))))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {f : PFun.{u2, u1} α σ} {g : PFun.{u2, u1} α σ}, (Partrec.{u2, u1} α σ _inst_1 _inst_4 f) -> (Partrec.{u2, u1} α σ _inst_1 _inst_4 g) -> (Exists.{max (succ u2) (succ u1)} (PFun.{u2, u1} α σ) (fun (k : PFun.{u2, u1} α σ) => And (Partrec.{u2, u1} α σ _inst_1 _inst_4 k) (forall (a : α), And (forall (x : σ), (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (k a)) -> (Or (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (f a)) (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (g a)))) (Iff (Part.Dom.{u1} σ (k a)) (Or (Part.Dom.{u1} σ (f a)) (Part.Dom.{u1} σ (g a)))))))
-Case conversion may be inaccurate. Consider using '#align partrec.merge' Partrec.merge'ₓ'. -/
 theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     ∃ k : α →. σ,
       Partrec k ∧ ∀ a, (∀ x ∈ k a, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
@@ -110,12 +104,6 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
   exact Or.inr ha
 #align partrec.merge' Partrec.merge'
 
-/- warning: partrec.merge -> Partrec.merge is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {f : PFun.{u1, u2} α σ} {g : PFun.{u1, u2} α σ}, (Partrec.{u1, u2} α σ _inst_1 _inst_4 f) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 g) -> (forall (a : α) (x : σ), (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (f a)) -> (forall (y : σ), (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) y (g a)) -> (Eq.{succ u2} σ x y))) -> (Exists.{max (succ u1) (succ u2)} (PFun.{u1, u2} α σ) (fun (k : PFun.{u1, u2} α σ) => And (Partrec.{u1, u2} α σ _inst_1 _inst_4 k) (forall (a : α) (x : σ), Iff (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (k a)) (Or (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (f a)) (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) x (g a))))))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {f : PFun.{u2, u1} α σ} {g : PFun.{u2, u1} α σ}, (Partrec.{u2, u1} α σ _inst_1 _inst_4 f) -> (Partrec.{u2, u1} α σ _inst_1 _inst_4 g) -> (forall (a : α) (x : σ), (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (f a)) -> (forall (y : σ), (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) y (g a)) -> (Eq.{succ u1} σ x y))) -> (Exists.{max (succ u2) (succ u1)} (PFun.{u2, u1} α σ) (fun (k : PFun.{u2, u1} α σ) => And (Partrec.{u2, u1} α σ _inst_1 _inst_4 k) (forall (a : α) (x : σ), Iff (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (k a)) (Or (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (f a)) (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) x (g a))))))
-Case conversion may be inaccurate. Consider using '#align partrec.merge Partrec.mergeₓ'. -/
 theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g)
     (H : ∀ (a), ∀ x ∈ f a, ∀ y ∈ g a, x = y) :
     ∃ k : α →. σ, Partrec k ∧ ∀ a x, x ∈ k a ↔ x ∈ f a ∨ x ∈ g a :=
@@ -132,12 +120,6 @@ theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g)
       · exact mem_unique h' h⟩⟩
 #align partrec.merge Partrec.merge
 
-/- warning: partrec.cond -> Partrec.cond is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {c : α -> Bool} {f : PFun.{u1, u2} α σ} {g : PFun.{u1, u2} α σ}, (Computable.{u1, 0} α Bool _inst_1 Primcodable.bool c) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 f) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 g) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => cond.{u2} (Part.{u2} σ) (c a) (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {c : α -> Bool} {f : PFun.{u2, u1} α σ} {g : PFun.{u2, u1} α σ}, (Computable.{u2, 0} α Bool _inst_1 Primcodable.bool c) -> (Partrec.{u2, u1} α σ _inst_1 _inst_4 f) -> (Partrec.{u2, u1} α σ _inst_1 _inst_4 g) -> (Partrec.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => cond.{u1} (Part.{u1} σ) (c a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align partrec.cond Partrec.condₓ'. -/
 theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f)
     (hg : Partrec g) : Partrec fun a => cond (c a) (f a) (g a) :=
   let ⟨cf, ef⟩ := exists_code.1 hf
@@ -147,12 +129,6 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
     fun a => by cases c a <;> simp [ef, eg, encodek]
 #align partrec.cond Partrec.cond
 
-/- warning: partrec.sum_cases -> Partrec.sum_casesOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} σ] {f : α -> (Sum.{u2, u3} β γ)} {g : α -> (PFun.{u2, u4} β σ)} {h : α -> (PFun.{u3, u4} γ σ)}, (Computable.{u1, max u2 u3} α (Sum.{u2, u3} β γ) _inst_1 (Primcodable.sum.{u2, u3} β γ _inst_2 _inst_3) f) -> (Partrec₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_4 g) -> (Partrec₂.{u1, u3, u4} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Partrec.{u1, u4} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u4, u2, u3} β γ (fun (_x : Sum.{u2, u3} β γ) => Part.{u4} σ) (f a) (g a) (h a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u2} σ] {f : α -> (Sum.{u4, u3} β γ)} {g : α -> (PFun.{u4, u2} β σ)} {h : α -> (PFun.{u3, u2} γ σ)}, (Computable.{u1, max u4 u3} α (Sum.{u4, u3} β γ) _inst_1 (Primcodable.sum.{u4, u3} β γ _inst_2 _inst_3) f) -> (Partrec₂.{u1, u4, u2} α β σ _inst_1 _inst_2 _inst_4 g) -> (Partrec₂.{u1, u3, u2} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u2, u4, u3} β γ (fun (_x : Sum.{u4, u3} β γ) => Part.{u2} σ) (f a) (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align partrec.sum_cases Partrec.sum_casesOnₓ'. -/
 theorem sum_casesOn {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f)
     (hg : Partrec₂ g) (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
@@ -186,12 +162,6 @@ theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (
 #align re_pred.of_eq RePred.of_eq
 -/
 
-/- warning: partrec.dom_re -> Partrec.dom_re is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : PFun.{u1, u2} α β}, (Partrec.{u1, u2} α β _inst_1 _inst_2 f) -> (RePred.{u1} α _inst_1 (fun (a : α) => Part.Dom.{u2} β (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {f : PFun.{u2, u1} α β}, (Partrec.{u2, u1} α β _inst_1 _inst_2 f) -> (RePred.{u2} α _inst_1 (fun (a : α) => Part.Dom.{u1} β (f a)))
-Case conversion may be inaccurate. Consider using '#align partrec.dom_re Partrec.dom_reₓ'. -/
 theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) :
     RePred fun a => (f a).Dom :=
   (h.map (Computable.const ()).to₂).of_eq fun n => Part.ext fun _ => by simp [Part.dom_iff_mem]

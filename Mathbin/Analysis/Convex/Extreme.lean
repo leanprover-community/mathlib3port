@@ -84,22 +84,10 @@ protected theorem IsExtreme.refl (A : Set E) : IsExtreme 𝕜 A A :=
 
 variable {𝕜} {A B C : Set E} {x : E}
 
-/- warning: is_extreme.rfl -> IsExtreme.rfl is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E}, IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A A
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommMonoid.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] {A : Set.{u1} E}, IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A A
-Case conversion may be inaccurate. Consider using '#align is_extreme.rfl IsExtreme.rflₓ'. -/
 protected theorem IsExtreme.rfl : IsExtreme 𝕜 A A :=
   IsExtreme.refl 𝕜 A
 #align is_extreme.rfl IsExtreme.rfl
 
-/- warning: is_extreme.trans -> IsExtreme.trans is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E} {C : Set.{u2} E}, (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 B C) -> (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A C)
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommMonoid.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] {A : Set.{u1} E} {B : Set.{u1} E} {C : Set.{u1} E}, (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 B C) -> (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A C)
-Case conversion may be inaccurate. Consider using '#align is_extreme.trans IsExtreme.transₓ'. -/
 @[trans]
 protected theorem IsExtreme.trans (hAB : IsExtreme 𝕜 A B) (hBC : IsExtreme 𝕜 B C) :
     IsExtreme 𝕜 A C :=
@@ -121,12 +109,6 @@ instance : IsPartialOrder (Set E) (IsExtreme 𝕜)
   trans A B C := IsExtreme.trans
   antisymm := IsExtreme.antisymm
 
-/- warning: is_extreme.inter -> IsExtreme.inter is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E} {C : Set.{u2} E}, (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A C) -> (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A (Inter.inter.{u2} (Set.{u2} E) (Set.hasInter.{u2} E) B C))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommMonoid.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] {A : Set.{u1} E} {B : Set.{u1} E} {C : Set.{u1} E}, (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A C) -> (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A (Inter.inter.{u1} (Set.{u1} E) (Set.instInterSet.{u1} E) B C))
-Case conversion may be inaccurate. Consider using '#align is_extreme.inter IsExtreme.interₓ'. -/
 theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : IsExtreme 𝕜 A (B ∩ C) :=
   by
   use subset.trans (inter_subset_left _ _) hAB.1
@@ -136,12 +118,6 @@ theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : 
   exact ⟨⟨hx₁B, hx₁C⟩, hx₂B, hx₂C⟩
 #align is_extreme.inter IsExtreme.inter
 
-/- warning: is_extreme.mono -> IsExtreme.mono is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E} {C : Set.{u2} E}, (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A C) -> (HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) B A) -> (HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) C B) -> (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 B C)
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommMonoid.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] {A : Set.{u1} E} {B : Set.{u1} E} {C : Set.{u1} E}, (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A C) -> (HasSubset.Subset.{u1} (Set.{u1} E) (Set.instHasSubsetSet.{u1} E) B A) -> (HasSubset.Subset.{u1} (Set.{u1} E) (Set.instHasSubsetSet.{u1} E) C B) -> (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 B C)
-Case conversion may be inaccurate. Consider using '#align is_extreme.mono IsExtreme.monoₓ'. -/
 protected theorem IsExtreme.mono (hAC : IsExtreme 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B) :
     IsExtreme 𝕜 B C :=
   ⟨hCB, fun x₁ hx₁B x₂ hx₂B x hxC hx => hAC.2 (hBA hx₁B) (hBA hx₂B) hxC hx⟩
@@ -218,35 +194,17 @@ theorem extremePoints_singleton : ({x} : Set E).extremePoints 𝕜 = {x} :=
 #align extreme_points_singleton extremePoints_singleton
 -/
 
-/- warning: inter_extreme_points_subset_extreme_points_of_subset -> inter_extremePoints_subset_extremePoints_of_subset is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E}, (HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) B A) -> (HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) (Inter.inter.{u2} (Set.{u2} E) (Set.hasInter.{u2} E) B (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A)) (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 B))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E}, (HasSubset.Subset.{u2} (Set.{u2} E) (Set.instHasSubsetSet.{u2} E) B A) -> (HasSubset.Subset.{u2} (Set.{u2} E) (Set.instHasSubsetSet.{u2} E) (Inter.inter.{u2} (Set.{u2} E) (Set.instInterSet.{u2} E) B (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A)) (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 B))
-Case conversion may be inaccurate. Consider using '#align inter_extreme_points_subset_extreme_points_of_subset inter_extremePoints_subset_extremePoints_of_subsetₓ'. -/
 theorem inter_extremePoints_subset_extremePoints_of_subset (hBA : B ⊆ A) :
     B ∩ A.extremePoints 𝕜 ⊆ B.extremePoints 𝕜 := fun x ⟨hxB, hxA⟩ =>
   ⟨hxB, fun x₁ hx₁ x₂ hx₂ hx => hxA.2 (hBA hx₁) (hBA hx₂) hx⟩
 #align inter_extreme_points_subset_extreme_points_of_subset inter_extremePoints_subset_extremePoints_of_subset
 
-/- warning: is_extreme.extreme_points_subset_extreme_points -> IsExtreme.extremePoints_subset_extremePoints is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E}, (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 B) (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommMonoid.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] {A : Set.{u1} E} {B : Set.{u1} E}, (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (HasSubset.Subset.{u1} (Set.{u1} E) (Set.instHasSubsetSet.{u1} E) (Set.extremePoints.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 B) (Set.extremePoints.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A))
-Case conversion may be inaccurate. Consider using '#align is_extreme.extreme_points_subset_extreme_points IsExtreme.extremePoints_subset_extremePointsₓ'. -/
 theorem IsExtreme.extremePoints_subset_extremePoints (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
   mem_extremePoints_iff_extreme_singleton.2
     (hAB.trans (mem_extremePoints_iff_extreme_singleton.1 hx))
 #align is_extreme.extreme_points_subset_extreme_points IsExtreme.extremePoints_subset_extremePoints
 
-/- warning: is_extreme.extreme_points_eq -> IsExtreme.extremePoints_eq is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : SMul.{u1, u2} 𝕜 E] {A : Set.{u2} E} {B : Set.{u2} E}, (IsExtreme.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (Eq.{succ u2} (Set.{u2} E) (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 B) (Inter.inter.{u2} (Set.{u2} E) (Set.hasInter.{u2} E) B (Set.extremePoints.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 A)))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommMonoid.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] {A : Set.{u1} E} {B : Set.{u1} E}, (IsExtreme.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A B) -> (Eq.{succ u1} (Set.{u1} E) (Set.extremePoints.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 B) (Inter.inter.{u1} (Set.{u1} E) (Set.instInterSet.{u1} E) B (Set.extremePoints.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 A)))
-Case conversion may be inaccurate. Consider using '#align is_extreme.extreme_points_eq IsExtreme.extremePoints_eqₓ'. -/
 theorem IsExtreme.extremePoints_eq (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 = B ∩ A.extremePoints 𝕜 :=
   Subset.antisymm (fun x hx => ⟨hx.1, hAB.extremePoints_subset_extremePoints hx⟩)
@@ -260,20 +218,11 @@ section OrderedSemiring
 variable [OrderedSemiring 𝕜] [AddCommGroup E] [AddCommGroup F] [∀ i, AddCommGroup (π i)]
   [Module 𝕜 E] [Module 𝕜 F] [∀ i, Module 𝕜 (π i)] {A B : Set E} {x : E}
 
-/- warning: is_extreme.convex_diff -> IsExtreme.convex_diff is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_5 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] {A : Set.{u2} E} {B : Set.{u2} E}, (Convex.{u1, u2} 𝕜 E _inst_1 (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (SMulZeroClass.toHasSmul.{u1, u2} 𝕜 E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} 𝕜 E (MulZeroClass.toHasZero.{u1} 𝕜 (MulZeroOneClass.toMulZeroClass.{u1} 𝕜 (MonoidWithZero.toMulZeroOneClass.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} 𝕜 E (Semiring.toMonoidWithZero.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_5)))) A) -> (IsExtreme.{u1, u2} 𝕜 E _inst_1 (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (SMulZeroClass.toHasSmul.{u1, u2} 𝕜 E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} 𝕜 E (MulZeroClass.toHasZero.{u1} 𝕜 (MulZeroOneClass.toMulZeroClass.{u1} 𝕜 (MonoidWithZero.toMulZeroOneClass.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} 𝕜 E (Semiring.toMonoidWithZero.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_5)))) A B) -> (Convex.{u1, u2} 𝕜 E _inst_1 (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (SMulZeroClass.toHasSmul.{u1, u2} 𝕜 E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} 𝕜 E (MulZeroClass.toHasZero.{u1} 𝕜 (MulZeroOneClass.toMulZeroClass.{u1} 𝕜 (MonoidWithZero.toMulZeroOneClass.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} 𝕜 E (Semiring.toMonoidWithZero.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_5)))) (SDiff.sdiff.{u2} (Set.{u2} E) (BooleanAlgebra.toHasSdiff.{u2} (Set.{u2} E) (Set.booleanAlgebra.{u2} E)) A B))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : AddCommGroup.{u1} E] [_inst_5 : Module.{u2, u1} 𝕜 E (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u1} E _inst_2)] {A : Set.{u1} E} {B : Set.{u1} E}, (Convex.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddCommMonoid.{u1} E _inst_2) (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (MonoidWithZero.toZero.{u2} 𝕜 (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1)) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u1} E _inst_2) _inst_5)))) A) -> (IsExtreme.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddCommMonoid.{u1} E _inst_2) (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (MonoidWithZero.toZero.{u2} 𝕜 (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1)) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u1} E _inst_2) _inst_5)))) A B) -> (Convex.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddCommMonoid.{u1} E _inst_2) (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (MonoidWithZero.toZero.{u2} 𝕜 (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1)) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_2))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u1} E _inst_2) _inst_5)))) (SDiff.sdiff.{u1} (Set.{u1} E) (Set.instSDiffSet.{u1} E) A B))
-Case conversion may be inaccurate. Consider using '#align is_extreme.convex_diff IsExtreme.convex_diffₓ'. -/
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
   convex_iff_openSegment_subset.2 fun x₁ ⟨hx₁A, hx₁B⟩ x₂ ⟨hx₂A, hx₂B⟩ x hx =>
     ⟨hA.openSegment_subset hx₁A hx₂A hx, fun hxB => hx₁B (hAB.2 hx₁A hx₂A hxB hx).1⟩
 #align is_extreme.convex_diff IsExtreme.convex_diff
 
-/- warning: extreme_points_prod -> extremePoints_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align extreme_points_prod extremePoints_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -337,9 +286,6 @@ variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSMulDivisors 𝕜 E] {A B : Set E} {x : E}
 
-/- warning: mem_extreme_points_iff_forall_segment -> mem_extremePoints_iff_forall_segment is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mem_extreme_points_iff_forall_segment mem_extremePoints_iff_forall_segmentₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
@@ -357,9 +303,6 @@ theorem mem_extremePoints_iff_forall_segment :
     exacts[⟨rfl, (left_mem_openSegment_iff.1 hx).symm⟩, ⟨right_mem_openSegment_iff.1 hx, rfl⟩]
 #align mem_extreme_points_iff_forall_segment mem_extremePoints_iff_forall_segment
 
-/- warning: convex.mem_extreme_points_iff_convex_diff -> Convex.mem_extremePoints_iff_convex_diff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.mem_extreme_points_iff_convex_diff Convex.mem_extremePoints_iff_convex_diffₓ'. -/
 theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
     x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) :=
   by
@@ -374,18 +317,12 @@ theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
       rfl
 #align convex.mem_extreme_points_iff_convex_diff Convex.mem_extremePoints_iff_convex_diff
 
-/- warning: convex.mem_extreme_points_iff_mem_diff_convex_hull_diff -> Convex.mem_extremePoints_iff_mem_diff_convexHull_diff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.mem_extreme_points_iff_mem_diff_convex_hull_diff Convex.mem_extremePoints_iff_mem_diff_convexHull_diffₓ'. -/
 theorem Convex.mem_extremePoints_iff_mem_diff_convexHull_diff (hA : Convex 𝕜 A) :
     x ∈ A.extremePoints 𝕜 ↔ x ∈ A \ convexHull 𝕜 (A \ {x}) := by
   rw [hA.mem_extreme_points_iff_convex_diff, hA.convex_remove_iff_not_mem_convex_hull_remove,
     mem_diff]
 #align convex.mem_extreme_points_iff_mem_diff_convex_hull_diff Convex.mem_extremePoints_iff_mem_diff_convexHull_diff
 
-/- warning: extreme_points_convex_hull_subset -> extremePoints_convexHull_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align extreme_points_convex_hull_subset extremePoints_convexHull_subsetₓ'. -/
 theorem extremePoints_convexHull_subset : (convexHull 𝕜 A).extremePoints 𝕜 ⊆ A :=
   by
   rintro x hx

@@ -48,23 +48,11 @@ section MulZeroClass
 
 variable [MulZeroClass M₀] {a b : M₀}
 
-/- warning: zero_mul -> MulZeroClass.zero_mul is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))) a) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))) a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))
-Case conversion may be inaccurate. Consider using '#align zero_mul MulZeroClass.zero_mulₓ'. -/
 @[ematch, simp]
 theorem MulZeroClass.zero_mul (a : M₀) : 0 * a = 0 :=
   MulZeroClass.zero_mul a
 #align zero_mul MulZeroClass.zero_mul
 
-/- warning: mul_zero -> MulZeroClass.mul_zero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))
-Case conversion may be inaccurate. Consider using '#align mul_zero MulZeroClass.mul_zeroₓ'. -/
 @[ematch, simp]
 theorem MulZeroClass.mul_zero (a : M₀) : a * 0 = 0 :=
   MulZeroClass.mul_zero a
@@ -136,44 +124,20 @@ section CommSemigroupWithZero
 
 variable [CommSemigroup M₀] [Zero M₀]
 
-/- warning: is_left_cancel_mul_zero.to_is_right_cancel_mul_zero -> IsLeftCancelMulZero.to_isRightCancelMulZero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsRightCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsRightCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_isRightCancelMulZeroₓ'. -/
 theorem IsLeftCancelMulZero.to_isRightCancelMulZero [IsLeftCancelMulZero M₀] :
     IsRightCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_left_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
 #align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_isRightCancelMulZero
 
-/- warning: is_right_cancel_mul_zero.to_is_left_cancel_mul_zero -> IsRightCancelMulZero.to_isLeftCancelMulZero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsLeftCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsLeftCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_isLeftCancelMulZeroₓ'. -/
 theorem IsRightCancelMulZero.to_isLeftCancelMulZero [IsRightCancelMulZero M₀] :
     IsLeftCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_right_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
 #align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_isLeftCancelMulZero
 
-/- warning: is_left_cancel_mul_zero.to_is_cancel_mul_zero -> IsLeftCancelMulZero.to_isCancelMulZero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_is_cancel_mul_zero IsLeftCancelMulZero.to_isCancelMulZeroₓ'. -/
 theorem IsLeftCancelMulZero.to_isCancelMulZero [IsLeftCancelMulZero M₀] : IsCancelMulZero M₀ :=
   { ‹IsLeftCancelMulZero M₀›, IsLeftCancelMulZero.to_isRightCancelMulZero with }
 #align is_left_cancel_mul_zero.to_is_cancel_mul_zero IsLeftCancelMulZero.to_isCancelMulZero
 
-/- warning: is_right_cancel_mul_zero.to_is_cancel_mul_zero -> IsRightCancelMulZero.to_isCancelMulZero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
-Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_is_cancel_mul_zero IsRightCancelMulZero.to_isCancelMulZeroₓ'. -/
 theorem IsRightCancelMulZero.to_isCancelMulZero [IsRightCancelMulZero M₀] : IsCancelMulZero M₀ :=
   { ‹IsRightCancelMulZero M₀›, IsRightCancelMulZero.to_isLeftCancelMulZero with }
 #align is_right_cancel_mul_zero.to_is_cancel_mul_zero IsRightCancelMulZero.to_isCancelMulZero
@@ -287,12 +251,6 @@ theorem inv_zero : (0 : G₀)⁻¹ = 0 :=
   GroupWithZero.inv_zero
 #align inv_zero inv_zero
 
-/- warning: mul_inv_cancel -> mul_inv_cancel is a dubious translation:
-lean 3 declaration is
-  forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (OfNat.mk.{u1} G₀ 0 (Zero.zero.{u1} G₀ (MulZeroClass.toHasZero.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toHasMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) a (Inv.inv.{u1} G₀ (DivInvMonoid.toHasInv.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ _inst_1)) a)) (OfNat.ofNat.{u1} G₀ 1 (OfNat.mk.{u1} G₀ 1 (One.one.{u1} G₀ (MulOneClass.toHasOne.{u1} G₀ (MulZeroOneClass.toMulOneClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))))))
-but is expected to have type
-  forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) a (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_1) a)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (Monoid.toOne.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align mul_inv_cancel mul_inv_cancelₓ'. -/
 @[simp]
 theorem mul_inv_cancel {a : G₀} (h : a ≠ 0) : a * a⁻¹ = 1 :=
   GroupWithZero.mul_inv_cancel a h
@@ -318,12 +276,6 @@ variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
 variable (M₀)
 
-/- warning: ne_zero.one -> NeZero.one is a dubious translation:
-lean 3 declaration is
-  forall (M₀ : Type.{u1}) [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀], NeZero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1)) (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall (M₀ : Type.{u1}) [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀], NeZero.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align ne_zero.one NeZero.oneₓ'. -/
 /-- In a nontrivial monoid with zero, zero and one are different. -/
 instance NeZero.one : NeZero (1 : M₀) :=
   ⟨by
@@ -340,12 +292,6 @@ instance NeZero.one : NeZero (1 : M₀) :=
 
 variable {M₀}
 
-/- warning: pullback_nonzero -> pullback_nonzero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} {M₀' : Type.{u2}} [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] [_inst_3 : Zero.{u2} M₀'] [_inst_4 : One.{u2} M₀'] (f : M₀' -> M₀), (Eq.{succ u1} M₀ (f (OfNat.ofNat.{u2} M₀' 0 (OfNat.mk.{u2} M₀' 0 (Zero.zero.{u2} M₀' _inst_3)))) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1)))))) -> (Eq.{succ u1} M₀ (f (OfNat.ofNat.{u2} M₀' 1 (OfNat.mk.{u2} M₀' 1 (One.one.{u2} M₀' _inst_4)))) (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1)))))) -> (Nontrivial.{u2} M₀')
-but is expected to have type
-  forall {M₀ : Type.{u1}} {M₀' : Type.{u2}} [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] [_inst_3 : Zero.{u2} M₀'] [_inst_4 : One.{u2} M₀'] (f : M₀' -> M₀), (Eq.{succ u1} M₀ (f (OfNat.ofNat.{u2} M₀' 0 (Zero.toOfNat0.{u2} M₀' _inst_3))) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1)))) -> (Eq.{succ u1} M₀ (f (OfNat.ofNat.{u2} M₀' 1 (One.toOfNat1.{u2} M₀' _inst_4))) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))) -> (Nontrivial.{u2} M₀')
-Case conversion may be inaccurate. Consider using '#align pullback_nonzero pullback_nonzeroₓ'. -/
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) :
     Nontrivial M₀' :=
@@ -358,34 +304,16 @@ section MulZeroClass
 
 variable [MulZeroClass M₀]
 
-/- warning: mul_eq_zero_of_left -> mul_eq_zero_of_left is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] {a : M₀}, (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) -> (forall (b : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] {a : M₀}, (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) -> (forall (b : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_left mul_eq_zero_of_leftₓ'. -/
 theorem mul_eq_zero_of_left {a : M₀} (h : a = 0) (b : M₀) : a * b = 0 :=
   h.symm ▸ MulZeroClass.zero_mul b
 #align mul_eq_zero_of_left mul_eq_zero_of_left
 
-/- warning: mul_eq_zero_of_right -> mul_eq_zero_of_right is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀) {b : M₀}, (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀) {b : M₀}, (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_right mul_eq_zero_of_rightₓ'. -/
 theorem mul_eq_zero_of_right (a : M₀) {b : M₀} (h : b = 0) : a * b = 0 :=
   h.symm ▸ MulZeroClass.mul_zero a
 #align mul_eq_zero_of_right mul_eq_zero_of_right
 
 variable [NoZeroDivisors M₀] {a b : M₀}
 
-/- warning: mul_eq_zero -> mul_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Or (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Or (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align mul_eq_zero mul_eq_zeroₓ'. -/
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp]
@@ -394,88 +322,40 @@ theorem mul_eq_zero : a * b = 0 ↔ a = 0 ∨ b = 0 :=
     o.elim (fun h => mul_eq_zero_of_left h b) (mul_eq_zero_of_right a)⟩
 #align mul_eq_zero mul_eq_zero
 
-/- warning: zero_eq_mul -> zero_eq_mul is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b)) (Or (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b)) (Or (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align zero_eq_mul zero_eq_mulₓ'. -/
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp]
 theorem zero_eq_mul : 0 = a * b ↔ a = 0 ∨ b = 0 := by rw [eq_comm, mul_eq_zero]
 #align zero_eq_mul zero_eq_mul
 
-/- warning: mul_ne_zero_iff -> mul_ne_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (And (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (And (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align mul_ne_zero_iff mul_ne_zero_iffₓ'. -/
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
 theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
   mul_eq_zero.Not.trans not_or
 #align mul_ne_zero_iff mul_ne_zero_iff
 
-/- warning: mul_eq_zero_comm -> mul_eq_zero_comm is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) b a) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) b a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mul_eq_zero_comm mul_eq_zero_commₓ'. -/
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
   mul_eq_zero.trans <| (or_comm' _ _).trans mul_eq_zero.symm
 #align mul_eq_zero_comm mul_eq_zero_comm
 
-/- warning: mul_ne_zero_comm -> mul_ne_zero_comm is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) b a) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) b a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mul_ne_zero_comm mul_ne_zero_commₓ'. -/
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is
 `b * a`. -/
 theorem mul_ne_zero_comm : a * b ≠ 0 ↔ b * a ≠ 0 :=
   mul_eq_zero_comm.Not
 #align mul_ne_zero_comm mul_ne_zero_comm
 
-/- warning: mul_self_eq_zero -> mul_self_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a a) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mul_self_eq_zero mul_self_eq_zeroₓ'. -/
 theorem mul_self_eq_zero : a * a = 0 ↔ a = 0 := by simp
 #align mul_self_eq_zero mul_self_eq_zero
 
-/- warning: zero_eq_mul_self -> zero_eq_mul_self is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Eq.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a a)) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Eq.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a a)) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align zero_eq_mul_self zero_eq_mul_selfₓ'. -/
 theorem zero_eq_mul_self : 0 = a * a ↔ a = 0 := by simp
 #align zero_eq_mul_self zero_eq_mul_self
 
-/- warning: mul_self_ne_zero -> mul_self_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a a) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mul_self_ne_zero mul_self_ne_zeroₓ'. -/
 theorem mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 :=
   mul_self_eq_zero.Not
 #align mul_self_ne_zero mul_self_ne_zero
 
-/- warning: zero_ne_mul_self -> zero_ne_mul_self is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1) (MulZeroClass.toHasZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a a)) (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a a)) (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align zero_ne_mul_self zero_ne_mul_selfₓ'. -/
 theorem zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 :=
   zero_eq_mul_self.Not
 #align zero_ne_mul_self zero_ne_mul_self

@@ -39,12 +39,6 @@ open Set Filter Function Lattice AddGroupWithZeroNhd
 
 open Topology Filter Pointwise
 
-/- warning: ring_subgroups_basis -> RingSubgroupsBasis is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A], (ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))) -> Prop
-but is expected to have type
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A], (ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (Ring.toAddGroupWithOne.{u1} A _inst_1)))) -> Prop
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis RingSubgroupsBasisₓ'. -/
 /-- A family of additive subgroups on a ring `A` is a subgroups basis if it satisfies some
 axioms ensuring there is a topology on `A` which is compatible with the ring structure and
 admits this family as a basis of neighborhoods of zero. -/
@@ -59,9 +53,6 @@ namespace RingSubgroupsBasis
 
 variable {A ι : Type _} [Ring A]
 
-/- warning: ring_subgroups_basis.of_comm -> RingSubgroupsBasis.of_comm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.of_comm RingSubgroupsBasis.of_commₓ'. -/
 theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
     (inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j) (mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i)
     (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i) :
@@ -76,12 +67,6 @@ theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
       simpa [mul_comm] using hj }
 #align ring_subgroups_basis.of_comm RingSubgroupsBasis.of_comm
 
-/- warning: ring_subgroups_basis.to_ring_filter_basis -> RingSubgroupsBasis.toRingFilterBasis is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))}, (RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) -> (RingFilterBasis.{u1} A _inst_1)
-but is expected to have type
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (Ring.toAddGroupWithOne.{u1} A _inst_1)))}, (RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) -> (RingFilterBasis.{u1} A _inst_1)
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.to_ring_filter_basis RingSubgroupsBasis.toRingFilterBasisₓ'. -/
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) :
     RingFilterBasis A where
@@ -122,45 +107,21 @@ def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgrou
 
 variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 
-/- warning: ring_subgroups_basis.mem_add_group_filter_basis_iff -> RingSubgroupsBasis.mem_addGroupFilterBasis_iff is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) {V : Set.{u1} A}, Iff (Membership.Mem.{u1, u1} (Set.{u1} A) (AddGroupFilterBasis.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (AddGroupFilterBasis.hasMem.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) V (RingFilterBasis.toAddGroupFilterBasis.{u1} A _inst_1 (RingSubgroupsBasis.toRingFilterBasis.{u1, u2} A ι _inst_1 _inst_2 B hB))) (Exists.{succ u2} ι (fun (i : ι) => Eq.{succ u1} (Set.{u1} A) V ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (HasLiftT.mk.{succ u1, succ u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (CoeTCₓ.coe.{succ u1, succ u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (SetLike.Set.hasCoeT.{u1, u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) A (AddSubgroup.setLike.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))))) (B i))))
-but is expected to have type
-  forall {A : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Ring.{u2} A] [_inst_2 : Nonempty.{succ u1} ι] {B : ι -> (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1)))} (hB : RingSubgroupsBasis.{u2, u1} A ι _inst_1 B) {V : Set.{u2} A}, Iff (Membership.mem.{u2, u2} (Set.{u2} A) (AddGroupFilterBasis.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (AddGroupFilterBasis.instMembershipSetAddGroupFilterBasis.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) V (RingFilterBasis.toAddGroupFilterBasis.{u2} A _inst_1 (RingSubgroupsBasis.toRingFilterBasis.{u2, u1} A ι _inst_1 _inst_2 B hB))) (Exists.{succ u1} ι (fun (i : ι) => Eq.{succ u2} (Set.{u2} A) V (SetLike.coe.{u2, u2} (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) A (AddSubgroup.instSetLikeAddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (B i))))
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_addGroupFilterBasis_iffₓ'. -/
 theorem mem_addGroupFilterBasis_iff {V : Set A} :
     V ∈ hB.toRingFilterBasis.toAddGroupFilterBasis ↔ ∃ i, V = B i :=
   Iff.rfl
 #align ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_addGroupFilterBasis_iff
 
-/- warning: ring_subgroups_basis.mem_add_group_filter_basis -> RingSubgroupsBasis.mem_addGroupFilterBasis is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) (i : ι), Membership.Mem.{u1, u1} (Set.{u1} A) (AddGroupFilterBasis.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (AddGroupFilterBasis.hasMem.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (HasLiftT.mk.{succ u1, succ u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (CoeTCₓ.coe.{succ u1, succ u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (SetLike.Set.hasCoeT.{u1, u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) A (AddSubgroup.setLike.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))))) (B i)) (RingFilterBasis.toAddGroupFilterBasis.{u1} A _inst_1 (RingSubgroupsBasis.toRingFilterBasis.{u1, u2} A ι _inst_1 _inst_2 B hB))
-but is expected to have type
-  forall {A : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Ring.{u2} A] [_inst_2 : Nonempty.{succ u1} ι] {B : ι -> (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1)))} (hB : RingSubgroupsBasis.{u2, u1} A ι _inst_1 B) (i : ι), Membership.mem.{u2, u2} (Set.{u2} A) (AddGroupFilterBasis.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (AddGroupFilterBasis.instMembershipSetAddGroupFilterBasis.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (SetLike.coe.{u2, u2} (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) A (AddSubgroup.instSetLikeAddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (B i)) (RingFilterBasis.toAddGroupFilterBasis.{u2} A _inst_1 (RingSubgroupsBasis.toRingFilterBasis.{u2, u1} A ι _inst_1 _inst_2 B hB))
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.mem_add_group_filter_basis RingSubgroupsBasis.mem_addGroupFilterBasisₓ'. -/
 theorem mem_addGroupFilterBasis (i) : (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=
   ⟨i, rfl⟩
 #align ring_subgroups_basis.mem_add_group_filter_basis RingSubgroupsBasis.mem_addGroupFilterBasis
 
-/- warning: ring_subgroups_basis.topology -> RingSubgroupsBasis.topology is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))}, (RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) -> (TopologicalSpace.{u1} A)
-but is expected to have type
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (Ring.toAddGroupWithOne.{u1} A _inst_1)))}, (RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) -> (TopologicalSpace.{u1} A)
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.topology RingSubgroupsBasis.topologyₓ'. -/
 /-- The topology defined from a subgroups basis, admitting the given subgroups as a basis
 of neighborhoods of zero. -/
 def topology : TopologicalSpace A :=
   hB.toRingFilterBasis.toAddGroupFilterBasis.topology
 #align ring_subgroups_basis.topology RingSubgroupsBasis.topology
 
-/- warning: ring_subgroups_basis.has_basis_nhds_zero -> RingSubgroupsBasis.hasBasis_nhds_zero is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B), Filter.HasBasis.{u1, succ u2} A ι (nhds.{u1} A (RingSubgroupsBasis.topology.{u1, u2} A ι _inst_1 _inst_2 B hB) (OfNat.ofNat.{u1} A 0 (OfNat.mk.{u1} A 0 (Zero.zero.{u1} A (MulZeroClass.toHasZero.{u1} A (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} A (NonAssocRing.toNonUnitalNonAssocRing.{u1} A (Ring.toNonAssocRing.{u1} A _inst_1))))))))) (fun (_x : ι) => True) (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (HasLiftT.mk.{succ u1, succ u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (CoeTCₓ.coe.{succ u1, succ u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (Set.{u1} A) (SetLike.Set.hasCoeT.{u1, u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) A (AddSubgroup.setLike.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))))) (B i))
-but is expected to have type
-  forall {A : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Ring.{u2} A] [_inst_2 : Nonempty.{succ u1} ι] {B : ι -> (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1)))} (hB : RingSubgroupsBasis.{u2, u1} A ι _inst_1 B), Filter.HasBasis.{u2, succ u1} A ι (nhds.{u2} A (RingSubgroupsBasis.topology.{u2, u1} A ι _inst_1 _inst_2 B hB) (OfNat.ofNat.{u2} A 0 (Zero.toOfNat0.{u2} A (MonoidWithZero.toZero.{u2} A (Semiring.toMonoidWithZero.{u2} A (Ring.toSemiring.{u2} A _inst_1)))))) (fun (_x : ι) => True) (fun (i : ι) => SetLike.coe.{u2, u2} (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) A (AddSubgroup.instSetLikeAddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (B i))
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.has_basis_nhds_zero RingSubgroupsBasis.hasBasis_nhds_zeroₓ'. -/
 theorem hasBasis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) fun i => B i :=
   ⟨by
     intro s
@@ -172,12 +133,6 @@ theorem hasBasis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) fu
       exact ⟨B i, ⟨i, rfl⟩, hi⟩⟩
 #align ring_subgroups_basis.has_basis_nhds_zero RingSubgroupsBasis.hasBasis_nhds_zero
 
-/- warning: ring_subgroups_basis.has_basis_nhds -> RingSubgroupsBasis.hasBasis_nhds is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B) (a : A), Filter.HasBasis.{u1, succ u2} A ι (nhds.{u1} A (RingSubgroupsBasis.topology.{u1, u2} A ι _inst_1 _inst_2 B hB) a) (fun (_x : ι) => True) (fun (i : ι) => setOf.{u1} A (fun (b : A) => Membership.Mem.{u1, u1} A (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) (SetLike.hasMem.{u1, u1} (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))) A (AddSubgroup.setLike.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))) (HSub.hSub.{u1, u1, u1} A A A (instHSub.{u1} A (SubNegMonoid.toHasSub.{u1} A (AddGroup.toSubNegMonoid.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1)))))) b a) (B i)))
-but is expected to have type
-  forall {A : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Ring.{u2} A] [_inst_2 : Nonempty.{succ u1} ι] {B : ι -> (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1)))} (hB : RingSubgroupsBasis.{u2, u1} A ι _inst_1 B) (a : A), Filter.HasBasis.{u2, succ u1} A ι (nhds.{u2} A (RingSubgroupsBasis.topology.{u2, u1} A ι _inst_1 _inst_2 B hB) a) (fun (_x : ι) => True) (fun (i : ι) => setOf.{u2} A (fun (b : A) => Membership.mem.{u2, u2} A (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1))) A (AddSubgroup.instSetLikeAddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1)))) (HSub.hSub.{u2, u2, u2} A A A (instHSub.{u2} A (Ring.toSub.{u2} A _inst_1)) b a) (B i)))
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.has_basis_nhds RingSubgroupsBasis.hasBasis_nhdsₓ'. -/
 theorem hasBasis_nhds (a : A) :
     HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
   ⟨by
@@ -203,12 +158,6 @@ theorem hasBasis_nhds (a : A) :
       simpa using b_in⟩
 #align ring_subgroups_basis.has_basis_nhds RingSubgroupsBasis.hasBasis_nhds
 
-/- warning: ring_subgroups_basis.open_add_subgroup -> RingSubgroupsBasis.openAddSubgroup is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B), ι -> (OpenAddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))) (RingSubgroupsBasis.topology.{u1, u2} A ι _inst_1 _inst_2 B hB))
-but is expected to have type
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (Ring.toAddGroupWithOne.{u1} A _inst_1)))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B), ι -> (OpenAddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (Ring.toAddGroupWithOne.{u1} A _inst_1)) (RingSubgroupsBasis.topology.{u1, u2} A ι _inst_1 _inst_2 B hB))
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.open_add_subgroup RingSubgroupsBasis.openAddSubgroupₓ'. -/
 /-- Given a subgroups basis, the basis elements as open additive subgroups in the associated
 topology. -/
 def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
@@ -223,12 +172,6 @@ def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
       simpa using (B i).add_mem a_in b_in }
 #align ring_subgroups_basis.open_add_subgroup RingSubgroupsBasis.openAddSubgroup
 
-/- warning: ring_subgroups_basis.nonarchimedean -> RingSubgroupsBasis.nonarchimedean is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Ring.{u1} A] [_inst_2 : Nonempty.{succ u2} ι] {B : ι -> (AddSubgroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A _inst_1))))} (hB : RingSubgroupsBasis.{u1, u2} A ι _inst_1 B), NonarchimedeanRing.{u1} A _inst_1 (RingSubgroupsBasis.topology.{u1, u2} A ι _inst_1 _inst_2 B hB)
-but is expected to have type
-  forall {A : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Ring.{u2} A] [_inst_2 : Nonempty.{succ u1} ι] {B : ι -> (AddSubgroup.{u2} A (AddGroupWithOne.toAddGroup.{u2} A (Ring.toAddGroupWithOne.{u2} A _inst_1)))} (hB : RingSubgroupsBasis.{u2, u1} A ι _inst_1 B), NonarchimedeanRing.{u2} A _inst_1 (RingSubgroupsBasis.topology.{u2, u1} A ι _inst_1 _inst_2 B hB)
-Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.nonarchimedean RingSubgroupsBasis.nonarchimedeanₓ'. -/
 -- see Note [nonarchimedean non instances]
 theorem nonarchimedean : @NonarchimedeanRing A _ hB.topology :=
   by
@@ -258,12 +201,6 @@ namespace SubmodulesRingBasis
 
 variable {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
 
-/- warning: submodules_ring_basis.to_ring_subgroups_basis -> SubmodulesRingBasis.toRing_subgroups_basis is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {R : Type.{u2}} {A : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : CommRing.{u3} A] [_inst_3 : Algebra.{u2, u3} R A (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u3} A (CommRing.toRing.{u3} A _inst_2))] {B : ι -> (Submodule.{u2, u3} R A (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} A (NonUnitalNonAssocRing.toAddCommGroup.{u3} A (NonAssocRing.toNonUnitalNonAssocRing.{u3} A (Ring.toNonAssocRing.{u3} A (CommRing.toRing.{u3} A _inst_2))))) (Algebra.toModule.{u2, u3} R A (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u3} A (CommRing.toRing.{u3} A _inst_2)) _inst_3))}, (SubmodulesRingBasis.{u1, u2, u3} ι R A _inst_1 _inst_2 _inst_3 B) -> (RingSubgroupsBasis.{u3, u1} A ι (CommRing.toRing.{u3} A _inst_2) (fun (i : ι) => Submodule.toAddSubgroup.{u2, u3} R A (CommRing.toRing.{u2} R _inst_1) (NonUnitalNonAssocRing.toAddCommGroup.{u3} A (NonAssocRing.toNonUnitalNonAssocRing.{u3} A (Ring.toNonAssocRing.{u3} A (CommRing.toRing.{u3} A _inst_2)))) (Algebra.toModule.{u2, u3} R A (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u3} A (CommRing.toRing.{u3} A _inst_2)) _inst_3) (B i)))
-but is expected to have type
-  forall {ι : Type.{u3}} {R : Type.{u2}} {A : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : CommRing.{u1} A] [_inst_3 : Algebra.{u2, u1} R A (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2))] {B : ι -> (Submodule.{u2, u1} R A (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} A (NonAssocRing.toNonUnitalNonAssocRing.{u1} A (Ring.toNonAssocRing.{u1} A (CommRing.toRing.{u1} A _inst_2))))) (Algebra.toModule.{u2, u1} R A (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2)) _inst_3))}, (SubmodulesRingBasis.{u3, u2, u1} ι R A _inst_1 _inst_2 _inst_3 B) -> (RingSubgroupsBasis.{u1, u3} A ι (CommRing.toRing.{u1} A _inst_2) (fun (i : ι) => Submodule.toAddSubgroup.{u2, u1} R A (CommRing.toRing.{u2} R _inst_1) (Ring.toAddCommGroup.{u1} A (CommRing.toRing.{u1} A _inst_2)) (Algebra.toModule.{u2, u1} R A (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2)) _inst_3) (B i)))
-Case conversion may be inaccurate. Consider using '#align submodules_ring_basis.to_ring_subgroups_basis SubmodulesRingBasis.toRing_subgroups_basisₓ'. -/
 theorem toRing_subgroups_basis (hB : SubmodulesRingBasis B) :
     RingSubgroupsBasis fun i => (B i).toAddSubgroup :=
   by
@@ -366,12 +303,6 @@ def openAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
 #align submodules_basis.open_add_subgroup SubmodulesBasis.openAddSubgroup
 -/
 
-/- warning: submodules_basis.nonarchimedean -> SubmodulesBasis.nonarchimedean is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {M : Type.{u3}} [_inst_4 : AddCommGroup.{u3} M] [_inst_5 : Module.{u2, u3} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_4)] [_inst_6 : TopologicalSpace.{u2} R] [_inst_7 : Nonempty.{succ u1} ι] {B : ι -> (Submodule.{u2, u3} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_4) _inst_5)} (hB : SubmodulesBasis.{u1, u2, u3} ι R _inst_1 M _inst_4 _inst_5 _inst_6 B), NonarchimedeanAddGroup.{u3} M (AddCommGroup.toAddGroup.{u3} M _inst_4) (SubmodulesBasis.topology.{u1, u2, u3} ι R _inst_1 M _inst_4 _inst_5 _inst_6 _inst_7 B hB)
-but is expected to have type
-  forall {ι : Type.{u3}} {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {M : Type.{u1}} [_inst_4 : AddCommGroup.{u1} M] [_inst_5 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_4)] [_inst_6 : TopologicalSpace.{u2} R] [_inst_7 : Nonempty.{succ u3} ι] {B : ι -> (Submodule.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5)} (hB : SubmodulesBasis.{u3, u2, u1} ι R _inst_1 M _inst_4 _inst_5 _inst_6 B), NonarchimedeanAddGroup.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_4) (SubmodulesBasis.topology.{u3, u2, u1} ι R _inst_1 M _inst_4 _inst_5 _inst_6 _inst_7 B hB)
-Case conversion may be inaccurate. Consider using '#align submodules_basis.nonarchimedean SubmodulesBasis.nonarchimedeanₓ'. -/
 -- see Note [nonarchimedean non instances]
 theorem nonarchimedean (hB : SubmodulesBasis B) : @NonarchimedeanAddGroup M _ hB.topology :=
   by
@@ -403,9 +334,6 @@ view definitionaly gives the same topology on `A`.
 variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
   (hsmul : ∀ (m : A) (i : ι), ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 
-/- warning: submodules_ring_basis.to_submodules_basis -> SubmodulesRingBasis.toSubmodulesBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.toSubmodulesBasisₓ'. -/
 theorem SubmodulesRingBasis.toSubmodulesBasis : SubmodulesBasis B :=
   { inter := hB.inter
     smul := hsmul }
@@ -427,12 +355,6 @@ structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → S
 #align ring_filter_basis.submodules_basis RingFilterBasis.SubmodulesBasis
 -/
 
-/- warning: ring_filter_basis.submodules_basis_is_basis -> RingFilterBasis.submodulesBasisIsBasis is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {M : Type.{u3}} [_inst_4 : AddCommGroup.{u3} M] [_inst_5 : Module.{u2, u3} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_4)] (BR : RingFilterBasis.{u2} R (CommRing.toRing.{u2} R _inst_1)) {B : ι -> (Submodule.{u2, u3} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_4) _inst_5)}, (RingFilterBasis.SubmodulesBasis.{u1, u2, u3} ι R _inst_1 M _inst_4 _inst_5 BR B) -> (SubmodulesBasis.{u1, u2, u3} ι R _inst_1 M _inst_4 _inst_5 (RingFilterBasis.topology.{u2} R (CommRing.toRing.{u2} R _inst_1) BR) B)
-but is expected to have type
-  forall {ι : Type.{u1}} {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] {M : Type.{u2}} [_inst_4 : AddCommGroup.{u2} M] [_inst_5 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_4)] (BR : RingFilterBasis.{u3} R (CommRing.toRing.{u3} R _inst_1)) {B : ι -> (Submodule.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5)}, (RingFilterBasis.SubmodulesBasis.{u1, u3, u2} ι R _inst_1 M _inst_4 _inst_5 BR B) -> (SubmodulesBasis.{u1, u3, u2} ι R _inst_1 M _inst_4 _inst_5 (RingFilterBasis.topology.{u3} R (CommRing.toRing.{u3} R _inst_1) BR) B)
-Case conversion may be inaccurate. Consider using '#align ring_filter_basis.submodules_basis_is_basis RingFilterBasis.submodulesBasisIsBasisₓ'. -/
 theorem RingFilterBasis.submodulesBasisIsBasis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
   { inter := hB.inter

@@ -19,12 +19,6 @@ import Mathbin.RingTheory.Ideal.QuotientOperations
 -/
 
 
-/- warning: ideal.is_radical_iff_quotient_reduced -> Ideal.isRadical_iff_quotient_reduced is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), Iff (Ideal.IsRadical.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) I) (IsReduced.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Submodule.Quotient.HasQuotient.Quotient.hasZero.{u1, u1} R R (CommRing.toRing.{u1} R _inst_1) (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I) (Monoid.Pow.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toMonoid.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), Iff (Ideal.IsRadical.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) I) (IsReduced.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Submodule.Quotient.instZeroQuotientSubmoduleToSemiringToAddCommMonoidHasQuotient.{u1, u1} R R (CommRing.toRing.{u1} R _inst_1) (Ring.toAddCommGroup.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I) (Monoid.Pow.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (MonoidWithZero.toMonoid.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Semiring.toMonoidWithZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommSemiring.toSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toCommSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))
-Case conversion may be inaccurate. Consider using '#align ideal.is_radical_iff_quotient_reduced Ideal.isRadical_iff_quotient_reducedₓ'. -/
 theorem Ideal.isRadical_iff_quotient_reduced {R : Type _} [CommRing R] (I : Ideal R) :
     I.IsRadical ↔ IsReduced (R ⧸ I) :=
   by
@@ -34,9 +28,6 @@ theorem Ideal.isRadical_iff_quotient_reduced {R : Type _} [CommRing R] (I : Idea
 
 variable {R S : Type _} [CommSemiring R] [CommRing S] [Algebra R S] (I : Ideal S)
 
-/- warning: ideal.is_nilpotent.induction_on -> Ideal.IsNilpotent.induction_on is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ideal.is_nilpotent.induction_on Ideal.IsNilpotent.induction_onₓ'. -/
 /-- Let `P` be a property on ideals. If `P` holds for square-zero ideals, and if
   `P I → P (J ⧸ I) → P J`, then `P` holds for all nilpotent ideals. -/
 theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
@@ -68,9 +59,6 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
   · apply h₁; rw [← Ideal.map_pow, Ideal.map_quotient_self]
 #align ideal.is_nilpotent.induction_on Ideal.IsNilpotent.induction_on
 
-/- warning: is_nilpotent.is_unit_quotient_mk_iff -> IsNilpotent.isUnit_quotient_mk_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_nilpotent.is_unit_quotient_mk_iff IsNilpotent.isUnit_quotient_mk_iffₓ'. -/
 theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal R}
     (hI : IsNilpotent I) {x : R} : IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x :=
   by

@@ -200,12 +200,6 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
 #align set.countable.preimage Set.Countable.preimage
 -/
 
-/- warning: set.exists_seq_supr_eq_top_iff_countable -> Set.exists_seq_iSup_eq_top_iff_countable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {p : α -> Prop}, (Exists.{succ u1} α (fun (x : α) => p x)) -> (Iff (Exists.{succ u1} (Nat -> α) (fun (s : Nat -> α) => And (forall (n : Nat), p (s n)) (Eq.{succ u1} α (iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (n : Nat) => s n)) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))))) (Exists.{succ u1} (Set.{u1} α) (fun (S : Set.{u1} α) => And (Set.Countable.{u1} α S) (And (forall (s : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) s S) -> (p s)) (Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) S) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {p : α -> Prop}, (Exists.{succ u1} α (fun (x : α) => p x)) -> (Iff (Exists.{succ u1} (Nat -> α) (fun (s : Nat -> α) => And (forall (n : Nat), p (s n)) (Eq.{succ u1} α (iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (n : Nat) => s n)) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))))) (Exists.{succ u1} (Set.{u1} α) (fun (S : Set.{u1} α) => And (Set.Countable.{u1} α S) (And (forall (s : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) s S) -> (p s)) (Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) S) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_iSup_eq_top_iff_countableₓ'. -/
 theorem exists_seq_iSup_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
       ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sSup S = ⊤ :=
@@ -272,23 +266,11 @@ alias countable.bUnion_iff ↔ _ countable.bUnion
 alias countable.sUnion_iff ↔ _ countable.sUnion
 #align set.countable.sUnion Set.Countable.sUnion
 
-/- warning: set.countable_union -> Set.countable_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Set.Countable.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (And (Set.Countable.{u1} α s) (Set.Countable.{u1} α t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Set.Countable.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (And (Set.Countable.{u1} α s) (Set.Countable.{u1} α t))
-Case conversion may be inaccurate. Consider using '#align set.countable_union Set.countable_unionₓ'. -/
 @[simp]
 theorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by
   simp [union_eq_Union, and_comm]
 #align set.countable_union Set.countable_union
 
-/- warning: set.countable.union -> Set.Countable.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Countable.{u1} α s) -> (Set.Countable.{u1} α t) -> (Set.Countable.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Countable.{u1} α s) -> (Set.Countable.{u1} α t) -> (Set.Countable.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align set.countable.union Set.Countable.unionₓ'. -/
 theorem Countable.union {s t : Set α} (hs : s.Countable) (ht : t.Countable) : (s ∪ t).Countable :=
   countable_union.2 ⟨hs, ht⟩
 #align set.countable.union Set.Countable.union
@@ -325,22 +307,10 @@ theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : s.Countable 
 #align set.subsingleton.countable Set.Subsingleton.countable
 -/
 
-/- warning: set.countable_is_top -> Set.countable_isTop is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
-Case conversion may be inaccurate. Consider using '#align set.countable_is_top Set.countable_isTopₓ'. -/
 theorem countable_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
   (finite_isTop α).Countable
 #align set.countable_is_top Set.countable_isTop
 
-/- warning: set.countable_is_bot -> Set.countable_isBot is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
-Case conversion may be inaccurate. Consider using '#align set.countable_is_bot Set.countable_isBotₓ'. -/
 theorem countable_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
   (finite_isBot α).Countable
 #align set.countable_is_bot Set.countable_isBot
@@ -359,24 +329,12 @@ theorem countable_setOf_finite_subset {s : Set α} :
 #align set.countable_set_of_finite_subset Set.countable_setOf_finite_subset
 -/
 
-/- warning: set.countable_univ_pi -> Set.countable_univ_pi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {π : α -> Type.{u2}} [_inst_1 : Finite.{succ u1} α] {s : forall (a : α), Set.{u2} (π a)}, (forall (a : α), Set.Countable.{u2} (π a) (s a)) -> (Set.Countable.{max u1 u2} (forall (i : α), π i) (Set.pi.{u1, u2} α (fun (a : α) => π a) (Set.univ.{u1} α) s))
-but is expected to have type
-  forall {α : Type.{u2}} {π : α -> Type.{u1}} [_inst_1 : Finite.{succ u2} α] {s : forall (a : α), Set.{u1} (π a)}, (forall (a : α), Set.Countable.{u1} (π a) (s a)) -> (Set.Countable.{max u2 u1} (forall (i : α), π i) (Set.pi.{u2, u1} α (fun (a : α) => π a) (Set.univ.{u2} α) s))
-Case conversion may be inaccurate. Consider using '#align set.countable_univ_pi Set.countable_univ_piₓ'. -/
 theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)}
     (hs : ∀ a, (s a).Countable) : (pi univ s).Countable :=
   haveI := fun a => (hs a).to_subtype
   (Countable.of_equiv _ (Equiv.Set.univPi s).symm).to_set
 #align set.countable_univ_pi Set.countable_univ_pi
 
-/- warning: set.countable_pi -> Set.countable_pi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {π : α -> Type.{u2}} [_inst_1 : Finite.{succ u1} α] {s : forall (a : α), Set.{u2} (π a)}, (forall (a : α), Set.Countable.{u2} (π a) (s a)) -> (Set.Countable.{max u1 u2} (forall (a : α), π a) (setOf.{max u1 u2} (forall (a : α), π a) (fun (f : forall (a : α), π a) => forall (a : α), Membership.Mem.{u2, u2} (π a) (Set.{u2} (π a)) (Set.hasMem.{u2} (π a)) (f a) (s a))))
-but is expected to have type
-  forall {α : Type.{u2}} {π : α -> Type.{u1}} [_inst_1 : Finite.{succ u2} α] {s : forall (a : α), Set.{u1} (π a)}, (forall (a : α), Set.Countable.{u1} (π a) (s a)) -> (Set.Countable.{max u2 u1} (forall (a : α), π a) (setOf.{max u2 u1} (forall (a : α), π a) (fun (f : forall (a : α), π a) => forall (a : α), Membership.mem.{u1, u1} (π a) (Set.{u1} (π a)) (Set.instMembershipSet.{u1} (π a)) (f a) (s a))))
-Case conversion may be inaccurate. Consider using '#align set.countable_pi Set.countable_piₓ'. -/
 theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
     { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by
   simpa only [← mem_univ_pi] using countable_univ_pi hs

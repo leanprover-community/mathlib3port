@@ -121,22 +121,10 @@ theorem isGδ_sInter {S : Set (Set α)} (h : ∀ s ∈ S, IsGδ s) (hS : S.Count
 #align is_Gδ_sInter isGδ_sInter
 -/
 
-/- warning: is_Gδ.inter -> IsGδ.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (IsGδ.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (IsGδ.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_Gδ.inter IsGδ.interₓ'. -/
 theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) := by
   rw [inter_eq_Inter]; exact isGδ_iInter (Bool.forall_bool.2 ⟨ht, hs⟩)
 #align is_Gδ.inter IsGδ.inter
 
-/- warning: is_Gδ.union -> IsGδ.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (IsGδ.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (IsGδ.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_Gδ.union IsGδ.unionₓ'. -/
 /-- The union of two Gδ sets is a Gδ set. -/
 theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ t) :=
   by
@@ -173,54 +161,24 @@ section T1Space
 
 variable [T1Space α]
 
-/- warning: is_Gδ_compl_singleton -> isGδ_compl_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] (a : α), IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] (a : α), IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
-Case conversion may be inaccurate. Consider using '#align is_Gδ_compl_singleton isGδ_compl_singletonₓ'. -/
 theorem isGδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
   isOpen_compl_singleton.IsGδ
 #align is_Gδ_compl_singleton isGδ_compl_singleton
 
-/- warning: set.countable.is_Gδ_compl -> Set.Countable.isGδ_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Countable.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Countable.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align set.countable.is_Gδ_compl Set.Countable.isGδ_complₓ'. -/
 theorem Set.Countable.isGδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) :=
   by
   rw [← bUnion_of_singleton s, compl_Union₂]
   exact isGδ_biInter hs fun x _ => isGδ_compl_singleton x
 #align set.countable.is_Gδ_compl Set.Countable.isGδ_compl
 
-/- warning: set.finite.is_Gδ_compl -> Set.Finite.isGδ_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align set.finite.is_Gδ_compl Set.Finite.isGδ_complₓ'. -/
 theorem Set.Finite.isGδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
   hs.Countable.isGδ_compl
 #align set.finite.is_Gδ_compl Set.Finite.isGδ_compl
 
-/- warning: set.subsingleton.is_Gδ_compl -> Set.Subsingleton.isGδ_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_complₓ'. -/
 theorem Set.Subsingleton.isGδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
   hs.Finite.isGδ_compl
 #align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_compl
 
-/- warning: finset.is_Gδ_compl -> Finset.isGδ_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] (s : Finset.{u1} α), IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] (s : Finset.{u1} α), IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.is_Gδ_compl Finset.isGδ_complₓ'. -/
 theorem Finset.isGδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
   s.finite_toSet.isGδ_compl
 #align finset.is_Gδ_compl Finset.isGδ_compl

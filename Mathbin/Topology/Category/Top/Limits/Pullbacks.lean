@@ -38,17 +38,11 @@ section Pullback
 
 variable {X Y Z : TopCat.{u}}
 
-/- warning: Top.pullback_fst -> TopCat.pullbackFst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_fst TopCat.pullbackFstₓ'. -/
 /-- The first projection from the pullback. -/
 abbrev pullbackFst (f : X ⟶ Z) (g : Y ⟶ Z) : TopCat.of { p : X × Y // f p.1 = g p.2 } ⟶ X :=
   ⟨Prod.fst ∘ Subtype.val⟩
 #align Top.pullback_fst TopCat.pullbackFst
 
-/- warning: Top.pullback_snd -> TopCat.pullbackSnd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_snd TopCat.pullbackSndₓ'. -/
 /-- The second projection from the pullback. -/
 abbrev pullbackSnd (f : X ⟶ Z) (g : Y ⟶ Z) : TopCat.of { p : X × Y // f p.1 = g p.2 } ⟶ Y :=
   ⟨Prod.snd ∘ Subtype.val⟩
@@ -82,27 +76,18 @@ def pullbackConeIsLimit (f : X ⟶ Z) (g : Y ⟶ Z) : IsLimit (pullbackCone f g)
 #align Top.pullback_cone_is_limit TopCat.pullbackConeIsLimit
 -/
 
-/- warning: Top.pullback_iso_prod_subtype -> TopCat.pullbackIsoProdSubtype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_iso_prod_subtype TopCat.pullbackIsoProdSubtypeₓ'. -/
 /-- The pullback of two maps can be identified as a subspace of `X × Y`. -/
 def pullbackIsoProdSubtype (f : X ⟶ Z) (g : Y ⟶ Z) :
     pullback f g ≅ TopCat.of { p : X × Y // f p.1 = g p.2 } :=
   (limit.isLimit _).conePointUniqueUpToIso (pullbackConeIsLimit f g)
 #align Top.pullback_iso_prod_subtype TopCat.pullbackIsoProdSubtype
 
-/- warning: Top.pullback_iso_prod_subtype_inv_fst -> TopCat.pullbackIsoProdSubtype_inv_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_iso_prod_subtype_inv_fst TopCat.pullbackIsoProdSubtype_inv_fstₓ'. -/
 @[simp, reassoc]
 theorem pullbackIsoProdSubtype_inv_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).inv ≫ pullback.fst = pullbackFst f g := by
   simpa [pullback_iso_prod_subtype]
 #align Top.pullback_iso_prod_subtype_inv_fst TopCat.pullbackIsoProdSubtype_inv_fst
 
-/- warning: Top.pullback_iso_prod_subtype_inv_fst_apply -> TopCat.pullbackIsoProdSubtype_inv_fst_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_iso_prod_subtype_inv_fst_apply TopCat.pullbackIsoProdSubtype_inv_fst_applyₓ'. -/
 @[simp]
 theorem pullbackIsoProdSubtype_inv_fst_apply (f : X ⟶ Z) (g : Y ⟶ Z)
     (x : { p : X × Y // f p.1 = g p.2 }) :
@@ -110,18 +95,12 @@ theorem pullbackIsoProdSubtype_inv_fst_apply (f : X ⟶ Z) (g : Y ⟶ Z)
   ConcreteCategory.congr_hom (pullbackIsoProdSubtype_inv_fst f g) x
 #align Top.pullback_iso_prod_subtype_inv_fst_apply TopCat.pullbackIsoProdSubtype_inv_fst_apply
 
-/- warning: Top.pullback_iso_prod_subtype_inv_snd -> TopCat.pullbackIsoProdSubtype_inv_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_iso_prod_subtype_inv_snd TopCat.pullbackIsoProdSubtype_inv_sndₓ'. -/
 @[simp, reassoc]
 theorem pullbackIsoProdSubtype_inv_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).inv ≫ pullback.snd = pullbackSnd f g := by
   simpa [pullback_iso_prod_subtype]
 #align Top.pullback_iso_prod_subtype_inv_snd TopCat.pullbackIsoProdSubtype_inv_snd
 
-/- warning: Top.pullback_iso_prod_subtype_inv_snd_apply -> TopCat.pullbackIsoProdSubtype_inv_snd_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_iso_prod_subtype_inv_snd_apply TopCat.pullbackIsoProdSubtype_inv_snd_applyₓ'. -/
 @[simp]
 theorem pullbackIsoProdSubtype_inv_snd_apply (f : X ⟶ Z) (g : Y ⟶ Z)
     (x : { p : X × Y // f p.1 = g p.2 }) :
@@ -143,9 +122,6 @@ theorem pullbackIsoProdSubtype_hom_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
 #align Top.pullback_iso_prod_subtype_hom_snd TopCat.pullbackIsoProdSubtype_hom_snd
 -/
 
-/- warning: Top.pullback_iso_prod_subtype_hom_apply -> TopCat.pullbackIsoProdSubtype_hom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_iso_prod_subtype_hom_apply TopCat.pullbackIsoProdSubtype_hom_applyₓ'. -/
 @[simp]
 theorem pullbackIsoProdSubtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pullback f g) :
     (pullbackIsoProdSubtype f g).Hom x =
@@ -157,9 +133,6 @@ theorem pullbackIsoProdSubtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pullba
     concrete_category.congr_hom (pullback_iso_prod_subtype_hom_snd f g) x]
 #align Top.pullback_iso_prod_subtype_hom_apply TopCat.pullbackIsoProdSubtype_hom_apply
 
-/- warning: Top.pullback_topology -> TopCat.pullback_topology is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_topology TopCat.pullback_topologyₓ'. -/
 theorem pullback_topology {X Y Z : TopCat.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullback f g).TopologicalSpace =
       induced (pullback.fst : pullback f g ⟶ _) X.TopologicalSpace ⊓
@@ -171,9 +144,6 @@ theorem pullback_topology {X Y Z : TopCat.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
   simpa [induced_compose]
 #align Top.pullback_topology TopCat.pullback_topology
 
-/- warning: Top.range_pullback_to_prod -> TopCat.range_pullback_to_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.range_pullback_to_prod TopCat.range_pullback_to_prodₓ'. -/
 theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     Set.range (prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) =
       { x | (Limits.prod.fst ≫ f) x = (Limits.prod.snd ≫ g) x } :=
@@ -190,25 +160,16 @@ theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     rintro ⟨⟨⟩⟩ <;> simp
 #align Top.range_pullback_to_prod TopCat.range_pullback_to_prod
 
-/- warning: Top.inducing_pullback_to_prod -> TopCat.inducing_pullback_to_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.inducing_pullback_to_prod TopCat.inducing_pullback_to_prodₓ'. -/
 theorem inducing_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     Inducing ⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) :=
   ⟨by simp [prod_topology, pullbackTopology, induced_compose, ← coe_comp]⟩
 #align Top.inducing_pullback_to_prod TopCat.inducing_pullback_to_prod
 
-/- warning: Top.embedding_pullback_to_prod -> TopCat.embedding_pullback_to_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.embedding_pullback_to_prod TopCat.embedding_pullback_to_prodₓ'. -/
 theorem embedding_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     Embedding ⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) :=
   ⟨inducing_pullback_to_prod f g, (TopCat.mono_iff_injective _).mp inferInstance⟩
 #align Top.embedding_pullback_to_prod TopCat.embedding_pullback_to_prod
 
-/- warning: Top.range_pullback_map -> TopCat.range_pullback_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.range_pullback_map TopCat.range_pullback_mapₓ'. -/
 /-- If the map `S ⟶ T` is mono, then there is a description of the image of `W ×ₛ X ⟶ Y ×ₜ Z`. -/
 theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶ S) (g₁ : Y ⟶ T)
     (g₂ : Z ⟶ T) (i₁ : W ⟶ Y) (i₂ : X ⟶ Z) (i₃ : S ⟶ T) [H₃ : Mono i₃] (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁)
@@ -238,9 +199,6 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
   · simp [hx₂]
 #align Top.range_pullback_map TopCat.range_pullback_map
 
-/- warning: Top.pullback_fst_range -> TopCat.pullback_fst_range is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_fst_range TopCat.pullback_fst_rangeₓ'. -/
 theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
     Set.range (pullback.fst : pullback f g ⟶ _) = { x : X | ∃ y : Y, f x = g y } :=
   by
@@ -254,9 +212,6 @@ theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
     simp
 #align Top.pullback_fst_range TopCat.pullback_fst_range
 
-/- warning: Top.pullback_snd_range -> TopCat.pullback_snd_range is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_snd_range TopCat.pullback_snd_rangeₓ'. -/
 theorem pullback_snd_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
     Set.range (pullback.snd : pullback f g ⟶ _) = { y : Y | ∃ x : X, f x = g y } :=
   by
@@ -270,9 +225,6 @@ theorem pullback_snd_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
     simp
 #align Top.pullback_snd_range TopCat.pullback_snd_range
 
-/- warning: Top.pullback_map_embedding_of_embeddings -> TopCat.pullback_map_embedding_of_embeddings is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_map_embedding_of_embeddings TopCat.pullback_map_embedding_of_embeddingsₓ'. -/
 /-- If there is a diagram where the morphisms `W ⟶ Y` and `X ⟶ Z` are embeddings,
 then the induced morphism `W ×ₛ X ⟶ Y ×ₜ Z` is also an embedding.
 
@@ -299,9 +251,6 @@ theorem pullback_map_embedding_of_embeddings {W X Y Z S T : TopCat} (f₁ : W �
   refine' Embedding.comp (embedding_prod_map H₁ H₂) (embedding_pullback_to_prod _ _)
 #align Top.pullback_map_embedding_of_embeddings TopCat.pullback_map_embedding_of_embeddings
 
-/- warning: Top.pullback_map_open_embedding_of_open_embeddings -> TopCat.pullback_map_openEmbedding_of_open_embeddings is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_openEmbedding_of_open_embeddingsₓ'. -/
 /-- If there is a diagram where the morphisms `W ⟶ Y` and `X ⟶ Z` are open embeddings, and `S ⟶ T`
 is mono, then the induced morphism `W ×ₛ X ⟶ Y ×ₜ Z` is also an open embedding.
   W  ⟶  Y
@@ -325,9 +274,6 @@ theorem pullback_map_openEmbedding_of_open_embeddings {W X Y Z S T : TopCat} (f�
     exacts[H₁.open_range, H₂.open_range]
 #align Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_openEmbedding_of_open_embeddings
 
-/- warning: Top.snd_embedding_of_left_embedding -> TopCat.snd_embedding_of_left_embedding is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.snd_embedding_of_left_embedding TopCat.snd_embedding_of_left_embeddingₓ'. -/
 theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :
     Embedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
   by
@@ -338,9 +284,6 @@ theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embe
   simp
 #align Top.snd_embedding_of_left_embedding TopCat.snd_embedding_of_left_embedding
 
-/- warning: Top.fst_embedding_of_right_embedding -> TopCat.fst_embedding_of_right_embedding is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.fst_embedding_of_right_embedding TopCat.fst_embedding_of_right_embeddingₓ'. -/
 theorem fst_embedding_of_right_embedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (H : Embedding g) : Embedding ⇑(pullback.fst : pullback f g ⟶ X) :=
   by
@@ -351,9 +294,6 @@ theorem fst_embedding_of_right_embedding {X Y S : TopCat} (f : X ⟶ S) {g : Y �
   simp
 #align Top.fst_embedding_of_right_embedding TopCat.fst_embedding_of_right_embedding
 
-/- warning: Top.embedding_of_pullback_embeddings -> TopCat.embedding_of_pullback_embeddings is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.embedding_of_pullback_embeddings TopCat.embedding_of_pullback_embeddingsₓ'. -/
 theorem embedding_of_pullback_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y ⟶ S} (H₁ : Embedding f)
     (H₂ : Embedding g) : Embedding (limit.π (cospan f g) WalkingCospan.one) :=
   by
@@ -363,9 +303,6 @@ theorem embedding_of_pullback_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y �
   exact (limit.w _ walking_cospan.hom.inr).symm
 #align Top.embedding_of_pullback_embeddings TopCat.embedding_of_pullback_embeddings
 
-/- warning: Top.snd_open_embedding_of_left_open_embedding -> TopCat.snd_openEmbedding_of_left_openEmbedding is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.snd_open_embedding_of_left_open_embedding TopCat.snd_openEmbedding_of_left_openEmbeddingₓ'. -/
 theorem snd_openEmbedding_of_left_openEmbedding {X Y S : TopCat} {f : X ⟶ S} (H : OpenEmbedding f)
     (g : Y ⟶ S) : OpenEmbedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
   by
@@ -376,9 +313,6 @@ theorem snd_openEmbedding_of_left_openEmbedding {X Y S : TopCat} {f : X ⟶ S} (
   simp
 #align Top.snd_open_embedding_of_left_open_embedding TopCat.snd_openEmbedding_of_left_openEmbedding
 
-/- warning: Top.fst_open_embedding_of_right_open_embedding -> TopCat.fst_openEmbedding_of_right_openEmbedding is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.fst_open_embedding_of_right_open_embedding TopCat.fst_openEmbedding_of_right_openEmbeddingₓ'. -/
 theorem fst_openEmbedding_of_right_openEmbedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (H : OpenEmbedding g) : OpenEmbedding ⇑(pullback.fst : pullback f g ⟶ X) :=
   by
@@ -389,9 +323,6 @@ theorem fst_openEmbedding_of_right_openEmbedding {X Y S : TopCat} (f : X ⟶ S) 
   simp
 #align Top.fst_open_embedding_of_right_open_embedding TopCat.fst_openEmbedding_of_right_openEmbedding
 
-/- warning: Top.open_embedding_of_pullback_open_embeddings -> TopCat.openEmbedding_of_pullback_open_embeddings is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.open_embedding_of_pullback_open_embeddings TopCat.openEmbedding_of_pullback_open_embeddingsₓ'. -/
 /-- If `X ⟶ S`, `Y ⟶ S` are open embeddings, then so is `X ×ₛ Y ⟶ S`. -/
 theorem openEmbedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y ⟶ S}
     (H₁ : OpenEmbedding f) (H₂ : OpenEmbedding g) :
@@ -403,9 +334,6 @@ theorem openEmbedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S}
   exact (limit.w _ walking_cospan.hom.inr).symm
 #align Top.open_embedding_of_pullback_open_embeddings TopCat.openEmbedding_of_pullback_open_embeddings
 
-/- warning: Top.fst_iso_of_right_embedding_range_subset -> TopCat.fst_iso_of_right_embedding_range_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.fst_iso_of_right_embedding_range_subset TopCat.fst_iso_of_right_embedding_range_subsetₓ'. -/
 theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (hg : Embedding g) (H : Set.range f ⊆ Set.range g) : IsIso (pullback.fst : pullback f g ⟶ X) :=
   by
@@ -421,9 +349,6 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {
   rfl
 #align Top.fst_iso_of_right_embedding_range_subset TopCat.fst_iso_of_right_embedding_range_subset
 
-/- warning: Top.snd_iso_of_left_embedding_range_subset -> TopCat.snd_iso_of_left_embedding_range_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.snd_iso_of_left_embedding_range_subset TopCat.snd_iso_of_left_embedding_range_subsetₓ'. -/
 theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (hf : Embedding f)
     (g : Y ⟶ S) (H : Set.range g ⊆ Set.range f) : IsIso (pullback.snd : pullback f g ⟶ Y) :=
   by
@@ -439,9 +364,6 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (h
   rfl
 #align Top.snd_iso_of_left_embedding_range_subset TopCat.snd_iso_of_left_embedding_range_subset
 
-/- warning: Top.pullback_snd_image_fst_preimage -> TopCat.pullback_snd_image_fst_preimage is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_snd_image_fst_preimage TopCat.pullback_snd_image_fst_preimageₓ'. -/
 theorem pullback_snd_image_fst_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set X) :
     (pullback.snd : pullback f g ⟶ _) '' ((pullback.fst : pullback f g ⟶ _) ⁻¹' U) =
       g ⁻¹' (f '' U) :=
@@ -455,9 +377,6 @@ theorem pullback_snd_image_fst_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set X) 
     exact ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, Eq⟩, by simpa, by simp⟩
 #align Top.pullback_snd_image_fst_preimage TopCat.pullback_snd_image_fst_preimage
 
-/- warning: Top.pullback_fst_image_snd_preimage -> TopCat.pullback_fst_image_snd_preimage is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pullback_fst_image_snd_preimage TopCat.pullback_fst_image_snd_preimageₓ'. -/
 theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) :
     (pullback.fst : pullback f g ⟶ _) '' ((pullback.snd : pullback f g ⟶ _) ⁻¹' U) =
       f ⁻¹' (g '' U) :=
@@ -474,9 +393,6 @@ theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) 
 
 end Pullback
 
-/- warning: Top.coinduced_of_is_colimit -> TopCat.coinduced_of_isColimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.coinduced_of_is_colimit TopCat.coinduced_of_isColimitₓ'. -/
 theorem coinduced_of_isColimit {F : J ⥤ TopCat.{max v u}} (c : Cocone F) (hc : IsColimit c) :
     c.pt.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) :=
   by
@@ -486,17 +402,11 @@ theorem coinduced_of_isColimit {F : J ⥤ TopCat.{max v u}} (c : Cocone F) (hc :
   exact isOpen_iSup_iff
 #align Top.coinduced_of_is_colimit TopCat.coinduced_of_isColimit
 
-/- warning: Top.colimit_topology -> TopCat.colimit_topology is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.colimit_topology TopCat.colimit_topologyₓ'. -/
 theorem colimit_topology (F : J ⥤ TopCat.{max v u}) :
     (colimit F).TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (colimit.ι F j) :=
   coinduced_of_isColimit _ (colimit.isColimit F)
 #align Top.colimit_topology TopCat.colimit_topology
 
-/- warning: Top.colimit_is_open_iff -> TopCat.colimit_isOpen_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.colimit_is_open_iff TopCat.colimit_isOpen_iffₓ'. -/
 theorem colimit_isOpen_iff (F : J ⥤ TopCat.{max v u}) (U : Set ((colimit F : _) : Type max v u)) :
     IsOpen U ↔ ∀ j, IsOpen (colimit.ι F j ⁻¹' U) :=
   by
@@ -504,9 +414,6 @@ theorem colimit_isOpen_iff (F : J ⥤ TopCat.{max v u}) (U : Set ((colimit F : _
   exact isOpen_iSup_iff
 #align Top.colimit_is_open_iff TopCat.colimit_isOpen_iff
 
-/- warning: Top.coequalizer_is_open_iff -> TopCat.coequalizer_isOpen_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.coequalizer_is_open_iff TopCat.coequalizer_isOpen_iffₓ'. -/
 theorem coequalizer_isOpen_iff (F : WalkingParallelPair ⥤ TopCat.{u})
     (U : Set ((colimit F : _) : Type u)) :
     IsOpen U ↔ IsOpen (colimit.ι F WalkingParallelPair.one ⁻¹' U) :=

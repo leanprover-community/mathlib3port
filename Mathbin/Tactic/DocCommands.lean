@@ -34,12 +34,6 @@ information.
 -/
 
 
-/- warning: string.hash -> String.hash is a dubious translation:
-lean 3 declaration is
-  String -> Nat
-but is expected to have type
-  ([mdata borrowed:1 String]) -> UInt64
-Case conversion may be inaccurate. Consider using '#align string.hash String.hashₓ'. -/
 /-- A rudimentary hash function on strings. -/
 def String.hash (s : String) : ℕ :=
   s.fold 1 fun h c => (33 * h + c.val) % unsignedSz

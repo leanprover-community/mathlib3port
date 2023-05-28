@@ -86,12 +86,6 @@ namespace Pretrivialization
 
 variable {F E} (e : Pretrivialization F (π E)) {x : TotalSpace E} {b : B} {y : E b}
 
-/- warning: pretrivialization.linear -> Pretrivialization.linear is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : Semiring.{u1} R] [_inst_2 : TopologicalSpace.{u3} F] [_inst_3 : TopologicalSpace.{u2} B] (e : Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u2, u4} B E)) [_inst_4 : AddCommMonoid.{u3} F] [_inst_5 : Module.{u1, u3} R F _inst_1 _inst_4] [_inst_6 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_7 : forall (x : B), Module.{u1, u4} R (E x) _inst_1 (_inst_6 x)] [_inst_8 : Pretrivialization.IsLinear.{u1, u2, u3, u4} R B F E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 (fun (x : B) => _inst_6 x) (fun (x : B) => _inst_7 x) e] {b : B}, (Membership.Mem.{u2, u2} B (Set.{u2} B) (Set.hasMem.{u2} B) b (Pretrivialization.baseSet.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u2, u4} B E) e)) -> (IsLinearMap.{u1, u4, u3} R (E b) F _inst_1 (_inst_6 b) _inst_4 (_inst_7 b) _inst_5 (fun (x : E b) => Prod.snd.{u2, u3} B F (coeFn.{max (succ u2) (succ u3) (succ (max u2 u4)), max (succ (max u2 u4)) (succ u2) (succ u3)} (Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u2, u4} B E)) (fun (_x : Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u2, u4} B E)) => (Bundle.TotalSpace.{u2, u4} B E) -> (Prod.{u2, u3} B F)) (Pretrivialization.hasCoeToFun.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u2, u4} B E)) e (Bundle.totalSpaceMk.{u2, u4} B E b x))))
-but is expected to have type
-  forall (R : Type.{u3}) {B : Type.{u1}} {F : Type.{u4}} {E : B -> Type.{u2}} [_inst_1 : Semiring.{u3} R] [_inst_2 : TopologicalSpace.{u4} F] [_inst_3 : TopologicalSpace.{u1} B] (e : Pretrivialization.{u1, u4, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u1, u2} B E)) [_inst_4 : AddCommMonoid.{u4} F] [_inst_5 : Module.{u3, u4} R F _inst_1 _inst_4] [_inst_6 : forall (x : B), AddCommMonoid.{u2} (E x)] [_inst_7 : forall (x : B), Module.{u3, u2} R (E x) _inst_1 (_inst_6 x)] [_inst_8 : Pretrivialization.IsLinear.{u3, u1, u4, u2} R B F E _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 (fun (x : B) => _inst_6 x) (fun (x : B) => _inst_7 x) e] {b : B}, (Membership.mem.{u1, u1} B (Set.{u1} B) (Set.instMembershipSet.{u1} B) b (Pretrivialization.baseSet.{u1, u4, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u1, u2} B E) e)) -> (IsLinearMap.{u3, u2, u4} R (E b) F _inst_1 (_inst_6 b) _inst_4 (_inst_7 b) _inst_5 (fun (x : E b) => Prod.snd.{u1, u4} B F (Pretrivialization.toFun'.{u1, u4, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B E) _inst_3 _inst_2 (Bundle.TotalSpace.proj.{u1, u2} B E) e (Bundle.totalSpaceMk.{u1, u2} B E b x))))
-Case conversion may be inaccurate. Consider using '#align pretrivialization.linear Pretrivialization.linearₓ'. -/
 theorem linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
     [e.isLinear R] {b : B} (hb : b ∈ e.baseSet) :
     IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2 :=
@@ -139,65 +133,41 @@ protected def linearMapAt (e : Pretrivialization F (π E)) [e.isLinear R] (b : B
 
 variable {R}
 
-/- warning: pretrivialization.coe_linear_map_at -> Pretrivialization.coe_linearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.coe_linear_map_at Pretrivialization.coe_linearMapAtₓ'. -/
 theorem coe_linearMapAt (e : Pretrivialization F (π E)) [e.isLinear R] (b : B) :
     ⇑(e.linearMapAt R b) = fun y => if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 := by
   rw [Pretrivialization.linearMapAt]; split_ifs <;> rfl
 #align pretrivialization.coe_linear_map_at Pretrivialization.coe_linearMapAt
 
-/- warning: pretrivialization.coe_linear_map_at_of_mem -> Pretrivialization.coe_linearMapAt_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.coe_linear_map_at_of_mem Pretrivialization.coe_linearMapAt_of_memₓ'. -/
 theorem coe_linearMapAt_of_mem (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) : ⇑(e.linearMapAt R b) = fun y => (e (totalSpaceMk b y)).2 := by
   simp_rw [coe_linear_map_at, if_pos hb]
 #align pretrivialization.coe_linear_map_at_of_mem Pretrivialization.coe_linearMapAt_of_mem
 
-/- warning: pretrivialization.linear_map_at_apply -> Pretrivialization.linearMapAt_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.linear_map_at_apply Pretrivialization.linearMapAt_applyₓ'. -/
 theorem linearMapAt_apply (e : Pretrivialization F (π E)) [e.isLinear R] {b : B} (y : E b) :
     e.linearMapAt R b y = if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 := by
   rw [coe_linear_map_at]
 #align pretrivialization.linear_map_at_apply Pretrivialization.linearMapAt_apply
 
-/- warning: pretrivialization.linear_map_at_def_of_mem -> Pretrivialization.linearMapAt_def_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.linear_map_at_def_of_mem Pretrivialization.linearMapAt_def_of_memₓ'. -/
 theorem linearMapAt_def_of_mem (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) : e.linearMapAt R b = e.linearEquivAt R b hb :=
   dif_pos hb
 #align pretrivialization.linear_map_at_def_of_mem Pretrivialization.linearMapAt_def_of_mem
 
-/- warning: pretrivialization.linear_map_at_def_of_not_mem -> Pretrivialization.linearMapAt_def_of_not_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.linear_map_at_def_of_not_mem Pretrivialization.linearMapAt_def_of_not_memₓ'. -/
 theorem linearMapAt_def_of_not_mem (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∉ e.baseSet) : e.linearMapAt R b = 0 :=
   dif_neg hb
 #align pretrivialization.linear_map_at_def_of_not_mem Pretrivialization.linearMapAt_def_of_not_mem
 
-/- warning: pretrivialization.linear_map_at_eq_zero -> Pretrivialization.linearMapAt_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.linear_map_at_eq_zero Pretrivialization.linearMapAt_eq_zeroₓ'. -/
 theorem linearMapAt_eq_zero (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∉ e.baseSet) : e.linearMapAt R b = 0 :=
   dif_neg hb
 #align pretrivialization.linear_map_at_eq_zero Pretrivialization.linearMapAt_eq_zero
 
-/- warning: pretrivialization.symmₗ_linear_map_at -> Pretrivialization.symmₗ_linearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.symmₗ_linear_map_at Pretrivialization.symmₗ_linearMapAtₓ'. -/
 theorem symmₗ_linearMapAt (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) (y : E b) : e.symmₗ R b (e.linearMapAt R b y) = y := by
   rw [e.linear_map_at_def_of_mem hb]; exact (e.linear_equiv_at R b hb).left_inv y
 #align pretrivialization.symmₗ_linear_map_at Pretrivialization.symmₗ_linearMapAt
 
-/- warning: pretrivialization.linear_map_at_symmₗ -> Pretrivialization.linearMapAt_symmₗ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pretrivialization.linear_map_at_symmₗ Pretrivialization.linearMapAt_symmₗₓ'. -/
 theorem linearMapAt_symmₗ (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) (y : F) : e.linearMapAt R b (e.symmₗ R b y) = y := by
   rw [e.linear_map_at_def_of_mem hb]; exact (e.linear_equiv_at R b hb).right_inv y
@@ -220,9 +190,6 @@ namespace Trivialization
 
 variable (e : Trivialization F (π E)) {x : TotalSpace E} {b : B} {y : E b}
 
-/- warning: trivialization.linear -> Trivialization.linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear Trivialization.linearₓ'. -/
 protected theorem linear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)]
     [∀ x, Module R (E x)] [e.isLinear R] {b : B} (hb : b ∈ e.baseSet) :
     IsLinearMap R fun y : E b => (e (totalSpaceMk b y)).2 :=
@@ -249,18 +216,12 @@ def linearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B) (hb : b �
 
 variable {R}
 
-/- warning: trivialization.linear_equiv_at_apply -> Trivialization.linearEquivAt_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear_equiv_at_apply Trivialization.linearEquivAt_applyₓ'. -/
 @[simp]
 theorem linearEquivAt_apply (e : Trivialization F (π E)) [e.isLinear R] (b : B) (hb : b ∈ e.baseSet)
     (v : E b) : e.linearEquivAt R b hb v = (e (totalSpaceMk b v)).2 :=
   rfl
 #align trivialization.linear_equiv_at_apply Trivialization.linearEquivAt_apply
 
-/- warning: trivialization.linear_equiv_at_symm_apply -> Trivialization.linearEquivAt_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear_equiv_at_symm_apply Trivialization.linearEquivAt_symm_applyₓ'. -/
 @[simp]
 theorem linearEquivAt_symm_apply (e : Trivialization F (π E)) [e.isLinear R] (b : B)
     (hb : b ∈ e.baseSet) (v : F) : (e.linearEquivAt R b hb).symm v = e.symm b v :=
@@ -278,9 +239,6 @@ protected def symmₗ (e : Trivialization F (π E)) [e.isLinear R] (b : B) : F �
 
 variable {R}
 
-/- warning: trivialization.coe_symmₗ -> Trivialization.coe_symmₗ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coe_symmₗ Trivialization.coe_symmₗₓ'. -/
 theorem coe_symmₗ (e : Trivialization F (π E)) [e.isLinear R] (b : B) : ⇑(e.symmₗ R b) = e.symm b :=
   rfl
 #align trivialization.coe_symmₗ Trivialization.coe_symmₗ
@@ -296,57 +254,36 @@ protected def linearMapAt (e : Trivialization F (π E)) [e.isLinear R] (b : B) :
 
 variable {R}
 
-/- warning: trivialization.coe_linear_map_at -> Trivialization.coe_linearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coe_linear_map_at Trivialization.coe_linearMapAtₓ'. -/
 theorem coe_linearMapAt (e : Trivialization F (π E)) [e.isLinear R] (b : B) :
     ⇑(e.linearMapAt R b) = fun y => if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 :=
   e.toPretrivialization.coe_linearMapAt b
 #align trivialization.coe_linear_map_at Trivialization.coe_linearMapAt
 
-/- warning: trivialization.coe_linear_map_at_of_mem -> Trivialization.coe_linearMapAt_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coe_linear_map_at_of_mem Trivialization.coe_linearMapAt_of_memₓ'. -/
 theorem coe_linearMapAt_of_mem (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) : ⇑(e.linearMapAt R b) = fun y => (e (totalSpaceMk b y)).2 := by
   simp_rw [coe_linear_map_at, if_pos hb]
 #align trivialization.coe_linear_map_at_of_mem Trivialization.coe_linearMapAt_of_mem
 
-/- warning: trivialization.linear_map_at_apply -> Trivialization.linearMapAt_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear_map_at_apply Trivialization.linearMapAt_applyₓ'. -/
 theorem linearMapAt_apply (e : Trivialization F (π E)) [e.isLinear R] {b : B} (y : E b) :
     e.linearMapAt R b y = if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 := by
   rw [coe_linear_map_at]
 #align trivialization.linear_map_at_apply Trivialization.linearMapAt_apply
 
-/- warning: trivialization.linear_map_at_def_of_mem -> Trivialization.linearMapAt_def_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear_map_at_def_of_mem Trivialization.linearMapAt_def_of_memₓ'. -/
 theorem linearMapAt_def_of_mem (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) : e.linearMapAt R b = e.linearEquivAt R b hb :=
   dif_pos hb
 #align trivialization.linear_map_at_def_of_mem Trivialization.linearMapAt_def_of_mem
 
-/- warning: trivialization.linear_map_at_def_of_not_mem -> Trivialization.linearMapAt_def_of_not_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear_map_at_def_of_not_mem Trivialization.linearMapAt_def_of_not_memₓ'. -/
 theorem linearMapAt_def_of_not_mem (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∉ e.baseSet) : e.linearMapAt R b = 0 :=
   dif_neg hb
 #align trivialization.linear_map_at_def_of_not_mem Trivialization.linearMapAt_def_of_not_mem
 
-/- warning: trivialization.symmₗ_linear_map_at -> Trivialization.symmₗ_linearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.symmₗ_linear_map_at Trivialization.symmₗ_linearMapAtₓ'. -/
 theorem symmₗ_linearMapAt (e : Trivialization F (π E)) [e.isLinear R] {b : B} (hb : b ∈ e.baseSet)
     (y : E b) : e.symmₗ R b (e.linearMapAt R b y) = y :=
   e.toPretrivialization.symmₗ_linearMapAt hb y
 #align trivialization.symmₗ_linear_map_at Trivialization.symmₗ_linearMapAt
 
-/- warning: trivialization.linear_map_at_symmₗ -> Trivialization.linearMapAt_symmₗ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.linear_map_at_symmₗ Trivialization.linearMapAt_symmₗₓ'. -/
 theorem linearMapAt_symmₗ (e : Trivialization F (π E)) [e.isLinear R] {b : B} (hb : b ∈ e.baseSet)
     (y : F) : e.linearMapAt R b (e.symmₗ R b y) = y :=
   e.toPretrivialization.linearMapAt_symmₗ hb y
@@ -388,18 +325,12 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R]
 
 variable {R}
 
-/- warning: trivialization.coe_coord_changeL -> Trivialization.coe_coordChangeL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coe_coord_changeL Trivialization.coe_coordChangeLₓ'. -/
 theorem coe_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) :
     ⇑(coordChangeL R e e' b) = (e.linearEquivAt R b hb.1).symm.trans (e'.linearEquivAt R b hb.2) :=
   congr_arg LinearEquiv.toFun (dif_pos hb)
 #align trivialization.coe_coord_changeL Trivialization.coe_coordChangeL
 
-/- warning: trivialization.coe_coord_changeL' -> Trivialization.coe_coordChangeL' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coe_coord_changeL' Trivialization.coe_coordChangeL'ₓ'. -/
 theorem coe_coordChangeL' (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) :
     (coordChangeL R e e' b).toLinearEquiv =
@@ -407,9 +338,6 @@ theorem coe_coordChangeL' (e e' : Trivialization F (π E)) [e.isLinear R] [e'.is
   LinearEquiv.coe_injective (coe_coordChangeL _ _ _)
 #align trivialization.coe_coord_changeL' Trivialization.coe_coordChangeL'
 
-/- warning: trivialization.symm_coord_changeL -> Trivialization.symm_coordChangeL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.symm_coord_changeL Trivialization.symm_coordChangeLₓ'. -/
 theorem symm_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e'.baseSet ∩ e.baseSet) : (e.coordChangeL R e' b).symm = e'.coordChangeL R e b :=
   by
@@ -418,18 +346,12 @@ theorem symm_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.is
     coe_coord_changeL' e e' hb.symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
 #align trivialization.symm_coord_changeL Trivialization.symm_coordChangeL
 
-/- warning: trivialization.coord_changeL_apply -> Trivialization.coordChangeL_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coord_changeL_apply Trivialization.coordChangeL_applyₓ'. -/
 theorem coordChangeL_apply (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (y : F) :
     coordChangeL R e e' b y = (e' (totalSpaceMk b (e.symm b y))).2 :=
   congr_arg (fun f => LinearEquiv.toFun f y) (dif_pos hb)
 #align trivialization.coord_changeL_apply Trivialization.coordChangeL_apply
 
-/- warning: trivialization.mk_coord_changeL -> Trivialization.mk_coordChangeL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.mk_coord_changeL Trivialization.mk_coordChangeLₓ'. -/
 theorem mk_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (y : F) :
     (b, coordChangeL R e e' b y) = e' (totalSpaceMk b (e.symm b y)) :=
@@ -440,18 +362,12 @@ theorem mk_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLi
   · exact e.coord_changeL_apply e' hb y
 #align trivialization.mk_coord_changeL Trivialization.mk_coordChangeL
 
-/- warning: trivialization.apply_symm_apply_eq_coord_changeL -> Trivialization.apply_symm_apply_eq_coordChangeL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.apply_symm_apply_eq_coord_changeL Trivialization.apply_symm_apply_eq_coordChangeLₓ'. -/
 theorem apply_symm_apply_eq_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R]
     [e'.isLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
     e' (e.toLocalHomeomorph.symm (b, v)) = (b, e.coordChangeL R e' b v) := by
   rw [e.mk_coord_changeL e' hb, e.mk_symm hb.1]
 #align trivialization.apply_symm_apply_eq_coord_changeL Trivialization.apply_symm_apply_eq_coordChangeL
 
-/- warning: trivialization.coord_changeL_apply' -> Trivialization.coordChangeL_apply' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coord_changeL_apply' Trivialization.coordChangeL_apply'ₓ'. -/
 /-- A version of `coord_change_apply` that fully unfolds `coord_change`. The right-hand side is
 ugly, but has good definitional properties for specifically defined trivializations. -/
 theorem coordChangeL_apply' (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
@@ -460,9 +376,6 @@ theorem coordChangeL_apply' (e e' : Trivialization F (π E)) [e.isLinear R] [e'.
   rw [e.coord_changeL_apply e' hb, e.mk_symm hb.1]
 #align trivialization.coord_changeL_apply' Trivialization.coordChangeL_apply'
 
-/- warning: trivialization.coord_changeL_symm_apply -> Trivialization.coordChangeL_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coord_changeL_symm_apply Trivialization.coordChangeL_symm_applyₓ'. -/
 theorem coordChangeL_symm_apply (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R]
     {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) :
     ⇑(coordChangeL R e e' b).symm =
@@ -530,9 +443,6 @@ instance (priority := 100) trivialization_linear [VectorBundle R F E] (e : Trivi
 #align trivialization_linear trivialization_linear
 -/
 
-/- warning: continuous_on_coord_change -> continuousOn_coordChange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_on_coord_change continuousOn_coordChangeₓ'. -/
 theorem continuousOn_coordChange [VectorBundle R F E] (e e' : Trivialization F (π E))
     [he : MemTrivializationAtlas e] [he' : MemTrivializationAtlas e'] :
     ContinuousOn (fun b => Trivialization.coordChangeL R e e' b : B → F →L[R] F)
@@ -582,17 +492,11 @@ def symmL (e : Trivialization F (π E)) [e.isLinear R] (b : B) : F →L[R] E b :
 
 variable {R}
 
-/- warning: trivialization.symmL_continuous_linear_map_at -> Trivialization.symmL_continuousLinearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.symmL_continuous_linear_map_at Trivialization.symmL_continuousLinearMapAtₓ'. -/
 theorem symmL_continuousLinearMapAt (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) (y : E b) : e.symmL R b (e.continuousLinearMapAt R b y) = y :=
   e.symmₗ_linearMapAt hb y
 #align trivialization.symmL_continuous_linear_map_at Trivialization.symmL_continuousLinearMapAt
 
-/- warning: trivialization.continuous_linear_map_at_symmL -> Trivialization.continuousLinearMapAt_symmL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.continuous_linear_map_at_symmL Trivialization.continuousLinearMapAt_symmLₓ'. -/
 theorem continuousLinearMapAt_symmL (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) (y : F) : e.continuousLinearMapAt R b (e.symmL R b y) = y :=
   e.linearMapAt_symmₗ hb y
@@ -622,26 +526,17 @@ def continuousLinearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B)
 
 variable {R}
 
-/- warning: trivialization.coe_continuous_linear_equiv_at_eq -> Trivialization.coe_continuousLinearEquivAt_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coe_continuous_linear_equiv_at_eq Trivialization.coe_continuousLinearEquivAt_eqₓ'. -/
 theorem coe_continuousLinearEquivAt_eq (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) :
     (e.continuousLinearEquivAt R b hb : E b → F) = e.continuousLinearMapAt R b :=
   (e.coe_linearMapAt_of_mem hb).symm
 #align trivialization.coe_continuous_linear_equiv_at_eq Trivialization.coe_continuousLinearEquivAt_eq
 
-/- warning: trivialization.symm_continuous_linear_equiv_at_eq -> Trivialization.symm_continuousLinearEquivAt_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.symm_continuous_linear_equiv_at_eq Trivialization.symm_continuousLinearEquivAt_eqₓ'. -/
 theorem symm_continuousLinearEquivAt_eq (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) : ((e.continuousLinearEquivAt R b hb).symm : F → E b) = e.symmL R b :=
   rfl
 #align trivialization.symm_continuous_linear_equiv_at_eq Trivialization.symm_continuousLinearEquivAt_eq
 
-/- warning: trivialization.continuous_linear_equiv_at_apply' -> Trivialization.continuousLinearEquivAt_apply' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.continuous_linear_equiv_at_apply' Trivialization.continuousLinearEquivAt_apply'ₓ'. -/
 @[simp]
 theorem continuousLinearEquivAt_apply' (e : Trivialization F (π E)) [e.isLinear R]
     (x : TotalSpace E) (hx : x ∈ e.source) :
@@ -650,9 +545,6 @@ theorem continuousLinearEquivAt_apply' (e : Trivialization F (π E)) [e.isLinear
 
 variable (R)
 
-/- warning: trivialization.apply_eq_prod_continuous_linear_equiv_at -> Trivialization.apply_eq_prod_continuousLinearEquivAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.apply_eq_prod_continuous_linear_equiv_at Trivialization.apply_eq_prod_continuousLinearEquivAtₓ'. -/
 theorem apply_eq_prod_continuousLinearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B)
     (hb : b ∈ e.baseSet) (z : E b) : e ⟨b, z⟩ = (b, e.continuousLinearEquivAt R b hb z) :=
   by
@@ -663,9 +555,6 @@ theorem apply_eq_prod_continuousLinearEquivAt (e : Trivialization F (π E)) [e.i
   · simp only [coe_coe, continuous_linear_equiv_at_apply]
 #align trivialization.apply_eq_prod_continuous_linear_equiv_at Trivialization.apply_eq_prod_continuousLinearEquivAt
 
-/- warning: trivialization.zero_section -> Trivialization.zeroSection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.zero_section Trivialization.zeroSectionₓ'. -/
 protected theorem zeroSection (e : Trivialization F (π E)) [e.isLinear R] {x : B}
     (hx : x ∈ e.baseSet) : e (zeroSection E x) = (x, 0) := by
   simp_rw [zero_section, total_space_mk, e.apply_eq_prod_continuous_linear_equiv_at R x hx 0,
@@ -674,9 +563,6 @@ protected theorem zeroSection (e : Trivialization F (π E)) [e.isLinear R] {x : 
 
 variable {R}
 
-/- warning: trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm -> Trivialization.symm_apply_eq_mk_continuousLinearEquivAt_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm Trivialization.symm_apply_eq_mk_continuousLinearEquivAt_symmₓ'. -/
 theorem symm_apply_eq_mk_continuousLinearEquivAt_symm (e : Trivialization F (π E)) [e.isLinear R]
     (b : B) (hb : b ∈ e.baseSet) (z : F) :
     e.toLocalHomeomorph.symm ⟨b, z⟩ = totalSpaceMk b ((e.continuousLinearEquivAt R b hb).symm z) :=
@@ -690,9 +576,6 @@ theorem symm_apply_eq_mk_continuousLinearEquivAt_symm (e : Trivialization F (π 
     ContinuousLinearEquiv.apply_symm_apply]
 #align trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm Trivialization.symm_apply_eq_mk_continuousLinearEquivAt_symm
 
-/- warning: trivialization.comp_continuous_linear_equiv_at_eq_coord_change -> Trivialization.comp_continuousLinearEquivAt_eq_coord_change is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.comp_continuous_linear_equiv_at_eq_coord_change Trivialization.comp_continuousLinearEquivAt_eq_coord_changeₓ'. -/
 theorem comp_continuousLinearEquivAt_eq_coord_change (e e' : Trivialization F (π E)) [e.isLinear R]
     [e'.isLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) :
     (e.continuousLinearEquivAt R b hb.1).symm.trans (e'.continuousLinearEquivAt R b hb.2) =
@@ -769,33 +652,18 @@ instance toFiberBundleCoreCoe : Coe (VectorBundleCore R B F ι) (FiberBundleCore
 
 include Z
 
-/- warning: vector_bundle_core.coord_change_linear_comp -> VectorBundleCore.coordChange_linear_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.coord_change_linear_comp VectorBundleCore.coordChange_linear_compₓ'. -/
 theorem coordChange_linear_comp (i j k : ι) :
     ∀ x ∈ Z.baseSet i ∩ Z.baseSet j ∩ Z.baseSet k,
       (Z.coordChange j k x).comp (Z.coordChange i j x) = Z.coordChange i k x :=
   fun x hx => by ext v; exact Z.coord_change_comp i j k x hx v
 #align vector_bundle_core.coord_change_linear_comp VectorBundleCore.coordChange_linear_comp
 
-/- warning: vector_bundle_core.index -> VectorBundleCore.Index is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u_1}} {B : Type.{u_2}} {F : Type.{u_3}} [_inst_1 : NontriviallyNormedField.{u_1} R] [_inst_4 : NormedAddCommGroup.{u_3} F] [_inst_5 : NormedSpace.{u_1, u_3} R F (NontriviallyNormedField.toNormedField.{u_1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u_3} F _inst_4)] [_inst_6 : TopologicalSpace.{u_2} B] {ι : Type.{u_5}}, (VectorBundleCore.{u_1, u_2, u_3, u_5} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) -> Type.{u_5}
-but is expected to have type
-  forall {R : Type.{u_1}}, Type.{u_1}
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.index VectorBundleCore.Indexₓ'. -/
 /-- The index set of a vector bundle core, as a convenience function for dot notation -/
 @[nolint unused_arguments has_nonempty_instance]
 def Index :=
   ι
 #align vector_bundle_core.index VectorBundleCore.Index
 
-/- warning: vector_bundle_core.base -> VectorBundleCore.Base is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u_1}} {B : Type.{u_2}} {F : Type.{u_3}} [_inst_1 : NontriviallyNormedField.{u_1} R] [_inst_4 : NormedAddCommGroup.{u_3} F] [_inst_5 : NormedSpace.{u_1, u_3} R F (NontriviallyNormedField.toNormedField.{u_1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u_3} F _inst_4)] [_inst_6 : TopologicalSpace.{u_2} B] {ι : Type.{u_5}}, (VectorBundleCore.{u_1, u_2, u_3, u_5} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) -> Type.{u_2}
-but is expected to have type
-  forall {R : Type.{u_1}}, Type.{u_1}
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.base VectorBundleCore.Baseₓ'. -/
 /-- The base space of a vector bundle core, as a convenience function for dot notation-/
 @[nolint unused_arguments, reducible]
 def Base :=
@@ -827,12 +695,6 @@ instance moduleFiber : ∀ x : B, Module R (Z.Fiber x) := by
 #align vector_bundle_core.module_fiber VectorBundleCore.moduleFiber
 -/
 
-/- warning: vector_bundle_core.add_comm_group_fiber -> VectorBundleCore.addCommGroupFiber is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) [_inst_10 : AddCommGroup.{u3} F] (x : B), AddCommGroup.{u3} (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x)
-but is expected to have type
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (_inst_10 : B), AddCommGroup.{u3} (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z _inst_10)
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.add_comm_group_fiber VectorBundleCore.addCommGroupFiberₓ'. -/
 instance addCommGroupFiber [AddCommGroup F] : ∀ x : B, AddCommGroup (Z.Fiber x) := by
   dsimp [VectorBundleCore.Fiber] <;> delta_instance fiber_bundle_core.fiber
 #align vector_bundle_core.add_comm_group_fiber VectorBundleCore.addCommGroupFiber
@@ -855,23 +717,11 @@ protected def TotalSpace :=
 #align vector_bundle_core.total_space VectorBundleCore.TotalSpace
 -/
 
-/- warning: vector_bundle_core.triv_change -> VectorBundleCore.trivChange is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}}, (VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) -> ι -> ι -> (LocalHomeomorph.{max u2 u3, max u2 u3} (Prod.{u2, u3} B F) (Prod.{u2, u3} B F) (Prod.topologicalSpace.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (Prod.topologicalSpace.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}}, (VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) -> ι -> ι -> (LocalHomeomorph.{max u3 u2, max u3 u2} (Prod.{u2, u3} B F) (Prod.{u2, u3} B F) (instTopologicalSpaceProd.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (instTopologicalSpaceProd.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))))
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.triv_change VectorBundleCore.trivChangeₓ'. -/
 /-- Local homeomorphism version of the trivialization change. -/
 def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F) :=
   FiberBundleCore.trivChange (↑Z) i j
 #align vector_bundle_core.triv_change VectorBundleCore.trivChange
 
-/- warning: vector_bundle_core.mem_triv_change_source -> VectorBundleCore.mem_trivChange_source is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (i : ι) (j : ι) (p : Prod.{u2, u3} B F), Iff (Membership.Mem.{max u2 u3, max u2 u3} (Prod.{u2, u3} B F) (Set.{max u2 u3} (Prod.{u2, u3} B F)) (Set.hasMem.{max u2 u3} (Prod.{u2, u3} B F)) p (LocalEquiv.source.{max u2 u3, max u2 u3} (Prod.{u2, u3} B F) (Prod.{u2, u3} B F) (LocalHomeomorph.toLocalEquiv.{max u2 u3, max u2 u3} (Prod.{u2, u3} B F) (Prod.{u2, u3} B F) (Prod.topologicalSpace.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (Prod.topologicalSpace.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (VectorBundleCore.trivChange.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i j)))) (Membership.Mem.{u2, u2} B (Set.{u2} B) (Set.hasMem.{u2} B) (Prod.fst.{u2, u3} B F p) (Inter.inter.{u2} (Set.{u2} B) (Set.hasInter.{u2} B) (VectorBundleCore.baseSet.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i) (VectorBundleCore.baseSet.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z j)))
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (i : ι) (j : ι) (p : Prod.{u4, u3} B F), Iff (Membership.mem.{max u4 u3, max u4 u3} (Prod.{u4, u3} B F) (Set.{max u4 u3} (Prod.{u4, u3} B F)) (Set.instMembershipSet.{max u4 u3} (Prod.{u4, u3} B F)) p (LocalEquiv.source.{max u4 u3, max u4 u3} (Prod.{u4, u3} B F) (Prod.{u4, u3} B F) (LocalHomeomorph.toLocalEquiv.{max u4 u3, max u4 u3} (Prod.{u4, u3} B F) (Prod.{u4, u3} B F) (instTopologicalSpaceProd.{u4, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (instTopologicalSpaceProd.{u4, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (VectorBundleCore.trivChange.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i j)))) (Membership.mem.{u4, u4} B (Set.{u4} B) (Set.instMembershipSet.{u4} B) (Prod.fst.{u4, u3} B F p) (Inter.inter.{u4} (Set.{u4} B) (Set.instInterSet.{u4} B) (VectorBundleCore.baseSet.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i) (VectorBundleCore.baseSet.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z j)))
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.mem_triv_change_source VectorBundleCore.mem_trivChange_sourceₓ'. -/
 @[simp, mfld_simps]
 theorem mem_trivChange_source (i j : ι) (p : B × F) :
     p ∈ (Z.trivChange i j).source ↔ p.1 ∈ Z.baseSet i ∩ Z.baseSet j :=
@@ -888,9 +738,6 @@ instance toTopologicalSpace : TopologicalSpace Z.TotalSpace :=
 
 variable (b : B) (a : F)
 
-/- warning: vector_bundle_core.coe_coord_change -> VectorBundleCore.coe_coordChange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.coe_coord_change VectorBundleCore.coe_coordChangeₓ'. -/
 @[simp, mfld_simps]
 theorem coe_coordChange (i j : ι) : Z.toFiberBundleCore.coordChange i j b = Z.coordChange i j b :=
   rfl
@@ -918,64 +765,40 @@ instance localTriv.isLinear (i : ι) : (Z.localTriv i).isLinear R
 
 variable (i j : ι)
 
-/- warning: vector_bundle_core.mem_local_triv_source -> VectorBundleCore.mem_localTriv_source is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.mem_local_triv_source VectorBundleCore.mem_localTriv_sourceₓ'. -/
 @[simp, mfld_simps]
 theorem mem_localTriv_source (p : Z.TotalSpace) : p ∈ (Z.localTriv i).source ↔ p.1 ∈ Z.baseSet i :=
   by dsimp [VectorBundleCore.Fiber] <;> exact Iff.rfl
 #align vector_bundle_core.mem_local_triv_source VectorBundleCore.mem_localTriv_source
 
-/- warning: vector_bundle_core.base_set_at -> VectorBundleCore.baseSet_at is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (i : ι), Eq.{succ u2} (Set.{u2} B) (VectorBundleCore.baseSet.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i) (Trivialization.baseSet.{u2, u3, max u2 u3} B F (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTriv.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i))
-but is expected to have type
-  forall {R : Type.{u3}} {B : Type.{u4}} {F : Type.{u2}} [_inst_1 : NontriviallyNormedField.{u3} R] [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u3, u2} R F (NontriviallyNormedField.toNormedField.{u3} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u3, u4, u2, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (i : ι), Eq.{succ u4} (Set.{u4} B) (VectorBundleCore.baseSet.{u3, u4, u2, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i) (Trivialization.baseSet.{u4, u2, max u4 u2} B F (Bundle.TotalSpace.{u4, u2} B (VectorBundleCore.Fiber.{u3, u4, u2, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u3, u4, u2, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u4, u2} B (VectorBundleCore.Fiber.{u3, u4, u2, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTriv.{u3, u4, u2, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z i))
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.base_set_at VectorBundleCore.baseSet_atₓ'. -/
 @[simp, mfld_simps]
 theorem baseSet_at : Z.baseSet i = (Z.localTriv i).baseSet :=
   rfl
 #align vector_bundle_core.base_set_at VectorBundleCore.baseSet_at
 
-/- warning: vector_bundle_core.local_triv_apply -> VectorBundleCore.localTriv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_apply VectorBundleCore.localTriv_applyₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_apply (p : Z.TotalSpace) :
     (Z.localTriv i) p = ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩ :=
   rfl
 #align vector_bundle_core.local_triv_apply VectorBundleCore.localTriv_apply
 
-/- warning: vector_bundle_core.mem_local_triv_target -> VectorBundleCore.mem_localTriv_target is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.mem_local_triv_target VectorBundleCore.mem_localTriv_targetₓ'. -/
 @[simp, mfld_simps]
 theorem mem_localTriv_target (p : B × F) :
     p ∈ (Z.localTriv i).target ↔ p.1 ∈ (Z.localTriv i).baseSet :=
   Z.toFiberBundleCore.mem_localTriv_target i p
 #align vector_bundle_core.mem_local_triv_target VectorBundleCore.mem_localTriv_target
 
-/- warning: vector_bundle_core.local_triv_symm_fst -> VectorBundleCore.localTriv_symm_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_symm_fst VectorBundleCore.localTriv_symm_fstₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_symm_fst (p : B × F) :
     (Z.localTriv i).toLocalHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
   rfl
 #align vector_bundle_core.local_triv_symm_fst VectorBundleCore.localTriv_symm_fst
 
-/- warning: vector_bundle_core.local_triv_symm_apply -> VectorBundleCore.localTriv_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_symm_apply VectorBundleCore.localTriv_symm_applyₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_symm_apply {b : B} (hb : b ∈ Z.baseSet i) (v : F) :
     (Z.localTriv i).symm b v = Z.coordChange i (Z.indexAt b) b v := by
   apply (Z.local_triv i).symm_apply hb v
 #align vector_bundle_core.local_triv_symm_apply VectorBundleCore.localTriv_symm_apply
 
-/- warning: vector_bundle_core.local_triv_coord_change_eq -> VectorBundleCore.localTriv_coordChange_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_coord_change_eq VectorBundleCore.localTriv_coordChange_eqₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_coordChange_eq {b : B} (hb : b ∈ Z.baseSet i ∩ Z.baseSet j) (v : F) :
     (Z.localTriv i).coordChangeL R (Z.localTriv j) b v = Z.coordChange i j b v :=
@@ -992,50 +815,26 @@ def localTrivAt (b : B) : Trivialization F (π Z.Fiber) :=
 #align vector_bundle_core.local_triv_at VectorBundleCore.localTrivAt
 -/
 
-/- warning: vector_bundle_core.local_triv_at_def -> VectorBundleCore.localTrivAt_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B), Eq.{max (succ u2) (succ u3) (succ (max u2 u3))} (Trivialization.{u2, u3, max u2 u3} B F (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (VectorBundleCore.localTriv.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z (VectorBundleCore.indexAt.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b)) (VectorBundleCore.localTrivAt.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b)
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B), Eq.{max (succ u4) (succ u3)} (Trivialization.{u4, u3, max u4 u3} B F (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (VectorBundleCore.localTriv.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z (VectorBundleCore.indexAt.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b)) (VectorBundleCore.localTrivAt.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b)
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_at_def VectorBundleCore.localTrivAt_defₓ'. -/
 @[simp, mfld_simps]
 theorem localTrivAt_def : Z.localTriv (Z.indexAt b) = Z.localTrivAt b :=
   rfl
 #align vector_bundle_core.local_triv_at_def VectorBundleCore.localTrivAt_def
 
-/- warning: vector_bundle_core.mem_source_at -> VectorBundleCore.mem_source_at is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B) (a : F), Membership.Mem.{max u2 u3, max u2 u3} (Sigma.{u2, u3} B (fun (x : B) => VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x)) (Set.{max u2 u3} (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (Set.hasMem.{max u2 u3} (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (Sigma.mk.{u2, u3} B (fun (x : B) => VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x) b a) (LocalEquiv.source.{max u2 u3, max u2 u3} (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (Prod.{u2, u3} B F) (LocalHomeomorph.toLocalEquiv.{max u2 u3, max u2 u3} (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (Prod.{u2, u3} B F) (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Prod.topologicalSpace.{u2, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (Trivialization.toLocalHomeomorph.{u2, u3, max u2 u3} B F (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTrivAt.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b))))
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B) (a : F), Membership.mem.{max u4 u3, max u4 u3} (Sigma.{u4, u3} B (fun (x : B) => VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x)) (Set.{max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (Set.instMembershipSet.{max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (Sigma.mk.{u4, u3} B (fun (x : B) => VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x) b a) (LocalEquiv.source.{max u4 u3, max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (Prod.{u4, u3} B F) (LocalHomeomorph.toLocalEquiv.{max u4 u3, max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (Prod.{u4, u3} B F) (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (instTopologicalSpaceProd.{u4, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (Trivialization.toLocalHomeomorph.{u4, u3, max u4 u3} B F (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTrivAt.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b))))
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.mem_source_at VectorBundleCore.mem_source_atₓ'. -/
 @[simp, mfld_simps]
 theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source := by
   rw [local_triv_at, mem_local_triv_source]; exact Z.mem_base_set_at b
 #align vector_bundle_core.mem_source_at VectorBundleCore.mem_source_at
 
-/- warning: vector_bundle_core.local_triv_at_apply -> VectorBundleCore.localTrivAt_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_at_apply VectorBundleCore.localTrivAt_applyₓ'. -/
 @[simp, mfld_simps]
 theorem localTrivAt_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ :=
   FiberBundleCore.localTrivAt_apply Z p
 #align vector_bundle_core.local_triv_at_apply VectorBundleCore.localTrivAt_apply
 
-/- warning: vector_bundle_core.local_triv_at_apply_mk -> VectorBundleCore.localTrivAt_apply_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_at_apply_mk VectorBundleCore.localTrivAt_apply_mkₓ'. -/
 @[simp, mfld_simps]
 theorem localTrivAt_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
   Z.localTrivAt_apply _
 #align vector_bundle_core.local_triv_at_apply_mk VectorBundleCore.localTrivAt_apply_mk
 
-/- warning: vector_bundle_core.mem_local_triv_at_base_set -> VectorBundleCore.mem_localTrivAt_baseSet is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B), Membership.Mem.{u2, u2} B (Set.{u2} B) (Set.hasMem.{u2} B) b (Trivialization.baseSet.{u2, u3, max u2 u3} B F (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTrivAt.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b))
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B), Membership.mem.{u4, u4} B (Set.{u4} B) (Set.instMembershipSet.{u4} B) b (Trivialization.baseSet.{u4, u3, max u4 u3} B F (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTrivAt.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b))
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.mem_local_triv_at_base_set VectorBundleCore.mem_localTrivAt_baseSetₓ'. -/
 @[simp, mfld_simps]
 theorem mem_localTrivAt_baseSet : b ∈ (Z.localTrivAt b).baseSet :=
   FiberBundleCore.mem_localTrivAt_baseSet Z b
@@ -1061,24 +860,12 @@ instance vectorBundle : VectorBundle R F Z.Fiber
 #align vector_bundle_core.vector_bundle VectorBundleCore.vectorBundle
 -/
 
-/- warning: vector_bundle_core.continuous_proj -> VectorBundleCore.continuous_proj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι), Continuous.{max u2 u3, u2} (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) B (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) _inst_6 (VectorBundleCore.proj.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι), Continuous.{max u4 u3, u4} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) B (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) _inst_6 (VectorBundleCore.proj.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.continuous_proj VectorBundleCore.continuous_projₓ'. -/
 /-- The projection on the base of a vector bundle created from core is continuous -/
 @[continuity]
 theorem continuous_proj : Continuous Z.proj :=
   FiberBundleCore.continuous_proj Z
 #align vector_bundle_core.continuous_proj VectorBundleCore.continuous_proj
 
-/- warning: vector_bundle_core.is_open_map_proj -> VectorBundleCore.isOpenMap_proj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] {ι : Type.{u4}} (Z : VectorBundleCore.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι), IsOpenMap.{max u2 u3, u2} (Bundle.TotalSpace.{u2, u3} B (VectorBundleCore.Fiber.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) B (VectorBundleCore.toTopologicalSpace.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) _inst_6 (VectorBundleCore.proj.{u1, u2, u3, u4} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι), IsOpenMap.{max u4 u3, u4} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) B (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) _inst_6 (VectorBundleCore.proj.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.is_open_map_proj VectorBundleCore.isOpenMap_projₓ'. -/
 /-- The projection on the base of a vector bundle created from core is an open map -/
 theorem isOpenMap_proj : IsOpenMap Z.proj :=
   FiberBundleCore.isOpenMap_proj Z
@@ -1086,9 +873,6 @@ theorem isOpenMap_proj : IsOpenMap Z.proj :=
 
 variable {i j}
 
-/- warning: vector_bundle_core.local_triv_continuous_linear_map_at -> VectorBundleCore.localTriv_continuousLinearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_continuous_linear_map_at VectorBundleCore.localTriv_continuousLinearMapAtₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_continuousLinearMapAt {b : B} (hb : b ∈ Z.baseSet i) :
     (Z.localTriv i).continuousLinearMapAt R b = Z.coordChange (Z.indexAt b) i b :=
@@ -1098,9 +882,6 @@ theorem localTriv_continuousLinearMapAt {b : B} (hb : b ∈ Z.baseSet i) :
   exacts[rfl, hb]
 #align vector_bundle_core.local_triv_continuous_linear_map_at VectorBundleCore.localTriv_continuousLinearMapAt
 
-/- warning: vector_bundle_core.trivialization_at_continuous_linear_map_at -> VectorBundleCore.trivializationAt_continuousLinearMapAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.trivialization_at_continuous_linear_map_at VectorBundleCore.trivializationAt_continuousLinearMapAtₓ'. -/
 @[simp, mfld_simps]
 theorem trivializationAt_continuousLinearMapAt {b₀ b : B}
     (hb : b ∈ (trivializationAt F Z.Fiber b₀).baseSet) :
@@ -1109,27 +890,18 @@ theorem trivializationAt_continuousLinearMapAt {b₀ b : B}
   Z.localTriv_continuousLinearMapAt hb
 #align vector_bundle_core.trivialization_at_continuous_linear_map_at VectorBundleCore.trivializationAt_continuousLinearMapAt
 
-/- warning: vector_bundle_core.local_triv_symmL -> VectorBundleCore.localTriv_symmL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_symmL VectorBundleCore.localTriv_symmLₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_symmL {b : B} (hb : b ∈ Z.baseSet i) :
     (Z.localTriv i).symmL R b = Z.coordChange i (Z.indexAt b) b := by ext1 v;
   rw [(Z.local_triv i).symmL_apply R, (Z.local_triv i).symm_apply]; exacts[rfl, hb]
 #align vector_bundle_core.local_triv_symmL VectorBundleCore.localTriv_symmL
 
-/- warning: vector_bundle_core.trivialization_at_symmL -> VectorBundleCore.trivializationAt_symmL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.trivialization_at_symmL VectorBundleCore.trivializationAt_symmLₓ'. -/
 @[simp, mfld_simps]
 theorem trivializationAt_symmL {b₀ b : B} (hb : b ∈ (trivializationAt F Z.Fiber b₀).baseSet) :
     (trivializationAt F Z.Fiber b₀).symmL R b = Z.coordChange (Z.indexAt b₀) (Z.indexAt b) b :=
   Z.localTriv_symmL hb
 #align vector_bundle_core.trivialization_at_symmL VectorBundleCore.trivializationAt_symmL
 
-/- warning: vector_bundle_core.trivialization_at_coord_change_eq -> VectorBundleCore.trivializationAt_coordChange_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle_core.trivialization_at_coord_change_eq VectorBundleCore.trivializationAt_coordChange_eqₓ'. -/
 @[simp, mfld_simps]
 theorem trivializationAt_coordChange_eq {b₀ b₁ b : B}
     (hb : b ∈ (trivializationAt F Z.Fiber b₀).baseSet ∩ (trivializationAt F Z.Fiber b₁).baseSet)
@@ -1197,18 +969,12 @@ def coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
 #align vector_prebundle.coord_change VectorPrebundle.coordChange
 -/
 
-/- warning: vector_prebundle.continuous_on_coord_change -> VectorPrebundle.continuousOn_coordChange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.continuous_on_coord_change VectorPrebundle.continuousOn_coordChangeₓ'. -/
 theorem continuousOn_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.pretrivializationAtlas) (he' : e' ∈ a.pretrivializationAtlas) :
     ContinuousOn (a.coordChange he he') (e.baseSet ∩ e'.baseSet) :=
   (Classical.choose_spec (a.exists_coord_change e he e' he')).1
 #align vector_prebundle.continuous_on_coord_change VectorPrebundle.continuousOn_coordChange
 
-/- warning: vector_prebundle.coord_change_apply -> VectorPrebundle.coordChange_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.coord_change_apply VectorPrebundle.coordChange_applyₓ'. -/
 theorem coordChange_apply (a : VectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.pretrivializationAtlas) (he' : e' ∈ a.pretrivializationAtlas) {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
@@ -1216,9 +982,6 @@ theorem coordChange_apply (a : VectorPrebundle R F E) {e e' : Pretrivialization 
   (Classical.choose_spec (a.exists_coord_change e he e' he')).2 b hb v
 #align vector_prebundle.coord_change_apply VectorPrebundle.coordChange_apply
 
-/- warning: vector_prebundle.mk_coord_change -> VectorPrebundle.mk_coordChange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.mk_coord_change VectorPrebundle.mk_coordChangeₓ'. -/
 theorem mk_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.pretrivializationAtlas) (he' : e' ∈ a.pretrivializationAtlas) {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
@@ -1274,12 +1037,6 @@ def trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
 #align vector_prebundle.trivialization_of_mem_pretrivialization_atlas VectorPrebundle.trivializationOfMemPretrivializationAtlas
 -/
 
-/- warning: vector_prebundle.linear_of_mem_pretrivialization_atlas -> VectorPrebundle.linear_trivializationOfMemPretrivializationAtlas is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] (a : VectorPrebundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) {e : Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (Bundle.TotalSpace.proj.{u2, u4} B E)} (he : Membership.Mem.{max u2 u3 u2 u4, max u2 u3 u2 u4} (Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (Bundle.TotalSpace.proj.{u2, u4} B E)) (Set.{max u2 u3 u2 u4} (Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (Bundle.TotalSpace.proj.{u2, u4} B E))) (Set.hasMem.{max u2 u3 u2 u4} (Pretrivialization.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (Bundle.TotalSpace.proj.{u2, u4} B E))) e (VectorPrebundle.pretrivializationAtlas.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a)), Trivialization.IsLinear.{u1, u2, u3, u4} R B F E (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) _inst_6 (VectorPrebundle.totalSpaceTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (AddCommGroup.toAddCommMonoid.{u3} F (NormedAddCommGroup.toAddCommGroup.{u3} F _inst_4)) (NormedSpace.toModule.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5) (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) (VectorPrebundle.trivializationOfMemPretrivializationAtlas.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a e he)
-but is expected to have type
-  forall {R : Type.{u4}} {B : Type.{u3}} {F : Type.{u2}} {E : B -> Type.{u1}} [_inst_1 : NontriviallyNormedField.{u4} R] [_inst_2 : forall (x : B), AddCommMonoid.{u1} (E x)] [_inst_3 : forall (x : B), Module.{u4, u1} R (E x) (DivisionSemiring.toSemiring.{u4} R (Semifield.toDivisionSemiring.{u4} R (Field.toSemifield.{u4} R (NormedField.toField.{u4} R (NontriviallyNormedField.toNormedField.{u4} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} R F (NontriviallyNormedField.toNormedField.{u4} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] [_inst_6 : TopologicalSpace.{u3} B] (a : VectorPrebundle.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) {e : Pretrivialization.{u3, u2, max u3 u1} B F (Bundle.TotalSpace.{u3, u1} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (Bundle.TotalSpace.proj.{u3, u1} B E)} (he : Membership.mem.{max (max u3 u2) u1, max (max u3 u2) u1} (Pretrivialization.{u3, u2, max u3 u1} B F (Bundle.TotalSpace.{u3, u1} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (Bundle.TotalSpace.proj.{u3, u1} B E)) (Set.{max (max (max u3 u1) u2) u3} (Pretrivialization.{u3, u2, max u3 u1} B F (Bundle.TotalSpace.{u3, u1} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (Bundle.TotalSpace.proj.{u3, u1} B E))) (Set.instMembershipSet.{max (max u3 u2) u1} (Pretrivialization.{u3, u2, max u3 u1} B F (Bundle.TotalSpace.{u3, u1} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (Bundle.TotalSpace.proj.{u3, u1} B E))) e (VectorPrebundle.pretrivializationAtlas.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a)), Trivialization.IsLinear.{u4, u3, u2, u1} R B F E (DivisionSemiring.toSemiring.{u4} R (Semifield.toDivisionSemiring.{u4} R (Field.toSemifield.{u4} R (NormedField.toField.{u4} R (NontriviallyNormedField.toNormedField.{u4} R _inst_1))))) (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) _inst_6 (VectorPrebundle.totalSpaceTopology.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (AddCommGroup.toAddCommMonoid.{u2} F (NormedAddCommGroup.toAddCommGroup.{u2} F _inst_4)) (NormedSpace.toModule.{u4, u2} R F (NontriviallyNormedField.toNormedField.{u4} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4) _inst_5) (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) (VectorPrebundle.trivializationOfMemPretrivializationAtlas.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a e he)
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.linear_of_mem_pretrivialization_atlas VectorPrebundle.linear_trivializationOfMemPretrivializationAtlasₓ'. -/
 theorem linear_trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
     {e : Pretrivialization F (π E)} (he : e ∈ a.pretrivializationAtlas) :
     @Trivialization.IsLinear R B F _ _ _ _ a.totalSpaceTopology _ _ _ _
@@ -1289,23 +1046,11 @@ theorem linear_trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R 
 
 variable (a : VectorPrebundle R F E)
 
-/- warning: vector_prebundle.mem_trivialization_at_source -> VectorPrebundle.mem_trivialization_at_source is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] (a : VectorPrebundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B) (x : E b), Membership.Mem.{max u2 u4, max u2 u4} (Bundle.TotalSpace.{u2, u4} B (fun (b : B) => E b)) (Set.{max u2 u4} (Bundle.TotalSpace.{u2, u4} B E)) (Set.hasMem.{max u2 u4} (Bundle.TotalSpace.{u2, u4} B E)) (Bundle.totalSpaceMk.{u2, u4} B (fun (b : B) => E b) b x) (LocalEquiv.source.{max u2 u4, max u2 u3} (Bundle.TotalSpace.{u2, u4} B E) (Prod.{u2, u3} B F) (Pretrivialization.toLocalEquiv.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (Bundle.TotalSpace.proj.{u2, u4} B E) (VectorPrebundle.pretrivializationAt.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b)))
-but is expected to have type
-  forall {R : Type.{u1}} {B : Type.{u3}} {F : Type.{u2}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (DivisionSemiring.toSemiring.{u1} R (Semifield.toDivisionSemiring.{u1} R (Field.toSemifield.{u1} R (NormedField.toField.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u1, u2} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] [_inst_6 : TopologicalSpace.{u3} B] (a : VectorPrebundle.{u1, u3, u2, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B) (x : E b), Membership.mem.{max u4 u3, max u3 u4} (Bundle.TotalSpace.{u3, u4} B E) (Set.{max u3 u4} (Bundle.TotalSpace.{u3, u4} B E)) (Set.instMembershipSet.{max u3 u4} (Bundle.TotalSpace.{u3, u4} B E)) (Bundle.totalSpaceMk.{u3, u4} B E b x) (LocalEquiv.source.{max u3 u4, max u3 u2} (Bundle.TotalSpace.{u3, u4} B E) (Prod.{u3, u2} B F) (Pretrivialization.toLocalEquiv.{u3, u2, max u3 u4} B F (Bundle.TotalSpace.{u3, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (Bundle.TotalSpace.proj.{u3, u4} B E) (VectorPrebundle.pretrivializationAt.{u1, u3, u2, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b)))
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.mem_trivialization_at_source VectorPrebundle.mem_trivialization_at_sourceₓ'. -/
 theorem mem_trivialization_at_source (b : B) (x : E b) :
     totalSpaceMk b x ∈ (a.pretrivializationAt b).source :=
   a.toFiberPrebundle.mem_pretrivializationAt_source b x
 #align vector_prebundle.mem_trivialization_at_source VectorPrebundle.mem_trivialization_at_source
 
-/- warning: vector_prebundle.total_space_mk_preimage_source -> VectorPrebundle.totalSpaceMk_preimage_source is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] (a : VectorPrebundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B), Eq.{succ u4} (Set.{u4} (E b)) (Set.preimage.{u4, max u2 u4} (E b) (Bundle.TotalSpace.{u2, u4} B E) (Bundle.totalSpaceMk.{u2, u4} B E b) (LocalEquiv.source.{max u2 u4, max u2 u3} (Bundle.TotalSpace.{u2, u4} B E) (Prod.{u2, u3} B F) (Pretrivialization.toLocalEquiv.{u2, u3, max u2 u4} B F (Bundle.TotalSpace.{u2, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (Bundle.TotalSpace.proj.{u2, u4} B E) (VectorPrebundle.pretrivializationAt.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b)))) (Set.univ.{u4} (E b))
-but is expected to have type
-  forall {R : Type.{u1}} {B : Type.{u3}} {F : Type.{u2}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (DivisionSemiring.toSemiring.{u1} R (Semifield.toDivisionSemiring.{u1} R (Field.toSemifield.{u1} R (NormedField.toField.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u1, u2} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] [_inst_6 : TopologicalSpace.{u3} B] (a : VectorPrebundle.{u1, u3, u2, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B), Eq.{succ u4} (Set.{u4} (E b)) (Set.preimage.{u4, max u3 u4} (E b) (Bundle.TotalSpace.{u3, u4} B E) (Bundle.totalSpaceMk.{u3, u4} B E b) (LocalEquiv.source.{max u3 u4, max u3 u2} (Bundle.TotalSpace.{u3, u4} B E) (Prod.{u3, u2} B F) (Pretrivialization.toLocalEquiv.{u3, u2, max u3 u4} B F (Bundle.TotalSpace.{u3, u4} B E) _inst_6 (UniformSpace.toTopologicalSpace.{u2} F (PseudoMetricSpace.toUniformSpace.{u2} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)))) (Bundle.TotalSpace.proj.{u3, u4} B E) (VectorPrebundle.pretrivializationAt.{u1, u3, u2, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b)))) (Set.univ.{u4} (E b))
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.total_space_mk_preimage_source VectorPrebundle.totalSpaceMk_preimage_sourceₓ'. -/
 @[simp]
 theorem totalSpaceMk_preimage_source (b : B) :
     totalSpaceMk b ⁻¹' (a.pretrivializationAt b).source = univ :=
@@ -1319,24 +1064,12 @@ def fiberTopology (b : B) : TopologicalSpace (E b) :=
 #align vector_prebundle.fiber_topology VectorPrebundle.fiberTopology
 -/
 
-/- warning: vector_prebundle.inducing_total_space_mk -> VectorPrebundle.inducing_totalSpaceMk is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] (a : VectorPrebundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B), Inducing.{u4, max u2 u4} (E b) (Bundle.TotalSpace.{u2, u4} B E) (VectorPrebundle.fiberTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b) (VectorPrebundle.totalSpaceTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (Bundle.totalSpaceMk.{u2, u4} B E b)
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u3}} {F : Type.{u1}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u2, u4} R (E x) (DivisionSemiring.toSemiring.{u2} R (Semifield.toDivisionSemiring.{u2} R (Field.toSemifield.{u2} R (NormedField.toField.{u2} R (NontriviallyNormedField.toNormedField.{u2} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u2, u1} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] [_inst_6 : TopologicalSpace.{u3} B] (a : VectorPrebundle.{u2, u3, u1, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B), Inducing.{u4, max u3 u4} (E b) (Bundle.TotalSpace.{u3, u4} B E) (VectorPrebundle.fiberTopology.{u2, u3, u1, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b) (VectorPrebundle.totalSpaceTopology.{u2, u3, u1, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (Bundle.totalSpaceMk.{u3, u4} B E b)
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.inducing_total_space_mk VectorPrebundle.inducing_totalSpaceMkₓ'. -/
 @[continuity]
 theorem inducing_totalSpaceMk (b : B) :
     @Inducing _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
   a.toFiberPrebundle.inducing_totalSpaceMk b
 #align vector_prebundle.inducing_total_space_mk VectorPrebundle.inducing_totalSpaceMk
 
-/- warning: vector_prebundle.continuous_total_space_mk -> VectorPrebundle.continuous_totalSpaceMk is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] (a : VectorPrebundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B), Continuous.{u4, max u2 u4} (E b) (Bundle.TotalSpace.{u2, u4} B E) (VectorPrebundle.fiberTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b) (VectorPrebundle.totalSpaceTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (Bundle.totalSpaceMk.{u2, u4} B E b)
-but is expected to have type
-  forall {R : Type.{u2}} {B : Type.{u3}} {F : Type.{u1}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u2, u4} R (E x) (DivisionSemiring.toSemiring.{u2} R (Semifield.toDivisionSemiring.{u2} R (Field.toSemifield.{u2} R (NormedField.toField.{u2} R (NontriviallyNormedField.toNormedField.{u2} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u2, u1} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] [_inst_6 : TopologicalSpace.{u3} B] (a : VectorPrebundle.{u2, u3, u1, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6) (b : B), Continuous.{u4, max u3 u4} (E b) (Bundle.TotalSpace.{u3, u4} B E) (VectorPrebundle.fiberTopology.{u2, u3, u1, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a b) (VectorPrebundle.totalSpaceTopology.{u2, u3, u1, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (Bundle.totalSpaceMk.{u3, u4} B E b)
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.continuous_total_space_mk VectorPrebundle.continuous_totalSpaceMkₓ'. -/
 @[continuity]
 theorem continuous_totalSpaceMk (b : B) :
     @Continuous _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
@@ -1351,12 +1084,6 @@ def toFiberBundle : @FiberBundle B F _ _ _ a.totalSpaceTopology a.fiberTopology 
 #align vector_prebundle.to_fiber_bundle VectorPrebundle.toFiberBundle
 -/
 
-/- warning: vector_prebundle.to_vector_bundle -> VectorPrebundle.to_vectorBundle is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {B : Type.{u2}} {F : Type.{u3}} {E : B -> Type.{u4}} [_inst_1 : NontriviallyNormedField.{u1} R] [_inst_2 : forall (x : B), AddCommMonoid.{u4} (E x)] [_inst_3 : forall (x : B), Module.{u1, u4} R (E x) (Ring.toSemiring.{u1} R (NormedRing.toRing.{u1} R (NormedCommRing.toNormedRing.{u1} R (NormedField.toNormedCommRing.{u1} R (NontriviallyNormedField.toNormedField.{u1} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} R F (NontriviallyNormedField.toNormedField.{u1} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u2} B] (a : VectorPrebundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6), VectorBundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 (VectorPrebundle.totalSpaceTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (VectorPrebundle.fiberTopology.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (VectorPrebundle.toFiberBundle.{u1, u2, u3, u4} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a)
-but is expected to have type
-  forall {R : Type.{u4}} {B : Type.{u3}} {F : Type.{u2}} {E : B -> Type.{u1}} [_inst_1 : NontriviallyNormedField.{u4} R] [_inst_2 : forall (x : B), AddCommMonoid.{u1} (E x)] [_inst_3 : forall (x : B), Module.{u4, u1} R (E x) (DivisionSemiring.toSemiring.{u4} R (Semifield.toDivisionSemiring.{u4} R (Field.toSemifield.{u4} R (NormedField.toField.{u4} R (NontriviallyNormedField.toNormedField.{u4} R _inst_1))))) (_inst_2 x)] [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} R F (NontriviallyNormedField.toNormedField.{u4} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] [_inst_6 : TopologicalSpace.{u3} B] (a : VectorPrebundle.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6), VectorBundle.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 (VectorPrebundle.totalSpaceTopology.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (VectorPrebundle.fiberTopology.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a) (VectorPrebundle.toFiberBundle.{u4, u3, u2, u1} R B F E _inst_1 (fun (x : B) => _inst_2 x) (fun (x : B) => _inst_3 x) _inst_4 _inst_5 _inst_6 a)
-Case conversion may be inaccurate. Consider using '#align vector_prebundle.to_vector_bundle VectorPrebundle.to_vectorBundleₓ'. -/
 /-- Make a `vector_bundle` from a `vector_prebundle`.  Concretely this means
 that, given a `vector_prebundle` structure for a sigma-type `E` -- which consists of a
 number of "pretrivializations" identifying parts of `E` with product spaces `U × F` -- one
@@ -1425,9 +1152,6 @@ def inCoordinates (x₀ x : B) (y₀ y : B') (ϕ : E x →SL[σ] E' y) : F →SL
 
 variable {F F'}
 
-/- warning: continuous_linear_map.in_coordinates_eq -> ContinuousLinearMap.inCoordinates_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.in_coordinates_eq ContinuousLinearMap.inCoordinates_eqₓ'. -/
 /-- rewrite `in_coordinates` using continuous linear equivalences. -/
 theorem inCoordinates_eq (x₀ x : B) (y₀ y : B') (ϕ : E x →SL[σ] E' y)
     (hx : x ∈ (trivializationAt F E x₀).baseSet) (hy : y ∈ (trivializationAt F' E' y₀).baseSet) :
@@ -1441,9 +1165,6 @@ theorem inCoordinates_eq (x₀ x : B) (y₀ y : B') (ϕ : E x →SL[σ] E' y)
     Trivialization.coe_continuousLinearEquivAt_eq, Trivialization.symm_continuousLinearEquivAt_eq]
 #align continuous_linear_map.in_coordinates_eq ContinuousLinearMap.inCoordinates_eq
 
-/- warning: continuous_linear_map.vector_bundle_core.in_coordinates_eq -> VectorBundleCore.inCoordinates_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.vector_bundle_core.in_coordinates_eq VectorBundleCore.inCoordinates_eqₓ'. -/
 /-- rewrite `in_coordinates` in a `vector_bundle_core`. -/
 protected theorem VectorBundleCore.inCoordinates_eq {ι ι'} (Z : VectorBundleCore 𝕜₁ B F ι)
     (Z' : VectorBundleCore 𝕜₂ B' F' ι') {x₀ x : B} {y₀ y : B'} (ϕ : F →SL[σ] F')

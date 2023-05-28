@@ -184,34 +184,16 @@ def Equiv (x y : PSet) : Prop :=
 #align pSet.equiv PSet.Equiv
 -/
 
-/- warning: pSet.equiv_iff -> PSet.equiv_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}}, Iff (PSet.Equiv.{u1, u2} x y) (And (forall (i : PSet.Type.{u1} x), Exists.{succ u2} (PSet.Type.{u2} y) (fun (j : PSet.Type.{u2} y) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j))) (forall (j : PSet.Type.{u2} y), Exists.{succ u1} (PSet.Type.{u1} x) (fun (i : PSet.Type.{u1} x) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j))))
-but is expected to have type
-  forall {x : PSet.{u2}} {y : PSet.{u1}}, Iff (PSet.Equiv.{u2, u1} x y) (And (forall (i : PSet.Type.{u2} x), Exists.{succ u1} (PSet.Type.{u1} y) (fun (j : PSet.Type.{u1} y) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j))) (forall (j : PSet.Type.{u1} y), Exists.{succ u2} (PSet.Type.{u2} x) (fun (i : PSet.Type.{u2} x) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j))))
-Case conversion may be inaccurate. Consider using '#align pSet.equiv_iff PSet.equiv_iffₓ'. -/
 theorem equiv_iff :
     ∀ {x y : PSet},
       Equiv x y ↔ (∀ i, ∃ j, Equiv (x.Func i) (y.Func j)) ∧ ∀ j, ∃ i, Equiv (x.Func i) (y.Func j)
   | ⟨α, A⟩, ⟨β, B⟩ => Iff.rfl
 #align pSet.equiv_iff PSet.equiv_iff
 
-/- warning: pSet.equiv.exists_left -> PSet.Equiv.exists_left is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}}, (PSet.Equiv.{u1, u2} x y) -> (forall (i : PSet.Type.{u1} x), Exists.{succ u2} (PSet.Type.{u2} y) (fun (j : PSet.Type.{u2} y) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j)))
-but is expected to have type
-  forall {x : PSet.{u2}} {y : PSet.{u1}}, (PSet.Equiv.{u2, u1} x y) -> (forall (i : PSet.Type.{u2} x), Exists.{succ u1} (PSet.Type.{u1} y) (fun (j : PSet.Type.{u1} y) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j)))
-Case conversion may be inaccurate. Consider using '#align pSet.equiv.exists_left PSet.Equiv.exists_leftₓ'. -/
 theorem Equiv.exists_left {x y : PSet} (h : Equiv x y) : ∀ i, ∃ j, Equiv (x.Func i) (y.Func j) :=
   (equiv_iff.1 h).1
 #align pSet.equiv.exists_left PSet.Equiv.exists_left
 
-/- warning: pSet.equiv.exists_right -> PSet.Equiv.exists_right is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}}, (PSet.Equiv.{u1, u2} x y) -> (forall (j : PSet.Type.{u2} y), Exists.{succ u1} (PSet.Type.{u1} x) (fun (i : PSet.Type.{u1} x) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j)))
-but is expected to have type
-  forall {x : PSet.{u2}} {y : PSet.{u1}}, (PSet.Equiv.{u2, u1} x y) -> (forall (j : PSet.Type.{u1} y), Exists.{succ u2} (PSet.Type.{u2} x) (fun (i : PSet.Type.{u2} x) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j)))
-Case conversion may be inaccurate. Consider using '#align pSet.equiv.exists_right PSet.Equiv.exists_rightₓ'. -/
 theorem Equiv.exists_right {x y : PSet} (h : Equiv x y) : ∀ j, ∃ i, Equiv (x.Func i) (y.Func j) :=
   (equiv_iff.1 h).2
 #align pSet.equiv.exists_right PSet.Equiv.exists_right
@@ -229,12 +211,6 @@ protected theorem Equiv.rfl : ∀ {x}, Equiv x x :=
 #align pSet.equiv.rfl PSet.Equiv.rfl
 -/
 
-/- warning: pSet.equiv.euc -> PSet.Equiv.euc is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}} {z : PSet.{u3}}, (PSet.Equiv.{u1, u2} x y) -> (PSet.Equiv.{u3, u2} z y) -> (PSet.Equiv.{u1, u3} x z)
-but is expected to have type
-  forall {x : PSet.{u3}} {y : PSet.{u2}} {z : PSet.{u1}}, (PSet.Equiv.{u3, u2} x y) -> (PSet.Equiv.{u1, u2} z y) -> (PSet.Equiv.{u3, u1} x z)
-Case conversion may be inaccurate. Consider using '#align pSet.equiv.euc PSet.Equiv.eucₓ'. -/
 protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
   PSet.recOn x fun α A IH y =>
     PSet.casesOn y fun β B ⟨γ, Γ⟩ ⟨αβ, βα⟩ ⟨γβ, βγ⟩ =>
@@ -248,44 +224,20 @@ protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x
         ⟨a, IH a ba cb⟩⟩
 #align pSet.equiv.euc PSet.Equiv.euc
 
-/- warning: pSet.equiv.symm -> PSet.Equiv.symm is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}}, (PSet.Equiv.{u1, u2} x y) -> (PSet.Equiv.{u2, u1} y x)
-but is expected to have type
-  forall {x : PSet.{u2}} {y : PSet.{u1}}, (PSet.Equiv.{u2, u1} x y) -> (PSet.Equiv.{u1, u2} y x)
-Case conversion may be inaccurate. Consider using '#align pSet.equiv.symm PSet.Equiv.symmₓ'. -/
 @[symm]
 protected theorem Equiv.symm {x y} : Equiv x y → Equiv y x :=
   (Equiv.refl y).euc
 #align pSet.equiv.symm PSet.Equiv.symm
 
-/- warning: pSet.equiv.comm -> PSet.Equiv.comm is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}}, Iff (PSet.Equiv.{u1, u2} x y) (PSet.Equiv.{u2, u1} y x)
-but is expected to have type
-  forall {x : PSet.{u2}} {y : PSet.{u1}}, Iff (PSet.Equiv.{u2, u1} x y) (PSet.Equiv.{u1, u2} y x)
-Case conversion may be inaccurate. Consider using '#align pSet.equiv.comm PSet.Equiv.commₓ'. -/
 protected theorem Equiv.comm {x y} : Equiv x y ↔ Equiv y x :=
   ⟨Equiv.symm, Equiv.symm⟩
 #align pSet.equiv.comm PSet.Equiv.comm
 
-/- warning: pSet.equiv.trans -> PSet.Equiv.trans is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u2}} {z : PSet.{u3}}, (PSet.Equiv.{u1, u2} x y) -> (PSet.Equiv.{u2, u3} y z) -> (PSet.Equiv.{u1, u3} x z)
-but is expected to have type
-  forall {x : PSet.{u3}} {y : PSet.{u2}} {z : PSet.{u1}}, (PSet.Equiv.{u3, u2} x y) -> (PSet.Equiv.{u2, u1} y z) -> (PSet.Equiv.{u3, u1} x z)
-Case conversion may be inaccurate. Consider using '#align pSet.equiv.trans PSet.Equiv.transₓ'. -/
 @[trans]
 protected theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
   h1.euc h2.symm
 #align pSet.equiv.trans PSet.Equiv.trans
 
-/- warning: pSet.equiv_of_is_empty -> PSet.equiv_of_isEmpty is a dubious translation:
-lean 3 declaration is
-  forall (x : PSet.{u1}) (y : PSet.{u2}) [_inst_1 : IsEmpty.{succ u1} (PSet.Type.{u1} x)] [_inst_2 : IsEmpty.{succ u2} (PSet.Type.{u2} y)], PSet.Equiv.{u1, u2} x y
-but is expected to have type
-  forall (x : PSet.{u2}) (y : PSet.{u1}) [_inst_1 : IsEmpty.{succ u2} (PSet.Type.{u2} x)] [_inst_2 : IsEmpty.{succ u1} (PSet.Type.{u1} y)], PSet.Equiv.{u2, u1} x y
-Case conversion may be inaccurate. Consider using '#align pSet.equiv_of_is_empty PSet.equiv_of_isEmptyₓ'. -/
 protected theorem equiv_of_isEmpty (x y : PSet) [IsEmpty x.type] [IsEmpty y.type] : Equiv x y :=
   equiv_iff.2 <| by simp
 #align pSet.equiv_of_is_empty PSet.equiv_of_isEmpty
@@ -553,12 +505,6 @@ theorem not_nonempty_empty : ¬PSet.Nonempty ∅ := by simp [PSet.Nonempty]
 #align pSet.not_nonempty_empty PSet.not_nonempty_empty
 -/
 
-/- warning: pSet.equiv_empty -> PSet.equiv_empty is a dubious translation:
-lean 3 declaration is
-  forall (x : PSet.{u1}) [_inst_1 : IsEmpty.{succ u1} (PSet.Type.{u1} x)], PSet.Equiv.{u1, u2} x (EmptyCollection.emptyCollection.{succ u2} PSet.{u2} PSet.hasEmptyc.{u2})
-but is expected to have type
-  forall (x : PSet.{u2}) [_inst_1 : IsEmpty.{succ u2} (PSet.Type.{u2} x)], PSet.Equiv.{u2, u1} x (EmptyCollection.emptyCollection.{succ u1} PSet.{u1} PSet.instEmptyCollectionPSet.{u1})
-Case conversion may be inaccurate. Consider using '#align pSet.equiv_empty PSet.equiv_emptyₓ'. -/
 protected theorem equiv_empty (x : PSet) [IsEmpty x.type] : Equiv x ∅ :=
   PSet.equiv_of_isEmpty x _
 #align pSet.equiv_empty PSet.equiv_empty
@@ -636,12 +582,6 @@ def sUnion (a : PSet) : PSet :=
 -- mathport name: pSet.sUnion
 prefix:110 "⋃₀ " => PSet.sUnion
 
-/- warning: pSet.mem_sUnion -> PSet.mem_sUnion is a dubious translation:
-lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y (PSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y z)))
-but is expected to have type
-  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y (PSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => And (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} z x) (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y z)))
-Case conversion may be inaccurate. Consider using '#align pSet.mem_sUnion PSet.mem_sUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
@@ -671,12 +611,6 @@ def image (f : PSet.{u} → PSet.{u}) (x : PSet.{u}) : PSet :=
 #align pSet.image PSet.image
 -/
 
-/- warning: pSet.mem_image -> PSet.mem_image is a dubious translation:
-lean 3 declaration is
-  forall {f : PSet.{u1} -> PSet.{u1}}, (forall {x : PSet.{u1}} {y : PSet.{u1}}, (PSet.Equiv.{u1, u1} x y) -> (PSet.Equiv.{u1, u1} (f x) (f y))) -> (forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y (PSet.image.{u1} f x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) => PSet.Equiv.{u1, u1} y (f z)))))
-but is expected to have type
-  forall {f : PSet.{u1} -> PSet.{u1}}, (forall (x : PSet.{u1}) (y : PSet.{u1}), (PSet.Equiv.{u1, u1} x y) -> (PSet.Equiv.{u1, u1} (f x) (f y))) -> (forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y (PSet.image.{u1} f x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => And (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} z x) (PSet.Equiv.{u1, u1} y (f z)))))
-Case conversion may be inaccurate. Consider using '#align pSet.mem_image PSet.mem_imageₓ'. -/
 theorem mem_image {f : PSet.{u} → PSet.{u}} (H : ∀ {x y}, Equiv x y → Equiv (f x) (f y)) :
     ∀ {x y : PSet.{u}}, y ∈ image f x ↔ ∃ z ∈ x, Equiv y (f z)
   | ⟨α, A⟩, y =>
@@ -1367,12 +1301,6 @@ noncomputable def sInter (x : ZFSet) : ZFSet := by
 -- mathport name: Set.sInter
 prefix:110 "⋂₀ " => ZFSet.sInter
 
-/- warning: Set.mem_sUnion -> ZFSet.mem_sUnion is a dubious translation:
-lean 3 declaration is
-  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y z)))
-but is expected to have type
-  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y z)))
-Case conversion may be inaccurate. Consider using '#align Set.mem_sUnion ZFSet.mem_sUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem mem_sUnion {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
@@ -1508,34 +1436,16 @@ instance : Inter ZFSet :=
 instance : SDiff ZFSet :=
   ⟨ZFSet.diff⟩
 
-/- warning: Set.to_set_union -> ZFSet.toSet_union is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.hasUnion.{u1} x y)) (Union.union.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.hasUnion.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
-but is expected to have type
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.instUnionZFSet.{u1} x y)) (Union.union.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instUnionSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
-Case conversion may be inaccurate. Consider using '#align Set.to_set_union ZFSet.toSet_unionₓ'. -/
 @[simp]
 theorem toSet_union (x y : ZFSet.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet := by unfold Union.union;
   rw [ZFSet.union]; simp
 #align Set.to_set_union ZFSet.toSet_union
 
-/- warning: Set.to_set_inter -> ZFSet.toSet_inter is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.hasInter.{u1} x y)) (Inter.inter.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.hasInter.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
-but is expected to have type
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y)) (Inter.inter.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instInterSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
-Case conversion may be inaccurate. Consider using '#align Set.to_set_inter ZFSet.toSet_interₓ'. -/
 @[simp]
 theorem toSet_inter (x y : ZFSet.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet := by unfold Inter.inter;
   rw [ZFSet.inter]; ext; simp
 #align Set.to_set_inter ZFSet.toSet_inter
 
-/- warning: Set.to_set_sdiff -> ZFSet.toSet_sdiff is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.hasSdiff.{u1} x y)) (SDiff.sdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (BooleanAlgebra.toHasSdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.booleanAlgebra.{succ u1} ZFSet.{u1})) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
-but is expected to have type
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.instSDiffZFSet.{u1} x y)) (SDiff.sdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instSDiffSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
-Case conversion may be inaccurate. Consider using '#align Set.to_set_sdiff ZFSet.toSet_sdiffₓ'. -/
 @[simp]
 theorem toSet_sdiff (x y : ZFSet.{u}) : (x \ y).toSet = x.toSet \ y.toSet := by
   change { z ∈ x | z ∉ y }.toSet = _; ext; simp
@@ -1610,12 +1520,6 @@ theorem mem_irrefl (x : ZFSet) : x ∉ x :=
 #align Set.mem_irrefl ZFSet.mem_irrefl
 -/
 
-/- warning: Set.regularity -> ZFSet.regularity is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}), (Ne.{succ (succ u1)} ZFSet.{u1} x (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.hasEmptyc.{u1})) -> (Exists.{succ (succ u1)} ZFSet.{u1} (fun (y : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y x) => Eq.{succ (succ u1)} ZFSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.hasInter.{u1} x y) (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.hasEmptyc.{u1}))))
-but is expected to have type
-  forall (x : ZFSet.{u1}), (Ne.{succ (succ u1)} ZFSet.{u1} x (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.instEmptyCollectionZFSet.{u1})) -> (Exists.{succ (succ u1)} ZFSet.{u1} (fun (y : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y x) (Eq.{succ (succ u1)} ZFSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y) (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.instEmptyCollectionZFSet.{u1}))))
-Case conversion may be inaccurate. Consider using '#align Set.regularity ZFSet.regularityₓ'. -/
 theorem regularity (x : ZFSet.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ :=
   by_contradiction fun ne =>
     h <|
@@ -1651,12 +1555,6 @@ theorem image.mk :
 #align Set.image.mk ZFSet.image.mk
 -/
 
-/- warning: Set.mem_image -> ZFSet.mem_image is a dubious translation:
-lean 3 declaration is
-  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.image.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Eq.{succ (succ u1)} ZFSet.{u1} (f z) y)))
-but is expected to have type
-  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.image.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Eq.{succ (succ u1)} ZFSet.{u1} (f z) y)))
-Case conversion may be inaccurate. Consider using '#align Set.mem_image ZFSet.mem_imageₓ'. -/
 @[simp]
 theorem mem_image :
     ∀ {f : ZFSet.{u} → ZFSet.{u}} [H : Definable 1 f] {x y : ZFSet.{u}},
@@ -1723,12 +1621,6 @@ def pairSep (p : ZFSet.{u} → ZFSet.{u} → Prop) (x y : ZFSet.{u}) : ZFSet.{u}
 #align Set.pair_sep ZFSet.pairSep
 -/
 
-/- warning: Set.mem_pair_sep -> ZFSet.mem_pairSep is a dubious translation:
-lean 3 declaration is
-  forall {p : ZFSet.{u1} -> ZFSet.{u1} -> Prop} {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z (ZFSet.pairSep.{u1} p x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) => Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) => And (Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b)) (p a b))))))
-but is expected to have type
-  forall {p : ZFSet.{u1} -> ZFSet.{u1} -> Prop} {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z (ZFSet.pairSep.{u1} p x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} a x) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} b y) (And (Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b)) (p a b))))))
-Case conversion may be inaccurate. Consider using '#align Set.mem_pair_sep ZFSet.mem_pairSepₓ'. -/
 @[simp]
 theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
     z ∈ pairSep p x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b :=
@@ -1780,12 +1672,6 @@ def prod : ZFSet.{u} → ZFSet.{u} → ZFSet.{u} :=
 #align Set.prod ZFSet.prod
 -/
 
-/- warning: Set.mem_prod -> ZFSet.mem_prod is a dubious translation:
-lean 3 declaration is
-  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z (ZFSet.prod.{u1} x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) => Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) => Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b))))))
-but is expected to have type
-  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z (ZFSet.prod.{u1} x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} a x) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} b y) (Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b))))))
-Case conversion may be inaccurate. Consider using '#align Set.mem_prod ZFSet.mem_prodₓ'. -/
 @[simp]
 theorem mem_prod {x y z : ZFSet.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b := by
   simp [Prod]
@@ -1838,12 +1724,6 @@ noncomputable def map (f : ZFSet → ZFSet) [H : Definable 1 f] : ZFSet → ZFSe
 #align Set.map ZFSet.map
 -/
 
-/- warning: Set.mem_map -> ZFSet.mem_map is a dubious translation:
-lean 3 declaration is
-  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.map.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Eq.{succ (succ u1)} ZFSet.{u1} (ZFSet.pair.{u1} z (f z)) y)))
-but is expected to have type
-  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.map.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Eq.{succ (succ u1)} ZFSet.{u1} (ZFSet.pair.{u1} z (f z)) y)))
-Case conversion may be inaccurate. Consider using '#align Set.mem_map ZFSet.mem_mapₓ'. -/
 @[simp]
 theorem mem_map {f : ZFSet → ZFSet} [H : Definable 1 f] {x y : ZFSet} :
     y ∈ map f x ↔ ∃ z ∈ x, pair z (f z) = y :=
@@ -2188,34 +2068,16 @@ theorem coe_insert (x y : ZFSet.{u}) : ↑(insert x y) = @insert ZFSet.{u} Class
 #align Class.coe_insert Class.coe_insert
 -/
 
-/- warning: Class.coe_union -> Class.coe_union is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) (Union.union.{succ u1} ZFSet.{u1} ZFSet.hasUnion.{u1} x y)) (Union.union.{succ u1} Class.{u1} Class.hasUnion.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) x) ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) y))
-but is expected to have type
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} (Class.ofSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.instUnionZFSet.{u1} x y)) (Union.union.{succ u1} Class.{u1} instClassUnion.{u1} (Class.ofSet.{u1} x) (Class.ofSet.{u1} y))
-Case conversion may be inaccurate. Consider using '#align Class.coe_union Class.coe_unionₓ'. -/
 @[simp, norm_cast]
 theorem coe_union (x y : ZFSet.{u}) : ↑(x ∪ y) = (x : Class.{u}) ∪ y :=
   ext fun z => ZFSet.mem_union
 #align Class.coe_union Class.coe_union
 
-/- warning: Class.coe_inter -> Class.coe_inter is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.hasInter.{u1} x y)) (Inter.inter.{succ u1} Class.{u1} Class.hasInter.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) x) ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) y))
-but is expected to have type
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} (Class.ofSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y)) (Inter.inter.{succ u1} Class.{u1} instClassInter.{u1} (Class.ofSet.{u1} x) (Class.ofSet.{u1} y))
-Case conversion may be inaccurate. Consider using '#align Class.coe_inter Class.coe_interₓ'. -/
 @[simp, norm_cast]
 theorem coe_inter (x y : ZFSet.{u}) : ↑(x ∩ y) = (x : Class.{u}) ∩ y :=
   ext fun z => ZFSet.mem_inter
 #align Class.coe_inter Class.coe_inter
 
-/- warning: Class.coe_diff -> Class.coe_diff is a dubious translation:
-lean 3 declaration is
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.hasSdiff.{u1} x y)) (SDiff.sdiff.{succ u1} Class.{u1} Class.hasSdiff.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) x) ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) y))
-but is expected to have type
-  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} (Class.ofSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.instSDiffZFSet.{u1} x y)) (SDiff.sdiff.{succ u1} Class.{u1} instClassSDiff.{u1} (Class.ofSet.{u1} x) (Class.ofSet.{u1} y))
-Case conversion may be inaccurate. Consider using '#align Class.coe_diff Class.coe_diffₓ'. -/
 @[simp, norm_cast]
 theorem coe_diff (x y : ZFSet.{u}) : ↑(x \ y) = (x : Class.{u}) \ y :=
   ext fun z => ZFSet.mem_diff

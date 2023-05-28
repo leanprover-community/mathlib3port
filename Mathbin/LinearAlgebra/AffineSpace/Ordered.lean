@@ -54,53 +54,35 @@ variable [OrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSMul k E]
 
 variable {a a' b b' : E} {r r' : k}
 
-/- warning: line_map_mono_left -> lineMap_mono_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_mono_left lineMap_mono_leftₓ'. -/
 theorem lineMap_mono_left (ha : a ≤ a') (hr : r ≤ 1) : lineMap a b r ≤ lineMap a' b r :=
   by
   simp only [line_map_apply_module]
   exact add_le_add_right (smul_le_smul_of_nonneg ha (sub_nonneg.2 hr)) _
 #align line_map_mono_left lineMap_mono_left
 
-/- warning: line_map_strict_mono_left -> lineMap_strict_mono_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_strict_mono_left lineMap_strict_mono_leftₓ'. -/
 theorem lineMap_strict_mono_left (ha : a < a') (hr : r < 1) : lineMap a b r < lineMap a' b r :=
   by
   simp only [line_map_apply_module]
   exact add_lt_add_right (smul_lt_smul_of_pos ha (sub_pos.2 hr)) _
 #align line_map_strict_mono_left lineMap_strict_mono_left
 
-/- warning: line_map_mono_right -> lineMap_mono_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_mono_right lineMap_mono_rightₓ'. -/
 theorem lineMap_mono_right (hb : b ≤ b') (hr : 0 ≤ r) : lineMap a b r ≤ lineMap a b' r :=
   by
   simp only [line_map_apply_module]
   exact add_le_add_left (smul_le_smul_of_nonneg hb hr) _
 #align line_map_mono_right lineMap_mono_right
 
-/- warning: line_map_strict_mono_right -> lineMap_strict_mono_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_strict_mono_right lineMap_strict_mono_rightₓ'. -/
 theorem lineMap_strict_mono_right (hb : b < b') (hr : 0 < r) : lineMap a b r < lineMap a b' r :=
   by
   simp only [line_map_apply_module]
   exact add_lt_add_left (smul_lt_smul_of_pos hb hr) _
 #align line_map_strict_mono_right lineMap_strict_mono_right
 
-/- warning: line_map_mono_endpoints -> lineMap_mono_endpoints is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_mono_endpoints lineMap_mono_endpointsₓ'. -/
 theorem lineMap_mono_endpoints (ha : a ≤ a') (hb : b ≤ b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
     lineMap a b r ≤ lineMap a' b' r :=
   (lineMap_mono_left ha h₁).trans (lineMap_mono_right hb h₀)
 #align line_map_mono_endpoints lineMap_mono_endpoints
 
-/- warning: line_map_strict_mono_endpoints -> lineMap_strict_mono_endpoints is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_strict_mono_endpoints lineMap_strict_mono_endpointsₓ'. -/
 theorem lineMap_strict_mono_endpoints (ha : a < a') (hb : b < b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
     lineMap a b r < lineMap a' b' r :=
   by
@@ -108,9 +90,6 @@ theorem lineMap_strict_mono_endpoints (ha : a < a') (hb : b < b') (h₀ : 0 ≤ 
   exact (lineMap_mono_left ha.le h₁).trans_lt (lineMap_strict_mono_right hb h₀)
 #align line_map_strict_mono_endpoints lineMap_strict_mono_endpoints
 
-/- warning: line_map_lt_line_map_iff_of_lt -> lineMap_lt_lineMap_iff_of_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_lt_line_map_iff_of_lt lineMap_lt_lineMap_iff_of_ltₓ'. -/
 theorem lineMap_lt_lineMap_iff_of_lt (h : r < r') : lineMap a b r < lineMap a b r' ↔ a < b :=
   by
   simp only [line_map_apply_module]
@@ -119,30 +98,18 @@ theorem lineMap_lt_lineMap_iff_of_lt (h : r < r') : lineMap a b r < lineMap a b 
   infer_instance
 #align line_map_lt_line_map_iff_of_lt lineMap_lt_lineMap_iff_of_lt
 
-/- warning: left_lt_line_map_iff_lt -> left_lt_lineMap_iff_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align left_lt_line_map_iff_lt left_lt_lineMap_iff_ltₓ'. -/
 theorem left_lt_lineMap_iff_lt (h : 0 < r) : a < lineMap a b r ↔ a < b :=
   Iff.trans (by rw [line_map_apply_zero]) (lineMap_lt_lineMap_iff_of_lt h)
 #align left_lt_line_map_iff_lt left_lt_lineMap_iff_lt
 
-/- warning: line_map_lt_left_iff_lt -> lineMap_lt_left_iff_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_lt_left_iff_lt lineMap_lt_left_iff_ltₓ'. -/
 theorem lineMap_lt_left_iff_lt (h : 0 < r) : lineMap a b r < a ↔ b < a :=
   @left_lt_lineMap_iff_lt k Eᵒᵈ _ _ _ _ _ _ _ h
 #align line_map_lt_left_iff_lt lineMap_lt_left_iff_lt
 
-/- warning: line_map_lt_right_iff_lt -> lineMap_lt_right_iff_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_lt_right_iff_lt lineMap_lt_right_iff_ltₓ'. -/
 theorem lineMap_lt_right_iff_lt (h : r < 1) : lineMap a b r < b ↔ a < b :=
   Iff.trans (by rw [line_map_apply_one]) (lineMap_lt_lineMap_iff_of_lt h)
 #align line_map_lt_right_iff_lt lineMap_lt_right_iff_lt
 
-/- warning: right_lt_line_map_iff_lt -> right_lt_lineMap_iff_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align right_lt_line_map_iff_lt right_lt_lineMap_iff_ltₓ'. -/
 theorem right_lt_lineMap_iff_lt (h : r < 1) : b < lineMap a b r ↔ b < a :=
   @lineMap_lt_right_iff_lt k Eᵒᵈ _ _ _ _ _ _ _ h
 #align right_lt_line_map_iff_lt right_lt_lineMap_iff_lt
@@ -154,12 +121,6 @@ section LinearOrderedRing
 variable [LinearOrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSMul k E]
   [Invertible (2 : k)] {a a' b b' : E} {r r' : k}
 
-/- warning: midpoint_le_midpoint -> midpoint_le_midpoint is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedRing.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (Ring.toSemiring.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (StrictOrderedSemiring.toOrderedSemiring.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)))))) (Module.toMulActionWithZero.{u1, u2} k E (Ring.toSemiring.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) _inst_3))] [_inst_5 : Invertible.{u1} k (Distrib.toHasMul.{u1} k (Ring.toDistrib.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)))) (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)))))) (OfNat.ofNat.{u1} k 2 (OfNat.mk.{u1} k 2 (bit0.{u1} k (Distrib.toHasAdd.{u1} k (Ring.toDistrib.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)))) (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1))))))))))] {a : E} {a' : E} {b : E} {b' : E}, (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a a') -> (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b b') -> (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) (midpoint.{u1, u2, u2} k E E (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)) _inst_5 (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b) (midpoint.{u1, u2, u2} k E E (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)) _inst_5 (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a' b'))
-but is expected to have type
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedRing.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (StrictOrderedSemiring.toSemiring.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toLinearOrderedSemiring.{u1} k _inst_1))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (StrictOrderedSemiring.toOrderedSemiring.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toLinearOrderedSemiring.{u1} k _inst_1))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (StrictOrderedSemiring.toSemiring.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toLinearOrderedSemiring.{u1} k _inst_1)))) (AddMonoid.toZero.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} k E (StrictOrderedSemiring.toSemiring.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toLinearOrderedSemiring.{u1} k _inst_1))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) _inst_3))] [_inst_5 : Invertible.{u1} k (NonUnitalNonAssocRing.toMul.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1))))) (Semiring.toOne.{u1} k (StrictOrderedSemiring.toSemiring.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toLinearOrderedSemiring.{u1} k _inst_1)))) (OfNat.ofNat.{u1} k 2 (instOfNat.{u1} k 2 (Semiring.toNatCast.{u1} k (StrictOrderedSemiring.toSemiring.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toLinearOrderedSemiring.{u1} k _inst_1)))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))] {a : E} {a' : E} {b : E} {b' : E}, (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a a') -> (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b b') -> (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) (midpoint.{u1, u2, u2} k E E (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)) _inst_5 (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b) (midpoint.{u1, u2, u2} k E E (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k _inst_1)) _inst_5 (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a' b'))
-Case conversion may be inaccurate. Consider using '#align midpoint_le_midpoint midpoint_le_midpointₓ'. -/
 theorem midpoint_le_midpoint (ha : a ≤ a') (hb : b ≤ b') : midpoint k a b ≤ midpoint k a' b' :=
   lineMap_mono_endpoints ha hb (invOf_nonneg.2 zero_le_two) <| invOf_le_one one_le_two
 #align midpoint_le_midpoint midpoint_le_midpoint
@@ -176,9 +137,6 @@ section
 
 variable {a b : E} {r r' : k}
 
-/- warning: line_map_le_line_map_iff_of_lt -> lineMap_le_lineMap_iff_of_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_le_line_map_iff_of_lt lineMap_le_lineMap_iff_of_ltₓ'. -/
 theorem lineMap_le_lineMap_iff_of_lt (h : r < r') : lineMap a b r ≤ lineMap a b r' ↔ a ≤ b :=
   by
   simp only [line_map_apply_module]
@@ -187,73 +145,37 @@ theorem lineMap_le_lineMap_iff_of_lt (h : r < r') : lineMap a b r ≤ lineMap a 
   infer_instance
 #align line_map_le_line_map_iff_of_lt lineMap_le_lineMap_iff_of_lt
 
-/- warning: left_le_line_map_iff_le -> left_le_lineMap_iff_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align left_le_line_map_iff_le left_le_lineMap_iff_leₓ'. -/
 theorem left_le_lineMap_iff_le (h : 0 < r) : a ≤ lineMap a b r ↔ a ≤ b :=
   Iff.trans (by rw [line_map_apply_zero]) (lineMap_le_lineMap_iff_of_lt h)
 #align left_le_line_map_iff_le left_le_lineMap_iff_le
 
-/- warning: left_le_midpoint -> left_le_midpoint is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (StrictOrderedSemiring.toOrderedSemiring.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)))))) (Module.toMulActionWithZero.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b)) (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a b)
-but is expected to have type
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (OrderedCommSemiring.toOrderedSemiring.{u1} k (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} k (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (AddMonoid.toZero.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b)) (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a b)
-Case conversion may be inaccurate. Consider using '#align left_le_midpoint left_le_midpointₓ'. -/
 @[simp]
 theorem left_le_midpoint : a ≤ midpoint k a b ↔ a ≤ b :=
   left_le_lineMap_iff_le <| inv_pos.2 zero_lt_two
 #align left_le_midpoint left_le_midpoint
 
-/- warning: line_map_le_left_iff_le -> lineMap_le_left_iff_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_le_left_iff_le lineMap_le_left_iff_leₓ'. -/
 theorem lineMap_le_left_iff_le (h : 0 < r) : lineMap a b r ≤ a ↔ b ≤ a :=
   @left_le_lineMap_iff_le k Eᵒᵈ _ _ _ _ _ _ _ h
 #align line_map_le_left_iff_le lineMap_le_left_iff_le
 
-/- warning: midpoint_le_left -> midpoint_le_left is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (StrictOrderedSemiring.toOrderedSemiring.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)))))) (Module.toMulActionWithZero.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b) a) (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b a)
-but is expected to have type
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (OrderedCommSemiring.toOrderedSemiring.{u1} k (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} k (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (AddMonoid.toZero.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b) a) (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b a)
-Case conversion may be inaccurate. Consider using '#align midpoint_le_left midpoint_le_leftₓ'. -/
 @[simp]
 theorem midpoint_le_left : midpoint k a b ≤ a ↔ b ≤ a :=
   lineMap_le_left_iff_le <| inv_pos.2 zero_lt_two
 #align midpoint_le_left midpoint_le_left
 
-/- warning: line_map_le_right_iff_le -> lineMap_le_right_iff_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_le_right_iff_le lineMap_le_right_iff_leₓ'. -/
 theorem lineMap_le_right_iff_le (h : r < 1) : lineMap a b r ≤ b ↔ a ≤ b :=
   Iff.trans (by rw [line_map_apply_one]) (lineMap_le_lineMap_iff_of_lt h)
 #align line_map_le_right_iff_le lineMap_le_right_iff_le
 
-/- warning: midpoint_le_right -> midpoint_le_right is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (StrictOrderedSemiring.toOrderedSemiring.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)))))) (Module.toMulActionWithZero.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b) b) (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a b)
-but is expected to have type
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (OrderedCommSemiring.toOrderedSemiring.{u1} k (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} k (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (AddMonoid.toZero.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b) b) (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) a b)
-Case conversion may be inaccurate. Consider using '#align midpoint_le_right midpoint_le_rightₓ'. -/
 @[simp]
 theorem midpoint_le_right : midpoint k a b ≤ b ↔ a ≤ b :=
   lineMap_le_right_iff_le <| inv_lt_one one_lt_two
 #align midpoint_le_right midpoint_le_right
 
-/- warning: right_le_line_map_iff_le -> right_le_lineMap_iff_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align right_le_line_map_iff_le right_le_lineMap_iff_leₓ'. -/
 theorem right_le_lineMap_iff_le (h : r < 1) : b ≤ lineMap a b r ↔ b ≤ a :=
   @lineMap_le_right_iff_le k Eᵒᵈ _ _ _ _ _ _ _ h
 #align right_le_line_map_iff_le right_le_lineMap_iff_le
 
-/- warning: right_le_midpoint -> right_le_midpoint is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (StrictOrderedSemiring.toOrderedSemiring.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)))))) (Module.toMulActionWithZero.{u1, u2} k E (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (StrictOrderedRing.toStrictOrderedSemiring.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b)) (LE.le.{u2} E (Preorder.toHasLe.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b a)
-but is expected to have type
-  forall {k : Type.{u1}} {E : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} k] [_inst_2 : OrderedAddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))] [_inst_4 : OrderedSMul.{u1, u2} k E (OrderedCommSemiring.toOrderedSemiring.{u1} k (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} k (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} k E (Semiring.toMonoidWithZero.{u1} k (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1))))) (AddMonoid.toZero.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (OrderedAddCommMonoid.toAddCommMonoid.{u2} E (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} k E (DivisionSemiring.toSemiring.{u1} k (Semifield.toDivisionSemiring.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} E (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} E _inst_2)) _inst_3))] {a : E} {b : E}, Iff (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b (midpoint.{u1, u2, u2} k E E (DivisionRing.toRing.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1))) (invertibleTwo.{u1} k (Field.toDivisionRing.{u1} k (LinearOrderedField.toField.{u1} k _inst_1)) (StrictOrderedSemiring.to_charZero.{u1} k (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} k (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} k (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_1)))))) (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2) _inst_3 (addGroupIsAddTorsor.{u2} E (AddCommGroup.toAddGroup.{u2} E (OrderedAddCommGroup.toAddCommGroup.{u2} E _inst_2))) a b)) (LE.le.{u2} E (Preorder.toLE.{u2} E (PartialOrder.toPreorder.{u2} E (OrderedAddCommGroup.toPartialOrder.{u2} E _inst_2))) b a)
-Case conversion may be inaccurate. Consider using '#align right_le_midpoint right_le_midpointₓ'. -/
 @[simp]
 theorem right_le_midpoint : b ≤ midpoint k a b ↔ b ≤ a :=
   right_le_lineMap_iff_le <| inv_lt_one one_lt_two
@@ -295,9 +217,6 @@ variable {f : k → E} {a b r : k}
 -- mathport name: exprc
 local notation "c" => lineMap a b r
 
-/- warning: map_le_line_map_iff_slope_le_slope_left -> map_le_lineMap_iff_slope_le_slope_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_le_line_map_iff_slope_le_slope_left map_le_lineMap_iff_slope_le_slope_leftₓ'. -/
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c ≤ slope f a b`. -/
 theorem map_le_lineMap_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
@@ -312,9 +231,6 @@ theorem map_le_lineMap_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
   infer_instance
 #align map_le_line_map_iff_slope_le_slope_left map_le_lineMap_iff_slope_le_slope_left
 
-/- warning: line_map_le_map_iff_slope_le_slope_left -> lineMap_le_map_iff_slope_le_slope_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_le_map_iff_slope_le_slope_left lineMap_le_map_iff_slope_le_slope_leftₓ'. -/
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b ≤ slope f a c`. -/
 theorem lineMap_le_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
@@ -322,9 +238,6 @@ theorem lineMap_le_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
   @map_le_lineMap_iff_slope_le_slope_left k Eᵒᵈ _ _ _ _ f a b r h
 #align line_map_le_map_iff_slope_le_slope_left lineMap_le_map_iff_slope_le_slope_left
 
-/- warning: map_lt_line_map_iff_slope_lt_slope_left -> map_lt_lineMap_iff_slope_lt_slope_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_lt_line_map_iff_slope_lt_slope_left map_lt_lineMap_iff_slope_lt_slope_leftₓ'. -/
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f a b`. -/
 theorem map_lt_lineMap_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
@@ -333,9 +246,6 @@ theorem map_lt_lineMap_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
     (map_le_lineMap_iff_slope_le_slope_left h)
 #align map_lt_line_map_iff_slope_lt_slope_left map_lt_lineMap_iff_slope_lt_slope_left
 
-/- warning: line_map_lt_map_iff_slope_lt_slope_left -> lineMap_lt_map_iff_slope_lt_slope_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_lt_map_iff_slope_lt_slope_left lineMap_lt_map_iff_slope_lt_slope_leftₓ'. -/
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f a c`. -/
 theorem lineMap_lt_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
@@ -343,9 +253,6 @@ theorem lineMap_lt_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
   @map_lt_lineMap_iff_slope_lt_slope_left k Eᵒᵈ _ _ _ _ f a b r h
 #align line_map_lt_map_iff_slope_lt_slope_left lineMap_lt_map_iff_slope_lt_slope_left
 
-/- warning: map_le_line_map_iff_slope_le_slope_right -> map_le_lineMap_iff_slope_le_slope_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_le_line_map_iff_slope_le_slope_right map_le_lineMap_iff_slope_le_slope_rightₓ'. -/
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b ≤ slope f c b`. -/
 theorem map_le_lineMap_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
@@ -360,9 +267,6 @@ theorem map_le_lineMap_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
   · infer_instance
 #align map_le_line_map_iff_slope_le_slope_right map_le_lineMap_iff_slope_le_slope_right
 
-/- warning: line_map_le_map_iff_slope_le_slope_right -> lineMap_le_map_iff_slope_le_slope_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_le_map_iff_slope_le_slope_right lineMap_le_map_iff_slope_le_slope_rightₓ'. -/
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b ≤ slope f a b`. -/
 theorem lineMap_le_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
@@ -370,9 +274,6 @@ theorem lineMap_le_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
   @map_le_lineMap_iff_slope_le_slope_right k Eᵒᵈ _ _ _ _ f a b r h
 #align line_map_le_map_iff_slope_le_slope_right lineMap_le_map_iff_slope_le_slope_right
 
-/- warning: map_lt_line_map_iff_slope_lt_slope_right -> map_lt_lineMap_iff_slope_lt_slope_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_lt_line_map_iff_slope_lt_slope_right map_lt_lineMap_iff_slope_lt_slope_rightₓ'. -/
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f c b`. -/
 theorem map_lt_lineMap_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
@@ -381,9 +282,6 @@ theorem map_lt_lineMap_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
     (map_le_lineMap_iff_slope_le_slope_right h)
 #align map_lt_line_map_iff_slope_lt_slope_right map_lt_lineMap_iff_slope_lt_slope_right
 
-/- warning: line_map_lt_map_iff_slope_lt_slope_right -> lineMap_lt_map_iff_slope_lt_slope_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_lt_map_iff_slope_lt_slope_right lineMap_lt_map_iff_slope_lt_slope_rightₓ'. -/
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a b`. -/
 theorem lineMap_lt_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
@@ -391,9 +289,6 @@ theorem lineMap_lt_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
   @map_lt_lineMap_iff_slope_lt_slope_right k Eᵒᵈ _ _ _ _ f a b r h
 #align line_map_lt_map_iff_slope_lt_slope_right lineMap_lt_map_iff_slope_lt_slope_right
 
-/- warning: map_le_line_map_iff_slope_le_slope -> map_le_lineMap_iff_slope_le_slope is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_le_line_map_iff_slope_le_slope map_le_lineMap_iff_slope_le_slopeₓ'. -/
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c ≤ slope f c b`. -/
 theorem map_le_lineMap_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
@@ -405,9 +300,6 @@ theorem map_le_lineMap_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r
   infer_instance
 #align map_le_line_map_iff_slope_le_slope map_le_lineMap_iff_slope_le_slope
 
-/- warning: line_map_le_map_iff_slope_le_slope -> lineMap_le_map_iff_slope_le_slope is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_le_map_iff_slope_le_slope lineMap_le_map_iff_slope_le_slopeₓ'. -/
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b ≤ slope f a c`. -/
 theorem lineMap_le_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
@@ -415,9 +307,6 @@ theorem lineMap_le_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r
   @map_le_lineMap_iff_slope_le_slope k Eᵒᵈ _ _ _ _ _ _ _ _ hab h₀ h₁
 #align line_map_le_map_iff_slope_le_slope lineMap_le_map_iff_slope_le_slope
 
-/- warning: map_lt_line_map_iff_slope_lt_slope -> map_lt_lineMap_iff_slope_lt_slope is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_lt_line_map_iff_slope_lt_slope map_lt_lineMap_iff_slope_lt_slopeₓ'. -/
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f c b`. -/
 theorem map_lt_lineMap_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
@@ -426,9 +315,6 @@ theorem map_lt_lineMap_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r
     (map_le_lineMap_iff_slope_le_slope hab h₀ h₁)
 #align map_lt_line_map_iff_slope_lt_slope map_lt_lineMap_iff_slope_lt_slope
 
-/- warning: line_map_lt_map_iff_slope_lt_slope -> lineMap_lt_map_iff_slope_lt_slope is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align line_map_lt_map_iff_slope_lt_slope lineMap_lt_map_iff_slope_lt_slopeₓ'. -/
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a c`. -/
 theorem lineMap_lt_map_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :

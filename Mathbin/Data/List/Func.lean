@@ -116,12 +116,6 @@ def sub {α : Type u} [Zero α] [Sub α] : List α → List α → List α :=
 #align list.func.sub List.Func.sub
 -/
 
-/- warning: list.func.length_set -> List.Func.length_set is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} [_inst_1 : Inhabited.{succ u1} α] {m : Nat} {as : List.{u1} α}, Eq.{1} Nat (List.length.{u1} α (List.Func.set.{u1} α _inst_1 a as m)) (LinearOrder.max.{0} Nat Nat.linearOrder (List.length.{u1} α as) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : Inhabited.{succ u1} α] {m : Nat} {as : List.{u1} α}, Eq.{1} Nat (List.length.{u1} α (List.Func.set.{u1} α _inst_1 a as m)) (Max.max.{0} Nat Nat.instMaxNat (List.length.{u1} α as) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align list.func.length_set List.Func.length_setₓ'. -/
 -- set
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
   | 0, [] => rfl
@@ -156,11 +150,6 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
 -/
 
 /- warning: list.func.eq_get_of_mem clashes with [anonymous] -> [anonymous]
-warning: list.func.eq_get_of_mem -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Inhabited.{succ u} α] {a : α} {as : List.{u} α}, (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) a as) -> (Exists.{1} Nat (fun (n : Nat) => α -> (Eq.{succ u} α a (List.Func.get.{u} α _inst_1 n as))))
-but is expected to have type
-  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align list.func.eq_get_of_mem [anonymous]ₓ'. -/
 theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
@@ -291,12 +280,6 @@ end Func
 -- so we close and open the namespace
 namespace Func
 
-/- warning: list.func.get_neg -> List.Func.get_neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] {k : Nat} {as : List.{u1} α}, Eq.{succ u1} α (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) k (List.Func.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as)) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) k as))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] {k : Nat} {as : List.{u1} α}, Eq.{succ u1} α (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) k (List.Func.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) as)) (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) k as))
-Case conversion may be inaccurate. Consider using '#align list.func.get_neg List.Func.get_negₓ'. -/
 -- neg
 @[simp]
 theorem get_neg [AddGroup α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as := by
@@ -346,12 +329,6 @@ theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f default defa
 #align list.func.get_pointwise List.Func.get_pointwise
 -/
 
-/- warning: list.func.length_pointwise -> List.Func.length_pointwise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Inhabited.{succ u1} α] [_inst_2 : Inhabited.{succ u2} β] {f : α -> β -> γ} {as : List.{u1} α} {bs : List.{u2} β}, Eq.{1} Nat (List.length.{u3} γ (List.Func.pointwise.{u1, u2, u3} α β γ _inst_1 _inst_2 f as bs)) (LinearOrder.max.{0} Nat Nat.linearOrder (List.length.{u1} α as) (List.length.{u2} β bs))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Inhabited.{succ u1} α] [_inst_2 : Inhabited.{succ u2} β] {f : α -> β -> γ} {as : List.{u1} α} {bs : List.{u2} β}, Eq.{1} Nat (List.length.{u3} γ (List.Func.pointwise.{u1, u2, u3} α β γ _inst_1 _inst_2 f as bs)) (Max.max.{0} Nat Nat.instMaxNat (List.length.{u1} α as) (List.length.{u2} β bs))
-Case conversion may be inaccurate. Consider using '#align list.func.length_pointwise List.Func.length_pointwiseₓ'. -/
 theorem length_pointwise {f : α → β → γ} :
     ∀ {as : List α} {bs : List β}, (pointwise f as bs).length = max as.length bs.length
   | [], [] => rfl
@@ -366,12 +343,6 @@ end Func
 
 namespace Func
 
-/- warning: list.func.get_add -> List.Func.get_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] {k : Nat} {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{succ u1} α (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)))))) k (List.Func.add.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) xs ys)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1))) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)))))) k xs) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)))))) k ys))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] {k : Nat} {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{succ u1} α (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddMonoid.toZero.{u1} α _inst_1)))) k (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) xs ys)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1))) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddMonoid.toZero.{u1} α _inst_1)))) k xs) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddMonoid.toZero.{u1} α _inst_1)))) k ys))
-Case conversion may be inaccurate. Consider using '#align list.func.get_add List.Func.get_addₓ'. -/
 -- add
 @[simp]
 theorem get_add {α : Type u} [AddMonoid α] {k : ℕ} {xs ys : List α} :
@@ -379,24 +350,12 @@ theorem get_add {α : Type u} [AddMonoid α] {k : ℕ} {xs ys : List α} :
   apply zero_add
 #align list.func.get_add List.Func.get_add
 
-/- warning: list.func.length_add -> List.Func.length_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : Add.{u1} α] {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{1} Nat (List.length.{u1} α (List.Func.add.{u1} α _inst_1 _inst_2 xs ys)) (LinearOrder.max.{0} Nat Nat.linearOrder (List.length.{u1} α xs) (List.length.{u1} α ys))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : Add.{u1} α] {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{1} Nat (List.length.{u1} α (List.Func.add.{u1} α _inst_1 _inst_2 xs ys)) (Max.max.{0} Nat Nat.instMaxNat (List.length.{u1} α xs) (List.length.{u1} α ys))
-Case conversion may be inaccurate. Consider using '#align list.func.length_add List.Func.length_addₓ'. -/
 @[simp]
 theorem length_add {α : Type u} [Zero α] [Add α] {xs ys : List α} :
     (add xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 #align list.func.length_add List.Func.length_add
 
-/- warning: list.func.nil_add -> List.Func.nil_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (List.nil.{u1} α) as) as
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (List.nil.{u1} α) as) as
-Case conversion may be inaccurate. Consider using '#align list.func.nil_add List.Func.nil_addₓ'. -/
 @[simp]
 theorem nil_add {α : Type u} [AddMonoid α] (as : List α) : add [] as = as :=
   by
@@ -406,12 +365,6 @@ theorem nil_add {α : Type u} [AddMonoid α] (as : List α) : add [] as = as :=
   rw [zero_add, id]
 #align list.func.nil_add List.Func.nil_add
 
-/- warning: list.func.add_nil -> List.Func.add_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) as (List.nil.{u1} α)) as
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) as (List.nil.{u1} α)) as
-Case conversion may be inaccurate. Consider using '#align list.func.add_nil List.Func.add_nilₓ'. -/
 @[simp]
 theorem add_nil {α : Type u} [AddMonoid α] (as : List α) : add as [] = as :=
   by
@@ -421,12 +374,6 @@ theorem add_nil {α : Type u} [AddMonoid α] (as : List α) : add as [] = as :=
   rw [add_zero, id]
 #align list.func.add_nil List.Func.add_nil
 
-/- warning: list.func.map_add_map -> List.Func.map_add_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (f : α -> α) (g : α -> α) {as : List.{u1} α}, Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (List.map.{u1, u1} α α f as) (List.map.{u1, u1} α α g as)) (List.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1))) (f x) (g x)) as)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (f : α -> α) (g : α -> α) {as : List.{u1} α}, Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (List.map.{u1, u1} α α f as) (List.map.{u1, u1} α α g as)) (List.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1))) (f x) (g x)) as)
-Case conversion may be inaccurate. Consider using '#align list.func.map_add_map List.Func.map_add_mapₓ'. -/
 theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α} :
     add (as.map f) (as.map g) = as.map fun x => f x + g x :=
   by
@@ -443,12 +390,6 @@ theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α
   apply zero_add
 #align list.func.map_add_map List.Func.map_add_map
 
-/- warning: list.func.get_sub -> List.Func.get_sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] {k : Nat} {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{succ u1} α (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) k (List.Func.sub.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))) (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) xs ys)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) k xs) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) k ys))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] {k : Nat} {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{succ u1} α (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) k (List.Func.sub.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) xs ys)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) k xs) (List.Func.get.{u1} α (Inhabited.mk.{succ u1} α (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) k ys))
-Case conversion may be inaccurate. Consider using '#align list.func.get_sub List.Func.get_subₓ'. -/
 -- sub
 @[simp]
 theorem get_sub {α : Type u} [AddGroup α] {k : ℕ} {xs ys : List α} :
@@ -456,24 +397,12 @@ theorem get_sub {α : Type u} [AddGroup α] {k : ℕ} {xs ys : List α} :
   apply sub_zero
 #align list.func.get_sub List.Func.get_sub
 
-/- warning: list.func.length_sub -> List.Func.length_sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : Sub.{u1} α] {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{1} Nat (List.length.{u1} α (List.Func.sub.{u1} α _inst_1 _inst_2 xs ys)) (LinearOrder.max.{0} Nat Nat.linearOrder (List.length.{u1} α xs) (List.length.{u1} α ys))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : Sub.{u1} α] {xs : List.{u1} α} {ys : List.{u1} α}, Eq.{1} Nat (List.length.{u1} α (List.Func.sub.{u1} α _inst_1 _inst_2 xs ys)) (Max.max.{0} Nat Nat.instMaxNat (List.length.{u1} α xs) (List.length.{u1} α ys))
-Case conversion may be inaccurate. Consider using '#align list.func.length_sub List.Func.length_subₓ'. -/
 @[simp]
 theorem length_sub [Zero α] [Sub α] {xs ys : List α} :
     (sub xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 #align list.func.length_sub List.Func.length_sub
 
-/- warning: list.func.nil_sub -> List.Func.nil_sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))) (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) (List.nil.{u1} α) as) (List.Func.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) (List.nil.{u1} α) as) (List.Func.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) as)
-Case conversion may be inaccurate. Consider using '#align list.func.nil_sub List.Func.nil_subₓ'. -/
 @[simp]
 theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as :=
   by
@@ -482,12 +411,6 @@ theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as 
   rw [zero_sub]
 #align list.func.nil_sub List.Func.nil_sub
 
-/- warning: list.func.sub_nil -> List.Func.sub_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))) (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as (List.nil.{u1} α)) as
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as (List.nil.{u1} α)) as
-Case conversion may be inaccurate. Consider using '#align list.func.sub_nil List.Func.sub_nilₓ'. -/
 @[simp]
 theorem sub_nil {α : Type _} [AddGroup α] (as : List α) : sub as [] = as :=
   by

@@ -56,9 +56,6 @@ instance trivialization.isLinear : (trivialization B F).isLinear 𝕜
 
 variable {𝕜}
 
-/- warning: bundle.trivial.trivialization.coord_changeL -> Bundle.Trivial.trivialization.coordChangeL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align bundle.trivial.trivialization.coord_changeL Bundle.Trivial.trivialization.coordChangeLₓ'. -/
 theorem trivialization.coordChangeL (b : B) :
     (trivialization B F).coordChangeL 𝕜 (trivialization B F) b = ContinuousLinearEquiv.refl 𝕜 F :=
   by
@@ -103,17 +100,11 @@ variable {F₁ E₁ F₂ E₂} [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module �
   [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)] (e₁ e₁' : Trivialization F₁ (π E₁))
   (e₂ e₂' : Trivialization F₂ (π E₂))
 
-/- warning: trivialization.prod.is_linear -> Trivialization.prod.isLinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.prod.is_linear Trivialization.prod.isLinearₓ'. -/
 instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e₂).isLinear 𝕜
     where linear := fun x ⟨h₁, h₂⟩ =>
     (((e₁.linear 𝕜 h₁).mk' _).Prod_map ((e₂.linear 𝕜 h₂).mk' _)).isLinear
 #align trivialization.prod.is_linear Trivialization.prod.isLinear
 
-/- warning: trivialization.coord_changeL_prod -> Trivialization.coordChangeL_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.coord_changeL_prod Trivialization.coordChangeL_prodₓ'. -/
 @[simp]
 theorem coordChangeL_prod [e₁.isLinear 𝕜] [e₁'.isLinear 𝕜] [e₂.isLinear 𝕜] [e₂'.isLinear 𝕜] ⦃b⦄
     (hb : b ∈ (e₁.Prod e₂).baseSet ∩ (e₁'.Prod e₂').baseSet) :
@@ -132,9 +123,6 @@ theorem coordChangeL_prod [e₁.isLinear 𝕜] [e₁'.isLinear 𝕜] [e₂.isLin
 variable {e₁ e₂} [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)]
   [FiberBundle F₁ E₁] [FiberBundle F₂ E₂]
 
-/- warning: trivialization.prod_apply -> Trivialization.prod_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.prod_apply Trivialization.prod_applyₓ'. -/
 theorem prod_apply [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
     (hx₂ : x ∈ e₂.baseSet) (v₁ : E₁ x) (v₂ : E₂ x) :
     prod e₁ e₂ ⟨x, (v₁, v₂)⟩ =
@@ -150,9 +138,6 @@ variable [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)] [∀ x, A
   [∀ x, Module 𝕜 (E₂ x)] [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)]
   [FiberBundle F₁ E₁] [FiberBundle F₂ E₂]
 
-/- warning: vector_bundle.prod -> VectorBundle.prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle.prod VectorBundle.prodₓ'. -/
 /-- The product of two vector bundles is a vector bundle. -/
 instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂ E₂] :
     VectorBundle 𝕜 (F₁ × F₂) (E₁ ×ᵇ E₂)
@@ -215,17 +200,11 @@ variable {E F} [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)] [Nontrivi
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B] [∀ x, AddCommMonoid (E x)]
   [∀ x, Module 𝕜 (E x)] {K : Type _} [ContinuousMapClass K B' B]
 
-/- warning: trivialization.pullback_linear -> Trivialization.pullback_linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.pullback_linear Trivialization.pullback_linearₓ'. -/
 instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.isLinear 𝕜] (f : K) :
     (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).isLinear 𝕜
     where linear x h := e.linear 𝕜 h
 #align trivialization.pullback_linear Trivialization.pullback_linear
 
-/- warning: vector_bundle.pullback -> VectorBundle.pullback is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector_bundle.pullback VectorBundle.pullbackₓ'. -/
 instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] [VectorBundle 𝕜 F E]
     (f : K) : VectorBundle 𝕜 F ((f : B' → B) *ᵖ E)
     where

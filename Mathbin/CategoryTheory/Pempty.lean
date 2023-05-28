@@ -29,12 +29,6 @@ namespace Functor
 
 variable (C : Type u) [Category.{v} C]
 
-/- warning: category_theory.functor.empty_equivalence -> CategoryTheory.Functor.emptyEquivalence is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} PEmpty.{succ u1}) (CategoryTheory.discreteCategory.{u1} PEmpty.{succ u1}) (CategoryTheory.Discrete.{u2} PEmpty.{succ u2}) (CategoryTheory.discreteCategory.{u2} PEmpty.{succ u2})
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} PEmpty.{succ u1}) (CategoryTheory.Discrete.{u2} PEmpty.{succ u2}) (CategoryTheory.discreteCategory.{u1} PEmpty.{succ u1}) (CategoryTheory.discreteCategory.{u2} PEmpty.{succ u2})
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.empty_equivalence CategoryTheory.Functor.emptyEquivalenceₓ'. -/
 /-- Equivalence between two empty categories. -/
 def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
   Equivalence.mk

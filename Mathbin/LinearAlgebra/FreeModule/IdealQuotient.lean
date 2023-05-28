@@ -32,9 +32,6 @@ variable {ι R S : Type _} [CommRing R] [CommRing S] [Algebra R S]
 
 variable [IsDomain R] [IsPrincipalIdealRing R] [IsDomain S] [Fintype ι]
 
-/- warning: ideal.quotient_equiv_pi_span -> Ideal.quotientEquivPiSpan is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpanₓ'. -/
 /-- We can write the quotient of an ideal over a PID as a product of quotients by principal ideals.
 -/
 noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI : I ≠ ⊥) :
@@ -87,9 +84,6 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
     exact this
 #align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpan
 
-/- warning: ideal.quotient_equiv_pi_zmod -> Ideal.quotientEquivPiZMod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ideal.quotient_equiv_pi_zmod Ideal.quotientEquivPiZModₓ'. -/
 /-- Ideal quotients over a free finite extension of `ℤ` are isomorphic to a direct product of
 `zmod`. -/
 noncomputable def Ideal.quotientEquivPiZMod (I : Ideal S) (b : Basis ι ℤ S) (hI : I ≠ ⊥) :
@@ -101,12 +95,6 @@ noncomputable def Ideal.quotientEquivPiZMod (I : Ideal S) (b : Basis ι ℤ S) (
   (↑(e : (S ⧸ I) ≃ₗ[ℤ] _) : S ⧸ I ≃+ _).trans e'
 #align ideal.quotient_equiv_pi_zmod Ideal.quotientEquivPiZMod
 
-/- warning: ideal.fintype_quotient_of_free_of_ne_bot -> Ideal.fintypeQuotientOfFreeOfNeBot is a dubious translation:
-lean 3 declaration is
-  forall {S : Type.{u1}} [_inst_2 : CommRing.{u1} S] [_inst_6 : IsDomain.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2))] [_inst_8 : Module.Free.{0, u1} Int S Int.semiring (AddCommGroup.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toAddCommGroup.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S (CommRing.toRing.{u1} S _inst_2))))) (AddCommGroup.intModule.{u1} S (NonUnitalNonAssocRing.toAddCommGroup.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S (CommRing.toRing.{u1} S _inst_2)))))] [_inst_9 : Module.Finite.{0, u1} Int S Int.semiring (AddCommGroup.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toAddCommGroup.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S (CommRing.toRing.{u1} S _inst_2))))) (AddCommGroup.intModule.{u1} S (NonUnitalNonAssocRing.toAddCommGroup.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S (CommRing.toRing.{u1} S _inst_2)))))] (I : Ideal.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2))), (Ne.{succ u1} (Ideal.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2))) I (Bot.bot.{u1} (Ideal.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2))) (Submodule.hasBot.{u1, u1} S S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S (Semiring.toNonAssocSemiring.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2))))) (Semiring.toModule.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2)))))) -> (Fintype.{u1} (HasQuotient.Quotient.{u1, u1} S (Ideal.{u1} S (Ring.toSemiring.{u1} S (CommRing.toRing.{u1} S _inst_2))) (Ideal.hasQuotient.{u1} S _inst_2) I))
-but is expected to have type
-  forall {S : Type.{u1}} [_inst_2 : CommRing.{u1} S] [_inst_6 : IsDomain.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2))] [_inst_8 : Module.Free.{0, u1} Int S Int.instSemiringInt (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S (CommRing.toRing.{u1} S _inst_2))))) (AddCommGroup.intModule.{u1} S (Ring.toAddCommGroup.{u1} S (CommRing.toRing.{u1} S _inst_2)))] [_inst_9 : Module.Finite.{0, u1} Int S Int.instSemiringInt (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S (CommRing.toRing.{u1} S _inst_2))))) (AddCommGroup.intModule.{u1} S (Ring.toAddCommGroup.{u1} S (CommRing.toRing.{u1} S _inst_2)))] (I : Ideal.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2))), (Ne.{succ u1} (Ideal.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2))) I (Bot.bot.{u1} (Ideal.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2))) (Submodule.instBotSubmodule.{u1, u1} S S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S (Semiring.toNonAssocSemiring.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2))))) (Semiring.toModule.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2)))))) -> (Fintype.{u1} (HasQuotient.Quotient.{u1, u1} S (Ideal.{u1} S (CommSemiring.toSemiring.{u1} S (CommRing.toCommSemiring.{u1} S _inst_2))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} S _inst_2) I))
-Case conversion may be inaccurate. Consider using '#align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBotₓ'. -/
 /-- A nonzero ideal over a free finite extension of `ℤ` has a finite quotient.
 
 Can't be an instance because of the side condition `I ≠ ⊥`, and more importantly,

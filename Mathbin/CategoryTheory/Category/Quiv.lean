@@ -112,12 +112,6 @@ def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunct
 #align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
 -/
 
-/- warning: category_theory.Quiv.adj -> CategoryTheory.QuivCat.adj is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Adjunction.{max u1 u2, max u1 u2, max (succ u1) u1 (succ (max u1 u2)), max (succ u1) u1 (succ (max u1 u2))} CategoryTheory.QuivCat.{max u1 u2, u1} CategoryTheory.QuivCat.category.{max u1 u2, u1} CategoryTheory.Cat.{max u1 u2, u1} CategoryTheory.Cat.category.{max u1 u2, u1} CategoryTheory.Cat.free.{max u1 u2, u1} CategoryTheory.QuivCat.forget.{max u1 u2, u1}
-but is expected to have type
-  CategoryTheory.Adjunction.{max u1 u2, max u1 u2, max (succ u2) (succ (max u1 u2)), max (succ u2) (succ (max u1 u2))} CategoryTheory.QuivCat.{max u1 u2, u2} CategoryTheory.QuivCat.category.{max u1 u2, u2} CategoryTheory.Cat.{max u1 u2, u2} CategoryTheory.Cat.category.{max u1 u2, u2} CategoryTheory.Cat.free.{max u1 u2, u2} CategoryTheory.QuivCat.forget.{max u1 u2, u2}
-Case conversion may be inaccurate. Consider using '#align category_theory.Quiv.adj CategoryTheory.QuivCat.adjₓ'. -/
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
 -- but it would require lifting quite a bit of machinery to quivers!

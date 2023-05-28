@@ -69,9 +69,6 @@ instance topologicalRingQuotientTopology : TopologicalSpace (R ⧸ N) :=
 -- note for the reader: in the following, `mk` is `ideal.quotient.mk`, the canonical map `R → R/I`.
 variable [TopologicalRing R]
 
-/- warning: quotient_ring.is_open_map_coe -> QuotientRing.isOpenMap_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align quotient_ring.is_open_map_coe QuotientRing.isOpenMap_coeₓ'. -/
 theorem QuotientRing.isOpenMap_coe : IsOpenMap (mk N) :=
   by
   intro s s_op
@@ -80,9 +77,6 @@ theorem QuotientRing.isOpenMap_coe : IsOpenMap (mk N) :=
   exact isOpen_iUnion fun ⟨n, _⟩ => isOpenMap_add_left n s s_op
 #align quotient_ring.is_open_map_coe QuotientRing.isOpenMap_coe
 
-/- warning: quotient_ring.quotient_map_coe_coe -> QuotientRing.quotientMap_coe_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align quotient_ring.quotient_map_coe_coe QuotientRing.quotientMap_coe_coeₓ'. -/
 theorem QuotientRing.quotientMap_coe_coe : QuotientMap fun p : R × R => (mk N p.1, mk N p.2) :=
   IsOpenMap.to_quotientMap ((QuotientRing.isOpenMap_coe N).Prod (QuotientRing.isOpenMap_coe N))
     ((continuous_quot_mk.comp continuous_fst).prod_mk (continuous_quot_mk.comp continuous_snd))

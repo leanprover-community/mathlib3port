@@ -68,12 +68,6 @@ structure Integers : Prop where
 instance : Algebra v.integer R :=
   Algebra.ofSubring v.integer
 
-/- warning: valuation.integer.integers -> Valuation.integer.integers is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {Γ₀ : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LinearOrderedCommGroupWithZero.{u2} Γ₀] (v : Valuation.{u1, u2} R Γ₀ (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u2} Γ₀ _inst_2) (CommRing.toRing.{u1} R _inst_1)), Valuation.Integers.{u1, u2, u1} R Γ₀ _inst_1 _inst_2 v (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R (CommRing.toRing.{u1} R _inst_1)) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R (CommRing.toRing.{u1} R _inst_1)) R (Subring.setLike.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Valuation.integer.{u1, u2} R Γ₀ (CommRing.toRing.{u1} R _inst_1) _inst_2 v)) (Subring.toCommRing.{u1} R _inst_1 (Valuation.integer.{u1, u2} R Γ₀ (CommRing.toRing.{u1} R _inst_1) _inst_2 v)) (Valuation.algebra.{u1, u2} R Γ₀ _inst_1 _inst_2 v)
-but is expected to have type
-  forall {R : Type.{u1}} {Γ₀ : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LinearOrderedCommGroupWithZero.{u2} Γ₀] (v : Valuation.{u1, u2} R Γ₀ (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u2} Γ₀ _inst_2) (CommRing.toRing.{u1} R _inst_1)), Valuation.Integers.{u1, u2, u1} R Γ₀ _inst_1 _inst_2 v (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Subring.{u1} R (CommRing.toRing.{u1} R _inst_1)) R (Subring.instSetLikeSubring.{u1} R (CommRing.toRing.{u1} R _inst_1))) x (Valuation.integer.{u1, u2} R Γ₀ (CommRing.toRing.{u1} R _inst_1) _inst_2 v))) (Subring.toCommRing.{u1} R _inst_1 (Valuation.integer.{u1, u2} R Γ₀ (CommRing.toRing.{u1} R _inst_1) _inst_2 v)) (Valuation.instAlgebraSubtypeMemSubringToRingInstMembershipInstSetLikeSubringIntegerToCommSemiringToCommSemiringToSubsemiringToSemiring.{u1, u2} R Γ₀ _inst_1 _inst_2 v)
-Case conversion may be inaccurate. Consider using '#align valuation.integer.integers Valuation.integer.integersₓ'. -/
 theorem integer.integers : v.Integers v.integer :=
   { hom_inj := Subtype.coe_injective
     map_le_one := fun r => r.2
@@ -86,9 +80,6 @@ variable {v O} (hv : Integers v O)
 
 include hv
 
-/- warning: valuation.integers.one_of_is_unit -> Valuation.Integers.one_of_isUnit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align valuation.integers.one_of_is_unit Valuation.Integers.one_of_isUnitₓ'. -/
 theorem one_of_isUnit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
   let ⟨u, hu⟩ := hx
   le_antisymm (hv.2 _) <|
@@ -98,9 +89,6 @@ theorem one_of_isUnit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
     exact mul_le_mul_left' (hv.2 (u⁻¹ : Units O)) _
 #align valuation.integers.one_of_is_unit Valuation.Integers.one_of_isUnit
 
-/- warning: valuation.integers.is_unit_of_one -> Valuation.Integers.isUnit_of_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align valuation.integers.is_unit_of_one Valuation.Integers.isUnit_of_oneₓ'. -/
 theorem isUnit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) :
     IsUnit x :=
   let ⟨u, hu⟩ := hx
@@ -114,9 +102,6 @@ theorem isUnit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebra
     hv.1 <| hr1.trans hu⟩
 #align valuation.integers.is_unit_of_one Valuation.Integers.isUnit_of_one
 
-/- warning: valuation.integers.le_of_dvd -> Valuation.Integers.le_of_dvd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align valuation.integers.le_of_dvd Valuation.Integers.le_of_dvdₓ'. -/
 theorem le_of_dvd {x y : O} (h : x ∣ y) : v (algebraMap O R y) ≤ v (algebraMap O R x) :=
   by
   let ⟨z, hz⟩ := h
@@ -138,9 +123,6 @@ include hv
 
 namespace Integers
 
-/- warning: valuation.integers.dvd_of_le -> Valuation.Integers.dvd_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align valuation.integers.dvd_of_le Valuation.Integers.dvd_of_leₓ'. -/
 theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) : y ∣ x :=
   by_cases
     (fun hy : algebraMap O F y = 0 =>
@@ -155,16 +137,10 @@ theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) 
     ⟨z, hv.1 <| ((algebraMap O F).map_mul y z).symm ▸ hz.symm ▸ (mul_inv_cancel_left₀ hy _).symm⟩
 #align valuation.integers.dvd_of_le Valuation.Integers.dvd_of_le
 
-/- warning: valuation.integers.dvd_iff_le -> Valuation.Integers.dvd_iff_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align valuation.integers.dvd_iff_le Valuation.Integers.dvd_iff_leₓ'. -/
 theorem dvd_iff_le {x y : O} : x ∣ y ↔ v (algebraMap O F y) ≤ v (algebraMap O F x) :=
   ⟨hv.le_of_dvd, hv.dvd_of_le⟩
 #align valuation.integers.dvd_iff_le Valuation.Integers.dvd_iff_le
 
-/- warning: valuation.integers.le_iff_dvd -> Valuation.Integers.le_iff_dvd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align valuation.integers.le_iff_dvd Valuation.Integers.le_iff_dvdₓ'. -/
 theorem le_iff_dvd {x y : O} : v (algebraMap O F x) ≤ v (algebraMap O F y) ↔ y ∣ x :=
   ⟨hv.dvd_of_le, hv.le_of_dvd⟩
 #align valuation.integers.le_iff_dvd Valuation.Integers.le_iff_dvd

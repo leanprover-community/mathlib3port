@@ -27,9 +27,6 @@ free (finite) modules over any commutative ring.
 -/
 
 
-/- warning: linear_map.det_zero'' -> LinearMap.det_zero'' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.det_zero'' LinearMap.det_zero''ₓ'. -/
 @[simp]
 theorem LinearMap.det_zero'' {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Free R M] [Module.Finite R M] [Nontrivial M] : LinearMap.det (0 : M →ₗ[R] M) = 0 :=

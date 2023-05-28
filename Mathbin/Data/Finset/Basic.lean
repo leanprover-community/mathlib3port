@@ -455,12 +455,6 @@ theorem coe_subset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊆ s₂ ↔ s₁ �
 #align finset.coe_subset Finset.coe_subset
 -/
 
-/- warning: finset.val_le_iff -> Finset.val_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂)
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂)
-Case conversion may be inaccurate. Consider using '#align finset.val_le_iff Finset.val_le_iffₓ'. -/
 @[simp]
 theorem val_le_iff {s₁ s₂ : Finset α} : s₁.1 ≤ s₂.1 ↔ s₁ ⊆ s₂ :=
   le_iff_subset s₁.2
@@ -472,74 +466,32 @@ theorem Subset.antisymm_iff {s₁ s₂ : Finset α} : s₁ = s₂ ↔ s₁ ⊆ s
 #align finset.subset.antisymm_iff Finset.Subset.antisymm_iff
 -/
 
-/- warning: finset.not_subset -> Finset.not_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t)) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) => Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x t))))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x t))))
-Case conversion may be inaccurate. Consider using '#align finset.not_subset Finset.not_subsetₓ'. -/
 theorem not_subset : ¬s ⊆ t ↔ ∃ x ∈ s, x ∉ t := by simp only [← coe_subset, Set.not_subset, mem_coe]
 #align finset.not_subset Finset.not_subset
 
-/- warning: finset.le_eq_subset -> Finset.le_eq_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2180 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2182 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Data.Finset.Basic._hyg.2180 x._@.Mathlib.Data.Finset.Basic._hyg.2182) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2195 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2197 : Finset.{u1} α) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Basic._hyg.2195 x._@.Mathlib.Data.Finset.Basic._hyg.2197)
-Case conversion may be inaccurate. Consider using '#align finset.le_eq_subset Finset.le_eq_subsetₓ'. -/
 @[simp]
 theorem le_eq_subset : ((· ≤ ·) : Finset α → Finset α → Prop) = (· ⊆ ·) :=
   rfl
 #align finset.le_eq_subset Finset.le_eq_subset
 
-/- warning: finset.lt_eq_subset -> Finset.lt_eq_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (LT.lt.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2233 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2235 : Finset.{u1} α) => LT.lt.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Data.Finset.Basic._hyg.2233 x._@.Mathlib.Data.Finset.Basic._hyg.2235) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2248 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2250 : Finset.{u1} α) => HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Basic._hyg.2248 x._@.Mathlib.Data.Finset.Basic._hyg.2250)
-Case conversion may be inaccurate. Consider using '#align finset.lt_eq_subset Finset.lt_eq_subsetₓ'. -/
 @[simp]
 theorem lt_eq_subset : ((· < ·) : Finset α → Finset α → Prop) = (· ⊂ ·) :=
   rfl
 #align finset.lt_eq_subset Finset.lt_eq_subset
 
-/- warning: finset.le_iff_subset -> Finset.le_iff_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂)
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂)
-Case conversion may be inaccurate. Consider using '#align finset.le_iff_subset Finset.le_iff_subsetₓ'. -/
 theorem le_iff_subset {s₁ s₂ : Finset α} : s₁ ≤ s₂ ↔ s₁ ⊆ s₂ :=
   Iff.rfl
 #align finset.le_iff_subset Finset.le_iff_subset
 
-/- warning: finset.lt_iff_ssubset -> Finset.lt_iff_ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂)
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂)
-Case conversion may be inaccurate. Consider using '#align finset.lt_iff_ssubset Finset.lt_iff_ssubsetₓ'. -/
 theorem lt_iff_ssubset {s₁ s₂ : Finset α} : s₁ < s₂ ↔ s₁ ⊂ s₂ :=
   Iff.rfl
 #align finset.lt_iff_ssubset Finset.lt_iff_ssubset
 
-/- warning: finset.coe_ssubset -> Finset.coe_ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂)
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (Finset.toSet.{u1} α s₁) (Finset.toSet.{u1} α s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂)
-Case conversion may be inaccurate. Consider using '#align finset.coe_ssubset Finset.coe_ssubsetₓ'. -/
 @[simp, norm_cast]
 theorem coe_ssubset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊂ s₂ ↔ s₁ ⊂ s₂ :=
   show (s₁ : Set α) ⊂ s₂ ↔ s₁ ⊆ s₂ ∧ ¬s₂ ⊆ s₁ by simp only [Set.ssubset_def, Finset.coe_subset]
 #align finset.coe_ssubset Finset.coe_ssubset
 
-/- warning: finset.val_lt_iff -> Finset.val_lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Multiset.{u1} α) (Preorder.toHasLt.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂)
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Multiset.{u1} α) (Preorder.toLT.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂)
-Case conversion may be inaccurate. Consider using '#align finset.val_lt_iff Finset.val_lt_iffₓ'. -/
 @[simp]
 theorem val_lt_iff {s₁ s₂ : Finset α} : s₁.1 < s₂.1 ↔ s₁ ⊂ s₂ :=
   and_congr val_le_iff <| not_congr val_le_iff
@@ -551,12 +503,6 @@ theorem ssubset_iff_subset_ne {s t : Finset α} : s ⊂ t ↔ s ⊆ t ∧ s ≠ 
 #align finset.ssubset_iff_subset_ne Finset.ssubset_iff_subset_ne
 -/
 
-/- warning: finset.ssubset_iff_of_subset -> Finset.ssubset_iff_of_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂) -> (Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s₂) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s₂) => Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s₁)))))
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂) -> (Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s₂) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s₁)))))
-Case conversion may be inaccurate. Consider using '#align finset.ssubset_iff_of_subset Finset.ssubset_iff_of_subsetₓ'. -/
 theorem ssubset_iff_of_subset {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁ ⊂ s₂ ↔ ∃ x ∈ s₂, x ∉ s₁ :=
   Set.ssubset_iff_of_subset h
 #align finset.ssubset_iff_of_subset Finset.ssubset_iff_of_subset
@@ -575,12 +521,6 @@ theorem ssubset_of_subset_of_ssubset {s₁ s₂ s₃ : Finset α} (hs₁s₂ : s
 #align finset.ssubset_of_subset_of_ssubset Finset.ssubset_of_subset_of_ssubset
 -/
 
-/- warning: finset.exists_of_ssubset -> Finset.exists_of_ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s₂) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s₂) => Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s₁))))
-but is expected to have type
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s₂) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s₁))))
-Case conversion may be inaccurate. Consider using '#align finset.exists_of_ssubset Finset.exists_of_ssubsetₓ'. -/
 theorem exists_of_ssubset {s₁ s₂ : Finset α} (h : s₁ ⊂ s₂) : ∃ x ∈ s₂, x ∉ s₁ :=
   Set.exists_of_ssubset h
 #align finset.exists_of_ssubset Finset.exists_of_ssubset
@@ -591,12 +531,6 @@ instance isWellFounded_ssubset : IsWellFounded (Finset α) (· ⊂ ·) :=
 #align finset.is_well_founded_ssubset Finset.isWellFounded_ssubset
 -/
 
-/- warning: finset.is_well_founded_lt -> Finset.wellFoundedLT is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, WellFoundedLT.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, WellFoundedLT.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align finset.is_well_founded_lt Finset.wellFoundedLTₓ'. -/
 instance wellFoundedLT : WellFoundedLT (Finset α) :=
   Finset.isWellFounded_ssubset
 #align finset.is_well_founded_lt Finset.wellFoundedLT
@@ -609,23 +543,11 @@ attribute [local trans] subset.trans superset.trans
 /-! ### Order embedding from `finset α` to `set α` -/
 
 
-/- warning: finset.coe_emb -> Finset.coeEmb is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.hasLe.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.instLESet.{u1} α)
-Case conversion may be inaccurate. Consider using '#align finset.coe_emb Finset.coeEmbₓ'. -/
 /-- Coercion to `set α` as an `order_embedding`. -/
 def coeEmb : Finset α ↪o Set α :=
   ⟨⟨coe, coe_injective⟩, fun s t => coe_subset⟩
 #align finset.coe_emb Finset.coeEmb
 
-/- warning: finset.coe_coe_emb -> Finset.coe_coeEmb is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Set.{u1} α)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.hasLe.{u1} α)) (fun (_x : RelEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Set.{u1} α) (Set.hasLe.{u1} α))) => (Finset.{u1} α) -> (Set.{u1} α)) (RelEmbedding.hasCoeToFun.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Set.{u1} α) (Set.hasLe.{u1} α))) (Finset.coeEmb.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (forall (ᾰ : Finset.{u1} α), (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Finset.{u1} α) => Set.{u1} α) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.instLESet.{u1} α)) (Finset.{u1} α) (fun (_x : Finset.{u1} α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Finset.{u1} α) => Set.{u1} α) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.instLESet.{u1} α)) (Finset.{u1} α) (Set.{u1} α) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Set.{u1} α) => LE.le.{u1} (Set.{u1} α) (Set.instLESet.{u1} α) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Set.{u1} α) => LE.le.{u1} (Set.{u1} α) (Set.instLESet.{u1} α) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (Finset.coeEmb.{u1} α)) (Finset.toSet.{u1} α)
-Case conversion may be inaccurate. Consider using '#align finset.coe_coe_emb Finset.coe_coeEmbₓ'. -/
 @[simp]
 theorem coe_coeEmb : ⇑(coeEmb : Finset α ↪o Set α) = coe :=
   rfl
@@ -860,12 +782,6 @@ instance : OrderBot (Finset α) where
   bot := ∅
   bot_le := empty_subset
 
-/- warning: finset.bot_eq_empty -> Finset.bot_eq_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Finset.{u1} α) (Bot.bot.{u1} (Finset.{u1} α) (OrderBot.toHasBot.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.orderBot.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Finset.{u1} α) (Bot.bot.{u1} (Finset.{u1} α) (OrderBot.toBot.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
-Case conversion may be inaccurate. Consider using '#align finset.bot_eq_empty Finset.bot_eq_emptyₓ'. -/
 @[simp]
 theorem bot_eq_empty : (⊥ : Finset α) = ∅ :=
   rfl
@@ -1208,171 +1124,75 @@ section Disjoint
 
 variable {f : α → β} {s t u : Finset α} {a b : α}
 
-/- warning: finset.disjoint_left -> Finset.disjoint_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_left Finset.disjoint_leftₓ'. -/
 theorem disjoint_left : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ s → a ∉ t :=
   ⟨fun h a hs ht =>
     singleton_subset_iff.mp (h (singleton_subset_iff.mpr hs) (singleton_subset_iff.mpr ht)),
     fun h x hs ht a ha => h (hs ha) (ht ha)⟩
 #align finset.disjoint_left Finset.disjoint_left
 
-/- warning: finset.disjoint_right -> Finset.disjoint_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t) -> (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t) -> (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_right Finset.disjoint_rightₓ'. -/
 theorem disjoint_right : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ t → a ∉ s := by rw [disjoint_comm, disjoint_left]
 #align finset.disjoint_right Finset.disjoint_right
 
-/- warning: finset.disjoint_iff_ne -> Finset.disjoint_iff_ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) -> (Ne.{succ u1} α a b)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) (forall (a : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (forall (b : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b t) -> (Ne.{succ u1} α a b)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_iff_ne Finset.disjoint_iff_neₓ'. -/
 theorem disjoint_iff_ne : Disjoint s t ↔ ∀ a ∈ s, ∀ b ∈ t, a ≠ b := by
   simp only [disjoint_left, imp_not_comm, forall_eq']
 #align finset.disjoint_iff_ne Finset.disjoint_iff_ne
 
-/- warning: finset.disjoint_val -> Finset.disjoint_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Multiset.Disjoint.{u1} α (Finset.val.{u1} α s) (Finset.val.{u1} α t)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Multiset.Disjoint.{u1} α (Finset.val.{u1} α s) (Finset.val.{u1} α t)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_val Finset.disjoint_valₓ'. -/
 @[simp]
 theorem disjoint_val : s.1.Disjoint t.1 ↔ Disjoint s t :=
   disjoint_left.symm
 #align finset.disjoint_val Finset.disjoint_val
 
-/- warning: disjoint.forall_ne_finset -> Disjoint.forall_ne_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α} {b : α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) -> (Ne.{succ u1} α a b)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α} {b : α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b t) -> (Ne.{succ u1} α a b)
-Case conversion may be inaccurate. Consider using '#align disjoint.forall_ne_finset Disjoint.forall_ne_finsetₓ'. -/
 theorem Disjoint.forall_ne_finset (h : Disjoint s t) (ha : a ∈ s) (hb : b ∈ t) : a ≠ b :=
   disjoint_iff_ne.1 h _ ha _ hb
 #align disjoint.forall_ne_finset Disjoint.forall_ne_finset
 
-/- warning: finset.not_disjoint_iff -> Finset.not_disjoint_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)) (Exists.{succ u1} α (fun (a : α) => And (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)))
-Case conversion may be inaccurate. Consider using '#align finset.not_disjoint_iff Finset.not_disjoint_iffₓ'. -/
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ a, a ∈ s ∧ a ∈ t :=
   disjoint_left.Not.trans <|
     not_forall.trans <| exists_congr fun _ => by rw [not_imp, Classical.not_not]
 #align finset.not_disjoint_iff Finset.not_disjoint_iff
 
-/- warning: finset.disjoint_of_subset_left -> Finset.disjoint_of_subset_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s u) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) u t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s u) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) u t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_of_subset_left Finset.disjoint_of_subset_leftₓ'. -/
 theorem disjoint_of_subset_left (h : s ⊆ u) (d : Disjoint u t) : Disjoint s t :=
   disjoint_left.2 fun x m₁ => (disjoint_left.1 d) (h m₁)
 #align finset.disjoint_of_subset_left Finset.disjoint_of_subset_left
 
-/- warning: finset.disjoint_of_subset_right -> Finset.disjoint_of_subset_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t u) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s u) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t u) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s u) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_of_subset_right Finset.disjoint_of_subset_rightₓ'. -/
 theorem disjoint_of_subset_right (h : t ⊆ u) (d : Disjoint s u) : Disjoint s t :=
   disjoint_right.2 fun x m₁ => (disjoint_right.1 d) (h m₁)
 #align finset.disjoint_of_subset_right Finset.disjoint_of_subset_right
 
-/- warning: finset.disjoint_empty_left -> Finset.disjoint_empty_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)) s
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)) s
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_empty_left Finset.disjoint_empty_leftₓ'. -/
 @[simp]
 theorem disjoint_empty_left (s : Finset α) : Disjoint ∅ s :=
   disjoint_bot_left
 #align finset.disjoint_empty_left Finset.disjoint_empty_left
 
-/- warning: finset.disjoint_empty_right -> Finset.disjoint_empty_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_empty_right Finset.disjoint_empty_rightₓ'. -/
 @[simp]
 theorem disjoint_empty_right (s : Finset α) : Disjoint s ∅ :=
   disjoint_bot_right
 #align finset.disjoint_empty_right Finset.disjoint_empty_right
 
-/- warning: finset.disjoint_singleton_left -> Finset.disjoint_singleton_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) s) (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) s) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_singleton_left Finset.disjoint_singleton_leftₓ'. -/
 @[simp]
 theorem disjoint_singleton_left : Disjoint (singleton a) s ↔ a ∉ s := by
   simp only [disjoint_left, mem_singleton, forall_eq]
 #align finset.disjoint_singleton_left Finset.disjoint_singleton_left
 
-/- warning: finset.disjoint_singleton_right -> Finset.disjoint_singleton_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a)) (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_singleton_right Finset.disjoint_singleton_rightₓ'. -/
 @[simp]
 theorem disjoint_singleton_right : Disjoint s (singleton a) ↔ a ∉ s :=
   disjoint_comm.trans disjoint_singleton_left
 #align finset.disjoint_singleton_right Finset.disjoint_singleton_right
 
-/- warning: finset.disjoint_singleton -> Finset.disjoint_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} {b : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) b)) (Ne.{succ u1} α a b)
-but is expected to have type
-  forall {α : Type.{u1}} {a : α} {b : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) b)) (Ne.{succ u1} α a b)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_singleton Finset.disjoint_singletonₓ'. -/
 @[simp]
 theorem disjoint_singleton : Disjoint ({a} : Finset α) {b} ↔ a ≠ b := by
   rw [disjoint_singleton_left, mem_singleton]
 #align finset.disjoint_singleton Finset.disjoint_singleton
 
-/- warning: finset.disjoint_self_iff_empty -> Finset.disjoint_self_iff_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s s) (Eq.{succ u1} (Finset.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s s) (Eq.{succ u1} (Finset.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_self_iff_empty Finset.disjoint_self_iff_emptyₓ'. -/
 theorem disjoint_self_iff_empty (s : Finset α) : Disjoint s s ↔ s = ∅ :=
   disjoint_self
 #align finset.disjoint_self_iff_empty Finset.disjoint_self_iff_empty
 
-/- warning: finset.disjoint_coe -> Finset.disjoint_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Finset.toSet.{u1} α s) (Finset.toSet.{u1} α t)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_coe Finset.disjoint_coeₓ'. -/
 @[simp, norm_cast]
 theorem disjoint_coe : Disjoint (s : Set α) t ↔ Disjoint s t := by
   rw [Finset.disjoint_left, Set.disjoint_left]; rfl
 #align finset.disjoint_coe Finset.disjoint_coe
 
-/- warning: finset.pairwise_disjoint_coe -> Finset.pairwiseDisjoint_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Finset.{u1} α)}, Iff (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (f i))) (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s f)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Finset.{u1} α)}, Iff (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s (fun (i : ι) => Finset.toSet.{u1} α (f i))) (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s f)
-Case conversion may be inaccurate. Consider using '#align finset.pairwise_disjoint_coe Finset.pairwiseDisjoint_coeₓ'. -/
 @[simp, norm_cast]
 theorem pairwiseDisjoint_coe {ι : Type _} {s : Set ι} {f : ι → Finset α} :
     s.PairwiseDisjoint (fun i => f i : ι → Set α) ↔ s.PairwiseDisjoint f :=
@@ -1384,12 +1204,6 @@ end Disjoint
 /-! ### disjoint union -/
 
 
-/- warning: finset.disj_union -> Finset.disjUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α), (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (Finset.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α), (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Finset.{u1} α)
-Case conversion may be inaccurate. Consider using '#align finset.disj_union Finset.disjUnionₓ'. -/
 /-- `disj_union s t h` is the set such that `a ∈ disj_union s t h` iff `a ∈ s` or `a ∈ t`.
 It is the same as `s ∪ t`, but it does not require decidable equality on the type. The hypothesis
 ensures that the sets are disjoint. -/
@@ -1397,69 +1211,33 @@ def disjUnion (s t : Finset α) (h : Disjoint s t) : Finset α :=
   ⟨s.1 + t.1, Multiset.nodup_add.2 ⟨s.2, t.2, disjoint_val.2 h⟩⟩
 #align finset.disj_union Finset.disjUnion
 
-/- warning: finset.mem_disj_union -> Finset.mem_disjUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t} {a : α}, Iff (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.disjUnion.{u1} α s t h)) (Or (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t} {a : α}, Iff (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a (Finset.disjUnion.{u1} α s t h)) (Or (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t))
-Case conversion may be inaccurate. Consider using '#align finset.mem_disj_union Finset.mem_disjUnionₓ'. -/
 @[simp]
 theorem mem_disjUnion {α s t h a} : a ∈ @disjUnion α s t h ↔ a ∈ s ∨ a ∈ t := by
   rcases s with ⟨⟨s⟩⟩ <;> rcases t with ⟨⟨t⟩⟩ <;> apply List.mem_append
 #align finset.mem_disj_union Finset.mem_disjUnion
 
-/- warning: finset.disj_union_comm -> Finset.disjUnion_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s t h) (Finset.disjUnion.{u1} α t s (Disjoint.symm.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t h))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s t h) (Finset.disjUnion.{u1} α t s (Disjoint.symm.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t h))
-Case conversion may be inaccurate. Consider using '#align finset.disj_union_comm Finset.disjUnion_commₓ'. -/
 theorem disjUnion_comm (s t : Finset α) (h : Disjoint s t) :
     disjUnion s t h = disjUnion t s h.symm :=
   eq_of_veq <| add_comm _ _
 #align finset.disj_union_comm Finset.disjUnion_comm
 
-/- warning: finset.empty_disj_union -> Finset.empty_disjUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (t : Finset.{u1} α) (h : optParam.{0} (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)) t) (disjoint_bot_left.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) t)), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)) t h) t
-but is expected to have type
-  forall {α : Type.{u1}} (t : Finset.{u1} α) (h : optParam.{0} (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)) t) (disjoint_bot_left.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) t)), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)) t h) t
-Case conversion may be inaccurate. Consider using '#align finset.empty_disj_union Finset.empty_disjUnionₓ'. -/
 @[simp]
 theorem empty_disjUnion (t : Finset α) (h : Disjoint ∅ t := disjoint_bot_left) :
     disjUnion ∅ t h = t :=
   eq_of_veq <| zero_add _
 #align finset.empty_disj_union Finset.empty_disjUnion
 
-/- warning: finset.disj_union_empty -> Finset.disjUnion_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (h : optParam.{0} (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (disjoint_bot_right.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s)), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)) h) s
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (h : optParam.{0} (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (disjoint_bot_right.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s)), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)) h) s
-Case conversion may be inaccurate. Consider using '#align finset.disj_union_empty Finset.disjUnion_emptyₓ'. -/
 @[simp]
 theorem disjUnion_empty (s : Finset α) (h : Disjoint s ∅ := disjoint_bot_right) :
     disjUnion s ∅ h = s :=
   eq_of_veq <| add_zero _
 #align finset.disj_union_empty Finset.disjUnion_empty
 
-/- warning: finset.singleton_disj_union -> Finset.singleton_disjUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (a : α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) t), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) t h) (Finset.cons.{u1} α a t (Iff.mp (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) t) (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)) (Finset.disjoint_singleton_left.{u1} α t a) h))
-but is expected to have type
-  forall {α : Type.{u1}} (a : α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) t), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) t h) (Finset.cons.{u1} α a t (Iff.mp (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) t) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) (Finset.disjoint_singleton_left.{u1} α t a) h))
-Case conversion may be inaccurate. Consider using '#align finset.singleton_disj_union Finset.singleton_disjUnionₓ'. -/
 theorem singleton_disjUnion (a : α) (t : Finset α) (h : Disjoint {a} t) :
     disjUnion {a} t h = cons a t (disjoint_singleton_left.mp h) :=
   eq_of_veq <| Multiset.singleton_add _ _
 #align finset.singleton_disj_union Finset.singleton_disjUnion
 
-/- warning: finset.disj_union_singleton -> Finset.disjUnion_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (a : α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a)), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) h) (Finset.cons.{u1} α a s (Iff.mp (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a)) (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s)) (Finset.disjoint_singleton_right.{u1} α s a) h))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (a : α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) h) (Finset.cons.{u1} α a s (Iff.mp (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)) (Finset.disjoint_singleton_right.{u1} α s a) h))
-Case conversion may be inaccurate. Consider using '#align finset.disj_union_singleton Finset.disjUnion_singletonₓ'. -/
 theorem disjUnion_singleton (s : Finset α) (a : α) (h : Disjoint s {a}) :
     disjUnion s {a} h = cons a s (disjoint_singleton_right.mp h) := by
   rw [disj_union_comm, singleton_disj_union]
@@ -1667,12 +1445,6 @@ theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
 #align finset.insert_inj Finset.insert_inj
 -/
 
-/- warning: finset.insert_inj_on -> Finset.insert_inj_on is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Set.InjOn.{u1, u1} α (Finset.{u1} α) (fun (a : α) => Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a s) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Set.InjOn.{u1, u1} α (Finset.{u1} α) (fun (a : α) => Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a s) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.insert_inj_on Finset.insert_inj_onₓ'. -/
 theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) := fun a h b _ =>
   (insert_inj h).1
 #align finset.insert_inj_on Finset.insert_inj_on
@@ -1787,23 +1559,11 @@ def subtypeInsertEquivOption {t : Finset α} {x : α} (h : x ∉ t) :
 #align finset.subtype_insert_equiv_option Finset.subtypeInsertEquivOption
 -/
 
-/- warning: finset.disjoint_insert_left -> Finset.disjoint_insert_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a s) t) (And (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a s) t) (And (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_insert_left Finset.disjoint_insert_leftₓ'. -/
 @[simp]
 theorem disjoint_insert_left : Disjoint (insert a s) t ↔ a ∉ t ∧ Disjoint s t := by
   simp only [disjoint_left, mem_insert, or_imp, forall_and, forall_eq]
 #align finset.disjoint_insert_left Finset.disjoint_insert_left
 
-/- warning: finset.disjoint_insert_right -> Finset.disjoint_insert_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a t)) (And (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a t)) (And (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_insert_right Finset.disjoint_insert_rightₓ'. -/
 @[simp]
 theorem disjoint_insert_right : Disjoint s (insert a t) ↔ a ∉ s ∧ Disjoint s t :=
   disjoint_comm.trans <| by rw [disjoint_insert_left, disjoint_comm]
@@ -1837,44 +1597,20 @@ instance : Lattice (Finset α) :=
     inf_le_left := fun s t a h => (mem_ndinter.1 h).1
     inf_le_right := fun s t a h => (mem_ndinter.1 h).2 }
 
-/- warning: finset.sup_eq_union -> Finset.sup_eq_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> (Finset.{u1} α)) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> (Finset.{u1} α)) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))
-Case conversion may be inaccurate. Consider using '#align finset.sup_eq_union Finset.sup_eq_unionₓ'. -/
 @[simp]
 theorem sup_eq_union : ((· ⊔ ·) : Finset α → Finset α → Finset α) = (· ∪ ·) :=
   rfl
 #align finset.sup_eq_union Finset.sup_eq_union
 
-/- warning: finset.inf_eq_inter -> Finset.inf_eq_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> (Finset.{u1} α)) (Inf.inf.{u1} (Finset.{u1} α) (SemilatticeInf.toHasInf.{u1} (Finset.{u1} α) (Lattice.toSemilatticeInf.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> (Finset.{u1} α)) (Inf.inf.{u1} (Finset.{u1} α) (Lattice.toInf.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))
-Case conversion may be inaccurate. Consider using '#align finset.inf_eq_inter Finset.inf_eq_interₓ'. -/
 @[simp]
 theorem inf_eq_inter : ((· ⊓ ·) : Finset α → Finset α → Finset α) = (· ∩ ·) :=
   rfl
 #align finset.inf_eq_inter Finset.inf_eq_inter
 
-/- warning: finset.disjoint_iff_inter_eq_empty -> Finset.disjoint_iff_inter_eq_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) (Eq.{succ u1} (Finset.{u1} α) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) (Eq.{succ u1} (Finset.{u1} α) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_iff_inter_eq_empty Finset.disjoint_iff_inter_eq_emptyₓ'. -/
 theorem disjoint_iff_inter_eq_empty : Disjoint s t ↔ s ∩ t = ∅ :=
   disjoint_iff
 #align finset.disjoint_iff_inter_eq_empty Finset.disjoint_iff_inter_eq_empty
 
-/- warning: finset.decidable_disjoint -> Finset.decidableDisjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (U : Finset.{u1} α) (V : Finset.{u1} α), Decidable (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) U V)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (U : Finset.{u1} α) (V : Finset.{u1} α), Decidable (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) U V)
-Case conversion may be inaccurate. Consider using '#align finset.decidable_disjoint Finset.decidableDisjointₓ'. -/
 instance decidableDisjoint (U V : Finset α) : Decidable (Disjoint U V) :=
   decidable_of_iff _ disjoint_left.symm
 #align finset.decidable_disjoint Finset.decidableDisjoint
@@ -1902,12 +1638,6 @@ theorem mem_union : a ∈ s ∪ t ↔ a ∈ s ∨ a ∈ t :=
 #align finset.mem_union Finset.mem_union
 -/
 
-/- warning: finset.disj_union_eq_union -> Finset.disjUnion_eq_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s t h) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t), Eq.{succ u1} (Finset.{u1} α) (Finset.disjUnion.{u1} α s t h) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disj_union_eq_union Finset.disjUnion_eq_unionₓ'. -/
 @[simp]
 theorem disjUnion_eq_union (s t h) : @disjUnion α s t h = s ∪ t :=
   ext fun a => by simp
@@ -1937,12 +1667,6 @@ theorem not_mem_union : a ∉ s ∪ t ↔ a ∉ s ∧ a ∉ t := by rw [mem_unio
 #align finset.not_mem_union Finset.not_mem_union
 -/
 
-/- warning: finset.coe_union -> Finset.coe_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s₁ : Finset.{u1} α) (s₂ : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s₁ : Finset.{u1} α) (s₂ : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Finset.toSet.{u1} α s₁) (Finset.toSet.{u1} α s₂))
-Case conversion may be inaccurate. Consider using '#align finset.coe_union Finset.coe_unionₓ'. -/
 @[simp, norm_cast]
 theorem coe_union (s₁ s₂ : Finset α) : ↑(s₁ ∪ s₂) = (s₁ ∪ s₂ : Set α) :=
   Set.ext fun x => mem_union
@@ -2110,12 +1834,6 @@ theorem right_eq_union_iff_subset {s t : Finset α} : s = t ∪ s ↔ t ⊆ s :=
 #align finset.right_eq_union_iff_subset Finset.right_eq_union_iff_subset
 -/
 
-/- warning: finset.union_congr_left -> Finset.union_congr_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s u)) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) u (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) -> (Eq.{succ u1} (Finset.{u1} α) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s u))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s u)) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) u (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) -> (Eq.{succ u1} (Finset.{u1} α) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s u))
-Case conversion may be inaccurate. Consider using '#align finset.union_congr_left Finset.union_congr_leftₓ'. -/
 theorem union_congr_left (ht : t ⊆ s ∪ u) (hu : u ⊆ s ∪ t) : s ∪ t = s ⊔ u :=
   sup_congr_left ht hu
 #align finset.union_congr_left Finset.union_congr_left
@@ -2138,23 +1856,11 @@ theorem union_eq_union_iff_right : s ∪ u = t ∪ u ↔ s ⊆ t ∪ u ∧ t ⊆
 #align finset.union_eq_union_iff_right Finset.union_eq_union_iff_right
 -/
 
-/- warning: finset.disjoint_union_left -> Finset.disjoint_union_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) u) (And (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s u) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) t u))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) u) (And (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s u) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) t u))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_union_left Finset.disjoint_union_leftₓ'. -/
 @[simp]
 theorem disjoint_union_left : Disjoint (s ∪ t) u ↔ Disjoint s u ∧ Disjoint t u := by
   simp only [disjoint_left, mem_union, or_imp, forall_and]
 #align finset.disjoint_union_left Finset.disjoint_union_left
 
-/- warning: finset.disjoint_union_right -> Finset.disjoint_union_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t u)) (And (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s u))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t u)) (And (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s u))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_union_right Finset.disjoint_union_rightₓ'. -/
 @[simp]
 theorem disjoint_union_right : Disjoint s (t ∪ u) ↔ Disjoint s t ∧ Disjoint s u := by
   simp only [disjoint_right, mem_union, or_imp, forall_and]
@@ -2181,12 +1887,6 @@ theorem induction_on_union (P : Finset α → Finset α → Prop) (symm : ∀ {a
 #align finset.induction_on_union Finset.induction_on_union
 -/
 
-/- warning: directed.exists_mem_subset_of_finset_subset_bUnion -> Directed.exists_mem_subset_of_finset_subset_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [hn : Nonempty.{succ u2} ι] {f : ι -> (Set.{u1} α)}, (Directed.{u1, succ u2} (Set.{u1} α) ι (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) f) -> (forall {s : Finset.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => f i))) -> (Exists.{succ u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (f i))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [hn : Nonempty.{succ u1} ι] {f : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Data.Finset.Basic._hyg.13840 : Set.{u2} α) (x._@.Mathlib.Data.Finset.Basic._hyg.13842 : Set.{u2} α) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Data.Finset.Basic._hyg.13840 x._@.Mathlib.Data.Finset.Basic._hyg.13842) f) -> (forall {s : Finset.{u2} α}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Finset.toSet.{u2} α s) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => f i))) -> (Exists.{succ u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Finset.toSet.{u2} α s) (f i))))
-Case conversion may be inaccurate. Consider using '#align directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_biUnionₓ'. -/
 theorem Directed.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} [hn : Nonempty ι]
     {f : ι → Set α} (h : Directed (· ⊆ ·) f) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i, f i) :
     ∃ i, (s : Set α) ⊆ f i := by
@@ -2204,12 +1904,6 @@ theorem Directed.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} [hn
       exact ⟨hk hbj, trans hti hk'⟩
 #align directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_biUnion
 
-/- warning: directed_on.exists_mem_subset_of_finset_subset_bUnion -> DirectedOn.exists_mem_subset_of_finset_subset_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Set.{u1} α)} {c : Set.{u2} ι}, (Set.Nonempty.{u2} ι c) -> (DirectedOn.{u2} ι (fun (i : ι) (j : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (f i) (f j)) c) -> (forall {s : Finset.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i c) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i c) => f i)))) -> (Exists.{succ u2} ι (fun (i : ι) => Exists.{0} (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i c) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i c) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (f i)))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {f : ι -> (Set.{u2} α)} {c : Set.{u1} ι}, (Set.Nonempty.{u1} ι c) -> (DirectedOn.{u1} ι (fun (i : ι) (j : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (f i) (f j)) c) -> (forall {s : Finset.{u2} α}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Finset.toSet.{u2} α s) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i c) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i c) => f i)))) -> (Exists.{succ u1} ι (fun (i : ι) => And (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i c) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Finset.toSet.{u2} α s) (f i)))))
-Case conversion may be inaccurate. Consider using '#align directed_on.exists_mem_subset_of_finset_subset_bUnion DirectedOn.exists_mem_subset_of_finset_subset_biUnionₓ'. -/
 theorem DirectedOn.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} {f : ι → Set α}
     {c : Set ι} (hn : c.Nonempty) (hc : DirectedOn (fun i j => f i ⊆ f j) c) {s : Finset α}
     (hs : (s : Set α) ⊆ ⋃ i ∈ c, f i) : ∃ i ∈ c, (s : Set α) ⊆ f i :=
@@ -2280,12 +1974,6 @@ theorem subset_inter {s₁ s₂ u : Finset α} : s₁ ⊆ s₂ → s₁ ⊆ u �
 #align finset.subset_inter Finset.subset_inter
 -/
 
-/- warning: finset.coe_inter -> Finset.coe_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s₁ : Finset.{u1} α) (s₂ : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s₁ : Finset.{u1} α) (s₂ : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Finset.toSet.{u1} α s₁) (Finset.toSet.{u1} α s₂))
-Case conversion may be inaccurate. Consider using '#align finset.coe_inter Finset.coe_interₓ'. -/
 @[simp, norm_cast]
 theorem coe_inter (s₁ s₂ : Finset α) : ↑(s₁ ∩ s₂) = (s₁ ∩ s₂ : Set α) :=
   Set.ext fun _ => mem_inter
@@ -2614,31 +2302,13 @@ theorem inter_subset_ite (s s' : Finset α) (P : Prop) [Decidable P] : s ∩ s' 
 #align finset.inter_subset_ite Finset.inter_subset_ite
 -/
 
-/- warning: finset.not_disjoint_iff_nonempty_inter -> Finset.not_disjoint_iff_nonempty_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)) (Finset.Nonempty.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)) (Finset.Nonempty.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t))
-Case conversion may be inaccurate. Consider using '#align finset.not_disjoint_iff_nonempty_inter Finset.not_disjoint_iff_nonempty_interₓ'. -/
 theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty :=
   not_disjoint_iff.trans <| by simp [Finset.Nonempty]
 #align finset.not_disjoint_iff_nonempty_inter Finset.not_disjoint_iff_nonempty_inter
 
-/- warning: finset.nonempty.not_disjoint -> Finset.Nonempty.not_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) -> (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) -> (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align finset.nonempty.not_disjoint Finset.Nonempty.not_disjointₓ'. -/
 alias not_disjoint_iff_nonempty_inter ↔ _ nonempty.not_disjoint
 #align finset.nonempty.not_disjoint Finset.Nonempty.not_disjoint
 
-/- warning: finset.disjoint_or_nonempty_inter -> Finset.disjoint_or_nonempty_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Or (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) (Finset.Nonempty.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Or (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) (Finset.Nonempty.{u1} α (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_or_nonempty_inter Finset.disjoint_or_nonempty_interₓ'. -/
 theorem disjoint_or_nonempty_inter (s t : Finset α) : Disjoint s t ∨ (s ∩ t).Nonempty := by
   rw [← not_disjoint_iff_nonempty_inter]; exact em _
 #align finset.disjoint_or_nonempty_inter Finset.disjoint_or_nonempty_inter
@@ -2800,12 +2470,6 @@ theorem subset_erase {a : α} {s t : Finset α} : s ⊆ t.eraseₓ a ↔ s ⊆ t
 #align finset.subset_erase Finset.subset_erase
 -/
 
-/- warning: finset.coe_erase -> Finset.coe_erase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Finset.toSet.{u1} α s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
-Case conversion may be inaccurate. Consider using '#align finset.coe_erase Finset.coe_eraseₓ'. -/
 @[simp, norm_cast]
 theorem coe_erase (a : α) (s : Finset α) : ↑(erase s a) = (s \ {a} : Set α) :=
   Set.ext fun _ => mem_erase.trans <| by rw [and_comm', Set.mem_diff, Set.mem_singleton_iff] <;> rfl
@@ -2820,12 +2484,6 @@ theorem erase_ssubset {a : α} {s : Finset α} (h : a ∈ s) : s.eraseₓ a ⊂ 
 #align finset.erase_ssubset Finset.erase_ssubset
 -/
 
-/- warning: finset.ssubset_iff_exists_subset_erase -> Finset.ssubset_iff_exists_subset_erase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s t) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s t) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a))))
-Case conversion may be inaccurate. Consider using '#align finset.ssubset_iff_exists_subset_erase Finset.ssubset_iff_exists_subset_eraseₓ'. -/
 theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a ∈ t, s ⊆ t.eraseₓ a :=
   by
   refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => ssubset_of_subset_of_ssubset h <| erase_ssubset ha⟩
@@ -3039,12 +2697,6 @@ theorem sdiff_subset_sdiff (hst : s ⊆ t) (hvu : v ⊆ u) : s \ u ⊆ t \ v :=
 #align finset.sdiff_subset_sdiff Finset.sdiff_subset_sdiff
 -/
 
-/- warning: finset.coe_sdiff -> Finset.coe_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s₁ : Finset.{u1} α) (s₂ : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂)) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s₁ : Finset.{u1} α) (s₂ : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂)) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Finset.toSet.{u1} α s₁) (Finset.toSet.{u1} α s₂))
-Case conversion may be inaccurate. Consider using '#align finset.coe_sdiff Finset.coe_sdiffₓ'. -/
 @[simp, norm_cast]
 theorem coe_sdiff (s₁ s₂ : Finset α) : ↑(s₁ \ s₂) = (s₁ \ s₂ : Set α) :=
   Set.ext fun _ => mem_sdiff
@@ -3076,22 +2728,10 @@ theorem union_sdiff_right (s t : Finset α) : (s ∪ t) \ t = s \ t :=
 #align finset.union_sdiff_right Finset.union_sdiff_right
 -/
 
-/- warning: finset.union_sdiff_cancel_left -> Finset.union_sdiff_cancel_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) s) t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) s) t)
-Case conversion may be inaccurate. Consider using '#align finset.union_sdiff_cancel_left Finset.union_sdiff_cancel_leftₓ'. -/
 theorem union_sdiff_cancel_left (h : Disjoint s t) : (s ∪ t) \ s = t :=
   h.sup_sdiff_cancel_left
 #align finset.union_sdiff_cancel_left Finset.union_sdiff_cancel_left
 
-/- warning: finset.union_sdiff_cancel_right -> Finset.union_sdiff_cancel_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) t) s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) t) s)
-Case conversion may be inaccurate. Consider using '#align finset.union_sdiff_cancel_right Finset.union_sdiff_cancel_rightₓ'. -/
 theorem union_sdiff_cancel_right (h : Disjoint s t) : (s ∪ t) \ t = s :=
   h.sup_sdiff_cancel_right
 #align finset.union_sdiff_cancel_right Finset.union_sdiff_cancel_right
@@ -3114,12 +2754,6 @@ theorem sdiff_idem (s t : Finset α) : (s \ t) \ t = s \ t :=
 #align finset.sdiff_idem Finset.sdiff_idem
 -/
 
-/- warning: finset.subset_sdiff -> Finset.subset_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t u)) (And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s u))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t u)) (And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s u))
-Case conversion may be inaccurate. Consider using '#align finset.subset_sdiff Finset.subset_sdiffₓ'. -/
 theorem subset_sdiff : s ⊆ t \ u ↔ s ⊆ t ∧ Disjoint s u :=
   le_iff_subset.symm.trans le_sdiff
 #align finset.subset_sdiff Finset.subset_sdiff
@@ -3223,34 +2857,16 @@ theorem erase_eq (s : Finset α) (a : α) : s.eraseₓ a = s \ {a} :=
 #align finset.erase_eq Finset.erase_eq
 -/
 
-/- warning: finset.disjoint_erase_comm -> Finset.disjoint_erase_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) t) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) t) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_erase_comm Finset.disjoint_erase_commₓ'. -/
 theorem disjoint_erase_comm : Disjoint (s.eraseₓ a) t ↔ Disjoint s (t.eraseₓ a) := by
   simp_rw [erase_eq, disjoint_sdiff_comm]
 #align finset.disjoint_erase_comm Finset.disjoint_erase_comm
 
-/- warning: finset.disjoint_of_erase_left -> Finset.disjoint_of_erase_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_of_erase_left Finset.disjoint_of_erase_leftₓ'. -/
 theorem disjoint_of_erase_left (ha : a ∉ t) (hst : Disjoint (s.eraseₓ a) t) : Disjoint s t :=
   by
   rw [← erase_insert ha, ← disjoint_erase_comm, disjoint_insert_right]
   exact ⟨not_mem_erase _ _, hst⟩
 #align finset.disjoint_of_erase_left Finset.disjoint_of_erase_left
 
-/- warning: finset.disjoint_of_erase_right -> Finset.disjoint_of_erase_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s)) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a)) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a)) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_of_erase_right Finset.disjoint_of_erase_rightₓ'. -/
 theorem disjoint_of_erase_right (ha : a ∉ s) (hst : Disjoint s (t.eraseₓ a)) : Disjoint s t :=
   by
   rw [← erase_insert ha, disjoint_erase_comm, disjoint_insert_left]
@@ -3408,53 +3024,23 @@ theorem erase_eq_empty_iff (s : Finset α) (a : α) : s.eraseₓ a = ∅ ↔ s =
 #align finset.erase_eq_empty_iff Finset.erase_eq_empty_iff
 -/
 
-/- warning: finset.sdiff_disjoint -> Finset.sdiff_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s) s
-Case conversion may be inaccurate. Consider using '#align finset.sdiff_disjoint Finset.sdiff_disjointₓ'. -/
 --TODO@Yaël: Kill lemmas duplicate with `boolean_algebra`
 theorem sdiff_disjoint : Disjoint (t \ s) s :=
   disjoint_left.2 fun a ha => (mem_sdiff.1 ha).2
 #align finset.sdiff_disjoint Finset.sdiff_disjoint
 
-/- warning: finset.disjoint_sdiff -> Finset.disjoint_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_sdiff Finset.disjoint_sdiffₓ'. -/
 theorem disjoint_sdiff : Disjoint s (t \ s) :=
   sdiff_disjoint.symm
 #align finset.disjoint_sdiff Finset.disjoint_sdiff
 
-/- warning: finset.disjoint_sdiff_inter -> Finset.disjoint_sdiff_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_sdiff_inter Finset.disjoint_sdiff_interₓ'. -/
 theorem disjoint_sdiff_inter (s t : Finset α) : Disjoint (s \ t) (s ∩ t) :=
   disjoint_of_subset_right (inter_subset_right _ _) sdiff_disjoint
 #align finset.disjoint_sdiff_inter Finset.disjoint_sdiff_inter
 
-/- warning: finset.sdiff_eq_self_iff_disjoint -> Finset.sdiff_eq_self_iff_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) s) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) s) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align finset.sdiff_eq_self_iff_disjoint Finset.sdiff_eq_self_iff_disjointₓ'. -/
 theorem sdiff_eq_self_iff_disjoint : s \ t = s ↔ Disjoint s t :=
   sdiff_eq_self_iff_disjoint'
 #align finset.sdiff_eq_self_iff_disjoint Finset.sdiff_eq_self_iff_disjoint
 
-/- warning: finset.sdiff_eq_self_of_disjoint -> Finset.sdiff_eq_self_of_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) s)
-Case conversion may be inaccurate. Consider using '#align finset.sdiff_eq_self_of_disjoint Finset.sdiff_eq_self_of_disjointₓ'. -/
 theorem sdiff_eq_self_of_disjoint (h : Disjoint s t) : s \ t = s :=
   sdiff_eq_self_iff_disjoint.2 h
 #align finset.sdiff_eq_self_of_disjoint Finset.sdiff_eq_self_of_disjoint
@@ -3468,22 +3054,10 @@ section symmDiff
 
 variable [DecidableEq α] {s t : Finset α} {a b : α}
 
-/- warning: finset.mem_symm_diff -> Finset.mem_symmDiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (Or (And (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t))) (And (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t) (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {a : α}, Iff (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (Or (And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t))) (And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t) (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_symm_diff Finset.mem_symmDiffₓ'. -/
 theorem mem_symmDiff : a ∈ s ∆ t ↔ a ∈ s ∧ a ∉ t ∨ a ∈ t ∧ a ∉ s := by
   simp_rw [symmDiff, sup_eq_union, mem_union, mem_sdiff]
 #align finset.mem_symm_diff Finset.mem_symmDiff
 
-/- warning: finset.coe_symm_diff -> Finset.coe_symmDiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) (Finset.toSet.{u1} α s) (Finset.toSet.{u1} α t))
-Case conversion may be inaccurate. Consider using '#align finset.coe_symm_diff Finset.coe_symmDiffₓ'. -/
 @[simp, norm_cast]
 theorem coe_symmDiff : (↑(s ∆ t) : Set α) = s ∆ t :=
   Set.ext fun _ => mem_symmDiff
@@ -3560,23 +3134,11 @@ def piecewise {α : Type _} {δ : α → Sort _} (s : Finset α) (f g : ∀ i, �
 
 variable {δ : α → Sort _} (s : Finset α) (f g : ∀ i, δ i)
 
-/- warning: finset.piecewise_insert_self -> Finset.piecewise_insert_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : DecidableEq.{succ u1} α] {j : α} [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) j s))], Eq.{u2} (δ j) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) j s) f g (fun (j : α) => _inst_2 j) j) (f j)
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : DecidableEq.{succ u2} α] {j : α} [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_1 a b)) j s))], Eq.{u1} (δ j) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_1 a b)) j s) f g (fun (j : α) => _inst_2 j) j) (f j)
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_insert_self Finset.piecewise_insert_selfₓ'. -/
 @[simp]
 theorem piecewise_insert_self [DecidableEq α] {j : α} [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g j = f j := by simp [piecewise]
 #align finset.piecewise_insert_self Finset.piecewise_insert_self
 
-/- warning: finset.piecewise_empty -> Finset.piecewise_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)) f g (fun (j : α) => _inst_1 j)) g
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i (EmptyCollection.emptyCollection.{u2} (Finset.{u2} α) (Finset.instEmptyCollectionFinset.{u2} α)))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (EmptyCollection.emptyCollection.{u2} (Finset.{u2} α) (Finset.instEmptyCollectionFinset.{u2} α)) f g (fun (j : α) => _inst_1 j)) g
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_empty Finset.piecewise_emptyₓ'. -/
 @[simp]
 theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Finset α))] : piecewise ∅ f g = g := by ext i;
   simp [piecewise]
@@ -3584,80 +3146,38 @@ theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Finset α))] : piec
 
 variable [∀ j, Decidable (j ∈ s)]
 
-/- warning: finset.piecewise_coe -> Finset.piecewise_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] [_inst_2 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) f g (fun (j : α) => _inst_2 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] [_inst_2 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j (Finset.toSet.{u2} α s))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (Finset.toSet.{u2} α s) f g (fun (j : α) => _inst_2 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_coe Finset.piecewise_coeₓ'. -/
 -- TODO: fix this in norm_cast
 @[norm_cast move]
 theorem piecewise_coe [∀ j, Decidable (j ∈ (s : Set α))] :
     (s : Set α).piecewise f g = s.piecewise f g := by ext; congr
 #align finset.piecewise_coe Finset.piecewise_coe
 
-/- warning: finset.piecewise_eq_of_mem -> Finset.piecewise_eq_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {i : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (Eq.{u2} (δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (f i))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] {i : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) -> (Eq.{u1} (δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (f i))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_eq_of_mem Finset.piecewise_eq_of_memₓ'. -/
 @[simp]
 theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i := by
   simp [piecewise, hi]
 #align finset.piecewise_eq_of_mem Finset.piecewise_eq_of_mem
 
-/- warning: finset.piecewise_eq_of_not_mem -> Finset.piecewise_eq_of_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {i : α}, (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s)) -> (Eq.{u2} (δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (g i))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] {i : α}, (Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)) -> (Eq.{u1} (δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (g i))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_eq_of_not_mem Finset.piecewise_eq_of_not_memₓ'. -/
 @[simp]
 theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g i := by
   simp [piecewise, hi]
 #align finset.piecewise_eq_of_not_mem Finset.piecewise_eq_of_not_mem
 
-/- warning: finset.piecewise_congr -> Finset.piecewise_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {f : forall (i : α), δ i} {f' : forall (i : α), δ i} {g : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (Eq.{u2} (δ i) (f i) (f' i))) -> (forall (i : α), (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s)) -> (Eq.{u2} (δ i) (g i) (g' i))) -> (Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] {f : forall (i : α), δ i} {f' : forall (i : α), δ i} {g : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (i : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) -> (Eq.{u1} (δ i) (f i) (f' i))) -> (forall (i : α), (Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)) -> (Eq.{u1} (δ i) (g i) (g' i))) -> (Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_congr Finset.piecewise_congrₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i ∈ s, f i = f' i)
     (hg : ∀ (i) (_ : i ∉ s), g i = g' i) : s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
 #align finset.piecewise_congr Finset.piecewise_congr
 
-/- warning: finset.piecewise_insert_of_ne -> Finset.piecewise_insert_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] [_inst_2 : DecidableEq.{succ u1} α] {i : α} {j : α} [_inst_3 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) j s))], (Ne.{succ u1} α i j) -> (Eq.{u2} (δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) j s) f g (fun (j : α) => _inst_3 j) i) (Finset.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) i))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] [_inst_2 : DecidableEq.{succ u2} α] {i : α} {j : α} [_inst_3 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) j s))], (Ne.{succ u2} α i j) -> (Eq.{u1} (δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) j s) f g (fun (j : α) => _inst_3 j) i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_insert_of_ne Finset.piecewise_insert_of_neₓ'. -/
 @[simp]
 theorem piecewise_insert_of_ne [DecidableEq α] {i j : α} [∀ i, Decidable (i ∈ insert j s)]
     (h : i ≠ j) : (insert j s).piecewise f g i = s.piecewise f g i := by simp [piecewise, h]
 #align finset.piecewise_insert_of_ne Finset.piecewise_insert_of_ne
 
-/- warning: finset.piecewise_insert -> Finset.piecewise_insert is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] [_inst_2 : DecidableEq.{succ u1} α] (j : α) [_inst_3 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) j s))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) j s) f g (fun (j : α) => _inst_3 j)) (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s f g (fun (j : α) => _inst_1 j)) j (f j))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] [_inst_2 : DecidableEq.{succ u2} α] (j : α) [_inst_3 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) j s))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) j s) f g (fun (j : α) => _inst_3 j)) (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s f g (fun (j : α) => _inst_1 j)) j (f j))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_insert Finset.piecewise_insertₓ'. -/
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g = update (s.piecewise f g) j (f j) := by
   classical simp only [← piecewise_coe, coe_insert, ← Set.piecewise_insert]
 #align finset.piecewise_insert Finset.piecewise_insert
 
-/- warning: finset.piecewise_cases -> Finset.piecewise_cases is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {i : α} (p : (δ i) -> Prop), (p (f i)) -> (p (g i)) -> (p (Finset.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) i))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] {i : α} (p : (δ i) -> Prop), (p (f i)) -> (p (g i)) -> (p (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_cases Finset.piecewise_casesₓ'. -/
 theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) :
     p (s.piecewise f g i) := by by_cases hi : i ∈ s <;> simpa [hi]
 #align finset.piecewise_cases Finset.piecewise_cases
@@ -3671,58 +3191,28 @@ theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set 
 #align finset.piecewise_mem_set_pi Finset.piecewise_mem_set_pi
 -/
 
-/- warning: finset.piecewise_singleton -> Finset.piecewise_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_2 : DecidableEq.{succ u1} α] (i : α), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) i) f g (fun (j : α) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_2 a b) j (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) i))) (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) g i (f i))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_2 : DecidableEq.{succ u2} α] (i : α), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (Singleton.singleton.{u2, u2} α (Finset.{u2} α) (Finset.instSingletonFinset.{u2} α) i) f g (fun (j : α) => Finset.decidableMem.{u2} α (fun (a : α) (b : α) => _inst_2 a b) j (Singleton.singleton.{u2, u2} α (Finset.{u2} α) (Finset.instSingletonFinset.{u2} α) i))) (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) g i (f i))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_singleton Finset.piecewise_singletonₓ'. -/
 theorem piecewise_singleton [DecidableEq α] (i : α) : piecewise {i} f g = update g i (f i) := by
   rw [← insert_emptyc_eq, piecewise_insert, piecewise_empty]
 #align finset.piecewise_singleton Finset.piecewise_singleton
 
-/- warning: finset.piecewise_piecewise_of_subset_left -> Finset.piecewise_piecewise_of_subset_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} {s : Finset.{u1} α} {t : Finset.{u1} α} [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s)] [_inst_3 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i t)], (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (forall (f₁ : forall (a : α), δ a) (f₂ : forall (a : α), δ a) (g : forall (a : α), δ a), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) t f₁ f₂ (fun (j : α) => _inst_3 j)) g (fun (j : α) => _inst_2 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f₁ g (fun (j : α) => _inst_2 j)))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} {s : Finset.{u2} α} {t : Finset.{u2} α} [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)] [_inst_3 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i t)], (HasSubset.Subset.{u2} (Finset.{u2} α) (Finset.instHasSubsetFinset.{u2} α) s t) -> (forall (f₁ : forall (a : α), δ a) (f₂ : forall (a : α), δ a) (g : forall (a : α), δ a), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) t f₁ f₂ (fun (j : α) => _inst_3 j)) g (fun (j : α) => _inst_2 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f₁ g (fun (j : α) => _inst_2 j)))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_piecewise_of_subset_left Finset.piecewise_piecewise_of_subset_leftₓ'. -/
 theorem piecewise_piecewise_of_subset_left {s t : Finset α} [∀ i, Decidable (i ∈ s)]
     [∀ i, Decidable (i ∈ t)] (h : s ⊆ t) (f₁ f₂ g : ∀ a, δ a) :
     s.piecewise (t.piecewise f₁ f₂) g = s.piecewise f₁ g :=
   s.piecewise_congr (fun i hi => piecewise_eq_of_mem _ _ _ (h hi)) fun _ _ => rfl
 #align finset.piecewise_piecewise_of_subset_left Finset.piecewise_piecewise_of_subset_left
 
-/- warning: finset.piecewise_idem_left -> Finset.piecewise_idem_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] (f₁ : forall (a : α), δ a) (f₂ : forall (a : α), δ a) (g : forall (a : α), δ a), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s f₁ f₂ (fun (j : α) => _inst_1 j)) g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f₁ g (fun (j : α) => _inst_1 j))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] (f₁ : forall (a : α), δ a) (f₂ : forall (a : α), δ a) (g : forall (a : α), δ a), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s f₁ f₂ (fun (j : α) => _inst_1 j)) g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f₁ g (fun (j : α) => _inst_1 j))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_idem_left Finset.piecewise_idem_leftₓ'. -/
 @[simp]
 theorem piecewise_idem_left (f₁ f₂ g : ∀ a, δ a) :
     s.piecewise (s.piecewise f₁ f₂) g = s.piecewise f₁ g :=
   piecewise_piecewise_of_subset_left (Subset.refl _) _ _ _
 #align finset.piecewise_idem_left Finset.piecewise_idem_left
 
-/- warning: finset.piecewise_piecewise_of_subset_right -> Finset.piecewise_piecewise_of_subset_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} {s : Finset.{u1} α} {t : Finset.{u1} α} [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s)] [_inst_3 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i t)], (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t s) -> (forall (f : forall (a : α), δ a) (g₁ : forall (a : α), δ a) (g₂ : forall (a : α), δ a), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s f (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) t g₁ g₂ (fun (j : α) => _inst_3 j)) (fun (j : α) => _inst_2 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g₂ (fun (j : α) => _inst_2 j)))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} {s : Finset.{u2} α} {t : Finset.{u2} α} [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)] [_inst_3 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i t)], (HasSubset.Subset.{u2} (Finset.{u2} α) (Finset.instHasSubsetFinset.{u2} α) t s) -> (forall (f : forall (a : α), δ a) (g₁ : forall (a : α), δ a) (g₂ : forall (a : α), δ a), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s f (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) t g₁ g₂ (fun (j : α) => _inst_3 j)) (fun (j : α) => _inst_2 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g₂ (fun (j : α) => _inst_2 j)))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_piecewise_of_subset_right Finset.piecewise_piecewise_of_subset_rightₓ'. -/
 theorem piecewise_piecewise_of_subset_right {s t : Finset α} [∀ i, Decidable (i ∈ s)]
     [∀ i, Decidable (i ∈ t)] (h : t ⊆ s) (f g₁ g₂ : ∀ a, δ a) :
     s.piecewise f (t.piecewise g₁ g₂) = s.piecewise f g₂ :=
   s.piecewise_congr (fun _ _ => rfl) fun i hi => t.piecewise_eq_of_not_mem _ _ (mt (@h _) hi)
 #align finset.piecewise_piecewise_of_subset_right Finset.piecewise_piecewise_of_subset_right
 
-/- warning: finset.piecewise_idem_right -> Finset.piecewise_idem_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] (f : forall (a : α), δ a) (g₁ : forall (a : α), δ a) (g₂ : forall (a : α), δ a), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s f (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s g₁ g₂ (fun (j : α) => _inst_1 j)) (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g₂ (fun (j : α) => _inst_1 j))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] (f : forall (a : α), δ a) (g₁ : forall (a : α), δ a) (g₂ : forall (a : α), δ a), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s f (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s g₁ g₂ (fun (j : α) => _inst_1 j)) (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g₂ (fun (j : α) => _inst_1 j))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_idem_right Finset.piecewise_idem_rightₓ'. -/
 @[simp]
 theorem piecewise_idem_right (f g₁ g₂ : ∀ a, δ a) :
     s.piecewise f (s.piecewise g₁ g₂) = s.piecewise f g₂ :=
@@ -3736,12 +3226,6 @@ theorem update_eq_piecewise {β : Type _} [DecidableEq α] (f : α → β) (i : 
 #align finset.update_eq_piecewise Finset.update_eq_piecewise
 -/
 
-/- warning: finset.update_piecewise -> Finset.update_piecewise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] [_inst_2 : DecidableEq.{succ u1} α] (i : α) (v : δ i), Eq.{imax (succ u1) u2} (forall (a : α), δ a) (Function.update.{succ u1, u2} α (fun (a : α) => δ a) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) i v) (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) f i v) (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) g i v) (fun (j : α) => _inst_1 j))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] [_inst_2 : DecidableEq.{succ u2} α] (i : α) (v : δ i), Eq.{imax (succ u2) u1} (forall (a : α), δ a) (Function.update.{succ u2, u1} α (fun (a : α) => δ a) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) i v) (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) f i v) (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) g i v) (fun (j : α) => _inst_1 j))
-Case conversion may be inaccurate. Consider using '#align finset.update_piecewise Finset.update_piecewiseₓ'. -/
 theorem update_piecewise [DecidableEq α] (i : α) (v : δ i) :
     update (s.piecewise f g) i v = s.piecewise (update f i v) (update g i v) :=
   by
@@ -3749,12 +3233,6 @@ theorem update_piecewise [DecidableEq α] (i : α) (v : δ i) :
   rcases em (j = i) with (rfl | hj) <;> by_cases hs : j ∈ s <;> simp [*]
 #align finset.update_piecewise Finset.update_piecewise
 
-/- warning: finset.update_piecewise_of_mem -> Finset.update_piecewise_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] [_inst_2 : DecidableEq.{succ u1} α] {i : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (forall (v : δ i), Eq.{imax (succ u1) u2} (forall (a : α), δ a) (Function.update.{succ u1, u2} α (fun (a : α) => δ a) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) i v) (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) f i v) g (fun (j : α) => _inst_1 j)))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] [_inst_2 : DecidableEq.{succ u2} α] {i : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) -> (forall (v : δ i), Eq.{imax (succ u2) u1} (forall (a : α), δ a) (Function.update.{succ u2, u1} α (fun (a : α) => δ a) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) i v) (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) f i v) g (fun (j : α) => _inst_1 j)))
-Case conversion may be inaccurate. Consider using '#align finset.update_piecewise_of_mem Finset.update_piecewise_of_memₓ'. -/
 theorem update_piecewise_of_mem [DecidableEq α] {i : α} (hi : i ∈ s) (v : δ i) :
     update (s.piecewise f g) i v = s.piecewise (update f i v) g :=
   by
@@ -3763,12 +3241,6 @@ theorem update_piecewise_of_mem [DecidableEq α] {i : α} (hi : i ∈ s) (v : δ
   exact fun h => hj (h.symm ▸ hi)
 #align finset.update_piecewise_of_mem Finset.update_piecewise_of_mem
 
-/- warning: finset.update_piecewise_of_not_mem -> Finset.update_piecewise_of_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Finset.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] [_inst_2 : DecidableEq.{succ u1} α] {i : α}, (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s)) -> (forall (v : δ i), Eq.{imax (succ u1) u2} (forall (a : α), δ a) (Function.update.{succ u1, u2} α (fun (a : α) => δ a) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) i v) (Finset.piecewise.{u1, u2} α (fun (a : α) => δ a) s f (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) g i v) (fun (j : α) => _inst_1 j)))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] [_inst_2 : DecidableEq.{succ u2} α] {i : α}, (Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)) -> (forall (v : δ i), Eq.{imax (succ u2) u1} (forall (a : α), δ a) (Function.update.{succ u2, u1} α (fun (a : α) => δ a) (fun (a : α) (b : α) => _inst_2 a b) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) i v) (Finset.piecewise.{u2, u1} α (fun (a : α) => δ a) s f (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) g i v) (fun (j : α) => _inst_1 j)))
-Case conversion may be inaccurate. Consider using '#align finset.update_piecewise_of_not_mem Finset.update_piecewise_of_not_memₓ'. -/
 theorem update_piecewise_of_not_mem [DecidableEq α] {i : α} (hi : i ∉ s) (v : δ i) :
     update (s.piecewise f g) i v = s.piecewise f (update g i v) :=
   by
@@ -3777,46 +3249,22 @@ theorem update_piecewise_of_not_mem [DecidableEq α] {i : α} (hi : i ∉ s) (v 
   exact fun h => hi (h ▸ hj)
 #align finset.update_piecewise_of_not_mem Finset.update_piecewise_of_not_mem
 
-/- warning: finset.piecewise_le_of_le_of_le -> Finset.piecewise_le_of_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) f h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) h)
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) f h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) h)
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_le_of_le_of_le Finset.piecewise_le_of_le_of_leₓ'. -/
 theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i}
     (Hf : f ≤ h) (Hg : g ≤ h) : s.piecewise f g ≤ h := fun x =>
   piecewise_cases s f g (· ≤ h x) (Hf x) (Hg x)
 #align finset.piecewise_le_of_le_of_le Finset.piecewise_le_of_le_of_le
 
-/- warning: finset.le_piecewise_of_le_of_le -> Finset.le_piecewise_of_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) h f) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) h g) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) h (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) h f) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) h g) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) h (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)))
-Case conversion may be inaccurate. Consider using '#align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_leₓ'. -/
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i}
     (Hf : h ≤ f) (Hg : h ≤ g) : h ≤ s.piecewise f g := fun x =>
   piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 #align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_le
 
-/- warning: finset.piecewise_le_piecewise' -> Finset.piecewise_le_piecewise' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (LE.le.{u2} (δ x) (Preorder.toHasLe.{u2} (δ x) (_inst_2 x)) (f x) (f' x))) -> (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s)) -> (LE.le.{u2} (δ x) (Preorder.toHasLe.{u2} (δ x) (_inst_2 x)) (g x) (g' x))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (LE.le.{u2} (δ x) (Preorder.toLE.{u2} (δ x) (_inst_2 x)) (f x) (f' x))) -> (forall (x : α), (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) -> (LE.le.{u2} (δ x) (Preorder.toLE.{u2} (δ x) (_inst_2 x)) (g x) (g' x))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_le_piecewise' Finset.piecewise_le_piecewise'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) :
     s.piecewise f g ≤ s.piecewise f' g' := fun x => by by_cases hx : x ∈ s <;> simp [hx, *]
 #align finset.piecewise_le_piecewise' Finset.piecewise_le_piecewise'
 
-/- warning: finset.piecewise_le_piecewise -> Finset.piecewise_le_piecewise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) f f') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g g') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) f f') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g g') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_le_piecewise Finset.piecewise_le_piecewiseₓ'. -/
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : f ≤ f') (Hg : g ≤ g') : s.piecewise f g ≤ s.piecewise f' g' :=
   s.piecewise_le_piecewise' (fun x _ => Hf x) fun x _ => Hg x
@@ -3830,23 +3278,11 @@ theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (�
 #align finset.piecewise_mem_Icc_of_mem_of_mem Finset.piecewise_mem_Icc_of_mem_of_mem
 -/
 
-/- warning: finset.piecewise_mem_Icc -> Finset.piecewise_mem_Icc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) f g) -> (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.hasMem.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) f g))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) f g) -> (Membership.mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.instMembershipSet.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) f g))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_mem_Icc Finset.piecewise_mem_Iccₓ'. -/
 theorem piecewise_mem_Icc {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : f ≤ g) :
     s.piecewise f g ∈ Set.Icc f g :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.left_mem_Icc.2 h) (Set.right_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc Finset.piecewise_mem_Icc
 
-/- warning: finset.piecewise_mem_Icc' -> Finset.piecewise_mem_Icc' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g f) -> (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.hasMem.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) g f))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g f) -> (Membership.mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.instMembershipSet.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) g f))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_mem_Icc' Finset.piecewise_mem_Icc'ₓ'. -/
 theorem piecewise_mem_Icc' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : g ≤ f) :
     s.piecewise f g ∈ Set.Icc g f :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.right_mem_Icc.2 h) (Set.left_mem_Icc.2 h)
@@ -3925,12 +3361,6 @@ theorem mem_of_mem_filter {s : Finset α} (x : α) (h : x ∈ s.filterₓ p) : x
 #align finset.mem_of_mem_filter Finset.mem_of_mem_filter
 -/
 
-/- warning: finset.filter_ssubset -> Finset.filter_ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) s) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) => Not (p x))))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) s) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) (Not (p x))))
-Case conversion may be inaccurate. Consider using '#align finset.filter_ssubset Finset.filter_ssubsetₓ'. -/
 theorem filter_ssubset {s : Finset α} : s.filterₓ p ⊂ s ↔ ∃ x ∈ s, ¬p x :=
   ⟨fun h =>
     let ⟨x, hs, hp⟩ := Set.exists_of_ssubset h
@@ -3946,22 +3376,10 @@ theorem filter_filter (s : Finset α) : (s.filterₓ p).filterₓ q = s.filter�
 #align finset.filter_filter Finset.filter_filter
 -/
 
-/- warning: finset.filter_true -> Finset.filter_True is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} [h : DecidablePred.{succ u1} α (fun (_x : α) => True)], Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (_x : α) => True) h s) s
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (x._@.Mathlib.Data.Finset.Basic._hyg.27713 : α) => True) (fun (a : α) => instDecidableTrue) s) s
-Case conversion may be inaccurate. Consider using '#align finset.filter_true Finset.filter_Trueₓ'. -/
 theorem filter_True {s : Finset α} [h : DecidablePred fun _ => True] :
     @Finset.filter α (fun _ => True) h s = s := by ext <;> simp
 #align finset.filter_true Finset.filter_True
 
-/- warning: finset.filter_false -> Finset.filter_False is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => False)} (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => False) h s) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} (h : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (x._@.Mathlib.Data.Finset.Basic._hyg.27751 : α) => False) (fun (a : α) => instDecidableFalse) h) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
-Case conversion may be inaccurate. Consider using '#align finset.filter_false Finset.filter_Falseₓ'. -/
 @[simp]
 theorem filter_False {h} (s : Finset α) : @filter α (fun a => False) h s = ∅ :=
   ext fun a => by simp only [mem_filter, and_false_iff] <;> rfl
@@ -3999,12 +3417,6 @@ theorem filter_eq_empty_iff (s : Finset α) : s.filterₓ p = ∅ ↔ ∀ x ∈ 
 #align finset.filter_eq_empty_iff Finset.filter_eq_empty_iff
 -/
 
-/- warning: finset.filter_nonempty_iff -> Finset.filter_nonempty_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (Finset.Nonempty.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => p a)))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (Finset.Nonempty.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (p a)))
-Case conversion may be inaccurate. Consider using '#align finset.filter_nonempty_iff Finset.filter_nonempty_iffₓ'. -/
 theorem filter_nonempty_iff {s : Finset α} : (s.filterₓ p).Nonempty ↔ ∃ a ∈ s, p a := by
   simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, Classical.not_not, not_forall]
 #align finset.filter_nonempty_iff Finset.filter_nonempty_iff
@@ -4034,12 +3446,6 @@ theorem monotone_filter_left : Monotone (filter p) := fun _ _ => filter_subset_f
 #align finset.monotone_filter_left Finset.monotone_filter_left
 -/
 
-/- warning: finset.monotone_filter_right -> Finset.monotone_filter_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) {{p : α -> Prop}} {{q : α -> Prop}} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (LE.le.{u1} (α -> Prop) (Pi.hasLe.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.le)) p q) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) {{p : α -> Prop}} {{q : α -> Prop}} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (LE.le.{u1} (α -> Prop) (Pi.hasLe.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.le)) p q) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s))
-Case conversion may be inaccurate. Consider using '#align finset.monotone_filter_right Finset.monotone_filter_rightₓ'. -/
 theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [DecidablePred p] [DecidablePred q]
     (h : p ≤ q) : s.filterₓ p ≤ s.filterₓ q :=
   Multiset.subset_of_le (Multiset.monotone_filter_right s.val h)
@@ -4081,34 +3487,16 @@ theorem filter_cons_of_neg (a : α) (s : Finset α) (ha : a ∉ s) (hp : ¬p a) 
 #align finset.filter_cons_of_neg Finset.filter_cons_of_neg
 -/
 
-/- warning: finset.disjoint_filter -> Finset.disjoint_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s)) (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (p x) -> (Not (q x)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s)) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (p x) -> (Not (q x)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter Finset.disjoint_filterₓ'. -/
 theorem disjoint_filter {s : Finset α} {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
     Disjoint (s.filterₓ p) (s.filterₓ q) ↔ ∀ x ∈ s, p x → ¬q x := by
   constructor <;> simp (config := { contextual := true }) [disjoint_left]
 #align finset.disjoint_filter Finset.disjoint_filter
 
-/- warning: finset.disjoint_filter_filter -> Finset.disjoint_filter_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter Finset.disjoint_filter_filterₓ'. -/
 theorem disjoint_filter_filter {s t : Finset α} {p q : α → Prop} [DecidablePred p]
     [DecidablePred q] : Disjoint s t → Disjoint (s.filterₓ p) (t.filterₓ q) :=
   Disjoint.mono (filter_subset _ _) (filter_subset _ _)
 #align finset.disjoint_filter_filter Finset.disjoint_filter_filter
 
-/- warning: finset.disjoint_filter_filter' -> Finset.disjoint_filter_filter' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toHasLe.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop (Preorder.toHasLe.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) Prop.boundedOrder)) p q) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => Prop) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop Prop.le Prop.boundedOrder)) p q) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter' Finset.disjoint_filter_filter'ₓ'. -/
 theorem disjoint_filter_filter' (s t : Finset α) {p q : α → Prop} [DecidablePred p]
     [DecidablePred q] (h : Disjoint p q) : Disjoint (s.filterₓ p) (t.filterₓ q) :=
   by
@@ -4117,23 +3505,11 @@ theorem disjoint_filter_filter' (s t : Finset α) {p q : α → Prop} [Decidable
   exact h.le_bot _ ⟨hp, hq⟩
 #align finset.disjoint_filter_filter' Finset.disjoint_filter_filter'
 
-/- warning: finset.disjoint_filter_filter_neg -> Finset.disjoint_filter_filter_neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) (p : α -> Prop) [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α (fun (a : α) => Not (p a))], Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => _inst_4 a) t)
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) (p : α -> Prop) [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : forall (x : α), Decidable (Not (p x))], Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => _inst_4 a) t)
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter_neg Finset.disjoint_filter_filter_negₓ'. -/
 theorem disjoint_filter_filter_neg (s t : Finset α) (p : α → Prop) [DecidablePred p]
     [DecidablePred fun a => ¬p a] : Disjoint (s.filterₓ p) (t.filterₓ fun a => ¬p a) :=
   disjoint_filter_filter' s t disjoint_compl_right
 #align finset.disjoint_filter_filter_neg Finset.disjoint_filter_filter_neg
 
-/- warning: finset.filter_disj_union -> Finset.filter_disj_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (s : Finset.{u1} α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s t), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) (Finset.disjUnion.{u1} α s t h)) (Finset.disjUnion.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) t) (Finset.disjoint_filter_filter.{u1} α s t p p (fun (a : α) => _inst_1 a) (fun (a : α) => _inst_1 a) h))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (s : Finset.{u1} α) (t : Finset.{u1} α) (h : Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) (Finset.disjUnion.{u1} α s t h)) (Finset.disjUnion.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) t) (Finset.disjoint_filter_filter.{u1} α s t p p (fun (a : α) => _inst_1 a) (fun (a : α) => _inst_1 a) h))
-Case conversion may be inaccurate. Consider using '#align finset.filter_disj_union Finset.filter_disj_unionₓ'. -/
 theorem filter_disj_union (s : Finset α) (t : Finset α) (h : Disjoint s t) :
     filter p (disjUnion s t h) = (filter p s).disjUnion (filter p t) (disjoint_filter_filter h) :=
   eq_of_veq <| Multiset.filter_add _ _ _
@@ -4208,34 +3584,16 @@ theorem filter_erase (a : α) (s : Finset α) : filter p (erase s a) = erase (fi
 #align finset.filter_erase Finset.filter_erase
 -/
 
-/- warning: finset.filter_or -> Finset.filter_or is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidablePred.{succ u1} α (fun (a : α) => Or (p a) (q a))] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Or (p a) (q a)) (fun (a : α) => _inst_4 a) s) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_2 a) s))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Or (p a) (q a)) (fun (a : α) => instDecidableOr (p a) (q a) (_inst_1 a) (_inst_2 a)) _inst_4) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4) (Finset.filter.{u1} α q (fun (a : α) => _inst_2 a) _inst_4))
-Case conversion may be inaccurate. Consider using '#align finset.filter_or Finset.filter_orₓ'. -/
 theorem filter_or [DecidablePred fun a => p a ∨ q a] (s : Finset α) :
     (s.filterₓ fun a => p a ∨ q a) = s.filterₓ p ∪ s.filterₓ q :=
   ext fun _ => by simp only [mem_filter, mem_union, and_or_left]
 #align finset.filter_or Finset.filter_or
 
-/- warning: finset.filter_and -> Finset.filter_and is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidablePred.{succ u1} α (fun (a : α) => And (p a) (q a))] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => And (p a) (q a)) (fun (a : α) => _inst_4 a) s) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_2 a) s))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => And (p a) (q a)) (fun (a : α) => instDecidableAnd (p a) (q a) (_inst_1 a) (_inst_2 a)) _inst_4) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4) (Finset.filter.{u1} α q (fun (a : α) => _inst_2 a) _inst_4))
-Case conversion may be inaccurate. Consider using '#align finset.filter_and Finset.filter_andₓ'. -/
 theorem filter_and [DecidablePred fun a => p a ∧ q a] (s : Finset α) :
     (s.filterₓ fun a => p a ∧ q a) = s.filterₓ p ∩ s.filterₓ q :=
   ext fun _ => by simp only [mem_filter, mem_inter, and_comm', and_left_comm, and_self_iff]
 #align finset.filter_and Finset.filter_and
 
-/- warning: finset.filter_not -> Finset.filter_not is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidablePred.{succ u1} α (fun (a : α) => Not (p a))] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => _inst_4 a) s) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) s (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => instDecidableNot (p a) (_inst_1 a)) _inst_4) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) _inst_4 (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4))
-Case conversion may be inaccurate. Consider using '#align finset.filter_not Finset.filter_notₓ'. -/
 theorem filter_not [DecidablePred fun a => ¬p a] (s : Finset α) :
     (s.filterₓ fun a => ¬p a) = s \ s.filterₓ p :=
   ext <| by
@@ -4264,12 +3622,6 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
 #align finset.sdiff_eq_self Finset.sdiff_eq_self
 -/
 
-/- warning: finset.subset_union_elim -> Finset.subset_union_elim is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t₁ t₂)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (s₁ : Finset.{u1} α) => Exists.{succ u1} (Finset.{u1} α) (fun (s₂ : Finset.{u1} α) => And (Eq.{succ u1} (Finset.{u1} α) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) s₁ s₂) s) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₁) t₁) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s₂) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t₂ t₁))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α s) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t₁ t₂)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (s₁ : Finset.{u1} α) => Exists.{succ u1} (Finset.{u1} α) (fun (s₂ : Finset.{u1} α) => And (Eq.{succ u1} (Finset.{u1} α) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) s₁ s₂) s) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α s₁) t₁) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α s₂) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t₂ t₁))))))
-Case conversion may be inaccurate. Consider using '#align finset.subset_union_elim Finset.subset_union_elimₓ'. -/
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
   classical
@@ -4280,11 +3632,6 @@ theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t�
 #align finset.subset_union_elim Finset.subset_union_elim
 
 /- warning: finset.filter_congr_decidable clashes with [anonymous] -> [anonymous]
-warning: finset.filter_congr_decidable -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} (s : Finset.{u_1} α) (p : α -> Prop) (h : DecidablePred.{succ u_1} α p) [_inst_4 : DecidablePred.{succ u_1} α p], Eq.{succ u_1} (Finset.{u_1} α) (Finset.filter.{u_1} α p h s) (Finset.filter.{u_1} α p (fun (a : α) => _inst_4 a) s)
-but is expected to have type
-  forall {α : Type.{u}} {s : Type.{v}}, (Nat -> α -> s) -> Nat -> (List.{u} α) -> (List.{v} s)
 Case conversion may be inaccurate. Consider using '#align finset.filter_congr_decidable [anonymous]ₓ'. -/
 -- We can simplify an application of filter where the decidability is inferred in "the wrong way"
 @[simp]
@@ -4359,12 +3706,6 @@ theorem filter_ne' [DecidableEq β] (s : Finset β) (b : β) :
 #align finset.filter_ne' Finset.filter_ne'
 -/
 
-/- warning: finset.filter_inter_filter_neg_eq -> Finset.filter_inter_filter_neg_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidablePred.{succ u1} α (fun (a : α) => Not (p a))] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => _inst_4 a) t)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α) (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => instDecidableNot (p a) (_inst_1 a)) s)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
-Case conversion may be inaccurate. Consider using '#align finset.filter_inter_filter_neg_eq Finset.filter_inter_filter_neg_eqₓ'. -/
 theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s t : Finset α) :
     (s.filterₓ p ∩ t.filterₓ fun a => ¬p a) = ∅ :=
   (disjoint_filter_filter_neg s t p).eq_bot
@@ -4435,22 +3776,10 @@ theorem range_one : range 1 = {0} :=
 #align finset.range_one Finset.range_one
 -/
 
-/- warning: finset.range_succ -> Finset.range_succ is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.range (Nat.succ n)) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.hasInsert.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) n (Finset.range n))
-but is expected to have type
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.range (Nat.succ n)) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.instInsertFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) n (Finset.range n))
-Case conversion may be inaccurate. Consider using '#align finset.range_succ Finset.range_succₓ'. -/
 theorem range_succ : range (succ n) = insert n (range n) :=
   eq_of_veq <| (range_succ n).trans <| (ndinsert_of_not_mem not_mem_range_self).symm
 #align finset.range_succ Finset.range_succ
 
-/- warning: finset.range_add_one -> Finset.range_add_one is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.hasInsert.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) n (Finset.range n))
-but is expected to have type
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.instInsertFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) n (Finset.range n))
-Case conversion may be inaccurate. Consider using '#align finset.range_add_one Finset.range_add_oneₓ'. -/
 theorem range_add_one : range (n + 1) = insert n (range n) :=
   range_succ
 #align finset.range_add_one Finset.range_add_one
@@ -4520,12 +3849,6 @@ theorem nonempty_range_succ : (range <| n + 1).Nonempty :=
 #align finset.nonempty_range_succ Finset.nonempty_range_succ
 -/
 
-/- warning: finset.range_filter_eq -> Finset.range_filter_eq is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Eq.{1} Nat _x m) (fun (a : Nat) => Nat.decidableEq a m) (Finset.range n)) (ite.{1} (Finset.{0} Nat) (LT.lt.{0} Nat Nat.hasLt m n) (Nat.decidableLt m n) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.hasSingleton.{0} Nat) m) (EmptyCollection.emptyCollection.{0} (Finset.{0} Nat) (Finset.hasEmptyc.{0} Nat)))
-but is expected to have type
-  forall {n : Nat} {m : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Eq.{1} Nat _x m) (fun (a : Nat) => instDecidableEqNat a m) (Finset.range n)) (ite.{1} (Finset.{0} Nat) (LT.lt.{0} Nat instLTNat m n) (Nat.decLt m n) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) m) (EmptyCollection.emptyCollection.{0} (Finset.{0} Nat) (Finset.instEmptyCollectionFinset.{0} Nat)))
-Case conversion may be inaccurate. Consider using '#align finset.range_filter_eq Finset.range_filter_eqₓ'. -/
 @[simp]
 theorem range_filter_eq {n m : ℕ} : (range n).filterₓ (· = m) = if m < n then {m} else ∅ :=
   by
@@ -4664,12 +3987,6 @@ theorem toFinset_add (s t : Multiset α) : toFinset (s + t) = toFinset s ∪ toF
 #align multiset.to_finset_add Multiset.toFinset_add
 -/
 
-/- warning: multiset.to_finset_nsmul -> Multiset.toFinset_nsmul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (n : Nat), (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} (Finset.{u1} α) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (SMul.smul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) n s)) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (n : Nat), (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u1} (Finset.{u1} α) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (HSMul.hSMul.{0, u1, u1} Nat (Multiset.{u1} α) (Multiset.{u1} α) (instHSMul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) n s)) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-Case conversion may be inaccurate. Consider using '#align multiset.to_finset_nsmul Multiset.toFinset_nsmulₓ'. -/
 @[simp]
 theorem toFinset_nsmul (s : Multiset α) : ∀ (n : ℕ) (hn : n ≠ 0), (n • s).toFinset = s.toFinset
   | 0, h => by contradiction
@@ -4745,12 +4062,6 @@ theorem val_toFinset [DecidableEq α] (s : Finset α) : s.val.toFinset = s := by
 #align finset.val_to_finset Finset.val_toFinset
 -/
 
-/- warning: finset.val_le_iff_val_subset -> Finset.val_le_iff_val_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : Finset.{u1} α} {b : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α a) b) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) (Finset.val.{u1} α a) b)
-but is expected to have type
-  forall {α : Type.{u1}} {a : Finset.{u1} α} {b : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Finset.val.{u1} α a) b) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) (Finset.val.{u1} α a) b)
-Case conversion may be inaccurate. Consider using '#align finset.val_le_iff_val_subset Finset.val_le_iff_val_subsetₓ'. -/
 theorem val_le_iff_val_subset {a : Finset α} {b : Multiset α} : a.val ≤ b ↔ a.val ⊆ b :=
   Multiset.le_iff_subset a.Nodup
 #align finset.val_le_iff_val_subset Finset.val_le_iff_val_subset
@@ -5034,12 +4345,6 @@ def disjUnion (s : Finset α) (t : α → Finset β) (hf : (s : Set α).Pairwise
         s.Nodup.Pairwise fun a ha b hb hab => disjoint_val.2 <| hf ha hb hab⟩⟩
 #align finset.disj_Union Finset.disjUnionₓ
 
-/- warning: finset.disj_Union_val -> Finset.disjiUnion_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (s : Finset.{u1} α) (t : α -> (Finset.{u2} β)) (h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) t), Eq.{succ u2} (Multiset.{u2} β) (Finset.val.{u2} β (Finset.disjUnionₓ.{u1, u2} α β s t h)) (Multiset.bind.{u1, u2} α β (Finset.val.{u1} α s) (fun (a : α) => Finset.val.{u2} β (t a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (s : Finset.{u2} α) (t : α -> (Finset.{u1} β)) (h : Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} β) α (Finset.partialOrder.{u1} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) (Finset.toSet.{u2} α s) t), Eq.{succ u1} (Multiset.{u1} β) (Finset.val.{u1} β (Finset.disjiUnion.{u2, u1} α β s t h)) (Multiset.bind.{u2, u1} α β (Finset.val.{u2} α s) (fun (a : α) => Finset.val.{u1} β (t a)))
-Case conversion may be inaccurate. Consider using '#align finset.disj_Union_val Finset.disjiUnion_valₓ'. -/
 @[simp]
 theorem disjiUnion_val (s : Finset α) (t : α → Finset β) (h) :
     (s.disjUnionₓ t h).1 = s.1.bind fun a => (t a).1 :=
@@ -5053,31 +4358,16 @@ theorem disjiUnion_empty (t : α → Finset β) : disjUnion ∅ t (by simp) = �
 #align finset.disj_Union_empty Finset.disjiUnion_empty
 -/
 
-/- warning: finset.mem_disj_Union -> Finset.mem_disjiUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {b : β} {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) t}, Iff (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b (Finset.disjUnionₓ.{u1, u2} α β s t h)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b (t a))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {b : β} {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (Finset.toSet.{u1} α s) t}, Iff (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjiUnion.{u1, u2} α β s t h)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (t a))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_disj_Union Finset.mem_disjiUnionₓ'. -/
 @[simp]
 theorem mem_disjiUnion {b : β} {h} : b ∈ s.disjUnionₓ t h ↔ ∃ a ∈ s, b ∈ t a := by
   simp only [mem_def, disj_Union_val, mem_bind, exists_prop]
 #align finset.mem_disj_Union Finset.mem_disjiUnion
 
-/- warning: finset.coe_disj_Union -> Finset.coe_disjiUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) t}, Eq.{succ u2} (Set.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) (Finset.disjUnionₓ.{u1, u2} α β s t h)) (Set.iUnion.{u2, succ u1} β α (fun (x : α) => Set.iUnion.{u2, 0} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) (t x))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (Finset.toSet.{u1} α s) t}, Eq.{succ u2} (Set.{u2} β) (Finset.toSet.{u2} β (Finset.disjiUnion.{u1, u2} α β s t h)) (Set.iUnion.{u2, succ u1} β α (fun (x : α) => Set.iUnion.{u2, 0} β (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Finset.toSet.{u1} α s)) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Finset.toSet.{u1} α s)) => Finset.toSet.{u2} β (t x))))
-Case conversion may be inaccurate. Consider using '#align finset.coe_disj_Union Finset.coe_disjiUnionₓ'. -/
 @[simp, norm_cast]
 theorem coe_disjiUnion {h} : (s.disjUnionₓ t h : Set β) = ⋃ x ∈ (s : Set α), t x := by
   simp only [Set.ext_iff, mem_disj_Union, Set.mem_iUnion, iff_self_iff, mem_coe, imp_true_iff]
 #align finset.coe_disj_Union Finset.coe_disjiUnion
 
-/- warning: finset.disj_Union_cons -> Finset.disjiUnion_cons is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.disj_Union_cons Finset.disjiUnion_consₓ'. -/
 @[simp]
 theorem disjiUnion_cons (a : α) (s : Finset α) (ha : a ∉ s) (f : α → Finset β) (H) :
     disjUnion (cons a s ha) f H =
@@ -5089,20 +4379,11 @@ theorem disjiUnion_cons (a : α) (s : Finset α) (ha : a ∉ s) (f : α → Fins
   eq_of_veq <| Multiset.cons_bind _ _ _
 #align finset.disj_Union_cons Finset.disjiUnion_cons
 
-/- warning: finset.singleton_disj_Union -> Finset.singleton_disjiUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {t : α -> (Finset.{u2} β)} (a : α) {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a)) t}, Eq.{succ u2} (Finset.{u2} β) (Finset.disjUnionₓ.{u1, u2} α β (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) t h) (t a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {t : α -> (Finset.{u2} β)} (a : α) {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (Finset.toSet.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)) t}, Eq.{succ u2} (Finset.{u2} β) (Finset.disjiUnion.{u1, u2} α β (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) t h) (t a)
-Case conversion may be inaccurate. Consider using '#align finset.singleton_disj_Union Finset.singleton_disjiUnionₓ'. -/
 @[simp]
 theorem singleton_disjiUnion (a : α) {h} : Finset.disjUnion {a} t h = t a :=
   eq_of_veq <| Multiset.singleton_bind _ _
 #align finset.singleton_disj_Union Finset.singleton_disjiUnion
 
-/- warning: finset.disj_Union_disj_Union -> Finset.disjiUnion_disjiUnion is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.disj_Union_disj_Union Finset.disjiUnion_disjiUnionₓ'. -/
 theorem disjiUnion_disjiUnion (s : Finset α) (f : α → Finset β) (g : β → Finset γ) (h1 h2) :
     (s.disjUnionₓ f h1).disjUnionₓ g h2 =
       s.attach.disjUnionₓ
@@ -5159,12 +4440,6 @@ protected def biUnion (s : Finset α) (t : α → Finset β) : Finset β :=
 #align finset.bUnion Finset.biUnion
 -/
 
-/- warning: finset.bUnion_val -> Finset.biUnion_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (t : α -> (Finset.{u2} β)), Eq.{succ u2} (Multiset.{u2} β) (Finset.val.{u2} β (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Multiset.dedup.{u2} β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.bind.{u1, u2} α β (Finset.val.{u1} α s) (fun (a : α) => Finset.val.{u2} β (t a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (t : α -> (Finset.{u1} β)), Eq.{succ u1} (Multiset.{u1} β) (Finset.val.{u1} β (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Multiset.dedup.{u1} β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.bind.{u2, u1} α β (Finset.val.{u2} α s) (fun (a : α) => Finset.val.{u1} β (t a))))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_val Finset.biUnion_valₓ'. -/
 @[simp]
 theorem biUnion_val (s : Finset α) (t : α → Finset β) :
     (s.biUnion t).1 = (s.1.bind fun a => (t a).1).dedup :=
@@ -5178,12 +4453,6 @@ theorem biUnion_empty : Finset.biUnion ∅ t = ∅ :=
 #align finset.bUnion_empty Finset.biUnion_empty
 -/
 
-/- warning: finset.mem_bUnion -> Finset.mem_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {b : β}, Iff (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b (t a))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {b : β}, Iff (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (t a))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_bUnion Finset.mem_biUnionₓ'. -/
 @[simp]
 theorem mem_biUnion {b : β} : b ∈ s.biUnion t ↔ ∃ a ∈ s, b ∈ t a := by
   simp only [mem_def, bUnion_val, mem_dedup, mem_bind, exists_prop]
@@ -5196,12 +4465,6 @@ theorem coe_biUnion : (s.biUnion t : Set β) = ⋃ x ∈ (s : Set α), t x := by
 #align finset.coe_bUnion Finset.coe_biUnion
 -/
 
-/- warning: finset.bUnion_insert -> Finset.biUnion_insert is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} [_inst_2 : DecidableEq.{succ u1} α] {a : α}, Eq.{succ u2} (Finset.{u2} β) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) a s) t) (Union.union.{u2} (Finset.{u2} β) (Finset.hasUnion.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (t a) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t : α -> (Finset.{u1} β)} [_inst_2 : DecidableEq.{succ u2} α] {a : α}, Eq.{succ u1} (Finset.{u1} β) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a s) t) (Union.union.{u1} (Finset.{u1} β) (Finset.instUnionFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (t a) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_insert Finset.biUnion_insertₓ'. -/
 @[simp]
 theorem biUnion_insert [DecidableEq α] {a : α} : (insert a s).biUnion t = t a ∪ s.biUnion t :=
   ext fun x => by
@@ -5209,23 +4472,11 @@ theorem biUnion_insert [DecidableEq α] {a : α} : (insert a s).biUnion t = t a 
       exists_eq_left]
 #align finset.bUnion_insert Finset.biUnion_insert
 
-/- warning: finset.bUnion_congr -> Finset.biUnion_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t₁ : α -> (Finset.{u2} β)} {t₂ : α -> (Finset.{u2} β)}, (Eq.{succ u1} (Finset.{u1} α) s₁ s₂) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s₁) -> (Eq.{succ u2} (Finset.{u2} β) (t₁ a) (t₂ a))) -> (Eq.{succ u2} (Finset.{u2} β) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s₁ t₁) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s₂ t₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s₁ : Finset.{u2} α} {s₂ : Finset.{u2} α} {t₁ : α -> (Finset.{u1} β)} {t₂ : α -> (Finset.{u1} β)}, (Eq.{succ u2} (Finset.{u2} α) s₁ s₂) -> (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s₁) -> (Eq.{succ u1} (Finset.{u1} β) (t₁ a) (t₂ a))) -> (Eq.{succ u1} (Finset.{u1} β) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s₁ t₁) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s₂ t₂))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_congr Finset.biUnion_congrₓ'. -/
 -- ext $ λ x, by simp [or_and_distrib_right, exists_or_distrib]
 theorem biUnion_congr (hs : s₁ = s₂) (ht : ∀ a ∈ s₁, t₁ a = t₂ a) : s₁.biUnion t₁ = s₂.biUnion t₂ :=
   ext fun x => by simp (config := { contextual := true }) [hs, ht]
 #align finset.bUnion_congr Finset.biUnion_congr
 
-/- warning: finset.disj_Union_eq_bUnion -> Finset.disjiUnion_eq_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (f : α -> (Finset.{u2} β)) (hf : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) f), Eq.{succ u2} (Finset.{u2} β) (Finset.disjUnionₓ.{u1, u2} α β s f hf) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (hf : Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} β) α (Finset.partialOrder.{u1} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) (Finset.toSet.{u2} α s) f), Eq.{succ u1} (Finset.{u1} β) (Finset.disjiUnion.{u2, u1} α β s f hf) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f)
-Case conversion may be inaccurate. Consider using '#align finset.disj_Union_eq_bUnion Finset.disjiUnion_eq_biUnionₓ'. -/
 @[simp]
 theorem disjiUnion_eq_biUnion (s : Finset α) (f : α → Finset β) (hf) :
     s.disjUnionₓ f hf = s.biUnion f :=
@@ -5249,12 +4500,6 @@ theorem singleton_biUnion {a : α} : Finset.biUnion {a} t = t a := by
 #align finset.singleton_bUnion Finset.singleton_biUnion
 -/
 
-/- warning: finset.bUnion_inter -> Finset.biUnion_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (f : α -> (Finset.{u2} β)) (t : Finset.{u2} β), Eq.{succ u2} (Finset.{u2} β) (Inter.inter.{u2} (Finset.{u2} β) (Finset.hasInter.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s f) t) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (x : α) => Inter.inter.{u2} (Finset.{u2} β) (Finset.hasInter.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (f x) t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (t : Finset.{u1} β), Eq.{succ u1} (Finset.{u1} β) (Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f) t) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (x : α) => Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (f x) t))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_inter Finset.biUnion_interₓ'. -/
 theorem biUnion_inter (s : Finset α) (f : α → Finset β) (t : Finset β) :
     s.biUnion f ∩ t = s.biUnion fun x => f x ∩ t :=
   by
@@ -5270,12 +4515,6 @@ theorem inter_biUnion (t : Finset β) (s : Finset α) (f : α → Finset β) :
 #align finset.inter_bUnion Finset.inter_biUnion
 -/
 
-/- warning: finset.bUnion_bUnion -> Finset.biUnion_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : DecidableEq.{succ u3} γ] (s : Finset.{u1} α) (f : α -> (Finset.{u2} β)) (g : β -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.biUnion.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_2 a b) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s f) g) (Finset.biUnion.{u1, u3} α γ (fun (a : γ) (b : γ) => _inst_2 a b) s (fun (a : α) => Finset.biUnion.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_2 a b) (f a) g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u3} γ] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (g : β -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.biUnion.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_2 a b) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f) g) (Finset.biUnion.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_2 a b) s (fun (a : α) => Finset.biUnion.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_2 a b) (f a) g))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_bUnion Finset.biUnion_biUnionₓ'. -/
 theorem biUnion_biUnion [DecidableEq γ] (s : Finset α) (f : α → Finset β) (g : β → Finset γ) :
     (s.biUnion f).biUnion g = s.biUnion fun a => (f a).biUnion g :=
   by
@@ -5285,23 +4524,11 @@ theorem biUnion_biUnion [DecidableEq γ] (s : Finset α) (f : α → Finset β) 
   rw [exists_comm]
 #align finset.bUnion_bUnion Finset.biUnion_biUnion
 
-/- warning: finset.bind_to_finset -> Finset.bind_toFinset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : α -> (Multiset.{u2} β)), Eq.{succ u2} (Finset.{u2} β) (Multiset.toFinset.{u2} β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.bind.{u1, u2} α β s t)) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s) (fun (a : α) => Multiset.toFinset.{u2} β (fun (a : β) (b : β) => _inst_1 a b) (t a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u2} α] (s : Multiset.{u2} α) (t : α -> (Multiset.{u1} β)), Eq.{succ u1} (Finset.{u1} β) (Multiset.toFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.bind.{u2, u1} α β s t)) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.toFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b) s) (fun (a : α) => Multiset.toFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b) (t a)))
-Case conversion may be inaccurate. Consider using '#align finset.bind_to_finset Finset.bind_toFinsetₓ'. -/
 theorem bind_toFinset [DecidableEq α] (s : Multiset α) (t : α → Multiset β) :
     (s.bind t).toFinset = s.toFinset.biUnion fun a => (t a).toFinset :=
   ext fun x => by simp only [Multiset.mem_toFinset, mem_bUnion, Multiset.mem_bind, exists_prop]
 #align finset.bind_to_finset Finset.bind_toFinset
 
-/- warning: finset.bUnion_mono -> Finset.biUnion_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t₁ : α -> (Finset.{u2} β)} {t₂ : α -> (Finset.{u2} β)}, (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) (t₁ a) (t₂ a))) -> (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t₁) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t₁ : α -> (Finset.{u1} β)} {t₂ : α -> (Finset.{u1} β)}, (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (t₁ a) (t₂ a))) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t₁) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t₂))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_mono Finset.biUnion_monoₓ'. -/
 theorem biUnion_mono (h : ∀ a ∈ s, t₁ a ⊆ t₂ a) : s.biUnion t₁ ⊆ s.biUnion t₂ :=
   by
   have : ∀ b a, a ∈ s → b ∈ t₁ a → ∃ a : α, a ∈ s ∧ b ∈ t₂ a := fun b a ha hb =>
@@ -5325,12 +4552,6 @@ theorem subset_biUnion_of_mem (u : α → Finset β) {x : α} (xs : x ∈ s) : u
 #align finset.subset_bUnion_of_mem Finset.subset_biUnion_of_mem
 -/
 
-/- warning: finset.bUnion_subset_iff_forall_subset -> Finset.biUnion_subset_iff_forall_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : Finset.{u2} β} {f : α -> (Finset.{u2} β)}, Iff (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) s f) t) (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) (f x) t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t : Finset.{u1} β} {f : α -> (Finset.{u1} β)}, Iff (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_2 a b) s f) t) (forall (x : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (f x) t))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_subset_iff_forall_subset Finset.biUnion_subset_iff_forall_subsetₓ'. -/
 @[simp]
 theorem biUnion_subset_iff_forall_subset {α β : Type _} [DecidableEq β] {s : Finset α}
     {t : Finset β} {f : α → Finset β} : s.biUnion f ⊆ t ↔ ∀ x ∈ s, f x ⊆ t :=
@@ -5346,12 +4567,6 @@ theorem biUnion_singleton_eq_self [DecidableEq α] : s.biUnion (singleton : α �
 #align finset.bUnion_singleton_eq_self Finset.biUnion_singleton_eq_self
 -/
 
-/- warning: finset.filter_bUnion -> Finset.filter_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (f : α -> (Finset.{u2} β)) (p : β -> Prop) [_inst_2 : DecidablePred.{succ u2} β p], Eq.{succ u2} (Finset.{u2} β) (Finset.filter.{u2} β p (fun (a : β) => _inst_2 a) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s f)) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (a : α) => Finset.filter.{u2} β p (fun (a : β) => _inst_2 a) (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (p : β -> Prop) [_inst_2 : DecidablePred.{succ u1} β p], Eq.{succ u1} (Finset.{u1} β) (Finset.filter.{u1} β p (fun (a : β) => _inst_2 a) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f)) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (a : α) => Finset.filter.{u1} β p (fun (a : β) => _inst_2 a) (f a)))
-Case conversion may be inaccurate. Consider using '#align finset.filter_bUnion Finset.filter_biUnionₓ'. -/
 theorem filter_biUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) [DecidablePred p] :
     (s.biUnion f).filterₓ p = s.biUnion fun a => (f a).filterₓ p :=
   by
@@ -5364,12 +4579,6 @@ theorem filter_biUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) 
     exact ⟨⟨a, ha, hba⟩, hb⟩
 #align finset.filter_bUnion Finset.filter_biUnion
 
-/- warning: finset.bUnion_filter_eq_of_maps_to -> Finset.biUnion_filter_eq_of_maps_to is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u2} β} {f : α -> β}, (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) (f x) t)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u2, u1} β α (fun (a : α) (b : α) => _inst_2 a b) t (fun (a : β) => Finset.filter.{u1} α (fun (c : α) => Eq.{succ u2} β (f c) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)) s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u2} α] {s : Finset.{u2} α} {t : Finset.{u1} β} {f : α -> β}, (forall (x : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) -> (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) (f x) t)) -> (Eq.{succ u2} (Finset.{u2} α) (Finset.biUnion.{u1, u2} β α (fun (a : α) (b : α) => _inst_2 a b) t (fun (a : β) => Finset.filter.{u2} α (fun (c : α) => Eq.{succ u1} β (f c) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)) s)
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_filter_eq_of_maps_to Finset.biUnion_filter_eq_of_maps_toₓ'. -/
 theorem biUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β}
     (h : ∀ x ∈ s, f x ∈ t) : (t.biUnion fun a => s.filterₓ fun c => f c = a) = s := by
   simpa only [disj_Union_eq_bUnion] using disj_Union_filter_eq_of_maps_to h
@@ -5382,34 +4591,16 @@ theorem erase_biUnion (f : α → Finset β) (s : Finset α) (b : β) :
 #align finset.erase_bUnion Finset.erase_biUnion
 -/
 
-/- warning: finset.bUnion_nonempty -> Finset.biUnion_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)}, Iff (Finset.Nonempty.{u2} β (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) => Finset.Nonempty.{u2} β (t x))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)}, Iff (Finset.Nonempty.{u2} β (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) (Finset.Nonempty.{u2} β (t x))))
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_nonempty Finset.biUnion_nonemptyₓ'. -/
 @[simp]
 theorem biUnion_nonempty : (s.biUnion t).Nonempty ↔ ∃ x ∈ s, (t x).Nonempty := by
   simp [Finset.Nonempty, ← exists_and_left, @exists_swap α]
 #align finset.bUnion_nonempty Finset.biUnion_nonempty
 
-/- warning: finset.nonempty.bUnion -> Finset.Nonempty.biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)}, (Finset.Nonempty.{u1} α s) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Finset.Nonempty.{u2} β (t x))) -> (Finset.Nonempty.{u2} β (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t : α -> (Finset.{u1} β)}, (Finset.Nonempty.{u2} α s) -> (forall (x : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) -> (Finset.Nonempty.{u1} β (t x))) -> (Finset.Nonempty.{u1} β (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t))
-Case conversion may be inaccurate. Consider using '#align finset.nonempty.bUnion Finset.Nonempty.biUnionₓ'. -/
 theorem Nonempty.biUnion (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) :
     (s.biUnion t).Nonempty :=
   biUnion_nonempty.2 <| hs.imp fun x hx => ⟨hx, ht x hx⟩
 #align finset.nonempty.bUnion Finset.Nonempty.biUnion
 
-/- warning: finset.disjoint_bUnion_left -> Finset.disjoint_biUnion_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (f : α -> (Finset.{u2} β)) (t : Finset.{u2} β), Iff (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s f) t) (forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) (f i) t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (t : Finset.{u1} β), Iff (Disjoint.{u1} (Finset.{u1} β) (Finset.partialOrder.{u1} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f) t) (forall (i : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) -> (Disjoint.{u1} (Finset.{u1} β) (Finset.partialOrder.{u1} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) (f i) t))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_bUnion_left Finset.disjoint_biUnion_leftₓ'. -/
 theorem disjoint_biUnion_left (s : Finset α) (f : α → Finset β) (t : Finset β) :
     Disjoint (s.biUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
   classical
@@ -5419,12 +4610,6 @@ theorem disjoint_biUnion_left (s : Finset α) (f : α → Finset β) (t : Finset
       simp only [disjoint_union_left, bUnion_insert, his, forall_mem_insert, ih]
 #align finset.disjoint_bUnion_left Finset.disjoint_biUnion_left
 
-/- warning: finset.disjoint_bUnion_right -> Finset.disjoint_biUnion_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u2} β) (t : Finset.{u1} α) (f : α -> (Finset.{u2} β)), Iff (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) s (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) t f)) (forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i t) -> (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.orderBot.{u2} β) s (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u2} β) (t : Finset.{u1} α) (f : α -> (Finset.{u2} β)), Iff (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) s (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) t f)) (forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i t) -> (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) s (f i)))
-Case conversion may be inaccurate. Consider using '#align finset.disjoint_bUnion_right Finset.disjoint_biUnion_rightₓ'. -/
 theorem disjoint_biUnion_right (s : Finset β) (t : Finset α) (f : α → Finset β) :
     Disjoint s (t.biUnion f) ↔ ∀ i ∈ t, Disjoint s (f i) := by
   simpa only [disjoint_comm] using disjoint_bUnion_left t f s
@@ -5479,12 +4664,6 @@ section Pairwise
 
 variable {s : Finset α}
 
-/- warning: finset.pairwise_subtype_iff_pairwise_finset' -> Finset.pairwise_subtype_iff_pairwise_finset' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} (r : β -> β -> Prop) (f : α -> β), Iff (Pairwise.{u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) (Function.onFun.{succ u1, succ u2, 1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) β Prop r (fun (x : coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s))))) x)))) (Set.Pairwise.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) (Function.onFun.{succ u1, succ u2, 1} α β Prop r f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Finset.{u2} α} (r : β -> β -> Prop) (f : α -> β), Iff (Pairwise.{u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s)) (Function.onFun.{succ u2, succ u1, 1} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s)) β Prop r (fun (x : Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s)) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) x)))) (Set.Pairwise.{u2} α (Finset.toSet.{u2} α s) (Function.onFun.{succ u2, succ u1, 1} α β Prop r f))
-Case conversion may be inaccurate. Consider using '#align finset.pairwise_subtype_iff_pairwise_finset' Finset.pairwise_subtype_iff_pairwise_finset'ₓ'. -/
 theorem pairwise_subtype_iff_pairwise_finset' (r : β → β → Prop) (f : α → β) :
     Pairwise (r on fun x : s => f x) ↔ (s : Set α).Pairwise (r on f) :=
   pairwise_subtype_iff_pairwise_set (s : Set α) (r on f)
@@ -5497,12 +4676,6 @@ theorem pairwise_subtype_iff_pairwise_finset (r : α → α → Prop) :
 #align finset.pairwise_subtype_iff_pairwise_finset Finset.pairwise_subtype_iff_pairwise_finset
 -/
 
-/- warning: finset.pairwise_cons' -> Finset.pairwise_cons' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {a : α} (ha : Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s)) (r : β -> β -> Prop) (f : α -> β), Iff (Pairwise.{u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) (Function.onFun.{succ u1, succ u2, 1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) β Prop r (fun (a_1 : coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) (Finset.cons.{u1} α a s ha)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finset.cons.{u1} α a s ha)))))) a_1)))) (And (Pairwise.{u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) (Function.onFun.{succ u1, succ u2, 1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) β Prop r (fun (a : coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} α) Type.{u1} (Finset.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s))))) a)))) (forall (b : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b s) -> (And (r (f a) (f b)) (r (f b) (f a)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Finset.{u2} α} {a : α} (ha : Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s)) (r : β -> β -> Prop) (f : α -> β), Iff (Pairwise.{u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x (Finset.cons.{u2} α a s ha))) (Function.onFun.{succ u2, succ u1, 1} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x (Finset.cons.{u2} α a s ha))) β Prop r (fun (a_1 : Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x (Finset.cons.{u2} α a s ha))) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x (Finset.cons.{u2} α a s ha)) a_1)))) (And (Pairwise.{u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s)) (Function.onFun.{succ u2, succ u1, 1} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s)) β Prop r (fun (a : Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s)) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) a)))) (forall (b : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) b s) -> (And (r (f a) (f b)) (r (f b) (f a)))))
-Case conversion may be inaccurate. Consider using '#align finset.pairwise_cons' Finset.pairwise_cons'ₓ'. -/
 theorem pairwise_cons' {a : α} (ha : a ∉ s) (r : β → β → Prop) (f : α → β) :
     Pairwise (r on fun a : s.cons a ha => f a) ↔
       Pairwise (r on fun a : s => f a) ∧ ∀ b ∈ s, r (f a) (f b) ∧ r (f b) (f a) :=
@@ -5552,12 +4725,6 @@ namespace Multiset
 
 variable [DecidableEq α]
 
-/- warning: multiset.disjoint_to_finset -> Multiset.disjoint_toFinset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {m1 : Multiset.{u1} α} {m2 : Multiset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) m1) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) m2)) (Multiset.Disjoint.{u1} α m1 m2)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {m1 : Multiset.{u1} α} {m2 : Multiset.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) m1) (Multiset.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) m2)) (Multiset.Disjoint.{u1} α m1 m2)
-Case conversion may be inaccurate. Consider using '#align multiset.disjoint_to_finset Multiset.disjoint_toFinsetₓ'. -/
 theorem disjoint_toFinset {m1 m2 : Multiset α} :
     Disjoint m1.toFinset m2.toFinset ↔ m1.Disjoint m2 :=
   by
@@ -5576,12 +4743,6 @@ namespace List
 
 variable [DecidableEq α] {l l' : List α}
 
-/- warning: list.disjoint_to_finset_iff_disjoint -> List.disjoint_toFinset_iff_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l : List.{u1} α} {l' : List.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l')) (List.Disjoint.{u1} α l l')
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l : List.{u1} α} {l' : List.{u1} α}, Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l')) (List.Disjoint.{u1} α l l')
-Case conversion may be inaccurate. Consider using '#align list.disjoint_to_finset_iff_disjoint List.disjoint_toFinset_iff_disjointₓ'. -/
 theorem disjoint_toFinset_iff_disjoint : Disjoint l.toFinset l'.toFinset ↔ l.Disjoint l' :=
   Multiset.disjoint_toFinset
 #align list.disjoint_to_finset_iff_disjoint List.disjoint_toFinset_iff_disjoint

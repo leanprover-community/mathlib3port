@@ -50,12 +50,6 @@ theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
 #align list.inj_on_insert_nth_index_of_not_mem List.injOn_insertNth_index_of_not_mem
 -/
 
-/- warning: list.foldr_range_subset_of_range_subset -> List.foldr_range_subset_of_range_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : β -> α -> α} {g : γ -> α -> α}, (HasSubset.Subset.{u1} (Set.{u1} (α -> α)) (Set.hasSubset.{u1} (α -> α)) (Set.range.{u1, succ u2} (α -> α) β f) (Set.range.{u1, succ u3} (α -> α) γ g)) -> (forall (a : α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.range.{u1, succ u2} α (List.{u2} β) (List.foldr.{u2, u1} β α f a)) (Set.range.{u1, succ u3} α (List.{u3} γ) (List.foldr.{u3, u1} γ α g a)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : β -> α -> α} {g : γ -> α -> α}, (HasSubset.Subset.{u3} (Set.{u3} (α -> α)) (Set.instHasSubsetSet.{u3} (α -> α)) (Set.range.{u3, succ u2} (α -> α) β f) (Set.range.{u3, succ u1} (α -> α) γ g)) -> (forall (a : α), HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) (Set.range.{u3, succ u2} α (List.{u2} β) (List.foldr.{u2, u3} β α f a)) (Set.range.{u3, succ u1} α (List.{u1} γ) (List.foldr.{u1, u3} γ α g a)))
-Case conversion may be inaccurate. Consider using '#align list.foldr_range_subset_of_range_subset List.foldr_range_subset_of_range_subsetₓ'. -/
 theorem foldr_range_subset_of_range_subset {f : β → α → α} {g : γ → α → α}
     (hfg : Set.range f ⊆ Set.range g) (a : α) : Set.range (foldr f a) ⊆ Set.range (foldr g a) :=
   by
@@ -68,12 +62,6 @@ theorem foldr_range_subset_of_range_subset {f : β → α → α} {g : γ → α
     exact ⟨c :: m, rfl⟩
 #align list.foldr_range_subset_of_range_subset List.foldr_range_subset_of_range_subset
 
-/- warning: list.foldl_range_subset_of_range_subset -> List.foldl_range_subset_of_range_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> α} {g : α -> γ -> α}, (HasSubset.Subset.{u1} (Set.{u1} (α -> α)) (Set.hasSubset.{u1} (α -> α)) (Set.range.{u1, succ u2} (α -> α) β (fun (a : β) (c : α) => f c a)) (Set.range.{u1, succ u3} (α -> α) γ (fun (b : γ) (c : α) => g c b))) -> (forall (a : α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.range.{u1, succ u2} α (List.{u2} β) (List.foldl.{u1, u2} α β f a)) (Set.range.{u1, succ u3} α (List.{u3} γ) (List.foldl.{u1, u3} α γ g a)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> α} {g : α -> γ -> α}, (HasSubset.Subset.{u3} (Set.{u3} (α -> α)) (Set.instHasSubsetSet.{u3} (α -> α)) (Set.range.{u3, succ u2} (α -> α) β (fun (a : β) (c : α) => f c a)) (Set.range.{u3, succ u1} (α -> α) γ (fun (b : γ) (c : α) => g c b))) -> (forall (a : α), HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) (Set.range.{u3, succ u2} α (List.{u2} β) (List.foldl.{u3, u2} α β f a)) (Set.range.{u3, succ u1} α (List.{u1} γ) (List.foldl.{u3, u1} α γ g a)))
-Case conversion may be inaccurate. Consider using '#align list.foldl_range_subset_of_range_subset List.foldl_range_subset_of_range_subsetₓ'. -/
 theorem foldl_range_subset_of_range_subset {f : α → β → α} {g : α → γ → α}
     (hfg : (Set.range fun a c => f c a) ⊆ Set.range fun b c => g c b) (a : α) :
     Set.range (foldl f a) ⊆ Set.range (foldl g a) :=
@@ -85,24 +73,12 @@ theorem foldl_range_subset_of_range_subset {f : α → β → α} {g : α → γ
   exact foldr_range_subset_of_range_subset hfg a
 #align list.foldl_range_subset_of_range_subset List.foldl_range_subset_of_range_subset
 
-/- warning: list.foldr_range_eq_of_range_eq -> List.foldr_range_eq_of_range_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : β -> α -> α} {g : γ -> α -> α}, (Eq.{succ u1} (Set.{u1} (α -> α)) (Set.range.{u1, succ u2} (α -> α) β f) (Set.range.{u1, succ u3} (α -> α) γ g)) -> (forall (a : α), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, succ u2} α (List.{u2} β) (List.foldr.{u2, u1} β α f a)) (Set.range.{u1, succ u3} α (List.{u3} γ) (List.foldr.{u3, u1} γ α g a)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : β -> α -> α} {g : γ -> α -> α}, (Eq.{succ u3} (Set.{u3} (α -> α)) (Set.range.{u3, succ u2} (α -> α) β f) (Set.range.{u3, succ u1} (α -> α) γ g)) -> (forall (a : α), Eq.{succ u3} (Set.{u3} α) (Set.range.{u3, succ u2} α (List.{u2} β) (List.foldr.{u2, u3} β α f a)) (Set.range.{u3, succ u1} α (List.{u1} γ) (List.foldr.{u1, u3} γ α g a)))
-Case conversion may be inaccurate. Consider using '#align list.foldr_range_eq_of_range_eq List.foldr_range_eq_of_range_eqₓ'. -/
 theorem foldr_range_eq_of_range_eq {f : β → α → α} {g : γ → α → α} (hfg : Set.range f = Set.range g)
     (a : α) : Set.range (foldr f a) = Set.range (foldr g a) :=
   (foldr_range_subset_of_range_subset hfg.le a).antisymm
     (foldr_range_subset_of_range_subset hfg.ge a)
 #align list.foldr_range_eq_of_range_eq List.foldr_range_eq_of_range_eq
 
-/- warning: list.foldl_range_eq_of_range_eq -> List.foldl_range_eq_of_range_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> α} {g : α -> γ -> α}, (Eq.{succ u1} (Set.{u1} (α -> α)) (Set.range.{u1, succ u2} (α -> α) β (fun (a : β) (c : α) => f c a)) (Set.range.{u1, succ u3} (α -> α) γ (fun (b : γ) (c : α) => g c b))) -> (forall (a : α), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, succ u2} α (List.{u2} β) (List.foldl.{u1, u2} α β f a)) (Set.range.{u1, succ u3} α (List.{u3} γ) (List.foldl.{u1, u3} α γ g a)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> α} {g : α -> γ -> α}, (Eq.{succ u3} (Set.{u3} (α -> α)) (Set.range.{u3, succ u2} (α -> α) β (fun (a : β) (c : α) => f c a)) (Set.range.{u3, succ u1} (α -> α) γ (fun (b : γ) (c : α) => g c b))) -> (forall (a : α), Eq.{succ u3} (Set.{u3} α) (Set.range.{u3, succ u2} α (List.{u2} β) (List.foldl.{u3, u2} α β f a)) (Set.range.{u3, succ u1} α (List.{u1} γ) (List.foldl.{u3, u1} α γ g a)))
-Case conversion may be inaccurate. Consider using '#align list.foldl_range_eq_of_range_eq List.foldl_range_eq_of_range_eqₓ'. -/
 theorem foldl_range_eq_of_range_eq {f : α → β → α} {g : α → γ → α}
     (hfg : (Set.range fun a c => f c a) = Set.range fun b c => g c b) (a : α) :
     Set.range (foldl f a) = Set.range (foldl g a) :=

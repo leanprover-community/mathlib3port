@@ -27,9 +27,6 @@ This file collects some basic results involving rings and the `fin` type
 -/
 
 
-/- warning: ring_equiv.pi_fin_two -> RingEquiv.piFinTwo is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.pi_fin_two RingEquiv.piFinTwoₓ'. -/
 /-- The product over `fin 2` of some rings is just the cartesian product of these rings. -/
 @[simps]
 def RingEquiv.piFinTwo (R : Fin 2 → Type _) [∀ i, Semiring (R i)] :

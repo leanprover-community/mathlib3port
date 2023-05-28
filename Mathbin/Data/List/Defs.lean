@@ -64,23 +64,11 @@ def splitOnPAux {α : Type u} (P : α → Prop) [DecidablePred P] :
   | h :: t, f => if P h then f [] :: split_on_p_aux t id else split_on_p_aux t fun l => f (h :: l)
 #align list.split_on_p_aux List.splitOnPAux
 
-/- warning: list.split_on_p -> List.splitOnP is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (P : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α P], (List.{u1} α) -> (List.{u1} (List.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (List.{u1} α) -> (List.{u1} (List.{u1} α))
-Case conversion may be inaccurate. Consider using '#align list.split_on_p List.splitOnPₓ'. -/
 /-- Split a list at every element satisfying a predicate. -/
 def splitOnP {α : Type u} (P : α → Prop) [DecidablePred P] (l : List α) : List (List α) :=
   splitOnPAux P l id
 #align list.split_on_p List.splitOnP
 
-/- warning: list.split_on -> List.splitOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], α -> (List.{u1} α) -> (List.{u1} (List.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BEq.{u1} α], α -> (List.{u1} α) -> (List.{u1} (List.{u1} α))
-Case conversion may be inaccurate. Consider using '#align list.split_on List.splitOnₓ'. -/
 /-- Split a list at every occurrence of an element.
 
     [1,1,2,3,2,4,4].split_on 2 = [[1,1],[3],[4,4]] -/
@@ -110,11 +98,6 @@ def head? : List α → Option α
 -/
 
 /- warning: list.to_array clashes with [anonymous] -> [anonymous]
-warning: list.to_array -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} (l : List.{u_1} α), Array'.{u_1} (List.length.{u_1} α l) α
-but is expected to have type
-  forall {α : Type.{u}} {l : Type.{v}}, (Nat -> α -> l) -> Nat -> (List.{u} α) -> (List.{v} l)
 Case conversion may be inaccurate. Consider using '#align list.to_array [anonymous]ₓ'. -/
 /-- Convert a list into an array (whose length is the length of `l`). -/
 def [anonymous] (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
@@ -200,12 +183,6 @@ def takeI : ∀ n, List α → List α
 
 end Take'
 
-/- warning: list.take_while -> List.takeWhile is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (List.{u1} α) -> (List.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (List.{u1} α) -> (List.{u1} α)
-Case conversion may be inaccurate. Consider using '#align list.take_while List.takeWhileₓ'. -/
 /-- Get the longest initial segment of the list whose members all satisfy `p`.
 
      take_while (λ x, x < 3) [0, 2, 5, 1] = [0, 2] -/
@@ -297,12 +274,6 @@ def partitionMap (f : α → Sum β γ) : List α → List β × List γ
 #align list.partition_map List.partitionMap
 -/
 
-/- warning: list.find -> List.find? is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (List.{u1} α) -> (Option.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (List.{u1} α) -> (Option.{u1} α)
-Case conversion may be inaccurate. Consider using '#align list.find List.find?ₓ'. -/
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
   element exists. -/
 def find? (p : α → Prop) [DecidablePred p] : List α → Option α
@@ -310,12 +281,6 @@ def find? (p : α → Prop) [DecidablePred p] : List α → Option α
   | a :: l => if p a then some a else find l
 #align list.find List.find?
 
-/- warning: list.mfind -> List.findM is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] [_inst_2 : Alternative.{u1, u2} m], (α -> (m PUnit.{succ u1})) -> (List.{u1} α) -> (m α)
-but is expected to have type
-  forall {α : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Alternative.{u1, u2} m], (α -> (m PUnit.{succ u1})) -> (List.{u1} α) -> (m α)
-Case conversion may be inaccurate. Consider using '#align list.mfind List.findMₓ'. -/
 /-- `mfind tac l` returns the first element of `l` on which `tac` succeeds, and
 fails otherwise. -/
 def findM {α} {m : Type u → Type v} [Monad m] [Alternative m] (tac : α → m PUnit) : List α → m α :=
@@ -346,12 +311,6 @@ def findM? {α} (p : α → m Bool) (xs : List α) : m (Option α) :=
 #align list.mbfind List.findM?
 -/
 
-/- warning: list.many -> List.anyM is a dubious translation:
-lean 3 declaration is
-  forall {m : Type -> Type.{u2}} [_inst_1 : Monad.{0, u2} m] {α : Type.{u1}}, (α -> (m Bool)) -> (List.{u1} α) -> (m Bool)
-but is expected to have type
-  forall {m : Type -> Type.{u1}} [_inst_1 : Monad.{0, u1} m] {α : Type.{u2}}, (α -> (m Bool)) -> (List.{u2} α) -> (m Bool)
-Case conversion may be inaccurate. Consider using '#align list.many List.anyMₓ'. -/
 -- Implementing this via `mbfind` would give us less universe polymorphism.
 /-- `many p as` returns true iff `p` returns true for any element of `l`.
 `many` short-circuits, so if `p` returns true for any element of `l`, later
@@ -363,12 +322,6 @@ def anyM {α : Type u} (p : α → m Bool) : List α → m Bool
     if px then pure tt else many xs
 #align list.many List.anyM
 
-/- warning: list.mall -> List.allM is a dubious translation:
-lean 3 declaration is
-  forall {m : Type -> Type.{u2}} [_inst_1 : Monad.{0, u2} m] {α : Type.{u1}}, (α -> (m Bool)) -> (List.{u1} α) -> (m Bool)
-but is expected to have type
-  forall {m : Type -> Type.{u1}} [_inst_1 : Monad.{0, u1} m] {α : Type.{u2}}, (α -> (m Bool)) -> (List.{u2} α) -> (m Bool)
-Case conversion may be inaccurate. Consider using '#align list.mall List.allMₓ'. -/
 /-- `mall p as` returns true iff `p` returns true for all elements of `l`.
 `mall` short-circuits, so if `p` returns false for any element of `l`, later
 elements are not checked. This is a monadic version of `list.all`. -/
@@ -396,24 +349,12 @@ def andM : List (m Bool) → m Bool :=
 
 end
 
-/- warning: list.foldl_with_index_aux -> List.foldlWithIndexAux is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> Nat -> α -> (List.{u2} β) -> α
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Type.{u1}}, (Nat -> α -> β -> α) -> Nat -> α -> (List.{u1} β) -> α
-Case conversion may be inaccurate. Consider using '#align list.foldl_with_index_aux List.foldlWithIndexAuxₓ'. -/
 /-- Auxiliary definition for `foldl_with_index`. -/
 def foldlWithIndexAux {α : Sort _} {β : Type _} (f : ℕ → α → β → α) : ℕ → α → List β → α
   | _, a, [] => a
   | i, a, b :: l => foldl_with_index_aux (i + 1) (f i a b) l
 #align list.foldl_with_index_aux List.foldlWithIndexAux
 
-/- warning: list.foldl_with_index -> List.foldlIdx is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> α -> (List.{u2} β) -> α
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> α -> (List.{u2} β) -> (optParam.{1} Nat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α
-Case conversion may be inaccurate. Consider using '#align list.foldl_with_index List.foldlIdxₓ'. -/
 /-- Fold a list from left to right as with `foldl`, but the combining function
 also receives each element's index. -/
 def foldlIdx {α : Sort _} {β : Type _} (f : ℕ → α → β → α) (a : α) (l : List β) : α :=
@@ -426,47 +367,23 @@ def foldrWithIndexAux {α : Type _} {β : Sort _} (f : ℕ → α → β → β)
   | i, b, a :: l => f i a (foldr_with_index_aux (i + 1) b l)
 #align list.foldr_with_index_aux List.foldrWithIndexAux
 
-/- warning: list.foldr_with_index -> List.foldrIdx is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Sort.{u2}}, (Nat -> α -> β -> β) -> β -> (List.{u1} α) -> β
-but is expected to have type
-  forall {α : Type.{u1}} {β : Sort.{u2}}, (Nat -> α -> β -> β) -> β -> (List.{u1} α) -> (optParam.{1} Nat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> β
-Case conversion may be inaccurate. Consider using '#align list.foldr_with_index List.foldrIdxₓ'. -/
 /-- Fold a list from right to left as with `foldr`, but the combining function
 also receives each element's index. -/
 def foldrIdx {α : Type _} {β : Sort _} (f : ℕ → α → β → β) (b : β) (l : List α) : β :=
   foldrWithIndexAux f 0 b l
 #align list.foldr_with_index List.foldrIdx
 
-/- warning: list.find_indexes -> List.findIdxs is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (List.{u1} α) -> (List.{0} Nat)
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (List.{u1} α) -> (List.{0} Nat)
-Case conversion may be inaccurate. Consider using '#align list.find_indexes List.findIdxsₓ'. -/
 /-- `find_indexes p l` is the list of indexes of elements of `l` that satisfy `p`. -/
 def findIdxs (p : α → Prop) [DecidablePred p] (l : List α) : List Nat :=
   foldrIdx (fun i a is => if p a then i :: is else is) [] l
 #align list.find_indexes List.findIdxs
 
-/- warning: list.indexes_values -> List.indexesValues is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (List.{u1} α) -> (List.{u1} (Prod.{0, u1} Nat α))
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (List.{u1} α) -> (List.{u1} (Prod.{0, u1} Nat α))
-Case conversion may be inaccurate. Consider using '#align list.indexes_values List.indexesValuesₓ'. -/
 /-- Returns the elements of `l` that satisfy `p` together with their indexes in
 `l`. The returned list is ordered by index. -/
 def indexesValues (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ × α) :=
   foldrIdx (fun i a l => if p a then (i, a) :: l else l) [] l
 #align list.indexes_values List.indexesValues
 
-/- warning: list.indexes_of -> List.indexesOf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], α -> (List.{u1} α) -> (List.{0} Nat)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BEq.{u1} α], α -> (List.{u1} α) -> (List.{0} Nat)
-Case conversion may be inaccurate. Consider using '#align list.indexes_of List.indexesOfₓ'. -/
 /-- `indexes_of a l` is the list of all indexes of `a` in `l`. For example:
 ```
 indexes_of a [a, b, a, a] = [0, 2, 3]
@@ -508,47 +425,23 @@ section MmapWithIndex
 
 variable {m : Type v → Type w} [Applicative m]
 
-/- warning: list.mmap_with_index_aux -> List.mmapWithIndexAux is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}}, (Nat -> α -> (m β)) -> Nat -> (List.{u3} α) -> (m (List.{u1} β))
-but is expected to have type
-  forall {m : Type.{u2} -> Type.{u3}} [_inst_1 : Applicative.{u2, u3} m] {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> (m β)) -> Nat -> (List.{u1} α) -> (m (List.{u2} β))
-Case conversion may be inaccurate. Consider using '#align list.mmap_with_index_aux List.mmapWithIndexAuxₓ'. -/
 /-- Auxiliary definition for `mmap_with_index`. -/
 def mmapWithIndexAux {α β} (f : ℕ → α → m β) : ℕ → List α → m (List β)
   | _, [] => pure []
   | i, a :: as => List.cons <$> f i a <*> mmap_with_index_aux (i + 1) as
 #align list.mmap_with_index_aux List.mmapWithIndexAux
 
-/- warning: list.mmap_with_index -> List.mapIdxM is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}}, (Nat -> α -> (m β)) -> (List.{u3} α) -> (m (List.{u1} β))
-but is expected to have type
-  forall {m : Type.{u3}} {_inst_1 : Type.{u1}} {α : Type.{u1} -> Type.{u2}} [β : Monad.{u1, u2} α], (List.{u3} m) -> (Nat -> m -> (α _inst_1)) -> (α (List.{u1} _inst_1))
-Case conversion may be inaccurate. Consider using '#align list.mmap_with_index List.mapIdxMₓ'. -/
 /-- Applicative variant of `map_with_index`. -/
 def mapIdxM {α β} (f : ℕ → α → m β) (as : List α) : m (List β) :=
   mmapWithIndexAux f 0 as
 #align list.mmap_with_index List.mapIdxM
 
-/- warning: list.mmap_with_index'_aux -> List.mapIdxMAux' is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] {α : Type.{u3}}, (Nat -> α -> (m PUnit.{succ u1})) -> Nat -> (List.{u3} α) -> (m PUnit.{succ u1})
-but is expected to have type
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}}, (Nat -> α -> (m PUnit.{succ u1})) -> Nat -> (List.{u3} α) -> (m PUnit.{succ u1})
-Case conversion may be inaccurate. Consider using '#align list.mmap_with_index'_aux List.mapIdxMAux'ₓ'. -/
 /-- Auxiliary definition for `mmap_with_index'`. -/
 def mapIdxMAux' {α} (f : ℕ → α → m PUnit) : ℕ → List α → m PUnit
   | _, [] => pure ⟨⟩
   | i, a :: as => f i a *> mmap_with_index'_aux (i + 1) as
 #align list.mmap_with_index'_aux List.mapIdxMAux'
 
-/- warning: list.mmap_with_index' -> List.mapIdxM' is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] {α : Type.{u3}}, (Nat -> α -> (m PUnit.{succ u1})) -> (List.{u3} α) -> (m PUnit.{succ u1})
-but is expected to have type
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}}, (Nat -> α -> (m PUnit.{succ u1})) -> (List.{u3} α) -> (m PUnit.{succ u1})
-Case conversion may be inaccurate. Consider using '#align list.mmap_with_index' List.mapIdxM'ₓ'. -/
 /-- A variant of `mmap_with_index` specialised to applicative actions which
 return `unit`. -/
 def mapIdxM' {α} (f : ℕ → α → m PUnit) (as : List α) : m PUnit :=
@@ -570,24 +463,12 @@ def lookmap (f : α → Option α) : List α → List α
 #align list.lookmap List.lookmap
 -/
 
-/- warning: list.countp -> List.countp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (List.{u1} α) -> Nat
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (List.{u1} α) -> Nat
-Case conversion may be inaccurate. Consider using '#align list.countp List.countpₓ'. -/
 /-- `countp p l` is the number of elements of `l` that satisfy `p`. -/
 def countp (p : α → Prop) [DecidablePred p] : List α → Nat
   | [] => 0
   | x :: xs => if p x then succ (countp xs) else countp xs
 #align list.countp List.countp
 
-/- warning: list.count -> List.count is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], α -> (List.{u1} α) -> Nat
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BEq.{u1} α], α -> (List.{u1} α) -> Nat
-Case conversion may be inaccurate. Consider using '#align list.count List.countₓ'. -/
 /-- `count a l` is the number of occurrences of `a` in `l`. -/
 def count [DecidableEq α] (a : α) : List α → Nat :=
   countp (Eq a)
@@ -648,12 +529,6 @@ def tails : List α → List (List α)
 #align list.tails List.tails
 -/
 
-/- warning: list.sublists'_aux -> List.sublists'Aux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, (List.{u_1} α) -> ((List.{u_1} α) -> (List.{u_2} β)) -> (List.{u_2} (List.{u_2} β)) -> (List.{u_2} (List.{u_2} β))
-but is expected to have type
-  forall {α : Type.{u}}, α -> (List.{u} (List.{u} α)) -> (List.{u} (List.{u} α)) -> (List.{u} (List.{u} α))
-Case conversion may be inaccurate. Consider using '#align list.sublists'_aux List.sublists'Auxₓ'. -/
 def sublists'Aux : List α → (List α → List β) → List (List β) → List (List β)
   | [], f, r => f [] :: r
   | a :: l, f, r => sublists'_aux l f (sublists'_aux l (f ∘ cons a) r)
@@ -671,12 +546,6 @@ def sublists' (l : List α) : List (List α) :=
 #align list.sublists' List.sublists'
 -/
 
-/- warning: list.sublists_aux -> List.sublistsAux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, (List.{u_1} α) -> ((List.{u_1} α) -> (List.{u_2} β) -> (List.{u_2} β)) -> (List.{u_2} β)
-but is expected to have type
-  forall {α : Type.{u}}, α -> (List.{u} (List.{u} α)) -> (List.{u} (List.{u} α))
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux List.sublistsAuxₓ'. -/
 def sublistsAux : List α → (List α → List β → List β) → List β
   | [], f => []
   | a :: l, f => f [a] (sublists_aux l fun ys r => f ys (f (a :: ys) r))
@@ -1088,12 +957,6 @@ def destutter (R : α → α → Prop) [DecidableRel R] : List α → List α
 #align list.destutter List.destutter
 -/
 
-/- warning: list.range' -> List.range' is a dubious translation:
-lean 3 declaration is
-  Nat -> Nat -> (List.{0} Nat)
-but is expected to have type
-  Nat -> Nat -> (optParam.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (List.{0} Nat)
-Case conversion may be inaccurate. Consider using '#align list.range' List.range'ₓ'. -/
 /-- `range' s n` is the list of numbers `[s, s+1, ..., s+n-1]`.
   It is intended mainly for proving properties of `range` and `iota`. -/
 @[simp]
@@ -1179,12 +1042,6 @@ def choose (hp : ∃ a, a ∈ l ∧ p a) : α :=
 
 end Choose
 
-/- warning: list.mmap_filter -> List.filterMapM is a dubious translation:
-lean 3 declaration is
-  forall {m : Type -> Type.{u1}} [_inst_1 : Monad.{0, u1} m] {α : Type.{u2}} {β : Type}, (α -> (m (Option.{0} β))) -> (List.{u2} α) -> (m (List.{0} β))
-but is expected to have type
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u1}} {β : Type.{u1}}, (α -> (m (Option.{u1} β))) -> (List.{u1} α) -> (m (List.{u1} β))
-Case conversion may be inaccurate. Consider using '#align list.mmap_filter List.filterMapMₓ'. -/
 /-- Filters and maps elements of a list -/
 def filterMapM {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)) : List α → m (List β)
   | [] => return []
@@ -1197,12 +1054,6 @@ def filterMapM {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)
         | some x => x :: t'
 #align list.mmap_filter List.filterMapM
 
-/- warning: list.mmap_upper_triangle -> List.mapDiagM is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u, u_1} m] {α : Type.{u}} {β : Type.{u}}, (α -> α -> (m β)) -> (List.{u} α) -> (m (List.{u} β))
-but is expected to have type
-  forall {m : Type.{u_1} -> Type.{u_2}} {_inst_1 : Type.{u_3}} {α : Type.{u_1}} [β : Monad.{u_1, u_2} m], (_inst_1 -> _inst_1 -> (m α)) -> (List.{u_3} _inst_1) -> (m (List.{u_1} α))
-Case conversion may be inaccurate. Consider using '#align list.mmap_upper_triangle List.mapDiagMₓ'. -/
 /-- `mmap_upper_triangle f l` calls `f` on all elements in the upper triangular part of `l × l`.
 That is, for each `e ∈ l`, it will run `f e e` and then `f e e'`
 for each `e'` that appears after `e` in `l`.
@@ -1466,12 +1317,6 @@ def takeList {α} : List α → List ℕ → List (List α) × List α
 #align list.take_list List.takeList
 -/
 
-/- warning: list.to_rbmap -> List.toRBMap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}}, (List.{u_1} α) -> (Rbmap.{0, u_1} Nat α (LT.lt.{0} Nat Nat.hasLt))
-but is expected to have type
-  forall {α : Type.{u_1}} {ᾰ : Type.{u_2}}, (List.{max u_2 u_1} (Prod.{u_1, u_2} α ᾰ)) -> (forall (cmp : α -> α -> Ordering), Std.RBMap.{u_1, u_2} α ᾰ cmp)
-Case conversion may be inaccurate. Consider using '#align list.to_rbmap List.toRBMapₓ'. -/
 /-- `to_rbmap as` is the map that associates each index `i` of `as` with the
 corresponding element of `as`.
 

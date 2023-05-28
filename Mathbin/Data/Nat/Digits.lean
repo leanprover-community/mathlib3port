@@ -205,12 +205,6 @@ def ofDigits {α : Type _} [Semiring α] (b : α) : List ℕ → α
 #align nat.of_digits Nat.ofDigits
 -/
 
-/- warning: nat.of_digits_eq_foldr -> Nat.ofDigits_eq_foldr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (b : α) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 b L) (List.foldr.{0, u1} Nat α (fun (x : Nat) (y : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) b y)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) L)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (b : α) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 b L) (List.foldr.{0, u1} Nat α (fun (x : Nat) (y : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α _inst_1) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) b y)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)))) L)
-Case conversion may be inaccurate. Consider using '#align nat.of_digits_eq_foldr Nat.ofDigits_eq_foldrₓ'. -/
 theorem ofDigits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
     ofDigits b L = L.foldr (fun x y => x + b * y) 0 :=
   by
@@ -255,12 +249,6 @@ theorem ofDigits_singleton {b n : ℕ} : ofDigits b [n] = n := by simp [of_digit
 #align nat.of_digits_singleton Nat.ofDigits_singleton
 -/
 
-/- warning: nat.of_digits_one_cons -> Nat.ofDigits_one_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (h : Nat) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) (List.cons.{0} Nat h L)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) h) (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) L))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (h : Nat) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α _inst_1))) (List.cons.{0} Nat h L)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α _inst_1) h) (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α _inst_1))) L))
-Case conversion may be inaccurate. Consider using '#align nat.of_digits_one_cons Nat.ofDigits_one_consₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem ofDigits_one_cons {α : Type _} [Semiring α] (h : ℕ) (L : List ℕ) :
@@ -289,12 +277,6 @@ theorem coe_ofDigits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) :
 #align nat.coe_of_digits Nat.coe_ofDigits
 -/
 
-/- warning: nat.coe_int_of_digits -> Nat.coe_int_ofDigits is a dubious translation:
-lean 3 declaration is
-  forall (b : Nat) (L : List.{0} Nat), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Nat.ofDigits.{0} Nat Nat.semiring b L)) (Nat.ofDigits.{0} Int Int.semiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) L)
-but is expected to have type
-  forall (b : Nat) (L : List.{0} Nat), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (Nat.ofDigits.{0} Nat Nat.semiring b L)) (Nat.ofDigits.{0} Int Int.instSemiringInt (Nat.cast.{0} Int instNatCastInt b) L)
-Case conversion may be inaccurate. Consider using '#align nat.coe_int_of_digits Nat.coe_int_ofDigitsₓ'. -/
 @[norm_cast]
 theorem coe_int_ofDigits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ) = ofDigits (b : ℤ) L :=
   by
@@ -631,12 +613,6 @@ theorem digits_two_eq_bits (n : ℕ) : digits 2 n = n.bits.map fun b => cond b 1
 /-! ### Modular Arithmetic -/
 
 
-/- warning: nat.dvd_of_digits_sub_of_digits -> Nat.dvd_ofDigits_sub_ofDigits is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] {a : α} {b : α} {k : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (CommRing.toRing.{u1} α _inst_1))))))) a b)) -> (forall (L : List.{0} Nat), Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (CommRing.toRing.{u1} α _inst_1))))))) (Nat.ofDigits.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) a L) (Nat.ofDigits.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) b L)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] {a : α} {b : α} {k : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (CommRing.toRing.{u1} α _inst_1))) a b)) -> (forall (L : List.{0} Nat), Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (CommRing.toRing.{u1} α _inst_1))) (Nat.ofDigits.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) a L) (Nat.ofDigits.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) b L)))
-Case conversion may be inaccurate. Consider using '#align nat.dvd_of_digits_sub_of_digits Nat.dvd_ofDigits_sub_ofDigitsₓ'. -/
 -- This is really a theorem about polynomials.
 theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : k ∣ a - b)
     (L : List ℕ) : k ∣ ofDigits a L - ofDigits b L :=
@@ -672,12 +648,6 @@ theorem ofDigits_mod (b k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b
 #align nat.of_digits_mod Nat.ofDigits_mod
 -/
 
-/- warning: nat.of_digits_zmodeq' -> Nat.ofDigits_zmodeq' is a dubious translation:
-lean 3 declaration is
-  forall (b : Int) (b' : Int) (k : Nat), (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k) b b') -> (forall (L : List.{0} Nat), Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k) (Nat.ofDigits.{0} Int Int.semiring b L) (Nat.ofDigits.{0} Int Int.semiring b' L))
-but is expected to have type
-  forall (b : Int) (b' : Int) (k : Nat), (Int.ModEq (Nat.cast.{0} Int instNatCastInt k) b b') -> (forall (L : List.{0} Nat), Int.ModEq (Nat.cast.{0} Int instNatCastInt k) (Nat.ofDigits.{0} Int Int.instSemiringInt b L) (Nat.ofDigits.{0} Int Int.instSemiringInt b' L))
-Case conversion may be inaccurate. Consider using '#align nat.of_digits_zmodeq' Nat.ofDigits_zmodeq'ₓ'. -/
 theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : List ℕ) :
     ofDigits b L ≡ ofDigits b' L [ZMOD k] :=
   by
@@ -689,22 +659,10 @@ theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Lis
     conv_rhs => rw [Int.add_emod, Int.mul_emod]
 #align nat.of_digits_zmodeq' Nat.ofDigits_zmodeq'
 
-/- warning: nat.of_digits_zmodeq -> Nat.ofDigits_zmodeq is a dubious translation:
-lean 3 declaration is
-  forall (b : Int) (k : Nat) (L : List.{0} Nat), Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k) (Nat.ofDigits.{0} Int Int.semiring b L) (Nat.ofDigits.{0} Int Int.semiring (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k)) L)
-but is expected to have type
-  forall (b : Int) (k : Nat) (L : List.{0} Nat), Int.ModEq (Nat.cast.{0} Int instNatCastInt k) (Nat.ofDigits.{0} Int Int.instSemiringInt b L) (Nat.ofDigits.{0} Int Int.instSemiringInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) b (Nat.cast.{0} Int instNatCastInt k)) L)
-Case conversion may be inaccurate. Consider using '#align nat.of_digits_zmodeq Nat.ofDigits_zmodeqₓ'. -/
 theorem ofDigits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [ZMOD k] :=
   ofDigits_zmodeq' b (b % k) k (b.mod_modEq ↑k).symm L
 #align nat.of_digits_zmodeq Nat.ofDigits_zmodeq
 
-/- warning: nat.of_digits_zmod -> Nat.ofDigits_zmod is a dubious translation:
-lean 3 declaration is
-  forall (b : Int) (k : Nat) (L : List.{0} Nat), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Nat.ofDigits.{0} Int Int.semiring b L) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Nat.ofDigits.{0} Int Int.semiring (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k)) L) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k))
-but is expected to have type
-  forall (b : Int) (k : Nat) (L : List.{0} Nat), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Nat.ofDigits.{0} Int Int.instSemiringInt b L) (Nat.cast.{0} Int instNatCastInt k)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Nat.ofDigits.{0} Int Int.instSemiringInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) b (Nat.cast.{0} Int instNatCastInt k)) L) (Nat.cast.{0} Int instNatCastInt k))
-Case conversion may be inaccurate. Consider using '#align nat.of_digits_zmod Nat.ofDigits_zmodₓ'. -/
 theorem ofDigits_zmod (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b % k) L % k :=
   ofDigits_zmodeq b k L
 #align nat.of_digits_zmod Nat.ofDigits_zmod
@@ -734,12 +692,6 @@ theorem modEq_nine_digits_sum (n : ℕ) : n ≡ (digits 10 n).Sum [MOD 9] :=
 #align nat.modeq_nine_digits_sum Nat.modEq_nine_digits_sum
 -/
 
-/- warning: nat.zmodeq_of_digits_digits -> Nat.zmodeq_ofDigits_digits is a dubious translation:
-lean 3 declaration is
-  forall (b : Nat) (b' : Nat) (c : Int), (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b') c) -> (forall (n : Nat), Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (Nat.ofDigits.{0} Int Int.semiring c (Nat.digits b' n)))
-but is expected to have type
-  forall (b : Nat) (b' : Nat) (c : Int), (Int.ModEq (Nat.cast.{0} Int instNatCastInt b) (Nat.cast.{0} Int instNatCastInt b') c) -> (forall (n : Nat), Int.ModEq (Nat.cast.{0} Int instNatCastInt b) (Nat.cast.{0} Int instNatCastInt n) (Nat.ofDigits.{0} Int Int.instSemiringInt c (Nat.digits b' n)))
-Case conversion may be inaccurate. Consider using '#align nat.zmodeq_of_digits_digits Nat.zmodeq_ofDigits_digitsₓ'. -/
 theorem zmodeq_ofDigits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (n : ℕ) :
     n ≡ ofDigits c (digits b' n) [ZMOD b] :=
   by
@@ -751,12 +703,6 @@ theorem zmodeq_ofDigits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (n
   apply of_digits_zmodeq' _ _ _ h
 #align nat.zmodeq_of_digits_digits Nat.zmodeq_ofDigits_digits
 
-/- warning: nat.of_digits_neg_one -> Nat.ofDigits_neg_one is a dubious translation:
-lean 3 declaration is
-  forall (L : List.{0} Nat), Eq.{1} Int (Nat.ofDigits.{0} Int Int.semiring (Neg.neg.{0} Int Int.hasNeg (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) L) (List.alternatingSum.{0} Int Int.hasZero Int.hasAdd Int.hasNeg (List.map.{0, 0} Nat Int (fun (n : Nat) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) L))
-but is expected to have type
-  forall (L : List.{0} Nat), Eq.{1} Int (Nat.ofDigits.{0} Int Int.instSemiringInt (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) L) (List.alternatingSum.{0} Int (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.instAddInt Int.instNegInt (List.map.{0, 0} Nat Int (fun (n : Nat) => Nat.cast.{0} Int instNatCastInt n) L))
-Case conversion may be inaccurate. Consider using '#align nat.of_digits_neg_one Nat.ofDigits_neg_oneₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ofDigits_neg_one :
@@ -803,12 +749,6 @@ theorem nine_dvd_iff (n : ℕ) : 9 ∣ n ↔ 9 ∣ (digits 10 n).Sum :=
 #align nat.nine_dvd_iff Nat.nine_dvd_iff
 -/
 
-/- warning: nat.dvd_iff_dvd_of_digits -> Nat.dvd_iff_dvd_ofDigits is a dubious translation:
-lean 3 declaration is
-  forall (b : Nat) (b' : Nat) (c : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b') c)) -> (forall (n : Nat), Iff (Dvd.Dvd.{0} Nat Nat.hasDvd b n) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) (Nat.ofDigits.{0} Int Int.semiring c (Nat.digits b' n))))
-but is expected to have type
-  forall (b : Nat) (b' : Nat) (c : Int), (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt b) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int instNatCastInt b') c)) -> (forall (n : Nat), Iff (Dvd.dvd.{0} Nat Nat.instDvdNat b n) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt b) (Nat.ofDigits.{0} Int Int.instSemiringInt c (Nat.digits b' n))))
-Case conversion may be inaccurate. Consider using '#align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_ofDigitsₓ'. -/
 theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ) - c) (n : ℕ) :
     b ∣ n ↔ (b : ℤ) ∣ ofDigits c (digits b' n) :=
   by
@@ -817,12 +757,6 @@ theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ
     dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modEq_iff_dvd.2 h).symm _).symm.Dvd
 #align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_ofDigits
 
-/- warning: nat.eleven_dvd_iff -> Nat.eleven_dvd_iff is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Iff (Dvd.Dvd.{0} Nat Nat.hasDvd (OfNat.ofNat.{0} Nat 11 (OfNat.mk.{0} Nat 11 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) n) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (OfNat.ofNat.{0} Int 11 (OfNat.mk.{0} Int 11 (bit1.{0} Int Int.hasOne Int.hasAdd (bit1.{0} Int Int.hasOne Int.hasAdd (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))))) (List.alternatingSum.{0} Int Int.hasZero Int.hasAdd Int.hasNeg (List.map.{0, 0} Nat Int (fun (n : Nat) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (Nat.digits (OfNat.ofNat.{0} Nat 10 (OfNat.mk.{0} Nat 10 (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) n))))
-but is expected to have type
-  forall {n : Nat}, Iff (Dvd.dvd.{0} Nat Nat.instDvdNat (OfNat.ofNat.{0} Nat 11 (instOfNatNat 11)) n) (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 11 (instOfNatInt 11)) (List.alternatingSum.{0} Int (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.instAddInt Int.instNegInt (List.map.{0, 0} Nat Int (fun (n : Nat) => Nat.cast.{0} Int instNatCastInt n) (Nat.digits (OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)) n))))
-Case conversion may be inaccurate. Consider using '#align nat.eleven_dvd_iff Nat.eleven_dvd_iffₓ'. -/
 theorem eleven_dvd_iff :
     11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum :=
   by

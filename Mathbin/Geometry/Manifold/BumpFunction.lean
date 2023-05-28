@@ -256,8 +256,6 @@ theorem updateR_r {r : ℝ} (hr : r ∈ Ioo 0 f.r) : (f.updateR r hr).r = f.r :=
 #align smooth_bump_function.update_r_R SmoothBumpFunction.updateR_r
 
 /- warning: smooth_bump_function.update_r_r clashes with smooth_bump_function.update_r_R -> SmoothBumpFunction.updateR_r
-warning: smooth_bump_function.update_r_r -> SmoothBumpFunction.updateR_r is a dubious translation:
-<too large>
 Case conversion may be inaccurate. Consider using '#align smooth_bump_function.update_r_r SmoothBumpFunction.updateR_rₓ'. -/
 @[simp]
 theorem updateR_r {r : ℝ} (hr : r ∈ Ioo 0 f.r) : (f.updateR r hr).R = r :=

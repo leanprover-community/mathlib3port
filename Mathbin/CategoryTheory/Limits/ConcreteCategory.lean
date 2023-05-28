@@ -37,9 +37,6 @@ section Limits
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{max w v} C] {J : Type w} [SmallCategory J]
   (F : J ⥤ C) [PreservesLimit F (forget C)]
 
-/- warning: category_theory.limits.concrete.to_product_injective_of_is_limit -> CategoryTheory.Limits.Concrete.to_product_injective_of_isLimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.to_product_injective_of_is_limit CategoryTheory.Limits.Concrete.to_product_injective_of_isLimitₓ'. -/
 theorem Concrete.to_product_injective_of_isLimit {D : Cone F} (hD : IsLimit D) :
     Function.Injective fun (x : D.pt) (j : J) => D.π.app j x :=
   by
@@ -57,17 +54,11 @@ theorem Concrete.to_product_injective_of_isLimit {D : Cone F} (hD : IsLimit D) :
   apply Subtype.ext
 #align category_theory.limits.concrete.to_product_injective_of_is_limit CategoryTheory.Limits.Concrete.to_product_injective_of_isLimit
 
-/- warning: category_theory.limits.concrete.is_limit_ext -> CategoryTheory.Limits.Concrete.isLimit_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.is_limit_ext CategoryTheory.Limits.Concrete.isLimit_extₓ'. -/
 theorem Concrete.isLimit_ext {D : Cone F} (hD : IsLimit D) (x y : D.pt) :
     (∀ j, D.π.app j x = D.π.app j y) → x = y := fun h =>
   Concrete.to_product_injective_of_isLimit _ hD (funext h)
 #align category_theory.limits.concrete.is_limit_ext CategoryTheory.Limits.Concrete.isLimit_ext
 
-/- warning: category_theory.limits.concrete.limit_ext -> CategoryTheory.Limits.Concrete.limit_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.limit_ext CategoryTheory.Limits.Concrete.limit_extₓ'. -/
 theorem Concrete.limit_ext [HasLimit F] (x y : limit F) :
     (∀ j, limit.π F j x = limit.π F j y) → x = y :=
   Concrete.isLimit_ext F (limit.isLimit _) _ _
@@ -119,9 +110,6 @@ theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequali
 #align category_theory.limits.concrete.multiequalizer_ext CategoryTheory.Limits.Concrete.multiequalizer_ext
 -/
 
-/- warning: category_theory.limits.concrete.multiequalizer_equiv_aux -> CategoryTheory.Limits.Concrete.multiequalizerEquivAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.multiequalizer_equiv_aux CategoryTheory.Limits.Concrete.multiequalizerEquivAuxₓ'. -/
 /-- An auxiliary equivalence to be used in `multiequalizer_equiv` below.-/
 def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
     (I.multicospan ⋙ forget C).sections ≃
@@ -168,9 +156,6 @@ noncomputable def Concrete.multiequalizerEquiv (I : MulticospanIndex.{w} C) [Has
 #align category_theory.limits.concrete.multiequalizer_equiv CategoryTheory.Limits.Concrete.multiequalizerEquiv
 -/
 
-/- warning: category_theory.limits.concrete.multiequalizer_equiv_apply -> CategoryTheory.Limits.Concrete.multiequalizerEquiv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.multiequalizer_equiv_apply CategoryTheory.Limits.Concrete.multiequalizerEquiv_applyₓ'. -/
 @[simp]
 theorem Concrete.multiequalizerEquiv_apply (I : MulticospanIndex.{w} C) [HasMultiequalizer I]
     [PreservesLimit I.multicospan (forget C)] (x : multiequalizer I) (i : I.L) :
@@ -185,9 +170,6 @@ end Limits
 
 section Colimits
 
-/- warning: category_theory.limits.cokernel_funext -> CategoryTheory.Limits.cokernel_funext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_funext CategoryTheory.Limits.cokernel_funextₓ'. -/
 -- We don't mark this as an `@[ext]` lemma as we don't always want to work elementwise.
 theorem cokernel_funext {C : Type _} [Category C] [HasZeroMorphisms C] [ConcreteCategory C]
     {M N K : C} {f : M ⟶ N} [HasCokernel f] {g h : cokernel f ⟶ K}
@@ -201,9 +183,6 @@ theorem cokernel_funext {C : Type _} [Category C] [HasZeroMorphisms C] [Concrete
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {J : Type v} [SmallCategory J]
   (F : J ⥤ C) [PreservesColimit F (forget C)]
 
-/- warning: category_theory.limits.concrete.from_union_surjective_of_is_colimit -> CategoryTheory.Limits.Concrete.from_union_surjective_of_isColimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.from_union_surjective_of_is_colimit CategoryTheory.Limits.Concrete.from_union_surjective_of_isColimitₓ'. -/
 theorem Concrete.from_union_surjective_of_isColimit {D : Cocone F} (hD : IsColimit D) :
     let ff : (Σj : J, F.obj j) → D.pt := fun a => D.ι.app a.1 a.2
     Function.Surjective ff :=
@@ -232,9 +211,6 @@ theorem Concrete.from_union_surjective_of_isColimit {D : Cocone F} (hD : IsColim
   exact ⟨⟨j, a⟩, rfl⟩
 #align category_theory.limits.concrete.from_union_surjective_of_is_colimit CategoryTheory.Limits.Concrete.from_union_surjective_of_isColimit
 
-/- warning: category_theory.limits.concrete.is_colimit_exists_rep -> CategoryTheory.Limits.Concrete.isColimit_exists_rep is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.is_colimit_exists_rep CategoryTheory.Limits.Concrete.isColimit_exists_repₓ'. -/
 theorem Concrete.isColimit_exists_rep {D : Cocone F} (hD : IsColimit D) (x : D.pt) :
     ∃ (j : J)(y : F.obj j), D.ι.app j y = x :=
   by
@@ -242,20 +218,11 @@ theorem Concrete.isColimit_exists_rep {D : Cocone F} (hD : IsColimit D) (x : D.p
   exact ⟨a.1, a.2, rfl⟩
 #align category_theory.limits.concrete.is_colimit_exists_rep CategoryTheory.Limits.Concrete.isColimit_exists_rep
 
-/- warning: category_theory.limits.concrete.colimit_exists_rep -> CategoryTheory.Limits.Concrete.colimit_exists_rep is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.ConcreteCategory.{u1, u1, u2} C _inst_1] {J : Type.{u1}} [_inst_3 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_3 C _inst_1) [_inst_4 : CategoryTheory.Limits.PreservesColimit.{u1, u1, u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} J _inst_3 F (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)] [_inst_5 : CategoryTheory.Limits.HasColimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F] (x : coeSort.{succ u2, succ (succ u1)} C Type.{u1} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u2, u1, u1} C _inst_1 _inst_2) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)), Exists.{succ u1} J (fun (j : J) => Exists.{succ u1} (coeSort.{succ u2, succ (succ u1)} C Type.{u1} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u2, u1, u1} C _inst_1 _inst_2) (CategoryTheory.Functor.obj.{u1, u1, u1, u2} J _inst_3 C _inst_1 F j)) (fun (y : coeSort.{succ u2, succ (succ u1)} C Type.{u1} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u2, u1, u1} C _inst_1 _inst_2) (CategoryTheory.Functor.obj.{u1, u1, u1, u2} J _inst_3 C _inst_1 F j)) => Eq.{succ u1} (coeSort.{succ u2, succ (succ u1)} C Type.{u1} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u2, u1, u1} C _inst_1 _inst_2) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.obj.{u1, u1, u1, u2} J _inst_3 C _inst_1 F j) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)) (fun (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.obj.{u1, u1, u1, u2} J _inst_3 C _inst_1 F j) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)) => (coeSort.{succ u2, succ (succ u1)} C Type.{u1} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u2, u1, u1} C _inst_1 _inst_2) (CategoryTheory.Functor.obj.{u1, u1, u1, u2} J _inst_3 C _inst_1 F j)) -> (coeSort.{succ u2, succ (succ u1)} C Type.{u1} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u2, u1, u1} C _inst_1 _inst_2) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5))) (CategoryTheory.ConcreteCategory.hasCoeToFun.{u2, u1, u1} C _inst_1 _inst_2 (CategoryTheory.Functor.obj.{u1, u1, u1, u2} J _inst_3 C _inst_1 F j) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)) (CategoryTheory.Limits.colimit.ι.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5 j) y) x))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.ConcreteCategory.{u1, u1, u2} C _inst_1] {J : Type.{u1}} [_inst_3 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_3 C _inst_1) [_inst_4 : CategoryTheory.Limits.PreservesColimit.{u1, u1, u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} J _inst_3 F (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)] [_inst_5 : CategoryTheory.Limits.HasColimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F] (x : Prefunctor.obj.{succ u1, succ u1, u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)), Exists.{succ u1} J (fun (j : J) => Exists.{succ u1} (Prefunctor.obj.{succ u1, succ u1, u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)) (Prefunctor.obj.{succ u1, succ u1, u1, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_3)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u2} J _inst_3 C _inst_1 F) j)) (fun (y : Prefunctor.obj.{succ u1, succ u1, u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)) (Prefunctor.obj.{succ u1, succ u1, u1, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_3)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u2} J _inst_3 C _inst_1 F) j)) => Eq.{succ u1} (Prefunctor.obj.{succ u1, succ u1, u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5)) (Prefunctor.map.{succ u1, succ u1, u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{u2, u1, u1} C _inst_1 _inst_2)) (Prefunctor.obj.{succ u1, succ u1, u1, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_3)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u2} J _inst_3 C _inst_1 F) j) (CategoryTheory.Limits.colimit.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5) (CategoryTheory.Limits.colimit.ι.{u1, u1, u1, u2} J _inst_3 C _inst_1 F _inst_5 j) y) x))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.colimit_exists_rep CategoryTheory.Limits.Concrete.colimit_exists_repₓ'. -/
 theorem Concrete.colimit_exists_rep [HasColimit F] (x : colimit F) :
     ∃ (j : J)(y : F.obj j), colimit.ι F j y = x :=
   Concrete.isColimit_exists_rep F (colimit.isColimit _) x
 #align category_theory.limits.concrete.colimit_exists_rep CategoryTheory.Limits.Concrete.colimit_exists_rep
 
-/- warning: category_theory.limits.concrete.is_colimit_rep_eq_of_exists -> CategoryTheory.Limits.Concrete.isColimit_rep_eq_of_exists is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.is_colimit_rep_eq_of_exists CategoryTheory.Limits.Concrete.isColimit_rep_eq_of_existsₓ'. -/
 theorem Concrete.isColimit_rep_eq_of_exists {D : Cocone F} {i j : J} (hD : IsColimit D)
     (x : F.obj i) (y : F.obj j) (h : ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y) :
     D.ι.app i x = D.ι.app j y := by
@@ -278,9 +245,6 @@ theorem Concrete.isColimit_rep_eq_of_exists {D : Cocone F} {i j : J} (hD : IsCol
   exact Quot.sound ⟨g, rfl⟩
 #align category_theory.limits.concrete.is_colimit_rep_eq_of_exists CategoryTheory.Limits.Concrete.isColimit_rep_eq_of_exists
 
-/- warning: category_theory.limits.concrete.colimit_rep_eq_of_exists -> CategoryTheory.Limits.Concrete.colimit_rep_eq_of_exists is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.colimit_rep_eq_of_exists CategoryTheory.Limits.Concrete.colimit_rep_eq_of_existsₓ'. -/
 theorem Concrete.colimit_rep_eq_of_exists [HasColimit F] {i j : J} (x : F.obj i) (y : F.obj j)
     (h : ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y) :
     colimit.ι F i x = colimit.ι F j y :=
@@ -291,9 +255,6 @@ section FilteredColimits
 
 variable [IsFiltered J]
 
-/- warning: category_theory.limits.concrete.is_colimit_exists_of_rep_eq -> CategoryTheory.Limits.Concrete.isColimit_exists_of_rep_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.is_colimit_exists_of_rep_eq CategoryTheory.Limits.Concrete.isColimit_exists_of_rep_eqₓ'. -/
 theorem Concrete.isColimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsColimit D)
     (x : F.obj i) (y : F.obj j) (h : D.ι.app _ x = D.ι.app _ y) :
     ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=
@@ -336,27 +297,18 @@ theorem Concrete.isColimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCol
     rw [is_filtered.coeq_condition]
 #align category_theory.limits.concrete.is_colimit_exists_of_rep_eq CategoryTheory.Limits.Concrete.isColimit_exists_of_rep_eq
 
-/- warning: category_theory.limits.concrete.is_colimit_rep_eq_iff_exists -> CategoryTheory.Limits.Concrete.isColimit_rep_eq_iff_exists is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.is_colimit_rep_eq_iff_exists CategoryTheory.Limits.Concrete.isColimit_rep_eq_iff_existsₓ'. -/
 theorem Concrete.isColimit_rep_eq_iff_exists {D : Cocone F} {i j : J} (hD : IsColimit D)
     (x : F.obj i) (y : F.obj j) :
     D.ι.app i x = D.ι.app j y ↔ ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=
   ⟨Concrete.isColimit_exists_of_rep_eq _ hD _ _, Concrete.isColimit_rep_eq_of_exists _ hD _ _⟩
 #align category_theory.limits.concrete.is_colimit_rep_eq_iff_exists CategoryTheory.Limits.Concrete.isColimit_rep_eq_iff_exists
 
-/- warning: category_theory.limits.concrete.colimit_exists_of_rep_eq -> CategoryTheory.Limits.Concrete.colimit_exists_of_rep_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.colimit_exists_of_rep_eq CategoryTheory.Limits.Concrete.colimit_exists_of_rep_eqₓ'. -/
 theorem Concrete.colimit_exists_of_rep_eq [HasColimit F] {i j : J} (x : F.obj i) (y : F.obj j)
     (h : colimit.ι F _ x = colimit.ι F _ y) :
     ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=
   Concrete.isColimit_exists_of_rep_eq F (colimit.isColimit _) x y h
 #align category_theory.limits.concrete.colimit_exists_of_rep_eq CategoryTheory.Limits.Concrete.colimit_exists_of_rep_eq
 
-/- warning: category_theory.limits.concrete.colimit_rep_eq_iff_exists -> CategoryTheory.Limits.Concrete.colimit_rep_eq_iff_exists is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.concrete.colimit_rep_eq_iff_exists CategoryTheory.Limits.Concrete.colimit_rep_eq_iff_existsₓ'. -/
 theorem Concrete.colimit_rep_eq_iff_exists [HasColimit F] {i j : J} (x : F.obj i) (y : F.obj j) :
     colimit.ι F i x = colimit.ι F j y ↔ ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=
   ⟨Concrete.colimit_exists_of_rep_eq _ _ _, Concrete.colimit_rep_eq_of_exists _ _ _⟩

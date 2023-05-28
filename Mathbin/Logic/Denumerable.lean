@@ -121,12 +121,6 @@ def ofEquiv (α) {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
 #align denumerable.of_equiv Denumerable.ofEquiv
 -/
 
-/- warning: denumerable.of_equiv_of_nat -> Denumerable.ofEquiv_ofNat is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) {β : Type.{u2}} [_inst_3 : Denumerable.{u1} α] (e : Equiv.{succ u2, succ u1} β α) (n : Nat), Eq.{succ u2} β (Denumerable.ofNat.{u2} β (Denumerable.ofEquiv.{u1, u2} α β _inst_3 e) n) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) (Equiv.symm.{succ u2, succ u1} β α e) (Denumerable.ofNat.{u1} α _inst_3 n))
-but is expected to have type
-  forall (α : Type.{u2}) {β : Type.{u1}} [_inst_3 : Denumerable.{u2} α] (e : Equiv.{succ u1, succ u2} β α) (n : Nat), Eq.{succ u1} β (Denumerable.ofNat.{u1} β (Denumerable.ofEquiv.{u2, u1} α β _inst_3 e) n) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) (Equiv.symm.{succ u1, succ u2} β α e) (Denumerable.ofNat.{u2} α _inst_3 n))
-Case conversion may be inaccurate. Consider using '#align denumerable.of_equiv_of_nat Denumerable.ofEquiv_ofNatₓ'. -/
 @[simp]
 theorem ofEquiv_ofNat (α) {β} [Denumerable α] (e : β ≃ α) (n) :
     @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
@@ -187,12 +181,6 @@ instance sigma : Denumerable (Sigma γ) :=
 #align denumerable.sigma Denumerable.sigma
 -/
 
-/- warning: denumerable.sigma_of_nat_val -> Denumerable.sigma_ofNat_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Denumerable.{u1} α] {γ : α -> Type.{u2}} [_inst_3 : forall (a : α), Denumerable.{u2} (γ a)] (n : Nat), Eq.{succ (max u1 u2)} (Sigma.{u1, u2} α γ) (Denumerable.ofNat.{max u1 u2} (Sigma.{u1, u2} α γ) (Denumerable.sigma.{u1, u2} α _inst_1 γ (fun (a : α) => _inst_3 a)) n) (Sigma.mk.{u1, u2} α γ (Denumerable.ofNat.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (Denumerable.ofNat.{u2} (γ (Denumerable.ofNat.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)))) (_inst_3 (Denumerable.ofNat.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)))) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Denumerable.{u2} α] {γ : α -> Type.{u1}} [_inst_3 : forall (a : α), Denumerable.{u1} (γ a)] (n : Nat), Eq.{max (succ u2) (succ u1)} (Sigma.{u2, u1} α γ) (Denumerable.ofNat.{max u1 u2} (Sigma.{u2, u1} α γ) (Denumerable.sigma.{u2, u1} α _inst_1 γ (fun (a : α) => _inst_3 a)) n) (Sigma.mk.{u2, u1} α γ (Denumerable.ofNat.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (Denumerable.ofNat.{u1} (γ (Denumerable.ofNat.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)))) (_inst_3 (Denumerable.ofNat.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)))) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))
-Case conversion may be inaccurate. Consider using '#align denumerable.sigma_of_nat_val Denumerable.sigma_ofNat_valₓ'. -/
 @[simp]
 theorem sigma_ofNat_val (n : ℕ) :
     ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
@@ -208,12 +196,6 @@ instance prod : Denumerable (α × β) :=
 #align denumerable.prod Denumerable.prod
 -/
 
-/- warning: denumerable.prod_of_nat_val -> Denumerable.prod_ofNat_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Denumerable.{u1} α] [_inst_2 : Denumerable.{u2} β] (n : Nat), Eq.{succ (max u1 u2)} (Prod.{u1, u2} α β) (Denumerable.ofNat.{max u1 u2} (Prod.{u1, u2} α β) (Denumerable.prod.{u1, u2} α β _inst_1 _inst_2) n) (Prod.mk.{u1, u2} α β (Denumerable.ofNat.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (Denumerable.ofNat.{u2} β _inst_2 (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Denumerable.{u2} α] [_inst_2 : Denumerable.{u1} β] (n : Nat), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Denumerable.ofNat.{max u1 u2} (Prod.{u2, u1} α β) (Denumerable.prod.{u2, u1} α β _inst_1 _inst_2) n) (Prod.mk.{u2, u1} α β (Denumerable.ofNat.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (Denumerable.ofNat.{u1} β _inst_2 (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))
-Case conversion may be inaccurate. Consider using '#align denumerable.prod_of_nat_val Denumerable.prod_ofNat_valₓ'. -/
 @[simp]
 theorem prod_ofNat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) :=
   by simp <;> rfl

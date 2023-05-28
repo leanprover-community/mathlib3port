@@ -35,9 +35,6 @@ noncomputable section
 
 open MvPolynomial Finset Function
 
-/- warning: ax_grothendieck_of_locally_finite -> ax_grothendieck_of_locally_finite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ax_grothendieck_of_locally_finite ax_grothendieck_of_locally_finiteₓ'. -/
 /-- Any injective polynomial map over an algebraic extension of a finite field is surjective. -/
 theorem ax_grothendieck_of_locally_finite {ι K R : Type _} [Field K] [Finite K] [CommRing R]
     [Finite ι] [Algebra K R] (alg : Algebra.IsAlgebraic K R) (ps : ι → MvPolynomial ι R)

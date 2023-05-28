@@ -295,12 +295,6 @@ theorem powersetLen_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powersetL
 #align finset.powerset_len_empty Finset.powersetLen_empty
 -/
 
-/- warning: finset.powerset_len_eq_filter -> Finset.powersetLen_eq_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α n s) (Finset.filter.{u1} (Finset.{u1} α) (fun (x : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α x) n) (fun (a : Finset.{u1} α) => Nat.decidableEq (Finset.card.{u1} α a) n) (Finset.powerset.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α n s) (Finset.filter.{u1} (Finset.{u1} α) (fun (x : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α x) n) (fun (a : Finset.{u1} α) => instDecidableEqNat (Finset.card.{u1} α a) n) (Finset.powerset.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.powerset_len_eq_filter Finset.powersetLen_eq_filterₓ'. -/
 theorem powersetLen_eq_filter {n} {s : Finset α} :
     powersetLen n s = (powerset s).filterₓ fun x => x.card = n := by ext; simp [mem_powerset_len]
 #align finset.powerset_len_eq_filter Finset.powersetLen_eq_filter
@@ -351,12 +345,6 @@ theorem powersetLen_self (s : Finset α) : powersetLen s.card s = {s} :=
 #align finset.powerset_len_self Finset.powersetLen_self
 -/
 
-/- warning: finset.pairwise_disjoint_powerset_len -> Finset.pairwise_disjoint_powersetLen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Pairwise.{0} Nat (fun (i : Nat) (j : Nat) => Disjoint.{u1} (Finset.{u1} (Finset.{u1} α)) (Finset.partialOrder.{u1} (Finset.{u1} α)) (Finset.orderBot.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α i s) (Finset.powersetLen.{u1} α j s))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Finset.{u1} α), Pairwise.{0} Nat (fun (i : Nat) (j : Nat) => Disjoint.{u1} (Finset.{u1} (Finset.{u1} α)) (Finset.partialOrder.{u1} (Finset.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α i s) (Finset.powersetLen.{u1} α j s))
-Case conversion may be inaccurate. Consider using '#align finset.pairwise_disjoint_powerset_len Finset.pairwise_disjoint_powersetLenₓ'. -/
 theorem pairwise_disjoint_powersetLen (s : Finset α) :
     Pairwise fun i j => Disjoint (s.powersetLen i) (s.powersetLen j) := fun i j hij =>
   Finset.disjoint_left.mpr fun x hi hj =>
@@ -386,12 +374,6 @@ theorem powerset_card_biUnion [DecidableEq (Finset α)] (s : Finset α) :
 #align finset.powerset_card_bUnion Finset.powerset_card_biUnion
 -/
 
-/- warning: finset.powerset_len_sup -> Finset.powerset_len_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (u : Finset.{u1} α) (n : Nat), (LT.lt.{0} Nat Nat.hasLt n (Finset.card.{u1} α u)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.sup.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) (Finset.orderBot.{u1} α) (Finset.powersetLen.{u1} α (Nat.succ n) u) (id.{succ u1} (Finset.{u1} α))) u)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (u : Finset.{u1} α) (n : Nat), (LT.lt.{0} Nat instLTNat n (Finset.card.{u1} α u)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.sup.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.powersetLen.{u1} α (Nat.succ n) u) (id.{succ u1} (Finset.{u1} α))) u)
-Case conversion may be inaccurate. Consider using '#align finset.powerset_len_sup Finset.powerset_len_supₓ'. -/
 theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :
     (powersetLen n.succ u).sup id = u := by
   apply le_antisymm

@@ -41,9 +41,6 @@ variable {J : Type v} [SmallCategory J] [IsCofiltered J] (F : J ⥤ TopCat.{max 
 
 include hC
 
-/- warning: Top.is_topological_basis_cofiltered_limit -> TopCat.isTopologicalBasis_cofiltered_limit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.is_topological_basis_cofiltered_limit TopCat.isTopologicalBasis_cofiltered_limitₓ'. -/
 /-- Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.

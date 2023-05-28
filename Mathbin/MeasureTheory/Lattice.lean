@@ -284,24 +284,12 @@ open Finset
 
 variable {δ : Type _} [MeasurableSpace δ] [SemilatticeSup α] [MeasurableSup₂ α]
 
-/- warning: finset.measurable_sup' -> Finset.measurable_sup' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {δ : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} δ] [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : MeasurableSup₂.{u1} α m (SemilatticeSup.toHasSup.{u1} α _inst_3)] {ι : Type.{u3}} {s : Finset.{u3} ι} (hs : Finset.Nonempty.{u3} ι s) {f : ι -> δ -> α}, (forall (n : ι), (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) n s) -> (Measurable.{u2, u1} δ α _inst_2 m (f n))) -> (Measurable.{u2, u1} δ α _inst_2 m (Finset.sup'.{max u2 u1, u3} (δ -> α) ι (Pi.semilatticeSup.{u2, u1} δ (fun (ᾰ : δ) => α) (fun (i : δ) => _inst_3)) s hs f))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {δ : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} δ] [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : MeasurableSup₂.{u1} α m (SemilatticeSup.toSup.{u1} α _inst_3)] {ι : Type.{u3}} {s : Finset.{u3} ι} (hs : Finset.Nonempty.{u3} ι s) {f : ι -> δ -> α}, (forall (n : ι), (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) n s) -> (Measurable.{u2, u1} δ α _inst_2 m (f n))) -> (Measurable.{u2, u1} δ α _inst_2 m (Finset.sup'.{max u1 u2, u3} (δ -> α) ι (Pi.semilatticeSup.{u2, u1} δ (fun (ᾰ : δ) => α) (fun (i : δ) => _inst_3)) s hs f))
-Case conversion may be inaccurate. Consider using '#align finset.measurable_sup' Finset.measurable_sup'ₓ'. -/
 @[measurability]
 theorem Finset.measurable_sup' {ι : Type _} {s : Finset ι} (hs : s.Nonempty) {f : ι → δ → α}
     (hf : ∀ n ∈ s, Measurable (f n)) : Measurable (s.sup' hs f) :=
   Finset.sup'_induction hs _ (fun f hf g hg => hf.sup hg) fun n hn => hf n hn
 #align finset.measurable_sup' Finset.measurable_sup'
 
-/- warning: finset.measurable_range_sup' -> Finset.measurable_range_sup' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {δ : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} δ] [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : MeasurableSup₂.{u1} α m (SemilatticeSup.toHasSup.{u1} α _inst_3)] {f : Nat -> δ -> α} {n : Nat}, (forall (k : Nat), (LE.le.{0} Nat Nat.hasLe k n) -> (Measurable.{u2, u1} δ α _inst_2 m (f k))) -> (Measurable.{u2, u1} δ α _inst_2 m (Finset.sup'.{max u2 u1, 0} (δ -> α) Nat (Pi.semilatticeSup.{u2, u1} δ (fun (ᾰ : δ) => α) (fun (i : δ) => _inst_3)) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.nonempty_range_succ n) f))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {δ : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} δ] [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : MeasurableSup₂.{u1} α m (SemilatticeSup.toSup.{u1} α _inst_3)] {f : Nat -> δ -> α} {n : Nat}, (forall (k : Nat), (LE.le.{0} Nat instLENat k n) -> (Measurable.{u2, u1} δ α _inst_2 m (f k))) -> (Measurable.{u2, u1} δ α _inst_2 m (Finset.sup'.{max u1 u2, 0} (δ -> α) Nat (Pi.semilatticeSup.{u2, u1} δ (fun (ᾰ : δ) => α) (fun (i : δ) => _inst_3)) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.nonempty_range_succ n) f))
-Case conversion may be inaccurate. Consider using '#align finset.measurable_range_sup' Finset.measurable_range_sup'ₓ'. -/
 @[measurability]
 theorem Finset.measurable_range_sup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, Measurable (f k)) :
     Measurable ((range (n + 1)).sup' nonempty_range_succ f) :=
@@ -311,12 +299,6 @@ theorem Finset.measurable_range_sup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀
   simpa [Finset.mem_range]
 #align finset.measurable_range_sup' Finset.measurable_range_sup'
 
-/- warning: finset.measurable_range_sup'' -> Finset.measurable_range_sup'' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {δ : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} δ] [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : MeasurableSup₂.{u1} α m (SemilatticeSup.toHasSup.{u1} α _inst_3)] {f : Nat -> δ -> α} {n : Nat}, (forall (k : Nat), (LE.le.{0} Nat Nat.hasLe k n) -> (Measurable.{u2, u1} δ α _inst_2 m (f k))) -> (Measurable.{u2, u1} δ α _inst_2 m (fun (x : δ) => Finset.sup'.{u1, 0} α Nat _inst_3 (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.nonempty_range_succ n) (fun (k : Nat) => f k x)))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {δ : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} δ] [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : MeasurableSup₂.{u1} α m (SemilatticeSup.toSup.{u1} α _inst_3)] {f : Nat -> δ -> α} {n : Nat}, (forall (k : Nat), (LE.le.{0} Nat instLENat k n) -> (Measurable.{u2, u1} δ α _inst_2 m (f k))) -> (Measurable.{u2, u1} δ α _inst_2 m (fun (x : δ) => Finset.sup'.{u1, 0} α Nat _inst_3 (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.nonempty_range_succ n) (fun (k : Nat) => f k x)))
-Case conversion may be inaccurate. Consider using '#align finset.measurable_range_sup'' Finset.measurable_range_sup''ₓ'. -/
 @[measurability]
 theorem Finset.measurable_range_sup'' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, Measurable (f k)) :
     Measurable fun x => (range (n + 1)).sup' nonempty_range_succ fun k => f k x :=

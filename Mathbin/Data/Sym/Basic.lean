@@ -49,12 +49,6 @@ def Sym (α : Type _) (n : ℕ) :=
 #align sym Sym
 -/
 
-/- warning: sym.has_coe -> Sym.hasCoe is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (n : Nat), Coe.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α)
-but is expected to have type
-  forall (α : Type.{u1}) (n : Nat), CoeOut.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α)
-Case conversion may be inaccurate. Consider using '#align sym.has_coe Sym.hasCoeₓ'. -/
 instance Sym.hasCoe (α : Type _) (n : ℕ) : Coe (Sym α n) (Multiset α) :=
   coeSubtype
 #align sym.has_coe Sym.hasCoe
@@ -89,12 +83,6 @@ theorem coe_inj {s₁ s₂ : Sym α n} : (s₁ : Multiset α) = s₂ ↔ s₁ = 
 #align sym.coe_inj Sym.coe_inj
 -/
 
-/- warning: sym.mk -> Sym.mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (m : Multiset.{u1} α), (Eq.{1} Nat (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u1} α) -> Nat) (AddMonoidHom.hasCoeToFun.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u1} α) m) n) -> (Sym.{u1} α n)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (m : Multiset.{u1} α), (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) m) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) m) n) -> (Sym.{u1} α n)
-Case conversion may be inaccurate. Consider using '#align sym.mk Sym.mkₓ'. -/
 /-- Construct an element of the `n`th symmetric power from a multiset of cardinality `n`.
 -/
 @[simps, match_pattern]
@@ -161,23 +149,11 @@ symmetric power.
 -/
 instance : HasLift (Vector α n) (Sym α n) where lift x := ⟨↑x.val, (Multiset.coe_card _).trans x.2⟩
 
-/- warning: sym.of_vector_nil -> Sym.of_vector_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (liftBase.{succ u1, succ u1} (Vector.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.hasLift.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (Vector.nil.{u1} α)) (Sym.nil.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.ofVector.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Vector.nil.{u1} α)) (Sym.nil.{u1} α)
-Case conversion may be inaccurate. Consider using '#align sym.of_vector_nil Sym.of_vector_nilₓ'. -/
 @[simp]
 theorem of_vector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
   rfl
 #align sym.of_vector_nil Sym.of_vector_nil
 
-/- warning: sym.of_vector_cons -> Sym.of_vector_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α (Nat.succ n)) (Sym.{u1} α (Nat.succ n)) (liftBase.{succ u1, succ u1} (Vector.{u1} α (Nat.succ n)) (Sym.{u1} α (Nat.succ n)) (Sym.hasLift.{u1} α (Nat.succ n))) (Vector.cons.{u1} α n a v)) (Sym.cons.{u1} α n a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α n) (Sym.{u1} α n) (liftBase.{succ u1, succ u1} (Vector.{u1} α n) (Sym.{u1} α n) (Sym.hasLift.{u1} α n)) v))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.ofVector.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v)) (Sym.cons.{u1} α n a (Sym.ofVector.{u1} α n v))
-Case conversion may be inaccurate. Consider using '#align sym.of_vector_cons Sym.of_vector_consₓ'. -/
 @[simp]
 theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
   cases v; rfl
@@ -188,141 +164,66 @@ theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::�
 instance : Membership α (Sym α n) :=
   ⟨fun a s => a ∈ s.1⟩
 
-/- warning: sym.decidable_mem -> Sym.decidableMem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Sym.{u1} α n), Decidable (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Sym.{u1} α n), Decidable (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s)
-Case conversion may be inaccurate. Consider using '#align sym.decidable_mem Sym.decidableMemₓ'. -/
 instance decidableMem [DecidableEq α] (a : α) (s : Sym α n) : Decidable (a ∈ s) :=
   s.1.decidableMem _
 #align sym.decidable_mem Sym.decidableMem
 
-/- warning: sym.mem_mk -> Sym.mem_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (a : α) (s : Multiset.{u1} α) (h : Eq.{1} Nat (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u1} α) -> Nat) (AddMonoidHom.hasCoeToFun.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u1} α) s) n), Iff (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a (Sym.mk.{u1} α n s h)) (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (a : α) (s : Multiset.{u1} α) (h : Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) s) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s) n), Iff (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a (Sym.mk.{u1} α n s h)) (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s)
-Case conversion may be inaccurate. Consider using '#align sym.mem_mk Sym.mem_mkₓ'. -/
 @[simp]
 theorem mem_mk (a : α) (s : Multiset α) (h : s.card = n) : a ∈ mk s h ↔ a ∈ s :=
   Iff.rfl
 #align sym.mem_mk Sym.mem_mk
 
-/- warning: sym.mem_cons -> Sym.mem_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α} {b : α}, Iff (Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n b s)) (Or (Eq.{succ u1} α a b) (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α} {b : α}, Iff (Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n b s)) (Or (Eq.{succ u1} α a b) (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s))
-Case conversion may be inaccurate. Consider using '#align sym.mem_cons Sym.mem_consₓ'. -/
 @[simp]
 theorem mem_cons : a ∈ b ::ₛ s ↔ a = b ∨ a ∈ s :=
   Multiset.mem_cons
 #align sym.mem_cons Sym.mem_cons
 
-/- warning: sym.mem_coe -> Sym.mem_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α}, Iff (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Sym.{u1} α n) (Multiset.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (coeBase.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (Sym.hasCoe.{u1} α n)))) s)) (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α}, Iff (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a (Sym.toMultiset.{u1} α n s)) (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s)
-Case conversion may be inaccurate. Consider using '#align sym.mem_coe Sym.mem_coeₓ'. -/
 @[simp]
 theorem mem_coe : a ∈ (s : Multiset α) ↔ a ∈ s :=
   Iff.rfl
 #align sym.mem_coe Sym.mem_coe
 
-/- warning: sym.mem_cons_of_mem -> Sym.mem_cons_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α} {b : α}, (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s) -> (Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n b s))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α} {b : α}, (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s) -> (Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n b s))
-Case conversion may be inaccurate. Consider using '#align sym.mem_cons_of_mem Sym.mem_cons_of_memₓ'. -/
 theorem mem_cons_of_mem (h : a ∈ s) : a ∈ b ::ₛ s :=
   Multiset.mem_cons_of_mem h
 #align sym.mem_cons_of_mem Sym.mem_cons_of_mem
 
-/- warning: sym.mem_cons_self -> Sym.mem_cons_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (a : α) (s : Sym.{u1} α n), Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n a s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (a : α) (s : Sym.{u1} α n), Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n a s)
-Case conversion may be inaccurate. Consider using '#align sym.mem_cons_self Sym.mem_cons_selfₓ'. -/
 @[simp]
 theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a ::ₛ s :=
   Multiset.mem_cons_self a s.1
 #align sym.mem_cons_self Sym.mem_cons_self
 
-/- warning: sym.cons_of_coe_eq -> Sym.cons_of_coe_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.cons.{u1} α n a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α n) (Sym.{u1} α n) (liftBase.{succ u1, succ u1} (Vector.{u1} α n) (Sym.{u1} α n) (Sym.hasLift.{u1} α n)) v)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α (Nat.succ n)) (Sym.{u1} α (Nat.succ n)) (liftBase.{succ u1, succ u1} (Vector.{u1} α (Nat.succ n)) (Sym.{u1} α (Nat.succ n)) (Sym.hasLift.{u1} α (Nat.succ n))) (Vector.cons.{u1} α n a v))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.cons.{u1} α n a (Sym.ofVector.{u1} α n v)) (Sym.ofVector.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v))
-Case conversion may be inaccurate. Consider using '#align sym.cons_of_coe_eq Sym.cons_of_coe_eqₓ'. -/
 theorem cons_of_coe_eq (a : α) (v : Vector α n) : a ::ₛ (↑v : Sym α n) = ↑(a ::ᵥ v) :=
   Subtype.ext <| by cases v; rfl
 #align sym.cons_of_coe_eq Sym.cons_of_coe_eq
 
-/- warning: sym.sound -> Sym.sound is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {a : Vector.{u1} α n} {b : Vector.{u1} α n}, (List.Perm.{u1} α (Subtype.val.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Nat (List.length.{u1} α l) n) a) (Subtype.val.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Nat (List.length.{u1} α l) n) b)) -> (Eq.{succ u1} (Sym.{u1} α n) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α n) (Sym.{u1} α n) (liftBase.{succ u1, succ u1} (Vector.{u1} α n) (Sym.{u1} α n) (Sym.hasLift.{u1} α n)) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Vector.{u1} α n) (Sym.{u1} α n) (liftBase.{succ u1, succ u1} (Vector.{u1} α n) (Sym.{u1} α n) (Sym.hasLift.{u1} α n)) b))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {a : Vector.{u1} α n} {b : Vector.{u1} α n}, (List.Perm.{u1} α (Subtype.val.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Nat (List.length.{u1} α l) n) a) (Subtype.val.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Nat (List.length.{u1} α l) n) b)) -> (Eq.{succ u1} (Sym.{u1} α n) (Sym.ofVector.{u1} α n a) (Sym.ofVector.{u1} α n b))
-Case conversion may be inaccurate. Consider using '#align sym.sound Sym.soundₓ'. -/
 theorem sound {a b : Vector α n} (h : a.val ~ b.val) : (↑a : Sym α n) = ↑b :=
   Subtype.ext <| Quotient.sound h
 #align sym.sound Sym.sound
 
-/- warning: sym.erase -> Sym.erase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (a : α), (Membership.Mem.{u1, u1} α (Sym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Sym.hasMem.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) a s) -> (Sym.{u1} α n)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (a : α), (Membership.mem.{u1, u1} α (Sym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Sym.instMembershipSym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) a s) -> (Sym.{u1} α n)
-Case conversion may be inaccurate. Consider using '#align sym.erase Sym.eraseₓ'. -/
 /-- `erase s a h` is the sym that subtracts 1 from the
   multiplicity of `a` if a is present in the sym. -/
 def erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : Sym α n :=
   ⟨s.val.eraseₓ a, (Multiset.card_erase_of_mem h).trans <| s.property.symm ▸ n.pred_succ⟩
 #align sym.erase Sym.erase
 
-/- warning: sym.erase_mk -> Sym.erase_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sym.erase_mk Sym.erase_mkₓ'. -/
 @[simp]
 theorem erase_mk [DecidableEq α] (m : Multiset α) (hc : m.card = n + 1) (a : α) (h : a ∈ m) :
     (mk m hc).eraseₓ a h = mk (m.eraseₓ a) (by rw [Multiset.card_erase_of_mem h, hc]; rfl) :=
   rfl
 #align sym.erase_mk Sym.erase_mk
 
-/- warning: sym.coe_erase -> Sym.coe_erase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] {s : Sym.{u1} α (Nat.succ n)} {a : α} (h : Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a s), Eq.{succ u1} (Multiset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Sym.{u1} α n) (Multiset.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (coeBase.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (Sym.hasCoe.{u1} α n)))) (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s a h)) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Sym.{u1} α (Nat.succ n)) (Multiset.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Sym.{u1} α (Nat.succ n)) (Multiset.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Sym.{u1} α (Nat.succ n)) (Multiset.{u1} α) (coeBase.{succ u1, succ u1} (Sym.{u1} α (Nat.succ n)) (Multiset.{u1} α) (Sym.hasCoe.{u1} α (Nat.succ n))))) s) a)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] {s : Sym.{u1} α (Nat.succ n)} {a : α} (h : Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a s), Eq.{succ u1} (Multiset.{u1} α) (Sym.toMultiset.{u1} α n (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s a h)) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Sym.toMultiset.{u1} α (Nat.succ n) s) a)
-Case conversion may be inaccurate. Consider using '#align sym.coe_erase Sym.coe_eraseₓ'. -/
 @[simp]
 theorem coe_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
     (s.eraseₓ a h : Multiset α) = Multiset.erase s a :=
   rfl
 #align sym.coe_erase Sym.coe_erase
 
-/- warning: sym.cons_erase -> Sym.cons_erase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] {s : Sym.{u1} α (Nat.succ n)} {a : α} (h : Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a s), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.cons.{u1} α n a (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s a h)) s
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] {s : Sym.{u1} α (Nat.succ n)} {a : α} (h : Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a s), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.cons.{u1} α n a (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s a h)) s
-Case conversion may be inaccurate. Consider using '#align sym.cons_erase Sym.cons_eraseₓ'. -/
 @[simp]
 theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
     a ::ₛ s.eraseₓ a h = s :=
   coe_injective <| Multiset.cons_erase h
 #align sym.cons_erase Sym.cons_erase
 
-/- warning: sym.erase_cons_head -> Sym.erase_cons_head is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} α n) (a : α) (h : optParam.{0} (Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n a s)) (Sym.mem_cons_self.{u1} α n a s)), Eq.{succ u1} (Sym.{u1} α n) (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) (Sym.cons.{u1} α n a s) a h) s
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} α n) (a : α) (h : optParam.{0} (Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a (Sym.cons.{u1} α n a s)) (Sym.mem_cons_self.{u1} α n a s)), Eq.{succ u1} (Sym.{u1} α n) (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) (Sym.cons.{u1} α n a s) a h) s
-Case conversion may be inaccurate. Consider using '#align sym.erase_cons_head Sym.erase_cons_headₓ'. -/
 @[simp]
 theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α)
     (h : a ∈ a ::ₛ s := mem_cons_self a s) : (a ::ₛ s).eraseₓ a h = s :=
@@ -400,35 +301,17 @@ theorem coe_replicate : (replicate n a : Multiset α) = Multiset.replicate n a :
 #align sym.coe_replicate Sym.coe_replicate
 -/
 
-/- warning: sym.mem_replicate -> Sym.mem_replicate is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {a : α} {b : α}, Iff (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) b (Sym.replicate.{u1} α n a)) (And (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{succ u1} α b a))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {a : α} {b : α}, Iff (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) b (Sym.replicate.{u1} α n a)) (And (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{succ u1} α b a))
-Case conversion may be inaccurate. Consider using '#align sym.mem_replicate Sym.mem_replicateₓ'. -/
 @[simp]
 theorem mem_replicate : b ∈ replicate n a ↔ n ≠ 0 ∧ b = a :=
   Multiset.mem_replicate
 #align sym.mem_replicate Sym.mem_replicate
 
-/- warning: sym.eq_replicate_iff -> Sym.eq_replicate_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α}, Iff (Eq.{succ u1} (Sym.{u1} α n) s (Sym.replicate.{u1} α n a)) (forall (b : α), (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) b s) -> (Eq.{succ u1} α b a))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {s : Sym.{u1} α n} {a : α}, Iff (Eq.{succ u1} (Sym.{u1} α n) s (Sym.replicate.{u1} α n a)) (forall (b : α), (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) b s) -> (Eq.{succ u1} α b a))
-Case conversion may be inaccurate. Consider using '#align sym.eq_replicate_iff Sym.eq_replicate_iffₓ'. -/
 theorem eq_replicate_iff : s = replicate n a ↔ ∀ b ∈ s, b = a :=
   by
   rw [Subtype.ext_iff, coe_replicate, Multiset.eq_replicate]
   exact and_iff_right s.2
 #align sym.eq_replicate_iff Sym.eq_replicate_iff
 
-/- warning: sym.exists_mem -> Sym.exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α (Nat.succ n)), Exists.{succ u1} α (fun (a : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) a s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α (Nat.succ n)), Exists.{succ u1} α (fun (a : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a s)
-Case conversion may be inaccurate. Consider using '#align sym.exists_mem Sym.exists_memₓ'. -/
 theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
   Multiset.card_pos_iff_exists_mem.1 <| s.2.symm ▸ n.succ_pos
 #align sym.exists_mem Sym.exists_mem
@@ -441,12 +324,6 @@ theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n)
 #align sym.exists_eq_cons_of_succ Sym.exists_eq_cons_of_succ
 -/
 
-/- warning: sym.eq_replicate -> Sym.eq_replicate is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} {n : Nat} {s : Sym.{u1} α n}, Iff (Eq.{succ u1} (Sym.{u1} α n) s (Sym.replicate.{u1} α n a)) (forall (b : α), (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) b s) -> (Eq.{succ u1} α b a))
-but is expected to have type
-  forall {α : Type.{u1}} {a : α} {n : Nat} {s : Sym.{u1} α n}, Iff (Eq.{succ u1} (Sym.{u1} α n) s (Sym.replicate.{u1} α n a)) (forall (b : α), (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) b s) -> (Eq.{succ u1} α b a))
-Case conversion may be inaccurate. Consider using '#align sym.eq_replicate Sym.eq_replicateₓ'. -/
 theorem eq_replicate {a : α} {n : ℕ} {s : Sym α n} : s = replicate n a ↔ ∀ b ∈ s, b = a :=
   Subtype.ext_iff.trans <| Multiset.eq_replicate.trans <| and_iff_right s.Prop
 #align sym.eq_replicate Sym.eq_replicate
@@ -507,12 +384,6 @@ def map {n : ℕ} (f : α → β) (x : Sym α n) : Sym β n :=
 #align sym.map Sym.map
 -/
 
-/- warning: sym.mem_map -> Sym.mem_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {n : Nat} {f : α -> β} {b : β} {l : Sym.{u1} α n}, Iff (Membership.Mem.{u2, u2} β (Sym.{u2} β n) (Sym.hasMem.{u2} β n) b (Sym.map.{u1, u2} α β n f l)) (Exists.{succ u1} α (fun (a : α) => And (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a l) (Eq.{succ u2} β (f a) b)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {n : Nat} {f : α -> β} {b : β} {l : Sym.{u2} α n}, Iff (Membership.mem.{u1, u1} β (Sym.{u1} β n) (Sym.instMembershipSym.{u1} β n) b (Sym.map.{u2, u1} α β n f l)) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Sym.{u2} α n) (Sym.instMembershipSym.{u2} α n) a l) (Eq.{succ u1} β (f a) b)))
-Case conversion may be inaccurate. Consider using '#align sym.mem_map Sym.mem_mapₓ'. -/
 @[simp]
 theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} :
     b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
@@ -532,76 +403,37 @@ theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by s
 #align sym.map_id Sym.map_id
 -/
 
-/- warning: sym.map_map -> Sym.map_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {n : Nat} (g : β -> γ) (f : α -> β) (s : Sym.{u1} α n), Eq.{succ u3} (Sym.{u3} γ n) (Sym.map.{u2, u3} β γ n g (Sym.map.{u1, u2} α β n f s)) (Sym.map.{u1, u3} α γ n (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {n : Nat} (g : β -> γ) (f : α -> β) (s : Sym.{u3} α n), Eq.{succ u1} (Sym.{u1} γ n) (Sym.map.{u2, u1} β γ n g (Sym.map.{u3, u2} α β n f s)) (Sym.map.{u3, u1} α γ n (Function.comp.{succ u3, succ u2, succ u1} α β γ g f) s)
-Case conversion may be inaccurate. Consider using '#align sym.map_map Sym.map_mapₓ'. -/
 @[simp]
 theorem map_map {α β γ : Type _} {n : ℕ} (g : β → γ) (f : α → β) (s : Sym α n) :
     Sym.map g (Sym.map f s) = Sym.map (g ∘ f) s := by simp [Sym.map]
 #align sym.map_map Sym.map_map
 
-/- warning: sym.map_zero -> Sym.map_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), Eq.{succ u2} (Sym.{u2} β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.map.{u1, u2} α β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) f (OfNat.ofNat.{u1} (Sym.{u1} α (Zero.zero.{0} Nat Nat.hasZero)) 0 (OfNat.mk.{u1} (Sym.{u1} α (Zero.zero.{0} Nat Nat.hasZero)) 0 (Zero.zero.{u1} (Sym.{u1} α (Zero.zero.{0} Nat Nat.hasZero)) (Sym.hasZero.{u1} α))))) (OfNat.ofNat.{u2} (Sym.{u2} β (Zero.zero.{0} Nat Nat.hasZero)) 0 (OfNat.mk.{u2} (Sym.{u2} β (Zero.zero.{0} Nat Nat.hasZero)) 0 (Zero.zero.{u2} (Sym.{u2} β (Zero.zero.{0} Nat Nat.hasZero)) (Sym.hasZero.{u2} β))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), Eq.{succ u2} (Sym.{u2} β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.map.{u1, u2} α β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) f (OfNat.ofNat.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) 0 (Zero.toOfNat0.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.instZeroSymOfNatNatInstOfNatNat.{u1} α)))) (OfNat.ofNat.{u2} (Sym.{u2} β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) 0 (Zero.toOfNat0.{u2} (Sym.{u2} β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.instZeroSymOfNatNatInstOfNatNat.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align sym.map_zero Sym.map_zeroₓ'. -/
 @[simp]
 theorem map_zero (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
   rfl
 #align sym.map_zero Sym.map_zero
 
-/- warning: sym.map_cons -> Sym.map_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {n : Nat} (f : α -> β) (a : α) (s : Sym.{u1} α n), Eq.{succ u2} (Sym.{u2} β (Nat.succ n)) (Sym.map.{u1, u2} α β (Nat.succ n) f (Sym.cons.{u1} α n a s)) (Sym.cons.{u2} β n (f a) (Sym.map.{u1, u2} α β n f s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {n : Nat} (f : α -> β) (a : α) (s : Sym.{u2} α n), Eq.{succ u1} (Sym.{u1} β (Nat.succ n)) (Sym.map.{u2, u1} α β (Nat.succ n) f (Sym.cons.{u2} α n a s)) (Sym.cons.{u1} β n (f a) (Sym.map.{u2, u1} α β n f s))
-Case conversion may be inaccurate. Consider using '#align sym.map_cons Sym.map_consₓ'. -/
 @[simp]
 theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a ::ₛ s).map f = f a ::ₛ s.map f := by
   simp [map, cons]
 #align sym.map_cons Sym.map_cons
 
-/- warning: sym.map_congr -> Sym.map_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {n : Nat} {f : α -> β} {g : α -> β} {s : Sym.{u1} α n}, (forall (x : α), (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s) -> (Eq.{succ u2} β (f x) (g x))) -> (Eq.{succ u2} (Sym.{u2} β n) (Sym.map.{u1, u2} α β n f s) (Sym.map.{u1, u2} α β n g s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {n : Nat} {f : α -> β} {g : α -> β} {s : Sym.{u2} α n}, (forall (x : α), (Membership.mem.{u2, u2} α (Sym.{u2} α n) (Sym.instMembershipSym.{u2} α n) x s) -> (Eq.{succ u1} β (f x) (g x))) -> (Eq.{succ u1} (Sym.{u1} β n) (Sym.map.{u2, u1} α β n f s) (Sym.map.{u2, u1} α β n g s))
-Case conversion may be inaccurate. Consider using '#align sym.map_congr Sym.map_congrₓ'. -/
 @[congr]
 theorem map_congr {f g : α → β} {s : Sym α n} (h : ∀ x ∈ s, f x = g x) : map f s = map g s :=
   Subtype.ext <| Multiset.map_congr rfl h
 #align sym.map_congr Sym.map_congr
 
-/- warning: sym.map_mk -> Sym.map_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sym.map_mk Sym.map_mkₓ'. -/
 @[simp]
 theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} :
     map f (mk m hc) = mk (m.map f) (by simp [hc]) :=
   rfl
 #align sym.map_mk Sym.map_mk
 
-/- warning: sym.coe_map -> Sym.coe_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {n : Nat} (s : Sym.{u1} α n) (f : α -> β), Eq.{succ u2} (Multiset.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Sym.{u2} β n) (Multiset.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Sym.{u2} β n) (Multiset.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Sym.{u2} β n) (Multiset.{u2} β) (coeBase.{succ u2, succ u2} (Sym.{u2} β n) (Multiset.{u2} β) (Sym.hasCoe.{u2} β n)))) (Sym.map.{u1, u2} α β n f s)) (Multiset.map.{u1, u2} α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Sym.{u1} α n) (Multiset.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (coeBase.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (Sym.hasCoe.{u1} α n)))) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {n : Nat} (s : Sym.{u2} α n) (f : α -> β), Eq.{succ u1} (Multiset.{u1} β) (Sym.toMultiset.{u1} β n (Sym.map.{u2, u1} α β n f s)) (Multiset.map.{u2, u1} α β f (Sym.toMultiset.{u2} α n s))
-Case conversion may be inaccurate. Consider using '#align sym.coe_map Sym.coe_mapₓ'. -/
 @[simp]
 theorem coe_map (s : Sym α n) (f : α → β) : ↑(s.map f) = Multiset.map f s :=
   rfl
 #align sym.coe_map Sym.coe_map
 
-/- warning: sym.map_injective -> Sym.map_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall (n : Nat), Function.Injective.{succ u1, succ u2} (Sym.{u1} α n) (Sym.{u2} β n) (Sym.map.{u1, u2} α β n f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall (n : Nat), Function.Injective.{succ u2, succ u1} (Sym.{u2} α n) (Sym.{u1} β n) (Sym.map.{u2, u1} α β n f))
-Case conversion may be inaccurate. Consider using '#align sym.map_injective Sym.map_injectiveₓ'. -/
 theorem map_injective {f : α → β} (hf : Injective f) (n : ℕ) :
     Injective (map f : Sym α n → Sym β n) := fun s t h =>
   coe_injective <| Multiset.map_injective hf <| coe_inj.2 h
@@ -620,76 +452,37 @@ def equivCongr (e : α ≃ β) : Sym α n ≃ Sym β n
 #align sym.equiv_congr Sym.equivCongr
 -/
 
-/- warning: sym.attach -> Sym.attach is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n), Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n), Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) n
-Case conversion may be inaccurate. Consider using '#align sym.attach Sym.attachₓ'. -/
 /-- "Attach" a proof that `a ∈ s` to each element `a` in `s` to produce
 an element of the symmetric power on `{x // x ∈ s}`. -/
 def attach (s : Sym α n) : Sym { x // x ∈ s } n :=
   ⟨s.val.attach, by rw [Multiset.card_attach, s.2]⟩
 #align sym.attach Sym.attach
 
-/- warning: sym.attach_mk -> Sym.attach_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sym.attach_mk Sym.attach_mkₓ'. -/
 @[simp]
 theorem attach_mk {m : Multiset α} {hc : m.card = n} :
     attach (mk m hc) = mk m.attach (Multiset.card_attach.trans hc) :=
   rfl
 #align sym.attach_mk Sym.attach_mk
 
-/- warning: sym.coe_attach -> Sym.coe_attach is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n), Eq.{succ u1} (Multiset.{u1} (Subtype.{succ u1} α (fun (a : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n) (Multiset.{u1} (Subtype.{succ u1} α (fun (a : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s))) (HasLiftT.mk.{succ u1, succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n) (Multiset.{u1} (Subtype.{succ u1} α (fun (a : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s))) (CoeTCₓ.coe.{succ u1, succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n) (Multiset.{u1} (Subtype.{succ u1} α (fun (a : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s))) (coeBase.{succ u1, succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n) (Multiset.{u1} (Subtype.{succ u1} α (fun (a : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s))) (Sym.hasCoe.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n)))) (Sym.attach.{u1} α n s)) (Multiset.attach.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Sym.{u1} α n) (Multiset.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (coeBase.{succ u1, succ u1} (Sym.{u1} α n) (Multiset.{u1} α) (Sym.hasCoe.{u1} α n)))) s))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n), Eq.{succ u1} (Multiset.{u1} (Subtype.{succ u1} α (fun (a : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s))) (Sym.toMultiset.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) n (Sym.attach.{u1} α n s)) (Multiset.attach.{u1} α (Sym.toMultiset.{u1} α n s))
-Case conversion may be inaccurate. Consider using '#align sym.coe_attach Sym.coe_attachₓ'. -/
 @[simp]
 theorem coe_attach (s : Sym α n) : (s.attach : Multiset { a // a ∈ s }) = Multiset.attach s :=
   rfl
 #align sym.coe_attach Sym.coe_attach
 
-/- warning: sym.attach_map_coe -> Sym.attach_map_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n), Eq.{succ u1} (Sym.{u1} α n) (Sym.map.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α n ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)))))) (Sym.attach.{u1} α n s)) s
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n), Eq.{succ u1} (Sym.{u1} α n) (Sym.map.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) α n (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) (Sym.attach.{u1} α n s)) s
-Case conversion may be inaccurate. Consider using '#align sym.attach_map_coe Sym.attach_map_coeₓ'. -/
 theorem attach_map_coe (s : Sym α n) : s.attach.map coe = s :=
   coe_injective <| Multiset.attach_map_val _
 #align sym.attach_map_coe Sym.attach_map_coe
 
-/- warning: sym.mem_attach -> Sym.mem_attach is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n) (x : Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)), Membership.Mem.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n) (Sym.hasMem.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) n) x (Sym.attach.{u1} α n s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (s : Sym.{u1} α n) (x : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)), Membership.mem.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) n) (Sym.instMembershipSym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) n) x (Sym.attach.{u1} α n s)
-Case conversion may be inaccurate. Consider using '#align sym.mem_attach Sym.mem_attachₓ'. -/
 @[simp]
 theorem mem_attach (s : Sym α n) (x : { x // x ∈ s }) : x ∈ s.attach :=
   Multiset.mem_attach _ _
 #align sym.mem_attach Sym.mem_attach
 
-/- warning: sym.attach_nil -> Sym.attach_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.hasMem.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) x (Sym.nil.{u1} α))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.attach.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Sym.nil.{u1} α)) (Sym.nil.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.hasMem.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) x (Sym.nil.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.instMembershipSym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) x (Sym.nil.{u1} α))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.attach.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Sym.nil.{u1} α)) (Sym.nil.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.instMembershipSym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) x (Sym.nil.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align sym.attach_nil Sym.attach_nilₓ'. -/
 @[simp]
 theorem attach_nil : (nil : Sym α 0).attach = nil :=
   rfl
 #align sym.attach_nil Sym.attach_nil
 
-/- warning: sym.attach_cons -> Sym.attach_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (x : α) (s : Sym.{u1} α n), Eq.{succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s))) (Nat.succ n)) (Sym.attach.{u1} α (Nat.succ n) (Sym.cons.{u1} α n x s)) (Sym.cons.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s))) n (Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s)) x (Sym.mem_cons_self.{u1} α n x s)) (Sym.map.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) (Subtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s))) n (fun (x_1 : Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) => Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.hasMem.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s))))) x_1) (Sym.mem_cons_of_mem.{u1} α n s ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s))))) x_1) x (Subtype.prop.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) x s) x_1))) (Sym.attach.{u1} α n s)))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (x : α) (s : Sym.{u1} α n), Eq.{succ u1} (Sym.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s))) (Nat.succ n)) (Sym.attach.{u1} α (Nat.succ n) (Sym.cons.{u1} α n x s)) (Sym.cons.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s))) n (Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s)) x (Sym.mem_cons_self.{u1} α n x s)) (Sym.map.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) (Subtype.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s))) n (fun (x_1 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s)) => Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) x_1 (Sym.cons.{u1} α n x s)) (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s) x_1) (Sym.mem_cons_of_mem.{u1} α n s (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s) x_1) x (Subtype.prop.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) x s) x_1))) (Sym.attach.{u1} α n s)))
-Case conversion may be inaccurate. Consider using '#align sym.attach_cons Sym.attach_consₓ'. -/
 @[simp]
 theorem attach_cons (x : α) (s : Sym α n) :
     (cons x s).attach =
@@ -731,12 +524,6 @@ theorem coe_cast (h : n = m) : (Sym.cast h s : Multiset α) = s :=
 #align sym.coe_cast Sym.coe_cast
 -/
 
-/- warning: sym.mem_cast -> Sym.mem_cast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {m : Nat} {s : Sym.{u1} α n} {a : α} (h : Eq.{1} Nat n m), Iff (Membership.Mem.{u1, u1} α (Sym.{u1} α m) (Sym.hasMem.{u1} α m) a (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sym.{u1} α n) (Sym.{u1} α m)) (fun (_x : Equiv.{succ u1, succ u1} (Sym.{u1} α n) (Sym.{u1} α m)) => (Sym.{u1} α n) -> (Sym.{u1} α m)) (Equiv.hasCoeToFun.{succ u1, succ u1} (Sym.{u1} α n) (Sym.{u1} α m)) (Sym.cast.{u1} α n m h) s)) (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s)
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {m : Nat} {s : Sym.{u1} α n} {a : α} (h : Eq.{1} Nat n m), Iff (Membership.mem.{u1, u1} α ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Sym.{u1} α n) => Sym.{u1} α m) s) (Sym.instMembershipSym.{u1} α m) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Sym.{u1} α n) (Sym.{u1} α m)) (Sym.{u1} α n) (fun (_x : Sym.{u1} α n) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Sym.{u1} α n) => Sym.{u1} α m) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Sym.{u1} α n) (Sym.{u1} α m)) (Sym.cast.{u1} α n m h) s)) (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s)
-Case conversion may be inaccurate. Consider using '#align sym.mem_cast Sym.mem_castₓ'. -/
 @[simp]
 theorem mem_cast (h : n = m) : a ∈ Sym.cast h s ↔ a ∈ s :=
   Iff.rfl
@@ -776,12 +563,6 @@ theorem coe_append (s : Sym α n) (s' : Sym α n') : (s.append s' : Multiset α)
 #align sym.coe_append Sym.coe_append
 -/
 
-/- warning: sym.mem_append_iff -> Sym.mem_append_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {m : Nat} {s : Sym.{u1} α n} {a : α} {s' : Sym.{u1} α m}, Iff (Membership.Mem.{u1, u1} α (Sym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n m)) (Sym.hasMem.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n m)) a (Sym.append.{u1} α n m s s')) (Or (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a s) (Membership.Mem.{u1, u1} α (Sym.{u1} α m) (Sym.hasMem.{u1} α m) a s'))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {m : Nat} {s : Sym.{u1} α n} {a : α} {s' : Sym.{u1} α m}, Iff (Membership.mem.{u1, u1} α (Sym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n m)) (Sym.instMembershipSym.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n m)) a (Sym.append.{u1} α n m s s')) (Or (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a s) (Membership.mem.{u1, u1} α (Sym.{u1} α m) (Sym.instMembershipSym.{u1} α m) a s'))
-Case conversion may be inaccurate. Consider using '#align sym.mem_append_iff Sym.mem_append_iffₓ'. -/
 theorem mem_append_iff {s' : Sym α m} : a ∈ s.append s' ↔ a ∈ s ∨ a ∈ s' :=
   Multiset.mem_add
 #align sym.mem_append_iff Sym.mem_append_iff
@@ -802,12 +583,6 @@ theorem coe_fill {a : α} {i : Fin (n + 1)} {m : Sym α (n - i)} :
 #align sym.coe_fill Sym.coe_fill
 -/
 
-/- warning: sym.mem_fill_iff -> Sym.mem_fill_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {a : α} {b : α} {i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {s : Sym.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (HasLiftT.mk.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (CoeTCₓ.coe.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (coeBase.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (Fin.coeToNat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))) i))}, Iff (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a (Sym.fill.{u1} α n b i s)) (Or (And (Ne.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (HasLiftT.mk.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (CoeTCₓ.coe.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (coeBase.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (Fin.coeToNat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))) i) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{succ u1} α a b)) (Membership.Mem.{u1, u1} α (Sym.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (HasLiftT.mk.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (CoeTCₓ.coe.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (coeBase.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (Fin.coeToNat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))) i))) (Sym.hasMem.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (HasLiftT.mk.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (CoeTCₓ.coe.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (coeBase.{1, 1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) Nat (Fin.coeToNat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))) i))) a s))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} {a : α} {b : α} {i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {s : Sym.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))}, Iff (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a (Sym.fill.{u1} α n b i s)) (Or (And (Ne.{1} Nat (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{succ u1} α a b)) (Membership.mem.{u1, u1} α (Sym.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))) (Sym.instMembershipSym.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))) a s))
-Case conversion may be inaccurate. Consider using '#align sym.mem_fill_iff Sym.mem_fill_iffₓ'. -/
 theorem mem_fill_iff {a b : α} {i : Fin (n + 1)} {s : Sym α (n - i)} :
     a ∈ Sym.fill b i s ↔ (i : ℕ) ≠ 0 ∧ a = b ∨ a ∈ s := by
   rw [fill, mem_cast, mem_append_iff, or_comm', mem_replicate]
@@ -854,9 +629,6 @@ theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
 #align sym.fill_filter_ne Sym.fill_filterNe
 -/
 
-/- warning: sym.filter_ne_fill -> Sym.filter_ne_fill is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sym.filter_ne_fill Sym.filter_ne_fillₓ'. -/
 theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α (n - i)) (h : a ∉ m.2) :
     (m.2.fill a m.1).filterNe a = m :=
   sigma_sub_ext
@@ -892,24 +664,12 @@ def encode [DecidableEq α] (s : Sym (Option α) n.succ) : Sum (Sym (Option α) 
 #align sym_option_succ_equiv.encode SymOptionSuccEquiv.encode
 -/
 
-/- warning: sym_option_succ_equiv.encode_of_none_mem -> SymOptionSuccEquiv.encode_of_none_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} (Option.{u1} α) (Nat.succ n)) (h : Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) (Option.none.{u1} α) s), Eq.{succ u1} (Sum.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n))) (SymOptionSuccEquiv.encode.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s) (Sum.inl.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n)) (Sym.erase.{u1} (Option.{u1} α) n (fun (a : Option.{u1} α) (b : Option.{u1} α) => Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) s (Option.none.{u1} α) h))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} (Option.{u1} α) (Nat.succ n)) (h : Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) (Option.none.{u1} α) s), Eq.{succ u1} (Sum.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n))) (SymOptionSuccEquiv.encode.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s) (Sum.inl.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n)) (Sym.erase.{u1} (Option.{u1} α) n (fun (a : Option.{u1} α) (b : Option.{u1} α) => instDecidableEqOption.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) s (Option.none.{u1} α) h))
-Case conversion may be inaccurate. Consider using '#align sym_option_succ_equiv.encode_of_none_mem SymOptionSuccEquiv.encode_of_none_memₓ'. -/
 @[simp]
 theorem encode_of_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : none ∈ s) :
     encode s = Sum.inl (s.eraseₓ none h) :=
   dif_pos h
 #align sym_option_succ_equiv.encode_of_none_mem SymOptionSuccEquiv.encode_of_none_mem
 
-/- warning: sym_option_succ_equiv.encode_of_not_none_mem -> SymOptionSuccEquiv.encode_of_not_none_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} (Option.{u1} α) (Nat.succ n)) (h : Not (Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) (Option.none.{u1} α) s)), Eq.{succ u1} (Sum.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n))) (SymOptionSuccEquiv.encode.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s) (Sum.inr.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n)) (Sym.map.{u1, u1} (Subtype.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s)) α (Nat.succ n) (fun (o : Subtype.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s)) => Option.get.{u1} α (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) (Iff.mp (Ne.{succ u1} (Option.{u1} α) (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) (Option.none.{u1} α)) (coeSort.{1, 1} Bool Prop coeSortBool (Option.isSome.{u1} α (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s) o))) (Option.ne_none_iff_isSome.{u1} α (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s) o)) (ne_of_mem_of_not_mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) s (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) (Option.none.{u1} α) (Subtype.property.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.Mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.hasMem.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) h))) (Sym.attach.{u1} (Option.{u1} α) (Nat.succ n) s)))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] (s : Sym.{u1} (Option.{u1} α) (Nat.succ n)) (h : Not (Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) (Option.none.{u1} α) s)), Eq.{succ u1} (Sum.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n))) (SymOptionSuccEquiv.encode.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s) (Sum.inr.{u1, u1} (Sym.{u1} (Option.{u1} α) n) (Sym.{u1} α (Nat.succ n)) (Sym.map.{u1, u1} (Subtype.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s)) α (Nat.succ n) (fun (o : Subtype.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s)) => Option.get.{u1} α (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) (Iff.mp (Ne.{succ u1} (Option.{u1} α) (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) (Option.none.{u1} α)) (Eq.{1} Bool (Option.isSome.{u1} α (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s) o)) Bool.true) (Option.ne_none_iff_isSome.{u1} α (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s) o)) (ne_of_mem_of_not_mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) s (Subtype.val.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) (Option.none.{u1} α) (Subtype.property.{succ u1} (Option.{u1} α) (fun (x : Option.{u1} α) => Membership.mem.{u1, u1} (Option.{u1} α) (Sym.{u1} (Option.{u1} α) (Nat.succ n)) (Sym.instMembershipSym.{u1} (Option.{u1} α) (Nat.succ n)) x s) o) h))) (Sym.attach.{u1} (Option.{u1} α) (Nat.succ n) s)))
-Case conversion may be inaccurate. Consider using '#align sym_option_succ_equiv.encode_of_not_none_mem SymOptionSuccEquiv.encode_of_not_none_memₓ'. -/
 @[simp]
 theorem encode_of_not_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : ¬none ∈ s) :
     encode s =

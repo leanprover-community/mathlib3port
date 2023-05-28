@@ -49,115 +49,73 @@ variable {s : Set E}
 
 variable {L : Filter E}
 
-/- warning: has_strict_fderiv_at.star -> HasStrictFDerivAt.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align has_strict_fderiv_at.star HasStrictFDerivAt.starₓ'. -/
 theorem HasStrictFDerivAt.star (h : HasStrictFDerivAt f f' x) :
     HasStrictFDerivAt (fun x => star (f x)) (((starL' 𝕜 : F ≃L[𝕜] F) : F →L[𝕜] F) ∘L f') x :=
   (starL' 𝕜 : F ≃L[𝕜] F).toContinuousLinearMap.HasStrictFDerivAt.comp x h
 #align has_strict_fderiv_at.star HasStrictFDerivAt.star
 
-/- warning: has_fderiv_at_filter.star -> HasFDerivAtFilter.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align has_fderiv_at_filter.star HasFDerivAtFilter.starₓ'. -/
 theorem HasFDerivAtFilter.star (h : HasFDerivAtFilter f f' x L) :
     HasFDerivAtFilter (fun x => star (f x)) (((starL' 𝕜 : F ≃L[𝕜] F) : F →L[𝕜] F) ∘L f') x L :=
   (starL' 𝕜 : F ≃L[𝕜] F).toContinuousLinearMap.HasFDerivAtFilter.comp x h Filter.tendsto_map
 #align has_fderiv_at_filter.star HasFDerivAtFilter.star
 
-/- warning: has_fderiv_within_at.star -> HasFDerivWithinAt.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align has_fderiv_within_at.star HasFDerivWithinAt.starₓ'. -/
 theorem HasFDerivWithinAt.star (h : HasFDerivWithinAt f f' s x) :
     HasFDerivWithinAt (fun x => star (f x)) (((starL' 𝕜 : F ≃L[𝕜] F) : F →L[𝕜] F) ∘L f') s x :=
   h.unit
 #align has_fderiv_within_at.star HasFDerivWithinAt.star
 
-/- warning: has_fderiv_at.star -> HasFDerivAt.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align has_fderiv_at.star HasFDerivAt.starₓ'. -/
 theorem HasFDerivAt.star (h : HasFDerivAt f f' x) :
     HasFDerivAt (fun x => star (f x)) (((starL' 𝕜 : F ≃L[𝕜] F) : F →L[𝕜] F) ∘L f') x :=
   h.unit
 #align has_fderiv_at.star HasFDerivAt.star
 
-/- warning: differentiable_within_at.star -> DifferentiableWithinAt.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_within_at.star DifferentiableWithinAt.starₓ'. -/
 theorem DifferentiableWithinAt.star (h : DifferentiableWithinAt 𝕜 f s x) :
     DifferentiableWithinAt 𝕜 (fun y => star (f y)) s x :=
   h.HasFDerivWithinAt.unit.DifferentiableWithinAt
 #align differentiable_within_at.star DifferentiableWithinAt.star
 
-/- warning: differentiable_within_at_star_iff -> differentiableWithinAt_star_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_within_at_star_iff differentiableWithinAt_star_iffₓ'. -/
 @[simp]
 theorem differentiableWithinAt_star_iff :
     DifferentiableWithinAt 𝕜 (fun y => star (f y)) s x ↔ DifferentiableWithinAt 𝕜 f s x :=
   (starL' 𝕜 : F ≃L[𝕜] F).comp_differentiableWithinAt_iff
 #align differentiable_within_at_star_iff differentiableWithinAt_star_iff
 
-/- warning: differentiable_at.star -> DifferentiableAt.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_at.star DifferentiableAt.starₓ'. -/
 theorem DifferentiableAt.star (h : DifferentiableAt 𝕜 f x) :
     DifferentiableAt 𝕜 (fun y => star (f y)) x :=
   h.HasFDerivAt.unit.DifferentiableAt
 #align differentiable_at.star DifferentiableAt.star
 
-/- warning: differentiable_at_star_iff -> differentiableAt_star_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_at_star_iff differentiableAt_star_iffₓ'. -/
 @[simp]
 theorem differentiableAt_star_iff :
     DifferentiableAt 𝕜 (fun y => star (f y)) x ↔ DifferentiableAt 𝕜 f x :=
   (starL' 𝕜 : F ≃L[𝕜] F).comp_differentiableAt_iff
 #align differentiable_at_star_iff differentiableAt_star_iff
 
-/- warning: differentiable_on.star -> DifferentiableOn.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_on.star DifferentiableOn.starₓ'. -/
 theorem DifferentiableOn.star (h : DifferentiableOn 𝕜 f s) :
     DifferentiableOn 𝕜 (fun y => star (f y)) s := fun x hx => (h x hx).unit
 #align differentiable_on.star DifferentiableOn.star
 
-/- warning: differentiable_on_star_iff -> differentiableOn_star_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_on_star_iff differentiableOn_star_iffₓ'. -/
 @[simp]
 theorem differentiableOn_star_iff :
     DifferentiableOn 𝕜 (fun y => star (f y)) s ↔ DifferentiableOn 𝕜 f s :=
   (starL' 𝕜 : F ≃L[𝕜] F).comp_differentiableOn_iff
 #align differentiable_on_star_iff differentiableOn_star_iff
 
-/- warning: differentiable.star -> Differentiable.star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable.star Differentiable.starₓ'. -/
 theorem Differentiable.star (h : Differentiable 𝕜 f) : Differentiable 𝕜 fun y => star (f y) :=
   fun x => (h x).unit
 #align differentiable.star Differentiable.star
 
-/- warning: differentiable_star_iff -> differentiable_star_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align differentiable_star_iff differentiable_star_iffₓ'. -/
 @[simp]
 theorem differentiable_star_iff : (Differentiable 𝕜 fun y => star (f y)) ↔ Differentiable 𝕜 f :=
   (starL' 𝕜 : F ≃L[𝕜] F).comp_differentiable_iff
 #align differentiable_star_iff differentiable_star_iff
 
-/- warning: fderiv_within_star -> fderivWithin_star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align fderiv_within_star fderivWithin_starₓ'. -/
 theorem fderivWithin_star (hxs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (fun y => star (f y)) s x =
       ((starL' 𝕜 : F ≃L[𝕜] F) : F →L[𝕜] F) ∘L fderivWithin 𝕜 f s x :=
   (starL' 𝕜 : F ≃L[𝕜] F).comp_fderivWithin hxs
 #align fderiv_within_star fderivWithin_star
 
-/- warning: fderiv_star -> fderiv_star is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align fderiv_star fderiv_starₓ'. -/
 @[simp]
 theorem fderiv_star :
     fderiv 𝕜 (fun y => star (f y)) x = ((starL' 𝕜 : F ≃L[𝕜] F) : F →L[𝕜] F) ∘L fderiv 𝕜 f x :=

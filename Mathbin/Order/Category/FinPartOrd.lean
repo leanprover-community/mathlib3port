@@ -51,11 +51,6 @@ instance (X : FinPartOrd) : PartialOrder X :=
 attribute [instance] FinPartOrd.isFintype
 
 /- warning: FinPartOrd.coe_to_PartOrd clashes with [anonymous] -> [anonymous]
-warning: FinPartOrd.coe_to_PartOrd -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall (X : FinPartOrd.{u_1}), Eq.{succ (succ u_1)} Type.{u_1} (coeSort.{succ (succ u_1), succ (succ u_1)} PartOrdCat.{u_1} Type.{u_1} PartOrdCat.hasCoeToSort.{u_1} (FinPartOrd.toPartOrd.{u_1} X)) (coeSort.{succ (succ u_1), succ (succ u_1)} FinPartOrd.{u_1} Type.{u_1} FinPartOrd.hasCoeToSort.{u_1} X)
-but is expected to have type
-  forall {X : Type.{u}} {β : Type.{v}}, (Nat -> X -> β) -> Nat -> (List.{u} X) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align FinPartOrd.coe_to_PartOrd [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (X : FinPartOrd) : ↥X.toPartOrd = ↥X :=
@@ -105,12 +100,6 @@ instance hasForgetToFintype : HasForget₂ FinPartOrd FintypeCat
 #align FinPartOrd.has_forget_to_Fintype FinPartOrd.hasForgetToFintype
 -/
 
-/- warning: FinPartOrd.iso.mk -> FinPartOrd.Iso.mk is a dubious translation:
-lean 3 declaration is
-  forall {α : FinPartOrd.{u1}} {β : FinPartOrd.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} FinPartOrd.{u1} Type.{u1} FinPartOrd.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} FinPartOrd.{u1} Type.{u1} FinPartOrd.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FinPartOrd.{u1} Type.{u1} FinPartOrd.hasCoeToSort.{u1} α) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FinPartOrd.{u1} Type.{u1} FinPartOrd.hasCoeToSort.{u1} α) (FinPartOrd.partialOrder.{u1} α))) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FinPartOrd.{u1} Type.{u1} FinPartOrd.hasCoeToSort.{u1} β) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FinPartOrd.{u1} Type.{u1} FinPartOrd.hasCoeToSort.{u1} β) (FinPartOrd.partialOrder.{u1} β)))) -> (CategoryTheory.Iso.{u1, succ u1} FinPartOrd.{u1} FinPartOrd.largeCategory.{u1} α β)
-but is expected to have type
-  forall {α : FinPartOrd.{u1}} {β : FinPartOrd.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} (FinPartOrd.toPartOrdCat.{u1} α)) (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} (FinPartOrd.toPartOrdCat.{u1} β)) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} (FinPartOrd.toPartOrdCat.{u1} α)) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} (FinPartOrd.toPartOrdCat.{u1} α)) (FinPartOrd.instPartialOrderαToPartOrdCat.{u1} α))) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} (FinPartOrd.toPartOrdCat.{u1} β)) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} (FinPartOrd.toPartOrdCat.{u1} β)) (FinPartOrd.instPartialOrderαToPartOrdCat.{u1} β)))) -> (CategoryTheory.Iso.{u1, succ u1} FinPartOrd.{u1} FinPartOrd.largeCategory.{u1} α β)
-Case conversion may be inaccurate. Consider using '#align FinPartOrd.iso.mk FinPartOrd.Iso.mkₓ'. -/
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : FinPartOrd.{u}} (e : α ≃o β) : α ≅ β
@@ -130,12 +119,6 @@ def dual : FinPartOrd ⥤ FinPartOrd where
 #align FinPartOrd.dual FinPartOrd.dual
 -/
 
-/- warning: FinPartOrd.dual_equiv -> FinPartOrd.dualEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} FinPartOrd.{u1} FinPartOrd.largeCategory.{u1} FinPartOrd.{u1} FinPartOrd.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} FinPartOrd.{u1} FinPartOrd.{u1} FinPartOrd.largeCategory.{u1} FinPartOrd.largeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align FinPartOrd.dual_equiv FinPartOrd.dualEquivₓ'. -/
 /-- The equivalence between `FinPartOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : FinPartOrd ≌ FinPartOrd :=

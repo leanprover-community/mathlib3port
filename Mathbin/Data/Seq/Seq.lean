@@ -307,12 +307,6 @@ theorem destruct_cons (a : α) : ∀ s, destruct (cons a s) = some (a, s)
 #align stream.seq.destruct_cons Stream'.Seq.destruct_cons
 -/
 
-/- warning: stream.seq.head_eq_destruct -> Stream'.Seq.head_eq_destruct is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Stream'.Seq.{u1} α), Eq.{succ u1} (Option.{u1} α) (Stream'.Seq.head.{u1} α s) (Functor.map.{u1, u1} Option.{u1} (Traversable.toFunctor.{u1} Option.{u1} Option.traversable.{u1}) (Prod.{u1, u1} α (Stream'.Seq.{u1} α)) α (Prod.fst.{u1, u1} α (Stream'.Seq.{u1} α)) (Stream'.Seq.destruct.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Stream'.Seq.{u1} α), Eq.{succ u1} (Option.{u1} α) (Stream'.Seq.head.{u1} α s) (Functor.map.{u1, u1} Option.{u1} instFunctorOption.{u1} (Prod.{u1, u1} α (Stream'.Seq.{u1} α)) α (Prod.fst.{u1, u1} α (Stream'.Seq.{u1} α)) (Stream'.Seq.destruct.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align stream.seq.head_eq_destruct Stream'.Seq.head_eq_destructₓ'. -/
 theorem head_eq_destruct (s : Seq α) : head s = Prod.fst <$> destruct s := by
   unfold destruct head <;> cases nth s 0 <;> rfl
 #align stream.seq.head_eq_destruct Stream'.Seq.head_eq_destruct

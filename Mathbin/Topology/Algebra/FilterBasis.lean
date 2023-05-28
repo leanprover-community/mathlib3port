@@ -87,12 +87,6 @@ attribute [to_additive] GroupFilterBasis.conj'
 
 attribute [to_additive] GroupFilterBasis.toFilterBasis
 
-/- warning: group_filter_basis_of_comm -> groupFilterBasisOfComm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] (sets : Set.{u1} (Set.{u1} G)), (Set.Nonempty.{u1} (Set.{u1} G) sets) -> (forall (x : Set.{u1} G) (y : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) x sets) -> (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) y sets) -> (Exists.{succ u1} (Set.{u1} G) (fun (z : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) z sets) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) z sets) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) z (Inter.inter.{u1} (Set.{u1} G) (Set.hasInter.{u1} G) x y))))) -> (forall (U : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) U sets) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))))))) U)) -> (forall (U : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) U sets) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) V sets) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) V sets) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))))) V V) U)))) -> (forall (U : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) U sets) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) V sets) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.hasMem.{u1} (Set.{u1} G)) V sets) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) V (Set.preimage.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))) x) U))))) -> (GroupFilterBasis.{u1} G (CommGroup.toGroup.{u1} G _inst_1))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] (sets : Set.{u1} (Set.{u1} G)), (Set.Nonempty.{u1} (Set.{u1} G) sets) -> (forall (x : Set.{u1} G) (y : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) x sets) -> (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) y sets) -> (Exists.{succ u1} (Set.{u1} G) (fun (z : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) z sets) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) z (Inter.inter.{u1} (Set.{u1} G) (Set.instInterSet.{u1} G) x y))))) -> (forall (U : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) U sets) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1))))))) U)) -> (forall (U : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) U sets) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) V sets) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))))) V V) U)))) -> (forall (U : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) U sets) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Set.{u1} (Set.{u1} G)) (Set.instMembershipSet.{u1} (Set.{u1} G)) V sets) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) V (Set.preimage.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1))))) x) U))))) -> (GroupFilterBasis.{u1} G (CommGroup.toGroup.{u1} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis_of_comm groupFilterBasisOfCommₓ'. -/
 /-- `group_filter_basis` constructor in the commutative group case. -/
 @[to_additive "`add_group_filter_basis` constructor in the additive commutative group case."]
 def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G))
@@ -117,48 +111,24 @@ variable {G : Type u} [Group G] {B : GroupFilterBasis G}
 instance : Membership (Set G) (GroupFilterBasis G) :=
   ⟨fun s f => s ∈ f.sets⟩
 
-/- warning: group_filter_basis.one -> GroupFilterBasis.one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) U B) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))) U)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) U B) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))) U)
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.one GroupFilterBasis.oneₓ'. -/
 @[to_additive]
 theorem one {U : Set G} : U ∈ B → (1 : G) ∈ U :=
   GroupFilterBasis.one'
 #align group_filter_basis.one GroupFilterBasis.one
 #align add_group_filter_basis.zero AddGroupFilterBasis.zero
 
-/- warning: group_filter_basis.mul -> GroupFilterBasis.mul is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))) V V) U)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) V B) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))) V V) U)))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.mul GroupFilterBasis.mulₓ'. -/
 @[to_additive]
 theorem mul {U : Set G} : U ∈ B → ∃ V ∈ B, V * V ⊆ U :=
   GroupFilterBasis.mul'
 #align group_filter_basis.mul GroupFilterBasis.mul
 #align add_group_filter_basis.add AddGroupFilterBasis.add
 
-/- warning: group_filter_basis.inv -> GroupFilterBasis.inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) V (Set.preimage.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x) U))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) V B) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) V (Set.preimage.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) x) U))))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.inv GroupFilterBasis.invₓ'. -/
 @[to_additive]
 theorem inv {U : Set G} : U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x⁻¹) ⁻¹' U :=
   GroupFilterBasis.inv'
 #align group_filter_basis.inv GroupFilterBasis.inv
 #align add_group_filter_basis.neg AddGroupFilterBasis.neg
 
-/- warning: group_filter_basis.conj -> GroupFilterBasis.conj is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} (x₀ : G) {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) V (Set.preimage.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x₀ x) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x₀)) U))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {B : GroupFilterBasis.{u1} G _inst_1} (x₀ : G) {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) V B) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) V (Set.preimage.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x₀ x) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) x₀)) U))))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.conj GroupFilterBasis.conjₓ'. -/
 @[to_additive]
 theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x₀ * x * x₀⁻¹) ⁻¹' U :=
   GroupFilterBasis.conj'
@@ -189,12 +159,6 @@ instance : Inhabited (GroupFilterBasis G) :=
       use {1}
       simp⟩
 
-/- warning: group_filter_basis.prod_subset_self -> GroupFilterBasis.prod_subset_self is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) U B) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) U (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))) U U))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) U B) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) U (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))) U U))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.prod_subset_self GroupFilterBasis.prod_subset_selfₓ'. -/
 @[to_additive]
 theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U :=
   fun x x_in => ⟨1, x, one h, x_in, one_mul x⟩
@@ -210,24 +174,12 @@ def N (B : GroupFilterBasis G) : G → Filter G := fun x =>
 #align add_group_filter_basis.N AddGroupFilterBasis.N
 -/
 
-/- warning: group_filter_basis.N_one -> GroupFilterBasis.N_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1), Eq.{succ u1} (Filter.{u1} G) (GroupFilterBasis.N.{u1} G _inst_1 B (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) (FilterBasis.filter.{u1} G (GroupFilterBasis.toFilterBasis.{u1} G _inst_1 B))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1), Eq.{succ u1} (Filter.{u1} G) (GroupFilterBasis.N.{u1} G _inst_1 B (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))) (FilterBasis.filter.{u1} G (GroupFilterBasis.toFilterBasis.{u1} G _inst_1 B))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.N_one GroupFilterBasis.N_oneₓ'. -/
 @[simp, to_additive]
 theorem N_one (B : GroupFilterBasis G) : B.N 1 = B.toFilterBasis.filterₓ := by
   simp only [N, one_mul, map_id']
 #align group_filter_basis.N_one GroupFilterBasis.N_one
 #align add_group_filter_basis.N_zero AddGroupFilterBasis.N_zero
 
-/- warning: group_filter_basis.has_basis -> GroupFilterBasis.hasBasis is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) (x : G), Filter.HasBasis.{u1, succ u1} G (Set.{u1} G) (GroupFilterBasis.N.{u1} G _inst_1 B x) (fun (V : Set.{u1} G) => Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) (fun (V : Set.{u1} G) => Set.image.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x y) V)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) (x : G), Filter.HasBasis.{u1, succ u1} G (Set.{u1} G) (GroupFilterBasis.N.{u1} G _inst_1 B x) (fun (V : Set.{u1} G) => Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) V B) (fun (V : Set.{u1} G) => Set.image.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x y) V)
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.has_basis GroupFilterBasis.hasBasisₓ'. -/
 @[to_additive]
 protected theorem hasBasis (B : GroupFilterBasis G) (x : G) :
     HasBasis (B.N x) (fun V : Set G => V ∈ B) fun V => (fun y => x * y) '' V :=
@@ -271,12 +223,6 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
 #align add_group_filter_basis.nhds_eq AddGroupFilterBasis.nhds_eq
 -/
 
-/- warning: group_filter_basis.nhds_one_eq -> GroupFilterBasis.nhds_one_eq is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) (FilterBasis.filter.{u1} G (GroupFilterBasis.toFilterBasis.{u1} G _inst_1 B))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))) (FilterBasis.filter.{u1} G (GroupFilterBasis.toFilterBasis.{u1} G _inst_1 B))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eqₓ'. -/
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) :
     @nhds G B.topology (1 : G) = B.toFilterBasis.filterₓ := by rw [B.nhds_eq];
@@ -284,12 +230,6 @@ theorem nhds_one_eq (B : GroupFilterBasis G) :
 #align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eq
 #align add_group_filter_basis.nhds_zero_eq AddGroupFilterBasis.nhds_zero_eq
 
-/- warning: group_filter_basis.nhds_has_basis -> GroupFilterBasis.nhds_hasBasis is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) (x₀ : G), Filter.HasBasis.{u1, succ u1} G (Set.{u1} G) (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) x₀) (fun (V : Set.{u1} G) => Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) (fun (V : Set.{u1} G) => Set.image.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x₀ y) V)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) (x₀ : G), Filter.HasBasis.{u1, succ u1} G (Set.{u1} G) (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) x₀) (fun (V : Set.{u1} G) => Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) V B) (fun (V : Set.{u1} G) => Set.image.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x₀ y) V)
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_hasBasisₓ'. -/
 @[to_additive]
 theorem nhds_hasBasis (B : GroupFilterBasis G) (x₀ : G) :
     HasBasis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀ * y) '' V := by
@@ -297,12 +237,6 @@ theorem nhds_hasBasis (B : GroupFilterBasis G) (x₀ : G) :
 #align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_hasBasis
 #align add_group_filter_basis.nhds_has_basis AddGroupFilterBasis.nhds_hasBasis
 
-/- warning: group_filter_basis.nhds_one_has_basis -> GroupFilterBasis.nhds_one_hasBasis is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1), Filter.HasBasis.{u1, succ u1} G (Set.{u1} G) (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) (fun (V : Set.{u1} G) => Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) V B) (id.{succ u1} (Set.{u1} G))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1), Filter.HasBasis.{u1, succ u1} G (Set.{u1} G) (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))) (fun (V : Set.{u1} G) => Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) V B) (id.{succ u1} (Set.{u1} G))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_hasBasisₓ'. -/
 @[to_additive]
 theorem nhds_one_hasBasis (B : GroupFilterBasis G) :
     HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id := by rw [B.nhds_one_eq];
@@ -310,12 +244,6 @@ theorem nhds_one_hasBasis (B : GroupFilterBasis G) :
 #align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_hasBasis
 #align add_group_filter_basis.nhds_zero_has_basis AddGroupFilterBasis.nhds_zero_hasBasis
 
-/- warning: group_filter_basis.mem_nhds_one -> GroupFilterBasis.mem_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.hasMem.{u1} G _inst_1) U B) -> (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) U (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (B : GroupFilterBasis.{u1} G _inst_1) {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (GroupFilterBasis.{u1} G _inst_1) (GroupFilterBasis.instMembershipSetGroupFilterBasis.{u1} G _inst_1) U B) -> (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) U (nhds.{u1} G (GroupFilterBasis.topology.{u1} G _inst_1 B) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))))
-Case conversion may be inaccurate. Consider using '#align group_filter_basis.mem_nhds_one GroupFilterBasis.mem_nhds_oneₓ'. -/
 @[to_additive]
 theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 :=
   by
@@ -378,32 +306,14 @@ variable {R : Type u} [Ring R] (B : RingFilterBasis R)
 instance : Membership (Set R) (RingFilterBasis R) :=
   ⟨fun s B => s ∈ B.sets⟩
 
-/- warning: ring_filter_basis.mul -> RingFilterBasis.mul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (B : RingFilterBasis.{u1} R _inst_1) {U : Set.{u1} R}, (Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} R) (fun (V : Set.{u1} R) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) V B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) V B) => HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) (HMul.hMul.{u1, u1, u1} (Set.{u1} R) (Set.{u1} R) (Set.{u1} R) (instHMul.{u1} (Set.{u1} R) (Set.mul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1)))) V V) U)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (B : RingFilterBasis.{u1} R _inst_1) {U : Set.{u1} R}, (Membership.mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.instMembershipSetRingFilterBasis.{u1} R _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} R) (fun (V : Set.{u1} R) => And (Membership.mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.instMembershipSetRingFilterBasis.{u1} R _inst_1) V B) (HasSubset.Subset.{u1} (Set.{u1} R) (Set.instHasSubsetSet.{u1} R) (HMul.hMul.{u1, u1, u1} (Set.{u1} R) (Set.{u1} R) (Set.{u1} R) (instHMul.{u1} (Set.{u1} R) (Set.mul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) V V) U)))
-Case conversion may be inaccurate. Consider using '#align ring_filter_basis.mul RingFilterBasis.mulₓ'. -/
 theorem mul {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V * V ⊆ U :=
   mul' hU
 #align ring_filter_basis.mul RingFilterBasis.mul
 
-/- warning: ring_filter_basis.mul_left -> RingFilterBasis.mul_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (B : RingFilterBasis.{u1} R _inst_1) (x₀ : R) {U : Set.{u1} R}, (Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} R) (fun (V : Set.{u1} R) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) V B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) V B) => HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) V (Set.preimage.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) x₀ x) U))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (B : RingFilterBasis.{u1} R _inst_1) (x₀ : R) {U : Set.{u1} R}, (Membership.mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.instMembershipSetRingFilterBasis.{u1} R _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} R) (fun (V : Set.{u1} R) => And (Membership.mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.instMembershipSetRingFilterBasis.{u1} R _inst_1) V B) (HasSubset.Subset.{u1} (Set.{u1} R) (Set.instHasSubsetSet.{u1} R) V (Set.preimage.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) x₀ x) U))))
-Case conversion may be inaccurate. Consider using '#align ring_filter_basis.mul_left RingFilterBasis.mul_leftₓ'. -/
 theorem mul_left (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ * x) ⁻¹' U :=
   mul_left' x₀ hU
 #align ring_filter_basis.mul_left RingFilterBasis.mul_left
 
-/- warning: ring_filter_basis.mul_right -> RingFilterBasis.mul_right is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (B : RingFilterBasis.{u1} R _inst_1) (x₀ : R) {U : Set.{u1} R}, (Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} R) (fun (V : Set.{u1} R) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) V B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.hasMem.{u1} R _inst_1) V B) => HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) V (Set.preimage.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) x x₀) U))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (B : RingFilterBasis.{u1} R _inst_1) (x₀ : R) {U : Set.{u1} R}, (Membership.mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.instMembershipSetRingFilterBasis.{u1} R _inst_1) U B) -> (Exists.{succ u1} (Set.{u1} R) (fun (V : Set.{u1} R) => And (Membership.mem.{u1, u1} (Set.{u1} R) (RingFilterBasis.{u1} R _inst_1) (RingFilterBasis.instMembershipSetRingFilterBasis.{u1} R _inst_1) V B) (HasSubset.Subset.{u1} (Set.{u1} R) (Set.instHasSubsetSet.{u1} R) V (Set.preimage.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) x x₀) U))))
-Case conversion may be inaccurate. Consider using '#align ring_filter_basis.mul_right RingFilterBasis.mul_rightₓ'. -/
 theorem mul_right (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x * x₀) ⁻¹' U :=
   mul_right' x₀ hU
 #align ring_filter_basis.mul_right RingFilterBasis.mul_right
@@ -472,26 +382,14 @@ instance GroupFilterBasis.hasMem : Membership (Set M) (ModuleFilterBasis R M) :=
 #align module_filter_basis.group_filter_basis.has_mem ModuleFilterBasis.GroupFilterBasis.hasMem
 -/
 
-/- warning: module_filter_basis.smul -> ModuleFilterBasis.smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module_filter_basis.smul ModuleFilterBasis.smulₓ'. -/
 theorem smul {U : Set M} (hU : U ∈ B) : ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ B, V • W ⊆ U :=
   B.smul' hU
 #align module_filter_basis.smul ModuleFilterBasis.smul
 
-/- warning: module_filter_basis.smul_left -> ModuleFilterBasis.smul_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module_filter_basis.smul_left ModuleFilterBasis.smul_leftₓ'. -/
 theorem smul_left (x₀ : R) {U : Set M} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ • x) ⁻¹' U :=
   B.smul_left' x₀ hU
 #align module_filter_basis.smul_left ModuleFilterBasis.smul_left
 
-/- warning: module_filter_basis.smul_right -> ModuleFilterBasis.smul_right is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : AddCommGroup.{u2} M] [_inst_4 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_3)] (B : ModuleFilterBasis.{u1, u2} R M _inst_1 _inst_2 _inst_3 _inst_4) (m₀ : M) {U : Set.{u2} M}, (Membership.Mem.{u2, u2} (Set.{u2} M) (ModuleFilterBasis.{u1, u2} R M _inst_1 _inst_2 _inst_3 _inst_4) (ModuleFilterBasis.GroupFilterBasis.hasMem.{u1, u2} R M _inst_1 _inst_2 _inst_3 _inst_4) U B) -> (Filter.Eventually.{u1} R (fun (x : R) => Membership.Mem.{u2, u2} M (Set.{u2} M) (Set.hasMem.{u2} M) (SMul.smul.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (AddCommGroup.toAddCommMonoid.{u2} M _inst_3)))) (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (AddCommGroup.toAddCommMonoid.{u2} M _inst_3)))) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (AddCommGroup.toAddCommMonoid.{u2} M _inst_3)))) (Module.toMulActionWithZero.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_3) _inst_4)))) x m₀) U) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : AddCommGroup.{u2} M] [_inst_4 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_3)] (B : ModuleFilterBasis.{u1, u2} R M _inst_1 _inst_2 _inst_3 _inst_4) (m₀ : M) {U : Set.{u2} M}, (Membership.mem.{u2, u2} (Set.{u2} M) (ModuleFilterBasis.{u1, u2} R M _inst_1 _inst_2 _inst_3 _inst_4) (ModuleFilterBasis.GroupFilterBasis.hasMem.{u1, u2} R M _inst_1 _inst_2 _inst_3 _inst_4) U B) -> (Filter.Eventually.{u1} R (fun (x : R) => Membership.mem.{u2, u2} M (Set.{u2} M) (Set.instMembershipSet.{u2} M) (HSMul.hSMul.{u1, u2, u2} R M M (instHSMul.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (NegZeroClass.toZero.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_3))))) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_3))))) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_3))))) (Module.toMulActionWithZero.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_3) _inst_4))))) x m₀) U) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align module_filter_basis.smul_right ModuleFilterBasis.smul_rightₓ'. -/
 theorem smul_right (m₀ : M) {U : Set M} (hU : U ∈ B) : ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U :=
   B.smul_right' m₀ hU
 #align module_filter_basis.smul_right ModuleFilterBasis.smul_right
@@ -536,9 +434,6 @@ def topology' {R M : Type _} [CommRing R] {tR : TopologicalSpace R} [AddCommGrou
 #align module_filter_basis.topology' ModuleFilterBasis.topology'
 -/
 
-/- warning: has_continuous_smul.of_basis_zero -> ContinuousSMul.of_basis_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align has_continuous_smul.of_basis_zero ContinuousSMul.of_basis_zeroₓ'. -/
 /-- A topological add group whith a basis of `𝓝 0` satisfying the axioms of `module_filter_basis`
 is a topological module.
 
@@ -586,9 +481,6 @@ instance (priority := 100) continuousSMul [TopologicalRing R] :
 #align module_filter_basis.has_continuous_smul ModuleFilterBasis.continuousSMul
 -/
 
-/- warning: module_filter_basis.of_bases -> ModuleFilterBasis.ofBases is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module_filter_basis.of_bases ModuleFilterBasis.ofBasesₓ'. -/
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : RingFilterBasis R)
     (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ V ∈ BR, ∃ W ∈ BM, V • W ⊆ U)

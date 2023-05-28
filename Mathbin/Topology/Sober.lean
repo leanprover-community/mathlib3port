@@ -109,22 +109,10 @@ protected theorem eq [T0Space α] (h : IsGenericPoint x S) (h' : IsGenericPoint 
 #align is_generic_point.eq IsGenericPoint.eq
 -/
 
-/- warning: is_generic_point.mem_open_set_iff -> IsGenericPoint.mem_open_set_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {S : Set.{u1} α} {U : Set.{u1} α}, (IsGenericPoint.{u1} α _inst_1 x S) -> (IsOpen.{u1} α _inst_1 U) -> (Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) S U)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {S : Set.{u1} α} {U : Set.{u1} α}, (IsGenericPoint.{u1} α _inst_1 x S) -> (IsOpen.{u1} α _inst_1 U) -> (Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) S U)))
-Case conversion may be inaccurate. Consider using '#align is_generic_point.mem_open_set_iff IsGenericPoint.mem_open_set_iffₓ'. -/
 theorem mem_open_set_iff (h : IsGenericPoint x S) (hU : IsOpen U) : x ∈ U ↔ (S ∩ U).Nonempty :=
   ⟨fun h' => ⟨x, h.Mem, h'⟩, fun ⟨y, hyS, hyU⟩ => (h.Specializes hyS).mem_open hU hyU⟩
 #align is_generic_point.mem_open_set_iff IsGenericPoint.mem_open_set_iff
 
-/- warning: is_generic_point.disjoint_iff -> IsGenericPoint.disjoint_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {S : Set.{u1} α} {U : Set.{u1} α}, (IsGenericPoint.{u1} α _inst_1 x S) -> (IsOpen.{u1} α _inst_1 U) -> (Iff (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) S U) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {S : Set.{u1} α} {U : Set.{u1} α}, (IsGenericPoint.{u1} α _inst_1 x S) -> (IsOpen.{u1} α _inst_1 U) -> (Iff (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) S U) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U)))
-Case conversion may be inaccurate. Consider using '#align is_generic_point.disjoint_iff IsGenericPoint.disjoint_iffₓ'. -/
 theorem disjoint_iff (h : IsGenericPoint x S) (hU : IsOpen U) : Disjoint S U ↔ x ∉ U := by
   rw [h.mem_open_set_iff hU, ← not_disjoint_iff_nonempty_inter, Classical.not_not]
 #align is_generic_point.disjoint_iff IsGenericPoint.disjoint_iff
@@ -135,12 +123,6 @@ theorem mem_closed_set_iff (h : IsGenericPoint x S) (hZ : IsClosed Z) : x ∈ Z 
 #align is_generic_point.mem_closed_set_iff IsGenericPoint.mem_closed_set_iff
 -/
 
-/- warning: is_generic_point.image -> IsGenericPoint.image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {x : α} {S : Set.{u1} α}, (IsGenericPoint.{u1} α _inst_1 x S) -> (forall {f : α -> β}, (Continuous.{u1, u2} α β _inst_1 _inst_2 f) -> (IsGenericPoint.{u2} β _inst_2 (f x) (closure.{u2} β _inst_2 (Set.image.{u1, u2} α β f S))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {x : α} {S : Set.{u2} α}, (IsGenericPoint.{u2} α _inst_1 x S) -> (forall {f : α -> β}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (IsGenericPoint.{u1} β _inst_2 (f x) (closure.{u1} β _inst_2 (Set.image.{u2, u1} α β f S))))
-Case conversion may be inaccurate. Consider using '#align is_generic_point.image IsGenericPoint.imageₓ'. -/
 protected theorem image (h : IsGenericPoint x S) {f : α → β} (hf : Continuous f) :
     IsGenericPoint (f x) (closure (f '' S)) :=
   by
@@ -206,22 +188,10 @@ noncomputable def genericPoint [QuasiSober α] [IrreducibleSpace α] : α :=
 #align generic_point genericPoint
 -/
 
-/- warning: generic_point_spec -> genericPoint_spec is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : IrreducibleSpace.{u1} α _inst_1], IsGenericPoint.{u1} α _inst_1 (genericPoint.{u1} α _inst_1 _inst_3 _inst_4) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toHasTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : IrreducibleSpace.{u1} α _inst_1], IsGenericPoint.{u1} α _inst_1 (genericPoint.{u1} α _inst_1 _inst_3 _inst_4) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))
-Case conversion may be inaccurate. Consider using '#align generic_point_spec genericPoint_specₓ'. -/
 theorem genericPoint_spec [QuasiSober α] [IrreducibleSpace α] : IsGenericPoint (genericPoint α) ⊤ :=
   by simpa using (IrreducibleSpace.isIrreducible_univ α).genericPoint_spec
 #align generic_point_spec genericPoint_spec
 
-/- warning: generic_point_closure -> genericPoint_closure is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : IrreducibleSpace.{u1} α _inst_1], Eq.{succ u1} (Set.{u1} α) (closure.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (genericPoint.{u1} α _inst_1 _inst_3 _inst_4))) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toHasTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : IrreducibleSpace.{u1} α _inst_1], Eq.{succ u1} (Set.{u1} α) (closure.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (genericPoint.{u1} α _inst_1 _inst_3 _inst_4))) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))
-Case conversion may be inaccurate. Consider using '#align generic_point_closure genericPoint_closureₓ'. -/
 @[simp]
 theorem genericPoint_closure [QuasiSober α] [IrreducibleSpace α] :
     closure ({genericPoint α} : Set α) = ⊤ :=
@@ -238,12 +208,6 @@ theorem genericPoint_specializes [QuasiSober α] [IrreducibleSpace α] (x : α) 
 
 attribute [local instance 10] specializationOrder
 
-/- warning: irreducible_set_equiv_points -> irreducibleSetEquivPoints is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : T0Space.{u1} α _inst_1], OrderIso.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s)))) α (Subtype.hasLe.{u1} (Set.{u1} α) (Set.hasLe.{u1} α) (fun (x : Set.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s))))) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (specializationOrder.{u1} α _inst_1 _inst_4)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : T0Space.{u1} α _inst_1], OrderIso.{u1, u1} (Set.Elem.{u1} (Set.{u1} α) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s)))) α (Subtype.le.{u1} (Set.{u1} α) (Set.instLESet.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (specializationOrder.{u1} α _inst_1 _inst_4)))
-Case conversion may be inaccurate. Consider using '#align irreducible_set_equiv_points irreducibleSetEquivPointsₓ'. -/
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α
@@ -260,12 +224,6 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 #align irreducible_set_equiv_points irreducibleSetEquivPoints
 
-/- warning: closed_embedding.quasi_sober -> ClosedEmbedding.quasiSober is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (ClosedEmbedding.{u1, u2} α β _inst_1 _inst_2 f) -> (forall [_inst_3 : QuasiSober.{u2} β _inst_2], QuasiSober.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (ClosedEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (forall [_inst_3 : QuasiSober.{u1} β _inst_2], QuasiSober.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align closed_embedding.quasi_sober ClosedEmbedding.quasiSoberₓ'. -/
 theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] :
     QuasiSober α := by
   constructor
@@ -279,12 +237,6 @@ theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [Qua
   rw [← hx, ← hf.closure_image_eq, Set.image_singleton]
 #align closed_embedding.quasi_sober ClosedEmbedding.quasiSober
 
-/- warning: open_embedding.quasi_sober -> OpenEmbedding.quasiSober is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (OpenEmbedding.{u1, u2} α β _inst_1 _inst_2 f) -> (forall [_inst_3 : QuasiSober.{u2} β _inst_2], QuasiSober.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (OpenEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (forall [_inst_3 : QuasiSober.{u1} β _inst_2], QuasiSober.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align open_embedding.quasi_sober OpenEmbedding.quasiSoberₓ'. -/
 theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSober β] : QuasiSober α :=
   by
   constructor
@@ -311,12 +263,6 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
       subset_closure ⟨h, hy⟩⟩
 #align open_embedding.quasi_sober OpenEmbedding.quasiSober
 
-/- warning: quasi_sober_of_open_cover -> quasiSober_of_open_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (S : Set.{u1} (Set.{u1} α)), (forall (s : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S), IsOpen.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (coeSubtype.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x S))))) s)) -> (forall [hS' : forall (s : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S), QuasiSober.{u1} (coeSort.{succ u1, succ (succ u1)} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) Type.{u1} (coeSortTrans.{succ (succ u1), succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (coeBaseAux.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (coeSubtype.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x S)))) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCoeTAux.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (coeBaseAux.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) S) (Set.{u1} α) (coeSubtype.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x S))) s)) _inst_1)], (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α S) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toHasTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) -> (QuasiSober.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (S : Set.{u1} (Set.{u1} α)), (forall (s : Set.Elem.{u1} (Set.{u1} α) S), IsOpen.{u1} α _inst_1 (Subtype.val.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) s)) -> (forall [hS' : forall (s : Set.Elem.{u1} (Set.{u1} α) S), QuasiSober.{u1} (Set.Elem.{u1} α (Subtype.val.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) s)) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Subtype.val.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) s)) _inst_1)], (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α S) (Top.top.{u1} (Set.{u1} α) (CompleteLattice.toTop.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) -> (QuasiSober.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align quasi_sober_of_open_cover quasiSober_of_open_coverₓ'. -/
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/
 theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Set α))
     [hS' : ∀ s : S, QuasiSober s] (hS'' : ⋃₀ S = ⊤) : QuasiSober α :=

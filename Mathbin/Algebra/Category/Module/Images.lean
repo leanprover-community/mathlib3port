@@ -132,9 +132,6 @@ noncomputable def isImage : IsImage (monoFactorisation f)
 #align Module.is_image ModuleCat.isImage
 -/
 
-/- warning: Module.image_iso_range -> ModuleCat.imageIsoRange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.image_iso_range ModuleCat.imageIsoRangeₓ'. -/
 /-- The categorical image of a morphism in `Module R`
 agrees with the linear algebraic range.
 -/
@@ -143,9 +140,6 @@ noncomputable def imageIsoRange {G H : ModuleCat.{v} R} (f : G ⟶ H) :
   IsImage.isoExt (Image.isImage f) (isImage f)
 #align Module.image_iso_range ModuleCat.imageIsoRange
 
-/- warning: Module.image_iso_range_inv_image_ι -> ModuleCat.imageIsoRange_inv_image_ι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.image_iso_range_inv_image_ι ModuleCat.imageIsoRange_inv_image_ιₓ'. -/
 @[simp, reassoc, elementwise]
 theorem imageIsoRange_inv_image_ι {G H : ModuleCat.{v} R} (f : G ⟶ H) :
     (imageIsoRange f).inv ≫ Limits.image.ι f = ModuleCat.ofHom f.range.Subtype :=

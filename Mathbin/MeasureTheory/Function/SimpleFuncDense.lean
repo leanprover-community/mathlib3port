@@ -97,9 +97,6 @@ theorem nearestPt_zero (e : ℕ → α) : nearestPt e 0 = const α (e 0) :=
 #align measure_theory.simple_func.nearest_pt_zero MeasureTheory.SimpleFunc.nearestPt_zero
 -/
 
-/- warning: measure_theory.simple_func.nearest_pt_ind_succ -> MeasureTheory.SimpleFunc.nearestPtInd_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.nearest_pt_ind_succ MeasureTheory.SimpleFunc.nearestPtInd_succₓ'. -/
 theorem nearestPtInd_succ (e : ℕ → α) (N : ℕ) (x : α) :
     nearestPtInd e (N + 1) x =
       if ∀ k ≤ N, edist (e (N + 1)) x < edist (e k) x then N + 1 else nearestPtInd e N x :=
@@ -116,12 +113,6 @@ theorem nearestPtInd_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N x
 #align measure_theory.simple_func.nearest_pt_ind_le MeasureTheory.SimpleFunc.nearestPtInd_le
 -/
 
-/- warning: measure_theory.simple_func.edist_nearest_pt_le -> MeasureTheory.SimpleFunc.edist_nearestPt_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : PseudoEMetricSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_2)) _inst_1] (e : Nat -> α) (x : α) {k : Nat} {N : Nat}, (LE.le.{0} Nat Nat.hasLe k N) -> (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α _inst_2) (coeFn.{succ u1, succ u1} (MeasureTheory.SimpleFunc.{u1, u1} α _inst_1 α) (fun (_x : MeasureTheory.SimpleFunc.{u1, u1} α _inst_1 α) => α -> α) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u1} α α _inst_1) (MeasureTheory.SimpleFunc.nearestPt.{u1} α _inst_1 _inst_2 _inst_3 e N) x) x) (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α _inst_2) (e k) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : PseudoEMetricSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_2)) _inst_1] (e : Nat -> α) (x : α) {k : Nat} {N : Nat}, (LE.le.{0} Nat instLENat k N) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_2) (MeasureTheory.SimpleFunc.toFun.{u1, u1} α _inst_1 α (MeasureTheory.SimpleFunc.nearestPt.{u1} α _inst_1 _inst_2 _inst_3 e N) x) x) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_2) (e k) x))
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.edist_nearest_pt_le MeasureTheory.SimpleFunc.edist_nearestPt_leₓ'. -/
 theorem edist_nearestPt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) :
     edist (nearestPt e N x) x ≤ edist (e k) x :=
   by
@@ -204,9 +195,6 @@ theorem tendsto_approxOn {f : β → α} (hf : Measurable f) {s : Set α} {y₀ 
 #align measure_theory.simple_func.tendsto_approx_on MeasureTheory.SimpleFunc.tendsto_approxOn
 -/
 
-/- warning: measure_theory.simple_func.edist_approx_on_mono -> MeasureTheory.SimpleFunc.edist_approxOn_mono is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.edist_approx_on_mono MeasureTheory.SimpleFunc.edist_approxOn_monoₓ'. -/
 theorem edist_approxOn_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) {m n : ℕ} (h : m ≤ n) :
     edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist (approxOn f hf s y₀ h₀ m x) (f x) :=
@@ -215,17 +203,11 @@ theorem edist_approxOn_mono {f : β → α} (hf : Measurable f) {s : Set α} {y�
   exact edist_nearest_pt_le _ _ ((nearest_pt_ind_le _ _ _).trans h)
 #align measure_theory.simple_func.edist_approx_on_mono MeasureTheory.SimpleFunc.edist_approxOn_mono
 
-/- warning: measure_theory.simple_func.edist_approx_on_le -> MeasureTheory.SimpleFunc.edist_approxOn_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.edist_approx_on_le MeasureTheory.SimpleFunc.edist_approxOn_leₓ'. -/
 theorem edist_approxOn_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) (n : ℕ) : edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist y₀ (f x) :=
   edist_approxOn_mono hf h₀ x (zero_le n)
 #align measure_theory.simple_func.edist_approx_on_le MeasureTheory.SimpleFunc.edist_approxOn_le
 
-/- warning: measure_theory.simple_func.edist_approx_on_y0_le -> MeasureTheory.SimpleFunc.edist_approxOn_y0_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.edist_approx_on_y0_le MeasureTheory.SimpleFunc.edist_approxOn_y0_leₓ'. -/
 theorem edist_approxOn_y0_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) (n : ℕ) :
     edist y₀ (approxOn f hf s y₀ h₀ n x) ≤ edist y₀ (f x) + edist y₀ (f x) :=

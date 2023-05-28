@@ -79,9 +79,6 @@ theorem mem_sections {s : Multiset (Multiset α)} :
 #align multiset.mem_sections Multiset.mem_sections
 -/
 
-/- warning: multiset.card_sections -> Multiset.card_sections is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.card_sections Multiset.card_sectionsₓ'. -/
 theorem card_sections {s : Multiset (Multiset α)} : card (Sections s) = prod (s.map card) :=
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }))
 #align multiset.card_sections Multiset.card_sections

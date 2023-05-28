@@ -110,9 +110,6 @@ def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResol
 #align category_theory.InjectiveResolution.desc CategoryTheory.InjectiveResolution.desc
 -/
 
-/- warning: category_theory.InjectiveResolution.desc_commutes -> CategoryTheory.InjectiveResolution.desc_commutes is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.desc_commutes CategoryTheory.InjectiveResolution.desc_commutesₓ'. -/
 /-- The resolution maps intertwine the descent of a morphism and that morphism. -/
 @[simp, reassoc]
 theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
@@ -122,9 +119,6 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
   rcases n with (_ | _ | n) <;> · dsimp [desc, desc_f_one, desc_f_zero]; simp
 #align category_theory.InjectiveResolution.desc_commutes CategoryTheory.InjectiveResolution.desc_commutes
 
-/- warning: category_theory.InjectiveResolution.desc_homotopy_zero_zero -> CategoryTheory.InjectiveResolution.descHomotopyZeroZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.desc_homotopy_zero_zero CategoryTheory.InjectiveResolution.descHomotopyZeroZeroₓ'. -/
 -- Now that we've checked this property of the descent,
 -- we can seal away the actual definition.
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
@@ -134,9 +128,6 @@ def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
     (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 #align category_theory.InjectiveResolution.desc_homotopy_zero_zero CategoryTheory.InjectiveResolution.descHomotopyZeroZero
 
-/- warning: category_theory.InjectiveResolution.desc_homotopy_zero_one -> CategoryTheory.InjectiveResolution.descHomotopyZeroOne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.desc_homotopy_zero_one CategoryTheory.InjectiveResolution.descHomotopyZeroOneₓ'. -/
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = (0 : _ ⟶ J.cocomplex)) :
@@ -146,9 +137,6 @@ def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveReso
     (by simp [desc_homotopy_zero_zero, ← category.assoc])
 #align category_theory.InjectiveResolution.desc_homotopy_zero_one CategoryTheory.InjectiveResolution.descHomotopyZeroOne
 
-/- warning: category_theory.InjectiveResolution.desc_homotopy_zero_succ -> CategoryTheory.InjectiveResolution.descHomotopyZeroSucc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.desc_homotopy_zero_succ CategoryTheory.InjectiveResolution.descHomotopyZeroSuccₓ'. -/
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (f : I.cocomplex ⟶ J.cocomplex) (n : ℕ) (g : I.cocomplex.pt (n + 1) ⟶ J.cocomplex.pt n)
@@ -163,9 +151,6 @@ def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
           rw [w]; simp only [add_sub_cancel]])
 #align category_theory.InjectiveResolution.desc_homotopy_zero_succ CategoryTheory.InjectiveResolution.descHomotopyZeroSucc
 
-/- warning: category_theory.InjectiveResolution.desc_homotopy_zero -> CategoryTheory.InjectiveResolution.descHomotopyZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.desc_homotopy_zero CategoryTheory.InjectiveResolution.descHomotopyZeroₓ'. -/
 /-- Any descent of the zero morphism is homotopic to zero. -/
 def descHomotopyZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = 0) : Homotopy f 0 :=
@@ -175,9 +160,6 @@ def descHomotopyZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolut
       simp [desc_homotopy_zero_succ, w]⟩
 #align category_theory.InjectiveResolution.desc_homotopy_zero CategoryTheory.InjectiveResolution.descHomotopyZero
 
-/- warning: category_theory.InjectiveResolution.desc_homotopy -> CategoryTheory.InjectiveResolution.descHomotopy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.desc_homotopy CategoryTheory.InjectiveResolution.descHomotopyₓ'. -/
 /-- Two descents of the same morphism are homotopic. -/
 def descHomotopy {Y Z : C} (f : Y ⟶ Z) {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (g h : I.cocomplex ⟶ J.cocomplex) (g_comm : I.ι ≫ g = (CochainComplex.single₀ C).map f ≫ J.ι)
@@ -216,17 +198,11 @@ def homotopyEquiv {X : C} (I J : InjectiveResolution X) : HomotopyEquiv I.cocomp
 #align category_theory.InjectiveResolution.homotopy_equiv CategoryTheory.InjectiveResolution.homotopyEquiv
 -/
 
-/- warning: category_theory.InjectiveResolution.homotopy_equiv_hom_ι -> CategoryTheory.InjectiveResolution.homotopyEquiv_hom_ι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.homotopy_equiv_hom_ι CategoryTheory.InjectiveResolution.homotopyEquiv_hom_ιₓ'. -/
 @[simp, reassoc]
 theorem homotopyEquiv_hom_ι {X : C} (I J : InjectiveResolution X) :
     I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by simp [HomotopyEquiv]
 #align category_theory.InjectiveResolution.homotopy_equiv_hom_ι CategoryTheory.InjectiveResolution.homotopyEquiv_hom_ι
 
-/- warning: category_theory.InjectiveResolution.homotopy_equiv_inv_ι -> CategoryTheory.InjectiveResolution.homotopyEquiv_inv_ι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.homotopy_equiv_inv_ι CategoryTheory.InjectiveResolution.homotopyEquiv_inv_ιₓ'. -/
 @[simp, reassoc]
 theorem homotopyEquiv_inv_ι {X : C} (I J : InjectiveResolution X) :
     J.ι ≫ (homotopyEquiv I J).inv = I.ι := by simp [HomotopyEquiv]
@@ -247,9 +223,6 @@ abbrev injectiveResolution (Z : C) [HasInjectiveResolution Z] : CochainComplex C
 #align category_theory.injective_resolution CategoryTheory.injectiveResolution
 -/
 
-/- warning: category_theory.injective_resolution.ι -> CategoryTheory.injectiveResolution.ι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.injective_resolution.ι CategoryTheory.injectiveResolution.ιₓ'. -/
 /-- The cochain map from cochain complex consisting of `Z` supported in degree `0`
 back to the arbitrarily chosen injective resolution `injective_resolution Z`. -/
 abbrev injectiveResolution.ι (Z : C) [HasInjectiveResolution Z] :
@@ -327,12 +300,6 @@ def ofCocomplex (Z : C) : CochainComplex C ℕ :=
 #align category_theory.InjectiveResolution.of_cocomplex CategoryTheory.InjectiveResolution.ofCocomplex
 -/
 
-/- warning: category_theory.InjectiveResolution.of -> CategoryTheory.InjectiveResolution.of is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Abelian.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.EnoughInjectives.{u1, u2} C _inst_1] (Z : C), CategoryTheory.InjectiveResolution.{u1, u2} C _inst_1 (CategoryTheory.Abelian.hasZeroObject.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (CategoryTheory.Abelian.hasEqualizers.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.InjectiveResolution.of._proof_1.{u2, u1} C _inst_1 _inst_2) Z
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Abelian.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.EnoughInjectives.{u2, u1} C _inst_1] (Z : C), CategoryTheory.InjectiveResolution.{u2, u1} C _inst_1 (CategoryTheory.Abelian.hasZeroObject.{u2, u1} C _inst_1 _inst_2) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} C _inst_1 _inst_2)) (CategoryTheory.Abelian.hasEqualizers.{u2, u1} C _inst_1 _inst_2) (CategoryTheory.Limits.hasImages_of_hasStrongEpiMonoFactorisations.{u2, u1} C _inst_1 (CategoryTheory.Abelian.instHasStrongEpiMonoFactorisations.{u2, u1} C _inst_1 _inst_2)) Z
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.of CategoryTheory.InjectiveResolution.ofₓ'. -/
 /-- In any abelian category with enough injectives,
 `InjectiveResolution.of Z` constructs an injective resolution of the object `Z`.
 -/
@@ -363,9 +330,6 @@ namespace HomologicalComplex.Hom
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
-/- warning: homological_complex.hom.homological_complex.hom.from_single₀_InjectiveResolution -> HomologicalComplex.Hom.HomologicalComplex.Hom.fromSingle₀InjectiveResolution is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.homological_complex.hom.from_single₀_InjectiveResolution HomologicalComplex.Hom.HomologicalComplex.Hom.fromSingle₀InjectiveResolutionₓ'. -/
 /-- If `X` is a cochain complex of injective objects and we have a quasi-isomorphism
 `f : Y[0] ⟶ X`, then `X` is an injective resolution of `Y.` -/
 def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex C ℕ) (Y : C)

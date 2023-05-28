@@ -30,9 +30,6 @@ variable [NormedAddCommGroup E] [NormedAddCommGroup F]
 
 variable [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
-/- warning: inner_product_geometry.is_conformal_map.preserves_angle -> InnerProductGeometry.IsConformalMap.preserves_angle is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_product_geometry.is_conformal_map.preserves_angle InnerProductGeometry.IsConformalMap.preserves_angleₓ'. -/
 theorem IsConformalMap.preserves_angle {f' : E →L[ℝ] F} (h : IsConformalMap f') (u v : E) :
     angle (f' u) (f' v) = angle u v :=
   by
@@ -40,9 +37,6 @@ theorem IsConformalMap.preserves_angle {f' : E →L[ℝ] F} (h : IsConformalMap 
   exact (angle_smul_smul hc _ _).trans (li.angle_map _ _)
 #align inner_product_geometry.is_conformal_map.preserves_angle InnerProductGeometry.IsConformalMap.preserves_angle
 
-/- warning: inner_product_geometry.conformal_at.preserves_angle -> InnerProductGeometry.ConformalAt.preserves_angle is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_product_geometry.conformal_at.preserves_angle InnerProductGeometry.ConformalAt.preserves_angleₓ'. -/
 /-- If a real differentiable map `f` is conformal at a point `x`,
     then it preserves the angles at that point. -/
 theorem ConformalAt.preserves_angle {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFDerivAt f f' x)

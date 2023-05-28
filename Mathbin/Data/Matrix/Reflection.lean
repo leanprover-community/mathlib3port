@@ -139,12 +139,6 @@ def dotProductᵣ [Mul α] [Add α] [Zero α] {m} (a b : Fin m → α) : α :=
 #align matrix.dot_productᵣ Matrix.dotProductᵣ
 -/
 
-/- warning: matrix.dot_productᵣ_eq -> Matrix.dotProductᵣ_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] {m : Nat} (a : (Fin m) -> α) (b : (Fin m) -> α), Eq.{succ u1} α (Matrix.dotProductᵣ.{u1} α _inst_1 (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) m a b) (Matrix.dotProduct.{u1, 0} (Fin m) α (Fin.fintype m) _inst_1 _inst_2 a b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] {m : Nat} (a : (Fin m) -> α) (b : (Fin m) -> α), Eq.{succ u1} α (Matrix.dotProductᵣ.{u1} α _inst_1 (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2)) m a b) (Matrix.dotProduct.{u1, 0} (Fin m) α (Fin.fintype m) _inst_1 _inst_2 a b)
-Case conversion may be inaccurate. Consider using '#align matrix.dot_productᵣ_eq Matrix.dotProductᵣ_eqₓ'. -/
 /-- This can be used to prove
 ```lean
 example (a b c d : α) [has_mul α] [add_comm_monoid α] :
@@ -169,12 +163,6 @@ def mulᵣ [Mul α] [Add α] [Zero α] (A : Matrix (Fin l) (Fin m) α) (B : Matr
 #align matrix.mulᵣ Matrix.mulᵣ
 -/
 
-/- warning: matrix.mulᵣ_eq -> Matrix.mulᵣ_eq is a dubious translation:
-lean 3 declaration is
-  forall {l : Nat} {m : Nat} {n : Nat} {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] (A : Matrix.{0, 0, u1} (Fin l) (Fin m) α) (B : Matrix.{0, 0, u1} (Fin m) (Fin n) α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin l) (Fin n) α) (Matrix.mulᵣ.{u1} l m n α _inst_1 (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) A B) (Matrix.mul.{u1, 0, 0, 0} (Fin l) (Fin m) (Fin n) α (Fin.fintype m) _inst_1 _inst_2 A B)
-but is expected to have type
-  forall {l : Nat} {m : Nat} {n : Nat} {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] (A : Matrix.{0, 0, u1} (Fin l) (Fin m) α) (B : Matrix.{0, 0, u1} (Fin m) (Fin n) α), Eq.{succ u1} (Matrix.{0, 0, u1} (Fin l) (Fin n) α) (Matrix.mulᵣ.{u1} l m n α _inst_1 (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2)) A B) (Matrix.mul.{u1, 0, 0, 0} (Fin l) (Fin m) (Fin n) α (Fin.fintype m) _inst_1 _inst_2 A B)
-Case conversion may be inaccurate. Consider using '#align matrix.mulᵣ_eq Matrix.mulᵣ_eqₓ'. -/
 /-- This can be used to prove
 ```lean
 example [add_comm_monoid α] [has_mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
@@ -207,12 +195,6 @@ def mulVecᵣ [Mul α] [Add α] [Zero α] (A : Matrix (Fin l) (Fin m) α) (v : F
 #align matrix.mul_vecᵣ Matrix.mulVecᵣ
 -/
 
-/- warning: matrix.mul_vecᵣ_eq -> Matrix.mulVecᵣ_eq is a dubious translation:
-lean 3 declaration is
-  forall {l : Nat} {m : Nat} {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] (A : Matrix.{0, 0, u1} (Fin l) (Fin m) α) (v : (Fin m) -> α), Eq.{succ u1} ((Fin l) -> α) (Matrix.mulVecᵣ.{u1} l m α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_1)) A v) (Matrix.mulVec.{u1, 0, 0} (Fin l) (Fin m) α _inst_1 (Fin.fintype m) A v)
-but is expected to have type
-  forall {l : Nat} {m : Nat} {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] (A : Matrix.{0, 0, u1} (Fin l) (Fin m) α) (v : (Fin m) -> α), Eq.{succ u1} ((Fin l) -> α) (Matrix.mulVecᵣ.{u1} l m α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_1) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_1)) A v) (Matrix.mulVec.{u1, 0, 0} (Fin l) (Fin m) α _inst_1 (Fin.fintype m) A v)
-Case conversion may be inaccurate. Consider using '#align matrix.mul_vecᵣ_eq Matrix.mulVecᵣ_eqₓ'. -/
 /-- This can be used to prove
 ```lean
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
@@ -239,12 +221,6 @@ def vecMulᵣ [Mul α] [Add α] [Zero α] (v : Fin l → α) (A : Matrix (Fin l)
 #align matrix.vec_mulᵣ Matrix.vecMulᵣ
 -/
 
-/- warning: matrix.vec_mulᵣ_eq -> Matrix.vecMulᵣ_eq is a dubious translation:
-lean 3 declaration is
-  forall {l : Nat} {m : Nat} {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] (v : (Fin l) -> α) (A : Matrix.{0, 0, u1} (Fin l) (Fin m) α), Eq.{succ u1} ((Fin m) -> α) (Matrix.vecMulᵣ.{u1} l m α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_1)) v A) (Matrix.vecMul.{u1, 0, 0} (Fin l) (Fin m) α _inst_1 (Fin.fintype l) v A)
-but is expected to have type
-  forall {l : Nat} {m : Nat} {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] (v : (Fin l) -> α) (A : Matrix.{0, 0, u1} (Fin l) (Fin m) α), Eq.{succ u1} ((Fin m) -> α) (Matrix.vecMulᵣ.{u1} l m α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_1) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_1)) v A) (Matrix.vecMul.{u1, 0, 0} (Fin l) (Fin m) α _inst_1 (Fin.fintype l) v A)
-Case conversion may be inaccurate. Consider using '#align matrix.vec_mulᵣ_eq Matrix.vecMulᵣ_eqₓ'. -/
 /-- This can be used to prove
 ```lean
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :

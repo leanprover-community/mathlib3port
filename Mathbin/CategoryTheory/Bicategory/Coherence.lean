@@ -56,12 +56,6 @@ namespace FreeBicategory
 
 variable {B : Type u} [Quiver.{v + 1} B]
 
-/- warning: category_theory.free_bicategory.inclusion_path_aux -> CategoryTheory.FreeBicategory.inclusionPathAux is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u2}} [_inst_1 : Quiver.{succ u1, u2} B] {a : B} {b : B}, (Quiver.Path.{succ u1, u2} B _inst_1 a b) -> (CategoryTheory.FreeBicategory.Hom.{u1, u2} B _inst_1 a b)
-but is expected to have type
-  forall {B : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} B] {a : B} {b : B}, (Quiver.Path.{succ u2, u1} B _inst_1 a b) -> (CategoryTheory.FreeBicategory.Hom.{u2, u1} B _inst_1 a b)
-Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.inclusion_path_aux CategoryTheory.FreeBicategory.inclusionPathAuxₓ'. -/
 /-- Auxiliary definition for `inclusion_path`. -/
 @[simp]
 def inclusionPathAux {a : B} : ∀ {b : B}, Path a b → Hom a b
@@ -102,12 +96,6 @@ theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : 
   exact (inclusion_path a b).map_id _
 #align category_theory.free_bicategory.preinclusion_map₂ CategoryTheory.FreeBicategory.preinclusion_map₂
 
-/- warning: category_theory.free_bicategory.normalize_aux -> CategoryTheory.FreeBicategory.normalizeAux is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u2}} [_inst_1 : Quiver.{succ u1, u2} B] {a : B} {b : B} {c : B}, (Quiver.Path.{succ u1, u2} B _inst_1 a b) -> (CategoryTheory.FreeBicategory.Hom.{u1, u2} B _inst_1 b c) -> (Quiver.Path.{succ u1, u2} B _inst_1 a c)
-but is expected to have type
-  forall {B : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} B] {a : B} {b : B} {c : B}, (Quiver.Path.{succ u2, u1} B _inst_1 a b) -> (CategoryTheory.FreeBicategory.Hom.{u2, u1} B _inst_1 b c) -> (Quiver.Path.{succ u2, u1} B _inst_1 a c)
-Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.normalize_aux CategoryTheory.FreeBicategory.normalizeAuxₓ'. -/
 /-- The normalization of the composition of `p : path a b` and `f : hom b c`.
 `p` will eventually be taken to be `nil` and we then get the normalization
 of `f` alone, but the auxiliary `p` is necessary for Lean to accept the definition of
@@ -120,9 +108,6 @@ def normalizeAux {a : B} : ∀ {b c : B}, Path a b → Hom b c → Path a c
   | _, _, p, hom.comp f g => normalize_aux (normalize_aux p f) g
 #align category_theory.free_bicategory.normalize_aux CategoryTheory.FreeBicategory.normalizeAux
 
-/- warning: category_theory.free_bicategory.normalize_iso -> CategoryTheory.FreeBicategory.normalizeIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.normalize_iso CategoryTheory.FreeBicategory.normalizeIsoₓ'. -/
 /-
 We may define
 ```
@@ -241,9 +226,6 @@ instance locally_thin {a b : FreeBicategory B} : Quiver.IsThin (a ⟶ b) := fun 
   ⟨fun η θ => (normalizeEquiv a b).Functor.map_injective (Subsingleton.elim _ _)⟩
 #align category_theory.free_bicategory.locally_thin CategoryTheory.FreeBicategory.locally_thin
 
-/- warning: category_theory.free_bicategory.inclusion_map_comp_aux -> CategoryTheory.FreeBicategory.inclusionMapCompAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.inclusion_map_comp_aux CategoryTheory.FreeBicategory.inclusionMapCompAuxₓ'. -/
 /-- Auxiliary definition for `inclusion`. -/
 def inclusionMapCompAux {a b : B} :
     ∀ {c : B} (f : Path a b) (g : Path b c),

@@ -91,22 +91,10 @@ theorem factors_count_eq {n p : ℕ} : n.factors.count p = n.factorization p :=
 #align nat.factors_count_eq Nat.factors_count_eq
 -/
 
-/- warning: nat.factorization_eq_factors_multiset -> Nat.factorization_eq_factors_multiset is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Nat.factorization n) (coeFn.{1, 1} (AddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Multiset.hasAdd.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (fun (_x : AddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Multiset.hasAdd.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) => (Multiset.{0} Nat) -> (Finsupp.{0, 0} Nat Nat Nat.hasZero)) (AddEquiv.hasCoeToFun.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Multiset.hasAdd.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Multiset.toFinsupp.{0} Nat) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} Nat) (Multiset.{0} Nat) (HasLiftT.mk.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (CoeTCₓ.coe.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (coeBase.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (Multiset.hasCoe.{0} Nat)))) (Nat.factors n)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Nat.factorization n) (FunLike.coe.{1, 1, 1} (AddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.instAddMultiset.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Multiset.{0} Nat) (fun (_x : Multiset.{0} Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Multiset.{0} Nat) => Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (AddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.instAddMultiset.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (EquivLike.toEmbeddingLike.{1, 1, 1} (AddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.instAddMultiset.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (AddEquivClass.toEquivLike.{0, 0, 0} (AddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.instAddMultiset.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.instAddMultiset.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddEquiv.instAddEquivClassAddEquiv.{0, 0} (Multiset.{0} Nat) (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.instAddMultiset.{0} Nat) (Finsupp.add.{0, 0} Nat Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))))) (Multiset.toFinsupp.{0} Nat) (Multiset.ofList.{0} Nat (Nat.factors n)))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_eq_factors_multiset Nat.factorization_eq_factors_multisetₓ'. -/
 theorem factorization_eq_factors_multiset (n : ℕ) :
     n.factorization = (n.factors : Multiset ℕ).toFinsupp := by ext p; simp
 #align nat.factorization_eq_factors_multiset Nat.factorization_eq_factors_multiset
 
-/- warning: nat.multiplicity_eq_factorization -> Nat.multiplicity_eq_factorization is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {p : Nat}, (Nat.Prime p) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} PartENat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat PartENat (HasLiftT.mk.{1, 1} Nat PartENat (CoeTCₓ.coe.{1, 1} Nat PartENat (Nat.castCoe.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.addCommMonoidWithOne))))) (coeFn.{1, 1} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (fun (_x : Finsupp.{0, 0} Nat Nat Nat.hasZero) => Nat -> Nat) (Finsupp.coeFun.{0, 0} Nat Nat Nat.hasZero) (Nat.factorization n) p)))
-but is expected to have type
-  forall {n : Nat} {p : Nat}, (Nat.Prime p) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} PartENat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p n) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) (FunLike.coe.{1, 1, 1} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) _x) (Finsupp.funLike.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Nat.factorization n) p)))
-Case conversion may be inaccurate. Consider using '#align nat.multiplicity_eq_factorization Nat.multiplicity_eq_factorizationₓ'. -/
 theorem multiplicity_eq_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
     multiplicity p n = n.factorization p := by
   simp [factorization, pp, padicValNat_def' pp.ne_one hn.bot_lt]
@@ -151,12 +139,6 @@ theorem factorization_one : factorization 1 = 0 := by simpa [factorization]
 #align nat.factorization_one Nat.factorization_one
 -/
 
-/- warning: nat.support_factorization -> Nat.support_factorization is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization n)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n))
-but is expected to have type
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization n)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n))
-Case conversion may be inaccurate. Consider using '#align nat.support_factorization Nat.support_factorizationₓ'. -/
 /-- The support of `n.factorization` is exactly `n.factors.to_finset` -/
 @[simp]
 theorem support_factorization {n : ℕ} : n.factorization.support = n.factors.toFinset := by
@@ -287,12 +269,6 @@ theorem factorization_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
 #align nat.factorization_mul Nat.factorization_mul
 -/
 
-/- warning: nat.factorization_mul_support -> Nat.factorization_mul_support is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Finset.{0} Nat) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization a)) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization b))))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finset.{0} Nat) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization a)) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization b))))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_mul_support Nat.factorization_mul_supportₓ'. -/
 theorem factorization_mul_support {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
     (a * b).factorization.support = a.factorization.support ∪ b.factorization.support :=
   by
@@ -301,12 +277,6 @@ theorem factorization_mul_support {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
   exact mem_factors_mul ha hb
 #align nat.factorization_mul_support Nat.factorization_mul_support
 
-/- warning: nat.prod_factorization_eq_prod_factors -> Nat.prod_factorization_eq_prod_factors is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : Nat -> β), Eq.{succ u1} β (Finsupp.prod.{0, 0, u1} Nat Nat β Nat.hasZero _inst_1 (Nat.factorization n) (fun (p : Nat) (k : Nat) => f p)) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => f p))
-but is expected to have type
-  forall {n : Nat} {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : Nat -> β), Eq.{succ u1} β (Finsupp.prod.{0, 0, u1} Nat Nat β (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) _inst_1 (Nat.factorization n) (fun (p : Nat) (k : Nat) => f p)) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => f p))
-Case conversion may be inaccurate. Consider using '#align nat.prod_factorization_eq_prod_factors Nat.prod_factorization_eq_prod_factorsₓ'. -/
 /-- If a product over `n.factorization` doesn't use the multiplicities of the prime factors
 then it's equal to the corresponding product over `n.factors.to_finset` -/
 theorem prod_factorization_eq_prod_factors {n : ℕ} {β : Type _} [CommMonoid β] (f : ℕ → β) :
@@ -813,24 +783,12 @@ theorem dvd_iff_prime_pow_dvd_dvd (n d : ℕ) : d ∣ n ↔ ∀ p k : ℕ, Prime
 #align nat.dvd_iff_prime_pow_dvd_dvd Nat.dvd_iff_prime_pow_dvd_dvd
 -/
 
-/- warning: nat.prod_prime_factors_dvd -> Nat.prod_prime_factors_dvd is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Dvd.Dvd.{0} Nat Nat.hasDvd (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => p)) n
-but is expected to have type
-  forall (n : Nat), Dvd.dvd.{0} Nat Nat.instDvdNat (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => p)) n
-Case conversion may be inaccurate. Consider using '#align nat.prod_prime_factors_dvd Nat.prod_prime_factors_dvdₓ'. -/
 theorem prod_prime_factors_dvd (n : ℕ) : (∏ p : ℕ in n.factors.toFinset, p) ∣ n :=
   by
   by_cases hn : n = 0; · subst hn; simp
   simpa [prod_factors hn] using Multiset.toFinset_prod_dvd_prod (n.factors : Multiset ℕ)
 #align nat.prod_prime_factors_dvd Nat.prod_prime_factors_dvd
 
-/- warning: nat.factorization_gcd -> Nat.factorization_gcd is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Nat.factorization (Nat.gcd a b)) (Inf.inf.{0} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (SemilatticeInf.toHasInf.{0} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Finsupp.semilatticeInf.{0, 0} Nat Nat Nat.hasZero (Lattice.toSemilatticeInf.{0} Nat Nat.lattice))) (Nat.factorization a) (Nat.factorization b)))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Nat.factorization (Nat.gcd a b)) (Inf.inf.{0} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Lattice.toInf.{0} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.lattice.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) Nat.instLatticeNat)) (Nat.factorization a) (Nat.factorization b)))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_gcd Nat.factorization_gcdₓ'. -/
 theorem factorization_gcd {a b : ℕ} (ha_pos : a ≠ 0) (hb_pos : b ≠ 0) :
     (gcd a b).factorization = a.factorization ⊓ b.factorization :=
   by
@@ -855,12 +813,6 @@ theorem factorization_gcd {a b : ℕ} (ha_pos : a ≠ 0) (hb_pos : b ≠ 0) :
     simp [← factorization_le_iff_dvd he_pos hd_pos, h1, hea', heb']
 #align nat.factorization_gcd Nat.factorization_gcd
 
-/- warning: nat.factorization_lcm -> Nat.factorization_lcm is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Nat.factorization (Nat.lcm a b)) (Sup.sup.{0} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (SemilatticeSup.toHasSup.{0} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (Finsupp.semilatticeSup.{0, 0} Nat Nat Nat.hasZero (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid))) (Nat.factorization a) (Nat.factorization b)))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Nat.factorization (Nat.lcm a b)) (Sup.sup.{0} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (SemilatticeSup.toSup.{0} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.semilatticeSup.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Lattice.toSemilatticeSup.{0} Nat Nat.instLatticeNat))) (Nat.factorization a) (Nat.factorization b)))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_lcm Nat.factorization_lcmₓ'. -/
 theorem factorization_lcm {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
     (a.lcm b).factorization = a.factorization ⊔ b.factorization :=
   by
@@ -870,12 +822,6 @@ theorem factorization_lcm {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
   ext1; exact (min_add_max _ _).symm
 #align nat.factorization_lcm Nat.factorization_lcm
 
-/- warning: nat.prod_factors_gcd_mul_prod_factors_mul -> Nat.prod_factors_gcd_mul_prod_factors_mul is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (m : Nat) (n : Nat) (f : Nat -> β), Eq.{succ u1} β (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors (Nat.gcd m n))) f) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n))) f)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors m)) f) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) f))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (m : Nat) (n : Nat) (f : Nat -> β), Eq.{succ u1} β (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors (Nat.gcd m n))) f) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n))) f)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors m)) f) (Finset.prod.{u1, 0} β Nat _inst_1 (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) f))
-Case conversion may be inaccurate. Consider using '#align nat.prod_factors_gcd_mul_prod_factors_mul Nat.prod_factors_gcd_mul_prod_factors_mulₓ'. -/
 @[to_additive sum_factors_gcd_add_sum_factors_mul]
 theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n : ℕ) (f : ℕ → β) :
     (m.gcd n).factors.toFinset.Prod f * (m * n).factors.toFinset.Prod f =
@@ -897,12 +843,6 @@ theorem setOf_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n �
 #align nat.set_of_pow_dvd_eq_Icc_factorization Nat.setOf_pow_dvd_eq_Icc_factorization
 -/
 
-/- warning: nat.Icc_factorization_eq_pow_dvd -> Nat.Icc_factorization_eq_pow_dvd is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) {p : Nat}, (Nat.Prime p) -> (Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (coeFn.{1, 1} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (fun (_x : Finsupp.{0, 0} Nat Nat Nat.hasZero) => Nat -> Nat) (Finsupp.coeFun.{0, 0} Nat Nat Nat.hasZero) (Nat.factorization n) p)) (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p i) n) (fun (a : Nat) => Nat.decidableDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p a) n) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) n)))
-but is expected to have type
-  forall (n : Nat) {p : Nat}, (Nat.Prime p) -> (Eq.{1} (Finset.{0} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) p)) (Finset.Icc.{0} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) p) (PartialOrder.toPreorder.{0} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) p) (StrictOrderedSemiring.toPartialOrder.{0} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) p) Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) p) 1 (instOfNatNat 1)) (FunLike.coe.{1, 1, 1} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) _x) (Finsupp.funLike.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Nat.factorization n) p)) (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p i) n) (fun (a : Nat) => Nat.decidable_dvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p a) n) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n)))
-Case conversion may be inaccurate. Consider using '#align nat.Icc_factorization_eq_pow_dvd Nat.Icc_factorization_eq_pow_dvdₓ'. -/
 /-- The set of positive powers of prime `p` that divide `n` is exactly the set of
 positive natural numbers up to `n.factorization p`. -/
 theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
@@ -915,23 +855,11 @@ theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
   exact fun H1 H2 => lt_of_le_of_lt H2 (factorization_lt p hn)
 #align nat.Icc_factorization_eq_pow_dvd Nat.Icc_factorization_eq_pow_dvd
 
-/- warning: nat.factorization_eq_card_pow_dvd -> Nat.factorization_eq_card_pow_dvd is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) {p : Nat}, (Nat.Prime p) -> (Eq.{1} Nat (coeFn.{1, 1} (Finsupp.{0, 0} Nat Nat Nat.hasZero) (fun (_x : Finsupp.{0, 0} Nat Nat Nat.hasZero) => Nat -> Nat) (Finsupp.coeFun.{0, 0} Nat Nat Nat.hasZero) (Nat.factorization n) p) (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p i) n) (fun (a : Nat) => Nat.decidableDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p a) n) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) n))))
-but is expected to have type
-  forall (n : Nat) {p : Nat}, (Nat.Prime p) -> (Eq.{1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) p) (FunLike.coe.{1, 1, 1} (Finsupp.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Nat) => Nat) _x) (Finsupp.funLike.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Nat.factorization n) p) (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p i) n) (fun (a : Nat) => Nat.decidable_dvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p a) n) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n))))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_eq_card_pow_dvd Nat.factorization_eq_card_pow_dvdₓ'. -/
 theorem factorization_eq_card_pow_dvd (n : ℕ) {p : ℕ} (pp : p.Prime) :
     n.factorization p = ((Ico 1 n).filterₓ fun i => p ^ i ∣ n).card := by
   simp [← Icc_factorization_eq_pow_dvd n pp]
 #align nat.factorization_eq_card_pow_dvd Nat.factorization_eq_card_pow_dvd
 
-/- warning: nat.Ico_filter_pow_dvd_eq -> Nat.Ico_filter_pow_dvd_eq is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {p : Nat} {b : Nat}, (Nat.Prime p) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LE.le.{0} Nat Nat.hasLe n (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p b)) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p i) n) (fun (a : Nat) => Nat.decidableDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p a) n) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) n)) (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p i) n) (fun (a : Nat) => Nat.decidableDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p a) n) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) b)))
-but is expected to have type
-  forall {n : Nat} {p : Nat} {b : Nat}, (Nat.Prime p) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (LE.le.{0} Nat instLENat n (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p b)) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p i) n) (fun (a : Nat) => Nat.decidable_dvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p a) n) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n)) (Finset.filter.{0} Nat (fun (i : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p i) n) (fun (a : Nat) => Nat.decidable_dvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p a) n) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) b)))
-Case conversion may be inaccurate. Consider using '#align nat.Ico_filter_pow_dvd_eq Nat.Ico_filter_pow_dvd_eqₓ'. -/
 theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
     ((Ico 1 n).filterₓ fun i => p ^ i ∣ n) = (Icc 1 b).filterₓ fun i => p ^ i ∣ n :=
   by
@@ -983,12 +911,6 @@ theorem factorization_eq_of_coprime_right {p a b : ℕ} (hab : coprime a b) (hpb
 #align nat.factorization_eq_of_coprime_right Nat.factorization_eq_of_coprime_right
 -/
 
-/- warning: nat.factorization_disjoint_of_coprime -> Nat.factorization_disjoint_of_coprime is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Disjoint.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat) (Finset.orderBot.{0} Nat) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization a)) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization b)))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Disjoint.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{0} Nat) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization a)) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization b)))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_disjoint_of_coprime Nat.factorization_disjoint_of_coprimeₓ'. -/
 /-- The prime factorizations of coprime `a` and `b` are disjoint -/
 theorem factorization_disjoint_of_coprime {a b : ℕ} (hab : coprime a b) :
     Disjoint a.factorization.support b.factorization.support := by
@@ -996,12 +918,6 @@ theorem factorization_disjoint_of_coprime {a b : ℕ} (hab : coprime a b) :
     disjoint_to_finset_iff_disjoint.mpr (coprime_factors_disjoint hab)
 #align nat.factorization_disjoint_of_coprime Nat.factorization_disjoint_of_coprime
 
-/- warning: nat.factorization_mul_support_of_coprime -> Nat.factorization_mul_support_of_coprime is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization a)) (Finsupp.support.{0, 0} Nat Nat Nat.hasZero (Nat.factorization b))))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization a)) (Finsupp.support.{0, 0} Nat Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (Nat.factorization b))))
-Case conversion may be inaccurate. Consider using '#align nat.factorization_mul_support_of_coprime Nat.factorization_mul_support_of_coprimeₓ'. -/
 /-- For coprime `a` and `b` the prime factorization `a * b` is the union of those of `a` and `b` -/
 theorem factorization_mul_support_of_coprime {a b : ℕ} (hab : coprime a b) :
     (a * b).factorization.support = a.factorization.support ∪ b.factorization.support :=
@@ -1087,12 +1003,6 @@ def recOnMul {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (hp : ∀ p, Prime p →
 #align nat.rec_on_mul Nat.recOnMul
 -/
 
-/- warning: nat.multiplicative_factorization -> Nat.multiplicative_factorization is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : Nat -> β), (forall (x : Nat) (y : Nat), (Nat.coprime x y) -> (Eq.{succ u1} β (f (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x y)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (f x) (f y)))) -> (Eq.{succ u1} β (f (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{u1} β 1 (OfNat.mk.{u1} β 1 (One.one.{u1} β (MulOneClass.toHasOne.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))))) -> (forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} β (f n) (Finsupp.prod.{0, 0, u1} Nat Nat β Nat.hasZero _inst_1 (Nat.factorization n) (fun (p : Nat) (k : Nat) => f (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p k)))))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : Nat -> β), (forall (x : Nat) (y : Nat), (Nat.coprime x y) -> (Eq.{succ u1} β (f (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x y)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (f x) (f y)))) -> (Eq.{succ u1} β (f (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Monoid.toOne.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) -> (forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u1} β (f n) (Finsupp.prod.{0, 0, u1} Nat Nat β (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) _inst_1 (Nat.factorization n) (fun (p : Nat) (k : Nat) => f (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p k)))))
-Case conversion may be inaccurate. Consider using '#align nat.multiplicative_factorization Nat.multiplicative_factorizationₓ'. -/
 /-- For any multiplicative function `f` with `f 1 = 1` and any `n ≠ 0`,
 we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/
 theorem multiplicative_factorization {β : Type _} [CommMonoid β] (f : ℕ → β)
@@ -1109,12 +1019,6 @@ theorem multiplicative_factorization {β : Type _} [CommMonoid β] (f : ℕ → 
     convert factorization_disjoint_of_coprime hab
 #align nat.multiplicative_factorization Nat.multiplicative_factorization
 
-/- warning: nat.multiplicative_factorization' -> Nat.multiplicative_factorization' is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : Nat -> β), (forall (x : Nat) (y : Nat), (Nat.coprime x y) -> (Eq.{succ u1} β (f (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x y)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (f x) (f y)))) -> (Eq.{succ u1} β (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u1} β 1 (OfNat.mk.{u1} β 1 (One.one.{u1} β (MulOneClass.toHasOne.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))))) -> (Eq.{succ u1} β (f (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{u1} β 1 (OfNat.mk.{u1} β 1 (One.one.{u1} β (MulOneClass.toHasOne.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))))) -> (forall {n : Nat}, Eq.{succ u1} β (f n) (Finsupp.prod.{0, 0, u1} Nat Nat β Nat.hasZero _inst_1 (Nat.factorization n) (fun (p : Nat) (k : Nat) => f (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p k))))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : Nat -> β), (forall (x : Nat) (y : Nat), (Nat.coprime x y) -> (Eq.{succ u1} β (f (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x y)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (f x) (f y)))) -> (Eq.{succ u1} β (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Monoid.toOne.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) -> (Eq.{succ u1} β (f (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Monoid.toOne.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) -> (forall {n : Nat}, Eq.{succ u1} β (f n) (Finsupp.prod.{0, 0, u1} Nat Nat β (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) _inst_1 (Nat.factorization n) (fun (p : Nat) (k : Nat) => f (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p k))))
-Case conversion may be inaccurate. Consider using '#align nat.multiplicative_factorization' Nat.multiplicative_factorization'ₓ'. -/
 /-- For any multiplicative function `f` with `f 1 = 1` and `f 0 = 1`,
 we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/
 theorem multiplicative_factorization' {β : Type _} [CommMonoid β] (f : ℕ → β)
@@ -1169,12 +1073,6 @@ theorem prod_pow_prime_padicValNat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < 
 /-! ### Lemmas about factorizations of particular functions -/
 
 
-/- warning: nat.card_multiples -> Nat.card_multiples is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (p : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (e : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) e (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (a : Nat) => Nat.decidableDvd p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.range n))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n p)
-but is expected to have type
-  forall (n : Nat) (p : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (e : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) e (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (a : Nat) => Nat.decidable_dvd p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.range n))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n p)
-Case conversion may be inaccurate. Consider using '#align nat.card_multiples Nat.card_multiplesₓ'. -/
 -- TODO: Port lemmas from `data/nat/multiplicity` to here, re-written in terms of `factorization`
 /-- Exactly `n / p` naturals in `[1, n]` are multiples of `p`. -/
 theorem card_multiples (n p : ℕ) : card ((Finset.range n).filterₓ fun e => p ∣ e + 1) = n / p :=
@@ -1184,12 +1082,6 @@ theorem card_multiples (n p : ℕ) : card ((Finset.range n).filterₓ fun e => p
     card_insert_of_not_mem, hn]
 #align nat.card_multiples Nat.card_multiples
 
-/- warning: nat.Ioc_filter_dvd_card_eq_div -> Nat.Ioc_filter_dvd_card_eq_div is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (p : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (x : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd p x) (fun (a : Nat) => Nat.decidableDvd p a) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n p)
-but is expected to have type
-  forall (n : Nat) (p : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (x : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat p x) (fun (a : Nat) => Nat.decidable_dvd p a) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n p)
-Case conversion may be inaccurate. Consider using '#align nat.Ioc_filter_dvd_card_eq_div Nat.Ioc_filter_dvd_card_eq_divₓ'. -/
 /-- Exactly `n / p` naturals in `(0, n]` are multiples of `p`. -/
 theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filterₓ fun x => p ∣ x).card = n / p :=
   by

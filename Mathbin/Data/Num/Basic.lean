@@ -254,23 +254,11 @@ def castNum [z : Zero α] : Num → α
 #align cast_num castNum
 -/
 
-/- warning: pos_num_coe -> posNumCoe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α], CoeTCₓ.{1, succ u1} PosNum α
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α], CoeHTCT.{1, succ u1} PosNum α
-Case conversion may be inaccurate. Consider using '#align pos_num_coe posNumCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) posNumCoe : CoeTC PosNum α :=
   ⟨castPosNum⟩
 #align pos_num_coe posNumCoe
 
-/- warning: num_nat_coe -> numNatCoe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α] [z : Zero.{u1} α], CoeTCₓ.{1, succ u1} Num α
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : Add.{u1} α] [z : Zero.{u1} α], CoeHTCT.{1, succ u1} Num α
-Case conversion may be inaccurate. Consider using '#align num_nat_coe numNatCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) numNatCoe [z : Zero α] : CoeTC Num α :=
   ⟨castNum⟩
@@ -903,12 +891,6 @@ def castZNum : ZNum → α
 #align cast_znum castZNum
 -/
 
-/- warning: znum_coe -> znumCoe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : Neg.{u1} α], CoeTCₓ.{1, succ u1} ZNum α
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : Neg.{u1} α], CoeHTCT.{1, succ u1} ZNum α
-Case conversion may be inaccurate. Consider using '#align znum_coe znumCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) znumCoe : CoeTC ZNum α :=
   ⟨castZNum⟩

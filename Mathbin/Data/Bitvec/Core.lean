@@ -403,12 +403,6 @@ theorem toNat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
 #align bitvec.to_nat_append Bitvec.toNat_append
 -/
 
-/- warning: bitvec.bits_to_nat_to_bool -> Bitvec.bits_toNat_decide is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Bitvec.toNat (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Vector.cons.{0} Bool (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Decidable.decide (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Nat.decidableEq (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.nil.{0} Bool))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Bitvec.toNat (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Vector.cons.{0} Bool (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Decidable.decide (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.nil.{0} Bool))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
-Case conversion may be inaccurate. Consider using '#align bitvec.bits_to_nat_to_bool Bitvec.bits_toNat_decideₓ'. -/
 theorem bits_toNat_decide (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
   by
   simp [bits_to_nat_to_list]
@@ -416,12 +410,6 @@ theorem bits_toNat_decide (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil
   simp [cond_to_bool_mod_two]
 #align bitvec.bits_to_nat_to_bool Bitvec.bits_toNat_decide
 
-/- warning: bitvec.of_nat_succ -> Bitvec.ofNat_succ is a dubious translation:
-lean 3 declaration is
-  forall {k : Nat} {n : Nat}, Eq.{1} (Bitvec (Nat.succ k)) (Bitvec.ofNat (Nat.succ k) n) (Vector.append.{0} Bool k (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Bitvec.ofNat k (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Vector.cons.{0} Bool (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Decidable.decide (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Nat.decidableEq (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.nil.{0} Bool)))
-but is expected to have type
-  forall {k : Nat} {n : Nat}, Eq.{1} (Bitvec (Nat.succ k)) (Bitvec.ofNat (Nat.succ k) n) (Vector.append.{0} Bool k (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Bitvec.ofNat k (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Vector.cons.{0} Bool (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Decidable.decide (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.nil.{0} Bool)))
-Case conversion may be inaccurate. Consider using '#align bitvec.of_nat_succ Bitvec.ofNat_succₓ'. -/
 theorem ofNat_succ {k n : ℕ} :
     Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
   rfl

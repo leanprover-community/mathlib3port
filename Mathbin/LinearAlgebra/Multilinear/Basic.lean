@@ -123,9 +123,6 @@ theorem toFun_eq_coe : f.toFun = f :=
 #align multilinear_map.to_fun_eq_coe MultilinearMap.toFun_eq_coe
 -/
 
-/- warning: multilinear_map.coe_mk -> MultilinearMap.coe_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.coe_mk MultilinearMap.coe_mkₓ'. -/
 @[simp]
 theorem coe_mk (f : (∀ i, M₁ i) → M₂) (h₁ h₂) : ⇑(⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
   rfl
@@ -169,17 +166,11 @@ theorem ext_iff {f g : MultilinearMap R M₁ M₂} : f = g ↔ ∀ x, f x = g x 
 #align multilinear_map.ext_iff MultilinearMap.ext_iff
 -/
 
-/- warning: multilinear_map.mk_coe -> MultilinearMap.mk_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.mk_coe MultilinearMap.mk_coeₓ'. -/
 @[simp]
 theorem mk_coe (f : MultilinearMap R M₁ M₂) (h₁ h₂) : (⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
   by ext; rfl
 #align multilinear_map.mk_coe MultilinearMap.mk_coe
 
-/- warning: multilinear_map.map_add -> MultilinearMap.map_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_add MultilinearMap.map_addₓ'. -/
 @[simp]
 protected theorem map_add [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
     f (update m i (x + y)) = f (update m i x) + f (update m i y) :=
@@ -194,35 +185,17 @@ protected theorem map_smul [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (c : R)
 #align multilinear_map.map_smul MultilinearMap.map_smul
 -/
 
-/- warning: multilinear_map.map_coord_zero -> MultilinearMap.map_coord_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) {m : forall (i : ι), M₁ i} (i : ι), (Eq.{succ u2} (M₁ i) (m i) (OfNat.ofNat.{u2} (M₁ i) 0 (OfNat.mk.{u2} (M₁ i) 0 (Zero.zero.{u2} (M₁ i) (AddZeroClass.toHasZero.{u2} (M₁ i) (AddMonoid.toAddZeroClass.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i)))))))) -> (Eq.{succ u3} M₂ (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) => (forall (i : ι), M₁ i) -> M₂) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) f m) (OfNat.ofNat.{u3} M₂ 0 (OfNat.mk.{u3} M₂ 0 (Zero.zero.{u3} M₂ (AddZeroClass.toHasZero.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4)))))))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) {m : forall (i : ι), M₁ i} (i : ι), (Eq.{succ u2} (M₁ i) (m i) (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i)))))) -> (Eq.{succ u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (FunLike.coe.{max (max (succ u4) (succ u2)) (succ u3), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (forall (i : ι), M₁ i) (fun (f : forall (i : ι), M₁ i) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) f m) (OfNat.ofNat.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) 0 (Zero.toOfNat0.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (AddMonoid.toZero.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (AddCommMonoid.toAddMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) _inst_4)))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_coord_zero MultilinearMap.map_coord_zeroₓ'. -/
 theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by
   classical
     have : (0 : R) • (0 : M₁ i) = 0 := by simp
     rw [← update_eq_self i m, h, ← this, f.map_smul, zero_smul]
 #align multilinear_map.map_coord_zero MultilinearMap.map_coord_zero
 
-/- warning: multilinear_map.map_update_zero -> MultilinearMap.map_update_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) [_inst_12 : DecidableEq.{succ u4} ι] (m : forall (i : ι), M₁ i) (i : ι), Eq.{succ u3} M₂ (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) => (forall (i : ι), M₁ i) -> M₂) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) f (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (OfNat.mk.{u2} (M₁ i) 0 (Zero.zero.{u2} (M₁ i) (AddZeroClass.toHasZero.{u2} (M₁ i) (AddMonoid.toAddZeroClass.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))))) (OfNat.ofNat.{u3} M₂ 0 (OfNat.mk.{u3} M₂ 0 (Zero.zero.{u3} M₂ (AddZeroClass.toHasZero.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) [_inst_12 : DecidableEq.{succ u4} ι] (m : forall (i : ι), M₁ i) (i : ι), Eq.{succ u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (FunLike.coe.{max (max (succ u4) (succ u2)) (succ u3), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (forall (i : ι), M₁ i) (fun (f : forall (i : ι), M₁ i) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) f (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (OfNat.ofNat.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) 0 (Zero.toOfNat0.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (AddMonoid.toZero.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (AddCommMonoid.toAddMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (Function.update.{succ u4, succ u2} ι (fun (i : ι) => M₁ i) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} (M₁ i) 0 (Zero.toOfNat0.{u2} (M₁ i) (AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) _inst_4))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_update_zero MultilinearMap.map_update_zeroₓ'. -/
 @[simp]
 theorem map_update_zero [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) : f (update m i 0) = 0 :=
   f.map_coord_zero i (update_same i 0 m)
 #align multilinear_map.map_update_zero MultilinearMap.map_update_zero
 
-/- warning: multilinear_map.map_zero -> MultilinearMap.map_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) [_inst_12 : Nonempty.{succ u4} ι], Eq.{succ u3} M₂ (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) => (forall (i : ι), M₁ i) -> M₂) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) f (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (OfNat.mk.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.zero.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddZeroClass.toHasZero.{u2} (M₁ i) (AddMonoid.toAddZeroClass.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))))) (OfNat.ofNat.{u3} M₂ 0 (OfNat.mk.{u3} M₂ 0 (Zero.zero.{u3} M₂ (AddZeroClass.toHasZero.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) [_inst_12 : Nonempty.{succ u4} ι], Eq.{succ u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.toOfNat0.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (FunLike.coe.{max (max (succ u4) (succ u2)) (succ u3), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (forall (i : ι), M₁ i) (fun (f : forall (i : ι), M₁ i) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) f (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.toOfNat0.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (OfNat.ofNat.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.toOfNat0.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) 0 (Zero.toOfNat0.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.toOfNat0.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (AddMonoid.toZero.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.toOfNat0.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) (AddCommMonoid.toAddMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) (OfNat.ofNat.{max u4 u2} (forall (i : ι), M₁ i) 0 (Zero.toOfNat0.{max u4 u2} (forall (i : ι), M₁ i) (Pi.instZero.{u4, u2} ι (fun (i : ι) => M₁ i) (fun (i : ι) => AddMonoid.toZero.{u2} (M₁ i) (AddCommMonoid.toAddMonoid.{u2} (M₁ i) (_inst_3 i))))))) _inst_4))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_zero MultilinearMap.map_zeroₓ'. -/
 @[simp]
 theorem map_zero [Nonempty ι] : f 0 = 0 :=
   by
@@ -235,9 +208,6 @@ instance : Add (MultilinearMap R M₁ M₂) :=
     ⟨fun x => f x + f' x, fun m i x y => by simp [add_left_comm, add_assoc], fun _ m i c x => by
       simp [smul_add]⟩⟩
 
-/- warning: multilinear_map.add_apply -> MultilinearMap.add_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.add_apply MultilinearMap.add_applyₓ'. -/
 @[simp]
 theorem add_apply (m : ∀ i, M₁ i) : (f + f') m = f m + f' m :=
   rfl
@@ -249,12 +219,6 @@ instance : Zero (MultilinearMap R M₁ M₂) :=
 instance : Inhabited (MultilinearMap R M₁ M₂) :=
   ⟨0⟩
 
-/- warning: multilinear_map.zero_apply -> MultilinearMap.zero_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (m : forall (i : ι), M₁ i), Eq.{succ u3} M₂ (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) => (forall (i : ι), M₁ i) -> M₂) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (OfNat.ofNat.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) 0 (OfNat.mk.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) 0 (Zero.zero.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (MultilinearMap.hasZero.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9)))) m) (OfNat.ofNat.{u3} M₂ 0 (OfNat.mk.{u3} M₂ 0 (Zero.zero.{u3} M₂ (AddZeroClass.toHasZero.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] (m : forall (i : ι), M₁ i), Eq.{succ u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (FunLike.coe.{max (max (succ u4) (succ u2)) (succ u3), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (forall (i : ι), M₁ i) (fun (f : forall (i : ι), M₁ i) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (OfNat.ofNat.{max (max u4 u2) u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) 0 (Zero.toOfNat0.{max (max u4 u2) u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (MultilinearMap.instZeroMultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9))) m) (OfNat.ofNat.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) 0 (Zero.toOfNat0.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (AddMonoid.toZero.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (AddCommMonoid.toAddMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) _inst_4))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.zero_apply MultilinearMap.zero_applyₓ'. -/
 @[simp]
 theorem zero_apply (m : ∀ i, M₁ i) : (0 : MultilinearMap R M₁ M₂) m = 0 :=
   rfl
@@ -270,17 +234,11 @@ instance : SMul R' (MultilinearMap A M₁ M₂) :=
     ⟨fun m => c • f m, fun _ m i x y => by simp [smul_add], fun _ l i x d => by
       simp [← smul_comm x c]⟩⟩
 
-/- warning: multilinear_map.smul_apply -> MultilinearMap.smul_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.smul_apply MultilinearMap.smul_applyₓ'. -/
 @[simp]
 theorem smul_apply (f : MultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
   rfl
 #align multilinear_map.smul_apply MultilinearMap.smul_apply
 
-/- warning: multilinear_map.coe_smul -> MultilinearMap.coe_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.coe_smul MultilinearMap.coe_smulₓ'. -/
 theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : ⇑(c • f) = c • f :=
   rfl
 #align multilinear_map.coe_smul MultilinearMap.coe_smul
@@ -290,9 +248,6 @@ end SMul
 instance : AddCommMonoid (MultilinearMap R M₁ M₂) :=
   coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
-/- warning: multilinear_map.sum_apply -> MultilinearMap.sum_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.sum_apply MultilinearMap.sum_applyₓ'. -/
 @[simp]
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
     ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m := by
@@ -314,12 +269,6 @@ def toLinearMap [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) : M₁ i →ₗ[R]
 #align multilinear_map.to_linear_map MultilinearMap.toLinearMap
 -/
 
-/- warning: multilinear_map.prod -> MultilinearMap.prod is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u5}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} {M₃ : Type.{u4}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : AddCommMonoid.{u4} M₃] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u4} R M₃ _inst_1 _inst_5], (MultilinearMap.{u1, u2, u3, u5} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) -> (MultilinearMap.{u1, u2, u4, u5} R ι M₁ M₃ _inst_1 (fun (i : ι) => _inst_3 i) _inst_5 (fun (i : ι) => _inst_8 i) _inst_10) -> (MultilinearMap.{u1, u2, max u3 u4, u5} R ι M₁ (Prod.{u3, u4} M₂ M₃) _inst_1 (fun (i : ι) => _inst_3 i) (Prod.addCommMonoid.{u3, u4} M₂ M₃ _inst_4 _inst_5) (fun (i : ι) => _inst_8 i) (Prod.module.{u1, u3, u4} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u5}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} {M₃ : Type.{u4}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : AddCommMonoid.{u4} M₃] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u4} R M₃ _inst_1 _inst_5], (MultilinearMap.{u1, u2, u3, u5} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) -> (MultilinearMap.{u1, u2, u4, u5} R ι M₁ M₃ _inst_1 (fun (i : ι) => _inst_3 i) _inst_5 (fun (i : ι) => _inst_8 i) _inst_10) -> (MultilinearMap.{u1, u2, max u4 u3, u5} R ι M₁ (Prod.{u3, u4} M₂ M₃) _inst_1 (fun (i : ι) => _inst_3 i) (Prod.instAddCommMonoidSum.{u3, u4} M₂ M₃ _inst_4 _inst_5) (fun (i : ι) => _inst_8 i) (Prod.module.{u1, u3, u4} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.prod MultilinearMap.prodₓ'. -/
 /-- The cartesian product of two multilinear maps, as a multilinear map. -/
 @[simps]
 def prod (f : MultilinearMap R M₁ M₂) (g : MultilinearMap R M₁ M₃) : MultilinearMap R M₁ (M₂ × M₃)
@@ -393,9 +342,6 @@ def restr {k n : ℕ} (f : MultilinearMap R (fun i : Fin n => M') M₂) (s : Fin
 
 variable {R}
 
-/- warning: multilinear_map.cons_add -> MultilinearMap.cons_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.cons_add MultilinearMap.cons_addₓ'. -/
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the additivity of a
 multilinear map along the first variable. -/
@@ -404,9 +350,6 @@ theorem cons_add (f : MultilinearMap R M M₂) (m : ∀ i : Fin n, M i.succ) (x 
   rw [← update_cons_zero x m (x + y), f.map_add, update_cons_zero, update_cons_zero]
 #align multilinear_map.cons_add MultilinearMap.cons_add
 
-/- warning: multilinear_map.cons_smul -> MultilinearMap.cons_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.cons_smul MultilinearMap.cons_smulₓ'. -/
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the multiplicativity
 of a multilinear map along the first variable. -/
@@ -415,9 +358,6 @@ theorem cons_smul (f : MultilinearMap R M M₂) (m : ∀ i : Fin n, M i.succ) (c
   rw [← update_cons_zero x m (c • x), f.map_smul, update_cons_zero]
 #align multilinear_map.cons_smul MultilinearMap.cons_smul
 
-/- warning: multilinear_map.snoc_add -> MultilinearMap.snoc_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.snoc_add MultilinearMap.snoc_addₓ'. -/
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `snoc`, one can express directly the additivity of a
 multilinear map along the first variable. -/
@@ -426,9 +366,6 @@ theorem snoc_add (f : MultilinearMap R M M₂) (m : ∀ i : Fin n, M i.cast_succ
   rw [← update_snoc_last x m (x + y), f.map_add, update_snoc_last, update_snoc_last]
 #align multilinear_map.snoc_add MultilinearMap.snoc_add
 
-/- warning: multilinear_map.snoc_smul -> MultilinearMap.snoc_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.snoc_smul MultilinearMap.snoc_smulₓ'. -/
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the multiplicativity
 of a multilinear map along the first variable. -/
@@ -463,18 +400,12 @@ def compLinearMap (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i →ₗ[R]
 #align multilinear_map.comp_linear_map MultilinearMap.compLinearMap
 -/
 
-/- warning: multilinear_map.comp_linear_map_apply -> MultilinearMap.compLinearMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.comp_linear_map_apply MultilinearMap.compLinearMap_applyₓ'. -/
 @[simp]
 theorem compLinearMap_apply (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i →ₗ[R] M₁' i)
     (m : ∀ i, M₁ i) : g.compLinearMap f m = g fun i => f i (m i) :=
   rfl
 #align multilinear_map.comp_linear_map_apply MultilinearMap.compLinearMap_apply
 
-/- warning: multilinear_map.comp_linear_map_assoc -> MultilinearMap.compLinearMap_assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.comp_linear_map_assoc MultilinearMap.compLinearMap_assocₓ'. -/
 /-- Composing a multilinear map twice with a linear map in each argument is
 the same as composing with their composition. -/
 theorem compLinearMap_assoc (g : MultilinearMap R M₁'' M₂) (f₁ : ∀ i, M₁' i →ₗ[R] M₁'' i)
@@ -483,12 +414,6 @@ theorem compLinearMap_assoc (g : MultilinearMap R M₁'' M₂) (f₁ : ∀ i, M�
   rfl
 #align multilinear_map.comp_linear_map_assoc MultilinearMap.compLinearMap_assoc
 
-/- warning: multilinear_map.zero_comp_linear_map -> MultilinearMap.zero_compLinearMap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_8 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u1, u3} R M₂ _inst_1 _inst_4] {M₁' : ι -> Type.{u5}} [_inst_12 : forall (i : ι), AddCommMonoid.{u5} (M₁' i)] [_inst_13 : forall (i : ι), Module.{u1, u5} R (M₁' i) _inst_1 (_inst_12 i)] (f : forall (i : ι), LinearMap.{u1, u1, u2, u5} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (M₁ i) (M₁' i) (_inst_3 i) (_inst_12 i) (_inst_8 i) (_inst_13 i)), Eq.{max (succ u4) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (MultilinearMap.compLinearMap.{u1, u2, u3, u4, u5} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9 M₁' (fun (i : ι) => _inst_12 i) (fun (i : ι) => _inst_13 i) (OfNat.ofNat.{max u4 u5 u3} (MultilinearMap.{u1, u5, u3, u4} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) 0 (OfNat.mk.{max u4 u5 u3} (MultilinearMap.{u1, u5, u3, u4} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) 0 (Zero.zero.{max u4 u5 u3} (MultilinearMap.{u1, u5, u3, u4} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) (MultilinearMap.hasZero.{u1, u5, u3, u4} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9)))) f) (OfNat.ofNat.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) 0 (OfNat.mk.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) 0 (Zero.zero.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (MultilinearMap.hasZero.{u1, u2, u3, u4} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9))))
-but is expected to have type
-  forall {R : Type.{u2}} {ι : Type.{u5}} {M₁ : ι -> Type.{u3}} {M₂ : Type.{u4}} [_inst_1 : Semiring.{u2} R] [_inst_3 : forall (i : ι), AddCommMonoid.{u3} (M₁ i)] [_inst_4 : AddCommMonoid.{u4} M₂] [_inst_8 : forall (i : ι), Module.{u2, u3} R (M₁ i) _inst_1 (_inst_3 i)] [_inst_9 : Module.{u2, u4} R M₂ _inst_1 _inst_4] {M₁' : ι -> Type.{u1}} [_inst_12 : forall (i : ι), AddCommMonoid.{u1} (M₁' i)] [_inst_13 : forall (i : ι), Module.{u2, u1} R (M₁' i) _inst_1 (_inst_12 i)] (f : forall (i : ι), LinearMap.{u2, u2, u3, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (M₁ i) (M₁' i) (_inst_3 i) (_inst_12 i) (_inst_8 i) (_inst_13 i)), Eq.{max (max (succ u5) (succ u3)) (succ u4)} (MultilinearMap.{u2, u3, u4, u5} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (MultilinearMap.compLinearMap.{u2, u3, u4, u5, u1} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9 M₁' (fun (i : ι) => _inst_12 i) (fun (i : ι) => _inst_13 i) (OfNat.ofNat.{max (max u5 u4) u1} (MultilinearMap.{u2, u1, u4, u5} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) 0 (Zero.toOfNat0.{max (max u5 u4) u1} (MultilinearMap.{u2, u1, u4, u5} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) (MultilinearMap.instZeroMultilinearMap.{u2, u1, u4, u5} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9))) f) (OfNat.ofNat.{max (max u5 u3) u4} (MultilinearMap.{u2, u3, u4, u5} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) 0 (Zero.toOfNat0.{max (max u5 u3) u4} (MultilinearMap.{u2, u3, u4, u5} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9) (MultilinearMap.instZeroMultilinearMap.{u2, u3, u4, u5} R ι (fun (i : ι) => M₁ i) M₂ _inst_1 (fun (i : ι) => _inst_3 i) _inst_4 (fun (i : ι) => _inst_8 i) _inst_9)))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.zero_comp_linear_map MultilinearMap.zero_compLinearMapₓ'. -/
 /-- Composing the zero multilinear map with a linear map in each argument. -/
 @[simp]
 theorem zero_compLinearMap (f : ∀ i, M₁ i →ₗ[R] M₁' i) :
@@ -496,12 +421,6 @@ theorem zero_compLinearMap (f : ∀ i, M₁ i →ₗ[R] M₁' i) :
   ext fun _ => rfl
 #align multilinear_map.zero_comp_linear_map MultilinearMap.zero_compLinearMap
 
-/- warning: multilinear_map.comp_linear_map_id -> MultilinearMap.compLinearMap_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u3}} {M₂ : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_9 : Module.{u1, u2} R M₂ _inst_1 _inst_4] {M₁' : ι -> Type.{u4}} [_inst_12 : forall (i : ι), AddCommMonoid.{u4} (M₁' i)] [_inst_13 : forall (i : ι), Module.{u1, u4} R (M₁' i) _inst_1 (_inst_12 i)] (g : MultilinearMap.{u1, u4, u2, u3} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9), Eq.{max (succ u3) (succ u4) (succ u2)} (MultilinearMap.{u1, u4, u2, u3} R ι (fun (i : ι) => M₁' i) M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) (MultilinearMap.compLinearMap.{u1, u4, u2, u3, u4} R ι (fun (i : ι) => M₁' i) M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9 M₁' (fun (i : ι) => _inst_12 i) (fun (i : ι) => _inst_13 i) g (fun (i : ι) => LinearMap.id.{u1, u4} R (M₁' i) _inst_1 (_inst_12 i) (_inst_13 i))) g
-but is expected to have type
-  forall {R : Type.{u2}} {ι : Type.{u4}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u2} R] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_9 : Module.{u2, u3} R M₂ _inst_1 _inst_4] {M₁' : ι -> Type.{u1}} [_inst_12 : forall (i : ι), AddCommMonoid.{u1} (M₁' i)] [_inst_13 : forall (i : ι), Module.{u2, u1} R (M₁' i) _inst_1 (_inst_12 i)] (g : MultilinearMap.{u2, u1, u3, u4} R ι M₁' M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9), Eq.{max (max (succ u4) (succ u3)) (succ u1)} (MultilinearMap.{u2, u1, u3, u4} R ι (fun (i : ι) => M₁' i) M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9) (MultilinearMap.compLinearMap.{u2, u1, u3, u4, u1} R ι (fun (i : ι) => M₁' i) M₂ _inst_1 (fun (i : ι) => _inst_12 i) _inst_4 (fun (i : ι) => _inst_13 i) _inst_9 M₁' (fun (i : ι) => _inst_12 i) (fun (i : ι) => _inst_13 i) g (fun (i : ι) => LinearMap.id.{u2, u1} R (M₁' i) _inst_1 (_inst_12 i) (_inst_13 i))) g
-Case conversion may be inaccurate. Consider using '#align multilinear_map.comp_linear_map_id MultilinearMap.compLinearMap_idₓ'. -/
 /-- Composing a multilinear map with the identity linear map in each argument. -/
 @[simp]
 theorem compLinearMap_id (g : MultilinearMap R M₁' M₂) :
@@ -509,9 +428,6 @@ theorem compLinearMap_id (g : MultilinearMap R M₁' M₂) :
   ext fun _ => rfl
 #align multilinear_map.comp_linear_map_id MultilinearMap.compLinearMap_id
 
-/- warning: multilinear_map.comp_linear_map_injective -> MultilinearMap.compLinearMap_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.comp_linear_map_injective MultilinearMap.compLinearMap_injectiveₓ'. -/
 /-- Composing with a family of surjective linear maps is injective. -/
 theorem compLinearMap_injective (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, Surjective (f i)) :
     Injective fun g : MultilinearMap R M₁' M₂ => g.compLinearMap f := fun g₁ g₂ h =>
@@ -519,17 +435,11 @@ theorem compLinearMap_injective (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ 
     simpa [fun i => surj_inv_eq (hf i)] using ext_iff.mp h fun i => surj_inv (hf i) (x i)
 #align multilinear_map.comp_linear_map_injective MultilinearMap.compLinearMap_injective
 
-/- warning: multilinear_map.comp_linear_map_inj -> MultilinearMap.compLinearMap_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.comp_linear_map_inj MultilinearMap.compLinearMap_injₓ'. -/
 theorem compLinearMap_inj (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, Surjective (f i))
     (g₁ g₂ : MultilinearMap R M₁' M₂) : g₁.compLinearMap f = g₂.compLinearMap f ↔ g₁ = g₂ :=
   (compLinearMap_injective _ hf).eq_iff
 #align multilinear_map.comp_linear_map_inj MultilinearMap.compLinearMap_inj
 
-/- warning: multilinear_map.comp_linear_equiv_eq_zero_iff -> MultilinearMap.comp_linearEquiv_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.comp_linear_equiv_eq_zero_iff MultilinearMap.comp_linearEquiv_eq_zero_iffₓ'. -/
 /-- Composing a multilinear map with a linear equiv on each argument gives the zero map
 if and only if the multilinear map is the zero map. -/
 @[simp]
@@ -542,9 +452,6 @@ theorem comp_linearEquiv_eq_zero_iff (g : MultilinearMap R M₁' M₂) (f : ∀ 
 
 end
 
-/- warning: multilinear_map.map_piecewise_add -> MultilinearMap.map_piecewise_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_piecewise_add MultilinearMap.map_piecewise_addₓ'. -/
 /-- If one adds to a vector `m'` another vector `m`, but only for coordinates in a finset `t`, then
 the image under a multilinear map `f` is the sum of `f (s.piecewise m m')` along all subsets `s` of
 `t`. This is mainly an auxiliary statement to prove the result when `t = univ`, given in
@@ -583,9 +490,6 @@ theorem map_piecewise_add [DecidableEq ι] (m m' : ∀ i, M₁ i) (t : Finset ι
   rw [this]
 #align multilinear_map.map_piecewise_add MultilinearMap.map_piecewise_add
 
-/- warning: multilinear_map.map_add_univ -> MultilinearMap.map_add_univ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_add_univ MultilinearMap.map_add_univₓ'. -/
 /-- Additivity of a multilinear map along all coordinates at the same time,
 writing `f (m + m')` as the sum  of `f (s.piecewise m m')` over all sets `s`. -/
 theorem map_add_univ [DecidableEq ι] [Fintype ι] (m m' : ∀ i, M₁ i) :
@@ -599,9 +503,6 @@ variable {α : ι → Type _} (g : ∀ i, α i → M₁ i) (A : ∀ i, Finset (�
 
 open Fintype Finset
 
-/- warning: multilinear_map.map_sum_finset_aux -> MultilinearMap.map_sum_finset_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_sum_finset_aux MultilinearMap.map_sum_finset_auxₓ'. -/
 /-- If `f` is multilinear, then `f (Σ_{j₁ ∈ A₁} g₁ j₁, ..., Σ_{jₙ ∈ Aₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
@@ -756,9 +657,6 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   rw [← Finset.sum_union D]
 #align multilinear_map.map_sum_finset_aux MultilinearMap.map_sum_finset_aux
 
-/- warning: multilinear_map.map_sum_finset -> MultilinearMap.map_sum_finset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_sum_finset MultilinearMap.map_sum_finsetₓ'. -/
 /-- If `f` is multilinear, then `f (Σ_{j₁ ∈ A₁} g₁ j₁, ..., Σ_{jₙ ∈ Aₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
@@ -768,9 +666,6 @@ theorem map_sum_finset [DecidableEq ι] [Fintype ι] :
   f.map_sum_finset_aux _ _ rfl
 #align multilinear_map.map_sum_finset MultilinearMap.map_sum_finset
 
-/- warning: multilinear_map.map_sum -> MultilinearMap.map_sum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_sum MultilinearMap.map_sumₓ'. -/
 /-- If `f` is multilinear, then `f (Σ_{j₁} g₁ j₁, ..., Σ_{jₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions `r`. This follows from
 multilinearity by expanding successively with respect to each coordinate. -/
@@ -779,9 +674,6 @@ theorem map_sum [DecidableEq ι] [Fintype ι] [∀ i, Fintype (α i)] :
   f.map_sum_finset g fun i => Finset.univ
 #align multilinear_map.map_sum MultilinearMap.map_sum
 
-/- warning: multilinear_map.map_update_sum -> MultilinearMap.map_update_sum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_update_sum MultilinearMap.map_update_sumₓ'. -/
 theorem map_update_sum {α : Type _} [DecidableEq ι] (t : Finset α) (i : ι) (g : α → M₁ i)
     (m : ∀ i, M₁ i) : f (update m i (∑ a in t, g a)) = ∑ a in t, f (update m i (g a)) := by
   classical
@@ -821,9 +713,6 @@ def restrictScalars (f : MultilinearMap A M₁ M₂) : MultilinearMap R M₁ M�
 #align multilinear_map.restrict_scalars MultilinearMap.restrictScalars
 -/
 
-/- warning: multilinear_map.coe_restrict_scalars -> MultilinearMap.coe_restrictScalars is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.coe_restrict_scalars MultilinearMap.coe_restrictScalarsₓ'. -/
 @[simp]
 theorem coe_restrictScalars (f : MultilinearMap A M₁ M₂) : ⇑(f.restrictScalars R) = f :=
   rfl
@@ -854,36 +743,18 @@ def domDomCongr (σ : ι₁ ≃ ι₂) (m : MultilinearMap R (fun i : ι₁ => M
 #align multilinear_map.dom_dom_congr MultilinearMap.domDomCongr
 -/
 
-/- warning: multilinear_map.dom_dom_congr_trans -> MultilinearMap.domDomCongr_trans is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M₂ : Type.{u2}} {M₃ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_5 : AddCommMonoid.{u3} M₃] [_inst_9 : Module.{u1, u2} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u3} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u4}} {ι₂ : Type.{u5}} {ι₃ : Type.{u6}} (σ₁ : Equiv.{succ u4, succ u5} ι₁ ι₂) (σ₂ : Equiv.{succ u5, succ u6} ι₂ ι₃) (m : MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10), Eq.{max (succ u6) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u6} R ι₃ (fun (i : ι₃) => M₂) M₃ _inst_1 (fun (i : ι₃) => _inst_4) _inst_5 (fun (i : ι₃) => _inst_9) _inst_10) (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u6} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₃ (Equiv.trans.{succ u4, succ u5, succ u6} ι₁ ι₂ ι₃ σ₁ σ₂) m) (MultilinearMap.domDomCongr.{u1, u2, u3, u5, u6} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₂ ι₃ σ₂ (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u5} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₂ σ₁ m))
-but is expected to have type
-  forall {R : Type.{u4}} {M₂ : Type.{u5}} {M₃ : Type.{u6}} [_inst_1 : Semiring.{u4} R] [_inst_4 : AddCommMonoid.{u5} M₂] [_inst_5 : AddCommMonoid.{u6} M₃] [_inst_9 : Module.{u4, u5} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u4, u6} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u3}} {ι₂ : Type.{u2}} {ι₃ : Type.{u1}} (σ₁ : Equiv.{succ u3, succ u2} ι₁ ι₂) (σ₂ : Equiv.{succ u2, succ u1} ι₂ ι₃) (m : MultilinearMap.{u4, u5, u6, u3} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10), Eq.{max (max (succ u5) (succ u6)) (succ u1)} (MultilinearMap.{u4, u5, u6, u1} R ι₃ (fun (i : ι₃) => M₂) M₃ _inst_1 (fun (i : ι₃) => _inst_4) _inst_5 (fun (i : ι₃) => _inst_9) _inst_10) (MultilinearMap.domDomCongr.{u4, u5, u6, u3, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₃ (Equiv.trans.{succ u3, succ u2, succ u1} ι₁ ι₂ ι₃ σ₁ σ₂) m) (MultilinearMap.domDomCongr.{u4, u5, u6, u2, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₂ ι₃ σ₂ (MultilinearMap.domDomCongr.{u4, u5, u6, u3, u2} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₂ σ₁ m))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_dom_congr_trans MultilinearMap.domDomCongr_transₓ'. -/
 theorem domDomCongr_trans (σ₁ : ι₁ ≃ ι₂) (σ₂ : ι₂ ≃ ι₃)
     (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
     m.domDomCongr (σ₁.trans σ₂) = (m.domDomCongr σ₁).domDomCongr σ₂ :=
   rfl
 #align multilinear_map.dom_dom_congr_trans MultilinearMap.domDomCongr_trans
 
-/- warning: multilinear_map.dom_dom_congr_mul -> MultilinearMap.domDomCongr_mul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M₂ : Type.{u2}} {M₃ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_5 : AddCommMonoid.{u3} M₃] [_inst_9 : Module.{u1, u2} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u3} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u4}} (σ₁ : Equiv.Perm.{succ u4} ι₁) (σ₂ : Equiv.Perm.{succ u4} ι₁) (m : MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10), Eq.{max (succ u4) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u4} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₁ (HMul.hMul.{u4, u4, u4} (Equiv.{succ u4, succ u4} ι₁ ι₁) (Equiv.{succ u4, succ u4} ι₁ ι₁) (Equiv.{succ u4, succ u4} ι₁ ι₁) (instHMul.{u4} (Equiv.{succ u4, succ u4} ι₁ ι₁) (MulOneClass.toHasMul.{u4} (Equiv.{succ u4, succ u4} ι₁ ι₁) (Monoid.toMulOneClass.{u4} (Equiv.{succ u4, succ u4} ι₁ ι₁) (DivInvMonoid.toMonoid.{u4} (Equiv.{succ u4, succ u4} ι₁ ι₁) (Group.toDivInvMonoid.{u4} (Equiv.{succ u4, succ u4} ι₁ ι₁) (Equiv.Perm.permGroup.{u4} ι₁)))))) σ₂ σ₁) m) (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u4} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₁ σ₂ (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u4} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₁ σ₁ m))
-but is expected to have type
-  forall {R : Type.{u2}} {M₂ : Type.{u3}} {M₃ : Type.{u4}} [_inst_1 : Semiring.{u2} R] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : AddCommMonoid.{u4} M₃] [_inst_9 : Module.{u2, u3} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u2, u4} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u1}} (σ₁ : Equiv.Perm.{succ u1} ι₁) (σ₂ : Equiv.Perm.{succ u1} ι₁) (m : MultilinearMap.{u2, u3, u4, u1} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10), Eq.{max (max (succ u3) (succ u4)) (succ u1)} (MultilinearMap.{u2, u3, u4, u1} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (MultilinearMap.domDomCongr.{u2, u3, u4, u1, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₁ (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} ι₁) (Equiv.Perm.{succ u1} ι₁) (Equiv.Perm.{succ u1} ι₁) (instHMul.{u1} (Equiv.Perm.{succ u1} ι₁) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} ι₁) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} ι₁) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} ι₁) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} ι₁) (Equiv.Perm.permGroup.{u1} ι₁)))))) σ₂ σ₁) m) (MultilinearMap.domDomCongr.{u2, u3, u4, u1, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₁ σ₂ (MultilinearMap.domDomCongr.{u2, u3, u4, u1, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₁ σ₁ m))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_dom_congr_mul MultilinearMap.domDomCongr_mulₓ'. -/
 theorem domDomCongr_mul (σ₁ : Equiv.Perm ι₁) (σ₂ : Equiv.Perm ι₁)
     (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
     m.domDomCongr (σ₂ * σ₁) = (m.domDomCongr σ₁).domDomCongr σ₂ :=
   rfl
 #align multilinear_map.dom_dom_congr_mul MultilinearMap.domDomCongr_mul
 
-/- warning: multilinear_map.dom_dom_congr_equiv -> MultilinearMap.domDomCongrEquiv is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M₂ : Type.{u2}} {M₃ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_5 : AddCommMonoid.{u3} M₃] [_inst_9 : Module.{u1, u2} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u3} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u4}} {ι₂ : Type.{u5}}, (Equiv.{succ u4, succ u5} ι₁ ι₂) -> (AddEquiv.{max u4 u2 u3, max u5 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (MultilinearMap.{u1, u2, u3, u5} R ι₂ (fun (i : ι₂) => M₂) M₃ _inst_1 (fun (i : ι₂) => _inst_4) _inst_5 (fun (i : ι₂) => _inst_9) _inst_10) (MultilinearMap.hasAdd.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (MultilinearMap.hasAdd.{u1, u2, u3, u5} R ι₂ (fun (i : ι₂) => M₂) M₃ _inst_1 (fun (i : ι₂) => _inst_4) _inst_5 (fun (i : ι₂) => _inst_9) _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} {M₂ : Type.{u2}} {M₃ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_5 : AddCommMonoid.{u3} M₃] [_inst_9 : Module.{u1, u2} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u3} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u4}} {ι₂ : Type.{u5}}, (Equiv.{succ u4, succ u5} ι₁ ι₂) -> (AddEquiv.{max (max u4 u3) u2, max (max u5 u3) u2} (MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (MultilinearMap.{u1, u2, u3, u5} R ι₂ (fun (i : ι₂) => M₂) M₃ _inst_1 (fun (i : ι₂) => _inst_4) _inst_5 (fun (i : ι₂) => _inst_9) _inst_10) (MultilinearMap.instAddMultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (MultilinearMap.instAddMultilinearMap.{u1, u2, u3, u5} R ι₂ (fun (i : ι₂) => M₂) M₃ _inst_1 (fun (i : ι₂) => _inst_4) _inst_5 (fun (i : ι₂) => _inst_9) _inst_10))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_dom_congr_equiv MultilinearMap.domDomCongrEquivₓ'. -/
 /-- `multilinear_map.dom_dom_congr` as an equivalence.
 
 This is declared separately because it does not work with dot notation. -/
@@ -898,12 +769,6 @@ def domDomCongrEquiv (σ : ι₁ ≃ ι₂) :
   map_add' a b := by ext; simp
 #align multilinear_map.dom_dom_congr_equiv MultilinearMap.domDomCongrEquiv
 
-/- warning: multilinear_map.dom_dom_congr_eq_iff -> MultilinearMap.domDomCongr_eq_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M₂ : Type.{u2}} {M₃ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_5 : AddCommMonoid.{u3} M₃] [_inst_9 : Module.{u1, u2} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u1, u3} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u4}} {ι₂ : Type.{u5}} (σ : Equiv.{succ u4, succ u5} ι₁ ι₂) (f : MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (g : MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10), Iff (Eq.{max (succ u5) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u5} R ι₂ (fun (i : ι₂) => M₂) M₃ _inst_1 (fun (i : ι₂) => _inst_4) _inst_5 (fun (i : ι₂) => _inst_9) _inst_10) (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u5} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₂ σ f) (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u5} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₂ σ g)) (Eq.{max (succ u4) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) f g)
-but is expected to have type
-  forall {R : Type.{u3}} {M₂ : Type.{u4}} {M₃ : Type.{u5}} [_inst_1 : Semiring.{u3} R] [_inst_4 : AddCommMonoid.{u4} M₂] [_inst_5 : AddCommMonoid.{u5} M₃] [_inst_9 : Module.{u3, u4} R M₂ _inst_1 _inst_4] [_inst_10 : Module.{u3, u5} R M₃ _inst_1 _inst_5] {ι₁ : Type.{u2}} {ι₂ : Type.{u1}} (σ : Equiv.{succ u2, succ u1} ι₁ ι₂) (f : MultilinearMap.{u3, u4, u5, u2} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) (g : MultilinearMap.{u3, u4, u5, u2} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10), Iff (Eq.{max (max (succ u4) (succ u5)) (succ u1)} (MultilinearMap.{u3, u4, u5, u1} R ι₂ (fun (i : ι₂) => M₂) M₃ _inst_1 (fun (i : ι₂) => _inst_4) _inst_5 (fun (i : ι₂) => _inst_9) _inst_10) (MultilinearMap.domDomCongr.{u3, u4, u5, u2, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₂ σ f) (MultilinearMap.domDomCongr.{u3, u4, u5, u2, u1} R M₂ M₃ _inst_1 _inst_4 _inst_5 _inst_9 _inst_10 ι₁ ι₂ σ g)) (Eq.{max (max (succ u4) (succ u5)) (succ u2)} (MultilinearMap.{u3, u4, u5, u2} R ι₁ (fun (i : ι₁) => M₂) M₃ _inst_1 (fun (i : ι₁) => _inst_4) _inst_5 (fun (i : ι₁) => _inst_9) _inst_10) f g)
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_dom_congr_eq_iff MultilinearMap.domDomCongr_eq_iffₓ'. -/
 /-- The results of applying `dom_dom_congr` to two maps are equal if
 and only if those maps are. -/
 @[simp]
@@ -933,18 +798,12 @@ def compMultilinearMap (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂
 #align linear_map.comp_multilinear_map LinearMap.compMultilinearMap
 -/
 
-/- warning: linear_map.coe_comp_multilinear_map -> LinearMap.coe_compMultilinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_comp_multilinear_map LinearMap.coe_compMultilinearMapₓ'. -/
 @[simp]
 theorem coe_compMultilinearMap (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) :
     ⇑(g.compMultilinearMap f) = g ∘ f :=
   rfl
 #align linear_map.coe_comp_multilinear_map LinearMap.coe_compMultilinearMap
 
-/- warning: linear_map.comp_multilinear_map_apply -> LinearMap.compMultilinearMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.comp_multilinear_map_apply LinearMap.compMultilinearMap_applyₓ'. -/
 @[simp]
 theorem compMultilinearMap_apply (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
     g.compMultilinearMap f m = g (f m) :=
@@ -960,9 +819,6 @@ theorem subtype_compMultilinearMap_codRestrict (f : MultilinearMap R M₁ M₂) 
 #align linear_map.subtype_comp_multilinear_map_cod_restrict LinearMap.subtype_compMultilinearMap_codRestrict
 -/
 
-/- warning: linear_map.comp_multilinear_map_cod_restrict -> LinearMap.compMultilinearMap_codRestrict is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.comp_multilinear_map_cod_restrict LinearMap.compMultilinearMap_codRestrictₓ'. -/
 /-- The multilinear version of `linear_map.comp_cod_restrict` -/
 @[simp]
 theorem compMultilinearMap_codRestrict (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂)
@@ -974,9 +830,6 @@ theorem compMultilinearMap_codRestrict (g : M₂ →ₗ[R] M₃) (f : Multilinea
 
 variable {ι₁ ι₂ : Type _}
 
-/- warning: linear_map.comp_multilinear_map_dom_dom_congr -> LinearMap.compMultilinearMap_domDomCongr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.comp_multilinear_map_dom_dom_congr LinearMap.compMultilinearMap_domDomCongrₓ'. -/
 @[simp]
 theorem compMultilinearMap_domDomCongr (σ : ι₁ ≃ ι₂) (g : M₂ →ₗ[R] M₃)
     (f : MultilinearMap R (fun i : ι₁ => M') M₂) :
@@ -1160,12 +1013,6 @@ protected def mkPiAlgebra : MultilinearMap R (fun i : ι => A) A
 
 variable {R A ι}
 
-/- warning: multilinear_map.mk_pi_algebra_apply -> MultilinearMap.mkPiAlgebra_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {A : Type.{u3}} [_inst_8 : CommSemiring.{u3} A] [_inst_9 : Algebra.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8)] [_inst_10 : Fintype.{u2} ι] (m : ι -> A), Eq.{succ u3} A (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (MultilinearMap.{u1, u3, u3, u2} R ι (fun (i : ι) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A (CommSemiring.toSemiring.{u3} A _inst_8)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A (CommSemiring.toSemiring.{u3} A _inst_8)))) (fun (i : ι) => Algebra.toModule.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8) _inst_9) (Algebra.toModule.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8) _inst_9)) (fun (f : MultilinearMap.{u1, u3, u3, u2} R ι (fun (i : ι) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A (CommSemiring.toSemiring.{u3} A _inst_8)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A (CommSemiring.toSemiring.{u3} A _inst_8)))) (fun (i : ι) => Algebra.toModule.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8) _inst_9) (Algebra.toModule.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8) _inst_9)) => (ι -> A) -> A) (MultilinearMap.hasCoeToFun.{u1, u3, u3, u2} R ι (fun (i : ι) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A (CommSemiring.toSemiring.{u3} A _inst_8)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A (CommSemiring.toSemiring.{u3} A _inst_8)))) (fun (i : ι) => Algebra.toModule.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8) _inst_9) (Algebra.toModule.{u1, u3} R A _inst_1 (CommSemiring.toSemiring.{u3} A _inst_8) _inst_9)) (MultilinearMap.mkPiAlgebra.{u1, u2, u3} R ι _inst_1 A _inst_8 _inst_9 _inst_10) m) (Finset.prod.{u3, u2} A ι (CommSemiring.toCommMonoid.{u3} A _inst_8) (Finset.univ.{u2} ι _inst_10) (fun (i : ι) => m i))
-but is expected to have type
-  forall {R : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] {A : Type.{u1}} [_inst_8 : CommSemiring.{u1} A] [_inst_9 : Algebra.{u2, u1} R A _inst_1 (CommSemiring.toSemiring.{u1} A _inst_8)] [_inst_10 : Fintype.{u3} ι] (m : ι -> A), Eq.{succ u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : ι -> A) => A) m) (FunLike.coe.{max (succ u3) (succ u1), max (succ u3) (succ u1), succ u1} (MultilinearMap.{u2, u1, u1, u3} R ι (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) A (CommSemiring.toSemiring.{u2} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) _inst_8)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A _inst_8)))) (fun (i : ι) => Algebra.toModule.{u2, u1} R ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) _inst_1 (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) _inst_8) _inst_9) (Algebra.toModule.{u2, u1} R A _inst_1 (CommSemiring.toSemiring.{u1} A _inst_8) _inst_9)) (ι -> A) (fun (f : ι -> A) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : ι -> A) => A) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u2, u1, u1, u3} R ι (fun (i : ι) => A) A (CommSemiring.toSemiring.{u2} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) _inst_8)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A _inst_8)))) (fun (i : ι) => Algebra.toModule.{u2, u1} R ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) _inst_1 (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.17592 : ι) => A) i) _inst_8) _inst_9) (Algebra.toModule.{u2, u1} R A _inst_1 (CommSemiring.toSemiring.{u1} A _inst_8) _inst_9)) (MultilinearMap.mkPiAlgebra.{u2, u3, u1} R ι _inst_1 A _inst_8 _inst_9 _inst_10) m) (Finset.prod.{u1, u3} A ι (CommSemiring.toCommMonoid.{u1} A _inst_8) (Finset.univ.{u3} ι _inst_10) (fun (i : ι) => m i))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.mk_pi_algebra_apply MultilinearMap.mkPiAlgebra_applyₓ'. -/
 @[simp]
 theorem mkPiAlgebra_apply (m : ι → A) : MultilinearMap.mkPiAlgebra R ι A m = ∏ i, m i :=
   rfl
@@ -1204,24 +1051,12 @@ protected def mkPiAlgebraFin : MultilinearMap R (fun i : Fin n => A) A
 
 variable {R A n}
 
-/- warning: multilinear_map.mk_pi_algebra_fin_apply -> MultilinearMap.mkPiAlgebraFin_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Nat} [_inst_1 : CommSemiring.{u1} R] {A : Type.{u2}} [_inst_8 : Semiring.{u2} A] [_inst_9 : Algebra.{u1, u2} R A _inst_1 _inst_8] (m : (Fin n) -> A), Eq.{succ u2} A (coeFn.{succ u2, succ u2} (MultilinearMap.{u1, u2, u2, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9)) (fun (f : MultilinearMap.{u1, u2, u2, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9)) => ((Fin n) -> A) -> A) (MultilinearMap.hasCoeToFun.{u1, u2, u2, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9)) (MultilinearMap.mkPiAlgebraFin.{u1, u2} R n _inst_1 A _inst_8 _inst_9) m) (List.prod.{u2} A (Distrib.toHasMul.{u2} A (NonUnitalNonAssocSemiring.toDistrib.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8)))) (AddMonoidWithOne.toOne.{u2} A (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} A (NonAssocSemiring.toAddCommMonoidWithOne.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8)))) (List.ofFn.{u2} A n m))
-but is expected to have type
-  forall {R : Type.{u2}} {n : Nat} [_inst_1 : CommSemiring.{u2} R] {A : Type.{u1}} [_inst_8 : Semiring.{u1} A] [_inst_9 : Algebra.{u2, u1} R A _inst_1 _inst_8] (m : (Fin n) -> A), Eq.{succ u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : (Fin n) -> A) => A) m) (FunLike.coe.{succ u1, succ u1, succ u1} (MultilinearMap.{u2, u1, u1, 0} R (Fin n) (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) A (CommSemiring.toSemiring.{u2} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u2, u1} R ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u2, u1} R A _inst_1 _inst_8 _inst_9)) ((Fin n) -> A) (fun (f : (Fin n) -> A) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : (Fin n) -> A) => A) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u2, u1, u1, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u2} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u2, u1} R ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u2, u1} R A _inst_1 _inst_8 _inst_9)) (MultilinearMap.mkPiAlgebraFin.{u2, u1} R n _inst_1 A _inst_8 _inst_9) m) (List.prod.{u1} A (NonUnitalNonAssocSemiring.toMul.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A _inst_8))) (Semiring.toOne.{u1} A _inst_8) (List.ofFn.{u1} A n m))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.mk_pi_algebra_fin_apply MultilinearMap.mkPiAlgebraFin_applyₓ'. -/
 @[simp]
 theorem mkPiAlgebraFin_apply (m : Fin n → A) :
     MultilinearMap.mkPiAlgebraFin R n A m = (List.ofFn m).Prod :=
   rfl
 #align multilinear_map.mk_pi_algebra_fin_apply MultilinearMap.mkPiAlgebraFin_apply
 
-/- warning: multilinear_map.mk_pi_algebra_fin_apply_const -> MultilinearMap.mkPiAlgebraFin_apply_const is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Nat} [_inst_1 : CommSemiring.{u1} R] {A : Type.{u2}} [_inst_8 : Semiring.{u2} A] [_inst_9 : Algebra.{u1, u2} R A _inst_1 _inst_8] (a : A), Eq.{succ u2} A (coeFn.{succ u2, succ u2} (MultilinearMap.{u1, u2, u2, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9)) (fun (f : MultilinearMap.{u1, u2, u2, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9)) => ((Fin n) -> A) -> A) (MultilinearMap.hasCoeToFun.{u1, u2, u2, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_8 _inst_9)) (MultilinearMap.mkPiAlgebraFin.{u1, u2} R n _inst_1 A _inst_8 _inst_9) (fun (_x : Fin n) => a)) (HPow.hPow.{u2, 0, u2} A Nat A (instHPow.{u2, 0} A Nat (Monoid.Pow.{u2} A (MonoidWithZero.toMonoid.{u2} A (Semiring.toMonoidWithZero.{u2} A _inst_8)))) a n)
-but is expected to have type
-  forall {R : Type.{u2}} {n : Nat} [_inst_1 : CommSemiring.{u2} R] {A : Type.{u1}} [_inst_8 : Semiring.{u1} A] [_inst_9 : Algebra.{u2, u1} R A _inst_1 _inst_8] (a : A), Eq.{succ u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : (Fin n) -> A) => A) (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18561 : Fin n) => a)) (FunLike.coe.{succ u1, succ u1, succ u1} (MultilinearMap.{u2, u1, u1, 0} R (Fin n) (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) A (CommSemiring.toSemiring.{u2} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u2, u1} R ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u2, u1} R A _inst_1 _inst_8 _inst_9)) ((Fin n) -> A) (fun (f : (Fin n) -> A) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : (Fin n) -> A) => A) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u2, u1, u1, 0} R (Fin n) (fun (i : Fin n) => A) A (CommSemiring.toSemiring.{u2} R _inst_1) (fun (i : Fin n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A (Semiring.toNonAssocSemiring.{u1} A _inst_8))) (fun (i : Fin n) => Algebra.toModule.{u2, u1} R ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18077 : Fin n) => A) i) _inst_1 _inst_8 _inst_9) (Algebra.toModule.{u2, u1} R A _inst_1 _inst_8 _inst_9)) (MultilinearMap.mkPiAlgebraFin.{u2, u1} R n _inst_1 A _inst_8 _inst_9) (fun (_x : Fin n) => a)) (HPow.hPow.{u1, 0, u1} A Nat A (instHPow.{u1, 0} A Nat (Monoid.Pow.{u1} A (MonoidWithZero.toMonoid.{u1} A (Semiring.toMonoidWithZero.{u1} A _inst_8)))) a n)
-Case conversion may be inaccurate. Consider using '#align multilinear_map.mk_pi_algebra_fin_apply_const MultilinearMap.mkPiAlgebraFin_apply_constₓ'. -/
 theorem mkPiAlgebraFin_apply_const (a : A) :
     (MultilinearMap.mkPiAlgebraFin R n A fun _ => a) = a ^ n := by simp
 #align multilinear_map.mk_pi_algebra_fin_apply_const MultilinearMap.mkPiAlgebraFin_apply_const
@@ -1287,22 +1122,10 @@ theorem mkPiRing_eq_iff [Fintype ι] {z₁ z₂ : M₂} :
 #align multilinear_map.mk_pi_ring_eq_iff MultilinearMap.mkPiRing_eq_iff
 -/
 
-/- warning: multilinear_map.mk_pi_ring_zero -> MultilinearMap.mkPiRing_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u3}} {M₂ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_7 : Module.{u1, u2} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_8 : Fintype.{u3} ι], Eq.{max (succ u3) (succ u1) (succ u2)} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.mkPiRing.{u1, u2, u3} R ι M₂ _inst_1 _inst_4 _inst_7 _inst_8 (OfNat.ofNat.{u2} M₂ 0 (OfNat.mk.{u2} M₂ 0 (Zero.zero.{u2} M₂ (AddZeroClass.toHasZero.{u2} M₂ (AddMonoid.toAddZeroClass.{u2} M₂ (AddCommMonoid.toAddMonoid.{u2} M₂ _inst_4))))))) (OfNat.ofNat.{max u3 u1 u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) 0 (OfNat.mk.{max u3 u1 u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) 0 (Zero.zero.{max u3 u1 u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.hasZero.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7))))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u3}} {M₂ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_7 : Module.{u1, u2} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_8 : Fintype.{u3} ι], Eq.{max (max (succ u1) (succ u3)) (succ u2)} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.mkPiRing.{u1, u2, u3} R ι M₂ _inst_1 _inst_4 _inst_7 _inst_8 (OfNat.ofNat.{u2} M₂ 0 (Zero.toOfNat0.{u2} M₂ (AddMonoid.toZero.{u2} M₂ (AddCommMonoid.toAddMonoid.{u2} M₂ _inst_4))))) (OfNat.ofNat.{max (max u1 u3) u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) 0 (Zero.toOfNat0.{max (max u1 u3) u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.instZeroMultilinearMap.{u1, u1, u2, u3} R ι (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7)))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.mk_pi_ring_zero MultilinearMap.mkPiRing_zeroₓ'. -/
 theorem mkPiRing_zero [Fintype ι] : MultilinearMap.mkPiRing R ι (0 : M₂) = 0 := by
   ext <;> rw [mk_pi_ring_apply, smul_zero, MultilinearMap.zero_apply]
 #align multilinear_map.mk_pi_ring_zero MultilinearMap.mkPiRing_zero
 
-/- warning: multilinear_map.mk_pi_ring_eq_zero_iff -> MultilinearMap.mkPiRing_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u3}} {M₂ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_7 : Module.{u1, u2} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_8 : Fintype.{u3} ι] (z : M₂), Iff (Eq.{max (succ u3) (succ u1) (succ u2)} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.mkPiRing.{u1, u2, u3} R ι M₂ _inst_1 _inst_4 _inst_7 _inst_8 z) (OfNat.ofNat.{max u3 u1 u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) 0 (OfNat.mk.{max u3 u1 u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) 0 (Zero.zero.{max u3 u1 u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.hasZero.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7))))) (Eq.{succ u2} M₂ z (OfNat.ofNat.{u2} M₂ 0 (OfNat.mk.{u2} M₂ 0 (Zero.zero.{u2} M₂ (AddZeroClass.toHasZero.{u2} M₂ (AddMonoid.toAddZeroClass.{u2} M₂ (AddCommMonoid.toAddMonoid.{u2} M₂ _inst_4)))))))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u3}} {M₂ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_4 : AddCommMonoid.{u2} M₂] [_inst_7 : Module.{u1, u2} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_8 : Fintype.{u3} ι] (z : M₂), Iff (Eq.{max (max (succ u1) (succ u3)) (succ u2)} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.mkPiRing.{u1, u2, u3} R ι M₂ _inst_1 _inst_4 _inst_7 _inst_8 z) (OfNat.ofNat.{max (max u1 u3) u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (i : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) 0 (Zero.toOfNat0.{max (max u1 u3) u2} (MultilinearMap.{u1, u1, u2, u3} R ι (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7) (MultilinearMap.instZeroMultilinearMap.{u1, u1, u2, u3} R ι (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) (CommSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.18917 : ι) => R) i) _inst_1)))) _inst_4 (fun (i : ι) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_7)))) (Eq.{succ u2} M₂ z (OfNat.ofNat.{u2} M₂ 0 (Zero.toOfNat0.{u2} M₂ (AddMonoid.toZero.{u2} M₂ (AddCommMonoid.toAddMonoid.{u2} M₂ _inst_4)))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.mk_pi_ring_eq_zero_iff MultilinearMap.mkPiRing_eq_zero_iffₓ'. -/
 theorem mkPiRing_eq_zero_iff [Fintype ι] (z : M₂) : MultilinearMap.mkPiRing R ι z = 0 ↔ z = 0 := by
   rw [← mk_pi_ring_zero, mk_pi_ring_eq_iff]
 #align multilinear_map.mk_pi_ring_eq_zero_iff MultilinearMap.mkPiRing_eq_zero_iff
@@ -1317,12 +1140,6 @@ variable [Semiring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommGroup M₂] [∀ i
 instance : Neg (MultilinearMap R M₁ M₂) :=
   ⟨fun f => ⟨fun m => -f m, fun _ m i x y => by simp [add_comm], fun _ m i c x => by simp⟩⟩
 
-/- warning: multilinear_map.neg_apply -> MultilinearMap.neg_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_2 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_3 : AddCommGroup.{u3} M₂] [_inst_4 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_2 i)] [_inst_5 : Module.{u1, u3} R M₂ _inst_1 (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3)] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (m : forall (i : ι), M₁ i), Eq.{succ u3} M₂ (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) => (forall (i : ι), M₁ i) -> M₂) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (Neg.neg.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (MultilinearMap.hasNeg.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) _inst_3 (fun (i : ι) => _inst_4 i) _inst_5) f) m) (Neg.neg.{u3} M₂ (SubNegMonoid.toHasNeg.{u3} M₂ (AddGroup.toSubNegMonoid.{u3} M₂ (AddCommGroup.toAddGroup.{u3} M₂ _inst_3))) (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) => (forall (i : ι), M₁ i) -> M₂) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) f m))
-but is expected to have type
-  forall {R : Type.{u1}} {ι : Type.{u4}} {M₁ : ι -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_2 : forall (i : ι), AddCommMonoid.{u2} (M₁ i)] [_inst_3 : AddCommGroup.{u3} M₂] [_inst_4 : forall (i : ι), Module.{u1, u2} R (M₁ i) _inst_1 (_inst_2 i)] [_inst_5 : Module.{u1, u3} R M₂ _inst_1 (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3)] (f : MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (m : forall (i : ι), M₁ i), Eq.{succ u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (FunLike.coe.{max (max (succ u4) (succ u2)) (succ u3), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (forall (i : ι), M₁ i) (fun (f : forall (i : ι), M₁ i) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (Neg.neg.{max (max u4 u2) u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (MultilinearMap.instNegMultilinearMapToAddCommMonoid.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) _inst_3 (fun (i : ι) => _inst_4 i) _inst_5) f) m) (Neg.neg.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (NegZeroClass.toNeg.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (SubNegZeroMonoid.toNegZeroClass.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (SubtractionMonoid.toSubNegZeroMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (SubtractionCommMonoid.toSubtractionMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) (AddCommGroup.toDivisionAddCommMonoid.{u3} ((fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) m) _inst_3))))) (FunLike.coe.{max (max (succ u4) (succ u2)) (succ u3), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) (forall (i : ι), M₁ i) (fun (f : forall (i : ι), M₁ i) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : forall (i : ι), M₁ i) => M₂) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u2, u3, u4} R ι M₁ M₂ _inst_1 (fun (i : ι) => _inst_2 i) (AddCommGroup.toAddCommMonoid.{u3} M₂ _inst_3) (fun (i : ι) => _inst_4 i) _inst_5) f m))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.neg_apply MultilinearMap.neg_applyₓ'. -/
 @[simp]
 theorem neg_apply (m : ∀ i, M₁ i) : (-f) m = -f m :=
   rfl
@@ -1334,9 +1151,6 @@ instance : Sub (MultilinearMap R M₁ M₂) :=
       simp only [MultilinearMap.map_add, sub_eq_add_neg, neg_add]; cc, fun _ m i c x => by
       simp only [MultilinearMap.map_smul, smul_sub]⟩⟩
 
-/- warning: multilinear_map.sub_apply -> MultilinearMap.sub_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.sub_apply MultilinearMap.sub_applyₓ'. -/
 @[simp]
 theorem sub_apply (m : ∀ i, M₁ i) : (f - g) m = f m - g m :=
   rfl
@@ -1366,9 +1180,6 @@ section AddCommGroup
 variable [Semiring R] [∀ i, AddCommGroup (M₁ i)] [AddCommGroup M₂] [∀ i, Module R (M₁ i)]
   [Module R M₂] (f : MultilinearMap R M₁ M₂)
 
-/- warning: multilinear_map.map_neg -> MultilinearMap.map_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_neg MultilinearMap.map_negₓ'. -/
 @[simp]
 theorem map_neg [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (x : M₁ i) :
     f (update m i (-x)) = -f (update m i x) :=
@@ -1376,9 +1187,6 @@ theorem map_neg [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (x : M₁ i) :
     rw [← MultilinearMap.map_add, add_left_neg, f.map_coord_zero i (update_same i 0 m)]
 #align multilinear_map.map_neg MultilinearMap.map_neg
 
-/- warning: multilinear_map.map_sub -> MultilinearMap.map_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.map_sub MultilinearMap.map_subₓ'. -/
 @[simp]
 theorem map_sub [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
     f (update m i (x - y)) = f (update m i x) - f (update m i y) := by
@@ -1436,12 +1244,6 @@ variable {R M M₂} [CommSemiring R] [∀ i, AddCommMonoid (M i)] [AddCommMonoid
 /-! #### Left currying -/
 
 
-/- warning: linear_map.uncurry_left -> LinearMap.uncurryLeft is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Nat} {M : (Fin (Nat.succ n)) -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : forall (i : Fin (Nat.succ n)), AddCommMonoid.{u2} (M i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : forall (i : Fin (Nat.succ n)), Module.{u1, u2} R (M i) (CommSemiring.toSemiring.{u1} R _inst_1) (_inst_2 i)] [_inst_7 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], (LinearMap.{u1, u1, u2, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.module.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (LinearMap.uncurryLeft._proof_1.{u1, u3} R M₂ _inst_1 _inst_4 _inst_7))) -> (MultilinearMap.{u1, u2, u3, 0} R (Fin (Nat.succ n)) M M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin (Nat.succ n)) => _inst_2 i) _inst_4 (fun (i : Fin (Nat.succ n)) => _inst_5 i) _inst_7)
-but is expected to have type
-  forall {R : Type.{u1}} {n : Nat} {M : (Fin (Nat.succ n)) -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : forall (i : Fin (Nat.succ n)), AddCommMonoid.{u2} (M i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : forall (i : Fin (Nat.succ n)), Module.{u1, u2} R (M i) (CommSemiring.toSemiring.{u1} R _inst_1) (_inst_2 i)] [_inst_7 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], (LinearMap.{u1, u1, u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.instModuleMultilinearMapAddCommMonoid.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (smulCommClass_self.{u1, u3} R M₂ (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u3} R M₂ (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_7))))) -> (MultilinearMap.{u1, u2, u3, 0} R (Fin (Nat.succ n)) M M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin (Nat.succ n)) => _inst_2 i) _inst_4 (fun (i : Fin (Nat.succ n)) => _inst_5 i) _inst_7)
-Case conversion may be inaccurate. Consider using '#align linear_map.uncurry_left LinearMap.uncurryLeftₓ'. -/
 /-- Given a linear map `f` from `M 0` to multilinear maps on `n` variables,
 construct the corresponding multilinear map on `n+1` variables obtained by concatenating
 the variables, given by `m ↦ f (m 0) (tail m)`-/
@@ -1471,21 +1273,12 @@ def LinearMap.uncurryLeft (f : M 0 →ₗ[R] MultilinearMap R (fun i : Fin n => 
       rw [tail_update_succ, tail_update_succ, MultilinearMap.map_smul]
 #align linear_map.uncurry_left LinearMap.uncurryLeft
 
-/- warning: linear_map.uncurry_left_apply -> LinearMap.uncurryLeft_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.uncurry_left_apply LinearMap.uncurryLeft_applyₓ'. -/
 @[simp]
 theorem LinearMap.uncurryLeft_apply (f : M 0 →ₗ[R] MultilinearMap R (fun i : Fin n => M i.succ) M₂)
     (m : ∀ i, M i) : f.uncurryLeft m = f (m 0) (tail m) :=
   rfl
 #align linear_map.uncurry_left_apply LinearMap.uncurryLeft_apply
 
-/- warning: multilinear_map.curry_left -> MultilinearMap.curryLeft is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Nat} {M : (Fin (Nat.succ n)) -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : forall (i : Fin (Nat.succ n)), AddCommMonoid.{u2} (M i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : forall (i : Fin (Nat.succ n)), Module.{u1, u2} R (M i) (CommSemiring.toSemiring.{u1} R _inst_1) (_inst_2 i)] [_inst_7 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], (MultilinearMap.{u1, u2, u3, 0} R (Fin (Nat.succ n)) M M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin (Nat.succ n)) => _inst_2 i) _inst_4 (fun (i : Fin (Nat.succ n)) => _inst_5 i) _inst_7) -> (LinearMap.{u1, u1, u2, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.module.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (MultilinearMap.curryLeft._proof_1.{u1, u3} R M₂ _inst_1 _inst_4 _inst_7)))
-but is expected to have type
-  forall {R : Type.{u1}} {n : Nat} {M : (Fin (Nat.succ n)) -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : forall (i : Fin (Nat.succ n)), AddCommMonoid.{u2} (M i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : forall (i : Fin (Nat.succ n)), Module.{u1, u2} R (M i) (CommSemiring.toSemiring.{u1} R _inst_1) (_inst_2 i)] [_inst_7 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], (MultilinearMap.{u1, u2, u3, 0} R (Fin (Nat.succ n)) M M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin (Nat.succ n)) => _inst_2 i) _inst_4 (fun (i : Fin (Nat.succ n)) => _inst_5 i) _inst_7) -> (LinearMap.{u1, u1, u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.instModuleMultilinearMapAddCommMonoid.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (smulCommClass_self.{u1, u3} R M₂ (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u3} R M₂ (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_7)))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_left MultilinearMap.curryLeftₓ'. -/
 /-- Given a multilinear map `f` in `n+1` variables, split the first variable to obtain
 a linear map into multilinear maps in `n` variables, given by `x ↦ (m ↦ f (cons x m))`. -/
 def MultilinearMap.curryLeft (f : MultilinearMap R M M₂) :
@@ -1499,21 +1292,12 @@ def MultilinearMap.curryLeft (f : MultilinearMap R M M₂) :
   map_smul' c x := by ext m; exact cons_smul f m c x
 #align multilinear_map.curry_left MultilinearMap.curryLeft
 
-/- warning: multilinear_map.curry_left_apply -> MultilinearMap.curryLeft_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_left_apply MultilinearMap.curryLeft_applyₓ'. -/
 @[simp]
 theorem MultilinearMap.curryLeft_apply (f : MultilinearMap R M M₂) (x : M 0)
     (m : ∀ i : Fin n, M i.succ) : f.curryLeft x m = f (cons x m) :=
   rfl
 #align multilinear_map.curry_left_apply MultilinearMap.curryLeft_apply
 
-/- warning: linear_map.curry_uncurry_left -> LinearMap.curry_uncurryLeft is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Nat} {M : (Fin (Nat.succ n)) -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : forall (i : Fin (Nat.succ n)), AddCommMonoid.{u2} (M i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : forall (i : Fin (Nat.succ n)), Module.{u1, u2} R (M i) (CommSemiring.toSemiring.{u1} R _inst_1) (_inst_2 i)] [_inst_7 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] (f : LinearMap.{u1, u1, u2, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.module.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (smulCommClass_self.{u1, u3} R M₂ (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u3} R M₂ (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4))) (Module.toMulActionWithZero.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_7))))), Eq.{max (succ u2) (succ (max u2 u3))} (LinearMap.{u1, u1, u2, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (MultilinearMap.module.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (MultilinearMap.curryLeft._proof_1.{u1, u3} R M₂ _inst_1 _inst_4 _inst_7))) (MultilinearMap.curryLeft.{u1, u2, u3} R n M M₂ _inst_1 (fun (i : Fin (Nat.succ n)) => _inst_2 i) _inst_4 (fun (i : Fin (Nat.succ n)) => _inst_5 i) _inst_7 (LinearMap.uncurryLeft.{u1, u2, u3} R n M M₂ _inst_1 _inst_2 _inst_4 _inst_5 _inst_7 f)) f
-but is expected to have type
-  forall {R : Type.{u1}} {n : Nat} {M : (Fin (Nat.succ n)) -> Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : forall (i : Fin (Nat.succ n)), AddCommMonoid.{u2} (M i)] [_inst_4 : AddCommMonoid.{u3} M₂] [_inst_5 : forall (i : Fin (Nat.succ n)), Module.{u1, u2} R (M i) (CommSemiring.toSemiring.{u1} R _inst_1) (_inst_2 i)] [_inst_7 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] (f : LinearMap.{u1, u1, u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.instModuleMultilinearMapAddCommMonoid.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (smulCommClass_self.{u1, u3} R M₂ (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u3} R M₂ (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_7))))), Eq.{max (succ u2) (succ u3)} (LinearMap.{u1, u1, u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (M (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_2 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.addCommMonoid.{u1, u2, u3, 0} R (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7) (_inst_5 (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (MultilinearMap.instModuleMultilinearMapAddCommMonoid.{u2, u3, 0, u1, u1} (Fin n) (fun (i : Fin n) => M (Fin.succ n i)) M₂ (fun (i : Fin n) => _inst_2 (Fin.succ n i)) _inst_4 R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Fin n) => _inst_5 (Fin.succ n i)) _inst_7 _inst_7 (smulCommClass_self.{u1, u3} R M₂ (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u3} R M₂ (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_7))))) (MultilinearMap.curryLeft.{u1, u2, u3} R n M M₂ _inst_1 (fun (i : Fin (Nat.succ n)) => _inst_2 i) _inst_4 (fun (i : Fin (Nat.succ n)) => _inst_5 i) _inst_7 (LinearMap.uncurryLeft.{u1, u2, u3} R n M M₂ _inst_1 _inst_2 _inst_4 _inst_5 _inst_7 f)) f
-Case conversion may be inaccurate. Consider using '#align linear_map.curry_uncurry_left LinearMap.curry_uncurryLeftₓ'. -/
 @[simp]
 theorem LinearMap.curry_uncurryLeft
     (f : M 0 →ₗ[R] MultilinearMap R (fun i : Fin n => M i.succ) M₂) : f.uncurryLeft.curryLeft = f :=
@@ -1532,9 +1316,6 @@ theorem MultilinearMap.uncurry_curryLeft (f : MultilinearMap R M M₂) :
 
 variable (R M M₂)
 
-/- warning: multilinear_curry_left_equiv -> multilinearCurryLeftEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_curry_left_equiv multilinearCurryLeftEquivₓ'. -/
 /-- The space of multilinear maps on `Π(i : fin (n+1)), M i` is canonically isomorphic to
 the space of linear maps from `M 0` to the space of multilinear maps on
 `Π(i : fin n), M i.succ `, by separating the first variable. We register this isomorphism as a
@@ -1558,9 +1339,6 @@ variable {R M M₂}
 /-! #### Right currying -/
 
 
-/- warning: multilinear_map.uncurry_right -> MultilinearMap.uncurryRight is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.uncurry_right MultilinearMap.uncurryRightₓ'. -/
 /-- Given a multilinear map `f` in `n` variables to the space of linear maps from `M (last n)` to
 `M₂`, construct the corresponding multilinear map on `n+1` variables obtained by concatenating
 the variables, given by `m ↦ f (init m) (m (last n))`-/
@@ -1599,9 +1377,6 @@ def MultilinearMap.uncurryRight
       rw [update_same, update_same, init_update_last, init_update_last, map_smul]
 #align multilinear_map.uncurry_right MultilinearMap.uncurryRight
 
-/- warning: multilinear_map.uncurry_right_apply -> MultilinearMap.uncurryRight_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.uncurry_right_apply MultilinearMap.uncurryRight_applyₓ'. -/
 @[simp]
 theorem MultilinearMap.uncurryRight_apply
     (f : MultilinearMap R (fun i : Fin n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) (m : ∀ i, M i) :
@@ -1609,9 +1384,6 @@ theorem MultilinearMap.uncurryRight_apply
   rfl
 #align multilinear_map.uncurry_right_apply MultilinearMap.uncurryRight_apply
 
-/- warning: multilinear_map.curry_right -> MultilinearMap.curryRight is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_right MultilinearMap.curryRightₓ'. -/
 /-- Given a multilinear map `f` in `n+1` variables, split the last variable to obtain
 a multilinear map in `n` variables taking values in linear maps from `M (last n)` to `M₂`, given by
 `m ↦ (x ↦ f (snoc m x))`. -/
@@ -1634,18 +1406,12 @@ def MultilinearMap.curryRight (f : MultilinearMap R M M₂) :
     rw [snoc_update, snoc_update, f.map_smul]
 #align multilinear_map.curry_right MultilinearMap.curryRight
 
-/- warning: multilinear_map.curry_right_apply -> MultilinearMap.curryRight_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_right_apply MultilinearMap.curryRight_applyₓ'. -/
 @[simp]
 theorem MultilinearMap.curryRight_apply (f : MultilinearMap R M M₂) (m : ∀ i : Fin n, M i.cast_succ)
     (x : M (last n)) : f.curryRight m x = f (snoc m x) :=
   rfl
 #align multilinear_map.curry_right_apply MultilinearMap.curryRight_apply
 
-/- warning: multilinear_map.curry_uncurry_right -> MultilinearMap.curry_uncurryRight is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_uncurry_right MultilinearMap.curry_uncurryRightₓ'. -/
 @[simp]
 theorem MultilinearMap.curry_uncurryRight
     (f : MultilinearMap R (fun i : Fin n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) :
@@ -1664,9 +1430,6 @@ theorem MultilinearMap.uncurry_curryRight (f : MultilinearMap R M M₂) :
 
 variable (R M M₂)
 
-/- warning: multilinear_curry_right_equiv -> multilinearCurryRightEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_curry_right_equiv multilinearCurryRightEquivₓ'. -/
 /-- The space of multilinear maps on `Π(i : fin (n+1)), M i` is canonically isomorphic to
 the space of linear maps from the space of multilinear maps on `Π(i : fin n), M i.cast_succ` to the
 space of linear maps on `M (last n)`, by separating the last variable. We register this isomorphism
@@ -1715,9 +1478,6 @@ def currySum (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) :
 #align multilinear_map.curry_sum MultilinearMap.currySum
 -/
 
-/- warning: multilinear_map.curry_sum_apply -> MultilinearMap.currySum_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_sum_apply MultilinearMap.currySum_applyₓ'. -/
 @[simp]
 theorem currySum_apply (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) (u : ι → M')
     (v : ι' → M') : f.currySum u v = f (Sum.elim u v) :=
@@ -1748,9 +1508,6 @@ def uncurrySum (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x
 #align multilinear_map.uncurry_sum MultilinearMap.uncurrySum
 -/
 
-/- warning: multilinear_map.uncurry_sum_aux_apply -> MultilinearMap.uncurrySum_aux_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.uncurry_sum_aux_apply MultilinearMap.uncurrySum_aux_applyₓ'. -/
 @[simp]
 theorem uncurrySum_aux_apply
     (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂))
@@ -1779,17 +1536,11 @@ def currySumEquiv :
 
 variable {ι ι' R M₂ M'}
 
-/- warning: multilinear_map.coe_curry_sum_equiv -> MultilinearMap.coe_currySumEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.coe_curry_sum_equiv MultilinearMap.coe_currySumEquivₓ'. -/
 @[simp]
 theorem coe_currySumEquiv : ⇑(currySumEquiv R ι M₂ M' ι') = currySum :=
   rfl
 #align multilinear_map.coe_curry_sum_equiv MultilinearMap.coe_currySumEquiv
 
-/- warning: multilinear_map.coe_curr_sum_equiv_symm -> MultilinearMap.coe_currySumEquiv_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.coe_curr_sum_equiv_symm MultilinearMap.coe_currySumEquiv_symmₓ'. -/
 @[simp]
 theorem coe_currySumEquiv_symm : ⇑(currySumEquiv R ι M₂ M' ι').symm = uncurrySum :=
   rfl
@@ -1797,9 +1548,6 @@ theorem coe_currySumEquiv_symm : ⇑(currySumEquiv R ι M₂ M' ι').symm = uncu
 
 variable (R M₂ M')
 
-/- warning: multilinear_map.curry_fin_finset -> MultilinearMap.curryFinFinset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_fin_finset MultilinearMap.curryFinFinsetₓ'. -/
 /-- If `s : finset (fin n)` is a finite set of cardinality `k` and its complement has cardinality
 `l`, then the space of multilinear maps on `λ i : fin n, M'` is isomorphic to the space of
 multilinear maps on `λ i : fin k, M'` taking values in the space of multilinear maps
@@ -1813,9 +1561,6 @@ def curryFinFinset {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k) (hl : s�
 
 variable {R M₂ M'}
 
-/- warning: multilinear_map.curry_fin_finset_apply -> MultilinearMap.curryFinFinset_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_fin_finset_apply MultilinearMap.curryFinFinset_applyₓ'. -/
 @[simp]
 theorem curryFinFinset_apply {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k) (hl : sᶜ.card = l)
     (f : MultilinearMap R (fun x : Fin n => M') M₂) (mk : Fin k → M') (ml : Fin l → M') :
@@ -1824,9 +1569,6 @@ theorem curryFinFinset_apply {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k
   rfl
 #align multilinear_map.curry_fin_finset_apply MultilinearMap.curryFinFinset_apply
 
-/- warning: multilinear_map.curry_fin_finset_symm_apply -> MultilinearMap.curryFinFinset_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_fin_finset_symm_apply MultilinearMap.curryFinFinset_symm_applyₓ'. -/
 @[simp]
 theorem curryFinFinset_symm_apply {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k)
     (hl : sᶜ.card = l)
@@ -1838,9 +1580,6 @@ theorem curryFinFinset_symm_apply {k l n : ℕ} {s : Finset (Fin n)} (hk : s.car
   rfl
 #align multilinear_map.curry_fin_finset_symm_apply MultilinearMap.curryFinFinset_symm_apply
 
-/- warning: multilinear_map.curry_fin_finset_symm_apply_piecewise_const -> MultilinearMap.curryFinFinset_symm_apply_piecewise_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_fin_finset_symm_apply_piecewise_const MultilinearMap.curryFinFinset_symm_apply_piecewise_constₓ'. -/
 @[simp]
 theorem curryFinFinset_symm_apply_piecewise_const {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k)
     (hl : sᶜ.card = l)
@@ -1856,9 +1595,6 @@ theorem curryFinFinset_symm_apply_piecewise_const {k l n : ℕ} {s : Finset (Fin
     exact Finset.mem_compl.1 (Finset.orderEmbOfFin_mem _ _ _)
 #align multilinear_map.curry_fin_finset_symm_apply_piecewise_const MultilinearMap.curryFinFinset_symm_apply_piecewise_const
 
-/- warning: multilinear_map.curry_fin_finset_symm_apply_const -> MultilinearMap.curryFinFinset_symm_apply_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_fin_finset_symm_apply_const MultilinearMap.curryFinFinset_symm_apply_constₓ'. -/
 @[simp]
 theorem curryFinFinset_symm_apply_const {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k)
     (hl : sᶜ.card = l)
@@ -1867,9 +1603,6 @@ theorem curryFinFinset_symm_apply_const {k l n : ℕ} {s : Finset (Fin n)} (hk :
   rfl
 #align multilinear_map.curry_fin_finset_symm_apply_const MultilinearMap.curryFinFinset_symm_apply_const
 
-/- warning: multilinear_map.curry_fin_finset_apply_const -> MultilinearMap.curryFinFinset_apply_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.curry_fin_finset_apply_const MultilinearMap.curryFinFinset_apply_constₓ'. -/
 @[simp]
 theorem curryFinFinset_apply_const {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k)
     (hl : sᶜ.card = l) (f : MultilinearMap R (fun x : Fin n => M') M₂) (x y : M') :

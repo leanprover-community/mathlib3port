@@ -70,23 +70,11 @@ instance instLT (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where lt := 
 #align prod.lex.has_lt Prod.Lex.instLT
 -/
 
-/- warning: prod.lex.le_iff -> Prod.Lex.le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LT.{u1} α] [_inst_2 : LE.{u2} β] (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β), Iff (LE.le.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β _inst_1 _inst_2) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (fun (_x : Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) => (Prod.{u1, u2} α β) -> (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (Equiv.hasCoeToFun.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (toLex.{max u1 u2} (Prod.{u1, u2} α β)) a) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (fun (_x : Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) => (Prod.{u1, u2} α β) -> (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (Equiv.hasCoeToFun.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (toLex.{max u1 u2} (Prod.{u1, u2} α β)) b)) (Or (LT.lt.{u1} α _inst_1 (Prod.fst.{u1, u2} α β a) (Prod.fst.{u1, u2} α β b)) (And (Eq.{succ u1} α (Prod.fst.{u1, u2} α β a) (Prod.fst.{u1, u2} α β b)) (LE.le.{u2} β _inst_2 (Prod.snd.{u1, u2} α β a) (Prod.snd.{u1, u2} α β b))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LT.{u2} α] [_inst_2 : LE.{u1} β] (a : Prod.{u2, u1} α β) (b : Prod.{u2, u1} α β), Iff (LE.le.{max u2 u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) a) (Prod.Lex.instLE.{u2, u1} α β _inst_1 _inst_2) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)) a) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)) b)) (Or (LT.lt.{u2} α _inst_1 (Prod.fst.{u2, u1} α β a) (Prod.fst.{u2, u1} α β b)) (And (Eq.{succ u2} α (Prod.fst.{u2, u1} α β a) (Prod.fst.{u2, u1} α β b)) (LE.le.{u1} β _inst_2 (Prod.snd.{u2, u1} α β a) (Prod.snd.{u2, u1} α β b))))
-Case conversion may be inaccurate. Consider using '#align prod.lex.le_iff Prod.Lex.le_iffₓ'. -/
 theorem le_iff [LT α] [LE β] (a b : α × β) :
     toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
   Prod.lex_def (· < ·) (· ≤ ·)
 #align prod.lex.le_iff Prod.Lex.le_iff
 
-/- warning: prod.lex.lt_iff -> Prod.Lex.lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LT.{u1} α] [_inst_2 : LT.{u2} β] (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β), Iff (LT.lt.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β _inst_1 _inst_2) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (fun (_x : Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) => (Prod.{u1, u2} α β) -> (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (Equiv.hasCoeToFun.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (toLex.{max u1 u2} (Prod.{u1, u2} α β)) a) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (fun (_x : Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) => (Prod.{u1, u2} α β) -> (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (Equiv.hasCoeToFun.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (toLex.{max u1 u2} (Prod.{u1, u2} α β)) b)) (Or (LT.lt.{u1} α _inst_1 (Prod.fst.{u1, u2} α β a) (Prod.fst.{u1, u2} α β b)) (And (Eq.{succ u1} α (Prod.fst.{u1, u2} α β a) (Prod.fst.{u1, u2} α β b)) (LT.lt.{u2} β _inst_2 (Prod.snd.{u1, u2} α β a) (Prod.snd.{u1, u2} α β b))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LT.{u2} α] [_inst_2 : LT.{u1} β] (a : Prod.{u2, u1} α β) (b : Prod.{u2, u1} α β), Iff (LT.lt.{max u2 u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) a) (Prod.Lex.instLT.{u2, u1} α β _inst_1 _inst_2) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)) a) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)) b)) (Or (LT.lt.{u2} α _inst_1 (Prod.fst.{u2, u1} α β a) (Prod.fst.{u2, u1} α β b)) (And (Eq.{succ u2} α (Prod.fst.{u2, u1} α β a) (Prod.fst.{u2, u1} α β b)) (LT.lt.{u1} β _inst_2 (Prod.snd.{u2, u1} α β a) (Prod.snd.{u2, u1} α β b))))
-Case conversion may be inaccurate. Consider using '#align prod.lex.lt_iff Prod.Lex.lt_iffₓ'. -/
 theorem lt_iff [LT α] [LT β] (a b : α × β) :
     toLex a < toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 < b.2 :=
   Prod.lex_def (· < ·) (· < ·)
@@ -126,12 +114,6 @@ section Preorder
 
 variable [PartialOrder α] [Preorder β]
 
-/- warning: prod.lex.to_lex_mono -> Prod.Lex.toLex_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β], Monotone.{max u1 u2, max u1 u2} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2) (Prod.Lex.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (fun (_x : Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) => (Prod.{u1, u2} α β) -> (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (Equiv.hasCoeToFun.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (toLex.{max u1 u2} (Prod.{u1, u2} α β)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β], Monotone.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Lex.{max u1 u2} (Prod.{u2, u1} α β)) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (Prod.Lex.preorder.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)))
-Case conversion may be inaccurate. Consider using '#align prod.lex.to_lex_mono Prod.Lex.toLex_monoₓ'. -/
 theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) :=
   by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨ha, hb⟩
@@ -140,12 +122,6 @@ theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) :=
   · exact left _ _ ha
 #align prod.lex.to_lex_mono Prod.Lex.toLex_mono
 
-/- warning: prod.lex.to_lex_strict_mono -> Prod.Lex.toLex_strictMono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β], StrictMono.{max u1 u2, max u1 u2} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2) (Prod.Lex.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (fun (_x : Equiv.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) => (Prod.{u1, u2} α β) -> (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (Equiv.hasCoeToFun.{succ (max u1 u2), succ (max u1 u2)} (Prod.{u1, u2} α β) (Lex.{max u1 u2} (Prod.{u1, u2} α β))) (toLex.{max u1 u2} (Prod.{u1, u2} α β)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β], StrictMono.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Lex.{max u1 u2} (Prod.{u2, u1} α β)) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (Prod.Lex.preorder.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)))
-Case conversion may be inaccurate. Consider using '#align prod.lex.to_lex_strict_mono Prod.Lex.toLex_strictMonoₓ'. -/
 theorem toLex_strictMono : StrictMono (toLex : α × β → α ×ₗ β) :=
   by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ h
@@ -181,36 +157,18 @@ instance linearOrder (α β : Type _) [LinearOrder α] [LinearOrder β] : Linear
 #align prod.lex.linear_order Prod.Lex.linearOrder
 -/
 
-/- warning: prod.lex.order_bot -> Prod.Lex.orderBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β _inst_2)], OrderBot.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β _inst_2)], OrderBot.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.order_bot Prod.Lex.orderBotₓ'. -/
 instance orderBot [PartialOrder α] [Preorder β] [OrderBot α] [OrderBot β] : OrderBot (α ×ₗ β)
     where
   bot := toLex ⊥
   bot_le a := toLex_mono bot_le
 #align prod.lex.order_bot Prod.Lex.orderBot
 
-/- warning: prod.lex.order_top -> Prod.Lex.orderTop is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2)], OrderTop.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)], OrderTop.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.order_top Prod.Lex.orderTopₓ'. -/
 instance orderTop [PartialOrder α] [Preorder β] [OrderTop α] [OrderTop β] : OrderTop (α ×ₗ β)
     where
   top := toLex ⊤
   le_top a := toLex_mono le_top
 #align prod.lex.order_top Prod.Lex.orderTop
 
-/- warning: prod.lex.bounded_order -> Prod.Lex.boundedOrder is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : BoundedOrder.{u2} β (Preorder.toHasLe.{u2} β _inst_2)], BoundedOrder.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : BoundedOrder.{u2} β (Preorder.toLE.{u2} β _inst_2)], BoundedOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLE.{u1, u2} α β (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.bounded_order Prod.Lex.boundedOrderₓ'. -/
 instance boundedOrder [PartialOrder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] :
     BoundedOrder (α ×ₗ β) :=
   { Lex.orderBot, Lex.orderTop with }
@@ -225,42 +183,18 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
     · obtain ⟨c, h₁, h₂⟩ := exists_between h
       exact ⟨(a, c), right _ h₁, right _ h₂⟩⟩
 
-/- warning: prod.lex.no_max_order_of_left -> Prod.Lex.noMaxOrder_of_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toHasLt.{u1} α _inst_1) (Preorder.toHasLt.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.no_max_order_of_left Prod.Lex.noMaxOrder_of_leftₓ'. -/
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_gt a; exact ⟨⟨c, b⟩, left _ _ h⟩⟩
 #align prod.lex.no_max_order_of_left Prod.Lex.noMaxOrder_of_left
 
-/- warning: prod.lex.no_min_order_of_left -> Prod.Lex.noMinOrder_of_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], NoMinOrder.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toHasLt.{u1} α _inst_1) (Preorder.toHasLt.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.no_min_order_of_left Prod.Lex.noMinOrder_of_leftₓ'. -/
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_lt a; exact ⟨⟨c, b⟩, left _ _ h⟩⟩
 #align prod.lex.no_min_order_of_left Prod.Lex.noMinOrder_of_left
 
-/- warning: prod.lex.no_max_order_of_right -> Prod.Lex.noMaxOrder_of_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toHasLt.{u2} β _inst_2)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toHasLt.{u1} α _inst_1) (Preorder.toHasLt.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.no_max_order_of_right Prod.Lex.noMaxOrder_of_rightₓ'. -/
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_gt b; exact ⟨⟨a, c⟩, right _ h⟩⟩
 #align prod.lex.no_max_order_of_right Prod.Lex.noMaxOrder_of_right
 
-/- warning: prod.lex.no_min_order_of_right -> Prod.Lex.noMinOrder_of_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toHasLt.{u2} β _inst_2)], NoMinOrder.{max u1 u2} (Lex.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toHasLt.{u1} α _inst_1) (Preorder.toHasLt.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align prod.lex.no_min_order_of_right Prod.Lex.noMinOrder_of_rightₓ'. -/
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_lt b; exact ⟨⟨a, c⟩, right _ h⟩⟩
 #align prod.lex.no_min_order_of_right Prod.Lex.noMinOrder_of_right

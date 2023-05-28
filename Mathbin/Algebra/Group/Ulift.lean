@@ -43,12 +43,6 @@ instance one [One α] : One (ULift α) :=
 #align ulift.has_zero ULift.zero
 -/
 
-/- warning: ulift.one_down -> ULift.one_down is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α], Eq.{succ u1} α (ULift.down.{u2, u1} α (OfNat.ofNat.{max u1 u2} (ULift.{u2, u1} α) 1 (OfNat.mk.{max u1 u2} (ULift.{u2, u1} α) 1 (One.one.{max u1 u2} (ULift.{u2, u1} α) (ULift.one.{u1, u2} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : One.{u2} α], Eq.{succ u2} α (ULift.down.{u1, u2} α (OfNat.ofNat.{max u2 u1} (ULift.{u1, u2} α) 1 (One.toOfNat1.{max u2 u1} (ULift.{u1, u2} α) (ULift.one.{u2, u1} α _inst_1)))) (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align ulift.one_down ULift.one_downₓ'. -/
 @[simp, to_additive]
 theorem one_down [One α] : (1 : ULift α).down = 1 :=
   rfl
@@ -111,12 +105,6 @@ instance smul [SMul α β] : SMul α (ULift β) :=
 #align ulift.has_vadd ULift.vadd
 -/
 
-/- warning: ulift.smul_down -> ULift.smul_down is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : SMul.{u1, u3} α β] (a : α) (b : ULift.{u2, u3} β), Eq.{succ u3} β (ULift.down.{u2, u3} β (SMul.smul.{u1, max u3 u2} α (ULift.{u2, u3} β) (ULift.smul.{u1, u3, u2} α β _inst_1) a b)) (SMul.smul.{u1, u3} α β _inst_1 a (ULift.down.{u2, u3} β b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : ULift.{u3, u1} β), Eq.{succ u1} β (ULift.down.{u3, u1} β (HSMul.hSMul.{u2, max u3 u1, max u3 u1} α (ULift.{u3, u1} β) (ULift.{u3, u1} β) (instHSMul.{u2, max u3 u1} α (ULift.{u3, u1} β) (ULift.smul.{u2, u1, u3} α β _inst_1)) a b)) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a (ULift.down.{u3, u1} β b))
-Case conversion may be inaccurate. Consider using '#align ulift.smul_down ULift.smul_downₓ'. -/
 @[simp, to_additive]
 theorem smul_down [SMul α β] (a : α) (b : ULift.{v} β) : (a • b).down = a • b.down :=
   rfl
@@ -131,12 +119,6 @@ instance pow [Pow α β] : Pow (ULift α) β :=
 #align ulift.has_smul ULift.smul
 -/
 
-/- warning: ulift.pow_down -> ULift.pow_down is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : Pow.{u1, u3} α β] (a : ULift.{u2, u1} α) (b : β), Eq.{succ u1} α (ULift.down.{u2, u1} α (HPow.hPow.{max u1 u2, u3, max u1 u2} (ULift.{u2, u1} α) β (ULift.{u2, u1} α) (instHPow.{max u1 u2, u3} (ULift.{u2, u1} α) β (ULift.pow.{u1, u3, u2} α β _inst_1)) a b)) (HPow.hPow.{u1, u3, u1} α β α (instHPow.{u1, u3} α β _inst_1) (ULift.down.{u2, u1} α a) b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : ULift.{u3, u2} α) (b : β), Eq.{succ u2} α (ULift.down.{u3, u2} α (HPow.hPow.{max u2 u3, u1, max u2 u3} (ULift.{u3, u2} α) β (ULift.{u3, u2} α) (instHPow.{max u2 u3, u1} (ULift.{u3, u2} α) β (ULift.pow.{u2, u1, u3} α β _inst_1)) a b)) (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) (ULift.down.{u3, u2} α a) b)
-Case conversion may be inaccurate. Consider using '#align ulift.pow_down ULift.pow_downₓ'. -/
 @[simp, to_additive smul_down, to_additive_reorder 1]
 theorem pow_down [Pow α β] (a : ULift.{v} α) (b : β) : (a ^ b).down = a.down ^ b :=
   rfl
@@ -205,45 +187,21 @@ instance [NatCast α] : NatCast (ULift α) :=
 instance [IntCast α] : IntCast (ULift α) :=
   ⟨fun n => up n⟩
 
-/- warning: ulift.up_nat_cast -> ULift.up_natCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NatCast.{u1} α] (n : Nat), Eq.{succ (max u1 u2)} (ULift.{u2, u1} α) (ULift.up.{u2, u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α _inst_1))) n)) ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Nat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (Nat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.natCast.{u1, u2} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : NatCast.{u2} α] (n : Nat), Eq.{max (succ u2) (succ u1)} (ULift.{u1, u2} α) (ULift.up.{u1, u2} α (Nat.cast.{u2} α _inst_1 n)) (Nat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.natCast.{u2, u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align ulift.up_nat_cast ULift.up_natCastₓ'. -/
 @[simp, norm_cast]
 theorem up_natCast [NatCast α] (n : ℕ) : up (n : α) = n :=
   rfl
 #align ulift.up_nat_cast ULift.up_natCast
 
-/- warning: ulift.up_int_cast -> ULift.up_intCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : IntCast.{u1} α] (n : Int), Eq.{succ (max u1 u2)} (ULift.{u2, u1} α) (ULift.up.{u2, u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α _inst_1))) n)) ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Int (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (Int.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.intCast.{u1, u2} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : IntCast.{u2} α] (n : Int), Eq.{max (succ u2) (succ u1)} (ULift.{u1, u2} α) (ULift.up.{u1, u2} α (Int.cast.{u2} α _inst_1 n)) (Int.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.intCast.{u2, u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align ulift.up_int_cast ULift.up_intCastₓ'. -/
 @[simp, norm_cast]
 theorem up_intCast [IntCast α] (n : ℤ) : up (n : α) = n :=
   rfl
 #align ulift.up_int_cast ULift.up_intCast
 
-/- warning: ulift.down_nat_cast -> ULift.down_natCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NatCast.{u1} α] (n : Nat), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Nat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (Nat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.natCast.{u1, u2} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α _inst_1))) n)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : NatCast.{u2} α] (n : Nat), Eq.{succ u2} α (ULift.down.{u1, u2} α (Nat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.natCast.{u2, u1} α _inst_1) n)) (Nat.cast.{u2} α _inst_1 n)
-Case conversion may be inaccurate. Consider using '#align ulift.down_nat_cast ULift.down_natCastₓ'. -/
 @[simp, norm_cast]
 theorem down_natCast [NatCast α] (n : ℕ) : down (n : ULift α) = n :=
   rfl
 #align ulift.down_nat_cast ULift.down_natCast
 
-/- warning: ulift.down_int_cast -> ULift.down_intCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : IntCast.{u1} α] (n : Int), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Int (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (Int.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.intCast.{u1, u2} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α _inst_1))) n)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : IntCast.{u2} α] (n : Int), Eq.{succ u2} α (ULift.down.{u1, u2} α (Int.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.intCast.{u2, u1} α _inst_1) n)) (Int.cast.{u2} α _inst_1 n)
-Case conversion may be inaccurate. Consider using '#align ulift.down_int_cast ULift.down_intCastₓ'. -/
 @[simp, norm_cast]
 theorem down_intCast [IntCast α] (n : ℤ) : down (n : ULift α) = n :=
   rfl

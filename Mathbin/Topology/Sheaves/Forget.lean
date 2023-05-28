@@ -89,9 +89,6 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :
 
 attribute [local reducible] res
 
-/- warning: Top.presheaf.sheaf_condition.map_cone_fork -> TopCat.Presheaf.SheafCondition.mapConeFork is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.map_cone_fork TopCat.Presheaf.SheafCondition.mapConeForkₓ'. -/
 /-- When `G` preserves limits, the image under `G` of the sheaf condition fork for `F`
 is the sheaf condition fork for `F ⋙ G`,
 postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves_limits`.

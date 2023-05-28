@@ -153,12 +153,6 @@ section CommMonoid
 
 variable [CommMonoid α]
 
-/- warning: finset.multiplicative_energy_comm -> Finset.multiplicativeEnergy_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommMonoid.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{1} Nat (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_2))) s t) (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_2))) t s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommMonoid.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{1} Nat (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_2))) s t) (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_2))) t s)
-Case conversion may be inaccurate. Consider using '#align finset.multiplicative_energy_comm Finset.multiplicativeEnergy_commₓ'. -/
 @[to_additive additive_energy_comm]
 theorem multiplicativeEnergy_comm (s t : Finset α) :
     multiplicativeEnergy s t = multiplicativeEnergy t s :=
@@ -174,12 +168,6 @@ section CommGroup
 
 variable [CommGroup α] [Fintype α] (s t : Finset α)
 
-/- warning: finset.multiplicative_energy_univ_left -> Finset.multiplicativeEnergy_univ_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : Fintype.{u1} α] (t : Finset.{u1} α), Eq.{1} Nat (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))) (Finset.univ.{u1} α _inst_3) t) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Fintype.card.{u1} α _inst_3) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Finset.card.{u1} α t) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : Fintype.{u1} α] (t : Finset.{u1} α), Eq.{1} Nat (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))) (Finset.univ.{u1} α _inst_3) t) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Fintype.card.{u1} α _inst_3) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Finset.card.{u1} α t) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align finset.multiplicative_energy_univ_left Finset.multiplicativeEnergy_univ_leftₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, to_additive additive_energy_univ_left]
@@ -204,12 +192,6 @@ theorem multiplicativeEnergy_univ_left :
 #align finset.multiplicative_energy_univ_left Finset.multiplicativeEnergy_univ_left
 #align finset.additive_energy_univ_left Finset.additiveEnergy_univ_left
 
-/- warning: finset.multiplicative_energy_univ_right -> Finset.multiplicativeEnergy_univ_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : Fintype.{u1} α] (s : Finset.{u1} α), Eq.{1} Nat (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))) s (Finset.univ.{u1} α _inst_3)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Fintype.card.{u1} α _inst_3) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Finset.card.{u1} α s) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : Fintype.{u1} α] (s : Finset.{u1} α), Eq.{1} Nat (Finset.multiplicativeEnergy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))) s (Finset.univ.{u1} α _inst_3)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Fintype.card.{u1} α _inst_3) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Finset.card.{u1} α s) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align finset.multiplicative_energy_univ_right Finset.multiplicativeEnergy_univ_rightₓ'. -/
 @[simp, to_additive additive_energy_univ_right]
 theorem multiplicativeEnergy_univ_right :
     multiplicativeEnergy s univ = Fintype.card α * s.card ^ 2 := by

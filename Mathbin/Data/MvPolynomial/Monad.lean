@@ -116,31 +116,16 @@ def join₂ : MvPolynomial σ (MvPolynomial σ R) →+* MvPolynomial σ R :=
 #align mv_polynomial.join₂ MvPolynomial.join₂
 -/
 
-/- warning: mv_polynomial.aeval_eq_bind₁ -> MvPolynomial.aeval_eq_bind₁ is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {τ : Type.{u2}} {R : Type.{u3}} [_inst_1 : CommSemiring.{u3} R] (f : σ -> (MvPolynomial.{u2, u3} τ R _inst_1)), Eq.{max (succ (max u1 u3)) (succ (max u2 u3))} (AlgHom.{u3, max u1 u3, max u2 u3} R (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u2, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (MvPolynomial.aeval.{u3, max u2 u3, u1} R (MvPolynomial.{u2, u3} τ R _inst_1) σ _inst_1 (MvPolynomial.commSemiring.{u3, u2} R τ _inst_1) (MvPolynomial.algebra.{u3, u3, u2} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) f) (MvPolynomial.bind₁.{u1, u2, u3} σ τ R _inst_1 f)
-but is expected to have type
-  forall {σ : Type.{u1}} {τ : Type.{u3}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] (f : σ -> (MvPolynomial.{u3, u2} τ R _inst_1)), Eq.{max (max (succ u1) (succ u3)) (succ u2)} (AlgHom.{u2, max u2 u1, max u3 u2} R (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u3, u2} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u3, u2} τ R _inst_1) (MvPolynomial.commSemiring.{u2, u3} R τ _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (MvPolynomial.aeval.{u2, max u3 u2, u1} R (MvPolynomial.{u3, u2} τ R _inst_1) σ _inst_1 (MvPolynomial.commSemiring.{u2, u3} R τ _inst_1) (MvPolynomial.algebra.{u2, u2, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) f) (MvPolynomial.bind₁.{u1, u3, u2} σ τ R _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_eq_bind₁ MvPolynomial.aeval_eq_bind₁ₓ'. -/
 @[simp]
 theorem aeval_eq_bind₁ (f : σ → MvPolynomial τ R) : aeval f = bind₁ f :=
   rfl
 #align mv_polynomial.aeval_eq_bind₁ MvPolynomial.aeval_eq_bind₁
 
-/- warning: mv_polynomial.eval₂_hom_C_eq_bind₁ -> MvPolynomial.eval₂Hom_C_eq_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_C_eq_bind₁ MvPolynomial.eval₂Hom_C_eq_bind₁ₓ'. -/
 @[simp]
 theorem eval₂Hom_C_eq_bind₁ (f : σ → MvPolynomial τ R) : eval₂Hom C f = bind₁ f :=
   rfl
 #align mv_polynomial.eval₂_hom_C_eq_bind₁ MvPolynomial.eval₂Hom_C_eq_bind₁
 
-/- warning: mv_polynomial.eval₂_hom_eq_bind₂ -> MvPolynomial.eval₂Hom_eq_bind₂ is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] (f : RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))), Eq.{max (succ (max u1 u2)) (succ (max u1 u3))} (RingHom.{max u1 u2, max u1 u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (MvPolynomial.eval₂Hom.{u2, max u1 u3, u1} R (MvPolynomial.{u1, u3} σ S _inst_2) σ _inst_1 (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2) f (MvPolynomial.X.{u3, u1} S σ _inst_2)) (MvPolynomial.bind₂.{u1, u2, u3} σ R S _inst_1 _inst_2 f)
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : CommSemiring.{u2} S] (f : RingHom.{u3, max u2 u1} R (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))), Eq.{max (max (succ u1) (succ u3)) (succ u2)} (RingHom.{max u3 u1, max u1 u2} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (MvPolynomial.eval₂Hom.{u3, max u1 u2, u1} R (MvPolynomial.{u1, u2} σ S _inst_2) σ _inst_1 (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2) f (MvPolynomial.X.{u2, u1} S σ _inst_2)) (MvPolynomial.bind₂.{u1, u3, u2} σ R S _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_eq_bind₂ MvPolynomial.eval₂Hom_eq_bind₂ₓ'. -/
 @[simp]
 theorem eval₂Hom_eq_bind₂ (f : R →+* MvPolynomial σ S) : eval₂Hom f X = bind₂ f :=
   rfl
@@ -150,31 +135,16 @@ section
 
 variable (σ R)
 
-/- warning: mv_polynomial.aeval_id_eq_join₁ -> MvPolynomial.aeval_id_eq_join₁ is a dubious translation:
-lean 3 declaration is
-  forall (σ : Type.{u1}) (R : Type.{u2}) [_inst_1 : CommSemiring.{u2} R], Eq.{succ (max u1 u2)} (AlgHom.{u2, max u1 u2, max u1 u2} R (MvPolynomial.{max u1 u2, u2} (MvPolynomial.{u1, u2} σ R _inst_1) R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{max u1 u2, u2} (MvPolynomial.{u1, u2} σ R _inst_1) R _inst_1) (MvPolynomial.commSemiring.{u2, max u1 u2} R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, max u1 u2} R R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (MvPolynomial.aeval.{u2, max u1 u2, max u1 u2} R (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (id.{succ (max u1 u2)} (MvPolynomial.{u1, u2} σ R _inst_1))) (MvPolynomial.join₁.{u1, u2} σ R _inst_1)
-but is expected to have type
-  forall (σ : Type.{u2}) (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (AlgHom.{u1, max u2 u1, max u2 u1} R (MvPolynomial.{max u2 u1, u1} (MvPolynomial.{u2, u1} σ R _inst_1) R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{max u2 u1, u1} (MvPolynomial.{u2, u1} σ R _inst_1) R _inst_1) (MvPolynomial.commSemiring.{u1, max u2 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1)) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.algebra.{u1, u1, max u2 u1} R R (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (MvPolynomial.aeval.{u1, max u2 u1, max u2 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (id.{succ (max u2 u1)} (MvPolynomial.{u2, u1} σ R _inst_1))) (MvPolynomial.join₁.{u2, u1} σ R _inst_1)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_id_eq_join₁ MvPolynomial.aeval_id_eq_join₁ₓ'. -/
 @[simp]
 theorem aeval_id_eq_join₁ : aeval id = @join₁ σ R _ :=
   rfl
 #align mv_polynomial.aeval_id_eq_join₁ MvPolynomial.aeval_id_eq_join₁
 
-/- warning: mv_polynomial.eval₂_hom_C_id_eq_join₁ -> MvPolynomial.eval₂Hom_C_id_eq_join₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_C_id_eq_join₁ MvPolynomial.eval₂Hom_C_id_eq_join₁ₓ'. -/
 theorem eval₂Hom_C_id_eq_join₁ (φ : MvPolynomial (MvPolynomial σ R) R) :
     eval₂Hom C id φ = join₁ φ :=
   rfl
 #align mv_polynomial.eval₂_hom_C_id_eq_join₁ MvPolynomial.eval₂Hom_C_id_eq_join₁
 
-/- warning: mv_polynomial.eval₂_hom_id_X_eq_join₂ -> MvPolynomial.eval₂Hom_id_X_eq_join₂ is a dubious translation:
-lean 3 declaration is
-  forall (σ : Type.{u1}) (R : Type.{u2}) [_inst_1 : CommSemiring.{u2} R], Eq.{succ (max u1 u2)} (RingHom.{max u1 u2, max u1 u2} (MvPolynomial.{u1, max u1 u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, max u1 u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, max u1 u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.commSemiring.{max u1 u2, u1} (MvPolynomial.{u1, u2} σ R _inst_1) σ (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))) (MvPolynomial.eval₂Hom.{max u1 u2, max u1 u2, u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) σ (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1) (RingHom.id.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))) (MvPolynomial.X.{u2, u1} R σ _inst_1)) (MvPolynomial.join₂.{u1, u2} σ R _inst_1)
-but is expected to have type
-  forall (σ : Type.{u2}) (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (RingHom.{max u2 u1, max u2 u1} (MvPolynomial.{u2, max u2 u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, max u2 u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, max u2 u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.commSemiring.{max u2 u1, u2} (MvPolynomial.{u2, u1} σ R _inst_1) σ (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)))) (MvPolynomial.eval₂Hom.{max u2 u1, max u2 u1, u2} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) σ (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1) (RingHom.id.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)))) (MvPolynomial.X.{u1, u2} R σ _inst_1)) (MvPolynomial.join₂.{u2, u1} σ R _inst_1)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_id_X_eq_join₂ MvPolynomial.eval₂Hom_id_X_eq_join₂ₓ'. -/
 @[simp]
 theorem eval₂Hom_id_X_eq_join₂ : eval₂Hom (RingHom.id _) X = @join₂ σ R _ :=
   rfl
@@ -188,182 +158,98 @@ end
 attribute [-simp]
   aeval_eq_bind₁ eval₂_hom_C_eq_bind₁ eval₂_hom_eq_bind₂ aeval_id_eq_join₁ eval₂_hom_id_X_eq_join₂
 
-/- warning: mv_polynomial.bind₁_X_right -> MvPolynomial.bind₁_X_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_X_right MvPolynomial.bind₁_X_rightₓ'. -/
 @[simp]
 theorem bind₁_X_right (f : σ → MvPolynomial τ R) (i : σ) : bind₁ f (X i) = f i :=
   aeval_X f i
 #align mv_polynomial.bind₁_X_right MvPolynomial.bind₁_X_right
 
-/- warning: mv_polynomial.bind₂_X_right -> MvPolynomial.bind₂_X_right is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] (f : RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (i : σ), Eq.{max (succ u1) (succ u3)} (MvPolynomial.{u1, u3} σ S _inst_2) (coeFn.{max (succ (max u1 u2)) (succ (max u1 u3)), max (succ (max u1 u2)) (succ (max u1 u3))} (RingHom.{max u1 u2, max u1 u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (fun (_x : RingHom.{max u1 u2, max u1 u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) => (MvPolynomial.{u1, u2} σ R _inst_1) -> (MvPolynomial.{u1, u3} σ S _inst_2)) (RingHom.hasCoeToFun.{max u1 u2, max u1 u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (MvPolynomial.bind₂.{u1, u2, u3} σ R S _inst_1 _inst_2 f) (MvPolynomial.X.{u2, u1} R σ _inst_1 i)) (MvPolynomial.X.{u3, u1} S σ _inst_2 i)
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : CommSemiring.{u2} S] (f : RingHom.{u3, max u2 u1} R (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (i : σ), Eq.{max (succ u1) (succ u2)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : MvPolynomial.{u1, u3} σ R _inst_1) => MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.X.{u3, u1} R σ _inst_1 i)) (FunLike.coe.{max (max (succ u1) (succ u3)) (succ u2), max (succ u1) (succ u3), max (succ u1) (succ u2)} (RingHom.{max u3 u1, max u2 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (MvPolynomial.{u1, u3} σ R _inst_1) (fun (_x : MvPolynomial.{u1, u3} σ R _inst_1) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : MvPolynomial.{u1, u3} σ R _inst_1) => MvPolynomial.{u1, u2} σ S _inst_2) _x) (MulHomClass.toFunLike.{max (max u1 u3) u2, max u1 u3, max u1 u2} (RingHom.{max u3 u1, max u2 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (NonUnitalNonAssocSemiring.toMul.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))))) (NonUnitalRingHomClass.toMulHomClass.{max (max u1 u3) u2, max u1 u3, max u1 u2} (RingHom.{max u3 u1, max u2 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (RingHomClass.toNonUnitalRingHomClass.{max (max u1 u3) u2, max u1 u3, max u1 u2} (RingHom.{max u3 u1, max u2 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))) (RingHom.instRingHomClassRingHom.{max u1 u3, max u1 u2} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))))))) (MvPolynomial.bind₂.{u1, u3, u2} σ R S _inst_1 _inst_2 f) (MvPolynomial.X.{u3, u1} R σ _inst_1 i)) (MvPolynomial.X.{u2, u1} S σ _inst_2 i)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_X_right MvPolynomial.bind₂_X_rightₓ'. -/
 @[simp]
 theorem bind₂_X_right (f : R →+* MvPolynomial σ S) (i : σ) : bind₂ f (X i) = X i :=
   eval₂Hom_X' f X i
 #align mv_polynomial.bind₂_X_right MvPolynomial.bind₂_X_right
 
-/- warning: mv_polynomial.bind₁_X_left -> MvPolynomial.bind₁_X_left is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R], Eq.{succ (max u1 u2)} (AlgHom.{u2, max u1 u2, max u1 u2} R (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (MvPolynomial.bind₁.{u1, u1, u2} σ σ R _inst_1 (MvPolynomial.X.{u2, u1} R σ _inst_1)) (AlgHom.id.{u2, max u1 u2} R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)))
-but is expected to have type
-  forall {σ : Type.{u2}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (AlgHom.{u1, max u1 u2, max u1 u2} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (MvPolynomial.bind₁.{u2, u2, u1} σ σ R _inst_1 (MvPolynomial.X.{u1, u2} R σ _inst_1)) (AlgHom.id.{u1, max u2 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)))
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_X_left MvPolynomial.bind₁_X_leftₓ'. -/
 @[simp]
 theorem bind₁_X_left : bind₁ (X : σ → MvPolynomial σ R) = AlgHom.id R _ := by ext1 i; simp
 #align mv_polynomial.bind₁_X_left MvPolynomial.bind₁_X_left
 
 variable (f : σ → MvPolynomial τ R)
 
-/- warning: mv_polynomial.bind₁_C_right -> MvPolynomial.bind₁_C_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_C_right MvPolynomial.bind₁_C_rightₓ'. -/
 @[simp]
 theorem bind₁_C_right (f : σ → MvPolynomial τ R) (x) : bind₁ f (C x) = C x := by
   simp [bind₁, algebra_map_eq]
 #align mv_polynomial.bind₁_C_right MvPolynomial.bind₁_C_right
 
-/- warning: mv_polynomial.bind₂_C_right -> MvPolynomial.bind₂_C_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_C_right MvPolynomial.bind₂_C_rightₓ'. -/
 @[simp]
 theorem bind₂_C_right (f : R →+* MvPolynomial σ S) (r : R) : bind₂ f (C r) = f r :=
   eval₂Hom_C f X r
 #align mv_polynomial.bind₂_C_right MvPolynomial.bind₂_C_right
 
-/- warning: mv_polynomial.bind₂_C_left -> MvPolynomial.bind₂_C_left is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R], Eq.{succ (max u1 u2)} (RingHom.{max u1 u2, max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))) (MvPolynomial.bind₂.{u1, u2, u2} σ R R _inst_1 _inst_1 (MvPolynomial.C.{u2, u1} R σ _inst_1)) (RingHom.id.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))
-but is expected to have type
-  forall {σ : Type.{u2}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (RingHom.{max u1 u2, max u1 u2} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)))) (MvPolynomial.bind₂.{u2, u1, u1} σ R R _inst_1 _inst_1 (MvPolynomial.C.{u1, u2} R σ _inst_1)) (RingHom.id.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_C_left MvPolynomial.bind₂_C_leftₓ'. -/
 @[simp]
 theorem bind₂_C_left : bind₂ (C : R →+* MvPolynomial σ R) = RingHom.id _ := by ext : 2 <;> simp
 #align mv_polynomial.bind₂_C_left MvPolynomial.bind₂_C_left
 
-/- warning: mv_polynomial.bind₂_comp_C -> MvPolynomial.bind₂_comp_C is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] (f : RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))), Eq.{max (succ u2) (succ (max u1 u3))} (RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (RingHom.comp.{u2, max u1 u2, max u1 u3} R (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (MvPolynomial.bind₂.{u1, u2, u3} σ R S _inst_1 _inst_2 f) (MvPolynomial.C.{u2, u1} R σ _inst_1)) f
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : CommSemiring.{u2} S] (f : RingHom.{u3, max u2 u1} R (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))), Eq.{max (max (succ u1) (succ u3)) (succ u2)} (RingHom.{u3, max u1 u2} R (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (RingHom.comp.{u3, max u1 u3, max u1 u2} R (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))) (MvPolynomial.bind₂.{u1, u3, u2} σ R S _inst_1 _inst_2 f) (MvPolynomial.C.{u3, u1} R σ _inst_1)) f
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_comp_C MvPolynomial.bind₂_comp_Cₓ'. -/
 @[simp]
 theorem bind₂_comp_C (f : R →+* MvPolynomial σ S) : (bind₂ f).comp C = f :=
   RingHom.ext <| bind₂_C_right _
 #align mv_polynomial.bind₂_comp_C MvPolynomial.bind₂_comp_C
 
-/- warning: mv_polynomial.join₂_map -> MvPolynomial.join₂_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.join₂_map MvPolynomial.join₂_mapₓ'. -/
 @[simp]
 theorem join₂_map (f : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
     join₂ (map f φ) = bind₂ f φ := by simp only [join₂, bind₂, eval₂_hom_map_hom, RingHom.id_comp]
 #align mv_polynomial.join₂_map MvPolynomial.join₂_map
 
-/- warning: mv_polynomial.join₂_comp_map -> MvPolynomial.join₂_comp_map is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] (f : RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))), Eq.{max (succ (max u1 u2)) (succ (max u1 u3))} (RingHom.{max u1 u2, max u1 u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (RingHom.comp.{max u1 u2, max u1 u3, max u1 u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, max u1 u3} σ (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, max u1 u3} σ (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, max u1 u3} σ (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)) (MvPolynomial.commSemiring.{max u1 u3, u1} (MvPolynomial.{u1, u3} σ S _inst_2) σ (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (MvPolynomial.join₂.{u1, u3} σ S _inst_2) (MvPolynomial.map.{u2, max u1 u3, u1} R (MvPolynomial.{u1, u3} σ S _inst_2) σ _inst_1 (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2) f)) (MvPolynomial.bind₂.{u1, u2, u3} σ R S _inst_1 _inst_2 f)
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : CommSemiring.{u2} S] (f : RingHom.{u3, max u2 u1} R (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))), Eq.{max (max (succ u1) (succ u3)) (succ u2)} (RingHom.{max u1 u3, max u2 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (RingHom.comp.{max u1 u3, max u2 u1, max u2 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, max u2 u1} σ (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, max u2 u1} σ (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, max u2 u1} σ (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)) (MvPolynomial.commSemiring.{max u1 u2, u1} (MvPolynomial.{u1, u2} σ S _inst_2) σ (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))) (MvPolynomial.join₂.{u1, u2} σ S _inst_2) (MvPolynomial.map.{u3, max u2 u1, u1} R (MvPolynomial.{u1, u2} σ S _inst_2) σ _inst_1 (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2) f)) (MvPolynomial.bind₂.{u1, u3, u2} σ R S _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.join₂_comp_map MvPolynomial.join₂_comp_mapₓ'. -/
 @[simp]
 theorem join₂_comp_map (f : R →+* MvPolynomial σ S) : join₂.comp (map f) = bind₂ f :=
   RingHom.ext <| join₂_map _
 #align mv_polynomial.join₂_comp_map MvPolynomial.join₂_comp_map
 
-/- warning: mv_polynomial.aeval_id_rename -> MvPolynomial.aeval_id_rename is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_id_rename MvPolynomial.aeval_id_renameₓ'. -/
 theorem aeval_id_rename (f : σ → MvPolynomial τ R) (p : MvPolynomial σ R) :
     aeval id (rename f p) = aeval f p := by rw [aeval_rename, Function.comp.left_id]
 #align mv_polynomial.aeval_id_rename MvPolynomial.aeval_id_rename
 
-/- warning: mv_polynomial.join₁_rename -> MvPolynomial.join₁_rename is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.join₁_rename MvPolynomial.join₁_renameₓ'. -/
 @[simp]
 theorem join₁_rename (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     join₁ (rename f φ) = bind₁ f φ :=
   aeval_id_rename _ _
 #align mv_polynomial.join₁_rename MvPolynomial.join₁_rename
 
-/- warning: mv_polynomial.bind₁_id -> MvPolynomial.bind₁_id is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R], Eq.{succ (max u1 u2)} (AlgHom.{u2, max u1 u2, max u1 u2} R (MvPolynomial.{max u1 u2, u2} (MvPolynomial.{u1, u2} σ R _inst_1) R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{max u1 u2, u2} (MvPolynomial.{u1, u2} σ R _inst_1) R _inst_1) (MvPolynomial.commSemiring.{u2, max u1 u2} R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, max u1 u2} R R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (MvPolynomial.bind₁.{max u1 u2, u1, u2} (MvPolynomial.{u1, u2} σ R _inst_1) σ R _inst_1 (id.{max (succ u1) (succ u2)} (MvPolynomial.{u1, u2} σ R _inst_1))) (MvPolynomial.join₁.{u1, u2} σ R _inst_1)
-but is expected to have type
-  forall {σ : Type.{u2}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (AlgHom.{u1, max u2 u1, max u1 u2} R (MvPolynomial.{max u2 u1, u1} (MvPolynomial.{u2, u1} σ R _inst_1) R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{max u2 u1, u1} (MvPolynomial.{u2, u1} σ R _inst_1) R _inst_1) (MvPolynomial.commSemiring.{u1, max u2 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1)) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.algebra.{u1, u1, max u2 u1} R R (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (MvPolynomial.bind₁.{max u2 u1, u2, u1} (MvPolynomial.{u2, u1} σ R _inst_1) σ R _inst_1 (id.{max (succ u1) (succ u2)} (MvPolynomial.{u2, u1} σ R _inst_1))) (MvPolynomial.join₁.{u2, u1} σ R _inst_1)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_id MvPolynomial.bind₁_idₓ'. -/
 @[simp]
 theorem bind₁_id : bind₁ (@id (MvPolynomial σ R)) = join₁ :=
   rfl
 #align mv_polynomial.bind₁_id MvPolynomial.bind₁_id
 
-/- warning: mv_polynomial.bind₂_id -> MvPolynomial.bind₂_id is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R], Eq.{succ (max u1 u2)} (RingHom.{max u1 u2, max u1 u2} (MvPolynomial.{u1, max u1 u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, max u1 u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, max u1 u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.commSemiring.{max u1 u2, u1} (MvPolynomial.{u1, u2} σ R _inst_1) σ (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))) (MvPolynomial.bind₂.{u1, max u1 u2, u2} σ (MvPolynomial.{u1, u2} σ R _inst_1) R (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1) _inst_1 (RingHom.id.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))) (MvPolynomial.join₂.{u1, u2} σ R _inst_1)
-but is expected to have type
-  forall {σ : Type.{u2}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (RingHom.{max u2 u1, max u1 u2} (MvPolynomial.{u2, max u2 u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, max u2 u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, max u2 u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.commSemiring.{max u2 u1, u2} (MvPolynomial.{u2, u1} σ R _inst_1) σ (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)))) (MvPolynomial.bind₂.{u2, max u2 u1, u1} σ (MvPolynomial.{u2, u1} σ R _inst_1) R (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1) _inst_1 (RingHom.id.{max u1 u2} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) (MvPolynomial.join₂.{u2, u1} σ R _inst_1)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_id MvPolynomial.bind₂_idₓ'. -/
 @[simp]
 theorem bind₂_id : bind₂ (RingHom.id (MvPolynomial σ R)) = join₂ :=
   rfl
 #align mv_polynomial.bind₂_id MvPolynomial.bind₂_id
 
-/- warning: mv_polynomial.bind₁_bind₁ -> MvPolynomial.bind₁_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_bind₁ MvPolynomial.bind₁_bind₁ₓ'. -/
 theorem bind₁_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R)
     (φ : MvPolynomial σ R) : (bind₁ g) (bind₁ f φ) = bind₁ (fun i => bind₁ g (f i)) φ := by
   simp [bind₁, ← comp_aeval]
 #align mv_polynomial.bind₁_bind₁ MvPolynomial.bind₁_bind₁
 
-/- warning: mv_polynomial.bind₁_comp_bind₁ -> MvPolynomial.bind₁_comp_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_comp_bind₁ MvPolynomial.bind₁_comp_bind₁ₓ'. -/
 theorem bind₁_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R) :
     (bind₁ g).comp (bind₁ f) = bind₁ fun i => bind₁ g (f i) := by ext1; apply bind₁_bind₁
 #align mv_polynomial.bind₁_comp_bind₁ MvPolynomial.bind₁_comp_bind₁
 
-/- warning: mv_polynomial.bind₂_comp_bind₂ -> MvPolynomial.bind₂_comp_bind₂ is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} {T : Type.{u4}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] [_inst_3 : CommSemiring.{u4} T] (f : RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (g : RingHom.{u3, max u1 u4} S (MvPolynomial.{u1, u4} σ T _inst_3) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2)) (Semiring.toNonAssocSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (CommSemiring.toSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (MvPolynomial.commSemiring.{u4, u1} T σ _inst_3)))), Eq.{max (succ (max u1 u2)) (succ (max u1 u4))} (RingHom.{max u1 u2, max u1 u4} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u4} σ T _inst_3) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (CommSemiring.toSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (MvPolynomial.commSemiring.{u4, u1} T σ _inst_3)))) (RingHom.comp.{max u1 u2, max u1 u3, max u1 u4} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.{u1, u4} σ T _inst_3) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (Semiring.toNonAssocSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (CommSemiring.toSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (MvPolynomial.commSemiring.{u4, u1} T σ _inst_3))) (MvPolynomial.bind₂.{u1, u3, u4} σ S T _inst_2 _inst_3 g) (MvPolynomial.bind₂.{u1, u2, u3} σ R S _inst_1 _inst_2 f)) (MvPolynomial.bind₂.{u1, u2, u4} σ R T _inst_1 _inst_3 (RingHom.comp.{u2, max u1 u3, max u1 u4} R (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.{u1, u4} σ T _inst_3) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (Semiring.toNonAssocSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (CommSemiring.toSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ T _inst_3) (MvPolynomial.commSemiring.{u4, u1} T σ _inst_3))) (MvPolynomial.bind₂.{u1, u3, u4} σ S T _inst_2 _inst_3 g) f))
-but is expected to have type
-  forall {σ : Type.{u2}} {R : Type.{u4}} {S : Type.{u3}} {T : Type.{u1}} [_inst_1 : CommSemiring.{u4} R] [_inst_2 : CommSemiring.{u3} S] [_inst_3 : CommSemiring.{u1} T] (f : RingHom.{u4, max u3 u2} R (MvPolynomial.{u2, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u4} R (CommSemiring.toSemiring.{u4} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u2} S σ _inst_2)))) (g : RingHom.{u3, max u1 u2} S (MvPolynomial.{u2, u1} σ T _inst_3) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2)) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (MvPolynomial.commSemiring.{u1, u2} T σ _inst_3)))), Eq.{max (max (succ u2) (succ u4)) (succ u1)} (RingHom.{max u4 u2, max u2 u1} (MvPolynomial.{u2, u4} σ R _inst_1) (MvPolynomial.{u2, u1} σ T _inst_3) (Semiring.toNonAssocSemiring.{max u2 u4} (MvPolynomial.{u2, u4} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u4} (MvPolynomial.{u2, u4} σ R _inst_1) (MvPolynomial.commSemiring.{u4, u2} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (MvPolynomial.commSemiring.{u1, u2} T σ _inst_3)))) (RingHom.comp.{max u4 u2, max u2 u3, max u2 u1} (MvPolynomial.{u2, u4} σ R _inst_1) (MvPolynomial.{u2, u3} σ S _inst_2) (MvPolynomial.{u2, u1} σ T _inst_3) (Semiring.toNonAssocSemiring.{max u2 u4} (MvPolynomial.{u2, u4} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u4} (MvPolynomial.{u2, u4} σ R _inst_1) (MvPolynomial.commSemiring.{u4, u2} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u2} S σ _inst_2))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (MvPolynomial.commSemiring.{u1, u2} T σ _inst_3))) (MvPolynomial.bind₂.{u2, u3, u1} σ S T _inst_2 _inst_3 g) (MvPolynomial.bind₂.{u2, u4, u3} σ R S _inst_1 _inst_2 f)) (MvPolynomial.bind₂.{u2, u4, u1} σ R T _inst_1 _inst_3 (RingHom.comp.{u4, max u2 u3, max u2 u1} R (MvPolynomial.{u2, u3} σ S _inst_2) (MvPolynomial.{u2, u1} σ T _inst_3) (Semiring.toNonAssocSemiring.{u4} R (CommSemiring.toSemiring.{u4} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u2} S σ _inst_2))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ T _inst_3) (MvPolynomial.commSemiring.{u1, u2} T σ _inst_3))) (MvPolynomial.bind₂.{u2, u3, u1} σ S T _inst_2 _inst_3 g) f))
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_comp_bind₂ MvPolynomial.bind₂_comp_bind₂ₓ'. -/
 theorem bind₂_comp_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* MvPolynomial σ T) :
     (bind₂ g).comp (bind₂ f) = bind₂ ((bind₂ g).comp f) := by ext : 2 <;> simp
 #align mv_polynomial.bind₂_comp_bind₂ MvPolynomial.bind₂_comp_bind₂
 
-/- warning: mv_polynomial.bind₂_bind₂ -> MvPolynomial.bind₂_bind₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_bind₂ MvPolynomial.bind₂_bind₂ₓ'. -/
 theorem bind₂_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* MvPolynomial σ T)
     (φ : MvPolynomial σ R) : (bind₂ g) (bind₂ f φ) = bind₂ ((bind₂ g).comp f) φ :=
   RingHom.congr_fun (bind₂_comp_bind₂ f g) φ
 #align mv_polynomial.bind₂_bind₂ MvPolynomial.bind₂_bind₂
 
-/- warning: mv_polynomial.rename_comp_bind₁ -> MvPolynomial.rename_comp_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.rename_comp_bind₁ MvPolynomial.rename_comp_bind₁ₓ'. -/
 theorem rename_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) :
     (rename g).comp (bind₁ f) = bind₁ fun i => rename g <| f i := by ext1 i; simp
 #align mv_polynomial.rename_comp_bind₁ MvPolynomial.rename_comp_bind₁
 
-/- warning: mv_polynomial.rename_bind₁ -> MvPolynomial.rename_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.rename_bind₁ MvPolynomial.rename_bind₁ₓ'. -/
 theorem rename_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) (φ : MvPolynomial σ R) :
     rename g (bind₁ f φ) = bind₁ (fun i => rename g <| f i) φ :=
   AlgHom.congr_fun (rename_comp_bind₁ f g) φ
 #align mv_polynomial.rename_bind₁ MvPolynomial.rename_bind₁
 
-/- warning: mv_polynomial.map_bind₂ -> MvPolynomial.map_bind₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.map_bind₂ MvPolynomial.map_bind₂ₓ'. -/
 theorem map_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* T) (φ : MvPolynomial σ R) :
     map g (bind₂ f φ) = bind₂ ((map g).comp f) φ :=
   by
@@ -372,147 +258,84 @@ theorem map_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* T) (φ : MvPoly
   simp only [Function.comp_apply, map_X]
 #align mv_polynomial.map_bind₂ MvPolynomial.map_bind₂
 
-/- warning: mv_polynomial.bind₁_comp_rename -> MvPolynomial.bind₁_comp_rename is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {τ : Type.{u2}} {R : Type.{u3}} [_inst_1 : CommSemiring.{u3} R] {υ : Type.{u4}} (f : τ -> (MvPolynomial.{u4, u3} υ R _inst_1)) (g : σ -> τ), Eq.{max (succ (max u1 u3)) (succ (max u4 u3))} (AlgHom.{u3, max u1 u3, max u4 u3} R (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u4, u3} υ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u4 u3} (MvPolynomial.{u4, u3} υ R _inst_1) (MvPolynomial.commSemiring.{u3, u4} R υ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u4} R R υ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (AlgHom.comp.{u3, max u1 u3, max u2 u3, max u4 u3} R (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u2, u3} τ R _inst_1) (MvPolynomial.{u4, u3} υ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R τ _inst_1)) (CommSemiring.toSemiring.{max u4 u3} (MvPolynomial.{u4, u3} υ R _inst_1) (MvPolynomial.commSemiring.{u3, u4} R υ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u4} R R υ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.bind₁.{u2, u4, u3} τ υ R _inst_1 f) (MvPolynomial.rename.{u1, u2, u3} σ τ R _inst_1 g)) (MvPolynomial.bind₁.{u1, u4, u3} σ υ R _inst_1 (Function.comp.{succ u1, succ u2, max (succ u4) (succ u3)} σ τ (MvPolynomial.{u4, u3} υ R _inst_1) f g))
-but is expected to have type
-  forall {σ : Type.{u2}} {τ : Type.{u1}} {R : Type.{u3}} [_inst_1 : CommSemiring.{u3} R] {υ : Type.{u4}} (f : τ -> (MvPolynomial.{u4, u3} υ R _inst_1)) (g : σ -> τ), Eq.{max (max (succ u2) (succ u3)) (succ u4)} (AlgHom.{u3, max u3 u2, max u3 u4} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u4, u3} υ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u4 u3} (MvPolynomial.{u4, u3} υ R _inst_1) (MvPolynomial.commSemiring.{u3, u4} R υ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u4} R R υ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (AlgHom.comp.{u3, max u3 u2, max u1 u3, max u3 u4} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.{u4, u3} υ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (CommSemiring.toSemiring.{max u4 u3} (MvPolynomial.{u4, u3} υ R _inst_1) (MvPolynomial.commSemiring.{u3, u4} R υ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u4} R R υ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.bind₁.{u1, u4, u3} τ υ R _inst_1 f) (MvPolynomial.rename.{u2, u1, u3} σ τ R _inst_1 g)) (MvPolynomial.bind₁.{u2, u4, u3} σ υ R _inst_1 (Function.comp.{succ u2, succ u1, max (succ u3) (succ u4)} σ τ (MvPolynomial.{u4, u3} υ R _inst_1) f g))
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_comp_rename MvPolynomial.bind₁_comp_renameₓ'. -/
 theorem bind₁_comp_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) :
     (bind₁ f).comp (rename g) = bind₁ (f ∘ g) := by ext1 i; simp
 #align mv_polynomial.bind₁_comp_rename MvPolynomial.bind₁_comp_rename
 
-/- warning: mv_polynomial.bind₁_rename -> MvPolynomial.bind₁_rename is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_rename MvPolynomial.bind₁_renameₓ'. -/
 theorem bind₁_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) (φ : MvPolynomial σ R) :
     bind₁ f (rename g φ) = bind₁ (f ∘ g) φ :=
   AlgHom.congr_fun (bind₁_comp_rename f g) φ
 #align mv_polynomial.bind₁_rename MvPolynomial.bind₁_rename
 
-/- warning: mv_polynomial.bind₂_map -> MvPolynomial.bind₂_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_map MvPolynomial.bind₂_mapₓ'. -/
 theorem bind₂_map (f : S →+* MvPolynomial σ T) (g : R →+* S) (φ : MvPolynomial σ R) :
     bind₂ f (map g φ) = bind₂ (f.comp g) φ := by simp [bind₂]
 #align mv_polynomial.bind₂_map MvPolynomial.bind₂_map
 
-/- warning: mv_polynomial.map_comp_C -> MvPolynomial.map_comp_C is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] (f : RingHom.{u2, u3} R S (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2))), Eq.{max (succ u2) (succ (max u1 u3))} (RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))) (RingHom.comp.{u2, max u1 u2, max u1 u3} R (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (MvPolynomial.map.{u2, u3, u1} R S σ _inst_1 _inst_2 f) (MvPolynomial.C.{u2, u1} R σ _inst_1)) (RingHom.comp.{u2, u3, max u1 u3} R S (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (MvPolynomial.C.{u3, u1} S σ _inst_2) f)
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : CommSemiring.{u2} S] (f : RingHom.{u3, u2} R S (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))), Eq.{max (max (succ u1) (succ u3)) (succ u2)} (RingHom.{u3, max u2 u1} R (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2)))) (RingHom.comp.{u3, max u3 u1, max u2 u1} R (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))) (MvPolynomial.map.{u3, u2, u1} R S σ _inst_1 _inst_2 f) (MvPolynomial.C.{u3, u1} R σ _inst_1)) (RingHom.comp.{u3, u2, max u1 u2} R S (MvPolynomial.{u1, u2} σ S _inst_2) (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2)) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ S _inst_2) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ S _inst_2) (MvPolynomial.commSemiring.{u2, u1} S σ _inst_2))) (MvPolynomial.C.{u2, u1} S σ _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.map_comp_C MvPolynomial.map_comp_Cₓ'. -/
 @[simp]
 theorem map_comp_C (f : R →+* S) : (map f).comp (C : R →+* MvPolynomial σ R) = C.comp f := by ext1;
   apply map_C
 #align mv_polynomial.map_comp_C MvPolynomial.map_comp_C
 
-/- warning: mv_polynomial.hom_bind₁ -> MvPolynomial.hom_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.hom_bind₁ MvPolynomial.hom_bind₁ₓ'. -/
 -- mixing the two monad structures
 theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     f (bind₁ g φ) = eval₂Hom (f.comp C) (fun i => f (g i)) φ := by
   rw [bind₁, map_aeval, algebra_map_eq]
 #align mv_polynomial.hom_bind₁ MvPolynomial.hom_bind₁
 
-/- warning: mv_polynomial.map_bind₁ -> MvPolynomial.map_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.map_bind₁ MvPolynomial.map_bind₁ₓ'. -/
 theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) := by
   rw [hom_bind₁, map_comp_C, ← eval₂_hom_map_hom]; rfl
 #align mv_polynomial.map_bind₁ MvPolynomial.map_bind₁
 
-/- warning: mv_polynomial.eval₂_hom_comp_C -> MvPolynomial.eval₂Hom_comp_C is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] (f : RingHom.{u2, u3} R S (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2))) (g : σ -> S), Eq.{max (succ u2) (succ u3)} (RingHom.{u2, u3} R S (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2))) (RingHom.comp.{u2, max u1 u2, u3} R (MvPolynomial.{u1, u2} σ R _inst_1) S (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2)) (MvPolynomial.eval₂Hom.{u2, u3, u1} R S σ _inst_1 _inst_2 f g) (MvPolynomial.C.{u2, u1} R σ _inst_1)) f
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : CommSemiring.{u2} S] (f : RingHom.{u3, u2} R S (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) (g : σ -> S), Eq.{max (succ u3) (succ u2)} (RingHom.{u3, u2} R S (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) (RingHom.comp.{u3, max u1 u3, u2} R (MvPolynomial.{u1, u3} σ R _inst_1) S (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1)) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2)) (MvPolynomial.eval₂Hom.{u3, u2, u1} R S σ _inst_1 _inst_2 f g) (MvPolynomial.C.{u3, u1} R σ _inst_1)) f
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_comp_C MvPolynomial.eval₂Hom_comp_Cₓ'. -/
 @[simp]
 theorem eval₂Hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂Hom f g).comp C = f := by ext1 r;
   exact eval₂_C f g r
 #align mv_polynomial.eval₂_hom_comp_C MvPolynomial.eval₂Hom_comp_C
 
-/- warning: mv_polynomial.eval₂_hom_bind₁ -> MvPolynomial.eval₂Hom_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_bind₁ MvPolynomial.eval₂Hom_bind₁ₓ'. -/
 theorem eval₂Hom_bind₁ (f : R →+* S) (g : τ → S) (h : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     eval₂Hom f g (bind₁ h φ) = eval₂Hom f (fun i => eval₂Hom f g (h i)) φ := by
   rw [hom_bind₁, eval₂_hom_comp_C]
 #align mv_polynomial.eval₂_hom_bind₁ MvPolynomial.eval₂Hom_bind₁
 
-/- warning: mv_polynomial.aeval_bind₁ -> MvPolynomial.aeval_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_bind₁ MvPolynomial.aeval_bind₁ₓ'. -/
 theorem aeval_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     aeval f (bind₁ g φ) = aeval (fun i => aeval f (g i)) φ :=
   eval₂Hom_bind₁ _ _ _ _
 #align mv_polynomial.aeval_bind₁ MvPolynomial.aeval_bind₁
 
-/- warning: mv_polynomial.aeval_comp_bind₁ -> MvPolynomial.aeval_comp_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_comp_bind₁ MvPolynomial.aeval_comp_bind₁ₓ'. -/
 theorem aeval_comp_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) :
     (aeval f).comp (bind₁ g) = aeval fun i => aeval f (g i) := by ext1; apply aeval_bind₁
 #align mv_polynomial.aeval_comp_bind₁ MvPolynomial.aeval_comp_bind₁
 
-/- warning: mv_polynomial.eval₂_hom_comp_bind₂ -> MvPolynomial.eval₂Hom_comp_bind₂ is a dubious translation:
-lean 3 declaration is
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u3}} {T : Type.{u4}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S] [_inst_3 : CommSemiring.{u4} T] (f : RingHom.{u3, u4} S T (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S _inst_2)) (Semiring.toNonAssocSemiring.{u4} T (CommSemiring.toSemiring.{u4} T _inst_3))) (g : σ -> T) (h : RingHom.{u2, max u1 u3} R (MvPolynomial.{u1, u3} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2)))), Eq.{max (succ (max u1 u2)) (succ u4)} (RingHom.{max u1 u2, u4} (MvPolynomial.{u1, u2} σ R _inst_1) T (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{u4} T (CommSemiring.toSemiring.{u4} T _inst_3))) (RingHom.comp.{max u1 u2, max u1 u3, u4} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u3} σ S _inst_2) T (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (Semiring.toNonAssocSemiring.{u4} T (CommSemiring.toSemiring.{u4} T _inst_3)) (MvPolynomial.eval₂Hom.{u3, u4, u1} S T σ _inst_2 _inst_3 f g) (MvPolynomial.bind₂.{u1, u2, u3} σ R S _inst_1 _inst_2 h)) (MvPolynomial.eval₂Hom.{u2, u4, u1} R T σ _inst_1 _inst_3 (RingHom.comp.{u2, max u1 u3, u4} R (MvPolynomial.{u1, u3} σ S _inst_2) T (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} σ S _inst_2) (MvPolynomial.commSemiring.{u3, u1} S σ _inst_2))) (Semiring.toNonAssocSemiring.{u4} T (CommSemiring.toSemiring.{u4} T _inst_3)) (MvPolynomial.eval₂Hom.{u3, u4, u1} S T σ _inst_2 _inst_3 f g) h) g)
-but is expected to have type
-  forall {σ : Type.{u1}} {R : Type.{u2}} {S : Type.{u4}} {T : Type.{u3}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u4} S] [_inst_3 : CommSemiring.{u3} T] (f : RingHom.{u4, u3} S T (Semiring.toNonAssocSemiring.{u4} S (CommSemiring.toSemiring.{u4} S _inst_2)) (Semiring.toNonAssocSemiring.{u3} T (CommSemiring.toSemiring.{u3} T _inst_3))) (g : σ -> T) (h : RingHom.{u2, max u4 u1} R (MvPolynomial.{u1, u4} σ S _inst_2) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ S _inst_2) (CommSemiring.toSemiring.{max u1 u4} (MvPolynomial.{u1, u4} σ S _inst_2) (MvPolynomial.commSemiring.{u4, u1} S σ _inst_2)))), Eq.{max (max (succ u1) (succ u2)) (succ u3)} (RingHom.{max u2 u1, u3} (MvPolynomial.{u1, u2} σ R _inst_1) T (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{u3} T (CommSemiring.toSemiring.{u3} T _inst_3))) (RingHom.comp.{max u2 u1, max u1 u4, u3} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u4} σ S _inst_2) T (Semiring.toNonAssocSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{max u4 u1} (MvPolynomial.{u1, u4} σ S _inst_2) (CommSemiring.toSemiring.{max u4 u1} (MvPolynomial.{u1, u4} σ S _inst_2) (MvPolynomial.commSemiring.{u4, u1} S σ _inst_2))) (Semiring.toNonAssocSemiring.{u3} T (CommSemiring.toSemiring.{u3} T _inst_3)) (MvPolynomial.eval₂Hom.{u4, u3, u1} S T σ _inst_2 _inst_3 f g) (MvPolynomial.bind₂.{u1, u2, u4} σ R S _inst_1 _inst_2 h)) (MvPolynomial.eval₂Hom.{u2, u3, u1} R T σ _inst_1 _inst_3 (RingHom.comp.{u2, max u1 u4, u3} R (MvPolynomial.{u1, u4} σ S _inst_2) T (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u4 u1} (MvPolynomial.{u1, u4} σ S _inst_2) (CommSemiring.toSemiring.{max u4 u1} (MvPolynomial.{u1, u4} σ S _inst_2) (MvPolynomial.commSemiring.{u4, u1} S σ _inst_2))) (Semiring.toNonAssocSemiring.{u3} T (CommSemiring.toSemiring.{u3} T _inst_3)) (MvPolynomial.eval₂Hom.{u4, u3, u1} S T σ _inst_2 _inst_3 f g) h) g)
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_comp_bind₂ MvPolynomial.eval₂Hom_comp_bind₂ₓ'. -/
 theorem eval₂Hom_comp_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolynomial σ S) :
     (eval₂Hom f g).comp (bind₂ h) = eval₂Hom ((eval₂Hom f g).comp h) g := by ext : 2 <;> simp
 #align mv_polynomial.eval₂_hom_comp_bind₂ MvPolynomial.eval₂Hom_comp_bind₂
 
-/- warning: mv_polynomial.eval₂_hom_bind₂ -> MvPolynomial.eval₂Hom_bind₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_bind₂ MvPolynomial.eval₂Hom_bind₂ₓ'. -/
 theorem eval₂Hom_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolynomial σ S)
     (φ : MvPolynomial σ R) : eval₂Hom f g (bind₂ h φ) = eval₂Hom ((eval₂Hom f g).comp h) g φ :=
   RingHom.congr_fun (eval₂Hom_comp_bind₂ f g h) φ
 #align mv_polynomial.eval₂_hom_bind₂ MvPolynomial.eval₂Hom_bind₂
 
-/- warning: mv_polynomial.aeval_bind₂ -> MvPolynomial.aeval_bind₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_bind₂ MvPolynomial.aeval_bind₂ₓ'. -/
 theorem aeval_bind₂ [Algebra S T] (f : σ → T) (g : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
     aeval f (bind₂ g φ) = eval₂Hom ((↑(aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
   eval₂Hom_bind₂ _ _ _ _
 #align mv_polynomial.aeval_bind₂ MvPolynomial.aeval_bind₂
 
-/- warning: mv_polynomial.eval₂_hom_C_left -> MvPolynomial.eval₂Hom_C_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_hom_C_left MvPolynomial.eval₂Hom_C_leftₓ'. -/
 theorem eval₂Hom_C_left (f : σ → MvPolynomial τ R) : eval₂Hom C f = bind₁ f :=
   rfl
 #align mv_polynomial.eval₂_hom_C_left MvPolynomial.eval₂Hom_C_left
 
-/- warning: mv_polynomial.bind₁_monomial -> MvPolynomial.bind₁_monomial is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₁_monomial MvPolynomial.bind₁_monomialₓ'. -/
 theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r : R) :
     bind₁ f (monomial d r) = C r * ∏ i in d.support, f i ^ d i := by
   simp only [monomial_eq, AlgHom.map_mul, bind₁_C_right, Finsupp.prod, AlgHom.map_prod,
     AlgHom.map_pow, bind₁_X_right]
 #align mv_polynomial.bind₁_monomial MvPolynomial.bind₁_monomial
 
-/- warning: mv_polynomial.bind₂_monomial -> MvPolynomial.bind₂_monomial is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_monomial MvPolynomial.bind₂_monomialₓ'. -/
 theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r : R) :
     bind₂ f (monomial d r) = f r * monomial d 1 := by
   simp only [monomial_eq, RingHom.map_mul, bind₂_C_right, Finsupp.prod, RingHom.map_prod,
     RingHom.map_pow, bind₂_X_right, C_1, one_mul]
 #align mv_polynomial.bind₂_monomial MvPolynomial.bind₂_monomial
 
-/- warning: mv_polynomial.bind₂_monomial_one -> MvPolynomial.bind₂_monomial_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.bind₂_monomial_one MvPolynomial.bind₂_monomial_oneₓ'. -/
 @[simp]
 theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) :
     bind₂ f (monomial d 1) = monomial d 1 := by rw [bind₂_monomial, f.map_one, one_mul]
@@ -520,9 +343,6 @@ theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ)
 
 section
 
-/- warning: mv_polynomial.vars_bind₁ -> MvPolynomial.vars_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_bind₁ MvPolynomial.vars_bind₁ₓ'. -/
 theorem vars_bind₁ [DecidableEq τ] (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     (bind₁ f φ).vars ⊆ φ.vars.biUnion fun i => (f i).vars :=
   by
@@ -562,9 +382,6 @@ theorem vars_bind₁ [DecidableEq τ] (f : σ → MvPolynomial τ R) (φ : MvPol
 
 end
 
-/- warning: mv_polynomial.mem_vars_bind₁ -> MvPolynomial.mem_vars_bind₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.mem_vars_bind₁ MvPolynomial.mem_vars_bind₁ₓ'. -/
 theorem mem_vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) {j : τ}
     (h : j ∈ (bind₁ f φ).vars) : ∃ i : σ, i ∈ φ.vars ∧ j ∈ (f i).vars := by
   classical simpa only [exists_prop, Finset.mem_biUnion, mem_support_iff, Ne.def] using

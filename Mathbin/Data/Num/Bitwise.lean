@@ -388,12 +388,6 @@ theorem bit_zero (b) : (b::zero b) = zero b := by cases b <;> rfl
 #align snum.bit_zero SNum.bit_zero
 -/
 
-/- warning: snum.bit_one -> SNum.bit_one is a dubious translation:
-lean 3 declaration is
-  forall (b : Bool), Eq.{1} SNum (SNum.bit b (SNum.zero (not b))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NzsNum SNum (HasLiftT.mk.{1, 1} NzsNum SNum (CoeTCₓ.coe.{1, 1} NzsNum SNum (coeBase.{1, 1} NzsNum SNum SNum.hasCoe))) (NzsNum.msb b))
-but is expected to have type
-  forall (b : Bool), Eq.{1} SNum (SNum.bit b (SNum.zero (Decidable.decide (Not (Eq.{1} Bool b Bool.true)) (instDecidableNot (Eq.{1} Bool b Bool.true) (instDecidableEqBool b Bool.true))))) (SNum.nz (NzsNum.msb b))
-Case conversion may be inaccurate. Consider using '#align snum.bit_one SNum.bit_oneₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem bit_one (b) : (b::zero (not b)) = msb b := by cases b <;> rfl
 #align snum.bit_one SNum.bit_one

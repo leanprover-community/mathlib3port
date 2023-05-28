@@ -78,12 +78,6 @@ theorem subset_intentClosure_iff_subset_extentClosure :
 
 variable (r)
 
-/- warning: gc_intent_closure_extent_closure -> gc_intentClosure_extentClosure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop), GaloisConnection.{u1, u2} (Set.{u1} α) (OrderDual.{u2} (Set.{u2} β)) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (OrderDual.preorder.{u2} (Set.{u2} β) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β)))))))) (Function.comp.{succ u1, succ u2, succ u2} (Set.{u1} α) (Set.{u2} β) (OrderDual.{u2} (Set.{u2} β)) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (Set.{u2} β) (OrderDual.{u2} (Set.{u2} β))) (fun (_x : Equiv.{succ u2, succ u2} (Set.{u2} β) (OrderDual.{u2} (Set.{u2} β))) => (Set.{u2} β) -> (OrderDual.{u2} (Set.{u2} β))) (Equiv.hasCoeToFun.{succ u2, succ u2} (Set.{u2} β) (OrderDual.{u2} (Set.{u2} β))) (OrderDual.toDual.{u2} (Set.{u2} β))) (intentClosure.{u1, u2} α β r)) (Function.comp.{succ u2, succ u2, succ u1} (OrderDual.{u2} (Set.{u2} β)) (Set.{u2} β) (Set.{u1} α) (extentClosure.{u1, u2} α β r) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} (Set.{u2} β)) (Set.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} (OrderDual.{u2} (Set.{u2} β)) (Set.{u2} β)) => (OrderDual.{u2} (Set.{u2} β)) -> (Set.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} (OrderDual.{u2} (Set.{u2} β)) (Set.{u2} β)) (OrderDual.ofDual.{u2} (Set.{u2} β))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop), GaloisConnection.{u2, u1} (Set.{u2} α) (OrderDual.{u1} (Set.{u1} β)) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (OrderDual.preorder.{u1} (Set.{u1} β) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β)))))))) (Function.comp.{succ u2, succ u1, succ u1} (Set.{u2} α) (Set.{u1} β) (OrderDual.{u1} (Set.{u1} β)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} β) (OrderDual.{u1} (Set.{u1} β))) (Set.{u1} β) (fun (_x : Set.{u1} β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Set.{u1} β) => OrderDual.{u1} (Set.{u1} β)) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Set.{u1} β) (OrderDual.{u1} (Set.{u1} β))) (OrderDual.toDual.{u1} (Set.{u1} β))) (intentClosure.{u2, u1} α β r)) (Function.comp.{succ u1, succ u1, succ u2} (OrderDual.{u1} (Set.{u1} β)) (Set.{u1} β) (Set.{u2} α) (extentClosure.{u2, u1} α β r) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} (Set.{u1} β)) (Set.{u1} β)) (OrderDual.{u1} (Set.{u1} β)) (fun (_x : OrderDual.{u1} (Set.{u1} β)) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : OrderDual.{u1} (Set.{u1} β)) => Set.{u1} β) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} (Set.{u1} β)) (Set.{u1} β)) (OrderDual.ofDual.{u1} (Set.{u1} β))))
-Case conversion may be inaccurate. Consider using '#align gc_intent_closure_extent_closure gc_intentClosure_extentClosureₓ'. -/
 theorem gc_intentClosure_extentClosure :
     GaloisConnection (toDual ∘ intentClosure r) (extentClosure r ∘ ofDual) := fun s t =>
   subset_intentClosure_iff_subset_extentClosure
@@ -95,12 +89,6 @@ theorem intentClosure_swap (t : Set β) : intentClosure (swap r) t = extentClosu
 #align intent_closure_swap intentClosure_swap
 -/
 
-/- warning: extent_closure_swap -> extentClosure_swap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) (s : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (extentClosure.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r) s) (intentClosure.{u1, u2} α β r s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) (s : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (extentClosure.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r) s) (intentClosure.{u2, u1} α β r s)
-Case conversion may be inaccurate. Consider using '#align extent_closure_swap extentClosure_swapₓ'. -/
 theorem extentClosure_swap (s : Set α) : extentClosure (swap r) s = intentClosure r s :=
   rfl
 #align extent_closure_swap extentClosure_swap
@@ -112,47 +100,23 @@ theorem intentClosure_empty : intentClosure r ∅ = univ :=
 #align intent_closure_empty intentClosure_empty
 -/
 
-/- warning: extent_closure_empty -> extentClosure_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop), Eq.{succ u1} (Set.{u1} α) (extentClosure.{u1, u2} α β r (EmptyCollection.emptyCollection.{u2} (Set.{u2} β) (Set.hasEmptyc.{u2} β))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop), Eq.{succ u2} (Set.{u2} α) (extentClosure.{u2, u1} α β r (EmptyCollection.emptyCollection.{u1} (Set.{u1} β) (Set.instEmptyCollectionSet.{u1} β))) (Set.univ.{u2} α)
-Case conversion may be inaccurate. Consider using '#align extent_closure_empty extentClosure_emptyₓ'. -/
 @[simp]
 theorem extentClosure_empty : extentClosure r ∅ = univ :=
   intentClosure_empty _
 #align extent_closure_empty extentClosure_empty
 
-/- warning: intent_closure_union -> intentClosure_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) (s₁ : Set.{u1} α) (s₂ : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (intentClosure.{u1, u2} α β r (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (intentClosure.{u1, u2} α β r s₁) (intentClosure.{u1, u2} α β r s₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) (s₁ : Set.{u2} α) (s₂ : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (intentClosure.{u2, u1} α β r (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (intentClosure.{u2, u1} α β r s₁) (intentClosure.{u2, u1} α β r s₂))
-Case conversion may be inaccurate. Consider using '#align intent_closure_union intentClosure_unionₓ'. -/
 @[simp]
 theorem intentClosure_union (s₁ s₂ : Set α) :
     intentClosure r (s₁ ∪ s₂) = intentClosure r s₁ ∩ intentClosure r s₂ :=
   Set.ext fun _ => ball_or_left
 #align intent_closure_union intentClosure_union
 
-/- warning: extent_closure_union -> extentClosure_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) (t₁ : Set.{u2} β) (t₂ : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (extentClosure.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) t₁ t₂)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (extentClosure.{u1, u2} α β r t₁) (extentClosure.{u1, u2} α β r t₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) (t₁ : Set.{u2} β) (t₂ : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (extentClosure.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet.{u2} β) t₁ t₂)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (extentClosure.{u1, u2} α β r t₁) (extentClosure.{u1, u2} α β r t₂))
-Case conversion may be inaccurate. Consider using '#align extent_closure_union extentClosure_unionₓ'. -/
 @[simp]
 theorem extentClosure_union (t₁ t₂ : Set β) :
     extentClosure r (t₁ ∪ t₂) = extentClosure r t₁ ∩ extentClosure r t₂ :=
   intentClosure_union _ _ _
 #align extent_closure_union extentClosure_union
 
-/- warning: intent_closure_Union -> intentClosure_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} (r : α -> β -> Prop) (f : ι -> (Set.{u2} α)), Eq.{succ u3} (Set.{u3} β) (intentClosure.{u2, u3} α β r (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i))) (Set.iInter.{u3, u1} β ι (fun (i : ι) => intentClosure.{u2, u3} α β r (f i)))
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} (r : α -> β -> Prop) (f : ι -> (Set.{u3} α)), Eq.{succ u2} (Set.{u2} β) (intentClosure.{u3, u2} α β r (Set.iUnion.{u3, u1} α ι (fun (i : ι) => f i))) (Set.iInter.{u2, u1} β ι (fun (i : ι) => intentClosure.{u3, u2} α β r (f i)))
-Case conversion may be inaccurate. Consider using '#align intent_closure_Union intentClosure_iUnionₓ'. -/
 @[simp]
 theorem intentClosure_iUnion (f : ι → Set α) :
     intentClosure r (⋃ i, f i) = ⋂ i, intentClosure r (f i) :=
@@ -167,12 +131,6 @@ theorem extentClosure_iUnion (f : ι → Set β) :
 #align extent_closure_Union extentClosure_iUnion
 -/
 
-/- warning: intent_closure_Union₂ -> intentClosure_iUnion₂ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} {κ : ι -> Sort.{u4}} (r : α -> β -> Prop) (f : forall (i : ι), (κ i) -> (Set.{u2} α)), Eq.{succ u3} (Set.{u3} β) (intentClosure.{u2, u3} α β r (Set.iUnion.{u2, u1} α ι (fun (i : ι) => Set.iUnion.{u2, u4} α (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u3, u1} β ι (fun (i : ι) => Set.iInter.{u3, u4} β (κ i) (fun (j : κ i) => intentClosure.{u2, u3} α β r (f i j))))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u4}} {β : Type.{u3}} {κ : ι -> Sort.{u1}} (r : α -> β -> Prop) (f : forall (i : ι), (κ i) -> (Set.{u4} α)), Eq.{succ u3} (Set.{u3} β) (intentClosure.{u4, u3} α β r (Set.iUnion.{u4, u2} α ι (fun (i : ι) => Set.iUnion.{u4, u1} α (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u3, u2} β ι (fun (i : ι) => Set.iInter.{u3, u1} β (κ i) (fun (j : κ i) => intentClosure.{u4, u3} α β r (f i j))))
-Case conversion may be inaccurate. Consider using '#align intent_closure_Union₂ intentClosure_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
@@ -181,12 +139,6 @@ theorem intentClosure_iUnion₂ (f : ∀ i, κ i → Set α) :
   (gc_intentClosure_extentClosure r).l_iSup₂
 #align intent_closure_Union₂ intentClosure_iUnion₂
 
-/- warning: extent_closure_Union₂ -> extentClosure_Union₂ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} {κ : ι -> Sort.{u4}} (r : α -> β -> Prop) (f : forall (i : ι), (κ i) -> (Set.{u3} β)), Eq.{succ u2} (Set.{u2} α) (extentClosure.{u2, u3} α β r (Set.iUnion.{u3, u1} β ι (fun (i : ι) => Set.iUnion.{u3, u4} β (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u2, u1} α ι (fun (i : ι) => Set.iInter.{u2, u4} α (κ i) (fun (j : κ i) => extentClosure.{u2, u3} α β r (f i j))))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u3}} {β : Type.{u4}} {κ : ι -> Sort.{u1}} (r : α -> β -> Prop) (f : forall (i : ι), (κ i) -> (Set.{u4} β)), Eq.{succ u3} (Set.{u3} α) (extentClosure.{u3, u4} α β r (Set.iUnion.{u4, u2} β ι (fun (i : ι) => Set.iUnion.{u4, u1} β (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => extentClosure.{u3, u4} α β r (f i j))))
-Case conversion may be inaccurate. Consider using '#align extent_closure_Union₂ extentClosure_Union₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
@@ -195,12 +147,6 @@ theorem extentClosure_Union₂ (f : ∀ i, κ i → Set β) :
   intentClosure_iUnion₂ _ _
 #align extent_closure_Union₂ extentClosure_Union₂
 
-/- warning: subset_extent_closure_intent_closure -> subset_extentClosure_intentClosure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (extentClosure.{u1, u2} α β r (intentClosure.{u1, u2} α β r s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) (s : Set.{u2} α), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (extentClosure.{u2, u1} α β r (intentClosure.{u2, u1} α β r s))
-Case conversion may be inaccurate. Consider using '#align subset_extent_closure_intent_closure subset_extentClosure_intentClosureₓ'. -/
 theorem subset_extentClosure_intentClosure (s : Set α) : s ⊆ extentClosure r (intentClosure r s) :=
   (gc_intentClosure_extentClosure r).le_u_l _
 #align subset_extent_closure_intent_closure subset_extentClosure_intentClosure
@@ -211,12 +157,6 @@ theorem subset_intentClosure_extentClosure (t : Set β) : t ⊆ intentClosure r 
 #align subset_intent_closure_extent_closure subset_intentClosure_extentClosure
 -/
 
-/- warning: intent_closure_extent_closure_intent_closure -> intentClosure_extentClosure_intentClosure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) (s : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (intentClosure.{u1, u2} α β r (extentClosure.{u1, u2} α β r (intentClosure.{u1, u2} α β r s))) (intentClosure.{u1, u2} α β r s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) (s : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (intentClosure.{u2, u1} α β r (extentClosure.{u2, u1} α β r (intentClosure.{u2, u1} α β r s))) (intentClosure.{u2, u1} α β r s)
-Case conversion may be inaccurate. Consider using '#align intent_closure_extent_closure_intent_closure intentClosure_extentClosure_intentClosureₓ'. -/
 @[simp]
 theorem intentClosure_extentClosure_intentClosure (s : Set α) :
     intentClosure r (extentClosure r <| intentClosure r s) = intentClosure r s :=
@@ -231,22 +171,10 @@ theorem extentClosure_intentClosure_extentClosure (t : Set β) :
 #align extent_closure_intent_closure_extent_closure extentClosure_intentClosure_extentClosure
 -/
 
-/- warning: intent_closure_anti -> intentClosure_anti is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop), Antitone.{u1, u2} (Set.{u1} α) (Set.{u2} β) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) (intentClosure.{u1, u2} α β r)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop), Antitone.{u2, u1} (Set.{u2} α) (Set.{u1} β) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (intentClosure.{u2, u1} α β r)
-Case conversion may be inaccurate. Consider using '#align intent_closure_anti intentClosure_antiₓ'. -/
 theorem intentClosure_anti : Antitone (intentClosure r) :=
   (gc_intentClosure_extentClosure r).monotone_l
 #align intent_closure_anti intentClosure_anti
 
-/- warning: extent_closure_anti -> extentClosure_anti is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop), Antitone.{u2, u1} (Set.{u2} β) (Set.{u1} α) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (extentClosure.{u1, u2} α β r)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop), Antitone.{u2, u1} (Set.{u2} β) (Set.{u1} α) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β))))))) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (extentClosure.{u1, u2} α β r)
-Case conversion may be inaccurate. Consider using '#align extent_closure_anti extentClosure_antiₓ'. -/
 theorem extentClosure_anti : Antitone (extentClosure r) :=
   intentClosure_anti _
 #align extent_closure_anti extentClosure_anti
@@ -272,12 +200,6 @@ variable {r α β} {c d : Concept α β r}
 
 attribute [simp] closure_fst closure_snd
 
-/- warning: concept.ext -> Concept.ext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, (Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) -> (Eq.{max (succ u1) (succ u2)} (Concept.{u1, u2} α β r) c d)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, (Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))) -> (Eq.{max (succ u2) (succ u1)} (Concept.{u2, u1} α β r) c d)
-Case conversion may be inaccurate. Consider using '#align concept.ext Concept.extₓ'. -/
 @[ext]
 theorem ext (h : c.fst = d.fst) : c = d :=
   by
@@ -301,21 +223,9 @@ theorem ext' (h : c.snd = d.snd) : c = d :=
 #align concept.ext' Concept.ext'
 -/
 
-/- warning: concept.fst_injective -> Concept.fst_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Function.Injective.{max (succ u1) (succ u2), succ u1} (Concept.{u1, u2} α β r) (Set.{u1} α) (fun (c : Concept.{u1, u2} α β r) => Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), succ u2} (Concept.{u2, u1} α β r) (Set.{u2} α) (fun (c : Concept.{u2, u1} α β r) => Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c))
-Case conversion may be inaccurate. Consider using '#align concept.fst_injective Concept.fst_injectiveₓ'. -/
 theorem fst_injective : Injective fun c : Concept α β r => c.fst := fun c d => ext
 #align concept.fst_injective Concept.fst_injective
 
-/- warning: concept.snd_injective -> Concept.snd_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Function.Injective.{max (succ u1) (succ u2), succ u2} (Concept.{u1, u2} α β r) (Set.{u2} β) (fun (c : Concept.{u1, u2} α β r) => Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), succ u1} (Concept.{u2, u1} α β r) (Set.{u1} β) (fun (c : Concept.{u2, u1} α β r) => Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c))
-Case conversion may be inaccurate. Consider using '#align concept.snd_injective Concept.snd_injectiveₓ'. -/
 theorem snd_injective : Injective fun c : Concept α β r => c.snd := fun c d => ext'
 #align concept.snd_injective Concept.snd_injective
 
@@ -340,34 +250,16 @@ instance : Inf (Concept α β r) :=
 instance : SemilatticeInf (Concept α β r) :=
   fst_injective.SemilatticeInf _ fun _ _ => rfl
 
-/- warning: concept.fst_subset_fst_iff -> Concept.fst_subset_fst_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) (LE.le.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLe.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.semilatticeInf.{u1, u2} α β r)))) c d)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, Iff (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))) (LE.le.{max u2 u1} (Concept.{u2, u1} α β r) (Preorder.toLE.{max u2 u1} (Concept.{u2, u1} α β r) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (SemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSemilatticeInfConcept.{u2, u1} α β r)))) c d)
-Case conversion may be inaccurate. Consider using '#align concept.fst_subset_fst_iff Concept.fst_subset_fst_iffₓ'. -/
 @[simp]
 theorem fst_subset_fst_iff : c.fst ⊆ d.fst ↔ c ≤ d :=
   Iff.rfl
 #align concept.fst_subset_fst_iff Concept.fst_subset_fst_iff
 
-/- warning: concept.fst_ssubset_fst_iff -> Concept.fst_ssubset_fst_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) (LT.lt.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLt.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.semilatticeInf.{u1, u2} α β r)))) c d)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, Iff (HasSSubset.SSubset.{u2} (Set.{u2} α) (Set.instHasSSubsetSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))) (LT.lt.{max u2 u1} (Concept.{u2, u1} α β r) (Preorder.toLT.{max u2 u1} (Concept.{u2, u1} α β r) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (SemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSemilatticeInfConcept.{u2, u1} α β r)))) c d)
-Case conversion may be inaccurate. Consider using '#align concept.fst_ssubset_fst_iff Concept.fst_ssubset_fst_iffₓ'. -/
 @[simp]
 theorem fst_ssubset_fst_iff : c.fst ⊂ d.fst ↔ c < d :=
   Iff.rfl
 #align concept.fst_ssubset_fst_iff Concept.fst_ssubset_fst_iff
 
-/- warning: concept.snd_subset_snd_iff -> Concept.snd_subset_snd_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) (LE.le.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLe.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.semilatticeInf.{u1, u2} α β r)))) d c)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) (LE.le.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toLE.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instSemilatticeInfConcept.{u1, u2} α β r)))) d c)
-Case conversion may be inaccurate. Consider using '#align concept.snd_subset_snd_iff Concept.snd_subset_snd_iffₓ'. -/
 @[simp]
 theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c :=
   by
@@ -378,33 +270,15 @@ theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c :=
     exact intentClosure_anti _ h
 #align concept.snd_subset_snd_iff Concept.snd_subset_snd_iff
 
-/- warning: concept.snd_ssubset_snd_iff -> Concept.snd_ssubset_snd_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (HasSSubset.SSubset.{u2} (Set.{u2} β) (Set.hasSsubset.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) (LT.lt.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLt.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.semilatticeInf.{u1, u2} α β r)))) d c)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (HasSSubset.SSubset.{u2} (Set.{u2} β) (Set.instHasSSubsetSet.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))) (LT.lt.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toLT.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instSemilatticeInfConcept.{u1, u2} α β r)))) d c)
-Case conversion may be inaccurate. Consider using '#align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iffₓ'. -/
 @[simp]
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by
   rw [ssubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
 #align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iff
 
-/- warning: concept.strict_mono_fst -> Concept.strictMono_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, StrictMono.{max u1 u2, u1} (Concept.{u1, u2} α β r) (Set.{u1} α) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.semilatticeInf.{u1, u2} α β r))) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (Function.comp.{max (succ u1) (succ u2), max (succ u1) (succ u2), succ u1} (Concept.{u1, u2} α β r) (Prod.{u1, u2} (Set.{u1} α) (Set.{u2} β)) (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β)) (Concept.toProd.{u1, u2} α β r))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, StrictMono.{max u2 u1, u2} (Concept.{u2, u1} α β r) (Set.{u2} α) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (SemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSemilatticeInfConcept.{u2, u1} α β r))) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (Function.comp.{max (succ u2) (succ u1), max (succ u1) (succ u2), succ u2} (Concept.{u2, u1} α β r) (Prod.{u2, u1} (Set.{u2} α) (Set.{u1} β)) (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β)) (Concept.toProd.{u2, u1} α β r))
-Case conversion may be inaccurate. Consider using '#align concept.strict_mono_fst Concept.strictMono_fstₓ'. -/
 theorem strictMono_fst : StrictMono (Prod.fst ∘ toProd : Concept α β r → Set α) := fun c d =>
   fst_ssubset_fst_iff.2
 #align concept.strict_mono_fst Concept.strictMono_fst
 
-/- warning: concept.strict_anti_snd -> Concept.strictAnti_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, StrictAnti.{max u1 u2, u2} (Concept.{u1, u2} α β r) (Set.{u2} β) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (SemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.semilatticeInf.{u1, u2} α β r))) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) (Function.comp.{max (succ u1) (succ u2), max (succ u1) (succ u2), succ u2} (Concept.{u1, u2} α β r) (Prod.{u1, u2} (Set.{u1} α) (Set.{u2} β)) (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β)) (Concept.toProd.{u1, u2} α β r))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, StrictAnti.{max u2 u1, u1} (Concept.{u2, u1} α β r) (Set.{u1} β) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (SemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSemilatticeInfConcept.{u2, u1} α β r))) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (Function.comp.{max (succ u2) (succ u1), max (succ u1) (succ u2), succ u1} (Concept.{u2, u1} α β r) (Prod.{u2, u1} (Set.{u2} α) (Set.{u1} β)) (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β)) (Concept.toProd.{u2, u1} α β r))
-Case conversion may be inaccurate. Consider using '#align concept.strict_anti_snd Concept.strictAnti_sndₓ'. -/
 theorem strictAnti_snd : StrictAnti (Prod.snd ∘ toProd : Concept α β r → Set β) := fun c d =>
   snd_ssubset_snd_iff.2
 #align concept.strict_anti_snd Concept.strictAnti_snd
@@ -450,134 +324,62 @@ instance : CompleteLattice (Concept α β r) :=
     inf_le := fun S c => biInter_subset_of_mem
     le_inf := fun S c => subset_iInter₂ }
 
-/- warning: concept.top_fst -> Concept.top_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Top.top.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toHasTop.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r))))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Top.top.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteLattice.toTop.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instCompleteLatticeConcept.{u2, u1} α β r))))) (Set.univ.{u2} α)
-Case conversion may be inaccurate. Consider using '#align concept.top_fst Concept.top_fstₓ'. -/
 @[simp]
 theorem top_fst : (⊤ : Concept α β r).fst = univ :=
   rfl
 #align concept.top_fst Concept.top_fst
 
-/- warning: concept.top_snd -> Concept.top_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Top.top.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toHasTop.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r))))) (intentClosure.{u1, u2} α β r (Set.univ.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Top.top.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toTop.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instCompleteLatticeConcept.{u1, u2} α β r))))) (intentClosure.{u1, u2} α β r (Set.univ.{u1} α))
-Case conversion may be inaccurate. Consider using '#align concept.top_snd Concept.top_sndₓ'. -/
 @[simp]
 theorem top_snd : (⊤ : Concept α β r).snd = intentClosure r univ :=
   rfl
 #align concept.top_snd Concept.top_snd
 
-/- warning: concept.bot_fst -> Concept.bot_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Bot.bot.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toHasBot.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r))))) (extentClosure.{u1, u2} α β r (Set.univ.{u2} β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Bot.bot.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteLattice.toBot.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instCompleteLatticeConcept.{u2, u1} α β r))))) (extentClosure.{u2, u1} α β r (Set.univ.{u1} β))
-Case conversion may be inaccurate. Consider using '#align concept.bot_fst Concept.bot_fstₓ'. -/
 @[simp]
 theorem bot_fst : (⊥ : Concept α β r).fst = extentClosure r univ :=
   rfl
 #align concept.bot_fst Concept.bot_fst
 
-/- warning: concept.bot_snd -> Concept.bot_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Bot.bot.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toHasBot.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r))))) (Set.univ.{u2} β)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Bot.bot.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toBot.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instCompleteLatticeConcept.{u1, u2} α β r))))) (Set.univ.{u2} β)
-Case conversion may be inaccurate. Consider using '#align concept.bot_snd Concept.bot_sndₓ'. -/
 @[simp]
 theorem bot_snd : (⊥ : Concept α β r).snd = univ :=
   rfl
 #align concept.bot_snd Concept.bot_snd
 
-/- warning: concept.sup_fst -> Concept.sup_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Sup.sup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) c d))) (extentClosure.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Sup.sup.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSupConcept.{u2, u1} α β r) c d))) (extentClosure.{u2, u1} α β r (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))))
-Case conversion may be inaccurate. Consider using '#align concept.sup_fst Concept.sup_fstₓ'. -/
 @[simp]
 theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = extentClosure r (c.snd ∩ d.snd) :=
   rfl
 #align concept.sup_fst Concept.sup_fst
 
-/- warning: concept.sup_snd -> Concept.sup_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Sup.sup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) c d))) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u1} (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Sup.sup.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSupConcept.{u2, u1} α β r) c d))) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d)))
-Case conversion may be inaccurate. Consider using '#align concept.sup_snd Concept.sup_sndₓ'. -/
 @[simp]
 theorem sup_snd (c d : Concept α β r) : (c ⊔ d).snd = c.snd ∩ d.snd :=
   rfl
 #align concept.sup_snd Concept.sup_snd
 
-/- warning: concept.inf_fst -> Concept.inf_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Inf.inf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) c d))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Inf.inf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instInfConcept.{u2, u1} α β r) c d))) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d)))
-Case conversion may be inaccurate. Consider using '#align concept.inf_fst Concept.inf_fstₓ'. -/
 @[simp]
 theorem inf_fst (c d : Concept α β r) : (c ⊓ d).fst = c.fst ∩ d.fst :=
   rfl
 #align concept.inf_fst Concept.inf_fst
 
-/- warning: concept.inf_snd -> Concept.inf_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Inf.inf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) c d))) (intentClosure.{u1, u2} α β r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u1} (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Inf.inf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instInfConcept.{u2, u1} α β r) c d))) (intentClosure.{u2, u1} α β r (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))))
-Case conversion may be inaccurate. Consider using '#align concept.inf_snd Concept.inf_sndₓ'. -/
 @[simp]
 theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = intentClosure r (c.fst ∩ d.fst) :=
   rfl
 #align concept.inf_snd Concept.inf_snd
 
-/- warning: concept.Sup_fst -> Concept.sSup_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u1 u2} (Concept.{u1, u2} α β r)), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (SupSet.sSup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) S))) (extentClosure.{u1, u2} α β r (Set.iInter.{u2, succ (max u1 u2)} β (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u2, 0} β (Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u2 u1} (Concept.{u1, u2} α β r)), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (SupSet.sSup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instSupSetConcept.{u1, u2} α β r) S))) (extentClosure.{u1, u2} α β r (Set.iInter.{u2, succ (max u1 u2)} β (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u2, 0} β (Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)))))
-Case conversion may be inaccurate. Consider using '#align concept.Sup_fst Concept.sSup_fstₓ'. -/
 @[simp]
 theorem sSup_fst (S : Set (Concept α β r)) :
     (sSup S).fst = extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd) :=
   rfl
 #align concept.Sup_fst Concept.sSup_fst
 
-/- warning: concept.Sup_snd -> Concept.sSup_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u1 u2} (Concept.{u1, u2} α β r)), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (SupSet.sSup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) S))) (Set.iInter.{u2, succ (max u1 u2)} β (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u2, 0} β (Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u2 u1} (Concept.{u1, u2} α β r)), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (SupSet.sSup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instSupSetConcept.{u1, u2} α β r) S))) (Set.iInter.{u2, succ (max u1 u2)} β (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u2, 0} β (Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c))))
-Case conversion may be inaccurate. Consider using '#align concept.Sup_snd Concept.sSup_sndₓ'. -/
 @[simp]
 theorem sSup_snd (S : Set (Concept α β r)) : (sSup S).snd = ⋂ c ∈ S, (c : Concept _ _ _).snd :=
   rfl
 #align concept.Sup_snd Concept.sSup_snd
 
-/- warning: concept.Inf_fst -> Concept.sInf_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u1 u2} (Concept.{u1, u2} α β r)), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (InfSet.sInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) S))) (Set.iInter.{u1, succ (max u1 u2)} α (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u1, 0} α (Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u2 u1} (Concept.{u1, u2} α β r)), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (InfSet.sInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instInfSetConcept.{u1, u2} α β r) S))) (Set.iInter.{u1, succ (max u1 u2)} α (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u1, 0} α (Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c))))
-Case conversion may be inaccurate. Consider using '#align concept.Inf_fst Concept.sInf_fstₓ'. -/
 @[simp]
 theorem sInf_fst (S : Set (Concept α β r)) : (sInf S).fst = ⋂ c ∈ S, (c : Concept _ _ _).fst :=
   rfl
 #align concept.Inf_fst Concept.sInf_fst
 
-/- warning: concept.Inf_snd -> Concept.sInf_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u1 u2} (Concept.{u1, u2} α β r)), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (InfSet.sInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) S))) (intentClosure.{u1, u2} α β r (Set.iInter.{u1, succ (max u1 u2)} α (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u1, 0} α (Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.Mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u1 u2} (Concept.{u1, u2} α β r)) (Set.hasMem.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (S : Set.{max u2 u1} (Concept.{u1, u2} α β r)), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (InfSet.sInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instInfSetConcept.{u1, u2} α β r) S))) (intentClosure.{u1, u2} α β r (Set.iInter.{u1, succ (max u1 u2)} α (Concept.{u1, u2} α β r) (fun (c : Concept.{u1, u2} α β r) => Set.iInter.{u1, 0} α (Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) (fun (H : Membership.mem.{max u1 u2, max u1 u2} (Concept.{u1, u2} α β r) (Set.{max u2 u1} (Concept.{u1, u2} α β r)) (Set.instMembershipSet.{max u1 u2} (Concept.{u1, u2} α β r)) c S) => Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)))))
-Case conversion may be inaccurate. Consider using '#align concept.Inf_snd Concept.sInf_sndₓ'. -/
 @[simp]
 theorem sInf_snd (S : Set (Concept α β r)) :
     (sInf S).snd = intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst) :=
@@ -595,45 +397,21 @@ def swap (c : Concept α β r) : Concept β α (swap r) :=
 #align concept.swap Concept.swap
 -/
 
-/- warning: concept.swap_swap -> Concept.swap_swap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r), Eq.{max (succ u1) (succ u2)} (Concept.{u1, u2} α β (Function.swap.{succ u2, succ u1, 1} β α (fun (ᾰ : β) (ᾰ : α) => Prop) (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r))) (Concept.swap.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r) (Concept.swap.{u1, u2} α β r c)) c
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r), Eq.{max (succ u2) (succ u1)} (Concept.{u2, u1} α β (Function.swap.{succ u1, succ u2, 1} β α (fun (ᾰ : β) (ᾰ : α) => Prop) (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r))) (Concept.swap.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r) (Concept.swap.{u2, u1} α β r c)) c
-Case conversion may be inaccurate. Consider using '#align concept.swap_swap Concept.swap_swapₓ'. -/
 @[simp]
 theorem swap_swap (c : Concept α β r) : c.symm.symm = c :=
   ext rfl
 #align concept.swap_swap Concept.swap_swap
 
-/- warning: concept.swap_le_swap_iff -> Concept.swap_le_swap_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (LE.le.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Preorder.toHasLe.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.completeLattice.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)))))) (Concept.swap.{u1, u2} α β r c) (Concept.swap.{u1, u2} α β r d)) (LE.le.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLe.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r))))) d c)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, Iff (LE.le.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Preorder.toLE.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.instCompleteLatticeConcept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)))))) (Concept.swap.{u2, u1} α β r c) (Concept.swap.{u2, u1} α β r d)) (LE.le.{max u2 u1} (Concept.{u2, u1} α β r) (Preorder.toLE.{max u2 u1} (Concept.{u2, u1} α β r) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instCompleteLatticeConcept.{u2, u1} α β r))))) d c)
-Case conversion may be inaccurate. Consider using '#align concept.swap_le_swap_iff Concept.swap_le_swap_iffₓ'. -/
 @[simp]
 theorem swap_le_swap_iff : c.symm ≤ d.symm ↔ d ≤ c :=
   snd_subset_snd_iff
 #align concept.swap_le_swap_iff Concept.swap_le_swap_iff
 
-/- warning: concept.swap_lt_swap_iff -> Concept.swap_lt_swap_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} {c : Concept.{u1, u2} α β r} {d : Concept.{u1, u2} α β r}, Iff (LT.lt.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Preorder.toHasLt.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.completeLattice.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)))))) (Concept.swap.{u1, u2} α β r c) (Concept.swap.{u1, u2} α β r d)) (LT.lt.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLt.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r))))) d c)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, Iff (LT.lt.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Preorder.toLT.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.instCompleteLatticeConcept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)))))) (Concept.swap.{u2, u1} α β r c) (Concept.swap.{u2, u1} α β r d)) (LT.lt.{max u2 u1} (Concept.{u2, u1} α β r) (Preorder.toLT.{max u2 u1} (Concept.{u2, u1} α β r) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instCompleteLatticeConcept.{u2, u1} α β r))))) d c)
-Case conversion may be inaccurate. Consider using '#align concept.swap_lt_swap_iff Concept.swap_lt_swap_iffₓ'. -/
 @[simp]
 theorem swap_lt_swap_iff : c.symm < d.symm ↔ d < c :=
   snd_ssubset_snd_iff
 #align concept.swap_lt_swap_iff Concept.swap_lt_swap_iff
 
-/- warning: concept.swap_equiv -> Concept.swapEquiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, OrderIso.{max u1 u2, max u2 u1} (OrderDual.{max u1 u2} (Concept.{u1, u2} α β r)) (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (OrderDual.hasLe.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toHasLe.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.completeLattice.{u1, u2} α β r)))))) (Preorder.toHasLe.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.completeLattice.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, OrderIso.{max u2 u1, max u1 u2} (OrderDual.{max u2 u1} (Concept.{u1, u2} α β r)) (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (OrderDual.instLEOrderDual.{max u1 u2} (Concept.{u1, u2} α β r) (Preorder.toLE.{max u1 u2} (Concept.{u1, u2} α β r) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u1, u2} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.instCompleteLatticeConcept.{u1, u2} α β r)))))) (Preorder.toLE.{max u1 u2} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u1 u2} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Concept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.instCompleteLatticeConcept.{u2, u1} β α (Function.swap.{succ u1, succ u2, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r))))))
-Case conversion may be inaccurate. Consider using '#align concept.swap_equiv Concept.swapEquivₓ'. -/
 /-- The dual of a concept lattice is isomorphic to the concept lattice of the dual context. -/
 @[simps]
 def swapEquiv : (Concept α β r)ᵒᵈ ≃o Concept β α (Function.swap r)

@@ -37,12 +37,6 @@ open AbsoluteValue Real
 
 variable {Fq : Type _} [Fintype Fq]
 
-/- warning: polynomial.exists_eq_polynomial -> Polynomial.exists_eq_polynomial is a dubious translation:
-lean 3 declaration is
-  forall {Fq : Type.{u1}} [_inst_1 : Fintype.{u1} Fq] [_inst_2 : Semiring.{u1} Fq] {d : Nat} {m : Nat}, (LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Fintype.card.{u1} Fq _inst_1) d) m) -> (forall (b : Polynomial.{u1} Fq _inst_2), (LE.le.{0} Nat Nat.hasLe (Polynomial.natDegree.{u1} Fq _inst_2 b) d) -> (forall (A : (Fin (Nat.succ m)) -> (Polynomial.{u1} Fq _inst_2)), (forall (i : Fin (Nat.succ m)), LT.lt.{0} (WithBot.{0} Nat) (Preorder.toHasLt.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} Fq _inst_2 (A i)) (Polynomial.degree.{u1} Fq _inst_2 b)) -> (Exists.{1} (Fin (Nat.succ m)) (fun (i₀ : Fin (Nat.succ m)) => Exists.{1} (Fin (Nat.succ m)) (fun (i₁ : Fin (Nat.succ m)) => And (Ne.{1} (Fin (Nat.succ m)) i₀ i₁) (Eq.{succ u1} (Polynomial.{u1} Fq _inst_2) (A i₁) (A i₀)))))))
-but is expected to have type
-  forall {Fq : Type.{u1}} [_inst_1 : Fintype.{u1} Fq] [_inst_2 : Semiring.{u1} Fq] {d : Nat} {m : Nat}, (LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Fintype.card.{u1} Fq _inst_1) d) m) -> (forall (b : Polynomial.{u1} Fq _inst_2), (LE.le.{0} Nat instLENat (Polynomial.natDegree.{u1} Fq _inst_2 b) d) -> (forall (A : (Fin (Nat.succ m)) -> (Polynomial.{u1} Fq _inst_2)), (forall (i : Fin (Nat.succ m)), LT.lt.{0} (WithBot.{0} Nat) (Preorder.toLT.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} Fq _inst_2 (A i)) (Polynomial.degree.{u1} Fq _inst_2 b)) -> (Exists.{1} (Fin (Nat.succ m)) (fun (i₀ : Fin (Nat.succ m)) => Exists.{1} (Fin (Nat.succ m)) (fun (i₁ : Fin (Nat.succ m)) => And (Ne.{1} (Fin (Nat.succ m)) i₀ i₁) (Eq.{succ u1} (Polynomial.{u1} Fq _inst_2) (A i₁) (A i₀)))))))
-Case conversion may be inaccurate. Consider using '#align polynomial.exists_eq_polynomial Polynomial.exists_eq_polynomialₓ'. -/
 /-- If `A` is a family of enough low-degree polynomials over a finite semiring, there is a
 pair of equal elements in `A`. -/
 theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m)
@@ -71,12 +65,6 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   exact lt_of_lt_of_le (coe_lt_degree.mp hbj) hb
 #align polynomial.exists_eq_polynomial Polynomial.exists_eq_polynomial
 
-/- warning: polynomial.exists_approx_polynomial_aux -> Polynomial.exists_approx_polynomial_aux is a dubious translation:
-lean 3 declaration is
-  forall {Fq : Type.{u1}} [_inst_1 : Fintype.{u1} Fq] [_inst_2 : Ring.{u1} Fq] {d : Nat} {m : Nat}, (LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Fintype.card.{u1} Fq _inst_1) d) m) -> (forall (b : Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (A : (Fin (Nat.succ m)) -> (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2))), (forall (i : Fin (Nat.succ m)), LT.lt.{0} (WithBot.{0} Nat) (Preorder.toHasLt.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) (A i)) (Polynomial.degree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) b)) -> (Exists.{1} (Fin (Nat.succ m)) (fun (i₀ : Fin (Nat.succ m)) => Exists.{1} (Fin (Nat.succ m)) (fun (i₁ : Fin (Nat.succ m)) => And (Ne.{1} (Fin (Nat.succ m)) i₀ i₁) (LT.lt.{0} (WithBot.{0} Nat) (Preorder.toHasLt.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) (HSub.hSub.{u1, u1, u1} (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (instHSub.{u1} (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (Polynomial.sub.{u1} Fq _inst_2)) (A i₁) (A i₀))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (WithBot.{0} Nat) (HasLiftT.mk.{1, 1} Nat (WithBot.{0} Nat) (CoeTCₓ.coe.{1, 1} Nat (WithBot.{0} Nat) (WithBot.hasCoeT.{0} Nat))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Polynomial.natDegree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) b) d)))))))
-but is expected to have type
-  forall {Fq : Type.{u1}} [_inst_1 : Fintype.{u1} Fq] [_inst_2 : Ring.{u1} Fq] {d : Nat} {m : Nat}, (LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Fintype.card.{u1} Fq _inst_1) d) m) -> (forall (b : Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (A : (Fin (Nat.succ m)) -> (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2))), (forall (i : Fin (Nat.succ m)), LT.lt.{0} (WithBot.{0} Nat) (Preorder.toLT.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) (A i)) (Polynomial.degree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) b)) -> (Exists.{1} (Fin (Nat.succ m)) (fun (i₀ : Fin (Nat.succ m)) => Exists.{1} (Fin (Nat.succ m)) (fun (i₁ : Fin (Nat.succ m)) => And (Ne.{1} (Fin (Nat.succ m)) i₀ i₁) (LT.lt.{0} (WithBot.{0} Nat) (Preorder.toLT.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) (HSub.hSub.{u1, u1, u1} (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (instHSub.{u1} (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2)) (Polynomial.sub.{u1} Fq _inst_2)) (A i₁) (A i₀))) (Nat.cast.{0} (WithBot.{0} Nat) (Semiring.toNatCast.{0} (WithBot.{0} Nat) (OrderedSemiring.toSemiring.{0} (WithBot.{0} Nat) (OrderedCommSemiring.toOrderedSemiring.{0} (WithBot.{0} Nat) (WithBot.orderedCommSemiring.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) Nat.canonicallyOrderedCommSemiring Nat.nontrivial)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Polynomial.natDegree.{u1} Fq (Ring.toSemiring.{u1} Fq _inst_2) b) d)))))))
-Case conversion may be inaccurate. Consider using '#align polynomial.exists_approx_polynomial_aux Polynomial.exists_approx_polynomial_auxₓ'. -/
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
@@ -121,9 +109,6 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
 
 variable [Field Fq]
 
-/- warning: polynomial.exists_approx_polynomial -> Polynomial.exists_approx_polynomial is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.exists_approx_polynomial Polynomial.exists_approx_polynomialₓ'. -/
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that the difference of their remainders is close together. -/
@@ -176,9 +161,6 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   exact le_of_eq (Nat.cast_sub le_b.le)
 #align polynomial.exists_approx_polynomial Polynomial.exists_approx_polynomial
 
-/- warning: polynomial.card_pow_degree_anti_archimedean -> Polynomial.cardPowDegree_anti_archimedean is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.card_pow_degree_anti_archimedean Polynomial.cardPowDegree_anti_archimedeanₓ'. -/
 /-- If `x` is close to `y` and `y` is close to `z`, then `x` and `z` are at least as close. -/
 theorem cardPowDegree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowDegree (x - y) < a)
     (hyz : cardPowDegree (y - z) < a) : cardPowDegree (x - z) < a :=
@@ -203,9 +185,6 @@ theorem cardPowDegree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowD
   exact (sub_add_sub_cancel _ _ _).symm
 #align polynomial.card_pow_degree_anti_archimedean Polynomial.cardPowDegree_anti_archimedean
 
-/- warning: polynomial.exists_partition_polynomial_aux -> Polynomial.exists_partition_polynomial_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.exists_partition_polynomial_aux Polynomial.exists_partition_polynomial_auxₓ'. -/
 /-- A slightly stronger version of `exists_partition` on which we perform induction on `n`:
 for all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into equivalence classes, where the equivalence(!) relation is "closer than `ε`". -/
@@ -289,9 +268,6 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
   contradiction
 #align polynomial.exists_partition_polynomial_aux Polynomial.exists_partition_polynomial_aux
 
-/- warning: polynomial.exists_partition_polynomial -> Polynomial.exists_partition_polynomial is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.exists_partition_polynomial Polynomial.exists_partition_polynomialₓ'. -/
 /-- For all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into classes, where all remainders in a class are close together. -/
 theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0)
@@ -304,12 +280,6 @@ theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[
   exact ⟨t, fun i₀ i₁ hi => (ht i₀ i₁).mp hi⟩
 #align polynomial.exists_partition_polynomial Polynomial.exists_partition_polynomial
 
-/- warning: polynomial.card_pow_degree_is_admissible -> Polynomial.cardPowDegreeIsAdmissible is a dubious translation:
-lean 3 declaration is
-  forall {Fq : Type.{u1}} [_inst_1 : Fintype.{u1} Fq] [_inst_2 : Field.{u1} Fq], AbsoluteValue.IsAdmissible.{u1} (Polynomial.{u1} Fq (Ring.toSemiring.{u1} Fq (DivisionRing.toRing.{u1} Fq (Field.toDivisionRing.{u1} Fq _inst_2)))) (Polynomial.euclideanDomain.{u1} Fq _inst_2) (Polynomial.cardPowDegree.{u1} Fq _inst_2 _inst_1)
-but is expected to have type
-  forall {Fq : Type.{u1}} [_inst_1 : Fintype.{u1} Fq] [_inst_2 : Field.{u1} Fq], AbsoluteValue.IsAdmissible.{u1} (Polynomial.{u1} Fq (DivisionSemiring.toSemiring.{u1} Fq (Semifield.toDivisionSemiring.{u1} Fq (Field.toSemifield.{u1} Fq _inst_2)))) (Polynomial.instEuclideanDomainPolynomialToSemiringToDivisionSemiringToSemifield.{u1} Fq _inst_2) (Polynomial.cardPowDegree.{u1} Fq _inst_2 _inst_1)
-Case conversion may be inaccurate. Consider using '#align polynomial.card_pow_degree_is_admissible Polynomial.cardPowDegreeIsAdmissibleₓ'. -/
 /-- `λ p, fintype.card Fq ^ degree p` is an admissible absolute value.
 We set `q ^ degree 0 = 0`. -/
 noncomputable def cardPowDegreeIsAdmissible :

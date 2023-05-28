@@ -124,12 +124,6 @@ theorem separated_equiv : Equivalence fun x y => (x, y) ∈ 𝓢 α :=
 #align separated_equiv separated_equiv
 -/
 
-/- warning: filter.has_basis.mem_separation_rel -> Filter.HasBasis.mem_separationRel is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (forall {a : Prod.{u1, u1} α α}, Iff (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) a (separationRel.{u1} α _inst_1)) (forall (i : ι), (p i) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) a (s i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {a : Prod.{u2, u2} α α}, Iff (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) a (separationRel.{u2} α _inst_1)) (forall (i : ι), (p i) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) a (s i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.mem_separation_rel Filter.HasBasis.mem_separationRelₓ'. -/
 theorem Filter.HasBasis.mem_separationRel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)}
     (h : (𝓤 α).HasBasis p s) {a : α × α} : a ∈ 𝓢 α ↔ ∀ i, p i → a ∈ s i :=
   h.forall_mem_mem
@@ -170,12 +164,6 @@ theorem separated_def {α : Type u} [UniformSpace α] :
 #align separated_def separated_def
 -/
 
-/- warning: separated_def' -> separated_def' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_4 : UniformSpace.{u1} α], Iff (SeparatedSpace.{u1} α _inst_4) (forall (x : α) (y : α), (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (r : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) r (uniformity.{u1} α _inst_4)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) r (uniformity.{u1} α _inst_4)) => Not (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) r)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_4 : UniformSpace.{u1} α], Iff (SeparatedSpace.{u1} α _inst_4) (forall (x : α) (y : α), (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (r : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) r (uniformity.{u1} α _inst_4)) (Not (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) r)))))
-Case conversion may be inaccurate. Consider using '#align separated_def' separated_def'ₓ'. -/
 theorem separated_def' {α : Type u} [UniformSpace α] :
     SeparatedSpace α ↔ ∀ x y, x ≠ y → ∃ r ∈ 𝓤 α, (x, y) ∉ r :=
   separated_def.trans <| forall₂_congr fun x y => by rw [← not_imp_not] <;> simp [not_forall]
@@ -188,12 +176,6 @@ theorem eq_of_uniformity {α : Type _} [UniformSpace α] [SeparatedSpace α] {x 
 #align eq_of_uniformity eq_of_uniformity
 -/
 
-/- warning: eq_of_uniformity_basis -> eq_of_uniformity_basis is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_4 : UniformSpace.{u1} α] [_inst_5 : SeparatedSpace.{u1} α _inst_4] {ι : Type.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, succ u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_4) p s) -> (forall {x : α} {y : α}, (forall {i : ι}, (p i) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s i))) -> (Eq.{succ u1} α x y))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_4 : UniformSpace.{u2} α] [_inst_5 : SeparatedSpace.{u2} α _inst_4] {ι : Type.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, succ u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_4) p s) -> (forall {x : α} {y : α}, (forall {i : ι}, (p i) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (s i))) -> (Eq.{succ u2} α x y))
-Case conversion may be inaccurate. Consider using '#align eq_of_uniformity_basis eq_of_uniformity_basisₓ'. -/
 theorem eq_of_uniformity_basis {α : Type _} [UniformSpace α] [SeparatedSpace α] {ι : Type _}
     {p : ι → Prop} {s : ι → Set (α × α)} (hs : (𝓤 α).HasBasis p s) {x y : α}
     (h : ∀ {i}, p i → (x, y) ∈ s i) : x = y :=
@@ -209,12 +191,6 @@ theorem eq_of_forall_symmetric {α : Type _} [UniformSpace α] [SeparatedSpace �
 #align eq_of_forall_symmetric eq_of_forall_symmetric
 -/
 
-/- warning: eq_of_cluster_pt_uniformity -> eq_of_clusterPt_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1] {x : α} {y : α}, (ClusterPt.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x y) (uniformity.{u1} α _inst_1)) -> (Eq.{succ u1} α x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1] {x : α} {y : α}, (ClusterPt.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x y) (uniformity.{u1} α _inst_1)) -> (Eq.{succ u1} α x y)
-Case conversion may be inaccurate. Consider using '#align eq_of_cluster_pt_uniformity eq_of_clusterPt_uniformityₓ'. -/
 theorem eq_of_clusterPt_uniformity [SeparatedSpace α] {x y : α} (h : ClusterPt (x, y) (𝓤 α)) :
     x = y :=
   eq_of_uniformity_basis uniformity_hasBasis_closed fun V ⟨hV, hVc⟩ =>
@@ -244,33 +220,15 @@ theorem separationRel_comap {f : α → β}
 #align separation_rel_comap separationRel_comap
 -/
 
-/- warning: filter.has_basis.separation_rel -> Filter.HasBasis.separationRel is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.iInter.{u1, u2} (Prod.{u1, u1} α α) ι (fun (i : ι) => Set.iInter.{u1, 0} (Prod.{u1, u1} α α) (p i) (fun (hi : p i) => s i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (Eq.{succ u2} (Set.{u2} (Prod.{u2, u2} α α)) (separationRel.{u2} α _inst_1) (Set.iInter.{u2, u1} (Prod.{u2, u2} α α) ι (fun (i : ι) => Set.iInter.{u2, 0} (Prod.{u2, u2} α α) (p i) (fun (hi : p i) => s i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.separation_rel Filter.HasBasis.separationRelₓ'. -/
 protected theorem Filter.HasBasis.separationRel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)}
     (h : HasBasis (𝓤 α) p s) : 𝓢 α = ⋂ (i) (hi : p i), s i := by unfold separationRel;
   rw [h.sInter_sets]
 #align filter.has_basis.separation_rel Filter.HasBasis.separationRel
 
-/- warning: separation_rel_eq_inter_closure -> separationRel_eq_inter_closure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.sInter.{u1} (Prod.{u1, u1} α α) (Set.image.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1))) (Filter.sets.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.sInter.{u1} (Prod.{u1, u1} α α) (Set.image.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1))) (Filter.sets.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1))))
-Case conversion may be inaccurate. Consider using '#align separation_rel_eq_inter_closure separationRel_eq_inter_closureₓ'. -/
 theorem separationRel_eq_inter_closure : 𝓢 α = ⋂₀ (closure '' (𝓤 α).sets) := by
   simp [uniformity_has_basis_closure.separation_rel]
 #align separation_rel_eq_inter_closure separationRel_eq_inter_closure
 
-/- warning: is_closed_separation_rel -> isClosed_separationRel is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], IsClosed.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (separationRel.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], IsClosed.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (separationRel.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align is_closed_separation_rel isClosed_separationRelₓ'. -/
 theorem isClosed_separationRel : IsClosed (𝓢 α) :=
   by
   rw [separationRel_eq_inter_closure]
@@ -327,12 +285,6 @@ theorem isClosed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀
 #align is_closed_of_spaced_out isClosed_of_spaced_out
 -/
 
-/- warning: is_closed_range_of_spaced_out -> isClosed_range_of_spaced_out is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Type.{u2}} [_inst_4 : SeparatedSpace.{u1} α _inst_1] {V₀ : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V₀ (uniformity.{u1} α _inst_1)) -> (forall {f : ι -> α}, (Pairwise.{u2} ι (fun (x : ι) (y : ι) => Not (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (f x) (f y)) V₀))) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (Set.range.{u1, succ u2} α ι f)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Type.{u1}} [_inst_4 : SeparatedSpace.{u2} α _inst_1] {V₀ : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) V₀ (uniformity.{u2} α _inst_1)) -> (forall {f : ι -> α}, (Pairwise.{u1} ι (fun (x : ι) (y : ι) => Not (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α (f x) (f y)) V₀))) -> (IsClosed.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (Set.range.{u2, succ u1} α ι f)))
-Case conversion may be inaccurate. Consider using '#align is_closed_range_of_spaced_out isClosed_range_of_spaced_outₓ'. -/
 theorem isClosed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α)
     {f : ι → α} (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (range f) :=
   isClosed_of_spaced_out V₀_in <| by rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h; exact hf (ne_of_apply_ne f h)
@@ -434,12 +386,6 @@ theorem uniformContinuous_quotient_lift {f : α → β} {h : ∀ a b, (a, b) ∈
 #align uniform_space.uniform_continuous_quotient_lift UniformSpace.uniformContinuous_quotient_lift
 -/
 
-/- warning: uniform_space.uniform_continuous_quotient_lift₂ -> UniformSpace.uniformContinuous_quotient_lift₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : UniformSpace.{u3} γ] {f : α -> β -> γ} {h : forall (a : α) (c : β) (b : α) (d : β), (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α a b) (separationRel.{u1} α _inst_1)) -> (Membership.Mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.hasMem.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β c d) (separationRel.{u2} β _inst_2)) -> (Eq.{succ u3} γ (f a c) (f b d))}, (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2) _inst_3 (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2))) γ (Prod.uniformSpace.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) (UniformSpace.separationSetoid.uniformSpace.{u1} α _inst_1) (UniformSpace.separationSetoid.uniformSpace.{u2} β _inst_2)) _inst_3 (fun (p : Prod.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2))) => Quotient.lift₂.{succ u1, succ u2, succ u3} α β γ (UniformSpace.separationSetoid.{u1} α _inst_1) (UniformSpace.separationSetoid.{u2} β _inst_2) f h (Prod.fst.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) p) (Prod.snd.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) p)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : UniformSpace.{u3} γ] {f : α -> β -> γ} {h : forall (a : α) (c : β) (b : α) (d : β), (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α a b) (separationRel.{u1} α _inst_1)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β c d) (separationRel.{u2} β _inst_2)) -> (Eq.{succ u3} γ (f a c) (f b d))}, (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (instUniformSpaceProd.{u1, u2} α β _inst_1 _inst_2) _inst_3 (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (UniformContinuous.{max u2 u1, u3} (Prod.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2))) γ (instUniformSpaceProd.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) (UniformSpace.separationSetoid.uniformSpace.{u1} α _inst_1) (UniformSpace.separationSetoid.uniformSpace.{u2} β _inst_2)) _inst_3 (fun (p : Prod.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2))) => Quotient.lift₂.{succ u1, succ u2, succ u3} α β γ (UniformSpace.separationSetoid.{u1} α _inst_1) (UniformSpace.separationSetoid.{u2} β _inst_2) f h (Prod.fst.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) p) (Prod.snd.{u1, u2} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) p)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.uniform_continuous_quotient_lift₂ UniformSpace.uniformContinuous_quotient_lift₂ₓ'. -/
 theorem uniformContinuous_quotient_lift₂ {f : α → β → γ}
     {h : ∀ a c b d, (a, b) ∈ 𝓢 α → (c, d) ∈ 𝓢 β → f a c = f b d}
     (hf : UniformContinuous fun p : α × β => f p.1 p.2) :
@@ -450,12 +396,6 @@ theorem uniformContinuous_quotient_lift₂ {f : α → β → γ}
   rwa [UniformContinuous, uniformity_prod_eq_prod, Filter.tendsto_map'_iff] at hf
 #align uniform_space.uniform_continuous_quotient_lift₂ UniformSpace.uniformContinuous_quotient_lift₂
 
-/- warning: uniform_space.comap_quotient_le_uniformity -> UniformSpace.comap_quotient_le_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toHasLe.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) (Prod.{u1, u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1))) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u1, u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.mk'.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p)) (Quotient.mk'.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1) (Prod.snd.{u1, u1} α α p))) (uniformity.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (UniformSpace.separationSetoid.uniformSpace.{u1} α _inst_1))) (uniformity.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) (Prod.{u1, u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1))) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u1, u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (Quotient.mk.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p)) (Quotient.mk.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1) (Prod.snd.{u1, u1} α α p))) (uniformity.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) (UniformSpace.separationSetoid.uniformSpace.{u1} α _inst_1))) (uniformity.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.comap_quotient_le_uniformity UniformSpace.comap_quotient_le_uniformityₓ'. -/
 theorem comap_quotient_le_uniformity :
     ((𝓤 <| Quotient <| separationSetoid α).comap fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) ≤ 𝓤 α :=
   fun t' ht' =>
@@ -600,12 +540,6 @@ theorem map_comp {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg 
 
 end SeparationQuotient
 
-/- warning: uniform_space.separation_prod -> UniformSpace.separation_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (HasEquivₓ.Equiv.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (setoidHasEquiv.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (UniformSpace.separationSetoid.{max u1 u2} (Prod.{u1, u2} α β) (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2))) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (And (HasEquivₓ.Equiv.{succ u1} α (setoidHasEquiv.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) a₁ a₂) (HasEquivₓ.Equiv.{succ u2} β (setoidHasEquiv.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) b₁ b₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (HasEquiv.Equiv.{max (succ u2) (succ u1), 0} (Prod.{u1, u2} α β) (instHasEquiv.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (UniformSpace.separationSetoid.{max u1 u2} (Prod.{u1, u2} α β) (instUniformSpaceProd.{u1, u2} α β _inst_1 _inst_2))) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (And (HasEquiv.Equiv.{succ u1, 0} α (instHasEquiv.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_1)) a₁ a₂) (HasEquiv.Equiv.{succ u2, 0} β (instHasEquiv.{succ u2} β (UniformSpace.separationSetoid.{u2} β _inst_2)) b₁ b₂))
-Case conversion may be inaccurate. Consider using '#align uniform_space.separation_prod UniformSpace.separation_prodₓ'. -/
 theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a₂, b₂) ↔ a₁ ≈ a₂ ∧ b₁ ≈ b₂ :=
   by
   constructor
@@ -623,12 +557,6 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
     exact ⟨h_α key_α, h_β key_β⟩
 #align uniform_space.separation_prod UniformSpace.separation_prod
 
-/- warning: uniform_space.separated.prod -> UniformSpace.Separated.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_4 : SeparatedSpace.{u1} α _inst_1] [_inst_5 : SeparatedSpace.{u2} β _inst_2], SeparatedSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_4 : SeparatedSpace.{u1} α _inst_1] [_inst_5 : SeparatedSpace.{u2} β _inst_2], SeparatedSpace.{max u2 u1} (Prod.{u1, u2} α β) (instUniformSpaceProd.{u1, u2} α β _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align uniform_space.separated.prod UniformSpace.Separated.prodₓ'. -/
 instance Separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace (α × β) :=
   separated_def.2 fun x y H =>
     Prod.ext (eq_of_separated_of_uniformContinuous uniformContinuous_fst H)

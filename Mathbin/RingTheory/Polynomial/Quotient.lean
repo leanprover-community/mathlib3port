@@ -37,9 +37,6 @@ noncomputable def quotientSpanXSubCAlgEquiv (x : R) :
 #align polynomial.quotient_span_X_sub_C_alg_equiv Polynomial.quotientSpanXSubCAlgEquiv
 -/
 
-/- warning: polynomial.quotient_span_X_sub_C_alg_equiv_mk -> Polynomial.quotientSpanXSubCAlgEquiv_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.quotient_span_X_sub_C_alg_equiv_mk Polynomial.quotientSpanXSubCAlgEquiv_mkₓ'. -/
 @[simp]
 theorem quotientSpanXSubCAlgEquiv_mk (x : R) (p : R[X]) :
     quotientSpanXSubCAlgEquiv x (Ideal.Quotient.mk _ p) = p.eval x :=
@@ -74,9 +71,6 @@ theorem quotient_map_C_eq_zero {I : Ideal R} :
 #align ideal.quotient_map_C_eq_zero Ideal.quotient_map_C_eq_zero
 -/
 
-/- warning: ideal.eval₂_C_mk_eq_zero -> Ideal.eval₂_C_mk_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ideal.eval₂_C_mk_eq_zero Ideal.eval₂_C_mk_eq_zeroₓ'. -/
 theorem eval₂_C_mk_eq_zero {I : Ideal R} :
     ∀ f ∈ (map (C : R →+* R[X]) I : Ideal R[X]), eval₂RingHom (C.comp (Quotient.mk I)) X f = 0 :=
   by
@@ -161,9 +155,6 @@ theorem isDomain_map_C_quotient {P : Ideal R} (H : IsPrime P) :
 #align ideal.is_domain_map_C_quotient Ideal.isDomain_map_C_quotient
 -/
 
-/- warning: ideal.eq_zero_of_polynomial_mem_map_range -> Ideal.eq_zero_of_polynomial_mem_map_range is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ideal.eq_zero_of_polynomial_mem_map_range Ideal.eq_zero_of_polynomial_mem_map_rangeₓ'. -/
 /-- Given any ring `R` and an ideal `I` of `R[X]`, we get a map `R → R[x] → R[x]/I`.
   If we let `R` be the image of `R` in `R[x]/I` then we also have a map `R[x] → R'[x]`.
   In particular we can map `I` across this map, to get `I'` and a new map `R' → R'[x] → R'[x]/I`.
@@ -202,9 +193,6 @@ namespace MvPolynomial
 
 variable {R : Type _} {σ : Type _} [CommRing R] {r : R}
 
-/- warning: mv_polynomial.quotient_map_C_eq_zero -> MvPolynomial.quotient_map_C_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.quotient_map_C_eq_zero MvPolynomial.quotient_map_C_eq_zeroₓ'. -/
 theorem quotient_map_C_eq_zero {I : Ideal R} {i : R} (hi : i ∈ I) :
     (Ideal.Quotient.mk (Ideal.map (C : R →+* MvPolynomial σ R) I : Ideal (MvPolynomial σ R))).comp C
         i =
@@ -214,9 +202,6 @@ theorem quotient_map_C_eq_zero {I : Ideal R} {i : R} (hi : i ∈ I) :
   exact Ideal.mem_map_of_mem _ hi
 #align mv_polynomial.quotient_map_C_eq_zero MvPolynomial.quotient_map_C_eq_zero
 
-/- warning: mv_polynomial.eval₂_C_mk_eq_zero -> MvPolynomial.eval₂_C_mk_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_C_mk_eq_zero MvPolynomial.eval₂_C_mk_eq_zeroₓ'. -/
 theorem eval₂_C_mk_eq_zero {I : Ideal R} {a : MvPolynomial σ R}
     (ha : a ∈ (Ideal.map (C : R →+* MvPolynomial σ R) I : Ideal (MvPolynomial σ R))) :
     eval₂Hom (C.comp (Ideal.Quotient.mk I)) X a = 0 :=

@@ -42,12 +42,6 @@ instance {x y : FundamentalGroupoid PUnit} : Subsingleton (x ⟶ y) :=
   · congr <;> apply PUnit.eq_punit
   apply Quotient.subsingleton
 
-/- warning: fundamental_groupoid.punit_equiv_discrete_punit -> FundamentalGroupoid.punitEquivDiscretePunit is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u2, u1, u2} (FundamentalGroupoid.{u1} PUnit.{succ u1}) (CategoryTheory.Groupoid.toCategory.{u1, u1} (FundamentalGroupoid.{u1} PUnit.{succ u1}) (FundamentalGroupoid.CategoryTheory.groupoid.{u1} PUnit.{succ u1} PUnit.topologicalSpace.{u1})) (CategoryTheory.Discrete.{u2} PUnit.{succ u2}) (CategoryTheory.discreteCategory.{u2} PUnit.{succ u2})
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u2, u1, u2} (FundamentalGroupoid.{u1} PUnit.{succ u1}) (CategoryTheory.Discrete.{u2} PUnit.{succ u2}) (CategoryTheory.Groupoid.toCategory.{u1, u1} (FundamentalGroupoid.{u1} PUnit.{succ u1}) (FundamentalGroupoid.instGroupoidFundamentalGroupoid.{u1} PUnit.{succ u1} instTopologicalSpacePUnit.{u1})) (CategoryTheory.discreteCategory.{u2} PUnit.{succ u2})
-Case conversion may be inaccurate. Consider using '#align fundamental_groupoid.punit_equiv_discrete_punit FundamentalGroupoid.punitEquivDiscretePunitₓ'. -/
 /-- Equivalence of groupoids between fundamental groupoid of punit and punit -/
 def punitEquivDiscretePunit : FundamentalGroupoid PUnit.{u + 1} ≌ Discrete PUnit.{v + 1} :=
   Equivalence.mk (Functor.star _) ((CategoryTheory.Functor.const _).obj PUnit.unit)

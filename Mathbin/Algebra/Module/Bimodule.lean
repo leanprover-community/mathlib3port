@@ -82,9 +82,6 @@ variable [IsScalarTower R A M] [IsScalarTower R B M]
 
 variable [SMulCommClass A B M]
 
-/- warning: subbimodule.mk -> Subbimodule.mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.mk Subbimodule.mkₓ'. -/
 /-- A constructor for a subbimodule which demands closure under the two sets of scalars
 individually, rather than jointly via their tensor product.
 
@@ -101,27 +98,18 @@ def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p
         fun z w hz hw hm => by simpa only [add_smul] using p.add_mem (hz hm) (hw hm) }
 #align subbimodule.mk Subbimodule.mk
 
-/- warning: subbimodule.smul_mem -> Subbimodule.smul_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.smul_mem Subbimodule.smul_memₓ'. -/
 theorem smul_mem (p : Submodule (A ⊗[R] B) M) (a : A) {m : M} (hm : m ∈ p) : a • m ∈ p :=
   by
   suffices a • m = a ⊗ₜ[R] (1 : B) • m by exact this.symm ▸ p.smul_mem _ hm
   simp [TensorProduct.Algebra.smul_def]
 #align subbimodule.smul_mem Subbimodule.smul_mem
 
-/- warning: subbimodule.smul_mem' -> Subbimodule.smul_mem' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.smul_mem' Subbimodule.smul_mem'ₓ'. -/
 theorem smul_mem' (p : Submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) : b • m ∈ p :=
   by
   suffices b • m = (1 : A) ⊗ₜ[R] b • m by exact this.symm ▸ p.smul_mem _ hm
   simp [TensorProduct.Algebra.smul_def]
 #align subbimodule.smul_mem' Subbimodule.smul_mem'
 
-/- warning: subbimodule.base_change -> Subbimodule.baseChange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.base_change Subbimodule.baseChangeₓ'. -/
 /-- If `A` and `B` are also `algebra`s over yet another set of scalars `S` then we may "base change"
 from `R` to `S`. -/
 @[simps]
@@ -131,9 +119,6 @@ def baseChange (S : Type _) [CommSemiring S] [Module S M] [Algebra S A] [Algebra
   mk p.toAddSubmonoid (smul_mem p) (smul_mem' p)
 #align subbimodule.base_change Subbimodule.baseChange
 
-/- warning: subbimodule.to_submodule -> Subbimodule.toSubmodule is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.to_submodule Subbimodule.toSubmoduleₓ'. -/
 /-- Forgetting the `B` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `A`. -/
 @[simps]
 def toSubmodule (p : Submodule (A ⊗[R] B) M) : Submodule A M :=
@@ -142,9 +127,6 @@ def toSubmodule (p : Submodule (A ⊗[R] B) M) : Submodule A M :=
     smul_mem' := smul_mem p }
 #align subbimodule.to_submodule Subbimodule.toSubmodule
 
-/- warning: subbimodule.to_submodule' -> Subbimodule.toSubmodule' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.to_submodule' Subbimodule.toSubmodule'ₓ'. -/
 /-- Forgetting the `A` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `B`. -/
 @[simps]
 def toSubmodule' (p : Submodule (A ⊗[R] B) M) : Submodule B M :=
@@ -161,9 +143,6 @@ variable (R S M : Type _) [Ring R] [Ring S]
 
 variable [AddCommGroup M] [Module R M] [Module S M] [SMulCommClass R S M]
 
-/- warning: subbimodule.to_subbimodule_int -> Subbimodule.toSubbimoduleInt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.to_subbimodule_int Subbimodule.toSubbimoduleIntₓ'. -/
 /-- A `submodule` over `R ⊗[ℕ] S` is naturally also a `submodule` over the canonically-isomorphic
 ring `R ⊗[ℤ] S`. -/
 @[simps]
@@ -171,9 +150,6 @@ def toSubbimoduleInt (p : Submodule (R ⊗[ℕ] S) M) : Submodule (R ⊗[ℤ] S)
   baseChange ℤ p
 #align subbimodule.to_subbimodule_int Subbimodule.toSubbimoduleInt
 
-/- warning: subbimodule.to_subbimodule_nat -> Subbimodule.toSubbimoduleNat is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subbimodule.to_subbimodule_nat Subbimodule.toSubbimoduleNatₓ'. -/
 /-- A `submodule` over `R ⊗[ℤ] S` is naturally also a `submodule` over the canonically-isomorphic
 ring `R ⊗[ℕ] S`. -/
 @[simps]

@@ -26,12 +26,6 @@ open Complex Set
 
 open ComplexConjugate
 
-/- warning: complex.subfield_eq_of_closed -> Complex.subfield_eq_of_closed is a dubious translation:
-lean 3 declaration is
-  forall {K : Subfield.{0} Complex Complex.field}, (IsClosed.{0} Complex (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSemiNormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.normedField)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subfield.{0} Complex Complex.field) (Set.{0} Complex) (HasLiftT.mk.{1, 1} (Subfield.{0} Complex Complex.field) (Set.{0} Complex) (CoeTCₓ.coe.{1, 1} (Subfield.{0} Complex Complex.field) (Set.{0} Complex) (SetLike.Set.hasCoeT.{0, 0} (Subfield.{0} Complex Complex.field) Complex (Subfield.setLike.{0} Complex Complex.field)))) K)) -> (Or (Eq.{1} (Subfield.{0} Complex Complex.field) K (RingHom.fieldRange.{0, 0} Real Complex Real.field Complex.field Complex.ofReal)) (Eq.{1} (Subfield.{0} Complex Complex.field) K (Top.top.{0} (Subfield.{0} Complex Complex.field) (Subfield.hasTop.{0} Complex Complex.field))))
-but is expected to have type
-  forall {K : Subfield.{0} Complex Complex.instFieldComplex}, (IsClosed.{0} Complex (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) (SetLike.coe.{0, 0} (Subfield.{0} Complex Complex.instFieldComplex) Complex (Subfield.instSetLikeSubfield.{0} Complex Complex.instFieldComplex) K)) -> (Or (Eq.{1} (Subfield.{0} Complex Complex.instFieldComplex) K (RingHom.fieldRange.{0, 0} Real Complex Real.field Complex.instFieldComplex Complex.ofReal)) (Eq.{1} (Subfield.{0} Complex Complex.instFieldComplex) K (Top.top.{0} (Subfield.{0} Complex Complex.instFieldComplex) (Subfield.instTopSubfield.{0} Complex Complex.instFieldComplex))))
-Case conversion may be inaccurate. Consider using '#align complex.subfield_eq_of_closed Complex.subfield_eq_of_closedₓ'. -/
 /-- The only closed subfields of `ℂ` are `ℝ` and `ℂ`. -/
 theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set ℂ)) :
     K = ofReal.fieldRange ∨ K = ⊤ :=
@@ -58,9 +52,6 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
   simp only [image_univ]
 #align complex.subfield_eq_of_closed Complex.subfield_eq_of_closed
 
-/- warning: complex.uniform_continuous_ring_hom_eq_id_or_conj -> Complex.uniformContinuous_ringHom_eq_id_or_conj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align complex.uniform_continuous_ring_hom_eq_id_or_conj Complex.uniformContinuous_ringHom_eq_id_or_conjₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
 /-- Let `K` a subfield of `ℂ` and let `ψ : K →+* ℂ` a ring homomorphism. Assume that `ψ` is uniform

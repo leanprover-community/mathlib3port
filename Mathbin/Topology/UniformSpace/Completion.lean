@@ -86,12 +86,6 @@ def gen (s : Set (α × α)) : Set (CauchyFilter α × CauchyFilter α) :=
 #align Cauchy.gen CauchyFilter.gen
 -/
 
-/- warning: Cauchy.monotone_gen -> CauchyFilter.monotone_gen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Monotone.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (PartialOrder.toPreorder.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.completeBooleanAlgebra.{u1} (Prod.{u1, u1} α α)))))))) (PartialOrder.toPreorder.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Set.completeBooleanAlgebra.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))))))))) (CauchyFilter.gen.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Monotone.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (PartialOrder.toPreorder.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instCompleteBooleanAlgebraSet.{u1} (Prod.{u1, u1} α α)))))))) (PartialOrder.toPreorder.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Set.instCompleteBooleanAlgebraSet.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))))))))) (CauchyFilter.gen.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align Cauchy.monotone_gen CauchyFilter.monotone_genₓ'. -/
 theorem monotone_gen : Monotone gen :=
   monotone_setOf fun p => @Filter.monotone_mem _ (p.1.val ×ᶠ p.2.val)
 #align Cauchy.monotone_gen CauchyFilter.monotone_gen
@@ -153,23 +147,11 @@ instance : UniformSpace (CauchyFilter α) :=
       symm := symm_gen
       comp := comp_gen }
 
-/- warning: Cauchy.mem_uniformity -> CauchyFilter.mem_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))}, Iff (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Filter.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Filter.hasMem.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) s (uniformity.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1))) (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (t : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) t (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) t (uniformity.{u1} α _inst_1)) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Set.hasSubset.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CauchyFilter.gen.{u1} α _inst_1 t) s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))}, Iff (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Filter.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (instMembershipSetFilter.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) s (uniformity.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1))) (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (t : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) t (uniformity.{u1} α _inst_1)) (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (CauchyFilter.gen.{u1} α _inst_1 t) s)))
-Case conversion may be inaccurate. Consider using '#align Cauchy.mem_uniformity CauchyFilter.mem_uniformityₓ'. -/
 theorem mem_uniformity {s : Set (CauchyFilter α × CauchyFilter α)} :
     s ∈ 𝓤 (CauchyFilter α) ↔ ∃ t ∈ 𝓤 α, gen t ⊆ s :=
   mem_lift'_sets monotone_gen
 #align Cauchy.mem_uniformity CauchyFilter.mem_uniformity
 
-/- warning: Cauchy.mem_uniformity' -> CauchyFilter.mem_uniformity' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))}, Iff (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Filter.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Filter.hasMem.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) s (uniformity.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1))) (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (t : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) t (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) t (uniformity.{u1} α _inst_1)) => forall (f : CauchyFilter.{u1} α _inst_1) (g : CauchyFilter.{u1} α _inst_1), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) t (Filter.prod.{u1, u1} α α (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_1 f) f) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_1 f) g))) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Set.hasMem.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Prod.mk.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1) f g) s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))}, Iff (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Filter.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (instMembershipSetFilter.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) s (uniformity.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1))) (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (t : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) t (uniformity.{u1} α _inst_1)) (forall (f : CauchyFilter.{u1} α _inst_1) (g : CauchyFilter.{u1} α _inst_1), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) t (Filter.prod.{u1, u1} α α (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_1 f) f) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_1 f) g))) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Set.instMembershipSet.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1))) (Prod.mk.{u1, u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.{u1} α _inst_1) f g) s))))
-Case conversion may be inaccurate. Consider using '#align Cauchy.mem_uniformity' CauchyFilter.mem_uniformity'ₓ'. -/
 theorem mem_uniformity' {s : Set (CauchyFilter α × CauchyFilter α)} :
     s ∈ 𝓤 (CauchyFilter α) ↔ ∃ t ∈ 𝓤 α, ∀ f g : CauchyFilter α, t ∈ f.1 ×ᶠ g.1 → (f, g) ∈ s :=
   mem_uniformity.trans <| bex_congr fun t h => Prod.forall
@@ -182,12 +164,6 @@ def pureCauchy (a : α) : CauchyFilter α :=
 #align Cauchy.pure_cauchy CauchyFilter.pureCauchy
 -/
 
-/- warning: Cauchy.uniform_inducing_pure_cauchy -> CauchyFilter.uniformInducing_pureCauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], UniformInducing.{u1, u1} α (CauchyFilter.{u1} α _inst_1) _inst_1 (CauchyFilter.uniformSpace.{u1} α _inst_1) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], UniformInducing.{u1, u1} α (CauchyFilter.{u1} α _inst_1) _inst_1 (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align Cauchy.uniform_inducing_pure_cauchy CauchyFilter.uniformInducing_pureCauchyₓ'. -/
 theorem uniformInducing_pureCauchy : UniformInducing (pure_cauchy : α → CauchyFilter α) :=
   ⟨have : (preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen = id :=
       funext fun s =>
@@ -200,23 +176,11 @@ theorem uniformInducing_pureCauchy : UniformInducing (pure_cauchy : α → Cauch
       ⟩
 #align Cauchy.uniform_inducing_pure_cauchy CauchyFilter.uniformInducing_pureCauchy
 
-/- warning: Cauchy.uniform_embedding_pure_cauchy -> CauchyFilter.uniformEmbedding_pureCauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], UniformEmbedding.{u1, u1} α (CauchyFilter.{u1} α _inst_1) _inst_1 (CauchyFilter.uniformSpace.{u1} α _inst_1) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], UniformEmbedding.{u1, u1} α (CauchyFilter.{u1} α _inst_1) _inst_1 (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align Cauchy.uniform_embedding_pure_cauchy CauchyFilter.uniformEmbedding_pureCauchyₓ'. -/
 theorem uniformEmbedding_pureCauchy : UniformEmbedding (pure_cauchy : α → CauchyFilter α) :=
   { uniform_inducing_pure_cauchy with
     inj := fun a₁ a₂ h => pure_injective <| Subtype.ext_iff_val.1 h }
 #align Cauchy.uniform_embedding_pure_cauchy CauchyFilter.uniformEmbedding_pureCauchy
 
-/- warning: Cauchy.dense_range_pure_cauchy -> CauchyFilter.denseRange_pureCauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseRange.{u1, u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1)) α (CauchyFilter.pureCauchy.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseRange.{u1, u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1)) α (CauchyFilter.pureCauchy.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align Cauchy.dense_range_pure_cauchy CauchyFilter.denseRange_pureCauchyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem denseRange_pureCauchy : DenseRange pure_cauchy := fun f =>
   by
@@ -242,22 +206,10 @@ theorem denseRange_pureCauchy : DenseRange pure_cauchy := fun f =>
       ⟨_, this⟩
 #align Cauchy.dense_range_pure_cauchy CauchyFilter.denseRange_pureCauchy
 
-/- warning: Cauchy.dense_inducing_pure_cauchy -> CauchyFilter.denseInducing_pureCauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseInducing.{u1, u1} α (CauchyFilter.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1)) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseInducing.{u1, u1} α (CauchyFilter.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1)) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align Cauchy.dense_inducing_pure_cauchy CauchyFilter.denseInducing_pureCauchyₓ'. -/
 theorem denseInducing_pureCauchy : DenseInducing pure_cauchy :=
   uniform_inducing_pure_cauchy.DenseInducing dense_range_pure_cauchy
 #align Cauchy.dense_inducing_pure_cauchy CauchyFilter.denseInducing_pureCauchy
 
-/- warning: Cauchy.dense_embedding_pure_cauchy -> CauchyFilter.denseEmbedding_pureCauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseEmbedding.{u1, u1} α (CauchyFilter.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1)) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseEmbedding.{u1, u1} α (CauchyFilter.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1)) (CauchyFilter.pureCauchy.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align Cauchy.dense_embedding_pure_cauchy CauchyFilter.denseEmbedding_pureCauchyₓ'. -/
 theorem denseEmbedding_pureCauchy : DenseEmbedding pure_cauchy :=
   uniform_embedding_pure_cauchy.DenseEmbedding dense_range_pure_cauchy
 #align Cauchy.dense_embedding_pure_cauchy CauchyFilter.denseEmbedding_pureCauchy
@@ -326,12 +278,6 @@ end SeparatedSpace
 
 variable [CompleteSpace β]
 
-/- warning: Cauchy.uniform_continuous_extend -> CauchyFilter.uniformContinuous_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] [_inst_4 : CompleteSpace.{u2} β _inst_2] {f : α -> β}, UniformContinuous.{u1, u2} (CauchyFilter.{u1} α _inst_1) β (CauchyFilter.uniformSpace.{u1} α _inst_1) _inst_2 (CauchyFilter.extend.{u1, u2} α _inst_1 β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] [_inst_4 : CompleteSpace.{u2} β _inst_2] {f : α -> β}, UniformContinuous.{u1, u2} (CauchyFilter.{u1} α _inst_1) β (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1) _inst_2 (CauchyFilter.extend.{u1, u2} α _inst_1 β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align Cauchy.uniform_continuous_extend CauchyFilter.uniformContinuous_extendₓ'. -/
 theorem uniformContinuous_extend {f : α → β} : UniformContinuous (extend f) :=
   by
   by_cases hf : UniformContinuous f
@@ -345,12 +291,6 @@ end Extend
 
 end
 
-/- warning: Cauchy.Cauchy_eq -> CauchyFilter.cauchyFilter_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : CompleteSpace.{u1} α _inst_2] [_inst_4 : SeparatedSpace.{u1} α _inst_2] {f : CauchyFilter.{u1} α _inst_2} {g : CauchyFilter.{u1} α _inst_2}, Iff (Eq.{succ u1} α (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) f)) (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) g))) (Membership.Mem.{u1, u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Set.hasMem.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Prod.mk.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2) f g) (separationRel.{u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.uniformSpace.{u1} α _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : CompleteSpace.{u1} α _inst_2] [_inst_4 : SeparatedSpace.{u1} α _inst_2] {f : CauchyFilter.{u1} α _inst_2} {g : CauchyFilter.{u1} α _inst_2}, Iff (Eq.{succ u1} α (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) f)) (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) g))) (Membership.mem.{u1, u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Set.instMembershipSet.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Prod.mk.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2) f g) (separationRel.{u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_2)))
-Case conversion may be inaccurate. Consider using '#align Cauchy.Cauchy_eq CauchyFilter.cauchyFilter_eqₓ'. -/
 theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α]
     [SeparatedSpace α] {f g : CauchyFilter α} :
     lim f.1 = lim g.1 ↔ (f, g) ∈ separationRel (CauchyFilter α) :=
@@ -387,12 +327,6 @@ section
 
 attribute [local instance] UniformSpace.separationSetoid
 
-/- warning: Cauchy.separated_pure_cauchy_injective -> CauchyFilter.separated_pureCauchy_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [s : SeparatedSpace.{u1} α _inst_1], Function.Injective.{succ u1, succ u1} α (Quotient.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1))) (fun (a : α) => Quotient.mk'.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1)) (CauchyFilter.pureCauchy.{u1} α _inst_1 a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [s : SeparatedSpace.{u1} α _inst_1], Function.Injective.{succ u1, succ u1} α (Quotient.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1))) (fun (a : α) => Quotient.mk.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1)) (CauchyFilter.pureCauchy.{u1} α _inst_1 a))
-Case conversion may be inaccurate. Consider using '#align Cauchy.separated_pure_cauchy_injective CauchyFilter.separated_pureCauchy_injectiveₓ'. -/
 theorem separated_pureCauchy_injective {α : Type _} [UniformSpace α] [s : SeparatedSpace α] :
     Function.Injective fun a : α => ⟦pureCauchy a⟧
   | a, b, h =>
@@ -461,23 +395,11 @@ instance : T3Space (Completion α) :=
 instance : CoeTC α (Completion α) :=
   ⟨Quotient.mk' ∘ pureCauchy⟩
 
-/- warning: uniform_space.completion.coe_eq -> UniformSpace.Completion.coe_eq is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (α -> (UniformSpace.Completion.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1)))) (Function.comp.{succ u1, succ u1, succ u1} α (CauchyFilter.{u1} α _inst_1) (UniformSpace.Completion.{u1} α _inst_1) (Quotient.mk'.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.uniformSpace.{u1} α _inst_1))) (CauchyFilter.pureCauchy.{u1} α _inst_1))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (α -> (UniformSpace.Completion.{u1} α _inst_1)) (UniformSpace.Completion.coe'.{u1} α _inst_1) (Function.comp.{succ u1, succ u1, succ u1} α (CauchyFilter.{u1} α _inst_1) (Quotient.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1))) (Quotient.mk'.{succ u1} (CauchyFilter.{u1} α _inst_1) (UniformSpace.separationSetoid.{u1} (CauchyFilter.{u1} α _inst_1) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_1))) (CauchyFilter.pureCauchy.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.coe_eq UniformSpace.Completion.coe_eqₓ'. -/
 -- note [use has_coe_t]
 protected theorem coe_eq : (coe : α → Completion α) = Quotient.mk' ∘ pureCauchy :=
   rfl
 #align uniform_space.completion.coe_eq UniformSpace.Completion.coe_eq
 
-/- warning: uniform_space.completion.comap_coe_eq_uniformity -> UniformSpace.Completion.comap_coe_eq_uniformity is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) (Prod.{u1, u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u1} α _inst_1)) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u1, u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) (Prod.fst.{u1, u1} α α p)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) (Prod.snd.{u1, u1} α α p))) (uniformity.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1))) (uniformity.{u1} α _inst_1)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) (Prod.{u1, u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u1} α _inst_1)) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u1, u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.coe'.{u1} α _inst_1 (Prod.fst.{u1, u1} α α p)) (UniformSpace.Completion.coe'.{u1} α _inst_1 (Prod.snd.{u1, u1} α α p))) (uniformity.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1))) (uniformity.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.comap_coe_eq_uniformity UniformSpace.Completion.comap_coe_eq_uniformityₓ'. -/
 theorem comap_coe_eq_uniformity :
     ((𝓤 _).comap fun p : α × α => ((p.1 : Completion α), (p.2 : Completion α))) = 𝓤 α :=
   by
@@ -492,24 +414,12 @@ theorem comap_coe_eq_uniformity :
   rw [comap_quotient_eq_uniformity, uniform_embedding_pure_cauchy.comap_uniformity]
 #align uniform_space.completion.comap_coe_eq_uniformity UniformSpace.Completion.comap_coe_eq_uniformity
 
-/- warning: uniform_space.completion.uniform_inducing_coe -> UniformSpace.Completion.uniformInducing_coe is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], UniformInducing.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) _inst_1 (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], UniformInducing.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) _inst_1 (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_inducing_coe UniformSpace.Completion.uniformInducing_coeₓ'. -/
 theorem uniformInducing_coe : UniformInducing (coe : α → Completion α) :=
   ⟨comap_coe_eq_uniformity α⟩
 #align uniform_space.completion.uniform_inducing_coe UniformSpace.Completion.uniformInducing_coe
 
 variable {α}
 
-/- warning: uniform_space.completion.dense_range_coe -> UniformSpace.Completion.denseRange_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseRange.{u1, u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseRange.{u1, u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) α (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.dense_range_coe UniformSpace.Completion.denseRange_coeₓ'. -/
 theorem denseRange_coe : DenseRange (coe : α → Completion α) :=
   denseRange_pureCauchy.Quotient
 #align uniform_space.completion.dense_range_coe UniformSpace.Completion.denseRange_coe
@@ -545,55 +455,25 @@ theorem nonempty_completion_iff : Nonempty (Completion α) ↔ Nonempty α :=
 #align uniform_space.completion.nonempty_completion_iff UniformSpace.Completion.nonempty_completion_iff
 -/
 
-/- warning: uniform_space.completion.uniform_continuous_coe -> UniformSpace.Completion.uniformContinuous_coe is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], UniformContinuous.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) _inst_1 (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], UniformContinuous.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) _inst_1 (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_continuous_coe UniformSpace.Completion.uniformContinuous_coeₓ'. -/
 theorem uniformContinuous_coe : UniformContinuous (coe : α → Completion α) :=
   cPkg.uniformContinuous_coe
 #align uniform_space.completion.uniform_continuous_coe UniformSpace.Completion.uniformContinuous_coe
 
-/- warning: uniform_space.completion.continuous_coe -> UniformSpace.Completion.continuous_coe is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], Continuous.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α], Continuous.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.continuous_coe UniformSpace.Completion.continuous_coeₓ'. -/
 theorem continuous_coe : Continuous (coe : α → Completion α) :=
   cPkg.continuous_coe
 #align uniform_space.completion.continuous_coe UniformSpace.Completion.continuous_coe
 
-/- warning: uniform_space.completion.uniform_embedding_coe -> UniformSpace.Completion.uniformEmbedding_coe is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1], UniformEmbedding.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) _inst_1 (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1], UniformEmbedding.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) _inst_1 (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_embedding_coe UniformSpace.Completion.uniformEmbedding_coeₓ'. -/
 theorem uniformEmbedding_coe [SeparatedSpace α] : UniformEmbedding (coe : α → Completion α) :=
   { comap_uniformity := comap_coe_eq_uniformity α
     inj := separated_pureCauchy_injective }
 #align uniform_space.completion.uniform_embedding_coe UniformSpace.Completion.uniformEmbedding_coe
 
-/- warning: uniform_space.completion.coe_injective -> UniformSpace.Completion.coe_injective is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1], Function.Injective.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1], Function.Injective.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.coe_injective UniformSpace.Completion.coe_injectiveₓ'. -/
 theorem coe_injective [SeparatedSpace α] : Function.Injective (coe : α → Completion α) :=
   UniformEmbedding.inj (uniformEmbedding_coe _)
 #align uniform_space.completion.coe_injective UniformSpace.Completion.coe_injective
 
 variable {α}
 
-/- warning: uniform_space.completion.dense_inducing_coe -> UniformSpace.Completion.denseInducing_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseInducing.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], DenseInducing.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.dense_inducing_coe UniformSpace.Completion.denseInducing_coeₓ'. -/
 theorem denseInducing_coe : DenseInducing (coe : α → Completion α) :=
   { (uniformInducing_coe α).Inducing with dense := denseRange_coe }
 #align uniform_space.completion.dense_inducing_coe UniformSpace.Completion.denseInducing_coe
@@ -613,57 +493,27 @@ instance separableSpace_completion [SeparableSpace α] : SeparableSpace (Complet
 #align uniform_space.completion.separable_space_completion UniformSpace.Completion.separableSpace_completion
 -/
 
-/- warning: uniform_space.completion.dense_embedding_coe -> UniformSpace.Completion.denseEmbedding_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1], DenseEmbedding.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_4 : SeparatedSpace.{u1} α _inst_1], DenseEmbedding.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.Completion.coe'.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.dense_embedding_coe UniformSpace.Completion.denseEmbedding_coeₓ'. -/
 theorem denseEmbedding_coe [SeparatedSpace α] : DenseEmbedding (coe : α → Completion α) :=
   { denseInducing_coe with inj := separated_pureCauchy_injective }
 #align uniform_space.completion.dense_embedding_coe UniformSpace.Completion.denseEmbedding_coe
 
-/- warning: uniform_space.completion.dense_range_coe₂ -> UniformSpace.Completion.denseRange_coe₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β], DenseRange.{max u1 u2, max u1 u2} (Prod.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2)) (Prod.topologicalSpace.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2))) (Prod.{u1, u2} α β) (fun (x : Prod.{u1, u2} α β) => Prod.mk.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) (Prod.fst.{u1, u2} α β x)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) (Prod.snd.{u1, u2} α β x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β], DenseRange.{max u2 u1, max u1 u2} (Prod.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2)) (instTopologicalSpaceProd.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2))) (Prod.{u1, u2} α β) (fun (x : Prod.{u1, u2} α β) => Prod.mk.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.coe'.{u1} α _inst_1 (Prod.fst.{u1, u2} α β x)) (UniformSpace.Completion.coe'.{u2} β _inst_2 (Prod.snd.{u1, u2} α β x)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.dense_range_coe₂ UniformSpace.Completion.denseRange_coe₂ₓ'. -/
 theorem denseRange_coe₂ :
     DenseRange fun x : α × β => ((x.1 : Completion α), (x.2 : Completion β)) :=
   denseRange_coe.Prod_map denseRange_coe
 #align uniform_space.completion.dense_range_coe₂ UniformSpace.Completion.denseRange_coe₂
 
-/- warning: uniform_space.completion.dense_range_coe₃ -> UniformSpace.Completion.denseRange_coe₃ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ], DenseRange.{max u1 u2 u3, max u1 u2 u3} (Prod.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3))) (Prod.topologicalSpace.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (Prod.topologicalSpace.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u3} (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u3} γ _inst_3)))) (Prod.{u1, max u2 u3} α (Prod.{u2, u3} β γ)) (fun (x : Prod.{u1, max u2 u3} α (Prod.{u2, u3} β γ)) => Prod.mk.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) (Prod.fst.{u1, max u2 u3} α (Prod.{u2, u3} β γ) x)) (Prod.mk.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) (Prod.fst.{u2, u3} β γ (Prod.snd.{u1, max u2 u3} α (Prod.{u2, u3} β γ) x))) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) γ (UniformSpace.Completion.{u3} γ _inst_3) (HasLiftT.mk.{succ u3, succ u3} γ (UniformSpace.Completion.{u3} γ _inst_3) (CoeTCₓ.coe.{succ u3, succ u3} γ (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.hasCoeT.{u3} γ _inst_3))) (Prod.snd.{u2, u3} β γ (Prod.snd.{u1, max u2 u3} α (Prod.{u2, u3} β γ) x)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ], DenseRange.{max (max u3 u2) u1, max (max u1 u2) u3} (Prod.{u1, max u3 u2} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3))) (instTopologicalSpaceProd.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (instTopologicalSpaceProd.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u3} (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u3} γ _inst_3)))) (Prod.{u1, max u3 u2} α (Prod.{u2, u3} β γ)) (fun (x : Prod.{u1, max u3 u2} α (Prod.{u2, u3} β γ)) => Prod.mk.{u1, max u3 u2} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) (UniformSpace.Completion.coe'.{u1} α _inst_1 (Prod.fst.{u1, max u2 u3} α (Prod.{u2, u3} β γ) x)) (Prod.mk.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.coe'.{u2} β _inst_2 (Prod.fst.{u2, u3} β γ (Prod.snd.{u1, max u2 u3} α (Prod.{u2, u3} β γ) x))) (UniformSpace.Completion.coe'.{u3} γ _inst_3 (Prod.snd.{u2, u3} β γ (Prod.snd.{u1, max u2 u3} α (Prod.{u2, u3} β γ) x)))))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.dense_range_coe₃ UniformSpace.Completion.denseRange_coe₃ₓ'. -/
 theorem denseRange_coe₃ :
     DenseRange fun x : α × β × γ =>
       ((x.1 : Completion α), ((x.2.1 : Completion β), (x.2.2 : Completion γ))) :=
   denseRange_coe.Prod_map denseRange_coe₂
 #align uniform_space.completion.dense_range_coe₃ UniformSpace.Completion.denseRange_coe₃
 
-/- warning: uniform_space.completion.induction_on -> UniformSpace.Completion.induction_on is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {p : (UniformSpace.Completion.{u1} α _inst_1) -> Prop} (a : UniformSpace.Completion.{u1} α _inst_1), (IsClosed.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (setOf.{u1} (UniformSpace.Completion.{u1} α _inst_1) (fun (a : UniformSpace.Completion.{u1} α _inst_1) => p a))) -> (forall (a : α), p ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a)) -> (p a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {p : (UniformSpace.Completion.{u1} α _inst_1) -> Prop} (a : UniformSpace.Completion.{u1} α _inst_1), (IsClosed.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (setOf.{u1} (UniformSpace.Completion.{u1} α _inst_1) (fun (a : UniformSpace.Completion.{u1} α _inst_1) => p a))) -> (forall (a : α), p (UniformSpace.Completion.coe'.{u1} α _inst_1 a)) -> (p a)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.induction_on UniformSpace.Completion.induction_onₓ'. -/
 @[elab_as_elim]
 theorem induction_on {p : Completion α → Prop} (a : Completion α) (hp : IsClosed { a | p a })
     (ih : ∀ a : α, p a) : p a :=
   isClosed_property denseRange_coe hp ih a
 #align uniform_space.completion.induction_on UniformSpace.Completion.induction_on
 
-/- warning: uniform_space.completion.induction_on₂ -> UniformSpace.Completion.induction_on₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {p : (UniformSpace.Completion.{u1} α _inst_1) -> (UniformSpace.Completion.{u2} β _inst_2) -> Prop} (a : UniformSpace.Completion.{u1} α _inst_1) (b : UniformSpace.Completion.{u2} β _inst_2), (IsClosed.{max u1 u2} (Prod.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2)) (Prod.topologicalSpace.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2))) (setOf.{max u1 u2} (Prod.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2)) (fun (x : Prod.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2)) => p (Prod.fst.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) x) (Prod.snd.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) x)))) -> (forall (a : α) (b : β), p ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) b)) -> (p a b)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {p : (UniformSpace.Completion.{u2} α _inst_1) -> (UniformSpace.Completion.{u1} β _inst_2) -> Prop} (a : UniformSpace.Completion.{u2} α _inst_1) (b : UniformSpace.Completion.{u1} β _inst_2), (IsClosed.{max u2 u1} (Prod.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2)) (instTopologicalSpaceProd.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.Completion.uniformSpace.{u1} β _inst_2))) (setOf.{max u2 u1} (Prod.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2)) (fun (x : Prod.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2)) => p (Prod.fst.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2) x) (Prod.snd.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2) x)))) -> (forall (a : α) (b : β), p (UniformSpace.Completion.coe'.{u2} α _inst_1 a) (UniformSpace.Completion.coe'.{u1} β _inst_2 b)) -> (p a b)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.induction_on₂ UniformSpace.Completion.induction_on₂ₓ'. -/
 @[elab_as_elim]
 theorem induction_on₂ {p : Completion α → Completion β → Prop} (a : Completion α) (b : Completion β)
     (hp : IsClosed { x : Completion α × Completion β | p x.1 x.2 })
@@ -673,12 +523,6 @@ theorem induction_on₂ {p : Completion α → Completion β → Prop} (a : Comp
   this (a, b)
 #align uniform_space.completion.induction_on₂ UniformSpace.Completion.induction_on₂
 
-/- warning: uniform_space.completion.induction_on₃ -> UniformSpace.Completion.induction_on₃ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] {p : (UniformSpace.Completion.{u1} α _inst_1) -> (UniformSpace.Completion.{u2} β _inst_2) -> (UniformSpace.Completion.{u3} γ _inst_3) -> Prop} (a : UniformSpace.Completion.{u1} α _inst_1) (b : UniformSpace.Completion.{u2} β _inst_2) (c : UniformSpace.Completion.{u3} γ _inst_3), (IsClosed.{max u1 u2 u3} (Prod.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3))) (Prod.topologicalSpace.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (Prod.topologicalSpace.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u3} (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u3} γ _inst_3)))) (setOf.{max u1 u2 u3} (Prod.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3))) (fun (x : Prod.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3))) => p (Prod.fst.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) x) (Prod.fst.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (Prod.snd.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) x)) (Prod.snd.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (Prod.snd.{u1, max u2 u3} (UniformSpace.Completion.{u1} α _inst_1) (Prod.{u2, u3} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3)) x))))) -> (forall (a : α) (b : β) (c : γ), p ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) b) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) γ (UniformSpace.Completion.{u3} γ _inst_3) (HasLiftT.mk.{succ u3, succ u3} γ (UniformSpace.Completion.{u3} γ _inst_3) (CoeTCₓ.coe.{succ u3, succ u3} γ (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.hasCoeT.{u3} γ _inst_3))) c)) -> (p a b c)
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] {p : (UniformSpace.Completion.{u3} α _inst_1) -> (UniformSpace.Completion.{u2} β _inst_2) -> (UniformSpace.Completion.{u1} γ _inst_3) -> Prop} (a : UniformSpace.Completion.{u3} α _inst_1) (b : UniformSpace.Completion.{u2} β _inst_2) (c : UniformSpace.Completion.{u1} γ _inst_3), (IsClosed.{max (max u3 u2) u1} (Prod.{u3, max u1 u2} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3))) (instTopologicalSpaceProd.{u3, max u2 u1} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3)) (UniformSpace.toTopologicalSpace.{u3} (UniformSpace.Completion.{u3} α _inst_1) (UniformSpace.Completion.uniformSpace.{u3} α _inst_1)) (instTopologicalSpaceProd.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u1} γ _inst_3)))) (setOf.{max (max u3 u2) u1} (Prod.{u3, max u1 u2} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3))) (fun (x : Prod.{u3, max u1 u2} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3))) => p (Prod.fst.{u3, max u2 u1} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3)) x) (Prod.fst.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3) (Prod.snd.{u3, max u2 u1} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3)) x)) (Prod.snd.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3) (Prod.snd.{u3, max u2 u1} (UniformSpace.Completion.{u3} α _inst_1) (Prod.{u2, u1} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3)) x))))) -> (forall (a : α) (b : β) (c : γ), p (UniformSpace.Completion.coe'.{u3} α _inst_1 a) (UniformSpace.Completion.coe'.{u2} β _inst_2 b) (UniformSpace.Completion.coe'.{u1} γ _inst_3 c)) -> (p a b c)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.induction_on₃ UniformSpace.Completion.induction_on₃ₓ'. -/
 @[elab_as_elim]
 theorem induction_on₃ {p : Completion α → Completion β → Completion γ → Prop} (a : Completion α)
     (b : Completion β) (c : Completion γ)
@@ -689,23 +533,11 @@ theorem induction_on₃ {p : Completion α → Completion β → Completion γ �
   this (a, b, c)
 #align uniform_space.completion.induction_on₃ UniformSpace.Completion.induction_on₃
 
-/- warning: uniform_space.completion.ext -> UniformSpace.Completion.ext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {Y : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} Y] [_inst_5 : T2Space.{u2} Y _inst_4] {f : (UniformSpace.Completion.{u1} α _inst_1) -> Y} {g : (UniformSpace.Completion.{u1} α _inst_1) -> Y}, (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 f) -> (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 g) -> (forall (a : α), Eq.{succ u2} Y (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a)) (g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a))) -> (Eq.{max (succ u1) (succ u2)} ((UniformSpace.Completion.{u1} α _inst_1) -> Y) f g)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {Y : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} Y] [_inst_5 : T2Space.{u2} Y _inst_4] {f : (UniformSpace.Completion.{u1} α _inst_1) -> Y} {g : (UniformSpace.Completion.{u1} α _inst_1) -> Y}, (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 f) -> (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 g) -> (forall (a : α), Eq.{succ u2} Y (f (UniformSpace.Completion.coe'.{u1} α _inst_1 a)) (g (UniformSpace.Completion.coe'.{u1} α _inst_1 a))) -> (Eq.{max (succ u1) (succ u2)} ((UniformSpace.Completion.{u1} α _inst_1) -> Y) f g)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.ext UniformSpace.Completion.extₓ'. -/
 theorem ext {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y}
     (hf : Continuous f) (hg : Continuous g) (h : ∀ a : α, f a = g a) : f = g :=
   cPkg.funext hf hg h
 #align uniform_space.completion.ext UniformSpace.Completion.ext
 
-/- warning: uniform_space.completion.ext' -> UniformSpace.Completion.ext' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {Y : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} Y] [_inst_5 : T2Space.{u2} Y _inst_4] {f : (UniformSpace.Completion.{u1} α _inst_1) -> Y} {g : (UniformSpace.Completion.{u1} α _inst_1) -> Y}, (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 f) -> (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 g) -> (forall (a : α), Eq.{succ u2} Y (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a)) (g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a))) -> (forall (a : UniformSpace.Completion.{u1} α _inst_1), Eq.{succ u2} Y (f a) (g a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {Y : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} Y] [_inst_5 : T2Space.{u2} Y _inst_4] {f : (UniformSpace.Completion.{u1} α _inst_1) -> Y} {g : (UniformSpace.Completion.{u1} α _inst_1) -> Y}, (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 f) -> (Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) Y (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) _inst_4 g) -> (forall (a : α), Eq.{succ u2} Y (f (UniformSpace.Completion.coe'.{u1} α _inst_1 a)) (g (UniformSpace.Completion.coe'.{u1} α _inst_1 a))) -> (forall (a : UniformSpace.Completion.{u1} α _inst_1), Eq.{succ u2} Y (f a) (g a))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.ext' UniformSpace.Completion.ext'ₓ'. -/
 theorem ext' {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y}
     (hf : Continuous f) (hg : Continuous g) (h : ∀ a : α, f a = g a) (a : Completion α) :
     f a = g a :=
@@ -728,34 +560,16 @@ section CompleteSpace
 
 variable [CompleteSpace β]
 
-/- warning: uniform_space.completion.uniform_continuous_extension -> UniformSpace.Completion.uniformContinuous_extension is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_4 : CompleteSpace.{u2} β _inst_2], UniformContinuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) β (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) _inst_2 (UniformSpace.Completion.extension.{u1, u2} α _inst_1 β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} [_inst_4 : CompleteSpace.{u1} β _inst_2], UniformContinuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) β (UniformSpace.Completion.uniformSpace.{u2} α _inst_1) _inst_2 (UniformSpace.Completion.extension.{u2, u1} α _inst_1 β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_continuous_extension UniformSpace.Completion.uniformContinuous_extensionₓ'. -/
 theorem uniformContinuous_extension : UniformContinuous (Completion.extension f) :=
   cPkg.uniformContinuous_extend
 #align uniform_space.completion.uniform_continuous_extension UniformSpace.Completion.uniformContinuous_extension
 
-/- warning: uniform_space.completion.continuous_extension -> UniformSpace.Completion.continuous_extension is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_4 : CompleteSpace.{u2} β _inst_2], Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) β (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β _inst_2) (UniformSpace.Completion.extension.{u1, u2} α _inst_1 β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} [_inst_4 : CompleteSpace.{u1} β _inst_2], Continuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) β (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} β _inst_2) (UniformSpace.Completion.extension.{u2, u1} α _inst_1 β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.continuous_extension UniformSpace.Completion.continuous_extensionₓ'. -/
 theorem continuous_extension : Continuous (Completion.extension f) :=
   cPkg.continuous_extend
 #align uniform_space.completion.continuous_extension UniformSpace.Completion.continuous_extension
 
 end CompleteSpace
 
-/- warning: uniform_space.completion.extension_coe -> UniformSpace.Completion.extension_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_4 : SeparatedSpace.{u2} β _inst_2], (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u2} β (UniformSpace.Completion.extension.{u1, u2} α _inst_1 β _inst_2 f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a)) (f a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_4 : SeparatedSpace.{u2} β _inst_2], (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u2} β (UniformSpace.Completion.extension.{u1, u2} α _inst_1 β _inst_2 f (UniformSpace.Completion.coe'.{u1} α _inst_1 a)) (f a))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.extension_coe UniformSpace.Completion.extension_coeₓ'. -/
 @[simp]
 theorem extension_coe [SeparatedSpace β] (hf : UniformContinuous f) (a : α) :
     (Completion.extension f) a = f a :=
@@ -764,24 +578,12 @@ theorem extension_coe [SeparatedSpace β] (hf : UniformContinuous f) (a : α) :
 
 variable [SeparatedSpace β] [CompleteSpace β]
 
-/- warning: uniform_space.completion.extension_unique -> UniformSpace.Completion.extension_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_4 : SeparatedSpace.{u2} β _inst_2] [_inst_5 : CompleteSpace.{u2} β _inst_2], (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {g : (UniformSpace.Completion.{u1} α _inst_1) -> β}, (UniformContinuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) β (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) _inst_2 g) -> (forall (a : α), Eq.{succ u2} β (f a) (g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a))) -> (Eq.{max (succ u1) (succ u2)} ((UniformSpace.Completion.{u1} α _inst_1) -> β) (UniformSpace.Completion.extension.{u1, u2} α _inst_1 β _inst_2 f) g))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} [_inst_4 : SeparatedSpace.{u1} β _inst_2] [_inst_5 : CompleteSpace.{u1} β _inst_2], (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {g : (UniformSpace.Completion.{u2} α _inst_1) -> β}, (UniformContinuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) β (UniformSpace.Completion.uniformSpace.{u2} α _inst_1) _inst_2 g) -> (forall (a : α), Eq.{succ u1} β (f a) (g (UniformSpace.Completion.coe'.{u2} α _inst_1 a))) -> (Eq.{max (succ u2) (succ u1)} ((UniformSpace.Completion.{u2} α _inst_1) -> β) (UniformSpace.Completion.extension.{u2, u1} α _inst_1 β _inst_2 f) g))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.extension_unique UniformSpace.Completion.extension_uniqueₓ'. -/
 theorem extension_unique (hf : UniformContinuous f) {g : Completion α → β}
     (hg : UniformContinuous g) (h : ∀ a : α, f a = g (a : Completion α)) :
     Completion.extension f = g :=
   cPkg.extend_unique hf hg h
 #align uniform_space.completion.extension_unique UniformSpace.Completion.extension_unique
 
-/- warning: uniform_space.completion.extension_comp_coe -> UniformSpace.Completion.extension_comp_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] [_inst_4 : SeparatedSpace.{u2} β _inst_2] [_inst_5 : CompleteSpace.{u2} β _inst_2] {f : (UniformSpace.Completion.{u1} α _inst_1) -> β}, (UniformContinuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) β (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) _inst_2 f) -> (Eq.{max (succ u1) (succ u2)} ((UniformSpace.Completion.{u1} α _inst_1) -> β) (UniformSpace.Completion.extension.{u1, u2} α _inst_1 β _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (UniformSpace.Completion.{u1} α _inst_1) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1)))))) f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] [_inst_4 : SeparatedSpace.{u1} β _inst_2] [_inst_5 : CompleteSpace.{u1} β _inst_2] {f : (UniformSpace.Completion.{u2} α _inst_1) -> β}, (UniformContinuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) β (UniformSpace.Completion.uniformSpace.{u2} α _inst_1) _inst_2 f) -> (Eq.{max (succ u2) (succ u1)} ((UniformSpace.Completion.{u2} α _inst_1) -> β) (UniformSpace.Completion.extension.{u2, u1} α _inst_1 β _inst_2 (Function.comp.{succ u2, succ u2, succ u1} α (UniformSpace.Completion.{u2} α _inst_1) β f (UniformSpace.Completion.coe'.{u2} α _inst_1))) f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.extension_comp_coe UniformSpace.Completion.extension_comp_coeₓ'. -/
 @[simp]
 theorem extension_comp_coe {f : Completion α → β} (hf : UniformContinuous f) :
     Completion.extension (f ∘ coe) = f :=
@@ -801,43 +603,19 @@ protected def map (f : α → β) : Completion α → Completion β :=
 #align uniform_space.completion.map UniformSpace.Completion.map
 -/
 
-/- warning: uniform_space.completion.uniform_continuous_map -> UniformSpace.Completion.uniformContinuous_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, UniformContinuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2) (UniformSpace.Completion.map.{u1, u2} α _inst_1 β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β}, UniformContinuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} β _inst_2) (UniformSpace.Completion.map.{u2, u1} α _inst_1 β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_continuous_map UniformSpace.Completion.uniformContinuous_mapₓ'. -/
 theorem uniformContinuous_map : UniformContinuous (Completion.map f) :=
   cPkg.uniformContinuous_map cPkg f
 #align uniform_space.completion.uniform_continuous_map UniformSpace.Completion.uniformContinuous_map
 
-/- warning: uniform_space.completion.continuous_map -> UniformSpace.Completion.continuous_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, Continuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) (UniformSpace.Completion.map.{u1, u2} α _inst_1 β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β}, Continuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.Completion.uniformSpace.{u1} β _inst_2)) (UniformSpace.Completion.map.{u2, u1} α _inst_1 β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.continuous_map UniformSpace.Completion.continuous_mapₓ'. -/
 theorem continuous_map : Continuous (Completion.map f) :=
   cPkg.continuous_map cPkg f
 #align uniform_space.completion.continuous_map UniformSpace.Completion.continuous_map
 
-/- warning: uniform_space.completion.map_coe -> UniformSpace.Completion.map_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.map.{u1, u2} α _inst_1 β _inst_2 f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β}, (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u1} (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.Completion.map.{u2, u1} α _inst_1 β _inst_2 f (UniformSpace.Completion.coe'.{u2} α _inst_1 a)) (UniformSpace.Completion.coe'.{u1} β _inst_2 (f a)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.map_coe UniformSpace.Completion.map_coeₓ'. -/
 @[simp]
 theorem map_coe (hf : UniformContinuous f) (a : α) : (Completion.map f) a = f a :=
   cPkg.map_coe cPkg hf a
 #align uniform_space.completion.map_coe UniformSpace.Completion.map_coe
 
-/- warning: uniform_space.completion.map_unique -> UniformSpace.Completion.map_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} {g : (UniformSpace.Completion.{u1} α _inst_1) -> (UniformSpace.Completion.{u2} β _inst_2)}, (UniformContinuous.{u1, u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2) g) -> (forall (a : α), Eq.{succ u2} (UniformSpace.Completion.{u2} β _inst_2) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) (f a)) (g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a))) -> (Eq.{max (succ u1) (succ u2)} ((UniformSpace.Completion.{u1} α _inst_1) -> (UniformSpace.Completion.{u2} β _inst_2)) (UniformSpace.Completion.map.{u1, u2} α _inst_1 β _inst_2 f) g)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} {g : (UniformSpace.Completion.{u2} α _inst_1) -> (UniformSpace.Completion.{u1} β _inst_2)}, (UniformContinuous.{u2, u1} (UniformSpace.Completion.{u2} α _inst_1) (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} β _inst_2) g) -> (forall (a : α), Eq.{succ u1} (UniformSpace.Completion.{u1} β _inst_2) (UniformSpace.Completion.coe'.{u1} β _inst_2 (f a)) (g (UniformSpace.Completion.coe'.{u2} α _inst_1 a))) -> (Eq.{max (succ u2) (succ u1)} ((UniformSpace.Completion.{u2} α _inst_1) -> (UniformSpace.Completion.{u1} β _inst_2)) (UniformSpace.Completion.map.{u2, u1} α _inst_1 β _inst_2 f) g)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.map_unique UniformSpace.Completion.map_uniqueₓ'. -/
 theorem map_unique {f : α → β} {g : Completion α → Completion β} (hg : UniformContinuous g)
     (h : ∀ a : α, ↑(f a) = g a) : Completion.map f = g :=
   cPkg.map_unique cPkg hg h
@@ -859,12 +637,6 @@ theorem extension_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g 
 #align uniform_space.completion.extension_map UniformSpace.Completion.extension_map
 -/
 
-/- warning: uniform_space.completion.map_comp -> UniformSpace.Completion.map_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] {g : β -> γ} {f : α -> β}, (UniformContinuous.{u2, u3} β γ _inst_2 _inst_3 g) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{max (succ u1) (succ u3)} ((UniformSpace.Completion.{u1} α _inst_1) -> (UniformSpace.Completion.{u3} γ _inst_3)) (Function.comp.{succ u1, succ u2, succ u3} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.map.{u2, u3} β _inst_2 γ _inst_3 g) (UniformSpace.Completion.map.{u1, u2} α _inst_1 β _inst_2 f)) (UniformSpace.Completion.map.{u1, u3} α _inst_1 γ _inst_3 (Function.comp.{succ u1, succ u2, succ u3} α β γ g f)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u3}} [_inst_2 : UniformSpace.{u3} β] {γ : Type.{u2}} [_inst_3 : UniformSpace.{u2} γ] {g : β -> γ} {f : α -> β}, (UniformContinuous.{u3, u2} β γ _inst_2 _inst_3 g) -> (UniformContinuous.{u1, u3} α β _inst_1 _inst_2 f) -> (Eq.{max (succ u1) (succ u2)} ((UniformSpace.Completion.{u1} α _inst_1) -> (UniformSpace.Completion.{u2} γ _inst_3)) (Function.comp.{succ u1, succ u3, succ u2} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u3} β _inst_2) (UniformSpace.Completion.{u2} γ _inst_3) (UniformSpace.Completion.map.{u3, u2} β _inst_2 γ _inst_3 g) (UniformSpace.Completion.map.{u1, u3} α _inst_1 β _inst_2 f)) (UniformSpace.Completion.map.{u1, u2} α _inst_1 γ _inst_3 (Function.comp.{succ u1, succ u3, succ u2} α β γ g f)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.map_comp UniformSpace.Completion.map_compₓ'. -/
 theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf : UniformContinuous f) :
     Completion.map g ∘ Completion.map f = Completion.map (g ∘ f) :=
   extension_map ((uniformContinuous_coe _).comp hg) hf
@@ -939,12 +711,6 @@ section SeparatedSpace
 
 variable [SeparatedSpace γ] {f}
 
-/- warning: uniform_space.completion.extension₂_coe_coe -> UniformSpace.Completion.extension₂_coe_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] {f : α -> β -> γ} [_inst_4 : SeparatedSpace.{u3} γ _inst_3], (UniformContinuous₂.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f) -> (forall (a : α) (b : β), Eq.{succ u3} γ (UniformSpace.Completion.extension₂.{u1, u2, u3} α _inst_1 β _inst_2 γ _inst_3 f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) b)) (f a b))
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] {f : α -> β -> γ} [_inst_4 : SeparatedSpace.{u1} γ _inst_3], (UniformContinuous₂.{u3, u2, u1} α β γ _inst_1 _inst_2 _inst_3 f) -> (forall (a : α) (b : β), Eq.{succ u1} γ (UniformSpace.Completion.extension₂.{u3, u2, u1} α _inst_1 β _inst_2 γ _inst_3 f (UniformSpace.Completion.coe'.{u3} α _inst_1 a) (UniformSpace.Completion.coe'.{u2} β _inst_2 b)) (f a b))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.extension₂_coe_coe UniformSpace.Completion.extension₂_coe_coeₓ'. -/
 @[simp]
 theorem extension₂_coe_coe (hf : UniformContinuous₂ f) (a : α) (b : β) :
     Completion.extension₂ f a b = f a b :=
@@ -955,12 +721,6 @@ end SeparatedSpace
 
 variable [CompleteSpace γ] (f)
 
-/- warning: uniform_space.completion.uniform_continuous_extension₂ -> UniformSpace.Completion.uniformContinuous_extension₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (f : α -> β -> γ) [_inst_4 : CompleteSpace.{u3} γ _inst_3], UniformContinuous₂.{u1, u2, u3} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) γ (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2) _inst_3 (UniformSpace.Completion.extension₂.{u1, u2, u3} α _inst_1 β _inst_2 γ _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (f : α -> β -> γ) [_inst_4 : CompleteSpace.{u1} γ _inst_3], UniformContinuous₂.{u3, u2, u1} (UniformSpace.Completion.{u3} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) γ (UniformSpace.Completion.uniformSpace.{u3} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2) _inst_3 (UniformSpace.Completion.extension₂.{u3, u2, u1} α _inst_1 β _inst_2 γ _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_continuous_extension₂ UniformSpace.Completion.uniformContinuous_extension₂ₓ'. -/
 theorem uniformContinuous_extension₂ : UniformContinuous₂ (Completion.extension₂ f) :=
   cPkg.uniformContinuous_extension₂ cPkg f
 #align uniform_space.completion.uniform_continuous_extension₂ UniformSpace.Completion.uniformContinuous_extension₂
@@ -978,34 +738,16 @@ protected def map₂ (f : α → β → γ) : Completion α → Completion β �
 #align uniform_space.completion.map₂ UniformSpace.Completion.map₂
 -/
 
-/- warning: uniform_space.completion.uniform_continuous_map₂ -> UniformSpace.Completion.uniformContinuous_map₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (f : α -> β -> γ), UniformContinuous₂.{u1, u2, u3} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u3} γ _inst_3) (UniformSpace.Completion.map₂.{u1, u2, u3} α _inst_1 β _inst_2 γ _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (f : α -> β -> γ), UniformContinuous₂.{u3, u2, u1} (UniformSpace.Completion.{u3} α _inst_1) (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.{u1} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u3} α _inst_1) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u1} γ _inst_3) (UniformSpace.Completion.map₂.{u3, u2, u1} α _inst_1 β _inst_2 γ _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.uniform_continuous_map₂ UniformSpace.Completion.uniformContinuous_map₂ₓ'. -/
 theorem uniformContinuous_map₂ (f : α → β → γ) : UniformContinuous₂ (Completion.map₂ f) :=
   cPkg.uniformContinuous_map₂ cPkg cPkg f
 #align uniform_space.completion.uniform_continuous_map₂ UniformSpace.Completion.uniformContinuous_map₂
 
-/- warning: uniform_space.completion.continuous_map₂ -> UniformSpace.Completion.continuous_map₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] {δ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} δ] {f : α -> β -> γ} {a : δ -> (UniformSpace.Completion.{u1} α _inst_1)} {b : δ -> (UniformSpace.Completion.{u2} β _inst_2)}, (Continuous.{u4, u1} δ (UniformSpace.Completion.{u1} α _inst_1) _inst_4 (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.uniformSpace.{u1} α _inst_1)) a) -> (Continuous.{u4, u2} δ (UniformSpace.Completion.{u2} β _inst_2) _inst_4 (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) b) -> (Continuous.{u4, u3} δ (UniformSpace.Completion.{u3} γ _inst_3) _inst_4 (UniformSpace.toTopologicalSpace.{u3} (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u3} γ _inst_3)) (fun (d : δ) => UniformSpace.Completion.map₂.{u1, u2, u3} α _inst_1 β _inst_2 γ _inst_3 f (a d) (b d)))
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] {δ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} δ] {f : α -> β -> γ} {a : δ -> (UniformSpace.Completion.{u3} α _inst_1)} {b : δ -> (UniformSpace.Completion.{u2} β _inst_2)}, (Continuous.{u4, u3} δ (UniformSpace.Completion.{u3} α _inst_1) _inst_4 (UniformSpace.toTopologicalSpace.{u3} (UniformSpace.Completion.{u3} α _inst_1) (UniformSpace.Completion.uniformSpace.{u3} α _inst_1)) a) -> (Continuous.{u4, u2} δ (UniformSpace.Completion.{u2} β _inst_2) _inst_4 (UniformSpace.toTopologicalSpace.{u2} (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.uniformSpace.{u2} β _inst_2)) b) -> (Continuous.{u4, u1} δ (UniformSpace.Completion.{u1} γ _inst_3) _inst_4 (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} γ _inst_3) (UniformSpace.Completion.uniformSpace.{u1} γ _inst_3)) (fun (d : δ) => UniformSpace.Completion.map₂.{u3, u2, u1} α _inst_1 β _inst_2 γ _inst_3 f (a d) (b d)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.continuous_map₂ UniformSpace.Completion.continuous_map₂ₓ'. -/
 theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → Completion α}
     {b : δ → Completion β} (ha : Continuous a) (hb : Continuous b) :
     Continuous fun d : δ => Completion.map₂ f (a d) (b d) :=
   cPkg.continuous_map₂ cPkg cPkg ha hb
 #align uniform_space.completion.continuous_map₂ UniformSpace.Completion.continuous_map₂
 
-/- warning: uniform_space.completion.map₂_coe_coe -> UniformSpace.Completion.map₂_coe_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (a : α) (b : β) (f : α -> β -> γ), (UniformContinuous₂.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f) -> (Eq.{succ u3} (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.map₂.{u1, u2, u3} α _inst_1 β _inst_2 γ _inst_3 f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (UniformSpace.Completion.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (UniformSpace.Completion.{u1} α _inst_1) (UniformSpace.Completion.hasCoeT.{u1} α _inst_1))) a) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) β (UniformSpace.Completion.{u2} β _inst_2) (HasLiftT.mk.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (CoeTCₓ.coe.{succ u2, succ u2} β (UniformSpace.Completion.{u2} β _inst_2) (UniformSpace.Completion.hasCoeT.{u2} β _inst_2))) b)) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) γ (UniformSpace.Completion.{u3} γ _inst_3) (HasLiftT.mk.{succ u3, succ u3} γ (UniformSpace.Completion.{u3} γ _inst_3) (CoeTCₓ.coe.{succ u3, succ u3} γ (UniformSpace.Completion.{u3} γ _inst_3) (UniformSpace.Completion.hasCoeT.{u3} γ _inst_3))) (f a b)))
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (a : α) (b : β) (f : α -> β -> γ), (UniformContinuous₂.{u3, u2, u1} α β γ _inst_1 _inst_2 _inst_3 f) -> (Eq.{succ u1} (UniformSpace.Completion.{u1} γ _inst_3) (UniformSpace.Completion.map₂.{u3, u2, u1} α _inst_1 β _inst_2 γ _inst_3 f (UniformSpace.Completion.coe'.{u3} α _inst_1 a) (UniformSpace.Completion.coe'.{u2} β _inst_2 b)) (UniformSpace.Completion.coe'.{u1} γ _inst_3 (f a b)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.map₂_coe_coe UniformSpace.Completion.map₂_coe_coeₓ'. -/
 theorem map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : UniformContinuous₂ f) :
     Completion.map₂ f (a : Completion α) (b : Completion β) = f a b :=
   cPkg.map₂_coe_coe cPkg cPkg a b f hf

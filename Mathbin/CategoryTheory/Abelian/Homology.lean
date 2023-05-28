@@ -220,9 +220,6 @@ theorem π'_ι : π' f g w ≫ ι f g w = kernel.ι _ ≫ cokernel.π _ := by
 #align homology.π'_ι homology.π'_ι
 -/
 
-/- warning: homology.π'_eq_π -> homology.π'_eq_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homology.π'_eq_π homology.π'_eq_πₓ'. -/
 @[simp, reassoc]
 theorem π'_eq_π : (kernelSubobjectIso _).Hom ≫ π' f g w = π _ _ _ :=
   by
@@ -345,9 +342,6 @@ namespace CategoryTheory.Functor
 variable {ι : Type _} {c : ComplexShape ι} {B : Type _} [Category B] [Abelian B] (F : A ⥤ B)
   [Functor.Additive F] [PreservesFiniteLimits F] [PreservesFiniteColimits F]
 
-/- warning: category_theory.functor.homology_iso -> CategoryTheory.Functor.homologyIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.homology_iso CategoryTheory.Functor.homologyIsoₓ'. -/
 /-- When `F` is an exact additive functor, `F(Hᵢ(X)) ≅ Hᵢ(F(X))` for `X` a complex. -/
 noncomputable def homologyIso (C : HomologicalComplex A c) (j : ι) :
     F.obj (C.homology j) ≅ ((F.mapHomologicalComplex _).obj C).homology j :=

@@ -80,9 +80,6 @@ open Presieve Presieve.FamilyOfElements Limits
 
 variable (P : Cᵒᵖ ⥤ A) {X : C} (S : Sieve X) (R : Presieve X) (E : Aᵒᵖ)
 
-/- warning: category_theory.presheaf.cones_equiv_sieve_compatible_family -> CategoryTheory.Presheaf.conesEquivSieveCompatibleFamily is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.cones_equiv_sieve_compatible_family CategoryTheory.Presheaf.conesEquivSieveCompatibleFamilyₓ'. -/
 /-- Given a sieve `S` on `X : C`, a presheaf `P : Cᵒᵖ ⥤ A`, and an object `E` of `A`,
     the cones over the natural diagram `S.arrows.diagram.op ⋙ P` associated to `S` and `P`
     with cone point `E` are in 1-1 correspondence with sieve_compatible family of elements
@@ -111,9 +108,6 @@ def conesEquivSieveCompatibleFamily :
 
 variable {P S E} {x : FamilyOfElements (P ⋙ coyoneda.obj E) S} (hx : x.SieveCompatible)
 
-/- warning: category_theory.presieve.family_of_elements.sieve_compatible.cone -> CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presieve.family_of_elements.sieve_compatible.cone CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.coneₓ'. -/
 /-- The cone corresponding to a sieve_compatible family of elements, dot notation enabled. -/
 @[simp]
 def CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone : Cone (S.arrows.diagram.op ⋙ P)
@@ -122,9 +116,6 @@ def CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone : Cone (S.arro
   π := (conesEquivSieveCompatibleFamily P S E).invFun ⟨x, hx⟩
 #align category_theory.presieve.family_of_elements.sieve_compatible.cone CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone
 
-/- warning: category_theory.presheaf.hom_equiv_amalgamation -> CategoryTheory.Presheaf.homEquivAmalgamation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.hom_equiv_amalgamation CategoryTheory.Presheaf.homEquivAmalgamationₓ'. -/
 /-- Cone morphisms from the cone corresponding to a sieve_compatible family to the natural
     cone associated to a sieve `S` and a presheaf `P` are in 1-1 correspondence with amalgamations
     of the family. -/
@@ -138,9 +129,6 @@ def homEquivAmalgamation : (hx.Cone ⟶ P.mapCone S.arrows.Cocone.op) ≃ { t //
 
 variable (P S)
 
-/- warning: category_theory.presheaf.is_limit_iff_is_sheaf_for -> CategoryTheory.Presheaf.isLimit_iff_isSheafFor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_limit_iff_is_sheaf_for CategoryTheory.Presheaf.isLimit_iff_isSheafForₓ'. -/
 /-- Given sieve `S` and presheaf `P : Cᵒᵖ ⥤ A`, their natural associated cone is a limit cone
     iff `Hom (E, P -)` is a sheaf of types for the sieve `S` and all `E : A`. -/
 theorem isLimit_iff_isSheafFor :
@@ -158,9 +146,6 @@ theorem isLimit_iff_isSheafFor :
     rw [unique_subtype_iff_exists_unique]; exact h _ _ (eqv π).2
 #align category_theory.presheaf.is_limit_iff_is_sheaf_for CategoryTheory.Presheaf.isLimit_iff_isSheafFor
 
-/- warning: category_theory.presheaf.subsingleton_iff_is_separated_for -> CategoryTheory.Presheaf.subsingleton_iff_isSeparatedFor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.subsingleton_iff_is_separated_for CategoryTheory.Presheaf.subsingleton_iff_isSeparatedForₓ'. -/
 /-- Given sieve `S` and presheaf `P : Cᵒᵖ ⥤ A`, their natural associated cone admits at most one
     morphism from every cone in the same category (i.e. over the same diagram),
     iff `Hom (E, P -)`is separated for the sieve `S` and all `E : A`. -/
@@ -178,9 +163,6 @@ theorem subsingleton_iff_isSeparatedFor :
     apply eqv'.injective; ext; apply h _ (eqv π).1 <;> exact (eqv' _).2
 #align category_theory.presheaf.subsingleton_iff_is_separated_for CategoryTheory.Presheaf.subsingleton_iff_isSeparatedFor
 
-/- warning: category_theory.presheaf.is_sheaf_iff_is_limit -> CategoryTheory.Presheaf.isSheaf_iff_isLimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf_iff_is_limit CategoryTheory.Presheaf.isSheaf_iff_isLimitₓ'. -/
 /-- A presheaf `P` is a sheaf for the Grothendieck topology `J` iff for every covering sieve
     `S` of `J`, the natural cone associated to `P` and `S` is a limit cone. -/
 theorem isSheaf_iff_isLimit :
@@ -190,9 +172,6 @@ theorem isSheaf_iff_isLimit :
     (isLimit_iff_isSheafFor P S).1 (h S hS) (op E)⟩
 #align category_theory.presheaf.is_sheaf_iff_is_limit CategoryTheory.Presheaf.isSheaf_iff_isLimit
 
-/- warning: category_theory.presheaf.is_separated_iff_subsingleton -> CategoryTheory.Presheaf.isSeparated_iff_subsingleton is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_separated_iff_subsingleton CategoryTheory.Presheaf.isSeparated_iff_subsingletonₓ'. -/
 /-- A presheaf `P` is separated for the Grothendieck topology `J` iff for every covering sieve
     `S` of `J`, the natural cone associated to `P` and `S` admits at most one morphism from every
     cone in the same category. -/
@@ -203,9 +182,6 @@ theorem isSeparated_iff_subsingleton :
     (subsingleton_iff_isSeparatedFor P S).1 (h S hS) (op E)⟩
 #align category_theory.presheaf.is_separated_iff_subsingleton CategoryTheory.Presheaf.isSeparated_iff_subsingleton
 
-/- warning: category_theory.presheaf.is_limit_iff_is_sheaf_for_presieve -> CategoryTheory.Presheaf.isLimit_iff_isSheafFor_presieve is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_limit_iff_is_sheaf_for_presieve CategoryTheory.Presheaf.isLimit_iff_isSheafFor_presieveₓ'. -/
 /-- Given presieve `R` and presheaf `P : Cᵒᵖ ⥤ A`, the natural cone associated to `P` and
     the sieve `sieve.generate R` generated by `R` is a limit cone iff `Hom (E, P -)` is a
     sheaf of types for the presieve `R` and all `E : A`. -/
@@ -215,9 +191,6 @@ theorem isLimit_iff_isSheafFor_presieve :
   (isLimit_iff_isSheafFor P _).trans (forall_congr' fun _ => (isSheafFor_iff_generate _).symm)
 #align category_theory.presheaf.is_limit_iff_is_sheaf_for_presieve CategoryTheory.Presheaf.isLimit_iff_isSheafFor_presieve
 
-/- warning: category_theory.presheaf.is_sheaf_iff_is_limit_pretopology -> CategoryTheory.Presheaf.isSheaf_iff_isLimit_pretopology is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf_iff_is_limit_pretopology CategoryTheory.Presheaf.isSheaf_iff_isLimit_pretopologyₓ'. -/
 /-- A presheaf `P` is a sheaf for the Grothendieck topology generated by a pretopology `K`
     iff for every covering presieve `R` of `K`, the natural cone associated to `P` and
     `sieve.generate R` is a limit cone. -/
@@ -235,9 +208,6 @@ end LimitSheafCondition
 
 variable {J}
 
-/- warning: category_theory.presheaf.is_sheaf.amalgamate -> CategoryTheory.Presheaf.IsSheaf.amalgamate is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf.amalgamate CategoryTheory.Presheaf.IsSheaf.amalgamateₓ'. -/
 /-- This is a wrapper around `presieve.is_sheaf_for.amalgamate` to be used below.
   If `P`s a sheaf, `S` is a cover of `X`, and `x` is a collection of morphisms from `E`
   to `P` evaluated at terms in the cover which are compatible, then we can amalgamate
@@ -249,9 +219,6 @@ def IsSheaf.amalgamate {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X :
     hx ⟨Y₁, Y₂, Z, g₁, g₂, f₁, f₂, h₁, h₂, w⟩
 #align category_theory.presheaf.is_sheaf.amalgamate CategoryTheory.Presheaf.IsSheaf.amalgamate
 
-/- warning: category_theory.presheaf.is_sheaf.amalgamate_map -> CategoryTheory.Presheaf.IsSheaf.amalgamate_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf.amalgamate_map CategoryTheory.Presheaf.IsSheaf.amalgamate_mapₓ'. -/
 @[simp, reassoc]
 theorem IsSheaf.amalgamate_map {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X : C} {P : Cᵒᵖ ⥤ A}
     (hP : Presheaf.IsSheaf J P) (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.y))
@@ -264,9 +231,6 @@ theorem IsSheaf.amalgamate_map {A : Type u₂} [Category.{max v₁ u₁} A] {E :
       (fun Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ w => hx ⟨Y₁, Y₂, Z, g₁, g₂, f₁, f₂, h₁, h₂, w⟩) f hf
 #align category_theory.presheaf.is_sheaf.amalgamate_map CategoryTheory.Presheaf.IsSheaf.amalgamate_map
 
-/- warning: category_theory.presheaf.is_sheaf.hom_ext -> CategoryTheory.Presheaf.IsSheaf.hom_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf.hom_ext CategoryTheory.Presheaf.IsSheaf.hom_extₓ'. -/
 theorem IsSheaf.hom_ext {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X : C} {P : Cᵒᵖ ⥤ A}
     (hP : Presheaf.IsSheaf J P) (S : J.cover X) (e₁ e₂ : E ⟶ P.obj (op X))
     (h : ∀ I : S.arrow, e₁ ≫ P.map I.f.op = e₂ ≫ P.map I.f.op) : e₁ = e₂ :=
@@ -283,12 +247,6 @@ theorem isSheaf_of_iso_iff {P P' : Cᵒᵖ ⥤ A} (e : P ≅ P') : IsSheaf J P �
 
 variable (J)
 
-/- warning: category_theory.presheaf.is_sheaf_of_is_terminal -> CategoryTheory.Presheaf.isSheaf_of_isTerminal is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {A : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} A] (J : CategoryTheory.GrothendieckTopology.{u1, u3} C _inst_1) {X : A}, (CategoryTheory.Limits.IsTerminal.{u2, u4} A _inst_2 X) -> (CategoryTheory.Presheaf.IsSheaf.{u1, u2, u3, u4} C _inst_1 A _inst_2 J (CategoryTheory.Functor.obj.{u2, max u3 u2, u4, max u1 u2 u3 u4} A _inst_2 (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.Functor.const.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) X))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {A : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} A] (J : CategoryTheory.GrothendieckTopology.{u1, u3} C _inst_1) {X : A}, (CategoryTheory.Limits.IsTerminal.{u2, u4} A _inst_2 X) -> (CategoryTheory.Presheaf.IsSheaf.{u1, u2, u3, u4} C _inst_1 A _inst_2 J (Prefunctor.obj.{succ u2, max (succ u3) (succ u2), u4, max (max (max u3 u1) u2) u4} A (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} A (CategoryTheory.Category.toCategoryStruct.{u2, u4} A _inst_2)) (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max (max u3 u1) u4) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max (max u3 u1) u4) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2))) (CategoryTheory.Functor.toPrefunctor.{u2, max u3 u2, u4, max (max (max u3 u1) u4) u2} A _inst_2 (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2) (CategoryTheory.Functor.const.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2)) X))
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf_of_is_terminal CategoryTheory.Presheaf.isSheaf_of_isTerminalₓ'. -/
 theorem isSheaf_of_isTerminal {X : A} (hX : IsTerminal X) :
     Presheaf.IsSheaf J ((CategoryTheory.Functor.const _).obj X) := fun _ _ _ _ _ _ =>
   ⟨hX.from _, fun _ _ _ => hX.hom_ext _ _, fun _ _ => hX.hom_ext _ _⟩
@@ -400,12 +358,6 @@ theorem isSheaf_iff_isSheaf_of_type (P : Cᵒᵖ ⥤ Type w) :
 #align category_theory.is_sheaf_iff_is_sheaf_of_type CategoryTheory.isSheaf_iff_isSheaf_of_type
 -/
 
-/- warning: category_theory.Sheaf_equiv_SheafOfTypes -> CategoryTheory.sheafEquivSheafOfTypes is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (J : CategoryTheory.GrothendieckTopology.{u2, u3} C _inst_1), CategoryTheory.Equivalence.{max u3 u1, max u1 u3, max u3 (succ u1) u2 u1, max u3 u2 (succ u1)} (CategoryTheory.Sheaf.{u2, u1, u3, succ u1} C _inst_1 J Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Sheaf.CategoryTheory.category.{u2, u1, u3, succ u1} C _inst_1 J Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.SheafOfTypes.{u1, u2, u3} C _inst_1 J) (CategoryTheory.SheafOfTypes.CategoryTheory.category.{u2, u3, u1} C _inst_1 J)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (J : CategoryTheory.GrothendieckTopology.{u2, u3} C _inst_1), CategoryTheory.Equivalence.{max u3 u1, max u3 u1, max (max (max (succ u1) u3) u1) u2, max (max u3 u2) (succ u1)} (CategoryTheory.Sheaf.{u2, u1, u3, succ u1} C _inst_1 J Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.SheafOfTypes.{u1, u2, u3} C _inst_1 J) (CategoryTheory.Sheaf.instCategorySheaf.{u2, u1, u3, succ u1} C _inst_1 J Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.SheafOfTypes.instCategorySheafOfTypes.{u2, u3, u1} C _inst_1 J)
-Case conversion may be inaccurate. Consider using '#align category_theory.Sheaf_equiv_SheafOfTypes CategoryTheory.sheafEquivSheafOfTypesₓ'. -/
 /-- The category of sheaves taking values in Type is the same as the category of set-valued sheaves.
 -/
 @[simps]
@@ -426,12 +378,6 @@ instance : Inhabited (Sheaf (⊥ : GrothendieckTopology C) (Type w)) :=
 
 variable {J} {A}
 
-/- warning: category_theory.Sheaf.is_terminal_of_bot_cover -> CategoryTheory.Sheaf.isTerminalOfBotCover is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {J : CategoryTheory.GrothendieckTopology.{u1, u3} C _inst_1} {A : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} A] (F : CategoryTheory.Sheaf.{u1, u2, u3, u4} C _inst_1 J A _inst_2) (X : C), (Membership.Mem.{max u3 u1, max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X) (Set.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X)) (Set.hasMem.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X)) (Bot.bot.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X) (CompleteLattice.toHasBot.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X) (CategoryTheory.Sieve.completeLattice.{u1, u3} C _inst_1 X))) (coeFn.{max (succ u3) (succ u1), max (succ u3) (succ (max u3 u1))} (CategoryTheory.GrothendieckTopology.{u1, u3} C _inst_1) (fun (_x : CategoryTheory.GrothendieckTopology.{u1, u3} C _inst_1) => forall (X : C), Set.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X)) (CategoryTheory.GrothendieckTopology.hasCoeToFun.{u1, u3} C _inst_1) J X)) -> (CategoryTheory.Limits.IsTerminal.{u2, u4} A _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2 (CategoryTheory.Sheaf.val.{u1, u2, u3, u4} C _inst_1 J A _inst_2 F) (Opposite.op.{succ u3} C X)))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {J : CategoryTheory.GrothendieckTopology.{u1, u3} C _inst_1} {A : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} A] (F : CategoryTheory.Sheaf.{u1, u2, u3, u4} C _inst_1 J A _inst_2) (X : C), (Membership.mem.{max u3 u1, max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X) (Set.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X)) (Set.instMembershipSet.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X)) (Bot.bot.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X) (CompleteLattice.toBot.{max u3 u1} (CategoryTheory.Sieve.{u1, u3} C _inst_1 X) (CategoryTheory.Sieve.instCompleteLatticeSieve.{u1, u3} C _inst_1 X))) (CategoryTheory.GrothendieckTopology.sieves.{u1, u3} C _inst_1 J X)) -> (CategoryTheory.Limits.IsTerminal.{u2, u4} A _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} (Opposite.{succ u3} C) (CategoryTheory.Category.toCategoryStruct.{u1, u3} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1))) A (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} A (CategoryTheory.Category.toCategoryStruct.{u2, u4} A _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) A _inst_2 (CategoryTheory.Sheaf.val.{u1, u2, u3, u4} C _inst_1 J A _inst_2 F)) (Opposite.op.{succ u3} C X)))
-Case conversion may be inaccurate. Consider using '#align category_theory.Sheaf.is_terminal_of_bot_cover CategoryTheory.Sheaf.isTerminalOfBotCoverₓ'. -/
 /-- If the empty sieve is a cover of `X`, then `F(X)` is terminal. -/
 def Sheaf.isTerminalOfBotCover (F : Sheaf J A) (X : C) (H : ⊥ ∈ J X) :
     IsTerminal (F.1.obj (op X)) :=
@@ -488,9 +434,6 @@ instance : Zero (P ⟶ Q) where zero := Sheaf.Hom.mk 0
 
 instance : Add (P ⟶ Q) where add f g := Sheaf.Hom.mk <| f.1 + g.1
 
-/- warning: category_theory.Sheaf.hom.add_app -> CategoryTheory.Sheaf.Hom.add_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.Sheaf.hom.add_app CategoryTheory.Sheaf.Hom.add_appₓ'. -/
 @[simp]
 theorem Sheaf.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.1.app U :=
   rfl
@@ -578,12 +521,6 @@ theorem isSheaf_iff_multifork :
 #align category_theory.presheaf.is_sheaf_iff_multifork CategoryTheory.Presheaf.isSheaf_iff_multifork
 -/
 
-/- warning: category_theory.presheaf.is_sheaf_iff_multiequalizer -> CategoryTheory.Presheaf.isSheaf_iff_multiequalizer is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : Type.{u3}} [_inst_2 : CategoryTheory.Category.{max u1 u2, u3} A] (J : CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (P : CategoryTheory.Functor.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2) [_inst_3 : forall (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u1, u2} C _inst_1 J X), CategoryTheory.Limits.HasMultiequalizer.{max u1 u2, u3, max u2 u1} A _inst_2 (CategoryTheory.GrothendieckTopology.Cover.index.{u3, u1, u2} C _inst_1 X J A _inst_2 S P)], Iff (CategoryTheory.Presheaf.IsSheaf.{u1, max u1 u2, u2, u3} C _inst_1 A _inst_2 J P) (forall (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u1, u2} C _inst_1 J X), CategoryTheory.IsIso.{max u1 u2, u3} A _inst_2 (CategoryTheory.Functor.obj.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P (Opposite.op.{succ u2} C X)) (CategoryTheory.Limits.multiequalizer.{max u1 u2, u3, max u2 u1} A _inst_2 (CategoryTheory.GrothendieckTopology.Cover.index.{u3, u1, u2} C _inst_1 X J A _inst_2 S P) (_inst_3 X S)) (CategoryTheory.GrothendieckTopology.Cover.toMultiequalizer.{u3, u1, u2} C _inst_1 X J A _inst_2 S P (_inst_3 X S)))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : Type.{u3}} [_inst_2 : CategoryTheory.Category.{max u1 u2, u3} A] (J : CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (P : CategoryTheory.Functor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2) [_inst_3 : forall (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u1, u2} C _inst_1 J X), CategoryTheory.Limits.HasMultiequalizer.{max u2 u1, u3, max u2 u1} A _inst_2 (CategoryTheory.GrothendieckTopology.Cover.index.{u3, u1, u2} C _inst_1 X J A _inst_2 S P)], Iff (CategoryTheory.Presheaf.IsSheaf.{u1, max u2 u1, u2, u3} C _inst_1 A _inst_2 J P) (forall (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u1, u2} C _inst_1 J X), CategoryTheory.IsIso.{max u2 u1, u3} A _inst_2 (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u2, u3} (Opposite.{succ u2} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1))) A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P) (Opposite.op.{succ u2} C X)) (CategoryTheory.Limits.multiequalizer.{max u2 u1, u3, max u2 u1} A _inst_2 (CategoryTheory.GrothendieckTopology.Cover.index.{u3, u1, u2} C _inst_1 X J A _inst_2 S P) (_inst_3 X S)) (CategoryTheory.GrothendieckTopology.Cover.toMultiequalizer.{u3, u1, u2} C _inst_1 X J A _inst_2 S P (_inst_3 X S)))
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.is_sheaf_iff_multiequalizer CategoryTheory.Presheaf.isSheaf_iff_multiequalizerₓ'. -/
 theorem isSheaf_iff_multiequalizer [∀ (X : C) (S : J.cover X), HasMultiequalizer (S.index P)] :
     IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), IsIso (S.toMultiequalizer P) :=
   by
@@ -619,12 +556,6 @@ def firstObj : A :=
 #align category_theory.presheaf.first_obj CategoryTheory.Presheaf.firstObj
 -/
 
-/- warning: category_theory.presheaf.fork_map -> CategoryTheory.Presheaf.forkMap is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : Type.{u3}} [_inst_2 : CategoryTheory.Category.{max u1 u2, u3} A] {U : C} (R : CategoryTheory.Presieve.{u1, u2} C _inst_1 U) (P : CategoryTheory.Functor.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2) [_inst_3 : CategoryTheory.Limits.HasProducts.{max u2 u1, max u1 u2, u3} A _inst_2], Quiver.Hom.{succ (max u1 u2), u3} A (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, u3} A (CategoryTheory.Category.toCategoryStruct.{max u1 u2, u3} A _inst_2)) (CategoryTheory.Functor.obj.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.firstObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (CategoryTheory.Presheaf.forkMap._proof_1.{u2, u3, u1} A _inst_2 _inst_3))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : Type.{u3}} [_inst_2 : CategoryTheory.Category.{max u1 u2, u3} A] {U : C} (R : CategoryTheory.Presieve.{u1, u2} C _inst_1 U) (P : CategoryTheory.Functor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2) [_inst_3 : CategoryTheory.Limits.HasProducts.{max u2 u1, max u2 u1, u3} A _inst_2], Quiver.Hom.{max (succ u2) (succ u1), u3} A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u2, u3} (Opposite.{succ u2} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1))) A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P) (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.firstObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J))
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.fork_map CategoryTheory.Presheaf.forkMapₓ'. -/
 /--
 The left morphism of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
 of <https://stacks.math.columbia.edu/tag/00VM>.
@@ -659,12 +590,6 @@ def secondMap : firstObj R P ⟶ secondObj R P :=
 #align category_theory.presheaf.second_map CategoryTheory.Presheaf.secondMap
 -/
 
-/- warning: category_theory.presheaf.w -> CategoryTheory.Presheaf.w is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : Type.{u3}} [_inst_2 : CategoryTheory.Category.{max u1 u2, u3} A] {U : C} (R : CategoryTheory.Presieve.{u1, u2} C _inst_1 U) (P : CategoryTheory.Functor.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2) [_inst_3 : CategoryTheory.Limits.HasProducts.{max u2 u1, max u1 u2, u3} A _inst_2] [_inst_4 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1], Eq.{succ (max u1 u2)} (Quiver.Hom.{succ (max u1 u2), u3} A (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, u3} A (CategoryTheory.Category.toCategoryStruct.{max u1 u2, u3} A _inst_2)) (CategoryTheory.Functor.obj.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.secondObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (CategoryTheory.Presheaf.firstMap._proof_2.{u2, u3, u1} A _inst_2 (fun (J : Type.{max u2 u1}) => _inst_3 J)) _inst_4)) (CategoryTheory.CategoryStruct.comp.{max u1 u2, u3} A (CategoryTheory.Category.toCategoryStruct.{max u1 u2, u3} A _inst_2) (CategoryTheory.Functor.obj.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.firstObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (CategoryTheory.Presheaf.forkMap._proof_1.{u2, u3, u1} A _inst_2 (fun (J : Type.{max u2 u1}) => _inst_3 J))) (CategoryTheory.Presheaf.secondObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (CategoryTheory.Presheaf.firstMap._proof_2.{u2, u3, u1} A _inst_2 (fun (J : Type.{max u2 u1}) => _inst_3 J)) _inst_4) (CategoryTheory.Presheaf.forkMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J)) (CategoryTheory.Presheaf.firstMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4)) (CategoryTheory.CategoryStruct.comp.{max u1 u2, u3} A (CategoryTheory.Category.toCategoryStruct.{max u1 u2, u3} A _inst_2) (CategoryTheory.Functor.obj.{u1, max u1 u2, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.firstObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (CategoryTheory.Presheaf.forkMap._proof_1.{u2, u3, u1} A _inst_2 (fun (J : Type.{max u2 u1}) => _inst_3 J))) (CategoryTheory.Presheaf.secondObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (CategoryTheory.Presheaf.firstMap._proof_2.{u2, u3, u1} A _inst_2 (fun (J : Type.{max u2 u1}) => _inst_3 J)) _inst_4) (CategoryTheory.Presheaf.forkMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J)) (CategoryTheory.Presheaf.secondMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : Type.{u3}} [_inst_2 : CategoryTheory.Category.{max u1 u2, u3} A] {U : C} (R : CategoryTheory.Presieve.{u1, u2} C _inst_1 U) (P : CategoryTheory.Functor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2) [_inst_3 : CategoryTheory.Limits.HasProducts.{max u2 u1, max u2 u1, u3} A _inst_2] [_inst_4 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1], Eq.{max (succ u2) (succ u1)} (Quiver.Hom.{succ (max u2 u1), u3} A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u2, u3} (Opposite.{succ u2} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1))) A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P) (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.secondObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2) (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u2, u3} (Opposite.{succ u2} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1))) A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P) (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.firstObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J)) (CategoryTheory.Presheaf.secondObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4) (CategoryTheory.Presheaf.forkMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J)) (CategoryTheory.Presheaf.firstMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2) (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u2, u3} (Opposite.{succ u2} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1))) A (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, u3} A (CategoryTheory.Category.toCategoryStruct.{max u2 u1, u3} A _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, u3} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) A _inst_2 P) (Opposite.op.{succ u2} C U)) (CategoryTheory.Presheaf.firstObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J)) (CategoryTheory.Presheaf.secondObj.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4) (CategoryTheory.Presheaf.forkMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J)) (CategoryTheory.Presheaf.secondMap.{u1, u2, u3} C _inst_1 A _inst_2 U R P (fun (J : Type.{max u2 u1}) => _inst_3 J) _inst_4))
-Case conversion may be inaccurate. Consider using '#align category_theory.presheaf.w CategoryTheory.Presheaf.wₓ'. -/
 theorem w : forkMap R P ≫ firstMap R P = forkMap R P ≫ secondMap R P :=
   by
   apply limit.hom_ext

@@ -71,12 +71,6 @@ instance AddGroup.uniformContinuousConstSMul_int [AddGroup X] [UniformAddGroup X
 #align add_group.has_uniform_continuous_const_smul_int AddGroup.uniformContinuousConstSMul_int
 -/
 
-/- warning: has_uniform_continuous_const_smul_of_continuous_const_smul -> uniformContinuousConstSMul_of_continuousConstSMul is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (M : Type.{u2}) [_inst_3 : Monoid.{u1} R] [_inst_4 : AddCommGroup.{u2} M] [_inst_5 : DistribMulAction.{u1, u2} R M _inst_3 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4)))] [_inst_6 : UniformSpace.{u2} M] [_inst_7 : UniformAddGroup.{u2} M _inst_6 (AddCommGroup.toAddGroup.{u2} M _inst_4)] [_inst_8 : ContinuousConstSMul.{u1, u2} R M (UniformSpace.toTopologicalSpace.{u2} M _inst_6) (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))))) (DistribSMul.toSmulZeroClass.{u1, u2} R M (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4)))) (DistribMulAction.toDistribSMul.{u1, u2} R M _inst_3 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))) _inst_5)))], UniformContinuousConstSMul.{u1, u2} R M _inst_6 (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))))) (DistribSMul.toSmulZeroClass.{u1, u2} R M (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4)))) (DistribMulAction.toDistribSMul.{u1, u2} R M _inst_3 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))) _inst_5)))
-but is expected to have type
-  forall (R : Type.{u1}) (M : Type.{u2}) [_inst_3 : Monoid.{u1} R] [_inst_4 : AddCommGroup.{u2} M] [_inst_5 : DistribMulAction.{u1, u2} R M _inst_3 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4)))] [_inst_6 : UniformSpace.{u2} M] [_inst_7 : UniformAddGroup.{u2} M _inst_6 (AddCommGroup.toAddGroup.{u2} M _inst_4)] [_inst_8 : ContinuousConstSMul.{u1, u2} R M (UniformSpace.toTopologicalSpace.{u2} M _inst_6) (SMulZeroClass.toSMul.{u1, u2} R M (NegZeroClass.toZero.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_4))))) (DistribSMul.toSMulZeroClass.{u1, u2} R M (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4)))) (DistribMulAction.toDistribSMul.{u1, u2} R M _inst_3 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))) _inst_5)))], UniformContinuousConstSMul.{u1, u2} R M _inst_6 (SMulZeroClass.toSMul.{u1, u2} R M (NegZeroClass.toZero.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_4))))) (DistribSMul.toSMulZeroClass.{u1, u2} R M (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4)))) (DistribMulAction.toDistribSMul.{u1, u2} R M _inst_3 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))) _inst_5)))
-Case conversion may be inaccurate. Consider using '#align has_uniform_continuous_const_smul_of_continuous_const_smul uniformContinuousConstSMul_of_continuousConstSMulₓ'. -/
 /-- A `distrib_mul_action` that is continuous on a uniform group is uniformly continuous.
 This can't be an instance due to it forming a loop with
 `has_uniform_continuous_const_smul.to_has_continuous_const_smul` -/
@@ -88,24 +82,12 @@ theorem uniformContinuousConstSMul_of_continuousConstSMul [Monoid R] [AddCommGro
       (Continuous.continuousAt (continuous_const_smul r))⟩
 #align has_uniform_continuous_const_smul_of_continuous_const_smul uniformContinuousConstSMul_of_continuousConstSMul
 
-/- warning: ring.has_uniform_continuous_const_smul -> Ring.uniformContinuousConstSMul is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : UniformSpace.{u1} R] [_inst_5 : UniformAddGroup.{u1} R _inst_4 (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_3)))] [_inst_6 : ContinuousMul.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_4) (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_3))], UniformContinuousConstSMul.{u1, u1} R R _inst_4 (Mul.toSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_3)))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : UniformSpace.{u1} R] [_inst_5 : UniformAddGroup.{u1} R _inst_4 (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_3))] [_inst_6 : ContinuousMul.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_4) (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3)))], UniformContinuousConstSMul.{u1, u1} R R _inst_4 (SMulZeroClass.toSMul.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_3))) (SMulWithZero.toSMulZeroClass.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_3))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_3))) (MulZeroClass.toSMulWithZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3)))))))
-Case conversion may be inaccurate. Consider using '#align ring.has_uniform_continuous_const_smul Ring.uniformContinuousConstSMulₓ'. -/
 /-- The action of `semiring.to_module` is uniformly continuous. -/
 instance Ring.uniformContinuousConstSMul [Ring R] [UniformSpace R] [UniformAddGroup R]
     [ContinuousMul R] : UniformContinuousConstSMul R R :=
   uniformContinuousConstSMul_of_continuousConstSMul _ _
 #align ring.has_uniform_continuous_const_smul Ring.uniformContinuousConstSMul
 
-/- warning: ring.has_uniform_continuous_const_op_smul -> Ring.uniformContinuousConstSMul_op is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : UniformSpace.{u1} R] [_inst_5 : UniformAddGroup.{u1} R _inst_4 (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_3)))] [_inst_6 : ContinuousMul.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_4) (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_3))], UniformContinuousConstSMul.{u1, u1} (MulOpposite.{u1} R) R _inst_4 (Mul.toHasOppositeSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_3)))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : UniformSpace.{u1} R] [_inst_5 : UniformAddGroup.{u1} R _inst_4 (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_3))] [_inst_6 : ContinuousMul.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_4) (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3)))], UniformContinuousConstSMul.{u1, u1} (MulOpposite.{u1} R) R _inst_4 (Mul.toHasOppositeSMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3))))
-Case conversion may be inaccurate. Consider using '#align ring.has_uniform_continuous_const_op_smul Ring.uniformContinuousConstSMul_opₓ'. -/
 /-- The action of `semiring.to_opposite_module` is uniformly continuous. -/
 instance Ring.uniformContinuousConstSMul_op [Ring R] [UniformSpace R] [UniformAddGroup R]
     [ContinuousMul R] : UniformContinuousConstSMul Rᵐᵒᵖ R :=
@@ -164,12 +146,6 @@ instance MulOpposite.uniformContinuousConstSMul [UniformContinuousConstSMul M X]
 
 end SMul
 
-/- warning: uniform_group.to_has_uniform_continuous_const_smul -> UniformGroup.to_uniformContinuousConstSMul is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_3 : Group.{u1} G] [_inst_4 : UniformSpace.{u1} G] [_inst_5 : UniformGroup.{u1} G _inst_4 _inst_3], UniformContinuousConstSMul.{u1, u1} G G _inst_4 (Mul.toSMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_3 : Group.{u1} G] [_inst_4 : UniformSpace.{u1} G] [_inst_5 : UniformGroup.{u1} G _inst_4 _inst_3], UniformContinuousConstSMul.{u1, u1} G G _inst_4 (MulAction.toSMul.{u1, u1} G G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3)) (Monoid.toMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3))))
-Case conversion may be inaccurate. Consider using '#align uniform_group.to_has_uniform_continuous_const_smul UniformGroup.to_uniformContinuousConstSMulₓ'. -/
 @[to_additive]
 instance UniformGroup.to_uniformContinuousConstSMul {G : Type u} [Group G] [UniformSpace G]
     [UniformGroup G] : UniformContinuousConstSMul G G :=
@@ -228,12 +204,6 @@ instance [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completi
 
 variable {M X} [UniformContinuousConstSMul M X]
 
-/- warning: uniform_space.completion.coe_smul -> UniformSpace.Completion.coe_smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : UniformSpace.{u2} X] [_inst_3 : SMul.{u1, u2} M X] [_inst_4 : UniformContinuousConstSMul.{u1, u2} M X _inst_1 _inst_3] (c : M) (x : X), Eq.{succ u2} (UniformSpace.Completion.{u2} X _inst_1) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) X (UniformSpace.Completion.{u2} X _inst_1) (HasLiftT.mk.{succ u2, succ u2} X (UniformSpace.Completion.{u2} X _inst_1) (CoeTCₓ.coe.{succ u2, succ u2} X (UniformSpace.Completion.{u2} X _inst_1) (UniformSpace.Completion.hasCoeT.{u2} X _inst_1))) (SMul.smul.{u1, u2} M X _inst_3 c x)) (SMul.smul.{u1, u2} M (UniformSpace.Completion.{u2} X _inst_1) (UniformSpace.Completion.hasSmul.{u1, u2} M X _inst_1 _inst_3) c ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) X (UniformSpace.Completion.{u2} X _inst_1) (HasLiftT.mk.{succ u2, succ u2} X (UniformSpace.Completion.{u2} X _inst_1) (CoeTCₓ.coe.{succ u2, succ u2} X (UniformSpace.Completion.{u2} X _inst_1) (UniformSpace.Completion.hasCoeT.{u2} X _inst_1))) x))
-but is expected to have type
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : UniformSpace.{u2} X] [_inst_3 : SMul.{u1, u2} M X] [_inst_4 : UniformContinuousConstSMul.{u1, u2} M X _inst_1 _inst_3] (c : M) (x : X), Eq.{succ u2} (UniformSpace.Completion.{u2} X _inst_1) (UniformSpace.Completion.coe'.{u2} X _inst_1 (HSMul.hSMul.{u1, u2, u2} M X X (instHSMul.{u1, u2} M X _inst_3) c x)) (HSMul.hSMul.{u1, u2, u2} M (UniformSpace.Completion.{u2} X _inst_1) (UniformSpace.Completion.{u2} X _inst_1) (instHSMul.{u1, u2} M (UniformSpace.Completion.{u2} X _inst_1) (UniformSpace.Completion.instSMulCompletion.{u1, u2} M X _inst_1 _inst_3)) c (UniformSpace.Completion.coe'.{u2} X _inst_1 x))
-Case conversion may be inaccurate. Consider using '#align uniform_space.completion.coe_smul UniformSpace.Completion.coe_smulₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_smul (c : M) (x : X) : ↑(c • x) = (c • x : Completion X) :=
   (map_coe (uniformContinuous_const_smul c) x).symm

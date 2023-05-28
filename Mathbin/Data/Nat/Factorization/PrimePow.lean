@@ -173,12 +173,6 @@ theorem Nat.coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.coprime a b) (hn
 #align nat.coprime.is_prime_pow_dvd_mul Nat.coprime.isPrimePow_dvd_mul
 -/
 
-/- warning: nat.mul_divisors_filter_prime_pow -> Nat.mul_divisors_filter_prime_pow is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => IsPrimePow.decidable a) (Nat.divisors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => IsPrimePow.decidable a) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Nat.divisors a) (Nat.divisors b))))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Nat.divisors a) (Nat.divisors b))))
-Case conversion may be inaccurate. Consider using '#align nat.mul_divisors_filter_prime_pow Nat.mul_divisors_filter_prime_powₓ'. -/
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.coprime b) :
     (a * b).divisors.filterₓ IsPrimePow = (a.divisors ∪ b.divisors).filterₓ IsPrimePow :=
   by

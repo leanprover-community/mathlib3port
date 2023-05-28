@@ -112,23 +112,11 @@ def pi : TwoPointing (α → β) where
 #align two_pointing.pi TwoPointing.pi
 -/
 
-/- warning: two_pointing.pi_fst -> TwoPointing.pi_fst is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) {β : Type.{u2}} (q : TwoPointing.{u2} β) [_inst_1 : Nonempty.{succ u1} α], Eq.{max (succ u1) (succ u2)} (α -> β) (Prod.fst.{max u1 u2, max u1 u2} (α -> β) (α -> β) (TwoPointing.toProd.{max u1 u2} (α -> β) (TwoPointing.pi.{u1, u2} α β q _inst_1))) (Function.const.{succ u2, succ u1} β α (Prod.fst.{u2, u2} β β (TwoPointing.toProd.{u2} β q)))
-but is expected to have type
-  forall (α : Type.{u2}) {β : Type.{u1}} (q : TwoPointing.{u1} β) [_inst_1 : Nonempty.{succ u2} α], Eq.{max (succ u2) (succ u1)} (α -> β) (Prod.fst.{max u2 u1, max u2 u1} (α -> β) (α -> β) (TwoPointing.toProd.{max u2 u1} (α -> β) (TwoPointing.pi.{u2, u1} α β q _inst_1))) (Function.const.{succ u1, succ u2} β α (Prod.fst.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
-Case conversion may be inaccurate. Consider using '#align two_pointing.pi_fst TwoPointing.pi_fstₓ'. -/
 @[simp]
 theorem pi_fst : (q.pi α).fst = const α q.fst :=
   rfl
 #align two_pointing.pi_fst TwoPointing.pi_fst
 
-/- warning: two_pointing.pi_snd -> TwoPointing.pi_snd is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) {β : Type.{u2}} (q : TwoPointing.{u2} β) [_inst_1 : Nonempty.{succ u1} α], Eq.{max (succ u1) (succ u2)} (α -> β) (Prod.snd.{max u1 u2, max u1 u2} (α -> β) (α -> β) (TwoPointing.toProd.{max u1 u2} (α -> β) (TwoPointing.pi.{u1, u2} α β q _inst_1))) (Function.const.{succ u2, succ u1} β α (Prod.snd.{u2, u2} β β (TwoPointing.toProd.{u2} β q)))
-but is expected to have type
-  forall (α : Type.{u2}) {β : Type.{u1}} (q : TwoPointing.{u1} β) [_inst_1 : Nonempty.{succ u2} α], Eq.{max (succ u2) (succ u1)} (α -> β) (Prod.snd.{max u2 u1, max u2 u1} (α -> β) (α -> β) (TwoPointing.toProd.{max u2 u1} (α -> β) (TwoPointing.pi.{u2, u1} α β q _inst_1))) (Function.const.{succ u1, succ u2} β α (Prod.snd.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
-Case conversion may be inaccurate. Consider using '#align two_pointing.pi_snd TwoPointing.pi_sndₓ'. -/
 @[simp]
 theorem pi_snd : (q.pi α).snd = const α q.snd :=
   rfl
@@ -145,23 +133,11 @@ def prod : TwoPointing (α × β) where
 #align two_pointing.prod TwoPointing.prod
 -/
 
-/- warning: two_pointing.prod_fst -> TwoPointing.prod_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (p : TwoPointing.{u1} α) (q : TwoPointing.{u2} β), Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.fst.{max u1 u2, max u1 u2} (Prod.{u1, u2} α β) (Prod.{u1, u2} α β) (TwoPointing.toProd.{max u1 u2} (Prod.{u1, u2} α β) (TwoPointing.prod.{u1, u2} α β p q))) (Prod.mk.{u1, u2} α β (Prod.fst.{u1, u1} α α (TwoPointing.toProd.{u1} α p)) (Prod.fst.{u2, u2} β β (TwoPointing.toProd.{u2} β q)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.fst.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Prod.{u2, u1} α β) (TwoPointing.prod.{u2, u1} α β p q))) (Prod.mk.{u2, u1} α β (Prod.fst.{u2, u2} α α (TwoPointing.toProd.{u2} α p)) (Prod.fst.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
-Case conversion may be inaccurate. Consider using '#align two_pointing.prod_fst TwoPointing.prod_fstₓ'. -/
 @[simp]
 theorem prod_fst : (p.Prod q).fst = (p.fst, q.fst) :=
   rfl
 #align two_pointing.prod_fst TwoPointing.prod_fst
 
-/- warning: two_pointing.prod_snd -> TwoPointing.prod_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (p : TwoPointing.{u1} α) (q : TwoPointing.{u2} β), Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.snd.{max u1 u2, max u1 u2} (Prod.{u1, u2} α β) (Prod.{u1, u2} α β) (TwoPointing.toProd.{max u1 u2} (Prod.{u1, u2} α β) (TwoPointing.prod.{u1, u2} α β p q))) (Prod.mk.{u1, u2} α β (Prod.snd.{u1, u1} α α (TwoPointing.toProd.{u1} α p)) (Prod.snd.{u2, u2} β β (TwoPointing.toProd.{u2} β q)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.snd.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Prod.{u2, u1} α β) (TwoPointing.prod.{u2, u1} α β p q))) (Prod.mk.{u2, u1} α β (Prod.snd.{u2, u2} α α (TwoPointing.toProd.{u2} α p)) (Prod.snd.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
-Case conversion may be inaccurate. Consider using '#align two_pointing.prod_snd TwoPointing.prod_sndₓ'. -/
 @[simp]
 theorem prod_snd : (p.Prod q).snd = (p.snd, q.snd) :=
   rfl
@@ -175,23 +151,11 @@ protected def sum : TwoPointing (Sum α β) :=
 #align two_pointing.sum TwoPointing.sum
 -/
 
-/- warning: two_pointing.sum_fst -> TwoPointing.sum_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (p : TwoPointing.{u1} α) (q : TwoPointing.{u2} β), Eq.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β) (Prod.fst.{max u1 u2, max u1 u2} (Sum.{u1, u2} α β) (Sum.{u1, u2} α β) (TwoPointing.toProd.{max u1 u2} (Sum.{u1, u2} α β) (TwoPointing.sum.{u1, u2} α β p q))) (Sum.inl.{u1, u2} α β (Prod.fst.{u1, u1} α α (TwoPointing.toProd.{u1} α p)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Prod.fst.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Sum.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Sum.{u2, u1} α β) (TwoPointing.sum.{u2, u1} α β p q))) (Sum.inl.{u2, u1} α β (Prod.fst.{u2, u2} α α (TwoPointing.toProd.{u2} α p)))
-Case conversion may be inaccurate. Consider using '#align two_pointing.sum_fst TwoPointing.sum_fstₓ'. -/
 @[simp]
 theorem sum_fst : (p.Sum q).fst = Sum.inl p.fst :=
   rfl
 #align two_pointing.sum_fst TwoPointing.sum_fst
 
-/- warning: two_pointing.sum_snd -> TwoPointing.sum_snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (p : TwoPointing.{u1} α) (q : TwoPointing.{u2} β), Eq.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β) (Prod.snd.{max u1 u2, max u1 u2} (Sum.{u1, u2} α β) (Sum.{u1, u2} α β) (TwoPointing.toProd.{max u1 u2} (Sum.{u1, u2} α β) (TwoPointing.sum.{u1, u2} α β p q))) (Sum.inr.{u1, u2} α β (Prod.snd.{u2, u2} β β (TwoPointing.toProd.{u2} β q)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Prod.snd.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Sum.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Sum.{u2, u1} α β) (TwoPointing.sum.{u2, u1} α β p q))) (Sum.inr.{u2, u1} α β (Prod.snd.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
-Case conversion may be inaccurate. Consider using '#align two_pointing.sum_snd TwoPointing.sum_sndₓ'. -/
 @[simp]
 theorem sum_snd : (p.Sum q).snd = Sum.inr q.snd :=
   rfl

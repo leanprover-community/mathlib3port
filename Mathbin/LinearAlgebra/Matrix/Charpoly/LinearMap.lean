@@ -47,17 +47,11 @@ def PiToModule.fromMatrix [DecidableEq ι] : Matrix ι ι R →ₗ[R] (ι → R)
 #align pi_to_module.from_matrix PiToModule.fromMatrix
 -/
 
-/- warning: pi_to_module.from_matrix_apply -> PiToModule.fromMatrix_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pi_to_module.from_matrix_apply PiToModule.fromMatrix_applyₓ'. -/
 theorem PiToModule.fromMatrix_apply [DecidableEq ι] (A : Matrix ι ι R) (w : ι → R) :
     PiToModule.fromMatrix R b A w = Fintype.total R R b (A.mulVec w) :=
   rfl
 #align pi_to_module.from_matrix_apply PiToModule.fromMatrix_apply
 
-/- warning: pi_to_module.from_matrix_apply_single_one -> PiToModule.fromMatrix_apply_single_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pi_to_module.from_matrix_apply_single_one PiToModule.fromMatrix_apply_single_oneₓ'. -/
 theorem PiToModule.fromMatrix_apply_single_one [DecidableEq ι] (A : Matrix ι ι R) (j : ι) :
     PiToModule.fromMatrix R b A (Pi.single j 1) = ∑ i : ι, A i j • b i :=
   by
@@ -73,17 +67,11 @@ def PiToModule.fromEnd : Module.End R M →ₗ[R] (ι → R) →ₗ[R] M :=
 #align pi_to_module.from_End PiToModule.fromEnd
 -/
 
-/- warning: pi_to_module.from_End_apply -> PiToModule.fromEnd_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pi_to_module.from_End_apply PiToModule.fromEnd_applyₓ'. -/
 theorem PiToModule.fromEnd_apply (f : Module.End R M) (w : ι → R) :
     PiToModule.fromEnd R b f w = f (Fintype.total R R b w) :=
   rfl
 #align pi_to_module.from_End_apply PiToModule.fromEnd_apply
 
-/- warning: pi_to_module.from_End_apply_single_one -> PiToModule.fromEnd_apply_single_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pi_to_module.from_End_apply_single_one PiToModule.fromEnd_apply_single_oneₓ'. -/
 theorem PiToModule.fromEnd_apply_single_one [DecidableEq ι] (f : Module.End R M) (i : ι) :
     PiToModule.fromEnd R b f (Pi.single i 1) = f (b i) :=
   by
@@ -93,9 +81,6 @@ theorem PiToModule.fromEnd_apply_single_one [DecidableEq ι] (f : Module.End R M
   rw [one_smul]
 #align pi_to_module.from_End_apply_single_one PiToModule.fromEnd_apply_single_one
 
-/- warning: pi_to_module.from_End_injective -> PiToModule.fromEnd_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align pi_to_module.from_End_injective PiToModule.fromEnd_injectiveₓ'. -/
 theorem PiToModule.fromEnd_injective (hb : Submodule.span R (Set.range b) = ⊤) :
     Function.Injective (PiToModule.fromEnd R b) :=
   by
@@ -120,25 +105,16 @@ def Matrix.Represents (A : Matrix ι ι R) (f : Module.End R M) : Prop :=
 
 variable {b}
 
-/- warning: matrix.represents.congr_fun -> Matrix.Represents.congr_fun is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.represents.congr_fun Matrix.Represents.congr_funₓ'. -/
 theorem Matrix.Represents.congr_fun {A : Matrix ι ι R} {f : Module.End R M} (h : A.Represents b f)
     (x) : Fintype.total R R b (A.mulVec x) = f (Fintype.total R R b x) :=
   LinearMap.congr_fun h x
 #align matrix.represents.congr_fun Matrix.Represents.congr_fun
 
-/- warning: matrix.represents_iff -> Matrix.represents_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.represents_iff Matrix.represents_iffₓ'. -/
 theorem Matrix.represents_iff {A : Matrix ι ι R} {f : Module.End R M} :
     A.Represents b f ↔ ∀ x, Fintype.total R R b (A.mulVec x) = f (Fintype.total R R b x) :=
   ⟨fun e x => e.congr_fun x, fun H => LinearMap.ext fun x => H x⟩
 #align matrix.represents_iff Matrix.represents_iff
 
-/- warning: matrix.represents_iff' -> Matrix.represents_iff' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.represents_iff' Matrix.represents_iff'ₓ'. -/
 theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.End R M} :
     A.Represents b f ↔ ∀ j, (∑ i : ι, A i j • b i) = f (b j) :=
   by
@@ -153,12 +129,6 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.End R M} :
     apply h
 #align matrix.represents_iff' Matrix.represents_iff'
 
-/- warning: matrix.represents.mul -> Matrix.Represents.mul is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] {R : Type.{u3}} [_inst_3 : CommRing.{u3} R] [_inst_4 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {b : ι -> M} [_inst_5 : DecidableEq.{succ u1} ι] {A : Matrix.{u1, u1, u3} ι ι R} {A' : Matrix.{u1, u1, u3} ι ι R} {f : Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4} {f' : Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4}, (Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A f) -> (Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A' f') -> (Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) (HMul.hMul.{max u1 u3, max u1 u3, max u1 u3} (Matrix.{u1, u1, u3} ι ι R) (Matrix.{u1, u1, u3} ι ι R) (Matrix.{u1, u1, u3} ι ι R) (instHMul.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) (Matrix.hasMul.{u3, u1} ι R _inst_1 (Distrib.toHasMul.{u3} R (Ring.toDistrib.{u3} R (CommRing.toRing.{u3} R _inst_3))) (AddCommGroup.toAddCommMonoid.{u3} R (NonUnitalNonAssocRing.toAddCommGroup.{u3} R (NonAssocRing.toNonUnitalNonAssocRing.{u3} R (Ring.toNonAssocRing.{u3} R (CommRing.toRing.{u3} R _inst_3))))))) A A') (HMul.hMul.{u2, u2, u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (instHMul.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (LinearMap.module.End.hasMul.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4)) f f'))
-but is expected to have type
-  forall {ι : Type.{u3}} [_inst_1 : Fintype.{u3} ι] {M : Type.{u1}} [_inst_2 : AddCommGroup.{u1} M] {R : Type.{u2}} [_inst_3 : CommRing.{u2} R] [_inst_4 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {b : ι -> M} [_inst_5 : DecidableEq.{succ u3} ι] {A : Matrix.{u3, u3, u2} ι ι R} {A' : Matrix.{u3, u3, u2} ι ι R} {f : Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4} {f' : Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4}, (Matrix.Represents.{u3, u1, u2} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A f) -> (Matrix.Represents.{u3, u1, u2} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A' f') -> (Matrix.Represents.{u3, u1, u2} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) (HMul.hMul.{max u3 u2, max u3 u2, max u3 u2} (Matrix.{u3, u3, u2} ι ι R) (Matrix.{u3, u3, u2} ι ι R) (Matrix.{u3, u3, u2} ι ι R) (instHMul.{max u3 u2} (Matrix.{u3, u3, u2} ι ι R) (Matrix.instMulMatrix.{u2, u3} ι R _inst_1 (NonUnitalNonAssocRing.toMul.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_3))))))) A A') (HMul.hMul.{u1, u1, u1} (Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) (Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) (Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) (instHMul.{u1} (Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) (LinearMap.instMulEnd.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4)) f f'))
-Case conversion may be inaccurate. Consider using '#align matrix.represents.mul Matrix.Represents.mulₓ'. -/
 theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.End R M} (h : A.Represents b f)
     (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') :=
   by
@@ -170,12 +140,6 @@ theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.End R M} (h
   rfl
 #align matrix.represents.mul Matrix.Represents.mul
 
-/- warning: matrix.represents.one -> Matrix.Represents.one is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] {R : Type.{u3}} [_inst_3 : CommRing.{u3} R] [_inst_4 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {b : ι -> M} [_inst_5 : DecidableEq.{succ u1} ι], Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) (OfNat.ofNat.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) 1 (OfNat.mk.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) 1 (One.one.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) (Matrix.hasOne.{u3, u1} ι R (fun (a : ι) (b : ι) => _inst_5 a b) (MulZeroClass.toHasZero.{u3} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} R (NonAssocRing.toNonUnitalNonAssocRing.{u3} R (Ring.toNonAssocRing.{u3} R (CommRing.toRing.{u3} R _inst_3)))))) (AddMonoidWithOne.toOne.{u3} R (AddGroupWithOne.toAddMonoidWithOne.{u3} R (AddCommGroupWithOne.toAddGroupWithOne.{u3} R (Ring.toAddCommGroupWithOne.{u3} R (CommRing.toRing.{u3} R _inst_3))))))))) (OfNat.ofNat.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) 1 (OfNat.mk.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) 1 (One.one.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (LinearMap.module.End.hasOne.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4))))
-but is expected to have type
-  forall {ι : Type.{u3}} [_inst_1 : Fintype.{u3} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] {R : Type.{u1}} [_inst_3 : CommRing.{u1} R] [_inst_4 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {b : ι -> M} [_inst_5 : DecidableEq.{succ u3} ι], Matrix.Represents.{u3, u2, u1} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) (OfNat.ofNat.{max u3 u1} (Matrix.{u3, u3, u1} ι ι R) 1 (One.toOfNat1.{max u3 u1} (Matrix.{u3, u3, u1} ι ι R) (Matrix.one.{u1, u3} ι R (fun (a : ι) (b : ι) => _inst_5 a b) (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3))) (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)))))) (OfNat.ofNat.{u2} (Module.End.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) 1 (One.toOfNat1.{u2} (Module.End.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (LinearMap.instOneEnd.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4)))
-Case conversion may be inaccurate. Consider using '#align matrix.represents.one Matrix.Represents.oneₓ'. -/
 theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 :=
   by
   delta Matrix.Represents PiToModule.fromMatrix
@@ -184,38 +148,20 @@ theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 :=
   rfl
 #align matrix.represents.one Matrix.Represents.one
 
-/- warning: matrix.represents.add -> Matrix.Represents.add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.represents.add Matrix.Represents.addₓ'. -/
 theorem Matrix.Represents.add {A A' : Matrix ι ι R} {f f' : Module.End R M} (h : A.Represents b f)
     (h' : Matrix.Represents b A' f') : (A + A').Represents b (f + f') := by
   delta Matrix.Represents at h h'⊢; rw [map_add, map_add, h, h']
 #align matrix.represents.add Matrix.Represents.add
 
-/- warning: matrix.represents.zero -> Matrix.Represents.zero is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] {R : Type.{u3}} [_inst_3 : CommRing.{u3} R] [_inst_4 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {b : ι -> M} [_inst_5 : DecidableEq.{succ u1} ι], Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) (OfNat.ofNat.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) 0 (OfNat.mk.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) 0 (Zero.zero.{max u1 u3} (Matrix.{u1, u1, u3} ι ι R) (Matrix.hasZero.{u3, u1, u1} ι ι R (MulZeroClass.toHasZero.{u3} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} R (NonAssocRing.toNonUnitalNonAssocRing.{u3} R (Ring.toNonAssocRing.{u3} R (CommRing.toRing.{u3} R _inst_3)))))))))) (OfNat.ofNat.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) 0 (OfNat.mk.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) 0 (Zero.zero.{u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (LinearMap.hasZero.{u3, u3, u2, u2} R R M M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4 _inst_4 (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3))))))))
-but is expected to have type
-  forall {ι : Type.{u3}} [_inst_1 : Fintype.{u3} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] {R : Type.{u1}} [_inst_3 : CommRing.{u1} R] [_inst_4 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {b : ι -> M} [_inst_5 : DecidableEq.{succ u3} ι], Matrix.Represents.{u3, u2, u1} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) (OfNat.ofNat.{max u3 u1} (Matrix.{u3, u3, u1} ι ι R) 0 (Zero.toOfNat0.{max u3 u1} (Matrix.{u3, u3, u1} ι ι R) (Matrix.zero.{u1, u3, u3} ι ι R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)))))) (OfNat.ofNat.{u2} (Module.End.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) 0 (Zero.toOfNat0.{u2} (Module.End.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (LinearMap.instZeroLinearMap.{u1, u1, u2, u2} R R M M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4 _inst_4 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_3)))))))
-Case conversion may be inaccurate. Consider using '#align matrix.represents.zero Matrix.Represents.zeroₓ'. -/
 theorem Matrix.Represents.zero : (0 : Matrix ι ι R).Represents b 0 := by delta Matrix.Represents;
   rw [map_zero, map_zero]
 #align matrix.represents.zero Matrix.Represents.zero
 
-/- warning: matrix.represents.smul -> Matrix.Represents.smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.represents.smul Matrix.Represents.smulₓ'. -/
 theorem Matrix.Represents.smul {A : Matrix ι ι R} {f : Module.End R M} (h : A.Represents b f)
     (r : R) : (r • A).Represents b (r • f) := by delta Matrix.Represents at h⊢;
   rw [map_smul, map_smul, h]
 #align matrix.represents.smul Matrix.Represents.smul
 
-/- warning: matrix.represents.eq -> Matrix.Represents.eq is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] {R : Type.{u3}} [_inst_3 : CommRing.{u3} R] [_inst_4 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {b : ι -> M}, (Eq.{succ u2} (Submodule.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (Submodule.span.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4 (Set.range.{u2, succ u1} M ι b)) (Top.top.{u2} (Submodule.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) (Submodule.hasTop.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4))) -> (forall [_inst_5 : DecidableEq.{succ u1} ι] {A : Matrix.{u1, u1, u3} ι ι R} {f : Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4} {f' : Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4}, (Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A f) -> (Matrix.Represents.{u1, u2, u3} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A f') -> (Eq.{succ u2} (Module.End.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_4) f f'))
-but is expected to have type
-  forall {ι : Type.{u3}} [_inst_1 : Fintype.{u3} ι] {M : Type.{u1}} [_inst_2 : AddCommGroup.{u1} M] {R : Type.{u2}} [_inst_3 : CommRing.{u2} R] [_inst_4 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {b : ι -> M}, (Eq.{succ u1} (Submodule.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) (Submodule.span.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4 (Set.range.{u1, succ u3} M ι b)) (Top.top.{u1} (Submodule.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) (Submodule.instTopSubmodule.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4))) -> (forall [_inst_5 : DecidableEq.{succ u3} ι] {A : Matrix.{u3, u3, u2} ι ι R} {f : Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4} {f' : Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4}, (Matrix.Represents.{u3, u1, u2} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A f) -> (Matrix.Represents.{u3, u1, u2} ι _inst_1 M _inst_2 R _inst_3 _inst_4 b (fun (a : ι) (b : ι) => _inst_5 a b) A f') -> (Eq.{succ u1} (Module.End.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_4) f f'))
-Case conversion may be inaccurate. Consider using '#align matrix.represents.eq Matrix.Represents.eqₓ'. -/
 theorem Matrix.Represents.eq {A : Matrix ι ι R} {f f' : Module.End R M} (h : A.Represents b f)
     (h' : A.Represents b f') : f = f' :=
   PiToModule.fromEnd_injective R b hb (h.symm.trans h')
@@ -223,12 +169,6 @@ theorem Matrix.Represents.eq {A : Matrix ι ι R} {f f' : Module.End R M} (h : A
 
 variable (b R)
 
-/- warning: matrix.is_representation -> Matrix.isRepresentation is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] (R : Type.{u3}) [_inst_3 : CommRing.{u3} R] [_inst_4 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)], (ι -> M) -> (forall [_inst_5 : DecidableEq.{succ u1} ι], Subalgebra.{u3, max u1 u3} R (Matrix.{u1, u1, u3} ι ι R) (CommRing.toCommSemiring.{u3} R _inst_3) (Matrix.semiring.{u3, u1} ι R (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) _inst_1 (fun (a : ι) (b : ι) => _inst_5 a b)) (Matrix.algebra.{u3, u1, u3} ι R R _inst_1 (fun (a : ι) (b : ι) => _inst_5 a b) (CommRing.toCommSemiring.{u3} R _inst_3) (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3)) (Algebra.id.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3))))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {M : Type.{u2}} [_inst_2 : AddCommGroup.{u2} M] (R : Type.{u3}) [_inst_3 : CommRing.{u3} R] [_inst_4 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)], (ι -> M) -> (forall [_inst_5 : DecidableEq.{succ u1} ι], Subalgebra.{u3, max u3 u1} R (Matrix.{u1, u1, u3} ι ι R) (CommRing.toCommSemiring.{u3} R _inst_3) (Matrix.semiring.{u3, u1} ι R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3)) _inst_1 (fun (a : ι) (b : ι) => _inst_5 a b)) (Matrix.instAlgebraMatrixSemiring.{u3, u1, u3} ι R R _inst_1 (fun (a : ι) (b : ι) => _inst_5 a b) (CommRing.toCommSemiring.{u3} R _inst_3) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3)) (Algebra.id.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3))))
-Case conversion may be inaccurate. Consider using '#align matrix.is_representation Matrix.isRepresentationₓ'. -/
 /-- The subalgebra of `matrix ι ι R` that consists of matrices that actually represent
 endomorphisms on `M`. -/
 def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R)
@@ -241,9 +181,6 @@ def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R)
   algebraMap_mem' r := ⟨r • 1, Matrix.Represents.one.smul r⟩
 #align matrix.is_representation Matrix.isRepresentation
 
-/- warning: matrix.is_representation.to_End -> Matrix.isRepresentation.toEnd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.is_representation.to_End Matrix.isRepresentation.toEndₓ'. -/
 /-- The map sending a matrix to the endomorphism it represents. This is an `R`-algebra morphism. -/
 noncomputable def Matrix.isRepresentation.toEnd : Matrix.isRepresentation R b →ₐ[R] Module.End R M
     where
@@ -256,26 +193,17 @@ noncomputable def Matrix.isRepresentation.toEnd : Matrix.isRepresentation R b �
     (r • 1 : Matrix.isRepresentation R b).2.choose_spec.Eq hb (Matrix.Represents.one.smul r)
 #align matrix.is_representation.to_End Matrix.isRepresentation.toEnd
 
-/- warning: matrix.is_representation.to_End_represents -> Matrix.isRepresentation.toEnd_represents is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.is_representation.to_End_represents Matrix.isRepresentation.toEnd_representsₓ'. -/
 theorem Matrix.isRepresentation.toEnd_represents (A : Matrix.isRepresentation R b) :
     (A : Matrix ι ι R).Represents b (Matrix.isRepresentation.toEnd R b hb A) :=
   A.2.choose_spec
 #align matrix.is_representation.to_End_represents Matrix.isRepresentation.toEnd_represents
 
-/- warning: matrix.is_representation.eq_to_End_of_represents -> Matrix.isRepresentation.eq_toEnd_of_represents is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_toEnd_of_representsₓ'. -/
 theorem Matrix.isRepresentation.eq_toEnd_of_represents (A : Matrix.isRepresentation R b)
     {f : Module.End R M} (h : (A : Matrix ι ι R).Represents b f) :
     Matrix.isRepresentation.toEnd R b hb A = f :=
   A.2.choose_spec.Eq hb h
 #align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_toEnd_of_represents
 
-/- warning: matrix.is_representation.to_End_exists_mem_ideal -> Matrix.isRepresentation.toEnd_exists_mem_ideal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.toEnd_exists_mem_idealₓ'. -/
 theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I : Ideal R)
     (hI : f.range ≤ I • ⊤) : ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I :=
   by
@@ -294,9 +222,6 @@ theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I :
       fun i j => (bM' (b j) i).Prop⟩
 #align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.toEnd_exists_mem_ideal
 
-/- warning: matrix.is_representation.to_End_surjective -> Matrix.isRepresentation.toEnd_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.is_representation.to_End_surjective Matrix.isRepresentation.toEnd_surjectiveₓ'. -/
 theorem Matrix.isRepresentation.toEnd_surjective :
     Function.Surjective (Matrix.isRepresentation.toEnd R b hb) :=
   by
@@ -308,9 +233,6 @@ theorem Matrix.isRepresentation.toEnd_surjective :
 
 end
 
-/- warning: linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul -> LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smulₓ'. -/
 /-- The **Cayley-Hamilton Theorem** for f.g. modules over arbitrary rings states that for each
 `R`-endomorphism `φ` of an `R`-module `M` such that `φ(M) ≤ I • M` for some ideal `I`, there
 exists some `n` and some `aᵢ ∈ Iⁱ` such that `φⁿ + a₁ φⁿ⁻¹ + ⋯ + aₙ = 0`.

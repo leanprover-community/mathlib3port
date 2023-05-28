@@ -38,12 +38,6 @@ instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWit
 #align with_top.linear_ordered_add_comm_group_with_top WithTop.linearOrderedAddCommGroupWithTop
 -/
 
-/- warning: with_top.coe_neg -> WithTop.coe_neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] (a : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))) a)) (Neg.neg.{u1} (WithTop.{u1} α) (SubNegMonoid.toHasNeg.{u1} (WithTop.{u1} α) (LinearOrderedAddCommGroupWithTop.toSubNegMonoid.{u1} (WithTop.{u1} α) (WithTop.linearOrderedAddCommGroupWithTop.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] (a : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))) a)) (Neg.neg.{u1} (WithTop.{u1} α) (LinearOrderedAddCommGroupWithTop.toNeg.{u1} (WithTop.{u1} α) (WithTop.linearOrderedAddCommGroupWithTop.{u1} α _inst_1)) (WithTop.some.{u1} α a))
-Case conversion may be inaccurate. Consider using '#align with_top.coe_neg WithTop.coe_negₓ'. -/
 @[simp, norm_cast]
 theorem WithTop.coe_neg (a : α) : ((-a : α) : WithTop α) = -a :=
   rfl

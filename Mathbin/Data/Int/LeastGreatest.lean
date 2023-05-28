@@ -61,12 +61,6 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
 #align int.least_of_bdd Int.leastOfBdd
 -/
 
-/- warning: int.exists_least_of_bdd -> Int.exists_least_of_bdd is a dubious translation:
-lean 3 declaration is
-  forall {P : Int -> Prop}, (Exists.{1} Int (fun (b : Int) => forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe b z))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (lb : Int) => And (P lb) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe lb z))))
-but is expected to have type
-  forall {P : Int -> Prop} [Hbdd : DecidablePred.{1} Int P], (Exists.{1} Int (fun (z : Int) => forall (z_1 : Int), (P z_1) -> (LE.le.{0} Int Int.instLEInt z z_1))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (lb : Int) => And (P lb) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.instLEInt lb z))))
-Case conversion may be inaccurate. Consider using '#align int.exists_least_of_bdd Int.exists_least_of_bddₓ'. -/
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
 then this set has the least element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/
@@ -104,12 +98,6 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
 #align int.greatest_of_bdd Int.greatestOfBdd
 -/
 
-/- warning: int.exists_greatest_of_bdd -> Int.exists_greatest_of_bdd is a dubious translation:
-lean 3 declaration is
-  forall {P : Int -> Prop}, (Exists.{1} Int (fun (b : Int) => forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe z b))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (ub : Int) => And (P ub) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.hasLe z ub))))
-but is expected to have type
-  forall {P : Int -> Prop} [Hbdd : DecidablePred.{1} Int P], (Exists.{1} Int (fun (z : Int) => forall (z_1 : Int), (P z_1) -> (LE.le.{0} Int Int.instLEInt z_1 z))) -> (Exists.{1} Int (fun (z : Int) => P z)) -> (Exists.{1} Int (fun (ub : Int) => And (P ub) (forall (z : Int), (P z) -> (LE.le.{0} Int Int.instLEInt z ub))))
-Case conversion may be inaccurate. Consider using '#align int.exists_greatest_of_bdd Int.exists_greatest_of_bddₓ'. -/
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,
 then this set has the greatest element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/

@@ -57,12 +57,6 @@ theorem Functor.map_comp_map (f : α → β) (g : β → γ) :
 #align functor.map_comp_map Functor.map_comp_map
 -/
 
-/- warning: functor.ext -> Functor.ext is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1} -> Type.{u2}} {F1 : Functor.{u1, u2} F} {F2 : Functor.{u1, u2} F} [_inst_3 : LawfulFunctor.{u1, u2} F F1] [_inst_4 : LawfulFunctor.{u1, u2} F F2], (forall (α : Type.{u1}) (β : Type.{u1}) (f : α -> β) (x : F α), Eq.{succ u2} (F β) (Functor.map.{u1, u2} F F1 α β f x) (Functor.map.{u1, u2} F F2 α β f x)) -> (Eq.{succ (max (succ u1) u2)} (Functor.{u1, u2} F) F1 F2)
-but is expected to have type
-  forall {F : Type.{u2} -> Type.{u1}} {F1 : Functor.{u2, u1} F} {F2 : Functor.{u2, u1} F} [_inst_3 : LawfulFunctor.{u2, u1} F F1] [_inst_4 : LawfulFunctor.{u2, u1} F F2], (forall (α : Type.{u2}) (β : Type.{u2}) (f : α -> β) (x : F α), Eq.{succ u1} (F β) (Functor.map.{u2, u1} F F1 α β f x) (Functor.map.{u2, u1} F F2 α β f x)) -> (Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} F) F1 F2)
-Case conversion may be inaccurate. Consider using '#align functor.ext Functor.extₓ'. -/
 theorem Functor.ext {F} :
     ∀ {F1 : Functor F} {F2 : Functor F} [@LawfulFunctor F F1] [@LawfulFunctor F F2]
       (H : ∀ (α β) (f : α → β) (x : F α), @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x),
@@ -124,12 +118,6 @@ def Const.run {α β} (x : Const α β) : α :=
 
 namespace Const
 
-/- warning: functor.const.ext -> Functor.Const.ext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {x : Functor.Const.{u1, u2} α β} {y : Functor.Const.{u1, u2} α β}, (Eq.{succ u1} α (Functor.Const.run.{u1, u2} α β x) (Functor.Const.run.{u1, u2} α β y)) -> (Eq.{succ u1} (Functor.Const.{u1, u2} α β) x y)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {x : Functor.Const.{u2, u1} α β} {y : Functor.Const.{u2, u1} α β}, (Eq.{succ u2} α (Functor.Const.run.{u2, u1} α β x) (Functor.Const.run.{u2, u1} α β y)) -> (Eq.{succ u2} (Functor.Const.{u2, u1} α β) x y)
-Case conversion may be inaccurate. Consider using '#align functor.const.ext Functor.Const.extₓ'. -/
 protected theorem ext {α β} {x y : Const α β} (h : x.run = y.run) : x = y :=
   h
 #align functor.const.ext Functor.Const.ext
@@ -278,22 +266,10 @@ instance : LawfulFunctor (Comp F G)
   id_map := @Comp.id_map F G _ _ _ _
   comp_map := @Comp.comp_map F G _ _ _ _
 
-/- warning: functor.comp.functor_comp_id -> Functor.Comp.functor_comp_id is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1} -> Type.{u2}} [AF : Functor.{u1, u2} F] [_inst_5 : LawfulFunctor.{u1, u2} F AF], Eq.{succ (max (succ u1) u2)} (Functor.{u1, u2} (Functor.Comp.{u1, u1, u2} F (id.{succ (succ u1)} Type.{u1}))) (Functor.Comp.functor.{u1, u1, u2} F (id.{succ (succ u1)} Type.{u1}) AF (Applicative.toFunctor.{u1, u1} (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}))) AF
-but is expected to have type
-  forall {F : Type.{u2} -> Type.{u1}} [AF : Functor.{u2, u1} F] [_inst_5 : LawfulFunctor.{u2, u1} F AF], Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} (Functor.Comp.{u2, u2, u1} F Id.{u2})) (Functor.Comp.functor.{u2, u2, u1} F Id.{u2} AF (Applicative.toFunctor.{u2, u2} Id.{u2} (Monad.toApplicative.{u2, u2} Id.{u2} Id.instMonadId.{u2}))) AF
-Case conversion may be inaccurate. Consider using '#align functor.comp.functor_comp_id Functor.Comp.functor_comp_idₓ'. -/
 theorem functor_comp_id {F} [AF : Functor F] [LawfulFunctor F] : @Comp.functor F id _ _ = AF :=
   @Functor.ext F _ AF (@Comp.lawfulFunctor F id _ _ _ _) _ fun α β f x => rfl
 #align functor.comp.functor_comp_id Functor.Comp.functor_comp_id
 
-/- warning: functor.comp.functor_id_comp -> Functor.Comp.functor_id_comp is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1} -> Type.{u2}} [AF : Functor.{u1, u2} F] [_inst_5 : LawfulFunctor.{u1, u2} F AF], Eq.{succ (max (succ u1) u2)} (Functor.{u1, u2} (Functor.Comp.{u2, u1, u2} (id.{succ (succ u2)} Type.{u2}) F)) (Functor.Comp.functor.{u2, u1, u2} (id.{succ (succ u2)} Type.{u2}) F (Applicative.toFunctor.{u2, u2} (id.{succ (succ u2)} Type.{u2}) (Monad.toApplicative.{u2, u2} (id.{succ (succ u2)} Type.{u2}) id.monad.{u2})) AF) AF
-but is expected to have type
-  forall {F : Type.{u2} -> Type.{u1}} [AF : Functor.{u2, u1} F] [_inst_5 : LawfulFunctor.{u2, u1} F AF], Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} (Functor.Comp.{u1, u2, u1} Id.{u1} F)) (Functor.Comp.functor.{u1, u2, u1} Id.{u1} F (Applicative.toFunctor.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) AF) AF
-Case conversion may be inaccurate. Consider using '#align functor.comp.functor_id_comp Functor.Comp.functor_id_compₓ'. -/
 theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] : @Comp.functor id F _ _ = AF :=
   @Functor.ext F _ AF (@Comp.lawfulFunctor id F _ _ _ _) _ fun α β f x => rfl
 #align functor.comp.functor_id_comp Functor.Comp.functor_id_comp
@@ -328,12 +304,6 @@ protected theorem run_pure {α : Type v} : ∀ x : α, (pure x : Comp F G α).ru
 #align functor.comp.run_pure Functor.Comp.run_pure
 -/
 
-/- warning: functor.comp.run_seq -> Functor.Comp.run_seq is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Applicative.{u1, u3} F] [_inst_2 : Applicative.{u2, u1} G] {α : Type.{u2}} {β : Type.{u2}} (f : Functor.Comp.{u1, u2, u3} F G (α -> β)) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (F (G β)) (Functor.Comp.run.{u1, u2, u3} F G β (Seq.seq.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.hasSeq.{u1, u2, u3} F G _inst_1 _inst_2) α β f x)) (Seq.seq.{u1, u3} F (Applicative.toHasSeq.{u1, u3} F _inst_1) (G α) (G β) (Functor.map.{u1, u3} F (Applicative.toFunctor.{u1, u3} F _inst_1) (G (α -> β)) ((G α) -> (G β)) (Seq.seq.{u2, u1} G (Applicative.toHasSeq.{u2, u1} G _inst_2) α β) (Functor.Comp.run.{u1, u2, u3} F G (α -> β) f)) (Functor.Comp.run.{u1, u2, u3} F G α x))
-but is expected to have type
-  forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Applicative.{u1, u3} F] [_inst_2 : Applicative.{u2, u1} G] {α : Type.{u2}} {β : Type.{u2}} (f : Functor.Comp.{u1, u2, u3} F G (α -> β)) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (F (G β)) (Functor.Comp.run.{u1, u2, u3} F G β (Seq.seq.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.instSeqComp.{u1, u2, u3} F G _inst_1 _inst_2) α β f (fun (x._@.Mathlib.Control.Functor._hyg.1843 : Unit) => x))) (Seq.seq.{u1, u3} F (Applicative.toSeq.{u1, u3} F _inst_1) (G α) (G β) (Functor.map.{u1, u3} F (Applicative.toFunctor.{u1, u3} F _inst_1) (G (α -> β)) ((G α) -> (G β)) (fun (x._@.Mathlib.Control.Functor._hyg.1854 : G (α -> β)) (x._@.Mathlib.Control.Functor._hyg.1856 : G α) => Seq.seq.{u2, u1} G (Applicative.toSeq.{u2, u1} G _inst_2) α β x._@.Mathlib.Control.Functor._hyg.1854 (fun (x._@.Mathlib.Control.Functor._hyg.1869 : Unit) => x._@.Mathlib.Control.Functor._hyg.1856)) (Functor.Comp.run.{u1, u2, u3} F G (α -> β) f)) (fun (x._@.Mathlib.Control.Functor._hyg.1877 : Unit) => Functor.Comp.run.{u1, u2, u3} F G α x))
-Case conversion may be inaccurate. Consider using '#align functor.comp.run_seq Functor.Comp.run_seqₓ'. -/
 @[simp]
 protected theorem run_seq {α β : Type v} (f : Comp F G (α → β)) (x : Comp F G α) :
     (f <*> x).run = (· <*> ·) <$> f.run <*> x.run :=

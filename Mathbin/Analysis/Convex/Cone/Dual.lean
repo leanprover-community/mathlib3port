@@ -56,25 +56,16 @@ def Set.innerDualCone (s : Set H) : ConvexCone ℝ H
 #align set.inner_dual_cone Set.innerDualCone
 -/
 
-/- warning: mem_inner_dual_cone -> mem_innerDualCone is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mem_inner_dual_cone mem_innerDualConeₓ'. -/
 @[simp]
 theorem mem_innerDualCone (y : H) (s : Set H) : y ∈ s.innerDualCone ↔ ∀ x ∈ s, 0 ≤ ⟪x, y⟫ :=
   Iff.rfl
 #align mem_inner_dual_cone mem_innerDualCone
 
-/- warning: inner_dual_cone_empty -> innerDualCone_empty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_dual_cone_empty innerDualCone_emptyₓ'. -/
 @[simp]
 theorem innerDualCone_empty : (∅ : Set H).innerDualCone = ⊤ :=
   eq_top_iff.mpr fun x hy y => False.elim
 #align inner_dual_cone_empty innerDualCone_empty
 
-/- warning: inner_dual_cone_zero -> innerDualCone_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_dual_cone_zero innerDualCone_zeroₓ'. -/
 /-- Dual cone of the convex cone {0} is the total space. -/
 @[simp]
 theorem innerDualCone_zero : (0 : Set H).innerDualCone = ⊤ :=
@@ -94,9 +85,6 @@ theorem innerDualCone_univ : (univ : Set H).innerDualCone = 0 :=
 #align inner_dual_cone_univ innerDualCone_univ
 -/
 
-/- warning: inner_dual_cone_le_inner_dual_cone -> innerDualCone_le_innerDualCone is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_dual_cone_le_inner_dual_cone innerDualCone_le_innerDualConeₓ'. -/
 theorem innerDualCone_le_innerDualCone (h : t ⊆ s) : s.innerDualCone ≤ t.innerDualCone :=
   fun y hy x hx => hy x (h hx)
 #align inner_dual_cone_le_inner_dual_cone innerDualCone_le_innerDualCone
@@ -106,9 +94,6 @@ theorem pointed_innerDualCone : s.innerDualCone.Pointed := fun x hx => by rw [in
 #align pointed_inner_dual_cone pointed_innerDualCone
 -/
 
-/- warning: inner_dual_cone_singleton -> innerDualCone_singleton is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_dual_cone_singleton innerDualCone_singletonₓ'. -/
 /-- The inner dual cone of a singleton is given by the preimage of the positive cone under the
 linear map `λ y, ⟪x, y⟫`. -/
 theorem innerDualCone_singleton (x : H) :
@@ -116,18 +101,12 @@ theorem innerDualCone_singleton (x : H) :
   ConvexCone.ext fun i => forall_eq
 #align inner_dual_cone_singleton innerDualCone_singleton
 
-/- warning: inner_dual_cone_union -> innerDualCone_union is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_dual_cone_union innerDualCone_unionₓ'. -/
 theorem innerDualCone_union (s t : Set H) :
     (s ∪ t).innerDualCone = s.innerDualCone ⊓ t.innerDualCone :=
   le_antisymm (le_inf (fun x hx y hy => hx _ <| Or.inl hy) fun x hx y hy => hx _ <| Or.inr hy)
     fun x hx y => Or.ndrec (hx.1 _) (hx.2 _)
 #align inner_dual_cone_union innerDualCone_union
 
-/- warning: inner_dual_cone_insert -> innerDualCone_insert is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_dual_cone_insert innerDualCone_insertₓ'. -/
 theorem innerDualCone_insert (x : H) (s : Set H) :
     (insert x s).innerDualCone = Set.innerDualCone {x} ⊓ s.innerDualCone := by
   rw [insert_eq, innerDualCone_union]
@@ -204,9 +183,6 @@ section CompleteSpace
 
 variable [CompleteSpace H]
 
-/- warning: convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem -> ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmemₓ'. -/
 /-- This is a stronger version of the Hahn-Banach separation theorem for closed convex cones. This
 is also the geometric interpretation of Farkas' lemma. -/
 theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : ConvexCone ℝ H)

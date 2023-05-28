@@ -171,33 +171,15 @@ equivalent as a ZFA list to this ZFA list. -/
 instance {b} : Membership (Lists α) (Lists' α b) :=
   ⟨fun a l => ∃ a' ∈ l.toList, a ~ a'⟩
 
-/- warning: lists'.mem_def -> Lists'.mem_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {b : Bool} {a : Lists.{u1} α} {l : Lists'.{u1} α b}, Iff (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α b) (Lists'.hasMem.{u1} α b) a l) (Exists.{succ u1} (Lists.{u1} α) (fun (a' : Lists.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.hasMem.{u1} (Lists.{u1} α)) a' (Lists'.toList.{u1} α b l)) (fun (H : Membership.Mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.hasMem.{u1} (Lists.{u1} α)) a' (Lists'.toList.{u1} α b l)) => Lists.Equiv.{u1} α a a')))
-but is expected to have type
-  forall {α : Type.{u1}} {b : Bool} {a : Lists.{u1} α} {l : Lists'.{u1} α b}, Iff (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α b) (Lists'.instMembershipListsLists'.{u1} α b) a l) (Exists.{succ u1} (Lists.{u1} α) (fun (a' : Lists.{u1} α) => And (Membership.mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.instMembershipList.{u1} (Lists.{u1} α)) a' (Lists'.toList.{u1} α b l)) (Lists.Equiv.{u1} α a a')))
-Case conversion may be inaccurate. Consider using '#align lists'.mem_def Lists'.mem_defₓ'. -/
 theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a' :=
   Iff.rfl
 #align lists'.mem_def Lists'.mem_def
 
-/- warning: lists'.mem_cons -> Lists'.mem_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {y : Lists.{u1} α} {l : Lists'.{u1} α Bool.true}, Iff (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a (Lists'.cons.{u1} α y l)) (Or (Lists.Equiv.{u1} α a y) (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l))
-but is expected to have type
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {y : Lists.{u1} α} {l : Lists'.{u1} α Bool.true}, Iff (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a (Lists'.cons.{u1} α y l)) (Or (Lists.Equiv.{u1} α a y) (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l))
-Case conversion may be inaccurate. Consider using '#align lists'.mem_cons Lists'.mem_consₓ'. -/
 @[simp]
 theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
   simp [mem_def, or_and_right, exists_or]
 #align lists'.mem_cons Lists'.mem_cons
 
-/- warning: lists'.cons_subset -> Lists'.cons_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, Iff (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.hasSubset.{u1} α) (Lists'.cons.{u1} α a l₁) l₂) (And (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l₂) (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.hasSubset.{u1} α) l₁ l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, Iff (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.instHasSubsetLists'True.{u1} α) (Lists'.cons.{u1} α a l₁) l₂) (And (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l₂) (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.instHasSubsetLists'True.{u1} α) l₁ l₂))
-Case conversion may be inaccurate. Consider using '#align lists'.cons_subset Lists'.cons_subsetₓ'. -/
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ :=
   by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
@@ -231,12 +213,6 @@ theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil :=
 #align lists'.subset_nil Lists'.subset_nil
 -/
 
-/- warning: lists'.mem_of_subset' -> Lists'.mem_of_subset' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.hasSubset.{u1} α) l₁ l₂) -> (Membership.Mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.hasMem.{u1} (Lists.{u1} α)) a (Lists'.toList.{u1} α Bool.true l₁)) -> (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.instHasSubsetLists'True.{u1} α) l₁ l₂) -> (Membership.mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.instMembershipList.{u1} (Lists.{u1} α)) a (Lists'.toList.{u1} α Bool.true l₁)) -> (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l₂)
-Case conversion may be inaccurate. Consider using '#align lists'.mem_of_subset' Lists'.mem_of_subset'ₓ'. -/
 theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ :=
   by
   induction' s with _ a a' l l' e m s IH; · cases h
@@ -244,12 +220,6 @@ theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h :
   exacts[⟨_, m, e⟩, IH h]
 #align lists'.mem_of_subset' Lists'.mem_of_subset'
 
-/- warning: lists'.subset_def -> Lists'.subset_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, Iff (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.hasSubset.{u1} α) l₁ l₂) (forall (a : Lists.{u1} α), (Membership.Mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.hasMem.{u1} (Lists.{u1} α)) a (Lists'.toList.{u1} α Bool.true l₁)) -> (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, Iff (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.instHasSubsetLists'True.{u1} α) l₁ l₂) (forall (a : Lists.{u1} α), (Membership.mem.{u1, u1} (Lists.{u1} α) (List.{u1} (Lists.{u1} α)) (List.instMembershipList.{u1} (Lists.{u1} α)) a (Lists'.toList.{u1} α Bool.true l₁)) -> (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l₂))
-Case conversion may be inaccurate. Consider using '#align lists'.subset_def Lists'.subset_defₓ'. -/
 theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H, fun H =>
     by
@@ -434,24 +404,12 @@ def Equiv.decidableMeas :
 
 open WellFoundedTactics
 
-/- warning: lists.sizeof_pos -> Lists.sizeof_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {b : Bool} (l : Lists'.{u1} α b), LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (SizeOf.sizeOf.{succ u1} (Lists'.{u1} α b) (Lists'.hasSizeofInst.{u1} α (defaultHasSizeof.{succ u1} α) b) l)
-but is expected to have type
-  forall {α : Type.{u1}} {b : Bool} (l : Lists'.{u1} α b), LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (SizeOf.sizeOf.{succ u1} (Lists'.{u1} α b) (Lists'._sizeOf_inst.{u1} α b (instSizeOf.{succ u1} α)) l)
-Case conversion may be inaccurate. Consider using '#align lists.sizeof_pos Lists.sizeof_posₓ'. -/
 theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
   cases l <;>
     run_tac
       andthen unfold_sizeof trivial_nat_lt
 #align lists.sizeof_pos Lists.sizeof_pos
 
-/- warning: lists.lt_sizeof_cons' -> Lists.lt_sizeof_cons' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {b : Bool} (a : Lists'.{u1} α b) (l : Lists'.{u1} α Bool.true), LT.lt.{0} Nat Nat.hasLt (SizeOf.sizeOf.{succ u1} (Sigma.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b)) (Sigma.hasSizeof.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b) Bool.hasSizeof (fun (a : Bool) => Lists'.hasSizeofInst.{u1} α (defaultHasSizeof.{succ u1} α) a)) (Sigma.mk.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b) b a)) (SizeOf.sizeOf.{succ u1} (Lists'.{u1} α Bool.true) (Lists'.hasSizeofInst.{u1} α (defaultHasSizeof.{succ u1} α) Bool.true) (Lists'.cons'.{u1} α b a l))
-but is expected to have type
-  forall {α : Type.{u1}} {b : Bool} (a : Lists'.{u1} α b) (l : Lists'.{u1} α Bool.true), LT.lt.{0} Nat instLTNat (SizeOf.sizeOf.{succ u1} (Sigma.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b)) (Sigma._sizeOf_inst.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b) Bool._sizeOf_inst (fun (a : Bool) => Lists'._sizeOf_inst.{u1} α a (instSizeOf.{succ u1} α))) (Sigma.mk.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b) b a)) (SizeOf.sizeOf.{succ u1} (Lists'.{u1} α Bool.true) (Lists'._sizeOf_inst.{u1} α Bool.true (instSizeOf.{succ u1} α)) (Lists'.cons'.{u1} α b a l))
-Case conversion may be inaccurate. Consider using '#align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
     SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
@@ -463,12 +421,6 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- warning: lists.mem.decidable -> Lists.mem.decidable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : Lists.{u1} α) (l : Lists'.{u1} α Bool.true), Decidable (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : Lists.{u1} α) (l : Lists'.{u1} α Bool.true), Decidable (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l)
-Case conversion may be inaccurate. Consider using '#align lists.mem.decidable Lists.mem.decidableₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 #print Lists.Equiv.decidable /-
 mutual
@@ -550,23 +502,11 @@ end Lists
 
 namespace Lists'
 
-/- warning: lists'.mem_equiv_left -> Lists'.mem_equiv_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Lists'.{u1} α Bool.true} {a : Lists.{u1} α} {a' : Lists.{u1} α}, (Lists.Equiv.{u1} α a a') -> (Iff (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l) (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a' l))
-but is expected to have type
-  forall {α : Type.{u1}} {l : Lists'.{u1} α Bool.true} {a : Lists.{u1} α} {a' : Lists.{u1} α}, (Lists.Equiv.{u1} α a a') -> (Iff (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l) (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a' l))
-Case conversion may be inaccurate. Consider using '#align lists'.mem_equiv_left Lists'.mem_equiv_leftₓ'. -/
 theorem mem_equiv_left {l : Lists' α true} : ∀ {a a'}, a ~ a' → (a ∈ l ↔ a' ∈ l) :=
   suffices ∀ {a a'}, a ~ a' → a ∈ l → a' ∈ l from fun a a' e => ⟨this e, this e.symm⟩
   fun a₁ a₂ e₁ ⟨a₃, m₃, e₂⟩ => ⟨_, m₃, e₁.symm.trans e₂⟩
 #align lists'.mem_equiv_left Lists'.mem_equiv_left
 
-/- warning: lists'.mem_of_subset -> Lists'.mem_of_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.hasSubset.{u1} α) l₁ l₂) -> (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l₁) -> (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {a : Lists.{u1} α} {l₁ : Lists'.{u1} α Bool.true} {l₂ : Lists'.{u1} α Bool.true}, (HasSubset.Subset.{u1} (Lists'.{u1} α Bool.true) (Lists'.instHasSubsetLists'True.{u1} α) l₁ l₂) -> (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l₁) -> (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l₂)
-Case conversion may be inaccurate. Consider using '#align lists'.mem_of_subset Lists'.mem_of_subsetₓ'. -/
 theorem mem_of_subset {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) : a ∈ l₁ → a ∈ l₂
   | ⟨a', m, e⟩ => (mem_equiv_left e).2 (mem_of_subset' s m)
 #align lists'.mem_of_subset Lists'.mem_of_subset

@@ -280,9 +280,6 @@ theorem of_hasPullback (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] :
 #align category_theory.is_pullback.of_has_pullback CategoryTheory.IsPullback.of_hasPullback
 -/
 
-/- warning: category_theory.is_pullback.of_is_product -> CategoryTheory.IsPullback.of_is_product is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.of_is_product CategoryTheory.IsPullback.of_is_productₓ'. -/
 /-- If `c` is a limiting binary product cone, and we have a terminal object,
 then we have `is_pullback c.fst c.snd 0 0`
 (where each `0` is the unique morphism to the terminal object). -/
@@ -438,9 +435,6 @@ theorem of_hasPushout (f : Z ⟶ X) (g : Z ⟶ Y) [HasPushout f g] :
 #align category_theory.is_pushout.of_has_pushout CategoryTheory.IsPushout.of_hasPushout
 -/
 
-/- warning: category_theory.is_pushout.of_is_coproduct -> CategoryTheory.IsPushout.of_is_coproduct is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.of_is_coproduct CategoryTheory.IsPushout.of_is_coproductₓ'. -/
 /-- If `c` is a colimiting binary coproduct cocone, and we have an initial object,
 then we have `is_pushout 0 0 c.inl c.inr`
 (where each `0` is the unique morphism from the initial object). -/
@@ -1184,9 +1178,6 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
-/- warning: category_theory.functor.map_is_pullback -> CategoryTheory.Functor.map_isPullback is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_is_pullback CategoryTheory.Functor.map_isPullbackₓ'. -/
 theorem Functor.map_isPullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i) :
     IsPullback (F.map f) (F.map g) (F.map h) (F.map i) :=
   by
@@ -1201,9 +1192,6 @@ theorem Functor.map_isPullback [PreservesLimit (cospan h i) F] (s : IsPullback f
   · dsimp; simp
 #align category_theory.functor.map_is_pullback CategoryTheory.Functor.map_isPullback
 
-/- warning: category_theory.functor.map_is_pushout -> CategoryTheory.Functor.map_isPushout is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_is_pushout CategoryTheory.Functor.map_isPushoutₓ'. -/
 theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) :=
   by
@@ -1216,21 +1204,12 @@ theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g
   · dsimp; simp
 #align category_theory.functor.map_is_pushout CategoryTheory.Functor.map_isPushout
 
-/- warning: category_theory.is_pullback.map -> CategoryTheory.IsPullback.map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.map CategoryTheory.IsPullback.mapₓ'. -/
 alias functor.map_is_pullback ← is_pullback.map
 #align category_theory.is_pullback.map CategoryTheory.IsPullback.map
 
-/- warning: category_theory.is_pushout.map -> CategoryTheory.IsPushout.map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.map CategoryTheory.IsPushout.mapₓ'. -/
 alias functor.map_is_pushout ← is_pushout.map
 #align category_theory.is_pushout.map CategoryTheory.IsPushout.map
 
-/- warning: category_theory.is_pullback.of_map -> CategoryTheory.IsPullback.of_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.of_map CategoryTheory.IsPullback.of_mapₓ'. -/
 theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
   by
@@ -1242,26 +1221,17 @@ theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
     (category.comp_id _).trans (category.id_comp _).symm]
 #align category_theory.is_pullback.of_map CategoryTheory.IsPullback.of_map
 
-/- warning: category_theory.is_pullback.of_map_of_faithful -> CategoryTheory.IsPullback.of_map_of_faithful is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.of_map_of_faithful CategoryTheory.IsPullback.of_map_of_faithfulₓ'. -/
 theorem IsPullback.of_map_of_faithful [ReflectsLimit (cospan h i) F] [Faithful F]
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
   H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
 #align category_theory.is_pullback.of_map_of_faithful CategoryTheory.IsPullback.of_map_of_faithful
 
-/- warning: category_theory.is_pullback.map_iff -> CategoryTheory.IsPullback.map_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.map_iff CategoryTheory.IsPullback.map_iffₓ'. -/
 theorem IsPullback.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesLimit (cospan h i) F]
     [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i) :
     IsPullback (F.map f) (F.map g) (F.map h) (F.map i) ↔ IsPullback f g h i :=
   ⟨fun h => h.of_map F e, fun h => h.map F⟩
 #align category_theory.is_pullback.map_iff CategoryTheory.IsPullback.map_iff
 
-/- warning: category_theory.is_pushout.of_map -> CategoryTheory.IsPushout.of_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.of_map CategoryTheory.IsPushout.of_mapₓ'. -/
 theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
     (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
   by
@@ -1273,17 +1243,11 @@ theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
     (category.comp_id _).trans (category.id_comp _)]
 #align category_theory.is_pushout.of_map CategoryTheory.IsPushout.of_map
 
-/- warning: category_theory.is_pushout.of_map_of_faithful -> CategoryTheory.IsPushout.of_map_of_faithful is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.of_map_of_faithful CategoryTheory.IsPushout.of_map_of_faithfulₓ'. -/
 theorem IsPushout.of_map_of_faithful [ReflectsColimit (span f g) F] [Faithful F]
     (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
   H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
 #align category_theory.is_pushout.of_map_of_faithful CategoryTheory.IsPushout.of_map_of_faithful
 
-/- warning: category_theory.is_pushout.map_iff -> CategoryTheory.IsPushout.map_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.map_iff CategoryTheory.IsPushout.map_iffₓ'. -/
 theorem IsPushout.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesColimit (span f g) F]
     [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) ↔ IsPushout f g h i :=

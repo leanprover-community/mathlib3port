@@ -126,12 +126,6 @@ def indiscretePartition (n : ℕ) : Partition n :=
 instance {n : ℕ} : Inhabited (Partition n) :=
   ⟨indiscretePartition n⟩
 
-/- warning: nat.partition.count_of_sums_of_ne_zero -> Nat.Partition.count_ofSums_of_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n) {i : Nat}, (Ne.{1} Nat i (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) i (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) i l))
-but is expected to have type
-  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n) {i : Nat}, (Ne.{1} Nat i (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) i (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) i l))
-Case conversion may be inaccurate. Consider using '#align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_ofSums_of_ne_zeroₓ'. -/
 /-- The number of times a positive integer `i` appears in the partition `of_sums n l hl` is the same
 as the number of times it appears in the multiset `l`.
 (For `i = 0`, `partition.non_zero` combined with `multiset.count_eq_zero_of_not_mem` gives that
@@ -142,12 +136,6 @@ theorem count_ofSums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {i
   count_filter_of_pos hi
 #align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_ofSums_of_ne_zero
 
-/- warning: nat.partition.count_of_sums_zero -> Nat.Partition.count_ofSums_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n), Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
-but is expected to have type
-  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n), Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
-Case conversion may be inaccurate. Consider using '#align nat.partition.count_of_sums_zero Nat.Partition.count_ofSums_zeroₓ'. -/
 theorem count_ofSums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) :
     (ofSums n l hl).parts.count 0 = 0 :=
   count_filter_of_neg fun h => h rfl

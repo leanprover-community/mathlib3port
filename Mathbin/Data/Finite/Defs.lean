@@ -67,22 +67,10 @@ class inductive Finite (α : Sort _) : Prop
 #align finite Finite
 -/
 
-/- warning: finite_iff_exists_equiv_fin -> finite_iff_exists_equiv_fin is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}}, Iff (Finite.{u1} α) (Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 (max u1 1) (imax 1 u1)} (Equiv.{u1, 1} α (Fin n))))
-but is expected to have type
-  forall {α : Sort.{u1}}, Iff (Finite.{u1} α) (Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 u1} (Equiv.{u1, 1} α (Fin n))))
-Case conversion may be inaccurate. Consider using '#align finite_iff_exists_equiv_fin finite_iff_exists_equiv_finₓ'. -/
 theorem finite_iff_exists_equiv_fin {α : Sort _} : Finite α ↔ ∃ n, Nonempty (α ≃ Fin n) :=
   ⟨fun ⟨e⟩ => ⟨_, ⟨e⟩⟩, fun ⟨n, ⟨e⟩⟩ => ⟨e⟩⟩
 #align finite_iff_exists_equiv_fin finite_iff_exists_equiv_fin
 
-/- warning: finite.exists_equiv_fin -> Finite.exists_equiv_fin is a dubious translation:
-lean 3 declaration is
-  forall (α : Sort.{u1}) [h : Finite.{u1} α], Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 (max u1 1) (imax 1 u1)} (Equiv.{u1, 1} α (Fin n)))
-but is expected to have type
-  forall (α : Sort.{u1}) [h : Finite.{u1} α], Exists.{1} Nat (fun (n : Nat) => Nonempty.{max 1 u1} (Equiv.{u1, 1} α (Fin n)))
-Case conversion may be inaccurate. Consider using '#align finite.exists_equiv_fin Finite.exists_equiv_finₓ'. -/
 theorem Finite.exists_equiv_fin (α : Sort _) [h : Finite α] : ∃ n : ℕ, Nonempty (α ≃ Fin n) :=
   finite_iff_exists_equiv_fin.mp h
 #align finite.exists_equiv_fin Finite.exists_equiv_fin
@@ -93,32 +81,14 @@ theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite �
 #align finite.of_equiv Finite.of_equiv
 -/
 
-/- warning: equiv.finite_iff -> Equiv.finite_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, (Equiv.{u1, u2} α β) -> (Iff (Finite.{u1} α) (Finite.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, (Equiv.{u2, u1} α β) -> (Iff (Finite.{u2} α) (Finite.{u1} β))
-Case conversion may be inaccurate. Consider using '#align equiv.finite_iff Equiv.finite_iffₓ'. -/
 theorem Equiv.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
   ⟨fun _ => Finite.of_equiv _ f, fun _ => Finite.of_equiv _ f.symm⟩
 #align equiv.finite_iff Equiv.finite_iff
 
-/- warning: function.bijective.finite_iff -> Function.Bijective.finite_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α -> β}, (Function.Bijective.{u1, u2} α β f) -> (Iff (Finite.{u1} α) (Finite.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β}, (Function.Bijective.{u2, u1} α β f) -> (Iff (Finite.{u2} α) (Finite.{u1} β))
-Case conversion may be inaccurate. Consider using '#align function.bijective.finite_iff Function.Bijective.finite_iffₓ'. -/
 theorem Function.Bijective.finite_iff {f : α → β} (h : Bijective f) : Finite α ↔ Finite β :=
   (Equiv.ofBijective f h).finite_iff
 #align function.bijective.finite_iff Function.Bijective.finite_iff
 
-/- warning: finite.of_bijective -> Finite.ofBijective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α] {f : α -> β}, (Function.Bijective.{u1, u2} α β f) -> (Finite.{u2} β)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Finite.{u2} α] {f : α -> β}, (Function.Bijective.{u2, u1} α β f) -> (Finite.{u1} β)
-Case conversion may be inaccurate. Consider using '#align finite.of_bijective Finite.ofBijectiveₓ'. -/
 theorem Finite.ofBijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
   h.finite_iff.mp ‹_›
 #align finite.of_bijective Finite.ofBijective
@@ -151,12 +121,6 @@ theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
 #align not_infinite_iff_finite not_infinite_iff_finite
 -/
 
-/- warning: equiv.infinite_iff -> Equiv.infinite_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, (Equiv.{u1, u2} α β) -> (Iff (Infinite.{u1} α) (Infinite.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, (Equiv.{u2, u1} α β) -> (Iff (Infinite.{u2} α) (Infinite.{u1} β))
-Case conversion may be inaccurate. Consider using '#align equiv.infinite_iff Equiv.infinite_iffₓ'. -/
 theorem Equiv.infinite_iff (e : α ≃ β) : Infinite α ↔ Infinite β :=
   not_finite_iff_infinite.symm.trans <| e.finite_iff.Not.trans not_finite_iff_infinite
 #align equiv.infinite_iff Equiv.infinite_iff

@@ -202,12 +202,6 @@ def lift (d : D) : C :=
 #align category_theory.functor.final.lift CategoryTheory.Functor.Final.lift
 -/
 
-/- warning: category_theory.functor.final.hom_to_lift -> CategoryTheory.Functor.Final.homToLift is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u2, u3, u4} C _inst_1 D _inst_2 F] (d : D), Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) d (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F (CategoryTheory.Functor.Final.lift.{u1, u2, u3, u4} C _inst_1 D _inst_2 F _inst_3 d))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u2, u3, u4} C _inst_1 D _inst_2 F] (d : D), Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) d (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) (CategoryTheory.Functor.Final.lift.{u1, u2, u3, u4} C _inst_1 D _inst_2 F _inst_3 d))
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.hom_to_lift CategoryTheory.Functor.Final.homToLiftₓ'. -/
 /-- When `F : C ⥤ D` is cofinal, we denote by `hom_to_lift` an arbitrary choice of morphism
 `d ⟶ F.obj (lift F d)`.
 -/
@@ -215,9 +209,6 @@ def homToLift (d : D) : d ⟶ F.obj (lift F d) :=
   (Classical.arbitrary (StructuredArrow d F)).Hom
 #align category_theory.functor.final.hom_to_lift CategoryTheory.Functor.Final.homToLift
 
-/- warning: category_theory.functor.final.induction -> CategoryTheory.Functor.Final.induction is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.induction CategoryTheory.Functor.Final.inductionₓ'. -/
 /-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
 We want to perform some construction (usually just a proof) about
 the particular choices `lift F d` and `hom_to_lift F d`,
@@ -272,9 +263,6 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G
 #align category_theory.functor.final.extend_cocone CategoryTheory.Functor.Final.extendCocone
 -/
 
-/- warning: category_theory.functor.final.colimit_cocone_comp_aux -> CategoryTheory.Functor.Final.colimit_cocone_comp_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_auxₓ'. -/
 @[simp]
 theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
     G.map (homToLift F (F.obj j)) ≫ s.ι.app (lift F (F.obj j)) = s.ι.app j :=
@@ -289,12 +277,6 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
 
 variable (F G)
 
-/- warning: category_theory.functor.final.cocones_equiv -> CategoryTheory.Functor.Final.coconesEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] (G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4), CategoryTheory.Equivalence.{u3, u3, max u4 u6 u3, max u5 u6 u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cocone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G)
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] (G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4), CategoryTheory.Equivalence.{u3, u3, max (max u6 u4) u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cocone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.cocones_equiv CategoryTheory.Functor.Final.coconesEquivₓ'. -/
 /-- If `F` is cofinal,
 the category of cocones on `F ⋙ G` is equivalent to the category of cocones on `G`,
 for any `G : D ⥤ E`.
@@ -319,12 +301,6 @@ def isColimitWhiskerEquiv (t : Cocone G) : IsColimit (t.whisker F) ≃ IsColimit
 #align category_theory.functor.final.is_colimit_whisker_equiv CategoryTheory.Functor.Final.isColimitWhiskerEquiv
 -/
 
-/- warning: category_theory.functor.final.is_colimit_extend_cocone_equiv -> CategoryTheory.Functor.Final.isColimitExtendCoconeEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] {G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4} (t : CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)), Equiv.{max (succ u5) (succ u6) (succ u3), max (succ u4) (succ u6) (succ u3)} (CategoryTheory.Limits.IsColimit.{u2, u3, u5, u6} D _inst_2 E _inst_4 G (CategoryTheory.Functor.obj.{u3, u3, max u4 u6 u3, max u5 u6 u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cocone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Functor.Final.extendCocone.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 F _inst_3 E _inst_4 G) t)) (CategoryTheory.Limits.IsColimit.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G) t)
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] {G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4} (t : CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)), Equiv.{max (max (succ u6) (succ u5)) (succ u3), max (max (succ u6) (succ u4)) (succ u3)} (CategoryTheory.Limits.IsColimit.{u2, u3, u5, u6} D _inst_2 E _inst_4 G (Prefunctor.obj.{succ u3, succ u3, max (max u6 u4) u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.CategoryStruct.toQuiver.{u3, max (max u6 u4) u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Category.toCategoryStruct.{u3, max (max u6 u4) u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)))) (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.CategoryStruct.toQuiver.{u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Category.toCategoryStruct.{u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cocone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G))) (CategoryTheory.Functor.toPrefunctor.{u3, u3, max (max u6 u4) u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cocone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cocone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cocone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Functor.Final.extendCocone.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 F _inst_3 E _inst_4 G)) t)) (CategoryTheory.Limits.IsColimit.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G) t)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.is_colimit_extend_cocone_equiv CategoryTheory.Functor.Final.isColimitExtendCoconeEquivₓ'. -/
 /-- When `F` is cofinal, and `t : cocone (F ⋙ G)`,
 `extend_cocone.obj t` is a colimit coconne exactly when `t` is.
 -/
@@ -349,9 +325,6 @@ instance (priority := 100) comp_hasColimit [HasColimit G] : HasColimit (F ⋙ G)
 #align category_theory.functor.final.comp_has_colimit CategoryTheory.Functor.Final.comp_hasColimit
 -/
 
-/- warning: category_theory.functor.final.colimit_pre_is_iso_aux -> CategoryTheory.Functor.Final.colimit_pre_is_iso_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_auxₓ'. -/
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.pt :=
   by
@@ -434,9 +407,6 @@ namespace Final
 
 variable {C : Type v} [Category.{v} C] {D : Type v} [Category.{v} D] (F : C ⥤ D) [Final F]
 
-/- warning: category_theory.functor.final.colimit_comp_coyoneda_iso -> CategoryTheory.Functor.Final.colimitCompCoyonedaIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIsoₓ'. -/
 /-- If the universal morphism `colimit (F ⋙ coyoneda.obj (op d)) ⟶ colimit (coyoneda.obj (op d))`
 is an isomorphism (as it always is when `F` is cofinal),
 then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
@@ -447,9 +417,6 @@ def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)]
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ Coyoneda.colimitCoyonedaIso (op d)
 #align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
 
-/- warning: category_theory.functor.final.zigzag_of_eqv_gen_quot_rel -> CategoryTheory.Functor.Final.zigzag_of_eqvGen_quot_rel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqvGen_quot_relₓ'. -/
 theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
     Zigzag (StructuredArrow.mk f₁.2) (StructuredArrow.mk f₂.2) :=
@@ -470,12 +437,6 @@ theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ 
     exact ih₁; exact ih₂
 #align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqvGen_quot_rel
 
-/- warning: category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit -> CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_pUnit is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u1, u1} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u1, u1} D] (F : CategoryTheory.Functor.{u1, u1, u1, u1} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Final.{u1, u1, u1, u1} C _inst_1 D _inst_2 F], (forall (d : D), CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Limits.colimit.{u1, u1, u1, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u1, succ u1} C _inst_1 D _inst_2 Type.{u1} CategoryTheory.types.{u1} F (CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u1, u1} D _inst_2) (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.coyoneda.{u1, u1} D _inst_2) (Opposite.op.{succ u1} D d))) (CategoryTheory.Functor.Final.comp_hasColimit.{u1, u1, u1, u1, u1, succ u1} C _inst_1 D _inst_2 F _inst_3 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u1, u1} D _inst_2) (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.coyoneda.{u1, u1} D _inst_2) (Opposite.op.{succ u1} D d)) (CategoryTheory.coyoneda.Obj.CategoryTheory.Limits.hasColimit.{u1} D _inst_2 (Opposite.op.{succ u1} D d)))) PUnit.{succ u1}) -> (CategoryTheory.Functor.Final.{u1, u1, u1, u1} C _inst_1 D _inst_2 F)
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u1, u1} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u1, u1} D] (F : CategoryTheory.Functor.{u1, u1, u1, u1} C _inst_1 D _inst_2), (forall (d : D), CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Limits.colimit.{u1, u1, u1, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u1, succ u1} C _inst_1 D _inst_2 Type.{u1} CategoryTheory.types.{u1} F (Prefunctor.obj.{succ u1, succ u1, u1, succ u1} (Opposite.{succ u1} D) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (Opposite.{succ u1} D) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u1, u1} D _inst_2))) (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u1, u1} D _inst_2) (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.coyoneda.{u1, u1} D _inst_2)) (Opposite.op.{succ u1} D d))) (CategoryTheory.Limits.Types.hasColimit'.{u1} C _inst_1 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, u1, succ u1} C _inst_1 D _inst_2 Type.{u1} CategoryTheory.types.{u1} F (Prefunctor.obj.{succ u1, succ u1, u1, succ u1} (Opposite.{succ u1} D) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (Opposite.{succ u1} D) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u1, u1} D _inst_2))) (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u1, u1} D _inst_2) (CategoryTheory.Functor.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u1, succ u1} D _inst_2 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.coyoneda.{u1, u1} D _inst_2)) (Opposite.op.{succ u1} D d))))) PUnit.{succ u1}) -> (CategoryTheory.Functor.Final.{u1, u1, u1, u1} C _inst_1 D _inst_2 F)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_pUnitₓ'. -/
 /-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
 theorem cofinal_of_colimit_comp_coyoneda_iso_pUnit
@@ -519,12 +480,6 @@ def lift (d : D) : C :=
 #align category_theory.functor.initial.lift CategoryTheory.Functor.Initial.lift
 -/
 
-/- warning: category_theory.functor.initial.hom_to_lift -> CategoryTheory.Functor.Initial.homToLift is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Initial.{u1, u2, u3, u4} C _inst_1 D _inst_2 F] (d : D), Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F (CategoryTheory.Functor.Initial.lift.{u1, u2, u3, u4} C _inst_1 D _inst_2 F _inst_3 d)) d
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Initial.{u1, u2, u3, u4} C _inst_1 D _inst_2 F] (d : D), Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) (CategoryTheory.Functor.Initial.lift.{u1, u2, u3, u4} C _inst_1 D _inst_2 F _inst_3 d)) d
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.initial.hom_to_lift CategoryTheory.Functor.Initial.homToLiftₓ'. -/
 /-- When `F : C ⥤ D` is initial, we denote by `hom_to_lift` an arbitrary choice of morphism
 `F.obj (lift F d) ⟶ d`.
 -/
@@ -532,9 +487,6 @@ def homToLift (d : D) : F.obj (lift F d) ⟶ d :=
   (Classical.arbitrary (CostructuredArrow F d)).Hom
 #align category_theory.functor.initial.hom_to_lift CategoryTheory.Functor.Initial.homToLift
 
-/- warning: category_theory.functor.initial.induction -> CategoryTheory.Functor.Initial.induction is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.initial.induction CategoryTheory.Functor.Initial.inductionₓ'. -/
 /-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
 We want to perform some construction (usually just a proof) about
 the particular choices `lift F d` and `hom_to_lift F d`,
@@ -592,9 +544,6 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G
 #align category_theory.functor.initial.extend_cone CategoryTheory.Functor.Initial.extendCone
 -/
 
-/- warning: category_theory.functor.initial.limit_cone_comp_aux -> CategoryTheory.Functor.Initial.limit_cone_comp_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_auxₓ'. -/
 @[simp]
 theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
     s.π.app (lift F (F.obj j)) ≫ G.map (homToLift F (F.obj j)) = s.π.app j :=
@@ -609,12 +558,6 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
 
 variable (F G)
 
-/- warning: category_theory.functor.initial.cones_equiv -> CategoryTheory.Functor.Initial.conesEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Initial.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] (G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4), CategoryTheory.Equivalence.{u3, u3, max u4 u6 u3, max u5 u6 u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G)
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Initial.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] (G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4), CategoryTheory.Equivalence.{u3, u3, max (max u6 u4) u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.initial.cones_equiv CategoryTheory.Functor.Initial.conesEquivₓ'. -/
 /-- If `F` is initial,
 the category of cones on `F ⋙ G` is equivalent to the category of cones on `G`,
 for any `G : D ⥤ E`.
@@ -639,12 +582,6 @@ def isLimitWhiskerEquiv (t : Cone G) : IsLimit (t.whisker F) ≃ IsLimit t :=
 #align category_theory.functor.initial.is_limit_whisker_equiv CategoryTheory.Functor.Initial.isLimitWhiskerEquiv
 -/
 
-/- warning: category_theory.functor.initial.is_limit_extend_cone_equiv -> CategoryTheory.Functor.Initial.isLimitExtendConeEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Initial.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] {G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4} (t : CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)), Equiv.{max (succ u5) (succ u6) (succ u3), max (succ u4) (succ u6) (succ u3)} (CategoryTheory.Limits.IsLimit.{u2, u3, u5, u6} D _inst_2 E _inst_4 G (CategoryTheory.Functor.obj.{u3, u3, max u4 u6 u3, max u5 u6 u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Functor.Initial.extendCone.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 F _inst_3 E _inst_4 G) t)) (CategoryTheory.Limits.IsLimit.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G) t)
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.Functor.Initial.{u1, u2, u4, u5} C _inst_1 D _inst_2 F] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E] {G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_4} (t : CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)), Equiv.{max (max (succ u6) (succ u5)) (succ u3), max (max (succ u6) (succ u4)) (succ u3)} (CategoryTheory.Limits.IsLimit.{u2, u3, u5, u6} D _inst_2 E _inst_4 G (Prefunctor.obj.{succ u3, succ u3, max (max u6 u4) u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.CategoryStruct.toQuiver.{u3, max (max u6 u4) u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Category.toCategoryStruct.{u3, max (max u6 u4) u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)))) (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.CategoryStruct.toQuiver.{u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Category.toCategoryStruct.{u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G))) (CategoryTheory.Functor.toPrefunctor.{u3, u3, max (max u6 u4) u3, max (max u6 u5) u3} (CategoryTheory.Limits.Cone.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.category.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G)) (CategoryTheory.Limits.Cone.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Limits.Cone.category.{u2, u3, u5, u6} D _inst_2 E _inst_4 G) (CategoryTheory.Functor.Initial.extendCone.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 F _inst_3 E _inst_4 G)) t)) (CategoryTheory.Limits.IsLimit.{u1, u3, u4, u6} C _inst_1 E _inst_4 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_4 F G) t)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.initial.is_limit_extend_cone_equiv CategoryTheory.Functor.Initial.isLimitExtendConeEquivₓ'. -/
 /-- When `F` is initial, and `t : cone (F ⋙ G)`,
 `extend_cone.obj t` is a limit cone exactly when `t` is.
 -/
@@ -668,9 +605,6 @@ instance (priority := 100) comp_hasLimit [HasLimit G] : HasLimit (F ⋙ G) :=
 #align category_theory.functor.initial.comp_has_limit CategoryTheory.Functor.Initial.comp_hasLimit
 -/
 
-/- warning: category_theory.functor.initial.limit_pre_is_iso_aux -> CategoryTheory.Functor.Initial.limit_pre_is_iso_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_auxₓ'. -/
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.pt :=
   by

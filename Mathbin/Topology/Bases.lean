@@ -93,12 +93,6 @@ theorem IsTopologicalBasis.insert_empty {s : Set (Set α)} (h : IsTopologicalBas
 #align topological_space.is_topological_basis.insert_empty TopologicalSpace.IsTopologicalBasis.insert_empty
 -/
 
-/- warning: topological_space.is_topological_basis.diff_empty -> TopologicalSpace.IsTopologicalBasis.diff_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t s) -> (TopologicalSpace.IsTopologicalBasis.{u1} α t (SDiff.sdiff.{u1} (Set.{u1} (Set.{u1} α)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (Set.{u1} α)) (Set.booleanAlgebra.{u1} (Set.{u1} α))) s (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasSingleton.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t s) -> (TopologicalSpace.IsTopologicalBasis.{u1} α t (SDiff.sdiff.{u1} (Set.{u1} (Set.{u1} α)) (Set.instSDiffSet.{u1} (Set.{u1} α)) s (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instSingletonSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.diff_empty TopologicalSpace.IsTopologicalBasis.diff_emptyₓ'. -/
 theorem IsTopologicalBasis.diff_empty {s : Set (Set α)} (h : IsTopologicalBasis s) :
     IsTopologicalBasis (s \ {∅}) :=
   by
@@ -130,12 +124,6 @@ theorem isTopologicalBasis_of_subbasis {s : Set (Set α)} (hs : t = generateFrom
 #align topological_space.is_topological_basis_of_subbasis TopologicalSpace.isTopologicalBasis_of_subbasis
 -/
 
-/- warning: topological_space.is_topological_basis_of_open_of_nhds -> TopologicalSpace.isTopologicalBasis_of_open_of_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} (Set.{u1} α)}, (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) u s) -> (IsOpen.{u1} α t u)) -> (forall (a : α) (u : Set.{u1} α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a u) -> (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) v s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) v s) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a v) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) v u))))) -> (TopologicalSpace.IsTopologicalBasis.{u1} α t s)
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} (Set.{u1} α)}, (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) u s) -> (IsOpen.{u1} α t u)) -> (forall (a : α) (u : Set.{u1} α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a u) -> (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) v s) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a v) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) v u))))) -> (TopologicalSpace.IsTopologicalBasis.{u1} α t s)
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis_of_open_of_nhds TopologicalSpace.isTopologicalBasis_of_open_of_nhdsₓ'. -/
 /-- If a family of open sets `s` is such that every open neighbourhood contains some
 member of `s`, then `s` is a topological basis. -/
 theorem isTopologicalBasis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀ u ∈ s, IsOpen u)
@@ -154,12 +142,6 @@ theorem isTopologicalBasis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀ u �
     exact iInf₂_le_of_le v ⟨hav, hvs⟩ (le_principal_iff.2 hvu)
 #align topological_space.is_topological_basis_of_open_of_nhds TopologicalSpace.isTopologicalBasis_of_open_of_nhds
 
-/- warning: topological_space.is_topological_basis.mem_nhds_iff -> TopologicalSpace.IsTopologicalBasis.mem_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α} {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α t a)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t b) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t b) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α} {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α t a)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t b) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.mem_nhds_iff TopologicalSpace.IsTopologicalBasis.mem_nhds_iffₓ'. -/
 /-- A set `s` is in the neighbourhood of `a` iff there is some basis set `t`, which
 contains `a` and is itself contained in `s`. -/
 theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
@@ -178,12 +160,6 @@ theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
     exact ⟨i, h2, h1⟩
 #align topological_space.is_topological_basis.mem_nhds_iff TopologicalSpace.IsTopologicalBasis.mem_nhds_iff
 
-/- warning: topological_space.is_topological_basis.is_open_iff -> TopologicalSpace.IsTopologicalBasis.isOpen_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} α} {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (Iff (IsOpen.{u1} α t s) (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t b) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t b) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s))))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} α} {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (Iff (IsOpen.{u1} α t s) (forall (a : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t b) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s))))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.is_open_iff TopologicalSpace.IsTopologicalBasis.isOpen_iffₓ'. -/
 theorem IsTopologicalBasis.isOpen_iff {s : Set α} {b : Set (Set α)} (hb : IsTopologicalBasis b) :
     IsOpen s ↔ ∀ a ∈ s, ∃ t ∈ b, a ∈ t ∧ t ⊆ s := by simp [isOpen_iff_mem_nhds, hb.mem_nhds_iff]
 #align topological_space.is_topological_basis.is_open_iff TopologicalSpace.IsTopologicalBasis.isOpen_iff
@@ -209,12 +185,6 @@ protected theorem IsTopologicalBasis.mem_nhds {a : α} {s : Set α} {b : Set (Se
 #align topological_space.is_topological_basis.mem_nhds TopologicalSpace.IsTopologicalBasis.mem_nhds
 -/
 
-/- warning: topological_space.is_topological_basis.exists_subset_of_mem_open -> TopologicalSpace.IsTopologicalBasis.exists_subset_of_mem_open is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (forall {a : α} {u : Set.{u1} α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a u) -> (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) v b) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) v b) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a v) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) v u)))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (forall {a : α} {u : Set.{u1} α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a u) -> (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) v b) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a v) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) v u)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.exists_subset_of_mem_open TopologicalSpace.IsTopologicalBasis.exists_subset_of_mem_openₓ'. -/
 theorem IsTopologicalBasis.exists_subset_of_mem_open {b : Set (Set α)} (hb : IsTopologicalBasis b)
     {a : α} {u : Set α} (au : a ∈ u) (ou : IsOpen u) : ∃ v ∈ b, a ∈ v ∧ v ⊆ u :=
   hb.mem_nhds_iffₓ.1 <| IsOpen.mem_nhds ou au
@@ -232,24 +202,12 @@ theorem IsTopologicalBasis.open_eq_sUnion' {B : Set (Set α)} (hB : IsTopologica
 #align topological_space.is_topological_basis.open_eq_sUnion' TopologicalSpace.IsTopologicalBasis.open_eq_sUnion'
 -/
 
-/- warning: topological_space.is_topological_basis.open_eq_sUnion -> TopologicalSpace.IsTopologicalBasis.open_eq_sUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (S : Set.{u1} (Set.{u1} α)) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) S B) (fun (H : HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) S B) => Eq.{succ u1} (Set.{u1} α) u (Set.sUnion.{u1} α S)))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (S : Set.{u1} (Set.{u1} α)) => And (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) S B) (Eq.{succ u1} (Set.{u1} α) u (Set.sUnion.{u1} α S)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.open_eq_sUnion TopologicalSpace.IsTopologicalBasis.open_eq_sUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (S «expr ⊆ » B) -/
 theorem IsTopologicalBasis.open_eq_sUnion {B : Set (Set α)} (hB : IsTopologicalBasis B) {u : Set α}
     (ou : IsOpen u) : ∃ (S : _)(_ : S ⊆ B), u = ⋃₀ S :=
   ⟨{ s ∈ B | s ⊆ u }, fun s h => h.1, hB.open_eq_sUnion' ou⟩
 #align topological_space.is_topological_basis.open_eq_sUnion TopologicalSpace.IsTopologicalBasis.open_eq_sUnion
 
-/- warning: topological_space.is_topological_basis.open_iff_eq_sUnion -> TopologicalSpace.IsTopologicalBasis.open_iff_eq_sUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, Iff (IsOpen.{u1} α t u) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (S : Set.{u1} (Set.{u1} α)) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) S B) (fun (H : HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) S B) => Eq.{succ u1} (Set.{u1} α) u (Set.sUnion.{u1} α S)))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, Iff (IsOpen.{u1} α t u) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (S : Set.{u1} (Set.{u1} α)) => And (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) S B) (Eq.{succ u1} (Set.{u1} α) u (Set.sUnion.{u1} α S)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.open_iff_eq_sUnion TopologicalSpace.IsTopologicalBasis.open_iff_eq_sUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (S «expr ⊆ » B) -/
 theorem IsTopologicalBasis.open_iff_eq_sUnion {B : Set (Set α)} (hB : IsTopologicalBasis B)
     {u : Set α} : IsOpen u ↔ ∃ (S : _)(_ : S ⊆ B), u = ⋃₀ S :=
@@ -264,24 +222,12 @@ theorem IsTopologicalBasis.open_eq_iUnion {B : Set (Set α)} (hB : IsTopological
 #align topological_space.is_topological_basis.open_eq_Union TopologicalSpace.IsTopologicalBasis.open_eq_iUnion
 -/
 
-/- warning: topological_space.is_topological_basis.mem_closure_iff -> TopologicalSpace.IsTopologicalBasis.mem_closure_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (forall {s : Set.{u1} α} {a : α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α t s)) (forall (o : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) o b) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a o) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) o s))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (forall {s : Set.{u1} α} {a : α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α t s)) (forall (o : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) o b) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a o) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) o s))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.mem_closure_iff TopologicalSpace.IsTopologicalBasis.mem_closure_iffₓ'. -/
 /-- A point `a` is in the closure of `s` iff all basis sets containing `a` intersect `s`. -/
 theorem IsTopologicalBasis.mem_closure_iff {b : Set (Set α)} (hb : IsTopologicalBasis b) {s : Set α}
     {a : α} : a ∈ closure s ↔ ∀ o ∈ b, a ∈ o → (o ∩ s).Nonempty :=
   (mem_closure_iff_nhds_basis' hb.nhds_hasBasis).trans <| by simp only [and_imp]
 #align topological_space.is_topological_basis.mem_closure_iff TopologicalSpace.IsTopologicalBasis.mem_closure_iff
 
-/- warning: topological_space.is_topological_basis.dense_iff -> TopologicalSpace.IsTopologicalBasis.dense_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (forall {s : Set.{u1} α}, Iff (Dense.{u1} α t s) (forall (o : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) o b) -> (Set.Nonempty.{u1} α o) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) o s))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {b : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t b) -> (forall {s : Set.{u1} α}, Iff (Dense.{u1} α t s) (forall (o : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) o b) -> (Set.Nonempty.{u1} α o) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) o s))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.dense_iff TopologicalSpace.IsTopologicalBasis.dense_iffₓ'. -/
 /-- A set is dense iff it has non-trivial intersection with all basis sets. -/
 theorem IsTopologicalBasis.dense_iff {b : Set (Set α)} (hb : IsTopologicalBasis b) {s : Set α} :
     Dense s ↔ ∀ o ∈ b, Set.Nonempty o → (o ∩ s).Nonempty :=
@@ -290,12 +236,6 @@ theorem IsTopologicalBasis.dense_iff {b : Set (Set α)} (hb : IsTopologicalBasis
   exact ⟨fun h o hb ⟨a, ha⟩ => h a o hb ha, fun h a o hb ha => h o hb ⟨a, ha⟩⟩
 #align topological_space.is_topological_basis.dense_iff TopologicalSpace.IsTopologicalBasis.dense_iff
 
-/- warning: topological_space.is_topological_basis.is_open_map_iff -> TopologicalSpace.IsTopologicalBasis.isOpenMap_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {f : α -> β}, Iff (IsOpenMap.{u1, u2} α β t _inst_1 f) (forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s B) -> (IsOpen.{u2} β _inst_1 (Set.image.{u1, u2} α β f s))))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} β] {B : Set.{u2} (Set.{u2} α)}, (TopologicalSpace.IsTopologicalBasis.{u2} α t B) -> (forall {f : α -> β}, Iff (IsOpenMap.{u2, u1} α β t _inst_1 f) (forall (s : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s B) -> (IsOpen.{u1} β _inst_1 (Set.image.{u2, u1} α β f s))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.is_open_map_iff TopologicalSpace.IsTopologicalBasis.isOpenMap_iffₓ'. -/
 theorem IsTopologicalBasis.isOpenMap_iff {β} [TopologicalSpace β] {B : Set (Set α)}
     (hB : IsTopologicalBasis B) {f : α → β} : IsOpenMap f ↔ ∀ s ∈ B, IsOpen (f '' s) :=
   by
@@ -304,12 +244,6 @@ theorem IsTopologicalBasis.isOpenMap_iff {β} [TopologicalSpace β] {B : Set (Se
   exact isOpen_iUnion fun s => hf s s.2.1
 #align topological_space.is_topological_basis.is_open_map_iff TopologicalSpace.IsTopologicalBasis.isOpenMap_iff
 
-/- warning: topological_space.is_topological_basis.exists_nonempty_subset -> TopologicalSpace.IsTopologicalBasis.exists_nonempty_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, (Set.Nonempty.{u1} α u) -> (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) v B) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) v B) => And (Set.Nonempty.{u1} α v) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) v u)))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, (Set.Nonempty.{u1} α u) -> (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) v B) (And (Set.Nonempty.{u1} α v) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) v u)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.exists_nonempty_subset TopologicalSpace.IsTopologicalBasis.exists_nonempty_subsetₓ'. -/
 theorem IsTopologicalBasis.exists_nonempty_subset {B : Set (Set α)} (hb : IsTopologicalBasis B)
     {u : Set α} (hu : u.Nonempty) (ou : IsOpen u) : ∃ v ∈ B, Set.Nonempty v ∧ v ⊆ u :=
   by
@@ -325,12 +259,6 @@ theorem isTopologicalBasis_opens : IsTopologicalBasis { U : Set α | IsOpen U } 
 #align topological_space.is_topological_basis_opens TopologicalSpace.isTopologicalBasis_opens
 -/
 
-/- warning: topological_space.is_topological_basis.prod -> TopologicalSpace.IsTopologicalBasis.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] {B₁ : Set.{u1} (Set.{u1} α)} {B₂ : Set.{u2} (Set.{u2} β)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B₁) -> (TopologicalSpace.IsTopologicalBasis.{u2} β _inst_1 B₂) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β t _inst_1) (Set.image2.{u1, u2, max u1 u2} (Set.{u1} α) (Set.{u2} β) (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.prod.{u1, u2} α β) B₁ B₂))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} β] {B₁ : Set.{u2} (Set.{u2} α)} {B₂ : Set.{u1} (Set.{u1} β)}, (TopologicalSpace.IsTopologicalBasis.{u2} α t B₁) -> (TopologicalSpace.IsTopologicalBasis.{u1} β _inst_1 B₂) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (Prod.{u2, u1} α β) (instTopologicalSpaceProd.{u2, u1} α β t _inst_1) (Set.image2.{u2, u1, max u1 u2} (Set.{u2} α) (Set.{u1} β) (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.prod.{u2, u1} α β) B₁ B₂))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.prod TopologicalSpace.IsTopologicalBasis.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 protected theorem IsTopologicalBasis.prod {β} [TopologicalSpace β] {B₁ : Set (Set α)}
@@ -346,12 +274,6 @@ protected theorem IsTopologicalBasis.prod {β} [TopologicalSpace β] {B₁ : Set
     exact ⟨s ×ˢ t, mem_image2_of_mem hs ht, ⟨ha, hb⟩, hu⟩
 #align topological_space.is_topological_basis.prod TopologicalSpace.IsTopologicalBasis.prod
 
-/- warning: topological_space.is_topological_basis.inducing -> TopologicalSpace.IsTopologicalBasis.inducing is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] {f : α -> β} {T : Set.{u2} (Set.{u2} β)}, (Inducing.{u1, u2} α β t _inst_1 f) -> (TopologicalSpace.IsTopologicalBasis.{u2} β _inst_1 T) -> (TopologicalSpace.IsTopologicalBasis.{u1} α t (Set.image.{u2, u1} (Set.{u2} β) (Set.{u1} α) (Set.preimage.{u1, u2} α β f) T))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} β] {f : α -> β} {T : Set.{u1} (Set.{u1} β)}, (Inducing.{u2, u1} α β t _inst_1 f) -> (TopologicalSpace.IsTopologicalBasis.{u1} β _inst_1 T) -> (TopologicalSpace.IsTopologicalBasis.{u2} α t (Set.image.{u1, u2} (Set.{u1} β) (Set.{u2} α) (Set.preimage.{u2, u1} α β f) T))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.inducing TopologicalSpace.IsTopologicalBasis.inducingₓ'. -/
 protected theorem IsTopologicalBasis.inducing {β} [TopologicalSpace β] {f : α → β} {T : Set (Set β)}
     (hf : Inducing f) (h : IsTopologicalBasis T) : IsTopologicalBasis (image (preimage f) T) :=
   by
@@ -367,12 +289,6 @@ protected theorem IsTopologicalBasis.inducing {β} [TopologicalSpace β] {f : α
     refine' ⟨f ⁻¹' W, ⟨_, hS hW, rfl⟩, ha, Set.preimage_mono <| Set.subset_sUnion_of_mem hW⟩
 #align topological_space.is_topological_basis.inducing TopologicalSpace.IsTopologicalBasis.inducing
 
-/- warning: topological_space.is_topological_basis_of_cover -> TopologicalSpace.isTopologicalBasis_of_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {U : ι -> (Set.{u1} α)}, (forall (i : ι), IsOpen.{u1} α t (U i)) -> (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => U i)) (Set.univ.{u1} α)) -> (forall {b : forall (i : ι), Set.{u1} (Set.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (U i)) t) (b i)) -> (TopologicalSpace.IsTopologicalBasis.{u1} α t (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Set.image.{u1, u1} (Set.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i))) (Set.{u1} α) (Set.image.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (U i)))))))) (b i)))))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {ι : Sort.{u1}} {U : ι -> (Set.{u2} α)}, (forall (i : ι), IsOpen.{u2} α t (U i)) -> (Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => U i)) (Set.univ.{u2} α)) -> (forall {b : forall (i : ι), Set.{u2} (Set.{u2} (Set.Elem.{u2} α (U i)))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u2} (Set.Elem.{u2} α (U i)) (instTopologicalSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (U i)) t) (b i)) -> (TopologicalSpace.IsTopologicalBasis.{u2} α t (Set.iUnion.{u2, u1} (Set.{u2} α) ι (fun (i : ι) => Set.image.{u2, u2} (Set.{u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (U i)))) (Set.{u2} α) (Set.image.{u2, u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (U i))) α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (U i)))) (b i)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis_of_cover TopologicalSpace.isTopologicalBasis_of_coverₓ'. -/
 theorem isTopologicalBasis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOpen (U i))
     (Uc : (⋃ i, U i) = univ) {b : ∀ i, Set (Set (U i))} (hb : ∀ i, IsTopologicalBasis (b i)) :
     IsTopologicalBasis (⋃ i : ι, image (coe : U i → α) '' b i) :=
@@ -391,12 +307,6 @@ theorem isTopologicalBasis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOpen
         image_subset_iff.2 hvu⟩
 #align topological_space.is_topological_basis_of_cover TopologicalSpace.isTopologicalBasis_of_cover
 
-/- warning: topological_space.is_topological_basis.continuous -> TopologicalSpace.IsTopologicalBasis.continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] {B : Set.{u2} (Set.{u2} β)}, (TopologicalSpace.IsTopologicalBasis.{u2} β _inst_1 B) -> (forall (f : α -> β), (forall (s : Set.{u2} β), (Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) s B) -> (IsOpen.{u1} α t (Set.preimage.{u1, u2} α β f s))) -> (Continuous.{u1, u2} α β t _inst_1 f))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} β] {B : Set.{u1} (Set.{u1} β)}, (TopologicalSpace.IsTopologicalBasis.{u1} β _inst_1 B) -> (forall (f : α -> β), (forall (s : Set.{u1} β), (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) s B) -> (IsOpen.{u2} α t (Set.preimage.{u2, u1} α β f s))) -> (Continuous.{u2, u1} α β t _inst_1 f))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.continuous TopologicalSpace.IsTopologicalBasis.continuousₓ'. -/
 protected theorem IsTopologicalBasis.continuous {β : Type _} [TopologicalSpace β] {B : Set (Set β)}
     (hB : IsTopologicalBasis B) (f : α → β) (hf : ∀ s ∈ B, IsOpen (f ⁻¹' s)) : Continuous f := by
   rw [hB.eq_generate_from]; exact continuous_generateFrom hf
@@ -465,23 +375,11 @@ instance (priority := 100) Countable.to_separableSpace [Countable α] : Separabl
 #align topological_space.countable.to_separable_space TopologicalSpace.Countable.to_separableSpace
 -/
 
-/- warning: topological_space.separable_space_of_dense_range -> TopologicalSpace.separableSpace_of_denseRange is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_1 : Countable.{succ u2} ι] (u : ι -> α), (DenseRange.{u1, u2} α t ι u) -> (TopologicalSpace.SeparableSpace.{u1} α t)
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] (u : ι -> α), (DenseRange.{u2, u1} α t ι u) -> (TopologicalSpace.SeparableSpace.{u2} α t)
-Case conversion may be inaccurate. Consider using '#align topological_space.separable_space_of_dense_range TopologicalSpace.separableSpace_of_denseRangeₓ'. -/
 theorem separableSpace_of_denseRange {ι : Type _} [Countable ι] (u : ι → α) (hu : DenseRange u) :
     SeparableSpace α :=
   ⟨⟨range u, countable_range u, hu⟩⟩
 #align topological_space.separable_space_of_dense_range TopologicalSpace.separableSpace_of_denseRange
 
-/- warning: set.pairwise_disjoint.countable_of_is_open -> Set.PairwiseDisjoint.countable_of_isOpen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] [_inst_1 : TopologicalSpace.SeparableSpace.{u1} α t] {ι : Type.{u2}} {s : ι -> (Set.{u1} α)} {a : Set.{u2} ι}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) a s) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i a) -> (IsOpen.{u1} α t (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i a) -> (Set.Nonempty.{u1} α (s i))) -> (Set.Countable.{u2} ι a)
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] [_inst_1 : TopologicalSpace.SeparableSpace.{u2} α t] {ι : Type.{u1}} {s : ι -> (Set.{u2} α)} {a : Set.{u1} ι}, (Set.PairwiseDisjoint.{u2, u1} (Set.{u2} α) ι (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) a s) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i a) -> (IsOpen.{u2} α t (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i a) -> (Set.Nonempty.{u2} α (s i))) -> (Set.Countable.{u1} ι a)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.countable_of_is_open Set.PairwiseDisjoint.countable_of_isOpenₓ'. -/
 /-- In a separable space, a family of nonempty disjoint open sets is countable. -/
 theorem Set.PairwiseDisjoint.countable_of_isOpen [SeparableSpace α] {ι : Type _} {s : ι → Set α}
     {a : Set ι} (h : a.PairwiseDisjoint s) (ha : ∀ i ∈ a, IsOpen (s i))
@@ -500,12 +398,6 @@ theorem Set.PairwiseDisjoint.countable_of_isOpen [SeparableSpace α] {ι : Type 
   exact ⟨@Encodable.ofInj _ _ u_encodable f f_inj⟩
 #align set.pairwise_disjoint.countable_of_is_open Set.PairwiseDisjoint.countable_of_isOpen
 
-/- warning: set.pairwise_disjoint.countable_of_nonempty_interior -> Set.PairwiseDisjoint.countable_of_nonempty_interior is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] [_inst_1 : TopologicalSpace.SeparableSpace.{u1} α t] {ι : Type.{u2}} {s : ι -> (Set.{u1} α)} {a : Set.{u2} ι}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) a s) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i a) -> (Set.Nonempty.{u1} α (interior.{u1} α t (s i)))) -> (Set.Countable.{u2} ι a)
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] [_inst_1 : TopologicalSpace.SeparableSpace.{u2} α t] {ι : Type.{u1}} {s : ι -> (Set.{u2} α)} {a : Set.{u1} ι}, (Set.PairwiseDisjoint.{u2, u1} (Set.{u2} α) ι (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) a s) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i a) -> (Set.Nonempty.{u2} α (interior.{u2} α t (s i)))) -> (Set.Countable.{u1} ι a)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.countable_of_nonempty_interior Set.PairwiseDisjoint.countable_of_nonempty_interiorₓ'. -/
 /-- In a separable space, a family of disjoint sets with nonempty interiors is countable. -/
 theorem Set.PairwiseDisjoint.countable_of_nonempty_interior [SeparableSpace α] {ι : Type _}
     {s : ι → Set α} {a : Set ι} (h : a.PairwiseDisjoint s)
@@ -531,12 +423,6 @@ theorem IsSeparable.mono {s u : Set α} (hs : IsSeparable s) (hu : u ⊆ s) : Is
 #align topological_space.is_separable.mono TopologicalSpace.IsSeparable.mono
 -/
 
-/- warning: topological_space.is_separable.union -> TopologicalSpace.IsSeparable.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α}, (TopologicalSpace.IsSeparable.{u1} α t s) -> (TopologicalSpace.IsSeparable.{u1} α t u) -> (TopologicalSpace.IsSeparable.{u1} α t (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s u))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α}, (TopologicalSpace.IsSeparable.{u1} α t s) -> (TopologicalSpace.IsSeparable.{u1} α t u) -> (TopologicalSpace.IsSeparable.{u1} α t (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s u))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_separable.union TopologicalSpace.IsSeparable.unionₓ'. -/
 theorem IsSeparable.union {s u : Set α} (hs : IsSeparable s) (hu : IsSeparable u) :
     IsSeparable (s ∪ u) := by
   rcases hs with ⟨cs, cs_count, hcs⟩
@@ -555,12 +441,6 @@ theorem IsSeparable.closure {s : Set α} (hs : IsSeparable s) : IsSeparable (clo
 #align topological_space.is_separable.closure TopologicalSpace.IsSeparable.closure
 -/
 
-/- warning: topological_space.is_separable_Union -> TopologicalSpace.isSeparable_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_1 : Countable.{succ u2} ι] {s : ι -> (Set.{u1} α)}, (forall (i : ι), TopologicalSpace.IsSeparable.{u1} α t (s i)) -> (TopologicalSpace.IsSeparable.{u1} α t (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => s i)))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), TopologicalSpace.IsSeparable.{u2} α t (s i)) -> (TopologicalSpace.IsSeparable.{u2} α t (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i)))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_separable_Union TopologicalSpace.isSeparable_iUnionₓ'. -/
 theorem isSeparable_iUnion {ι : Type _} [Countable ι] {s : ι → Set α}
     (hs : ∀ i, IsSeparable (s i)) : IsSeparable (⋃ i, s i) :=
   by
@@ -599,12 +479,6 @@ theorem isSeparable_of_separableSpace [h : SeparableSpace α] (s : Set α) : IsS
 #align topological_space.is_separable_of_separable_space TopologicalSpace.isSeparable_of_separableSpace
 -/
 
-/- warning: topological_space.is_separable.image -> TopologicalSpace.IsSeparable.image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] {s : Set.{u1} α}, (TopologicalSpace.IsSeparable.{u1} α t s) -> (forall {f : α -> β}, (Continuous.{u1, u2} α β t _inst_1 f) -> (TopologicalSpace.IsSeparable.{u2} β _inst_1 (Set.image.{u1, u2} α β f s)))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} β] {s : Set.{u2} α}, (TopologicalSpace.IsSeparable.{u2} α t s) -> (forall {f : α -> β}, (Continuous.{u2, u1} α β t _inst_1 f) -> (TopologicalSpace.IsSeparable.{u1} β _inst_1 (Set.image.{u2, u1} α β f s)))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_separable.image TopologicalSpace.IsSeparable.imageₓ'. -/
 theorem IsSeparable.image {β : Type _} [TopologicalSpace β] {s : Set α} (hs : IsSeparable s)
     {f : α → β} (hf : Continuous f) : IsSeparable (f '' s) :=
   by
@@ -627,12 +501,6 @@ end TopologicalSpace
 
 open TopologicalSpace
 
-/- warning: is_topological_basis_pi -> isTopologicalBasis_pi is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {X : ι -> Type.{u2}} [_inst_1 : forall (i : ι), TopologicalSpace.{u2} (X i)] {T : forall (i : ι), Set.{u2} (Set.{u2} (X i))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u2} (X i) (_inst_1 i) (T i)) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (forall (i : ι), X i) (Pi.topologicalSpace.{u1, u2} ι (fun (i : ι) => X i) (fun (a : ι) => _inst_1 a)) (setOf.{max u1 u2} (Set.{max u1 u2} (forall (i : ι), X i)) (fun (S : Set.{max u1 u2} (forall (i : ι), X i)) => Exists.{max (succ u1) (succ u2)} (forall (i : ι), Set.{u2} (X i)) (fun (U : forall (i : ι), Set.{u2} (X i)) => Exists.{succ u1} (Finset.{u1} ι) (fun (F : Finset.{u1} ι) => And (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i F) -> (Membership.Mem.{u2, u2} (Set.{u2} (X i)) (Set.{u2} (Set.{u2} (X i))) (Set.hasMem.{u2} (Set.{u2} (X i))) (U i) (T i))) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), X i)) S (Set.pi.{u1, u2} ι (fun (i : ι) => X i) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) F) U)))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {X : ι -> Type.{u1}} [_inst_1 : forall (i : ι), TopologicalSpace.{u1} (X i)] {T : forall (i : ι), Set.{u1} (Set.{u1} (X i))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u1} (X i) (_inst_1 i) (T i)) -> (TopologicalSpace.IsTopologicalBasis.{max u2 u1} (forall (i : ι), X i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => X i) (fun (a : ι) => _inst_1 a)) (setOf.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), X i)) (fun (S : Set.{max u2 u1} (forall (i : ι), X i)) => Exists.{max (succ u2) (succ u1)} (forall (i : ι), Set.{u1} (X i)) (fun (U : forall (i : ι), Set.{u1} (X i)) => Exists.{succ u2} (Finset.{u2} ι) (fun (F : Finset.{u2} ι) => And (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i F) -> (Membership.mem.{u1, u1} (Set.{u1} (X i)) (Set.{u1} (Set.{u1} (X i))) (Set.instMembershipSet.{u1} (Set.{u1} (X i))) (U i) (T i))) (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), X i)) S (Set.pi.{u2, u1} ι (fun (i : ι) => X i) (Finset.toSet.{u2} ι F) U)))))))
-Case conversion may be inaccurate. Consider using '#align is_topological_basis_pi isTopologicalBasis_piₓ'. -/
 theorem isTopologicalBasis_pi {ι : Type _} {X : ι → Type _} [∀ i, TopologicalSpace (X i)]
     {T : ∀ i, Set (Set (X i))} (cond : ∀ i, IsTopologicalBasis (T i)) :
     IsTopologicalBasis
@@ -654,12 +522,6 @@ theorem isTopologicalBasis_pi {ι : Type _} {X : ι → Type _} [∀ i, Topologi
       ⟨_, ⟨V, I, fun i hi => hVT i, rfl⟩, fun i hi => haV i, (pi_mono fun i hi => hVt i).trans htU⟩
 #align is_topological_basis_pi isTopologicalBasis_pi
 
-/- warning: is_topological_basis_infi -> isTopologicalBasis_iInf is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {ι : Type.{u2}} {X : ι -> Type.{u3}} [t : forall (i : ι), TopologicalSpace.{u3} (X i)] {T : forall (i : ι), Set.{u3} (Set.{u3} (X i))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u3} (X i) (t i) (T i)) -> (forall (f : forall (i : ι), β -> (X i)), TopologicalSpace.IsTopologicalBasis.{u1} β (iInf.{u1, succ u2} (TopologicalSpace.{u1} β) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} β) (TopologicalSpace.completeLattice.{u1} β))) ι (fun (i : ι) => TopologicalSpace.induced.{u1, u3} β (X i) (f i) (t i))) (setOf.{u1} (Set.{u1} β) (fun (S : Set.{u1} β) => Exists.{max (succ u2) (succ u3)} (forall (i : ι), Set.{u3} (X i)) (fun (U : forall (i : ι), Set.{u3} (X i)) => Exists.{succ u2} (Finset.{u2} ι) (fun (F : Finset.{u2} ι) => And (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i F) -> (Membership.Mem.{u3, u3} (Set.{u3} (X i)) (Set.{u3} (Set.{u3} (X i))) (Set.hasMem.{u3} (Set.{u3} (X i))) (U i) (T i))) (Eq.{succ u1} (Set.{u1} β) S (Set.iInter.{u1, succ u2} β ι (fun (i : ι) => Set.iInter.{u1, 0} β (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i F) (fun (hi : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i F) => Set.preimage.{u1, u3} β (X i) (f i) (U i))))))))))
-but is expected to have type
-  forall {β : Type.{u3}} {ι : Type.{u2}} {X : ι -> Type.{u1}} [t : forall (i : ι), TopologicalSpace.{u1} (X i)] {T : forall (i : ι), Set.{u1} (Set.{u1} (X i))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u1} (X i) (t i) (T i)) -> (forall (f : forall (i : ι), β -> (X i)), TopologicalSpace.IsTopologicalBasis.{u3} β (iInf.{u3, succ u2} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} β))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u1} β (X i) (f i) (t i))) (setOf.{u3} (Set.{u3} β) (fun (S : Set.{u3} β) => Exists.{max (succ u2) (succ u1)} (forall (i : ι), Set.{u1} (X i)) (fun (U : forall (i : ι), Set.{u1} (X i)) => Exists.{succ u2} (Finset.{u2} ι) (fun (F : Finset.{u2} ι) => And (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i F) -> (Membership.mem.{u1, u1} (Set.{u1} (X i)) (Set.{u1} (Set.{u1} (X i))) (Set.instMembershipSet.{u1} (Set.{u1} (X i))) (U i) (T i))) (Eq.{succ u3} (Set.{u3} β) S (Set.iInter.{u3, succ u2} β ι (fun (i : ι) => Set.iInter.{u3, 0} β (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i F) (fun (hi : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i F) => Set.preimage.{u3, u1} β (X i) (f i) (U i))))))))))
-Case conversion may be inaccurate. Consider using '#align is_topological_basis_infi isTopologicalBasis_iInfₓ'. -/
 theorem isTopologicalBasis_iInf {β : Type _} {ι : Type _} {X : ι → Type _}
     [t : ∀ i, TopologicalSpace (X i)] {T : ∀ i, Set (Set (X i))}
     (cond : ∀ i, IsTopologicalBasis (T i)) (f : ∀ i, β → X i) :
@@ -699,12 +561,6 @@ theorem isTopologicalBasis_singletons (α : Type _) [TopologicalSpace α] [Discr
 #align is_topological_basis_singletons isTopologicalBasis_singletons
 -/
 
-/- warning: dense_range.separable_space -> DenseRange.separableSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.SeparableSpace.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] {f : α -> β}, (DenseRange.{u2, u1} β _inst_3 α f) -> (Continuous.{u1, u2} α β _inst_1 _inst_3 f) -> (TopologicalSpace.SeparableSpace.{u2} β _inst_3)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.SeparableSpace.{u2} α _inst_1] [_inst_3 : TopologicalSpace.{u1} β] {f : α -> β}, (DenseRange.{u1, u2} β _inst_3 α f) -> (Continuous.{u2, u1} α β _inst_1 _inst_3 f) -> (TopologicalSpace.SeparableSpace.{u1} β _inst_3)
-Case conversion may be inaccurate. Consider using '#align dense_range.separable_space DenseRange.separableSpaceₓ'. -/
 /-- If `α` is a separable space and `f : α → β` is a continuous map with dense range, then `β` is
 a separable space as well. E.g., the completion of a separable uniform space is separable. -/
 protected theorem DenseRange.separableSpace {α β : Type _} [TopologicalSpace α] [SeparableSpace α]
@@ -721,12 +577,6 @@ theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] 
     hs.denseRange_val.dense_image continuous_subtype_val htd⟩
 #align dense.exists_countable_dense_subset Dense.exists_countable_dense_subsetₓ
 
-/- warning: dense.exists_countable_dense_subset_bot_top -> Dense.exists_countable_dense_subset_bot_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] {s : Set.{u1} α} [_inst_3 : TopologicalSpace.SeparableSpace.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1)], (Dense.{u1} α _inst_1 s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Countable.{u1} α t) (And (Dense.{u1} α _inst_1 t) (And (forall (x : α), (IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)) (forall (x : α), (IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] {s : Set.{u1} α} [_inst_3 : TopologicalSpace.SeparableSpace.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1)], (Dense.{u1} α _inst_1 s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Countable.{u1} α t) (And (Dense.{u1} α _inst_1 t) (And (forall (x : α), (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)) (forall (x : α), (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)))))))
-Case conversion may be inaccurate. Consider using '#align dense.exists_countable_dense_subset_bot_top Dense.exists_countable_dense_subset_bot_topₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Let `s` be a dense set in a topological space `α` with partial order structure. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
@@ -753,12 +603,6 @@ instance separableSpace_univ {α : Type _} [TopologicalSpace α] [SeparableSpace
 #align separable_space_univ separableSpace_univ
 -/
 
-/- warning: exists_countable_dense_bot_top -> exists_countable_dense_bot_top is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.SeparableSpace.{u1} α _inst_1] [_inst_3 : PartialOrder.{u1} α], Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Set.Countable.{u1} α s) (And (Dense.{u1} α _inst_1 s) (And (forall (x : α), (IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) (forall (x : α), (IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.SeparableSpace.{u1} α _inst_1] [_inst_3 : PartialOrder.{u1} α], Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Set.Countable.{u1} α s) (And (Dense.{u1} α _inst_1 s) (And (forall (x : α), (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) (forall (x : α), (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)))))
-Case conversion may be inaccurate. Consider using '#align exists_countable_dense_bot_top exists_countable_dense_bot_topₓ'. -/
 /-- If `α` is a separable topological space with a partial order, then there exists a countable
 dense set `s : set α` that contains those of both bottom and top elements of `α` that actually
 exist. For a dense set containing neither bot nor top elements, see
@@ -924,12 +768,6 @@ instance (priority := 100) SecondCountableTopology.to_firstCountableTopology
 #align topological_space.second_countable_topology.to_first_countable_topology TopologicalSpace.SecondCountableTopology.to_firstCountableTopology
 -/
 
-/- warning: topological_space.second_countable_topology_induced -> TopologicalSpace.secondCountableTopology_induced is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}) [t : TopologicalSpace.{u2} β] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u2} β t] (f : α -> β), TopologicalSpace.SecondCountableTopology.{u1} α (TopologicalSpace.induced.{u1, u2} α β f t)
-but is expected to have type
-  forall (α : Type.{u2}) (β : Type.{u1}) [t : TopologicalSpace.{u1} β] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u1} β t] (f : α -> β), TopologicalSpace.SecondCountableTopology.{u2} α (TopologicalSpace.induced.{u2, u1} α β f t)
-Case conversion may be inaccurate. Consider using '#align topological_space.second_countable_topology_induced TopologicalSpace.secondCountableTopology_inducedₓ'. -/
 /-- If `β` is a second-countable space, then its induced topology
 via `f` on `α` is also second-countable. -/
 theorem secondCountableTopology_induced (β) [t : TopologicalSpace β] [SecondCountableTopology β]
@@ -992,12 +830,6 @@ instance (priority := 100) SecondCountableTopology.to_separableSpace [SecondCoun
 
 variable {α}
 
-/- warning: topological_space.second_countable_topology_of_countable_cover -> TopologicalSpace.secondCountableTopology_of_countable_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_1 : Encodable.{u2} ι] {U : ι -> (Set.{u1} α)} [_inst_2 : forall (i : ι), TopologicalSpace.SecondCountableTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (U i)) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (U i)) t)], (forall (i : ι), IsOpen.{u1} α t (U i)) -> (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => U i)) (Set.univ.{u1} α)) -> (TopologicalSpace.SecondCountableTopology.{u1} α t)
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_1 : Encodable.{u1} ι] {U : ι -> (Set.{u2} α)} [_inst_2 : forall (i : ι), TopologicalSpace.SecondCountableTopology.{u2} (Set.Elem.{u2} α (U i)) (instTopologicalSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (U i)) t)], (forall (i : ι), IsOpen.{u2} α t (U i)) -> (Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => U i)) (Set.univ.{u2} α)) -> (TopologicalSpace.SecondCountableTopology.{u2} α t)
-Case conversion may be inaccurate. Consider using '#align topological_space.second_countable_topology_of_countable_cover TopologicalSpace.secondCountableTopology_of_countable_coverₓ'. -/
 /-- A countable open cover induces a second-countable topology if all open covers
 are themselves second countable. -/
 theorem secondCountableTopology_of_countable_cover {ι} [Encodable ι] {U : ι → Set α}
@@ -1008,12 +840,6 @@ theorem secondCountableTopology_of_countable_cover {ι} [Encodable ι] {U : ι �
   this.second_countable_topology (countable_Union fun i => (countable_countable_basis _).image _)
 #align topological_space.second_countable_topology_of_countable_cover TopologicalSpace.secondCountableTopology_of_countable_cover
 
-/- warning: topological_space.is_open_Union_countable -> TopologicalSpace.isOpen_iUnion_countable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u1} α t] {ι : Type.{u2}} (s : ι -> (Set.{u1} α)), (forall (i : ι), IsOpen.{u1} α t (s i)) -> (Exists.{succ u2} (Set.{u2} ι) (fun (T : Set.{u2} ι) => And (Set.Countable.{u2} ι T) (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i T) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i T) => s i))) (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => s i)))))
-but is expected to have type
-  forall {α : Type.{u2}} [t : TopologicalSpace.{u2} α] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u2} α t] {ι : Type.{u1}} (s : ι -> (Set.{u2} α)), (forall (i : ι), IsOpen.{u2} α t (s i)) -> (Exists.{succ u1} (Set.{u1} ι) (fun (T : Set.{u1} ι) => And (Set.Countable.{u1} ι T) (Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i T) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i T) => s i))) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i)))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_open_Union_countable TopologicalSpace.isOpen_iUnion_countableₓ'. -/
 /-- In a second-countable space, an open set, given as a union of open sets,
 is equal to the union of countably many of those sets. -/
 theorem isOpen_iUnion_countable [SecondCountableTopology α] {ι} (s : ι → Set α)
@@ -1053,12 +879,6 @@ theorem countable_cover_nhds [SecondCountableTopology α] {f : α → Set α} (h
 #align topological_space.countable_cover_nhds TopologicalSpace.countable_cover_nhds
 -/
 
-/- warning: topological_space.countable_cover_nhds_within -> TopologicalSpace.countable_cover_nhdsWithin is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u1} α t] {f : α -> (Set.{u1} α)} {s : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (f x) (nhdsWithin.{u1} α t x s))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Countable.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) => f x)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u1} α t] {f : α -> (Set.{u1} α)} {s : Set.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (f x) (nhdsWithin.{u1} α t x s))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Countable.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) (fun (h._@.Mathlib.Topology.Bases._hyg.7220 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) => f x)))))))
-Case conversion may be inaccurate. Consider using '#align topological_space.countable_cover_nhds_within TopologicalSpace.countable_cover_nhdsWithinₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem countable_cover_nhdsWithin [SecondCountableTopology α] {f : α → Set α} {s : Set α}
     (hf : ∀ x ∈ s, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ ⋃ x ∈ t, f x :=
@@ -1076,12 +896,6 @@ variable {ι : Type _} {E : ι → Type _} [∀ i, TopologicalSpace (E i)]
 
 omit t
 
-/- warning: topological_space.is_topological_basis.sigma -> TopologicalSpace.IsTopologicalBasis.sigma is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), TopologicalSpace.{u2} (E i)] {s : forall (i : ι), Set.{u2} (Set.{u2} (E i))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u2} (E i) (_inst_1 i) (s i)) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Sigma.topologicalSpace.{u1, u2} ι (fun (i : ι) => E i) (fun (a : ι) => _inst_1 a)) (Set.iUnion.{max u1 u2, succ u1} (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) ι (fun (i : ι) => Set.image.{u2, max u1 u2} (Set.{u2} (E i)) (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) (fun (u : Set.{u2} (E i)) => Set.image.{u2, max u1 u2} (E i) (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => E i) i) u) (s i))))
-but is expected to have type
-  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), TopologicalSpace.{u2} (E i)] {s : forall (i : ι), Set.{u2} (Set.{u2} (E i))}, (forall (i : ι), TopologicalSpace.IsTopologicalBasis.{u2} (E i) (_inst_1 i) (s i)) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (instTopologicalSpaceSigma.{u1, u2} ι (fun (i : ι) => E i) (fun (a : ι) => _inst_1 a)) (Set.iUnion.{max u1 u2, succ u1} (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) ι (fun (i : ι) => Set.image.{u2, max u1 u2} (Set.{u2} (E i)) (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) (fun (u : Set.{u2} (E i)) => Set.image.{u2, max u1 u2} (E i) (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => E i) i) u) (s i))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.sigma TopologicalSpace.IsTopologicalBasis.sigmaₓ'. -/
 /-- In a disjoint union space `Σ i, E i`, one can form a topological basis by taking the union of
 topological bases on each of the parts of the space. -/
 theorem IsTopologicalBasis.sigma {s : ∀ i : ι, Set (Set (E i))}
@@ -1118,12 +932,6 @@ omit t
 
 variable {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-/- warning: topological_space.is_topological_basis.sum -> TopologicalSpace.IsTopologicalBasis.sum is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α _inst_1 s) -> (forall {t : Set.{u2} (Set.{u2} β)}, (TopologicalSpace.IsTopologicalBasis.{u2} β _inst_2 t) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (Sum.{u1, u2} α β) (Sum.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) (Union.union.{max u1 u2} (Set.{max u1 u2} (Set.{max u1 u2} (Sum.{u1, u2} α β))) (Set.hasUnion.{max u1 u2} (Set.{max u1 u2} (Sum.{u1, u2} α β))) (Set.image.{u1, max u1 u2} (Set.{u1} α) (Set.{max u1 u2} (Sum.{u1, u2} α β)) (fun (u : Set.{u1} α) => Set.image.{u1, max u1 u2} α (Sum.{u1, u2} α β) (Sum.inl.{u1, u2} α β) u) s) (Set.image.{u2, max u1 u2} (Set.{u2} β) (Set.{max u1 u2} (Sum.{u1, u2} α β)) (fun (u : Set.{u2} β) => Set.image.{u2, max u1 u2} β (Sum.{u1, u2} α β) (Sum.inr.{u1, u2} α β) u) t))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {s : Set.{u2} (Set.{u2} α)}, (TopologicalSpace.IsTopologicalBasis.{u2} α _inst_1 s) -> (forall {t : Set.{u1} (Set.{u1} β)}, (TopologicalSpace.IsTopologicalBasis.{u1} β _inst_2 t) -> (TopologicalSpace.IsTopologicalBasis.{max u1 u2} (Sum.{u2, u1} α β) (instTopologicalSpaceSum.{u2, u1} α β _inst_1 _inst_2) (Union.union.{max u1 u2} (Set.{max u1 u2} (Set.{max u1 u2} (Sum.{u2, u1} α β))) (Set.instUnionSet.{max u2 u1} (Set.{max u1 u2} (Sum.{u2, u1} α β))) (Set.image.{u2, max u1 u2} (Set.{u2} α) (Set.{max u1 u2} (Sum.{u2, u1} α β)) (fun (u : Set.{u2} α) => Set.image.{u2, max u1 u2} α (Sum.{u2, u1} α β) (Sum.inl.{u2, u1} α β) u) s) (Set.image.{u1, max u2 u1} (Set.{u1} β) (Set.{max u1 u2} (Sum.{u2, u1} α β)) (fun (u : Set.{u1} β) => Set.image.{u1, max u2 u1} β (Sum.{u2, u1} α β) (Sum.inr.{u2, u1} α β) u) t))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.sum TopologicalSpace.IsTopologicalBasis.sumₓ'. -/
 /-- In a sum space `α ⊕ β`, one can form a topological basis by taking the union of
 topological bases on each of the two components. -/
 theorem IsTopologicalBasis.sum {s : Set (Set α)} (hs : IsTopologicalBasis s) {t : Set (Set β)}
@@ -1173,12 +981,6 @@ variable {X : Type _} [TopologicalSpace X] {Y : Type _} [TopologicalSpace Y] {π
 
 omit t
 
-/- warning: topological_space.is_topological_basis.quotient_map -> TopologicalSpace.IsTopologicalBasis.quotientMap is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {Y : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} Y] {π : X -> Y} {V : Set.{u1} (Set.{u1} X)}, (TopologicalSpace.IsTopologicalBasis.{u1} X _inst_1 V) -> (QuotientMap.{u1, u2} X Y _inst_1 _inst_2 π) -> (IsOpenMap.{u1, u2} X Y _inst_1 _inst_2 π) -> (TopologicalSpace.IsTopologicalBasis.{u2} Y _inst_2 (Set.image.{u1, u2} (Set.{u1} X) (Set.{u2} Y) (Set.image.{u1, u2} X Y π) V))
-but is expected to have type
-  forall {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {Y : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} Y] {π : X -> Y} {V : Set.{u2} (Set.{u2} X)}, (TopologicalSpace.IsTopologicalBasis.{u2} X _inst_1 V) -> (QuotientMap.{u2, u1} X Y _inst_1 _inst_2 π) -> (IsOpenMap.{u2, u1} X Y _inst_1 _inst_2 π) -> (TopologicalSpace.IsTopologicalBasis.{u1} Y _inst_2 (Set.image.{u2, u1} (Set.{u2} X) (Set.{u1} Y) (Set.image.{u2, u1} X Y π) V))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.quotient_map TopologicalSpace.IsTopologicalBasis.quotientMapₓ'. -/
 /-- The image of a topological basis under an open quotient map is a topological basis. -/
 theorem IsTopologicalBasis.quotientMap {V : Set (Set X)} (hV : IsTopologicalBasis V)
     (h' : QuotientMap π) (h : IsOpenMap π) : IsTopologicalBasis (Set.image π '' V) :=
@@ -1196,12 +998,6 @@ theorem IsTopologicalBasis.quotientMap {V : Set (Set X)} (hV : IsTopologicalBasi
     exact ⟨π '' Z, ⟨Z, Z_in_V, rfl⟩, ⟨x, x_in_Z, rfl⟩, πZ_in_U⟩
 #align topological_space.is_topological_basis.quotient_map TopologicalSpace.IsTopologicalBasis.quotientMap
 
-/- warning: topological_space.quotient_map.second_countable_topology -> QuotientMap.secondCountableTopology is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {Y : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} Y] {π : X -> Y} [_inst_3 : TopologicalSpace.SecondCountableTopology.{u1} X _inst_1], (QuotientMap.{u1, u2} X Y _inst_1 _inst_2 π) -> (IsOpenMap.{u1, u2} X Y _inst_1 _inst_2 π) -> (TopologicalSpace.SecondCountableTopology.{u2} Y _inst_2)
-but is expected to have type
-  forall {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {Y : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} Y] {π : X -> Y} [_inst_3 : TopologicalSpace.SecondCountableTopology.{u2} X _inst_1], (QuotientMap.{u2, u1} X Y _inst_1 _inst_2 π) -> (IsOpenMap.{u2, u1} X Y _inst_1 _inst_2 π) -> (TopologicalSpace.SecondCountableTopology.{u1} Y _inst_2)
-Case conversion may be inaccurate. Consider using '#align topological_space.quotient_map.second_countable_topology QuotientMap.secondCountableTopologyₓ'. -/
 /-- A second countable space is mapped by an open quotient map to a second countable space. -/
 theorem QuotientMap.secondCountableTopology [SecondCountableTopology X] (h' : QuotientMap π)
     (h : IsOpenMap π) : SecondCountableTopology Y :=

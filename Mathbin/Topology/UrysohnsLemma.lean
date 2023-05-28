@@ -158,12 +158,6 @@ noncomputable def approx : ℕ → CU X → X → ℝ
 #align urysohns.CU.approx Urysohns.CU.approx
 -/
 
-/- warning: urysohns.CU.approx_of_mem_C -> Urysohns.CU.approx_of_mem_C is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) {x : X}, (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x (Urysohns.CU.c.{u1} X _inst_1 c)) -> (Eq.{1} Real (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) {x : X}, (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (Urysohns.CU.C.{u1} X _inst_1 c)) -> (Eq.{1} Real (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_Cₓ'. -/
 theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx n x = 0 :=
   by
   induction' n with n ihn generalizing c
@@ -173,12 +167,6 @@ theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx
     exacts[c.subset_right_C hx, hx]
 #align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_C
 
-/- warning: urysohns.CU.approx_of_nmem_U -> Urysohns.CU.approx_of_nmem_U is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) {x : X}, (Not (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x (Urysohns.CU.u.{u1} X _inst_1 c))) -> (Eq.{1} Real (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) {x : X}, (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (Urysohns.CU.U.{u1} X _inst_1 c))) -> (Eq.{1} Real (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_Uₓ'. -/
 theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
   by
   induction' n with n ihn generalizing c
@@ -188,12 +176,6 @@ theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.appro
     exacts[hx, fun hU => hx <| c.left_U_subset hU]
 #align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_U
 
-/- warning: urysohns.CU.approx_nonneg -> Urysohns.CU.approx_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) (x : X), LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) (x : X), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x)
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_nonneg Urysohns.CU.approx_nonnegₓ'. -/
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x :=
   by
   induction' n with n ihn generalizing c
@@ -202,12 +184,6 @@ theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x :=
     refine' mul_nonneg (inv_nonneg.2 zero_le_two) (add_nonneg _ _) <;> apply ihn
 #align urysohns.CU.approx_nonneg Urysohns.CU.approx_nonneg
 
-/- warning: urysohns.CU.approx_le_one -> Urysohns.CU.approx_le_one is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) (x : X), LE.le.{0} Real Real.hasLe (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) (x : X), LE.le.{0} Real Real.instLEReal (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_le_one Urysohns.CU.approx_le_oneₓ'. -/
 theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 :=
   by
   induction' n with n ihn generalizing c
@@ -222,12 +198,6 @@ theorem bddAbove_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.ap
 #align urysohns.CU.bdd_above_range_approx Urysohns.CU.bddAbove_range_approx
 -/
 
-/- warning: urysohns.CU.approx_le_approx_of_U_sub_C -> Urysohns.CU.approx_le_approx_of_U_sub_C is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] {c₁ : Urysohns.CU.{u1} X _inst_1} {c₂ : Urysohns.CU.{u1} X _inst_1}, (HasSubset.Subset.{u1} (Set.{u1} X) (Set.hasSubset.{u1} X) (Urysohns.CU.u.{u1} X _inst_1 c₁) (Urysohns.CU.c.{u1} X _inst_1 c₂)) -> (forall (n₁ : Nat) (n₂ : Nat) (x : X), LE.le.{0} Real Real.hasLe (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n₂ c₂ x) (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n₁ c₁ x))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] {c₁ : Urysohns.CU.{u1} X _inst_1} {c₂ : Urysohns.CU.{u1} X _inst_1}, (HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) (Urysohns.CU.U.{u1} X _inst_1 c₁) (Urysohns.CU.C.{u1} X _inst_1 c₂)) -> (forall (n₁ : Nat) (n₂ : Nat) (x : X), LE.le.{0} Real Real.instLEReal (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n₂ c₂ x) (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n₁ c₁ x))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_Cₓ'. -/
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x :=
   by
@@ -261,12 +231,6 @@ theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
 #align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
 -/
 
-/- warning: urysohns.CU.approx_le_succ -> Urysohns.CU.approx_le_succ is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) (x : X), LE.le.{0} Real Real.hasLe (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) c x)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (n : Nat) (x : X), LE.le.{0} Real Real.instLEReal (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) c x)
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_le_succ Urysohns.CU.approx_le_succₓ'. -/
 theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x :=
   by
   induction' n with n ihn generalizing c
@@ -300,32 +264,14 @@ theorem tendsto_approx_atTop (c : CU X) (x : X) :
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_atTop
 -/
 
-/- warning: urysohns.CU.lim_of_mem_C -> Urysohns.CU.lim_of_mem_C is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x (Urysohns.CU.c.{u1} X _inst_1 c)) -> (Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (Urysohns.CU.C.{u1} X _inst_1 c)) -> (Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_Cₓ'. -/
 theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 := by
   simp only [CU.lim, approx_of_mem_C, h, ciSup_const]
 #align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_C
 
-/- warning: urysohns.CU.lim_of_nmem_U -> Urysohns.CU.lim_of_nmem_U is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), (Not (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x (Urysohns.CU.u.{u1} X _inst_1 c))) -> (Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (Urysohns.CU.U.{u1} X _inst_1 c))) -> (Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_Uₓ'. -/
 theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
   simp only [CU.lim, approx_of_nmem_U c _ h, ciSup_const]
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
 
-/- warning: urysohns.CU.lim_eq_midpoint -> Urysohns.CU.lim_eq_midpoint is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (midpoint.{0, 0, 0} Real Real Real Real.ring (invertibleTwo.{0} Real Real.divisionRing (StrictOrderedSemiring.to_charZero.{0} Real Real.strictOrderedSemiring)) Real.addCommGroup Real.module (addGroupIsAddTorsor.{0} Real Real.addGroup) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 (Urysohns.CU.left.{u1} X _inst_1 _inst_2 c) x) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 (Urysohns.CU.right.{u1} X _inst_1 _inst_2 c) x))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (midpoint.{0, 0, 0} Real Real Real Real.instRingReal (invertibleTwo.{0} Real Real.instDivisionRingReal (StrictOrderedSemiring.to_charZero.{0} Real Real.strictOrderedSemiring)) Real.instAddCommGroupReal (NormedSpace.toModule.{0, 0} Real Real Real.normedField (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Real (NormedRing.toNonUnitalNormedRing.{0} Real (NormedCommRing.toNormedRing.{0} Real Real.normedCommRing)))) (NormedField.toNormedSpace.{0} Real Real.normedField)) (NormedAddTorsor.toAddTorsor.{0, 0} Real Real (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Real (NormedRing.toNonUnitalNormedRing.{0} Real (NormedCommRing.toNormedRing.{0} Real Real.normedCommRing)))) Real.pseudoMetricSpace (SeminormedAddCommGroup.toNormedAddTorsor.{0} Real (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Real (NormedRing.toNonUnitalNormedRing.{0} Real (NormedCommRing.toNormedRing.{0} Real Real.normedCommRing)))))) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 (Urysohns.CU.left.{u1} X _inst_1 _inst_2 c) x) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 (Urysohns.CU.right.{u1} X _inst_1 _inst_2 c) x))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_eq_midpoint Urysohns.CU.lim_eq_midpointₓ'. -/
 theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
   by
   refine' tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _)
@@ -333,42 +279,18 @@ theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim 
   exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
 #align urysohns.CU.lim_eq_midpoint Urysohns.CU.lim_eq_midpoint
 
-/- warning: urysohns.CU.approx_le_lim -> Urysohns.CU.approx_le_lim is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X) (n : Nat), LE.le.{0} Real Real.hasLe (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X) (n : Nat), LE.le.{0} Real Real.instLEReal (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x)
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_le_lim Urysohns.CU.approx_le_limₓ'. -/
 theorem approx_le_lim (c : CU X) (x : X) (n : ℕ) : c.approx n x ≤ c.lim x :=
   le_ciSup (c.bddAbove_range_approx x) _
 #align urysohns.CU.approx_le_lim Urysohns.CU.approx_le_lim
 
-/- warning: urysohns.CU.lim_nonneg -> Urysohns.CU.lim_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x)
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_nonneg Urysohns.CU.lim_nonnegₓ'. -/
 theorem lim_nonneg (c : CU X) (x : X) : 0 ≤ c.lim x :=
   (c.approx_nonneg 0 x).trans (c.approx_le_lim x 0)
 #align urysohns.CU.lim_nonneg Urysohns.CU.lim_nonneg
 
-/- warning: urysohns.CU.lim_le_one -> Urysohns.CU.lim_le_one is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), LE.le.{0} Real Real.hasLe (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), LE.le.{0} Real Real.instLEReal (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_le_one Urysohns.CU.lim_le_oneₓ'. -/
 theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
   ciSup_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
-/- warning: urysohns.CU.lim_mem_Icc -> Urysohns.CU.lim_mem_Icc is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (Set.Icc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (Set.Icc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Iccₓ'. -/
 theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
 #align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Icc
@@ -422,12 +344,6 @@ end Urysohns
 
 variable [NormalSpace X]
 
-/- warning: exists_continuous_zero_one_of_closed -> exists_continuous_zero_one_of_closed is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] {s : Set.{u1} X} {t : Set.{u1} X}, (IsClosed.{u1} X _inst_1 s) -> (IsClosed.{u1} X _inst_1 t) -> (Disjoint.{u1} (Set.{u1} X) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} X) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.completeBooleanAlgebra.{u1} X)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} X) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} X) (Set.booleanAlgebra.{u1} X))) s t) -> (Exists.{succ u1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (fun (f : ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) => And (Set.EqOn.{u1, 0} X Real (coeFn.{succ u1, succ u1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (fun (_x : ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) => X -> Real) (ContinuousMap.hasCoeToFun.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) f) (OfNat.ofNat.{u1} (X -> Real) 0 (OfNat.mk.{u1} (X -> Real) 0 (Zero.zero.{u1} (X -> Real) (Pi.instZero.{u1, 0} X (fun (ᾰ : X) => Real) (fun (i : X) => Real.hasZero))))) s) (And (Set.EqOn.{u1, 0} X Real (coeFn.{succ u1, succ u1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (fun (_x : ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) => X -> Real) (ContinuousMap.hasCoeToFun.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) f) (OfNat.ofNat.{u1} (X -> Real) 1 (OfNat.mk.{u1} (X -> Real) 1 (One.one.{u1} (X -> Real) (Pi.instOne.{u1, 0} X (fun (ᾰ : X) => Real) (fun (i : X) => Real.hasOne))))) t) (forall (x : X), Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) (coeFn.{succ u1, succ u1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (fun (_x : ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) => X -> Real) (ContinuousMap.hasCoeToFun.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) f x) (Set.Icc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))))))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] {s : Set.{u1} X} {t : Set.{u1} X}, (IsClosed.{u1} X _inst_1 s) -> (IsClosed.{u1} X _inst_1 t) -> (Disjoint.{u1} (Set.{u1} X) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} X) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.instCompleteBooleanAlgebraSet.{u1} X)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} X) (Preorder.toLE.{u1} (Set.{u1} X) (PartialOrder.toPreorder.{u1} (Set.{u1} X) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} X) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.instCompleteBooleanAlgebraSet.{u1} X)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.instCompleteBooleanAlgebraSet.{u1} X)))))) s t) -> (Exists.{succ u1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (fun (f : ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) => And (Set.EqOn.{u1, 0} X Real (FunLike.coe.{succ u1, succ u1, 1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Real) _x) (ContinuousMapClass.toFunLike.{u1, u1, 0} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (ContinuousMap.instContinuousMapClassContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)))) f) (OfNat.ofNat.{u1} (X -> Real) 0 (Zero.toOfNat0.{u1} (X -> Real) (Pi.instZero.{u1, 0} X (fun (a._@.Mathlib.Data.Set.Function._hyg.1349 : X) => Real) (fun (i : X) => Real.instZeroReal)))) s) (And (Set.EqOn.{u1, 0} X Real (FunLike.coe.{succ u1, succ u1, 1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Real) _x) (ContinuousMapClass.toFunLike.{u1, u1, 0} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (ContinuousMap.instContinuousMapClassContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)))) f) (OfNat.ofNat.{u1} (X -> Real) 1 (One.toOfNat1.{u1} (X -> Real) (Pi.instOne.{u1, 0} X (fun (a._@.Mathlib.Data.Set.Function._hyg.1349 : X) => Real) (fun (i : X) => Real.instOneReal)))) t) (forall (x : X), Membership.mem.{0, 0} ((fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Real) x) (Set.{0} Real) (Set.instMembershipSet.{0} Real) (FunLike.coe.{succ u1, succ u1, 1} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Real) _x) (ContinuousMapClass.toFunLike.{u1, u1, 0} (ContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (ContinuousMap.instContinuousMapClassContinuousMap.{u1, 0} X Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)))) f x) (Set.Icc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))))))
-Case conversion may be inaccurate. Consider using '#align exists_continuous_zero_one_of_closed exists_continuous_zero_one_of_closedₓ'. -/
 /-- Urysohns lemma: if `s` and `t` are two disjoint closed sets in a normal topological space `X`,
 then there exists a continuous function `f : X → ℝ` such that
 

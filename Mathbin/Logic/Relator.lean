@@ -88,12 +88,6 @@ def BiUnique : Prop :=
 
 variable {R}
 
-/- warning: relator.right_total.rel_forall -> Relator.RightTotal.rel_forall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u₁}} {β : Type.{u₂}} {R : α -> β -> Prop}, (Relator.RightTotal.{u₁, u₂} α β R) -> (Relator.LiftFun.{max (succ u₁) 1, max (succ u₂) 1, 1, 1} (α -> Prop) (β -> Prop) Prop Prop (Relator.LiftFun.{succ u₁, succ u₂, 1, 1} α β Prop Prop R Implies) Implies (fun (p : α -> Prop) => forall (i : α), p i) (fun (q : β -> Prop) => forall (i : β), q i))
-but is expected to have type
-  forall {α : Type.{u₁}} {β : Type.{u₂}} {R : α -> β -> Prop}, (Relator.RightTotal.{u₁, u₂} α β R) -> (Relator.LiftFun.{max (succ u₁) (succ u_1), succ u₂, succ (imax (succ u₁) u_1), 1} (α -> Sort.{u_1}) (β -> Prop) Sort.{imax (succ u₁) u_1} Prop (Relator.LiftFun.{succ u₁, succ u₂, succ u_1, 1} α β Sort.{u_1} Prop R (fun (x._@.Mathlib.Logic.Relator._hyg.883 : Sort.{u_1}) (x._@.Mathlib.Logic.Relator._hyg.885 : Prop) => x._@.Mathlib.Logic.Relator._hyg.883 -> x._@.Mathlib.Logic.Relator._hyg.885)) (fun (x._@.Mathlib.Logic.Relator._hyg.896 : Sort.{imax (succ u₁) u_1}) (x._@.Mathlib.Logic.Relator._hyg.898 : Prop) => x._@.Mathlib.Logic.Relator._hyg.896 -> x._@.Mathlib.Logic.Relator._hyg.898) (fun (p : α -> Sort.{u_1}) => forall (i : α), p i) (fun (q : β -> Prop) => forall (i : β), q i))
-Case conversion may be inaccurate. Consider using '#align relator.right_total.rel_forall Relator.RightTotal.rel_forallₓ'. -/
 theorem RightTotal.rel_forall (h : RightTotal R) :
     ((R ⇒ Implies) ⇒ Implies) (fun p => ∀ i, p i) fun q => ∀ i, q i := fun p q Hrel H b =>
   Exists.elim (h b) fun a Rab => Hrel Rab (H _)
@@ -151,12 +145,6 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 variable {r : α → β → Prop} {p : β → γ → Prop} {q : γ → δ → Prop}
 
-/- warning: relator.left_unique.flip -> Relator.LeftUnique.flip is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, (Relator.LeftUnique.{u1, u2} α β r) -> (Relator.RightUnique.{u2, u1} β α (flip.{succ u1, succ u2, 1} α β Prop r))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, (Relator.LeftUnique.{u2, u1} α β r) -> (Relator.RightUnique.{u1, u2} β α (flip.{succ u2, succ u1, 1} α β Prop r))
-Case conversion may be inaccurate. Consider using '#align relator.left_unique.flip Relator.LeftUnique.flipₓ'. -/
 theorem LeftUnique.flip (h : LeftUnique r) : RightUnique (flip r) := fun a b c h₁ h₂ => h h₁ h₂
 #align relator.left_unique.flip Relator.LeftUnique.flip
 
@@ -178,12 +166,6 @@ theorem rel_iff : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ↔ ·) (· 
 #align relator.rel_iff Relator.rel_iff
 -/
 
-/- warning: relator.rel_eq -> Relator.rel_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, (Relator.BiUnique.{u1, u2} α β r) -> (Relator.LiftFun.{succ u1, succ u2, succ u1, succ u2} α β (α -> Prop) (β -> Prop) r (Relator.LiftFun.{succ u1, succ u2, 1, 1} α β Prop Prop r Iff) (Eq.{succ u1} α) (Eq.{succ u2} β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, (Relator.BiUnique.{u2, u1} α β r) -> (Relator.LiftFun.{succ u2, succ u1, succ u2, succ u1} α β (α -> Prop) (β -> Prop) r (Relator.LiftFun.{succ u2, succ u1, 1, 1} α β Prop Prop r (fun (x._@.Mathlib.Logic.Relator._hyg.1983 : Prop) (x._@.Mathlib.Logic.Relator._hyg.1985 : Prop) => Iff x._@.Mathlib.Logic.Relator._hyg.1983 x._@.Mathlib.Logic.Relator._hyg.1985)) (fun (x._@.Mathlib.Logic.Relator._hyg.1998 : α) (x._@.Mathlib.Logic.Relator._hyg.2000 : α) => Eq.{succ u2} α x._@.Mathlib.Logic.Relator._hyg.1998 x._@.Mathlib.Logic.Relator._hyg.2000) (fun (x._@.Mathlib.Logic.Relator._hyg.2013 : β) (x._@.Mathlib.Logic.Relator._hyg.2015 : β) => Eq.{succ u1} β x._@.Mathlib.Logic.Relator._hyg.2013 x._@.Mathlib.Logic.Relator._hyg.2015))
-Case conversion may be inaccurate. Consider using '#align relator.rel_eq Relator.rel_eqₓ'. -/
 theorem rel_eq {r : α → β → Prop} (hr : BiUnique r) : (r ⇒ r ⇒ (· ↔ ·)) (· = ·) (· = ·) :=
   fun a b h₁ c d h₂ => ⟨fun h => hr.right h₁ <| h.symm ▸ h₂, fun h => hr.left h₁ <| h.symm ▸ h₂⟩
 #align relator.rel_eq Relator.rel_eq

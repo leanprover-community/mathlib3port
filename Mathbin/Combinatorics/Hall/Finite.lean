@@ -146,9 +146,6 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
 #align hall_marriage_theorem.hall_cond_of_restrict HallMarriageTheorem.hall_cond_of_restrict
 -/
 
-/- warning: hall_marriage_theorem.hall_cond_of_compl -> HallMarriageTheorem.hall_cond_of_compl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_complₓ'. -/
 theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (hus : s.card = (s.biUnion t).card) (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card)
     (s' : Finset (sᶜ : Set ι)) : s'.card ≤ (s'.biUnion fun x' => t x' \ s.biUnion t).card :=
@@ -274,12 +271,6 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).ca
 
 end HallMarriageTheorem
 
-/- warning: finset.all_card_le_bUnion_card_iff_exists_injective' -> Finset.all_card_le_biUnion_card_iff_existsInjective' is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u2} α] (t : ι -> (Finset.{u2} α)), Iff (forall (s : Finset.{u1} ι), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_2 a b) s t))) (Exists.{max (succ u1) (succ u2)} (ι -> α) (fun (f : ι -> α) => And (Function.Injective.{succ u1, succ u2} ι α f) (forall (x : ι), Membership.Mem.{u2, u2} α (Finset.{u2} α) (Finset.hasMem.{u2} α) (f x) (t x))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Finite.{succ u2} ι] [_inst_2 : DecidableEq.{succ u1} α] (t : ι -> (Finset.{u1} α)), Iff (forall (s : Finset.{u2} ι), LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (Finset.card.{u1} α (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s t))) (Exists.{max (succ u2) (succ u1)} (ι -> α) (fun (f : ι -> α) => And (Function.Injective.{succ u2, succ u1} ι α f) (forall (x : ι), Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (f x) (t x))))
-Case conversion may be inaccurate. Consider using '#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_biUnion_card_iff_existsInjective'ₓ'. -/
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α` with `ι` finite.
 It states that there is a set of distinct representatives if and only

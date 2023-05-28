@@ -68,35 +68,17 @@ namespace FinCategory
 
 variable (α : Type _) [Fintype α] [SmallCategory α] [FinCategory α]
 
-/- warning: category_theory.fin_category.obj_as_type -> CategoryTheory.FinCategory.ObjAsType is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α] [_inst_2 : CategoryTheory.SmallCategory.{u1} α] [_inst_3 : CategoryTheory.FinCategory.{u1} α _inst_2], Type
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Type
-Case conversion may be inaccurate. Consider using '#align category_theory.fin_category.obj_as_type CategoryTheory.FinCategory.ObjAsTypeₓ'. -/
 /-- A fin_category `α` is equivalent to a category with objects in `Type`. -/
 @[nolint unused_arguments]
 abbrev ObjAsType : Type :=
   InducedCategory α (Fintype.equivFin α).symm
 #align category_theory.fin_category.obj_as_type CategoryTheory.FinCategory.ObjAsType
 
-/- warning: category_theory.fin_category.obj_as_type_equiv -> CategoryTheory.FinCategory.objAsTypeEquiv is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α] [_inst_2 : CategoryTheory.SmallCategory.{u1} α] [_inst_3 : CategoryTheory.FinCategory.{u1} α _inst_2], CategoryTheory.Equivalence.{u1, u1, 0, u1} (CategoryTheory.FinCategory.ObjAsType.{u1} α _inst_1 _inst_2 _inst_3) (CategoryTheory.InducedCategory.category.{u1, 0, u1} (Fin (Fintype.card.{u1} α _inst_1)) α _inst_2 (coeFn.{succ u1, succ u1} (Equiv.{1, succ u1} (Fin (Fintype.card.{u1} α _inst_1)) α) (fun (_x : Equiv.{1, succ u1} (Fin (Fintype.card.{u1} α _inst_1)) α) => (Fin (Fintype.card.{u1} α _inst_1)) -> α) (Equiv.hasCoeToFun.{1, succ u1} (Fin (Fintype.card.{u1} α _inst_1)) α) (Equiv.symm.{succ u1, 1} α (Fin (Fintype.card.{u1} α _inst_1)) (Fintype.equivFin.{u1} α _inst_1)))) α _inst_2
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α] [_inst_2 : CategoryTheory.SmallCategory.{u1} α], CategoryTheory.Equivalence.{u1, u1, 0, u1} (CategoryTheory.FinCategory.ObjAsType.{u1} α _inst_1) α (CategoryTheory.InducedCategory.category.{u1, 0, u1} (Fin (Fintype.card.{u1} α _inst_1)) α _inst_2 (FunLike.coe.{succ u1, 1, succ u1} (Equiv.{1, succ u1} (Fin (Fintype.card.{u1} α _inst_1)) α) (Fin (Fintype.card.{u1} α _inst_1)) (fun (a : Fin (Fintype.card.{u1} α _inst_1)) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Fin (Fintype.card.{u1} α _inst_1)) => α) a) (Equiv.instFunLikeEquiv.{1, succ u1} (Fin (Fintype.card.{u1} α _inst_1)) α) (Equiv.symm.{succ u1, 1} α (Fin (Fintype.card.{u1} α _inst_1)) (Fintype.equivFin.{u1} α _inst_1)))) _inst_2
-Case conversion may be inaccurate. Consider using '#align category_theory.fin_category.obj_as_type_equiv CategoryTheory.FinCategory.objAsTypeEquivₓ'. -/
 /-- The constructed category is indeed equivalent to `α`. -/
 noncomputable def objAsTypeEquiv : ObjAsType α ≌ α :=
   (inducedFunctor (Fintype.equivFin α).symm).asEquivalence
 #align category_theory.fin_category.obj_as_type_equiv CategoryTheory.FinCategory.objAsTypeEquiv
 
-/- warning: category_theory.fin_category.as_type -> CategoryTheory.FinCategory.AsType is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α] [_inst_2 : CategoryTheory.SmallCategory.{u1} α] [_inst_3 : CategoryTheory.FinCategory.{u1} α _inst_2], Type
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Type
-Case conversion may be inaccurate. Consider using '#align category_theory.fin_category.as_type CategoryTheory.FinCategory.AsTypeₓ'. -/
 /-- A fin_category `α` is equivalent to a fin_category with in `Type`. -/
 @[nolint unused_arguments]
 abbrev AsType : Type :=

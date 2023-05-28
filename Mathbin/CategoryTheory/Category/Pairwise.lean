@@ -157,12 +157,6 @@ section
 -- but the appropriate structure has not been defined.
 variable [CompleteLattice α]
 
-/- warning: category_theory.pairwise.cocone_ι_app -> CategoryTheory.Pairwise.coconeιApp is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u1}} (U : ι -> α) [_inst_1 : CompleteLattice.{u1} α] (o : CategoryTheory.Pairwise.{u1} ι), Quiver.Hom.{succ u1, u1} α (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} α (CategoryTheory.Category.toCategoryStruct.{u1, u1} α (Preorder.smallCategory.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (CategoryTheory.Pairwise.diagramObj.{u1} ι α U (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1)) o) (iSup.{u1, succ u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι U)
-but is expected to have type
-  forall {ι : Type.{u1}} {α : Type.{u1}} (U : ι -> α) [_inst_1 : CompleteLattice.{u1} α] (o : CategoryTheory.Pairwise.{u1} ι), Quiver.Hom.{succ u1, u1} α (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} α (CategoryTheory.Category.toCategoryStruct.{u1, u1} α (Preorder.smallCategory.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (CategoryTheory.Pairwise.diagramObj.{u1} ι α U (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1)) o) (iSup.{u1, succ u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι U)
-Case conversion may be inaccurate. Consider using '#align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιAppₓ'. -/
 /-- Auxiliary definition for `cocone`. -/
 def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ iSup U
   | single i => homOfLE (le_iSup U i)

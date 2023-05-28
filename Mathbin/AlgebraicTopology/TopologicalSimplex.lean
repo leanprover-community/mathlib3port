@@ -33,12 +33,6 @@ open Simplicial NNReal BigOperators Classical
 attribute [local instance]
   CategoryTheory.ConcreteCategory.hasCoeToSort CategoryTheory.ConcreteCategory.hasCoeToFun
 
-/- warning: simplex_category.to_Top_obj -> SimplexCategory.toTopObj is a dubious translation:
-lean 3 declaration is
-  forall (x : SimplexCategory), Set.{0} ((coeSort.{1, 2} SimplexCategory Type (CategoryTheory.ConcreteCategory.hasCoeToSort.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.CategoryTheory.concreteCategory) x) -> NNReal)
-but is expected to have type
-  forall (x : SimplexCategory), Set.{0} ((Prefunctor.obj.{1, 1, 0, 1} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) Type (CategoryTheory.CategoryStruct.toQuiver.{0, 1} Type (CategoryTheory.Category.toCategoryStruct.{0, 1} Type CategoryTheory.types.{0})) (CategoryTheory.Functor.toPrefunctor.{0, 0, 0, 1} SimplexCategory SimplexCategory.smallCategory Type CategoryTheory.types.{0} (CategoryTheory.forget.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.instConcreteCategorySimplexCategorySmallCategory)) x) -> NNReal)
-Case conversion may be inaccurate. Consider using '#align simplex_category.to_Top_obj SimplexCategory.toTopObjₓ'. -/
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
 def toTopObj (x : SimplexCategory) :=
@@ -48,20 +42,11 @@ def toTopObj (x : SimplexCategory) :=
 instance (x : SimplexCategory) : CoeFun x.toTopObj fun _ => x → ℝ≥0 :=
   ⟨fun f => (f : x → ℝ≥0)⟩
 
-/- warning: simplex_category.to_Top_obj.ext -> SimplexCategory.toTopObj.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.to_Top_obj.ext SimplexCategory.toTopObj.extₓ'. -/
 @[ext]
 theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ≥0) = g → f = g :=
   Subtype.ext
 #align simplex_category.to_Top_obj.ext SimplexCategory.toTopObj.ext
 
-/- warning: simplex_category.to_Top_map -> SimplexCategory.toTopMap is a dubious translation:
-lean 3 declaration is
-  forall {x : SimplexCategory} {y : SimplexCategory}, (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) x y) -> (coeSort.{1, 2} (Set.{0} ((coeSort.{1, 2} SimplexCategory Type (CategoryTheory.ConcreteCategory.hasCoeToSort.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.CategoryTheory.concreteCategory) x) -> NNReal)) Type (Set.hasCoeToSort.{0} ((coeSort.{1, 2} SimplexCategory Type (CategoryTheory.ConcreteCategory.hasCoeToSort.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.CategoryTheory.concreteCategory) x) -> NNReal)) (SimplexCategory.toTopObj x)) -> (coeSort.{1, 2} (Set.{0} ((coeSort.{1, 2} SimplexCategory Type (CategoryTheory.ConcreteCategory.hasCoeToSort.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.CategoryTheory.concreteCategory) y) -> NNReal)) Type (Set.hasCoeToSort.{0} ((coeSort.{1, 2} SimplexCategory Type (CategoryTheory.ConcreteCategory.hasCoeToSort.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.CategoryTheory.concreteCategory) y) -> NNReal)) (SimplexCategory.toTopObj y))
-but is expected to have type
-  forall {x : SimplexCategory} {y : SimplexCategory}, (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) x y) -> (Set.Elem.{0} ((Prefunctor.obj.{1, 1, 0, 1} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) Type (CategoryTheory.CategoryStruct.toQuiver.{0, 1} Type (CategoryTheory.Category.toCategoryStruct.{0, 1} Type CategoryTheory.types.{0})) (CategoryTheory.Functor.toPrefunctor.{0, 0, 0, 1} SimplexCategory SimplexCategory.smallCategory Type CategoryTheory.types.{0} (CategoryTheory.forget.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.instConcreteCategorySimplexCategorySmallCategory)) x) -> NNReal) (SimplexCategory.toTopObj x)) -> (Set.Elem.{0} ((Prefunctor.obj.{1, 1, 0, 1} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) Type (CategoryTheory.CategoryStruct.toQuiver.{0, 1} Type (CategoryTheory.Category.toCategoryStruct.{0, 1} Type CategoryTheory.types.{0})) (CategoryTheory.Functor.toPrefunctor.{0, 0, 0, 1} SimplexCategory SimplexCategory.smallCategory Type CategoryTheory.types.{0} (CategoryTheory.forget.{0, 0, 0} SimplexCategory SimplexCategory.smallCategory SimplexCategory.instConcreteCategorySimplexCategorySmallCategory)) y) -> NNReal) (SimplexCategory.toTopObj y))
-Case conversion may be inaccurate. Consider using '#align simplex_category.to_Top_map SimplexCategory.toTopMapₓ'. -/
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filterₓ fun k => f k = i, g j,
@@ -82,18 +67,12 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
       rw [← he.1, ← he.2]⟩
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
 
-/- warning: simplex_category.coe_to_Top_map -> SimplexCategory.coe_toTopMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.coe_to_Top_map SimplexCategory.coe_toTopMapₓ'. -/
 @[simp]
 theorem coe_toTopMap {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i : y) :
     toTopMap f g i = ∑ j in Finset.univ.filterₓ fun k => f k = i, g j :=
   rfl
 #align simplex_category.coe_to_Top_map SimplexCategory.coe_toTopMap
 
-/- warning: simplex_category.continuous_to_Top_map -> SimplexCategory.continuous_toTopMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.continuous_to_Top_map SimplexCategory.continuous_toTopMapₓ'. -/
 @[continuity]
 theorem continuous_toTopMap {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
   Continuous.subtype_mk

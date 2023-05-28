@@ -47,12 +47,6 @@ theorem mem_sections_length {L : List (List α)} {f} (h : f ∈ sections L) : le
 #align list.mem_sections_length List.mem_sections_length
 -/
 
-/- warning: list.rel_sections -> List.rel_sections is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Relator.LiftFun.{succ u1, succ u2, succ u1, succ u2} (List.{u1} (List.{u1} α)) (List.{u2} (List.{u2} β)) (List.{u1} (List.{u1} α)) (List.{u2} (List.{u2} β)) (List.Forall₂.{u1, u2} (List.{u1} α) (List.{u2} β) (List.Forall₂.{u1, u2} α β r)) (List.Forall₂.{u1, u2} (List.{u1} α) (List.{u2} β) (List.Forall₂.{u1, u2} α β r)) (List.sections.{u1} α) (List.sections.{u2} β)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Relator.LiftFun.{succ u2, succ u1, succ u2, succ u1} (List.{u2} (List.{u2} α)) (List.{u1} (List.{u1} β)) (List.{u2} (List.{u2} α)) (List.{u1} (List.{u1} β)) (List.Forall₂.{u2, u1} (List.{u2} α) (List.{u1} β) (List.Forall₂.{u2, u1} α β r)) (List.Forall₂.{u2, u1} (List.{u2} α) (List.{u1} β) (List.Forall₂.{u2, u1} α β r)) (List.sections.{u2} α) (List.sections.{u1} β)
-Case conversion may be inaccurate. Consider using '#align list.rel_sections List.rel_sectionsₓ'. -/
 theorem rel_sections {r : α → β → Prop} :
     (Forall₂ (Forall₂ r) ⇒ Forall₂ (Forall₂ r)) sections sections
   | _, _, forall₂.nil => Forall₂.cons Forall₂.nil Forall₂.nil

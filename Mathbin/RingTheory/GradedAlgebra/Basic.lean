@@ -79,12 +79,6 @@ variable [GradedRing 𝒜]
 
 namespace DirectSum
 
-/- warning: direct_sum.decompose_ring_equiv -> DirectSum.decomposeRingEquiv is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {A : Type.{u2}} {σ : Type.{u3}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : AddMonoid.{u1} ι] [_inst_4 : Semiring.{u2} A] [_inst_6 : SetLike.{u3, u2} σ A] [_inst_7 : AddSubmonoidClass.{u3, u2} σ A (AddMonoid.toAddZeroClass.{u2} A (AddMonoidWithOne.toAddMonoid.{u2} A (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} A (NonAssocSemiring.toAddCommMonoidWithOne.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4))))) _inst_6] (𝒜 : ι -> σ) [_inst_8 : GradedRing.{u1, u2, u3} ι A σ (fun (a : ι) (b : ι) => _inst_1 a b) _inst_2 _inst_4 _inst_6 _inst_7 𝒜], RingEquiv.{u2, max u1 u2} A (DirectSum.{u1, u2} ι (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (Distrib.toHasMul.{u2} A (NonUnitalNonAssocSemiring.toDistrib.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)))) (Distrib.toHasAdd.{u2} A (NonUnitalNonAssocSemiring.toDistrib.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)))) (Distrib.toHasMul.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (NonUnitalNonAssocSemiring.toDistrib.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (DirectSum.nonUnitalNonAssocSemiring.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i) (SetLike.gnonUnitalNonAssocSemiring.{u1, u3, u2} ι σ A (fun (a : ι) (b : ι) => _inst_1 a b) (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)) _inst_6 _inst_7 (fun (i : ι) => 𝒜 i) (DirectSum.decomposeRingEquiv._proof_1.{u1, u2, u3} ι A σ _inst_1 _inst_2 _inst_4 _inst_6 _inst_7 𝒜 _inst_8))))) (Distrib.toHasAdd.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (NonUnitalNonAssocSemiring.toDistrib.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (DirectSum.nonUnitalNonAssocSemiring.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => coeSort.{succ u3, succ (succ u2)} σ Type.{u2} (SetLike.hasCoeToSort.{u3, u2} σ A _inst_6) (𝒜 i)) (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i) (SetLike.gnonUnitalNonAssocSemiring.{u1, u3, u2} ι σ A (fun (a : ι) (b : ι) => _inst_1 a b) (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)) _inst_6 _inst_7 (fun (i : ι) => 𝒜 i) (DirectSum.decomposeRingEquiv._proof_1.{u1, u2, u3} ι A σ _inst_1 _inst_2 _inst_4 _inst_6 _inst_7 𝒜 _inst_8)))))
-but is expected to have type
-  forall {ι : Type.{u1}} {A : Type.{u2}} {σ : Type.{u3}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : AddMonoid.{u1} ι] [_inst_4 : Semiring.{u2} A] [_inst_6 : SetLike.{u3, u2} σ A] [_inst_7 : AddSubmonoidClass.{u3, u2} σ A (AddMonoid.toAddZeroClass.{u2} A (AddMonoidWithOne.toAddMonoid.{u2} A (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} A (NonAssocSemiring.toAddCommMonoidWithOne.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4))))) _inst_6] (𝒜 : ι -> σ) [_inst_8 : GradedRing.{u1, u2, u3} ι A σ (fun (a : ι) (b : ι) => _inst_1 a b) _inst_2 _inst_4 _inst_6 _inst_7 𝒜], RingEquiv.{u2, max u2 u1} A (DirectSum.{u1, u2} ι (fun (i : ι) => Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u3} A σ (SetLike.instMembership.{u3, u2} σ A _inst_6) x (𝒜 i))) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (NonUnitalNonAssocSemiring.toMul.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4))) (NonUnitalNonAssocSemiring.toMul.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u3} A σ (SetLike.instMembership.{u3, u2} σ A _inst_6) x (𝒜 i))) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (DirectSum.instNonUnitalNonAssocSemiringDirectSum.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u3} A σ (SetLike.instMembership.{u3, u2} σ A _inst_6) x (𝒜 i))) (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i) (SetLike.gnonUnitalNonAssocSemiring.{u1, u3, u2} ι σ A (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)) _inst_6 _inst_7 (fun (i : ι) => 𝒜 i) (SetLike.GradedMonoid.toGradedMul.{u1, u2, u3} ι A σ _inst_6 (MonoidWithZero.toMonoid.{u2} A (Semiring.toMonoidWithZero.{u2} A _inst_4)) _inst_2 (fun (i : ι) => 𝒜 i) (GradedRing.toGradedMonoid.{u1, u2, u3} ι A σ (fun (a : ι) (b : ι) => _inst_1 a b) _inst_2 _inst_4 _inst_6 _inst_7 (fun (i : ι) => 𝒜 i) _inst_8))))) (Distrib.toAdd.{u2} A (NonUnitalNonAssocSemiring.toDistrib.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)))) (Distrib.toAdd.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u3} A σ (SetLike.instMembership.{u3, u2} σ A _inst_6) x (𝒜 i))) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (NonUnitalNonAssocSemiring.toDistrib.{max u1 u2} (DirectSum.{u1, u2} ι (fun (i : ι) => Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u3} A σ (SetLike.instMembership.{u3, u2} σ A _inst_6) x (𝒜 i))) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i)) (DirectSum.instNonUnitalNonAssocSemiringDirectSum.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u3} A σ (SetLike.instMembership.{u3, u2} σ A _inst_6) x (𝒜 i))) (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (fun (i : ι) => AddCommMonoid.ofSubmonoidOnSemiring.{u1, u3, u2} ι σ A _inst_4 _inst_6 _inst_7 𝒜 i) (SetLike.gnonUnitalNonAssocSemiring.{u1, u3, u2} ι σ A (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4)) _inst_6 _inst_7 (fun (i : ι) => 𝒜 i) (SetLike.GradedMonoid.toGradedMul.{u1, u2, u3} ι A σ _inst_6 (MonoidWithZero.toMonoid.{u2} A (Semiring.toMonoidWithZero.{u2} A _inst_4)) _inst_2 (fun (i : ι) => 𝒜 i) (GradedRing.toGradedMonoid.{u1, u2, u3} ι A σ (fun (a : ι) (b : ι) => _inst_1 a b) _inst_2 _inst_4 _inst_6 _inst_7 (fun (i : ι) => 𝒜 i) _inst_8))))))
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_ring_equiv DirectSum.decomposeRingEquivₓ'. -/
 /-- If `A` is graded by `ι` with degree `i` component `𝒜 i`, then it is isomorphic as
 a ring to a direct sum of components. -/
 def decomposeRingEquiv : A ≃+* ⨁ i, 𝒜 i :=
@@ -95,33 +89,21 @@ def decomposeRingEquiv : A ≃+* ⨁ i, 𝒜 i :=
       map_add' := (coeRingHom 𝒜).map_add }
 #align direct_sum.decompose_ring_equiv DirectSum.decomposeRingEquiv
 
-/- warning: direct_sum.decompose_one -> DirectSum.decompose_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_one DirectSum.decompose_oneₓ'. -/
 @[simp]
 theorem decompose_one : decompose 𝒜 (1 : A) = 1 :=
   map_one (decomposeRingEquiv 𝒜)
 #align direct_sum.decompose_one DirectSum.decompose_one
 
-/- warning: direct_sum.decompose_symm_one -> DirectSum.decompose_symm_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_symm_one DirectSum.decompose_symm_oneₓ'. -/
 @[simp]
 theorem decompose_symm_one : (decompose 𝒜).symm 1 = (1 : A) :=
   map_one (decomposeRingEquiv 𝒜).symm
 #align direct_sum.decompose_symm_one DirectSum.decompose_symm_one
 
-/- warning: direct_sum.decompose_mul -> DirectSum.decompose_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_mul DirectSum.decompose_mulₓ'. -/
 @[simp]
 theorem decompose_mul (x y : A) : decompose 𝒜 (x * y) = decompose 𝒜 x * decompose 𝒜 y :=
   map_mul (decomposeRingEquiv 𝒜) x y
 #align direct_sum.decompose_mul DirectSum.decompose_mul
 
-/- warning: direct_sum.decompose_symm_mul -> DirectSum.decompose_symm_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_symm_mul DirectSum.decompose_symm_mulₓ'. -/
 @[simp]
 theorem decompose_symm_mul (x y : ⨁ i, 𝒜 i) :
     (decompose 𝒜).symm (x * y) = (decompose 𝒜).symm x * (decompose 𝒜).symm y :=
@@ -139,26 +121,17 @@ def GradedRing.proj (i : ι) : A →+ A :=
 #align graded_ring.proj GradedRing.proj
 -/
 
-/- warning: graded_ring.proj_apply -> GradedRing.proj_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align graded_ring.proj_apply GradedRing.proj_applyₓ'. -/
 @[simp]
 theorem GradedRing.proj_apply (i : ι) (r : A) :
     GradedRing.proj 𝒜 i r = (decompose 𝒜 r : ⨁ i, 𝒜 i) i :=
   rfl
 #align graded_ring.proj_apply GradedRing.proj_apply
 
-/- warning: graded_ring.proj_recompose -> GradedRing.proj_recompose is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align graded_ring.proj_recompose GradedRing.proj_recomposeₓ'. -/
 theorem GradedRing.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
     GradedRing.proj 𝒜 i ((decompose 𝒜).symm a) = (decompose 𝒜).symm (DirectSum.of _ i (a i)) := by
   rw [GradedRing.proj_apply, decompose_symm_of, Equiv.apply_symm_apply]
 #align graded_ring.proj_recompose GradedRing.proj_recompose
 
-/- warning: graded_ring.mem_support_iff -> GradedRing.mem_support_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align graded_ring.mem_support_iff GradedRing.mem_support_iffₓ'. -/
 theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r ≠ 0 :=
   Dfinsupp.mem_support_iff.trans ZeroMemClass.coe_eq_zero.Not.symm
@@ -176,34 +149,22 @@ variable {i j : ι}
 
 namespace DirectSum
 
-/- warning: direct_sum.coe_decompose_mul_add_of_left_mem -> DirectSum.coe_decompose_mul_add_of_left_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_add_of_left_mem DirectSum.coe_decompose_mul_add_of_left_memₓ'. -/
 theorem coe_decompose_mul_add_of_left_mem [AddLeftCancelMonoid ι] [GradedRing 𝒜] {a b : A}
     (a_mem : a ∈ 𝒜 i) : (decompose 𝒜 (a * b) (i + j) : A) = a * decompose 𝒜 b j := by
   lift a to 𝒜 i using a_mem; rw [decompose_mul, decompose_coe, coe_of_mul_apply_add]
 #align direct_sum.coe_decompose_mul_add_of_left_mem DirectSum.coe_decompose_mul_add_of_left_mem
 
-/- warning: direct_sum.coe_decompose_mul_add_of_right_mem -> DirectSum.coe_decompose_mul_add_of_right_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_add_of_right_mem DirectSum.coe_decompose_mul_add_of_right_memₓ'. -/
 theorem coe_decompose_mul_add_of_right_mem [AddRightCancelMonoid ι] [GradedRing 𝒜] {a b : A}
     (b_mem : b ∈ 𝒜 j) : (decompose 𝒜 (a * b) (i + j) : A) = decompose 𝒜 a i * b := by
   lift b to 𝒜 j using b_mem; rw [decompose_mul, decompose_coe, coe_mul_of_apply_add]
 #align direct_sum.coe_decompose_mul_add_of_right_mem DirectSum.coe_decompose_mul_add_of_right_mem
 
-/- warning: direct_sum.decompose_mul_add_left -> DirectSum.decompose_mul_add_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_mul_add_left DirectSum.decompose_mul_add_leftₓ'. -/
 theorem decompose_mul_add_left [AddLeftCancelMonoid ι] [GradedRing 𝒜] (a : 𝒜 i) {b : A} :
     decompose 𝒜 (↑a * b) (i + j) =
       @GradedMonoid.GMul.mul ι (fun i => 𝒜 i) _ _ _ _ a (decompose 𝒜 b j) :=
   Subtype.ext <| coe_decompose_mul_add_of_left_mem 𝒜 a.2
 #align direct_sum.decompose_mul_add_left DirectSum.decompose_mul_add_left
 
-/- warning: direct_sum.decompose_mul_add_right -> DirectSum.decompose_mul_add_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.decompose_mul_add_right DirectSum.decompose_mul_add_rightₓ'. -/
 theorem decompose_mul_add_right [AddRightCancelMonoid ι] [GradedRing 𝒜] {a : A} (b : 𝒜 j) :
     decompose 𝒜 (a * ↑b) (i + j) =
       @GradedMonoid.GMul.mul ι (fun i => 𝒜 i) _ _ _ _ (decompose 𝒜 a i) b :=
@@ -278,26 +239,17 @@ def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : �
 #align graded_algebra.proj GradedAlgebra.proj
 -/
 
-/- warning: graded_algebra.proj_apply -> GradedAlgebra.proj_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align graded_algebra.proj_apply GradedAlgebra.proj_applyₓ'. -/
 @[simp]
 theorem GradedAlgebra.proj_apply (i : ι) (r : A) :
     GradedAlgebra.proj 𝒜 i r = (decompose 𝒜 r : ⨁ i, 𝒜 i) i :=
   rfl
 #align graded_algebra.proj_apply GradedAlgebra.proj_apply
 
-/- warning: graded_algebra.proj_recompose -> GradedAlgebra.proj_recompose is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align graded_algebra.proj_recompose GradedAlgebra.proj_recomposeₓ'. -/
 theorem GradedAlgebra.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
     GradedAlgebra.proj 𝒜 i ((decompose 𝒜).symm a) = (decompose 𝒜).symm (of _ i (a i)) := by
   rw [GradedAlgebra.proj_apply, decompose_symm_of, Equiv.apply_symm_apply]
 #align graded_algebra.proj_recompose GradedAlgebra.proj_recompose
 
-/- warning: graded_algebra.mem_support_iff -> GradedAlgebra.mem_support_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align graded_algebra.mem_support_iff GradedAlgebra.mem_support_iffₓ'. -/
 theorem GradedAlgebra.mem_support_iff [DecidableEq A] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedAlgebra.proj 𝒜 i r ≠ 0 :=
   Dfinsupp.mem_support_iff.trans Submodule.coe_eq_zero.Not.symm
@@ -354,17 +306,11 @@ variable {a b : A} {n i : ι}
 
 namespace DirectSum
 
-/- warning: direct_sum.coe_decompose_mul_of_left_mem_of_not_le -> DirectSum.coe_decompose_mul_of_left_mem_of_not_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_of_left_mem_of_not_le DirectSum.coe_decompose_mul_of_left_mem_of_not_leₓ'. -/
 theorem coe_decompose_mul_of_left_mem_of_not_le (a_mem : a ∈ 𝒜 i) (h : ¬i ≤ n) :
     (decompose 𝒜 (a * b) n : A) = 0 := by lift a to 𝒜 i using a_mem;
   rwa [decompose_mul, decompose_coe, coe_of_mul_apply_of_not_le]
 #align direct_sum.coe_decompose_mul_of_left_mem_of_not_le DirectSum.coe_decompose_mul_of_left_mem_of_not_le
 
-/- warning: direct_sum.coe_decompose_mul_of_right_mem_of_not_le -> DirectSum.coe_decompose_mul_of_right_mem_of_not_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_of_right_mem_of_not_le DirectSum.coe_decompose_mul_of_right_mem_of_not_leₓ'. -/
 theorem coe_decompose_mul_of_right_mem_of_not_le (b_mem : b ∈ 𝒜 i) (h : ¬i ≤ n) :
     (decompose 𝒜 (a * b) n : A) = 0 := by lift b to 𝒜 i using b_mem;
   rwa [decompose_mul, decompose_coe, coe_mul_of_apply_of_not_le]
@@ -372,33 +318,21 @@ theorem coe_decompose_mul_of_right_mem_of_not_le (b_mem : b ∈ 𝒜 i) (h : ¬i
 
 variable [Sub ι] [OrderedSub ι] [ContravariantClass ι ι (· + ·) (· ≤ ·)]
 
-/- warning: direct_sum.coe_decompose_mul_of_left_mem_of_le -> DirectSum.coe_decompose_mul_of_left_mem_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_of_left_mem_of_le DirectSum.coe_decompose_mul_of_left_mem_of_leₓ'. -/
 theorem coe_decompose_mul_of_left_mem_of_le (a_mem : a ∈ 𝒜 i) (h : i ≤ n) :
     (decompose 𝒜 (a * b) n : A) = a * decompose 𝒜 b (n - i) := by lift a to 𝒜 i using a_mem;
   rwa [decompose_mul, decompose_coe, coe_of_mul_apply_of_le]
 #align direct_sum.coe_decompose_mul_of_left_mem_of_le DirectSum.coe_decompose_mul_of_left_mem_of_le
 
-/- warning: direct_sum.coe_decompose_mul_of_right_mem_of_le -> DirectSum.coe_decompose_mul_of_right_mem_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_of_right_mem_of_le DirectSum.coe_decompose_mul_of_right_mem_of_leₓ'. -/
 theorem coe_decompose_mul_of_right_mem_of_le (b_mem : b ∈ 𝒜 i) (h : i ≤ n) :
     (decompose 𝒜 (a * b) n : A) = decompose 𝒜 a (n - i) * b := by lift b to 𝒜 i using b_mem;
   rwa [decompose_mul, decompose_coe, coe_mul_of_apply_of_le]
 #align direct_sum.coe_decompose_mul_of_right_mem_of_le DirectSum.coe_decompose_mul_of_right_mem_of_le
 
-/- warning: direct_sum.coe_decompose_mul_of_left_mem -> DirectSum.coe_decompose_mul_of_left_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_of_left_mem DirectSum.coe_decompose_mul_of_left_memₓ'. -/
 theorem coe_decompose_mul_of_left_mem (n) [Decidable (i ≤ n)] (a_mem : a ∈ 𝒜 i) :
     (decompose 𝒜 (a * b) n : A) = if i ≤ n then a * decompose 𝒜 b (n - i) else 0 := by
   lift a to 𝒜 i using a_mem; rwa [decompose_mul, decompose_coe, coe_of_mul_apply]
 #align direct_sum.coe_decompose_mul_of_left_mem DirectSum.coe_decompose_mul_of_left_mem
 
-/- warning: direct_sum.coe_decompose_mul_of_right_mem -> DirectSum.coe_decompose_mul_of_right_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.coe_decompose_mul_of_right_mem DirectSum.coe_decompose_mul_of_right_memₓ'. -/
 theorem coe_decompose_mul_of_right_mem (n) [Decidable (i ≤ n)] (b_mem : b ∈ 𝒜 i) :
     (decompose 𝒜 (a * b) n : A) = if i ≤ n then decompose 𝒜 a (n - i) * b else 0 := by
   lift b to 𝒜 i using b_mem; rwa [decompose_mul, decompose_coe, coe_mul_of_apply]

@@ -32,12 +32,6 @@ Dickson, order, partial well order
 -/
 
 
-/- warning: finsupp.is_pwo -> Finsupp.isPwo is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))] [_inst_4 : Finite.{succ u2} σ] (S : Set.{max u2 u1} (Finsupp.{u2, u1} σ α _inst_1)), Set.IsPwo.{max u2 u1} (Finsupp.{u2, u1} σ α _inst_1) (Finsupp.preorder.{u2, u1} σ α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))) S
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Zero.{u2} α] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : IsWellOrder.{u2} α (fun (x._@.Mathlib.Data.Finsupp.Pwo._hyg.21 : α) (x._@.Mathlib.Data.Finsupp.Pwo._hyg.23 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_2)))))) x._@.Mathlib.Data.Finsupp.Pwo._hyg.21 x._@.Mathlib.Data.Finsupp.Pwo._hyg.23)] [_inst_4 : Finite.{succ u1} σ] (S : Set.{max u2 u1} (Finsupp.{u1, u2} σ α _inst_1)), Set.IsPwo.{max u2 u1} (Finsupp.{u1, u2} σ α _inst_1) (Finsupp.preorder.{u1, u2} σ α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_2)))))) S
-Case conversion may be inaccurate. Consider using '#align finsupp.is_pwo Finsupp.isPwoₓ'. -/
 /-- A version of **Dickson's lemma** any subset of functions `σ →₀ α` is partially well
 ordered, when `σ` is `finite` and `α` is a linear well order.
 This version uses finsupps on a finite type as it is intended for use with `mv_power_series`.

@@ -122,24 +122,12 @@ def ofEquiv (α) [Encodable α] (e : β ≃ α) : Encodable β :=
 #align encodable.of_equiv Encodable.ofEquiv
 -/
 
-/- warning: encodable.encode_of_equiv -> Encodable.encode_ofEquiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] (e : Equiv.{succ u2, succ u1} β α) (b : β), Eq.{1} Nat (Encodable.encode.{u2} β (Encodable.ofEquiv.{u2, u1} β α _inst_1 e) b) (Encodable.encode.{u1} α _inst_1 (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} β α) (fun (_x : Equiv.{succ u2, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u2, succ u1} β α) e b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u2} α] (e : Equiv.{succ u1, succ u2} β α) (b : β), Eq.{1} Nat (Encodable.encode.{u1} β (Encodable.ofEquiv.{u1, u2} β α _inst_1 e) b) (Encodable.encode.{u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) b) _inst_1 (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u2} β α) e b))
-Case conversion may be inaccurate. Consider using '#align encodable.encode_of_equiv Encodable.encode_ofEquivₓ'. -/
 @[simp]
 theorem encode_ofEquiv {α β} [Encodable α] (e : β ≃ α) (b : β) :
     @encode _ (ofEquiv _ e) b = encode (e b) :=
   rfl
 #align encodable.encode_of_equiv Encodable.encode_ofEquiv
 
-/- warning: encodable.decode_of_equiv -> Encodable.decode_ofEquiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] (e : Equiv.{succ u2, succ u1} β α) (n : Nat), Eq.{succ u2} (Option.{u2} β) (Encodable.decode.{u2} β (Encodable.ofEquiv.{u2, u1} β α _inst_1 e) n) (Option.map.{u1, u2} α β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) (Equiv.symm.{succ u2, succ u1} β α e)) (Encodable.decode.{u1} α _inst_1 n))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u2} α] (e : Equiv.{succ u1, succ u2} β α) (n : Nat), Eq.{succ u1} (Option.{u1} β) (Encodable.decode.{u1} β (Encodable.ofEquiv.{u1, u2} β α _inst_1 e) n) (Option.map.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) (Equiv.symm.{succ u1, succ u2} β α e)) (Encodable.decode.{u2} α _inst_1 n))
-Case conversion may be inaccurate. Consider using '#align encodable.decode_of_equiv Encodable.decode_ofEquivₓ'. -/
 @[simp]
 theorem decode_ofEquiv {α β} [Encodable α] (e : β ≃ α) (n : ℕ) :
     @decode _ (ofEquiv _ e) n = (decode α n).map e.symm :=
@@ -372,12 +360,6 @@ theorem encode_inr (b : β) : @encode (Sum α β) _ (Sum.inr b) = bit1 (encode b
   rfl
 #align encodable.encode_inr Encodable.encode_inrₓ
 
-/- warning: encodable.decode_sum_val -> Encodable.decode_sum_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Encodable.{u2} β] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sum.{u1, u2} α β)) (Encodable.decode.{max u1 u2} (Sum.{u1, u2} α β) (Sum.encodable.{u1, u2} α β _inst_1 _inst_2) n) (Encodable.decodeSum.{u1, u2} α β _inst_1 _inst_2 n)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u2} α] [_inst_2 : Encodable.{u1} β] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sum.{u2, u1} α β)) (Encodable.decode.{max u2 u1} (Sum.{u2, u1} α β) (Sum.encodable.{u2, u1} α β _inst_1 _inst_2) n) (Encodable.decodeSum.{u2, u1} α β _inst_1 _inst_2 n)
-Case conversion may be inaccurate. Consider using '#align encodable.decode_sum_val Encodable.decode_sum_valₓ'. -/
 @[simp]
 theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decodeSum n :=
   rfl
@@ -463,12 +445,6 @@ instance Sigma.encodable : Encodable (Sigma γ) :=
 #align sigma.encodable Sigma.encodable
 -/
 
-/- warning: encodable.decode_sigma_val -> Encodable.decode_sigma_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : α -> Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : forall (a : α), Encodable.{u2} (γ a)] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sigma.{u1, u2} α γ)) (Encodable.decode.{max u1 u2} (Sigma.{u1, u2} α γ) (Sigma.encodable.{u1, u2} α γ _inst_1 (fun (a : α) => _inst_2 a)) n) (Option.bind.{u1, max u1 u2} α (Sigma.{u1, u2} α γ) (Encodable.decode.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u2, max u1 u2} (γ a) (Sigma.{u1, u2} α γ) (Sigma.mk.{u1, u2} α γ a) (Encodable.decode.{u2} (γ a) (_inst_2 a) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
-but is expected to have type
-  forall {α : Type.{u2}} {γ : α -> Type.{u1}} [_inst_1 : Encodable.{u2} α] [_inst_2 : forall (a : α), Encodable.{u1} (γ a)] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sigma.{u2, u1} α γ)) (Encodable.decode.{max u2 u1} (Sigma.{u2, u1} α γ) (Sigma.encodable.{u2, u1} α γ _inst_1 (fun (a : α) => _inst_2 a)) n) (Option.bind.{u2, max u2 u1} α (Sigma.{u2, u1} α γ) (Encodable.decode.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u1, max u2 u1} (γ a) (Sigma.{u2, u1} α γ) (Sigma.mk.{u2, u1} α γ a) (Encodable.decode.{u1} (γ a) (_inst_2 a) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
-Case conversion may be inaccurate. Consider using '#align encodable.decode_sigma_val Encodable.decode_sigma_valₓ'. -/
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
     decode (Sigma γ) n =
@@ -494,12 +470,6 @@ instance Prod.encodable : Encodable (α × β) :=
   ofEquiv _ (Equiv.sigmaEquivProd α β).symm
 #align prod.encodable Prod.encodable
 
-/- warning: encodable.decode_prod_val -> Encodable.decode_prod_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Encodable.{u2} β] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Prod.{u1, u2} α β)) (Encodable.decode.{max u1 u2} (Prod.{u1, u2} α β) (Prod.encodable.{u1, u2} α β _inst_1 _inst_2) n) (Option.bind.{u1, max u1 u2} α (Prod.{u1, u2} α β) (Encodable.decode.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u2, max u1 u2} β (Prod.{u1, u2} α β) (Prod.mk.{u1, u2} α β a) (Encodable.decode.{u2} β _inst_2 (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u1} β] [_inst_2 : Encodable.{u2} α] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u1 u2} (Prod.{u2, u1} α β)) (Encodable.decode.{max u1 u2} (Prod.{u2, u1} α β) (Encodable.Prod.encodable.{u2, u1} α β _inst_2 _inst_1) n) (Option.bind.{u2, max u1 u2} α (Prod.{u2, u1} α β) (Encodable.decode.{u2} α _inst_2 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u1, max u1 u2} β (Prod.{u2, u1} α β) (Prod.mk.{u2, u1} α β a) (Encodable.decode.{u1} β _inst_1 (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
-Case conversion may be inaccurate. Consider using '#align encodable.decode_prod_val Encodable.decode_prod_valₓ'. -/
 @[simp]
 theorem decode_prod_val (n : ℕ) :
     decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map <| Prod.mk a :=
@@ -755,24 +725,12 @@ theorem choose_spec (h : ∃ x, p x) : p (choose h) :=
 
 end FindA
 
-/- warning: encodable.axiom_of_choice -> Encodable.axiom_of_choice is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {R : forall (x : α), (β x) -> Prop} [_inst_1 : forall (a : α), Encodable.{u2} (β a)] [_inst_2 : forall (x : α) (y : β x), Decidable (R x y)], (forall (x : α), Exists.{succ u2} (β x) (fun (y : β x) => R x y)) -> (Exists.{max (succ u1) (succ u2)} (forall (a : α), β a) (fun (f : forall (a : α), β a) => forall (x : α), R x (f x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} {R : forall (x : α), (β x) -> Prop} [_inst_1 : forall (a : α), Encodable.{u1} (β a)] [_inst_2 : forall (x : α) (y : β x), Decidable (R x y)], (forall (x : α), Exists.{succ u1} (β x) (fun (y : β x) => R x y)) -> (Exists.{max (succ u2) (succ u1)} (forall (a : α), β a) (fun (f : forall (a : α), β a) => forall (x : α), R x (f x)))
-Case conversion may be inaccurate. Consider using '#align encodable.axiom_of_choice Encodable.axiom_of_choiceₓ'. -/
 /-- A constructive version of `classical.axiom_of_choice` for `encodable` types. -/
 theorem axiom_of_choice {α : Type _} {β : α → Type _} {R : ∀ x, β x → Prop} [∀ a, Encodable (β a)]
     [∀ x y, Decidable (R x y)] (H : ∀ x, ∃ y, R x y) : ∃ f : ∀ a, β a, ∀ x, R x (f x) :=
   ⟨fun x => choose (H x), fun x => choose_spec (H x)⟩
 #align encodable.axiom_of_choice Encodable.axiom_of_choice
 
-/- warning: encodable.skolem -> Encodable.skolem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {P : forall (x : α), (β x) -> Prop} [c : forall (a : α), Encodable.{u2} (β a)] [d : forall (x : α) (y : β x), Decidable (P x y)], Iff (forall (x : α), Exists.{succ u2} (β x) (fun (y : β x) => P x y)) (Exists.{max (succ u1) (succ u2)} (forall (a : α), β a) (fun (f : forall (a : α), β a) => forall (x : α), P x (f x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} {P : forall (x : α), (β x) -> Prop} [c : forall (a : α), Encodable.{u1} (β a)] [d : forall (x : α) (y : β x), Decidable (P x y)], Iff (forall (x : α), Exists.{succ u1} (β x) (fun (y : β x) => P x y)) (Exists.{max (succ u2) (succ u1)} (forall (a : α), β a) (fun (f : forall (a : α), β a) => forall (x : α), P x (f x)))
-Case conversion may be inaccurate. Consider using '#align encodable.skolem Encodable.skolemₓ'. -/
 /-- A constructive version of `classical.skolem` for `encodable` types. -/
 theorem skolem {α : Type _} {β : α → Type _} {P : ∀ x, β x → Prop} [c : ∀ a, Encodable (β a)]
     [d : ∀ x y, Decidable (P x y)] : (∀ x, ∃ y, P x y) ↔ ∃ f : ∀ a, β a, ∀ x, P x (f x) :=
@@ -843,22 +801,10 @@ theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f
 
 variable [Preorder β] {f : α → β} (hf : Directed (· ≤ ·) f)
 
-/- warning: directed.sequence_mono -> Directed.sequence_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f), Monotone.{0, u2} Nat β (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) _inst_3 (Function.comp.{1, succ u1, succ u2} Nat α β f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f hf))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4337 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 x._@.Mathlib.Logic.Encodable.Basic._hyg.4337) f), Monotone.{0, u2} Nat β (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) _inst_3 (Function.comp.{1, succ u1, succ u2} Nat α β f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4337 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 x._@.Mathlib.Logic.Encodable.Basic._hyg.4337) f hf))
-Case conversion may be inaccurate. Consider using '#align directed.sequence_mono Directed.sequence_monoₓ'. -/
 theorem sequence_mono : Monotone (f ∘ hf.sequence f) :=
   monotone_nat_of_le_succ <| hf.sequence_mono_nat
 #align directed.sequence_mono Directed.sequence_mono
 
-/- warning: directed.le_sequence -> Directed.le_sequence is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f) (a : α), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3) (f a) (f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f hf (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Encodable.encode.{u1} α _inst_1 a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4383 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 x._@.Mathlib.Logic.Encodable.Basic._hyg.4383) f) (a : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) (f a) (f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4383 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 x._@.Mathlib.Logic.Encodable.Basic._hyg.4383) f hf (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Encodable.encode.{u1} α _inst_1 a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align directed.le_sequence Directed.le_sequenceₓ'. -/
 theorem le_sequence (a : α) : f a ≤ f (hf.sequence f (encode a + 1)) :=
   hf.rel_sequence a
 #align directed.le_sequence Directed.le_sequence

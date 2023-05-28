@@ -48,23 +48,11 @@ instance : PredOrder ℕ where
     · exact b.zero_le
     · exact h
 
-/- warning: nat.succ_eq_succ -> Nat.succ_eq_succ is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Nat -> Nat) (Order.succ.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.succOrder) Nat.succ
-but is expected to have type
-  Eq.{1} (Nat -> Nat) (Order.succ.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.instSuccOrderNatToPreorderToPartialOrderStrictOrderedSemiring) Nat.succ
-Case conversion may be inaccurate. Consider using '#align nat.succ_eq_succ Nat.succ_eq_succₓ'. -/
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=
   rfl
 #align nat.succ_eq_succ Nat.succ_eq_succ
 
-/- warning: nat.pred_eq_pred -> Nat.pred_eq_pred is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Nat -> Nat) (Order.pred.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.predOrder) Nat.pred
-but is expected to have type
-  Eq.{1} (([mdata borrowed:1 Nat]) -> ([mdata borrowed:1 Nat])) (Order.pred.{0} ([mdata borrowed:1 Nat]) (PartialOrder.toPreorder.{0} ([mdata borrowed:1 Nat]) (StrictOrderedSemiring.toPartialOrder.{0} ([mdata borrowed:1 Nat]) Nat.strictOrderedSemiring)) Nat.instPredOrderNatToPreorderToPartialOrderStrictOrderedSemiring) Nat.pred
-Case conversion may be inaccurate. Consider using '#align nat.pred_eq_pred Nat.pred_eq_predₓ'. -/
 @[simp]
 theorem pred_eq_pred : Order.pred = pred :=
   rfl

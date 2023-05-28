@@ -93,9 +93,6 @@ theorem contractLeft_assoc_coevaluation :
 #align contract_left_assoc_coevaluation contractLeft_assoc_coevaluation
 -/
 
-/- warning: contract_left_assoc_coevaluation' -> contractLeft_assoc_coevaluation' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align contract_left_assoc_coevaluation' contractLeft_assoc_coevaluation'ₓ'. -/
 /-- This lemma corresponds to one of the coherence laws for duals in rigid categories, see
   `category_theory.monoidal.rigid`. -/
 theorem contractLeft_assoc_coevaluation' :

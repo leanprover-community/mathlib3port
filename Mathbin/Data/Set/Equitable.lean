@@ -85,22 +85,10 @@ section OrderedSemiring
 
 variable [OrderedSemiring β]
 
-/- warning: set.subsingleton.equitable_on -> Set.Subsingleton.equitableOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (forall (f : α -> β), Set.EquitableOn.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) (Distrib.toHasAdd.{u2} β (NonUnitalNonAssocSemiring.toDistrib.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))) (AddMonoidWithOne.toOne.{u2} β (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} β (NonAssocSemiring.toAddCommMonoidWithOne.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))) s f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} β] {s : Set.{u2} α}, (Set.Subsingleton.{u2} α s) -> (forall (f : α -> β), Set.EquitableOn.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedSemiring.toPartialOrder.{u1} β _inst_1))) (Distrib.toAdd.{u1} β (NonUnitalNonAssocSemiring.toDistrib.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1))))) (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1)) s f)
-Case conversion may be inaccurate. Consider using '#align set.subsingleton.equitable_on Set.Subsingleton.equitableOnₓ'. -/
 theorem Subsingleton.equitableOn {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
   fun i j hi hj => by rw [hs hi hj]; exact le_add_of_nonneg_right zero_le_one
 #align set.subsingleton.equitable_on Set.Subsingleton.equitableOn
 
-/- warning: set.equitable_on_singleton -> Set.equitableOn_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] (a : α) (f : α -> β), Set.EquitableOn.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) (Distrib.toHasAdd.{u2} β (NonUnitalNonAssocSemiring.toDistrib.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))) (AddMonoidWithOne.toOne.{u2} β (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} β (NonAssocSemiring.toAddCommMonoidWithOne.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} β] (a : α) (f : α -> β), Set.EquitableOn.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedSemiring.toPartialOrder.{u1} β _inst_1))) (Distrib.toAdd.{u1} β (NonUnitalNonAssocSemiring.toDistrib.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1))))) (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1)) (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a) f
-Case conversion may be inaccurate. Consider using '#align set.equitable_on_singleton Set.equitableOn_singletonₓ'. -/
 theorem equitableOn_singleton (a : α) (f : α → β) : Set.EquitableOn {a} f :=
   Set.subsingleton_singleton.EquitableOn f
 #align set.equitable_on_singleton Set.equitableOn_singleton

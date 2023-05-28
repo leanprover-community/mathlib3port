@@ -133,33 +133,21 @@ instance : CoeFun (A →⋆ₙₐ[R] B) fun _ => A → B :=
 
 initialize_simps_projections NonUnitalStarAlgHom (toFun → apply)
 
-/- warning: non_unital_star_alg_hom.coe_coe -> NonUnitalStarAlgHom.coe_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_coe NonUnitalStarAlgHom.coe_coeₓ'. -/
 @[simp, protected]
 theorem coe_coe {F : Type _} [NonUnitalStarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆ₙₐ[R] B) = f :=
   rfl
 #align non_unital_star_alg_hom.coe_coe NonUnitalStarAlgHom.coe_coe
 
-/- warning: non_unital_star_alg_hom.coe_to_non_unital_alg_hom -> NonUnitalStarAlgHom.coe_toNonUnitalAlgHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_toNonUnitalAlgHomₓ'. -/
 @[simp]
 theorem coe_toNonUnitalAlgHom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgHom : A → B) = f :=
   rfl
 #align non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_toNonUnitalAlgHom
 
-/- warning: non_unital_star_alg_hom.ext -> NonUnitalStarAlgHom.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.ext NonUnitalStarAlgHom.extₓ'. -/
 @[ext]
 theorem ext {f g : A →⋆ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align non_unital_star_alg_hom.ext NonUnitalStarAlgHom.ext
 
-/- warning: non_unital_star_alg_hom.copy -> NonUnitalStarAlgHom.copy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.copy NonUnitalStarAlgHom.copyₓ'. -/
 /-- Copy of a `non_unital_star_alg_hom` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
 protected def copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆ₙₐ[R] B
@@ -172,17 +160,11 @@ protected def copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : A →
   map_star' := h.symm ▸ map_star f
 #align non_unital_star_alg_hom.copy NonUnitalStarAlgHom.copy
 
-/- warning: non_unital_star_alg_hom.coe_copy -> NonUnitalStarAlgHom.coe_copy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_copy NonUnitalStarAlgHom.coe_copyₓ'. -/
 @[simp]
 theorem coe_copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align non_unital_star_alg_hom.coe_copy NonUnitalStarAlgHom.coe_copy
 
-/- warning: non_unital_star_alg_hom.copy_eq -> NonUnitalStarAlgHom.copy_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.copy_eq NonUnitalStarAlgHom.copy_eqₓ'. -/
 theorem copy_eq (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h = f :=
   FunLike.ext' h
 #align non_unital_star_alg_hom.copy_eq NonUnitalStarAlgHom.copy_eq
@@ -209,9 +191,6 @@ protected def id : A →⋆ₙₐ[R] A :=
 #align non_unital_star_alg_hom.id NonUnitalStarAlgHom.id
 -/
 
-/- warning: non_unital_star_alg_hom.coe_id -> NonUnitalStarAlgHom.coe_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_id NonUnitalStarAlgHom.coe_idₓ'. -/
 @[simp]
 theorem coe_id : ⇑(NonUnitalStarAlgHom.id R A) = id :=
   rfl
@@ -230,48 +209,27 @@ def comp (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) : A →⋆ₙₐ[R]
 #align non_unital_star_alg_hom.comp NonUnitalStarAlgHom.comp
 -/
 
-/- warning: non_unital_star_alg_hom.coe_comp -> NonUnitalStarAlgHom.coe_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_comp NonUnitalStarAlgHom.coe_compₓ'. -/
 @[simp]
 theorem coe_comp (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) : ⇑(comp f g) = f ∘ g :=
   rfl
 #align non_unital_star_alg_hom.coe_comp NonUnitalStarAlgHom.coe_comp
 
-/- warning: non_unital_star_alg_hom.comp_apply -> NonUnitalStarAlgHom.comp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.comp_apply NonUnitalStarAlgHom.comp_applyₓ'. -/
 @[simp]
 theorem comp_apply (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) (a : A) : comp f g a = f (g a) :=
   rfl
 #align non_unital_star_alg_hom.comp_apply NonUnitalStarAlgHom.comp_apply
 
-/- warning: non_unital_star_alg_hom.comp_assoc -> NonUnitalStarAlgHom.comp_assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.comp_assoc NonUnitalStarAlgHom.comp_assocₓ'. -/
 @[simp]
 theorem comp_assoc (f : C →⋆ₙₐ[R] D) (g : B →⋆ₙₐ[R] C) (h : A →⋆ₙₐ[R] B) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align non_unital_star_alg_hom.comp_assoc NonUnitalStarAlgHom.comp_assoc
 
-/- warning: non_unital_star_alg_hom.id_comp -> NonUnitalStarAlgHom.id_comp is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B] (f : NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u3)} (NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (NonUnitalStarAlgHom.comp.{u1, u2, u3, u3} R A B B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_5 _inst_6 _inst_7 (NonUnitalStarAlgHom.id.{u1, u3} R B _inst_1 _inst_5 _inst_6 _inst_7) f) f
-but is expected to have type
-  forall {R : Type.{u3}} {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : Monoid.{u3} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u3, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u1} B] [_inst_6 : DistribMulAction.{u3, u1} R B _inst_1 (AddCommMonoid.toAddMonoid.{u1} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} B _inst_5))] [_inst_7 : Star.{u1} B] (f : NonUnitalStarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u1)} (NonUnitalStarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (NonUnitalStarAlgHom.comp.{u3, u2, u1, u1} R A B B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_5 _inst_6 _inst_7 (NonUnitalStarAlgHom.id.{u3, u1} R B _inst_1 _inst_5 _inst_6 _inst_7) f) f
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.id_comp NonUnitalStarAlgHom.id_compₓ'. -/
 @[simp]
 theorem id_comp (f : A →⋆ₙₐ[R] B) : (NonUnitalStarAlgHom.id _ _).comp f = f :=
   ext fun _ => rfl
 #align non_unital_star_alg_hom.id_comp NonUnitalStarAlgHom.id_comp
 
-/- warning: non_unital_star_alg_hom.comp_id -> NonUnitalStarAlgHom.comp_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B] (f : NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u3)} (NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (NonUnitalStarAlgHom.comp.{u1, u2, u2, u3} R A A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 f (NonUnitalStarAlgHom.id.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)) f
-but is expected to have type
-  forall {R : Type.{u3}} {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : Monoid.{u3} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u3, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u1} B] [_inst_6 : DistribMulAction.{u3, u1} R B _inst_1 (AddCommMonoid.toAddMonoid.{u1} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} B _inst_5))] [_inst_7 : Star.{u1} B] (f : NonUnitalStarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u1)} (NonUnitalStarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (NonUnitalStarAlgHom.comp.{u3, u2, u2, u1} R A A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 f (NonUnitalStarAlgHom.id.{u3, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)) f
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.comp_id NonUnitalStarAlgHom.comp_idₓ'. -/
 @[simp]
 theorem comp_id (f : A →⋆ₙₐ[R] B) : f.comp (NonUnitalStarAlgHom.id _ _) = f :=
   ext fun _ => rfl
@@ -284,17 +242,11 @@ instance : Monoid (A →⋆ₙₐ[R] A) where
   one_mul := id_comp
   mul_one := comp_id
 
-/- warning: non_unital_star_alg_hom.coe_one -> NonUnitalStarAlgHom.coe_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_one NonUnitalStarAlgHom.coe_oneₓ'. -/
 @[simp]
 theorem coe_one : ((1 : A →⋆ₙₐ[R] A) : A → A) = id :=
   rfl
 #align non_unital_star_alg_hom.coe_one NonUnitalStarAlgHom.coe_one
 
-/- warning: non_unital_star_alg_hom.one_apply -> NonUnitalStarAlgHom.one_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.one_apply NonUnitalStarAlgHom.one_applyₓ'. -/
 theorem one_apply (a : A) : (1 : A →⋆ₙₐ[R] A) a = a :=
   rfl
 #align non_unital_star_alg_hom.one_apply NonUnitalStarAlgHom.one_apply
@@ -322,17 +274,11 @@ instance : MonoidWithZero (A →⋆ₙₐ[R] A) :=
     zero_mul := fun f => ext fun x => rfl
     mul_zero := fun f => ext fun x => map_zero f }
 
-/- warning: non_unital_star_alg_hom.coe_zero -> NonUnitalStarAlgHom.coe_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_zero NonUnitalStarAlgHom.coe_zeroₓ'. -/
 @[simp]
 theorem coe_zero : ((0 : A →⋆ₙₐ[R] B) : A → B) = 0 :=
   rfl
 #align non_unital_star_alg_hom.coe_zero NonUnitalStarAlgHom.coe_zero
 
-/- warning: non_unital_star_alg_hom.zero_apply -> NonUnitalStarAlgHom.zero_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.zero_apply NonUnitalStarAlgHom.zero_applyₓ'. -/
 theorem zero_apply (a : A) : (0 : A →⋆ₙₐ[R] B) a = 0 :=
   rfl
 #align non_unital_star_alg_hom.zero_apply NonUnitalStarAlgHom.zero_apply
@@ -424,9 +370,6 @@ directly. -/
 instance : CoeFun (A →⋆ₐ[R] B) fun _ => A → B :=
   FunLike.hasCoeToFun
 
-/- warning: star_alg_hom.coe_coe -> StarAlgHom.coe_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_coe StarAlgHom.coe_coeₓ'. -/
 @[simp, protected]
 theorem coe_coe {F : Type _} [StarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆ₐ[R] B) = f :=
   rfl
@@ -434,25 +377,16 @@ theorem coe_coe {F : Type _} [StarAlgHomClass F R A B] (f : F) : ⇑(f : A →�
 
 initialize_simps_projections StarAlgHom (toFun → apply)
 
-/- warning: star_alg_hom.coe_to_alg_hom -> StarAlgHom.coe_toAlgHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_to_alg_hom StarAlgHom.coe_toAlgHomₓ'. -/
 @[simp]
 theorem coe_toAlgHom {f : A →⋆ₐ[R] B} : (f.toAlgHom : A → B) = f :=
   rfl
 #align star_alg_hom.coe_to_alg_hom StarAlgHom.coe_toAlgHom
 
-/- warning: star_alg_hom.ext -> StarAlgHom.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.ext StarAlgHom.extₓ'. -/
 @[ext]
 theorem ext {f g : A →⋆ₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align star_alg_hom.ext StarAlgHom.ext
 
-/- warning: star_alg_hom.copy -> StarAlgHom.copy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.copy StarAlgHom.copyₓ'. -/
 /-- Copy of a `star_alg_hom` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
 protected def copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆ₐ[R] B
@@ -466,17 +400,11 @@ protected def copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆
   map_star' := h.symm ▸ map_star f
 #align star_alg_hom.copy StarAlgHom.copy
 
-/- warning: star_alg_hom.coe_copy -> StarAlgHom.coe_copy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_copy StarAlgHom.coe_copyₓ'. -/
 @[simp]
 theorem coe_copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align star_alg_hom.coe_copy StarAlgHom.coe_copy
 
-/- warning: star_alg_hom.copy_eq -> StarAlgHom.copy_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.copy_eq StarAlgHom.copy_eqₓ'. -/
 theorem copy_eq (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h = f :=
   FunLike.ext' h
 #align star_alg_hom.copy_eq StarAlgHom.copy_eq
@@ -503,9 +431,6 @@ protected def id : A →⋆ₐ[R] A :=
 #align star_alg_hom.id StarAlgHom.id
 -/
 
-/- warning: star_alg_hom.coe_id -> StarAlgHom.coe_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_id StarAlgHom.coe_idₓ'. -/
 @[simp]
 theorem coe_id : ⇑(StarAlgHom.id R A) = id :=
   rfl
@@ -526,48 +451,27 @@ def comp (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) : A →⋆ₐ[R] C :=
 #align star_alg_hom.comp StarAlgHom.comp
 -/
 
-/- warning: star_alg_hom.coe_comp -> StarAlgHom.coe_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_comp StarAlgHom.coe_compₓ'. -/
 @[simp]
 theorem coe_comp (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) : ⇑(comp f g) = f ∘ g :=
   rfl
 #align star_alg_hom.coe_comp StarAlgHom.coe_comp
 
-/- warning: star_alg_hom.comp_apply -> StarAlgHom.comp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.comp_apply StarAlgHom.comp_applyₓ'. -/
 @[simp]
 theorem comp_apply (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) (a : A) : comp f g a = f (g a) :=
   rfl
 #align star_alg_hom.comp_apply StarAlgHom.comp_apply
 
-/- warning: star_alg_hom.comp_assoc -> StarAlgHom.comp_assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.comp_assoc StarAlgHom.comp_assocₓ'. -/
 @[simp]
 theorem comp_assoc (f : C →⋆ₐ[R] D) (g : B →⋆ₐ[R] C) (h : A →⋆ₐ[R] B) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align star_alg_hom.comp_assoc StarAlgHom.comp_assoc
 
-/- warning: star_alg_hom.id_comp -> StarAlgHom.id_comp is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B] (f : StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u3)} (StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.comp.{u1, u2, u3, u3} R A B B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_5 _inst_6 _inst_7 (StarAlgHom.id.{u1, u3} R B _inst_1 _inst_5 _inst_6 _inst_7) f) f
-but is expected to have type
-  forall {R : Type.{u3}} {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u3, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u1} B] [_inst_6 : Algebra.{u3, u1} R B _inst_1 _inst_5] [_inst_7 : Star.{u1} B] (f : StarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u1)} (StarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.comp.{u3, u2, u1, u1} R A B B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_5 _inst_6 _inst_7 (StarAlgHom.id.{u3, u1} R B _inst_1 _inst_5 _inst_6 _inst_7) f) f
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.id_comp StarAlgHom.id_compₓ'. -/
 @[simp]
 theorem id_comp (f : A →⋆ₐ[R] B) : (StarAlgHom.id _ _).comp f = f :=
   ext fun _ => rfl
 #align star_alg_hom.id_comp StarAlgHom.id_comp
 
-/- warning: star_alg_hom.comp_id -> StarAlgHom.comp_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B] (f : StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u3)} (StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.comp.{u1, u2, u2, u3} R A A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 f (StarAlgHom.id.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)) f
-but is expected to have type
-  forall {R : Type.{u3}} {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u3, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u1} B] [_inst_6 : Algebra.{u3, u1} R B _inst_1 _inst_5] [_inst_7 : Star.{u1} B] (f : StarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7), Eq.{max (succ u2) (succ u1)} (StarAlgHom.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.comp.{u3, u2, u2, u1} R A A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 f (StarAlgHom.id.{u3, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)) f
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.comp_id StarAlgHom.comp_idₓ'. -/
 @[simp]
 theorem comp_id (f : A →⋆ₐ[R] B) : f.comp (StarAlgHom.id _ _) = f :=
   ext fun _ => rfl
@@ -587,9 +491,6 @@ def toNonUnitalStarAlgHom (f : A →⋆ₐ[R] B) : A →⋆ₙₐ[R] B :=
 #align star_alg_hom.to_non_unital_star_alg_hom StarAlgHom.toNonUnitalStarAlgHom
 -/
 
-/- warning: star_alg_hom.coe_to_non_unital_star_alg_hom -> StarAlgHom.coe_toNonUnitalStarAlgHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_to_non_unital_star_alg_hom StarAlgHom.coe_toNonUnitalStarAlgHomₓ'. -/
 @[simp]
 theorem coe_toNonUnitalStarAlgHom (f : A →⋆ₐ[R] B) : (f.toNonUnitalStarAlgHom : A → B) = f :=
   rfl
@@ -612,24 +513,12 @@ variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMul
   [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [Star B] [NonUnitalNonAssocSemiring C]
   [DistribMulAction R C] [Star C]
 
-/- warning: non_unital_star_alg_hom.fst -> NonUnitalStarAlgHom.fst is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B], NonUnitalStarAlgHom.{u1, max u2 u3, u2} R (Prod.{u2, u3} A B) A _inst_1 (Prod.nonUnitalNonAssocSemiring.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u1, u2, u3} R A B _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) _inst_2 _inst_3 _inst_4
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B], NonUnitalStarAlgHom.{u1, max u3 u2, u2} R (Prod.{u2, u3} A B) A _inst_1 (Prod.instNonUnitalNonAssocSemiringProd.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u2, u3, u1} A B R _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.instStarProd.{u2, u3} A B _inst_4 _inst_7) _inst_2 _inst_3 _inst_4
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.fst NonUnitalStarAlgHom.fstₓ'. -/
 /-- The first projection of a product is a non-unital ⋆-algebra homomoprhism. -/
 @[simps]
 def fst : A × B →⋆ₙₐ[R] A :=
   { NonUnitalAlgHom.fst R A B with map_star' := fun x => rfl }
 #align non_unital_star_alg_hom.fst NonUnitalStarAlgHom.fst
 
-/- warning: non_unital_star_alg_hom.snd -> NonUnitalStarAlgHom.snd is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B], NonUnitalStarAlgHom.{u1, max u2 u3, u3} R (Prod.{u2, u3} A B) B _inst_1 (Prod.nonUnitalNonAssocSemiring.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u1, u2, u3} R A B _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) _inst_5 _inst_6 _inst_7
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B], NonUnitalStarAlgHom.{u1, max u3 u2, u3} R (Prod.{u2, u3} A B) B _inst_1 (Prod.instNonUnitalNonAssocSemiringProd.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u2, u3, u1} A B R _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.instStarProd.{u2, u3} A B _inst_4 _inst_7) _inst_5 _inst_6 _inst_7
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.snd NonUnitalStarAlgHom.sndₓ'. -/
 /-- The second projection of a product is a non-unital ⋆-algebra homomorphism. -/
 @[simps]
 def snd : A × B →⋆ₙₐ[R] B :=
@@ -638,12 +527,6 @@ def snd : A × B →⋆ₙₐ[R] B :=
 
 variable {R A B C}
 
-/- warning: non_unital_star_alg_hom.prod -> NonUnitalStarAlgHom.prod is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B] [_inst_8 : NonUnitalNonAssocSemiring.{u4} C] [_inst_9 : DistribMulAction.{u1, u4} R C _inst_1 (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8))] [_inst_10 : Star.{u4} C], (NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) -> (NonUnitalStarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10) -> (NonUnitalStarAlgHom.{u1, u2, max u3 u4} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.nonUnitalNonAssocSemiring.{u3, u4} B C _inst_5 _inst_8) (Prod.distribMulAction.{u1, u3, u4} R B C _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8)) _inst_6 _inst_9) (Prod.hasStar.{u3, u4} B C _inst_7 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B] [_inst_8 : NonUnitalNonAssocSemiring.{u4} C] [_inst_9 : DistribMulAction.{u1, u4} R C _inst_1 (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8))] [_inst_10 : Star.{u4} C], (NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) -> (NonUnitalStarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10) -> (NonUnitalStarAlgHom.{u1, u2, max u4 u3} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.instNonUnitalNonAssocSemiringProd.{u3, u4} B C _inst_5 _inst_8) (Prod.distribMulAction.{u3, u4, u1} B C R _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8)) _inst_6 _inst_9) (Prod.instStarProd.{u3, u4} B C _inst_7 _inst_10))
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.prod NonUnitalStarAlgHom.prodₓ'. -/
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : A →⋆ₙₐ[R] B × C :=
@@ -651,43 +534,25 @@ def prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : A →⋆ₙₐ[R]
     map_star' := fun x => by simp [map_star, Prod.star_def] }
 #align non_unital_star_alg_hom.prod NonUnitalStarAlgHom.prod
 
-/- warning: non_unital_star_alg_hom.coe_prod -> NonUnitalStarAlgHom.coe_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_prod NonUnitalStarAlgHom.coe_prodₓ'. -/
 theorem coe_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 #align non_unital_star_alg_hom.coe_prod NonUnitalStarAlgHom.coe_prod
 
-/- warning: non_unital_star_alg_hom.fst_prod -> NonUnitalStarAlgHom.fst_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.fst_prod NonUnitalStarAlgHom.fst_prodₓ'. -/
 @[simp]
 theorem fst_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by
   ext <;> rfl
 #align non_unital_star_alg_hom.fst_prod NonUnitalStarAlgHom.fst_prod
 
-/- warning: non_unital_star_alg_hom.snd_prod -> NonUnitalStarAlgHom.snd_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.snd_prod NonUnitalStarAlgHom.snd_prodₓ'. -/
 @[simp]
 theorem snd_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by
   ext <;> rfl
 #align non_unital_star_alg_hom.snd_prod NonUnitalStarAlgHom.snd_prod
 
-/- warning: non_unital_star_alg_hom.prod_fst_snd -> NonUnitalStarAlgHom.prod_fst_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.prod_fst_snd NonUnitalStarAlgHom.prod_fst_sndₓ'. -/
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
   FunLike.coe_injective Pi.prod_fst_snd
 #align non_unital_star_alg_hom.prod_fst_snd NonUnitalStarAlgHom.prod_fst_snd
 
-/- warning: non_unital_star_alg_hom.prod_equiv -> NonUnitalStarAlgHom.prodEquiv is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B] [_inst_8 : NonUnitalNonAssocSemiring.{u4} C] [_inst_9 : DistribMulAction.{u1, u4} R C _inst_1 (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8))] [_inst_10 : Star.{u4} C], Equiv.{max (succ (max u2 u3)) (succ (max u2 u4)), max (succ u2) (succ (max u3 u4))} (Prod.{max u2 u3, max u2 u4} (NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (NonUnitalStarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10)) (NonUnitalStarAlgHom.{u1, u2, max u3 u4} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.nonUnitalNonAssocSemiring.{u3, u4} B C _inst_5 _inst_8) (Prod.distribMulAction.{u1, u3, u4} R B C _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8)) _inst_6 _inst_9) (Prod.hasStar.{u3, u4} B C _inst_7 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : Star.{u2} A] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : Star.{u3} B] [_inst_8 : NonUnitalNonAssocSemiring.{u4} C] [_inst_9 : DistribMulAction.{u1, u4} R C _inst_1 (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8))] [_inst_10 : Star.{u4} C], Equiv.{max (succ (max u4 u2)) (succ (max u3 u2)), max (succ (max u4 u3)) (succ u2)} (Prod.{max u3 u2, max u4 u2} (NonUnitalStarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (NonUnitalStarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10)) (NonUnitalStarAlgHom.{u1, u2, max u4 u3} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.instNonUnitalNonAssocSemiringProd.{u3, u4} B C _inst_5 _inst_8) (Prod.distribMulAction.{u3, u4, u1} B C R _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) (AddCommMonoid.toAddMonoid.{u4} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} C _inst_8)) _inst_6 _inst_9) (Prod.instStarProd.{u3, u4} B C _inst_7 _inst_10))
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.prod_equiv NonUnitalStarAlgHom.prodEquivₓ'. -/
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
@@ -707,23 +572,11 @@ variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMul
   [StarAddMonoid A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [StarAddMonoid B]
   [NonUnitalNonAssocSemiring C] [DistribMulAction R C] [StarAddMonoid C]
 
-/- warning: non_unital_star_alg_hom.inl -> NonUnitalStarAlgHom.inl is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : StarAddMonoid.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : StarAddMonoid.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))], NonUnitalStarAlgHom.{u1, u2, max u2 u3} R A (Prod.{u2, u3} A B) _inst_1 _inst_2 _inst_3 (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) _inst_4)) (Prod.nonUnitalNonAssocSemiring.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u1, u2, u3} R A B _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.hasStar.{u2, u3} A B (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) _inst_4)) (InvolutiveStar.toHasStar.{u3} B (StarAddMonoid.toHasInvolutiveStar.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_7)))
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : StarAddMonoid.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : StarAddMonoid.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))], NonUnitalStarAlgHom.{u1, u2, max u3 u2} R A (Prod.{u2, u3} A B) _inst_1 _inst_2 _inst_3 (InvolutiveStar.toStar.{u2} A (StarAddMonoid.toInvolutiveStar.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) _inst_4)) (Prod.instNonUnitalNonAssocSemiringProd.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u2, u3, u1} A B R _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.instStarProd.{u2, u3} A B (InvolutiveStar.toStar.{u2} A (StarAddMonoid.toInvolutiveStar.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) _inst_4)) (InvolutiveStar.toStar.{u3} B (StarAddMonoid.toInvolutiveStar.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_7)))
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.inl NonUnitalStarAlgHom.inlₓ'. -/
 /-- The left injection into a product is a non-unital algebra homomorphism. -/
 def inl : A →⋆ₙₐ[R] A × B :=
   prod 1 0
 #align non_unital_star_alg_hom.inl NonUnitalStarAlgHom.inl
 
-/- warning: non_unital_star_alg_hom.inr -> NonUnitalStarAlgHom.inr is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : StarAddMonoid.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : StarAddMonoid.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))], NonUnitalStarAlgHom.{u1, u3, max u2 u3} R B (Prod.{u2, u3} A B) _inst_1 _inst_5 _inst_6 (InvolutiveStar.toHasStar.{u3} B (StarAddMonoid.toHasInvolutiveStar.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_7)) (Prod.nonUnitalNonAssocSemiring.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u1, u2, u3} R A B _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.hasStar.{u2, u3} A B (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) _inst_4)) (InvolutiveStar.toHasStar.{u3} B (StarAddMonoid.toHasInvolutiveStar.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_7)))
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : StarAddMonoid.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_5 : NonUnitalNonAssocSemiring.{u3} B] [_inst_6 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))] [_inst_7 : StarAddMonoid.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5))], NonUnitalStarAlgHom.{u1, u3, max u3 u2} R B (Prod.{u2, u3} A B) _inst_1 _inst_5 _inst_6 (InvolutiveStar.toStar.{u3} B (StarAddMonoid.toInvolutiveStar.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_7)) (Prod.instNonUnitalNonAssocSemiringProd.{u2, u3} A B _inst_2 _inst_5) (Prod.distribMulAction.{u2, u3, u1} A B R _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_3 _inst_6) (Prod.instStarProd.{u2, u3} A B (InvolutiveStar.toStar.{u2} A (StarAddMonoid.toInvolutiveStar.{u2} A (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2)) _inst_4)) (InvolutiveStar.toStar.{u3} B (StarAddMonoid.toInvolutiveStar.{u3} B (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_5)) _inst_7)))
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.inr NonUnitalStarAlgHom.inrₓ'. -/
 /-- The right injection into a product is a non-unital algebra homomorphism. -/
 def inr : B →⋆ₙₐ[R] A × B :=
   prod 0 1
@@ -731,32 +584,20 @@ def inr : B →⋆ₙₐ[R] A × B :=
 
 variable {R A B}
 
-/- warning: non_unital_star_alg_hom.coe_inl -> NonUnitalStarAlgHom.coe_inl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_inl NonUnitalStarAlgHom.coe_inlₓ'. -/
 @[simp]
 theorem coe_inl : (inl R A B : A → A × B) = fun x => (x, 0) :=
   rfl
 #align non_unital_star_alg_hom.coe_inl NonUnitalStarAlgHom.coe_inl
 
-/- warning: non_unital_star_alg_hom.inl_apply -> NonUnitalStarAlgHom.inl_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.inl_apply NonUnitalStarAlgHom.inl_applyₓ'. -/
 theorem inl_apply (x : A) : inl R A B x = (x, 0) :=
   rfl
 #align non_unital_star_alg_hom.inl_apply NonUnitalStarAlgHom.inl_apply
 
-/- warning: non_unital_star_alg_hom.coe_inr -> NonUnitalStarAlgHom.coe_inr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.coe_inr NonUnitalStarAlgHom.coe_inrₓ'. -/
 @[simp]
 theorem coe_inr : (inr R A B : B → A × B) = Prod.mk 0 :=
   rfl
 #align non_unital_star_alg_hom.coe_inr NonUnitalStarAlgHom.coe_inr
 
-/- warning: non_unital_star_alg_hom.inr_apply -> NonUnitalStarAlgHom.inr_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align non_unital_star_alg_hom.inr_apply NonUnitalStarAlgHom.inr_applyₓ'. -/
 theorem inr_apply (x : B) : inr R A B x = (0, x) :=
   rfl
 #align non_unital_star_alg_hom.inr_apply NonUnitalStarAlgHom.inr_apply
@@ -770,24 +611,12 @@ namespace StarAlgHom
 variable (R A B C : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [Star A] [Semiring B]
   [Algebra R B] [Star B] [Semiring C] [Algebra R C] [Star C]
 
-/- warning: star_alg_hom.fst -> StarAlgHom.fst is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B], StarAlgHom.{u1, max u2 u3, u2} R (Prod.{u2, u3} A B) A _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) _inst_2 _inst_3 _inst_4
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B], StarAlgHom.{u1, max u3 u2, u2} R (Prod.{u2, u3} A B) A _inst_1 (Prod.instSemiringProd.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u2, u3} A B _inst_4 _inst_7) _inst_2 _inst_3 _inst_4
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.fst StarAlgHom.fstₓ'. -/
 /-- The first projection of a product is a ⋆-algebra homomoprhism. -/
 @[simps]
 def fst : A × B →⋆ₐ[R] A :=
   { AlgHom.fst R A B with map_star' := fun x => rfl }
 #align star_alg_hom.fst StarAlgHom.fst
 
-/- warning: star_alg_hom.snd -> StarAlgHom.snd is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B], StarAlgHom.{u1, max u2 u3, u3} R (Prod.{u2, u3} A B) B _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) _inst_5 _inst_6 _inst_7
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B], StarAlgHom.{u1, max u3 u2, u3} R (Prod.{u2, u3} A B) B _inst_1 (Prod.instSemiringProd.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u2, u3} A B _inst_4 _inst_7) _inst_5 _inst_6 _inst_7
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.snd StarAlgHom.sndₓ'. -/
 /-- The second projection of a product is a ⋆-algebra homomorphism. -/
 @[simps]
 def snd : A × B →⋆ₐ[R] B :=
@@ -796,58 +625,31 @@ def snd : A × B →⋆ₐ[R] B :=
 
 variable {R A B C}
 
-/- warning: star_alg_hom.prod -> StarAlgHom.prod is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B] [_inst_8 : Semiring.{u4} C] [_inst_9 : Algebra.{u1, u4} R C _inst_1 _inst_8] [_inst_10 : Star.{u4} C], (StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) -> (StarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10) -> (StarAlgHom.{u1, u2, max u3 u4} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.semiring.{u3, u4} B C _inst_5 _inst_8) (Prod.algebra.{u1, u3, u4} R B C _inst_1 _inst_5 _inst_6 _inst_8 _inst_9) (Prod.hasStar.{u3, u4} B C _inst_7 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B] [_inst_8 : Semiring.{u4} C] [_inst_9 : Algebra.{u1, u4} R C _inst_1 _inst_8] [_inst_10 : Star.{u4} C], (StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) -> (StarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10) -> (StarAlgHom.{u1, u2, max u4 u3} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.instSemiringProd.{u3, u4} B C _inst_5 _inst_8) (Prod.algebra.{u1, u3, u4} R B C _inst_1 _inst_5 _inst_6 _inst_8 _inst_9) (Prod.instStarProd.{u3, u4} B C _inst_7 _inst_10))
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.prod StarAlgHom.prodₓ'. -/
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : A →⋆ₐ[R] B × C :=
   { f.toAlgHom.Prod g.toAlgHom with map_star' := fun x => by simp [Prod.star_def, map_star] }
 #align star_alg_hom.prod StarAlgHom.prod
 
-/- warning: star_alg_hom.coe_prod -> StarAlgHom.coe_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.coe_prod StarAlgHom.coe_prodₓ'. -/
 theorem coe_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 #align star_alg_hom.coe_prod StarAlgHom.coe_prod
 
-/- warning: star_alg_hom.fst_prod -> StarAlgHom.fst_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.fst_prod StarAlgHom.fst_prodₓ'. -/
 @[simp]
 theorem fst_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (fst R B C).comp (prod f g) = f := by
   ext <;> rfl
 #align star_alg_hom.fst_prod StarAlgHom.fst_prod
 
-/- warning: star_alg_hom.snd_prod -> StarAlgHom.snd_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.snd_prod StarAlgHom.snd_prodₓ'. -/
 @[simp]
 theorem snd_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (snd R B C).comp (prod f g) = g := by
   ext <;> rfl
 #align star_alg_hom.snd_prod StarAlgHom.snd_prod
 
-/- warning: star_alg_hom.prod_fst_snd -> StarAlgHom.prod_fst_snd is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B], Eq.{succ (max u2 u3)} (StarAlgHom.{u1, max u2 u3, max u2 u3} R (Prod.{u2, u3} A B) (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)) (StarAlgHom.prod.{u1, max u2 u3, u2, u3} R (Prod.{u2, u3} A B) A B _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 (StarAlgHom.fst.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.snd.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)) (OfNat.ofNat.{max u2 u3} (StarAlgHom.{u1, max u2 u3, max u2 u3} R (Prod.{u2, u3} A B) (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)) 1 (OfNat.mk.{max u2 u3} (StarAlgHom.{u1, max u2 u3, max u2 u3} R (Prod.{u2, u3} A B) (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)) 1 (One.one.{max u2 u3} (StarAlgHom.{u1, max u2 u3, max u2 u3} R (Prod.{u2, u3} A B) (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)) (MulOneClass.toHasOne.{max u2 u3} (StarAlgHom.{u1, max u2 u3, max u2 u3} R (Prod.{u2, u3} A B) (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)) (Monoid.toMulOneClass.{max u2 u3} (StarAlgHom.{u1, max u2 u3, max u2 u3} R (Prod.{u2, u3} A B) (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7) (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)) (StarAlgHom.monoid.{u1, max u2 u3} R (Prod.{u2, u3} A B) _inst_1 (Prod.semiring.{u2, u3} A B _inst_2 _inst_5) (Prod.algebra.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.hasStar.{u2, u3} A B _inst_4 _inst_7)))))))
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u3}} {B : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u3} A] [_inst_3 : Algebra.{u1, u3} R A _inst_1 _inst_2] [_inst_4 : Star.{u3} A] [_inst_5 : Semiring.{u2} B] [_inst_6 : Algebra.{u1, u2} R B _inst_1 _inst_5] [_inst_7 : Star.{u2} B], Eq.{max (succ u3) (succ u2)} (StarAlgHom.{u1, max u3 u2, max u2 u3} R (Prod.{u3, u2} A B) (Prod.{u3, u2} A B) _inst_1 (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7) (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7)) (StarAlgHom.prod.{u1, max u3 u2, u3, u2} R (Prod.{u3, u2} A B) A B _inst_1 (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7) _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 (StarAlgHom.fst.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.snd.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7)) (OfNat.ofNat.{max u3 u2} (StarAlgHom.{u1, max u3 u2, max u2 u3} R (Prod.{u3, u2} A B) (Prod.{u3, u2} A B) _inst_1 (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7) (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7)) 1 (One.toOfNat1.{max u3 u2} (StarAlgHom.{u1, max u3 u2, max u2 u3} R (Prod.{u3, u2} A B) (Prod.{u3, u2} A B) _inst_1 (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7) (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7)) (Monoid.toOne.{max u3 u2} (StarAlgHom.{u1, max u3 u2, max u2 u3} R (Prod.{u3, u2} A B) (Prod.{u3, u2} A B) _inst_1 (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7) (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7)) (StarAlgHom.instMonoidStarAlgHom.{u1, max u3 u2} R (Prod.{u3, u2} A B) _inst_1 (Prod.instSemiringProd.{u3, u2} A B _inst_2 _inst_5) (Prod.algebra.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_5 _inst_6) (Prod.instStarProd.{u3, u2} A B _inst_4 _inst_7)))))
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.prod_fst_snd StarAlgHom.prod_fst_sndₓ'. -/
 @[simp]
 theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
   FunLike.coe_injective Pi.prod_fst_snd
 #align star_alg_hom.prod_fst_snd StarAlgHom.prod_fst_snd
 
-/- warning: star_alg_hom.prod_equiv -> StarAlgHom.prodEquiv is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B] [_inst_8 : Semiring.{u4} C] [_inst_9 : Algebra.{u1, u4} R C _inst_1 _inst_8] [_inst_10 : Star.{u4} C], Equiv.{max (succ (max u2 u3)) (succ (max u2 u4)), max (succ u2) (succ (max u3 u4))} (Prod.{max u2 u3, max u2 u4} (StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10)) (StarAlgHom.{u1, u2, max u3 u4} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.semiring.{u3, u4} B C _inst_5 _inst_8) (Prod.algebra.{u1, u3, u4} R B C _inst_1 _inst_5 _inst_6 _inst_8 _inst_9) (Prod.hasStar.{u3, u4} B C _inst_7 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] [_inst_4 : Star.{u2} A] [_inst_5 : Semiring.{u3} B] [_inst_6 : Algebra.{u1, u3} R B _inst_1 _inst_5] [_inst_7 : Star.{u3} B] [_inst_8 : Semiring.{u4} C] [_inst_9 : Algebra.{u1, u4} R C _inst_1 _inst_8] [_inst_10 : Star.{u4} C], Equiv.{max (succ (max u4 u2)) (succ (max u3 u2)), max (succ (max u4 u3)) (succ u2)} (Prod.{max u3 u2, max u4 u2} (StarAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7) (StarAlgHom.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_8 _inst_9 _inst_10)) (StarAlgHom.{u1, u2, max u4 u3} R A (Prod.{u3, u4} B C) _inst_1 _inst_2 _inst_3 _inst_4 (Prod.instSemiringProd.{u3, u4} B C _inst_5 _inst_8) (Prod.algebra.{u1, u3, u4} R B C _inst_1 _inst_5 _inst_6 _inst_8 _inst_9) (Prod.instStarProd.{u3, u4} B C _inst_7 _inst_10))
-Case conversion may be inaccurate. Consider using '#align star_alg_hom.prod_equiv StarAlgHom.prodEquivₓ'. -/
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
@@ -864,12 +666,6 @@ end StarAlgHom
 /-! ### Star algebra equivalences -/
 
 
-/- warning: star_alg_equiv -> StarAlgEquiv is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A] [_inst_5 : Add.{u3} B] [_inst_6 : Mul.{u3} B] [_inst_7 : SMul.{u1, u3} R B] [_inst_8 : Star.{u3} B], Sort.{max (succ u2) (succ u3)}
-but is expected to have type
-  forall (R : Type.{u1}) (A : Type.{u2}) (B : Type.{u3}) [_inst_1 : Add.{u2} A] [_inst_2 : Add.{u3} B] [_inst_3 : Mul.{u2} A] [_inst_4 : Mul.{u3} B] [_inst_5 : SMul.{u1, u2} R A] [_inst_6 : SMul.{u1, u3} R B] [_inst_7 : Star.{u2} A] [_inst_8 : Star.{u3} B], Sort.{max (succ u2) (succ u3)}
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv StarAlgEquivₓ'. -/
 /-- A *⋆-algebra* equivalence is an equivalence preserving addition, multiplication, scalar
 multiplication and the star operation, which allows for considering both unital and non-unital
 equivalences with a single structure. Currently, `alg_equiv` requires unital algebras, which is
@@ -974,27 +770,15 @@ instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B
 instance : CoeFun (A ≃⋆ₐ[R] B) fun _ => A → B :=
   ⟨StarAlgEquiv.toFun⟩
 
-/- warning: star_alg_equiv.ext -> StarAlgEquiv.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.ext StarAlgEquiv.extₓ'. -/
 @[ext]
 theorem ext {f g : A ≃⋆ₐ[R] B} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align star_alg_equiv.ext StarAlgEquiv.ext
 
-/- warning: star_alg_equiv.ext_iff -> StarAlgEquiv.ext_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.ext_iff StarAlgEquiv.ext_iffₓ'. -/
 theorem ext_iff {f g : A ≃⋆ₐ[R] B} : f = g ↔ ∀ a, f a = g a :=
   FunLike.ext_iff
 #align star_alg_equiv.ext_iff StarAlgEquiv.ext_iff
 
-/- warning: star_alg_equiv.refl -> StarAlgEquiv.refl is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A], StarAlgEquiv.{u1, u2, u2} R A A _inst_1 _inst_2 _inst_3 _inst_4 _inst_1 _inst_2 _inst_3 _inst_4
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A], StarAlgEquiv.{u1, u2, u2} R A A _inst_1 _inst_1 _inst_2 _inst_2 _inst_3 _inst_3 _inst_4 _inst_4
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.refl StarAlgEquiv.reflₓ'. -/
 /-- Star algebra equivalences are reflexive. -/
 @[refl]
 def refl : A ≃⋆ₐ[R] A :=
@@ -1013,12 +797,6 @@ theorem coe_refl : ⇑(refl : A ≃⋆ₐ[R] A) = id :=
 #align star_alg_equiv.coe_refl StarAlgEquiv.coe_refl
 -/
 
-/- warning: star_alg_equiv.symm -> StarAlgEquiv.symm is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A] [_inst_5 : Add.{u3} B] [_inst_6 : Mul.{u3} B] [_inst_7 : SMul.{u1, u3} R B] [_inst_8 : Star.{u3} B], (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) -> (StarAlgEquiv.{u1, u3, u2} R B A _inst_5 _inst_6 _inst_7 _inst_8 _inst_1 _inst_2 _inst_3 _inst_4)
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Add.{u2} A] [_inst_2 : Add.{u3} B] [_inst_3 : Mul.{u2} A] [_inst_4 : Mul.{u3} B] [_inst_5 : SMul.{u1, u2} R A] [_inst_6 : SMul.{u1, u3} R B] [_inst_7 : Star.{u2} A] [_inst_8 : Star.{u3} B], (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) -> (StarAlgEquiv.{u1, u3, u2} R B A _inst_2 _inst_1 _inst_4 _inst_3 _inst_6 _inst_5 _inst_8 _inst_7)
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm StarAlgEquiv.symmₓ'. -/
 /-- Star algebra equivalences are symmetric. -/
 @[symm]
 def symm (e : A ≃⋆ₐ[R] B) : B ≃⋆ₐ[R] A :=
@@ -1032,12 +810,6 @@ def symm (e : A ≃⋆ₐ[R] B) : B ≃⋆ₐ[R] A :=
         congr_arg e.inv_fun (e.map_smul' r (e.inv_fun b)).symm }
 #align star_alg_equiv.symm StarAlgEquiv.symm
 
-/- warning: star_alg_equiv.simps.symm_apply -> StarAlgEquiv.Simps.symm_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A] [_inst_5 : Add.{u3} B] [_inst_6 : Mul.{u3} B] [_inst_7 : SMul.{u1, u3} R B] [_inst_8 : Star.{u3} B], (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) -> B -> A
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Add.{u2} A] [_inst_2 : Add.{u3} B] [_inst_3 : Mul.{u2} A] [_inst_4 : Mul.{u3} B] [_inst_5 : SMul.{u1, u2} R A] [_inst_6 : SMul.{u1, u3} R B] [_inst_7 : Star.{u2} A] [_inst_8 : Star.{u3} B], (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) -> B -> A
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.simps.symm_apply StarAlgEquiv.Simps.symm_applyₓ'. -/
 /-- See Note [custom simps projection] -/
 def Simps.symm_apply (e : A ≃⋆ₐ[R] B) : B → A :=
   e.symm
@@ -1045,30 +817,15 @@ def Simps.symm_apply (e : A ≃⋆ₐ[R] B) : B → A :=
 
 initialize_simps_projections StarAlgEquiv (toFun → apply, invFun → simps.symm_apply)
 
-/- warning: star_alg_equiv.inv_fun_eq_symm -> StarAlgEquiv.invFun_eq_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.inv_fun_eq_symm StarAlgEquiv.invFun_eq_symmₓ'. -/
 @[simp]
 theorem invFun_eq_symm {e : A ≃⋆ₐ[R] B} : e.invFun = e.symm :=
   rfl
 #align star_alg_equiv.inv_fun_eq_symm StarAlgEquiv.invFun_eq_symm
 
-/- warning: star_alg_equiv.symm_symm -> StarAlgEquiv.symm_symm is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A] [_inst_5 : Add.{u3} B] [_inst_6 : Mul.{u3} B] [_inst_7 : SMul.{u1, u3} R B] [_inst_8 : Star.{u3} B] (e : StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8), Eq.{max (succ u2) (succ u3)} (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) (StarAlgEquiv.symm.{u1, u3, u2} R B A _inst_5 _inst_6 _inst_7 _inst_8 _inst_1 _inst_2 _inst_3 _inst_4 (StarAlgEquiv.symm.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8 e)) e
-but is expected to have type
-  forall {R : Type.{u3}} {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : Add.{u2} A] [_inst_2 : Add.{u1} B] [_inst_3 : Mul.{u2} A] [_inst_4 : Mul.{u1} B] [_inst_5 : SMul.{u3, u2} R A] [_inst_6 : SMul.{u3, u1} R B] [_inst_7 : Star.{u2} A] [_inst_8 : Star.{u1} B] (e : StarAlgEquiv.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8), Eq.{max (succ u2) (succ u1)} (StarAlgEquiv.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) (StarAlgEquiv.symm.{u3, u1, u2} R B A _inst_2 _inst_1 _inst_4 _inst_3 _inst_6 _inst_5 _inst_8 _inst_7 (StarAlgEquiv.symm.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8 e)) e
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm_symm StarAlgEquiv.symm_symmₓ'. -/
 @[simp]
 theorem symm_symm (e : A ≃⋆ₐ[R] B) : e.symm.symm = e := by ext; rfl
 #align star_alg_equiv.symm_symm StarAlgEquiv.symm_symm
 
-/- warning: star_alg_equiv.symm_bijective -> StarAlgEquiv.symm_bijective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A] [_inst_5 : Add.{u3} B] [_inst_6 : Mul.{u3} B] [_inst_7 : SMul.{u1, u3} R B] [_inst_8 : Star.{u3} B], Function.Bijective.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) (StarAlgEquiv.{u1, u3, u2} R B A _inst_5 _inst_6 _inst_7 _inst_8 _inst_1 _inst_2 _inst_3 _inst_4) (StarAlgEquiv.symm.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8)
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u3}} {B : Type.{u2}} [_inst_1 : Add.{u3} A] [_inst_2 : Add.{u2} B] [_inst_3 : Mul.{u3} A] [_inst_4 : Mul.{u2} B] [_inst_5 : SMul.{u1, u3} R A] [_inst_6 : SMul.{u1, u2} R B] [_inst_7 : Star.{u3} A] [_inst_8 : Star.{u2} B], Function.Bijective.{max (succ u3) (succ u2), max (succ u3) (succ u2)} (StarAlgEquiv.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) (StarAlgEquiv.{u1, u2, u3} R B A _inst_2 _inst_1 _inst_4 _inst_3 _inst_6 _inst_5 _inst_8 _inst_7) (StarAlgEquiv.symm.{u1, u3, u2} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8)
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm_bijective StarAlgEquiv.symm_bijectiveₓ'. -/
 theorem symm_bijective : Function.Bijective (symm : (A ≃⋆ₐ[R] B) → B ≃⋆ₐ[R] A) :=
   Equiv.bijective ⟨symm, symm, symm_symm, symm_symm⟩
 #align star_alg_equiv.symm_bijective StarAlgEquiv.symm_bijective
@@ -1090,39 +847,21 @@ theorem symm_mk (f f') (h₁ h₂ h₃ h₄ h₅ h₆) :
   rfl
 #align star_alg_equiv.symm_mk StarAlgEquiv.symm_mkₓ
 
-/- warning: star_alg_equiv.refl_symm -> StarAlgEquiv.refl_symm is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A], Eq.{succ u2} (StarAlgEquiv.{u1, u2, u2} R A A _inst_1 _inst_2 _inst_3 _inst_4 _inst_1 _inst_2 _inst_3 _inst_4) (StarAlgEquiv.symm.{u1, u2, u2} R A A _inst_1 _inst_2 _inst_3 _inst_4 _inst_1 _inst_2 _inst_3 _inst_4 (StarAlgEquiv.refl.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)) (StarAlgEquiv.refl.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A], Eq.{succ u2} (StarAlgEquiv.{u1, u2, u2} R A A _inst_1 _inst_1 _inst_2 _inst_2 _inst_3 _inst_3 _inst_4 _inst_4) (StarAlgEquiv.symm.{u1, u2, u2} R A A _inst_1 _inst_1 _inst_2 _inst_2 _inst_3 _inst_3 _inst_4 _inst_4 (StarAlgEquiv.refl.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)) (StarAlgEquiv.refl.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4)
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.refl_symm StarAlgEquiv.refl_symmₓ'. -/
 @[simp]
 theorem refl_symm : (StarAlgEquiv.refl : A ≃⋆ₐ[R] A).symm = StarAlgEquiv.refl :=
   rfl
 #align star_alg_equiv.refl_symm StarAlgEquiv.refl_symm
 
-/- warning: star_alg_equiv.to_ring_equiv_symm -> StarAlgEquiv.to_ringEquiv_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.to_ring_equiv_symm StarAlgEquiv.to_ringEquiv_symmₓ'. -/
 -- should be a `simp` lemma, but causes a linter timeout
 theorem to_ringEquiv_symm (f : A ≃⋆ₐ[R] B) : (f : A ≃+* B).symm = f.symm :=
   rfl
 #align star_alg_equiv.to_ring_equiv_symm StarAlgEquiv.to_ringEquiv_symm
 
-/- warning: star_alg_equiv.symm_to_ring_equiv -> StarAlgEquiv.symm_to_ringEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm_to_ring_equiv StarAlgEquiv.symm_to_ringEquivₓ'. -/
 @[simp]
 theorem symm_to_ringEquiv (e : A ≃⋆ₐ[R] B) : (e.symm : B ≃+* A) = (e : A ≃+* B).symm :=
   rfl
 #align star_alg_equiv.symm_to_ring_equiv StarAlgEquiv.symm_to_ringEquiv
 
-/- warning: star_alg_equiv.trans -> StarAlgEquiv.trans is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : Add.{u2} A] [_inst_2 : Mul.{u2} A] [_inst_3 : SMul.{u1, u2} R A] [_inst_4 : Star.{u2} A] [_inst_5 : Add.{u3} B] [_inst_6 : Mul.{u3} B] [_inst_7 : SMul.{u1, u3} R B] [_inst_8 : Star.{u3} B] [_inst_9 : Add.{u4} C] [_inst_10 : Mul.{u4} C] [_inst_11 : SMul.{u1, u4} R C] [_inst_12 : Star.{u4} C], (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) -> (StarAlgEquiv.{u1, u3, u4} R B C _inst_5 _inst_6 _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12) -> (StarAlgEquiv.{u1, u2, u4} R A C _inst_1 _inst_2 _inst_3 _inst_4 _inst_9 _inst_10 _inst_11 _inst_12)
-but is expected to have type
-  forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} {C : Type.{u4}} [_inst_1 : Add.{u2} A] [_inst_2 : Add.{u3} B] [_inst_3 : Mul.{u2} A] [_inst_4 : Mul.{u3} B] [_inst_5 : SMul.{u1, u2} R A] [_inst_6 : SMul.{u1, u3} R B] [_inst_7 : Star.{u2} A] [_inst_8 : Star.{u3} B] [_inst_9 : Add.{u4} C] [_inst_10 : Mul.{u4} C] [_inst_11 : SMul.{u1, u4} R C] [_inst_12 : Star.{u4} C], (StarAlgEquiv.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) -> (StarAlgEquiv.{u1, u3, u4} R B C _inst_2 _inst_9 _inst_4 _inst_10 _inst_6 _inst_11 _inst_8 _inst_12) -> (StarAlgEquiv.{u1, u2, u4} R A C _inst_1 _inst_9 _inst_3 _inst_10 _inst_5 _inst_11 _inst_7 _inst_12)
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.trans StarAlgEquiv.transₓ'. -/
 /-- Star algebra equivalences are transitive. -/
 @[trans]
 def trans (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) : A ≃⋆ₐ[R] C :=
@@ -1137,57 +876,36 @@ def trans (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) : A ≃⋆ₐ[R] C
         rw [e₁.map_star', e₂.map_star'] }
 #align star_alg_equiv.trans StarAlgEquiv.trans
 
-/- warning: star_alg_equiv.apply_symm_apply -> StarAlgEquiv.apply_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.apply_symm_apply StarAlgEquiv.apply_symm_applyₓ'. -/
 @[simp]
 theorem apply_symm_apply (e : A ≃⋆ₐ[R] B) : ∀ x, e (e.symm x) = x :=
   e.toRingEquiv.apply_symm_apply
 #align star_alg_equiv.apply_symm_apply StarAlgEquiv.apply_symm_apply
 
-/- warning: star_alg_equiv.symm_apply_apply -> StarAlgEquiv.symm_apply_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm_apply_apply StarAlgEquiv.symm_apply_applyₓ'. -/
 @[simp]
 theorem symm_apply_apply (e : A ≃⋆ₐ[R] B) : ∀ x, e.symm (e x) = x :=
   e.toRingEquiv.symm_apply_apply
 #align star_alg_equiv.symm_apply_apply StarAlgEquiv.symm_apply_apply
 
-/- warning: star_alg_equiv.symm_trans_apply -> StarAlgEquiv.symm_trans_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm_trans_apply StarAlgEquiv.symm_trans_applyₓ'. -/
 @[simp]
 theorem symm_trans_apply (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) (x : C) :
     (e₁.trans e₂).symm x = e₁.symm (e₂.symm x) :=
   rfl
 #align star_alg_equiv.symm_trans_apply StarAlgEquiv.symm_trans_apply
 
-/- warning: star_alg_equiv.coe_trans -> StarAlgEquiv.coe_trans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.coe_trans StarAlgEquiv.coe_transₓ'. -/
 @[simp]
 theorem coe_trans (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 #align star_alg_equiv.coe_trans StarAlgEquiv.coe_trans
 
-/- warning: star_alg_equiv.trans_apply -> StarAlgEquiv.trans_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.trans_apply StarAlgEquiv.trans_applyₓ'. -/
 @[simp]
 theorem trans_apply (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) (x : A) : (e₁.trans e₂) x = e₂ (e₁ x) :=
   rfl
 #align star_alg_equiv.trans_apply StarAlgEquiv.trans_apply
 
-/- warning: star_alg_equiv.left_inverse_symm -> StarAlgEquiv.leftInverse_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.left_inverse_symm StarAlgEquiv.leftInverse_symmₓ'. -/
 theorem leftInverse_symm (e : A ≃⋆ₐ[R] B) : Function.LeftInverse e.symm e :=
   e.left_inv
 #align star_alg_equiv.left_inverse_symm StarAlgEquiv.leftInverse_symm
 
-/- warning: star_alg_equiv.right_inverse_symm -> StarAlgEquiv.rightInverse_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.right_inverse_symm StarAlgEquiv.rightInverse_symmₓ'. -/
 theorem rightInverse_symm (e : A ≃⋆ₐ[R] B) : Function.RightInverse e.symm e :=
   e.right_inv
 #align star_alg_equiv.right_inverse_symm StarAlgEquiv.rightInverse_symm
@@ -1206,9 +924,6 @@ variable [hF : NonUnitalStarAlgHomClass F R A B] [NonUnitalStarAlgHomClass G R B
 
 include hF
 
-/- warning: star_alg_equiv.of_star_alg_hom -> StarAlgEquiv.ofStarAlgHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.of_star_alg_hom StarAlgEquiv.ofStarAlgHomₓ'. -/
 /-- If a (unital or non-unital) star algebra morphism has an inverse, it is an isomorphism of
 star algebras. -/
 @[simps]
@@ -1224,9 +939,6 @@ def ofStarAlgHom (f : F) (g : G) (h₁ : ∀ x, g (f x) = x) (h₂ : ∀ x, f (g
   map_star' := map_star f
 #align star_alg_equiv.of_star_alg_hom StarAlgEquiv.ofStarAlgHom
 
-/- warning: star_alg_equiv.of_bijective -> StarAlgEquiv.ofBijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.of_bijective StarAlgEquiv.ofBijectiveₓ'. -/
 /-- Promote a bijective star algebra homomorphism to a star algebra equivalence. -/
 noncomputable def ofBijective (f : F) (hf : Function.Bijective f) : A ≃⋆ₐ[R] B :=
   {
@@ -1237,18 +949,12 @@ noncomputable def ofBijective (f : F) (hf : Function.Bijective f) : A ≃⋆ₐ[
     map_smul' := map_smul f }
 #align star_alg_equiv.of_bijective StarAlgEquiv.ofBijective
 
-/- warning: star_alg_equiv.coe_of_bijective -> StarAlgEquiv.coe_ofBijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.coe_of_bijective StarAlgEquiv.coe_ofBijectiveₓ'. -/
 @[simp]
 theorem coe_ofBijective {f : F} (hf : Function.Bijective f) :
     (StarAlgEquiv.ofBijective f hf : A → B) = f :=
   rfl
 #align star_alg_equiv.coe_of_bijective StarAlgEquiv.coe_ofBijective
 
-/- warning: star_alg_equiv.of_bijective_apply -> StarAlgEquiv.ofBijective_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_alg_equiv.of_bijective_apply StarAlgEquiv.ofBijective_applyₓ'. -/
 theorem ofBijective_apply {f : F} (hf : Function.Bijective f) (a : A) :
     (StarAlgEquiv.ofBijective f hf) a = f a :=
   rfl

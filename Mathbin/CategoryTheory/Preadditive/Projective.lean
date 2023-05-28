@@ -168,12 +168,6 @@ instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀
     where Factors E X' f e epi :=
     ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by tidy⟩
 
-/- warning: category_theory.projective.projective_iff_preserves_epimorphisms_coyoneda_obj -> CategoryTheory.Projective.projective_iff_preservesEpimorphisms_coyoneda_obj is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (P : C), Iff (CategoryTheory.Projective.{u1, u2} C _inst_1 P) (CategoryTheory.Functor.PreservesEpimorphisms.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.obj.{u1, max u2 u1, u2, max u1 u2 (succ u1)} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.coyoneda.{u1, u2} C _inst_1) (Opposite.op.{succ u2} C P)))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (P : C), Iff (CategoryTheory.Projective.{u1, u2} C _inst_1 P) (CategoryTheory.Functor.PreservesEpimorphisms.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u2, max u2 (succ u1)} (Opposite.{succ u2} C) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1))) (CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 (succ u1)} (CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 (succ u1)} (CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}))) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, max u2 (succ u1)} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u2, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.coyoneda.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)))
-Case conversion may be inaccurate. Consider using '#align category_theory.projective.projective_iff_preserves_epimorphisms_coyoneda_obj CategoryTheory.Projective.projective_iff_preservesEpimorphisms_coyoneda_objₓ'. -/
 theorem projective_iff_preservesEpimorphisms_coyoneda_obj (P : C) :
     Projective P ↔ (coyoneda.obj (op P)).PreservesEpimorphisms :=
   ⟨fun hP =>
@@ -255,12 +249,6 @@ namespace Adjunction
 
 variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
-/- warning: category_theory.adjunction.map_projective -> CategoryTheory.Adjunction.map_projective is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u4, u1, u3, u2} D _inst_2 C _inst_1 G] (P : C), (CategoryTheory.Projective.{u1, u2} C _inst_1 P) -> (CategoryTheory.Projective.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_2 F P)))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] {F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u3, u1, u4, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u3, u2, u4} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u3, u1, u4, u2} D _inst_2 C _inst_1 G] (P : C), (CategoryTheory.Projective.{u1, u2} C _inst_1 P) -> (CategoryTheory.Projective.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) P)))
-Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.map_projective CategoryTheory.Adjunction.map_projectiveₓ'. -/
 theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : Projective P) :
     Projective (F.obj P) :=
   ⟨fun X Y f g => by
@@ -271,12 +259,6 @@ theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : P
     simp⟩
 #align category_theory.adjunction.map_projective CategoryTheory.Adjunction.map_projective
 
-/- warning: category_theory.adjunction.projective_of_map_projective -> CategoryTheory.Adjunction.projective_of_map_projective is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Full.{u1, u4, u2, u3} C _inst_1 D _inst_2 F] [_inst_4 : CategoryTheory.Faithful.{u1, u4, u2, u3} C _inst_1 D _inst_2 F] (P : C), (CategoryTheory.Projective.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_2 F P)) -> (CategoryTheory.Projective.{u1, u2} C _inst_1 P))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] {F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u3, u1, u4, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u3, u2, u4} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Full.{u1, u3, u2, u4} C _inst_1 D _inst_2 F] [_inst_4 : CategoryTheory.Faithful.{u1, u3, u2, u4} C _inst_1 D _inst_2 F] (P : C), (CategoryTheory.Projective.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) P)) -> (CategoryTheory.Projective.{u1, u2} C _inst_1 P))
-Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.projective_of_map_projective CategoryTheory.Adjunction.projective_of_map_projectiveₓ'. -/
 theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : C)
     (hP : Projective (F.obj P)) : Projective P :=
   ⟨fun X Y f g => by
@@ -288,12 +270,6 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
     simpa⟩
 #align category_theory.adjunction.projective_of_map_projective CategoryTheory.Adjunction.projective_of_map_projective
 
-/- warning: category_theory.adjunction.map_projective_presentation -> CategoryTheory.Adjunction.mapProjectivePresentation is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u4, u1, u3, u2} D _inst_2 C _inst_1 G] (X : C), (CategoryTheory.ProjectivePresentation.{u1, u2} C _inst_1 X) -> (CategoryTheory.ProjectivePresentation.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_2 F X)))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] {F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u3, u1, u4, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u3, u2, u4} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u3, u1, u4, u2} D _inst_2 C _inst_1 G] (X : C), (CategoryTheory.ProjectivePresentation.{u1, u2} C _inst_1 X) -> (CategoryTheory.ProjectivePresentation.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) X)))
-Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentationₓ'. -/
 /-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
 `X` to a projective presentation of `F(X)`. -/
 def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
@@ -313,12 +289,6 @@ namespace Equivalence
 
 variable {D : Type _} [Category D] (F : C ≌ D)
 
-/- warning: category_theory.equivalence.projective_presentation_of_map_projective_presentation -> CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Equivalence.{u1, u4, u2, u3} C _inst_1 D _inst_2) (X : C), (CategoryTheory.ProjectivePresentation.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_2 (CategoryTheory.Equivalence.functor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X)) -> (CategoryTheory.ProjectivePresentation.{u1, u2} C _inst_1 X)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] (F : CategoryTheory.Equivalence.{u1, u3, u2, u4} C D _inst_1 _inst_2) (X : C), (CategoryTheory.ProjectivePresentation.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 (CategoryTheory.Equivalence.functor.{u1, u3, u2, u4} C D _inst_1 _inst_2 F)) X)) -> (CategoryTheory.ProjectivePresentation.{u1, u2} C _inst_1 X)
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentationₓ'. -/
 /-- Given an equivalence of categories `F`, a projective presentation of `F(X)` induces a
 projective presentation of `X.` -/
 def projectivePresentationOfMapProjectivePresentation (X : C)
@@ -330,12 +300,6 @@ def projectivePresentationOfMapProjectivePresentation (X : C)
   Epi := epi_comp _ _
 #align category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation
 
-/- warning: category_theory.equivalence.enough_projectives_iff -> CategoryTheory.Equivalence.enoughProjectives_iff is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D], (CategoryTheory.Equivalence.{u1, u4, u2, u3} C _inst_1 D _inst_2) -> (Iff (CategoryTheory.EnoughProjectives.{u1, u2} C _inst_1) (CategoryTheory.EnoughProjectives.{u4, u3} D _inst_2))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D], (CategoryTheory.Equivalence.{u1, u3, u2, u4} C D _inst_1 _inst_2) -> (Iff (CategoryTheory.EnoughProjectives.{u1, u2} C _inst_1) (CategoryTheory.EnoughProjectives.{u3, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.enough_projectives_iff CategoryTheory.Equivalence.enoughProjectives_iffₓ'. -/
 theorem enoughProjectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProjectives D :=
   by
   constructor

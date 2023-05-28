@@ -100,12 +100,6 @@ noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExte
   le_total := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.2.1
   decidableLe := Classical.decRel _
 
-/- warning: to_linear_extension -> toLinearExtension is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], RelHom.{u1, u1} α (LinearExtension.{u1} α) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u1} (LinearExtension.{u1} α) (Preorder.toHasLe.{u1} (LinearExtension.{u1} α) (PartialOrder.toPreorder.{u1} (LinearExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (LinearExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (LinearExtension.{u1} α) (LinearOrder.toLattice.{u1} (LinearExtension.{u1} α) (LinearExtension.linearOrder.{u1} α _inst_1)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], RelHom.{u1, u1} α (LinearExtension.{u1} α) (fun (x._@.Mathlib.Order.Extension.Linear._hyg.951 : α) (x._@.Mathlib.Order.Extension.Linear._hyg.953 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Extension.Linear._hyg.951 x._@.Mathlib.Order.Extension.Linear._hyg.953) (fun (x._@.Mathlib.Order.Extension.Linear._hyg.975 : LinearExtension.{u1} α) (x._@.Mathlib.Order.Extension.Linear._hyg.977 : LinearExtension.{u1} α) => LE.le.{u1} (LinearExtension.{u1} α) (Preorder.toLE.{u1} (LinearExtension.{u1} α) (PartialOrder.toPreorder.{u1} (LinearExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (LinearExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (LinearExtension.{u1} α) (DistribLattice.toLattice.{u1} (LinearExtension.{u1} α) (instDistribLattice.{u1} (LinearExtension.{u1} α) (instLinearOrderLinearExtension.{u1} α _inst_1))))))) x._@.Mathlib.Order.Extension.Linear._hyg.975 x._@.Mathlib.Order.Extension.Linear._hyg.977)
-Case conversion may be inaccurate. Consider using '#align to_linear_extension toLinearExtensionₓ'. -/
 /-- The embedding of `α` into `linear_extension α` as a relation homomorphism. -/
 def toLinearExtension {α : Type u} [PartialOrder α] :
     ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop)

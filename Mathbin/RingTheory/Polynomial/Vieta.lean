@@ -41,9 +41,6 @@ section Semiring
 
 variable {R : Type _} [CommSemiring R]
 
-/- warning: multiset.prod_X_add_C_eq_sum_esymm -> Multiset.prod_X_add_C_eq_sum_esymm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymmₓ'. -/
 /-- A sum version of Vieta's formula for `multiset`: the product of the linear terms `X + λ` where
 `λ` runs through a multiset `s` is equal to a linear combination of the symmetric functions
 `esymm s` of the `λ`'s .-/
@@ -61,9 +58,6 @@ theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
     simp [ht, map_const, prod_replicate, prod_hom', map_id', card_sub]
 #align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymm
 
-/- warning: multiset.prod_X_add_C_coeff -> Multiset.prod_X_add_C_coeff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.prod_X_add_C_coeff Multiset.prod_X_add_C_coeffₓ'. -/
 /-- Vieta's formula for the coefficients of the product of linear terms `X + λ` where `λ` runs
 through a multiset `s` : the `k`th coefficient is the symmetric function `esymm (card s - k) s`. -/
 theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
@@ -82,17 +76,11 @@ theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
     exact Nat.sub_lt_succ s.card k
 #align multiset.prod_X_add_C_coeff Multiset.prod_X_add_C_coeff
 
-/- warning: multiset.prod_X_add_C_coeff' -> Multiset.prod_X_add_C_coeff' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.prod_X_add_C_coeff' Multiset.prod_X_add_C_coeff'ₓ'. -/
 theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
     (s.map fun i => X + C (r i)).Prod.coeff k = (s.map r).esymm (s.card - k) := by
   rw [← map_map (fun r => X + C r) r, prod_X_add_C_coeff] <;> rwa [s.card_map r]
 #align multiset.prod_X_add_C_coeff' Multiset.prod_X_add_C_coeff'
 
-/- warning: finset.prod_X_add_C_coeff -> Finset.prod_X_add_C_coeff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeffₓ'. -/
 theorem Finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
     (∏ i in s, X + C (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i := by
   rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]; rfl
@@ -104,12 +92,6 @@ section Ring
 
 variable {R : Type _} [CommRing R]
 
-/- warning: multiset.esymm_neg -> Multiset.esymm_neg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (s : Multiset.{u1} R) (k : Nat), Eq.{succ u1} R (Multiset.esymm.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Multiset.map.{u1, u1} R R (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) s) k) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))))))) k) (Multiset.esymm.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) s k))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (s : Multiset.{u1} R) (k : Nat), Eq.{succ u1} R (Multiset.esymm.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Multiset.map.{u1, u1} R R (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1))) s) k) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) k) (Multiset.esymm.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) s k))
-Case conversion may be inaccurate. Consider using '#align multiset.esymm_neg Multiset.esymm_negₓ'. -/
 theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ k * esymm s k :=
   by
   rw [esymm, esymm, ← Multiset.sum_map_mul_left, Multiset.powersetLen_map, Multiset.map_map,
@@ -121,9 +103,6 @@ theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ 
   exact fun z _ => neg_one_mul z
 #align multiset.esymm_neg Multiset.esymm_neg
 
-/- warning: multiset.prod_X_sub_C_eq_sum_esymm -> Multiset.prod_X_sub_X_eq_sum_esymm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.prod_X_sub_C_eq_sum_esymm Multiset.prod_X_sub_X_eq_sum_esymmₓ'. -/
 theorem prod_X_sub_X_eq_sum_esymm (s : Multiset R) :
     (s.map fun t => X - C t).Prod =
       ∑ j in Finset.range (s.card + 1), (-1) ^ j * (C (s.esymm j) * X ^ (s.card - j)) :=
@@ -139,9 +118,6 @@ theorem prod_X_sub_X_eq_sum_esymm (s : Multiset R) :
   · simp only [esymm_neg, card_map, mul_assoc, map_mul, map_pow, map_neg, map_one]
 #align multiset.prod_X_sub_C_eq_sum_esymm Multiset.prod_X_sub_X_eq_sum_esymm
 
-/- warning: multiset.prod_X_sub_C_coeff -> Multiset.prod_X_sub_C_coeff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.prod_X_sub_C_coeff Multiset.prod_X_sub_C_coeffₓ'. -/
 theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
     (s.map fun t => X - C t).Prod.coeff k = (-1) ^ (s.card - k) * s.esymm (s.card - k) :=
   by
@@ -158,12 +134,6 @@ theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
   · rwa [card_map]
 #align multiset.prod_X_sub_C_coeff Multiset.prod_X_sub_C_coeff
 
-/- warning: polynomial.coeff_eq_esymm_roots_of_card -> Polynomial.coeff_eq_esymm_roots_of_card is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))] {p : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))}, (Eq.{1} Nat (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.orderedCancelAddCommMonoid.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.orderedCancelAddCommMonoid.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u1} R) -> Nat) (AddMonoidHom.hasCoeToFun.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.orderedCancelAddCommMonoid.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u1} R) (Polynomial.roots.{u1} R _inst_1 _inst_2 p)) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p)) -> (forall {k : Nat}, (LE.le.{0} Nat Nat.hasLe k (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p)) -> (Eq.{succ u1} R (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p k) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))))))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p) k))) (Multiset.esymm.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Polynomial.roots.{u1} R _inst_1 _inst_2 p) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p) k)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] {p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))}, (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} R) => Nat) (Polynomial.roots.{u1} R _inst_1 _inst_2 p)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} R) (fun (_x : Multiset.{u1} R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} R) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} R) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} R) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} R))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} R) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} R) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} R) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} R) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} R) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} R) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} R)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} R) (Polynomial.roots.{u1} R _inst_1 _inst_2 p)) (Polynomial.natDegree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p)) -> (forall {k : Nat}, (LE.le.{0} Nat instLENat k (Polynomial.natDegree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p)) -> (Eq.{succ u1} R (Polynomial.coeff.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p k) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Polynomial.leadingCoeff.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Polynomial.natDegree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p) k))) (Multiset.esymm.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Polynomial.roots.{u1} R _inst_1 _inst_2 p) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Polynomial.natDegree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p) k)))))
-Case conversion may be inaccurate. Consider using '#align polynomial.coeff_eq_esymm_roots_of_card Polynomial.coeff_eq_esymm_roots_of_cardₓ'. -/
 /-- Vieta's formula for the coefficients and the roots of a polynomial over an integral domain
   with as many roots as its degree. -/
 theorem Polynomial.coeff_eq_esymm_roots_of_card [IsDomain R] {p : R[X]}
@@ -175,12 +145,6 @@ theorem Polynomial.coeff_eq_esymm_roots_of_card [IsDomain R] {p : R[X]}
   convert p.roots.prod_X_sub_C_coeff _ using 3 <;> rw [hroots]; exact h
 #align polynomial.coeff_eq_esymm_roots_of_card Polynomial.coeff_eq_esymm_roots_of_card
 
-/- warning: polynomial.coeff_eq_esymm_roots_of_splits -> Polynomial.coeff_eq_esymm_roots_of_splits is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_2 : Field.{u1} F] {p : Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))}, (Polynomial.Splits.{u1, u1} F F (EuclideanDomain.toCommRing.{u1} F (Field.toEuclideanDomain.{u1} F _inst_2)) _inst_2 (RingHom.id.{u1} F (NonAssocRing.toNonAssocSemiring.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))))) p) -> (forall {k : Nat}, (LE.le.{0} Nat Nat.hasLe k (Polynomial.natDegree.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))) p)) -> (Eq.{succ u1} F (Polynomial.coeff.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))) p k) (HMul.hMul.{u1, u1, u1} F F F (instHMul.{u1} F (Distrib.toHasMul.{u1} F (Ring.toDistrib.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))))) (HMul.hMul.{u1, u1, u1} F F F (instHMul.{u1} F (Distrib.toHasMul.{u1} F (Ring.toDistrib.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))))) (Polynomial.leadingCoeff.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))) p) (HPow.hPow.{u1, 0, u1} F Nat F (instHPow.{u1, 0} F Nat (Monoid.Pow.{u1} F (Ring.toMonoid.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))))) (Neg.neg.{u1} F (SubNegMonoid.toHasNeg.{u1} F (AddGroup.toSubNegMonoid.{u1} F (AddGroupWithOne.toAddGroup.{u1} F (AddCommGroupWithOne.toAddGroupWithOne.{u1} F (Ring.toAddCommGroupWithOne.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))))))) (OfNat.ofNat.{u1} F 1 (OfNat.mk.{u1} F 1 (One.one.{u1} F (AddMonoidWithOne.toOne.{u1} F (AddGroupWithOne.toAddMonoidWithOne.{u1} F (AddCommGroupWithOne.toAddGroupWithOne.{u1} F (Ring.toAddCommGroupWithOne.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))))))))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Polynomial.natDegree.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))) p) k))) (Multiset.esymm.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (Polynomial.roots.{u1} F (EuclideanDomain.toCommRing.{u1} F (Field.toEuclideanDomain.{u1} F _inst_2)) (Field.isDomain.{u1} F _inst_2) p) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Polynomial.natDegree.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))) p) k)))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_2 : Field.{u1} F] {p : Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))}, (Polynomial.Splits.{u1, u1} F F (EuclideanDomain.toCommRing.{u1} F (Field.toEuclideanDomain.{u1} F _inst_2)) _inst_2 (RingHom.id.{u1} F (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))))) p) -> (forall {k : Nat}, (LE.le.{0} Nat instLENat k (Polynomial.natDegree.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) p)) -> (Eq.{succ u1} F (Polynomial.coeff.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) p k) (HMul.hMul.{u1, u1, u1} F F F (instHMul.{u1} F (NonUnitalNonAssocRing.toMul.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))))) (HMul.hMul.{u1, u1, u1} F F F (instHMul.{u1} F (NonUnitalNonAssocRing.toMul.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))))) (Polynomial.leadingCoeff.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) p) (HPow.hPow.{u1, 0, u1} F Nat F (instHPow.{u1, 0} F Nat (Monoid.Pow.{u1} F (MonoidWithZero.toMonoid.{u1} F (Semiring.toMonoidWithZero.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))))))) (Neg.neg.{u1} F (Ring.toNeg.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2))) (OfNat.ofNat.{u1} F 1 (One.toOfNat1.{u1} F (Semiring.toOne.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))))))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Polynomial.natDegree.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) p) k))) (Multiset.esymm.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (Polynomial.roots.{u1} F (EuclideanDomain.toCommRing.{u1} F (Field.toEuclideanDomain.{u1} F _inst_2)) (Field.isDomain.{u1} F _inst_2) p) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Polynomial.natDegree.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) p) k)))))
-Case conversion may be inaccurate. Consider using '#align polynomial.coeff_eq_esymm_roots_of_splits Polynomial.coeff_eq_esymm_roots_of_splitsₓ'. -/
 /-- Vieta's formula for split polynomials over a field. -/
 theorem Polynomial.coeff_eq_esymm_roots_of_splits {F} [Field F] {p : F[X]}
     (hsplit : p.Splits (RingHom.id F)) {k : ℕ} (h : k ≤ p.natDegree) :
@@ -198,9 +162,6 @@ open Finset Polynomial Fintype
 
 variable (R σ : Type _) [CommSemiring R] [Fintype σ]
 
-/- warning: mv_polynomial.prod_C_add_X_eq_sum_esymm -> MvPolynomial.prod_C_add_X_eq_sum_esymm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_C_add_X_eq_sum_esymmₓ'. -/
 /-- A sum version of Vieta's formula for `mv_polynomial`: viewing `X i` as variables,
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
@@ -216,9 +177,6 @@ theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
   · rw [Multiset.card_map]; rfl
 #align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_C_add_X_eq_sum_esymm
 
-/- warning: mv_polynomial.prod_X_add_C_coeff -> MvPolynomial.prod_X_add_C_coeff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.prod_X_add_C_coeff MvPolynomial.prod_X_add_C_coeffₓ'. -/
 theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
     (∏ i : σ, X + C (MvPolynomial.X i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
   by

@@ -49,12 +49,6 @@ def nhdsSet (s : Set α) : Filter α :=
 -- mathport name: nhds_set
 scoped[Topology] notation "𝓝ˢ" => nhdsSet
 
-/- warning: nhds_set_diagonal -> nhdsSet_diagonal is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
-Case conversion may be inaccurate. Consider using '#align nhds_set_diagonal nhdsSet_diagonalₓ'. -/
 theorem nhdsSet_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) := by
   rw [nhdsSet, ← range_diag, ← range_comp]; rfl
 #align nhds_set_diagonal nhdsSet_diagonal
@@ -95,12 +89,6 @@ theorem IsOpen.mem_nhdsSet (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
 #align is_open.mem_nhds_set IsOpen.mem_nhdsSet
 -/
 
-/- warning: principal_le_nhds_set -> principal_le_nhdsSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α s) (nhdsSet.{u1} α _inst_1 s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.principal.{u1} α s) (nhdsSet.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align principal_le_nhds_set principal_le_nhdsSetₓ'. -/
 theorem principal_le_nhdsSet : 𝓟 s ≤ 𝓝ˢ s := fun s hs =>
   (subset_interior_iff_mem_nhdsSet.mpr hs).trans interior_subset
 #align principal_le_nhds_set principal_le_nhdsSet
@@ -137,12 +125,6 @@ theorem mem_nhdsSet_interior : s ∈ 𝓝ˢ (interior s) :=
 #align mem_nhds_set_interior mem_nhdsSet_interior
 -/
 
-/- warning: nhds_set_empty -> nhdsSet_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Eq.{succ u1} (Filter.{u1} α) (nhdsSet.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Eq.{succ u1} (Filter.{u1} α) (nhdsSet.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align nhds_set_empty nhdsSet_emptyₓ'. -/
 @[simp]
 theorem nhdsSet_empty : 𝓝ˢ (∅ : Set α) = ⊥ := by rw [is_open_empty.nhds_set_eq, principal_empty]
 #align nhds_set_empty nhdsSet_empty
@@ -152,63 +134,27 @@ theorem mem_nhdsSet_empty : s ∈ 𝓝ˢ (∅ : Set α) := by simp
 #align mem_nhds_set_empty mem_nhdsSet_empty
 -/
 
-/- warning: nhds_set_univ -> nhdsSet_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Eq.{succ u1} (Filter.{u1} α) (nhdsSet.{u1} α _inst_1 (Set.univ.{u1} α)) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Eq.{succ u1} (Filter.{u1} α) (nhdsSet.{u1} α _inst_1 (Set.univ.{u1} α)) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align nhds_set_univ nhdsSet_univₓ'. -/
 @[simp]
 theorem nhdsSet_univ : 𝓝ˢ (univ : Set α) = ⊤ := by rw [is_open_univ.nhds_set_eq, principal_univ]
 #align nhds_set_univ nhdsSet_univ
 
-/- warning: nhds_set_mono -> nhdsSet_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
-Case conversion may be inaccurate. Consider using '#align nhds_set_mono nhdsSet_monoₓ'. -/
 @[mono]
 theorem nhdsSet_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
   sSup_le_sSup <| image_subset _ h
 #align nhds_set_mono nhdsSet_mono
 
-/- warning: monotone_nhds_set -> monotone_nhdsSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Monotone.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (nhdsSet.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Monotone.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (nhdsSet.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align monotone_nhds_set monotone_nhdsSetₓ'. -/
 theorem monotone_nhdsSet : Monotone (𝓝ˢ : Set α → Filter α) := fun s t => nhdsSet_mono
 #align monotone_nhds_set monotone_nhdsSet
 
-/- warning: nhds_le_nhds_set -> nhds_le_nhdsSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s))
-Case conversion may be inaccurate. Consider using '#align nhds_le_nhds_set nhds_le_nhdsSetₓ'. -/
 theorem nhds_le_nhdsSet (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
   le_sSup <| mem_image_of_mem _ h
 #align nhds_le_nhds_set nhds_le_nhdsSet
 
-/- warning: nhds_set_union -> nhdsSet_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsSet.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsSet.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
-Case conversion may be inaccurate. Consider using '#align nhds_set_union nhdsSet_unionₓ'. -/
 @[simp]
 theorem nhdsSet_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
   simp only [nhdsSet, image_union, sSup_union]
 #align nhds_set_union nhdsSet_union
 
-/- warning: union_mem_nhds_set -> union_mem_nhdsSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s₁ (nhdsSet.{u1} α _inst_1 t₁)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s₂ (nhdsSet.{u1} α _inst_1 t₂)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) (nhdsSet.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t₁ t₂)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s₁ (nhdsSet.{u1} α _inst_1 t₁)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s₂ (nhdsSet.{u1} α _inst_1 t₂)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂) (nhdsSet.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t₁ t₂)))
-Case conversion may be inaccurate. Consider using '#align union_mem_nhds_set union_mem_nhdsSetₓ'. -/
 theorem union_mem_nhdsSet (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
   rw [nhdsSet_union]; exact union_mem_sup h₁ h₂
 #align union_mem_nhds_set union_mem_nhdsSet

@@ -68,12 +68,6 @@ def splitLower (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 #align box_integral.box.split_lower BoxIntegral.Box.splitLower
 -/
 
-/- warning: box_integral.box.coe_split_lower -> BoxIntegral.Box.coe_splitLower is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.withBotCoe.{u1} ι))) (BoxIntegral.Box.splitLower.{u1} ι I i x)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LE.le.{0} Real Real.hasLe (y i) x)))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.withBotToSet.{u1} ι (BoxIntegral.Box.splitLower.{u1} ι I i x)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LE.le.{0} Real Real.instLEReal (y i) x)))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.coe_split_lower BoxIntegral.Box.coe_splitLowerₓ'. -/
 @[simp]
 theorem coe_splitLower : (splitLower I i x : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
   by
@@ -84,22 +78,10 @@ theorem coe_splitLower : (splitLower I i x : Set (ι → ℝ)) = I ∩ { y | y i
   rw [and_comm' (y i ≤ x), Pi.le_def]
 #align box_integral.box.coe_split_lower BoxIntegral.Box.coe_splitLower
 
-/- warning: box_integral.box.split_lower_le -> BoxIntegral.Box.splitLower_le is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toHasLe.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) (BoxIntegral.Box.splitLower.{u1} ι I i x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I)
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) (BoxIntegral.Box.splitLower.{u1} ι I i x) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I)
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_lower_le BoxIntegral.Box.splitLower_leₓ'. -/
 theorem splitLower_le : I.splitLower i x ≤ I :=
   withBotCoe_subset_iff.1 <| by simp
 #align box_integral.box.split_lower_le BoxIntegral.Box.splitLower_le
 
-/- warning: box_integral.box.split_lower_eq_bot -> BoxIntegral.Box.splitLower_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasBot.{u1} (BoxIntegral.Box.{u1} ι)))) (LE.le.{0} Real Real.hasLe x (BoxIntegral.Box.lower.{u1} ι I i))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.bot.{u1} (BoxIntegral.Box.{u1} ι)))) (LE.le.{0} Real Real.instLEReal x (BoxIntegral.Box.lower.{u1} ι I i))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_lower_eq_bot BoxIntegral.Box.splitLower_eq_botₓ'. -/
 @[simp]
 theorem splitLower_eq_bot {i x} : I.splitLower i x = ⊥ ↔ x ≤ I.lower i :=
   by
@@ -107,23 +89,11 @@ theorem splitLower_eq_bot {i x} : I.splitLower i x = ⊥ ↔ x ≤ I.lower i :=
   simp [(I.lower_lt_upper _).not_le]
 #align box_integral.box.split_lower_eq_bot BoxIntegral.Box.splitLower_eq_bot
 
-/- warning: box_integral.box.split_lower_eq_self -> BoxIntegral.Box.splitLower_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I)) (LE.le.{0} Real Real.hasLe (BoxIntegral.Box.upper.{u1} ι I i) x)
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I)) (LE.le.{0} Real Real.instLEReal (BoxIntegral.Box.upper.{u1} ι I i) x)
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_lower_eq_self BoxIntegral.Box.splitLower_eq_selfₓ'. -/
 @[simp]
 theorem splitLower_eq_self : I.splitLower i x = I ↔ I.upper i ≤ x := by
   simp [split_lower, update_eq_iff]
 #align box_integral.box.split_lower_eq_self BoxIntegral.Box.splitLower_eq_self
 
-/- warning: box_integral.box.split_lower_def -> BoxIntegral.Box.splitLower_def is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : DecidableEq.{succ u1} ι] {i : ι} {x : Real} (h : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioo.{0} Real Real.preorder (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i))) (h' : optParam.{0} (forall (j : ι), LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x j)) (Iff.mpr (forall (x_1 : ι), (fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) y) x_1 (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x x_1)) (And ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) y) i x) (forall (x : ι), (Ne.{succ u1} ι x i) -> ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) y) x (BoxIntegral.Box.upper.{u1} ι I x)))) (Function.forall_update_iff.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x (fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) y)) (And.intro ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) y) i x) (forall (x : ι), (Ne.{succ u1} ι x i) -> ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt (BoxIntegral.Box.lower.{u1} ι I j) y) x (BoxIntegral.Box.upper.{u1} ι I x))) (And.left (LT.lt.{0} Real (Preorder.toHasLt.{0} Real Real.preorder) (BoxIntegral.Box.lower.{u1} ι I i) x) (LT.lt.{0} Real (Preorder.toHasLt.{0} Real Real.preorder) x (BoxIntegral.Box.upper.{u1} ι I i)) h) (fun (j : ι) (hne : Ne.{succ u1} ι j i) => BoxIntegral.Box.lower_lt_upper.{u1} ι I j)))), Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) (BoxIntegral.Box.mk.{u1} ι (BoxIntegral.Box.lower.{u1} ι I) (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x) h'))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : DecidableEq.{succ u1} ι] {i : ι} {x : Real} (h : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioo.{0} Real Real.instPreorderReal (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i))) (h' : optParam.{0} (forall (j : ι), LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I j) (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x j)) (Iff.mpr (forall (x_1 : ι), LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I x_1) (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x x_1)) (And (LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I i) x) (forall (x : ι), (Ne.{succ u1} ι x i) -> (LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I x) (BoxIntegral.Box.upper.{u1} ι I x)))) (Function.forall_update_iff.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x (fun (j : ι) (y : Real) => LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I j) y)) (And.intro (LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I i) x) (forall (x : ι), (Ne.{succ u1} ι x i) -> (LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I x) (BoxIntegral.Box.upper.{u1} ι I x))) (And.left (LT.lt.{0} Real (Preorder.toLT.{0} Real Real.instPreorderReal) (BoxIntegral.Box.lower.{u1} ι I i) x) (LT.lt.{0} Real (Preorder.toLT.{0} Real Real.instPreorderReal) x (BoxIntegral.Box.upper.{u1} ι I i)) h) (fun (j : ι) (hne : Ne.{succ u1} ι j i) => BoxIntegral.Box.lower_lt_upper.{u1} ι I j)))), Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.mk.{u1} ι (BoxIntegral.Box.lower.{u1} ι I) (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.upper.{u1} ι I) i x) h'))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_lower_def BoxIntegral.Box.splitLower_defₓ'. -/
 theorem splitLower_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upper i))
     (h' : ∀ j, I.lower j < update I.upper i x j :=
       (forall_update_iff I.upper fun j y => I.lower j < y).2
@@ -142,12 +112,6 @@ def splitUpper (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 #align box_integral.box.split_upper BoxIntegral.Box.splitUpper
 -/
 
-/- warning: box_integral.box.coe_split_upper -> BoxIntegral.Box.coe_splitUpper is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.withBotCoe.{u1} ι))) (BoxIntegral.Box.splitUpper.{u1} ι I i x)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LT.lt.{0} Real Real.hasLt x (y i))))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.withBotToSet.{u1} ι (BoxIntegral.Box.splitUpper.{u1} ι I i x)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LT.lt.{0} Real Real.instLTReal x (y i))))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.coe_split_upper BoxIntegral.Box.coe_splitUpperₓ'. -/
 @[simp]
 theorem coe_splitUpper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
   by
@@ -159,22 +123,10 @@ theorem coe_splitUpper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ { y | x <
   exact and_comm' _ _
 #align box_integral.box.coe_split_upper BoxIntegral.Box.coe_splitUpper
 
-/- warning: box_integral.box.split_upper_le -> BoxIntegral.Box.splitUpper_le is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toHasLe.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) (BoxIntegral.Box.splitUpper.{u1} ι I i x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I)
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) (BoxIntegral.Box.splitUpper.{u1} ι I i x) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I)
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_upper_le BoxIntegral.Box.splitUpper_leₓ'. -/
 theorem splitUpper_le : I.splitUpper i x ≤ I :=
   withBotCoe_subset_iff.1 <| by simp
 #align box_integral.box.split_upper_le BoxIntegral.Box.splitUpper_le
 
-/- warning: box_integral.box.split_upper_eq_bot -> BoxIntegral.Box.splitUpper_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitUpper.{u1} ι I i x) (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasBot.{u1} (BoxIntegral.Box.{u1} ι)))) (LE.le.{0} Real Real.hasLe (BoxIntegral.Box.upper.{u1} ι I i) x)
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitUpper.{u1} ι I i x) (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.bot.{u1} (BoxIntegral.Box.{u1} ι)))) (LE.le.{0} Real Real.instLEReal (BoxIntegral.Box.upper.{u1} ι I i) x)
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_upper_eq_bot BoxIntegral.Box.splitUpper_eq_botₓ'. -/
 @[simp]
 theorem splitUpper_eq_bot {i x} : I.splitUpper i x = ⊥ ↔ I.upper i ≤ x :=
   by
@@ -182,23 +134,11 @@ theorem splitUpper_eq_bot {i x} : I.splitUpper i x = ⊥ ↔ I.upper i ≤ x :=
   simp [(I.lower_lt_upper _).not_le]
 #align box_integral.box.split_upper_eq_bot BoxIntegral.Box.splitUpper_eq_bot
 
-/- warning: box_integral.box.split_upper_eq_self -> BoxIntegral.Box.splitUpper_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitUpper.{u1} ι I i x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I)) (LE.le.{0} Real Real.hasLe x (BoxIntegral.Box.lower.{u1} ι I i))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitUpper.{u1} ι I i x) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I)) (LE.le.{0} Real Real.instLEReal x (BoxIntegral.Box.lower.{u1} ι I i))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_upper_eq_self BoxIntegral.Box.splitUpper_eq_selfₓ'. -/
 @[simp]
 theorem splitUpper_eq_self : I.splitUpper i x = I ↔ x ≤ I.lower i := by
   simp [split_upper, update_eq_iff]
 #align box_integral.box.split_upper_eq_self BoxIntegral.Box.splitUpper_eq_self
 
-/- warning: box_integral.box.split_upper_def -> BoxIntegral.Box.splitUpper_def is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : DecidableEq.{succ u1} ι] {i : ι} {x : Real} (h : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioo.{0} Real Real.preorder (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i))) (h' : optParam.{0} (forall (j : ι), LT.lt.{0} Real Real.hasLt (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x j) (BoxIntegral.Box.upper.{u1} ι I j)) (Iff.mpr (forall (x_1 : ι), (fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt y (BoxIntegral.Box.upper.{u1} ι I j)) x_1 (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x x_1)) (And ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt y (BoxIntegral.Box.upper.{u1} ι I j)) i x) (forall (x : ι), (Ne.{succ u1} ι x i) -> ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt y (BoxIntegral.Box.upper.{u1} ι I j)) x (BoxIntegral.Box.lower.{u1} ι I x)))) (Function.forall_update_iff.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x (fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt y (BoxIntegral.Box.upper.{u1} ι I j))) (And.intro ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt y (BoxIntegral.Box.upper.{u1} ι I j)) i x) (forall (x : ι), (Ne.{succ u1} ι x i) -> ((fun (j : ι) (y : Real) => LT.lt.{0} Real Real.hasLt y (BoxIntegral.Box.upper.{u1} ι I j)) x (BoxIntegral.Box.lower.{u1} ι I x))) (And.right (LT.lt.{0} Real (Preorder.toHasLt.{0} Real Real.preorder) (BoxIntegral.Box.lower.{u1} ι I i) x) (LT.lt.{0} Real (Preorder.toHasLt.{0} Real Real.preorder) x (BoxIntegral.Box.upper.{u1} ι I i)) h) (fun (j : ι) (hne : Ne.{succ u1} ι j i) => BoxIntegral.Box.lower_lt_upper.{u1} ι I j)))), Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitUpper.{u1} ι I i x) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) (BoxIntegral.Box.mk.{u1} ι (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x) (BoxIntegral.Box.upper.{u1} ι I) h'))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : DecidableEq.{succ u1} ι] {i : ι} {x : Real} (h : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioo.{0} Real Real.instPreorderReal (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i))) (h' : optParam.{0} (forall (j : ι), LT.lt.{0} Real Real.instLTReal (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x j) (BoxIntegral.Box.upper.{u1} ι I j)) (Iff.mpr (forall (x_1 : ι), LT.lt.{0} Real Real.instLTReal (Function.update.{succ u1, 1} ι (fun (a : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x x_1) (BoxIntegral.Box.upper.{u1} ι I x_1)) (And (LT.lt.{0} Real Real.instLTReal x (BoxIntegral.Box.upper.{u1} ι I i)) (forall (x : ι), (Ne.{succ u1} ι x i) -> (LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I x) (BoxIntegral.Box.upper.{u1} ι I x)))) (Function.forall_update_iff.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x (fun (j : ι) (y : Real) => LT.lt.{0} Real Real.instLTReal y (BoxIntegral.Box.upper.{u1} ι I j))) (And.intro (LT.lt.{0} Real Real.instLTReal x (BoxIntegral.Box.upper.{u1} ι I i)) (forall (x : ι), (Ne.{succ u1} ι x i) -> (LT.lt.{0} Real Real.instLTReal (BoxIntegral.Box.lower.{u1} ι I x) (BoxIntegral.Box.upper.{u1} ι I x))) (And.right (LT.lt.{0} Real (Preorder.toLT.{0} Real Real.instPreorderReal) (BoxIntegral.Box.lower.{u1} ι I i) x) (LT.lt.{0} Real (Preorder.toLT.{0} Real Real.instPreorderReal) x (BoxIntegral.Box.upper.{u1} ι I i)) h) (fun (j : ι) (hne : Ne.{succ u1} ι j i) => BoxIntegral.Box.lower_lt_upper.{u1} ι I j)))), Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.splitUpper.{u1} ι I i x) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.mk.{u1} ι (Function.update.{succ u1, 1} ι (fun (ᾰ : ι) => Real) (fun (a : ι) (b : ι) => _inst_1 a b) (BoxIntegral.Box.lower.{u1} ι I) i x) (BoxIntegral.Box.upper.{u1} ι I) h'))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.split_upper_def BoxIntegral.Box.splitUpper_defₓ'. -/
 theorem splitUpper_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upper i))
     (h' : ∀ j, update I.lower i x j < I.upper j :=
       (forall_update_iff I.lower fun j y => y < I.upper j).2
@@ -207,12 +147,6 @@ theorem splitUpper_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.uppe
   simp only [split_upper, mk'_eq_coe, max_eq_left h.1.le]; refine' ⟨_, rfl⟩; congr
 #align box_integral.box.split_upper_def BoxIntegral.Box.splitUpper_def
 
-/- warning: box_integral.box.disjoint_split_lower_split_upper -> BoxIntegral.Box.disjoint_splitLower_splitUpper is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) (i : ι) (x : Real), Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (BoxIntegral.Box.splitLower.{u1} ι I i x) (BoxIntegral.Box.splitUpper.{u1} ι I i x)
-but is expected to have type
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) (i : ι) (x : Real), Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) (BoxIntegral.Box.splitLower.{u1} ι I i x) (BoxIntegral.Box.splitUpper.{u1} ι I i x)
-Case conversion may be inaccurate. Consider using '#align box_integral.box.disjoint_split_lower_split_upper BoxIntegral.Box.disjoint_splitLower_splitUpperₓ'. -/
 theorem disjoint_splitLower_splitUpper (I : Box ι) (i : ι) (x : ℝ) :
     Disjoint (I.splitLower i x) (I.splitUpper i x) :=
   by
@@ -263,12 +197,6 @@ theorem mem_split_iff : J ∈ split I i x ↔ ↑J = I.splitLower i x ∨ ↑J =
 #align box_integral.prepartition.mem_split_iff BoxIntegral.Prepartition.mem_split_iff
 -/
 
-/- warning: box_integral.prepartition.mem_split_iff' -> BoxIntegral.Prepartition.mem_split_iff' is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.split.{u1} ι I i x)) (Or (Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LE.le.{0} Real Real.hasLe (y i) x)))) (Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LT.lt.{0} Real Real.hasLt x (y i))))))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.split.{u1} ι I i x)) (Or (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LE.le.{0} Real Real.instLEReal (y i) x)))) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LT.lt.{0} Real Real.instLTReal x (y i))))))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_split_iff' BoxIntegral.Prepartition.mem_split_iff'ₓ'. -/
 theorem mem_split_iff' :
     J ∈ split I i x ↔
       (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } ∨ (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
@@ -288,23 +216,11 @@ theorem isPartitionSplit (I : Box ι) (i : ι) (x : ℝ) : IsPartition (split I 
 #align box_integral.prepartition.is_partition_split BoxIntegral.Prepartition.isPartitionSplit
 -/
 
-/- warning: box_integral.prepartition.sum_split_boxes -> BoxIntegral.Prepartition.sum_split_boxes is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (I : BoxIntegral.Box.{u1} ι) (i : ι) (x : Real) (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I (BoxIntegral.Prepartition.split.{u1} ι I i x)) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (HAdd.hAdd.{u2, u2, u2} M M M (instHAdd.{u2} M (AddZeroClass.toHasAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) (Option.elim'.{u1, u2} (BoxIntegral.Box.{u1} ι) M (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))))) f (BoxIntegral.Box.splitLower.{u1} ι I i x)) (Option.elim'.{u1, u2} (BoxIntegral.Box.{u1} ι) M (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))))) f (BoxIntegral.Box.splitUpper.{u1} ι I i x)))
-but is expected to have type
-  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (I : BoxIntegral.Box.{u1} ι) (i : ι) (x : Real) (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I (BoxIntegral.Prepartition.split.{u1} ι I i x)) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (HAdd.hAdd.{u2, u2, u2} M M M (instHAdd.{u2} M (AddZeroClass.toAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) (Option.elim'.{u1, u2} (BoxIntegral.Box.{u1} ι) M (OfNat.ofNat.{u2} M 0 (Zero.toOfNat0.{u2} M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) f (BoxIntegral.Box.splitLower.{u1} ι I i x)) (Option.elim'.{u1, u2} (BoxIntegral.Box.{u1} ι) M (OfNat.ofNat.{u2} M 0 (Zero.toOfNat0.{u2} M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) f (BoxIntegral.Box.splitUpper.{u1} ι I i x)))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxesₓ'. -/
 theorem sum_split_boxes {M : Type _} [AddCommMonoid M] (I : Box ι) (i : ι) (x : ℝ) (f : Box ι → M) :
     (∑ J in (split I i x).boxes, f J) = (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f :=
   by rw [split, sum_of_with_bot, Finset.sum_pair (I.split_lower_ne_split_upper i x)]
 #align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxes
 
-/- warning: box_integral.prepartition.split_of_not_mem_Ioo -> BoxIntegral.Prepartition.split_of_not_mem_Ioo is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, (Not (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioo.{0} Real Real.preorder (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i)))) -> (Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.split.{u1} ι I i x) (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I))))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real}, (Not (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioo.{0} Real Real.instPreorderReal (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i)))) -> (Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.split.{u1} ι I i x) (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I))))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.split_of_not_mem_Ioo BoxIntegral.Prepartition.split_of_not_mem_Iooₓ'. -/
 /-- If `x ∉ (I.lower i, I.upper i)`, then the hyperplane `{y | y i = x}` does not split `I`. -/
 theorem split_of_not_mem_Ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i x = ⊤ :=
   by
@@ -317,23 +233,11 @@ theorem split_of_not_mem_Ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i
   · rwa [eq_comm, box.split_lower_eq_self]
 #align box_integral.prepartition.split_of_not_mem_Ioo BoxIntegral.Prepartition.split_of_not_mem_Ioo
 
-/- warning: box_integral.prepartition.coe_eq_of_mem_split_of_mem_le -> BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_le is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real} {y : ι -> Real}, (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.split.{u1} ι I i x)) -> (Membership.Mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasMem.{u1} ι) y J) -> (LE.le.{0} Real Real.hasLe (y i) x) -> (Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LE.le.{0} Real Real.hasLe (y i) x))))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real} {y : ι -> Real}, (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.split.{u1} ι I i x)) -> (Membership.mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instMembershipForAllRealBox.{u1} ι) y J) -> (LE.le.{0} Real Real.instLEReal (y i) x) -> (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LE.le.{0} Real Real.instLEReal (y i) x))))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_leₓ'. -/
 theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
     (h₃ : y i ≤ x) : (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
   (mem_split_iff'.1 h₁).resolve_right fun H => by rw [← box.mem_coe, H] at h₂; exact h₃.not_lt h₂.2
 #align box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_le
 
-/- warning: box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem -> BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_mem is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real} {y : ι -> Real}, (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.split.{u1} ι I i x)) -> (Membership.Mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasMem.{u1} ι) y J) -> (LT.lt.{0} Real Real.hasLt x (y i)) -> (Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LT.lt.{0} Real Real.hasLt x (y i)))))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {i : ι} {x : Real} {y : ι -> Real}, (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.split.{u1} ι I i x)) -> (Membership.mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instMembershipForAllRealBox.{u1} ι) y J) -> (LT.lt.{0} Real Real.instLTReal x (y i)) -> (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (setOf.{u1} (ι -> Real) (fun (y : ι -> Real) => LT.lt.{0} Real Real.instLTReal x (y i)))))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_memₓ'. -/
 theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
     (h₃ : x < y i) : (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
   (mem_split_iff'.1 h₁).resolve_left fun H => by rw [← box.mem_coe, H] at h₂; exact h₃.not_le h₂.2
@@ -365,12 +269,6 @@ def splitMany (I : Box ι) (s : Finset (ι × ℝ)) : Prepartition I :=
 #align box_integral.prepartition.split_many BoxIntegral.Prepartition.splitMany
 -/
 
-/- warning: box_integral.prepartition.split_many_empty -> BoxIntegral.Prepartition.splitMany_empty is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι), Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.splitMany.{u1} ι I (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.hasEmptyc.{u1} (Prod.{u1, 0} ι Real)))) (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))
-but is expected to have type
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι), Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.splitMany.{u1} ι I (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.instEmptyCollectionFinset.{u1} (Prod.{u1, 0} ι Real)))) (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.split_many_empty BoxIntegral.Prepartition.splitMany_emptyₓ'. -/
 @[simp]
 theorem splitMany_empty (I : Box ι) : splitMany I ∅ = ⊤ :=
   Finset.inf_empty
@@ -384,12 +282,6 @@ theorem splitMany_insert (I : Box ι) (s : Finset (ι × ℝ)) (p : ι × ℝ) :
 #align box_integral.prepartition.split_many_insert BoxIntegral.Prepartition.splitMany_insert
 -/
 
-/- warning: box_integral.prepartition.split_many_le_split -> BoxIntegral.Prepartition.splitMany_le_split is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) {s : Finset.{u1} (Prod.{u1, 0} ι Real)} {p : Prod.{u1, 0} ι Real}, (Membership.Mem.{u1, u1} (Prod.{u1, 0} ι Real) (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.hasMem.{u1} (Prod.{u1, 0} ι Real)) p s) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.splitMany.{u1} ι I s) (BoxIntegral.Prepartition.split.{u1} ι I (Prod.fst.{u1, 0} ι Real p) (Prod.snd.{u1, 0} ι Real p)))
-but is expected to have type
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) {s : Finset.{u1} (Prod.{u1, 0} ι Real)} {p : Prod.{u1, 0} ι Real}, (Membership.mem.{u1, u1} (Prod.{u1, 0} ι Real) (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.instMembershipFinset.{u1} (Prod.{u1, 0} ι Real)) p s) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.splitMany.{u1} ι I s) (BoxIntegral.Prepartition.split.{u1} ι I (Prod.fst.{u1, 0} ι Real p) (Prod.snd.{u1, 0} ι Real p)))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.split_many_le_split BoxIntegral.Prepartition.splitMany_le_splitₓ'. -/
 theorem splitMany_le_split (I : Box ι) {s : Finset (ι × ℝ)} {p : ι × ℝ} (hp : p ∈ s) :
     splitMany I s ≤ split I p.1 p.2 :=
   Finset.inf_le hp
@@ -419,12 +311,6 @@ theorem inf_splitMany {I : Box ι} (π : Prepartition I) (s : Finset (ι × ℝ)
 #align box_integral.prepartition.inf_split_many BoxIntegral.Prepartition.inf_splitMany
 -/
 
-/- warning: box_integral.prepartition.not_disjoint_imp_le_of_subset_of_mem_split_many -> BoxIntegral.Prepartition.not_disjoint_imp_le_of_subset_of_mem_splitMany is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {Js : BoxIntegral.Box.{u1} ι} {s : Finset.{u1} (Prod.{u1, 0} ι Real)}, (forall (i : ι), HasSubset.Subset.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.hasSubset.{u1} (Prod.{u1, 0} ι Real)) (Insert.insert.{u1, u1} (Prod.{u1, 0} ι Real) (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.hasInsert.{u1} (Prod.{u1, 0} ι Real) (fun (a : Prod.{u1, 0} ι Real) (b : Prod.{u1, 0} ι Real) => Prod.Lex.decidableEq.{u1, 0} ι Real (fun (a : ι) (b : ι) => Classical.propDecidable (Eq.{succ u1} ι a b)) (fun (a : Real) (b : Real) => Real.decidableEq a b) a b)) (Prod.mk.{u1, 0} ι Real i (BoxIntegral.Box.lower.{u1} ι J i)) (Singleton.singleton.{u1, u1} (Prod.{u1, 0} ι Real) (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.hasSingleton.{u1} (Prod.{u1, 0} ι Real)) (Prod.mk.{u1, 0} ι Real i (BoxIntegral.Box.upper.{u1} ι J i)))) s) -> (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) Js (BoxIntegral.Prepartition.splitMany.{u1} ι I s)) -> (Not (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) Js))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι) Js J)
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {Js : BoxIntegral.Box.{u1} ι} {s : Finset.{u1} (Prod.{u1, 0} ι Real)}, (forall (i : ι), HasSubset.Subset.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.instHasSubsetFinset.{u1} (Prod.{u1, 0} ι Real)) (Insert.insert.{u1, u1} (Prod.{u1, 0} ι Real) (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.instInsertFinset.{u1} (Prod.{u1, 0} ι Real) (fun (a : Prod.{u1, 0} ι Real) (b : Prod.{u1, 0} ι Real) => instDecidableEqProd.{u1, 0} ι Real (fun (a : ι) (b : ι) => Classical.propDecidable (Eq.{succ u1} ι a b)) (fun (a : Real) (b : Real) => Real.decidableEq a b) a b)) (Prod.mk.{u1, 0} ι Real i (BoxIntegral.Box.lower.{u1} ι J i)) (Singleton.singleton.{u1, u1} (Prod.{u1, 0} ι Real) (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.instSingletonFinset.{u1} (Prod.{u1, 0} ι Real)) (Prod.mk.{u1, 0} ι Real i (BoxIntegral.Box.upper.{u1} ι J i)))) s) -> (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) Js (BoxIntegral.Prepartition.splitMany.{u1} ι I s)) -> (Not (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) Js))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) Js J)
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.not_disjoint_imp_le_of_subset_of_mem_split_many BoxIntegral.Prepartition.not_disjoint_imp_le_of_subset_of_mem_splitManyₓ'. -/
 /-- Let `s : finset (ι × ℝ)` be a set of hyperplanes `{x : ι → ℝ | x i = r}` in `ι → ℝ` encoded as
 pairs `(i, r)`. Suppose that this set contains all faces of a box `J`. The hyperplanes of `s` split
 a box `I` into subboxes. Let `Js` be one of them. If `J` and `Js` have nonempty intersection, then
@@ -450,12 +336,6 @@ section Fintype
 
 variable [Finite ι]
 
-/- warning: box_integral.prepartition.eventually_not_disjoint_imp_le_of_mem_split_many -> BoxIntegral.Prepartition.eventually_not_disjoint_imp_le_of_mem_splitMany is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] (s : Finset.{u1} (BoxIntegral.Box.{u1} ι)), Filter.Eventually.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (fun (t : Finset.{u1} (Prod.{u1, 0} ι Real)) => forall (I : BoxIntegral.Box.{u1} ι) (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.hasMem.{u1} (BoxIntegral.Box.{u1} ι)) J s) -> (forall (J' : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' (BoxIntegral.Prepartition.splitMany.{u1} ι I t)) -> (Not (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J'))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι) J' J))) (Filter.atTop.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.partialOrder.{u1} (Prod.{u1, 0} ι Real))))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] (s : Finset.{u1} (BoxIntegral.Box.{u1} ι)), Filter.Eventually.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (fun (t : Finset.{u1} (Prod.{u1, 0} ι Real)) => forall (I : BoxIntegral.Box.{u1} ι) (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instMembershipFinset.{u1} (BoxIntegral.Box.{u1} ι)) J s) -> (forall (J' : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' (BoxIntegral.Prepartition.splitMany.{u1} ι I t)) -> (Not (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J'))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) J' J))) (Filter.atTop.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (Finset.partialOrder.{u1} (Prod.{u1, 0} ι Real))))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.eventually_not_disjoint_imp_le_of_mem_split_many BoxIntegral.Prepartition.eventually_not_disjoint_imp_le_of_mem_splitManyₓ'. -/
 /-- Let `s` be a finite set of boxes in `ℝⁿ = ι → ℝ`. Then there exists a finite set `t₀` of
 hyperplanes (namely, the set of all hyperfaces of boxes in `s`) such that for any `t ⊇ t₀`
 and any box `I` in `ℝⁿ` the following holds. The hyperplanes from `t` split `I` into subboxes.
@@ -502,12 +382,6 @@ theorem exists_splitMany_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs 
 #align box_integral.prepartition.exists_split_many_inf_eq_filter_of_finite BoxIntegral.Prepartition.exists_splitMany_inf_eq_filter_of_finite
 -/
 
-/- warning: box_integral.prepartition.is_partition.exists_split_many_le -> BoxIntegral.Prepartition.IsPartition.exists_splitMany_le is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {I : BoxIntegral.Box.{u1} ι} {π : BoxIntegral.Prepartition.{u1} ι I}, (BoxIntegral.Prepartition.IsPartition.{u1} ι I π) -> (Exists.{succ u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (fun (s : Finset.{u1} (Prod.{u1, 0} ι Real)) => LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.splitMany.{u1} ι I s) π))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {I : BoxIntegral.Box.{u1} ι} {π : BoxIntegral.Prepartition.{u1} ι I}, (BoxIntegral.Prepartition.IsPartition.{u1} ι I π) -> (Exists.{succ u1} (Finset.{u1} (Prod.{u1, 0} ι Real)) (fun (s : Finset.{u1} (Prod.{u1, 0} ι Real)) => LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.splitMany.{u1} ι I s) π))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.is_partition.exists_split_many_le BoxIntegral.Prepartition.IsPartition.exists_splitMany_leₓ'. -/
 /-- If `π` is a partition of `I`, then there exists a finite set `s` of hyperplanes such that
 `split_many I s ≤ π`. -/
 theorem IsPartition.exists_splitMany_le {I : Box ι} {π : Prepartition I} (h : IsPartition π) :
@@ -516,12 +390,6 @@ theorem IsPartition.exists_splitMany_le {I : Box ι} {π : Prepartition I} (h : 
     rwa [h.Union_eq, filter_of_true, inf_eq_right] at hs; exact fun J hJ => le_of_mem _ hJ
 #align box_integral.prepartition.is_partition.exists_split_many_le BoxIntegral.Prepartition.IsPartition.exists_splitMany_le
 
-/- warning: box_integral.prepartition.exists_Union_eq_diff -> BoxIntegral.Prepartition.exists_iUnion_eq_diff is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π' : BoxIntegral.Prepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π') (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π)))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π' : BoxIntegral.Prepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π') (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π)))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.exists_Union_eq_diff BoxIntegral.Prepartition.exists_iUnion_eq_diffₓ'. -/
 /-- For every prepartition `π` of `I` there exists a prepartition that covers exactly
 `I \ π.Union`. -/
 theorem exists_iUnion_eq_diff (π : Prepartition I) :
@@ -540,12 +408,6 @@ def compl (π : Prepartition I) : Prepartition I :=
 #align box_integral.prepartition.compl BoxIntegral.Prepartition.compl
 -/
 
-/- warning: box_integral.prepartition.Union_compl -> BoxIntegral.Prepartition.iUnion_compl is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_compl BoxIntegral.Prepartition.iUnion_complₓ'. -/
 @[simp]
 theorem iUnion_compl (π : Prepartition I) : π.compl.iUnion = I \ π.iUnion :=
   π.exists_iUnion_eq_diff.choose_spec
@@ -559,22 +421,10 @@ theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.iUnion = π₂.iUn
 #align box_integral.prepartition.compl_congr BoxIntegral.Prepartition.compl_congr
 -/
 
-/- warning: box_integral.prepartition.is_partition.compl_eq_bot -> BoxIntegral.Prepartition.IsPartition.compl_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] {π : BoxIntegral.Prepartition.{u1} ι I}, (BoxIntegral.Prepartition.IsPartition.{u1} ι I π) -> (Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π) (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I))))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] {π : BoxIntegral.Prepartition.{u1} ι I}, (BoxIntegral.Prepartition.IsPartition.{u1} ι I π) -> (Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π) (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I))))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.is_partition.compl_eq_bot BoxIntegral.Prepartition.IsPartition.compl_eq_botₓ'. -/
 theorem IsPartition.compl_eq_bot {π : Prepartition I} (h : IsPartition π) : π.compl = ⊥ := by
   rw [← Union_eq_empty, Union_compl, h.Union_eq, diff_self]
 #align box_integral.prepartition.is_partition.compl_eq_bot BoxIntegral.Prepartition.IsPartition.compl_eq_bot
 
-/- warning: box_integral.prepartition.compl_top -> BoxIntegral.Prepartition.compl_top is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι], Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))) (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I)))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι], Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))) (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I)))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.compl_top BoxIntegral.Prepartition.compl_topₓ'. -/
 @[simp]
 theorem compl_top : (⊤ : Prepartition I).compl = ⊥ :=
   (isPartitionTop I).compl_eq_bot

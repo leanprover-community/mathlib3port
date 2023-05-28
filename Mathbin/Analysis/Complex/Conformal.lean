@@ -45,9 +45,6 @@ open Complex ContinuousLinearMap
 
 open ComplexConjugate
 
-/- warning: is_conformal_map_conj -> isConformalMap_conj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_conformal_map_conj isConformalMap_conjₓ'. -/
 theorem isConformalMap_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
   conjLie.toLinearIsometry.IsConformalMap
 #align is_conformal_map_conj isConformalMap_conj
@@ -57,9 +54,6 @@ section ConformalIntoComplexNormed
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ}
   {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
-/- warning: is_conformal_map_complex_linear -> isConformalMap_complex_linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_conformal_map_complex_linear isConformalMap_complex_linearₓ'. -/
 theorem isConformalMap_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
     IsConformalMap (map.restrictScalars ℝ) :=
   by
@@ -79,9 +73,6 @@ theorem isConformalMap_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠
       smul_inv_smul₀, Ne.def, not_false_iff]
 #align is_conformal_map_complex_linear isConformalMap_complex_linear
 
-/- warning: is_conformal_map_complex_linear_conj -> isConformalMap_complex_linear_conj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_conformal_map_complex_linear_conj isConformalMap_complex_linear_conjₓ'. -/
 theorem isConformalMap_complex_linear_conj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
     IsConformalMap ((map.restrictScalars ℝ).comp (conjCle : ℂ →L[ℝ] ℂ)) :=
   (isConformalMap_complex_linear nonzero).comp isConformalMap_conj
@@ -95,9 +86,6 @@ open ContinuousLinearMap
 
 variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 
-/- warning: is_conformal_map.is_complex_or_conj_linear -> IsConformalMap.is_complex_or_conj_linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_conformal_map.is_complex_or_conj_linear IsConformalMap.is_complex_or_conj_linearₓ'. -/
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
     (∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨
       ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conjCle :=
@@ -119,9 +107,6 @@ theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
       conj_lie_apply, conj_conj]
 #align is_conformal_map.is_complex_or_conj_linear IsConformalMap.is_complex_or_conj_linear
 
-/- warning: is_conformal_map_iff_is_complex_or_conj_linear -> isConformalMap_iff_is_complex_or_conj_linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_conformal_map_iff_is_complex_or_conj_linear isConformalMap_iff_is_complex_or_conj_linearₓ'. -/
 /-- A real continuous linear map on the complex plane is conformal if and only if the map or its
     conjugate is complex linear, and the map is nonvanishing. -/
 theorem isConformalMap_iff_is_complex_or_conj_linear :

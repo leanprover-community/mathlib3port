@@ -36,24 +36,12 @@ section
 
 variable {X Y : AddCommGroupCat.{u}} (f : X ⟶ Y)
 
-/- warning: AddCommGroup.normal_mono -> AddCommGroupCat.normalMono is a dubious translation:
-lean 3 declaration is
-  forall {X : AddCommGroupCat.{u1}} {Y : AddCommGroupCat.{u1}} (f : Quiver.Hom.{succ u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1})) X Y), (CategoryTheory.Mono.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} X Y f) -> (CategoryTheory.NormalMono.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} X Y (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.CategoryTheory.preadditive.{u1}) f)
-but is expected to have type
-  forall {X : AddCommGroupCat.{u1}} {Y : AddCommGroupCat.{u1}} (f : Quiver.Hom.{succ u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1})) X Y), (CategoryTheory.Mono.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1} X Y f) -> (CategoryTheory.NormalMono.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1} X Y (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1} AddCommGroupCat.instPreadditiveAddCommGroupCatInstAddCommGroupCatLargeCategory.{u1}) f)
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.normal_mono AddCommGroupCat.normalMonoₓ'. -/
 /-- In the category of abelian groups, every monomorphism is normal. -/
 def normalMono (hf : Mono f) : NormalMono f :=
   equivalenceReflectsNormalMono (forget₂ (ModuleCat.{u} ℤ) AddCommGroupCat.{u}).inv <|
     ModuleCat.normalMono _ inferInstance
 #align AddCommGroup.normal_mono AddCommGroupCat.normalMono
 
-/- warning: AddCommGroup.normal_epi -> AddCommGroupCat.normalEpi is a dubious translation:
-lean 3 declaration is
-  forall {X : AddCommGroupCat.{u1}} {Y : AddCommGroupCat.{u1}} (f : Quiver.Hom.{succ u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1})) X Y), (CategoryTheory.Epi.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} X Y f) -> (CategoryTheory.NormalEpi.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} X Y (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, succ u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.CategoryTheory.preadditive.{u1}) f)
-but is expected to have type
-  forall {X : AddCommGroupCat.{u1}} {Y : AddCommGroupCat.{u1}} (f : Quiver.Hom.{succ u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} AddCommGroupCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1})) X Y), (CategoryTheory.Epi.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1} X Y f) -> (CategoryTheory.NormalEpi.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1} X Y (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, succ u1} AddCommGroupCat.{u1} instAddCommGroupCatLargeCategory.{u1} AddCommGroupCat.instPreadditiveAddCommGroupCatInstAddCommGroupCatLargeCategory.{u1}) f)
-Case conversion may be inaccurate. Consider using '#align AddCommGroup.normal_epi AddCommGroupCat.normalEpiₓ'. -/
 /-- In the category of abelian groups, every epimorphism is normal. -/
 def normalEpi (hf : Epi f) : NormalEpi f :=
   equivalenceReflectsNormalEpi (forget₂ (ModuleCat.{u} ℤ) AddCommGroupCat.{u}).inv <|

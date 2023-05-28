@@ -95,12 +95,6 @@ theorem shadow_monotone : Monotone (shadow : Finset (Finset α) → Finset (Fins
 #align finset.shadow_monotone Finset.shadow_monotone
 -/
 
-/- warning: finset.mem_shadow_iff -> Finset.mem_shadow_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t) => Eq.{succ u1} (Finset.{u1} α) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t) (Eq.{succ u1} (Finset.{u1} α) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a) s)))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_shadow_iff Finset.mem_shadow_iffₓ'. -/
 /-- `s` is in the shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element to
 get `s`. -/
 theorem mem_shadow_iff : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ a ∈ t, erase t a = s := by
@@ -147,12 +141,6 @@ theorem sized_shadow_iff (h : ∅ ∉ 𝒜) :
 #align finset.sized_shadow_iff Finset.sized_shadow_iff
 -/
 
-/- warning: finset.mem_shadow_iff_exists_mem_card_add_one -> Finset.mem_shadow_iff_exists_mem_card_add_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) (Eq.{1} Nat (Finset.card.{u1} α t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) (Eq.{1} Nat (Finset.card.{u1} α t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_shadow_iff_exists_mem_card_add_one Finset.mem_shadow_iff_exists_mem_card_add_oneₓ'. -/
 /-- `s ∈ ∂ 𝒜` iff `s` is exactly one element less than something from `𝒜` -/
 theorem mem_shadow_iff_exists_mem_card_add_one :
     s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + 1 :=
@@ -168,24 +156,12 @@ theorem mem_shadow_iff_exists_mem_card_add_one :
         rwa [insert_eq a s, ← ha, sdiff_union_of_subset hst]⟩
 #align finset.mem_shadow_iff_exists_mem_card_add_one Finset.mem_shadow_iff_exists_mem_card_add_one
 
-/- warning: finset.exists_subset_of_mem_shadow -> Finset.exists_subset_of_mem_shadow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t)))
-Case conversion may be inaccurate. Consider using '#align finset.exists_subset_of_mem_shadow Finset.exists_subset_of_mem_shadowₓ'. -/
 /-- Being in the shadow of `𝒜` means we have a superset in `𝒜`. -/
 theorem exists_subset_of_mem_shadow (hs : s ∈ (∂ ) 𝒜) : ∃ t ∈ 𝒜, s ⊆ t :=
   let ⟨t, ht, hst⟩ := mem_shadow_iff_exists_mem_card_add_one.1 hs
   ⟨t, ht, hst.1⟩
 #align finset.exists_subset_of_mem_shadow Finset.exists_subset_of_mem_shadow
 
-/- warning: finset.mem_shadow_iff_exists_mem_card_add -> Finset.mem_shadow_iff_exists_mem_card_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α} {k : Nat}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Nat.iterate.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) k 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) (Eq.{1} Nat (Finset.card.{u1} α t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α s) k)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α} {k : Nat}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Nat.iterate.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) k 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) (Eq.{1} Nat (Finset.card.{u1} α t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α s) k)))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_shadow_iff_exists_mem_card_add Finset.mem_shadow_iff_exists_mem_card_addₓ'. -/
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements less than something in `𝒜`. -/
 theorem mem_shadow_iff_exists_mem_card_add :
     s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k :=
@@ -248,12 +224,6 @@ theorem upShadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (
 #align finset.up_shadow_monotone Finset.upShadow_monotone
 -/
 
-/- warning: finset.mem_up_shadow_iff -> Finset.mem_upShadow_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => Exists.{succ u1} α (fun (a : α) => Exists.{0} (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)) (fun (H : Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a t)) => Eq.{succ u1} (Finset.{u1} α) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a t) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) (fun (x._@.Mathlib.Combinatorics.SetFamily.Shadow._hyg.2641 : Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) => Eq.{succ u1} (Finset.{u1} α) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a t) s)))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff Finset.mem_upShadow_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » t) -/
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
@@ -276,12 +246,6 @@ protected theorem Set.Sized.upShadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) 
   rw [card_insert_of_not_mem hi, h𝒜 hA]
 #align set.sized.up_shadow Set.Sized.upShadow
 
-/- warning: finset.mem_up_shadow_iff_erase_mem -> Finset.mem_upShadow_iff_erase_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) 𝒜)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) 𝒜)))
-Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff_erase_mem Finset.mem_upShadow_iff_erase_memₓ'. -/
 /-- `t` is in the upper shadow of `𝒜` iff we can remove an element from it so that the resulting
 finset is in `𝒜`. -/
 theorem mem_upShadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.eraseₓ a ∈ 𝒜 :=
@@ -294,12 +258,6 @@ theorem mem_upShadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.era
     exact ⟨s.erase a, hs, a, not_mem_erase _ _, insert_erase ha⟩
 #align finset.mem_up_shadow_iff_erase_mem Finset.mem_upShadow_iff_erase_mem
 
-/- warning: finset.mem_up_shadow_iff_exists_mem_card_add_one -> Finset.mem_upShadow_iff_exists_mem_card_add_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t s) (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α t) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Finset.card.{u1} α s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t s) (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α t) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Finset.card.{u1} α s)))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff_exists_mem_card_add_one Finset.mem_upShadow_iff_exists_mem_card_add_oneₓ'. -/
 /-- `s ∈ ∂⁺ 𝒜` iff `s` is exactly one element less than something from `𝒜`. -/
 theorem mem_upShadow_iff_exists_mem_card_add_one :
     s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + 1 = s.card :=
@@ -314,24 +272,12 @@ theorem mem_upShadow_iff_exists_mem_card_add_one :
     rwa [← sdiff_singleton_eq_erase, ← ha, sdiff_sdiff_eq_self hts]
 #align finset.mem_up_shadow_iff_exists_mem_card_add_one Finset.mem_upShadow_iff_exists_mem_card_add_one
 
-/- warning: finset.exists_subset_of_mem_up_shadow -> Finset.exists_subset_of_mem_upShadow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t s)))
-Case conversion may be inaccurate. Consider using '#align finset.exists_subset_of_mem_up_shadow Finset.exists_subset_of_mem_upShadowₓ'. -/
 /-- Being in the upper shadow of `𝒜` means we have a superset in `𝒜`. -/
 theorem exists_subset_of_mem_upShadow (hs : s ∈ (∂⁺ ) 𝒜) : ∃ t ∈ 𝒜, t ⊆ s :=
   let ⟨t, ht, hts, _⟩ := mem_upShadow_iff_exists_mem_card_add_one.1 hs
   ⟨t, ht, hts⟩
 #align finset.exists_subset_of_mem_up_shadow Finset.exists_subset_of_mem_upShadow
 
-/- warning: finset.mem_up_shadow_iff_exists_mem_card_add -> Finset.mem_upShadow_iff_exists_mem_card_add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α} {k : Nat}, Iff (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) s (Nat.iterate.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) k 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) (fun (H : Membership.Mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.hasMem.{u1} (Finset.{u1} α)) t 𝒜) => And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t s) (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α t) k) (Finset.card.{u1} α s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α} {k : Nat}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Nat.iterate.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) k 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (And (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t s) (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α t) k) (Finset.card.{u1} α s)))))
-Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_upShadow_iff_exists_mem_card_addₓ'. -/
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements more than something in `𝒜`. -/
 theorem mem_upShadow_iff_exists_mem_card_add :
     s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + k = s.card :=

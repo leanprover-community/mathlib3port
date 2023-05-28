@@ -168,12 +168,6 @@ theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) 
 #align minimals_mono minimals_mono
 -/
 
-/- warning: maximals_union -> maximals_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (maximals.{u1} α r (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (maximals.{u1} α r s) (maximals.{u1} α r t))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (maximals.{u1} α r (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (maximals.{u1} α r s) (maximals.{u1} α r t))
-Case conversion may be inaccurate. Consider using '#align maximals_union maximals_unionₓ'. -/
 theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t :=
   by
   intro a ha
@@ -182,52 +176,22 @@ theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t 
   · exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
 #align maximals_union maximals_union
 
-/- warning: minimals_union -> minimals_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (minimals.{u1} α r (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (minimals.{u1} α r s) (minimals.{u1} α r t))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (minimals.{u1} α r (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (minimals.{u1} α r s) (minimals.{u1} α r t))
-Case conversion may be inaccurate. Consider using '#align minimals_union minimals_unionₓ'. -/
 theorem minimals_union : minimals r (s ∪ t) ⊆ minimals r s ∪ minimals r t :=
   maximals_union
 #align minimals_union minimals_union
 
-/- warning: maximals_inter_subset -> maximals_inter_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (maximals.{u1} α r s) t) (maximals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (maximals.{u1} α r s) t) (maximals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align maximals_inter_subset maximals_inter_subsetₓ'. -/
 theorem maximals_inter_subset : maximals r s ∩ t ⊆ maximals r (s ∩ t) := fun a ha =>
   ⟨⟨ha.1.1, ha.2⟩, fun b hb => ha.1.2 hb.1⟩
 #align maximals_inter_subset maximals_inter_subset
 
-/- warning: minimals_inter_subset -> minimals_inter_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (minimals.{u1} α r s) t) (minimals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (minimals.{u1} α r s) t) (minimals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align minimals_inter_subset minimals_inter_subsetₓ'. -/
 theorem minimals_inter_subset : minimals r s ∩ t ⊆ minimals r (s ∩ t) :=
   maximals_inter_subset
 #align minimals_inter_subset minimals_inter_subset
 
-/- warning: inter_maximals_subset -> inter_maximals_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (maximals.{u1} α r t)) (maximals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (maximals.{u1} α r t)) (maximals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align inter_maximals_subset inter_maximals_subsetₓ'. -/
 theorem inter_maximals_subset : s ∩ maximals r t ⊆ maximals r (s ∩ t) := fun a ha =>
   ⟨⟨ha.1, ha.2.1⟩, fun b hb => ha.2.2 hb.2⟩
 #align inter_maximals_subset inter_maximals_subset
 
-/- warning: inter_minimals_subset -> inter_minimals_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (minimals.{u1} α r t)) (minimals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (minimals.{u1} α r t)) (minimals.{u1} α r (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align inter_minimals_subset inter_minimals_subsetₓ'. -/
 theorem inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) :=
   inter_maximals_subset
 #align inter_minimals_subset inter_minimals_subset
@@ -260,12 +224,6 @@ theorem minimals_idem : minimals r (minimals r s) = minimals r s :=
 #align minimals_idem minimals_idem
 -/
 
-/- warning: is_antichain.max_maximals -> IsAntichain.max_maximals is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, (IsAntichain.{u1} α r t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (maximals.{u1} α r s) t) -> (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a t) -> (Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b (maximals.{u1} α r s)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b (maximals.{u1} α r s)) => r b a)))) -> (Eq.{succ u1} (Set.{u1} α) (maximals.{u1} α r s) t)
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, (IsAntichain.{u1} α r t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (maximals.{u1} α r s) t) -> (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t) -> (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (maximals.{u1} α r s)) (r b a)))) -> (Eq.{succ u1} (Set.{u1} α) (maximals.{u1} α r s) t)
-Case conversion may be inaccurate. Consider using '#align is_antichain.max_maximals IsAntichain.max_maximalsₓ'. -/
 /-- If `maximals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem IsAntichain.max_maximals (ht : IsAntichain r t) (h : maximals r s ⊆ t)
@@ -276,12 +234,6 @@ theorem IsAntichain.max_maximals (ht : IsAntichain r t) (h : maximals r s ⊆ t)
   rwa [of_not_not fun hab => ht (h hb) ha (Ne.symm hab) hr]
 #align is_antichain.max_maximals IsAntichain.max_maximals
 
-/- warning: is_antichain.max_minimals -> IsAntichain.max_minimals is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, (IsAntichain.{u1} α r t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (minimals.{u1} α r s) t) -> (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a t) -> (Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b (minimals.{u1} α r s)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b (minimals.{u1} α r s)) => r a b)))) -> (Eq.{succ u1} (Set.{u1} α) (minimals.{u1} α r s) t)
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} {s : Set.{u1} α} {t : Set.{u1} α}, (IsAntichain.{u1} α r t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (minimals.{u1} α r s) t) -> (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t) -> (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (minimals.{u1} α r s)) (r a b)))) -> (Eq.{succ u1} (Set.{u1} α) (minimals.{u1} α r s) t)
-Case conversion may be inaccurate. Consider using '#align is_antichain.max_minimals IsAntichain.max_minimalsₓ'. -/
 /-- If `minimals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : minimals r s ⊆ t)
@@ -294,52 +246,22 @@ theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : minimals r s ⊆ t)
 
 variable [PartialOrder α]
 
-/- warning: is_least.mem_minimals -> IsLeast.mem_minimals is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsLeast.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (minimals.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsLeast.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (minimals.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2180 : α) (x._@.Mathlib.Order.Minimal._hyg.2182 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2180 x._@.Mathlib.Order.Minimal._hyg.2182) s))
-Case conversion may be inaccurate. Consider using '#align is_least.mem_minimals IsLeast.mem_minimalsₓ'. -/
 theorem IsLeast.mem_minimals (h : IsLeast s a) : a ∈ minimals (· ≤ ·) s :=
   ⟨h.1, fun b hb _ => h.2 hb⟩
 #align is_least.mem_minimals IsLeast.mem_minimals
 
-/- warning: is_greatest.mem_maximals -> IsGreatest.mem_maximals is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsGreatest.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (maximals.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsGreatest.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (maximals.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2246 : α) (x._@.Mathlib.Order.Minimal._hyg.2248 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2246 x._@.Mathlib.Order.Minimal._hyg.2248) s))
-Case conversion may be inaccurate. Consider using '#align is_greatest.mem_maximals IsGreatest.mem_maximalsₓ'. -/
 theorem IsGreatest.mem_maximals (h : IsGreatest s a) : a ∈ maximals (· ≤ ·) s :=
   ⟨h.1, fun b hb _ => h.2 hb⟩
 #align is_greatest.mem_maximals IsGreatest.mem_maximals
 
-/- warning: is_least.minimals_eq -> IsLeast.minimals_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsLeast.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Eq.{succ u1} (Set.{u1} α) (minimals.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsLeast.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Eq.{succ u1} (Set.{u1} α) (minimals.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2311 : α) (x._@.Mathlib.Order.Minimal._hyg.2313 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2311 x._@.Mathlib.Order.Minimal._hyg.2313) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
-Case conversion may be inaccurate. Consider using '#align is_least.minimals_eq IsLeast.minimals_eqₓ'. -/
 theorem IsLeast.minimals_eq (h : IsLeast s a) : minimals (· ≤ ·) s = {a} :=
   eq_singleton_iff_unique_mem.2 ⟨h.mem_minimals, fun b hb => eq_of_mem_minimals hb h.1 <| h.2 hb.1⟩
 #align is_least.minimals_eq IsLeast.minimals_eq
 
-/- warning: is_greatest.maximals_eq -> IsGreatest.maximals_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsGreatest.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Eq.{succ u1} (Set.{u1} α) (maximals.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : PartialOrder.{u1} α], (IsGreatest.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s a) -> (Eq.{succ u1} (Set.{u1} α) (maximals.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2416 : α) (x._@.Mathlib.Order.Minimal._hyg.2418 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2416 x._@.Mathlib.Order.Minimal._hyg.2418) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
-Case conversion may be inaccurate. Consider using '#align is_greatest.maximals_eq IsGreatest.maximals_eqₓ'. -/
 theorem IsGreatest.maximals_eq (h : IsGreatest s a) : maximals (· ≤ ·) s = {a} :=
   eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => eq_of_mem_maximals hb h.1 <| h.2 hb.1⟩
 #align is_greatest.maximals_eq IsGreatest.maximals_eq
 
-/- warning: is_antichain.minimals_upper_closure -> IsAntichain.minimals_upperClosure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : PartialOrder.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s) -> (Eq.{succ u1} (Set.{u1} α) (minimals.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (UpperSet.setLike.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))))) (upperClosure.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s))) s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : PartialOrder.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2515 : α) (x._@.Mathlib.Order.Minimal._hyg.2517 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2515 x._@.Mathlib.Order.Minimal._hyg.2517) s) -> (Eq.{succ u1} (Set.{u1} α) (minimals.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2535 : α) (x._@.Mathlib.Order.Minimal._hyg.2537 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2535 x._@.Mathlib.Order.Minimal._hyg.2537) (SetLike.coe.{u1, u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (UpperSet.instSetLikeUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (upperClosure.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s))) s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.minimals_upper_closure IsAntichain.minimals_upperClosureₓ'. -/
 theorem IsAntichain.minimals_upperClosure (hs : IsAntichain (· ≤ ·) s) :
     minimals (· ≤ ·) (upperClosure s : Set α) = s :=
   hs.max_minimals
@@ -349,12 +271,6 @@ theorem IsAntichain.minimals_upperClosure (hs : IsAntichain (· ≤ ·) s) :
       le_rfl⟩
 #align is_antichain.minimals_upper_closure IsAntichain.minimals_upperClosure
 
-/- warning: is_antichain.maximals_lower_closure -> IsAntichain.maximals_lowerClosure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : PartialOrder.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s) -> (Eq.{succ u1} (Set.{u1} α) (maximals.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (LowerSet.setLike.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))))) (lowerClosure.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s))) s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : PartialOrder.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2768 : α) (x._@.Mathlib.Order.Minimal._hyg.2770 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2768 x._@.Mathlib.Order.Minimal._hyg.2770) s) -> (Eq.{succ u1} (Set.{u1} α) (maximals.{u1} α (fun (x._@.Mathlib.Order.Minimal._hyg.2788 : α) (x._@.Mathlib.Order.Minimal._hyg.2790 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Minimal._hyg.2788 x._@.Mathlib.Order.Minimal._hyg.2790) (SetLike.coe.{u1, u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (LowerSet.instSetLikeLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (lowerClosure.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s))) s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.maximals_lower_closure IsAntichain.maximals_lowerClosureₓ'. -/
 theorem IsAntichain.maximals_lowerClosure (hs : IsAntichain (· ≤ ·) s) :
     maximals (· ≤ ·) (lowerClosure s : Set α) = s :=
   hs.toDual.minimals_upperClosure

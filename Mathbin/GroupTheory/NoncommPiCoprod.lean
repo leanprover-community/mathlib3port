@@ -56,12 +56,6 @@ namespace Subgroup
 
 variable {G : Type _} [Group G]
 
-/- warning: subgroup.eq_one_of_noncomm_prod_eq_one_of_independent -> Subgroup.eq_one_of_noncommProd_eq_one_of_independent is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} (s : Finset.{u2} ι) (f : ι -> G) (comm : Set.Pairwise.{u2} ι ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) (fun (a : ι) (b : ι) => Commute.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (f a) (f b))) (K : ι -> (Subgroup.{u1} G _inst_1)), (CompleteLattice.Independent.{succ u2, u1} ι (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1) K) -> (forall (x : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (f x) (K x))) -> (Eq.{succ u1} G (Finset.noncommProd.{u2, u1} ι G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) s f comm) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Eq.{succ u1} G (f i) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} (s : Finset.{u2} ι) (f : ι -> G) (comm : Set.Pairwise.{u2} ι (Finset.toSet.{u2} ι s) (fun (a : ι) (b : ι) => Commute.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (f a) (f b))) (K : ι -> (Subgroup.{u1} G _inst_1)), (CompleteLattice.Independent.{succ u2, u1} ι (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1) K) -> (forall (x : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) x s) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) (f x) (K x))) -> (Eq.{succ u1} G (Finset.noncommProd.{u2, u1} ι G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) s f comm) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))) -> (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Eq.{succ u1} G (f i) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))))
-Case conversion may be inaccurate. Consider using '#align subgroup.eq_one_of_noncomm_prod_eq_one_of_independent Subgroup.eq_one_of_noncommProd_eq_one_of_independentₓ'. -/
 /-- `finset.noncomm_prod` is “injective” in `f` if `f` maps into independent subgroups.  This
 generalizes (one direction of) `subgroup.disjoint_iff_mul_eq_one`. -/
 @[to_additive
@@ -119,12 +113,6 @@ variable (f g : ∀ i : ι, N i)
 
 namespace MonoidHom
 
-/- warning: monoid_hom.noncomm_pi_coprod -> MonoidHom.noncommPiCoprod is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {ι : Type.{u2}} [_inst_2 : Fintype.{u2} ι] {N : ι -> Type.{u3}} [_inst_3 : forall (i : ι), Monoid.{u3} (N i)] (ϕ : forall (i : ι), MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)), (Pairwise.{u2} ι (fun (i : ι) (j : ι) => forall (x : N i) (y : N j), Commute.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (coeFn.{max (succ u1) (succ u3), max (succ u3) (succ u1)} (MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)) (fun (_x : MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)) => (N i) -> M) (MonoidHom.hasCoeToFun.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)) (ϕ i) x) (coeFn.{max (succ u1) (succ u3), max (succ u3) (succ u1)} (MonoidHom.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)) (fun (_x : MonoidHom.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)) => (N j) -> M) (MonoidHom.hasCoeToFun.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)) (ϕ j) y))) -> (MonoidHom.{max u2 u3, u1} (forall (i : ι), N i) M (Pi.mulOneClass.{u2, u3} ι (fun (i : ι) => N i) (fun (i : ι) => Monoid.toMulOneClass.{u3} (N i) (_inst_3 i))) (Monoid.toMulOneClass.{u1} M _inst_1))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {ι : Type.{u2}} [_inst_2 : Fintype.{u2} ι] {N : ι -> Type.{u3}} [_inst_3 : forall (i : ι), Monoid.{u3} (N i)] (ϕ : forall (i : ι), MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)), (Pairwise.{u2} ι (fun (i : ι) (j : ι) => forall (x : N i) (y : N j), Commute.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N i) => M) x) (MulOneClass.toMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N i) => M) x) (Monoid.toMulOneClass.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N i) => M) x) _inst_1)) (FunLike.coe.{max (succ u1) (succ u3), succ u3, succ u1} (MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)) (N i) (fun (_x : N i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N i) => M) _x) (MulHomClass.toFunLike.{max u1 u3, u3, u1} (MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)) (N i) M (MulOneClass.toMul.{u3} (N i) (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i))) (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MonoidHomClass.toMulHomClass.{max u1 u3, u3, u1} (MonoidHom.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)) (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1) (MonoidHom.monoidHomClass.{u3, u1} (N i) M (Monoid.toMulOneClass.{u3} (N i) (_inst_3 i)) (Monoid.toMulOneClass.{u1} M _inst_1)))) (ϕ i) x) (FunLike.coe.{max (succ u1) (succ u3), succ u3, succ u1} (MonoidHom.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)) (N j) (fun (_x : N j) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N j) => M) _x) (MulHomClass.toFunLike.{max u1 u3, u3, u1} (MonoidHom.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)) (N j) M (MulOneClass.toMul.{u3} (N j) (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j))) (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MonoidHomClass.toMulHomClass.{max u1 u3, u3, u1} (MonoidHom.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)) (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1) (MonoidHom.monoidHomClass.{u3, u1} (N j) M (Monoid.toMulOneClass.{u3} (N j) (_inst_3 j)) (Monoid.toMulOneClass.{u1} M _inst_1)))) (ϕ j) y))) -> (MonoidHom.{max u2 u3, u1} (forall (i : ι), N i) M (Pi.mulOneClass.{u2, u3} ι (fun (i : ι) => N i) (fun (i : ι) => Monoid.toMulOneClass.{u3} (N i) (_inst_3 i))) (Monoid.toMulOneClass.{u1} M _inst_1))
-Case conversion may be inaccurate. Consider using '#align monoid_hom.noncomm_pi_coprod MonoidHom.noncommPiCoprodₓ'. -/
 /-- The canonical homomorphism from a family of monoids. -/
 @[to_additive
       "The canonical homomorphism from a family of additive monoids.\n\nSee also `linear_map.lsum` for a linear version without the commutativity assumption."]
@@ -144,9 +132,6 @@ variable {hcomm}
 
 include hdec
 
-/- warning: monoid_hom.noncomm_pi_coprod_mul_single -> MonoidHom.noncommPiCoprod_mulSingle is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.noncomm_pi_coprod_mul_single MonoidHom.noncommPiCoprod_mulSingleₓ'. -/
 @[simp, to_additive]
 theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
     noncommPiCoprod ϕ hcomm (Pi.mulSingle i y) = ϕ i y :=
@@ -163,9 +148,6 @@ theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
 
 omit hcomm
 
-/- warning: monoid_hom.noncomm_pi_coprod_equiv -> MonoidHom.noncommPiCoprodEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.noncomm_pi_coprod_equiv MonoidHom.noncommPiCoprodEquivₓ'. -/
 /-- The universal property of `noncomm_pi_coprod` -/
 @[to_additive "The universal property of `noncomm_pi_coprod`"]
 def noncommPiCoprodEquiv :
@@ -184,9 +166,6 @@ omit hdec
 
 include hcomm
 
-/- warning: monoid_hom.noncomm_pi_coprod_mrange -> MonoidHom.noncommPiCoprod_mrange is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.noncomm_pi_coprod_mrange MonoidHom.noncommPiCoprod_mrangeₓ'. -/
 @[to_additive]
 theorem noncommPiCoprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι, (ϕ i).mrange := by
   classical
@@ -227,9 +206,6 @@ include hfin
 
 namespace MonoidHom
 
-/- warning: monoid_hom.noncomm_pi_coprod_range -> MonoidHom.noncommPiCoprod_range is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.noncomm_pi_coprod_range MonoidHom.noncommPiCoprod_rangeₓ'. -/
 -- The subgroup version of `noncomm_pi_coprod_mrange`
 @[to_additive]
 theorem noncommPiCoprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (ϕ i).range := by
@@ -246,9 +222,6 @@ theorem noncommPiCoprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (
 #align monoid_hom.noncomm_pi_coprod_range MonoidHom.noncommPiCoprod_range
 #align add_monoid_hom.noncomm_pi_coprod_range AddMonoidHom.noncommPiCoprod_range
 
-/- warning: monoid_hom.injective_noncomm_pi_coprod_of_independent -> MonoidHom.injective_noncommPiCoprod_of_independent is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.injective_noncomm_pi_coprod_of_independent MonoidHom.injective_noncommPiCoprod_of_independentₓ'. -/
 @[to_additive]
 theorem injective_noncommPiCoprod_of_independent
     (hind : CompleteLattice.Independent fun i => (ϕ i).range)
@@ -271,9 +244,6 @@ variable (hcomm)
 
 omit hfin
 
-/- warning: monoid_hom.independent_range_of_coprime_order -> MonoidHom.independent_range_of_coprime_order is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.independent_range_of_coprime_order MonoidHom.independent_range_of_coprime_orderₓ'. -/
 @[to_additive]
 theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :
@@ -326,9 +296,6 @@ variable (hcomm : ∀ i j : ι, i ≠ j → ∀ x y : G, x ∈ H i → y ∈ H j
 
 include hcomm
 
-/- warning: subgroup.commute_subtype_of_commute -> Subgroup.commute_subtype_of_commute is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subgroup.commute_subtype_of_commute Subgroup.commute_subtype_of_commuteₓ'. -/
 @[to_additive]
 theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
     ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) := by rintro ⟨x, hx⟩ ⟨y, hy⟩;
@@ -338,12 +305,6 @@ theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
 
 include hfin
 
-/- warning: subgroup.noncomm_pi_coprod -> Subgroup.noncommPiCoprod is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} [hfin : Fintype.{u2} ι] {H : ι -> (Subgroup.{u1} G _inst_1)}, (forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (forall (x : G) (y : G), (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (H i)) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) y (H j)) -> (Commute.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x y))) -> (MonoidHom.{max u2 u1, u1} (forall (i : ι), coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) G (Pi.mulOneClass.{u2, u1} ι (fun (i : ι) => coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (fun (i : ι) => Monoid.toMulOneClass.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (Group.toDivInvMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (Subgroup.toGroup.{u1} G _inst_1 (H i)))))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} [hfin : Fintype.{u2} ι] {H : ι -> (Subgroup.{u1} G _inst_1)}, (forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (forall (x : G) (y : G), (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (H i)) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) y (H j)) -> (Commute.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x y))) -> (MonoidHom.{max u1 u2, u1} (forall (i : ι), Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (H i))) G (Pi.mulOneClass.{u2, u1} ι (fun (i : ι) => Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (H i))) (fun (i : ι) => Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 (H i)))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))
-Case conversion may be inaccurate. Consider using '#align subgroup.noncomm_pi_coprod Subgroup.noncommPiCoprodₓ'. -/
 /-- The canonical homomorphism from a family of subgroups where elements from different subgroups
 commute -/
 @[to_additive
@@ -357,9 +318,6 @@ variable {hcomm}
 
 include hdec
 
-/- warning: subgroup.noncomm_pi_coprod_mul_single -> Subgroup.noncommPiCoprod_mulSingle is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subgroup.noncomm_pi_coprod_mul_single Subgroup.noncommPiCoprod_mulSingleₓ'. -/
 @[simp, to_additive]
 theorem noncommPiCoprod_mulSingle (i : ι) (y : H i) :
     noncommPiCoprod hcomm (Pi.mulSingle i y) = y := by apply MonoidHom.noncommPiCoprod_mulSingle
@@ -368,21 +326,12 @@ theorem noncommPiCoprod_mulSingle (i : ι) (y : H i) :
 
 omit hdec
 
-/- warning: subgroup.noncomm_pi_coprod_range -> Subgroup.noncommPiCoprod_range is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} [hfin : Fintype.{u2} ι] {H : ι -> (Subgroup.{u1} G _inst_1)} {hcomm : forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (forall (x : G) (y : G), (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (H i)) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) y (H j)) -> (Commute.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x y))}, Eq.{succ u1} (Subgroup.{u1} G _inst_1) (MonoidHom.range.{max u2 u1, u1} (forall (i : ι), coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (Pi.group.{u2, u1} ι (fun (i : ι) => coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (fun (i : ι) => Subgroup.toGroup.{u1} G _inst_1 (H i))) G _inst_1 (Subgroup.noncommPiCoprod.{u1, u2} G _inst_1 ι hfin (fun (i : ι) => H i) hcomm)) (iSup.{u1, succ u2} (Subgroup.{u1} G _inst_1) (ConditionallyCompleteLattice.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => H i))
-but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {ι : Type.{u1}} [hfin : DecidableEq.{succ u1} ι] [H : Fintype.{u1} ι] {hcomm : ι -> (Subgroup.{u2} G _inst_1)} {hcomm_1 : forall (i : ι) (j : ι), (Ne.{succ u1} ι i j) -> (forall (x : G) (y : G), (Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x (hcomm i)) -> (Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) y (hcomm j)) -> (Commute.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) x y))}, Eq.{succ u2} (Subgroup.{u2} G _inst_1) (MonoidHom.range.{max u2 u1, u2} (forall (i : ι), Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x (hcomm i))) (Pi.group.{u1, u2} ι (fun (i : ι) => Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x (hcomm i))) (fun (i : ι) => Subgroup.toGroup.{u2} G _inst_1 (hcomm i))) G _inst_1 (Subgroup.noncommPiCoprod.{u2, u1} G _inst_1 ι H (fun (i : ι) => hcomm i) hcomm_1)) (iSup.{u2, succ u1} (Subgroup.{u2} G _inst_1) (ConditionallyCompleteLattice.toSupSet.{u2} (Subgroup.{u2} G _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1))) ι (fun (i : ι) => hcomm i))
-Case conversion may be inaccurate. Consider using '#align subgroup.noncomm_pi_coprod_range Subgroup.noncommPiCoprod_rangeₓ'. -/
 @[to_additive]
 theorem noncommPiCoprod_range : (noncommPiCoprod hcomm).range = ⨆ i : ι, H i := by
   simp [noncomm_pi_coprod, MonoidHom.noncommPiCoprod_range]
 #align subgroup.noncomm_pi_coprod_range Subgroup.noncommPiCoprod_range
 #align add_subgroup.noncomm_pi_coprod_range AddSubgroup.noncommPiCoprod_range
 
-/- warning: subgroup.injective_noncomm_pi_coprod_of_independent -> Subgroup.injective_noncommPiCoprod_of_independent is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subgroup.injective_noncomm_pi_coprod_of_independent Subgroup.injective_noncommPiCoprod_of_independentₓ'. -/
 @[to_additive]
 theorem injective_noncommPiCoprod_of_independent (hind : CompleteLattice.Independent H) :
     Function.Injective (noncommPiCoprod hcomm) :=
@@ -397,12 +346,6 @@ variable (hcomm)
 
 omit hfin
 
-/- warning: subgroup.independent_of_coprime_order -> Subgroup.independent_of_coprime_order is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} {H : ι -> (Subgroup.{u1} G _inst_1)}, (forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (forall (x : G) (y : G), (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (H i)) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) y (H j)) -> (Commute.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x y))) -> (forall [_inst_2 : Finite.{succ u2} ι] [_inst_3 : forall (i : ι), Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i))], (forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (Nat.coprime (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H i)) (_inst_3 i)) (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (H j)) (_inst_3 j)))) -> (CompleteLattice.Independent.{succ u2, u1} ι (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1) H))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Type.{u2}} [H : DecidableEq.{succ u2} ι] {hcomm : ι -> (Subgroup.{u1} G _inst_1)}, (forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (forall (x : G) (y : G), (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (hcomm i)) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) y (hcomm j)) -> (Commute.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x y))) -> (forall [_inst_3 : Finite.{succ u2} ι] [hcoprime : forall (i : ι), Fintype.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (hcomm i)))], (forall (i : ι) (j : ι), (Ne.{succ u2} ι i j) -> (Nat.coprime (Fintype.card.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (hcomm i))) (hcoprime i)) (Fintype.card.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (hcomm j))) (hcoprime j)))) -> (CompleteLattice.Independent.{succ u2, u1} ι (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1) hcomm))
-Case conversion may be inaccurate. Consider using '#align subgroup.independent_of_coprime_order Subgroup.independent_of_coprime_orderₓ'. -/
 @[to_additive]
 theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :

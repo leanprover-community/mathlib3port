@@ -116,12 +116,6 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
-/- warning: char_prime_of_ne_zero -> char_prime_of_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))] {p : Nat} [hp : CharP.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) p], (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Nat.Prime p)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))] {p : Nat} [hp : CharP.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) p], (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Nat.Prime p)
-Case conversion may be inaccurate. Consider using '#align char_prime_of_ne_zero char_prime_of_ne_zeroₓ'. -/
 /-- A helper lemma: the characteristic is prime if it is non-zero. -/
 theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) : Nat.Prime p :=
   by
@@ -130,12 +124,6 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
   · contradiction
 #align char_prime_of_ne_zero char_prime_of_ne_zero
 
-/- warning: exp_char_is_prime_or_one -> expChar_is_prime_or_one is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))] (q : Nat) [hq : ExpChar.{u1} R _inst_1 q], Or (Nat.Prime q) (Eq.{1} Nat q (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] (_inst_2 : Nat) [_inst_3 : ExpChar.{u1} R _inst_1 _inst_2], Or (Nat.Prime _inst_2) (Eq.{1} Nat _inst_2 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align exp_char_is_prime_or_one expChar_is_prime_or_oneₓ'. -/
 /-- The exponential characteristic is a prime number or one. -/
 theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
   or_iff_not_imp_right.mpr fun h =>

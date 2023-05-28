@@ -25,9 +25,6 @@ space over `ℝ`.
 
 namespace Complex
 
-/- warning: complex.det_conj_ae -> Complex.det_conjAe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align complex.det_conj_ae Complex.det_conjAeₓ'. -/
 /-- The determinant of `conj_ae`, as a linear map. -/
 @[simp]
 theorem det_conjAe : conjAe.toLinearMap.det = -1 :=
@@ -36,9 +33,6 @@ theorem det_conjAe : conjAe.toLinearMap.det = -1 :=
   simp
 #align complex.det_conj_ae Complex.det_conjAe
 
-/- warning: complex.linear_equiv_det_conj_ae -> Complex.linearEquiv_det_conjAe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align complex.linear_equiv_det_conj_ae Complex.linearEquiv_det_conjAeₓ'. -/
 /-- The determinant of `conj_ae`, as a linear equiv. -/
 @[simp]
 theorem linearEquiv_det_conjAe : conjAe.toLinearEquiv.det = -1 := by

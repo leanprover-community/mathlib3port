@@ -101,36 +101,18 @@ def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R
 #align category_theory.linear_coyoneda CategoryTheory.linearCoyoneda
 -/
 
-/- warning: category_theory.linear_yoneda_obj_additive -> CategoryTheory.linearYoneda_obj_additive is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] (C : Type.{u3}) [_inst_2 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.Preadditive.{u2, u3} C _inst_2] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R (Ring.toSemiring.{u1} R _inst_1) C _inst_2 _inst_3] (X : C), CategoryTheory.Functor.Additive.{u3, max u1 (succ u2), u2, u2} (Opposite.{succ u3} C) (ModuleCat.{u2, u1} R _inst_1) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.moduleCategory.{u2, u1} R _inst_1) (CategoryTheory.Opposite.preadditive.{u3, u2} C _inst_2 _inst_3) (ModuleCat.CategoryTheory.preadditive.{u2, u1} R _inst_1) (CategoryTheory.Functor.obj.{u2, max u3 u2, u3, max u2 u3 u1 (succ u2)} C _inst_2 (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Functor.category.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.linearYoneda.{u1, u2, u3} R _inst_1 C _inst_2 _inst_3 _inst_4) X)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] (C : Type.{u3}) [_inst_2 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.Preadditive.{u2, u3} C _inst_2] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R (Ring.toSemiring.{u1} R _inst_1) C _inst_2 _inst_3] (X : C), CategoryTheory.Functor.Additive.{u3, max (succ u2) u1, u2, u2} (Opposite.{succ u3} C) (ModuleCat.{u2, u1} R _inst_1) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.moduleCategory.{u2, u1} R _inst_1) (CategoryTheory.instPreadditiveOppositeOpposite.{u3, u2} C _inst_2 _inst_3) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u2, u1} R _inst_1) (Prefunctor.obj.{succ u2, max (succ u3) (succ u2), u3, max (max u3 (succ u2)) u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_2)) (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max u3 (succ u2)) u1} (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max u3 (succ u2)) u1} (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Functor.category.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)))) (CategoryTheory.Functor.toPrefunctor.{u2, max u3 u2, u3, max (max u3 (succ u2)) u1} C _inst_2 (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Functor.category.{u2, u2, u3, max u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.linearYoneda.{u1, u2, u3} R _inst_1 C _inst_2 _inst_3 _inst_4)) X)
-Case conversion may be inaccurate. Consider using '#align category_theory.linear_yoneda_obj_additive CategoryTheory.linearYoneda_obj_additiveₓ'. -/
 instance linearYoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive where
 #align category_theory.linear_yoneda_obj_additive CategoryTheory.linearYoneda_obj_additive
 
-/- warning: category_theory.linear_coyoneda_obj_additive -> CategoryTheory.linearCoyoneda_obj_additive is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] (C : Type.{u3}) [_inst_2 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.Preadditive.{u2, u3} C _inst_2] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R (Ring.toSemiring.{u1} R _inst_1) C _inst_2 _inst_3] (Y : Opposite.{succ u3} C), CategoryTheory.Functor.Additive.{u3, max u1 (succ u2), u2, u2} C (ModuleCat.{u2, u1} R _inst_1) _inst_2 (ModuleCat.moduleCategory.{u2, u1} R _inst_1) _inst_3 (ModuleCat.CategoryTheory.preadditive.{u2, u1} R _inst_1) (CategoryTheory.Functor.obj.{u2, max u3 u2, u3, max u2 u3 u1 (succ u2)} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Functor.category.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.linearCoyoneda.{u1, u2, u3} R _inst_1 C _inst_2 _inst_3 _inst_4) Y)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] (C : Type.{u3}) [_inst_2 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.Preadditive.{u2, u3} C _inst_2] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R (Ring.toSemiring.{u1} R _inst_1) C _inst_2 _inst_3] (Y : Opposite.{succ u3} C), CategoryTheory.Functor.Additive.{u3, max (succ u2) u1, u2, u2} C (ModuleCat.{u2, u1} R _inst_1) _inst_2 (ModuleCat.moduleCategory.{u2, u1} R _inst_1) _inst_3 (ModuleCat.instPreadditiveModuleCatModuleCategory.{u2, u1} R _inst_1) (Prefunctor.obj.{succ u2, max (succ u3) (succ u2), u3, max (max u3 (succ u2)) u1} (Opposite.{succ u3} C) (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} (Opposite.{succ u3} C) (CategoryTheory.Category.toCategoryStruct.{u2, u3} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2))) (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max u3 (succ u2)) u1} (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max u3 (succ u2)) u1} (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Functor.category.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)))) (CategoryTheory.Functor.toPrefunctor.{u2, max u3 u2, u3, max (max u3 (succ u2)) u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_2) (CategoryTheory.Functor.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.Functor.category.{u2, u2, u3, max u1 (succ u2)} C _inst_2 (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)) (CategoryTheory.linearCoyoneda.{u1, u2, u3} R _inst_1 C _inst_2 _inst_3 _inst_4)) Y)
-Case conversion may be inaccurate. Consider using '#align category_theory.linear_coyoneda_obj_additive CategoryTheory.linearCoyoneda_obj_additiveₓ'. -/
 instance linearCoyoneda_obj_additive (Y : Cᵒᵖ) : ((linearCoyoneda R C).obj Y).Additive where
 #align category_theory.linear_coyoneda_obj_additive CategoryTheory.linearCoyoneda_obj_additive
 
-/- warning: category_theory.whiskering_linear_yoneda -> CategoryTheory.whiskering_linearYoneda is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.whiskering_linear_yoneda CategoryTheory.whiskering_linearYonedaₓ'. -/
 @[simp]
 theorem whiskering_linearYoneda :
     linearYoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)) = yoneda :=
   rfl
 #align category_theory.whiskering_linear_yoneda CategoryTheory.whiskering_linearYoneda
 
-/- warning: category_theory.whiskering_linear_yoneda₂ -> CategoryTheory.whiskering_linearYoneda₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.whiskering_linear_yoneda₂ CategoryTheory.whiskering_linearYoneda₂ₓ'. -/
 @[simp]
 theorem whiskering_linearYoneda₂ :
     linearYoneda R C ⋙ (whiskeringRight _ _ _).obj (forget₂ (ModuleCat.{v} R) AddCommGroupCat.{v}) =
@@ -138,18 +120,12 @@ theorem whiskering_linearYoneda₂ :
   rfl
 #align category_theory.whiskering_linear_yoneda₂ CategoryTheory.whiskering_linearYoneda₂
 
-/- warning: category_theory.whiskering_linear_coyoneda -> CategoryTheory.whiskering_linearCoyoneda is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.whiskering_linear_coyoneda CategoryTheory.whiskering_linearCoyonedaₓ'. -/
 @[simp]
 theorem whiskering_linearCoyoneda :
     linearCoyoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)) = coyoneda :=
   rfl
 #align category_theory.whiskering_linear_coyoneda CategoryTheory.whiskering_linearCoyoneda
 
-/- warning: category_theory.whiskering_linear_coyoneda₂ -> CategoryTheory.whiskering_linearCoyoneda₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.whiskering_linear_coyoneda₂ CategoryTheory.whiskering_linearCoyoneda₂ₓ'. -/
 @[simp]
 theorem whiskering_linearCoyoneda₂ :
     linearCoyoneda R C ⋙

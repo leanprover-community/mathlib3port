@@ -48,12 +48,6 @@ def ofTypeMonad : Monad (Type u)
 #align category_theory.of_type_monad CategoryTheory.ofTypeMonad
 -/
 
-/- warning: category_theory.eq -> CategoryTheory.eq is a dubious translation:
-lean 3 declaration is
-  forall (m : Type.{u1} -> Type.{u1}) [_inst_1 : Monad.{u1, u1} m] [_inst_2 : LawfulMonad.{u1, u1} m _inst_1], CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} (CategoryTheory.KleisliCat.{u1, u1} m) (CategoryTheory.KleisliCat.category.{u1, u1} m _inst_1 _inst_2) (CategoryTheory.Kleisli.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.ofTypeMonad.{u1} m _inst_1 _inst_2)) (CategoryTheory.Kleisli.Kleisli.category.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.ofTypeMonad.{u1} m _inst_1 _inst_2))
-but is expected to have type
-  forall (m : Type.{u1} -> Type.{u1}) [_inst_1 : Monad.{u1, u1} m] [_inst_2 : LawfulMonad.{u1, u1} m _inst_1], CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} (CategoryTheory.KleisliCat.{u1, u1} m) (CategoryTheory.Kleisli.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.ofTypeMonad.{u1} m _inst_1 _inst_2)) (CategoryTheory.KleisliCat.category.{u1, u1} m _inst_1 _inst_2) (CategoryTheory.Kleisli.Kleisli.category.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.ofTypeMonad.{u1} m _inst_1 _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.eq CategoryTheory.eqₓ'. -/
 /-- The `Kleisli` category of a `control.monad` is equivalent to the `kleisli` category of its
 category-theoretic version, provided the monad is lawful.
 -/

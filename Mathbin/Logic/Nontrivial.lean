@@ -75,35 +75,17 @@ theorem nontrivial_of_ne (x y : α) (h : x ≠ y) : Nontrivial α :=
 #align nontrivial_of_ne nontrivial_of_ne
 -/
 
-/- warning: nontrivial_of_lt -> nontrivial_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (x : α) (y : α), (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x y) -> (Nontrivial.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (x : α) (y : α), (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x y) -> (Nontrivial.{u1} α)
-Case conversion may be inaccurate. Consider using '#align nontrivial_of_lt nontrivial_of_ltₓ'. -/
 -- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
 theorem nontrivial_of_lt [Preorder α] (x y : α) (h : x < y) : Nontrivial α :=
   ⟨⟨x, y, ne_of_lt h⟩⟩
 #align nontrivial_of_lt nontrivial_of_lt
 
-/- warning: exists_pair_lt -> exists_pair_lt is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Nontrivial.{u1} α] [_inst_2 : LinearOrder.{u1} α], Exists.{succ u1} α (fun (x : α) => Exists.{succ u1} α (fun (y : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_2))) x y))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Nontrivial.{u1} α] [_inst_2 : LinearOrder.{u1} α], Exists.{succ u1} α (fun (x : α) => Exists.{succ u1} α (fun (y : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_2))) x y))
-Case conversion may be inaccurate. Consider using '#align exists_pair_lt exists_pair_ltₓ'. -/
 theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ x y : α, x < y :=
   by
   rcases exists_pair_ne α with ⟨x, y, hxy⟩
   cases lt_or_gt_of_ne hxy <;> exact ⟨_, _, h⟩
 #align exists_pair_lt exists_pair_lt
 
-/- warning: nontrivial_iff_lt -> nontrivial_iff_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α], Iff (Nontrivial.{u1} α) (Exists.{succ u1} α (fun (x : α) => Exists.{succ u1} α (fun (y : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α], Iff (Nontrivial.{u1} α) (Exists.{succ u1} α (fun (x : α) => Exists.{succ u1} α (fun (y : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y)))
-Case conversion may be inaccurate. Consider using '#align nontrivial_iff_lt nontrivial_iff_ltₓ'. -/
 theorem nontrivial_iff_lt [LinearOrder α] : Nontrivial α ↔ ∃ x y : α, x < y :=
   ⟨fun h => @exists_pair_lt α h _, fun ⟨x, y, h⟩ => nontrivial_of_lt x y h⟩
 #align nontrivial_iff_lt nontrivial_iff_lt
@@ -198,12 +180,6 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by inhabit 
 #align option.nontrivial Option.nontrivial
 -/
 
-/- warning: function.injective.nontrivial -> Function.Injective.nontrivial is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nontrivial.{u1} α] {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (Nontrivial.{u2} β)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nontrivial.{u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Nontrivial.{u1} β)
-Case conversion may be inaccurate. Consider using '#align function.injective.nontrivial Function.Injective.nontrivialₓ'. -/
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
     (hf : Function.Injective f) : Nontrivial β :=
@@ -224,12 +200,6 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
 #align function.surjective.nontrivial Function.Surjective.nontrivial
 -/
 
-/- warning: function.injective.exists_ne -> Function.Injective.exists_ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nontrivial.{u1} α] {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall (y : β), Exists.{succ u1} α (fun (x : α) => Ne.{succ u2} β (f x) y))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nontrivial.{u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall (y : β), Exists.{succ u2} α (fun (x : α) => Ne.{succ u1} β (f x) y))
-Case conversion may be inaccurate. Consider using '#align function.injective.exists_ne Function.Injective.exists_neₓ'. -/
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
@@ -291,12 +261,6 @@ instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α 
      `nontriviality)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp lemmas for `nontriviality` tactic -/ register_simp_attr nontriviality
 
-/- warning: subsingleton.le -> Subsingleton.le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (x : α) (y : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x y
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (x : α) (y : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x y
-Case conversion may be inaccurate. Consider using '#align subsingleton.le Subsingleton.leₓ'. -/
 protected theorem Subsingleton.le [Preorder α] [Subsingleton α] (x y : α) : x ≤ y :=
   le_of_eq (Subsingleton.elim x y)
 #align subsingleton.le Subsingleton.le

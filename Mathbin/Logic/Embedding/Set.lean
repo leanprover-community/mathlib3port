@@ -26,12 +26,6 @@ section Equiv
 
 variable {α : Sort u} {β : Sort v} (f : α ≃ β)
 
-/- warning: equiv.as_embedding_range -> Equiv.asEmbedding_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Type.{u2}} {p : β -> Prop} (e : Equiv.{u1, succ u2} α (Subtype.{succ u2} β p)), Eq.{succ u2} (Set.{u2} β) (Set.range.{u2, u1} β α (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α β) (fun (_x : Function.Embedding.{u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{u1, succ u2} α β) (Equiv.asEmbedding.{u1, succ u2} α β p e))) (setOf.{u2} β p)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Type.{u1}} {p : β -> Prop} (e : Equiv.{u2, succ u1} α (Subtype.{succ u1} β p)), Eq.{succ u1} (Set.{u1} β) (Set.range.{u1, u2} β α (FunLike.coe.{max (max 1 u2) (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (max 1 u2) (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α β)) (Equiv.asEmbedding.{succ u1, u2} β α p e))) (setOf.{u1} β p)
-Case conversion may be inaccurate. Consider using '#align equiv.as_embedding_range Equiv.asEmbedding_rangeₓ'. -/
 @[simp]
 theorem Equiv.asEmbedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
     Set.range e.asEmbedding = setOf p :=
@@ -61,12 +55,6 @@ def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.range f) : Option
 #align function.embedding.option_elim Function.Embedding.optionElim
 -/
 
-/- warning: function.embedding.option_embedding_equiv -> Function.Embedding.optionEmbeddingEquiv is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}), Equiv.{max 1 (succ u1) (succ u2), max (succ (max u1 u2)) (succ u2)} (Function.Embedding.{succ u1, succ u2} (Option.{u1} α) β) (Sigma.{max u1 u2, u2} (Function.Embedding.{succ u1, succ u2} α β) (fun (f : Function.Embedding.{succ u1, succ u2} α β) => coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f)))))
-but is expected to have type
-  forall (α : Type.{u1}) (β : Type.{u2}), Equiv.{max (succ u2) (succ u1), max (succ u2) (succ (max u1 u2))} (Function.Embedding.{succ u1, succ u2} (Option.{u1} α) β) (Sigma.{max u1 u2, u2} (Function.Embedding.{succ u1, succ u2} α β) (fun (f : Function.Embedding.{succ u1, succ u2} α β) => Set.Elem.{u2} β (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u1} β α (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) f)))))
-Case conversion may be inaccurate. Consider using '#align function.embedding.option_embedding_equiv Function.Embedding.optionEmbeddingEquivₓ'. -/
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
 def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.range fᶜ)
@@ -84,12 +72,6 @@ def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α
 #align function.embedding.cod_restrict Function.Embedding.codRestrict
 -/
 
-/- warning: function.embedding.cod_restrict_apply -> Function.Embedding.codRestrict_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Type.{u2}} (p : Set.{u2} β) (f : Function.Embedding.{u1, succ u2} α β) (H : forall (a : α), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α β) (fun (_x : Function.Embedding.{u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{u1, succ u2} α β) f a) p) (a : α), Eq.{succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p) (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) (fun (_x : Function.Embedding.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) => α -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) (Function.Embedding.hasCoeToFun.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) p)) (Function.Embedding.codRestrict.{u1, u2} α β p f H) a) (Subtype.mk.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x p) (coeFn.{max 1 u1 (succ u2), max u1 (succ u2)} (Function.Embedding.{u1, succ u2} α β) (fun (_x : Function.Embedding.{u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{u1, succ u2} α β) f a) (H a))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Type.{u1}} (p : Set.{u1} β) (f : Function.Embedding.{u2, succ u1} α β) (H : forall (a : α), Membership.mem.{u1, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (Set.{u1} β) (Set.instMembershipSet.{u1} β) (FunLike.coe.{max (succ u1) u2, u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) u2, u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α β)) f a) p) (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Set.Elem.{u1} β p) a) (FunLike.coe.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α (Set.Elem.{u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Set.Elem.{u1} β p) _x) (EmbeddingLike.toFunLike.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α (Set.Elem.{u1} β p)) α (Set.Elem.{u1} β p) (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α (Set.Elem.{u1} β p))) (Function.Embedding.codRestrict.{u2, u1} α β p f H) a) (Subtype.mk.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x p) (FunLike.coe.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max u2 (succ u1), u2, succ u1} (Function.Embedding.{u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, succ u1} α β)) f a) (H a))
-Case conversion may be inaccurate. Consider using '#align function.embedding.cod_restrict_apply Function.Embedding.codRestrict_applyₓ'. -/
 @[simp]
 theorem codRestrict_apply {α β} (p) (f : α ↪ β) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
   rfl

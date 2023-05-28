@@ -60,44 +60,20 @@ theorem Sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB 
 #align set.sized.mono Set.Sized.mono
 -/
 
-/- warning: set.sized_union -> Set.sized_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, Iff (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.hasUnion.{u1} (Finset.{u1} α)) A B)) (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B))
-but is expected to have type
-  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, Iff (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.instUnionSet.{u1} (Finset.{u1} α)) A B)) (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B))
-Case conversion may be inaccurate. Consider using '#align set.sized_union Set.sized_unionₓ'. -/
 theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
     hx.elim (fun h => hA.1 h) fun h => hA.2 h⟩
 #align set.sized_union Set.sized_union
 
-/- warning: set.sized.union -> Set.sized.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B)) -> (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.hasUnion.{u1} (Finset.{u1} α)) A B))
-but is expected to have type
-  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B)) -> (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.instUnionSet.{u1} (Finset.{u1} α)) A B))
-Case conversion may be inaccurate. Consider using '#align set.sized.union Set.sized.unionₓ'. -/
 alias sized_union ↔ _ sized.union
 #align set.sized.union Set.sized.union
 
-/- warning: set.sized_Union -> Set.sized_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {r : Nat} {f : ι -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.iUnion.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u1} α r (f i))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {r : Nat} {f : ι -> (Set.{u2} (Finset.{u2} α))}, Iff (Set.Sized.{u2} α r (Set.iUnion.{u2, u1} (Finset.{u2} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u2} α r (f i))
-Case conversion may be inaccurate. Consider using '#align set.sized_Union Set.sized_iUnionₓ'. -/
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
 theorem sized_iUnion {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r := by
   simp_rw [Set.Sized, Set.mem_iUnion, forall_exists_index]; exact forall_swap
 #align set.sized_Union Set.sized_iUnion
 
-/- warning: set.sized_Union₂ -> Set.sized_iUnion₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.iUnion.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => Set.iUnion.{u1, u3} (Finset.{u1} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u1} α r (f i j))
-but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u3} (Finset.{u3} α))}, Iff (Set.Sized.{u3} α r (Set.iUnion.{u3, u2} (Finset.{u3} α) ι (fun (i : ι) => Set.iUnion.{u3, u1} (Finset.{u3} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u3} α r (f i j))
-Case conversion may be inaccurate. Consider using '#align set.sized_Union₂ Set.sized_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem sized_iUnion₂ {f : ∀ i, κ i → Set (Finset α)} :
@@ -218,36 +194,18 @@ theorem ne_of_mem_slice (h₁ : A₁ ∈ 𝒜 # r₁) (h₂ : A₂ ∈ 𝒜 # r�
 #align finset.ne_of_mem_slice Finset.ne_of_mem_slice
 -/
 
-/- warning: finset.pairwise_disjoint_slice -> Finset.pairwiseDisjoint_slice is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝒜 : Finset.{u1} (Finset.{u1} α)}, Set.PairwiseDisjoint.{u1, 0} (Finset.{u1} (Finset.{u1} α)) Nat (Finset.partialOrder.{u1} (Finset.{u1} α)) (Finset.orderBot.{u1} (Finset.{u1} α)) (Set.univ.{0} Nat) (Finset.slice.{u1} α 𝒜)
-but is expected to have type
-  forall {α : Type.{u1}} {𝒜 : Finset.{u1} (Finset.{u1} α)}, Set.PairwiseDisjoint.{u1, 0} (Finset.{u1} (Finset.{u1} α)) Nat (Finset.partialOrder.{u1} (Finset.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} (Finset.{u1} α)) (Set.univ.{0} Nat) (Finset.slice.{u1} α 𝒜)
-Case conversion may be inaccurate. Consider using '#align finset.pairwise_disjoint_slice Finset.pairwiseDisjoint_sliceₓ'. -/
 theorem pairwiseDisjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
   disjoint_filter.2 fun s hs hm hn => hmn <| hm.symm.trans hn
 #align finset.pairwise_disjoint_slice Finset.pairwiseDisjoint_slice
 
 variable [Fintype α] (𝒜)
 
-/- warning: finset.bUnion_slice -> Finset.biUnion_slice is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α], Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.biUnion.{0, u1} Nat (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) (Fintype.card.{u1} α _inst_1)) (Finset.slice.{u1} α 𝒜)) 𝒜
-but is expected to have type
-  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α], Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.biUnion.{0, u1} Nat (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fintype.card.{u1} α _inst_1)) (Finset.slice.{u1} α 𝒜)) 𝒜
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_slice Finset.biUnion_sliceₓ'. -/
 @[simp]
 theorem biUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).biUnion 𝒜.slice = 𝒜 :=
   Subset.antisymm (biUnion_subset.2 fun r _ => slice_subset) fun s hs =>
     mem_biUnion.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.biUnion_slice
 
-/- warning: finset.sum_card_slice -> Finset.sum_card_slice is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) (Fintype.card.{u1} α _inst_1)) (fun (r : Nat) => Finset.card.{u1} (Finset.{u1} α) (Finset.slice.{u1} α 𝒜 r))) (Finset.card.{u1} (Finset.{u1} α) 𝒜)
-but is expected to have type
-  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fintype.card.{u1} α _inst_1)) (fun (r : Nat) => Finset.card.{u1} (Finset.{u1} α) (Finset.slice.{u1} α 𝒜 r))) (Finset.card.{u1} (Finset.{u1} α) 𝒜)
-Case conversion may be inaccurate. Consider using '#align finset.sum_card_slice Finset.sum_card_sliceₓ'. -/
 @[simp]
 theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
   by

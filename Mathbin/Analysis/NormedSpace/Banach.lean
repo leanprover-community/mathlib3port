@@ -52,21 +52,12 @@ structure NonlinearRightInverse where
 instance : CoeFun (NonlinearRightInverse f) fun _ => F → E :=
   ⟨fun fsymm => fsymm.toFun⟩
 
-/- warning: continuous_linear_map.nonlinear_right_inverse.right_inv -> ContinuousLinearMap.NonlinearRightInverse.right_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.nonlinear_right_inverse.right_inv ContinuousLinearMap.NonlinearRightInverse.right_invₓ'. -/
 @[simp]
 theorem NonlinearRightInverse.right_inv {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) :
     f (fsymm y) = y :=
   fsymm.right_inv' y
 #align continuous_linear_map.nonlinear_right_inverse.right_inv ContinuousLinearMap.NonlinearRightInverse.right_inv
 
-/- warning: continuous_linear_map.nonlinear_right_inverse.bound -> ContinuousLinearMap.NonlinearRightInverse.bound is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : ContinuousLinearMap.{u1, u1, u2, u3} 𝕜 𝕜 (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1))))) (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1))))) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1))))))) E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) F (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (AddCommGroup.toAddCommMonoid.{u3} F (NormedAddCommGroup.toAddCommGroup.{u3} F _inst_4)) (NormedSpace.toModule.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3) (NormedSpace.toModule.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5)} (fsymm : ContinuousLinearMap.NonlinearRightInverse.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f) (y : F), LE.le.{0} Real Real.hasLe (Norm.norm.{u2} E (NormedAddCommGroup.toHasNorm.{u2} E _inst_2) (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (ContinuousLinearMap.NonlinearRightInverse.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f) (fun (_x : ContinuousLinearMap.NonlinearRightInverse.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f) => F -> E) (ContinuousLinearMap.NonlinearRightInverse.hasCoeToFun.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f) fsymm y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (ContinuousLinearMap.NonlinearRightInverse.nnnorm.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f fsymm)) (Norm.norm.{u3} F (NormedAddCommGroup.toHasNorm.{u3} F _inst_4) y))
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : ContinuousLinearMap.{u3, u3, u2, u1} 𝕜 𝕜 (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))) (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))) (RingHom.id.{u3} 𝕜 (Semiring.toNonAssocSemiring.{u3} 𝕜 (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))))) E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) F (UniformSpace.toTopologicalSpace.{u1} F (PseudoMetricSpace.toUniformSpace.{u1} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)))) (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_4)) (NormedSpace.toModule.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3) (NormedSpace.toModule.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4) _inst_5)} (fsymm : ContinuousLinearMap.NonlinearRightInverse.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f) (y : F), LE.le.{0} Real Real.instLEReal (Norm.norm.{u2} E (NormedAddCommGroup.toNorm.{u2} E _inst_2) (ContinuousLinearMap.NonlinearRightInverse.toFun.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f fsymm y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (NNReal.toReal (ContinuousLinearMap.NonlinearRightInverse.nnnorm.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f fsymm)) (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_4) y))
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.nonlinear_right_inverse.bound ContinuousLinearMap.NonlinearRightInverse.boundₓ'. -/
 theorem NonlinearRightInverse.bound {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) :
     ‖fsymm y‖ ≤ fsymm.nnnorm * ‖y‖ :=
   fsymm.bound' y
@@ -98,9 +89,6 @@ variable [CompleteSpace F]
 
 namespace ContinuousLinearMap
 
-/- warning: continuous_linear_map.exists_approx_preimage_norm_le -> ContinuousLinearMap.exists_approx_preimage_norm_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.exists_approx_preimage_norm_le ContinuousLinearMap.exists_approx_preimage_norm_leₓ'. -/
 /-- First step of the proof of the Banach open mapping theorem (using completeness of `F`):
 by Baire's theorem, there exists a ball in `E` whose image closure has nonempty interior.
 Rescaling everything, it follows that any `y ∈ F` is arbitrarily well approached by
@@ -185,9 +173,6 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
 
 variable [CompleteSpace E]
 
-/- warning: continuous_linear_map.exists_preimage_norm_le -> ContinuousLinearMap.exists_preimage_norm_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.exists_preimage_norm_le ContinuousLinearMap.exists_preimage_norm_leₓ'. -/
 /-- The Banach open mapping theorem: if a bounded linear map between Banach spaces is onto, then
 any point has a preimage with controlled norm. -/
 theorem exists_preimage_norm_le (surj : Surjective f) :
@@ -265,9 +250,6 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
   exact ⟨x, feq, x_ineq⟩
 #align continuous_linear_map.exists_preimage_norm_le ContinuousLinearMap.exists_preimage_norm_le
 
-/- warning: continuous_linear_map.is_open_map -> ContinuousLinearMap.isOpenMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.is_open_map ContinuousLinearMap.isOpenMapₓ'. -/
 /-- The Banach open mapping theorem: a surjective bounded linear map between Banach spaces is
 open. -/
 protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
@@ -293,16 +275,10 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
   exact Set.mem_image_of_mem _ (hε this)
 #align continuous_linear_map.is_open_map ContinuousLinearMap.isOpenMap
 
-/- warning: continuous_linear_map.quotient_map -> ContinuousLinearMap.quotientMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.quotient_map ContinuousLinearMap.quotientMapₓ'. -/
 protected theorem quotientMap (surj : Surjective f) : QuotientMap f :=
   (f.IsOpenMap surj).to_quotientMap f.Continuous surj
 #align continuous_linear_map.quotient_map ContinuousLinearMap.quotientMap
 
-/- warning: affine_map.is_open_map -> AffineMap.isOpenMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.is_open_map AffineMap.isOpenMapₓ'. -/
 theorem AffineMap.isOpenMap {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
     [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : Surjective f) : IsOpenMap f :=
   AffineMap.isOpenMap_linear_iff.mp <|
@@ -313,32 +289,20 @@ theorem AffineMap.isOpenMap {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P]
 /-! ### Applications of the Banach open mapping theorem -/
 
 
-/- warning: continuous_linear_map.interior_preimage -> ContinuousLinearMap.interior_preimage is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.interior_preimage ContinuousLinearMap.interior_preimageₓ'. -/
 theorem interior_preimage (hsurj : Surjective f) (s : Set F) :
     interior (f ⁻¹' s) = f ⁻¹' interior s :=
   ((f.IsOpenMap hsurj).preimage_interior_eq_interior_preimage f.Continuous s).symm
 #align continuous_linear_map.interior_preimage ContinuousLinearMap.interior_preimage
 
-/- warning: continuous_linear_map.closure_preimage -> ContinuousLinearMap.closure_preimage is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.closure_preimage ContinuousLinearMap.closure_preimageₓ'. -/
 theorem closure_preimage (hsurj : Surjective f) (s : Set F) : closure (f ⁻¹' s) = f ⁻¹' closure s :=
   ((f.IsOpenMap hsurj).preimage_closure_eq_closure_preimage f.Continuous s).symm
 #align continuous_linear_map.closure_preimage ContinuousLinearMap.closure_preimage
 
-/- warning: continuous_linear_map.frontier_preimage -> ContinuousLinearMap.frontier_preimage is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.frontier_preimage ContinuousLinearMap.frontier_preimageₓ'. -/
 theorem frontier_preimage (hsurj : Surjective f) (s : Set F) :
     frontier (f ⁻¹' s) = f ⁻¹' frontier s :=
   ((f.IsOpenMap hsurj).preimage_frontier_eq_frontier_preimage f.Continuous s).symm
 #align continuous_linear_map.frontier_preimage ContinuousLinearMap.frontier_preimage
 
-/- warning: continuous_linear_map.exists_nonlinear_right_inverse_of_surjective -> ContinuousLinearMap.exists_nonlinearRightInverse_of_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.exists_nonlinear_right_inverse_of_surjective ContinuousLinearMap.exists_nonlinearRightInverse_of_surjectiveₓ'. -/
 theorem exists_nonlinearRightInverse_of_surjective (f : E →L[𝕜] F) (hsurj : LinearMap.range f = ⊤) :
     ∃ fsymm : NonlinearRightInverse f, 0 < fsymm.nnnorm :=
   by
@@ -351,9 +315,6 @@ theorem exists_nonlinearRightInverse_of_surjective (f : E →L[𝕜] F) (hsurj :
   exact hC
 #align continuous_linear_map.exists_nonlinear_right_inverse_of_surjective ContinuousLinearMap.exists_nonlinearRightInverse_of_surjective
 
-/- warning: continuous_linear_map.nonlinear_right_inverse_of_surjective -> ContinuousLinearMap.nonlinearRightInverseOfSurjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.nonlinear_right_inverse_of_surjective ContinuousLinearMap.nonlinearRightInverseOfSurjectiveₓ'. -/
 /-- A surjective continuous linear map between Banach spaces admits a (possibly nonlinear)
 controlled right inverse. In general, it is not possible to ensure that such a right inverse
 is linear (take for instance the map from `E` to `E/F` where `F` is a closed subspace of `E`
@@ -363,9 +324,6 @@ noncomputable irreducible_def nonlinearRightInverseOfSurjective (f : E →L[𝕜
   Classical.choose (exists_nonlinearRightInverse_of_surjective f hsurj)
 #align continuous_linear_map.nonlinear_right_inverse_of_surjective ContinuousLinearMap.nonlinearRightInverseOfSurjective
 
-/- warning: continuous_linear_map.nonlinear_right_inverse_of_surjective_nnnorm_pos -> ContinuousLinearMap.nonlinearRightInverseOfSurjective_nnnorm_pos is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.nonlinear_right_inverse_of_surjective_nnnorm_pos ContinuousLinearMap.nonlinearRightInverseOfSurjective_nnnorm_posₓ'. -/
 theorem nonlinearRightInverseOfSurjective_nnnorm_pos (f : E →L[𝕜] F)
     (hsurj : LinearMap.range f = ⊤) : 0 < (nonlinearRightInverseOfSurjective f hsurj).nnnorm :=
   by
@@ -379,9 +337,6 @@ namespace LinearEquiv
 
 variable [CompleteSpace E]
 
-/- warning: linear_equiv.continuous_symm -> LinearEquiv.continuous_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.continuous_symm LinearEquiv.continuous_symmₓ'. -/
 /-- If a bounded linear map is a bijection, then its inverse is also a bounded linear map. -/
 @[continuity]
 theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e.symm :=
@@ -393,9 +348,6 @@ theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e
   exact ContinuousLinearMap.isOpenMap ⟨↑e, h⟩ e.surjective s hs
 #align linear_equiv.continuous_symm LinearEquiv.continuous_symm
 
-/- warning: linear_equiv.to_continuous_linear_equiv_of_continuous -> LinearEquiv.toContinuousLinearEquivOfContinuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.to_continuous_linear_equiv_of_continuous LinearEquiv.toContinuousLinearEquivOfContinuousₓ'. -/
 /-- Associating to a linear equivalence between Banach spaces a continuous linear equivalence when
 the direct map is continuous, thanks to the Banach open mapping theorem that ensures that the
 inverse map is also continuous. -/
@@ -405,18 +357,12 @@ def toContinuousLinearEquivOfContinuous (e : E ≃ₗ[𝕜] F) (h : Continuous e
     continuous_invFun := e.continuous_symm h }
 #align linear_equiv.to_continuous_linear_equiv_of_continuous LinearEquiv.toContinuousLinearEquivOfContinuous
 
-/- warning: linear_equiv.coe_fn_to_continuous_linear_equiv_of_continuous -> LinearEquiv.coeFn_toContinuousLinearEquivOfContinuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.coe_fn_to_continuous_linear_equiv_of_continuous LinearEquiv.coeFn_toContinuousLinearEquivOfContinuousₓ'. -/
 @[simp]
 theorem coeFn_toContinuousLinearEquivOfContinuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) :
     ⇑(e.toContinuousLinearEquivOfContinuous h) = e :=
   rfl
 #align linear_equiv.coe_fn_to_continuous_linear_equiv_of_continuous LinearEquiv.coeFn_toContinuousLinearEquivOfContinuous
 
-/- warning: linear_equiv.coe_fn_to_continuous_linear_equiv_of_continuous_symm -> LinearEquiv.coeFn_toContinuousLinearEquivOfContinuous_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.coe_fn_to_continuous_linear_equiv_of_continuous_symm LinearEquiv.coeFn_toContinuousLinearEquivOfContinuous_symmₓ'. -/
 @[simp]
 theorem coeFn_toContinuousLinearEquivOfContinuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) :
     ⇑(e.toContinuousLinearEquivOfContinuous h).symm = e.symm :=
@@ -429,9 +375,6 @@ namespace ContinuousLinearEquiv
 
 variable [CompleteSpace E]
 
-/- warning: continuous_linear_equiv.of_bijective -> ContinuousLinearEquiv.ofBijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.of_bijective ContinuousLinearEquiv.ofBijectiveₓ'. -/
 /-- Convert a bijective continuous linear map `f : E →L[𝕜] F` from a Banach space to a normed space
 to a continuous linear equivalence. -/
 noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
@@ -442,34 +385,22 @@ noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj :
     f.Continuous
 #align continuous_linear_equiv.of_bijective ContinuousLinearEquiv.ofBijective
 
-/- warning: continuous_linear_equiv.coe_fn_of_bijective -> ContinuousLinearEquiv.coeFn_ofBijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.coe_fn_of_bijective ContinuousLinearEquiv.coeFn_ofBijectiveₓ'. -/
 @[simp]
 theorem coeFn_ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
     ⇑(ofBijective f hinj hsurj) = f :=
   rfl
 #align continuous_linear_equiv.coe_fn_of_bijective ContinuousLinearEquiv.coeFn_ofBijective
 
-/- warning: continuous_linear_equiv.coe_of_bijective -> ContinuousLinearEquiv.coe_ofBijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.coe_of_bijective ContinuousLinearEquiv.coe_ofBijectiveₓ'. -/
 theorem coe_ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
     ↑(ofBijective f hinj hsurj) = f := by ext; rfl
 #align continuous_linear_equiv.coe_of_bijective ContinuousLinearEquiv.coe_ofBijective
 
-/- warning: continuous_linear_equiv.of_bijective_symm_apply_apply -> ContinuousLinearEquiv.ofBijective_symm_apply_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.of_bijective_symm_apply_apply ContinuousLinearEquiv.ofBijective_symm_apply_applyₓ'. -/
 @[simp]
 theorem ofBijective_symm_apply_apply (f : E →L[𝕜] F) (hinj : ker f = ⊥)
     (hsurj : LinearMap.range f = ⊤) (x : E) : (ofBijective f hinj hsurj).symm (f x) = x :=
   (ofBijective f hinj hsurj).symm_apply_apply x
 #align continuous_linear_equiv.of_bijective_symm_apply_apply ContinuousLinearEquiv.ofBijective_symm_apply_apply
 
-/- warning: continuous_linear_equiv.of_bijective_apply_symm_apply -> ContinuousLinearEquiv.ofBijective_apply_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.of_bijective_apply_symm_apply ContinuousLinearEquiv.ofBijective_apply_symm_applyₓ'. -/
 @[simp]
 theorem ofBijective_apply_symm_apply (f : E →L[𝕜] F) (hinj : ker f = ⊥)
     (hsurj : LinearMap.range f = ⊤) (y : F) : f ((ofBijective f hinj hsurj).symm y) = y :=
@@ -482,9 +413,6 @@ namespace ContinuousLinearMap
 
 variable [CompleteSpace E]
 
-/- warning: continuous_linear_map.coprod_subtypeL_equiv_of_is_compl -> ContinuousLinearMap.coprodSubtypeLEquivOfIsCompl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coprod_subtypeL_equiv_of_is_compl ContinuousLinearMap.coprodSubtypeLEquivOfIsComplₓ'. -/
 /-- Intermediate definition used to show
 `continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot`.
 
@@ -500,9 +428,6 @@ noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodu
     (by simp only [range_coprod, h.sup_eq_top, Submodule.range_subtypeL])
 #align continuous_linear_map.coprod_subtypeL_equiv_of_is_compl ContinuousLinearMap.coprodSubtypeLEquivOfIsCompl
 
-/- warning: continuous_linear_map.range_eq_map_coprod_subtypeL_equiv_of_is_compl -> ContinuousLinearMap.range_eq_map_coprodSubtypeLEquivOfIsCompl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.range_eq_map_coprod_subtypeL_equiv_of_is_compl ContinuousLinearMap.range_eq_map_coprodSubtypeLEquivOfIsComplₓ'. -/
 theorem range_eq_map_coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodule 𝕜 F}
     (h : IsCompl (LinearMap.range f) G) [CompleteSpace G] (hker : ker f = ⊥) :
     LinearMap.range f =
@@ -514,9 +439,6 @@ theorem range_eq_map_coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Subm
   rfl
 #align continuous_linear_map.range_eq_map_coprod_subtypeL_equiv_of_is_compl ContinuousLinearMap.range_eq_map_coprodSubtypeLEquivOfIsCompl
 
-/- warning: continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot -> ContinuousLinearMap.closed_complemented_range_of_isCompl_of_ker_eq_bot is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot ContinuousLinearMap.closed_complemented_range_of_isCompl_of_ker_eq_botₓ'. -/
 /- TODO: remove the assumption `f.ker = ⊥` in the next lemma, by using the map induced by `f` on
 `E / f.ker`, once we have quotient normed spaces. -/
 theorem closed_complemented_range_of_isCompl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F)
@@ -536,9 +458,6 @@ section ClosedGraphThm
 
 variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
 
-/- warning: linear_map.continuous_of_is_closed_graph -> LinearMap.continuous_of_isClosed_graph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_of_is_closed_graph LinearMap.continuous_of_isClosed_graphₓ'. -/
 /-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
 is continuous. -/
 theorem LinearMap.continuous_of_isClosed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
@@ -554,9 +473,6 @@ theorem LinearMap.continuous_of_isClosed_graph (hg : IsClosed (g.graph : Set <| 
   exact (continuous_subtype_coe.comp ψ.symm.continuous).snd
 #align linear_map.continuous_of_is_closed_graph LinearMap.continuous_of_isClosed_graph
 
-/- warning: linear_map.continuous_of_seq_closed_graph -> LinearMap.continuous_of_seq_closed_graph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_of_seq_closed_graph LinearMap.continuous_of_seq_closed_graphₓ'. -/
 /-- A useful form of the **closed graph theorem** : let `f` be a linear map between two Banach
 spaces. To show that `f` is continuous, it suffices to show that for any convergent sequence
 `uₙ ⟶ x`, if `f(uₙ) ⟶ y` then `y = f(x)`. -/
@@ -578,9 +494,6 @@ variable {g}
 
 namespace ContinuousLinearMap
 
-/- warning: continuous_linear_map.of_is_closed_graph -> ContinuousLinearMap.ofIsClosedGraph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.of_is_closed_graph ContinuousLinearMap.ofIsClosedGraphₓ'. -/
 /-- Upgrade a `linear_map` to a `continuous_linear_map` using the **closed graph theorem**. -/
 def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F
     where
@@ -588,25 +501,16 @@ def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F
   cont := g.continuous_of_isClosed_graph hg
 #align continuous_linear_map.of_is_closed_graph ContinuousLinearMap.ofIsClosedGraph
 
-/- warning: continuous_linear_map.coe_fn_of_is_closed_graph -> ContinuousLinearMap.coeFn_ofIsClosedGraph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_fn_of_is_closed_graph ContinuousLinearMap.coeFn_ofIsClosedGraphₓ'. -/
 @[simp]
 theorem coeFn_ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) :
     ⇑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
   rfl
 #align continuous_linear_map.coe_fn_of_is_closed_graph ContinuousLinearMap.coeFn_ofIsClosedGraph
 
-/- warning: continuous_linear_map.coe_of_is_closed_graph -> ContinuousLinearMap.coe_ofIsClosedGraph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_of_is_closed_graph ContinuousLinearMap.coe_ofIsClosedGraphₓ'. -/
 theorem coe_ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) :
     ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by ext; rfl
 #align continuous_linear_map.coe_of_is_closed_graph ContinuousLinearMap.coe_ofIsClosedGraph
 
-/- warning: continuous_linear_map.of_seq_closed_graph -> ContinuousLinearMap.ofSeqClosedGraph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.of_seq_closed_graph ContinuousLinearMap.ofSeqClosedGraphₓ'. -/
 /-- Upgrade a `linear_map` to a `continuous_linear_map` using a variation on the
 **closed graph theorem**. -/
 def ofSeqClosedGraph
@@ -616,9 +520,6 @@ def ofSeqClosedGraph
   cont := g.continuous_of_seq_closed_graph hg
 #align continuous_linear_map.of_seq_closed_graph ContinuousLinearMap.ofSeqClosedGraph
 
-/- warning: continuous_linear_map.coe_fn_of_seq_closed_graph -> ContinuousLinearMap.coeFn_ofSeqClosedGraph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_fn_of_seq_closed_graph ContinuousLinearMap.coeFn_ofSeqClosedGraphₓ'. -/
 @[simp]
 theorem coeFn_ofSeqClosedGraph
     (hg : ∀ (u : ℕ → E) (x y), Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
@@ -626,9 +527,6 @@ theorem coeFn_ofSeqClosedGraph
   rfl
 #align continuous_linear_map.coe_fn_of_seq_closed_graph ContinuousLinearMap.coeFn_ofSeqClosedGraph
 
-/- warning: continuous_linear_map.coe_of_seq_closed_graph -> ContinuousLinearMap.coe_ofSeqClosedGraph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_of_seq_closed_graph ContinuousLinearMap.coe_ofSeqClosedGraphₓ'. -/
 theorem coe_ofSeqClosedGraph
     (hg : ∀ (u : ℕ → E) (x y), Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
     ↑(ContinuousLinearMap.ofSeqClosedGraph hg) = g := by ext; rfl

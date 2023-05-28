@@ -52,24 +52,12 @@ variable {R : Type u} [CommSemiring R] (S : Submonoid R)
 
 variable (M : Type v) [AddCommMonoid M] [Module R M]
 
-/- warning: localized_module.r -> LocalizedModule.r is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], (Prod.{u2, u1} M (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S)) -> (Prod.{u2, u1} M (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S)) -> Prop
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], (Prod.{u2, u1} M (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S))) -> (Prod.{u2, u1} M (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S))) -> Prop
-Case conversion may be inaccurate. Consider using '#align localized_module.r LocalizedModule.rₓ'. -/
 /-- The equivalence relation on `M × S` where `(m1, s1) ≈ (m2, s2)` if and only if
 for some (u : S), u * (s2 • m1 - s1 • m2) = 0-/
 def r (a b : M × S) : Prop :=
   ∃ u : S, u • b.2 • a.1 = u • a.2 • b.1
 #align localized_module.r LocalizedModule.r
 
-/- warning: localized_module.r.is_equiv -> LocalizedModule.r.isEquiv is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], IsEquiv.{max u2 u1} (Prod.{u2, u1} M (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S)) (LocalizedModule.r.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], IsEquiv.{max u1 u2} (Prod.{u2, u1} M (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S))) (LocalizedModule.r.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align localized_module.r.is_equiv LocalizedModule.r.isEquivₓ'. -/
 theorem r.isEquiv : IsEquiv _ (r S M) :=
   { refl := fun ⟨m, s⟩ => ⟨1, by rw [one_smul]⟩
     trans := fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨m3, s3⟩ ⟨u1, hu1⟩ ⟨u2, hu2⟩ =>
@@ -83,12 +71,6 @@ theorem r.isEquiv : IsEquiv _ (r S M) :=
     symm := fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => ⟨u, hu.symm⟩ }
 #align localized_module.r.is_equiv LocalizedModule.r.isEquiv
 
-/- warning: localized_module.r.setoid -> LocalizedModule.r.setoid is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], Setoid.{max (succ u2) (succ u1)} (Prod.{u2, u1} M (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], Setoid.{max (succ u1) (succ u2)} (Prod.{u2, u1} M (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)))
-Case conversion may be inaccurate. Consider using '#align localized_module.r.setoid LocalizedModule.r.setoidₓ'. -/
 instance r.setoid : Setoid (M × S) where
   R := r S M
   iseqv := ⟨(r.isEquiv S M).refl, (r.isEquiv S M).symm, (r.isEquiv S M).trans⟩
@@ -113,50 +95,26 @@ section
 
 variable {M S}
 
-/- warning: localized_module.mk -> LocalizedModule.mk is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], M -> (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S) -> (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], M -> (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)) -> (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align localized_module.mk LocalizedModule.mkₓ'. -/
 /-- The canonical map sending `(m, s) ↦ m/s`-/
 def mk (m : M) (s : S) : LocalizedModule S M :=
   Quotient.mk' ⟨m, s⟩
 #align localized_module.mk LocalizedModule.mk
 
-/- warning: localized_module.mk_eq -> LocalizedModule.mk_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_eq LocalizedModule.mk_eqₓ'. -/
 theorem mk_eq {m m' : M} {s s' : S} : mk m s = mk m' s' ↔ ∃ u : S, u • s' • m = u • s • m' :=
   Quotient.eq'
 #align localized_module.mk_eq LocalizedModule.mk_eq
 
-/- warning: localized_module.induction_on -> LocalizedModule.induction_on is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] {β : (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) -> Prop}, (forall (m : M) (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S), β (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m s)) -> (forall (x : LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3), β x)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] {β : (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) -> Prop}, (forall (m : M) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)), β (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m s)) -> (forall (x : LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3), β x)
-Case conversion may be inaccurate. Consider using '#align localized_module.induction_on LocalizedModule.induction_onₓ'. -/
 @[elab_as_elim]
 theorem induction_on {β : LocalizedModule S M → Prop} (h : ∀ (m : M) (s : S), β (mk m s)) :
     ∀ x : LocalizedModule S M, β x := by rintro ⟨⟨m, s⟩⟩; exact h m s
 #align localized_module.induction_on LocalizedModule.induction_on
 
-/- warning: localized_module.induction_on₂ -> LocalizedModule.induction_on₂ is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] {β : (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) -> (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) -> Prop}, (forall (m : M) (m' : M) (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S) (s' : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S), β (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m s) (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m' s')) -> (forall (x : LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (y : LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3), β x y)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] {β : (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) -> (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) -> Prop}, (forall (m : M) (m' : M) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)) (s' : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)), β (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m s) (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m' s')) -> (forall (x : LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (y : LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3), β x y)
-Case conversion may be inaccurate. Consider using '#align localized_module.induction_on₂ LocalizedModule.induction_on₂ₓ'. -/
 @[elab_as_elim]
 theorem induction_on₂ {β : LocalizedModule S M → LocalizedModule S M → Prop}
     (h : ∀ (m m' : M) (s s' : S), β (mk m s) (mk m' s')) : ∀ x y, β x y := by
   rintro ⟨⟨m, s⟩⟩ ⟨⟨m', s'⟩⟩; exact h m m' s s'
 #align localized_module.induction_on₂ LocalizedModule.induction_on₂
 
-/- warning: localized_module.lift_on -> LocalizedModule.liftOn is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_on LocalizedModule.liftOnₓ'. -/
 /-- If `f : M × S → α` respects the equivalence relation `localized_module.r`, then
 `f` descents to a map `localized_module M S → α`.
 -/
@@ -165,16 +123,10 @@ def liftOn {α : Type _} (x : LocalizedModule S M) (f : M × S → α)
   Quotient.liftOn x f wd
 #align localized_module.lift_on LocalizedModule.liftOn
 
-/- warning: localized_module.lift_on_mk -> LocalizedModule.liftOn_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_on_mk LocalizedModule.liftOn_mkₓ'. -/
 theorem liftOn_mk {α : Type _} {f : M × S → α} (wd : ∀ (p p' : M × S) (h1 : p ≈ p'), f p = f p')
     (m : M) (s : S) : liftOn (mk m s) f wd = f ⟨m, s⟩ := by convert Quotient.liftOn_mk f wd ⟨m, s⟩
 #align localized_module.lift_on_mk LocalizedModule.liftOn_mk
 
-/- warning: localized_module.lift_on₂ -> LocalizedModule.liftOn₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_on₂ LocalizedModule.liftOn₂ₓ'. -/
 /-- If `f : M × S → M × S → α` respects the equivalence relation `localized_module.r`, then
 `f` descents to a map `localized_module M S → localized_module M S → α`.
 -/
@@ -183,9 +135,6 @@ def liftOn₂ {α : Type _} (x y : LocalizedModule S M) (f : M × S → M × S �
   Quotient.liftOn₂ x y f wd
 #align localized_module.lift_on₂ LocalizedModule.liftOn₂
 
-/- warning: localized_module.lift_on₂_mk -> LocalizedModule.liftOn₂_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_on₂_mk LocalizedModule.liftOn₂_mkₓ'. -/
 theorem liftOn₂_mk {α : Type _} (f : M × S → M × S → α)
     (wd : ∀ (p q p' q' : M × S) (h1 : p ≈ p') (h2 : q ≈ q'), f p q = f p' q') (m m' : M)
     (s s' : S) : liftOn₂ (mk m s) (mk m' s') f wd = f ⟨m, s⟩ ⟨m', s'⟩ := by
@@ -195,12 +144,6 @@ theorem liftOn₂_mk {α : Type _} (f : M × S → M × S → α)
 instance : Zero (LocalizedModule S M) :=
   ⟨mk 0 1⟩
 
-/- warning: localized_module.zero_mk -> LocalizedModule.zero_mk is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S), Eq.{succ (max u1 u2)} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))) s) (OfNat.ofNat.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) 0 (OfNat.mk.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) 0 (Zero.zero.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.hasZero.{u1, u2} R _inst_1 S M _inst_2 _inst_3))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)), Eq.{max (succ u1) (succ u2)} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 (OfNat.ofNat.{u2} M 0 (Zero.toOfNat0.{u2} M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))) s) (OfNat.ofNat.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) 0 (Zero.toOfNat0.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.instZeroLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3)))
-Case conversion may be inaccurate. Consider using '#align localized_module.zero_mk LocalizedModule.zero_mkₓ'. -/
 @[simp]
 theorem zero_mk (s : S) : mk (0 : M) s = 0 :=
   mk_eq.mpr ⟨1, by rw [one_smul, smul_zero, smul_zero, one_smul]⟩
@@ -220,9 +163,6 @@ instance : Add (LocalizedModule S M)
             hu1' hu2'⊢
           rw [hu1', hu2']⟩
 
-/- warning: localized_module.mk_add_mk -> LocalizedModule.mk_add_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_add_mk LocalizedModule.mk_add_mkₓ'. -/
 theorem mk_add_mk {m1 m2 : M} {s1 s2 : S} :
     mk m1 s1 + mk m2 s2 = mk (s2 • m1 + s1 • m2) (s1 * s2) :=
   mk_eq.mpr <| ⟨1, by dsimp only <;> rw [one_smul]⟩
@@ -299,12 +239,6 @@ instance {M : Type _} [AddCommGroup M] [Module R M] : AddCommGroup (LocalizedMod
       rw [lift_on_mk, mk_add_mk]
       simp }
 
-/- warning: localized_module.mk_neg -> LocalizedModule.mk_neg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_4 : AddCommGroup.{u2} M] [_inst_5 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_4)] {m : M} {s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S}, Eq.{succ (max u1 u2)} (LocalizedModule.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5) (LocalizedModule.mk.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5 (Neg.neg.{u2} M (SubNegMonoid.toHasNeg.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_4))) m) s) (Neg.neg.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5) (SubNegMonoid.toHasNeg.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5) (AddGroup.toSubNegMonoid.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5) (AddCommGroup.toAddGroup.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5) (LocalizedModule.addCommGroup.{u1, u2} R _inst_1 S M _inst_4 _inst_5)))) (LocalizedModule.mk.{u1, u2} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u2} M _inst_4) _inst_5 m s))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {S : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))} {M : Type.{u1}} [_inst_4 : AddCommGroup.{u1} M] [_inst_5 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_4)] {m : M} {s : Subtype.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))))) x S)}, Eq.{max (succ u2) (succ u1)} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (LocalizedModule.mk.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5 (Neg.neg.{u1} M (NegZeroClass.toNeg.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_4))))) m) s) (Neg.neg.{max u2 u1} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (NegZeroClass.toNeg.{max u2 u1} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (SubNegZeroMonoid.toNegZeroClass.{max u2 u1} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (SubtractionMonoid.toSubNegZeroMonoid.{max u2 u1} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (SubtractionCommMonoid.toSubtractionMonoid.{max u2 u1} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (AddCommGroup.toDivisionAddCommMonoid.{max u2 u1} (LocalizedModule.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5) (LocalizedModule.instAddCommGroupLocalizedModuleToAddCommMonoid.{u2, u1} R _inst_1 S M _inst_4 _inst_5)))))) (LocalizedModule.mk.{u2, u1} R _inst_1 S M (AddCommGroup.toAddCommMonoid.{u1} M _inst_4) _inst_5 m s))
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_neg LocalizedModule.mk_negₓ'. -/
 theorem mk_neg {M : Type _} [AddCommGroup M] [Module R M] {m : M} {s : S} : mk (-m) s = -mk m s :=
   rfl
 #align localized_module.mk_neg LocalizedModule.mk_neg
@@ -392,9 +326,6 @@ instance {A : Type _} [CommRing A] [Algebra R A] {S : Submonoid R} :
       obtain ⟨⟨a₂, s₂⟩, rfl : mk a₂ s₂ = x₂⟩ := Quotient.exists_rep x₂
       exact mk_eq.mpr ⟨1, by simp only [one_smul, mul_comm]⟩ }
 
-/- warning: localized_module.mk_mul_mk -> LocalizedModule.mk_mul_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_mul_mk LocalizedModule.mk_mul_mkₓ'. -/
 theorem mk_mul_mk {A : Type _} [Semiring A] [Algebra R A] {a₁ a₂ : A} {s₁ s₂ : S} :
     mk a₁ s₁ * mk a₂ s₂ = mk (a₁ * a₂) (s₁ * s₂) :=
   rfl
@@ -423,9 +354,6 @@ instance : SMul (Localization S) (LocalizedModule S M)
         ring_nf  at eq1'⊢
         rw [eq1'])
 
-/- warning: localized_module.mk_smul_mk -> LocalizedModule.mk_smul_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_smul_mk LocalizedModule.mk_smul_mkₓ'. -/
 theorem mk_smul_mk (r : R) (m : M) (s t : S) : Localization.mk r s • mk m t = mk (r • m) (s * t) :=
   by
   unfold SMul.smul
@@ -484,12 +412,6 @@ private theorem zero_smul' (x : LocalizedModule S M) : (0 : Localization S) • 
   induction' x using LocalizedModule.induction_on with m s
   rw [← Localization.mk_zero s, mk_smul_mk, zero_smul, zero_mk]
 
-/- warning: localized_module.is_module -> LocalizedModule.isModule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], Module.{u1, max u1 u2} (Localization.{u1} R (CommSemiring.toCommMonoid.{u1} R _inst_1) S) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} (Localization.{u1} R (CommSemiring.toCommMonoid.{u1} R _inst_1) S) (Localization.commSemiring.{u1} R _inst_1 S)) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], Module.{u1, max u2 u1} (Localization.{u1} R (CommSemiring.toCommMonoid.{u1} R _inst_1) S) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} (Localization.{u1} R (CommSemiring.toCommMonoid.{u1} R _inst_1) S) (Localization.instCommSemiringLocalizationToCommMonoid.{u1} R _inst_1 S)) (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align localized_module.is_module LocalizedModule.isModuleₓ'. -/
 instance isModule : Module (Localization S) (LocalizedModule S M)
     where
   smul := (· • ·)
@@ -501,46 +423,25 @@ instance isModule : Module (Localization S) (LocalizedModule S M)
   zero_smul := zero_smul'
 #align localized_module.is_module LocalizedModule.isModule
 
-/- warning: localized_module.mk_cancel_common_left -> LocalizedModule.mk_cancel_common_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_cancel_common_left LocalizedModule.mk_cancel_common_leftₓ'. -/
 @[simp]
 theorem mk_cancel_common_left (s' s : S) (m : M) : mk (s' • m) (s' * s) = mk m s :=
   mk_eq.mpr ⟨1, by simp only [mul_smul, one_smul]; rw [smul_comm]⟩
 #align localized_module.mk_cancel_common_left LocalizedModule.mk_cancel_common_left
 
-/- warning: localized_module.mk_cancel -> LocalizedModule.mk_cancel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_cancel LocalizedModule.mk_cancelₓ'. -/
 @[simp]
 theorem mk_cancel (s : S) (m : M) : mk (s • m) s = mk m 1 :=
   mk_eq.mpr ⟨1, by simp⟩
 #align localized_module.mk_cancel LocalizedModule.mk_cancel
 
-/- warning: localized_module.mk_cancel_common_right -> LocalizedModule.mk_cancel_common_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_cancel_common_right LocalizedModule.mk_cancel_common_rightₓ'. -/
 @[simp]
 theorem mk_cancel_common_right (s s' : S) (m : M) : mk (s' • m) (s * s') = mk m s :=
   mk_eq.mpr ⟨1, by simp [mul_smul]⟩
 #align localized_module.mk_cancel_common_right LocalizedModule.mk_cancel_common_right
 
-/- warning: localized_module.is_module' -> LocalizedModule.isModule' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], Module.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} R _inst_1) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], Module.{u1, max u2 u1} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} R _inst_1) (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align localized_module.is_module' LocalizedModule.isModule'ₓ'. -/
 instance isModule' : Module R (LocalizedModule S M) :=
   { Module.compHom (LocalizedModule S M) <| algebraMap R (Localization S) with }
 #align localized_module.is_module' LocalizedModule.isModule'
 
-/- warning: localized_module.smul'_mk -> LocalizedModule.smul'_mk is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] (r : R) (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S) (m : M), Eq.{succ (max u1 u2)} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (SMul.smul.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (SMulZeroClass.toHasSmul.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddZeroClass.toHasZero.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddMonoid.toAddZeroClass.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddCommMonoid.toAddMonoid.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3)))) (SMulWithZero.toSmulZeroClass.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddMonoid.toAddZeroClass.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddCommMonoid.toAddMonoid.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3)))) (MulActionWithZero.toSMulWithZero.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddMonoid.toAddZeroClass.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (AddCommMonoid.toAddMonoid.{max u1 u2} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3)))) (Module.toMulActionWithZero.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} R _inst_1) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3))))) r (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m s)) (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 (SMul.smul.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Module.toMulActionWithZero.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3)))) r m) s)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] (r : R) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)) (m : M), Eq.{max (succ u1) (succ u2)} (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (HSMul.hSMul.{u1, max u2 u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (instHSMul.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (SMulZeroClass.toSMul.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.instZeroLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (SMulWithZero.toSMulZeroClass.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (LocalizedModule.instZeroLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (MulActionWithZero.toSMulWithZero.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (LocalizedModule.instZeroLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (Module.toMulActionWithZero.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} R _inst_1) (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3)))))) r (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 m s)) (LocalizedModule.mk.{u1, u2} R _inst_1 S M _inst_2 _inst_3 (HSMul.hSMul.{u1, u2, u2} R M M (instHSMul.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (Module.toMulActionWithZero.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3))))) r m) s)
-Case conversion may be inaccurate. Consider using '#align localized_module.smul'_mk LocalizedModule.smul'_mkₓ'. -/
 theorem smul'_mk (r : R) (s : S) (m : M) : r • mk m s = mk (r • m) s := by
   erw [mk_smul_mk r m 1 s, one_mul]
 #align localized_module.smul'_mk LocalizedModule.smul'_mk
@@ -562,9 +463,6 @@ instance {A : Type _} [Semiring A] [Algebra R A] : Algebra (Localization S) (Loc
       rw [mk_mul_mk, ← Localization.mk_eq_mk', mk_smul_mk, mk_smul_mk, mk_mul_mk, mul_left_comm,
         mul_smul_comm])
 
-/- warning: localized_module.algebra_map_mk -> LocalizedModule.algebraMap_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.algebra_map_mk LocalizedModule.algebraMap_mkₓ'. -/
 theorem algebraMap_mk {A : Type _} [Semiring A] [Algebra R A] (a : R) (s : S) :
     algebraMap _ _ (Localization.mk a s) = mk (algebraMap R A a) s :=
   by
@@ -576,12 +474,6 @@ theorem algebraMap_mk {A : Type _} [Semiring A] [Algebra R A] (a : R) (s : S) :
 instance : IsScalarTower R (Localization S) (LocalizedModule S M) :=
   RestrictScalars.isScalarTower R (Localization S) (LocalizedModule S M)
 
-/- warning: localized_module.algebra' -> LocalizedModule.algebra' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {A : Type.{u2}} [_inst_4 : Semiring.{u2} A] [_inst_5 : Algebra.{u1, u2} R A _inst_1 _inst_4], Algebra.{u1, max u1 u2} R (LocalizedModule.{u1, u2} R _inst_1 S A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_4 _inst_5)) _inst_1 (LocalizedModule.semiring.{u1, u2} R _inst_1 A _inst_4 _inst_5 S)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {A : Type.{u2}} [_inst_4 : Semiring.{u2} A] [_inst_5 : Algebra.{u1, u2} R A _inst_1 _inst_4], Algebra.{u1, max u2 u1} R (LocalizedModule.{u1, u2} R _inst_1 S A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_4))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_4 _inst_5)) _inst_1 (LocalizedModule.instSemiringLocalizedModuleToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToModule.{u1, u2} R _inst_1 A _inst_4 _inst_5 S)
-Case conversion may be inaccurate. Consider using '#align localized_module.algebra' LocalizedModule.algebra'ₓ'. -/
 instance algebra' {A : Type _} [Semiring A] [Algebra R A] : Algebra R (LocalizedModule S A) :=
   { (algebraMap (Localization S) (LocalizedModule S A)).comp (algebraMap R <| Localization S),
     show Module R (LocalizedModule S A) by
@@ -604,12 +496,6 @@ section
 
 variable (S M)
 
-/- warning: localized_module.mk_linear_map -> LocalizedModule.mkLinearMap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], LinearMap.{u1, u1, u2, max u1 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) _inst_2 (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3) _inst_3 (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (M : Type.{u2}) [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], LinearMap.{u1, u1, u2, max u2 u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) _inst_2 (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) _inst_3 (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align localized_module.mk_linear_map LocalizedModule.mkLinearMapₓ'. -/
 /-- The function `m ↦ m / 1` as an `R`-linear map.
 -/
 @[simps]
@@ -622,12 +508,6 @@ def mkLinearMap : M →ₗ[R] LocalizedModule S M
 
 end
 
-/- warning: localized_module.div_by -> LocalizedModule.divBy is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S) -> (LinearMap.{u1, u1, max u1 u2, max u1 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.addCommMonoid.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2], (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x S)) -> (LinearMap.{u1, u1, max u2 u1, max u2 u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3) (LocalizedModule.isModule'.{u1, u2} R _inst_1 S M _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align localized_module.div_by LocalizedModule.divByₓ'. -/
 /-- For any `s : S`, there is an `R`-linear map given by `a/b ↦ a/(b*s)`.
 -/
 @[simps]
@@ -647,9 +527,6 @@ def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M
   map_smul' r x := x.inductionOn <| by intros ; simp [LocalizedModule.liftOn_mk, smul'_mk]
 #align localized_module.div_by LocalizedModule.divBy
 
-/- warning: localized_module.div_by_mul_by -> LocalizedModule.divBy_mul_by is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.div_by_mul_by LocalizedModule.divBy_mul_byₓ'. -/
 theorem divBy_mul_by (s : S) (p : LocalizedModule S M) :
     divBy s (algebraMap R (Module.End R (LocalizedModule S M)) s p) = p :=
   p.inductionOn
@@ -659,9 +536,6 @@ theorem divBy_mul_by (s : S) (p : LocalizedModule S M) :
       erw [mk_cancel_common_left s t])
 #align localized_module.div_by_mul_by LocalizedModule.divBy_mul_by
 
-/- warning: localized_module.mul_by_div_by -> LocalizedModule.mul_by_divBy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.mul_by_div_by LocalizedModule.mul_by_divByₓ'. -/
 theorem mul_by_divBy (s : S) (p : LocalizedModule S M) :
     algebraMap R (Module.End R (LocalizedModule S M)) s (divBy s p) = p :=
   p.inductionOn
@@ -702,9 +576,6 @@ class IsLocalizedModule : Prop where
 
 namespace LocalizedModule
 
-/- warning: localized_module.lift' -> LocalizedModule.lift' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift' LocalizedModule.lift'ₓ'. -/
 /--
 If `g` is a linear map `M → M''` such that all scalar multiplication by `s : S` is invertible, then
 there is a linear map `localized_module S M → M''`.
@@ -734,17 +605,11 @@ noncomputable def lift' (g : M →ₗ[R] M'')
     rfl
 #align localized_module.lift' LocalizedModule.lift'
 
-/- warning: localized_module.lift'_mk -> LocalizedModule.lift'_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift'_mk LocalizedModule.lift'_mkₓ'. -/
 theorem lift'_mk (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
     (m : M) (s : S) : LocalizedModule.lift' S g h (LocalizedModule.mk m s) = (h s).Unit⁻¹.1 (g m) :=
   rfl
 #align localized_module.lift'_mk LocalizedModule.lift'_mk
 
-/- warning: localized_module.lift'_add -> LocalizedModule.lift'_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift'_add LocalizedModule.lift'_addₓ'. -/
 theorem lift'_add (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
     (x y) :
     LocalizedModule.lift' S g h (x + y) =
@@ -762,9 +627,6 @@ theorem lift'_add (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (M
     x y
 #align localized_module.lift'_add LocalizedModule.lift'_add
 
-/- warning: localized_module.lift'_smul -> LocalizedModule.lift'_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift'_smul LocalizedModule.lift'_smulₓ'. -/
 theorem lift'_smul (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
     (r : R) (m) : r • LocalizedModule.lift' S g h m = LocalizedModule.lift' S g h (r • m) :=
   m.inductionOn
@@ -775,9 +637,6 @@ theorem lift'_smul (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (
       erw [← h1.unit⁻¹.1.map_smul, ← g.map_smul])
 #align localized_module.lift'_smul LocalizedModule.lift'_smul
 
-/- warning: localized_module.lift -> LocalizedModule.lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift LocalizedModule.liftₓ'. -/
 /--
 If `g` is a linear map `M → M''` such that all scalar multiplication by `s : S` is invertible, then
 there is a linear map `localized_module S M → M''`.
@@ -790,9 +649,6 @@ noncomputable def lift (g : M →ₗ[R] M'')
   map_smul' r x := by rw [LocalizedModule.lift'_smul, RingHom.id_apply]
 #align localized_module.lift LocalizedModule.lift
 
-/- warning: localized_module.lift_mk -> LocalizedModule.lift_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_mk LocalizedModule.lift_mkₓ'. -/
 /--
 If `g` is a linear map `M → M''` such that all scalar multiplication by `s : S` is invertible, then
 `lift g m s = s⁻¹ • g m`.
@@ -802,9 +658,6 @@ theorem lift_mk (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Mod
   rfl
 #align localized_module.lift_mk LocalizedModule.lift_mk
 
-/- warning: localized_module.lift_comp -> LocalizedModule.lift_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_comp LocalizedModule.lift_compₓ'. -/
 /--
 If `g` is a linear map `M → M''` such that all scalar multiplication by `s : S` is invertible, then
 there is a linear map `lift g ∘ mk_linear_map = g`.
@@ -816,9 +669,6 @@ theorem lift_comp (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (M
   erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, one_smul]
 #align localized_module.lift_comp LocalizedModule.lift_comp
 
-/- warning: localized_module.lift_unique -> LocalizedModule.lift_unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align localized_module.lift_unique LocalizedModule.lift_uniqueₓ'. -/
 /--
 If `g` is a linear map `M → M''` such that all scalar multiplication by `s : S` is invertible and
 `l` is another linear map `localized_module S M ⟶ M''` such that `l ∘ mk_linear_map = g` then
@@ -837,12 +687,6 @@ theorem lift_unique (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R 
 
 end LocalizedModule
 
-/- warning: localized_module_is_localized_module -> localizedModuleIsLocalizedModule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2], IsLocalizedModule.{u1, u2, max u1 u2} R _inst_1 S M (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_2 (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_5 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.mkLinearMap.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_5 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_2], IsLocalizedModule.{u1, u2, max u1 u2} R _inst_1 S M (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_2 (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_5 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.mkLinearMap.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5)
-Case conversion may be inaccurate. Consider using '#align localized_module_is_localized_module localizedModuleIsLocalizedModuleₓ'. -/
 instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule.mkLinearMap S M)
     where
   map_units s :=
@@ -883,9 +727,6 @@ noncomputable def fromLocalizedModule' : LocalizedModule S M → M' := fun p =>
 #align is_localized_module.from_localized_module' IsLocalizedModule.fromLocalizedModule'
 -/
 
-/- warning: is_localized_module.from_localized_module'_mk -> IsLocalizedModule.fromLocalizedModule'_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module'_mk IsLocalizedModule.fromLocalizedModule'_mkₓ'. -/
 @[simp]
 theorem fromLocalizedModule'_mk (m : M) (s : S) :
     fromLocalizedModule' S f (LocalizedModule.mk m s) =
@@ -893,12 +734,6 @@ theorem fromLocalizedModule'_mk (m : M) (s : S) :
   rfl
 #align is_localized_module.from_localized_module'_mk IsLocalizedModule.fromLocalizedModule'_mk
 
-/- warning: is_localized_module.from_localized_module'_add -> IsLocalizedModule.fromLocalizedModule'_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f] (x : LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (y : LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5), Eq.{succ u3} M' (IsLocalizedModule.fromLocalizedModule'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (instHAdd.{max u1 u2} (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.hasAdd.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5)) x y)) (HAdd.hAdd.{u3, u3, u3} M' M' M' (instHAdd.{u3} M' (AddZeroClass.toHasAdd.{u3} M' (AddMonoid.toAddZeroClass.{u3} M' (AddCommMonoid.toAddMonoid.{u3} M' _inst_3)))) (IsLocalizedModule.fromLocalizedModule'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 x) (IsLocalizedModule.fromLocalizedModule'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 y))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] (S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u1}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u1} M'] [_inst_5 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u1} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u2, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f] (x : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (y : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5), Eq.{succ u1} M' (IsLocalizedModule.fromLocalizedModule'.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 (HAdd.hAdd.{max u3 u2, max u3 u2, max u3 u2} (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (instHAdd.{max u3 u2} (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.instAddLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5)) x y)) (HAdd.hAdd.{u1, u1, u1} M' M' M' (instHAdd.{u1} M' (AddZeroClass.toAdd.{u1} M' (AddMonoid.toAddZeroClass.{u1} M' (AddCommMonoid.toAddMonoid.{u1} M' _inst_3)))) (IsLocalizedModule.fromLocalizedModule'.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 x) (IsLocalizedModule.fromLocalizedModule'.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 y))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module'_add IsLocalizedModule.fromLocalizedModule'_addₓ'. -/
 theorem fromLocalizedModule'_add (x y : LocalizedModule S M) :
     fromLocalizedModule' S f (x + y) = fromLocalizedModule' S f x + fromLocalizedModule' S f y :=
   LocalizedModule.induction_on₂
@@ -915,9 +750,6 @@ theorem fromLocalizedModule'_add (x y : LocalizedModule S M) :
     x y
 #align is_localized_module.from_localized_module'_add IsLocalizedModule.fromLocalizedModule'_add
 
-/- warning: is_localized_module.from_localized_module'_smul -> IsLocalizedModule.fromLocalizedModule'_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module'_smul IsLocalizedModule.fromLocalizedModule'_smulₓ'. -/
 theorem fromLocalizedModule'_smul (r : R) (x : LocalizedModule S M) :
     r • fromLocalizedModule' S f x = fromLocalizedModule' S f (r • x) :=
   LocalizedModule.induction_on
@@ -928,12 +760,6 @@ theorem fromLocalizedModule'_smul (r : R) (x : LocalizedModule S M) :
     x
 #align is_localized_module.from_localized_module'_smul IsLocalizedModule.fromLocalizedModule'_smul
 
-/- warning: is_localized_module.from_localized_module -> IsLocalizedModule.fromLocalizedModule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], LinearMap.{u1, u1, max u2 u1, u3} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module IsLocalizedModule.fromLocalizedModuleₓ'. -/
 /-- If `(M', f : M ⟶ M')` satisfies universal property of localized module, there is a canonical map
 `localized_module S M ⟶ M'`.
 -/
@@ -944,21 +770,12 @@ noncomputable def fromLocalizedModule : LocalizedModule S M →ₗ[R] M'
   map_smul' r x := by rw [from_localized_module'_smul, RingHom.id_apply]
 #align is_localized_module.from_localized_module IsLocalizedModule.fromLocalizedModule
 
-/- warning: is_localized_module.from_localized_module_mk -> IsLocalizedModule.fromLocalizedModule_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module_mk IsLocalizedModule.fromLocalizedModule_mkₓ'. -/
 theorem fromLocalizedModule_mk (m : M) (s : S) :
     fromLocalizedModule S f (LocalizedModule.mk m s) =
       (IsLocalizedModule.map_units f s).Unit⁻¹ (f m) :=
   rfl
 #align is_localized_module.from_localized_module_mk IsLocalizedModule.fromLocalizedModule_mk
 
-/- warning: is_localized_module.from_localized_module.inj -> IsLocalizedModule.fromLocalizedModule.inj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Injective.{succ (max u1 u2), succ u3} (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (coeFn.{max (succ (max u1 u2)) (succ u3), max (succ (max u1 u2)) (succ u3)} (LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6) (fun (_x : LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6) => (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) -> M') (LinearMap.hasCoeToFun.{u1, u1, max u1 u2, u3} R R (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (IsLocalizedModule.fromLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] (S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u1}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u1} M'] [_inst_5 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u1} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u2, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Injective.{max (succ u3) (succ u2), succ u1} (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u2), succ u1} (LinearMap.{u3, u3, max u2 u3, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.instAddCommMonoidLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_6) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (fun (_x : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) => M') _x) (LinearMap.instFunLikeLinearMap.{u3, u3, max u3 u2, u1} R R (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (LocalizedModule.instAddCommMonoidLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_6 (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))) (IsLocalizedModule.fromLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module.inj IsLocalizedModule.fromLocalizedModule.injₓ'. -/
 theorem fromLocalizedModule.inj : Function.Injective <| fromLocalizedModule S f := fun x y eq1 =>
   by
   induction' x using LocalizedModule.induction_on with a b
@@ -971,34 +788,16 @@ theorem fromLocalizedModule.inj : Function.Injective <| fromLocalizedModule S f 
   rfl
 #align is_localized_module.from_localized_module.inj IsLocalizedModule.fromLocalizedModule.inj
 
-/- warning: is_localized_module.from_localized_module.surj -> IsLocalizedModule.fromLocalizedModule.surj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Surjective.{succ (max u1 u2), succ u3} (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (coeFn.{max (succ (max u1 u2)) (succ u3), max (succ (max u1 u2)) (succ u3)} (LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6) (fun (_x : LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6) => (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) -> M') (LinearMap.hasCoeToFun.{u1, u1, max u1 u2, u3} R R (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (IsLocalizedModule.fromLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] (S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u1}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u1} M'] [_inst_5 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u1} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u2, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Surjective.{max (succ u3) (succ u2), succ u1} (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u2), succ u1} (LinearMap.{u3, u3, max u2 u3, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.instAddCommMonoidLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_6) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (fun (_x : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) => M') _x) (LinearMap.instFunLikeLinearMap.{u3, u3, max u3 u2, u1} R R (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (LocalizedModule.instAddCommMonoidLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_6 (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))) (IsLocalizedModule.fromLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module.surj IsLocalizedModule.fromLocalizedModule.surjₓ'. -/
 theorem fromLocalizedModule.surj : Function.Surjective <| fromLocalizedModule S f := fun x =>
   let ⟨⟨m, s⟩, eq1⟩ := IsLocalizedModule.surj S f x
   ⟨LocalizedModule.mk m s, by
     rw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← eq1]; rfl⟩
 #align is_localized_module.from_localized_module.surj IsLocalizedModule.fromLocalizedModule.surj
 
-/- warning: is_localized_module.from_localized_module.bij -> IsLocalizedModule.fromLocalizedModule.bij is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Bijective.{succ (max u1 u2), succ u3} (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (coeFn.{max (succ (max u1 u2)) (succ u3), max (succ (max u1 u2)) (succ u3)} (LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6) (fun (_x : LinearMap.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6) => (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) -> M') (LinearMap.hasCoeToFun.{u1, u1, max u1 u2, u3} R R (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (IsLocalizedModule.fromLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] (S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u1}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u1} M'] [_inst_5 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u1} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u2, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Bijective.{max (succ u3) (succ u2), succ u1} (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u2), succ u1} (LinearMap.{u3, u3, max u2 u3, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.instAddCommMonoidLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_6) (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) (fun (_x : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) => M') _x) (LinearMap.instFunLikeLinearMap.{u3, u3, max u3 u2, u1} R R (LocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (LocalizedModule.instAddCommMonoidLocalizedModule.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u3, u2} R (CommRing.toCommSemiring.{u3} R _inst_1) S M _inst_2 _inst_5) _inst_6 (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))) (IsLocalizedModule.fromLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module.bij IsLocalizedModule.fromLocalizedModule.bijₓ'. -/
 theorem fromLocalizedModule.bij : Function.Bijective <| fromLocalizedModule S f :=
   ⟨fromLocalizedModule.inj _ _, fromLocalizedModule.surj _ _⟩
 #align is_localized_module.from_localized_module.bij IsLocalizedModule.fromLocalizedModule.bij
 
-/- warning: is_localized_module.iso -> IsLocalizedModule.iso is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], LinearEquiv.{u1, u1, max u1 u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (IsLocalizedModule.iso._proof_1.{u1} R _inst_1) (IsLocalizedModule.iso._proof_2.{u1} R _inst_1) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], LinearEquiv.{u1, u1, max u2 u1, u3} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) M' (LocalizedModule.instAddCommMonoidLocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_3 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_6
-Case conversion may be inaccurate. Consider using '#align is_localized_module.iso IsLocalizedModule.isoₓ'. -/
 /--
 If `(M', f : M ⟶ M')` satisfies universal property of localized module, then `M'` is isomorphic to
 `localized_module S M` as an `R`-module.
@@ -1009,17 +808,11 @@ noncomputable def iso : LocalizedModule S M ≃ₗ[R] M' :=
     Equiv.ofBijective (fromLocalizedModule S f) <| fromLocalizedModule.bij _ _ with }
 #align is_localized_module.iso IsLocalizedModule.iso
 
-/- warning: is_localized_module.iso_apply_mk -> IsLocalizedModule.iso_apply_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.iso_apply_mk IsLocalizedModule.iso_apply_mkₓ'. -/
 theorem iso_apply_mk (m : M) (s : S) :
     iso S f (LocalizedModule.mk m s) = (IsLocalizedModule.map_units f s).Unit⁻¹ (f m) :=
   rfl
 #align is_localized_module.iso_apply_mk IsLocalizedModule.iso_apply_mk
 
-/- warning: is_localized_module.iso_symm_apply_aux -> IsLocalizedModule.iso_symm_apply_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.iso_symm_apply_aux IsLocalizedModule.iso_symm_apply_auxₓ'. -/
 theorem iso_symm_apply_aux (m : M') :
     (iso S f).symm m =
       LocalizedModule.mk (IsLocalizedModule.surj S f m).some.1
@@ -1032,9 +825,6 @@ theorem iso_symm_apply_aux (m : M') :
   erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff', h2.some_spec]
 #align is_localized_module.iso_symm_apply_aux IsLocalizedModule.iso_symm_apply_aux
 
-/- warning: is_localized_module.iso_symm_apply' -> IsLocalizedModule.iso_symm_apply' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.iso_symm_apply' IsLocalizedModule.iso_symm_apply'ₓ'. -/
 theorem iso_symm_apply' (m : M') (a : M) (b : S) (eq1 : b • m = f a) :
     (iso S f).symm m = LocalizedModule.mk a b :=
   (iso_symm_apply_aux S f m).trans <|
@@ -1044,18 +834,12 @@ theorem iso_symm_apply' (m : M') (a : M) (b : S) (eq1 : b • m = f a) :
         mul_smul, mul_comm, mul_smul, eq1]
 #align is_localized_module.iso_symm_apply' IsLocalizedModule.iso_symm_apply'
 
-/- warning: is_localized_module.iso_symm_comp -> IsLocalizedModule.iso_symm_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.iso_symm_comp IsLocalizedModule.iso_symm_compₓ'. -/
 theorem iso_symm_comp : (iso S f).symm.toLinearMap.comp f = LocalizedModule.mkLinearMap S M :=
   by
   ext m; rw [LinearMap.comp_apply, LocalizedModule.mkLinearMap_apply]
   change (iso S f).symm _ = _; rw [iso_symm_apply']; exact one_smul _ _
 #align is_localized_module.iso_symm_comp IsLocalizedModule.iso_symm_comp
 
-/- warning: is_localized_module.lift -> IsLocalizedModule.lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.lift IsLocalizedModule.liftₓ'. -/
 /--
 If `M'` is a localized module and `g` is a linear map `M' → M''` such that all scalar multiplication
 by `s : S` is invertible, then there is a linear map `M' → M''`.
@@ -1065,9 +849,6 @@ noncomputable def lift (g : M →ₗ[R] M'')
   (LocalizedModule.lift S g h).comp (iso S f).symm.toLinearMap
 #align is_localized_module.lift IsLocalizedModule.lift
 
-/- warning: is_localized_module.lift_comp -> IsLocalizedModule.lift_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.lift_comp IsLocalizedModule.lift_compₓ'. -/
 theorem lift_comp (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x)) :
     (lift S f g h).comp f = g :=
   by
@@ -1077,9 +858,6 @@ theorem lift_comp (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (M
   exact iso_symm_comp _ _
 #align is_localized_module.lift_comp IsLocalizedModule.lift_comp
 
-/- warning: is_localized_module.lift_unique -> IsLocalizedModule.lift_unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.lift_unique IsLocalizedModule.lift_uniqueₓ'. -/
 theorem lift_unique (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
     (l : M' →ₗ[R] M'') (hl : l.comp f = g) : lift S f g h = l :=
   by
@@ -1092,9 +870,6 @@ theorem lift_unique (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R 
     erw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, one_smul]
 #align is_localized_module.lift_unique IsLocalizedModule.lift_unique
 
-/- warning: is_localized_module.is_universal -> IsLocalizedModule.is_universal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.is_universal IsLocalizedModule.is_universalₓ'. -/
 /-- Universal property from localized module:
 If `(M', f : M ⟶ M')` is a localized module then it satisfies the following universal property:
 For every `R`-module `M''` which every `s : S`-scalar multiplication is invertible and for every
@@ -1115,9 +890,6 @@ theorem is_universal :
   fun g h => ⟨lift S f g h, lift_comp S f g h, fun l hl => (lift_unique S f g h l hl).symm⟩
 #align is_localized_module.is_universal IsLocalizedModule.is_universal
 
-/- warning: is_localized_module.ring_hom_ext -> IsLocalizedModule.ringHom_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.ring_hom_ext IsLocalizedModule.ringHom_extₓ'. -/
 theorem ringHom_ext (map_unit : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
     ⦃j k : M' →ₗ[R] M''⦄ (h : j.comp f = k.comp f) : j = k := by
   rw [← lift_unique S f (k.comp f) map_unit j h, lift_unique]; rfl
@@ -1134,61 +906,34 @@ noncomputable def linearEquiv [IsLocalizedModule S g] : M' ≃ₗ[R] M'' :=
 
 variable {S}
 
-/- warning: is_localized_module.smul_injective -> IsLocalizedModule.smul_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.smul_injective IsLocalizedModule.smul_injectiveₓ'. -/
 theorem smul_injective (s : S) : Function.Injective fun m : M' => s • m :=
   ((Module.End_isUnit_iff _).mp (IsLocalizedModule.map_units f s)).Injective
 #align is_localized_module.smul_injective IsLocalizedModule.smul_injective
 
-/- warning: is_localized_module.smul_inj -> IsLocalizedModule.smul_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.smul_inj IsLocalizedModule.smul_injₓ'. -/
 theorem smul_inj (s : S) (m₁ m₂ : M') : s • m₁ = s • m₂ ↔ m₁ = m₂ :=
   (smul_injective f s).eq_iff
 #align is_localized_module.smul_inj IsLocalizedModule.smul_inj
 
-/- warning: is_localized_module.mk' -> IsLocalizedModule.mk' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))} {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], M -> (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S) -> M'
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))} {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], M -> (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))) x S)) -> M'
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk' IsLocalizedModule.mk'ₓ'. -/
 /-- `mk' f m s` is the fraction `m/s` with respect to the localization map `f`. -/
 noncomputable def mk' (m : M) (s : S) : M' :=
   fromLocalizedModule S f (LocalizedModule.mk m s)
 #align is_localized_module.mk' IsLocalizedModule.mk'
 
-/- warning: is_localized_module.mk'_smul -> IsLocalizedModule.mk'_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_smul IsLocalizedModule.mk'_smulₓ'. -/
 theorem mk'_smul (r : R) (m : M) (s : S) : mk' f (r • m) s = r • mk' f m s := by delta mk';
   rw [← LocalizedModule.smul'_mk, LinearMap.map_smul]
 #align is_localized_module.mk'_smul IsLocalizedModule.mk'_smul
 
-/- warning: is_localized_module.mk'_add_mk' -> IsLocalizedModule.mk'_add_mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_add_mk' IsLocalizedModule.mk'_add_mk'ₓ'. -/
 theorem mk'_add_mk' (m₁ m₂ : M) (s₁ s₂ : S) :
     mk' f m₁ s₁ + mk' f m₂ s₂ = mk' f (s₂ • m₁ + s₁ • m₂) (s₁ * s₂) := by delta mk';
   rw [← map_add, LocalizedModule.mk_add_mk]
 #align is_localized_module.mk'_add_mk' IsLocalizedModule.mk'_add_mk'
 
-/- warning: is_localized_module.mk'_zero -> IsLocalizedModule.mk'_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))} {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f] (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S), Eq.{succ u3} M' (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))) s) (OfNat.ofNat.{u3} M' 0 (OfNat.mk.{u3} M' 0 (Zero.zero.{u3} M' (AddZeroClass.toHasZero.{u3} M' (AddMonoid.toAddZeroClass.{u3} M' (AddCommMonoid.toAddMonoid.{u3} M' _inst_3))))))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] {S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))} {M : Type.{u1}} {M' : Type.{u2}} [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : AddCommMonoid.{u2} M'] [_inst_5 : Module.{u3, u1} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u2} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u1, u2} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u1, u2} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f] (s : Subtype.{succ u3} R (fun (x : R) => Membership.mem.{u3, u3} R (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) (SetLike.instMembership.{u3, u3} (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))))) x S)), Eq.{succ u2} M' (IsLocalizedModule.mk'.{u3, u1, u2} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)))) s) (OfNat.ofNat.{u2} M' 0 (Zero.toOfNat0.{u2} M' (AddMonoid.toZero.{u2} M' (AddCommMonoid.toAddMonoid.{u2} M' _inst_3))))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_zero IsLocalizedModule.mk'_zeroₓ'. -/
 @[simp]
 theorem mk'_zero (s : S) : mk' f 0 s = 0 := by rw [← zero_smul R (0 : M), mk'_smul, zero_smul]
 #align is_localized_module.mk'_zero IsLocalizedModule.mk'_zero
 
 variable (S)
 
-/- warning: is_localized_module.mk'_one -> IsLocalizedModule.mk'_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_one IsLocalizedModule.mk'_oneₓ'. -/
 @[simp]
 theorem mk'_one (m : M) : mk' f m (1 : S) = f m := by delta mk';
   rw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, Submonoid.coe_one,
@@ -1197,51 +942,30 @@ theorem mk'_one (m : M) : mk' f m (1 : S) = f m := by delta mk';
 
 variable {S}
 
-/- warning: is_localized_module.mk'_cancel -> IsLocalizedModule.mk'_cancel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel IsLocalizedModule.mk'_cancelₓ'. -/
 @[simp]
 theorem mk'_cancel (m : M) (s : S) : mk' f (s • m) s = f m := by delta mk';
   rw [LocalizedModule.mk_cancel, ← mk'_one S f]; rfl
 #align is_localized_module.mk'_cancel IsLocalizedModule.mk'_cancel
 
-/- warning: is_localized_module.mk'_cancel' -> IsLocalizedModule.mk'_cancel' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel' IsLocalizedModule.mk'_cancel'ₓ'. -/
 @[simp]
 theorem mk'_cancel' (m : M) (s : S) : s • mk' f m s = f m := by
   rw [Submonoid.smul_def, ← mk'_smul, ← Submonoid.smul_def, mk'_cancel]
 #align is_localized_module.mk'_cancel' IsLocalizedModule.mk'_cancel'
 
-/- warning: is_localized_module.mk'_cancel_left -> IsLocalizedModule.mk'_cancel_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel_left IsLocalizedModule.mk'_cancel_leftₓ'. -/
 @[simp]
 theorem mk'_cancel_left (m : M) (s₁ s₂ : S) : mk' f (s₁ • m) (s₁ * s₂) = mk' f m s₂ := by delta mk';
   rw [LocalizedModule.mk_cancel_common_left]
 #align is_localized_module.mk'_cancel_left IsLocalizedModule.mk'_cancel_left
 
-/- warning: is_localized_module.mk'_cancel_right -> IsLocalizedModule.mk'_cancel_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel_right IsLocalizedModule.mk'_cancel_rightₓ'. -/
 @[simp]
 theorem mk'_cancel_right (m : M) (s₁ s₂ : S) : mk' f (s₂ • m) (s₁ * s₂) = mk' f m s₁ := by
   delta mk'; rw [LocalizedModule.mk_cancel_common_right]
 #align is_localized_module.mk'_cancel_right IsLocalizedModule.mk'_cancel_right
 
-/- warning: is_localized_module.mk'_add -> IsLocalizedModule.mk'_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))} {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f] (m₁ : M) (m₂ : M) (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S), Eq.{succ u3} M' (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 (HAdd.hAdd.{u2, u2, u2} M M M (instHAdd.{u2} M (AddZeroClass.toHasAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))) m₁ m₂) s) (HAdd.hAdd.{u3, u3, u3} M' M' M' (instHAdd.{u3} M' (AddZeroClass.toHasAdd.{u3} M' (AddMonoid.toAddZeroClass.{u3} M' (AddCommMonoid.toAddMonoid.{u3} M' _inst_3)))) (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 m₁ s) (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 m₂ s))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] {S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))} {M : Type.{u1}} {M' : Type.{u2}} [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : AddCommMonoid.{u2} M'] [_inst_5 : Module.{u3, u1} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u2} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u1, u2} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u1, u2} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f] (m₁ : M) (m₂ : M) (s : Subtype.{succ u3} R (fun (x : R) => Membership.mem.{u3, u3} R (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) (SetLike.instMembership.{u3, u3} (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))))) x S)), Eq.{succ u2} M' (IsLocalizedModule.mk'.{u3, u1, u2} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)))) m₁ m₂) s) (HAdd.hAdd.{u2, u2, u2} M' M' M' (instHAdd.{u2} M' (AddZeroClass.toAdd.{u2} M' (AddMonoid.toAddZeroClass.{u2} M' (AddCommMonoid.toAddMonoid.{u2} M' _inst_3)))) (IsLocalizedModule.mk'.{u3, u1, u2} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 m₁ s) (IsLocalizedModule.mk'.{u3, u1, u2} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8 m₂ s))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_add IsLocalizedModule.mk'_addₓ'. -/
 theorem mk'_add (m₁ m₂ : M) (s : S) : mk' f (m₁ + m₂) s = mk' f m₁ s + mk' f m₂ s := by
   rw [mk'_add_mk', ← smul_add, mk'_cancel_left]
 #align is_localized_module.mk'_add IsLocalizedModule.mk'_add
 
-/- warning: is_localized_module.mk'_eq_mk'_iff -> IsLocalizedModule.mk'_eq_mk'_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_eq_mk'_iff IsLocalizedModule.mk'_eq_mk'_iffₓ'. -/
 theorem mk'_eq_mk'_iff (m₁ m₂ : M) (s₁ s₂ : S) :
     mk' f m₁ s₁ = mk' f m₂ s₂ ↔ ∃ s : S, s • s₁ • m₂ = s • s₂ • m₁ :=
   by
@@ -1250,41 +974,23 @@ theorem mk'_eq_mk'_iff (m₁ m₂ : M) (s₁ s₂ : S) :
   simp_rw [eq_comm]
 #align is_localized_module.mk'_eq_mk'_iff IsLocalizedModule.mk'_eq_mk'_iff
 
-/- warning: is_localized_module.mk'_neg -> IsLocalizedModule.mk'_neg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))} {M : Type.{u2}} {M' : Type.{u3}} [_inst_9 : AddCommGroup.{u2} M] [_inst_10 : AddCommGroup.{u3} M'] [_inst_11 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9)] [_inst_12 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10)] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12) [_inst_13 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f] (m : M) (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S), Eq.{succ u3} M' (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f _inst_13 (Neg.neg.{u2} M (SubNegMonoid.toHasNeg.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_9))) m) s) (Neg.neg.{u3} M' (SubNegMonoid.toHasNeg.{u3} M' (AddGroup.toSubNegMonoid.{u3} M' (AddCommGroup.toAddGroup.{u3} M' _inst_10))) (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f _inst_13 m s))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))} {M : Type.{u3}} {M' : Type.{u2}} [_inst_9 : AddCommGroup.{u3} M] [_inst_10 : AddCommGroup.{u2} M'] [_inst_11 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_9)] [_inst_12 : Module.{u1, u2} R M' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10)] (f : LinearMap.{u1, u1, u3, u2} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12) [_inst_13 : IsLocalizedModule.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f] (m : M) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))) x S)), Eq.{succ u2} M' (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 (Neg.neg.{u3} M (NegZeroClass.toNeg.{u3} M (SubNegZeroMonoid.toNegZeroClass.{u3} M (SubtractionMonoid.toSubNegZeroMonoid.{u3} M (SubtractionCommMonoid.toSubtractionMonoid.{u3} M (AddCommGroup.toDivisionAddCommMonoid.{u3} M _inst_9))))) m) s) (Neg.neg.{u2} M' (NegZeroClass.toNeg.{u2} M' (SubNegZeroMonoid.toNegZeroClass.{u2} M' (SubtractionMonoid.toSubNegZeroMonoid.{u2} M' (SubtractionCommMonoid.toSubtractionMonoid.{u2} M' (AddCommGroup.toDivisionAddCommMonoid.{u2} M' _inst_10))))) (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 m s))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_neg IsLocalizedModule.mk'_negₓ'. -/
 theorem mk'_neg {M M' : Type _} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
     (f : M →ₗ[R] M') [IsLocalizedModule S f] (m : M) (s : S) : mk' f (-m) s = -mk' f m s := by
   delta mk'; rw [LocalizedModule.mk_neg, map_neg]
 #align is_localized_module.mk'_neg IsLocalizedModule.mk'_neg
 
-/- warning: is_localized_module.mk'_sub -> IsLocalizedModule.mk'_sub is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))} {M : Type.{u2}} {M' : Type.{u3}} [_inst_9 : AddCommGroup.{u2} M] [_inst_10 : AddCommGroup.{u3} M'] [_inst_11 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9)] [_inst_12 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10)] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12) [_inst_13 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f] (m₁ : M) (m₂ : M) (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S), Eq.{succ u3} M' (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f _inst_13 (HSub.hSub.{u2, u2, u2} M M M (instHSub.{u2} M (SubNegMonoid.toHasSub.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_9)))) m₁ m₂) s) (HSub.hSub.{u3, u3, u3} M' M' M' (instHSub.{u3} M' (SubNegMonoid.toHasSub.{u3} M' (AddGroup.toSubNegMonoid.{u3} M' (AddCommGroup.toAddGroup.{u3} M' _inst_10)))) (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f _inst_13 m₁ s) (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) (AddCommGroup.toAddCommMonoid.{u3} M' _inst_10) _inst_11 _inst_12 f _inst_13 m₂ s))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))} {M : Type.{u3}} {M' : Type.{u2}} [_inst_9 : AddCommGroup.{u3} M] [_inst_10 : AddCommGroup.{u2} M'] [_inst_11 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_9)] [_inst_12 : Module.{u1, u2} R M' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10)] (f : LinearMap.{u1, u1, u3, u2} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12) [_inst_13 : IsLocalizedModule.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f] (m₁ : M) (m₂ : M) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))) x S)), Eq.{succ u2} M' (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 (HSub.hSub.{u3, u3, u3} M M M (instHSub.{u3} M (SubNegMonoid.toSub.{u3} M (AddGroup.toSubNegMonoid.{u3} M (AddCommGroup.toAddGroup.{u3} M _inst_9)))) m₁ m₂) s) (HSub.hSub.{u2, u2, u2} M' M' M' (instHSub.{u2} M' (SubNegMonoid.toSub.{u2} M' (AddGroup.toSubNegMonoid.{u2} M' (AddCommGroup.toAddGroup.{u2} M' _inst_10)))) (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 m₁ s) (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 m₂ s))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_sub IsLocalizedModule.mk'_subₓ'. -/
 theorem mk'_sub {M M' : Type _} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
     (f : M →ₗ[R] M') [IsLocalizedModule S f] (m₁ m₂ : M) (s : S) :
     mk' f (m₁ - m₂) s = mk' f m₁ s - mk' f m₂ s := by
   rw [sub_eq_add_neg, sub_eq_add_neg, mk'_add, mk'_neg]
 #align is_localized_module.mk'_sub IsLocalizedModule.mk'_sub
 
-/- warning: is_localized_module.mk'_sub_mk' -> IsLocalizedModule.mk'_sub_mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_sub_mk' IsLocalizedModule.mk'_sub_mk'ₓ'. -/
 theorem mk'_sub_mk' {M M' : Type _} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
     (f : M →ₗ[R] M') [IsLocalizedModule S f] (m₁ m₂ : M) (s₁ s₂ : S) :
     mk' f m₁ s₁ - mk' f m₂ s₂ = mk' f (s₂ • m₁ - s₁ • m₂) (s₁ * s₂) := by
   rw [sub_eq_add_neg, ← mk'_neg, mk'_add_mk', smul_neg, ← sub_eq_add_neg]
 #align is_localized_module.mk'_sub_mk' IsLocalizedModule.mk'_sub_mk'
 
-/- warning: is_localized_module.mk'_mul_mk'_of_map_mul -> IsLocalizedModule.mk'_mul_mk'_of_map_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_mul_mk'_of_map_mul IsLocalizedModule.mk'_mul_mk'_of_map_mulₓ'. -/
 theorem mk'_mul_mk'_of_map_mul {M M' : Type _} [Semiring M] [Semiring M'] [Module R M]
     [Algebra R M'] (f : M →ₗ[R] M') (hf : ∀ m₁ m₂, f (m₁ * m₂) = f m₁ * f m₂)
     [IsLocalizedModule S f] (m₁ m₂ : M) (s₁ s₂ : S) :
@@ -1297,9 +1003,6 @@ theorem mk'_mul_mk'_of_map_mul {M M' : Type _} [Semiring M] [Semiring M'] [Modul
   simp_rw [← Submonoid.smul_def, mk'_cancel, smul_eq_mul, hf]
 #align is_localized_module.mk'_mul_mk'_of_map_mul IsLocalizedModule.mk'_mul_mk'_of_map_mul
 
-/- warning: is_localized_module.mk'_mul_mk' -> IsLocalizedModule.mk'_mul_mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_mul_mk' IsLocalizedModule.mk'_mul_mk'ₓ'. -/
 theorem mk'_mul_mk' {M M' : Type _} [Semiring M] [Semiring M'] [Algebra R M] [Algebra R M']
     (f : M →ₐ[R] M') [IsLocalizedModule S f.toLinearMap] (m₁ m₂ : M) (s₁ s₂ : S) :
     mk' f.toLinearMap m₁ s₁ * mk' f.toLinearMap m₂ s₂ = mk' f.toLinearMap (m₁ * m₂) (s₁ * s₂) :=
@@ -1308,36 +1011,21 @@ theorem mk'_mul_mk' {M M' : Type _} [Semiring M] [Semiring M'] [Algebra R M] [Al
 
 variable {f}
 
-/- warning: is_localized_module.mk'_eq_iff -> IsLocalizedModule.mk'_eq_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_eq_iff IsLocalizedModule.mk'_eq_iffₓ'. -/
 @[simp]
 theorem mk'_eq_iff {m : M} {s : S} {m' : M'} : mk' f m s = m' ↔ f m = s • m' := by
   rw [← smul_inj f s, Submonoid.smul_def, ← mk'_smul, ← Submonoid.smul_def, mk'_cancel]
 #align is_localized_module.mk'_eq_iff IsLocalizedModule.mk'_eq_iff
 
-/- warning: is_localized_module.mk'_eq_zero -> IsLocalizedModule.mk'_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_eq_zero IsLocalizedModule.mk'_eq_zeroₓ'. -/
 @[simp]
 theorem mk'_eq_zero {m : M} (s : S) : mk' f m s = 0 ↔ f m = 0 := by rw [mk'_eq_iff, smul_zero]
 #align is_localized_module.mk'_eq_zero IsLocalizedModule.mk'_eq_zero
 
 variable (f)
 
-/- warning: is_localized_module.mk'_eq_zero' -> IsLocalizedModule.mk'_eq_zero' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_eq_zero' IsLocalizedModule.mk'_eq_zero'ₓ'. -/
 theorem mk'_eq_zero' {m : M} (s : S) : mk' f m s = 0 ↔ ∃ s' : S, s' • m = 0 := by
   simp_rw [← mk'_zero f (1 : S), mk'_eq_mk'_iff, smul_zero, one_smul, eq_comm]
 #align is_localized_module.mk'_eq_zero' IsLocalizedModule.mk'_eq_zero'
 
-/- warning: is_localized_module.mk_eq_mk' -> IsLocalizedModule.mk_eq_mk' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))} {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] (s : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S) (m : M), Eq.{succ (max u1 u2)} (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.mk.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5 m s) (IsLocalizedModule.mk'.{u1, u2, max u1 u2} R _inst_1 S M (LocalizedModule.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_2 (LocalizedModule.addCommMonoid.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) _inst_5 (LocalizedModule.isModule'.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.mkLinearMap.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S M _inst_2 _inst_5) (localizedModuleIsLocalizedModule.{u1, u2} R _inst_1 S M _inst_2 _inst_5) m s)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {S : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))} {M : Type.{u1}} [_inst_2 : AddCommMonoid.{u1} M] [_inst_5 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) _inst_2] (s : Subtype.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))))) x S)) (m : M), Eq.{max (succ u2) (succ u1)} (LocalizedModule.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.mk.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S M _inst_2 _inst_5 m s) (IsLocalizedModule.mk'.{u2, u1, max u2 u1} R _inst_1 S M (LocalizedModule.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S M _inst_2 _inst_5) _inst_2 (LocalizedModule.instAddCommMonoidLocalizedModule.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S M _inst_2 _inst_5) _inst_5 (LocalizedModule.isModule'.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S M _inst_2 _inst_5) (LocalizedModule.mkLinearMap.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S M _inst_2 _inst_5) (localizedModuleIsLocalizedModule.{u2, u1} R _inst_1 S M _inst_2 _inst_5) m s)
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk_eq_mk' IsLocalizedModule.mk_eq_mk'ₓ'. -/
 theorem mk_eq_mk' (s : S) (m : M) :
     LocalizedModule.mk m s = mk' (LocalizedModule.mkLinearMap S M) m s := by
   rw [eq_comm, mk'_eq_iff, Submonoid.smul_def, LocalizedModule.smul'_mk, ← Submonoid.smul_def,
@@ -1346,19 +1034,10 @@ theorem mk_eq_mk' (s : S) (m : M) :
 
 variable (S)
 
-/- warning: is_localized_module.eq_zero_iff -> IsLocalizedModule.eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.eq_zero_iff IsLocalizedModule.eq_zero_iffₓ'. -/
 theorem eq_zero_iff {m : M} : f m = 0 ↔ ∃ s' : S, s' • m = 0 :=
   (mk'_eq_zero (1 : S)).symm.trans (mk'_eq_zero' f _)
 #align is_localized_module.eq_zero_iff IsLocalizedModule.eq_zero_iff
 
-/- warning: is_localized_module.mk'_surjective -> IsLocalizedModule.mk'_surjective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u3}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M'] [_inst_5 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_2] [_inst_6 : Module.{u1, u3} R M' (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) _inst_3] (f : LinearMap.{u1, u1, u2, u3} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Surjective.{max (succ u2) (succ u1), succ u3} (Prod.{u2, u1} M (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S)) M' (Function.uncurry.{u2, u1, u3} M (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) R (Submonoid.setLike.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) S) M' (IsLocalizedModule.mk'.{u1, u2, u3} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommRing.{u3} R] (S : Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) {M : Type.{u2}} {M' : Type.{u1}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u1} M'] [_inst_5 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_2] [_inst_6 : Module.{u3, u1} R M' (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) _inst_3] (f : LinearMap.{u3, u3, u2, u1} R R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))) M M' _inst_2 _inst_3 _inst_5 _inst_6) [_inst_8 : IsLocalizedModule.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f], Function.Surjective.{max (succ u3) (succ u2), succ u1} (Prod.{u2, u3} M (Subtype.{succ u3} R (fun (x : R) => Membership.mem.{u3, u3} R (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) (SetLike.instMembership.{u3, u3} (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))))) x S))) M' (Function.uncurry.{u2, u3, u1} M (Subtype.{succ u3} R (fun (x : R) => Membership.mem.{u3, u3} R (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) (SetLike.instMembership.{u3, u3} (Submonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u3} R (MulZeroOneClass.toMulOneClass.{u3} R (NonAssocSemiring.toMulZeroOneClass.{u3} R (Semiring.toNonAssocSemiring.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_1))))))) x S)) M' (IsLocalizedModule.mk'.{u3, u2, u1} R _inst_1 S M M' _inst_2 _inst_3 _inst_5 _inst_6 f _inst_8))
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_surjective IsLocalizedModule.mk'_surjectiveₓ'. -/
 theorem mk'_surjective : Function.Surjective (Function.uncurry <| mk' f : M × S → M') :=
   by
   intro x
@@ -1368,9 +1047,6 @@ theorem mk'_surjective : Function.Surjective (Function.uncurry <| mk' f : M × S
 
 section Algebra
 
-/- warning: is_localized_module.mk_of_algebra -> IsLocalizedModule.mkOfAlgebra is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localized_module.mk_of_algebra IsLocalizedModule.mkOfAlgebraₓ'. -/
 theorem mkOfAlgebra {R S S' : Type _} [CommRing R] [CommRing S] [CommRing S'] [Algebra R S]
     [Algebra R S'] (M : Submonoid R) (f : S →ₐ[R] S') (h₁ : ∀ x ∈ M, IsUnit (algebraMap R S' x))
     (h₂ : ∀ y, ∃ x : S × M, x.2 • y = f x.1) (h₃ : ∀ x, f x = 0 → ∃ m : M, m • x = 0) :

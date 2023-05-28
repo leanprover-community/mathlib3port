@@ -86,12 +86,6 @@ instance preadditiveNatLinear : Linear ℕ C
 #align category_theory.linear.preadditive_nat_linear CategoryTheory.Linear.preadditiveNatLinear
 -/
 
-/- warning: category_theory.linear.preadditive_int_linear -> CategoryTheory.Linear.preadditiveIntLinear is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1], CategoryTheory.Linear.{0, u1, u2} Int Int.semiring C _inst_1 _inst_2
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1], CategoryTheory.Linear.{0, u1, u2} Int Int.instSemiringInt C _inst_1 _inst_2
-Case conversion may be inaccurate. Consider using '#align category_theory.linear.preadditive_int_linear CategoryTheory.Linear.preadditiveIntLinearₓ'. -/
 instance preadditiveIntLinear : Linear ℤ C
     where
   smul_comp' X Y Z r f g := (Preadditive.rightComp X g).map_zsmul f r
@@ -130,12 +124,6 @@ instance inducedCategory : Linear.{w, v} R (InducedCategory C F)
 
 end InducedCategory
 
-/- warning: category_theory.linear.full_subcategory -> CategoryTheory.Linear.fullSubcategory is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u3} C _inst_1] {R : Type.{u1}} [_inst_3 : Semiring.{u1} R] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R _inst_3 C _inst_1 _inst_2] (Z : C -> Prop), CategoryTheory.Linear.{u1, u2, u3} R _inst_3 (CategoryTheory.FullSubcategoryₓ.{u2, u3} C _inst_1 Z) (CategoryTheory.FullSubcategory.category.{u2, u3} C _inst_1 Z) (CategoryTheory.Preadditive.fullSubcategory.{u2, u3} C _inst_1 _inst_2 Z)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u3} C _inst_1] {R : Type.{u1}} [_inst_3 : Semiring.{u1} R] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R _inst_3 C _inst_1 _inst_2] (Z : C -> Prop), CategoryTheory.Linear.{u1, u2, u3} R _inst_3 (CategoryTheory.FullSubcategory.{u3} C Z) (CategoryTheory.FullSubcategory.category.{u2, u3} C _inst_1 Z) (CategoryTheory.Preadditive.fullSubcategory.{u2, u3} C _inst_1 _inst_2 Z)
-Case conversion may be inaccurate. Consider using '#align category_theory.linear.full_subcategory CategoryTheory.Linear.fullSubcategoryₓ'. -/
 instance fullSubcategory (Z : C → Prop) : Linear.{w, v} R (FullSubcategory Z)
     where
   homModule X Y := @Linear.homModule R _ C _ _ _ X.obj Y.obj
@@ -200,18 +188,12 @@ def homCongr (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
 #align category_theory.linear.hom_congr CategoryTheory.Linear.homCongr
 -/
 
-/- warning: category_theory.linear.hom_congr_apply -> CategoryTheory.Linear.homCongr_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.linear.hom_congr_apply CategoryTheory.Linear.homCongr_applyₓ'. -/
 theorem homCongr_apply (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
     [Linear k C] {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) (f : X ⟶ W) :
     homCongr k f₁ f₂ f = (f₁.inv ≫ f) ≫ f₂.hom :=
   rfl
 #align category_theory.linear.hom_congr_apply CategoryTheory.Linear.homCongr_apply
 
-/- warning: category_theory.linear.hom_congr_symm_apply -> CategoryTheory.Linear.homCongr_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.linear.hom_congr_symm_apply CategoryTheory.Linear.homCongr_symm_applyₓ'. -/
 theorem homCongr_symm_apply (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
     [Linear k C] {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) (f : Y ⟶ Z) :
     (homCongr k f₁ f₂).symm f = f₁.hom ≫ f ≫ f₂.inv :=

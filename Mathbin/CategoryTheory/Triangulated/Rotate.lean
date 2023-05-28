@@ -43,12 +43,6 @@ variable [HasShift C ℤ]
 
 variable (X : C)
 
-/- warning: category_theory.pretriangulated.triangle.rotate -> CategoryTheory.Pretriangulated.Triangle.rotate is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle.rotate CategoryTheory.Pretriangulated.Triangle.rotateₓ'. -/
 /-- If you rotate a triangle, you get another triangle.
 Given a triangle of the form:
 ```
@@ -68,12 +62,6 @@ def Triangle.rotate (T : Triangle C) : Triangle C :=
 
 section
 
-/- warning: category_theory.pretriangulated.triangle.inv_rotate -> CategoryTheory.Pretriangulated.Triangle.invRotate is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle.inv_rotate CategoryTheory.Pretriangulated.Triangle.invRotateₓ'. -/
 /-- Given a triangle of the form:
 ```
       f       g       h
@@ -97,12 +85,6 @@ end
 
 variable (C)
 
-/- warning: category_theory.pretriangulated.rotate -> CategoryTheory.Pretriangulated.rotate is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.rotate CategoryTheory.Pretriangulated.rotateₓ'. -/
 /-- Rotating triangles gives an endofunctor on the category of triangles in `C`.
 -/
 @[simps]
@@ -116,12 +98,6 @@ def rotate : Triangle C ⥤ Triangle C
       comm₃' := by dsimp; simp only [comp_neg, neg_comp, ← functor.map_comp, f.comm₁] }
 #align category_theory.pretriangulated.rotate CategoryTheory.Pretriangulated.rotate
 
-/- warning: category_theory.pretriangulated.inv_rotate -> CategoryTheory.Pretriangulated.invRotate is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.inv_rotate CategoryTheory.Pretriangulated.invRotateₓ'. -/
 /-- The inverse rotation of triangles gives an endofunctor on the category of triangles in `C`.
 -/
 @[simps]
@@ -148,12 +124,6 @@ variable [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 attribute [local simp]
   shift_shift_neg' shift_neg_shift' shift_shift_functor_comp_iso_id_add_neg_self_inv_app shift_shift_functor_comp_iso_id_add_neg_self_hom_app
 
-/- warning: category_theory.pretriangulated.rot_comp_inv_rot -> CategoryTheory.Pretriangulated.rotCompInvRot is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] [_inst_4 : forall (n : Int), CategoryTheory.Functor.Additive.{u2, u2, u1, u1} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.addMonoid _inst_3 n)], CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.category.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.id.{u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.comp.{u1, u1, u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.rotate.{u1, u2} C _inst_1 _inst_2 _inst_3) (CategoryTheory.Pretriangulated.invRotate.{u1, u2} C _inst_1 _inst_2 _inst_3))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] [_inst_4 : forall (n : Int), CategoryTheory.Functor.Additive.{u2, u2, u1, u1} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt _inst_3 n)], CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.category.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.id.{u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.comp.{u1, u1, u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.rotate.{u1, u2} C _inst_1 _inst_2 _inst_3) (CategoryTheory.Pretriangulated.invRotate.{u1, u2} C _inst_1 _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.rot_comp_inv_rot CategoryTheory.Pretriangulated.rotCompInvRotₓ'. -/
 /-- The unit isomorphism of the auto-equivalence of categories `triangle_rotation C` of
 `triangle C` given by the rotation of triangles. -/
 @[simps]
@@ -165,12 +135,6 @@ def rotCompInvRot : 𝟭 (Triangle C) ≅ rotate C ⋙ invRotate C :=
     (by tidy)
 #align category_theory.pretriangulated.rot_comp_inv_rot CategoryTheory.Pretriangulated.rotCompInvRot
 
-/- warning: category_theory.pretriangulated.inv_rot_comp_rot -> CategoryTheory.Pretriangulated.invRotCompRot is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] [_inst_4 : forall (n : Int), CategoryTheory.Functor.Additive.{u2, u2, u1, u1} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.addMonoid _inst_3 n)], CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.category.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.comp.{u1, u1, u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.invRotate.{u1, u2} C _inst_1 _inst_2 _inst_3) (CategoryTheory.Pretriangulated.rotate.{u1, u2} C _inst_1 _inst_2 _inst_3)) (CategoryTheory.Functor.id.{u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] [_inst_4 : forall (n : Int), CategoryTheory.Functor.Additive.{u2, u2, u1, u1} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt _inst_3 n)], CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.category.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)) (CategoryTheory.Functor.comp.{u1, u1, u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.invRotate.{u1, u2} C _inst_1 _inst_2 _inst_3) (CategoryTheory.Pretriangulated.rotate.{u1, u2} C _inst_1 _inst_2 _inst_3)) (CategoryTheory.Functor.id.{u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3))
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.inv_rot_comp_rot CategoryTheory.Pretriangulated.invRotCompRotₓ'. -/
 /-- The counit isomorphism of the auto-equivalence of categories `triangle_rotation C` of
 `triangle C` given by the rotation of triangles. -/
 @[simps]
@@ -184,12 +148,6 @@ def invRotCompRot : invRotate C ⋙ rotate C ≅ 𝟭 (Triangle C) :=
 
 variable (C)
 
-/- warning: category_theory.pretriangulated.triangle_rotation -> CategoryTheory.Pretriangulated.triangleRotation is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] [_inst_4 : forall (n : Int), CategoryTheory.Functor.Additive.{u2, u2, u1, u1} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.addMonoid _inst_3 n)], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] [_inst_4 : forall (n : Int), CategoryTheory.Functor.Additive.{u2, u2, u1, u1} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt _inst_3 n)], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Pretriangulated.triangleCategory.{u1, u2} C _inst_1 _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle_rotation CategoryTheory.Pretriangulated.triangleRotationₓ'. -/
 /-- Rotating triangles gives an auto-equivalence on the category of triangles in `C`.
 -/
 @[simps]

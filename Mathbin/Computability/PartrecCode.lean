@@ -53,12 +53,6 @@ namespace Nat.Partrec
 
 open Nat (pair)
 
-/- warning: nat.partrec.rfind' -> Nat.Partrec.rfind' is a dubious translation:
-lean 3 declaration is
-  forall {f : PFun.{0, 0} Nat Nat}, (Nat.Partrec f) -> (Nat.Partrec (Nat.unpaired.{1} (Part.{0} Nat) (fun (a : Nat) (m : Nat) => Part.map.{0, 0} Nat Nat (fun (_x : Nat) => HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) _x m) (Nat.rfind (fun (n : Nat) => Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat Bool (fun (m : Nat) => Decidable.decide (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (f (Nat.pair a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n m))))))))
-but is expected to have type
-  forall {f : PFun.{0, 0} Nat Nat}, (Nat.Partrec f) -> (Nat.Partrec (Nat.unpaired.{1} (Part.{0} Nat) (fun (a : Nat) (m : Nat) => Part.map.{0, 0} Nat Nat (fun (_x : Nat) => HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) _x m) (Nat.rfind (fun (n : Nat) => Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat Bool (fun (m : Nat) => Decidable.decide (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (f (Nat.pair a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n m))))))))
-Case conversion may be inaccurate. Consider using '#align nat.partrec.rfind' Nat.Partrec.rfind'ₓ'. -/
 theorem rfind' {f} (hf : Nat.Partrec f) :
     Nat.Partrec
       (Nat.unpaired fun a m =>
@@ -317,9 +311,6 @@ theorem rfind_prim : Primrec rfind' :=
 #align nat.partrec.code.rfind_prim Nat.Partrec.Code.rfind_prim
 -/
 
-/- warning: nat.partrec.code.rec_prim' -> Nat.Partrec.Code.rec_prim' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align nat.partrec.code.rec_prim' Nat.Partrec.Code.rec_prim'ₓ'. -/
 theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
     (hr : Primrec r) {pr : α → Code × Code × σ × σ → σ} (hpr : Primrec₂ pr)
@@ -415,9 +406,6 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   cases n.bodd <;> cases n.div2.bodd <;> rfl
 #align nat.partrec.code.rec_prim' Nat.Partrec.Code.rec_prim'
 
-/- warning: nat.partrec.code.rec_prim -> Nat.Partrec.Code.rec_prim is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align nat.partrec.code.rec_prim Nat.Partrec.Code.rec_primₓ'. -/
 /-- Recursion on `nat.partrec.code` is primitive recursive. -/
 theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
@@ -524,9 +512,6 @@ section
 
 open Computable
 
-/- warning: nat.partrec.code.rec_computable -> Nat.Partrec.Code.rec_computable is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align nat.partrec.code.rec_computable Nat.Partrec.Code.rec_computableₓ'. -/
 /-- Recursion on `nat.partrec.code` is computable. -/
 theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Computable c)
     {z : α → σ} (hz : Computable z) {s : α → σ} (hs : Computable s) {l : α → σ} (hl : Computable l)
@@ -670,12 +655,6 @@ theorem eval_prec_zero (cf cg : Code) (a : ℕ) : eval (prec cf cg) (pair a 0) =
 #align nat.partrec.code.eval_prec_zero Nat.Partrec.Code.eval_prec_zero
 -/
 
-/- warning: nat.partrec.code.eval_prec_succ -> Nat.Partrec.Code.eval_prec_succ is a dubious translation:
-lean 3 declaration is
-  forall (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (a : Nat) (k : Nat), Eq.{1} (Part.{0} Nat) (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a (Nat.succ k))) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) Nat Nat (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a k)) (fun (ih : Nat) => Nat.Partrec.Code.eval cg (Nat.pair a (Nat.pair k ih))))
-but is expected to have type
-  forall (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (a : Nat) (k : Nat), Eq.{1} (Part.{0} Nat) (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a (Nat.succ k))) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) Nat Nat (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a k)) (fun (ih : Nat) => Nat.Partrec.Code.eval cg (Nat.pair a (Nat.pair k ih))))
-Case conversion may be inaccurate. Consider using '#align nat.partrec.code.eval_prec_succ Nat.Partrec.Code.eval_prec_succₓ'. -/
 /-- Helper lemma for the evaluation of `prec` in the recursive case. -/
 theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
     eval (prec cf cg) (pair a (Nat.succ k)) = do

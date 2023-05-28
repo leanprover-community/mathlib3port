@@ -95,9 +95,6 @@ def homotopyPInftyToId : Homotopy (PInfty : K[X] ⟶ _) (𝟙 _)
 #align algebraic_topology.dold_kan.homotopy_P_infty_to_id AlgebraicTopology.DoldKan.homotopyPInftyToId
 -/
 
-/- warning: algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex -> AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplexₓ'. -/
 /-- The inclusion of the Moore complex in the alternating face map complex
 is an homotopy equivalence -/
 @[simps]

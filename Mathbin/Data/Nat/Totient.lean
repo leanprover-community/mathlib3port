@@ -57,12 +57,6 @@ theorem totient_one : φ 1 = 1 := by simp [totient]
 #align nat.totient_one Nat.totient_one
 -/
 
-/- warning: nat.totient_eq_card_coprime -> Nat.totient_eq_card_coprime is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Nat.totient n) (Finset.card.{0} Nat (Finset.filter.{0} Nat (Nat.coprime n) (fun (a : Nat) => Nat.coprime.decidable n a) (Finset.range n)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Nat.totient n) (Finset.card.{0} Nat (Finset.filter.{0} Nat (Nat.coprime n) (fun (a : Nat) => Nat.instDecidableCoprime_1 n a) (Finset.range n)))
-Case conversion may be inaccurate. Consider using '#align nat.totient_eq_card_coprime Nat.totient_eq_card_coprimeₓ'. -/
 theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filterₓ n.coprime).card :=
   rfl
 #align nat.totient_eq_card_coprime Nat.totient_eq_card_coprime
@@ -100,12 +94,6 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
 #align nat.totient_pos Nat.totient_pos
 -/
 
-/- warning: nat.filter_coprime_Ico_eq_totient -> Nat.filter_coprime_Ico_eq_totient is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (n : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat (Nat.coprime a) (fun (a_1 : Nat) => Nat.coprime.decidable a a_1) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a)))) (Nat.totient a)
-but is expected to have type
-  forall (a : Nat) (n : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat (Nat.coprime a) (fun (a_1 : Nat) => Nat.instDecidableCoprime_1 a a_1) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a)))) (Nat.totient a)
-Case conversion may be inaccurate. Consider using '#align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_Ico_eq_totientₓ'. -/
 theorem filter_coprime_Ico_eq_totient (a n : ℕ) :
     ((Ico n (n + a)).filterₓ (coprime a)).card = totient a :=
   by
@@ -113,12 +101,6 @@ theorem filter_coprime_Ico_eq_totient (a n : ℕ) :
   exact periodic_coprime a
 #align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_Ico_eq_totient
 
-/- warning: nat.Ico_filter_coprime_le -> Nat.Ico_filter_coprime_le is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} (k : Nat) (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{0} Nat (Finset.filter.{0} Nat (Nat.coprime a) (fun (a_1 : Nat) => Nat.coprime.decidable a a_1) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k n)))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.totient a) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {a : Nat} (k : Nat) (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (LE.le.{0} Nat instLENat (Finset.card.{0} Nat (Finset.filter.{0} Nat (Nat.coprime a) (fun (a_1 : Nat) => Nat.instDecidableCoprime_1 a a_1) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k n)))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.totient a) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align nat.Ico_filter_coprime_le Nat.Ico_filter_coprime_leₓ'. -/
 theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
     ((Ico k (k + n)).filterₓ (coprime a)).card ≤ totient a * (n / a + 1) :=
   by
@@ -152,12 +134,6 @@ theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
 
 open ZMod
 
-/- warning: zmod.card_units_eq_totient -> ZMod.card_units_eq_totient is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) [_inst_1 : NeZero.{0} Nat Nat.hasZero n] [_inst_2 : Fintype.{0} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))], Eq.{1} Nat (Fintype.card.{0} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) _inst_2) (Nat.totient n)
-but is expected to have type
-  forall (n : Nat) [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] [_inst_2 : Fintype.{0} (Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))], Eq.{1} Nat (Fintype.card.{0} (Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) _inst_2) (Nat.totient n)
-Case conversion may be inaccurate. Consider using '#align zmod.card_units_eq_totient ZMod.card_units_eq_totientₓ'. -/
 /-- Note this takes an explicit `fintype ((zmod n)ˣ)` argument to avoid trouble with instance
 diamonds. -/
 @[simp]
@@ -200,12 +176,6 @@ theorem totient_mul {m n : ℕ} (h : m.coprime n) : φ (m * n) = φ m * φ n :=
 #align nat.totient_mul Nat.totient_mul
 -/
 
-/- warning: nat.totient_div_of_dvd -> Nat.totient_div_of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {d : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd d n) -> (Eq.{1} Nat (Nat.totient (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n d)) (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (k : Nat) => Eq.{1} Nat (Nat.gcd n k) d) (fun (a : Nat) => Nat.decidableEq (Nat.gcd n a) d) (Finset.range n))))
-but is expected to have type
-  forall {n : Nat} {d : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat d n) -> (Eq.{1} Nat (Nat.totient (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n d)) (Finset.card.{0} Nat (Finset.filter.{0} Nat (fun (k : Nat) => Eq.{1} Nat (Nat.gcd n k) d) (fun (a : Nat) => instDecidableEqNat (Nat.gcd n a) d) (Finset.range n))))
-Case conversion may be inaccurate. Consider using '#align nat.totient_div_of_dvd Nat.totient_div_of_dvdₓ'. -/
 /-- For `d ∣ n`, the totient of `n/d` equals the number of values `k < n` such that `gcd n k = d` -/
 theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) :
     φ (n / d) = (filter (fun k : ℕ => n.gcd k = d) (range n)).card :=
@@ -241,12 +211,6 @@ theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n :=
 #align nat.sum_totient Nat.sum_totient
 -/
 
-/- warning: nat.sum_totient' -> Nat.sum_totient' is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd _x n) (fun (a : Nat) => Nat.decidableDvd a n) (Finset.range (Nat.succ n))) (fun (m : Nat) => Nat.totient m)) n
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat _x n) (fun (a : Nat) => Nat.decidable_dvd a n) (Finset.range (Nat.succ n))) (fun (m : Nat) => Nat.totient m)) n
-Case conversion may be inaccurate. Consider using '#align nat.sum_totient' Nat.sum_totient'ₓ'. -/
 theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filterₓ (· ∣ n), φ m) = n :=
   by
   convert sum_totient _ using 1
@@ -321,12 +285,6 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
 #align nat.totient_eq_iff_prime Nat.totient_eq_iff_prime
 -/
 
-/- warning: nat.card_units_zmod_lt_sub_one -> Nat.card_units_zmod_lt_sub_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) p) -> (forall [_inst_1 : Fintype.{0} (Units.{0} (ZMod p) (Ring.toMonoid.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))], LE.le.{0} Nat Nat.hasLe (Fintype.card.{0} (Units.{0} (ZMod p) (Ring.toMonoid.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))) _inst_1) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall {p : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) p) -> (forall [_inst_1 : Fintype.{0} (Units.{0} (ZMod p) (MonoidWithZero.toMonoid.{0} (ZMod p) (Semiring.toMonoidWithZero.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p))))))], LE.le.{0} Nat instLENat (Fintype.card.{0} (Units.{0} (ZMod p) (MonoidWithZero.toMonoid.{0} (ZMod p) (Semiring.toMonoidWithZero.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p)))))) _inst_1) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align nat.card_units_zmod_lt_sub_one Nat.card_units_zmod_lt_sub_oneₓ'. -/
 theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (ZMod p)ˣ] :
     Fintype.card (ZMod p)ˣ ≤ p - 1 :=
   by
@@ -335,12 +293,6 @@ theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (ZMod p)ˣ] :
   exact Nat.le_pred_of_lt (Nat.totient_lt p hp)
 #align nat.card_units_zmod_lt_sub_one Nat.card_units_zmod_lt_sub_one
 
-/- warning: nat.prime_iff_card_units -> Nat.prime_iff_card_units is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fintype.{0} (Units.{0} (ZMod p) (Ring.toMonoid.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))], Iff (Nat.Prime p) (Eq.{1} Nat (Fintype.card.{0} (Units.{0} (ZMod p) (Ring.toMonoid.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))) _inst_1) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fintype.{0} (Units.{0} (ZMod p) (MonoidWithZero.toMonoid.{0} (ZMod p) (Semiring.toMonoidWithZero.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p))))))], Iff (Nat.Prime p) (Eq.{1} Nat (Fintype.card.{0} (Units.{0} (ZMod p) (MonoidWithZero.toMonoid.{0} (ZMod p) (Semiring.toMonoidWithZero.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p)))))) _inst_1) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align nat.prime_iff_card_units Nat.prime_iff_card_unitsₓ'. -/
 theorem prime_iff_card_units (p : ℕ) [Fintype (ZMod p)ˣ] :
     p.Prime ↔ Fintype.card (ZMod p)ˣ = p - 1 :=
   by
@@ -389,12 +341,6 @@ theorem totient_eq_prod_factorization {n : ℕ} (hn : n ≠ 0) :
 #align nat.totient_eq_prod_factorization Nat.totient_eq_prod_factorization
 -/
 
-/- warning: nat.totient_mul_prod_factors -> Nat.totient_mul_prod_factors is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.totient n) (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => p))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) n (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.totient n) (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => p))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align nat.totient_mul_prod_factors Nat.totient_mul_prod_factorsₓ'. -/
 /-- Euler's product formula for the totient function. -/
 theorem totient_mul_prod_factors (n : ℕ) :
     (φ n * ∏ p in n.factors.toFinset, p) = n * ∏ p in n.factors.toFinset, p - 1 :=
@@ -408,12 +354,6 @@ theorem totient_mul_prod_factors (n : ℕ) :
   rw [mul_comm, ← mul_assoc, ← pow_succ, Nat.sub_add_cancel hp]
 #align nat.totient_mul_prod_factors Nat.totient_mul_prod_factors
 
-/- warning: nat.totient_eq_div_factors_mul -> Nat.totient_eq_div_factors_mul is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Nat.totient n) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => p))) (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Nat.totient n) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => p))) (Finset.prod.{0, 0} Nat Nat Nat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align nat.totient_eq_div_factors_mul Nat.totient_eq_div_factors_mulₓ'. -/
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_div_factors_mul (n : ℕ) :
     φ n = (n / ∏ p in n.factors.toFinset, p) * ∏ p in n.factors.toFinset, p - 1 :=
@@ -423,12 +363,6 @@ theorem totient_eq_div_factors_mul (n : ℕ) :
   simpa [prod_factorization_eq_prod_factors] using prod_pos fun p => pos_of_mem_factorization
 #align nat.totient_eq_div_factors_mul Nat.totient_eq_div_factors_mul
 
-/- warning: nat.totient_eq_mul_prod_factors -> Nat.totient_eq_mul_prod_factors is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.totient n)) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n) (Finset.prod.{0, 0} Rat Nat Rat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (fun (p : Nat) => HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (Inv.inv.{0} Rat Rat.hasInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) p)))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Rat (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.totient n)) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (Finset.prod.{0, 0} Rat Nat Rat.commMonoid (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (fun (p : Nat) => HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (Inv.inv.{0} Rat Rat.instInvRat (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p)))))
-Case conversion may be inaccurate. Consider using '#align nat.totient_eq_mul_prod_factors Nat.totient_eq_mul_prod_factorsₓ'. -/
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_mul_prod_factors (n : ℕ) : (φ n : ℚ) = n * ∏ p in n.factors.toFinset, 1 - p⁻¹ :=
   by

@@ -108,50 +108,20 @@ instance (priority := 70) : Div R :=
 instance (priority := 70) : Mod R :=
   ⟨EuclideanDomain.remainder⟩
 
-/- warning: euclidean_domain.div_add_mod -> EuclideanDomain.div_add_mod is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) (b : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) b (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) a b)) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) a b)) a
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) (b : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) b (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) a b)) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) a b)) a
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.div_add_mod EuclideanDomain.div_add_modₓ'. -/
 theorem div_add_mod (a b : R) : b * (a / b) + a % b = a :=
   EuclideanDomain.quotient_mul_add_remainder_eq _ _
 #align euclidean_domain.div_add_mod EuclideanDomain.div_add_mod
 
-/- warning: euclidean_domain.mod_add_div -> EuclideanDomain.mod_add_div is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) (b : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) a b) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) b (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) a b))) a
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) (b : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) a b) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) b (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) a b))) a
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.mod_add_div EuclideanDomain.mod_add_divₓ'. -/
 theorem mod_add_div (a b : R) : a % b + b * (a / b) = a :=
   (add_comm _ _).trans (div_add_mod _ _)
 #align euclidean_domain.mod_add_div EuclideanDomain.mod_add_div
 
-/- warning: euclidean_domain.mod_add_div' -> EuclideanDomain.mod_add_div' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (m : R) (k : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) m k) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) m k) k)) m
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (m : R) (k : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) m k) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) m k) k)) m
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.mod_add_div' EuclideanDomain.mod_add_div'ₓ'. -/
 theorem mod_add_div' (m k : R) : m % k + m / k * k = m := by rw [mul_comm]; exact mod_add_div _ _
 #align euclidean_domain.mod_add_div' EuclideanDomain.mod_add_div'
 
-/- warning: euclidean_domain.div_add_mod' -> EuclideanDomain.div_add_mod' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (m : R) (k : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) m k) k) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) m k)) m
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (m : R) (k : R), Eq.{succ u1} R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) m k) k) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) m k)) m
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.div_add_mod' EuclideanDomain.div_add_mod'ₓ'. -/
 theorem div_add_mod' (m k : R) : m / k * k + m % k = m := by rw [mul_comm]; exact div_add_mod _ _
 #align euclidean_domain.div_add_mod' EuclideanDomain.div_add_mod'
 
-/- warning: euclidean_domain.mod_eq_sub_mul_div -> EuclideanDomain.mod_eq_sub_mul_div is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_2 : EuclideanDomain.{u1} R] (a : R) (b : R), Eq.{succ u1} R (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_2)) a b) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_2)))))))) a (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_2))))) b (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_2)) a b)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_2 : EuclideanDomain.{u1} R] (a : R) (b : R), Eq.{succ u1} R (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_2)) a b) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_2)))) a (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_2)))))) b (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_2)) a b)))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.mod_eq_sub_mul_div EuclideanDomain.mod_eq_sub_mul_divₓ'. -/
 theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = a - b * (a / b) :=
   calc
     a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel' _ _).symm
@@ -159,64 +129,28 @@ theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = 
     
 #align euclidean_domain.mod_eq_sub_mul_div EuclideanDomain.mod_eq_sub_mul_div
 
-/- warning: euclidean_domain.mod_lt -> EuclideanDomain.mod_lt is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) {b : R}, (Ne.{succ u1} R b (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) -> (EuclideanDomain.r.{u1} R _inst_1 (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) a b) b)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) {b : R}, (Ne.{succ u1} R b (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) -> (EuclideanDomain.r.{u1} R _inst_1 (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) a b) b)
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.mod_lt EuclideanDomain.mod_ltₓ'. -/
 theorem mod_lt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
   EuclideanDomain.remainder_lt
 #align euclidean_domain.mod_lt EuclideanDomain.mod_lt
 
-/- warning: euclidean_domain.mul_right_not_lt -> EuclideanDomain.mul_right_not_lt is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] {a : R} (b : R), (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) -> (Not (EuclideanDomain.r.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) a b) b))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] {a : R} (b : R), (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) -> (Not (EuclideanDomain.r.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) a b) b))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.mul_right_not_lt EuclideanDomain.mul_right_not_ltₓ'. -/
 theorem mul_right_not_lt {a : R} (b) (h : a ≠ 0) : ¬a * b ≺ b := by rw [mul_comm];
   exact mul_left_not_lt b h
 #align euclidean_domain.mul_right_not_lt EuclideanDomain.mul_right_not_lt
 
-/- warning: euclidean_domain.mod_zero -> EuclideanDomain.mod_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), Eq.{succ u1} R (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) a
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), Eq.{succ u1} R (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) a
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.mod_zero EuclideanDomain.mod_zeroₓ'. -/
 @[simp]
 theorem mod_zero (a : R) : a % 0 = a := by
   simpa only [MulZeroClass.zero_mul, zero_add] using div_add_mod a 0
 #align euclidean_domain.mod_zero EuclideanDomain.mod_zero
 
-/- warning: euclidean_domain.lt_one -> EuclideanDomain.lt_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), (EuclideanDomain.r.{u1} R _inst_1 a (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) -> (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), (EuclideanDomain.r.{u1} R _inst_1 a (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) -> (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.lt_one EuclideanDomain.lt_oneₓ'. -/
 theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 :=
   haveI := Classical.dec
   not_imp_not.1 fun h => by simpa only [one_mul] using mul_left_not_lt 1 h
 #align euclidean_domain.lt_one EuclideanDomain.lt_one
 
-/- warning: euclidean_domain.val_dvd_le -> EuclideanDomain.val_dvd_le is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) (b : R), (Dvd.Dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (NonUnitalSemiring.toSemigroupWithZero.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) b a) -> (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) -> (Not (EuclideanDomain.r.{u1} R _inst_1 a b))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R) (b : R), (Dvd.dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (NonUnitalSemiring.toSemigroupWithZero.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) b a) -> (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) -> (Not (EuclideanDomain.r.{u1} R _inst_1 a b))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.val_dvd_le EuclideanDomain.val_dvd_leₓ'. -/
 theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
   | _, b, ⟨d, rfl⟩, ha => mul_left_not_lt b (mt (by rintro rfl; exact MulZeroClass.mul_zero _) ha)
 #align euclidean_domain.val_dvd_le EuclideanDomain.val_dvd_le
 
-/- warning: euclidean_domain.div_zero -> EuclideanDomain.div_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), Eq.{succ u1} R (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), Eq.{succ u1} R (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.div_zero EuclideanDomain.div_zeroₓ'. -/
 @[simp]
 theorem div_zero (a : R) : a / 0 = 0 :=
   EuclideanDomain.quotient_zero a
@@ -226,12 +160,6 @@ section
 
 open Classical
 
-/- warning: euclidean_domain.gcd.induction -> EuclideanDomain.GCD.induction is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] {P : R -> R -> Prop} (a : R) (b : R), (forall (x : R), P (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) x) -> (forall (a : R) (b : R), (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) -> (P (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) b a) a) -> (P a b)) -> (P a b)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] {P : R -> R -> Prop} (a : R) (b : R), (forall (x : R), P (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) x) -> (forall (a : R) (b : R), (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) -> (P (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) b a) a) -> (P a b)) -> (P a b)
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd.induction EuclideanDomain.GCD.inductionₓ'. -/
 @[elab_as_elim]
 theorem GCD.induction {P : R → R → Prop} :
     ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
@@ -262,12 +190,6 @@ def gcd : R → R → R
 #align euclidean_domain.gcd EuclideanDomain.gcd
 -/
 
-/- warning: euclidean_domain.gcd_zero_left -> EuclideanDomain.gcd_zero_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (a : R), Eq.{succ u1} R (EuclideanDomain.gcd.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) a) a
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (a : R), Eq.{succ u1} R (EuclideanDomain.gcd.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) a) a
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd_zero_left EuclideanDomain.gcd_zero_leftₓ'. -/
 @[simp]
 theorem gcd_zero_left (a : R) : gcd 0 a = a := by rw [gcd]; exact if_pos rfl
 #align euclidean_domain.gcd_zero_left EuclideanDomain.gcd_zero_left
@@ -293,23 +215,11 @@ def xgcdAux : R → R → R → R → R → R → R × R × R
 #align euclidean_domain.xgcd_aux EuclideanDomain.xgcdAux
 -/
 
-/- warning: euclidean_domain.xgcd_zero_left -> EuclideanDomain.xgcd_zero_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {s : R} {t : R} {r' : R} {s' : R} {t' : R}, Eq.{succ u1} (Prod.{u1, u1} R (Prod.{u1, u1} R R)) (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) s t r' s' t') (Prod.mk.{u1, u1} R (Prod.{u1, u1} R R) r' (Prod.mk.{u1, u1} R R s' t'))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {s : R} {t : R} {r' : R} {s' : R} {t' : R}, Eq.{succ u1} (Prod.{u1, u1} R (Prod.{u1, u1} R R)) (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) s t r' s' t') (Prod.mk.{u1, u1} R (Prod.{u1, u1} R R) r' (Prod.mk.{u1, u1} R R s' t'))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.xgcd_zero_left EuclideanDomain.xgcd_zero_leftₓ'. -/
 @[simp]
 theorem xgcd_zero_left {s t r' s' t' : R} : xgcdAux 0 s t r' s' t' = (r', s', t') := by
   unfold xgcd_aux; exact if_pos rfl
 #align euclidean_domain.xgcd_zero_left EuclideanDomain.xgcd_zero_left
 
-/- warning: euclidean_domain.xgcd_aux_rec -> EuclideanDomain.xgcdAux_rec is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {r : R} {s : R} {t : R} {r' : R} {s' : R} {t' : R}, (Ne.{succ u1} R r (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))) -> (Eq.{succ u1} (Prod.{u1, u1} R (Prod.{u1, u1} R R)) (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) r s t r' s' t') (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.hasMod.{u1} R _inst_1)) r' r) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))) s' (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) r' r) s)) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))) t' (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) r' r) t)) r s t))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {r : R} {s : R} {t : R} {r' : R} {s' : R} {t' : R}, (Ne.{succ u1} R r (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) -> (Eq.{succ u1} (Prod.{u1, u1} R (Prod.{u1, u1} R R)) (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) r s t r' s' t') (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) r' r) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))) s' (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) r' r) s)) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))) t' (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) r' r) t)) r s t))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.xgcd_aux_rec EuclideanDomain.xgcdAux_recₓ'. -/
 theorem xgcdAux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
   conv =>
@@ -340,22 +250,10 @@ def gcdB (x y : R) : R :=
 #align euclidean_domain.gcd_b EuclideanDomain.gcdB
 -/
 
-/- warning: euclidean_domain.gcd_a_zero_left -> EuclideanDomain.gcdA_zero_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {s : R}, Eq.{succ u1} R (EuclideanDomain.gcdA.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) s) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {s : R}, Eq.{succ u1} R (EuclideanDomain.gcdA.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) s) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd_a_zero_left EuclideanDomain.gcdA_zero_leftₓ'. -/
 @[simp]
 theorem gcdA_zero_left {s : R} : gcdA 0 s = 0 := by unfold gcd_a; rw [xgcd, xgcd_zero_left]
 #align euclidean_domain.gcd_a_zero_left EuclideanDomain.gcdA_zero_left
 
-/- warning: euclidean_domain.gcd_b_zero_left -> EuclideanDomain.gcdB_zero_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {s : R}, Eq.{succ u1} R (EuclideanDomain.gcdB.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) s) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] {s : R}, Eq.{succ u1} R (EuclideanDomain.gcdB.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) s) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd_b_zero_left EuclideanDomain.gcdB_zero_leftₓ'. -/
 @[simp]
 theorem gcdB_zero_left {s : R} : gcdB 0 s = 1 := by unfold gcd_b; rw [xgcd, xgcd_zero_left]
 #align euclidean_domain.gcd_b_zero_left EuclideanDomain.gcdB_zero_left

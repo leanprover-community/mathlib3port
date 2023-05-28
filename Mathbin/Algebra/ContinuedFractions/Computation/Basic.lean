@@ -123,12 +123,6 @@ instance coe : Coe (IntFractPair K) (IntFractPair β) :=
 #align generalized_continued_fraction.int_fract_pair.has_coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe
 -/
 
-/- warning: generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair -> GeneralizedContinuedFraction.IntFractPair.coe_to_intFractPair is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Coe.{succ u_1, succ u_2} K β] {b : Int} {fr : K}, Eq.{succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_2} β) ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (HasLiftT.mk.{succ u_1, succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (CoeTCₓ.coe.{succ u_1, succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (coeBase.{succ u_1, succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (GeneralizedContinuedFraction.IntFractPair.coe.{u_1, u_2} K β _inst_1)))) (GeneralizedContinuedFraction.IntFractPair.mk.{u_1} K b fr)) (GeneralizedContinuedFraction.IntFractPair.mk.{u_2} β b ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) K β (HasLiftT.mk.{succ u_1, succ u_2} K β (CoeTCₓ.coe.{succ u_1, succ u_2} K β (coeBase.{succ u_1, succ u_2} K β _inst_1))) fr))
-but is expected to have type
-  forall {K : Type.{u_1}} {β : Type.{u_1}} [_inst_1 : Coe.{succ u_1, succ u_1} K β] {b : Int} {fr : K}, Eq.{succ u_1} (GeneralizedContinuedFraction.IntFractPair.{u_1} β) (GeneralizedContinuedFraction.IntFractPair.coeFn.{u_1, u_1} K β _inst_1 (GeneralizedContinuedFraction.IntFractPair.mk.{u_1} K b fr)) (GeneralizedContinuedFraction.IntFractPair.mk.{u_1} β b (Coe.coe.{succ u_1, succ u_1} K β _inst_1 fr))
-Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe_to_intFractPairₓ'. -/
 @[simp, norm_cast]
 theorem coe_to_intFractPair {b : ℤ} {fr : K} :
     (↑(IntFractPair.mk b fr) : IntFractPair β) = IntFractPair.mk b (↑fr : β) :=

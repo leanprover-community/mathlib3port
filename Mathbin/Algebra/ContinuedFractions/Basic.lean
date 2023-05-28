@@ -94,12 +94,6 @@ instance hasCoeToGeneralizedContinuedFractionPair : Coe (Pair α) (Pair β) :=
   ⟨map coe⟩
 #align generalized_continued_fraction.pair.has_coe_to_generalized_continued_fraction_pair GeneralizedContinuedFraction.Pair.hasCoeToGeneralizedContinuedFractionPair
 
-/- warning: generalized_continued_fraction.pair.coe_to_generalized_continued_fraction_pair -> GeneralizedContinuedFraction.Pair.coe_toPair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Coe.{succ u_1, succ u_2} α β] {a : α} {b : α}, Eq.{succ u_2} (GeneralizedContinuedFraction.Pair.{u_2} β) ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (HasLiftT.mk.{succ u_1, succ u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (CoeTCₓ.coe.{succ u_1, succ u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (coeBase.{succ u_1, succ u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (GeneralizedContinuedFraction.Pair.hasCoeToGeneralizedContinuedFractionPair.{u_1, u_2} α β _inst_1)))) (GeneralizedContinuedFraction.Pair.mk.{u_1} α a b)) (GeneralizedContinuedFraction.Pair.mk.{u_2} β ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) α β (HasLiftT.mk.{succ u_1, succ u_2} α β (CoeTCₓ.coe.{succ u_1, succ u_2} α β (coeBase.{succ u_1, succ u_2} α β _inst_1))) a) ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) α β (HasLiftT.mk.{succ u_1, succ u_2} α β (CoeTCₓ.coe.{succ u_1, succ u_2} α β (coeBase.{succ u_1, succ u_2} α β _inst_1))) b))
-but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}} [_inst_1 : Coe.{succ u_1, succ u_1} α β] {a : α} {b : α}, Eq.{succ u_1} (GeneralizedContinuedFraction.Pair.{u_1} β) (GeneralizedContinuedFraction.Pair.coeFn.{u_1, u_1} α β _inst_1 (GeneralizedContinuedFraction.Pair.mk.{u_1} α a b)) (GeneralizedContinuedFraction.Pair.mk.{u_1} β (Coe.coe.{succ u_1, succ u_1} α β _inst_1 a) (Coe.coe.{succ u_1, succ u_1} α β _inst_1 b))
-Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.pair.coe_to_generalized_continued_fraction_pair GeneralizedContinuedFraction.Pair.coe_toPairₓ'. -/
 @[simp, norm_cast]
 theorem coe_toPair {a b : α} : (↑(Pair.mk a b) : Pair β) = Pair.mk (a : β) (b : β) :=
   rfl
@@ -195,12 +189,6 @@ instance hasCoeToGeneralizedContinuedFraction :
   ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩⟩
 #align generalized_continued_fraction.has_coe_to_generalized_continued_fraction GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
-/- warning: generalized_continued_fraction.coe_to_generalized_continued_fraction -> GeneralizedContinuedFraction.coe_toGeneralizedContinuedFraction is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Coe.{succ u_1, succ u_2} α β] {g : GeneralizedContinuedFraction.{u_1} α}, Eq.{succ u_2} (GeneralizedContinuedFraction.{u_2} β) ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) (GeneralizedContinuedFraction.{u_1} α) (GeneralizedContinuedFraction.{u_2} β) (HasLiftT.mk.{succ u_1, succ u_2} (GeneralizedContinuedFraction.{u_1} α) (GeneralizedContinuedFraction.{u_2} β) (CoeTCₓ.coe.{succ u_1, succ u_2} (GeneralizedContinuedFraction.{u_1} α) (GeneralizedContinuedFraction.{u_2} β) (coeBase.{succ u_1, succ u_2} (GeneralizedContinuedFraction.{u_1} α) (GeneralizedContinuedFraction.{u_2} β) (GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction.{u_1, u_2} α β _inst_1)))) g) (GeneralizedContinuedFraction.mk.{u_2} β ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) α β (HasLiftT.mk.{succ u_1, succ u_2} α β (CoeTCₓ.coe.{succ u_1, succ u_2} α β (coeBase.{succ u_1, succ u_2} α β _inst_1))) (GeneralizedContinuedFraction.h.{u_1} α g)) (Stream'.Seq.map.{u_1, u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (HasLiftT.mk.{succ u_1, succ u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (CoeTCₓ.coe.{succ u_1, succ u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (coeBase.{succ u_1, succ u_2} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_2} β) (GeneralizedContinuedFraction.Pair.hasCoeToGeneralizedContinuedFractionPair.{u_1, u_2} α β _inst_1))))) (GeneralizedContinuedFraction.s.{u_1} α g)))
-but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}} [_inst_1 : Coe.{succ u_1, succ u_1} α β] {g : GeneralizedContinuedFraction.{u_1} α}, Eq.{succ u_1} (GeneralizedContinuedFraction.{u_1} β) (GeneralizedContinuedFraction.coeFn.{u_1} α β _inst_1 g) (GeneralizedContinuedFraction.mk.{u_1} β (Coe.coe.{succ u_1, succ u_1} α β _inst_1 (GeneralizedContinuedFraction.h.{u_1} α g)) (Stream'.Seq.map.{u_1, u_1} (GeneralizedContinuedFraction.Pair.{u_1} α) (GeneralizedContinuedFraction.Pair.{u_1} β) (GeneralizedContinuedFraction.Pair.coeFn.{u_1, u_1} α β _inst_1) (GeneralizedContinuedFraction.s.{u_1} α g)))
-Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_toGeneralizedContinuedFractionₓ'. -/
 @[simp, norm_cast]
 theorem coe_toGeneralizedContinuedFraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
@@ -274,11 +262,6 @@ instance hasCoeToGeneralizedContinuedFraction :
 #align simple_continued_fraction.has_coe_to_generalized_continued_fraction SimpleContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 /- warning: simple_continued_fraction.coe_to_generalized_continued_fraction clashes with [anonymous] -> [anonymous]
-warning: simple_continued_fraction.coe_to_generalized_continued_fraction -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] {s : SimpleContinuedFraction.{u_1} α _inst_1}, Eq.{succ u_1} (GeneralizedContinuedFraction.{u_1} α) ((fun (a : Sort.{max 1 (succ u_1)}) (b : Type.{u_1}) [self : HasLiftT.{max 1 (succ u_1), succ u_1} a b] => self.0) (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (HasLiftT.mk.{max 1 (succ u_1), succ u_1} (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (CoeTCₓ.coe.{max 1 (succ u_1), succ u_1} (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (coeBase.{max 1 (succ u_1), succ u_1} (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (SimpleContinuedFraction.hasCoeToGeneralizedContinuedFraction.{u_1} α _inst_1)))) s) (Subtype.val.{succ u_1} (GeneralizedContinuedFraction.{u_1} α) (fun (g : GeneralizedContinuedFraction.{u_1} α) => GeneralizedContinuedFraction.IsSimpleContinuedFraction.{u_1} α g _inst_1) s)
-but is expected to have type
-  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align simple_continued_fraction.coe_to_generalized_continued_fraction [anonymous]ₓ'. -/
 theorem [anonymous] {s : SimpleContinuedFraction α} :
     (↑s : GeneralizedContinuedFraction α) = s.val :=
@@ -336,11 +319,6 @@ instance hasCoeToSimpleContinuedFraction : Coe (ContinuedFraction α) (SimpleCon
 #align continued_fraction.has_coe_to_simple_continued_fraction ContinuedFraction.hasCoeToSimpleContinuedFraction
 
 /- warning: continued_fraction.coe_to_simple_continued_fraction clashes with [anonymous] -> [anonymous]
-warning: continued_fraction.coe_to_simple_continued_fraction -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] [_inst_2 : Zero.{u_1} α] [_inst_3 : LT.{u_1} α] {c : ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3}, Eq.{max 1 (succ u_1)} (SimpleContinuedFraction.{u_1} α _inst_1) ((fun (a : Sort.{max 1 (succ u_1)}) (b : Sort.{max 1 (succ u_1)}) [self : HasLiftT.{max 1 (succ u_1), max 1 (succ u_1)} a b] => self.0) (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (SimpleContinuedFraction.{u_1} α _inst_1) (HasLiftT.mk.{max 1 (succ u_1), max 1 (succ u_1)} (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (SimpleContinuedFraction.{u_1} α _inst_1) (CoeTCₓ.coe.{max 1 (succ u_1), max 1 (succ u_1)} (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (SimpleContinuedFraction.{u_1} α _inst_1) (coeBase.{max 1 (succ u_1), max 1 (succ u_1)} (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (SimpleContinuedFraction.{u_1} α _inst_1) (ContinuedFraction.hasCoeToSimpleContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3)))) c) (Subtype.val.{max 1 (succ u_1)} (SimpleContinuedFraction.{u_1} α _inst_1) (fun (s : SimpleContinuedFraction.{u_1} α _inst_1) => SimpleContinuedFraction.IsContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3 s) c)
-but is expected to have type
-  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align continued_fraction.coe_to_simple_continued_fraction [anonymous]ₓ'. -/
 theorem [anonymous] {c : ContinuedFraction α} : (↑c : SimpleContinuedFraction α) = c.val :=
   rfl
@@ -353,11 +331,6 @@ instance hasCoeToGeneralizedContinuedFraction :
 #align continued_fraction.has_coe_to_generalized_continued_fraction ContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 /- warning: continued_fraction.coe_to_generalized_continued_fraction clashes with [anonymous] -> [anonymous]
-warning: continued_fraction.coe_to_generalized_continued_fraction -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] [_inst_2 : Zero.{u_1} α] [_inst_3 : LT.{u_1} α] {c : ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3}, Eq.{succ u_1} (GeneralizedContinuedFraction.{u_1} α) ((fun (a : Sort.{max 1 (succ u_1)}) (b : Type.{u_1}) [self : HasLiftT.{max 1 (succ u_1), succ u_1} a b] => self.0) (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (GeneralizedContinuedFraction.{u_1} α) (HasLiftT.mk.{max 1 (succ u_1), succ u_1} (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (GeneralizedContinuedFraction.{u_1} α) (CoeTCₓ.coe.{max 1 (succ u_1), succ u_1} (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (GeneralizedContinuedFraction.{u_1} α) (coeBase.{max 1 (succ u_1), succ u_1} (ContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3) (GeneralizedContinuedFraction.{u_1} α) (ContinuedFraction.hasCoeToGeneralizedContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3)))) c) ((fun (a : Sort.{max 1 (succ u_1)}) (b : Type.{u_1}) [self : HasLiftT.{max 1 (succ u_1), succ u_1} a b] => self.0) (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (HasLiftT.mk.{max 1 (succ u_1), succ u_1} (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (CoeTCₓ.coe.{max 1 (succ u_1), succ u_1} (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (coeBase.{max 1 (succ u_1), succ u_1} (SimpleContinuedFraction.{u_1} α _inst_1) (GeneralizedContinuedFraction.{u_1} α) (SimpleContinuedFraction.hasCoeToGeneralizedContinuedFraction.{u_1} α _inst_1)))) (Subtype.val.{max 1 (succ u_1)} (SimpleContinuedFraction.{u_1} α _inst_1) (fun (s : SimpleContinuedFraction.{u_1} α _inst_1) => SimpleContinuedFraction.IsContinuedFraction.{u_1} α _inst_1 _inst_2 _inst_3 s) c))
-but is expected to have type
-  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align continued_fraction.coe_to_generalized_continued_fraction [anonymous]ₓ'. -/
 theorem [anonymous] {c : ContinuedFraction α} : (↑c : GeneralizedContinuedFraction α) = c.val :=
   rfl
@@ -495,12 +468,6 @@ protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
 #align generalized_continued_fraction.ext_iff GeneralizedContinuedFraction.ext_iff
 -/
 
-/- warning: generalized_continued_fraction.ext -> GeneralizedContinuedFraction.ext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {g : GeneralizedContinuedFraction.{u1} α} {g' : GeneralizedContinuedFraction.{u1} α}, (And (Eq.{succ u1} α (GeneralizedContinuedFraction.h.{u1} α g) (GeneralizedContinuedFraction.h.{u1} α g')) (Eq.{succ u1} (Stream'.Seq.{u1} (GeneralizedContinuedFraction.Pair.{u1} α)) (GeneralizedContinuedFraction.s.{u1} α g) (GeneralizedContinuedFraction.s.{u1} α g'))) -> (Eq.{succ u1} (GeneralizedContinuedFraction.{u1} α) g g')
-but is expected to have type
-  forall {α : Type.{u1}} (g : GeneralizedContinuedFraction.{u1} α) (g' : GeneralizedContinuedFraction.{u1} α), (Eq.{succ u1} α (GeneralizedContinuedFraction.h.{u1} α g) (GeneralizedContinuedFraction.h.{u1} α g')) -> (Eq.{succ u1} (Stream'.Seq.{u1} (GeneralizedContinuedFraction.Pair.{u1} α)) (GeneralizedContinuedFraction.s.{u1} α g) (GeneralizedContinuedFraction.s.{u1} α g')) -> (Eq.{succ u1} (GeneralizedContinuedFraction.{u1} α) g g')
-Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.ext GeneralizedContinuedFraction.extₓ'. -/
 @[ext]
 protected theorem ext {g g' : GeneralizedContinuedFraction α} (hyp : g.h = g'.h ∧ g.s = g'.s) :
     g = g' :=

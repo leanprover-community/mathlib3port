@@ -60,12 +60,6 @@ noncomputable def wellOrderExtension : LinearOrder α :=
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
 -/
 
-/- warning: well_founded.well_order_extension.is_well_founded_lt -> WellFounded.wellOrderExtension.isWellFounded_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} (hwf : WellFounded.{succ u1} α r), IsWellFounded.{u1} α (LinearOrder.Lt.{u1} α (WellFounded.wellOrderExtension.{u1} α r hwf))
-but is expected to have type
-  forall {α : Type.{u1}} {r : α -> α -> Prop} (hwf : WellFounded.{succ u1} α r), IsWellFounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α (WellFounded.wellOrderExtension.{u1} α r hwf)))))
-Case conversion may be inaccurate. Consider using '#align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_ltₓ'. -/
 instance wellOrderExtension.isWellFounded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
   ⟨InvImage.wf _ <| WellFounded.prod_lex Ordinal.wellFoundedLT.wf WellOrderingRel.isWellOrder.wf⟩
 #align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_lt
@@ -99,23 +93,11 @@ def toWellOrderExtension : α ≃ WellOrderExtension α :=
 noncomputable instance [LT α] [WellFoundedLT α] : LinearOrder (WellOrderExtension α) :=
   (IsWellFounded.wf : @WellFounded α (· < ·)).wellOrderExtension
 
-/- warning: well_order_extension.well_founded_lt -> WellOrderExtension.wellFoundedLT is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedLT.{u1} α _inst_1], WellFoundedLT.{u1} (WellOrderExtension.{u1} α) (Preorder.toHasLt.{u1} (WellOrderExtension.{u1} α) (PartialOrder.toPreorder.{u1} (WellOrderExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (WellOrderExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (WellOrderExtension.{u1} α) (LinearOrder.toLattice.{u1} (WellOrderExtension.{u1} α) (WellOrderExtension.linearOrder.{u1} α _inst_1 _inst_2))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedLT.{u1} α _inst_1], WellFoundedLT.{u1} (WellOrderExtension.{u1} α) (Preorder.toLT.{u1} (WellOrderExtension.{u1} α) (PartialOrder.toPreorder.{u1} (WellOrderExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (WellOrderExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (WellOrderExtension.{u1} α) (DistribLattice.toLattice.{u1} (WellOrderExtension.{u1} α) (instDistribLattice.{u1} (WellOrderExtension.{u1} α) (instLinearOrderWellOrderExtension.{u1} α _inst_1 _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align well_order_extension.well_founded_lt WellOrderExtension.wellFoundedLTₓ'. -/
 instance WellOrderExtension.wellFoundedLT [LT α] [WellFoundedLT α] :
     WellFoundedLT (WellOrderExtension α) :=
   WellFounded.wellOrderExtension.isWellFounded_lt _
 #align well_order_extension.well_founded_lt WellOrderExtension.wellFoundedLT
 
-/- warning: to_well_order_extension_strict_mono -> toWellOrderExtension_strictMono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : WellFoundedLT.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], StrictMono.{u1, u1} α (WellOrderExtension.{u1} α) _inst_1 (PartialOrder.toPreorder.{u1} (WellOrderExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (WellOrderExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (WellOrderExtension.{u1} α) (LinearOrder.toLattice.{u1} (WellOrderExtension.{u1} α) (WellOrderExtension.linearOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1) _inst_2))))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (WellOrderExtension.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (WellOrderExtension.{u1} α)) => α -> (WellOrderExtension.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (WellOrderExtension.{u1} α)) (toWellOrderExtension.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : WellFoundedLT.{u1} α (Preorder.toLT.{u1} α _inst_1)], StrictMono.{u1, u1} α (WellOrderExtension.{u1} α) _inst_1 (PartialOrder.toPreorder.{u1} (WellOrderExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (WellOrderExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (WellOrderExtension.{u1} α) (DistribLattice.toLattice.{u1} (WellOrderExtension.{u1} α) (instDistribLattice.{u1} (WellOrderExtension.{u1} α) (instLinearOrderWellOrderExtension.{u1} α (Preorder.toLT.{u1} α _inst_1) _inst_2)))))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (WellOrderExtension.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => WellOrderExtension.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (WellOrderExtension.{u1} α)) (toWellOrderExtension.{u1} α))
-Case conversion may be inaccurate. Consider using '#align to_well_order_extension_strict_mono toWellOrderExtension_strictMonoₓ'. -/
 theorem toWellOrderExtension_strictMono [Preorder α] [WellFoundedLT α] :
     StrictMono (toWellOrderExtension : α → WellOrderExtension α) := fun a b h =>
   Prod.Lex.left _ _ <| WellFounded.rank_lt_of_rel _ h

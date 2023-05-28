@@ -144,12 +144,6 @@ theorem count_dedup (l : List α) (a : α) : l.dedup.count a = if a ∈ l then 1
 #align list.count_dedup List.count_dedup
 -/
 
-/- warning: list.sum_map_count_dedup_filter_eq_countp -> List.sum_map_count_dedup_filter_eq_countp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (p : α -> Prop) [_inst_2 : DecidablePred.{succ u1} α p] (l : List.{u1} α), Eq.{1} Nat (List.sum.{0} Nat Nat.hasAdd Nat.hasZero (List.map.{u1, 0} α Nat (fun (x : α) => List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) x l) (List.filterₓ.{u1} α p (fun (a : α) => _inst_2 a) (List.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l)))) (List.countp.{u1} α p (fun (a : α) => _inst_2 a) l)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (p : α -> Bool) (_inst_2 : List.{u1} α), Eq.{1} Nat (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u1, 0} α Nat (fun (x : α) => List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x _inst_2) (List.filter.{u1} α p (List.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)))) (List.countp.{u1} α p _inst_2)
-Case conversion may be inaccurate. Consider using '#align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countpₓ'. -/
 /-- Summing the count of `x` over a list filtered by some `p` is just `countp` applied to `p` -/
 theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p] (l : List α) :
     ((l.dedup.filterₓ p).map fun x => l.count x).Sum = l.countp p :=

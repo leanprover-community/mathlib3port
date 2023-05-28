@@ -36,12 +36,6 @@ theorem map_coe_finRange (n : ℕ) : (finRange n).map coe = List.range n :=
 #align list.map_coe_fin_range List.map_coe_finRange
 -/
 
-/- warning: list.fin_range_succ_eq_map -> List.finRange_succ_eq_map is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (List.{0} (Fin (Nat.succ n))) (List.finRange (Nat.succ n)) (List.cons.{0} (Fin (Nat.succ n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n))))) (List.map.{0, 0} (Fin n) (Fin (Nat.succ n)) (Fin.succ n) (List.finRange n)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (List.{0} (Fin (Nat.succ n))) (List.finRange (Nat.succ n)) (List.cons.{0} (Fin (Nat.succ n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n))) (List.map.{0, 0} (Fin n) (Fin (Nat.succ n)) (Fin.succ n) (List.finRange n)))
-Case conversion may be inaccurate. Consider using '#align list.fin_range_succ_eq_map List.finRange_succ_eq_mapₓ'. -/
 theorem finRange_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).map Fin.succ :=
   by
   apply map_injective_iff.mpr Fin.val_injective

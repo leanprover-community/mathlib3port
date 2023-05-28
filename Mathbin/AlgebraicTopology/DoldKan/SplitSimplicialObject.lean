@@ -39,12 +39,6 @@ namespace Splitting
 variable {C : Type _} [Category C] [HasFiniteCoproducts C] {X : SimplicialObject C}
   (s : Splitting X)
 
-/- warning: simplicial_object.splitting.π_summand -> SimplicialObject.Splitting.πSummand is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} (s : SimplicialObject.Splitting.{u1, u2} C _inst_1 _inst_2 X) [_inst_3 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u1} C _inst_1] {Δ : Opposite.{1} SimplexCategory} (A : SimplicialObject.Splitting.IndexSet Δ), Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X Δ) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 X s (SimplexCategory.len (Opposite.unop.{1} SimplexCategory (Sigma.fst.{0, 0} (Opposite.{1} SimplexCategory) (fun (Δ' : Opposite.{1} SimplexCategory) => Subtype.{1} (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (Opposite.unop.{1} SimplexCategory Δ) (Opposite.unop.{1} SimplexCategory Δ')) (fun (α : Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (Opposite.unop.{1} SimplexCategory Δ) (Opposite.unop.{1} SimplexCategory Δ')) => CategoryTheory.Epi.{0, 0} SimplexCategory SimplexCategory.smallCategory (Opposite.unop.{1} SimplexCategory Δ) (Opposite.unop.{1} SimplexCategory Δ') α)) A))))
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} (s : SimplicialObject.Splitting.{u1, u2} C _inst_1 _inst_2 X) [_inst_3 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u1} C _inst_1] {Δ : Opposite.{1} SimplexCategory} (A : SimplicialObject.Splitting.IndexSet Δ), Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) Δ) (SimplicialObject.Splitting.N.{u1, u2} C _inst_1 _inst_2 X s (SimplexCategory.len (Opposite.unop.{1} SimplexCategory (Sigma.fst.{0, 0} (Opposite.{1} SimplexCategory) (fun (Δ' : Opposite.{1} SimplexCategory) => Subtype.{1} (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (Opposite.unop.{1} SimplexCategory Δ) (Opposite.unop.{1} SimplexCategory Δ')) (fun (α : Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (Opposite.unop.{1} SimplexCategory Δ) (Opposite.unop.{1} SimplexCategory Δ')) => CategoryTheory.Epi.{0, 0} SimplexCategory SimplexCategory.smallCategory (Opposite.unop.{1} SimplexCategory Δ) (Opposite.unop.{1} SimplexCategory Δ') α)) A))))
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummandₓ'. -/
 /-- The projection on a summand of the coproduct decomposition given
 by a splitting of a simplicial object. -/
 def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
@@ -56,9 +50,6 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
   · exact 0
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 
-/- warning: simplicial_object.splitting.ι_π_summand_eq_id -> SimplicialObject.Splitting.ι_πSummand_eq_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_πSummand_eq_idₓ'. -/
 @[simp, reassoc]
 theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ s.πSummand A = 𝟙 _ :=
@@ -70,9 +61,6 @@ theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A 
   simp only [eq_self_iff_true, if_true]
 #align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_πSummand_eq_id
 
-/- warning: simplicial_object.splitting.ι_π_summand_eq_zero -> SimplicialObject.Splitting.ι_πSummand_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_πSummand_eq_zeroₓ'. -/
 @[simp, reassoc]
 theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
     (h : B ≠ A) : s.ιSummand A ≫ s.πSummand B = 0 :=
@@ -86,9 +74,6 @@ theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (
 
 variable [Preadditive C]
 
-/- warning: simplicial_object.splitting.decomposition_id -> SimplicialObject.Splitting.decomposition_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_idₓ'. -/
 theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
     𝟙 (X.obj Δ) = ∑ A : IndexSet Δ, s.πSummand A ≫ s.ιSummand A :=
   by
@@ -100,9 +85,6 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
   · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
 #align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_id
 
-/- warning: simplicial_object.splitting.σ_comp_π_summand_id_eq_zero -> SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zeroₓ'. -/
 @[simp, reassoc]
 theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ s.πSummand (IndexSet.id (op [n + 1])) = 0 :=
@@ -119,9 +101,6 @@ theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
   linarith
 #align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zero
 
-/- warning: simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero -> SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zeroₓ'. -/
 /-- If a simplicial object `X` in an additive category is split,
 then `P_infty` vanishes on all the summands of `X _[n]` which do
 not correspond to the identity of `[n]`. -/
@@ -133,9 +112,6 @@ theorem ιSummand_comp_PInfty_eq_zero {X : SimplicialObject C} (s : SimplicialOb
   rw [SimplicialObject.Splitting.ιSummand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
 #align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zero
 
-/- warning: simplicial_object.splitting.comp_P_infty_eq_zero_iff -> SimplicialObject.Splitting.comp_PInfty_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_PInfty_eq_zero_iffₓ'. -/
 theorem comp_PInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
     f ≫ PInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 :=
   by
@@ -175,9 +151,6 @@ theorem PInfty_comp_πSummand_id (n : ℕ) :
 #align simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.PInfty_comp_πSummand_id
 -/
 
-/- warning: simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty -> SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_PInfty_eq_PInfty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_PInfty_eq_PInftyₓ'. -/
 @[simp, reassoc]
 theorem πSummand_comp_ιSummand_comp_PInfty_eq_PInfty (n : ℕ) :
     s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ PInfty.f n =
@@ -199,9 +172,6 @@ def d (i j : ℕ) : s.n i ⟶ s.n j :=
 #align simplicial_object.splitting.d SimplicialObject.Splitting.d
 -/
 
-/- warning: simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero -> SimplicialObject.Splitting.ιSummand_comp_d_comp_πSummand_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero SimplicialObject.Splitting.ιSummand_comp_d_comp_πSummand_eq_zeroₓ'. -/
 theorem ιSummand_comp_d_comp_πSummand_eq_zero (j k : ℕ) (A : IndexSet (op [j])) (hA : ¬A.EqId) :
     s.ιSummand A ≫ K[X].d j k ≫ s.πSummand (IndexSet.id (op [k])) = 0 :=
   by
@@ -236,9 +206,6 @@ def nondegComplex : ChainComplex C ℕ where
 #align simplicial_object.splitting.nondeg_complex SimplicialObject.Splitting.nondegComplex
 -/
 
-/- warning: simplicial_object.splitting.to_karoubi_nondeg_complex_iso_N₁ -> SimplicialObject.Splitting.toKaroubiNondegComplexIsoN₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.to_karoubi_nondeg_complex_iso_N₁ SimplicialObject.Splitting.toKaroubiNondegComplexIsoN₁ₓ'. -/
 /-- The chain complex `s.nondeg_complex` attached to a splitting of a simplicial object `X`
 becomes isomorphic to the normalized Moore complex `N₁.obj X` defined as a formal direct
 factor in the category `karoubi (chain_complex C ℕ)`. -/
@@ -281,12 +248,6 @@ namespace Split
 
 variable {C : Type _} [Category C] [Preadditive C] [HasFiniteCoproducts C]
 
-/- warning: simplicial_object.split.nondeg_complex_functor -> SimplicialObject.Split.nondegComplexFunctor is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1], CategoryTheory.Functor.{u2, u2, max u1 u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_3) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_3) (ChainComplex.{u2, u1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u2, u1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne))
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1], CategoryTheory.Functor.{u2, u2, max u2 u1, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_3) (SimplicialObject.instCategorySplit.{u1, u2} C _inst_1 _inst_3) (ChainComplex.{u2, u1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u2, u1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)))
-Case conversion may be inaccurate. Consider using '#align simplicial_object.split.nondeg_complex_functor SimplicialObject.Split.nondegComplexFunctorₓ'. -/
 /-- The functor which sends a split simplicial object in a preadditive category to
 the chain complex which consists of nondegenerate simplices. -/
 @[simps]
@@ -314,9 +275,6 @@ def nondegComplexFunctor : Split C ⥤ ChainComplex C ℕ
             comp_zero] }
 #align simplicial_object.split.nondeg_complex_functor SimplicialObject.Split.nondegComplexFunctor
 
-/- warning: simplicial_object.split.to_karoubi_nondeg_complex_functor_iso_N₁ -> SimplicialObject.Split.toKaroubiNondegComplexFunctorIsoN₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplicial_object.split.to_karoubi_nondeg_complex_functor_iso_N₁ SimplicialObject.Split.toKaroubiNondegComplexFunctorIsoN₁ₓ'. -/
 /-- The natural isomorphism (in `karoubi (chain_complex C ℕ)`) between the chain complex
 of nondegenerate simplices of a split simplicial object and the normalized Moore complex
 defined as a formal direct factor of the alternating face map complex. -/

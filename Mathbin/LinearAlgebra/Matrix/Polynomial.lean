@@ -40,9 +40,6 @@ open Polynomial Matrix Equiv.Perm
 
 namespace Polynomial
 
-/- warning: polynomial.nat_degree_det_X_add_C_le -> Polynomial.natDegree_det_X_add_C_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.nat_degree_det_X_add_C_le Polynomial.natDegree_det_X_add_C_leₓ'. -/
 theorem natDegree_det_X_add_C_le (A B : Matrix n n α) :
     natDegree (det ((X : α[X]) • A.map C + B.map C)) ≤ Fintype.card n :=
   by
@@ -77,9 +74,6 @@ theorem natDegree_det_X_add_C_le (A B : Matrix n n α) :
     
 #align polynomial.nat_degree_det_X_add_C_le Polynomial.natDegree_det_X_add_C_le
 
-/- warning: polynomial.coeff_det_X_add_C_zero -> Polynomial.coeff_det_X_add_C_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.coeff_det_X_add_C_zero Polynomial.coeff_det_X_add_C_zeroₓ'. -/
 theorem coeff_det_X_add_C_zero (A B : Matrix n n α) :
     coeff (det ((X : α[X]) • A.map C + B.map C)) 0 = det B :=
   by
@@ -92,9 +86,6 @@ theorem coeff_det_X_add_C_zero (A B : Matrix n n α) :
   simp
 #align polynomial.coeff_det_X_add_C_zero Polynomial.coeff_det_X_add_C_zero
 
-/- warning: polynomial.coeff_det_X_add_C_card -> Polynomial.coeff_det_X_add_C_card is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.coeff_det_X_add_C_card Polynomial.coeff_det_X_add_C_cardₓ'. -/
 theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     coeff (det ((X : α[X]) • A.map C + B.map C)) (Fintype.card n) = det A :=
   by
@@ -114,9 +105,6 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
       max_eq_left, zero_le'] using (nat_degree_C_mul_le _ _).trans nat_degree_X_le
 #align polynomial.coeff_det_X_add_C_card Polynomial.coeff_det_X_add_C_card
 
-/- warning: polynomial.leading_coeff_det_X_one_add_C -> Polynomial.leadingCoeff_det_X_one_add_C is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.leading_coeff_det_X_one_add_C Polynomial.leadingCoeff_det_X_one_add_Cₓ'. -/
 theorem leadingCoeff_det_X_one_add_C (A : Matrix n n α) :
     leadingCoeff (det ((X : α[X]) • (1 : Matrix n n α[X]) + A.map C)) = 1 :=
   by

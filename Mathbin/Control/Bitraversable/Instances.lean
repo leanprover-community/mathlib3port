@@ -40,12 +40,6 @@ section
 
 variable {F : Type u → Type u} [Applicative F]
 
-/- warning: prod.bitraverse -> Prod.bitraverse is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1} -> Type.{u1}} [_inst_2 : Applicative.{u1, u1} F] {α : Type.{u2}} {α' : Type.{u1}} {β : Type.{u3}} {β' : Type.{u1}}, (α -> (F α')) -> (β -> (F β')) -> (Prod.{u2, u3} α β) -> (F (Prod.{u1, u1} α' β'))
-but is expected to have type
-  forall {F : Type.{u3} -> Type.{u3}} [_inst_2 : Applicative.{u3, u3} F] {α : Type.{u1}} {α' : Type.{u3}} {β : Type.{u2}} {β' : Type.{u3}}, (α -> (F α')) -> (β -> (F β')) -> (Prod.{u1, u2} α β) -> (F (Prod.{u3, u3} α' β'))
-Case conversion may be inaccurate. Consider using '#align prod.bitraverse Prod.bitraverseₓ'. -/
 /-- The bitraverse function for `α × β`. -/
 def Prod.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : α × β → F (α' × β')
   | (x, y) => Prod.mk <$> f x <*> f' y
@@ -58,12 +52,6 @@ instance : IsLawfulBitraversable Prod := by
 
 open Functor
 
-/- warning: sum.bitraverse -> Sum.bitraverse is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1} -> Type.{u1}} [_inst_2 : Applicative.{u1, u1} F] {α : Type.{u2}} {α' : Type.{u1}} {β : Type.{u3}} {β' : Type.{u1}}, (α -> (F α')) -> (β -> (F β')) -> (Sum.{u2, u3} α β) -> (F (Sum.{u1, u1} α' β'))
-but is expected to have type
-  forall {F : Type.{u3} -> Type.{u3}} [_inst_2 : Applicative.{u3, u3} F] {α : Type.{u1}} {α' : Type.{u3}} {β : Type.{u2}} {β' : Type.{u3}}, (α -> (F α')) -> (β -> (F β')) -> (Sum.{u1, u2} α β) -> (F (Sum.{u3, u3} α' β'))
-Case conversion may be inaccurate. Consider using '#align sum.bitraverse Sum.bitraverseₓ'. -/
 /-- The bitraverse function for `α ⊕ β`. -/
 def Sum.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : Sum α β → F (Sum α' β')
   | Sum.inl x => Sum.inl <$> f x

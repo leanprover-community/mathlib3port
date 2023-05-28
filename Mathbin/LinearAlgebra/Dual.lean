@@ -119,9 +119,6 @@ def dualPairing (R M) [CommSemiring R] [AddCommMonoid M] [Module R M] :
 #align module.dual_pairing Module.dualPairing
 -/
 
-/- warning: module.dual_pairing_apply -> Module.dualPairing_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.dual_pairing_apply Module.dualPairing_applyₓ'. -/
 @[simp]
 theorem dualPairing_apply (v x) : dualPairing R M v x = v x :=
   rfl
@@ -143,9 +140,6 @@ def eval : M →ₗ[R] Dual R (Dual R M) :=
 #align module.dual.eval Module.Dual.eval
 -/
 
-/- warning: module.dual.eval_apply -> Module.Dual.eval_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.dual.eval_apply Module.Dual.eval_applyₓ'. -/
 @[simp]
 theorem eval_apply (v : M) (a : Dual R M) : eval R M v a = a v :=
   rfl
@@ -161,9 +155,6 @@ def transpose : (M →ₗ[R] M') →ₗ[R] Dual R M' →ₗ[R] Dual R M :=
 #align module.dual.transpose Module.Dual.transpose
 -/
 
-/- warning: module.dual.transpose_apply -> Module.Dual.transpose_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.dual.transpose_apply Module.Dual.transpose_applyₓ'. -/
 theorem transpose_apply (u : M →ₗ[R] M') (l : Dual R M') : transpose u l = l.comp u :=
   rfl
 #align module.dual.transpose_apply Module.Dual.transpose_apply
@@ -183,18 +174,12 @@ section Prod
 
 variable (M' : Type _) [AddCommMonoid M'] [Module R M']
 
-/- warning: module.dual_prod_dual_equiv_dual -> Module.dualProdDualEquivDual is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.dual_prod_dual_equiv_dual Module.dualProdDualEquivDualₓ'. -/
 /-- Taking duals distributes over products. -/
 @[simps]
 def dualProdDualEquivDual : (Module.Dual R M × Module.Dual R M') ≃ₗ[R] Module.Dual R (M × M') :=
   LinearMap.coprodEquiv R
 #align module.dual_prod_dual_equiv_dual Module.dualProdDualEquivDual
 
-/- warning: module.dual_prod_dual_equiv_dual_apply -> Module.dualProdDualEquivDual_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.dual_prod_dual_equiv_dual_apply Module.dualProdDualEquivDual_applyₓ'. -/
 @[simp]
 theorem dualProdDualEquivDual_apply (φ : Module.Dual R M) (ψ : Module.Dual R M') :
     dualProdDualEquivDual R M M' (φ, ψ) = φ.coprod ψ :=
@@ -227,16 +212,10 @@ theorem LinearMap.dualMap_def (f : M₁ →ₗ[R] M₂) : f.dualMap = Module.Dua
 #align linear_map.dual_map_def LinearMap.dualMap_def
 -/
 
-/- warning: linear_map.dual_map_apply' -> LinearMap.dualMap_apply' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_apply' LinearMap.dualMap_apply'ₓ'. -/
 theorem LinearMap.dualMap_apply' (f : M₁ →ₗ[R] M₂) (g : Dual R M₂) : f.dualMap g = g.comp f :=
   rfl
 #align linear_map.dual_map_apply' LinearMap.dualMap_apply'
 
-/- warning: linear_map.dual_map_apply -> LinearMap.dualMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_apply LinearMap.dualMap_applyₓ'. -/
 @[simp]
 theorem LinearMap.dualMap_apply (f : M₁ →ₗ[R] M₂) (g : Dual R M₂) (x : M₁) :
     f.dualMap g x = g (f x) :=
@@ -249,17 +228,11 @@ theorem LinearMap.dualMap_id : (LinearMap.id : M₁ →ₗ[R] M₁).dualMap = Li
 #align linear_map.dual_map_id LinearMap.dualMap_id
 -/
 
-/- warning: linear_map.dual_map_comp_dual_map -> LinearMap.dualMap_comp_dualMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_comp_dual_map LinearMap.dualMap_comp_dualMapₓ'. -/
 theorem LinearMap.dualMap_comp_dualMap {M₃ : Type _} [AddCommGroup M₃] [Module R M₃]
     (f : M₁ →ₗ[R] M₂) (g : M₂ →ₗ[R] M₃) : f.dualMap.comp g.dualMap = (g.comp f).dualMap :=
   rfl
 #align linear_map.dual_map_comp_dual_map LinearMap.dualMap_comp_dualMap
 
-/- warning: linear_map.dual_map_injective_of_surjective -> LinearMap.dualMap_injective_of_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_injective_of_surjective LinearMap.dualMap_injective_of_surjectiveₓ'. -/
 /-- If a linear map is surjective, then its dual is injective. -/
 theorem LinearMap.dualMap_injective_of_surjective {f : M₁ →ₗ[R] M₂} (hf : Function.Surjective f) :
     Function.Injective f.dualMap := by
@@ -285,9 +258,6 @@ def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R
 #align linear_equiv.dual_map LinearEquiv.dualMap
 -/
 
-/- warning: linear_equiv.dual_map_apply -> LinearEquiv.dualMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.dual_map_apply LinearEquiv.dualMap_applyₓ'. -/
 @[simp]
 theorem LinearEquiv.dualMap_apply (f : M₁ ≃ₗ[R] M₂) (g : Dual R M₂) (x : M₁) :
     f.dualMap g x = g (f x) :=
@@ -309,9 +279,6 @@ theorem LinearEquiv.dualMap_symm {f : M₁ ≃ₗ[R] M₂} :
 #align linear_equiv.dual_map_symm LinearEquiv.dualMap_symm
 -/
 
-/- warning: linear_equiv.dual_map_trans -> LinearEquiv.dualMap_trans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.dual_map_trans LinearEquiv.dualMap_transₓ'. -/
 theorem LinearEquiv.dualMap_trans {M₃ : Type _} [AddCommGroup M₃] [Module R M₃] (f : M₁ ≃ₗ[R] M₂)
     (g : M₂ ≃ₗ[R] M₃) : g.dualMap.trans f.dualMap = (f.trans g).dualMap :=
   rfl
@@ -343,16 +310,10 @@ def toDual : M →ₗ[R] Module.Dual R M :=
 #align basis.to_dual Basis.toDual
 -/
 
-/- warning: basis.to_dual_apply -> Basis.toDual_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_apply Basis.toDual_applyₓ'. -/
 theorem toDual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0 := by
   erw [constr_basis b, constr_basis b]; ac_rfl
 #align basis.to_dual_apply Basis.toDual_apply
 
-/- warning: basis.to_dual_total_left -> Basis.toDual_total_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_total_left Basis.toDual_total_leftₓ'. -/
 @[simp]
 theorem toDual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total ι M R b f) (b i) = f i :=
   by
@@ -364,9 +325,6 @@ theorem toDual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total �
   · rw [finsupp.not_mem_support_iff.mp h]
 #align basis.to_dual_total_left Basis.toDual_total_left
 
-/- warning: basis.to_dual_total_right -> Basis.toDual_total_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_total_right Basis.toDual_total_rightₓ'. -/
 @[simp]
 theorem toDual_total_right (f : ι →₀ R) (i : ι) : b.toDual (b i) (Finsupp.total ι M R b f) = f i :=
   by
@@ -377,23 +335,14 @@ theorem toDual_total_right (f : ι →₀ R) (i : ι) : b.toDual (b i) (Finsupp.
   · rw [finsupp.not_mem_support_iff.mp h]
 #align basis.to_dual_total_right Basis.toDual_total_right
 
-/- warning: basis.to_dual_apply_left -> Basis.toDual_apply_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_apply_left Basis.toDual_apply_leftₓ'. -/
 theorem toDual_apply_left (m : M) (i : ι) : b.toDual m (b i) = b.repr m i := by
   rw [← b.to_dual_total_left, b.total_repr]
 #align basis.to_dual_apply_left Basis.toDual_apply_left
 
-/- warning: basis.to_dual_apply_right -> Basis.toDual_apply_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_apply_right Basis.toDual_apply_rightₓ'. -/
 theorem toDual_apply_right (i : ι) (m : M) : b.toDual (b i) m = b.repr m i := by
   rw [← b.to_dual_total_right, b.total_repr]
 #align basis.to_dual_apply_right Basis.toDual_apply_right
 
-/- warning: basis.coe_to_dual_self -> Basis.coe_toDual_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.coe_to_dual_self Basis.coe_toDual_selfₓ'. -/
 theorem coe_toDual_self (i : ι) : b.toDual (b i) = b.Coord i := by ext; apply to_dual_apply_right
 #align basis.coe_to_dual_self Basis.coe_toDual_self
 
@@ -404,30 +353,18 @@ def toDualFlip (m : M) : M →ₗ[R] R :=
 #align basis.to_dual_flip Basis.toDualFlip
 -/
 
-/- warning: basis.to_dual_flip_apply -> Basis.toDualFlip_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_flip_apply Basis.toDualFlip_applyₓ'. -/
 theorem toDualFlip_apply (m₁ m₂ : M) : b.toDualFlip m₁ m₂ = b.toDual m₂ m₁ :=
   rfl
 #align basis.to_dual_flip_apply Basis.toDualFlip_apply
 
-/- warning: basis.to_dual_eq_repr -> Basis.toDual_eq_repr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_eq_repr Basis.toDual_eq_reprₓ'. -/
 theorem toDual_eq_repr (m : M) (i : ι) : b.toDual m (b i) = b.repr m i :=
   b.toDual_apply_left m i
 #align basis.to_dual_eq_repr Basis.toDual_eq_repr
 
-/- warning: basis.to_dual_eq_equiv_fun -> Basis.toDual_eq_equivFun is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_eq_equiv_fun Basis.toDual_eq_equivFunₓ'. -/
 theorem toDual_eq_equivFun [Fintype ι] (m : M) (i : ι) : b.toDual m (b i) = b.equivFun m i := by
   rw [b.equiv_fun_apply, to_dual_eq_repr]
 #align basis.to_dual_eq_equiv_fun Basis.toDual_eq_equivFun
 
-/- warning: basis.to_dual_inj -> Basis.toDual_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_inj Basis.toDual_injₓ'. -/
 theorem toDual_inj (m : M) (a : b.toDual m = 0) : m = 0 :=
   by
   rw [← mem_bot R, ← b.repr.ker, mem_ker, LinearEquiv.coe_coe]
@@ -493,9 +430,6 @@ def toDualEquiv : M ≃ₗ[R] Dual R M :=
 #align basis.to_dual_equiv Basis.toDualEquiv
 -/
 
-/- warning: basis.to_dual_equiv_apply -> Basis.toDualEquiv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.to_dual_equiv_apply Basis.toDualEquiv_applyₓ'. -/
 -- `simps` times out when generating this
 @[simp]
 theorem toDualEquiv_apply (m : M) : b.toDualEquiv m = b.toDual m :=
@@ -509,17 +443,11 @@ def dualBasis : Basis ι R (Dual R M) :=
 #align basis.dual_basis Basis.dualBasis
 -/
 
-/- warning: basis.dual_basis_apply_self -> Basis.dualBasis_apply_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.dual_basis_apply_self Basis.dualBasis_apply_selfₓ'. -/
 -- We use `j = i` to match `basis.repr_self`
 theorem dualBasis_apply_self (i j : ι) : b.dualBasis i (b j) = if j = i then 1 else 0 := by
   convert b.to_dual_apply i j using 2; rw [@eq_comm _ j i]
 #align basis.dual_basis_apply_self Basis.dualBasis_apply_self
 
-/- warning: basis.total_dual_basis -> Basis.total_dualBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.total_dual_basis Basis.total_dualBasisₓ'. -/
 theorem total_dualBasis (f : ι →₀ R) (i : ι) :
     Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i :=
   by
@@ -531,16 +459,10 @@ theorem total_dualBasis (f : ι →₀ R) (i : ι) :
   · intro ; rw [zero_smul]
 #align basis.total_dual_basis Basis.total_dualBasis
 
-/- warning: basis.dual_basis_repr -> Basis.dualBasis_repr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.dual_basis_repr Basis.dualBasis_reprₓ'. -/
 theorem dualBasis_repr (l : Dual R M) (i : ι) : b.dualBasis.repr l i = l (b i) := by
   rw [← total_dual_basis b, Basis.total_repr b.dual_basis l]
 #align basis.dual_basis_repr Basis.dualBasis_repr
 
-/- warning: basis.dual_basis_apply -> Basis.dualBasis_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.dual_basis_apply Basis.dualBasis_applyₓ'. -/
 theorem dualBasis_apply (i : ι) (m : M) : b.dualBasis i m = b.repr m i :=
   b.toDual_apply_right i m
 #align basis.dual_basis_apply Basis.dualBasis_apply
@@ -563,16 +485,10 @@ theorem toDual_toDual : b.dualBasis.toDual.comp b.toDual = Dual.eval R M :=
 
 end Finite
 
-/- warning: basis.dual_basis_equiv_fun -> Basis.dualBasis_equivFun is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.dual_basis_equiv_fun Basis.dualBasis_equivFunₓ'. -/
 theorem dualBasis_equivFun [Fintype ι] (l : Dual R M) (i : ι) :
     b.dualBasis.equivFun l i = l (b i) := by rw [Basis.equivFun_apply, dual_basis_repr]
 #align basis.dual_basis_equiv_fun Basis.dualBasis_equivFun
 
-/- warning: basis.eval_ker -> Basis.eval_ker is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.eval_ker Basis.eval_kerₓ'. -/
 theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
   by
   rw [ker_eq_bot']
@@ -581,9 +497,6 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
   exact (Basis.forall_coord_eq_zero_iff _).mp fun i => hm (b.coord i)
 #align basis.eval_ker Basis.eval_ker
 
-/- warning: basis.eval_range -> Basis.eval_range is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.eval_range Basis.eval_rangeₓ'. -/
 theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
     cases nonempty_fintype ι
@@ -598,9 +511,6 @@ def evalEquiv {ι : Type _} [Finite ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R 
 #align basis.eval_equiv Basis.evalEquiv
 -/
 
-/- warning: basis.eval_equiv_to_linear_map -> Basis.evalEquiv_toLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.eval_equiv_to_linear_map Basis.evalEquiv_toLinearMapₓ'. -/
 @[simp]
 theorem evalEquiv_toLinearMap {ι : Type _} [Finite ι] (b : Basis ι R M) :
     b.evalEquiv.toLinearMap = Dual.eval R M :=
@@ -629,9 +539,6 @@ end
 
 end CommRing
 
-/- warning: basis.total_coord -> Basis.total_coord is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.total_coord Basis.total_coordₓ'. -/
 /-- `simp` normal form version of `total_dual_basis` -/
 @[simp]
 theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : Basis ι R M)
@@ -639,12 +546,6 @@ theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : 
   haveI := Classical.decEq ι; rw [← coe_dual_basis, total_dual_basis]
 #align basis.total_coord Basis.total_coord
 
-/- warning: basis.dual_rank_eq -> Basis.dual_rank_eq is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} {V : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : Finite.{succ u3} ι], (Basis.{u3, u1, u2} ι K V (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) -> (Eq.{succ (succ (max u2 u1))} Cardinal.{max u2 u1} (Cardinal.lift.{u1, u2} (Module.rank.{u1, u2} K V (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)) (Module.rank.{u1, max u2 u1} K (Module.Dual.{u1, u2} K V (CommRing.toCommSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1)) (LinearMap.addCommMonoid.{u1, u1, u2, u1} K K V K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1)) (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))))) _inst_3 (Semiring.toModule.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))) (RingHom.id.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))))) (LinearMap.module.{u1, u1, u1, u2, u1} K K K V K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1)) (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))))) _inst_3 (Semiring.toModule.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))) (RingHom.id.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1)))) (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1)) (Semiring.toModule.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1))) (smulCommClass_self.{u1, u1} K K (CommRing.toCommMonoid.{u1} K _inst_1) (Monoid.toMulAction.{u1} K (CommMonoid.toMonoid.{u1} K (CommRing.toCommMonoid.{u1} K _inst_1)))))))
-but is expected to have type
-  forall {K : Type.{u2}} {V : Type.{u3}} {ι : Type.{u1}} [_inst_1 : CommRing.{u2} K] [_inst_2 : AddCommGroup.{u3} V] [_inst_3 : Module.{u2, u3} K V (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2)] [_inst_4 : Finite.{succ u1} ι], (Basis.{u1, u2, u3} ι K V (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) _inst_3) -> (Eq.{max (succ (succ u2)) (succ (succ u3))} Cardinal.{max u3 u2} (Cardinal.lift.{u2, u3} (Module.rank.{u2, u3} K V (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) _inst_3)) (Module.rank.{u2, max u3 u2} K (Module.Dual.{u2, u3} K V (CommRing.toCommSemiring.{u2} K _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) _inst_3) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (LinearMap.addCommMonoid.{u2, u2, u3, u2} K K V K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))))) _inst_3 (Semiring.toModule.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))) (RingHom.id.{u2} K (Semiring.toNonAssocSemiring.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))))) (LinearMap.instModuleLinearMapAddCommMonoid.{u2, u2, u2, u3, u2} K K K V K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))))) _inst_3 (Semiring.toModule.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))) (RingHom.id.{u2} K (Semiring.toNonAssocSemiring.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)))) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)) (Semiring.toModule.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))) (smulCommClass_self.{u2, u2} K K (CommRing.toCommMonoid.{u2} K _inst_1) (MulActionWithZero.toMulAction.{u2, u2} K K (Semiring.toMonoidWithZero.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))) (CommMonoidWithZero.toZero.{u2} K (CommSemiring.toCommMonoidWithZero.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1))) (MonoidWithZero.toMulActionWithZero.{u2} K (Semiring.toMonoidWithZero.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_1)))))))))
-Case conversion may be inaccurate. Consider using '#align basis.dual_rank_eq Basis.dual_rank_eqₓ'. -/
 theorem dual_rank_eq [CommRing K] [AddCommGroup V] [Module K V] [Finite ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
   classical
@@ -712,12 +613,6 @@ theorem eval_apply_injective : Function.Injective (eval K V) :=
 #align module.eval_apply_injective Module.eval_apply_injective
 -/
 
-/- warning: module.forall_dual_apply_eq_zero_iff -> Module.forall_dual_apply_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall (K : Type.{u1}) {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] (v : V), Iff (forall (φ : Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3), Eq.{succ u1} K (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (fun (_x : Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) => V -> K) (Module.Dual.hasCoeToFun.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) φ v) (OfNat.ofNat.{u1} K 0 (OfNat.mk.{u1} K 0 (Zero.zero.{u1} K (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))))))))))) (Eq.{succ u2} V v (OfNat.ofNat.{u2} V 0 (OfNat.mk.{u2} V 0 (Zero.zero.{u2} V (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (SubNegMonoid.toAddMonoid.{u2} V (AddGroup.toSubNegMonoid.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2)))))))))
-but is expected to have type
-  forall (K : Type.{u1}) {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] (v : V), Iff (forall (φ : Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3), Eq.{succ u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) V (fun (_x : V) => (fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) _x) (Module.Dual.instFunLikeDual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) φ v) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (CommMonoidWithZero.toZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (CommGroupWithZero.toCommMonoidWithZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (Semifield.toCommGroupWithZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (Field.toSemifield.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) _inst_1))))))) (Eq.{succ u2} V v (OfNat.ofNat.{u2} V 0 (Zero.toOfNat0.{u2} V (NegZeroClass.toZero.{u2} V (SubNegZeroMonoid.toNegZeroClass.{u2} V (SubtractionMonoid.toSubNegZeroMonoid.{u2} V (SubtractionCommMonoid.toSubtractionMonoid.{u2} V (AddCommGroup.toDivisionAddCommMonoid.{u2} V _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align module.forall_dual_apply_eq_zero_iff Module.forall_dual_apply_eq_zero_iffₓ'. -/
 theorem forall_dual_apply_eq_zero_iff (v : V) : (∀ φ : Module.Dual K V, φ v = 0) ↔ v = 0 := by
   rw [← eval_apply_eq_zero_iff K v, LinearMap.ext_iff]; rfl
 #align module.forall_dual_apply_eq_zero_iff Module.forall_dual_apply_eq_zero_iff
@@ -826,12 +721,6 @@ variable [CommRing R] [AddCommGroup M] [Module R M]
 
 variable {e : ι → M} {ε : ι → Dual R M}
 
-/- warning: module.dual_bases.coeffs -> Module.DualBases.coeffs is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι], (Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) -> M -> (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι], (Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) -> M -> (Finsupp.{u3, u1} ι R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.coeffs Module.DualBases.coeffsₓ'. -/
 /-- The coefficients of `v` on the basis `e` -/
 def coeffs [DecidableEq ι] (h : DualBases e ε) (m : M) : ι →₀ R
     where
@@ -840,35 +729,17 @@ def coeffs [DecidableEq ι] (h : DualBases e ε) (m : M) : ι →₀ R
   mem_support_toFun := by intro i; rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
 #align module.dual_bases.coeffs Module.DualBases.coeffs
 
-/- warning: module.dual_bases.coeffs_apply -> Module.DualBases.coeffs_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (m : M) (i : ι), Eq.{succ u1} R (coeFn.{max (succ u3) (succ u1), max (succ u3) (succ u1)} (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (fun (_x : Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) => ι -> R) (Finsupp.coeFun.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (Module.DualBases.coeffs.{u1, u2, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h m) i) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (fun (_x : Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) => M -> R) (Module.Dual.hasCoeToFun.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (ε i) m)
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u1}} {ι : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u2, u1, u3} R M ι (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (m : M) (i : ι), Eq.{succ u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => R) i) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => R) _x) (Finsupp.funLike.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) (Module.DualBases.coeffs.{u2, u1, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h m) i) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Module.Dual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) _x) (Module.Dual.instFunLikeDual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) (ε i) m)
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.coeffs_apply Module.DualBases.coeffs_applyₓ'. -/
 @[simp]
 theorem coeffs_apply [DecidableEq ι] (h : DualBases e ε) (m : M) (i : ι) : h.coeffs m i = ε i m :=
   rfl
 #align module.dual_bases.coeffs_apply Module.DualBases.coeffs_apply
 
-/- warning: module.dual_bases.lc -> Module.DualBases.lc is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {ι : Type.{u3}}, (ι -> M) -> (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) -> M
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {ι : Type.{u3}}, (ι -> M) -> (Finsupp.{u3, u1} ι R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) -> M
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.lc Module.DualBases.lcₓ'. -/
 /-- linear combinations of elements of `e`.
 This is a convenient abbreviation for `finsupp.total _ M R e l` -/
 def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
   l.Sum fun (i : ι) (a : R) => a • e i
 #align module.dual_bases.lc Module.DualBases.lc
 
-/- warning: module.dual_bases.lc_def -> Module.DualBases.lc_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] (e : ι -> M) (l : Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))), Eq.{succ u2} M (Module.DualBases.lc.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 ι e l) (coeFn.{max (succ (max u3 u1)) (succ u2), max (succ (max u3 u1)) (succ u2)} (LinearMap.{u1, u1, max u3 u1, u2} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) M (Finsupp.addCommMonoid.{u3, u1} ι R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (Finsupp.module.{u3, u1, u1} ι R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) _inst_3) (fun (_x : LinearMap.{u1, u1, max u3 u1, u2} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) M (Finsupp.addCommMonoid.{u3, u1} ι R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (Finsupp.module.{u3, u1, u1} ι R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) _inst_3) => (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) -> M) (LinearMap.hasCoeToFun.{u1, u1, max u3 u1, u2} R R (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Finsupp.addCommMonoid.{u3, u1} ι R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (Finsupp.module.{u3, u1, u1} ι R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) _inst_3 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Finsupp.total.{u3, u2, u1} ι M R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 e) l)
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u1}} {ι : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] (e : ι -> M) (l : Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))), Eq.{succ u1} M (Module.DualBases.lc.{u2, u1, u3} R M _inst_1 _inst_2 _inst_3 ι e l) (FunLike.coe.{max (max (succ u2) (succ u1)) (succ u3), max (succ u2) (succ u3), succ u1} (LinearMap.{u2, u2, max u2 u3, u1} R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) (Finsupp.{u3, u2} ι R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) M (Finsupp.addCommMonoid.{u3, u2} ι R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) (Finsupp.module.{u3, u2, u2} ι R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) _inst_3) (Finsupp.{u3, u2} ι R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (fun (_x : Finsupp.{u3, u2} ι R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : Finsupp.{u3, u2} ι R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) => M) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, max u2 u3, u1} R R (Finsupp.{u3, u2} ι R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Finsupp.addCommMonoid.{u3, u2} ι R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) (Finsupp.module.{u3, u2, u2} ι R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) _inst_3 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Finsupp.total.{u3, u1, u2} ι M R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3 e) l)
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.lc_def Module.DualBases.lc_defₓ'. -/
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
 #align module.dual_bases.lc_def Module.DualBases.lc_def
@@ -879,12 +750,6 @@ variable [DecidableEq ι] (h : DualBases e ε)
 
 include h
 
-/- warning: module.dual_bases.dual_lc -> Module.DualBases.dual_lc is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι], (Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) -> (forall (l : Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (i : ι), Eq.{succ u1} R (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (fun (_x : Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) => M -> R) (Module.Dual.hasCoeToFun.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (ε i) (Module.DualBases.lc.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 ι e l)) (coeFn.{max (succ u3) (succ u1), max (succ u3) (succ u1)} (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (fun (_x : Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) => ι -> R) (Finsupp.coeFun.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) l i))
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u1}} {ι : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι], (Module.DualBases.{u2, u1, u3} R M ι (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) -> (forall (l : Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) (i : ι), Eq.{succ u2} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) (Module.DualBases.lc.{u2, u1, u3} R M _inst_1 _inst_2 _inst_3 ι e l)) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Module.Dual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) _x) (Module.Dual.instFunLikeDual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) (ε i) (Module.DualBases.lc.{u2, u1, u3} R M _inst_1 _inst_2 _inst_3 ι e l)) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => R) _x) (Finsupp.funLike.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) l i))
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.dual_lc Module.DualBases.dual_lcₓ'. -/
 theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualBases.lc e l) = l i :=
   by
   erw [LinearMap.map_sum]
@@ -897,23 +762,11 @@ theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualBases.lc e l) = l i :=
     simp [Finsupp.not_mem_support_iff.1 p_not_in]
 #align module.dual_bases.dual_lc Module.DualBases.dual_lc
 
-/- warning: module.dual_bases.coeffs_lc -> Module.DualBases.coeffs_lc is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (l : Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))), Eq.{max (succ u3) (succ u1)} (Finsupp.{u3, u1} ι R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (Module.DualBases.coeffs.{u1, u2, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h (Module.DualBases.lc.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 ι e l)) l
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u1}} {ι : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u2, u1, u3} R M ι (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (l : Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))), Eq.{max (succ u2) (succ u3)} (Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) (Module.DualBases.coeffs.{u2, u1, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h (Module.DualBases.lc.{u2, u1, u3} R M _inst_1 _inst_2 _inst_3 ι e l)) l
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.coeffs_lc Module.DualBases.coeffs_lcₓ'. -/
 @[simp]
 theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualBases.lc e l) = l := by ext i;
   rw [h.coeffs_apply, h.dual_lc]
 #align module.dual_bases.coeffs_lc Module.DualBases.coeffs_lc
 
-/- warning: module.dual_bases.lc_coeffs -> Module.DualBases.lc_coeffs is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (m : M), Eq.{succ u2} M (Module.DualBases.lc.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 ι e (Module.DualBases.coeffs.{u1, u2, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h m)) m
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u3}} {ι : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : AddCommGroup.{u3} M] [_inst_3 : Module.{u2, u3} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u2, u3} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u1} ι] (h : Module.DualBases.{u2, u3, u1} R M ι (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (m : M), Eq.{succ u3} M (Module.DualBases.lc.{u2, u3, u1} R M _inst_1 _inst_2 _inst_3 ι e (Module.DualBases.coeffs.{u2, u3, u1} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h m)) m
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.lc_coeffs Module.DualBases.lc_coeffsₓ'. -/
 /-- For any m : M n, \sum_{p ∈ Q n} (ε p m) • e p = m -/
 @[simp]
 theorem lc_coeffs (m : M) : DualBases.lc e (h.coeffs m) = m :=
@@ -937,12 +790,6 @@ def basis : Basis ι R M :=
 #align module.dual_bases.basis Module.DualBases.basis
 -/
 
-/- warning: module.dual_bases.coe_basis -> Module.DualBases.coe_basis is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε), Eq.{max (succ u3) (succ u2)} (ι -> M) (coeFn.{max (succ u3) (succ u1) (succ u2), max (succ u3) (succ u2)} (Basis.{u3, u1, u2} ι R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (fun (_x : Basis.{u3, u1, u2} ι R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) => ι -> M) (FunLike.hasCoeToFun.{max (succ u3) (succ u1) (succ u2), succ u3, succ u2} (Basis.{u3, u1, u2} ι R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) ι (fun (_x : ι) => M) (Basis.funLike.{u3, u1, u2} ι R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)) (Module.DualBases.basis.{u1, u2, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h)) e
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u3}} {ι : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u3} M] [_inst_3 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u3} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u2} ι] (h : Module.DualBases.{u1, u3, u2} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε), Eq.{max (succ u3) (succ u2)} (forall (a : ι), (fun (x._@.Mathlib.LinearAlgebra.Basis._hyg.548 : ι) => M) a) (FunLike.coe.{max (max (succ u1) (succ u3)) (succ u2), succ u2, succ u3} (Basis.{u2, u1, u3} ι R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) _inst_3) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.Basis._hyg.548 : ι) => M) _x) (Basis.funLike.{u2, u1, u3} ι R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) _inst_3) (Module.DualBases.basis.{u1, u3, u2} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h)) e
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.coe_basis Module.DualBases.coe_basisₓ'. -/
 @[simp]
 theorem coe_basis : ⇑h.Basis = e := by
   ext i; rw [Basis.apply_eq_iff]; ext j
@@ -950,12 +797,6 @@ theorem coe_basis : ⇑h.Basis = e := by
   convert if_congr eq_comm rfl rfl
 #align module.dual_bases.coe_basis Module.DualBases.coe_basis
 
-/- warning: module.dual_bases.mem_of_mem_span -> Module.DualBases.mem_of_mem_span is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι], (Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) -> (forall {H : Set.{u3} ι} {x : M}, (Membership.Mem.{u2, u2} M (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (SetLike.hasMem.{u2, u2} (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) M (Submodule.setLike.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)) x (Submodule.span.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (Set.image.{u3, u2} ι M e H))) -> (forall (i : ι), (Ne.{succ u1} R (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (fun (_x : Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) => M -> R) (Module.Dual.hasCoeToFun.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (ε i) x) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))))) -> (Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i H)))
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι], (Module.DualBases.{u1, u2, u3} R M ι (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) -> (forall {H : Set.{u3} ι} {x : M}, (Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) M (Submodule.setLike.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)) x (Submodule.span.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3 (Set.image.{u3, u2} ι M e H))) -> (forall (i : ι), (Ne.{succ u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) x) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Module.Dual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) _x) (Module.Dual.instFunLikeDual.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (ε i) x) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) x) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) x) (CommMonoidWithZero.toZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) x) (CommSemiring.toCommMonoidWithZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) x) (CommRing.toCommSemiring.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : M) => R) x) _inst_1)))))) -> (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i H)))
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.mem_of_mem_span Module.DualBases.mem_of_mem_spanₓ'. -/
 -- `convert` to get rid of a `decidable_eq` mismatch
 theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '' H)) :
     ∀ i : ι, ε i x ≠ 0 → i ∈ H := by
@@ -965,9 +806,6 @@ theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '
   rwa [← lc_def, h.dual_lc] at hi
 #align module.dual_bases.mem_of_mem_span Module.DualBases.mem_of_mem_span
 
-/- warning: module.dual_bases.coe_dual_basis -> Module.DualBases.coe_dualBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.dual_bases.coe_dual_basis Module.DualBases.coe_dualBasisₓ'. -/
 theorem coe_dualBasis [Fintype ι] : ⇑h.Basis.dualBasis = ε :=
   funext fun i =>
     h.Basis.ext fun j => by
@@ -999,9 +837,6 @@ theorem dualRestrict_def (W : Submodule R M) : W.dualRestrict = W.Subtype.dualMa
 #align submodule.dual_restrict_def Submodule.dualRestrict_def
 -/
 
-/- warning: submodule.dual_restrict_apply -> Submodule.dualRestrict_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_restrict_apply Submodule.dualRestrict_applyₓ'. -/
 @[simp]
 theorem dualRestrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) :
     W.dualRestrict φ x = φ (x : M) :=
@@ -1017,9 +852,6 @@ def dualAnnihilator {R : Type u} {M : Type v} [CommSemiring R] [AddCommMonoid M]
 #align submodule.dual_annihilator Submodule.dualAnnihilator
 -/
 
-/- warning: submodule.mem_dual_annihilator -> Submodule.mem_dualAnnihilator is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.mem_dual_annihilator Submodule.mem_dualAnnihilatorₓ'. -/
 @[simp]
 theorem mem_dualAnnihilator (φ : Module.Dual R M) : φ ∈ W.dualAnnihilator ↔ ∀ w ∈ W, φ w = 0 :=
   by
@@ -1052,9 +884,6 @@ theorem mem_dualCoannihilator {Φ : Submodule R (Module.Dual R M)} (x : M) :
 #align submodule.mem_dual_coannihilator Submodule.mem_dualCoannihilator
 -/
 
-/- warning: submodule.dual_annihilator_gc -> Submodule.dualAnnihilator_gc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_annihilator_gc Submodule.dualAnnihilator_gcₓ'. -/
 theorem dualAnnihilator_gc (R M : Type _) [CommSemiring R] [AddCommMonoid M] [Module R M] :
     GaloisConnection
       (OrderDual.toDual ∘ (dualAnnihilator : Submodule R M → Submodule R (Module.Dual R M)))
@@ -1104,9 +933,6 @@ theorem dualCoannihilator_bot : (⊥ : Submodule R (Module.Dual R M)).dualCoanni
 #align submodule.dual_coannihilator_bot Submodule.dualCoannihilator_bot
 -/
 
-/- warning: submodule.dual_annihilator_anti -> Submodule.dualAnnihilator_anti is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_annihilator_anti Submodule.dualAnnihilator_antiₓ'. -/
 @[mono]
 theorem dualAnnihilator_anti {U V : Submodule R M} (hUV : U ≤ V) :
     V.dualAnnihilator ≤ U.dualAnnihilator :=
@@ -1121,12 +947,6 @@ theorem dualCoannihilator_anti {U V : Submodule R (Module.Dual R M)} (hUV : U �
 #align submodule.dual_coannihilator_anti Submodule.dualCoannihilator_anti
 -/
 
-/- warning: submodule.le_dual_annihilator_dual_coannihilator -> Submodule.le_dualAnnihilator_dualCoannihilator is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] (U : Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3), LE.le.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (Preorder.toHasLe.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (Submodule.completeLattice.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3))))) U (Submodule.dualCoannihilator.{u1, u2} R M _inst_1 _inst_2 _inst_3 (Submodule.dualAnnihilator.{u1, u2} R M _inst_1 _inst_2 _inst_3 U))
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] (U : Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3), LE.le.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (Preorder.toLE.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3) (Submodule.completeLattice.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_3))))) U (Submodule.dualCoannihilator.{u1, u2} R M _inst_1 _inst_2 _inst_3 (Submodule.dualAnnihilator.{u1, u2} R M _inst_1 _inst_2 _inst_3 U))
-Case conversion may be inaccurate. Consider using '#align submodule.le_dual_annihilator_dual_coannihilator Submodule.le_dualAnnihilator_dualCoannihilatorₓ'. -/
 theorem le_dualAnnihilator_dualCoannihilator (U : Submodule R M) :
     U ≤ U.dualAnnihilator.dualCoannihilator :=
   (dualAnnihilator_gc R M).le_u_l U
@@ -1167,25 +987,16 @@ theorem dualCoannihilator_sup_eq (U V : Submodule R (Module.Dual R M)) :
 #align submodule.dual_coannihilator_sup_eq Submodule.dualCoannihilator_sup_eq
 -/
 
-/- warning: submodule.dual_annihilator_supr_eq -> Submodule.dualAnnihilator_iSup_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_annihilator_supr_eq Submodule.dualAnnihilator_iSup_eqₓ'. -/
 theorem dualAnnihilator_iSup_eq {ι : Type _} (U : ι → Submodule R M) :
     (⨆ i : ι, U i).dualAnnihilator = ⨅ i : ι, (U i).dualAnnihilator :=
   (dualAnnihilator_gc R M).l_iSup
 #align submodule.dual_annihilator_supr_eq Submodule.dualAnnihilator_iSup_eq
 
-/- warning: submodule.dual_coannihilator_supr_eq -> Submodule.dualCoannihilator_iSup_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_coannihilator_supr_eq Submodule.dualCoannihilator_iSup_eqₓ'. -/
 theorem dualCoannihilator_iSup_eq {ι : Type _} (U : ι → Submodule R (Module.Dual R M)) :
     (⨆ i : ι, U i).dualCoannihilator = ⨅ i : ι, (U i).dualCoannihilator :=
   (dualAnnihilator_gc R M).u_iInf
 #align submodule.dual_coannihilator_supr_eq Submodule.dualCoannihilator_iSup_eq
 
-/- warning: submodule.sup_dual_annihilator_le_inf -> Submodule.sup_dualAnnihilator_le_inf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.sup_dual_annihilator_le_inf Submodule.sup_dualAnnihilator_le_infₓ'. -/
 /-- See also `subspace.dual_annihilator_inf_eq` for vector subspaces. -/
 theorem sup_dualAnnihilator_le_inf (U V : Submodule R M) :
     U.dualAnnihilator ⊔ V.dualAnnihilator ≤ (U ⊓ V).dualAnnihilator :=
@@ -1194,9 +1005,6 @@ theorem sup_dualAnnihilator_le_inf (U V : Submodule R M) :
   apply inf_le_inf <;> exact le_dual_annihilator_dual_coannihilator _
 #align submodule.sup_dual_annihilator_le_inf Submodule.sup_dualAnnihilator_le_inf
 
-/- warning: submodule.supr_dual_annihilator_le_infi -> Submodule.iSup_dualAnnihilator_le_iInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.supr_dual_annihilator_le_infi Submodule.iSup_dualAnnihilator_le_iInfₓ'. -/
 /-- See also `subspace.dual_annihilator_infi_eq` for vector subspaces when `ι` is finite. -/
 theorem iSup_dualAnnihilator_le_iInf {ι : Type _} (U : ι → Submodule R M) :
     (⨆ i : ι, (U i).dualAnnihilator) ≤ (⨅ i : ι, U i).dualAnnihilator :=
@@ -1250,9 +1058,6 @@ theorem dualAnnihilator_dualCoannihilator_eq {W : Subspace K V} :
 #align subspace.dual_annihilator_dual_coannihilator_eq Subspace.dualAnnihilator_dualCoannihilator_eq
 -/
 
-/- warning: subspace.forall_mem_dual_annihilator_apply_eq_zero_iff -> Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.forall_mem_dual_annihilator_apply_eq_zero_iff Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iffₓ'. -/
 -- exact elaborates slowly
 theorem forall_mem_dualAnnihilator_apply_eq_zero_iff (W : Subspace K V) (v : V) :
     (∀ φ : Module.Dual K V, φ ∈ W.dualAnnihilator → φ v = 0) ↔ v ∈ W := by
@@ -1273,9 +1078,6 @@ def dualAnnihilatorGci (K V : Type _) [Field K] [AddCommGroup V] [Module K V] :
 #align subspace.dual_annihilator_gci Subspace.dualAnnihilatorGci
 -/
 
-/- warning: subspace.dual_annihilator_le_dual_annihilator_iff -> Subspace.dualAnnihilator_le_dualAnnihilator_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_annihilator_le_dual_annihilator_iff Subspace.dualAnnihilator_le_dualAnnihilator_iffₓ'. -/
 theorem dualAnnihilator_le_dualAnnihilator_iff {W W' : Subspace K V} :
     W.dualAnnihilator ≤ W'.dualAnnihilator ↔ W' ≤ W :=
   (dualAnnihilatorGci K V).l_le_l_iff
@@ -1303,17 +1105,11 @@ noncomputable def dualLift (W : Subspace K V) : Module.Dual K W →ₗ[K] Module
 
 variable {W : Subspace K V}
 
-/- warning: subspace.dual_lift_of_subtype -> Subspace.dualLift_of_subtype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_lift_of_subtype Subspace.dualLift_of_subtypeₓ'. -/
 @[simp]
 theorem dualLift_of_subtype {φ : Module.Dual K W} (w : W) : W.dualLift φ (w : V) = φ w := by
   erw [of_is_compl_left_apply _ w]; rfl
 #align subspace.dual_lift_of_subtype Subspace.dualLift_of_subtype
 
-/- warning: subspace.dual_lift_of_mem -> Subspace.dualLift_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_lift_of_mem Subspace.dualLift_of_memₓ'. -/
 theorem dualLift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLift φ w = φ ⟨w, hw⟩ :=
   by convert dual_lift_of_subtype ⟨w, hw⟩
 #align subspace.dual_lift_of_mem Subspace.dualLift_of_mem
@@ -1325,32 +1121,20 @@ theorem dualRestrict_comp_dualLift (W : Subspace K V) : W.dualRestrict.comp W.du
 #align subspace.dual_restrict_comp_dual_lift Subspace.dualRestrict_comp_dualLift
 -/
 
-/- warning: subspace.dual_restrict_left_inverse -> Subspace.dualRestrict_leftInverse is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_restrict_left_inverse Subspace.dualRestrict_leftInverseₓ'. -/
 theorem dualRestrict_leftInverse (W : Subspace K V) :
     Function.LeftInverse W.dualRestrict W.dualLift := fun x =>
   show W.dualRestrict.comp W.dualLift x = x by rw [dual_restrict_comp_dual_lift]; rfl
 #align subspace.dual_restrict_left_inverse Subspace.dualRestrict_leftInverse
 
-/- warning: subspace.dual_lift_right_inverse -> Subspace.dualLift_rightInverse is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_lift_right_inverse Subspace.dualLift_rightInverseₓ'. -/
 theorem dualLift_rightInverse (W : Subspace K V) :
     Function.RightInverse W.dualLift W.dualRestrict :=
   W.dualRestrict_leftInverse
 #align subspace.dual_lift_right_inverse Subspace.dualLift_rightInverse
 
-/- warning: subspace.dual_restrict_surjective -> Subspace.dualRestrict_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_restrict_surjective Subspace.dualRestrict_surjectiveₓ'. -/
 theorem dualRestrict_surjective : Function.Surjective W.dualRestrict :=
   W.dualLift_rightInverse.Surjective
 #align subspace.dual_restrict_surjective Subspace.dualRestrict_surjective
 
-/- warning: subspace.dual_lift_injective -> Subspace.dualLift_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_lift_injective Subspace.dualLift_injectiveₓ'. -/
 theorem dualLift_injective : Function.Injective W.dualLift :=
   W.dualRestrict_leftInverse.Injective
 #align subspace.dual_lift_injective Subspace.dualLift_injective
@@ -1365,9 +1149,6 @@ noncomputable def quotAnnihilatorEquiv (W : Subspace K V) :
 #align subspace.quot_annihilator_equiv Subspace.quotAnnihilatorEquiv
 -/
 
-/- warning: subspace.quot_annihilator_equiv_apply -> Subspace.quotAnnihilatorEquiv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.quot_annihilator_equiv_apply Subspace.quotAnnihilatorEquiv_applyₓ'. -/
 @[simp]
 theorem quotAnnihilatorEquiv_apply (W : Subspace K V) (φ : Module.Dual K V) :
     W.quotAnnihilatorEquiv (Submodule.Quotient.mk φ) = W.dualRestrict φ := by ext; rfl
@@ -1387,9 +1168,6 @@ theorem dualEquivDual_def (W : Subspace K V) :
 #align subspace.dual_equiv_dual_def Subspace.dualEquivDual_def
 -/
 
-/- warning: subspace.dual_equiv_dual_apply -> Subspace.dualEquivDual_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_equiv_dual_apply Subspace.dualEquivDual_applyₓ'. -/
 @[simp]
 theorem dualEquivDual_apply (φ : Module.Dual K W) :
     W.dualEquivDual φ = ⟨W.dualLift φ, mem_range.2 ⟨φ, rfl⟩⟩ :=
@@ -1493,9 +1271,6 @@ theorem ker_dualMap_eq_dualAnnihilator_range : f.dualMap.ker = f.range.dualAnnih
 #align linear_map.ker_dual_map_eq_dual_annihilator_range LinearMap.ker_dualMap_eq_dualAnnihilator_range
 -/
 
-/- warning: linear_map.range_dual_map_le_dual_annihilator_ker -> LinearMap.range_dualMap_le_dualAnnihilator_ker is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dualMap_le_dualAnnihilator_kerₓ'. -/
 theorem range_dualMap_le_dualAnnihilator_ker : f.dualMap.range ≤ f.ker.dualAnnihilator :=
   by
   rintro _ ⟨ψ, rfl⟩
@@ -1526,9 +1301,6 @@ def dualCopairing (W : Submodule R M) : W.dualAnnihilator →ₗ[R] M ⧸ W →�
 #align submodule.dual_copairing Submodule.dualCopairing
 -/
 
-/- warning: submodule.dual_copairing_apply -> Submodule.dualCopairing_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_copairing_apply Submodule.dualCopairing_applyₓ'. -/
 @[simp]
 theorem dualCopairing_apply {W : Submodule R M} (φ : W.dualAnnihilator) (x : M) :
     W.dualCopairing φ (Quotient.mk x) = φ x :=
@@ -1547,18 +1319,12 @@ def dualPairing (W : Submodule R M) : Module.Dual R M ⧸ W.dualAnnihilator →�
 #align submodule.dual_pairing Submodule.dualPairing
 -/
 
-/- warning: submodule.dual_pairing_apply -> Submodule.dualPairing_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_pairing_apply Submodule.dualPairing_applyₓ'. -/
 @[simp]
 theorem dualPairing_apply {W : Submodule R M} (φ : Module.Dual R M) (x : W) :
     W.dualPairing (Quotient.mk φ) x = φ x :=
   rfl
 #align submodule.dual_pairing_apply Submodule.dualPairing_apply
 
-/- warning: submodule.range_dual_map_mkq_eq -> Submodule.range_dualMap_mkQ_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.range_dual_map_mkq_eq Submodule.range_dualMap_mkQ_eqₓ'. -/
 /-- That $\operatorname{im}(q^* : (V/W)^* \to V^*) = \operatorname{ann}(W)$. -/
 theorem range_dualMap_mkQ_eq (W : Submodule R M) : W.mkQ.dualMap.range = W.dualAnnihilator :=
   by
@@ -1589,26 +1355,17 @@ def dualQuotEquivDualAnnihilator (W : Submodule R M) :
 #align submodule.dual_quot_equiv_dual_annihilator Submodule.dualQuotEquivDualAnnihilator
 -/
 
-/- warning: submodule.dual_quot_equiv_dual_annihilator_apply -> Submodule.dualQuotEquivDualAnnihilator_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_quot_equiv_dual_annihilator_apply Submodule.dualQuotEquivDualAnnihilator_applyₓ'. -/
 @[simp]
 theorem dualQuotEquivDualAnnihilator_apply (W : Submodule R M) (φ : Module.Dual R (M ⧸ W)) (x : M) :
     dualQuotEquivDualAnnihilator W φ x = φ (Quotient.mk x) :=
   rfl
 #align submodule.dual_quot_equiv_dual_annihilator_apply Submodule.dualQuotEquivDualAnnihilator_apply
 
-/- warning: submodule.dual_copairing_eq -> Submodule.dualCopairing_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_copairing_eq Submodule.dualCopairing_eqₓ'. -/
 theorem dualCopairing_eq (W : Submodule R M) :
     W.dualCopairing = (dualQuotEquivDualAnnihilator W).symm.toLinearMap :=
   rfl
 #align submodule.dual_copairing_eq Submodule.dualCopairing_eq
 
-/- warning: submodule.dual_quot_equiv_dual_annihilator_symm_apply_mk -> Submodule.dualQuotEquivDualAnnihilator_symm_apply_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.dual_quot_equiv_dual_annihilator_symm_apply_mk Submodule.dualQuotEquivDualAnnihilator_symm_apply_mkₓ'. -/
 @[simp]
 theorem dualQuotEquivDualAnnihilator_symm_apply_mk (W : Submodule R M) (φ : W.dualAnnihilator)
     (x : M) : (dualQuotEquivDualAnnihilator W).symm φ (Quotient.mk x) = φ x :=
@@ -1621,9 +1378,6 @@ namespace LinearMap
 
 open Submodule
 
-/- warning: linear_map.range_dual_map_eq_dual_annihilator_ker_of_surjective -> LinearMap.range_dualMap_eq_dualAnnihilator_ker_of_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.range_dual_map_eq_dual_annihilator_ker_of_surjective LinearMap.range_dualMap_eq_dualAnnihilator_ker_of_surjectiveₓ'. -/
 theorem range_dualMap_eq_dualAnnihilator_ker_of_surjective (f : M →ₗ[R] M')
     (hf : Function.Surjective f) : f.dualMap.range = f.ker.dualAnnihilator :=
   by
@@ -1640,9 +1394,6 @@ theorem range_dualMap_eq_dualAnnihilator_ker_of_surjective (f : M →ₗ[R] M')
       LinearMap.quotKerEquivRange_symm_apply_image, mkq_apply]
 #align linear_map.range_dual_map_eq_dual_annihilator_ker_of_surjective LinearMap.range_dualMap_eq_dualAnnihilator_ker_of_surjective
 
-/- warning: linear_map.range_dual_map_eq_dual_annihilator_ker_of_subtype_range_surjective -> LinearMap.range_dualMap_eq_dualAnnihilator_ker_of_subtype_range_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.range_dual_map_eq_dual_annihilator_ker_of_subtype_range_surjective LinearMap.range_dualMap_eq_dualAnnihilator_ker_of_subtype_range_surjectiveₓ'. -/
 -- Note, this can be specialized to the case where `R` is an injective `R`-module, or when
 -- `f.coker` is a projective `R`-module.
 theorem range_dualMap_eq_dualAnnihilator_ker_of_subtype_range_surjective (f : M →ₗ[R] M')
@@ -1677,9 +1428,6 @@ theorem dualPairing_nondegenerate : (dualPairing K V₁).Nondegenerate :=
 #align linear_map.dual_pairing_nondegenerate LinearMap.dualPairing_nondegenerate
 -/
 
-/- warning: linear_map.dual_map_surjective_of_injective -> LinearMap.dualMap_surjective_of_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_surjective_of_injective LinearMap.dualMap_surjective_of_injectiveₓ'. -/
 theorem dualMap_surjective_of_injective {f : V₁ →ₗ[K] V₂} (hf : Function.Injective f) :
     Function.Surjective f.dualMap := by
   intro φ
@@ -1700,9 +1448,6 @@ theorem range_dualMap_eq_dualAnnihilator_ker (f : V₁ →ₗ[K] V₂) :
 #align linear_map.range_dual_map_eq_dual_annihilator_ker LinearMap.range_dualMap_eq_dualAnnihilator_ker
 -/
 
-/- warning: linear_map.dual_map_surjective_iff -> LinearMap.dualMap_surjective_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_surjective_iff LinearMap.dualMap_surjective_iffₓ'. -/
 /-- For vector spaces, `f.dual_map` is surjective if and only if `f` is injective -/
 @[simp]
 theorem dualMap_surjective_iff {f : V₁ →ₗ[K] V₂} :
@@ -1771,9 +1516,6 @@ theorem dualAnnihilator_inf_eq (W W' : Subspace K V₁) :
 #align subspace.dual_annihilator_inf_eq Subspace.dualAnnihilator_inf_eq
 -/
 
-/- warning: subspace.dual_annihilator_infi_eq -> Subspace.dualAnnihilator_iInf_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subspace.dual_annihilator_infi_eq Subspace.dualAnnihilator_iInf_eqₓ'. -/
 -- This is also true if `V₁` is finite dimensional since one can restrict `ι` to some subtype
 -- for which the infi and supr are the same.
 --
@@ -1843,9 +1585,6 @@ theorem finrank_range_dualMap_eq_finrank_range (f : V₁ →ₗ[K] V₂) :
 #align linear_map.finrank_range_dual_map_eq_finrank_range LinearMap.finrank_range_dualMap_eq_finrank_range
 -/
 
-/- warning: linear_map.dual_map_injective_iff -> LinearMap.dualMap_injective_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_injective_iff LinearMap.dualMap_injective_iffₓ'. -/
 /-- `f.dual_map` is injective if and only if `f` is surjective -/
 @[simp]
 theorem dualMap_injective_iff {f : V₁ →ₗ[K] V₂} :
@@ -1861,9 +1600,6 @@ theorem dualMap_injective_iff {f : V₁ →ₗ[K] V₂} :
     Subspace.dual_finrank_eq]
 #align linear_map.dual_map_injective_iff LinearMap.dualMap_injective_iff
 
-/- warning: linear_map.dual_map_bijective_iff -> LinearMap.dualMap_bijective_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.dual_map_bijective_iff LinearMap.dualMap_bijective_iffₓ'. -/
 /-- `f.dual_map` is bijective if and only if `f` is -/
 @[simp]
 theorem dualMap_bijective_iff {f : V₁ →ₗ[K] V₂} :
@@ -1915,9 +1651,6 @@ def dualDistrib : Dual R M ⊗[R] Dual R N →ₗ[R] Dual R (M ⊗[R] N) :=
 
 variable {R M N}
 
-/- warning: tensor_product.dual_distrib_apply -> TensorProduct.dualDistrib_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.dual_distrib_apply TensorProduct.dualDistrib_applyₓ'. -/
 @[simp]
 theorem dualDistrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
     dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n :=
@@ -1932,9 +1665,6 @@ variable [CommRing R] [AddCommGroup M] [AddCommGroup N]
 
 variable [Module R M] [Module R N]
 
-/- warning: tensor_product.dual_distrib_inv_of_basis -> TensorProduct.dualDistribInvOfBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.dual_distrib_inv_of_basis TensorProduct.dualDistribInvOfBasisₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- An inverse to `dual_tensor_dual_map` given bases.
 -/
@@ -1945,9 +1675,6 @@ noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
       applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
 #align tensor_product.dual_distrib_inv_of_basis TensorProduct.dualDistribInvOfBasis
 
-/- warning: tensor_product.dual_distrib_inv_of_basis_apply -> TensorProduct.dualDistribInvOfBasis_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.dual_distrib_inv_of_basis_apply TensorProduct.dualDistribInvOfBasis_applyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem dualDistribInvOfBasis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :

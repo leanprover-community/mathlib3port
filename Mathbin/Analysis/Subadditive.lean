@@ -53,12 +53,6 @@ protected irreducible_def lim :=
 #align subadditive.lim Subadditive.lim
 -/
 
-/- warning: subadditive.lim_le_div -> Subadditive.lim_le_div is a dubious translation:
-lean 3 declaration is
-  forall {u : Nat -> Real} (h : Subadditive u), (BddBelow.{0} Real Real.preorder (Set.range.{0, 1} Real Nat (fun (n : Nat) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (u n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)))) -> (forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LE.le.{0} Real Real.hasLe (Subadditive.lim u h) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (u n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n))))
-but is expected to have type
-  forall {u : Nat -> Real} (h : Subadditive u), (BddBelow.{0} Real Real.instPreorderReal (Set.range.{0, 1} Real Nat (fun (n : Nat) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (u n) (Nat.cast.{0} Real Real.natCast n)))) -> (forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (LE.le.{0} Real Real.instLEReal (Subadditive.lim u h) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (u n) (Nat.cast.{0} Real Real.natCast n))))
-Case conversion may be inaccurate. Consider using '#align subadditive.lim_le_div Subadditive.lim_le_divₓ'. -/
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
     h.limUnder ≤ u n / n := by
   rw [Subadditive.lim]
@@ -69,12 +63,6 @@ theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n 
     exact zero_lt_iff.2 hn
 #align subadditive.lim_le_div Subadditive.lim_le_div
 
-/- warning: subadditive.apply_mul_add_le -> Subadditive.apply_mul_add_le is a dubious translation:
-lean 3 declaration is
-  forall {u : Nat -> Real}, (Subadditive u) -> (forall (k : Nat) (n : Nat) (r : Nat), LE.le.{0} Real Real.hasLe (u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) k n) r)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) k) (u n)) (u r)))
-but is expected to have type
-  forall {u : Nat -> Real}, (Subadditive u) -> (forall (k : Nat) (n : Nat) (r : Nat), LE.le.{0} Real Real.instLEReal (u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) k n) r)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Nat.cast.{0} Real Real.natCast k) (u n)) (u r)))
-Case conversion may be inaccurate. Consider using '#align subadditive.apply_mul_add_le Subadditive.apply_mul_add_leₓ'. -/
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
   by
   induction' k with k IH; · simp only [Nat.cast_zero, MulZeroClass.zero_mul, zero_add]
@@ -86,12 +74,6 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
     
 #align subadditive.apply_mul_add_le Subadditive.apply_mul_add_le
 
-/- warning: subadditive.eventually_div_lt_of_div_lt -> Subadditive.eventually_div_lt_of_div_lt is a dubious translation:
-lean 3 declaration is
-  forall {u : Nat -> Real}, (Subadditive u) -> (forall {L : Real} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} Real Real.hasLt (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (u n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)) L) -> (Filter.Eventually.{0} Nat (fun (p : Nat) => LT.lt.{0} Real Real.hasLt (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (u p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p)) L) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))))
-but is expected to have type
-  forall {u : Nat -> Real}, (Subadditive u) -> (forall {L : Real} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (LT.lt.{0} Real Real.instLTReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (u n) (Nat.cast.{0} Real Real.natCast n)) L) -> (Filter.Eventually.{0} Nat (fun (p : Nat) => LT.lt.{0} Real Real.instLTReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (u p) (Nat.cast.{0} Real Real.natCast p)) L) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))))
-Case conversion may be inaccurate. Consider using '#align subadditive.eventually_div_lt_of_div_lt Subadditive.eventually_div_lt_of_div_ltₓ'. -/
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) :
     ∀ᶠ p in atTop, u p / p < L :=
   by
@@ -138,12 +120,6 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
   filter_upwards [B, C]with _ hp h'p using hp.trans_lt h'p
 #align subadditive.eventually_div_lt_of_div_lt Subadditive.eventually_div_lt_of_div_lt
 
-/- warning: subadditive.tendsto_lim -> Subadditive.tendsto_lim is a dubious translation:
-lean 3 declaration is
-  forall {u : Nat -> Real} (h : Subadditive u), (BddBelow.{0} Real Real.preorder (Set.range.{0, 1} Real Nat (fun (n : Nat) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (u n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (u n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Subadditive.lim u h)))
-but is expected to have type
-  forall {u : Nat -> Real} (h : Subadditive u), (BddBelow.{0} Real Real.instPreorderReal (Set.range.{0, 1} Real Nat (fun (n : Nat) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (u n) (Nat.cast.{0} Real Real.natCast n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (u n) (Nat.cast.{0} Real Real.natCast n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Subadditive.lim u h)))
-Case conversion may be inaccurate. Consider using '#align subadditive.tendsto_lim Subadditive.tendsto_limₓ'. -/
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
     Tendsto (fun n => u n / n) atTop (𝓝 h.limUnder) :=

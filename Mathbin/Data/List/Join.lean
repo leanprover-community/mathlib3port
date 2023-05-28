@@ -53,12 +53,6 @@ theorem join_concat (L : List (List α)) (l : List α) : join (L.concat l) = joi
 #align list.join_concat List.join_concat
 -/
 
-/- warning: list.join_filter_empty_eq_ff -> List.join_filter_isEmpty_eq_false is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidablePred.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Bool (List.isEmpty.{u1} α l) Bool.false)] {L : List.{u1} (List.{u1} α)}, Eq.{succ u1} (List.{u1} α) (List.join.{u1} α (List.filterₓ.{u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Bool (List.isEmpty.{u1} α l) Bool.false) (fun (a : List.{u1} α) => _inst_1 a) L)) (List.join.{u1} α L)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidablePred.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Bool (List.isEmpty.{u1} α l) Bool.false)] {L : List.{u1} (List.{u1} α)}, Eq.{succ u1} (List.{u1} α) (List.join.{u1} α (List.filter.{u1} (List.{u1} α) (fun (a : List.{u1} α) => Decidable.decide (Eq.{1} Bool (List.isEmpty.{u1} α a) Bool.false) (_inst_1 a)) L)) (List.join.{u1} α L)
-Case conversion may be inaccurate. Consider using '#align list.join_filter_empty_eq_ff List.join_filter_isEmpty_eq_falseₓ'. -/
 @[simp]
 theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty = false] :
     ∀ {L : List (List α)}, join (L.filterₓ fun l => l.Empty = false) = L.join
@@ -67,12 +61,6 @@ theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty =
   | (a :: l) :: L => by simp [@join_filter_empty_eq_ff L]
 #align list.join_filter_empty_eq_ff List.join_filter_isEmpty_eq_false
 
-/- warning: list.join_filter_ne_nil -> List.join_filter_ne_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidablePred.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Ne.{succ u1} (List.{u1} α) l (List.nil.{u1} α))] {L : List.{u1} (List.{u1} α)}, Eq.{succ u1} (List.{u1} α) (List.join.{u1} α (List.filterₓ.{u1} (List.{u1} α) (fun (l : List.{u1} α) => Ne.{succ u1} (List.{u1} α) l (List.nil.{u1} α)) (fun (a : List.{u1} α) => _inst_1 a) L)) (List.join.{u1} α L)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidablePred.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Ne.{succ u1} (List.{u1} α) l (List.nil.{u1} α))] {L : List.{u1} (List.{u1} α)}, Eq.{succ u1} (List.{u1} α) (List.join.{u1} α (List.filter.{u1} (List.{u1} α) (fun (a : List.{u1} α) => Decidable.decide (Ne.{succ u1} (List.{u1} α) a (List.nil.{u1} α)) (_inst_1 a)) L)) (List.join.{u1} α L)
-Case conversion may be inaccurate. Consider using '#align list.join_filter_ne_nil List.join_filter_ne_nilₓ'. -/
 @[simp]
 theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List (List α)} :
     join (L.filterₓ fun l => l ≠ []) = L.join := by
@@ -92,23 +80,11 @@ theorem length_join (L : List (List α)) : length (join L) = sum (map length L) 
 #align list.length_join List.length_join
 -/
 
-/- warning: list.length_bind -> List.length_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : List.{u1} α) (f : α -> (List.{u2} β)), Eq.{1} Nat (List.length.{u2} β (List.bind.{u1, u2} α β l f)) (List.sum.{0} Nat Nat.hasAdd Nat.hasZero (List.map.{u1, 0} α Nat (Function.comp.{succ u1, succ u2, 1} α (List.{u2} β) Nat (List.length.{u2} β) f) l))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (l : List.{u2} α) (f : α -> (List.{u1} β)), Eq.{1} Nat (List.length.{u1} β (List.bind.{u2, u1} α β l f)) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u2, 0} α Nat (Function.comp.{succ u2, succ u1, 1} α (List.{u1} β) Nat (List.length.{u1} β) f) l))
-Case conversion may be inaccurate. Consider using '#align list.length_bind List.length_bindₓ'. -/
 @[simp]
 theorem length_bind (l : List α) (f : α → List β) :
     length (List.bind l f) = sum (map (length ∘ f) l) := by rw [List.bind, length_join, map_map]
 #align list.length_bind List.length_bind
 
-/- warning: list.bind_eq_nil -> List.bind_eq_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : List.{u1} α} {f : α -> (List.{u2} β)}, Iff (Eq.{succ u2} (List.{u2} β) (List.bind.{u1, u2} α β l f) (List.nil.{u2} β)) (forall (x : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l) -> (Eq.{succ u2} (List.{u2} β) (f x) (List.nil.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {l : List.{u2} α} {f : α -> (List.{u1} β)}, Iff (Eq.{succ u1} (List.{u1} β) (List.bind.{u2, u1} α β l f) (List.nil.{u1} β)) (forall (x : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) x l) -> (Eq.{succ u1} (List.{u1} β) (f x) (List.nil.{u1} β)))
-Case conversion may be inaccurate. Consider using '#align list.bind_eq_nil List.bind_eq_nilₓ'. -/
 @[simp]
 theorem bind_eq_nil {l : List α} {f : α → List β} : List.bind l f = [] ↔ ∀ x ∈ l, f x = [] :=
   join_eq_nil.trans <| by

@@ -71,25 +71,16 @@ def dualTensorHom : Module.Dual R M ⊗ N →ₗ[R] M →ₗ[R] N :=
 
 variable {R M N P Q}
 
-/- warning: contract_left_apply -> contractLeft_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align contract_left_apply contractLeft_applyₓ'. -/
 @[simp]
 theorem contractLeft_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m :=
   rfl
 #align contract_left_apply contractLeft_apply
 
-/- warning: contract_right_apply -> contractRight_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align contract_right_apply contractRight_applyₓ'. -/
 @[simp]
 theorem contractRight_apply (f : Module.Dual R M) (m : M) : contractRight R M (m ⊗ₜ f) = f m :=
   rfl
 #align contract_right_apply contractRight_apply
 
-/- warning: dual_tensor_hom_apply -> dualTensorHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dual_tensor_hom_apply dualTensorHom_applyₓ'. -/
 @[simp]
 theorem dualTensorHom_apply (f : Module.Dual R M) (m : M) (n : N) :
     dualTensorHom R M N (f ⊗ₜ n) m = f m • n :=
@@ -108,9 +99,6 @@ theorem transpose_dualTensorHom (f : Module.Dual R M) (m : M) :
 #align transpose_dual_tensor_hom transpose_dualTensorHom
 -/
 
-/- warning: dual_tensor_hom_prod_map_zero -> dualTensorHom_prodMap_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dual_tensor_hom_prod_map_zero dualTensorHom_prodMap_zeroₓ'. -/
 @[simp]
 theorem dualTensorHom_prodMap_zero (f : Module.Dual R M) (p : P) :
     ((dualTensorHom R M P) (f ⊗ₜ[R] p)).Prod_map (0 : N →ₗ[R] Q) =
@@ -121,9 +109,6 @@ theorem dualTensorHom_prodMap_zero (f : Module.Dual R M) (p : P) :
       fst_apply, Prod.smul_mk, zero_apply, smul_zero]
 #align dual_tensor_hom_prod_map_zero dualTensorHom_prodMap_zero
 
-/- warning: zero_prod_map_dual_tensor_hom -> zero_prodMap_dualTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align zero_prod_map_dual_tensor_hom zero_prodMap_dualTensorHomₓ'. -/
 @[simp]
 theorem zero_prodMap_dualTensorHom (g : Module.Dual R N) (q : Q) :
     (0 : M →ₗ[R] P).Prod_map ((dualTensorHom R N Q) (g ⊗ₜ[R] q)) =
@@ -134,9 +119,6 @@ theorem zero_prodMap_dualTensorHom (g : Module.Dual R N) (q : Q) :
       snd_apply, Prod.smul_mk, zero_apply, smul_zero]
 #align zero_prod_map_dual_tensor_hom zero_prodMap_dualTensorHom
 
-/- warning: map_dual_tensor_hom -> map_dualTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align map_dual_tensor_hom map_dualTensorHomₓ'. -/
 theorem map_dualTensorHom (f : Module.Dual R M) (p : P) (g : Module.Dual R N) (q : Q) :
     TensorProduct.map (dualTensorHom R M P (f ⊗ₜ[R] p)) (dualTensorHom R N Q (g ⊗ₜ[R] q)) =
       dualTensorHom R (M ⊗[R] N) (P ⊗[R] Q) (dualDistrib R M N (f ⊗ₜ g) ⊗ₜ[R] p ⊗ₜ[R] q) :=
@@ -145,9 +127,6 @@ theorem map_dualTensorHom (f : Module.Dual R M) (p : P) (g : Module.Dual R N) (q
     smul_tmul_smul]
 #align map_dual_tensor_hom map_dualTensorHom
 
-/- warning: comp_dual_tensor_hom -> comp_dualTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align comp_dual_tensor_hom comp_dualTensorHomₓ'. -/
 @[simp]
 theorem comp_dualTensorHom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (p : P) :
     dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) =
@@ -159,9 +138,6 @@ theorem comp_dualTensorHom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (
   rw [smul_comm]
 #align comp_dual_tensor_hom comp_dualTensorHom
 
-/- warning: to_matrix_dual_tensor_hom -> toMatrix_dualTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align to_matrix_dual_tensor_hom toMatrix_dualTensorHomₓ'. -/
 /-- As a matrix, `dual_tensor_hom` evaluated on a basis element of `M* ⊗ N` is a matrix with a
 single one and zeros elsewhere -/
 theorem toMatrix_dualTensorHom {m : Type _} {n : Type _} [Fintype m] [Fintype n] [DecidableEq m]
@@ -225,9 +201,6 @@ theorem dualTensorHomEquivOfBasis_symm_cancel_left (x : Module.Dual R M ⊗[R] N
 #align dual_tensor_hom_equiv_of_basis_symm_cancel_left dualTensorHomEquivOfBasis_symm_cancel_left
 -/
 
-/- warning: dual_tensor_hom_equiv_of_basis_symm_cancel_right -> dualTensorHomEquivOfBasis_symm_cancel_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dual_tensor_hom_equiv_of_basis_symm_cancel_right dualTensorHomEquivOfBasis_symm_cancel_rightₓ'. -/
 @[simp]
 theorem dualTensorHomEquivOfBasis_symm_cancel_right (x : M →ₗ[R] N) :
     dualTensorHom R M N ((dualTensorHomEquivOfBasis b).symm x) = x := by

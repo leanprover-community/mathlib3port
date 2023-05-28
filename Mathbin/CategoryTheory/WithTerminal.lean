@@ -64,12 +64,6 @@ attribute [local tidy] tactic.case_bash
 
 variable {C}
 
-/- warning: category_theory.with_terminal.hom -> CategoryTheory.WithTerminal.Hom is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.WithTerminal.{u1, u2} C _inst_1) -> (CategoryTheory.WithTerminal.{u1, u2} C _inst_1) -> Type.{u1}
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.WithTerminal.{u2, u1} C _inst_1) -> (CategoryTheory.WithTerminal.{u2, u1} C _inst_1) -> Type.{u2}
-Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.hom CategoryTheory.WithTerminal.Homₓ'. -/
 /-- Morphisms for `with_terminal C`. -/
 @[simp, nolint has_nonempty_instance]
 def Hom : WithTerminal C → WithTerminal C → Type v
@@ -78,12 +72,6 @@ def Hom : WithTerminal C → WithTerminal C → Type v
   | _, star => PUnit
 #align category_theory.with_terminal.hom CategoryTheory.WithTerminal.Hom
 
-/- warning: category_theory.with_terminal.id -> CategoryTheory.WithTerminal.id is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : CategoryTheory.WithTerminal.{u1, u2} C _inst_1), CategoryTheory.WithTerminal.Hom.{u1, u2} C _inst_1 X X
-but is expected to have type
-  PUnit.{max (succ (succ u1)) (succ (succ u2))}
-Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.id CategoryTheory.WithTerminal.idₓ'. -/
 /-- Identity morphisms for `with_terminal C`. -/
 @[simp]
 def id : ∀ X : WithTerminal C, Hom X X
@@ -91,12 +79,6 @@ def id : ∀ X : WithTerminal C, Hom X X
   | star => PUnit.unit
 #align category_theory.with_terminal.id CategoryTheory.WithTerminal.id
 
-/- warning: category_theory.with_terminal.comp -> CategoryTheory.WithTerminal.comp is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : CategoryTheory.WithTerminal.{u1, u2} C _inst_1} {Y : CategoryTheory.WithTerminal.{u1, u2} C _inst_1} {Z : CategoryTheory.WithTerminal.{u1, u2} C _inst_1}, (CategoryTheory.WithTerminal.Hom.{u1, u2} C _inst_1 X Y) -> (CategoryTheory.WithTerminal.Hom.{u1, u2} C _inst_1 Y Z) -> (CategoryTheory.WithTerminal.Hom.{u1, u2} C _inst_1 X Z)
-but is expected to have type
-  PUnit.{max (succ (succ u1)) (succ (succ u2))}
-Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.comp CategoryTheory.WithTerminal.compₓ'. -/
 /-- Composition of morphisms for `with_terminal C`. -/
 @[simp]
 def comp : ∀ {X Y Z : WithTerminal C}, Hom X Y → Hom Y Z → Hom X Z
@@ -251,12 +233,6 @@ attribute [local tidy] tactic.case_bash
 
 variable {C}
 
-/- warning: category_theory.with_initial.hom -> CategoryTheory.WithInitial.Hom is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.WithInitial.{u1, u2} C _inst_1) -> (CategoryTheory.WithInitial.{u1, u2} C _inst_1) -> Type.{u1}
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.WithInitial.{u2, u1} C _inst_1) -> (CategoryTheory.WithInitial.{u2, u1} C _inst_1) -> Type.{u2}
-Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.hom CategoryTheory.WithInitial.Homₓ'. -/
 /-- Morphisms for `with_initial C`. -/
 @[simp, nolint has_nonempty_instance]
 def Hom : WithInitial C → WithInitial C → Type v
@@ -265,12 +241,6 @@ def Hom : WithInitial C → WithInitial C → Type v
   | star, _ => PUnit
 #align category_theory.with_initial.hom CategoryTheory.WithInitial.Hom
 
-/- warning: category_theory.with_initial.id -> CategoryTheory.WithInitial.id is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : CategoryTheory.WithInitial.{u1, u2} C _inst_1), CategoryTheory.WithInitial.Hom.{u1, u2} C _inst_1 X X
-but is expected to have type
-  PUnit.{max (succ (succ u1)) (succ (succ u2))}
-Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.id CategoryTheory.WithInitial.idₓ'. -/
 /-- Identity morphisms for `with_initial C`. -/
 @[simp]
 def id : ∀ X : WithInitial C, Hom X X
@@ -278,12 +248,6 @@ def id : ∀ X : WithInitial C, Hom X X
   | star => PUnit.unit
 #align category_theory.with_initial.id CategoryTheory.WithInitial.id
 
-/- warning: category_theory.with_initial.comp -> CategoryTheory.WithInitial.comp is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : CategoryTheory.WithInitial.{u1, u2} C _inst_1} {Y : CategoryTheory.WithInitial.{u1, u2} C _inst_1} {Z : CategoryTheory.WithInitial.{u1, u2} C _inst_1}, (CategoryTheory.WithInitial.Hom.{u1, u2} C _inst_1 X Y) -> (CategoryTheory.WithInitial.Hom.{u1, u2} C _inst_1 Y Z) -> (CategoryTheory.WithInitial.Hom.{u1, u2} C _inst_1 X Z)
-but is expected to have type
-  PUnit.{max (succ (succ u1)) (succ (succ u2))}
-Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.comp CategoryTheory.WithInitial.compₓ'. -/
 /-- Composition of morphisms for `with_initial C`. -/
 @[simp]
 def comp : ∀ {X Y Z : WithInitial C}, Hom X Y → Hom Y Z → Hom X Z

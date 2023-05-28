@@ -48,9 +48,6 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C] {X X' : SimplicialObject C}
 
-/- warning: algebraic_topology.dold_kan.decomposition_Q -> AlgebraicTopology.DoldKan.decomposition_Q is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_Qₓ'. -/
 /-- In each positive degree, this lemma decomposes the idempotent endomorphism
 `Q q` as a sum of morphisms which are postcompositions with suitable degeneracies.
 As `Q q` is the complement projection to `P q`, this implies that in the case of
@@ -91,12 +88,6 @@ theorem decomposition_Q (n q : ℕ) :
 
 variable (X)
 
-/- warning: algebraic_topology.dold_kan.morph_components -> AlgebraicTopology.DoldKan.MorphComponents is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1], (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) -> Nat -> C -> Type.{u2}
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) -> Nat -> C -> Type.{u2}
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.morph_components AlgebraicTopology.DoldKan.MorphComponentsₓ'. -/
 /-- The structure `morph_components` is an ad hoc structure that is used in
 the proof that `N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms. The fields are the data that are needed in order to
@@ -132,12 +123,6 @@ def id : MorphComponents X n (X _[n + 1])
 #align algebraic_topology.dold_kan.morph_components.id AlgebraicTopology.DoldKan.MorphComponents.id
 -/
 
-/- warning: algebraic_topology.dold_kan.morph_components.id_φ -> AlgebraicTopology.DoldKan.MorphComponents.id_φ is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] (X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (n : Nat), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))) (AlgebraicTopology.DoldKan.MorphComponents.φ.{u1, u2} C _inst_1 _inst_2 X n (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (AlgebraicTopology.DoldKan.MorphComponents.id.{u1, u2} C _inst_1 _inst_2 X n)) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] (X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (n : Nat), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))) (AlgebraicTopology.DoldKan.MorphComponents.φ.{u1, u2} C _inst_1 _inst_2 X n (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (AlgebraicTopology.DoldKan.MorphComponents.id.{u1, u2} C _inst_1 _inst_2 X n)) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φₓ'. -/
 @[simp]
 theorem id_φ : (id X n).φ = 𝟙 _ :=
   by
@@ -151,12 +136,6 @@ theorem id_φ : (id X n).φ = 𝟙 _ :=
 
 variable {X n}
 
-/- warning: algebraic_topology.dold_kan.morph_components.post_comp -> AlgebraicTopology.DoldKan.MorphComponents.postComp is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} {n : Nat} {Z : C} {Z' : C}, (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X n Z) -> (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) Z Z') -> (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X n Z')
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {_inst_2 : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} {X : Nat} {n : C} {Z : C}, (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X n) -> (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) n Z) -> (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X Z)
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.morph_components.post_comp AlgebraicTopology.DoldKan.MorphComponents.postCompₓ'. -/
 /-- A `morph_components` can be postcomposed with a morphism. -/
 @[simps]
 def postComp : MorphComponents X n Z' where
@@ -173,12 +152,6 @@ theorem postComp_φ : (f.postComp h).φ = f.φ ≫ h :=
 #align algebraic_topology.dold_kan.morph_components.post_comp_φ AlgebraicTopology.DoldKan.MorphComponents.postComp_φ
 -/
 
-/- warning: algebraic_topology.dold_kan.morph_components.pre_comp -> AlgebraicTopology.DoldKan.MorphComponents.preComp is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} {X' : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} {n : Nat} {Z : C}, (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X n Z) -> (Quiver.Hom.{succ u2, max u2 u1} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u2 u1} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u2 u1} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1))) X' X) -> (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X' n Z)
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {_inst_2 : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} {X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} {X' : Nat} {n : C}, (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 _inst_2 X' n) -> (Quiver.Hom.{succ u2, max u1 u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1))) X _inst_2) -> (AlgebraicTopology.DoldKan.MorphComponents.{u1, u2} C _inst_1 X X' n)
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.morph_components.pre_comp AlgebraicTopology.DoldKan.MorphComponents.preCompₓ'. -/
 /-- A `morph_components` can be precomposed with a morphism of simplicial objects. -/
 @[simps]
 def preComp : MorphComponents X' n Z

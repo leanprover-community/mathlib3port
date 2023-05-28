@@ -66,23 +66,11 @@ theorem piFinset_subset (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a, t₁ a �
 #align fintype.pi_finset_subset Fintype.piFinset_subset
 -/
 
-/- warning: fintype.pi_finset_empty -> Fintype.piFinset_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {δ : α -> Type.{u2}} [_inst_3 : Nonempty.{succ u1} α], Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (forall (a : α), δ a)) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (_x : α) => δ _x) (fun (_x : α) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (δ _x)) (Finset.hasEmptyc.{u2} (δ _x)))) (EmptyCollection.emptyCollection.{max u1 u2} (Finset.{max u1 u2} (forall (a : α), δ a)) (Finset.hasEmptyc.{max u1 u2} (forall (a : α), δ a)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] {δ : α -> Type.{u1}} [_inst_3 : Nonempty.{succ u2} α], Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (forall (a : α), δ a)) (Fintype.piFinset.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (_x : α) => δ _x) (fun (_x : α) => EmptyCollection.emptyCollection.{u1} (Finset.{u1} (δ _x)) (Finset.instEmptyCollectionFinset.{u1} (δ _x)))) (EmptyCollection.emptyCollection.{max u2 u1} (Finset.{max u2 u1} (forall (a : α), δ a)) (Finset.instEmptyCollectionFinset.{max u2 u1} (forall (a : α), δ a)))
-Case conversion may be inaccurate. Consider using '#align fintype.pi_finset_empty Fintype.piFinset_emptyₓ'. -/
 @[simp]
 theorem piFinset_empty [Nonempty α] : piFinset (fun _ => ∅ : ∀ i, Finset (δ i)) = ∅ :=
   eq_empty_of_forall_not_mem fun _ => by simp
 #align fintype.pi_finset_empty Fintype.piFinset_empty
 
-/- warning: fintype.pi_finset_singleton -> Fintype.piFinset_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {δ : α -> Type.{u2}} (f : forall (i : α), δ i), Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (forall (a : α), δ a)) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (i : α) => δ i) (fun (i : α) => Singleton.singleton.{u2, u2} (δ i) (Finset.{u2} (δ i)) (Finset.hasSingleton.{u2} (δ i)) (f i))) (Singleton.singleton.{max u1 u2, max u1 u2} (forall (a : α), δ a) (Finset.{max u1 u2} (forall (a : α), δ a)) (Finset.hasSingleton.{max u1 u2} (forall (a : α), δ a)) f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] {δ : α -> Type.{u1}} (f : forall (i : α), δ i), Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (forall (a : α), δ a)) (Fintype.piFinset.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (i : α) => δ i) (fun (i : α) => Singleton.singleton.{u1, u1} (δ i) (Finset.{u1} (δ i)) (Finset.instSingletonFinset.{u1} (δ i)) (f i))) (Singleton.singleton.{max u2 u1, max u2 u1} (forall (a : α), δ a) (Finset.{max u2 u1} (forall (a : α), δ a)) (Finset.instSingletonFinset.{max u2 u1} (forall (a : α), δ a)) f)
-Case conversion may be inaccurate. Consider using '#align fintype.pi_finset_singleton Fintype.piFinset_singletonₓ'. -/
 @[simp]
 theorem piFinset_singleton (f : ∀ i, δ i) : piFinset (fun i => {f i} : ∀ i, Finset (δ i)) = {f} :=
   ext fun _ => by simp only [Function.funext_iff, Fintype.mem_piFinset, mem_singleton]
@@ -95,12 +83,6 @@ theorem piFinset_subsingleton {f : ∀ i, Finset (δ i)} (hf : ∀ i, (f i : Set
 #align fintype.pi_finset_subsingleton Fintype.piFinset_subsingleton
 -/
 
-/- warning: fintype.pi_finset_disjoint_of_disjoint -> Fintype.piFinset_disjoint_of_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {δ : α -> Type.{u2}} (t₁ : forall (a : α), Finset.{u2} (δ a)) (t₂ : forall (a : α), Finset.{u2} (δ a)) {a : α}, (Disjoint.{u2} (Finset.{u2} (δ a)) (Finset.partialOrder.{u2} (δ a)) (Finset.orderBot.{u2} (δ a)) (t₁ a) (t₂ a)) -> (Disjoint.{max u1 u2} (Finset.{max u1 u2} (forall (a : α), δ a)) (Finset.partialOrder.{max u1 u2} (forall (a : α), δ a)) (Finset.orderBot.{max u1 u2} (forall (a : α), δ a)) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => δ a) t₁) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => δ a) t₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {δ : α -> Type.{u2}} (t₁ : forall (a : α), Finset.{u2} (δ a)) (t₂ : forall (a : α), Finset.{u2} (δ a)) {a : α}, (Disjoint.{u2} (Finset.{u2} (δ a)) (Finset.partialOrder.{u2} (δ a)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} (δ a)) (t₁ a) (t₂ a)) -> (Disjoint.{max u2 u1} (Finset.{max u1 u2} (forall (a : α), δ a)) (Finset.partialOrder.{max u1 u2} (forall (a : α), δ a)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{max u1 u2} (forall (a : α), δ a)) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => δ a) t₁) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => δ a) t₂))
-Case conversion may be inaccurate. Consider using '#align fintype.pi_finset_disjoint_of_disjoint Fintype.piFinset_disjoint_of_disjointₓ'. -/
 theorem piFinset_disjoint_of_disjoint (t₁ t₂ : ∀ a, Finset (δ a)) {a : α}
     (h : Disjoint (t₁ a) (t₂ a)) : Disjoint (piFinset t₁) (piFinset t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
@@ -121,12 +103,6 @@ instance Pi.fintype {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype
 #align pi.fintype Pi.fintype
 -/
 
-/- warning: fintype.pi_finset_univ -> Fintype.piFinset_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] [_inst_3 : forall (a : α), Fintype.{u2} (β a)], Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (forall (a : α), β a)) (Fintype.piFinset.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => β a) (fun (a : α) => Finset.univ.{u2} (β a) (_inst_3 a))) (Finset.univ.{max u1 u2} (forall (a : α), β a) (Pi.fintype.{u1, u2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => _inst_3 a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] [_inst_3 : forall (a : α), Fintype.{u1} (β a)], Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (forall (a : α), β a)) (Fintype.piFinset.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => β a) (fun (a : α) => Finset.univ.{u1} (β a) (_inst_3 a))) (Finset.univ.{max u2 u1} (forall (a : α), β a) (Pi.fintype.{u2, u1} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => _inst_3 a)))
-Case conversion may be inaccurate. Consider using '#align fintype.pi_finset_univ Fintype.piFinset_univₓ'. -/
 @[simp]
 theorem Fintype.piFinset_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α]
     [∀ a, Fintype (β a)] :
@@ -135,23 +111,11 @@ theorem Fintype.piFinset_univ {α : Type _} {β : α → Type _} [DecidableEq α
   rfl
 #align fintype.pi_finset_univ Fintype.piFinset_univ
 
-/- warning: function.embedding.fintype -> Function.Embedding.fintype is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidableEq.{succ u2} β], Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)
-Case conversion may be inaccurate. Consider using '#align function.embedding.fintype Function.Embedding.fintypeₓ'. -/
 instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] :
     Fintype (α ↪ β) :=
   Fintype.ofEquiv _ (Equiv.subtypeInjectiveEquivEmbedding α β)
 #align function.embedding.fintype Function.Embedding.fintype
 
-/- warning: finset.univ_pi_univ -> Finset.univ_pi_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] [_inst_3 : forall (a : α), Fintype.{u2} (β a)], Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.univ.{u1} α _inst_2)) -> (β a))) (Finset.pi.{u1, u2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_1 a b) (Finset.univ.{u1} α _inst_2) (fun (a : α) => Finset.univ.{u2} (β a) (_inst_3 a))) (Finset.univ.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.univ.{u1} α _inst_2)) -> (β a)) (Pi.fintype.{u1, u2} α (fun (a : α) => (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.univ.{u1} α _inst_2)) -> (β a)) (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => pfunFintype.{u2} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.univ.{u1} α _inst_2)) (Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (Finset.univ.{u1} α _inst_2)) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.univ.{u1} α _inst_2)) => β a) (fun (hp : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (Finset.univ.{u1} α _inst_2)) => _inst_3 a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] [_inst_3 : forall (a : α), Fintype.{u1} (β a)], Eq.{max (succ u2) (succ u1)} (Finset.{max u1 u2} (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finset.univ.{u2} α _inst_2)) -> (β a))) (Finset.pi.{u1, u2} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_1 a b) (Finset.univ.{u2} α _inst_2) (fun (a : α) => Finset.univ.{u1} (β a) (_inst_3 a))) (Finset.univ.{max u2 u1} (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finset.univ.{u2} α _inst_2)) -> (β a)) (Pi.fintype.{u2, u1} α (fun (a : α) => (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finset.univ.{u2} α _inst_2)) -> (β a)) (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (fun (a : α) => pfunFintype.{u1} (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finset.univ.{u2} α _inst_2)) (Finset.decidableMem.{u2} α (fun (a : α) (b : α) => _inst_1 a b) a (Finset.univ.{u2} α _inst_2)) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finset.univ.{u2} α _inst_2)) => β a) (fun (hp : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finset.univ.{u2} α _inst_2)) => (fun (a : α) => _inst_3 a) a))))
-Case conversion may be inaccurate. Consider using '#align finset.univ_pi_univ Finset.univ_pi_univₓ'. -/
 @[simp]
 theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α]
     [∀ a, Fintype (β a)] :

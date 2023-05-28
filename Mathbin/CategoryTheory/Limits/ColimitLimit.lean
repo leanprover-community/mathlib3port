@@ -45,17 +45,11 @@ variable (F : J × K ⥤ C)
 
 open CategoryTheory.prod
 
-/- warning: category_theory.limits.map_id_left_eq_curry_map -> CategoryTheory.Limits.map_id_left_eq_curry_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.map_id_left_eq_curry_map CategoryTheory.Limits.map_id_left_eq_curry_mapₓ'. -/
 theorem map_id_left_eq_curry_map {j : J} {k k' : K} {f : k ⟶ k'} :
     F.map ((𝟙 j, f) : (j, k) ⟶ (j, k')) = ((curry.obj F).obj j).map f :=
   rfl
 #align category_theory.limits.map_id_left_eq_curry_map CategoryTheory.Limits.map_id_left_eq_curry_map
 
-/- warning: category_theory.limits.map_id_right_eq_curry_swap_map -> CategoryTheory.Limits.map_id_right_eq_curry_swap_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.map_id_right_eq_curry_swap_map CategoryTheory.Limits.map_id_right_eq_curry_swap_mapₓ'. -/
 theorem map_id_right_eq_curry_swap_map {j j' : J} {f : j ⟶ j'} {k : K} :
     F.map ((f, 𝟙 k) : (j, k) ⟶ (j', k)) = ((curry.obj (swap K J ⋙ F)).obj k).map f :=
   rfl
@@ -65,9 +59,6 @@ variable [HasLimitsOfShape J C]
 
 variable [HasColimitsOfShape K C]
 
-/- warning: category_theory.limits.colimit_limit_to_limit_colimit -> CategoryTheory.Limits.colimitLimitToLimitColimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit_limit_to_limit_colimit CategoryTheory.Limits.colimitLimitToLimitColimitₓ'. -/
 /-- The universal morphism
 $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
 -/
@@ -97,9 +88,6 @@ noncomputable def colimitLimitToLimitColimit :
               map_id_right_eq_curry_swap_map, limit.w_assoc] } }
 #align category_theory.limits.colimit_limit_to_limit_colimit CategoryTheory.Limits.colimitLimitToLimitColimit
 
-/- warning: category_theory.limits.ι_colimit_limit_to_limit_colimit_π -> CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimitLimitToLimitColimit_πₓ'. -/
 /-- Since `colimit_limit_to_limit_colimit` is a morphism from a colimit to a limit,
 this lemma characterises it.
 -/
@@ -110,9 +98,6 @@ theorem ι_colimitLimitToLimitColimit_π (j) (k) :
   by dsimp [colimit_limit_to_limit_colimit]; simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π
 
-/- warning: category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply -> CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_applyₓ'. -/
 @[simp]
 theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (f) :
     limit.π (curry.obj F ⋙ colim) j
@@ -121,12 +106,6 @@ theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (
   by dsimp [colimit_limit_to_limit_colimit]; simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply
 
-/- warning: category_theory.limits.colimit_limit_to_limit_colimit_cone -> CategoryTheory.Limits.colimitLimitToLimitColimitCone is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u1}} {K : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.SmallCategory.{u1} K] {C : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} C] [_inst_4 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u1, u1, u2} J _inst_1 C _inst_3] [_inst_5 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u1, u1, u2} K _inst_2 C _inst_3] (G : CategoryTheory.Functor.{u1, u1, u1, max u1 u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3)) [_inst_6 : CategoryTheory.Limits.HasLimit.{u1, u1, u1, max u1 u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) G], Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u1 u2, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u1 u2, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u1 u2, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))) (CategoryTheory.Limits.Cone.category.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u1 u2, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))))) (CategoryTheory.Functor.mapCone.{u1, u1, u1, u1, max u1 u2, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5) (CategoryTheory.Limits.limit.cone.{u1, u1, u1, max u1 u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) G _inst_6)) (CategoryTheory.Limits.limit.cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u1 u2, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5)) (CategoryTheory.Limits.colimitLimitToLimitColimitCone._proof_1.{u2, u1} J K _inst_1 _inst_2 C _inst_3 _inst_4 _inst_5 G))
-but is expected to have type
-  forall {J : Type.{u1}} {K : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.SmallCategory.{u1} K] {C : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} C] [_inst_4 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u1, u1, u2} J _inst_1 C _inst_3] [_inst_5 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u1, u1, u2} K _inst_2 C _inst_3] (G : CategoryTheory.Functor.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3)) [_inst_6 : CategoryTheory.Limits.HasLimit.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) G], Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))) (CategoryTheory.Limits.Cone.category.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))))) (CategoryTheory.Functor.mapCone.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5) G (CategoryTheory.Limits.limit.cone.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) G _inst_6)) (CategoryTheory.Limits.limit.cone.{u1, u1, u1, u2} J _inst_1 C _inst_3 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5)) (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{u1, u1, u1, u2} C _inst_3 J _inst_1 _inst_4 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Functor.{u1, u1, u1, u2} K _inst_2 C _inst_3) (CategoryTheory.Functor.category.{u1, u1, u1, u2} K _inst_2 C _inst_3) C _inst_3 G (CategoryTheory.Limits.colim.{u1, u1, u1, u2} K _inst_2 C _inst_3 _inst_5))))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit_limit_to_limit_colimit_cone CategoryTheory.Limits.colimitLimitToLimitColimitConeₓ'. -/
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]
 noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G] :

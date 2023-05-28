@@ -44,12 +44,6 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
 #align pi.can_lift Pi.canLift
 -/
 
-/- warning: subtype.exists_pi_extension -> Subtype.exists_pi_extension is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : ι -> Sort.{u2}} [ne : forall (i : ι), Nonempty.{u2} (α i)] {p : ι -> Prop} (f : forall (i : Subtype.{u1} ι p), α ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} ι p) ι (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} ι p) ι (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeBase.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeSubtype.{u1} ι (fun (x : ι) => p x))))) i)), Exists.{imax u1 u2} (forall (i : ι), α i) (fun (g : forall (i : ι), α i) => Eq.{imax (max 1 u1) u2} (forall (i : Subtype.{u1} ι p), α ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} ι p) ι (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} ι p) ι (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeBase.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeSubtype.{u1} ι (fun (x : ι) => p x))))) i)) (fun (i : Subtype.{u1} ι p) => g ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} ι p) ι (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} ι p) ι (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeBase.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeSubtype.{u1} ι (fun (x : ι) => p x))))) i)) f)
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : ι -> Sort.{u1}} [ne : forall (i : ι), Nonempty.{u1} (α i)] {p : ι -> Prop} (f : forall (i : Subtype.{u2} ι p), α (Subtype.val.{u2} ι p i)), Exists.{imax u2 u1} (forall (i : ι), α i) (fun (g : forall (i : ι), α i) => Eq.{imax (max 1 u2) u1} (forall (i : Subtype.{u2} ι p), α (Subtype.val.{u2} ι p i)) (fun (i : Subtype.{u2} ι p) => g (Subtype.val.{u2} ι p i)) f)
-Case conversion may be inaccurate. Consider using '#align subtype.exists_pi_extension Subtype.exists_pi_extensionₓ'. -/
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)]
     {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
     ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by

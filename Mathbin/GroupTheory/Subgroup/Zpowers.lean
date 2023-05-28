@@ -37,23 +37,11 @@ def zpowers (g : G) : Subgroup G :=
 #align subgroup.zpowers Subgroup.zpowers
 -/
 
-/- warning: subgroup.mem_zpowers -> Subgroup.mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 g)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_zpowers Subgroup.mem_zpowersₓ'. -/
 @[simp]
 theorem mem_zpowers (g : G) : g ∈ zpowers g :=
   ⟨1, zpow_one _⟩
 #align subgroup.mem_zpowers Subgroup.mem_zpowers
 
-/- warning: subgroup.coe_zpowers -> Subgroup.coe_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 g)) (Set.range.{u1, 1} G Int (fun (n : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g n))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g)) (Set.range.{u1, 1} G Int (fun (n : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g n))
-Case conversion may be inaccurate. Consider using '#align subgroup.coe_zpowers Subgroup.coe_zpowersₓ'. -/
 @[norm_cast]
 theorem coe_zpowers (g : G) : ↑(zpowers g) = Set.range fun n : ℤ => g ^ n :=
   rfl
@@ -72,76 +60,34 @@ theorem range_zpowersHom (g : G) : (zpowersHom G g).range = zpowers g :=
 #align subgroup.range_zpowers_hom Subgroup.range_zpowersHom
 -/
 
-/- warning: subgroup.mem_zpowers_iff -> Subgroup.mem_zpowers_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {h : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) h (Subgroup.zpowers.{u1} G _inst_1 g)) (Exists.{1} Int (fun (k : Int) => Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g k) h))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {h : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) h (Subgroup.zpowers.{u1} G _inst_1 g)) (Exists.{1} Int (fun (k : Int) => Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g k) h))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_zpowers_iff Subgroup.mem_zpowers_iffₓ'. -/
 theorem mem_zpowers_iff {g h : G} : h ∈ zpowers g ↔ ∃ k : ℤ, g ^ k = h :=
   Iff.rfl
 #align subgroup.mem_zpowers_iff Subgroup.mem_zpowers_iff
 
-/- warning: subgroup.zpow_mem_zpowers -> Subgroup.zpow_mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G) (k : Int), Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g k) (Subgroup.zpowers.{u1} G _inst_1 g)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G) (k : Int), Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g k) (Subgroup.zpowers.{u1} G _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align subgroup.zpow_mem_zpowers Subgroup.zpow_mem_zpowersₓ'. -/
 @[simp]
 theorem zpow_mem_zpowers (g : G) (k : ℤ) : g ^ k ∈ zpowers g :=
   mem_zpowers_iff.mpr ⟨k, rfl⟩
 #align subgroup.zpow_mem_zpowers Subgroup.zpow_mem_zpowers
 
-/- warning: subgroup.npow_mem_zpowers -> Subgroup.npow_mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G) (k : Nat), Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) g k) (Subgroup.zpowers.{u1} G _inst_1 g)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G) (k : Nat), Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) g k) (Subgroup.zpowers.{u1} G _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align subgroup.npow_mem_zpowers Subgroup.npow_mem_zpowersₓ'. -/
 @[simp]
 theorem npow_mem_zpowers (g : G) (k : ℕ) : g ^ k ∈ zpowers g :=
   zpow_ofNat g k ▸ zpow_mem_zpowers g k
 #align subgroup.npow_mem_zpowers Subgroup.npow_mem_zpowers
 
-/- warning: subgroup.forall_zpowers -> Subgroup.forall_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (Subgroup.zpowers.{u1} G _inst_1 x)) -> Prop}, Iff (forall (g : coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (Subgroup.zpowers.{u1} G _inst_1 x)), p g) (forall (m : Int), p (Subtype.mk.{succ u1} G (fun (x_1 : G) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m) (Exists.intro.{1} Int (fun (y : Int) => Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x y) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)) m (rfl.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : (Subtype.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x))) -> Prop}, Iff (forall (g : Subtype.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x))), p g) (forall (m : Int), p (Subtype.mk.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m) (Exists.intro.{1} Int (fun (y : Int) => Eq.{succ u1} G ((fun (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 : G) (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77 : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77) x y) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)) m (rfl.{succ u1} G ((fun (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 : G) (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77 : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77) x m)))))
-Case conversion may be inaccurate. Consider using '#align subgroup.forall_zpowers Subgroup.forall_zpowersₓ'. -/
 @[simp]
 theorem forall_zpowers {x : G} {p : zpowers x → Prop} : (∀ g, p g) ↔ ∀ m : ℤ, p ⟨x ^ m, m, rfl⟩ :=
   Set.forall_subtype_range_iff
 #align subgroup.forall_zpowers Subgroup.forall_zpowers
 
-/- warning: subgroup.exists_zpowers -> Subgroup.exists_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (Subgroup.zpowers.{u1} G _inst_1 x)) -> Prop}, Iff (Exists.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (Subgroup.zpowers.{u1} G _inst_1 x)) (fun (g : coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (Subgroup.zpowers.{u1} G _inst_1 x)) => p g)) (Exists.{1} Int (fun (m : Int) => p (Subtype.mk.{succ u1} G (fun (x_1 : G) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m) (Exists.intro.{1} Int (fun (y : Int) => Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x y) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)) m (rfl.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : (Subtype.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x))) -> Prop}, Iff (Exists.{succ u1} (Subtype.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x))) (fun (g : Subtype.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x))) => p g)) (Exists.{1} Int (fun (m : Int) => p (Subtype.mk.{succ u1} G (fun (x_1 : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x_1 (Subgroup.zpowers.{u1} G _inst_1 x)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m) (Exists.intro.{1} Int (fun (y : Int) => Eq.{succ u1} G ((fun (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 : G) (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77 : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77) x y) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)) m (rfl.{succ u1} G ((fun (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 : G) (x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77 : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.75 x._@.Mathlib.GroupTheory.Subgroup.ZPowers._hyg.77) x m))))))
-Case conversion may be inaccurate. Consider using '#align subgroup.exists_zpowers Subgroup.exists_zpowersₓ'. -/
 @[simp]
 theorem exists_zpowers {x : G} {p : zpowers x → Prop} : (∃ g, p g) ↔ ∃ m : ℤ, p ⟨x ^ m, m, rfl⟩ :=
   Set.exists_subtype_range_iff
 #align subgroup.exists_zpowers Subgroup.exists_zpowers
 
-/- warning: subgroup.forall_mem_zpowers -> Subgroup.forall_mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : G -> Prop}, Iff (forall (g : G), (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 x)) -> (p g)) (forall (m : Int), p (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : G -> Prop}, Iff (forall (g : G), (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 x)) -> (p g)) (forall (m : Int), p (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m))
-Case conversion may be inaccurate. Consider using '#align subgroup.forall_mem_zpowers Subgroup.forall_mem_zpowersₓ'. -/
 theorem forall_mem_zpowers {x : G} {p : G → Prop} : (∀ g ∈ zpowers x, p g) ↔ ∀ m : ℤ, p (x ^ m) :=
   Set.forall_range_iff
 #align subgroup.forall_mem_zpowers Subgroup.forall_mem_zpowers
 
-/- warning: subgroup.exists_mem_zpowers -> Subgroup.exists_mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : G -> Prop}, Iff (Exists.{succ u1} G (fun (g : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 x)) (fun (H : Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 x)) => p g))) (Exists.{1} Int (fun (m : Int) => p (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G} {p : G -> Prop}, Iff (Exists.{succ u1} G (fun (g : G) => And (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) g (Subgroup.zpowers.{u1} G _inst_1 x)) (p g))) (Exists.{1} Int (fun (m : Int) => p (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x m)))
-Case conversion may be inaccurate. Consider using '#align subgroup.exists_mem_zpowers Subgroup.exists_mem_zpowersₓ'. -/
 theorem exists_mem_zpowers {x : G} {p : G → Prop} : (∃ g ∈ zpowers x, p g) ↔ ∃ m : ℤ, p (x ^ m) :=
   Set.exists_range_iff
 #align subgroup.exists_mem_zpowers Subgroup.exists_mem_zpowers
@@ -198,23 +144,11 @@ section Ring
 
 variable {R : Type _} [Ring R] (r : R) (k : ℤ)
 
-/- warning: add_subgroup.int_cast_mul_mem_zmultiples -> AddSubgroup.int_cast_mul_mem_zmultiples is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_4 : Ring.{u1} R] (r : R) (k : Int), Membership.Mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4)))) (SetLike.hasMem.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4)))) R (AddSubgroup.setLike.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_4))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4)))))) k) r) (AddSubgroup.zmultiples.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4))) r)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_4 : Ring.{u1} R] (r : R) (k : Int), Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_4)))) (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_4) k) r) (AddSubgroup.zmultiples.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4)) r)
-Case conversion may be inaccurate. Consider using '#align add_subgroup.int_cast_mul_mem_zmultiples AddSubgroup.int_cast_mul_mem_zmultiplesₓ'. -/
 @[simp]
 theorem int_cast_mul_mem_zmultiples : ↑(k : ℤ) * r ∈ zmultiples r := by
   simpa only [← zsmul_eq_mul] using zsmul_mem_zmultiples r k
 #align add_subgroup.int_cast_mul_mem_zmultiples AddSubgroup.int_cast_mul_mem_zmultiples
 
-/- warning: add_subgroup.int_cast_mem_zmultiples_one -> AddSubgroup.int_cast_mem_zmultiples_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_4 : Ring.{u1} R] (k : Int), Membership.Mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4)))) (SetLike.hasMem.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4)))) R (AddSubgroup.setLike.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4)))))) k) (AddSubgroup.zmultiples.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_4))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_4 : Ring.{u1} R] (k : Int), Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4)))) (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_4) k) (AddSubgroup.zmultiples.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_4)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (Ring.toSemiring.{u1} R _inst_4)))))
-Case conversion may be inaccurate. Consider using '#align add_subgroup.int_cast_mem_zmultiples_one AddSubgroup.int_cast_mem_zmultiples_oneₓ'. -/
 @[simp]
 theorem int_cast_mem_zmultiples_one : ↑(k : ℤ) ∈ zmultiples (1 : R) :=
   mem_zmultiples_iff.mp ⟨k, by simp⟩
@@ -224,12 +158,6 @@ end Ring
 
 end AddSubgroup
 
-/- warning: monoid_hom.map_zpowers -> MonoidHom.map_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_3 : Group.{u2} N] (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_3)))) (x : G), Eq.{succ u2} (Subgroup.{u2} N _inst_3) (Subgroup.map.{u1, u2} G _inst_1 N _inst_3 f (Subgroup.zpowers.{u1} G _inst_1 x)) (Subgroup.zpowers.{u2} N _inst_3 (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_3)))) (fun (_x : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_3)))) => G -> N) (MonoidHom.hasCoeToFun.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_3)))) f x))
-but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_3 : Group.{u1} N] (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3)))) (x : G), Eq.{succ u1} (Subgroup.{u1} N _inst_3) (Subgroup.map.{u2, u1} G _inst_1 N _inst_3 f (Subgroup.zpowers.{u2} G _inst_1 x)) (Subgroup.zpowers.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => N) x) _inst_3 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3)))) G N (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3)))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3)))) G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3))) (MonoidHom.monoidHomClass.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_3)))))) f x))
-Case conversion may be inaccurate. Consider using '#align monoid_hom.map_zpowers MonoidHom.map_zpowersₓ'. -/
 @[simp, to_additive map_zmultiples]
 theorem MonoidHom.map_zpowers (f : G →* N) (x : G) :
     (Subgroup.zpowers x).map f = Subgroup.zpowers (f x) := by
@@ -237,22 +165,10 @@ theorem MonoidHom.map_zpowers (f : G →* N) (x : G) :
 #align monoid_hom.map_zpowers MonoidHom.map_zpowers
 #align add_monoid_hom.map_zmultiples AddMonoidHom.map_zmultiples
 
-/- warning: int.mem_zmultiples_iff -> Int.mem_zmultiples_iff is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (Membership.Mem.{0, 0} Int (AddSubgroup.{0} Int Int.addGroup) (SetLike.hasMem.{0, 0} (AddSubgroup.{0} Int Int.addGroup) Int (AddSubgroup.setLike.{0} Int Int.addGroup)) b (AddSubgroup.zmultiples.{0} Int Int.addGroup a)) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
-but is expected to have type
-  forall {a : Int} {b : Int}, Iff (Membership.mem.{0, 0} Int (AddSubgroup.{0} Int Int.instAddGroupInt) (SetLike.instMembership.{0, 0} (AddSubgroup.{0} Int Int.instAddGroupInt) Int (AddSubgroup.instSetLikeAddSubgroup.{0} Int Int.instAddGroupInt)) b (AddSubgroup.zmultiples.{0} Int Int.instAddGroupInt a)) (Dvd.dvd.{0} Int Int.instDvdInt a b)
-Case conversion may be inaccurate. Consider using '#align int.mem_zmultiples_iff Int.mem_zmultiples_iffₓ'. -/
 theorem Int.mem_zmultiples_iff {a b : ℤ} : b ∈ AddSubgroup.zmultiples a ↔ a ∣ b :=
   exists_congr fun k => by rw [mul_comm, eq_comm, ← smul_eq_mul]
 #align int.mem_zmultiples_iff Int.mem_zmultiples_iff
 
-/- warning: of_mul_image_zpowers_eq_zmultiples_of_mul -> ofMul_image_zpowers_eq_zmultiples_ofMul is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G}, Eq.{succ u1} (Set.{u1} (Additive.{u1} G)) (Set.image.{u1, u1} G (Additive.{u1} G) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} G (Additive.{u1} G)) (fun (_x : Equiv.{succ u1, succ u1} G (Additive.{u1} G)) => G -> (Additive.{u1} G)) (Equiv.hasCoeToFun.{succ u1, succ u1} G (Additive.{u1} G)) (Additive.ofMul.{u1} G)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 x))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (AddSubgroup.{u1} (Additive.{u1} G) (Additive.addGroup.{u1} G _inst_1)) (Set.{u1} (Additive.{u1} G)) (HasLiftT.mk.{succ u1, succ u1} (AddSubgroup.{u1} (Additive.{u1} G) (Additive.addGroup.{u1} G _inst_1)) (Set.{u1} (Additive.{u1} G)) (CoeTCₓ.coe.{succ u1, succ u1} (AddSubgroup.{u1} (Additive.{u1} G) (Additive.addGroup.{u1} G _inst_1)) (Set.{u1} (Additive.{u1} G)) (SetLike.Set.hasCoeT.{u1, u1} (AddSubgroup.{u1} (Additive.{u1} G) (Additive.addGroup.{u1} G _inst_1)) (Additive.{u1} G) (AddSubgroup.setLike.{u1} (Additive.{u1} G) (Additive.addGroup.{u1} G _inst_1))))) (AddSubgroup.zmultiples.{u1} (Additive.{u1} G) (Additive.addGroup.{u1} G _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} G (Additive.{u1} G)) (fun (_x : Equiv.{succ u1, succ u1} G (Additive.{u1} G)) => G -> (Additive.{u1} G)) (Equiv.hasCoeToFun.{succ u1, succ u1} G (Additive.{u1} G)) (Additive.ofMul.{u1} G) x)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {x : G}, Eq.{succ u1} (Set.{u1} (Additive.{u1} G)) (Set.image.{u1, u1} G (Additive.{u1} G) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} G (Additive.{u1} G)) G (fun (_x : G) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : G) => Additive.{u1} G) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} G (Additive.{u1} G)) (Additive.ofMul.{u1} G)) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 x))) (SetLike.coe.{u1, u1} (AddSubgroup.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : G) => Additive.{u1} G) x) (Additive.addGroup.{u1} G _inst_1)) (Additive.{u1} G) (AddSubgroup.instSetLikeAddSubgroup.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : G) => Additive.{u1} G) x) (Additive.addGroup.{u1} G _inst_1)) (AddSubgroup.zmultiples.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : G) => Additive.{u1} G) x) (Additive.addGroup.{u1} G _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} G (Additive.{u1} G)) G (fun (_x : G) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : G) => Additive.{u1} G) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} G (Additive.{u1} G)) (Additive.ofMul.{u1} G) x)))
-Case conversion may be inaccurate. Consider using '#align of_mul_image_zpowers_eq_zmultiples_of_mul ofMul_image_zpowers_eq_zmultiples_ofMulₓ'. -/
 theorem ofMul_image_zpowers_eq_zmultiples_ofMul {x : G} :
     Additive.ofMul '' (Subgroup.zpowers x : Set G) = AddSubgroup.zmultiples (Additive.ofMul x) :=
   by
@@ -267,12 +183,6 @@ theorem ofMul_image_zpowers_eq_zmultiples_ofMul {x : G} :
     rwa [ofMul_zpow]
 #align of_mul_image_zpowers_eq_zmultiples_of_mul ofMul_image_zpowers_eq_zmultiples_ofMul
 
-/- warning: of_add_image_zmultiples_eq_zpowers_of_add -> ofAdd_image_zmultiples_eq_zpowers_ofAdd is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} [_inst_2 : AddGroup.{u1} A] {x : A}, Eq.{succ u1} (Set.{u1} (Multiplicative.{u1} A)) (Set.image.{u1, u1} A (Multiplicative.{u1} A) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) (fun (_x : Equiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) => A -> (Multiplicative.{u1} A)) (Equiv.hasCoeToFun.{succ u1, succ u1} A (Multiplicative.{u1} A)) (Multiplicative.ofAdd.{u1} A)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (AddSubgroup.{u1} A _inst_2) (Set.{u1} A) (HasLiftT.mk.{succ u1, succ u1} (AddSubgroup.{u1} A _inst_2) (Set.{u1} A) (CoeTCₓ.coe.{succ u1, succ u1} (AddSubgroup.{u1} A _inst_2) (Set.{u1} A) (SetLike.Set.hasCoeT.{u1, u1} (AddSubgroup.{u1} A _inst_2) A (AddSubgroup.setLike.{u1} A _inst_2)))) (AddSubgroup.zmultiples.{u1} A _inst_2 x))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Multiplicative.{u1} A) (Multiplicative.group.{u1} A _inst_2)) (Set.{u1} (Multiplicative.{u1} A)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Multiplicative.{u1} A) (Multiplicative.group.{u1} A _inst_2)) (Set.{u1} (Multiplicative.{u1} A)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Multiplicative.{u1} A) (Multiplicative.group.{u1} A _inst_2)) (Set.{u1} (Multiplicative.{u1} A)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Multiplicative.{u1} A) (Multiplicative.group.{u1} A _inst_2)) (Multiplicative.{u1} A) (Subgroup.setLike.{u1} (Multiplicative.{u1} A) (Multiplicative.group.{u1} A _inst_2))))) (Subgroup.zpowers.{u1} (Multiplicative.{u1} A) (Multiplicative.group.{u1} A _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) (fun (_x : Equiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) => A -> (Multiplicative.{u1} A)) (Equiv.hasCoeToFun.{succ u1, succ u1} A (Multiplicative.{u1} A)) (Multiplicative.ofAdd.{u1} A) x)))
-but is expected to have type
-  forall {A : Type.{u1}} [_inst_2 : AddGroup.{u1} A] {x : A}, Eq.{succ u1} (Set.{u1} (Multiplicative.{u1} A)) (Set.image.{u1, u1} A (Multiplicative.{u1} A) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) A (fun (_x : A) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : A) => Multiplicative.{u1} A) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) (Multiplicative.ofAdd.{u1} A)) (SetLike.coe.{u1, u1} (AddSubgroup.{u1} A _inst_2) A (AddSubgroup.instSetLikeAddSubgroup.{u1} A _inst_2) (AddSubgroup.zmultiples.{u1} A _inst_2 x))) (SetLike.coe.{u1, u1} (Subgroup.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : A) => Multiplicative.{u1} A) x) (Multiplicative.group.{u1} A _inst_2)) (Multiplicative.{u1} A) (Subgroup.instSetLikeSubgroup.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : A) => Multiplicative.{u1} A) x) (Multiplicative.group.{u1} A _inst_2)) (Subgroup.zpowers.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : A) => Multiplicative.{u1} A) x) (Multiplicative.group.{u1} A _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) A (fun (_x : A) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : A) => Multiplicative.{u1} A) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} A (Multiplicative.{u1} A)) (Multiplicative.ofAdd.{u1} A) x)))
-Case conversion may be inaccurate. Consider using '#align of_add_image_zmultiples_eq_zpowers_of_add ofAdd_image_zmultiples_eq_zpowers_ofAddₓ'. -/
 theorem ofAdd_image_zmultiples_eq_zpowers_ofAdd {x : A} :
     Multiplicative.ofAdd '' (AddSubgroup.zmultiples x : Set A) =
       Subgroup.zpowers (Multiplicative.ofAdd x) :=
@@ -296,67 +206,31 @@ instance zpowers_isCommutative (g : G) : (zpowers g).IsCommutative :=
 #align add_subgroup.zmultiples_is_commutative AddSubgroup.zmultiples_isCommutative
 -/
 
-/- warning: subgroup.zpowers_le -> Subgroup.zpowers_le is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {H : Subgroup.{u1} G _inst_1}, Iff (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 g) H) (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g H)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {H : Subgroup.{u1} G _inst_1}, Iff (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Subgroup.zpowers.{u1} G _inst_1 g) H) (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) g H)
-Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_le Subgroup.zpowers_leₓ'. -/
 @[simp, to_additive zmultiples_le]
 theorem zpowers_le {g : G} {H : Subgroup G} : zpowers g ≤ H ↔ g ∈ H := by
   rw [zpowers_eq_closure, closure_le, Set.singleton_subset_iff, SetLike.mem_coe]
 #align subgroup.zpowers_le Subgroup.zpowers_le
 #align add_subgroup.zmultiples_le AddSubgroup.zmultiples_le
 
-/- warning: subgroup.zpowers_le_of_mem -> Subgroup.zpowers_le_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {H : Subgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g H) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 g) H)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {H : Subgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) g H) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Subgroup.zpowers.{u1} G _inst_1 g) H)
-Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_le_of_mem Subgroup.zpowers_le_of_memₓ'. -/
 alias zpowers_le ↔ _ zpowers_le_of_mem
 #align subgroup.zpowers_le_of_mem Subgroup.zpowers_le_of_mem
 
-/- warning: add_subgroup.zmultiples_le_of_mem -> AddSubgroup.zmultiples_le_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : AddGroup.{u1} G] {g : G} {H : AddSubgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} G (AddSubgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (AddSubgroup.{u1} G _inst_1) G (AddSubgroup.setLike.{u1} G _inst_1)) g H) -> (LE.le.{u1} (AddSubgroup.{u1} G _inst_1) (Preorder.toHasLe.{u1} (AddSubgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (AddSubgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (AddSubgroup.{u1} G _inst_1) G (AddSubgroup.setLike.{u1} G _inst_1)))) (AddSubgroup.zmultiples.{u1} G _inst_1 g) H)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : AddGroup.{u1} G] {g : G} {H : AddSubgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} G (AddSubgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} G _inst_1) G (AddSubgroup.instSetLikeAddSubgroup.{u1} G _inst_1)) g H) -> (LE.le.{u1} (AddSubgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (AddSubgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (AddSubgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (AddSubgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (AddSubgroup.{u1} G _inst_1) (AddSubgroup.instCompleteLatticeAddSubgroup.{u1} G _inst_1))))) (AddSubgroup.zmultiples.{u1} G _inst_1 g) H)
-Case conversion may be inaccurate. Consider using '#align add_subgroup.zmultiples_le_of_mem AddSubgroup.zmultiples_le_of_memₓ'. -/
 alias AddSubgroup.zmultiples_le ↔ _ _root_.add_subgroup.zmultiples_le_of_mem
 #align add_subgroup.zmultiples_le_of_mem AddSubgroup.zmultiples_le_of_mem
 
 attribute [to_additive zmultiples_le_of_mem] zpowers_le_of_mem
 
-/- warning: subgroup.zpowers_eq_bot -> Subgroup.zpowers_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))) (Eq.{succ u1} G g (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))) (Eq.{succ u1} G g (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_eq_bot Subgroup.zpowers_eq_botₓ'. -/
 @[simp, to_additive zmultiples_eq_bot]
 theorem zpowers_eq_bot {g : G} : zpowers g = ⊥ ↔ g = 1 := by rw [eq_bot_iff, zpowers_le, mem_bot]
 #align subgroup.zpowers_eq_bot Subgroup.zpowers_eq_bot
 #align add_subgroup.zmultiples_eq_bot AddSubgroup.zmultiples_eq_bot
 
-/- warning: subgroup.zpowers_ne_bot -> Subgroup.zpowers_ne_bot is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Ne.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))) (Ne.{succ u1} G g (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Ne.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))) (Ne.{succ u1} G g (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_ne_bot Subgroup.zpowers_ne_botₓ'. -/
 @[to_additive zmultiples_ne_bot]
 theorem zpowers_ne_bot : zpowers g ≠ ⊥ ↔ g ≠ 1 :=
   zpowers_eq_bot.Not
 #align subgroup.zpowers_ne_bot Subgroup.zpowers_ne_bot
 #align add_subgroup.zmultiples_ne_bot AddSubgroup.zmultiples_ne_bot
 
-/- warning: subgroup.zpowers_one_eq_bot -> Subgroup.zpowers_one_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_one_eq_bot Subgroup.zpowers_one_eq_botₓ'. -/
 @[simp, to_additive zmultiples_zero_eq_bot]
 theorem zpowers_one_eq_bot : Subgroup.zpowers (1 : G) = ⊥ :=
   Subgroup.zpowers_eq_bot.mpr rfl
@@ -376,12 +250,6 @@ theorem centralizer_closure (S : Set G) :
 #align add_subgroup.centralizer_closure AddSubgroup.centralizer_closure
 -/
 
-/- warning: subgroup.center_eq_infi -> Subgroup.center_eq_iInf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) G (fun (g : G) => iInf.{u1, 0} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g S) (fun (H : Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 g)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) G (fun (g : G) => iInf.{u1, 0} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g S) (fun (H : Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 g)))))
-Case conversion may be inaccurate. Consider using '#align subgroup.center_eq_infi Subgroup.center_eq_iInfₓ'. -/
 @[to_additive]
 theorem center_eq_iInf (S : Set G) (hS : closure S = ⊤) :
     center G = ⨅ g ∈ S, centralizer (zpowers g) := by
@@ -389,12 +257,6 @@ theorem center_eq_iInf (S : Set G) (hS : closure S = ⊤) :
 #align subgroup.center_eq_infi Subgroup.center_eq_iInf
 #align add_subgroup.center_eq_infi AddSubgroup.center_eq_iInf
 
-/- warning: subgroup.center_eq_infi' -> Subgroup.center_eq_infi' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) (fun (g : coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (coeSubtype.{succ u1} G (fun (x : G) => Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x S))))) g)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) (Set.Elem.{u1} G S) (fun (g : Set.Elem.{u1} G S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 (Subtype.val.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x S) g)))))
-Case conversion may be inaccurate. Consider using '#align subgroup.center_eq_infi' Subgroup.center_eq_infi'ₓ'. -/
 @[to_additive]
 theorem center_eq_infi' (S : Set G) (hS : closure S = ⊤) :
     center G = ⨅ g : S, centralizer (zpowers g) := by rw [center_eq_infi S hS, ← iInf_subtype'']

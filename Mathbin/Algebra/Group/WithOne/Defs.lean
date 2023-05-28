@@ -135,11 +135,6 @@ theorem coe_unone {x : WithOne α} (hx : x ≠ 1) : ↑(unone hx) = x :=
 -/
 
 /- warning: with_one.some_eq_coe clashes with [anonymous] -> [anonymous]
-warning: with_one.some_eq_coe -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {a : α}, Eq.{succ u} (Option.{u} α) (Option.some.{u} α a) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (Option.{u} α) (HasLiftT.mk.{succ u, succ u} α (Option.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (Option.{u} α) (coeOption.{u} α))) a)
-but is expected to have type
-  forall {α : Type.{u}} {a : Type.{v}}, (Nat -> α -> a) -> Nat -> (List.{u} α) -> (List.{v} a)
 Case conversion may be inaccurate. Consider using '#align with_one.some_eq_coe [anonymous]ₓ'. -/
 @[to_additive]
 theorem [anonymous] {a : α} : (some a : WithOne α) = ↑a :=
@@ -248,12 +243,6 @@ instance [Mul α] : MulZeroClass (WithZero α) :=
     zero_mul := id <| Option.map₂_none_left (· * ·)
     mul_zero := id <| Option.map₂_none_right (· * ·) }
 
-/- warning: with_zero.coe_mul -> WithZero.coe_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {a : α} {b : α}, Eq.{succ u1} (WithZero.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toHasMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {a : α} {b : α}, Eq.{succ u1} (WithZero.{u1} α) (WithZero.coe.{u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) (WithZero.coe.{u1} α a) (WithZero.coe.{u1} α b))
-Case conversion may be inaccurate. Consider using '#align with_zero.coe_mul WithZero.coe_mulₓ'. -/
 @[simp, norm_cast]
 theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α) = a * b :=
   rfl

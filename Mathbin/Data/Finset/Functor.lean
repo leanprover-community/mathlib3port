@@ -177,12 +177,6 @@ variable [∀ P, Decidable P]
 instance : Monad Finset :=
   { Finset.applicative with bind := fun α β => @sup _ _ _ _ }
 
-/- warning: finset.bind_def -> Finset.bind_def is a dubious translation:
-lean 3 declaration is
-  forall [_inst_1 : forall (P : Prop), Decidable P] {α : Type.{u1}} {β : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} β) -> (β -> (Finset.{u1} α)) -> (Finset.{u1} α)) (Bind.bind.{u1, u1} Finset.{u1} (Monad.toHasBind.{u1, u1} Finset.{u1} (Finset.monad.{u1} (fun (P : Prop) => _inst_1 P))) β α) (Finset.sup.{u1, u1} (Finset.{u1} α) β (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 (Eq.{succ u1} α a b)))) (Finset.orderBot.{u1} α))
-but is expected to have type
-  forall [_inst_1 : forall (P : Prop), Decidable P] {α : Type.{u1}} {β : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} β) -> (β -> (Finset.{u1} α)) -> (Finset.{u1} α)) (fun (x._@.Mathlib.Data.Finset.Functor._hyg.1279 : Finset.{u1} β) (x._@.Mathlib.Data.Finset.Functor._hyg.1281 : β -> (Finset.{u1} α)) => Bind.bind.{u1, u1} Finset.{u1} (Monad.toBind.{u1, u1} Finset.{u1} (Finset.instMonadFinset.{u1} (fun (P : Prop) => _inst_1 P))) β α x._@.Mathlib.Data.Finset.Functor._hyg.1279 x._@.Mathlib.Data.Finset.Functor._hyg.1281) (Finset.sup.{u1, u1} (Finset.{u1} α) β (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 (Eq.{succ u1} α a b)))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α))
-Case conversion may be inaccurate. Consider using '#align finset.bind_def Finset.bind_defₓ'. -/
 @[simp]
 theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
   rfl
@@ -227,12 +221,6 @@ def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) 
 #align finset.traverse Finset.traverse
 -/
 
-/- warning: finset.id_traverse -> Finset.id_traverse is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_5 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (id.{succ (succ u1)} Type.{u1} (Finset.{u1} α)) (Finset.traverse.{u1} α α (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}) id.commApplicative.{u1} (fun (a : α) (b : α) => _inst_5 a b) (id.mk.{succ u1} α) s) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_5 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Id.{u1} (Finset.{u1} α)) (Finset.traverse.{u1} α α Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) instCommApplicativeIdToApplicativeInstMonadId.{u1} (fun (a : α) (b : α) => _inst_5 a b) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) α) s) s
-Case conversion may be inaccurate. Consider using '#align finset.id_traverse Finset.id_traverseₓ'. -/
 @[simp]
 theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := by
   rw [traverse, Multiset.id_traverse]; exact s.val_to_finset

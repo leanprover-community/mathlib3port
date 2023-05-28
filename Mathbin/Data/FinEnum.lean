@@ -26,12 +26,6 @@ universe u v
 
 open Finset
 
-/- warning: fin_enum -> FinEnum is a dubious translation:
-lean 3 declaration is
-  Sort.{u1} -> Sort.{max 1 (imax 1 u1) u1}
-but is expected to have type
-  Sort.{u1} -> Sort.{max 1 u1}
-Case conversion may be inaccurate. Consider using '#align fin_enum FinEnumₓ'. -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
@@ -278,12 +272,6 @@ def pi {β : α → Type max u v} [DecidableEq α] :
 #align fin_enum.pi FinEnum.pi
 -/
 
-/- warning: fin_enum.mem_pi -> FinEnum.mem_pi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{max u1 u2}} [_inst_1 : FinEnum.{succ u1} α] [_inst_2 : forall (a : α), FinEnum.{succ (max u1 u2)} (β a)] (xs : List.{u1} α) (f : forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a xs) -> (β a)), Membership.Mem.{max u1 u2, max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a xs) -> (β a)) (List.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a xs) -> (β a))) (List.hasMem.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a xs) -> (β a))) f (FinEnum.pi.{u1, u2} α (fun (x : α) => β x) (fun (a : α) (b : α) => FinEnum.decEq.{succ u1} α _inst_1 a b) xs (fun (x : α) => FinEnum.toList.{max u1 u2} (β x) (_inst_2 x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{max u2 u1}} [_inst_1 : FinEnum.{succ u2} α] [_inst_2 : forall (a : α), FinEnum.{succ (max u2 u1)} (β a)] (xs : List.{u2} α) (f : forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a xs) -> (β a)), Membership.mem.{max u2 u1, max u2 u1} (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a xs) -> (β a)) (List.{max u2 u1} (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a xs) -> (β a))) (List.instMembershipList.{max u2 u1} (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a xs) -> (β a))) f (FinEnum.pi.{u2, u1} α (fun (x : α) => β x) (fun (a : α) (b : α) => FinEnum.decEq.{succ u2} α _inst_1 a b) xs (fun (x : α) => FinEnum.toList.{max u2 u1} (β x) (_inst_2 x)))
-Case conversion may be inaccurate. Consider using '#align fin_enum.mem_pi FinEnum.mem_piₓ'. -/
 theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (xs : List α)
     (f : ∀ a, a ∈ xs → β a) : f ∈ pi xs fun x => toList (β x) :=
   by
@@ -315,12 +303,6 @@ instance pi.finEnum {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β 
 #align fin_enum.pi.fin_enum FinEnum.pi.finEnum
 -/
 
-/- warning: fin_enum.pfun_fin_enum -> FinEnum.pfunFinEnum is a dubious translation:
-lean 3 declaration is
-  forall (p : Prop) [_inst_1 : Decidable p] (α : p -> Type.{u_1}) [_inst_2 : forall (hp : p), FinEnum.{succ u_1} (α hp)], FinEnum.{succ u_1} (forall (hp : p), α hp)
-but is expected to have type
-  forall (p : Prop) [_inst_1 : Decidable p] (α : p -> Type) [_inst_2 : forall (hp : p), FinEnum.{1} (α hp)], FinEnum.{1} (forall (hp : p), α hp)
-Case conversion may be inaccurate. Consider using '#align fin_enum.pfun_fin_enum FinEnum.pfunFinEnumₓ'. -/
 instance pfunFinEnum (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, FinEnum (α hp)] :
     FinEnum (∀ hp : p, α hp) :=
   if hp : p then

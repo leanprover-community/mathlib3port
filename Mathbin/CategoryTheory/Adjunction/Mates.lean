@@ -117,18 +117,12 @@ def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R�
 #align category_theory.transfer_nat_trans CategoryTheory.transferNatTrans
 -/
 
-/- warning: category_theory.transfer_nat_trans_counit -> CategoryTheory.transferNatTrans_counit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.transfer_nat_trans_counit CategoryTheory.transferNatTrans_counitₓ'. -/
 theorem transferNatTrans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
     L₂.map ((transferNatTrans adj₁ adj₂ f).app _) ≫ adj₂.counit.app _ =
       f.app _ ≫ H.map (adj₁.counit.app Y) :=
   by erw [functor.map_comp]; simp
 #align category_theory.transfer_nat_trans_counit CategoryTheory.transferNatTrans_counit
 
-/- warning: category_theory.unit_transfer_nat_trans -> CategoryTheory.unit_transferNatTrans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.unit_transfer_nat_trans CategoryTheory.unit_transferNatTransₓ'. -/
 theorem unit_transferNatTrans (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (X : C) :
     G.map (adj₁.Unit.app X) ≫ (transferNatTrans adj₁ adj₂ f).app _ =
       adj₂.Unit.app _ ≫ R₂.map (f.app _) :=
@@ -169,9 +163,6 @@ def transferNatTransSelf : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
 #align category_theory.transfer_nat_trans_self CategoryTheory.transferNatTransSelf
 -/
 
-/- warning: category_theory.transfer_nat_trans_self_counit -> CategoryTheory.transferNatTransSelf_counit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.transfer_nat_trans_self_counit CategoryTheory.transferNatTransSelf_counitₓ'. -/
 theorem transferNatTransSelf_counit (f : L₂ ⟶ L₁) (X) :
     L₂.map ((transferNatTransSelf adj₁ adj₂ f).app _) ≫ adj₂.counit.app X =
       f.app _ ≫ adj₁.counit.app X :=
@@ -184,9 +175,6 @@ theorem transferNatTransSelf_counit (f : L₂ ⟶ L₁) (X) :
   simp
 #align category_theory.transfer_nat_trans_self_counit CategoryTheory.transferNatTransSelf_counit
 
-/- warning: category_theory.unit_transfer_nat_trans_self -> CategoryTheory.unit_transferNatTransSelf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.unit_transfer_nat_trans_self CategoryTheory.unit_transferNatTransSelfₓ'. -/
 theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
     adj₁.Unit.app _ ≫ (transferNatTransSelf adj₁ adj₂ f).app _ =
       adj₂.Unit.app X ≫ Functor.map _ (f.app _) :=
@@ -227,9 +215,6 @@ theorem transferNatTransSelf_comp (f g) :
 #align category_theory.transfer_nat_trans_self_comp CategoryTheory.transferNatTransSelf_comp
 -/
 
-/- warning: category_theory.transfer_nat_trans_self_adjunction_id -> CategoryTheory.transferNatTransSelf_adjunction_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.transfer_nat_trans_self_adjunction_id CategoryTheory.transferNatTransSelf_adjunction_idₓ'. -/
 theorem transferNatTransSelf_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 𝟭 C ⟶ L) (X : C) :
     (transferNatTransSelf adj Adjunction.id f).app X = f.app (R.obj X) ≫ adj.counit.app X :=
   by
@@ -237,9 +222,6 @@ theorem transferNatTransSelf_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 
   simp only [comp_id, id_comp]
 #align category_theory.transfer_nat_trans_self_adjunction_id CategoryTheory.transferNatTransSelf_adjunction_id
 
-/- warning: category_theory.transfer_nat_trans_self_adjunction_id_symm -> CategoryTheory.transferNatTransSelf_adjunction_id_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.transfer_nat_trans_self_adjunction_id_symm CategoryTheory.transferNatTransSelf_adjunction_id_symmₓ'. -/
 theorem transferNatTransSelf_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) (g : R ⟶ 𝟭 C) (X : C) :
     ((transferNatTransSelf adj Adjunction.id).symm g).app X = adj.Unit.app X ≫ g.app (L.obj X) :=
   by

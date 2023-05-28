@@ -55,12 +55,6 @@ class Quiver (V : Type u) where
 -- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
-/- warning: prefunctor -> Prefunctor is a dubious translation:
-lean 3 declaration is
-  forall (V : Type.{u3}) [_inst_1 : Quiver.{u1, u3} V] (W : Type.{u4}) [_inst_2 : Quiver.{u2, u4} W], Sort.{max (imax (succ u3) (succ u3) u1 u2) (succ u3) (succ u4)}
-but is expected to have type
-  forall (V : Type.{u3}) [_inst_1 : Quiver.{u1, u3} V] (W : Type.{u4}) [_inst_2 : Quiver.{u2, u4} W], Sort.{max (max (max (succ u3) (succ u4)) u1) u2}
-Case conversion may be inaccurate. Consider using '#align prefunctor Prefunctorₓ'. -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
@@ -115,34 +109,16 @@ def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W]
 #align prefunctor.comp Prefunctor.comp
 -/
 
-/- warning: prefunctor.comp_id -> Prefunctor.comp_id is a dubious translation:
-lean 3 declaration is
-  forall {U : Type.{u1}} [_inst_1 : Quiver.{u2, u1} U] {V : Type.{u3}} [_inst_2 : Quiver.{u4, u3} V] (F : Prefunctor.{u2, u4, u1, u3} U _inst_1 V _inst_2), Eq.{max (imax (succ u1) (succ u1) u2 u4) (succ u1) (succ u3)} (Prefunctor.{u2, u4, u1, u3} U _inst_1 V _inst_2) (Prefunctor.comp.{u1, u2, u3, u4, u3, u4} U _inst_1 V _inst_2 V _inst_2 F (Prefunctor.id.{u3, u4} V _inst_2)) F
-but is expected to have type
-  forall {U : Type.{u4}} {_inst_1 : Type.{u3}} [V : Quiver.{u2, u4} U] [_inst_2 : Quiver.{u1, u3} _inst_1] (F : Prefunctor.{u2, u1, u4, u3} U V _inst_1 _inst_2), Eq.{max (max (max (succ u4) (succ u3)) u2) u1} (Prefunctor.{u2, u1, u4, u3} U V _inst_1 _inst_2) (Prefunctor.comp.{u4, u2, u3, u1, u3, u1} U V _inst_1 _inst_2 _inst_1 _inst_2 F (Prefunctor.id.{u3, u1} _inst_1 _inst_2)) F
-Case conversion may be inaccurate. Consider using '#align prefunctor.comp_id Prefunctor.comp_idₓ'. -/
 @[simp]
 theorem comp_id {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
     F.comp (id _) = F := by cases F; rfl
 #align prefunctor.comp_id Prefunctor.comp_id
 
-/- warning: prefunctor.id_comp -> Prefunctor.id_comp is a dubious translation:
-lean 3 declaration is
-  forall {U : Type.{u1}} [_inst_1 : Quiver.{u2, u1} U] {V : Type.{u3}} [_inst_2 : Quiver.{u4, u3} V] (F : Prefunctor.{u2, u4, u1, u3} U _inst_1 V _inst_2), Eq.{max (imax (succ u1) (succ u1) u2 u4) (succ u1) (succ u3)} (Prefunctor.{u2, u4, u1, u3} U _inst_1 V _inst_2) (Prefunctor.comp.{u1, u2, u1, u2, u3, u4} U _inst_1 U _inst_1 V _inst_2 (Prefunctor.id.{u1, u2} U _inst_1) F) F
-but is expected to have type
-  forall {U : Type.{u4}} {_inst_1 : Type.{u3}} [V : Quiver.{u2, u4} U] [_inst_2 : Quiver.{u1, u3} _inst_1] (F : Prefunctor.{u2, u1, u4, u3} U V _inst_1 _inst_2), Eq.{max (max (max (succ u4) (succ u3)) u2) u1} (Prefunctor.{u2, u1, u4, u3} U V _inst_1 _inst_2) (Prefunctor.comp.{u4, u2, u4, u2, u3, u1} U V U V _inst_1 _inst_2 (Prefunctor.id.{u4, u2} U V) F) F
-Case conversion may be inaccurate. Consider using '#align prefunctor.id_comp Prefunctor.id_compₓ'. -/
 @[simp]
 theorem id_comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
     (id _).comp F = F := by cases F; rfl
 #align prefunctor.id_comp Prefunctor.id_comp
 
-/- warning: prefunctor.comp_assoc -> Prefunctor.comp_assoc is a dubious translation:
-lean 3 declaration is
-  forall {U : Type.{u1}} {V : Type.{u2}} {W : Type.{u3}} {Z : Type.{u4}} [_inst_1 : Quiver.{u5, u1} U] [_inst_2 : Quiver.{u6, u2} V] [_inst_3 : Quiver.{u7, u3} W] [_inst_4 : Quiver.{u8, u4} Z] (F : Prefunctor.{u5, u6, u1, u2} U _inst_1 V _inst_2) (G : Prefunctor.{u6, u7, u2, u3} V _inst_2 W _inst_3) (H : Prefunctor.{u7, u8, u3, u4} W _inst_3 Z _inst_4), Eq.{max (imax (succ u1) (succ u1) u5 u8) (succ u1) (succ u4)} (Prefunctor.{u5, u8, u1, u4} U _inst_1 Z _inst_4) (Prefunctor.comp.{u1, u5, u3, u7, u4, u8} U _inst_1 W _inst_3 Z _inst_4 (Prefunctor.comp.{u1, u5, u2, u6, u3, u7} U _inst_1 V _inst_2 W _inst_3 F G) H) (Prefunctor.comp.{u1, u5, u2, u6, u4, u8} U _inst_1 V _inst_2 Z _inst_4 F (Prefunctor.comp.{u2, u6, u3, u7, u4, u8} V _inst_2 W _inst_3 Z _inst_4 G H))
-but is expected to have type
-  forall {U : Type.{u8}} {V : Type.{u7}} {W : Type.{u6}} {Z : Type.{u5}} [_inst_1 : Quiver.{u4, u8} U] [_inst_2 : Quiver.{u3, u7} V] [_inst_3 : Quiver.{u2, u6} W] [_inst_4 : Quiver.{u1, u5} Z] (F : Prefunctor.{u4, u3, u8, u7} U _inst_1 V _inst_2) (G : Prefunctor.{u3, u2, u7, u6} V _inst_2 W _inst_3) (H : Prefunctor.{u2, u1, u6, u5} W _inst_3 Z _inst_4), Eq.{max (max (max (succ u8) (succ u5)) u4) u1} (Prefunctor.{u4, u1, u8, u5} U _inst_1 Z _inst_4) (Prefunctor.comp.{u8, u4, u6, u2, u5, u1} U _inst_1 W _inst_3 Z _inst_4 (Prefunctor.comp.{u8, u4, u7, u3, u6, u2} U _inst_1 V _inst_2 W _inst_3 F G) H) (Prefunctor.comp.{u8, u4, u7, u3, u5, u1} U _inst_1 V _inst_2 Z _inst_4 F (Prefunctor.comp.{u7, u3, u6, u2, u5, u1} V _inst_2 W _inst_3 Z _inst_4 G H))
-Case conversion may be inaccurate. Consider using '#align prefunctor.comp_assoc Prefunctor.comp_assocₓ'. -/
 @[simp]
 theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z]
     (F : Prefunctor U V) (G : Prefunctor V W) (H : Prefunctor W Z) :
@@ -163,12 +139,6 @@ end Prefunctor
 
 namespace Quiver
 
-/- warning: quiver.opposite -> Quiver.opposite is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Quiver.{u2, u1} V], Quiver.{u2, u1} (Opposite.{succ u1} V)
-but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Quiver.{u2, u1} V], Quiver.{max 1 u2, u1} (Opposite.{succ u1} V)
-Case conversion may be inaccurate. Consider using '#align quiver.opposite Quiver.oppositeₓ'. -/
 /-- `Vᵒᵖ` reverses the direction of all arrows of `V`. -/
 instance opposite {V} [Quiver V] : Quiver Vᵒᵖ :=
   ⟨fun a b => unop b ⟶ unop a⟩

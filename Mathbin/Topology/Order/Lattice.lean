@@ -101,94 +101,46 @@ variable {L : Type _} [TopologicalSpace L]
 
 variable {X : Type _} [TopologicalSpace X]
 
-/- warning: continuous_inf -> continuous_inf is a dubious translation:
-lean 3 declaration is
-  forall {L : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} L] [_inst_3 : Inf.{u1} L] [_inst_4 : ContinuousInf.{u1} L _inst_1 _inst_3], Continuous.{u1, u1} (Prod.{u1, u1} L L) L (Prod.topologicalSpace.{u1, u1} L L _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} L L) => Inf.inf.{u1} L _inst_3 (Prod.fst.{u1, u1} L L p) (Prod.snd.{u1, u1} L L p))
-but is expected to have type
-  forall {L : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} L] [_inst_3 : Inf.{u1} L] [_inst_4 : ContinuousInf.{u1} L _inst_1 _inst_3], Continuous.{u1, u1} (Prod.{u1, u1} L L) L (instTopologicalSpaceProd.{u1, u1} L L _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} L L) => Inf.inf.{u1} L _inst_3 (Prod.fst.{u1, u1} L L p) (Prod.snd.{u1, u1} L L p))
-Case conversion may be inaccurate. Consider using '#align continuous_inf continuous_infₓ'. -/
 @[continuity]
 theorem continuous_inf [Inf L] [ContinuousInf L] : Continuous fun p : L × L => p.1 ⊓ p.2 :=
   ContinuousInf.continuous_inf
 #align continuous_inf continuous_inf
 
-/- warning: continuous.inf -> Continuous.inf is a dubious translation:
-lean 3 declaration is
-  forall {L : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} L] {X : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} X] [_inst_3 : Inf.{u1} L] [_inst_4 : ContinuousInf.{u1} L _inst_1 _inst_3] {f : X -> L} {g : X -> L}, (Continuous.{u2, u1} X L _inst_2 _inst_1 f) -> (Continuous.{u2, u1} X L _inst_2 _inst_1 g) -> (Continuous.{u2, u1} X L _inst_2 _inst_1 (fun (x : X) => Inf.inf.{u1} L _inst_3 (f x) (g x)))
-but is expected to have type
-  forall {L : Type.{u2}} {_inst_1 : Type.{u1}} [X : TopologicalSpace.{u2} L] [_inst_2 : TopologicalSpace.{u1} _inst_1] [_inst_3 : Inf.{u2} L] [_inst_4 : ContinuousInf.{u2} L X _inst_3] {f : _inst_1 -> L} {g : _inst_1 -> L}, (Continuous.{u1, u2} _inst_1 L _inst_2 X f) -> (Continuous.{u1, u2} _inst_1 L _inst_2 X g) -> (Continuous.{u1, u2} _inst_1 L _inst_2 X (fun (x : _inst_1) => Inf.inf.{u2} L _inst_3 (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align continuous.inf Continuous.infₓ'. -/
 @[continuity]
 theorem Continuous.inf [Inf L] [ContinuousInf L] {f g : X → L} (hf : Continuous f)
     (hg : Continuous g) : Continuous fun x => f x ⊓ g x :=
   continuous_inf.comp (hf.prod_mk hg : _)
 #align continuous.inf Continuous.inf
 
-/- warning: continuous_sup -> continuous_sup is a dubious translation:
-lean 3 declaration is
-  forall {L : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} L] [_inst_3 : Sup.{u1} L] [_inst_4 : ContinuousSup.{u1} L _inst_1 _inst_3], Continuous.{u1, u1} (Prod.{u1, u1} L L) L (Prod.topologicalSpace.{u1, u1} L L _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} L L) => Sup.sup.{u1} L _inst_3 (Prod.fst.{u1, u1} L L p) (Prod.snd.{u1, u1} L L p))
-but is expected to have type
-  forall {L : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} L] [_inst_3 : Sup.{u1} L] [_inst_4 : ContinuousSup.{u1} L _inst_1 _inst_3], Continuous.{u1, u1} (Prod.{u1, u1} L L) L (instTopologicalSpaceProd.{u1, u1} L L _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} L L) => Sup.sup.{u1} L _inst_3 (Prod.fst.{u1, u1} L L p) (Prod.snd.{u1, u1} L L p))
-Case conversion may be inaccurate. Consider using '#align continuous_sup continuous_supₓ'. -/
 @[continuity]
 theorem continuous_sup [Sup L] [ContinuousSup L] : Continuous fun p : L × L => p.1 ⊔ p.2 :=
   ContinuousSup.continuous_sup
 #align continuous_sup continuous_sup
 
-/- warning: continuous.sup -> Continuous.sup is a dubious translation:
-lean 3 declaration is
-  forall {L : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} L] {X : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} X] [_inst_3 : Sup.{u1} L] [_inst_4 : ContinuousSup.{u1} L _inst_1 _inst_3] {f : X -> L} {g : X -> L}, (Continuous.{u2, u1} X L _inst_2 _inst_1 f) -> (Continuous.{u2, u1} X L _inst_2 _inst_1 g) -> (Continuous.{u2, u1} X L _inst_2 _inst_1 (fun (x : X) => Sup.sup.{u1} L _inst_3 (f x) (g x)))
-but is expected to have type
-  forall {L : Type.{u2}} {_inst_1 : Type.{u1}} [X : TopologicalSpace.{u2} L] [_inst_2 : TopologicalSpace.{u1} _inst_1] [_inst_3 : Sup.{u2} L] [_inst_4 : ContinuousSup.{u2} L X _inst_3] {f : _inst_1 -> L} {g : _inst_1 -> L}, (Continuous.{u1, u2} _inst_1 L _inst_2 X f) -> (Continuous.{u1, u2} _inst_1 L _inst_2 X g) -> (Continuous.{u1, u2} _inst_1 L _inst_2 X (fun (x : _inst_1) => Sup.sup.{u2} L _inst_3 (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align continuous.sup Continuous.supₓ'. -/
 @[continuity]
 theorem Continuous.sup [Sup L] [ContinuousSup L] {f g : X → L} (hf : Continuous f)
     (hg : Continuous g) : Continuous fun x => f x ⊔ g x :=
   continuous_sup.comp (hf.prod_mk hg : _)
 #align continuous.sup Continuous.sup
 
-/- warning: filter.tendsto.sup_right_nhds' -> Filter.Tendsto.sup_right_nhds' is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {β : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : Sup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_3 _inst_4] {l : Filter.{u1} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u1, u2} ι β f l (nhds.{u2} β _inst_3 x)) -> (Filter.Tendsto.{u1, u2} ι β g l (nhds.{u2} β _inst_3 y)) -> (Filter.Tendsto.{u1, u2} ι β (Sup.sup.{max u1 u2} (ι -> β) (Pi.hasSup.{u1, u2} ι (fun (ᾰ : ι) => β) (fun (i : ι) => _inst_4)) f g) l (nhds.{u2} β _inst_3 (Sup.sup.{u2} β _inst_4 x y)))
-but is expected to have type
-  forall {ι : Type.{u2}} {β : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : Sup.{u1} β] [_inst_5 : ContinuousSup.{u1} β _inst_3 _inst_4] {l : Filter.{u2} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u2, u1} ι β f l (nhds.{u1} β _inst_3 x)) -> (Filter.Tendsto.{u2, u1} ι β g l (nhds.{u1} β _inst_3 y)) -> (Filter.Tendsto.{u2, u1} ι β (Sup.sup.{max u1 u2} (ι -> β) (Pi.instSupForAll.{u2, u1} ι (fun (ᾰ : ι) => β) (fun (i : ι) => _inst_4)) f g) l (nhds.{u1} β _inst_3 (Sup.sup.{u1} β _inst_4 x y)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.sup_right_nhds' Filter.Tendsto.sup_right_nhds'ₓ'. -/
 theorem Filter.Tendsto.sup_right_nhds' {ι β} [TopologicalSpace β] [Sup β] [ContinuousSup β]
     {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (f ⊔ g) l (𝓝 (x ⊔ y)) :=
   (continuous_sup.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
 #align filter.tendsto.sup_right_nhds' Filter.Tendsto.sup_right_nhds'
 
-/- warning: filter.tendsto.sup_right_nhds -> Filter.Tendsto.sup_right_nhds is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {β : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : Sup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_3 _inst_4] {l : Filter.{u1} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u1, u2} ι β f l (nhds.{u2} β _inst_3 x)) -> (Filter.Tendsto.{u1, u2} ι β g l (nhds.{u2} β _inst_3 y)) -> (Filter.Tendsto.{u1, u2} ι β (fun (i : ι) => Sup.sup.{u2} β _inst_4 (f i) (g i)) l (nhds.{u2} β _inst_3 (Sup.sup.{u2} β _inst_4 x y)))
-but is expected to have type
-  forall {ι : Type.{u2}} {β : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : Sup.{u1} β] [_inst_5 : ContinuousSup.{u1} β _inst_3 _inst_4] {l : Filter.{u2} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u2, u1} ι β f l (nhds.{u1} β _inst_3 x)) -> (Filter.Tendsto.{u2, u1} ι β g l (nhds.{u1} β _inst_3 y)) -> (Filter.Tendsto.{u2, u1} ι β (fun (i : ι) => Sup.sup.{u1} β _inst_4 (f i) (g i)) l (nhds.{u1} β _inst_3 (Sup.sup.{u1} β _inst_4 x y)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.sup_right_nhds Filter.Tendsto.sup_right_nhdsₓ'. -/
 theorem Filter.Tendsto.sup_right_nhds {ι β} [TopologicalSpace β] [Sup β] [ContinuousSup β]
     {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (fun i => f i ⊔ g i) l (𝓝 (x ⊔ y)) :=
   hf.sup_right_nhds' hg
 #align filter.tendsto.sup_right_nhds Filter.Tendsto.sup_right_nhds
 
-/- warning: filter.tendsto.inf_right_nhds' -> Filter.Tendsto.inf_right_nhds' is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {β : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : Inf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_3 _inst_4] {l : Filter.{u1} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u1, u2} ι β f l (nhds.{u2} β _inst_3 x)) -> (Filter.Tendsto.{u1, u2} ι β g l (nhds.{u2} β _inst_3 y)) -> (Filter.Tendsto.{u1, u2} ι β (Inf.inf.{max u1 u2} (ι -> β) (Pi.hasInf.{u1, u2} ι (fun (ᾰ : ι) => β) (fun (i : ι) => _inst_4)) f g) l (nhds.{u2} β _inst_3 (Inf.inf.{u2} β _inst_4 x y)))
-but is expected to have type
-  forall {ι : Type.{u2}} {β : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : Inf.{u1} β] [_inst_5 : ContinuousInf.{u1} β _inst_3 _inst_4] {l : Filter.{u2} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u2, u1} ι β f l (nhds.{u1} β _inst_3 x)) -> (Filter.Tendsto.{u2, u1} ι β g l (nhds.{u1} β _inst_3 y)) -> (Filter.Tendsto.{u2, u1} ι β (Inf.inf.{max u1 u2} (ι -> β) (Pi.instInfForAll.{u2, u1} ι (fun (ᾰ : ι) => β) (fun (i : ι) => _inst_4)) f g) l (nhds.{u1} β _inst_3 (Inf.inf.{u1} β _inst_4 x y)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.inf_right_nhds' Filter.Tendsto.inf_right_nhds'ₓ'. -/
 theorem Filter.Tendsto.inf_right_nhds' {ι β} [TopologicalSpace β] [Inf β] [ContinuousInf β]
     {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (f ⊓ g) l (𝓝 (x ⊓ y)) :=
   (continuous_inf.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
 #align filter.tendsto.inf_right_nhds' Filter.Tendsto.inf_right_nhds'
 
-/- warning: filter.tendsto.inf_right_nhds -> Filter.Tendsto.inf_right_nhds is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {β : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : Inf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_3 _inst_4] {l : Filter.{u1} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u1, u2} ι β f l (nhds.{u2} β _inst_3 x)) -> (Filter.Tendsto.{u1, u2} ι β g l (nhds.{u2} β _inst_3 y)) -> (Filter.Tendsto.{u1, u2} ι β (fun (i : ι) => Inf.inf.{u2} β _inst_4 (f i) (g i)) l (nhds.{u2} β _inst_3 (Inf.inf.{u2} β _inst_4 x y)))
-but is expected to have type
-  forall {ι : Type.{u2}} {β : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : Inf.{u1} β] [_inst_5 : ContinuousInf.{u1} β _inst_3 _inst_4] {l : Filter.{u2} ι} {f : ι -> β} {g : ι -> β} {x : β} {y : β}, (Filter.Tendsto.{u2, u1} ι β f l (nhds.{u1} β _inst_3 x)) -> (Filter.Tendsto.{u2, u1} ι β g l (nhds.{u1} β _inst_3 y)) -> (Filter.Tendsto.{u2, u1} ι β (fun (i : ι) => Inf.inf.{u1} β _inst_4 (f i) (g i)) l (nhds.{u1} β _inst_3 (Inf.inf.{u1} β _inst_4 x y)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.inf_right_nhds Filter.Tendsto.inf_right_nhdsₓ'. -/
 theorem Filter.Tendsto.inf_right_nhds {ι β} [TopologicalSpace β] [Inf β] [ContinuousInf β]
     {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (fun i => f i ⊓ g i) l (𝓝 (x ⊓ y)) :=

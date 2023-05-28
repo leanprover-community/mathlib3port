@@ -69,9 +69,6 @@ open NNReal ContinuousLinearMap MulOpposite
 
 universe u v
 
-/- warning: double_centralizer -> DoubleCentralizer is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer DoubleCentralizerₓ'. -/
 /-- The type of *double centralizers*, also known as the *multiplier algebra* and denoted by
 `𝓜(𝕜, A)`, of a non-unital normed algebra.
 
@@ -105,9 +102,6 @@ algebra structure from `(A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ` to `𝓜(
 
 variable {𝕜 A}
 
-/- warning: double_centralizer.range_to_prod -> DoubleCentralizer.range_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.range_to_prod DoubleCentralizer.range_toProdₓ'. -/
 theorem range_toProd :
     Set.range toProd = { lr : (A →L[𝕜] A) × _ | ∀ x y, lr.2 x * y = x * lr.1 y } :=
   Set.ext fun x => ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
@@ -151,24 +145,15 @@ instance : SMul S 𝓜(𝕜, A)
         show (s • a.snd) x * y = x * (s • a.fst) y by
           simp only [ContinuousLinearMap.smul_apply, mul_smul_comm, smul_mul_assoc, central] }
 
-/- warning: double_centralizer.smul_to_prod -> DoubleCentralizer.smul_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.smul_to_prod DoubleCentralizer.smul_toProdₓ'. -/
 @[simp]
 theorem smul_toProd (s : S) (a : 𝓜(𝕜, A)) : (s • a).toProd = s • a.toProd :=
   rfl
 #align double_centralizer.smul_to_prod DoubleCentralizer.smul_toProd
 
-/- warning: double_centralizer.smul_fst -> DoubleCentralizer.smul_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.smul_fst DoubleCentralizer.smul_fstₓ'. -/
 theorem smul_fst (s : S) (a : 𝓜(𝕜, A)) : (s • a).fst = s • a.fst :=
   rfl
 #align double_centralizer.smul_fst DoubleCentralizer.smul_fst
 
-/- warning: double_centralizer.smul_snd -> DoubleCentralizer.smul_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.smul_snd DoubleCentralizer.smul_sndₓ'. -/
 theorem smul_snd (s : S) (a : 𝓜(𝕜, A)) : (s • a).snd = s • a.snd :=
   rfl
 #align double_centralizer.smul_snd DoubleCentralizer.smul_snd
@@ -219,219 +204,132 @@ instance : Pow 𝓜(𝕜, A) ℕ
 instance : Inhabited 𝓜(𝕜, A) :=
   ⟨0⟩
 
-/- warning: double_centralizer.add_to_prod -> DoubleCentralizer.add_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.add_to_prod DoubleCentralizer.add_toProdₓ'. -/
 @[simp]
 theorem add_toProd (a b : 𝓜(𝕜, A)) : (a + b).toProd = a.toProd + b.toProd :=
   rfl
 #align double_centralizer.add_to_prod DoubleCentralizer.add_toProd
 
-/- warning: double_centralizer.zero_to_prod -> DoubleCentralizer.zero_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.zero_to_prod DoubleCentralizer.zero_toProdₓ'. -/
 @[simp]
 theorem zero_toProd : (0 : 𝓜(𝕜, A)).toProd = 0 :=
   rfl
 #align double_centralizer.zero_to_prod DoubleCentralizer.zero_toProd
 
-/- warning: double_centralizer.neg_to_prod -> DoubleCentralizer.neg_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.neg_to_prod DoubleCentralizer.neg_toProdₓ'. -/
 @[simp]
 theorem neg_toProd (a : 𝓜(𝕜, A)) : (-a).toProd = -a.toProd :=
   rfl
 #align double_centralizer.neg_to_prod DoubleCentralizer.neg_toProd
 
-/- warning: double_centralizer.sub_to_prod -> DoubleCentralizer.sub_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.sub_to_prod DoubleCentralizer.sub_toProdₓ'. -/
 @[simp]
 theorem sub_toProd (a b : 𝓜(𝕜, A)) : (a - b).toProd = a.toProd - b.toProd :=
   rfl
 #align double_centralizer.sub_to_prod DoubleCentralizer.sub_toProd
 
-/- warning: double_centralizer.one_to_prod -> DoubleCentralizer.one_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.one_to_prod DoubleCentralizer.one_toProdₓ'. -/
 @[simp]
 theorem one_toProd : (1 : 𝓜(𝕜, A)).toProd = 1 :=
   rfl
 #align double_centralizer.one_to_prod DoubleCentralizer.one_toProd
 
-/- warning: double_centralizer.nat_cast_to_prod -> DoubleCentralizer.nat_cast_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nat_cast_to_prod DoubleCentralizer.nat_cast_toProdₓ'. -/
 @[simp]
 theorem nat_cast_toProd (n : ℕ) : (n : 𝓜(𝕜, A)).toProd = n :=
   rfl
 #align double_centralizer.nat_cast_to_prod DoubleCentralizer.nat_cast_toProd
 
-/- warning: double_centralizer.int_cast_to_prod -> DoubleCentralizer.int_cast_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.int_cast_to_prod DoubleCentralizer.int_cast_toProdₓ'. -/
 @[simp]
 theorem int_cast_toProd (n : ℤ) : (n : 𝓜(𝕜, A)).toProd = n :=
   rfl
 #align double_centralizer.int_cast_to_prod DoubleCentralizer.int_cast_toProd
 
-/- warning: double_centralizer.pow_to_prod -> DoubleCentralizer.pow_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.pow_to_prod DoubleCentralizer.pow_toProdₓ'. -/
 @[simp]
 theorem pow_toProd (n : ℕ) (a : 𝓜(𝕜, A)) : (a ^ n).toProd = a.toProd ^ n :=
   rfl
 #align double_centralizer.pow_to_prod DoubleCentralizer.pow_toProd
 
-/- warning: double_centralizer.add_fst -> DoubleCentralizer.add_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.add_fst DoubleCentralizer.add_fstₓ'. -/
 theorem add_fst (a b : 𝓜(𝕜, A)) : (a + b).fst = a.fst + b.fst :=
   rfl
 #align double_centralizer.add_fst DoubleCentralizer.add_fst
 
-/- warning: double_centralizer.add_snd -> DoubleCentralizer.add_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.add_snd DoubleCentralizer.add_sndₓ'. -/
 theorem add_snd (a b : 𝓜(𝕜, A)) : (a + b).snd = a.snd + b.snd :=
   rfl
 #align double_centralizer.add_snd DoubleCentralizer.add_snd
 
-/- warning: double_centralizer.zero_fst -> DoubleCentralizer.zero_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.zero_fst DoubleCentralizer.zero_fstₓ'. -/
 theorem zero_fst : (0 : 𝓜(𝕜, A)).fst = 0 :=
   rfl
 #align double_centralizer.zero_fst DoubleCentralizer.zero_fst
 
-/- warning: double_centralizer.zero_snd -> DoubleCentralizer.zero_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.zero_snd DoubleCentralizer.zero_sndₓ'. -/
 theorem zero_snd : (0 : 𝓜(𝕜, A)).snd = 0 :=
   rfl
 #align double_centralizer.zero_snd DoubleCentralizer.zero_snd
 
-/- warning: double_centralizer.neg_fst -> DoubleCentralizer.neg_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.neg_fst DoubleCentralizer.neg_fstₓ'. -/
 theorem neg_fst (a : 𝓜(𝕜, A)) : (-a).fst = -a.fst :=
   rfl
 #align double_centralizer.neg_fst DoubleCentralizer.neg_fst
 
-/- warning: double_centralizer.neg_snd -> DoubleCentralizer.neg_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.neg_snd DoubleCentralizer.neg_sndₓ'. -/
 theorem neg_snd (a : 𝓜(𝕜, A)) : (-a).snd = -a.snd :=
   rfl
 #align double_centralizer.neg_snd DoubleCentralizer.neg_snd
 
-/- warning: double_centralizer.sub_fst -> DoubleCentralizer.sub_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.sub_fst DoubleCentralizer.sub_fstₓ'. -/
 theorem sub_fst (a b : 𝓜(𝕜, A)) : (a - b).fst = a.fst - b.fst :=
   rfl
 #align double_centralizer.sub_fst DoubleCentralizer.sub_fst
 
-/- warning: double_centralizer.sub_snd -> DoubleCentralizer.sub_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.sub_snd DoubleCentralizer.sub_sndₓ'. -/
 theorem sub_snd (a b : 𝓜(𝕜, A)) : (a - b).snd = a.snd - b.snd :=
   rfl
 #align double_centralizer.sub_snd DoubleCentralizer.sub_snd
 
-/- warning: double_centralizer.one_fst -> DoubleCentralizer.one_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.one_fst DoubleCentralizer.one_fstₓ'. -/
 theorem one_fst : (1 : 𝓜(𝕜, A)).fst = 1 :=
   rfl
 #align double_centralizer.one_fst DoubleCentralizer.one_fst
 
-/- warning: double_centralizer.one_snd -> DoubleCentralizer.one_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.one_snd DoubleCentralizer.one_sndₓ'. -/
 theorem one_snd : (1 : 𝓜(𝕜, A)).snd = 1 :=
   rfl
 #align double_centralizer.one_snd DoubleCentralizer.one_snd
 
-/- warning: double_centralizer.mul_fst -> DoubleCentralizer.mul_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.mul_fst DoubleCentralizer.mul_fstₓ'. -/
 @[simp]
 theorem mul_fst (a b : 𝓜(𝕜, A)) : (a * b).fst = a.fst * b.fst :=
   rfl
 #align double_centralizer.mul_fst DoubleCentralizer.mul_fst
 
-/- warning: double_centralizer.mul_snd -> DoubleCentralizer.mul_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.mul_snd DoubleCentralizer.mul_sndₓ'. -/
 @[simp]
 theorem mul_snd (a b : 𝓜(𝕜, A)) : (a * b).snd = b.snd * a.snd :=
   rfl
 #align double_centralizer.mul_snd DoubleCentralizer.mul_snd
 
-/- warning: double_centralizer.nat_cast_fst -> DoubleCentralizer.nat_cast_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nat_cast_fst DoubleCentralizer.nat_cast_fstₓ'. -/
 theorem nat_cast_fst (n : ℕ) : (n : 𝓜(𝕜, A)).fst = n :=
   rfl
 #align double_centralizer.nat_cast_fst DoubleCentralizer.nat_cast_fst
 
-/- warning: double_centralizer.nat_cast_snd -> DoubleCentralizer.nat_cast_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nat_cast_snd DoubleCentralizer.nat_cast_sndₓ'. -/
 theorem nat_cast_snd (n : ℕ) : (n : 𝓜(𝕜, A)).snd = n :=
   rfl
 #align double_centralizer.nat_cast_snd DoubleCentralizer.nat_cast_snd
 
-/- warning: double_centralizer.int_cast_fst -> DoubleCentralizer.int_cast_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.int_cast_fst DoubleCentralizer.int_cast_fstₓ'. -/
 theorem int_cast_fst (n : ℤ) : (n : 𝓜(𝕜, A)).fst = n :=
   rfl
 #align double_centralizer.int_cast_fst DoubleCentralizer.int_cast_fst
 
-/- warning: double_centralizer.int_cast_snd -> DoubleCentralizer.int_cast_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.int_cast_snd DoubleCentralizer.int_cast_sndₓ'. -/
 theorem int_cast_snd (n : ℤ) : (n : 𝓜(𝕜, A)).snd = n :=
   rfl
 #align double_centralizer.int_cast_snd DoubleCentralizer.int_cast_snd
 
-/- warning: double_centralizer.pow_fst -> DoubleCentralizer.pow_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.pow_fst DoubleCentralizer.pow_fstₓ'. -/
 theorem pow_fst (n : ℕ) (a : 𝓜(𝕜, A)) : (a ^ n).fst = a.fst ^ n :=
   rfl
 #align double_centralizer.pow_fst DoubleCentralizer.pow_fst
 
-/- warning: double_centralizer.pow_snd -> DoubleCentralizer.pow_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.pow_snd DoubleCentralizer.pow_sndₓ'. -/
 theorem pow_snd (n : ℕ) (a : 𝓜(𝕜, A)) : (a ^ n).snd = a.snd ^ n :=
   rfl
 #align double_centralizer.pow_snd DoubleCentralizer.pow_snd
 
-/- warning: double_centralizer.to_prod_mul_opposite -> DoubleCentralizer.toProdMulOpposite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.to_prod_mul_opposite DoubleCentralizer.toProdMulOppositeₓ'. -/
 /-- The natural injection from `double_centralizer.to_prod` except the second coordinate inherits
 `mul_opposite.op`. The ring structure on `𝓜(𝕜, A)` is the pullback under this map. -/
 def toProdMulOpposite : 𝓜(𝕜, A) → (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ := fun a =>
   (a.fst, MulOpposite.op a.snd)
 #align double_centralizer.to_prod_mul_opposite DoubleCentralizer.toProdMulOpposite
 
-/- warning: double_centralizer.to_prod_mul_opposite_injective -> DoubleCentralizer.toProdMulOpposite_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.to_prod_mul_opposite_injective DoubleCentralizer.toProdMulOpposite_injectiveₓ'. -/
 theorem toProdMulOpposite_injective :
     Function.Injective (toProdMulOpposite : 𝓜(𝕜, A) → (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ) := fun a b h =>
   let h' := Prod.ext_iff.mp h
   ext _ _ <| Prod.ext h'.1 <| MulOpposite.op_injective h'.2
 #align double_centralizer.to_prod_mul_opposite_injective DoubleCentralizer.toProdMulOpposite_injective
 
-/- warning: double_centralizer.range_to_prod_mul_opposite -> DoubleCentralizer.range_toProdMulOpposite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.range_to_prod_mul_opposite DoubleCentralizer.range_toProdMulOppositeₓ'. -/
 theorem range_toProdMulOpposite :
     Set.range toProdMulOpposite = { lr : (A →L[𝕜] A) × _ | ∀ x y, unop lr.2 x * y = x * lr.1 y } :=
   Set.ext fun x =>
@@ -446,9 +344,6 @@ instance : Ring 𝓜(𝕜, A) :=
     (fun x n => Prod.ext rfl <| MulOpposite.op_smul _ _)
     (fun x n => Prod.ext rfl <| MulOpposite.op_pow _ _) (fun _ => rfl) fun _ => rfl
 
-/- warning: double_centralizer.to_prod_hom -> DoubleCentralizer.toProdHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.to_prod_hom DoubleCentralizer.toProdHomₓ'. -/
 /-- The canonical map `double_centralizer.to_prod` as an additive group homomorphism. -/
 @[simps]
 def toProdHom : 𝓜(𝕜, A) →+ (A →L[𝕜] A) × (A →L[𝕜] A)
@@ -458,9 +353,6 @@ def toProdHom : 𝓜(𝕜, A) →+ (A →L[𝕜] A) × (A →L[𝕜] A)
   map_add' x y := rfl
 #align double_centralizer.to_prod_hom DoubleCentralizer.toProdHom
 
-/- warning: double_centralizer.to_prod_mul_opposite_hom -> DoubleCentralizer.toProdMulOppositeHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.to_prod_mul_opposite_hom DoubleCentralizer.toProdMulOppositeHomₓ'. -/
 /-- The canonical map `double_centralizer.to_prod_mul_opposite` as a ring homomorphism. -/
 @[simps]
 def toProdMulOppositeHom : 𝓜(𝕜, A) →+* (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ
@@ -498,24 +390,15 @@ instance : Algebra 𝕜 𝓜(𝕜, A)
     ext _ _ <|
       Prod.ext (Algebra.smul_def _ _) ((Algebra.smul_def _ _).trans <| Algebra.commutes _ _)
 
-/- warning: double_centralizer.algebra_map_to_prod -> DoubleCentralizer.algebraMap_toProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.algebra_map_to_prod DoubleCentralizer.algebraMap_toProdₓ'. -/
 @[simp]
 theorem algebraMap_toProd (k : 𝕜) : (algebraMap 𝕜 𝓜(𝕜, A) k).toProd = algebraMap 𝕜 _ k :=
   rfl
 #align double_centralizer.algebra_map_to_prod DoubleCentralizer.algebraMap_toProd
 
-/- warning: double_centralizer.algebra_map_fst -> DoubleCentralizer.algebraMap_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.algebra_map_fst DoubleCentralizer.algebraMap_fstₓ'. -/
 theorem algebraMap_fst (k : 𝕜) : (algebraMap 𝕜 𝓜(𝕜, A) k).fst = algebraMap 𝕜 _ k :=
   rfl
 #align double_centralizer.algebra_map_fst DoubleCentralizer.algebraMap_fst
 
-/- warning: double_centralizer.algebra_map_snd -> DoubleCentralizer.algebraMap_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.algebra_map_snd DoubleCentralizer.algebraMap_sndₓ'. -/
 theorem algebraMap_snd (k : 𝕜) : (algebraMap 𝕜 𝓜(𝕜, A) k).snd = algebraMap 𝕜 _ k :=
   rfl
 #align double_centralizer.algebra_map_snd DoubleCentralizer.algebraMap_snd
@@ -542,17 +425,11 @@ instance : Star 𝓜(𝕜, A)
       central := fun x y => by
         simpa only [star_mul, star_star] using (congr_arg star (a.central (star y) (star x))).symm }
 
-/- warning: double_centralizer.star_fst -> DoubleCentralizer.star_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.star_fst DoubleCentralizer.star_fstₓ'. -/
 @[simp]
 theorem star_fst (a : 𝓜(𝕜, A)) (b : A) : (star a).fst b = star (a.snd (star b)) :=
   rfl
 #align double_centralizer.star_fst DoubleCentralizer.star_fst
 
-/- warning: double_centralizer.star_snd -> DoubleCentralizer.star_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.star_snd DoubleCentralizer.star_sndₓ'. -/
 @[simp]
 theorem star_snd (a : 𝓜(𝕜, A)) (b : A) : (star a).snd b = star (a.fst (star b)) :=
   rfl
@@ -595,17 +472,11 @@ noncomputable instance : CoeTC A 𝓜(𝕜, A)
       snd := (ContinuousLinearMap.mul 𝕜 A).flip a
       central := fun x y => mul_assoc _ _ _ }
 
-/- warning: double_centralizer.coe_fst -> DoubleCentralizer.coe_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.coe_fst DoubleCentralizer.coe_fstₓ'. -/
 @[simp, norm_cast]
 theorem coe_fst (a : A) : (a : 𝓜(𝕜, A)).fst = ContinuousLinearMap.mul 𝕜 A a :=
   rfl
 #align double_centralizer.coe_fst DoubleCentralizer.coe_fst
 
-/- warning: double_centralizer.coe_snd -> DoubleCentralizer.coe_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.coe_snd DoubleCentralizer.coe_sndₓ'. -/
 @[simp, norm_cast]
 theorem coe_snd (a : A) : (a : 𝓜(𝕜, A)).snd = (ContinuousLinearMap.mul 𝕜 A).flip a :=
   rfl
@@ -620,9 +491,6 @@ theorem coe_eq_algebraMap : (coe : 𝕜 → 𝓜(𝕜, 𝕜)) = algebraMap 𝕜 
 #align double_centralizer.coe_eq_algebra_map DoubleCentralizer.coe_eq_algebraMap
 -/
 
-/- warning: double_centralizer.coe_hom -> DoubleCentralizer.coeHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.coe_hom DoubleCentralizer.coeHomₓ'. -/
 /-- The coercion of an algebra into its multiplier algebra as a non-unital star algebra
 homomorphism. -/
 @[simps]
@@ -660,32 +528,20 @@ noncomputable instance : NormedRing 𝓜(𝕜, A) :=
   NormedRing.induced _ _ (toProdMulOppositeHom : 𝓜(𝕜, A) →+* (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ)
     toProdMulOpposite_injective
 
-/- warning: double_centralizer.norm_def -> DoubleCentralizer.norm_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.norm_def DoubleCentralizer.norm_defₓ'. -/
 -- even though the definition is actually in terms of `double_centralizer.to_prod_mul_opposite`, we
 -- choose to see through that here to avoid `mul_opposite.op` appearing.
 theorem norm_def (a : 𝓜(𝕜, A)) : ‖a‖ = ‖a.toProdHom‖ :=
   rfl
 #align double_centralizer.norm_def DoubleCentralizer.norm_def
 
-/- warning: double_centralizer.nnnorm_def -> DoubleCentralizer.nnnorm_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nnnorm_def DoubleCentralizer.nnnorm_defₓ'. -/
 theorem nnnorm_def (a : 𝓜(𝕜, A)) : ‖a‖₊ = ‖a.toProdHom‖₊ :=
   rfl
 #align double_centralizer.nnnorm_def DoubleCentralizer.nnnorm_def
 
-/- warning: double_centralizer.norm_def' -> DoubleCentralizer.norm_def' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.norm_def' DoubleCentralizer.norm_def'ₓ'. -/
 theorem norm_def' (a : 𝓜(𝕜, A)) : ‖a‖ = ‖a.toProdMulOppositeHom‖ :=
   rfl
 #align double_centralizer.norm_def' DoubleCentralizer.norm_def'
 
-/- warning: double_centralizer.nnnorm_def' -> DoubleCentralizer.nnnorm_def' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nnnorm_def' DoubleCentralizer.nnnorm_def'ₓ'. -/
 theorem nnnorm_def' (a : 𝓜(𝕜, A)) : ‖a‖₊ = ‖a.toProdMulOppositeHom‖₊ :=
   rfl
 #align double_centralizer.nnnorm_def' DoubleCentralizer.nnnorm_def'
@@ -697,9 +553,6 @@ instance : NormedSpace 𝕜 𝓜(𝕜, A) :=
 instance : NormedAlgebra 𝕜 𝓜(𝕜, A) :=
   { DoubleCentralizer.algebra, DoubleCentralizer.normedSpace with }
 
-/- warning: double_centralizer.uniform_embedding_to_prod_mul_opposite -> DoubleCentralizer.uniformEmbedding_toProdMulOpposite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.uniform_embedding_to_prod_mul_opposite DoubleCentralizer.uniformEmbedding_toProdMulOppositeₓ'. -/
 theorem uniformEmbedding_toProdMulOpposite : UniformEmbedding (@toProdMulOpposite 𝕜 A _ _ _ _ _) :=
   uniformEmbedding_comap toProdMulOpposite_injective
 #align double_centralizer.uniform_embedding_to_prod_mul_opposite DoubleCentralizer.uniformEmbedding_toProdMulOpposite
@@ -717,9 +570,6 @@ instance [CompleteSpace A] : CompleteSpace 𝓜(𝕜, A) :=
 
 variable [StarRing A] [CstarRing A]
 
-/- warning: double_centralizer.norm_fst_eq_snd -> DoubleCentralizer.norm_fst_eq_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.norm_fst_eq_snd DoubleCentralizer.norm_fst_eq_sndₓ'. -/
 /-- For `a : 𝓜(𝕜, A)`, the norms of `a.fst` and `a.snd` coincide, and hence these
 also coincide with `‖a‖` which is `max (‖a.fst‖) (‖a.snd‖)`. -/
 theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
@@ -767,40 +617,25 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
   exact le_antisymm (h0 _ _ h1) (h0 _ _ h2)
 #align double_centralizer.norm_fst_eq_snd DoubleCentralizer.norm_fst_eq_snd
 
-/- warning: double_centralizer.nnnorm_fst_eq_snd -> DoubleCentralizer.nnnorm_fst_eq_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nnnorm_fst_eq_snd DoubleCentralizer.nnnorm_fst_eq_sndₓ'. -/
 theorem nnnorm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖₊ = ‖a.snd‖₊ :=
   Subtype.ext <| norm_fst_eq_snd a
 #align double_centralizer.nnnorm_fst_eq_snd DoubleCentralizer.nnnorm_fst_eq_snd
 
-/- warning: double_centralizer.norm_fst -> DoubleCentralizer.norm_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.norm_fst DoubleCentralizer.norm_fstₓ'. -/
 @[simp]
 theorem norm_fst (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a‖ := by
   simp only [norm_def, to_prod_hom_apply, Prod.norm_def, norm_fst_eq_snd, max_eq_right,
     eq_self_iff_true]
 #align double_centralizer.norm_fst DoubleCentralizer.norm_fst
 
-/- warning: double_centralizer.norm_snd -> DoubleCentralizer.norm_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.norm_snd DoubleCentralizer.norm_sndₓ'. -/
 @[simp]
 theorem norm_snd (a : 𝓜(𝕜, A)) : ‖a.snd‖ = ‖a‖ := by rw [← norm_fst, norm_fst_eq_snd]
 #align double_centralizer.norm_snd DoubleCentralizer.norm_snd
 
-/- warning: double_centralizer.nnnorm_fst -> DoubleCentralizer.nnnorm_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nnnorm_fst DoubleCentralizer.nnnorm_fstₓ'. -/
 @[simp]
 theorem nnnorm_fst (a : 𝓜(𝕜, A)) : ‖a.fst‖₊ = ‖a‖₊ :=
   Subtype.ext (norm_fst a)
 #align double_centralizer.nnnorm_fst DoubleCentralizer.nnnorm_fst
 
-/- warning: double_centralizer.nnnorm_snd -> DoubleCentralizer.nnnorm_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align double_centralizer.nnnorm_snd DoubleCentralizer.nnnorm_sndₓ'. -/
 @[simp]
 theorem nnnorm_snd (a : 𝓜(𝕜, A)) : ‖a.snd‖₊ = ‖a‖₊ :=
   Subtype.ext (norm_snd a)

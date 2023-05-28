@@ -165,12 +165,6 @@ unsafe def sampleable.mk_trivial_interp : tactic Unit :=
   tactic.refine ``(id)
 #align slim_check.sampleable.mk_trivial_interp slim_check.sampleable.mk_trivial_interp
 
-/- warning: slim_check.sampleable_ext -> SlimCheck.SampleableExt is a dubious translation:
-lean 3 declaration is
-  Sort.{u1} -> Sort.{max (imax (succ u2) u1) (succ (succ u2))}
-but is expected to have type
-  Sort.{u1} -> Sort.{max u1 (succ (succ u2))}
-Case conversion may be inaccurate. Consider using '#align slim_check.sampleable_ext SlimCheck.SampleableExtₓ'. -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
@@ -271,12 +265,6 @@ def Nat.shrink' (k : ℕ) :
       nat.shrink' m h₀ (⟨k - m, h₁⟩::ls)
 #align slim_check.nat.shrink' SlimCheck.Nat.shrink'
 
-/- warning: slim_check.nat.shrink -> SlimCheck.Nat.shrink is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), List.{0} (Subtype.{1} Nat (fun (m : Nat) => WellFoundedRelation.R.{1} Nat (hasWellFoundedOfHasSizeof.{1} Nat Nat.hasSizeof) m n))
-but is expected to have type
-  Nat -> (List.{0} Nat)
-Case conversion may be inaccurate. Consider using '#align slim_check.nat.shrink SlimCheck.Nat.shrinkₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `nat.shrink n` creates a list of smaller natural numbers by
@@ -466,12 +454,6 @@ def sampleableChar (length : Nat) (characters : String) : Sampleable Char
   shrink _ := LazyList.nil
 #align slim_check.sampleable_char SlimCheck.sampleableChar
 
-/- warning: slim_check.char.sampleable -> SlimCheck.Char.sampleable is a dubious translation:
-lean 3 declaration is
-  SlimCheck.Sampleable.{0} Char
-but is expected to have type
-  Nat -> (forall (chars : List.{0} Char), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (List.length.{0} Char chars)) -> (SlimCheck.SampleableExt.{1, 0} Char))
-Case conversion may be inaccurate. Consider using '#align slim_check.char.sampleable SlimCheck.Char.sampleableₓ'. -/
 instance Char.sampleable : Sampleable Char :=
   sampleableChar 3 " 0123abcABC:,;`\\/"
 #align slim_check.char.sampleable SlimCheck.Char.sampleable
@@ -907,12 +889,6 @@ instance Perm'.slimCheck {xs : List α} : SlimCheck.Sampleable { ys : List α //
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- warning: slim_check.print_samples -> SlimCheck.printSamples is a dubious translation:
-lean 3 declaration is
-  forall {t : Type.{u}} [_inst_1 : Repr.{u} t], (SlimCheck.Gen.{u} t) -> (Io Unit)
-but is expected to have type
-  forall {t : Type} [_inst_1 : Repr.{0} t], (SlimCheck.Gen.{0} t) -> (IO PUnit.{1})
-Case conversion may be inaccurate. Consider using '#align slim_check.print_samples SlimCheck.printSamplesₓ'. -/
 /-- Print (at most) 10 samples of a given type to stdout for debugging.
 -/
 def printSamples {t : Type u} [Repr t] (g : Gen t) : Io Unit := do

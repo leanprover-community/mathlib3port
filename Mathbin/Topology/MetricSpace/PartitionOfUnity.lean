@@ -43,12 +43,6 @@ namespace Emetric
 
 variable [EMetricSpace X] {K : ι → Set X} {U : ι → Set X}
 
-/- warning: emetric.eventually_nhds_zero_forall_closed_ball_subset -> EMetric.eventually_nhds_zero_forall_closedBall_subset is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : EMetricSpace.{u2} X] {K : ι -> (Set.{u2} X)} {U : ι -> (Set.{u2} X)}, (forall (i : ι), IsClosed.{u2} X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEmetricSpace.{u2} X _inst_1))) (K i)) -> (forall (i : ι), IsOpen.{u2} X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEmetricSpace.{u2} X _inst_1))) (U i)) -> (forall (i : ι), HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) (K i) (U i)) -> (LocallyFinite.{u1, u2} ι X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEmetricSpace.{u2} X _inst_1))) K) -> (forall (x : X), Filter.Eventually.{u2} (Prod.{0, u2} ENNReal X) (fun (p : Prod.{0, u2} ENNReal X) => forall (i : ι), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) (Prod.snd.{0, u2} ENNReal X p) (K i)) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) (EMetric.closedBall.{u2} X (EMetricSpace.toPseudoEmetricSpace.{u2} X _inst_1) (Prod.snd.{0, u2} ENNReal X p) (Prod.fst.{0, u2} ENNReal X p)) (U i))) (Filter.prod.{0, u2} ENNReal X (nhds.{0} ENNReal ENNReal.topologicalSpace (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (nhds.{u2} X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEmetricSpace.{u2} X _inst_1))) x)))
-but is expected to have type
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : EMetricSpace.{u2} X] {K : ι -> (Set.{u2} X)} {U : ι -> (Set.{u2} X)}, (forall (i : ι), IsClosed.{u2} X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEMetricSpace.{u2} X _inst_1))) (K i)) -> (forall (i : ι), IsOpen.{u2} X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEMetricSpace.{u2} X _inst_1))) (U i)) -> (forall (i : ι), HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) (K i) (U i)) -> (LocallyFinite.{u1, u2} ι X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEMetricSpace.{u2} X _inst_1))) K) -> (forall (x : X), Filter.Eventually.{u2} (Prod.{0, u2} ENNReal X) (fun (p : Prod.{0, u2} ENNReal X) => forall (i : ι), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) (Prod.snd.{0, u2} ENNReal X p) (K i)) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) (EMetric.closedBall.{u2} X (EMetricSpace.toPseudoEMetricSpace.{u2} X _inst_1) (Prod.snd.{0, u2} ENNReal X p) (Prod.fst.{0, u2} ENNReal X p)) (U i))) (Filter.prod.{0, u2} ENNReal X (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (nhds.{u2} X (UniformSpace.toTopologicalSpace.{u2} X (PseudoEMetricSpace.toUniformSpace.{u2} X (EMetricSpace.toPseudoEMetricSpace.{u2} X _inst_1))) x)))
-Case conversion may be inaccurate. Consider using '#align emetric.eventually_nhds_zero_forall_closed_ball_subset EMetric.eventually_nhds_zero_forall_closedBall_subsetₓ'. -/
 /-- Let `K : ι → set X` be a locally finitie family of closed sets in an emetric space. Let
 `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then for any point
 `x : X`, for sufficiently small `r : ℝ≥0∞` and for `y` sufficiently close to `x`, for all `i`, if
@@ -77,9 +71,6 @@ theorem eventually_nhds_zero_forall_closedBall_subset (hK : ∀ i, IsClosed (K i
     
 #align emetric.eventually_nhds_zero_forall_closed_ball_subset EMetric.eventually_nhds_zero_forall_closedBall_subset
 
-/- warning: emetric.exists_forall_closed_ball_subset_aux₁ -> EMetric.exists_forall_closedBall_subset_aux₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align emetric.exists_forall_closed_ball_subset_aux₁ EMetric.exists_forall_closedBall_subset_aux₁ₓ'. -/
 theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU : ∀ i, IsOpen (U i))
     (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) (x : X) :
     ∃ r : ℝ,
@@ -94,12 +85,6 @@ theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU 
   rwa [mem_preimage, mem_Inter₂]
 #align emetric.exists_forall_closed_ball_subset_aux₁ EMetric.exists_forall_closedBall_subset_aux₁
 
-/- warning: emetric.exists_forall_closed_ball_subset_aux₂ -> EMetric.exists_forall_closedBall_subset_aux₂ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : EMetricSpace.{u2} X] {K : ι -> (Set.{u2} X)} {U : ι -> (Set.{u2} X)} (y : X), Convex.{0, 0} Real Real Real.orderedSemiring Real.addCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Set.preimage.{0, 0} Real ENNReal ENNReal.ofReal (Set.iInter.{0, succ u1} ENNReal ι (fun (i : ι) => Set.iInter.{0, 0} ENNReal (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) y (K i)) (fun (hi : Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) y (K i)) => setOf.{0} ENNReal (fun (r : ENNReal) => HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) (EMetric.closedBall.{u2} X (EMetricSpace.toPseudoEmetricSpace.{u2} X _inst_1) y r) (U i)))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {K : ι -> (Set.{u1} X)} {U : ι -> (Set.{u1} X)} (y : X), Convex.{0, 0} Real Real Real.orderedSemiring Real.instAddCommMonoidReal (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (NormedAlgebra.id.{0} Real Real.normedField))) (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Set.preimage.{0, 0} Real ENNReal ENNReal.ofReal (Set.iInter.{0, succ u2} ENNReal ι (fun (i : ι) => Set.iInter.{0, 0} ENNReal (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) y (K i)) (fun (hi : Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) y (K i)) => setOf.{0} ENNReal (fun (r : ENNReal) => HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) (EMetric.closedBall.{u1} X (EMetricSpace.toPseudoEMetricSpace.{u1} X _inst_1) y r) (U i)))))))
-Case conversion may be inaccurate. Consider using '#align emetric.exists_forall_closed_ball_subset_aux₂ EMetric.exists_forall_closedBall_subset_aux₂ₓ'. -/
 theorem exists_forall_closedBall_subset_aux₂ (y : X) :
     Convex ℝ
       (Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
@@ -110,9 +95,6 @@ theorem exists_forall_closedBall_subset_aux₂ (y : X) :
           ordConnected_iInter fun hi => ordConnected_setOf_closedBall_subset y (U i)
 #align emetric.exists_forall_closed_ball_subset_aux₂ EMetric.exists_forall_closedBall_subset_aux₂
 
-/- warning: emetric.exists_continuous_real_forall_closed_ball_subset -> EMetric.exists_continuous_real_forall_closedBall_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align emetric.exists_continuous_real_forall_closed_ball_subset EMetric.exists_continuous_real_forall_closedBall_subsetₓ'. -/
 /-- Let `X` be an extended metric space. Let `K : ι → set X` be a locally finite family of closed
 sets, let `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then there
 exists a positive continuous function `δ : C(X, ℝ)` such that for any `i` and `x ∈ K i`,
@@ -126,9 +108,6 @@ theorem exists_continuous_real_forall_closedBall_subset (hK : ∀ i, IsClosed (K
       (exists_forall_closed_ball_subset_aux₁ hK hU hKU hfin)
 #align emetric.exists_continuous_real_forall_closed_ball_subset EMetric.exists_continuous_real_forall_closedBall_subset
 
-/- warning: emetric.exists_continuous_nnreal_forall_closed_ball_subset -> EMetric.exists_continuous_nNReal_forall_closedBall_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align emetric.exists_continuous_nnreal_forall_closed_ball_subset EMetric.exists_continuous_nNReal_forall_closedBall_subsetₓ'. -/
 /-- Let `X` be an extended metric space. Let `K : ι → set X` be a locally finite family of closed
 sets, let `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then there
 exists a positive continuous function `δ : C(X, ℝ≥0)` such that for any `i` and `x ∈ K i`,
@@ -143,9 +122,6 @@ theorem exists_continuous_nNReal_forall_closedBall_subset (hK : ∀ i, IsClosed 
   simpa only [← ENNReal.ofReal_coe_nnreal] using hδ i x hi
 #align emetric.exists_continuous_nnreal_forall_closed_ball_subset EMetric.exists_continuous_nNReal_forall_closedBall_subset
 
-/- warning: emetric.exists_continuous_ennreal_forall_closed_ball_subset -> EMetric.exists_continuous_eNNReal_forall_closedBall_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align emetric.exists_continuous_ennreal_forall_closed_ball_subset EMetric.exists_continuous_eNNReal_forall_closedBall_subsetₓ'. -/
 /-- Let `X` be an extended metric space. Let `K : ι → set X` be a locally finite family of closed
 sets, let `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then there
 exists a positive continuous function `δ : C(X, ℝ≥0∞)` such that for any `i` and `x ∈ K i`,
@@ -163,9 +139,6 @@ namespace Metric
 
 variable [MetricSpace X] {K : ι → Set X} {U : ι → Set X}
 
-/- warning: metric.exists_continuous_nnreal_forall_closed_ball_subset -> Metric.exists_continuous_nNReal_forall_closedBall_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align metric.exists_continuous_nnreal_forall_closed_ball_subset Metric.exists_continuous_nNReal_forall_closedBall_subsetₓ'. -/
 /-- Let `X` be a metric space. Let `K : ι → set X` be a locally finite family of closed sets, let
 `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then there exists a
 positive continuous function `δ : C(X, ℝ≥0)` such that for any `i` and `x ∈ K i`, we have
@@ -180,9 +153,6 @@ theorem exists_continuous_nNReal_forall_closedBall_subset (hK : ∀ i, IsClosed 
   exact hδ i x hx
 #align metric.exists_continuous_nnreal_forall_closed_ball_subset Metric.exists_continuous_nNReal_forall_closedBall_subset
 
-/- warning: metric.exists_continuous_real_forall_closed_ball_subset -> Metric.exists_continuous_real_forall_closedBall_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align metric.exists_continuous_real_forall_closed_ball_subset Metric.exists_continuous_real_forall_closedBall_subsetₓ'. -/
 /-- Let `X` be a metric space. Let `K : ι → set X` be a locally finite family of closed sets, let
 `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then there exists a
 positive continuous function `δ : C(X, ℝ)` such that for any `i` and `x ∈ K i`, we have

@@ -480,12 +480,6 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) :
 #align pfunctor.M.agree_iff_agree' PFunctor.M.agree_iff_agree'
 -/
 
-/- warning: pfunctor.M.cases_mk -> PFunctor.M.cases_mk is a dubious translation:
-lean 3 declaration is
-  forall {F : PFunctor.{u1}} {r : (PFunctor.M.{u1} F) -> Sort.{u2}} (x : PFunctor.Obj.{u1, u1} F (PFunctor.M.{u1} F)) (f : forall (x : PFunctor.Obj.{u1, u1} F (PFunctor.M.{u1} F)), r (PFunctor.M.mk.{u1} F x)), Eq.{u2} (r (PFunctor.M.mk.{u1} F x)) (PFunctor.M.cases.{u1, u2} F r f (PFunctor.M.mk.{u1} F x)) (f x)
-but is expected to have type
-  forall {F : PFunctor.{u2}} {r : (PFunctor.M.{u2} F) -> Sort.{u1}} (x : PFunctor.Obj.{u2, u2} F (PFunctor.M.{u2} F)) (f : forall (x : PFunctor.Obj.{u2, u2} F (PFunctor.M.{u2} F)), r (PFunctor.M.mk.{u2} F x)), Eq.{u1} (r (PFunctor.M.mk.{u2} F x)) (PFunctor.M.cases.{u2, u1} F r f (PFunctor.M.mk.{u2} F x)) (f x)
-Case conversion may be inaccurate. Consider using '#align pfunctor.M.cases_mk PFunctor.M.cases_mkₓ'. -/
 @[simp]
 theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     PFunctor.M.cases f (M.mk x) = f x :=
@@ -499,24 +493,12 @@ theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M
   congr with n; change (x_snd x).approx n = _; rw [h]
 #align pfunctor.M.cases_mk PFunctor.M.cases_mk
 
-/- warning: pfunctor.M.cases_on_mk -> PFunctor.M.casesOn_mk is a dubious translation:
-lean 3 declaration is
-  forall {F : PFunctor.{u1}} {r : (PFunctor.M.{u1} F) -> Sort.{u2}} (x : PFunctor.Obj.{u1, u1} F (PFunctor.M.{u1} F)) (f : forall (x : PFunctor.Obj.{u1, u1} F (PFunctor.M.{u1} F)), r (PFunctor.M.mk.{u1} F x)), Eq.{u2} (r (PFunctor.M.mk.{u1} F x)) (PFunctor.M.casesOn.{u1, u2} F r (PFunctor.M.mk.{u1} F x) f) (f x)
-but is expected to have type
-  forall {F : PFunctor.{u2}} {r : (PFunctor.M.{u2} F) -> Sort.{u1}} (x : PFunctor.Obj.{u2, u2} F (PFunctor.M.{u2} F)) (f : forall (x : PFunctor.Obj.{u2, u2} F (PFunctor.M.{u2} F)), r (PFunctor.M.mk.{u2} F x)), Eq.{u1} (r (PFunctor.M.mk.{u2} F x)) (PFunctor.M.casesOn.{u2, u1} F r (PFunctor.M.mk.{u2} F x) f) (f x)
-Case conversion may be inaccurate. Consider using '#align pfunctor.M.cases_on_mk PFunctor.M.casesOn_mkₓ'. -/
 @[simp]
 theorem casesOn_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     PFunctor.M.casesOn (M.mk x) f = f x :=
   cases_mk x f
 #align pfunctor.M.cases_on_mk PFunctor.M.casesOn_mk
 
-/- warning: pfunctor.M.cases_on_mk' -> PFunctor.M.casesOn_mk' is a dubious translation:
-lean 3 declaration is
-  forall {F : PFunctor.{u1}} {r : (PFunctor.M.{u1} F) -> Sort.{u2}} {a : PFunctor.A.{u1} F} (x : (PFunctor.B.{u1} F a) -> (PFunctor.M.{u1} F)) (f : forall (a : PFunctor.A.{u1} F) (f : (PFunctor.B.{u1} F a) -> (PFunctor.M.{u1} F)), r (PFunctor.M.mk.{u1} F (Sigma.mk.{u1, u1} (PFunctor.A.{u1} F) (fun (x : PFunctor.A.{u1} F) => (PFunctor.B.{u1} F x) -> (PFunctor.M.{u1} F)) a f))), Eq.{u2} (r (PFunctor.M.mk.{u1} F (Sigma.mk.{u1, u1} (PFunctor.A.{u1} F) (fun (x : PFunctor.A.{u1} F) => (PFunctor.B.{u1} F x) -> (PFunctor.M.{u1} F)) a x))) (PFunctor.M.casesOn'.{u1, u2} F r (PFunctor.M.mk.{u1} F (Sigma.mk.{u1, u1} (PFunctor.A.{u1} F) (fun (x : PFunctor.A.{u1} F) => (PFunctor.B.{u1} F x) -> (PFunctor.M.{u1} F)) a x)) f) (f a x)
-but is expected to have type
-  forall {F : PFunctor.{u2}} {r : (PFunctor.M.{u2} F) -> Sort.{u1}} {a : PFunctor.A.{u2} F} (x : (PFunctor.B.{u2} F a) -> (PFunctor.M.{u2} F)) (f : forall (a : PFunctor.A.{u2} F) (f : (PFunctor.B.{u2} F a) -> (PFunctor.M.{u2} F)), r (PFunctor.M.mk.{u2} F (Sigma.mk.{u2, u2} (PFunctor.A.{u2} F) (fun (x : PFunctor.A.{u2} F) => (PFunctor.B.{u2} F x) -> (PFunctor.M.{u2} F)) a f))), Eq.{u1} (r (PFunctor.M.mk.{u2} F (Sigma.mk.{u2, u2} (PFunctor.A.{u2} F) (fun (x : PFunctor.A.{u2} F) => (PFunctor.B.{u2} F x) -> (PFunctor.M.{u2} F)) a x))) (PFunctor.M.casesOn'.{u2, u1} F r (PFunctor.M.mk.{u2} F (Sigma.mk.{u2, u2} (PFunctor.A.{u2} F) (fun (x : PFunctor.A.{u2} F) => (PFunctor.B.{u2} F x) -> (PFunctor.M.{u2} F)) a x)) f) (f a x)
-Case conversion may be inaccurate. Consider using '#align pfunctor.M.cases_on_mk' PFunctor.M.casesOn_mk'ₓ'. -/
 @[simp]
 theorem casesOn_mk' {r : M F → Sort _} {a} (x : F.B a → M F)
     (f : ∀ (a) (f : F.B a → M F), r (M.mk ⟨a, f⟩)) : PFunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
@@ -800,12 +782,6 @@ theorem bisim (R : M P → M P → Prop)
 #align pfunctor.M.bisim PFunctor.M.bisim
 -/
 
-/- warning: pfunctor.M.bisim' -> PFunctor.M.bisim' is a dubious translation:
-lean 3 declaration is
-  forall {P : PFunctor.{u1}} {α : Type.{u2}} (Q : α -> Prop) (u : α -> (PFunctor.M.{u1} P)) (v : α -> (PFunctor.M.{u1} P)), (forall (x : α), (Q x) -> (Exists.{succ u1} (PFunctor.A.{u1} P) (fun (a : PFunctor.A.{u1} P) => Exists.{succ u1} ((PFunctor.B.{u1} P a) -> (PFunctor.M.{u1} P)) (fun (f : (PFunctor.B.{u1} P a) -> (PFunctor.M.{u1} P)) => Exists.{succ u1} ((PFunctor.B.{u1} P a) -> (PFunctor.M.{u1} P)) (fun (f' : (PFunctor.B.{u1} P a) -> (PFunctor.M.{u1} P)) => And (Eq.{succ u1} (PFunctor.Obj.{u1, u1} P (PFunctor.M.{u1} P)) (PFunctor.M.dest.{u1} P (u x)) (Sigma.mk.{u1, u1} (PFunctor.A.{u1} P) (fun (x : PFunctor.A.{u1} P) => (PFunctor.B.{u1} P x) -> (PFunctor.M.{u1} P)) a f)) (And (Eq.{succ u1} (PFunctor.Obj.{u1, u1} P (PFunctor.M.{u1} P)) (PFunctor.M.dest.{u1} P (v x)) (Sigma.mk.{u1, u1} (PFunctor.A.{u1} P) (fun (x : PFunctor.A.{u1} P) => (PFunctor.B.{u1} P x) -> (PFunctor.M.{u1} P)) a f')) (forall (i : PFunctor.B.{u1} P a), Exists.{succ u2} α (fun (x' : α) => And (Q x') (And (Eq.{succ u1} (PFunctor.M.{u1} P) (f i) (u x')) (Eq.{succ u1} (PFunctor.M.{u1} P) (f' i) (v x'))))))))))) -> (forall (x : α), (Q x) -> (Eq.{succ u1} (PFunctor.M.{u1} P) (u x) (v x)))
-but is expected to have type
-  forall {P : PFunctor.{u2}} {α : Type.{u1}} (Q : α -> Prop) (u : α -> (PFunctor.M.{u2} P)) (v : α -> (PFunctor.M.{u2} P)), (forall (x : α), (Q x) -> (Exists.{succ u2} (PFunctor.A.{u2} P) (fun (a : PFunctor.A.{u2} P) => Exists.{succ u2} ((PFunctor.B.{u2} P a) -> (PFunctor.M.{u2} P)) (fun (f : (PFunctor.B.{u2} P a) -> (PFunctor.M.{u2} P)) => Exists.{succ u2} ((PFunctor.B.{u2} P a) -> (PFunctor.M.{u2} P)) (fun (f' : (PFunctor.B.{u2} P a) -> (PFunctor.M.{u2} P)) => And (Eq.{succ u2} (PFunctor.Obj.{u2, u2} P (PFunctor.M.{u2} P)) (PFunctor.M.dest.{u2} P (u x)) (Sigma.mk.{u2, u2} (PFunctor.A.{u2} P) (fun (x : PFunctor.A.{u2} P) => (PFunctor.B.{u2} P x) -> (PFunctor.M.{u2} P)) a f)) (And (Eq.{succ u2} (PFunctor.Obj.{u2, u2} P (PFunctor.M.{u2} P)) (PFunctor.M.dest.{u2} P (v x)) (Sigma.mk.{u2, u2} (PFunctor.A.{u2} P) (fun (x : PFunctor.A.{u2} P) => (PFunctor.B.{u2} P x) -> (PFunctor.M.{u2} P)) a f')) (forall (i : PFunctor.B.{u2} P a), Exists.{succ u1} α (fun (x' : α) => And (Q x') (And (Eq.{succ u2} (PFunctor.M.{u2} P) (f i) (u x')) (Eq.{succ u2} (PFunctor.M.{u2} P) (f' i) (v x'))))))))))) -> (forall (x : α), (Q x) -> (Eq.{succ u2} (PFunctor.M.{u2} P) (u x) (v x)))
-Case conversion may be inaccurate. Consider using '#align pfunctor.M.bisim' PFunctor.M.bisim'ₓ'. -/
 theorem bisim' {α : Type _} (Q : α → Prop) (u v : α → M P)
     (h :
       ∀ x,

@@ -177,22 +177,10 @@ instance [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
           (equivCongr (Equiv.refl α) (eα.trans (Eq.recOn h eβ.symm)) : α ≃ α ≃ (α ≃ β))
   else ⟨∅, fun x => False.elim (h (Fintype.card_eq.2 ⟨x.symm⟩))⟩
 
-/- warning: fintype.card_perm -> Fintype.card_perm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{u1} (Equiv.Perm.{succ u1} α) (Equiv.fintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) (b : α) => _inst_1 a b) _inst_3 _inst_3)) (Nat.factorial (Fintype.card.{u1} α _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{u1} (Equiv.Perm.{succ u1} α) (equivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) (b : α) => _inst_1 a b) _inst_3 _inst_3)) (Nat.factorial (Fintype.card.{u1} α _inst_3))
-Case conversion may be inaccurate. Consider using '#align fintype.card_perm Fintype.card_permₓ'. -/
 theorem Fintype.card_perm [Fintype α] : Fintype.card (Perm α) = (Fintype.card α)! :=
   Subsingleton.elim (@fintypePerm α _ _) (@Equiv.fintype α α _ _ _ _) ▸ card_perms_of_finset _
 #align fintype.card_perm Fintype.card_perm
 
-/- warning: fintype.card_equiv -> Fintype.card_equiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : Fintype.{u1} α] [_inst_4 : Fintype.{u2} β], (Equiv.{succ u1, succ u2} α β) -> (Eq.{1} Nat (Fintype.card.{max (max u1 u2) u2 u1} (Equiv.{succ u1, succ u2} α β) (Equiv.fintype.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) _inst_3 _inst_4)) (Nat.factorial (Fintype.card.{u1} α _inst_3)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} β] [_inst_3 : Fintype.{u2} α] [_inst_4 : Fintype.{u1} β], (Equiv.{succ u2, succ u1} α β) -> (Eq.{1} Nat (Fintype.card.{max u2 u1} (Equiv.{succ u2, succ u1} α β) (equivFintype.{u2, u1} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) _inst_3 _inst_4)) (Nat.factorial (Fintype.card.{u2} α _inst_3)))
-Case conversion may be inaccurate. Consider using '#align fintype.card_equiv Fintype.card_equivₓ'. -/
 theorem Fintype.card_equiv [Fintype α] [Fintype β] (e : α ≃ β) :
     Fintype.card (α ≃ β) = (Fintype.card α)! :=
   Fintype.card_congr (equivCongr (Equiv.refl α) e) ▸ Fintype.card_perm

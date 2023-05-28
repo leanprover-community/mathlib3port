@@ -35,9 +35,6 @@ variable {E F 𝕜 𝕜₂ : Type _} [SeminormedAddCommGroup E] [SeminormedAddCo
   [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
   {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
-/- warning: banach_steinhaus -> banach_steinhaus is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align banach_steinhaus banach_steinhausₓ'. -/
 /-- This is the standard Banach-Steinhaus theorem, or Uniform Boundedness Principle.
 If a family of continuous linear maps from a Banach space into a normed space is pointwise
 bounded, then the norms of these linear maps are uniformly bounded. -/
@@ -88,9 +85,6 @@ open ENNReal
 
 open ENNReal
 
-/- warning: banach_steinhaus_supr_nnnorm -> banach_steinhaus_iSup_nnnorm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align banach_steinhaus_supr_nnnorm banach_steinhaus_iSup_nnnormₓ'. -/
 /-- This version of Banach-Steinhaus is stated in terms of suprema of `↑‖⬝‖₊ : ℝ≥0∞`
 for convenience. -/
 theorem banach_steinhaus_iSup_nnnorm {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F}
@@ -116,9 +110,6 @@ open Topology
 
 open Filter
 
-/- warning: continuous_linear_map_of_tendsto -> continuousLinearMapOfTendsto is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map_of_tendsto continuousLinearMapOfTendstoₓ'. -/
 /-- Given a *sequence* of continuous linear maps which converges pointwise and for which the
 domain is complete, the Banach-Steinhaus theorem is used to guarantee that the limit map
 is a *continuous* linear map as well. -/

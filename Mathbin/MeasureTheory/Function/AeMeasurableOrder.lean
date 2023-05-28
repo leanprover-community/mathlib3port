@@ -33,9 +33,6 @@ open MeasureTheory Set TopologicalSpace
 
 open Classical ENNReal NNReal
 
-/- warning: measure_theory.ae_measurable_of_exist_almost_disjoint_supersets -> MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_measurable_of_exist_almost_disjoint_supersets MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersetsₓ'. -/
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
@@ -125,9 +122,6 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
   exact ⟨f', f'_meas, ff'⟩
 #align measure_theory.ae_measurable_of_exist_almost_disjoint_supersets MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets
 
-/- warning: ennreal.ae_measurable_of_exist_almost_disjoint_supersets -> ENNReal.aemeasurable_of_exist_almost_disjoint_supersets is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ennreal.ae_measurable_of_exist_almost_disjoint_supersets ENNReal.aemeasurable_of_exist_almost_disjoint_supersetsₓ'. -/
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
 `p < q`, then `f` is almost-everywhere measurable. -/

@@ -60,12 +60,6 @@ def Component (j : ConnectedComponents J) : Type u₁ :=
 #align category_theory.component CategoryTheory.Component
 -/
 
-/- warning: category_theory.component.ι -> CategoryTheory.Component.ι is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] (j : CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1), CategoryTheory.Functor.{u1, u1, u2, u2} (CategoryTheory.Component.{u1, u2} J _inst_1 j) (CategoryTheory.InducedCategory.category.{u1, u2, u2} (CategoryTheory.FullSubcategoryₓ.{u1, u2} J _inst_1 (fun (k : J) => Eq.{succ u2} (Quotient.{succ u2} J (CategoryTheory.Zigzag.setoid.{u1, u2} J _inst_1)) (Quotient.mk''.{succ u2} J (CategoryTheory.Zigzag.setoid.{u1, u2} J _inst_1) k) j)) J _inst_1 (CategoryTheory.FullSubcategoryₓ.obj.{u1, u2} J _inst_1 (fun (k : J) => Eq.{succ u2} (Quotient.{succ u2} J (CategoryTheory.Zigzag.setoid.{u1, u2} J _inst_1)) (Quotient.mk''.{succ u2} J (CategoryTheory.Zigzag.setoid.{u1, u2} J _inst_1) k) j))) J _inst_1
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] (j : CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1), CategoryTheory.Functor.{u1, u1, u2, u2} (CategoryTheory.Component.{u1, u2} J _inst_1 j) (CategoryTheory.instCategoryComponent.{u1, u2} J _inst_1 j) J _inst_1
-Case conversion may be inaccurate. Consider using '#align category_theory.component.ι CategoryTheory.Component.ιₓ'. -/
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
 def Component.ι (j) : Component j ⥤ J :=
@@ -174,12 +168,6 @@ instance : EssSurj (decomposedTo J) where mem_essImage j := ⟨⟨_, j, rfl⟩, 
 instance : IsEquivalence (decomposedTo J) :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
-/- warning: category_theory.decomposed_equiv -> CategoryTheory.decomposedEquiv is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J], CategoryTheory.Equivalence.{max u1 u2, u1, u2, u2} (CategoryTheory.Decomposed.{u1, u2} J _inst_1) (CategoryTheory.Sigma.sigma.{u2, u1, u2} (CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1) (fun (j : CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1) => CategoryTheory.Component.{u1, u2} J _inst_1 j) (fun (i : CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1) => CategoryTheory.Component.category.{u2, u1} J _inst_1 i)) J _inst_1
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J], CategoryTheory.Equivalence.{max u2 u1, u1, u2, u2} (CategoryTheory.Decomposed.{u1, u2} J _inst_1) J (CategoryTheory.Sigma.sigma.{u2, u1, u2} (CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1) (fun (j : CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1) => CategoryTheory.Component.{u1, u2} J _inst_1 j) (fun (i : CategoryTheory.ConnectedComponents.{u1, u2} J _inst_1) => CategoryTheory.instCategoryComponent.{u1, u2} J _inst_1 i)) _inst_1
-Case conversion may be inaccurate. Consider using '#align category_theory.decomposed_equiv CategoryTheory.decomposedEquivₓ'. -/
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/
 @[simps (config := { rhsMd := semireducible }) Functor]
 def decomposedEquiv : Decomposed J ≌ J :=

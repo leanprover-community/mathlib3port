@@ -61,64 +61,28 @@ def essInf {m : MeasurableSpace α} (f : α → β) (μ : Measure α) :=
 #align ess_inf essInf
 -/
 
-/- warning: ess_sup_congr_ae -> essSup_congr_ae is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : ConditionallyCompleteLattice.{u2} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m μ) f g) -> (Eq.{succ u2} β (essSup.{u1, u2} α β _inst_1 m f μ) (essSup.{u1, u2} α β _inst_1 m g μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m μ) f g) -> (Eq.{succ u1} β (essSup.{u2, u1} α β _inst_1 m f μ) (essSup.{u2, u1} α β _inst_1 m g μ))
-Case conversion may be inaccurate. Consider using '#align ess_sup_congr_ae essSup_congr_aeₓ'. -/
 theorem essSup_congr_ae {f g : α → β} (hfg : f =ᵐ[μ] g) : essSup f μ = essSup g μ :=
   limsup_congr hfg
 #align ess_sup_congr_ae essSup_congr_ae
 
-/- warning: ess_inf_congr_ae -> essInf_congr_ae is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : ConditionallyCompleteLattice.{u2} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m μ) f g) -> (Eq.{succ u2} β (essInf.{u1, u2} α β _inst_1 m f μ) (essInf.{u1, u2} α β _inst_1 m g μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m μ) f g) -> (Eq.{succ u1} β (essInf.{u2, u1} α β _inst_1 m f μ) (essInf.{u2, u1} α β _inst_1 m g μ))
-Case conversion may be inaccurate. Consider using '#align ess_inf_congr_ae essInf_congr_aeₓ'. -/
 theorem essInf_congr_ae {f g : α → β} (hfg : f =ᵐ[μ] g) : essInf f μ = essInf g μ :=
   @essSup_congr_ae α βᵒᵈ _ _ _ _ _ hfg
 #align ess_inf_congr_ae essInf_congr_ae
 
-/- warning: ess_sup_const' -> essSup_const' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : ConditionallyCompleteLattice.{u2} β] [_inst_2 : Filter.NeBot.{u1} α (MeasureTheory.Measure.ae.{u1} α m μ)] (c : β), Eq.{succ u2} β (essSup.{u1, u2} α β _inst_1 m (fun (x : α) => c) μ) c
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] [_inst_2 : Filter.NeBot.{u2} α (MeasureTheory.Measure.ae.{u2} α m μ)] (c : β), Eq.{succ u1} β (essSup.{u2, u1} α β _inst_1 m (fun (x : α) => c) μ) c
-Case conversion may be inaccurate. Consider using '#align ess_sup_const' essSup_const'ₓ'. -/
 @[simp]
 theorem essSup_const' [μ.ae.ne_bot] (c : β) : essSup (fun x : α => c) μ = c :=
   limsup_const _
 #align ess_sup_const' essSup_const'
 
-/- warning: ess_inf_const' -> essInf_const' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : ConditionallyCompleteLattice.{u2} β] [_inst_2 : Filter.NeBot.{u1} α (MeasureTheory.Measure.ae.{u1} α m μ)] (c : β), Eq.{succ u2} β (essInf.{u1, u2} α β _inst_1 m (fun (x : α) => c) μ) c
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] [_inst_2 : Filter.NeBot.{u2} α (MeasureTheory.Measure.ae.{u2} α m μ)] (c : β), Eq.{succ u1} β (essInf.{u2, u1} α β _inst_1 m (fun (x : α) => c) μ) c
-Case conversion may be inaccurate. Consider using '#align ess_inf_const' essInf_const'ₓ'. -/
 @[simp]
 theorem essInf_const' [μ.ae.ne_bot] (c : β) : essInf (fun x : α => c) μ = c :=
   liminf_const _
 #align ess_inf_const' essInf_const'
 
-/- warning: ess_sup_const -> essSup_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : ConditionallyCompleteLattice.{u2} β] (c : β), (Ne.{succ u1} (MeasureTheory.Measure.{u1} α m) μ (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} α m) 0 (OfNat.mk.{u1} (MeasureTheory.Measure.{u1} α m) 0 (Zero.zero.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instZero.{u1} α m))))) -> (Eq.{succ u2} β (essSup.{u1, u2} α β _inst_1 m (fun (x : α) => c) μ) c)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] (c : β), (Ne.{succ u2} (MeasureTheory.Measure.{u2} α m) μ (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α m) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instZero.{u2} α m)))) -> (Eq.{succ u1} β (essSup.{u2, u1} α β _inst_1 m (fun (x : α) => c) μ) c)
-Case conversion may be inaccurate. Consider using '#align ess_sup_const essSup_constₓ'. -/
 theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c := by
   rw [← ae_ne_bot] at hμ; exact essSup_const' _
 #align ess_sup_const essSup_const
 
-/- warning: ess_inf_const -> essInf_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : ConditionallyCompleteLattice.{u2} β] (c : β), (Ne.{succ u1} (MeasureTheory.Measure.{u1} α m) μ (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} α m) 0 (OfNat.mk.{u1} (MeasureTheory.Measure.{u1} α m) 0 (Zero.zero.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instZero.{u1} α m))))) -> (Eq.{succ u2} β (essInf.{u1, u2} α β _inst_1 m (fun (x : α) => c) μ) c)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] (c : β), (Ne.{succ u2} (MeasureTheory.Measure.{u2} α m) μ (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α m) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instZero.{u2} α m)))) -> (Eq.{succ u1} β (essInf.{u2, u1} α β _inst_1 m (fun (x : α) => c) μ) c)
-Case conversion may be inaccurate. Consider using '#align ess_inf_const essInf_constₓ'. -/
 theorem essInf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c := by
   rw [← ae_ne_bot] at hμ; exact essInf_const' _
 #align ess_inf_const essInf_const
@@ -129,31 +93,16 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder β] {x : β} {f : α → β}
 
-/- warning: ess_sup_eq_Inf -> essSup_eq_sInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLinearOrder.{u2} β] {m : MeasurableSpace.{u1} α} (μ : MeasureTheory.Measure.{u1} α m) (f : α -> β), Eq.{succ u2} β (essSup.{u1, u2} α β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ) (InfSet.sInf.{u2} β (ConditionallyCompleteLattice.toHasInf.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_1)) (setOf.{u2} β (fun (a : β) => Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (setOf.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_1)))))) a (f x)))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {m : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m) (f : α -> β), Eq.{succ u1} β (essSup.{u2, u1} α β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) (InfSet.sInf.{u1} β (ConditionallyCompleteLattice.toInfSet.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)) (setOf.{u1} β (fun (a : β) => Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m μ) (setOf.{u2} α (fun (x : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) a (f x)))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))))
-Case conversion may be inaccurate. Consider using '#align ess_sup_eq_Inf essSup_eq_sInfₓ'. -/
 theorem essSup_eq_sInf {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
     essSup f μ = sInf { a | μ { x | a < f x } = 0 } := by dsimp [essSup, limsup, Limsup];
   simp only [ae_iff, not_le]
 #align ess_sup_eq_Inf essSup_eq_sInf
 
-/- warning: ess_inf_eq_Sup -> essInf_eq_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLinearOrder.{u2} β] {m : MeasurableSpace.{u1} α} (μ : MeasureTheory.Measure.{u1} α m) (f : α -> β), Eq.{succ u2} β (essInf.{u1, u2} α β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ) (SupSet.sSup.{u2} β (ConditionallyCompleteLattice.toHasSup.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_1)) (setOf.{u2} β (fun (a : β) => Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (setOf.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_1)))))) (f x) a))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {m : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m) (f : α -> β), Eq.{succ u1} β (essInf.{u2, u1} α β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) (SupSet.sSup.{u1} β (ConditionallyCompleteLattice.toSupSet.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)) (setOf.{u1} β (fun (a : β) => Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m μ) (setOf.{u2} α (fun (x : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (f x) a))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))))
-Case conversion may be inaccurate. Consider using '#align ess_inf_eq_Sup essInf_eq_sSupₓ'. -/
 theorem essInf_eq_sSup {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
     essInf f μ = sSup { a | μ { x | f x < a } = 0 } := by dsimp [essInf, liminf, Liminf];
   simp only [ae_iff, not_le]
 #align ess_inf_eq_Sup essInf_eq_sSup
 
-/- warning: ae_lt_of_ess_sup_lt -> ae_lt_of_essSup_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_lt_of_ess_sup_lt ae_lt_of_essSup_ltₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem ae_lt_of_essSup_lt (hx : essSup f μ < x)
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
@@ -163,9 +112,6 @@ theorem ae_lt_of_essSup_lt (hx : essSup f μ < x)
   eventually_lt_of_limsup_lt hx hf
 #align ae_lt_of_ess_sup_lt ae_lt_of_essSup_lt
 
-/- warning: ae_lt_of_lt_ess_inf -> ae_lt_of_lt_essInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_lt_of_lt_ess_inf ae_lt_of_lt_essInfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem ae_lt_of_lt_essInf (hx : x < essInf f μ)
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
@@ -177,9 +123,6 @@ theorem ae_lt_of_lt_essInf (hx : x < essInf f μ)
 
 variable [TopologicalSpace β] [FirstCountableTopology β] [OrderTopology β]
 
-/- warning: ae_le_ess_sup -> ae_le_essSup is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_le_ess_sup ae_le_essSupₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem ae_le_essSup
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
@@ -189,9 +132,6 @@ theorem ae_le_essSup
   eventually_le_limsup hf
 #align ae_le_ess_sup ae_le_essSup
 
-/- warning: ae_ess_inf_le -> ae_essInf_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_ess_inf_le ae_essInf_leₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem ae_essInf_le
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
@@ -201,9 +141,6 @@ theorem ae_essInf_le
   eventually_liminf_le hf
 #align ae_ess_inf_le ae_essInf_le
 
-/- warning: meas_ess_sup_lt -> meas_essSup_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align meas_ess_sup_lt meas_essSup_ltₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem meas_essSup_lt
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
@@ -212,9 +149,6 @@ theorem meas_essSup_lt
     μ { y | essSup f μ < f y } = 0 := by simp_rw [← not_le]; exact ae_le_essSup hf
 #align meas_ess_sup_lt meas_essSup_lt
 
-/- warning: meas_lt_ess_inf -> meas_lt_essInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align meas_lt_ess_inf meas_lt_essInfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem meas_lt_essInf
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
@@ -229,54 +163,24 @@ section CompleteLattice
 
 variable [CompleteLattice β]
 
-/- warning: ess_sup_measure_zero -> essSup_measure_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u2} β] {m : MeasurableSpace.{u1} α} {f : α -> β}, Eq.{succ u2} β (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} α m) 0 (OfNat.mk.{u1} (MeasureTheory.Measure.{u1} α m) 0 (Zero.zero.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instZero.{u1} α m))))) (Bot.bot.{u2} β (CompleteLattice.toHasBot.{u2} β _inst_1))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u1} β] {m : MeasurableSpace.{u2} α} {f : α -> β}, Eq.{succ u1} β (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α m) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instZero.{u2} α m)))) (Bot.bot.{u1} β (CompleteLattice.toBot.{u1} β _inst_1))
-Case conversion may be inaccurate. Consider using '#align ess_sup_measure_zero essSup_measure_zeroₓ'. -/
 @[simp]
 theorem essSup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f (0 : Measure α) = ⊥ :=
   le_bot_iff.mp (sInf_le (by simp [Set.mem_setOf_eq, eventually_le, ae_iff]))
 #align ess_sup_measure_zero essSup_measure_zero
 
-/- warning: ess_inf_measure_zero -> essInf_measure_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u2} β] {m : MeasurableSpace.{u1} α} {f : α -> β}, Eq.{succ u2} β (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} α m) 0 (OfNat.mk.{u1} (MeasureTheory.Measure.{u1} α m) 0 (Zero.zero.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instZero.{u1} α m))))) (Top.top.{u2} β (CompleteLattice.toHasTop.{u2} β _inst_1))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u1} β] {m : MeasurableSpace.{u2} α} {f : α -> β}, Eq.{succ u1} β (essInf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α m) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instZero.{u2} α m)))) (Top.top.{u1} β (CompleteLattice.toTop.{u1} β _inst_1))
-Case conversion may be inaccurate. Consider using '#align ess_inf_measure_zero essInf_measure_zeroₓ'. -/
 @[simp]
 theorem essInf_measure_zero {m : MeasurableSpace α} {f : α → β} : essInf f (0 : Measure α) = ⊤ :=
   @essSup_measure_zero α βᵒᵈ _ _ _
 #align ess_inf_measure_zero essInf_measure_zero
 
-/- warning: ess_sup_mono_ae -> essSup_mono_ae is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (MeasureTheory.Measure.ae.{u1} α m μ) f g) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m g μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : CompleteLattice.{u1} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (MeasureTheory.Measure.ae.{u2} α m μ) f g) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m g μ))
-Case conversion may be inaccurate. Consider using '#align ess_sup_mono_ae essSup_mono_aeₓ'. -/
 theorem essSup_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essSup f μ ≤ essSup g μ :=
   limsup_le_limsup hfg
 #align ess_sup_mono_ae essSup_mono_ae
 
-/- warning: ess_inf_mono_ae -> essInf_mono_ae is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (MeasureTheory.Measure.ae.{u1} α m μ) f g) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ) (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m g μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : CompleteLattice.{u1} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (MeasureTheory.Measure.ae.{u2} α m μ) f g) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (essInf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) (essInf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m g μ))
-Case conversion may be inaccurate. Consider using '#align ess_inf_mono_ae essInf_mono_aeₓ'. -/
 theorem essInf_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essInf f μ ≤ essInf g μ :=
   liminf_le_liminf hfg
 #align ess_inf_mono_ae essInf_mono_ae
 
-/- warning: ess_sup_le_of_ae_le -> essSup_le_of_ae_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {f : α -> β} (c : β), (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (MeasureTheory.Measure.ae.{u1} α m μ) f (fun (_x : α) => c)) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ) c)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : CompleteLattice.{u1} β] {f : α -> β} (c : β), (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (MeasureTheory.Measure.ae.{u2} α m μ) f (fun (_x : α) => c)) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) c)
-Case conversion may be inaccurate. Consider using '#align ess_sup_le_of_ae_le essSup_le_of_ae_leₓ'. -/
 theorem essSup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c :=
   by
   refine' (essSup_mono_ae hf).trans _
@@ -285,39 +189,18 @@ theorem essSup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => 
   · rwa [essSup_const]
 #align ess_sup_le_of_ae_le essSup_le_of_ae_le
 
-/- warning: le_ess_inf_of_ae_le -> le_essInf_of_ae_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {f : α -> β} (c : β), (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (MeasureTheory.Measure.ae.{u1} α m μ) (fun (_x : α) => c) f) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) c (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : CompleteLattice.{u1} β] {f : α -> β} (c : β), (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (MeasureTheory.Measure.ae.{u2} α m μ) (fun (_x : α) => c) f) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) c (essInf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ))
-Case conversion may be inaccurate. Consider using '#align le_ess_inf_of_ae_le le_essInf_of_ae_leₓ'. -/
 theorem le_essInf_of_ae_le {f : α → β} (c : β) (hf : (fun _ => c) ≤ᵐ[μ] f) : c ≤ essInf f μ :=
   @essSup_le_of_ae_le α βᵒᵈ _ _ _ _ c hf
 #align le_ess_inf_of_ae_le le_essInf_of_ae_le
 
-/- warning: ess_sup_const_bot -> essSup_const_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β], Eq.{succ u2} β (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m (fun (x : α) => Bot.bot.{u2} β (CompleteLattice.toHasBot.{u2} β _inst_1)) μ) (Bot.bot.{u2} β (CompleteLattice.toHasBot.{u2} β _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β], Eq.{succ u2} β (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m (fun (x : α) => Bot.bot.{u2} β (CompleteLattice.toBot.{u2} β _inst_1)) μ) (Bot.bot.{u2} β (CompleteLattice.toBot.{u2} β _inst_1))
-Case conversion may be inaccurate. Consider using '#align ess_sup_const_bot essSup_const_botₓ'. -/
 theorem essSup_const_bot : essSup (fun x : α => (⊥ : β)) μ = (⊥ : β) :=
   limsup_const_bot
 #align ess_sup_const_bot essSup_const_bot
 
-/- warning: ess_inf_const_top -> essInf_const_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β], Eq.{succ u2} β (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m (fun (x : α) => Top.top.{u2} β (CompleteLattice.toHasTop.{u2} β _inst_1)) μ) (Top.top.{u2} β (CompleteLattice.toHasTop.{u2} β _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β], Eq.{succ u2} β (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m (fun (x : α) => Top.top.{u2} β (CompleteLattice.toTop.{u2} β _inst_1)) μ) (Top.top.{u2} β (CompleteLattice.toTop.{u2} β _inst_1))
-Case conversion may be inaccurate. Consider using '#align ess_inf_const_top essInf_const_topₓ'. -/
 theorem essInf_const_top : essInf (fun x : α => (⊤ : β)) μ = (⊤ : β) :=
   liminf_const_top
 #align ess_inf_const_top essInf_const_top
 
-/- warning: order_iso.ess_sup_apply -> OrderIso.essSup_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align order_iso.ess_sup_apply OrderIso.essSup_applyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem OrderIso.essSup_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ] (f : α → β)
     (μ : Measure α) (g : β ≃o γ) : g (essSup f μ) = essSup (fun x => g (f x)) μ :=
@@ -328,20 +211,11 @@ theorem OrderIso.essSup_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ]
       is_bounded_default
 #align order_iso.ess_sup_apply OrderIso.essSup_apply
 
-/- warning: order_iso.ess_inf_apply -> OrderIso.essInf_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align order_iso.ess_inf_apply OrderIso.essInf_applyₓ'. -/
 theorem OrderIso.essInf_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ] (f : α → β)
     (μ : Measure α) (g : β ≃o γ) : g (essInf f μ) = essInf (fun x => g (f x)) μ :=
   @OrderIso.essSup_apply α βᵒᵈ _ _ γᵒᵈ _ _ _ g.dual
 #align order_iso.ess_inf_apply OrderIso.essInf_apply
 
-/- warning: ess_sup_mono_measure -> essSup_mono_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {f : α -> β}, (MeasureTheory.Measure.AbsolutelyContinuous.{u1} α m ν μ) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f ν) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {ν : MeasureTheory.Measure.{u2} α m} [_inst_1 : CompleteLattice.{u1} β] {f : α -> β}, (MeasureTheory.Measure.AbsolutelyContinuous.{u2} α m ν μ) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f ν) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ))
-Case conversion may be inaccurate. Consider using '#align ess_sup_mono_measure essSup_mono_measureₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem essSup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν ≤ essSup f μ :=
   by
@@ -351,24 +225,12 @@ theorem essSup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν �
       is_bounded_default
 #align ess_sup_mono_measure essSup_mono_measure
 
-/- warning: ess_sup_mono_measure' -> essSup_mono_measure' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} [_inst_2 : CompleteLattice.{u2} β] {f : α -> β}, (LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toHasLe.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) ν μ) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2) m f ν) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2) m f μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {ν : MeasureTheory.Measure.{u2} α m} [_inst_2 : CompleteLattice.{u1} β] {f : α -> β}, (LE.le.{u2} (MeasureTheory.Measure.{u2} α m) (Preorder.toLE.{u2} (MeasureTheory.Measure.{u2} α m) (PartialOrder.toPreorder.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instPartialOrder.{u2} α m))) ν μ) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_2)))) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2) m f ν) (essSup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2) m f μ))
-Case conversion may be inaccurate. Consider using '#align ess_sup_mono_measure' essSup_mono_measure'ₓ'. -/
 theorem essSup_mono_measure' {α : Type _} {β : Type _} {m : MeasurableSpace α}
     {μ ν : MeasureTheory.Measure α} [CompleteLattice β] {f : α → β} (hμν : ν ≤ μ) :
     essSup f ν ≤ essSup f μ :=
   essSup_mono_measure (Measure.absolutelyContinuous_of_le hμν)
 #align ess_sup_mono_measure' essSup_mono_measure'
 
-/- warning: ess_inf_antitone_measure -> essInf_antitone_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {f : α -> β}, (MeasureTheory.Measure.AbsolutelyContinuous.{u1} α m μ ν) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f ν) (essInf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m f μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {ν : MeasureTheory.Measure.{u2} α m} [_inst_1 : CompleteLattice.{u1} β] {f : α -> β}, (MeasureTheory.Measure.AbsolutelyContinuous.{u2} α m μ ν) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (essInf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f ν) (essInf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ))
-Case conversion may be inaccurate. Consider using '#align ess_inf_antitone_measure essInf_antitone_measureₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem essInf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f ν ≤ essInf f μ :=
   by
@@ -378,9 +240,6 @@ theorem essInf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f �
       is_bounded_default
 #align ess_inf_antitone_measure essInf_antitone_measure
 
-/- warning: ess_sup_smul_measure -> essSup_smul_measure is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ess_sup_smul_measure essSup_smul_measureₓ'. -/
 theorem essSup_smul_measure {f : α → β} {c : ℝ≥0∞} (hc : c ≠ 0) : essSup f (c • μ) = essSup f μ :=
   by
   simp_rw [essSup]
@@ -396,12 +255,6 @@ variable {γ : Type _} {mγ : MeasurableSpace γ} {f : α → γ} {g : γ → β
 
 include mγ
 
-/- warning: ess_sup_comp_le_ess_sup_map_measure -> essSup_comp_le_essSup_map_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {f : α -> γ} {g : γ -> β}, (AEMeasurable.{u1, u3} α γ mγ m f μ) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_1)))) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m (Function.comp.{succ u1, succ u3, succ u2} α γ β g f) μ) (essSup.{u3, u2} γ β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) mγ g (MeasureTheory.Measure.map.{u1, u3} α γ mγ m f μ)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {m : MeasurableSpace.{u3} α} {μ : MeasureTheory.Measure.{u3} α m} [_inst_1 : CompleteLattice.{u1} β] {γ : Type.{u2}} {mγ : MeasurableSpace.{u2} γ} {f : α -> γ} {g : γ -> β}, (AEMeasurable.{u3, u2} α γ mγ m f μ) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OmegaCompletePartialOrder.toPartialOrder.{u1} β (CompleteLattice.instOmegaCompletePartialOrder.{u1} β _inst_1)))) (essSup.{u3, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m (Function.comp.{succ u3, succ u2, succ u1} α γ β g f) μ) (essSup.{u2, u1} γ β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) mγ g (MeasureTheory.Measure.map.{u3, u2} α γ mγ m f μ)))
-Case conversion may be inaccurate. Consider using '#align ess_sup_comp_le_ess_sup_map_measure essSup_comp_le_essSup_map_measureₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem essSup_comp_le_essSup_map_measure (hf : AEMeasurable f μ) :
@@ -421,12 +274,6 @@ theorem essSup_comp_le_essSup_map_measure (hf : AEMeasurable f μ) :
   exact fun h => mem_ae_of_mem_ae_map hf h
 #align ess_sup_comp_le_ess_sup_map_measure essSup_comp_le_essSup_map_measure
 
-/- warning: measurable_embedding.ess_sup_map_measure -> MeasurableEmbedding.essSup_map_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_1 : CompleteLattice.{u2} β] {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {f : α -> γ} {g : γ -> β}, (MeasurableEmbedding.{u1, u3} α γ m mγ f) -> (Eq.{succ u2} β (essSup.{u3, u2} γ β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) mγ g (MeasureTheory.Measure.map.{u1, u3} α γ mγ m f μ)) (essSup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_1) m (Function.comp.{succ u1, succ u3, succ u2} α γ β g f) μ))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {m : MeasurableSpace.{u3} α} {μ : MeasureTheory.Measure.{u3} α m} [_inst_1 : CompleteLattice.{u1} β] {γ : Type.{u2}} {mγ : MeasurableSpace.{u2} γ} {f : α -> γ} {g : γ -> β}, (MeasurableEmbedding.{u3, u2} α γ m mγ f) -> (Eq.{succ u1} β (essSup.{u2, u1} γ β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) mγ g (MeasureTheory.Measure.map.{u3, u2} α γ mγ m f μ)) (essSup.{u3, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_1) m (Function.comp.{succ u3, succ u2, succ u1} α γ β g f) μ))
-Case conversion may be inaccurate. Consider using '#align measurable_embedding.ess_sup_map_measure MeasurableEmbedding.essSup_map_measureₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem MeasurableEmbedding.essSup_map_measure (hf : MeasurableEmbedding f) :
@@ -548,75 +395,33 @@ namespace ENNReal
 
 variable {f : α → ℝ≥0∞}
 
-/- warning: ennreal.ae_le_ess_sup -> ENNReal.ae_le_essSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} (f : α -> ENNReal), Filter.Eventually.{u1} α (fun (y : α) => LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (f y) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m f μ)) (MeasureTheory.Measure.ae.{u1} α m μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} (f : α -> ENNReal), Filter.Eventually.{u1} α (fun (y : α) => LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (f y) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m f μ)) (MeasureTheory.Measure.ae.{u1} α m μ)
-Case conversion may be inaccurate. Consider using '#align ennreal.ae_le_ess_sup ENNReal.ae_le_essSupₓ'. -/
 theorem ae_le_essSup (f : α → ℝ≥0∞) : ∀ᵐ y ∂μ, f y ≤ essSup f μ :=
   eventually_le_limsup f
 #align ennreal.ae_le_ess_sup ENNReal.ae_le_essSup
 
-/- warning: ennreal.ess_sup_eq_zero_iff -> ENNReal.essSup_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> ENNReal}, Iff (Eq.{1} ENNReal (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m f μ) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (Filter.EventuallyEq.{u1, 0} α ENNReal (MeasureTheory.Measure.ae.{u1} α m μ) f (OfNat.ofNat.{u1} (α -> ENNReal) 0 (OfNat.mk.{u1} (α -> ENNReal) 0 (Zero.zero.{u1} (α -> ENNReal) (Pi.instZero.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => ENNReal.hasZero))))))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> ENNReal}, Iff (Eq.{1} ENNReal (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m f μ) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (Filter.EventuallyEq.{u1, 0} α ENNReal (MeasureTheory.Measure.ae.{u1} α m μ) f (OfNat.ofNat.{u1} (α -> ENNReal) 0 (Zero.toOfNat0.{u1} (α -> ENNReal) (Pi.instZero.{u1, 0} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => ENNReal) (fun (i : α) => instENNRealZero)))))
-Case conversion may be inaccurate. Consider using '#align ennreal.ess_sup_eq_zero_iff ENNReal.essSup_eq_zero_iffₓ'. -/
 @[simp]
 theorem essSup_eq_zero_iff : essSup f μ = 0 ↔ f =ᵐ[μ] 0 :=
   limsup_eq_zero_iff
 #align ennreal.ess_sup_eq_zero_iff ENNReal.essSup_eq_zero_iff
 
-/- warning: ennreal.ess_sup_const_mul -> ENNReal.essSup_const_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> ENNReal} {a : ENNReal}, Eq.{1} ENNReal (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m (fun (x : α) => HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) a (f x)) μ) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) a (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m f μ))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> ENNReal} {a : ENNReal}, Eq.{1} ENNReal (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m (fun (x : α) => HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) a (f x)) μ) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) a (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m f μ))
-Case conversion may be inaccurate. Consider using '#align ennreal.ess_sup_const_mul ENNReal.essSup_const_mulₓ'. -/
 theorem essSup_const_mul {a : ℝ≥0∞} : essSup (fun x : α => a * f x) μ = a * essSup f μ :=
   limsup_const_mul
 #align ennreal.ess_sup_const_mul ENNReal.essSup_const_mul
 
-/- warning: ennreal.ess_sup_mul_le -> ENNReal.essSup_mul_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} (f : α -> ENNReal) (g : α -> ENNReal), LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m (HMul.hMul.{u1, u1, u1} (α -> ENNReal) (α -> ENNReal) (α -> ENNReal) (instHMul.{u1} (α -> ENNReal) (Pi.instMul.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))))))) f g) μ) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m f μ) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m g μ))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} (f : α -> ENNReal) (g : α -> ENNReal), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m (HMul.hMul.{u1, u1, u1} (α -> ENNReal) (α -> ENNReal) (α -> ENNReal) (instHMul.{u1} (α -> ENNReal) (Pi.instMul.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))) f g) μ) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m f μ) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m g μ))
-Case conversion may be inaccurate. Consider using '#align ennreal.ess_sup_mul_le ENNReal.essSup_mul_leₓ'. -/
 theorem essSup_mul_le (f g : α → ℝ≥0∞) : essSup (f * g) μ ≤ essSup f μ * essSup g μ :=
   limsup_mul_le f g
 #align ennreal.ess_sup_mul_le ENNReal.essSup_mul_le
 
-/- warning: ennreal.ess_sup_add_le -> ENNReal.essSup_add_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} (f : α -> ENNReal) (g : α -> ENNReal), LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m (HAdd.hAdd.{u1, u1, u1} (α -> ENNReal) (α -> ENNReal) (α -> ENNReal) (instHAdd.{u1} (α -> ENNReal) (Pi.instAdd.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))))))) f g) μ) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m f μ) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m g μ))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} (f : α -> ENNReal) (g : α -> ENNReal), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m (HAdd.hAdd.{u1, u1, u1} (α -> ENNReal) (α -> ENNReal) (α -> ENNReal) (instHAdd.{u1} (α -> ENNReal) (Pi.instAdd.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))))))) f g) μ) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m f μ) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m g μ))
-Case conversion may be inaccurate. Consider using '#align ennreal.ess_sup_add_le ENNReal.essSup_add_leₓ'. -/
 theorem essSup_add_le (f g : α → ℝ≥0∞) : essSup (f + g) μ ≤ essSup f μ + essSup g μ :=
   limsup_add_le f g
 #align ennreal.ess_sup_add_le ENNReal.essSup_add_le
 
-/- warning: ennreal.ess_sup_liminf_le -> ENNReal.essSup_liminf_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ι : Type.{u2}} [_inst_1 : Countable.{succ u2} ι] [_inst_2 : LinearOrder.{u2} ι] (f : ι -> α -> ENNReal), LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m (fun (x : α) => Filter.liminf.{0, u2} ENNReal ι (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) (fun (n : ι) => f n x) (Filter.atTop.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (LinearOrder.toLattice.{u2} ι _inst_2)))))) μ) (Filter.liminf.{0, u2} ENNReal ι (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) (fun (n : ι) => essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m (fun (x : α) => f n x) μ) (Filter.atTop.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (LinearOrder.toLattice.{u2} ι _inst_2))))))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ι : Type.{u2}} [_inst_1 : Countable.{succ u2} ι] [_inst_2 : LinearOrder.{u2} ι] (f : ι -> α -> ENNReal), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m (fun (x : α) => Filter.liminf.{0, u2} ENNReal ι (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) (fun (n : ι) => f n x) (Filter.atTop.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (DistribLattice.toLattice.{u2} ι (instDistribLattice.{u2} ι _inst_2))))))) μ) (Filter.liminf.{0, u2} ENNReal ι (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) (fun (n : ι) => essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m (fun (x : α) => f n x) μ) (Filter.atTop.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (DistribLattice.toLattice.{u2} ι (instDistribLattice.{u2} ι _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align ennreal.ess_sup_liminf_le ENNReal.essSup_liminf_leₓ'. -/
 theorem essSup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α → ℝ≥0∞) :
     essSup (fun x => atTop.liminf fun n => f n x) μ ≤
       atTop.liminf fun n => essSup (fun x => f n x) μ :=
   by simp_rw [essSup]; exact ENNReal.limsup_liminf_le_liminf_limsup fun a b => f b a
 #align ennreal.ess_sup_liminf_le ENNReal.essSup_liminf_le
 
-/- warning: ennreal.coe_ess_sup -> ENNReal.coe_essSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> NNReal}, (Filter.IsBoundedUnder.{0, u1} NNReal α (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring))))) (MeasureTheory.Measure.ae.{u1} α m μ) f) -> (Eq.{1} ENNReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (essSup.{u1, 0} α NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.conditionallyCompleteLinearOrderBot)) m f μ)) (essSup.{u1, 0} α ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)) m (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (f x)) μ))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> NNReal}, (Filter.IsBoundedUnder.{0, u1} NNReal α (fun (x._@.Mathlib.MeasureTheory.Function.EssSup._hyg.3950 : NNReal) (x._@.Mathlib.MeasureTheory.Function.EssSup._hyg.3952 : NNReal) => LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) x._@.Mathlib.MeasureTheory.Function.EssSup._hyg.3950 x._@.Mathlib.MeasureTheory.Function.EssSup._hyg.3952) (MeasureTheory.Measure.ae.{u1} α m μ) f) -> (Eq.{1} ENNReal (ENNReal.some (essSup.{u1, 0} α NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal)) m f μ)) (essSup.{u1, 0} α ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) m (fun (x : α) => ENNReal.some (f x)) μ))
-Case conversion may be inaccurate. Consider using '#align ennreal.coe_ess_sup ENNReal.coe_essSupₓ'. -/
 theorem coe_essSup {f : α → ℝ≥0} (hf : IsBoundedUnder (· ≤ ·) μ.ae f) :
     (↑(essSup f μ) : ℝ≥0∞) = essSup (fun x => f x) μ :=
   (ENNReal.coe_sInf <| hf).trans <|

@@ -333,72 +333,30 @@ theorem coe_nat_val (n : ℕ) : (n : ℤ√d) = ⟨n, 0⟩ :=
 #align zsqrtd.coe_nat_val Zsqrtd.coe_nat_val
 -/
 
-/- warning: zsqrtd.coe_int_re -> Zsqrtd.coe_int_re is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int), Eq.{1} Int (Zsqrtd.re d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n)) n
-but is expected to have type
-  forall {d : Int} (n : Int), Eq.{1} Int (Zsqrtd.re d (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n)) n
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_re Zsqrtd.coe_int_reₓ'. -/
 @[simp]
 theorem coe_int_re (n : ℤ) : (n : ℤ√d).re = n := by cases n <;> rfl
 #align zsqrtd.coe_int_re Zsqrtd.coe_int_re
 
-/- warning: zsqrtd.coe_int_im -> Zsqrtd.coe_int_im is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int), Eq.{1} Int (Zsqrtd.im d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n)) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
-but is expected to have type
-  forall {d : Int} (n : Int), Eq.{1} Int (Zsqrtd.im d (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n)) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_im Zsqrtd.coe_int_imₓ'. -/
 @[simp]
 theorem coe_int_im (n : ℤ) : (n : ℤ√d).im = 0 := by cases n <;> rfl
 #align zsqrtd.coe_int_im Zsqrtd.coe_int_im
 
-/- warning: zsqrtd.coe_int_val -> Zsqrtd.coe_int_val is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int), Eq.{1} (Zsqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n) (Zsqrtd.mk d n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
-but is expected to have type
-  forall {d : Int} (n : Int), Eq.{1} (Zsqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n) (Zsqrtd.mk d n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_val Zsqrtd.coe_int_valₓ'. -/
 theorem coe_int_val (n : ℤ) : (n : ℤ√d) = ⟨n, 0⟩ := by simp [ext]
 #align zsqrtd.coe_int_val Zsqrtd.coe_int_val
 
 instance : CharZero (ℤ√d) where cast_injective m n := by simp [ext]
 
-/- warning: zsqrtd.of_int_eq_coe -> Zsqrtd.ofInt_eq_coe is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int), Eq.{1} (Zsqrtd d) (Zsqrtd.ofInt d n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n)
-but is expected to have type
-  forall {d : Int} (n : Int), Eq.{1} (Zsqrtd d) (Zsqrtd.ofInt d n) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.of_int_eq_coe Zsqrtd.ofInt_eq_coeₓ'. -/
 @[simp]
 theorem ofInt_eq_coe (n : ℤ) : (of_int n : ℤ√d) = n := by simp [ext, of_int_re, of_int_im]
 #align zsqrtd.of_int_eq_coe Zsqrtd.ofInt_eq_coe
 
-/- warning: zsqrtd.smul_val -> Zsqrtd.smul_val is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int) (x : Int) (y : Int), Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n) (Zsqrtd.mk d x y)) (Zsqrtd.mk d (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n x) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n y))
-but is expected to have type
-  forall {d : Int} (n : Int) (x : Int) (y : Int), Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n) (Zsqrtd.mk d x y)) (Zsqrtd.mk d (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n x) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n y))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.smul_val Zsqrtd.smul_valₓ'. -/
 @[simp]
 theorem smul_val (n x y : ℤ) : (n : ℤ√d) * ⟨x, y⟩ = ⟨n * x, n * y⟩ := by simp [ext]
 #align zsqrtd.smul_val Zsqrtd.smul_val
 
-/- warning: zsqrtd.smul_re -> Zsqrtd.smul_re is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (a : Int) (b : Zsqrtd d), Eq.{1} Int (Zsqrtd.re d (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) a) b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (Zsqrtd.re d b))
-but is expected to have type
-  forall {d : Int} (a : Int) (b : Zsqrtd d), Eq.{1} Int (Zsqrtd.re d (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) a) b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Zsqrtd.re d b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.smul_re Zsqrtd.smul_reₓ'. -/
 theorem smul_re (a : ℤ) (b : ℤ√d) : (↑a * b).re = a * b.re := by simp
 #align zsqrtd.smul_re Zsqrtd.smul_re
 
-/- warning: zsqrtd.smul_im -> Zsqrtd.smul_im is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (a : Int) (b : Zsqrtd d), Eq.{1} Int (Zsqrtd.im d (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) a) b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (Zsqrtd.im d b))
-but is expected to have type
-  forall {d : Int} (a : Int) (b : Zsqrtd d), Eq.{1} Int (Zsqrtd.im d (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) a) b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Zsqrtd.im d b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.smul_im Zsqrtd.smul_imₓ'. -/
 theorem smul_im (a : ℤ) (b : ℤ√d) : (↑a * b).im = a * b.im := by simp
 #align zsqrtd.smul_im Zsqrtd.smul_im
 
@@ -408,91 +366,37 @@ theorem muld_val (x y : ℤ) : sqrtd * ⟨x, y⟩ = ⟨d * y, x⟩ := by simp [e
 #align zsqrtd.muld_val Zsqrtd.muld_val
 -/
 
-/- warning: zsqrtd.dmuld -> Zsqrtd.dmuld is a dubious translation:
-lean 3 declaration is
-  forall {d : Int}, Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) (Zsqrtd.sqrtd d) (Zsqrtd.sqrtd d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) d)
-but is expected to have type
-  forall {d : Int}, Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Zsqrtd.sqrtd d) (Zsqrtd.sqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) d)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.dmuld Zsqrtd.dmuldₓ'. -/
 @[simp]
 theorem dmuld : sqrtd * sqrtd = d := by simp [ext]
 #align zsqrtd.dmuld Zsqrtd.dmuld
 
-/- warning: zsqrtd.smuld_val -> Zsqrtd.smuld_val is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int) (x : Int) (y : Int), Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) (Zsqrtd.sqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n)) (Zsqrtd.mk d x y)) (Zsqrtd.mk d (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) d n) y) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n x))
-but is expected to have type
-  forall {d : Int} (n : Int) (x : Int) (y : Int), Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Zsqrtd.sqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n)) (Zsqrtd.mk d x y)) (Zsqrtd.mk d (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) d n) y) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n x))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.smuld_val Zsqrtd.smuld_valₓ'. -/
 @[simp]
 theorem smuld_val (n x y : ℤ) : sqrtd * (n : ℤ√d) * ⟨x, y⟩ = ⟨d * n * y, n * x⟩ := by simp [ext]
 #align zsqrtd.smuld_val Zsqrtd.smuld_val
 
-/- warning: zsqrtd.decompose -> Zsqrtd.decompose is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {x : Int} {y : Int}, Eq.{1} (Zsqrtd d) (Zsqrtd.mk d x y) (HAdd.hAdd.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHAdd.{0} (Zsqrtd d) (Zsqrtd.hasAdd d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) x) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) (Zsqrtd.sqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) y)))
-but is expected to have type
-  forall {d : Int} {x : Int} {y : Int}, Eq.{1} (Zsqrtd d) (Zsqrtd.mk d x y) (HAdd.hAdd.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHAdd.{0} (Zsqrtd d) (Zsqrtd.instAddZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) x) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Zsqrtd.sqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) y)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.decompose Zsqrtd.decomposeₓ'. -/
 theorem decompose {x y : ℤ} : (⟨x, y⟩ : ℤ√d) = x + sqrtd * y := by simp [ext]
 #align zsqrtd.decompose Zsqrtd.decompose
 
-/- warning: zsqrtd.mul_star -> Zsqrtd.mul_star is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {x : Int} {y : Int}, Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) (Zsqrtd.mk d x y) (Star.star.{0} (Zsqrtd d) (Zsqrtd.hasStar d) (Zsqrtd.mk d x y))) (HSub.hSub.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHSub.{0} (Zsqrtd d) (SubNegMonoid.toHasSub.{0} (Zsqrtd d) (AddGroup.toSubNegMonoid.{0} (Zsqrtd d) (AddGroupWithOne.toAddGroup.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) x)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) y)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) y)))
-but is expected to have type
-  forall {d : Int} {x : Int} {y : Int}, Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Zsqrtd.mk d x y) (Star.star.{0} (Zsqrtd d) (Zsqrtd.instStarZsqrtd d) (Zsqrtd.mk d x y))) (HSub.hSub.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHSub.{0} (Zsqrtd d) (Ring.toSub.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d))) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) x) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) x)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) y)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) y)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.mul_star Zsqrtd.mul_starₓ'. -/
 theorem mul_star {x y : ℤ} : (⟨x, y⟩ * star ⟨x, y⟩ : ℤ√d) = x * x - d * y * y := by
   simp [ext, sub_eq_add_neg, mul_comm]
 #align zsqrtd.mul_star Zsqrtd.mul_star
 
-/- warning: zsqrtd.coe_int_add -> Zsqrtd.coe_int_add is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (m : Int) (n : Int), Eq.{1} (Zsqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) m n)) (HAdd.hAdd.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHAdd.{0} (Zsqrtd d) (Zsqrtd.hasAdd d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n))
-but is expected to have type
-  forall {d : Int} (m : Int) (n : Int), Eq.{1} (Zsqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m n)) (HAdd.hAdd.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHAdd.{0} (Zsqrtd d) (Zsqrtd.instAddZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) m) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_add Zsqrtd.coe_int_addₓ'. -/
 protected theorem coe_int_add (m n : ℤ) : (↑(m + n) : ℤ√d) = ↑m + ↑n :=
   (Int.castRingHom _).map_add _ _
 #align zsqrtd.coe_int_add Zsqrtd.coe_int_add
 
-/- warning: zsqrtd.coe_int_sub -> Zsqrtd.coe_int_sub is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (m : Int) (n : Int), Eq.{1} (Zsqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) m n)) (HSub.hSub.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHSub.{0} (Zsqrtd d) (SubNegMonoid.toHasSub.{0} (Zsqrtd d) (AddGroup.toSubNegMonoid.{0} (Zsqrtd d) (AddGroupWithOne.toAddGroup.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n))
-but is expected to have type
-  forall {d : Int} (m : Int) (n : Int), Eq.{1} (Zsqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) m n)) (HSub.hSub.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHSub.{0} (Zsqrtd d) (Ring.toSub.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d))) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) m) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_sub Zsqrtd.coe_int_subₓ'. -/
 protected theorem coe_int_sub (m n : ℤ) : (↑(m - n) : ℤ√d) = ↑m - ↑n :=
   (Int.castRingHom _).map_sub _ _
 #align zsqrtd.coe_int_sub Zsqrtd.coe_int_sub
 
-/- warning: zsqrtd.coe_int_mul -> Zsqrtd.coe_int_mul is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (m : Int) (n : Int), Eq.{1} (Zsqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n))
-but is expected to have type
-  forall {d : Int} (m : Int) (n : Int), Eq.{1} (Zsqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) m) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_mul Zsqrtd.coe_int_mulₓ'. -/
 protected theorem coe_int_mul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n :=
   (Int.castRingHom _).map_mul _ _
 #align zsqrtd.coe_int_mul Zsqrtd.coe_int_mul
 
-/- warning: zsqrtd.coe_int_inj -> Zsqrtd.coe_int_inj is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {m : Int} {n : Int}, (Eq.{1} (Zsqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n)) -> (Eq.{1} Int m n)
-but is expected to have type
-  forall {d : Int} {m : Int} {n : Int}, (Eq.{1} (Zsqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) m) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n)) -> (Eq.{1} Int m n)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_inj Zsqrtd.coe_int_injₓ'. -/
 protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n := by
   simpa using congr_arg re h
 #align zsqrtd.coe_int_inj Zsqrtd.coe_int_inj
 
-/- warning: zsqrtd.coe_int_dvd_iff -> Zsqrtd.coe_int_dvd_iff is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (z : Int) (a : Zsqrtd d), Iff (Dvd.Dvd.{0} (Zsqrtd d) (semigroupDvd.{0} (Zsqrtd d) (Zsqrtd.semigroup d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) z) a) (And (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) z (Zsqrtd.re d a)) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) z (Zsqrtd.im d a)))
-but is expected to have type
-  forall {d : Int} (z : Int) (a : Zsqrtd d), Iff (Dvd.dvd.{0} (Zsqrtd d) (semigroupDvd.{0} (Zsqrtd d) (Zsqrtd.instSemigroupZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) z) a) (And (Dvd.dvd.{0} Int Int.instDvdInt z (Zsqrtd.re d a)) (Dvd.dvd.{0} Int Int.instDvdInt z (Zsqrtd.im d a)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_dvd_iff Zsqrtd.coe_int_dvd_iffₓ'. -/
 theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im :=
   by
   constructor
@@ -505,12 +409,6 @@ theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ 
     exact ⟨hr, hi⟩
 #align zsqrtd.coe_int_dvd_iff Zsqrtd.coe_int_dvd_iff
 
-/- warning: zsqrtd.coe_int_dvd_coe_int -> Zsqrtd.coe_int_dvd_coe_int is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (a : Int) (b : Int), Iff (Dvd.Dvd.{0} (Zsqrtd d) (semigroupDvd.{0} (Zsqrtd d) (Zsqrtd.semigroup d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) b)) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
-but is expected to have type
-  forall {d : Int} (a : Int) (b : Int), Iff (Dvd.dvd.{0} (Zsqrtd d) (semigroupDvd.{0} (Zsqrtd d) (Zsqrtd.instSemigroupZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) a) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) b)) (Dvd.dvd.{0} Int Int.instDvdInt a b)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coe_int_dvd_coe_int Zsqrtd.coe_int_dvd_coe_intₓ'. -/
 @[simp, norm_cast]
 theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
   by
@@ -522,12 +420,6 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
     exact fun hc => ⟨hc, dvd_zero a⟩
 #align zsqrtd.coe_int_dvd_coe_int Zsqrtd.coe_int_dvd_coe_int
 
-/- warning: zsqrtd.eq_of_smul_eq_smul_left -> Zsqrtd.eq_of_smul_eq_smul_left is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {a : Int} {b : Zsqrtd d} {c : Zsqrtd d}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) a) b) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) a) c)) -> (Eq.{1} (Zsqrtd d) b c)
-but is expected to have type
-  forall {d : Int} {a : Int} {b : Zsqrtd d} {c : Zsqrtd d}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} (Zsqrtd d) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) a) b) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) a) c)) -> (Eq.{1} (Zsqrtd d) b c)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.eq_of_smul_eq_smul_left Zsqrtd.eq_of_smul_eq_smul_leftₓ'. -/
 protected theorem eq_of_smul_eq_smul_left {a : ℤ} {b c : ℤ√d} (ha : a ≠ 0) (h : ↑a * b = a * c) :
     b = c := by
   rw [ext] at h⊢
@@ -548,12 +440,6 @@ theorem gcd_pos_iff (a : ℤ√d) : 0 < Int.gcd a.re a.im ↔ a ≠ 0 :=
 #align zsqrtd.gcd_pos_iff Zsqrtd.gcd_pos_iff
 -/
 
-/- warning: zsqrtd.coprime_of_dvd_coprime -> Zsqrtd.coprime_of_dvd_coprime is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {a : Zsqrtd d} {b : Zsqrtd d}, (IsCoprime.{0} Int Int.commSemiring (Zsqrtd.re d a) (Zsqrtd.im d a)) -> (Dvd.Dvd.{0} (Zsqrtd d) (semigroupDvd.{0} (Zsqrtd d) (Zsqrtd.semigroup d)) b a) -> (IsCoprime.{0} Int Int.commSemiring (Zsqrtd.re d b) (Zsqrtd.im d b))
-but is expected to have type
-  forall {d : Int} {a : Zsqrtd d} {b : Zsqrtd d}, (IsCoprime.{0} Int Int.instCommSemiringInt (Zsqrtd.re d a) (Zsqrtd.im d a)) -> (Dvd.dvd.{0} (Zsqrtd d) (semigroupDvd.{0} (Zsqrtd d) (Zsqrtd.instSemigroupZsqrtd d)) b a) -> (IsCoprime.{0} Int Int.instCommSemiringInt (Zsqrtd.re d b) (Zsqrtd.im d b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.coprime_of_dvd_coprime Zsqrtd.coprime_of_dvd_coprimeₓ'. -/
 theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) (hdvd : b ∣ a) :
     IsCoprime b.re b.im := by
   apply isCoprime_of_dvd
@@ -573,12 +459,6 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
     exact hcoprime.is_unit_of_dvd' ha hb
 #align zsqrtd.coprime_of_dvd_coprime Zsqrtd.coprime_of_dvd_coprime
 
-/- warning: zsqrtd.exists_coprime_of_gcd_pos -> Zsqrtd.exists_coprime_of_gcd_pos is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {a : Zsqrtd d}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Int.gcd (Zsqrtd.re d a) (Zsqrtd.im d a))) -> (Exists.{1} (Zsqrtd d) (fun (b : Zsqrtd d) => And (Eq.{1} (Zsqrtd d) a (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd (Zsqrtd.re d a) (Zsqrtd.im d a)))) b)) (IsCoprime.{0} Int Int.commSemiring (Zsqrtd.re d b) (Zsqrtd.im d b))))
-but is expected to have type
-  forall {d : Int} {a : Zsqrtd d}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Int.gcd (Zsqrtd.re d a) (Zsqrtd.im d a))) -> (Exists.{1} (Zsqrtd d) (fun (b : Zsqrtd d) => And (Eq.{1} (Zsqrtd d) a (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) (Nat.cast.{0} Int instNatCastInt (Int.gcd (Zsqrtd.re d a) (Zsqrtd.im d a)))) b)) (IsCoprime.{0} Int Int.instCommSemiringInt (Zsqrtd.re d b) (Zsqrtd.im d b))))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.exists_coprime_of_gcd_pos Zsqrtd.exists_coprime_of_gcd_posₓ'. -/
 theorem exists_coprime_of_gcd_pos {a : ℤ√d} (hgcd : 0 < Int.gcd a.re a.im) :
     ∃ b : ℤ√d, a = ((Int.gcd a.re a.im : ℤ) : ℤ√d) * b ∧ IsCoprime b.re b.im :=
   by
@@ -734,12 +614,6 @@ theorem norm_one : norm 1 = 1 := by simp [norm]
 #align zsqrtd.norm_one Zsqrtd.norm_one
 -/
 
-/- warning: zsqrtd.norm_int_cast -> Zsqrtd.norm_int_cast is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Int), Eq.{1} Int (Zsqrtd.norm d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) n)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n n)
-but is expected to have type
-  forall {d : Int} (n : Int), Eq.{1} Int (Zsqrtd.norm d (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) n)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n n)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_int_cast Zsqrtd.norm_int_castₓ'. -/
 @[simp]
 theorem norm_int_cast (n : ℤ) : norm n = n * n := by simp [norm]
 #align zsqrtd.norm_int_cast Zsqrtd.norm_int_cast
@@ -758,12 +632,6 @@ theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m := by
 #align zsqrtd.norm_mul Zsqrtd.norm_mul
 -/
 
-/- warning: zsqrtd.norm_monoid_hom -> Zsqrtd.normMonoidHom is a dubious translation:
-lean 3 declaration is
-  forall {d : Int}, MonoidHom.{0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring))))
-but is expected to have type
-  forall {d : Int}, MonoidHom.{0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_monoid_hom Zsqrtd.normMonoidHomₓ'. -/
 /-- `norm` as a `monoid_hom`. -/
 def normMonoidHom : ℤ√d →* ℤ where
   toFun := norm
@@ -771,12 +639,6 @@ def normMonoidHom : ℤ√d →* ℤ where
   map_one' := norm_one
 #align zsqrtd.norm_monoid_hom Zsqrtd.normMonoidHom
 
-/- warning: zsqrtd.norm_eq_mul_conj -> Zsqrtd.norm_eq_mul_conj is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (n : Zsqrtd d), Eq.{1} (Zsqrtd d) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Zsqrtd d) (HasLiftT.mk.{1, 1} Int (Zsqrtd d) (CoeTCₓ.coe.{1, 1} Int (Zsqrtd d) (Int.castCoe.{0} (Zsqrtd d) (AddGroupWithOne.toHasIntCast.{0} (Zsqrtd d) (Zsqrtd.addGroupWithOne d))))) (Zsqrtd.norm d n)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.hasMul d)) n (Star.star.{0} (Zsqrtd d) (Zsqrtd.hasStar d) n))
-but is expected to have type
-  forall {d : Int} (n : Zsqrtd d), Eq.{1} (Zsqrtd d) (Int.cast.{0} (Zsqrtd d) (Ring.toIntCast.{0} (Zsqrtd d) (Zsqrtd.instRingZsqrtd d)) (Zsqrtd.norm d n)) (HMul.hMul.{0, 0, 0} (Zsqrtd d) (Zsqrtd d) (Zsqrtd d) (instHMul.{0} (Zsqrtd d) (Zsqrtd.instMulZsqrtd d)) n (Star.star.{0} (Zsqrtd d) (Zsqrtd.instStarZsqrtd d) n))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_eq_mul_conj Zsqrtd.norm_eq_mul_conjₓ'. -/
 theorem norm_eq_mul_conj (n : ℤ√d) : (norm n : ℤ√d) = n * star n := by
   cases n <;> simp [norm, star, Zsqrtd.ext, mul_comm, sub_eq_add_neg]
 #align zsqrtd.norm_eq_mul_conj Zsqrtd.norm_eq_mul_conj
@@ -803,12 +665,6 @@ theorem norm_nonneg (hd : d ≤ 0) (n : ℤ√d) : 0 ≤ n.norm :=
 #align zsqrtd.norm_nonneg Zsqrtd.norm_nonneg
 -/
 
-/- warning: zsqrtd.norm_eq_one_iff -> Zsqrtd.norm_eq_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {x : Zsqrtd d}, Iff (Eq.{1} Nat (Int.natAbs (Zsqrtd.norm d x)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (IsUnit.{0} (Zsqrtd d) (Zsqrtd.monoid d) x)
-but is expected to have type
-  forall {d : Int} {x : Zsqrtd d}, Iff (Eq.{1} Nat (Int.natAbs (Zsqrtd.norm d x)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (IsUnit.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d) x)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_eq_one_iff Zsqrtd.norm_eq_one_iffₓ'. -/
 theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
   ⟨fun h =>
     isUnit_iff_dvd_one.2 <|
@@ -831,22 +687,10 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
     exact this.1⟩
 #align zsqrtd.norm_eq_one_iff Zsqrtd.norm_eq_one_iff
 
-/- warning: zsqrtd.is_unit_iff_norm_is_unit -> Zsqrtd.isUnit_iff_norm_isUnit is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} (z : Zsqrtd d), Iff (IsUnit.{0} (Zsqrtd d) (Zsqrtd.monoid d) z) (IsUnit.{0} Int Int.monoid (Zsqrtd.norm d z))
-but is expected to have type
-  forall {d : Int} (z : Zsqrtd d), Iff (IsUnit.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d) z) (IsUnit.{0} Int Int.instMonoidInt (Zsqrtd.norm d z))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.is_unit_iff_norm_is_unit Zsqrtd.isUnit_iff_norm_isUnitₓ'. -/
 theorem isUnit_iff_norm_isUnit {d : ℤ} (z : ℤ√d) : IsUnit z ↔ IsUnit z.norm := by
   rw [Int.isUnit_iff_natAbs_eq, norm_eq_one_iff]
 #align zsqrtd.is_unit_iff_norm_is_unit Zsqrtd.isUnit_iff_norm_isUnit
 
-/- warning: zsqrtd.norm_eq_one_iff' -> Zsqrtd.norm_eq_one_iff' is a dubious translation:
-lean 3 declaration is
-  forall {d : Int}, (LE.le.{0} Int Int.hasLe d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (forall (z : Zsqrtd d), Iff (Eq.{1} Int (Zsqrtd.norm d z) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (IsUnit.{0} (Zsqrtd d) (Zsqrtd.monoid d) z))
-but is expected to have type
-  forall {d : Int}, (LE.le.{0} Int Int.instLEInt d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (forall (z : Zsqrtd d), Iff (Eq.{1} Int (Zsqrtd.norm d z) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (IsUnit.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d) z))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_eq_one_iff' Zsqrtd.norm_eq_one_iff'ₓ'. -/
 theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔ IsUnit z := by
   rw [← norm_eq_one_iff, ← Int.coe_nat_inj', Int.natAbs_of_nonneg (norm_nonneg hd z), Int.ofNat_one]
 #align zsqrtd.norm_eq_one_iff' Zsqrtd.norm_eq_one_iff'
@@ -869,12 +713,6 @@ theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z
 #align zsqrtd.norm_eq_zero_iff Zsqrtd.norm_eq_zero_iff
 -/
 
-/- warning: zsqrtd.norm_eq_of_associated -> Zsqrtd.norm_eq_of_associated is a dubious translation:
-lean 3 declaration is
-  forall {d : Int}, (LE.le.{0} Int Int.hasLe d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (forall {x : Zsqrtd d} {y : Zsqrtd d}, (Associated.{0} (Zsqrtd d) (Zsqrtd.monoid d) x y) -> (Eq.{1} Int (Zsqrtd.norm d x) (Zsqrtd.norm d y)))
-but is expected to have type
-  forall {d : Int}, (LE.le.{0} Int Int.instLEInt d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (forall {x : Zsqrtd d} {y : Zsqrtd d}, (Associated.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d) x y) -> (Eq.{1} Int (Zsqrtd.norm d x) (Zsqrtd.norm d y)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_eq_of_associated Zsqrtd.norm_eq_of_associatedₓ'. -/
 theorem norm_eq_of_associated {d : ℤ} (hd : d ≤ 0) {x y : ℤ√d} (h : Associated x y) :
     x.norm = y.norm := by
   obtain ⟨u, rfl⟩ := h
@@ -914,12 +752,6 @@ instance decidableNonneg : ∀ a : ℤ√d, Decidable (nonneg a)
 #align zsqrtd.decidable_nonneg Zsqrtd.decidableNonneg
 -/
 
-/- warning: zsqrtd.decidable_le -> Zsqrtd.decidableLE is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat}, DecidableRel.{1} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d))
-but is expected to have type
-  forall {d : Nat}, DecidableRel.{1} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (fun (x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7357 : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7359 : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) => LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7357 x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7359)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.decidable_le Zsqrtd.decidableLEₓ'. -/
 instance decidableLE : @DecidableRel (ℤ√d) (· ≤ ·) := fun _ _ => decidable_nonneg _
 #align zsqrtd.decidable_le Zsqrtd.decidableLE
 
@@ -985,22 +817,10 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
 #align zsqrtd.nonneg.add Zsqrtd.Nonneg.add
 -/
 
-/- warning: zsqrtd.nonneg_iff_zero_le -> Zsqrtd.nonneg_iff_zero_le is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} {a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)}, Iff (Zsqrtd.Nonneg d a) (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) a)
-but is expected to have type
-  forall {d : Nat} {a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)}, Iff (Zsqrtd.Nonneg d a) (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) a)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.nonneg_iff_zero_le Zsqrtd.nonneg_iff_zero_leₓ'. -/
 theorem nonneg_iff_zero_le {a : ℤ√d} : nonneg a ↔ 0 ≤ a :=
   show _ ↔ nonneg _ by simp
 #align zsqrtd.nonneg_iff_zero_le Zsqrtd.nonneg_iff_zero_le
 
-/- warning: zsqrtd.le_of_le_le -> Zsqrtd.le_of_le_le is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} {x : Int} {y : Int} {z : Int} {w : Int}, (LE.le.{0} Int Int.hasLe x z) -> (LE.le.{0} Int Int.hasLe y w) -> (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (Zsqrtd.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d) x y) (Zsqrtd.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d) z w))
-but is expected to have type
-  forall {d : Nat} {x : Int} {y : Int} {z : Int} {w : Int}, (LE.le.{0} Int Int.instLEInt x z) -> (LE.le.{0} Int Int.instLEInt y w) -> (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (Zsqrtd.mk (Nat.cast.{0} Int instNatCastInt d) x y) (Zsqrtd.mk (Nat.cast.{0} Int instNatCastInt d) z w))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.le_of_le_le Zsqrtd.le_of_le_leₓ'. -/
 theorem le_of_le_le {x y z w : ℤ} (xz : x ≤ z) (yw : y ≤ w) : (⟨x, y⟩ : ℤ√d) ≤ ⟨z, w⟩ :=
   show nonneg ⟨z - x, w - y⟩ from
     match z - x, w - y, Int.le.dest_sub xz, Int.le.dest_sub yw with
@@ -1018,12 +838,6 @@ protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
 #align zsqrtd.nonneg_total Zsqrtd.nonneg_total
 -/
 
-/- warning: zsqrtd.le_total -> Zsqrtd.le_total is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), Or (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) a b) (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) b a)
-but is expected to have type
-  forall {d : Nat} (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), Or (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) a b) (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) b a)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.le_total Zsqrtd.le_totalₓ'. -/
 protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a :=
   by
   have t := (b - a).nonneg_total
@@ -1037,12 +851,6 @@ instance : Preorder (ℤ√d) where
   lt := (· < ·)
   lt_iff_le_not_le a b := (and_iff_right_of_imp (Zsqrtd.le_total _ _).resolve_left).symm
 
-/- warning: zsqrtd.le_arch -> Zsqrtd.le_arch is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), Exists.{1} Nat (fun (n : Nat) => LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (HasLiftT.mk.{1, 1} Nat (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (CoeTCₓ.coe.{1, 1} Nat (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Nat.castCoe.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (AddMonoidWithOne.toNatCast.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (AddGroupWithOne.toAddMonoidWithOne.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.addGroupWithOne ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))))) n))
-but is expected to have type
-  forall {d : Nat} (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), Exists.{1} Nat (fun (n : Nat) => LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) a (Nat.cast.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Semiring.toNatCast.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instSemiringZsqrtd (Nat.cast.{0} Int instNatCastInt d))) n))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.le_arch Zsqrtd.le_archₓ'. -/
 theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n :=
   by
   let ⟨x, y, (h : a ≤ ⟨x, y⟩)⟩ :=
@@ -1062,32 +870,14 @@ theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n :=
   exact h (y + 1)
 #align zsqrtd.le_arch Zsqrtd.le_arch
 
-/- warning: zsqrtd.add_le_add_left -> Zsqrtd.add_le_add_left is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) a b) -> (forall (c : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (HAdd.hAdd.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHAdd.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) c a) (HAdd.hAdd.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHAdd.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) c b))
-but is expected to have type
-  forall {d : Nat} (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) a b) -> (forall (c : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (HAdd.hAdd.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHAdd.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instAddZsqrtd (Nat.cast.{0} Int instNatCastInt d))) c a) (HAdd.hAdd.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHAdd.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instAddZsqrtd (Nat.cast.{0} Int instNatCastInt d))) c b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.add_le_add_left Zsqrtd.add_le_add_leftₓ'. -/
 protected theorem add_le_add_left (a b : ℤ√d) (ab : a ≤ b) (c : ℤ√d) : c + a ≤ c + b :=
   show nonneg _ by rw [add_sub_add_left_eq_sub] <;> exact ab
 #align zsqrtd.add_le_add_left Zsqrtd.add_le_add_left
 
-/- warning: zsqrtd.le_of_add_le_add_left -> Zsqrtd.le_of_add_le_add_left is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (c : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (HAdd.hAdd.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHAdd.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) c a) (HAdd.hAdd.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHAdd.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) c b)) -> (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) a b)
-but is expected to have type
-  forall {d : Nat} (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (c : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (HAdd.hAdd.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHAdd.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instAddZsqrtd (Nat.cast.{0} Int instNatCastInt d))) c a) (HAdd.hAdd.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHAdd.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instAddZsqrtd (Nat.cast.{0} Int instNatCastInt d))) c b)) -> (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) a b)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.le_of_add_le_add_left Zsqrtd.le_of_add_le_add_leftₓ'. -/
 protected theorem le_of_add_le_add_left (a b c : ℤ√d) (h : c + a ≤ c + b) : a ≤ b := by
   simpa using Zsqrtd.add_le_add_left _ _ h (-c)
 #align zsqrtd.le_of_add_le_add_left Zsqrtd.le_of_add_le_add_left
 
-/- warning: zsqrtd.add_lt_add_left -> Zsqrtd.add_lt_add_left is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), (LT.lt.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLt d) a b) -> (forall (c : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), LT.lt.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLt d) (HAdd.hAdd.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHAdd.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) c a) (HAdd.hAdd.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHAdd.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) c b))
-but is expected to have type
-  forall {d : Nat} (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), (LT.lt.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLTZsqrtdCastIntInstNatCastInt d) a b) -> (forall (c : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), LT.lt.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLTZsqrtdCastIntInstNatCastInt d) (HAdd.hAdd.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHAdd.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instAddZsqrtd (Nat.cast.{0} Int instNatCastInt d))) c a) (HAdd.hAdd.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHAdd.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instAddZsqrtd (Nat.cast.{0} Int instNatCastInt d))) c b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.add_lt_add_left Zsqrtd.add_lt_add_leftₓ'. -/
 protected theorem add_lt_add_left (a b : ℤ√d) (h : a < b) (c) : c + a < c + b := fun h' =>
   h (Zsqrtd.le_of_add_le_add_left _ _ _ h')
 #align zsqrtd.add_lt_add_left Zsqrtd.add_lt_add_left
@@ -1168,12 +958,6 @@ theorem nonneg_mul {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a *
 #align zsqrtd.nonneg_mul Zsqrtd.nonneg_mul
 -/
 
-/- warning: zsqrtd.mul_nonneg -> Zsqrtd.mul_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) a) -> (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) b) -> (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) (HMul.hMul.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHMul.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasMul ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) a b))
-but is expected to have type
-  forall {d : Nat} (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) a) -> (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) b) -> (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) (HMul.hMul.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHMul.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instMulZsqrtd (Nat.cast.{0} Int instNatCastInt d))) a b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.mul_nonneg Zsqrtd.mul_nonnegₓ'. -/
 protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
   repeat' rw [← nonneg_iff_zero_le] <;> exact nonneg_mul
 #align zsqrtd.mul_nonneg Zsqrtd.mul_nonneg
@@ -1261,12 +1045,6 @@ theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
 #align zsqrtd.nonneg_antisymm Zsqrtd.nonneg_antisymm
 -/
 
-/- warning: zsqrtd.le_antisymm -> Zsqrtd.le_antisymm is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} [dnsq : Zsqrtd.Nonsquare d] {a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)} {b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)}, (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) a b) -> (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d) b a) -> (Eq.{1} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) a b)
-but is expected to have type
-  forall {d : Nat} [dnsq : Zsqrtd.Nonsquare d] {a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)} {b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)}, (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) a b) -> (LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) b a) -> (Eq.{1} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) a b)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.le_antisymm Zsqrtd.le_antisymmₓ'. -/
 theorem le_antisymm {a b : ℤ√d} (ab : a ≤ b) (ba : b ≤ a) : a = b :=
   eq_of_sub_eq_zero <| nonneg_antisymm ba (by rw [neg_sub] <;> exact ab)
 #align zsqrtd.le_antisymm Zsqrtd.le_antisymm
@@ -1317,12 +1095,6 @@ instance : NoZeroDivisors (ℤ√d)
 instance : IsDomain (ℤ√d) :=
   NoZeroDivisors.to_isDomain _
 
-/- warning: zsqrtd.mul_pos -> Zsqrtd.mul_pos is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} [dnsq : Zsqrtd.Nonsquare d] (a : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (b : Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)), (LT.lt.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLt d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) a) -> (LT.lt.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLt d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) b) -> (LT.lt.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLt d) (OfNat.ofNat.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (OfNat.mk.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) 0 (Zero.zero.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasZero ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))))) (HMul.hMul.{0, 0, 0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (instHMul.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasMul ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))) a b))
-but is expected to have type
-  forall {d : Nat} [dnsq : Zsqrtd.Nonsquare d] (a : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (b : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)), (LT.lt.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLTZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) a) -> (LT.lt.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLTZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) b) -> (LT.lt.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLTZsqrtdCastIntInstNatCastInt d) (OfNat.ofNat.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) 0 (Zero.toOfNat0.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instZeroZsqrtd (Nat.cast.{0} Int instNatCastInt d)))) (HMul.hMul.{0, 0, 0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (instHMul.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instMulZsqrtd (Nat.cast.{0} Int instNatCastInt d))) a b))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.mul_pos Zsqrtd.mul_posₓ'. -/
 protected theorem mul_pos (a b : ℤ√d) (a0 : 0 < a) (b0 : 0 < b) : 0 < a * b := fun ab =>
   Or.elim
     (eq_zero_or_eq_zero_of_mul_eq_zero
@@ -1366,12 +1138,6 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
 
 variable {R : Type}
 
-/- warning: zsqrtd.hom_ext -> Zsqrtd.hom_ext is a dubious translation:
-lean 3 declaration is
-  forall {R : Type} [_inst_1 : Ring.{0} R] {d : Int} (f : RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) (g : RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))), (Eq.{1} R (coeFn.{1, 1} (RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) (fun (_x : RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) => (Zsqrtd d) -> R) (RingHom.hasCoeToFun.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) f (Zsqrtd.sqrtd d)) (coeFn.{1, 1} (RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) (fun (_x : RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) => (Zsqrtd d) -> R) (RingHom.hasCoeToFun.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) g (Zsqrtd.sqrtd d))) -> (Eq.{1} (RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R _inst_1))) f g)
-but is expected to have type
-  forall {R : Type} [_inst_1 : Ring.{0} R] {d : Int} (f : RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (g : RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))), (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Zsqrtd d) => R) (Zsqrtd.sqrtd d)) (FunLike.coe.{1, 1, 1} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) (fun (_x : Zsqrtd d) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Zsqrtd d) => R) _x) (MulHomClass.toFunLike.{0, 0, 0} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) R (NonUnitalNonAssocSemiring.toMul.{0} (Zsqrtd d) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)))) (NonUnitalNonAssocSemiring.toMul.{0} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} R (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{0, 0, 0} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} R (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{0, 0, 0} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1)) (RingHom.instRingHomClassRingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1)))))) f (Zsqrtd.sqrtd d)) (FunLike.coe.{1, 1, 1} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) (fun (_x : Zsqrtd d) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Zsqrtd d) => R) _x) (MulHomClass.toFunLike.{0, 0, 0} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) R (NonUnitalNonAssocSemiring.toMul.{0} (Zsqrtd d) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)))) (NonUnitalNonAssocSemiring.toMul.{0} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} R (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{0, 0, 0} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} R (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{0, 0, 0} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1)) (RingHom.instRingHomClassRingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1)))))) g (Zsqrtd.sqrtd d))) -> (Eq.{1} (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (Ring.toSemiring.{0} R _inst_1))) f g)
-Case conversion may be inaccurate. Consider using '#align zsqrtd.hom_ext Zsqrtd.hom_extₓ'. -/
 @[ext]
 theorem hom_ext [Ring R] {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrtd) : f = g :=
   by
@@ -1381,12 +1147,6 @@ theorem hom_ext [Ring R] {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrt
 
 variable [CommRing R]
 
-/- warning: zsqrtd.lift -> Zsqrtd.lift is a dubious translation:
-lean 3 declaration is
-  forall {R : Type} [_inst_1 : CommRing.{0} R] {d : Int}, Equiv.{1, 1} (Subtype.{1} R (fun (r : R) => Eq.{1} R (HMul.hMul.{0, 0, 0} R R R (instHMul.{0} R (Distrib.toHasMul.{0} R (Ring.toDistrib.{0} R (CommRing.toRing.{0} R _inst_1)))) r r) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int R (HasLiftT.mk.{1, 1} Int R (CoeTCₓ.coe.{1, 1} Int R (Int.castCoe.{0} R (AddGroupWithOne.toHasIntCast.{0} R (AddCommGroupWithOne.toAddGroupWithOne.{0} R (Ring.toAddCommGroupWithOne.{0} R (CommRing.toRing.{0} R _inst_1))))))) d))) (RingHom.{0, 0} (Zsqrtd d) R (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))) (NonAssocRing.toNonAssocSemiring.{0} R (Ring.toNonAssocRing.{0} R (CommRing.toRing.{0} R _inst_1))))
-but is expected to have type
-  forall {R : Type} [_inst_1 : CommRing.{0} R] {d : Int}, Equiv.{1, 1} (Subtype.{1} R (fun (r : R) => Eq.{1} R (HMul.hMul.{0, 0, 0} R R R (instHMul.{0} R (NonUnitalNonAssocRing.toMul.{0} R (NonAssocRing.toNonUnitalNonAssocRing.{0} R (Ring.toNonAssocRing.{0} R (CommRing.toRing.{0} R _inst_1))))) r r) (Int.cast.{0} R (Ring.toIntCast.{0} R (CommRing.toRing.{0} R _inst_1)) d))) (RingHom.{0, 0} (Zsqrtd d) R (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)) (Semiring.toNonAssocSemiring.{0} R (CommSemiring.toSemiring.{0} R (CommRing.toCommSemiring.{0} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.lift Zsqrtd.liftₓ'. -/
 /-- The unique `ring_hom` from `ℤ√d` to a ring `R`, constructed by replacing `√d` with the provided
 root. Conversely, this associates to every mapping `ℤ√d →+* R` a value of `√d` in `R`. -/
 @[simps]
@@ -1410,9 +1170,6 @@ def lift {d : ℤ} : { r : R // r * r = ↑d } ≃ (ℤ√d →+* R)
   right_inv f := by ext; simp
 #align zsqrtd.lift Zsqrtd.lift
 
-/- warning: zsqrtd.lift_injective -> Zsqrtd.lift_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align zsqrtd.lift_injective Zsqrtd.lift_injectiveₓ'. -/
 /-- `lift r` is injective if `d` is non-square, and R has characteristic zero (that is, the map from
 `ℤ` into `R` is injective). -/
 theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d })
@@ -1428,12 +1185,6 @@ theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d })
     rw [norm_eq_mul_conj, RingHom.map_mul, ha, MulZeroClass.zero_mul]
 #align zsqrtd.lift_injective Zsqrtd.lift_injective
 
-/- warning: zsqrtd.norm_eq_one_iff_mem_unitary -> Zsqrtd.norm_eq_one_iff_mem_unitary is a dubious translation:
-lean 3 declaration is
-  forall {d : Int} {a : Zsqrtd d}, Iff (Eq.{1} Int (Zsqrtd.norm d a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (Membership.Mem.{0, 0} (Zsqrtd d) (Submonoid.{0} (Zsqrtd d) (Monoid.toMulOneClass.{0} (Zsqrtd d) (Zsqrtd.monoid d))) (SetLike.hasMem.{0, 0} (Submonoid.{0} (Zsqrtd d) (Monoid.toMulOneClass.{0} (Zsqrtd d) (Zsqrtd.monoid d))) (Zsqrtd d) (Submonoid.setLike.{0} (Zsqrtd d) (Monoid.toMulOneClass.{0} (Zsqrtd d) (Zsqrtd.monoid d)))) a (unitary.{0} (Zsqrtd d) (Zsqrtd.monoid d) (StarRing.toStarSemigroup.{0} (Zsqrtd d) (NonUnitalRing.toNonUnitalSemiring.{0} (Zsqrtd d) (NonUnitalCommRing.toNonUnitalRing.{0} (Zsqrtd d) (CommRing.toNonUnitalCommRing.{0} (Zsqrtd d) (Zsqrtd.commRing d)))) (Zsqrtd.starRing d))))
-but is expected to have type
-  forall {d : Int} {a : Zsqrtd d}, Iff (Eq.{1} Int (Zsqrtd.norm d a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Membership.mem.{0, 0} (Zsqrtd d) (Submonoid.{0} (Zsqrtd d) (Monoid.toMulOneClass.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d))) (SetLike.instMembership.{0, 0} (Submonoid.{0} (Zsqrtd d) (Monoid.toMulOneClass.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d))) (Zsqrtd d) (Submonoid.instSetLikeSubmonoid.{0} (Zsqrtd d) (Monoid.toMulOneClass.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d)))) a (unitary.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d) (StarRing.toStarSemigroup.{0} (Zsqrtd d) (NonUnitalCommSemiring.toNonUnitalSemiring.{0} (Zsqrtd d) (NonUnitalCommRing.toNonUnitalCommSemiring.{0} (Zsqrtd d) (CommRing.toNonUnitalCommRing.{0} (Zsqrtd d) (Zsqrtd.commRing d)))) (Zsqrtd.instStarRingZsqrtdToNonUnitalSemiringToNonUnitalCommSemiringToNonUnitalCommRingCommRing d))))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.norm_eq_one_iff_mem_unitary Zsqrtd.norm_eq_one_iff_mem_unitaryₓ'. -/
 /-- An element of `ℤ√d` has norm equal to `1` if and only if it is contained in the submonoid
 of unitary elements. -/
 theorem norm_eq_one_iff_mem_unitary {d : ℤ} {a : ℤ√d} : a.norm = 1 ↔ a ∈ unitary (ℤ√d) :=
@@ -1442,12 +1193,6 @@ theorem norm_eq_one_iff_mem_unitary {d : ℤ} {a : ℤ√d} : a.norm = 1 ↔ a �
   norm_cast
 #align zsqrtd.norm_eq_one_iff_mem_unitary Zsqrtd.norm_eq_one_iff_mem_unitary
 
-/- warning: zsqrtd.mker_norm_eq_unitary -> Zsqrtd.mker_norm_eq_unitary is a dubious translation:
-lean 3 declaration is
-  forall {d : Int}, Eq.{1} (Submonoid.{0} (Zsqrtd d) (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d)))))) (MonoidHom.mker.{0, 0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))) (MonoidHom.{0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring))))) (MonoidHom.monoidHomClass.{0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (NonAssocRing.toNonAssocSemiring.{0} (Zsqrtd d) (Ring.toNonAssocRing.{0} (Zsqrtd d) (Zsqrtd.ring d))))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring))))) (Zsqrtd.normMonoidHom d)) (unitary.{0} (Zsqrtd d) (Zsqrtd.monoid d) (StarRing.toStarSemigroup.{0} (Zsqrtd d) (NonUnitalRing.toNonUnitalSemiring.{0} (Zsqrtd d) (NonUnitalCommRing.toNonUnitalRing.{0} (Zsqrtd d) (CommRing.toNonUnitalCommRing.{0} (Zsqrtd d) (Zsqrtd.commRing d)))) (Zsqrtd.starRing d)))
-but is expected to have type
-  forall {d : Int}, Eq.{1} (Submonoid.{0} (Zsqrtd d) (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d))))) (MonoidHom.mker.{0, 0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt))) (MonoidHom.{0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt)))) (MonoidHom.monoidHomClass.{0, 0} (Zsqrtd d) Int (MulZeroOneClass.toMulOneClass.{0} (Zsqrtd d) (NonAssocSemiring.toMulZeroOneClass.{0} (Zsqrtd d) (Semiring.toNonAssocSemiring.{0} (Zsqrtd d) (Zsqrtd.instSemiringZsqrtd d)))) (MulZeroOneClass.toMulOneClass.{0} Int (NonAssocSemiring.toMulZeroOneClass.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt)))) (Zsqrtd.normMonoidHom d)) (unitary.{0} (Zsqrtd d) (Zsqrtd.instMonoidZsqrtd d) (StarRing.toStarSemigroup.{0} (Zsqrtd d) (NonUnitalCommSemiring.toNonUnitalSemiring.{0} (Zsqrtd d) (NonUnitalCommRing.toNonUnitalCommSemiring.{0} (Zsqrtd d) (CommRing.toNonUnitalCommRing.{0} (Zsqrtd d) (Zsqrtd.commRing d)))) (Zsqrtd.instStarRingZsqrtdToNonUnitalSemiringToNonUnitalCommSemiringToNonUnitalCommRingCommRing d)))
-Case conversion may be inaccurate. Consider using '#align zsqrtd.mker_norm_eq_unitary Zsqrtd.mker_norm_eq_unitaryₓ'. -/
 /-- The kernel of the norm map on `ℤ√d` equals the submonoid of unitary elements. -/
 theorem mker_norm_eq_unitary {d : ℤ} : (@normMonoidHom d).mker = unitary (ℤ√d) :=
   Submonoid.ext fun x => norm_eq_one_iff_mem_unitary

@@ -146,24 +146,12 @@ open MeasureTheory
 /-! ## Strongly measurable functions -/
 
 
-/- warning: measure_theory.strongly_measurable.ae_strongly_measurable -> MeasureTheory.StronglyMeasurable.aestronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α m0}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m0 f) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m0 f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m0 f) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m0 f μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.ae_strongly_measurable MeasureTheory.StronglyMeasurable.aestronglyMeasurableₓ'. -/
 protected theorem StronglyMeasurable.aestronglyMeasurable {α β} {m0 : MeasurableSpace α}
     [TopologicalSpace β] {f : α → β} {μ : Measure α} (hf : StronglyMeasurable f) :
     AEStronglyMeasurable f μ :=
   ⟨f, hf, EventuallyEq.refl _ _⟩
 #align measure_theory.strongly_measurable.ae_strongly_measurable MeasureTheory.StronglyMeasurable.aestronglyMeasurable
 
-/- warning: measure_theory.subsingleton.strongly_measurable -> MeasureTheory.Subsingleton.stronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : Subsingleton.{succ u2} β] (f : α -> β), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : Subsingleton.{succ u1} β] (f : α -> β), MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_3 _inst_2 f
-Case conversion may be inaccurate. Consider using '#align measure_theory.subsingleton.strongly_measurable MeasureTheory.Subsingleton.stronglyMeasurableₓ'. -/
 @[simp]
 theorem Subsingleton.stronglyMeasurable {α β} [MeasurableSpace α] [TopologicalSpace β]
     [Subsingleton β] (f : α → β) : StronglyMeasurable f :=
@@ -175,45 +163,21 @@ theorem Subsingleton.stronglyMeasurable {α β} [MeasurableSpace α] [Topologica
     exact MeasurableSet.univ
 #align measure_theory.subsingleton.strongly_measurable MeasureTheory.Subsingleton.stronglyMeasurable
 
-/- warning: measure_theory.simple_func.strongly_measurable -> MeasureTheory.SimpleFunc.stronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] (f : MeasureTheory.SimpleFunc.{u1, u2} α m β), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (fun (_x : MeasureTheory.SimpleFunc.{u1, u2} α m β) => α -> β) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u2} α β m) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] (f : MeasureTheory.SimpleFunc.{u2, u1} α m β), MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (MeasureTheory.SimpleFunc.toFun.{u2, u1} α m β f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.strongly_measurable MeasureTheory.SimpleFunc.stronglyMeasurableₓ'. -/
 theorem SimpleFunc.stronglyMeasurable {α β} {m : MeasurableSpace α} [TopologicalSpace β]
     (f : α →ₛ β) : StronglyMeasurable f :=
   ⟨fun _ => f, fun x => tendsto_const_nhds⟩
 #align measure_theory.simple_func.strongly_measurable MeasureTheory.SimpleFunc.stronglyMeasurable
 
-/- warning: measure_theory.strongly_measurable_of_is_empty -> MeasureTheory.stronglyMeasurable_of_isEmpty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : IsEmpty.{succ u1} α] {m : MeasurableSpace.{u1} α} [_inst_3 : TopologicalSpace.{u2} β] (f : α -> β), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_3 m f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : IsEmpty.{succ u2} α] {m : MeasurableSpace.{u2} α} [_inst_3 : TopologicalSpace.{u1} β] (f : α -> β), MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_3 m f
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable_of_is_empty MeasureTheory.stronglyMeasurable_of_isEmptyₓ'. -/
 theorem stronglyMeasurable_of_isEmpty [IsEmpty α] {m : MeasurableSpace α} [TopologicalSpace β]
     (f : α → β) : StronglyMeasurable f :=
   ⟨fun n => SimpleFunc.ofIsEmpty, isEmptyElim⟩
 #align measure_theory.strongly_measurable_of_is_empty MeasureTheory.stronglyMeasurable_of_isEmpty
 
-/- warning: measure_theory.strongly_measurable_const -> MeasureTheory.stronglyMeasurable_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {b : β}, MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (a : α) => b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {b : β}, MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (fun (a : α) => b)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable_const MeasureTheory.stronglyMeasurable_constₓ'. -/
 theorem stronglyMeasurable_const {α β} {m : MeasurableSpace α} [TopologicalSpace β] {b : β} :
     StronglyMeasurable fun a : α => b :=
   ⟨fun n => SimpleFunc.const α b, fun a => tendsto_const_nhds⟩
 #align measure_theory.strongly_measurable_const MeasureTheory.stronglyMeasurable_const
 
-/- warning: measure_theory.strongly_measurable_one -> MeasureTheory.stronglyMeasurable_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : One.{u2} β], MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (OfNat.ofNat.{max u1 u2} (α -> β) 1 (OfNat.mk.{max u1 u2} (α -> β) 1 (One.one.{max u1 u2} (α -> β) (Pi.instOne.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_3)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : One.{u1} β], MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (OfNat.ofNat.{max u2 u1} (α -> β) 1 (One.toOfNat1.{max u2 u1} (α -> β) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic._hyg.1583 : α) => β) (fun (i : α) => _inst_3))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable_one MeasureTheory.stronglyMeasurable_oneₓ'. -/
 @[to_additive]
 theorem stronglyMeasurable_one {α β} {m : MeasurableSpace α} [TopologicalSpace β] [One β] :
     StronglyMeasurable (1 : α → β) :=
@@ -221,12 +185,6 @@ theorem stronglyMeasurable_one {α β} {m : MeasurableSpace α} [TopologicalSpac
 #align measure_theory.strongly_measurable_one MeasureTheory.stronglyMeasurable_one
 #align measure_theory.strongly_measurable_zero MeasureTheory.stronglyMeasurable_zero
 
-/- warning: measure_theory.strongly_measurable_const' -> MeasureTheory.stronglyMeasurable_const' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (forall (x : α) (y : α), Eq.{succ u2} β (f x) (f y)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (forall (x : α) (y : α), Eq.{succ u1} β (f x) (f y)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable_const' MeasureTheory.stronglyMeasurable_const'ₓ'. -/
 /-- A version of `strongly_measurable_const` that assumes `f x = f y` for all `x, y`.
 This version works for functions between empty types. -/
 theorem stronglyMeasurable_const' {α β} {m : MeasurableSpace α} [TopologicalSpace β] {f : α → β}
@@ -237,12 +195,6 @@ theorem stronglyMeasurable_const' {α β} {m : MeasurableSpace α} [TopologicalS
   · convert strongly_measurable_const; exact funext fun x => hf x h.some
 #align measure_theory.strongly_measurable_const' MeasureTheory.stronglyMeasurable_const'
 
-/- warning: measure_theory.subsingleton.strongly_measurable' -> MeasureTheory.Subsingleton.stronglyMeasurable' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : Subsingleton.{succ u1} α] (f : α -> β), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : Subsingleton.{succ u2} α] (f : α -> β), MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_3 _inst_2 f
-Case conversion may be inaccurate. Consider using '#align measure_theory.subsingleton.strongly_measurable' MeasureTheory.Subsingleton.stronglyMeasurable'ₓ'. -/
 @[simp]
 theorem Subsingleton.stronglyMeasurable' {α β} [MeasurableSpace α] [TopologicalSpace β]
     [Subsingleton α] (f : α → β) : StronglyMeasurable f :=
@@ -266,12 +218,6 @@ protected noncomputable def approx {m : MeasurableSpace α} (hf : StronglyMeasur
 #align measure_theory.strongly_measurable.approx MeasureTheory.StronglyMeasurable.approx
 -/
 
-/- warning: measure_theory.strongly_measurable.tendsto_approx -> MeasureTheory.StronglyMeasurable.tendsto_approx is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] {m : MeasurableSpace.{u1} α} (hf : MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) (x : α), Filter.Tendsto.{0, u2} Nat β (fun (n : Nat) => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (fun (_x : MeasureTheory.SimpleFunc.{u1, u2} α m β) => α -> β) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u2} α β m) (MeasureTheory.StronglyMeasurable.approx.{u1, u2} α β f _inst_2 m hf n) x) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u2} β _inst_2 (f x))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} [_inst_2 : TopologicalSpace.{u1} β] {m : MeasurableSpace.{u2} α} (hf : MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) (x : α), Filter.Tendsto.{0, u1} Nat β (fun (n : Nat) => MeasureTheory.SimpleFunc.toFun.{u2, u1} α m β (MeasureTheory.StronglyMeasurable.approx.{u2, u1} α β f _inst_2 m hf n) x) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} β _inst_2 (f x))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.tendsto_approx MeasureTheory.StronglyMeasurable.tendsto_approxₓ'. -/
 protected theorem tendsto_approx {m : MeasurableSpace α} (hf : StronglyMeasurable f) :
     ∀ x, Tendsto (fun n => hf.approx n x) atTop (𝓝 (f x)) :=
   hf.choose_spec
@@ -287,9 +233,6 @@ noncomputable def approxBounded {m : MeasurableSpace α} [Norm β] [SMul ℝ β]
 #align measure_theory.strongly_measurable.approx_bounded MeasureTheory.StronglyMeasurable.approxBounded
 -/
 
-/- warning: measure_theory.strongly_measurable.tendsto_approx_bounded_of_norm_le -> MeasureTheory.StronglyMeasurable.tendsto_approxBounded_of_norm_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.tendsto_approx_bounded_of_norm_le MeasureTheory.StronglyMeasurable.tendsto_approxBounded_of_norm_leₓ'. -/
 theorem tendsto_approxBounded_of_norm_le {β} {f : α → β} [NormedAddCommGroup β] [NormedSpace ℝ β]
     {m : MeasurableSpace α} (hf : strongly_measurable[m] f) {c : ℝ} {x : α} (hfx : ‖f x‖ ≤ c) :
     Tendsto (fun n => hf.approxBounded c n x) atTop (𝓝 (f x)) :=
@@ -327,9 +270,6 @@ theorem tendsto_approxBounded_of_norm_le {β} {f : α → β} [NormedAddCommGrou
   refine' tendsto.div tendsto_const_nhds h_tendsto.norm hfx0
 #align measure_theory.strongly_measurable.tendsto_approx_bounded_of_norm_le MeasureTheory.StronglyMeasurable.tendsto_approxBounded_of_norm_le
 
-/- warning: measure_theory.strongly_measurable.tendsto_approx_bounded_ae -> MeasureTheory.StronglyMeasurable.tendsto_approxBounded_ae is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.tendsto_approx_bounded_ae MeasureTheory.StronglyMeasurable.tendsto_approxBounded_aeₓ'. -/
 theorem tendsto_approxBounded_ae {β} {f : α → β} [NormedAddCommGroup β] [NormedSpace ℝ β]
     {m m0 : MeasurableSpace α} {μ : Measure α} (hf : strongly_measurable[m] f) {c : ℝ}
     (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
@@ -337,9 +277,6 @@ theorem tendsto_approxBounded_ae {β} {f : α → β} [NormedAddCommGroup β] [N
   filter_upwards [hf_bound]with x hfx using tendsto_approx_bounded_of_norm_le hf hfx
 #align measure_theory.strongly_measurable.tendsto_approx_bounded_ae MeasureTheory.StronglyMeasurable.tendsto_approxBounded_ae
 
-/- warning: measure_theory.strongly_measurable.norm_approx_bounded_le -> MeasureTheory.StronglyMeasurable.norm_approxBounded_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.norm_approx_bounded_le MeasureTheory.StronglyMeasurable.norm_approxBounded_leₓ'. -/
 theorem norm_approxBounded_le {β} {f : α → β} [SeminormedAddCommGroup β] [NormedSpace ℝ β]
     {m : MeasurableSpace α} {c : ℝ} (hf : strongly_measurable[m] f) (hc : 0 ≤ c) (n : ℕ) (x : α) :
     ‖hf.approxBounded c n x‖ ≤ c :=
@@ -360,12 +297,6 @@ theorem norm_approxBounded_le {β} {f : α → β} [SeminormedAddCommGroup β] [
     · rwa [div_le_one (lt_of_le_of_ne (norm_nonneg _) (Ne.symm h0))]
 #align measure_theory.strongly_measurable.norm_approx_bounded_le MeasureTheory.StronglyMeasurable.norm_approxBounded_le
 
-/- warning: strongly_measurable_bot_iff -> stronglyMeasurable_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Nonempty.{succ u2} β] [_inst_4 : T2Space.{u2} β _inst_2], Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 (Bot.bot.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toHasBot.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) f) (Exists.{succ u2} β (fun (c : β) => Eq.{max (succ u1) (succ u2)} (α -> β) f (fun (_x : α) => c)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Nonempty.{succ u2} β] [_inst_4 : T2Space.{u2} β _inst_2], Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 (Bot.bot.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toBot.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) f) (Exists.{succ u2} β (fun (c : β) => Eq.{max (succ u1) (succ u2)} (α -> β) f (fun (_x : α) => c)))
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_bot_iff stronglyMeasurable_bot_iffₓ'. -/
 theorem stronglyMeasurable_bot_iff [Nonempty β] [T2Space β] :
     strongly_measurable[⊥] f ↔ ∃ c, f = fun _ => c :=
   by
@@ -388,12 +319,6 @@ theorem stronglyMeasurable_bot_iff [Nonempty β] [T2Space β] :
 
 end BasicPropertiesInAnyTopologicalSpace
 
-/- warning: measure_theory.strongly_measurable.fin_strongly_measurable_of_set_sigma_finite -> MeasureTheory.StronglyMeasurable.finStronglyMeasurable_of_set_sigmaFinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (forall {t : Set.{u1} α}, (MeasurableSet.{u1} α m t) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t)) -> (Eq.{succ u2} β (f x) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))))) -> (MeasureTheory.SigmaFinite.{u1} α m (MeasureTheory.Measure.restrict.{u1} α m μ t)) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (forall {t : Set.{u1} α}, (MeasurableSet.{u1} α m t) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t)) -> (Eq.{succ u2} β (f x) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_3)))) -> (MeasureTheory.SigmaFinite.{u1} α m (MeasureTheory.Measure.restrict.{u1} α m μ t)) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.fin_strongly_measurable_of_set_sigma_finite MeasureTheory.StronglyMeasurable.finStronglyMeasurable_of_set_sigmaFiniteₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » t) -/
 theorem finStronglyMeasurable_of_set_sigmaFinite [TopologicalSpace β] [Zero β]
     {m : MeasurableSpace α} {μ : Measure α} (hf_meas : StronglyMeasurable f) {t : Set α}
@@ -454,12 +379,6 @@ protected theorem finStronglyMeasurable [TopologicalSpace β] [Zero β] {m0 : Me
 #align measure_theory.strongly_measurable.fin_strongly_measurable MeasureTheory.StronglyMeasurable.finStronglyMeasurable
 -/
 
-/- warning: measure_theory.strongly_measurable.measurable -> MeasureTheory.StronglyMeasurable.measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_4 : MeasurableSpace.{u2} β] [_inst_5 : BorelSpace.{u2} β _inst_2 _inst_4], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (Measurable.{u1, u2} α β m _inst_4 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] [_inst_4 : MeasurableSpace.{u1} β] [_inst_5 : BorelSpace.{u1} β _inst_2 _inst_4], (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (Measurable.{u2, u1} α β m _inst_4 f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.measurable MeasureTheory.StronglyMeasurable.measurableₓ'. -/
 /-- A strongly measurable function is measurable. -/
 protected theorem measurable {m : MeasurableSpace α} [TopologicalSpace β] [PseudoMetrizableSpace β]
     [MeasurableSpace β] [BorelSpace β] (hf : StronglyMeasurable f) : Measurable f :=
@@ -467,12 +386,6 @@ protected theorem measurable {m : MeasurableSpace α} [TopologicalSpace β] [Pse
     (tendsto_pi_nhds.mpr hf.tendsto_approx)
 #align measure_theory.strongly_measurable.measurable MeasureTheory.StronglyMeasurable.measurable
 
-/- warning: measure_theory.strongly_measurable.ae_measurable -> MeasureTheory.StronglyMeasurable.aemeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_4 : MeasurableSpace.{u2} β] [_inst_5 : BorelSpace.{u2} β _inst_2 _inst_4] {μ : MeasureTheory.Measure.{u1} α m}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (AEMeasurable.{u1, u2} α β _inst_4 m f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] [_inst_4 : MeasurableSpace.{u1} β] [_inst_5 : BorelSpace.{u1} β _inst_2 _inst_4] {μ : MeasureTheory.Measure.{u2} α m}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (AEMeasurable.{u2, u1} α β _inst_4 m f μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.ae_measurable MeasureTheory.StronglyMeasurable.aemeasurableₓ'. -/
 /-- A strongly measurable function is almost everywhere measurable. -/
 protected theorem aemeasurable {m : MeasurableSpace α} [TopologicalSpace β]
     [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β] {μ : Measure α}
@@ -480,24 +393,12 @@ protected theorem aemeasurable {m : MeasurableSpace α} [TopologicalSpace β]
   hf.Measurable.AEMeasurable
 #align measure_theory.strongly_measurable.ae_measurable MeasureTheory.StronglyMeasurable.aemeasurable
 
-/- warning: continuous.comp_strongly_measurable -> Continuous.comp_stronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] {g : β -> γ} {f : α -> β}, (Continuous.{u2, u3} β γ _inst_2 _inst_3 g) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u3} α γ _inst_3 m (fun (x : α) => g (f x)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {m : MeasurableSpace.{u3} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u1} γ] {g : β -> γ} {f : α -> β}, (Continuous.{u2, u1} β γ _inst_2 _inst_3 g) -> (MeasureTheory.StronglyMeasurable.{u3, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u3, u1} α γ _inst_3 m (fun (x : α) => g (f x)))
-Case conversion may be inaccurate. Consider using '#align continuous.comp_strongly_measurable Continuous.comp_stronglyMeasurableₓ'. -/
 theorem Continuous.comp_stronglyMeasurable {m : MeasurableSpace α} [TopologicalSpace β]
     [TopologicalSpace γ] {g : β → γ} {f : α → β} (hg : Continuous g) (hf : StronglyMeasurable f) :
     StronglyMeasurable fun x => g (f x) :=
   ⟨fun n => SimpleFunc.map g (hf.approx n), fun x => (hg.Tendsto _).comp (hf.tendsto_approx x)⟩
 #align continuous.comp_strongly_measurable Continuous.comp_stronglyMeasurable
 
-/- warning: measure_theory.strongly_measurable.measurable_set_mul_support -> MeasureTheory.StronglyMeasurable.measurableSet_mulSupport is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : One.{u2} β] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : TopologicalSpace.MetrizableSpace.{u2} β _inst_3], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_3 m f) -> (MeasurableSet.{u1} α m (Function.mulSupport.{u1, u2} α β _inst_2 f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : One.{u1} β] [_inst_3 : TopologicalSpace.{u1} β] [_inst_4 : TopologicalSpace.MetrizableSpace.{u1} β _inst_3], (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_3 m f) -> (MeasurableSet.{u2} α m (Function.mulSupport.{u2, u1} α β _inst_2 f))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.measurable_set_mul_support MeasureTheory.StronglyMeasurable.measurableSet_mulSupportₓ'. -/
 @[to_additive]
 theorem measurableSet_mulSupport {m : MeasurableSpace α} [One β] [TopologicalSpace β]
     [MetrizableSpace β] (hf : StronglyMeasurable f) : MeasurableSet (mulSupport f) := by borelize β;
@@ -505,12 +406,6 @@ theorem measurableSet_mulSupport {m : MeasurableSpace α} [One β] [TopologicalS
 #align measure_theory.strongly_measurable.measurable_set_mul_support MeasureTheory.StronglyMeasurable.measurableSet_mulSupport
 #align measure_theory.strongly_measurable.measurable_set_support MeasureTheory.StronglyMeasurable.measurableSet_support
 
-/- warning: measure_theory.strongly_measurable.mono -> MeasureTheory.StronglyMeasurable.mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} {m' : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m' f) -> (LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.hasLe.{u1} α) m' m) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} {m' : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β], (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m' f) -> (LE.le.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instLEMeasurableSpace.{u2} α) m' m) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.mono MeasureTheory.StronglyMeasurable.monoₓ'. -/
 protected theorem mono {m m' : MeasurableSpace α} [TopologicalSpace β]
     (hf : strongly_measurable[m'] f) (h_mono : m' ≤ m) : strongly_measurable[m] f :=
   by
@@ -521,12 +416,6 @@ protected theorem mono {m m' : MeasurableSpace α} [TopologicalSpace β]
   exact ⟨f_approx, hf.tendsto_approx⟩
 #align measure_theory.strongly_measurable.mono MeasureTheory.StronglyMeasurable.mono
 
-/- warning: measure_theory.strongly_measurable.prod_mk -> MeasureTheory.StronglyMeasurable.prod_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] {f : α -> β} {g : α -> γ}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u3} α γ _inst_3 m g) -> (MeasureTheory.StronglyMeasurable.{u1, max u2 u3} α (Prod.{u2, u3} β γ) (Prod.topologicalSpace.{u2, u3} β γ _inst_2 _inst_3) m (fun (x : α) => Prod.mk.{u2, u3} β γ (f x) (g x)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {m : MeasurableSpace.{u3} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u1} γ] {f : α -> β} {g : α -> γ}, (MeasureTheory.StronglyMeasurable.{u3, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u3, u1} α γ _inst_3 m g) -> (MeasureTheory.StronglyMeasurable.{u3, max u1 u2} α (Prod.{u2, u1} β γ) (instTopologicalSpaceProd.{u2, u1} β γ _inst_2 _inst_3) m (fun (x : α) => Prod.mk.{u2, u1} β γ (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.prod_mk MeasureTheory.StronglyMeasurable.prod_mkₓ'. -/
 protected theorem prod_mk {m : MeasurableSpace α} [TopologicalSpace β] [TopologicalSpace γ]
     {f : α → β} {g : α → γ} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     StronglyMeasurable fun x => (f x, g x) :=
@@ -536,35 +425,17 @@ protected theorem prod_mk {m : MeasurableSpace α} [TopologicalSpace β] [Topolo
   exact tendsto.prod_mk (hf.tendsto_approx x) (hg.tendsto_approx x)
 #align measure_theory.strongly_measurable.prod_mk MeasureTheory.StronglyMeasurable.prod_mk
 
-/- warning: measure_theory.strongly_measurable.comp_measurable -> MeasureTheory.StronglyMeasurable.comp_measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] {m : MeasurableSpace.{u1} α} {m' : MeasurableSpace.{u3} γ} {f : α -> β} {g : γ -> α}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (Measurable.{u3, u1} γ α m' m g) -> (MeasureTheory.StronglyMeasurable.{u3, u2} γ β _inst_2 m' (Function.comp.{succ u3, succ u1, succ u2} γ α β f g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] {m : MeasurableSpace.{u2} α} {m' : MeasurableSpace.{u1} γ} {f : α -> β} {g : γ -> α}, (MeasureTheory.StronglyMeasurable.{u2, u3} α β _inst_2 m f) -> (Measurable.{u1, u2} γ α m' m g) -> (MeasureTheory.StronglyMeasurable.{u1, u3} γ β _inst_2 m' (Function.comp.{succ u1, succ u2, succ u3} γ α β f g))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.comp_measurable MeasureTheory.StronglyMeasurable.comp_measurableₓ'. -/
 theorem comp_measurable [TopologicalSpace β] {m : MeasurableSpace α} {m' : MeasurableSpace γ}
     {f : α → β} {g : γ → α} (hf : StronglyMeasurable f) (hg : Measurable g) :
     StronglyMeasurable (f ∘ g) :=
   ⟨fun n => SimpleFunc.comp (hf.approx n) g hg, fun x => hf.tendsto_approx (g x)⟩
 #align measure_theory.strongly_measurable.comp_measurable MeasureTheory.StronglyMeasurable.comp_measurable
 
-/- warning: measure_theory.strongly_measurable.of_uncurry_left -> MeasureTheory.StronglyMeasurable.of_uncurry_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] {mα : MeasurableSpace.{u1} α} {mγ : MeasurableSpace.{u3} γ} {f : α -> γ -> β}, (MeasureTheory.StronglyMeasurable.{max u1 u3, u2} (Prod.{u1, u3} α γ) β _inst_2 (Prod.instMeasurableSpace.{u1, u3} α γ mα mγ) (Function.uncurry.{u1, u3, u2} α γ β f)) -> (forall {x : α}, MeasureTheory.StronglyMeasurable.{u3, u2} γ β _inst_2 mγ (f x))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] {mα : MeasurableSpace.{u2} α} {mγ : MeasurableSpace.{u1} γ} {f : α -> γ -> β}, (MeasureTheory.StronglyMeasurable.{max u1 u2, u3} (Prod.{u2, u1} α γ) β _inst_2 (Prod.instMeasurableSpace.{u2, u1} α γ mα mγ) (Function.uncurry.{u2, u1, u3} α γ β f)) -> (forall {x : α}, MeasureTheory.StronglyMeasurable.{u1, u3} γ β _inst_2 mγ (f x))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.of_uncurry_left MeasureTheory.StronglyMeasurable.of_uncurry_leftₓ'. -/
 theorem of_uncurry_left [TopologicalSpace β] {mα : MeasurableSpace α} {mγ : MeasurableSpace γ}
     {f : α → γ → β} (hf : StronglyMeasurable (uncurry f)) {x : α} : StronglyMeasurable (f x) :=
   hf.comp_measurable measurable_prod_mk_left
 #align measure_theory.strongly_measurable.of_uncurry_left MeasureTheory.StronglyMeasurable.of_uncurry_left
 
-/- warning: measure_theory.strongly_measurable.of_uncurry_right -> MeasureTheory.StronglyMeasurable.of_uncurry_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] {mα : MeasurableSpace.{u1} α} {mγ : MeasurableSpace.{u3} γ} {f : α -> γ -> β}, (MeasureTheory.StronglyMeasurable.{max u1 u3, u2} (Prod.{u1, u3} α γ) β _inst_2 (Prod.instMeasurableSpace.{u1, u3} α γ mα mγ) (Function.uncurry.{u1, u3, u2} α γ β f)) -> (forall {y : γ}, MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα (fun (x : α) => f x y))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] {mα : MeasurableSpace.{u2} α} {mγ : MeasurableSpace.{u1} γ} {f : α -> γ -> β}, (MeasureTheory.StronglyMeasurable.{max u1 u2, u3} (Prod.{u2, u1} α γ) β _inst_2 (Prod.instMeasurableSpace.{u2, u1} α γ mα mγ) (Function.uncurry.{u2, u1, u3} α γ β f)) -> (forall {y : γ}, MeasureTheory.StronglyMeasurable.{u2, u3} α β _inst_2 mα (fun (x : α) => f x y))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.of_uncurry_right MeasureTheory.StronglyMeasurable.of_uncurry_rightₓ'. -/
 theorem of_uncurry_right [TopologicalSpace β] {mα : MeasurableSpace α} {mγ : MeasurableSpace γ}
     {f : α → γ → β} (hf : StronglyMeasurable (uncurry f)) {y : γ} :
     StronglyMeasurable fun x => f x y :=
@@ -604,12 +475,6 @@ theorem const_mul [Mul β] [ContinuousMul β] (hf : StronglyMeasurable f) (c : �
 #align measure_theory.strongly_measurable.const_add MeasureTheory.StronglyMeasurable.const_add
 -/
 
-/- warning: measure_theory.strongly_measurable.inv -> MeasureTheory.StronglyMeasurable.inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {mα : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Group.{u2} β] [_inst_4 : TopologicalGroup.{u2} β _inst_2 _inst_3], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα (Inv.inv.{max u1 u2} (α -> β) (Pi.instInv.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => DivInvMonoid.toHasInv.{u2} β (Group.toDivInvMonoid.{u2} β _inst_3))) f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {mα : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Group.{u2} β] [_inst_4 : TopologicalGroup.{u2} β _inst_2 _inst_3], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα (Inv.inv.{max u2 u1} (α -> β) (Pi.instInv.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => InvOneClass.toInv.{u2} β (DivInvOneMonoid.toInvOneClass.{u2} β (DivisionMonoid.toDivInvOneMonoid.{u2} β (Group.toDivisionMonoid.{u2} β _inst_3))))) f))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.inv MeasureTheory.StronglyMeasurable.invₓ'. -/
 @[to_additive]
 protected theorem inv [Group β] [TopologicalGroup β] (hf : StronglyMeasurable f) :
     StronglyMeasurable f⁻¹ :=
@@ -673,12 +538,6 @@ variable [Group G] [MulAction G β] [ContinuousConstSMul G β]
 
 variable [GroupWithZero G₀] [MulAction G₀ β] [ContinuousConstSMul G₀ β]
 
-/- warning: strongly_measurable_const_smul_iff -> stronglyMeasurable_const_smul_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {G : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_6 : Group.{u3} G] [_inst_7 : MulAction.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6))] [_inst_8 : ContinuousConstSMul.{u3, u2} G β _inst_2 (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6)) _inst_7)] {m : MeasurableSpace.{u1} α} (c : G), Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G β (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6)) _inst_7) c (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {f : α -> β} [G : TopologicalSpace.{u2} β] {_inst_2 : Type.{u1}} [_inst_6 : Group.{u1} _inst_2] [_inst_7 : MulAction.{u1, u2} _inst_2 β (DivInvMonoid.toMonoid.{u1} _inst_2 (Group.toDivInvMonoid.{u1} _inst_2 _inst_6))] [_inst_8 : ContinuousConstSMul.{u1, u2} _inst_2 β G (MulAction.toSMul.{u1, u2} _inst_2 β (DivInvMonoid.toMonoid.{u1} _inst_2 (Group.toDivInvMonoid.{u1} _inst_2 _inst_6)) _inst_7)] {m : MeasurableSpace.{u3} α} (c : _inst_2), Iff (MeasureTheory.StronglyMeasurable.{u3, u2} α β G m (fun (x : α) => HSMul.hSMul.{u1, u2, u2} _inst_2 β β (instHSMul.{u1, u2} _inst_2 β (MulAction.toSMul.{u1, u2} _inst_2 β (DivInvMonoid.toMonoid.{u1} _inst_2 (Group.toDivInvMonoid.{u1} _inst_2 _inst_6)) _inst_7)) c (f x))) (MeasureTheory.StronglyMeasurable.{u3, u2} α β G m f)
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_const_smul_iff stronglyMeasurable_const_smul_iffₓ'. -/
 theorem stronglyMeasurable_const_smul_iff {m : MeasurableSpace α} (c : G) :
     (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
@@ -690,12 +549,6 @@ theorem IsUnit.stronglyMeasurable_const_smul_iff {m : MeasurableSpace α} {c : M
   hu ▸ stronglyMeasurable_const_smul_iff u
 #align is_unit.strongly_measurable_const_smul_iff IsUnit.stronglyMeasurable_const_smul_iff
 
-/- warning: strongly_measurable_const_smul_iff₀ -> stronglyMeasurable_const_smul_iff₀ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {G₀ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_9 : GroupWithZero.{u3} G₀] [_inst_10 : MulAction.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9))] [_inst_11 : ContinuousConstSMul.{u3, u2} G₀ β _inst_2 (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9)) _inst_10)] {m : MeasurableSpace.{u1} α} {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (OfNat.mk.{u3} G₀ 0 (Zero.zero.{u3} G₀ (MulZeroClass.toHasZero.{u3} G₀ (MulZeroOneClass.toMulZeroClass.{u3} G₀ (MonoidWithZero.toMulZeroOneClass.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9)))))))) -> (Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G₀ β (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9)) _inst_10) c (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {f : α -> β} [G₀ : TopologicalSpace.{u1} β] {_inst_2 : Type.{u2}} [_inst_9 : GroupWithZero.{u2} _inst_2] [_inst_10 : MulAction.{u2, u1} _inst_2 β (MonoidWithZero.toMonoid.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9))] [_inst_11 : ContinuousConstSMul.{u2, u1} _inst_2 β G₀ (MulAction.toSMul.{u2, u1} _inst_2 β (MonoidWithZero.toMonoid.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9)) _inst_10)] {m : MeasurableSpace.{u3} α} {c : _inst_2}, (Ne.{succ u2} _inst_2 c (OfNat.ofNat.{u2} _inst_2 0 (Zero.toOfNat0.{u2} _inst_2 (MonoidWithZero.toZero.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9))))) -> (Iff (MeasureTheory.StronglyMeasurable.{u3, u1} α β G₀ m (fun (x : α) => HSMul.hSMul.{u2, u1, u1} _inst_2 β β (instHSMul.{u2, u1} _inst_2 β (MulAction.toSMul.{u2, u1} _inst_2 β (MonoidWithZero.toMonoid.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9)) _inst_10)) c (f x))) (MeasureTheory.StronglyMeasurable.{u3, u1} α β G₀ m f))
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_const_smul_iff₀ stronglyMeasurable_const_smul_iff₀ₓ'. -/
 theorem stronglyMeasurable_const_smul_iff₀ {m : MeasurableSpace α} {c : G₀} (hc : c ≠ 0) :
     (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
   (IsUnit.mk0 _ hc).stronglyMeasurable_const_smul_iff
@@ -740,12 +593,6 @@ variable {M : Type _} [Monoid M] [TopologicalSpace M] [ContinuousMul M] {m : Mea
 
 include m
 
-/- warning: list.strongly_measurable_prod' -> List.stronglyMeasurable_prod' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_2 : Monoid.{u2} M] [_inst_3 : TopologicalSpace.{u2} M] [_inst_4 : ContinuousMul.{u2} M _inst_3 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2))] {m : MeasurableSpace.{u1} α} (l : List.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (List.{max u1 u2} (α -> M)) (List.hasMem.{max u1 u2} (α -> M)) f l) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (List.prod.{max u1 u2} (α -> M) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2))) (Pi.instOne.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2))) l))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_2 : Monoid.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_3 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_2))] {m : MeasurableSpace.{u2} α} (l : List.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (List.{max u2 u1} (α -> M)) (List.instMembershipList.{max u2 u1} (α -> M)) f l) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (List.prod.{max u2 u1} (α -> M) (Pi.instMul.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_2))) (Pi.instOne.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Monoid.toOne.{u1} M _inst_2)) l))
-Case conversion may be inaccurate. Consider using '#align list.strongly_measurable_prod' List.stronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem List.stronglyMeasurable_prod' (l : List (α → M)) (hl : ∀ f ∈ l, StronglyMeasurable f) :
     StronglyMeasurable l.Prod := by
@@ -756,12 +603,6 @@ theorem List.stronglyMeasurable_prod' (l : List (α → M)) (hl : ∀ f ∈ l, S
 #align list.strongly_measurable_prod' List.stronglyMeasurable_prod'
 #align list.strongly_measurable_sum' List.stronglyMeasurable_sum'
 
-/- warning: list.strongly_measurable_prod -> List.stronglyMeasurable_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_2 : Monoid.{u2} M] [_inst_3 : TopologicalSpace.{u2} M] [_inst_4 : ContinuousMul.{u2} M _inst_3 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2))] {m : MeasurableSpace.{u1} α} (l : List.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (List.{max u1 u2} (α -> M)) (List.hasMem.{max u1 u2} (α -> M)) f l) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (fun (x : α) => List.prod.{u2} M (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2)) (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2)) (List.map.{max u1 u2, u2} (α -> M) M (fun (f : α -> M) => f x) l)))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_2 : Monoid.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_3 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_2))] {m : MeasurableSpace.{u2} α} (l : List.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (List.{max u2 u1} (α -> M)) (List.instMembershipList.{max u2 u1} (α -> M)) f l) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (fun (x : α) => List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_2)) (Monoid.toOne.{u1} M _inst_2) (List.map.{max u2 u1, u1} (α -> M) M (fun (f : α -> M) => f x) l)))
-Case conversion may be inaccurate. Consider using '#align list.strongly_measurable_prod List.stronglyMeasurable_prodₓ'. -/
 @[to_additive]
 theorem List.stronglyMeasurable_prod (l : List (α → M)) (hl : ∀ f ∈ l, StronglyMeasurable f) :
     StronglyMeasurable fun x => (l.map fun f : α → M => f x).Prod := by
@@ -777,12 +618,6 @@ variable {M : Type _} [CommMonoid M] [TopologicalSpace M] [ContinuousMul M] {m :
 
 include m
 
-/- warning: multiset.strongly_measurable_prod' -> Multiset.stronglyMeasurable_prod' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_2 : CommMonoid.{u2} M] [_inst_3 : TopologicalSpace.{u2} M] [_inst_4 : ContinuousMul.{u2} M _inst_3 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_2)))] {m : MeasurableSpace.{u1} α} (l : Multiset.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (Multiset.{max u1 u2} (α -> M)) (Multiset.hasMem.{max u1 u2} (α -> M)) f l) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (Multiset.prod.{max u1 u2} (α -> M) (Pi.commMonoid.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) l))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_2 : CommMonoid.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_3 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))] {m : MeasurableSpace.{u2} α} (l : Multiset.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (Multiset.{max u2 u1} (α -> M)) (Multiset.instMembershipMultiset.{max u2 u1} (α -> M)) f l) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (Multiset.prod.{max u2 u1} (α -> M) (Pi.commMonoid.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) l))
-Case conversion may be inaccurate. Consider using '#align multiset.strongly_measurable_prod' Multiset.stronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem Multiset.stronglyMeasurable_prod' (l : Multiset (α → M))
     (hl : ∀ f ∈ l, StronglyMeasurable f) : StronglyMeasurable l.Prod := by rcases l with ⟨l⟩;
@@ -790,12 +625,6 @@ theorem Multiset.stronglyMeasurable_prod' (l : Multiset (α → M))
 #align multiset.strongly_measurable_prod' Multiset.stronglyMeasurable_prod'
 #align multiset.strongly_measurable_sum' Multiset.stronglyMeasurable_sum'
 
-/- warning: multiset.strongly_measurable_prod -> Multiset.stronglyMeasurable_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_2 : CommMonoid.{u2} M] [_inst_3 : TopologicalSpace.{u2} M] [_inst_4 : ContinuousMul.{u2} M _inst_3 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_2)))] {m : MeasurableSpace.{u1} α} (s : Multiset.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (Multiset.{max u1 u2} (α -> M)) (Multiset.hasMem.{max u1 u2} (α -> M)) f s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (fun (x : α) => Multiset.prod.{u2} M _inst_2 (Multiset.map.{max u1 u2, u2} (α -> M) M (fun (f : α -> M) => f x) s)))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_2 : CommMonoid.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_3 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))] {m : MeasurableSpace.{u2} α} (s : Multiset.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (Multiset.{max u2 u1} (α -> M)) (Multiset.instMembershipMultiset.{max u2 u1} (α -> M)) f s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m f)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (fun (x : α) => Multiset.prod.{u1} M _inst_2 (Multiset.map.{max u2 u1, u1} (α -> M) M (fun (f : α -> M) => f x) s)))
-Case conversion may be inaccurate. Consider using '#align multiset.strongly_measurable_prod Multiset.stronglyMeasurable_prodₓ'. -/
 @[to_additive]
 theorem Multiset.stronglyMeasurable_prod (s : Multiset (α → M))
     (hs : ∀ f ∈ s, StronglyMeasurable f) :
@@ -804,12 +633,6 @@ theorem Multiset.stronglyMeasurable_prod (s : Multiset (α → M))
 #align multiset.strongly_measurable_prod Multiset.stronglyMeasurable_prod
 #align multiset.strongly_measurable_sum Multiset.stronglyMeasurable_sum
 
-/- warning: finset.strongly_measurable_prod' -> Finset.stronglyMeasurable_prod' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_2 : CommMonoid.{u2} M] [_inst_3 : TopologicalSpace.{u2} M] [_inst_4 : ContinuousMul.{u2} M _inst_3 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_2)))] {m : MeasurableSpace.{u1} α} {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (f i))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (Finset.prod.{max u1 u2, u3} (α -> M) ι (Pi.commMonoid.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) s (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_2 : CommMonoid.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_3 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))] {m : MeasurableSpace.{u2} α} {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (f i))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (Finset.prod.{max u1 u2, u3} (α -> M) ι (Pi.commMonoid.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) s (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align finset.strongly_measurable_prod' Finset.stronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem Finset.stronglyMeasurable_prod' {ι : Type _} {f : ι → α → M} (s : Finset ι)
     (hf : ∀ i ∈ s, StronglyMeasurable (f i)) : StronglyMeasurable (∏ i in s, f i) :=
@@ -817,12 +640,6 @@ theorem Finset.stronglyMeasurable_prod' {ι : Type _} {f : ι → α → M} (s :
 #align finset.strongly_measurable_prod' Finset.stronglyMeasurable_prod'
 #align finset.strongly_measurable_sum' Finset.stronglyMeasurable_sum'
 
-/- warning: finset.strongly_measurable_prod -> Finset.stronglyMeasurable_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_2 : CommMonoid.{u2} M] [_inst_3 : TopologicalSpace.{u2} M] [_inst_4 : ContinuousMul.{u2} M _inst_3 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_2)))] {m : MeasurableSpace.{u1} α} {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (f i))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α M _inst_3 m (fun (a : α) => Finset.prod.{u2, u3} M ι _inst_2 s (fun (i : ι) => f i a)))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_2 : CommMonoid.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_3 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))] {m : MeasurableSpace.{u2} α} {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (f i))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α M _inst_3 m (fun (a : α) => Finset.prod.{u1, u3} M ι _inst_2 s (fun (i : ι) => f i a)))
-Case conversion may be inaccurate. Consider using '#align finset.strongly_measurable_prod Finset.stronglyMeasurable_prodₓ'. -/
 @[to_additive]
 theorem Finset.stronglyMeasurable_prod {ι : Type _} {f : ι → α → M} (s : Finset ι)
     (hf : ∀ i ∈ s, StronglyMeasurable (f i)) : StronglyMeasurable fun a => ∏ i in s, f i a := by
@@ -832,12 +649,6 @@ theorem Finset.stronglyMeasurable_prod {ι : Type _} {f : ι → α → M} (s : 
 
 end CommMonoid
 
-/- warning: measure_theory.strongly_measurable.is_separable_range -> MeasureTheory.StronglyMeasurable.isSeparable_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (TopologicalSpace.IsSeparable.{u2} β _inst_2 (Set.range.{u2, succ u1} β α f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β], (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (TopologicalSpace.IsSeparable.{u1} β _inst_2 (Set.range.{u1, succ u2} β α f))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.is_separable_range MeasureTheory.StronglyMeasurable.isSeparable_rangeₓ'. -/
 /-- The range of a strongly measurable function is separable. -/
 theorem isSeparable_range {m : MeasurableSpace α} [TopologicalSpace β] (hf : StronglyMeasurable f) :
     TopologicalSpace.IsSeparable (range f) :=
@@ -852,12 +663,6 @@ theorem isSeparable_range {m : MeasurableSpace α} [TopologicalSpace β] (hf : S
   exact mem_range_self _
 #align measure_theory.strongly_measurable.is_separable_range MeasureTheory.StronglyMeasurable.isSeparable_range
 
-/- warning: measure_theory.strongly_measurable.separable_space_range_union_singleton -> MeasureTheory.StronglyMeasurable.separableSpace_range_union_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (forall {b : β}, TopologicalSpace.SeparableSpace.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) (Set.range.{u2, succ u1} β α f) (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) b))) (Subtype.topologicalSpace.{u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) (Set.range.{u2, succ u1} β α f) (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) b))) _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2], (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (forall {b : β}, TopologicalSpace.SeparableSpace.{u1} (Set.Elem.{u1} β (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) (Set.range.{u1, succ u2} β α f) (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) b))) (instTopologicalSpaceSubtype.{u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) (Set.range.{u1, succ u2} β α f) (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) b))) _inst_2))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.separable_space_range_union_singleton MeasureTheory.StronglyMeasurable.separableSpace_range_union_singletonₓ'. -/
 theorem separableSpace_range_union_singleton {m : MeasurableSpace α} [TopologicalSpace β]
     [PseudoMetrizableSpace β] (hf : StronglyMeasurable f) {b : β} :
     SeparableSpace (range f ∪ {b} : Set β) :=
@@ -904,12 +709,6 @@ theorem stronglyMeasurable_id [TopologicalSpace α] [PseudoMetrizableSpace α]
 
 end SecondCountableStronglyMeasurable
 
-/- warning: strongly_measurable_iff_measurable_separable -> stronglyMeasurable_iff_measurable_separable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_4 : MeasurableSpace.{u2} β] [_inst_5 : BorelSpace.{u2} β _inst_2 _inst_4], Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) (And (Measurable.{u1, u2} α β m _inst_4 f) (TopologicalSpace.IsSeparable.{u2} β _inst_2 (Set.range.{u2, succ u1} β α f)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] [_inst_4 : MeasurableSpace.{u1} β] [_inst_5 : BorelSpace.{u1} β _inst_2 _inst_4], Iff (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) (And (Measurable.{u2, u1} α β m _inst_4 f) (TopologicalSpace.IsSeparable.{u1} β _inst_2 (Set.range.{u1, succ u2} β α f)))
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_iff_measurable_separable stronglyMeasurable_iff_measurable_separableₓ'. -/
 /-- A function is strongly measurable if and only if it is measurable and has separable
 range. -/
 theorem stronglyMeasurable_iff_measurable_separable {m : MeasurableSpace α} [TopologicalSpace β]
@@ -936,12 +735,6 @@ theorem stronglyMeasurable_iff_measurable_separable {m : MeasurableSpace α} [To
   exact continuous_subtype_coe.comp_strongly_measurable g_smeas
 #align strongly_measurable_iff_measurable_separable stronglyMeasurable_iff_measurable_separable
 
-/- warning: continuous.strongly_measurable -> Continuous.stronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : OpensMeasurableSpace.{u1} α _inst_3 _inst_2] {β : Type.{u2}} [_inst_5 : TopologicalSpace.{u2} β] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_5] [h : SecondCountableTopologyEither.{u1, u2} α β _inst_3 _inst_5] {f : α -> β}, (Continuous.{u1, u2} α β _inst_3 _inst_5 f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_5 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : OpensMeasurableSpace.{u2} α _inst_3 _inst_2] {β : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} β] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_5] [h : SecondCountableTopologyEither.{u2, u1} α β _inst_3 _inst_5] {f : α -> β}, (Continuous.{u2, u1} α β _inst_3 _inst_5 f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_5 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align continuous.strongly_measurable Continuous.stronglyMeasurableₓ'. -/
 /-- A continuous function is strongly measurable when either the source space or the target space
 is second-countable. -/
 theorem Continuous.stronglyMeasurable [MeasurableSpace α] [TopologicalSpace α]
@@ -957,12 +750,6 @@ theorem Continuous.stronglyMeasurable [MeasurableSpace α] [TopologicalSpace α]
   · exact hf.measurable.strongly_measurable
 #align continuous.strongly_measurable Continuous.stronglyMeasurable
 
-/- warning: embedding.comp_strongly_measurable_iff -> Embedding.comp_stronglyMeasurable_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_4 : TopologicalSpace.{u3} γ] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u3} γ _inst_4] {g : β -> γ} {f : α -> β}, (Embedding.{u2, u3} β γ _inst_2 _inst_4 g) -> (Iff (MeasureTheory.StronglyMeasurable.{u1, u3} α γ _inst_4 m (fun (x : α) => g (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {m : MeasurableSpace.{u3} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_4 : TopologicalSpace.{u1} γ] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} γ _inst_4] {g : β -> γ} {f : α -> β}, (Embedding.{u2, u1} β γ _inst_2 _inst_4 g) -> (Iff (MeasureTheory.StronglyMeasurable.{u3, u1} α γ _inst_4 m (fun (x : α) => g (f x))) (MeasureTheory.StronglyMeasurable.{u3, u2} α β _inst_2 m f))
-Case conversion may be inaccurate. Consider using '#align embedding.comp_strongly_measurable_iff Embedding.comp_stronglyMeasurable_iffₓ'. -/
 /-- If `g` is a topological embedding, then `f` is strongly measurable iff `g ∘ f` is. -/
 theorem Embedding.comp_stronglyMeasurable_iff {m : MeasurableSpace α} [TopologicalSpace β]
     [PseudoMetrizableSpace β] [TopologicalSpace γ] [PseudoMetrizableSpace γ] {g : β → γ} {f : α → β}
@@ -989,12 +776,6 @@ theorem Embedding.comp_stronglyMeasurable_iff {m : MeasurableSpace α} [Topologi
     simp [hg.inj.eq_iff]
 #align embedding.comp_strongly_measurable_iff Embedding.comp_stronglyMeasurable_iff
 
-/- warning: strongly_measurable_of_tendsto -> stronglyMeasurable_of_tendsto is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] (u : Filter.{u3} ι) [_inst_4 : Filter.NeBot.{u3} ι u] [_inst_5 : Filter.IsCountablyGenerated.{u3} ι u] {f : ι -> α -> β} {g : α -> β}, (forall (i : ι), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (f i)) -> (Filter.Tendsto.{u3, max u1 u2} ι (α -> β) f u (nhds.{max u1 u2} (α -> β) (Pi.topologicalSpace.{u1, u2} α (fun (ᾰ : α) => β) (fun (a : α) => _inst_2)) g)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {ι : Type.{u3}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] (u : Filter.{u3} ι) [_inst_4 : Filter.NeBot.{u3} ι u] [_inst_5 : Filter.IsCountablyGenerated.{u3} ι u] {f : ι -> α -> β} {g : α -> β}, (forall (i : ι), MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (f i)) -> (Filter.Tendsto.{u3, max u2 u1} ι (α -> β) f u (nhds.{max u2 u1} (α -> β) (Pi.topologicalSpace.{u2, u1} α (fun (ᾰ : α) => β) (fun (a : α) => _inst_2)) g)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m g)
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_of_tendsto stronglyMeasurable_of_tendstoₓ'. -/
 /-- A sequential limit of strongly measurable functions is strongly measurable. -/
 theorem stronglyMeasurable_of_tendsto {ι : Type _} {m : MeasurableSpace α} [TopologicalSpace β]
     [PseudoMetrizableSpace β] (u : Filter ι) [NeBot u] [IsCountablyGenerated u] {f : ι → α → β}
@@ -1015,12 +796,6 @@ theorem stronglyMeasurable_of_tendsto {ι : Type _} {m : MeasurableSpace α} [To
     exact mem_range_self _
 #align strongly_measurable_of_tendsto stronglyMeasurable_of_tendsto
 
-/- warning: measure_theory.strongly_measurable.piecewise -> MeasureTheory.StronglyMeasurable.piecewise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {g : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {_x : DecidablePred.{succ u1} α (fun (_x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) _x s)}, (MeasurableSet.{u1} α m s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m g) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _x j)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {g : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {s : Set.{u2} α} {_x : DecidablePred.{succ u2} α (fun (_x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) _x s)}, (MeasurableSet.{u2} α m s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m g) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _x j)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.piecewise MeasureTheory.StronglyMeasurable.piecewiseₓ'. -/
 protected theorem piecewise {m : MeasurableSpace α} [TopologicalSpace β] {s : Set α}
     {_ : DecidablePred (· ∈ s)} (hs : MeasurableSet s) (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable (Set.piecewise s f g) :=
@@ -1031,12 +806,6 @@ protected theorem piecewise {m : MeasurableSpace α} [TopologicalSpace β] {s : 
   · simpa [hx] using hg.tendsto_approx x
 #align measure_theory.strongly_measurable.piecewise MeasureTheory.StronglyMeasurable.piecewise
 
-/- warning: measure_theory.strongly_measurable.ite -> MeasureTheory.StronglyMeasurable.ite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {g : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {p : α -> Prop} {_x : DecidablePred.{succ u1} α p}, (MeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => p a))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m g) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => ite.{succ u2} β (p x) (_x x) (f x) (g x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {g : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {p : α -> Prop} {_x : DecidablePred.{succ u2} α p}, (MeasurableSet.{u2} α m (setOf.{u2} α (fun (a : α) => p a))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m g) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (fun (x : α) => ite.{succ u1} β (p x) (_x x) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.ite MeasureTheory.StronglyMeasurable.iteₓ'. -/
 /-- this is slightly different from `strongly_measurable.piecewise`. It can be used to show
 `strongly_measurable (ite (x=0) 0 1)` by
 `exact strongly_measurable.ite (measurable_set_singleton 0) strongly_measurable_const
@@ -1048,12 +817,6 @@ protected theorem ite {m : MeasurableSpace α} [TopologicalSpace β] {p : α →
   StronglyMeasurable.piecewise hp hf hg
 #align measure_theory.strongly_measurable.ite MeasureTheory.StronglyMeasurable.ite
 
-/- warning: strongly_measurable_of_strongly_measurable_union_cover -> stronglyMeasurable_of_stronglyMeasurable_union_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} (s : Set.{u1} α) (t : Set.{u1} α), (MeasurableSet.{u1} α m s) -> (MeasurableSet.{u1} α m t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.univ.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β _inst_2 (Subtype.instMeasurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) m) (fun (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) a))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t) β _inst_2 (Subtype.instMeasurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) m) (fun (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t))))) a))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} (s : Set.{u2} α) (t : Set.{u2} α), (MeasurableSet.{u2} α m s) -> (MeasurableSet.{u2} α m t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Set.univ.{u2} α) (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s t)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} (Set.Elem.{u2} α s) β _inst_2 (Subtype.instMeasurableSpace.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) m) (fun (a : Set.Elem.{u2} α s) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} (Set.Elem.{u2} α t) β _inst_2 (Subtype.instMeasurableSpace.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x t) m) (fun (a : Set.Elem.{u2} α t) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x t) a))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f)
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_of_strongly_measurable_union_cover stronglyMeasurable_of_stronglyMeasurable_union_coverₓ'. -/
 theorem stronglyMeasurable_of_stronglyMeasurable_union_cover {m : MeasurableSpace α}
     [TopologicalSpace β] {f : α → β} (s t : Set α) (hs : MeasurableSet s) (ht : MeasurableSet t)
     (h : univ ⊆ s ∪ t) (hc : StronglyMeasurable fun a : s => f a)
@@ -1100,12 +863,6 @@ theorem stronglyMeasurable_of_stronglyMeasurable_union_cover {m : MeasurableSpac
       simp only [dif_neg hy, simple_func.apply_mk]
 #align strongly_measurable_of_strongly_measurable_union_cover stronglyMeasurable_of_stronglyMeasurable_union_cover
 
-/- warning: strongly_measurable_of_restrict_of_restrict_compl -> stronglyMeasurable_of_restrict_of_restrict_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, (MeasurableSet.{u1} α m s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β _inst_2 (Subtype.instMeasurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) m) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) β _inst_2 (Subtype.instMeasurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) m) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f)) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {s : Set.{u2} α}, (MeasurableSet.{u2} α m s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} (Set.Elem.{u2} α s) β _inst_2 (Subtype.instMeasurableSpace.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) m) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} (Set.Elem.{u2} α (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) β _inst_2 (Subtype.instMeasurableSpace.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) m) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) f)) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f)
-Case conversion may be inaccurate. Consider using '#align strongly_measurable_of_restrict_of_restrict_compl stronglyMeasurable_of_restrict_of_restrict_complₓ'. -/
 theorem stronglyMeasurable_of_restrict_of_restrict_compl {m : MeasurableSpace α}
     [TopologicalSpace β] {f : α → β} {s : Set α} (hs : MeasurableSet s)
     (h₁ : StronglyMeasurable (s.restrict f)) (h₂ : StronglyMeasurable (sᶜ.restrict f)) :
@@ -1114,80 +871,38 @@ theorem stronglyMeasurable_of_restrict_of_restrict_compl {m : MeasurableSpace α
     h₂
 #align strongly_measurable_of_restrict_of_restrict_compl stronglyMeasurable_of_restrict_of_restrict_compl
 
-/- warning: measure_theory.strongly_measurable.indicator -> MeasureTheory.StronglyMeasurable.indicator is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β], (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α m s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (Set.indicator.{u1, u2} α β _inst_3 s f)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : Zero.{u1} β], (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (forall {s : Set.{u2} α}, (MeasurableSet.{u2} α m s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (Set.indicator.{u2, u1} α β _inst_3 s f)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.indicator MeasureTheory.StronglyMeasurable.indicatorₓ'. -/
 protected theorem indicator {m : MeasurableSpace α} [TopologicalSpace β] [Zero β]
     (hf : StronglyMeasurable f) {s : Set α} (hs : MeasurableSet s) :
     StronglyMeasurable (s.indicator f) :=
   hf.piecewise hs stronglyMeasurable_const
 #align measure_theory.strongly_measurable.indicator MeasureTheory.StronglyMeasurable.indicator
 
-/- warning: measure_theory.strongly_measurable.dist -> MeasureTheory.StronglyMeasurable.dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {β : Type.{u2}} [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {g : α -> β}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) m f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) m g) -> (MeasureTheory.StronglyMeasurable.{u1, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m (fun (x : α) => Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) (g x)))
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] {f : α -> β} {g : α -> β}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β _inst_2)) m f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β _inst_2)) m g) -> (MeasureTheory.StronglyMeasurable.{u2, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m (fun (x : α) => Dist.dist.{u1} β (PseudoMetricSpace.toDist.{u1} β _inst_2) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.dist MeasureTheory.StronglyMeasurable.distₓ'. -/
 protected theorem dist {m : MeasurableSpace α} {β : Type _} [PseudoMetricSpace β] {f g : α → β}
     (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     StronglyMeasurable fun x => dist (f x) (g x) :=
   continuous_dist.comp_stronglyMeasurable (hf.prod_mk hg)
 #align measure_theory.strongly_measurable.dist MeasureTheory.StronglyMeasurable.dist
 
-/- warning: measure_theory.strongly_measurable.norm -> MeasureTheory.StronglyMeasurable.norm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {β : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u2} β] {f : α -> β}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) m f) -> (MeasureTheory.StronglyMeasurable.{u1, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m (fun (x : α) => Norm.norm.{u2} β (SeminormedAddCommGroup.toHasNorm.{u2} β _inst_2) (f x)))
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {β : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u1} β] {f : α -> β}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} β _inst_2))) m f) -> (MeasureTheory.StronglyMeasurable.{u2, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m (fun (x : α) => Norm.norm.{u1} β (SeminormedAddCommGroup.toNorm.{u1} β _inst_2) (f x)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.norm MeasureTheory.StronglyMeasurable.normₓ'. -/
 protected theorem norm {m : MeasurableSpace α} {β : Type _} [SeminormedAddCommGroup β] {f : α → β}
     (hf : StronglyMeasurable f) : StronglyMeasurable fun x => ‖f x‖ :=
   continuous_norm.comp_stronglyMeasurable hf
 #align measure_theory.strongly_measurable.norm MeasureTheory.StronglyMeasurable.norm
 
-/- warning: measure_theory.strongly_measurable.nnnorm -> MeasureTheory.StronglyMeasurable.nnnorm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {β : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u2} β] {f : α -> β}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) m f) -> (MeasureTheory.StronglyMeasurable.{u1, 0} α NNReal NNReal.topologicalSpace m (fun (x : α) => NNNorm.nnnorm.{u2} β (SeminormedAddGroup.toNNNorm.{u2} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} β _inst_2)) (f x)))
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {β : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u1} β] {f : α -> β}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} β _inst_2))) m f) -> (MeasureTheory.StronglyMeasurable.{u2, 0} α NNReal NNReal.instTopologicalSpaceNNReal m (fun (x : α) => NNNorm.nnnorm.{u1} β (SeminormedAddGroup.toNNNorm.{u1} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} β _inst_2)) (f x)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.nnnorm MeasureTheory.StronglyMeasurable.nnnormₓ'. -/
 protected theorem nnnorm {m : MeasurableSpace α} {β : Type _} [SeminormedAddCommGroup β] {f : α → β}
     (hf : StronglyMeasurable f) : StronglyMeasurable fun x => ‖f x‖₊ :=
   continuous_nnnorm.comp_stronglyMeasurable hf
 #align measure_theory.strongly_measurable.nnnorm MeasureTheory.StronglyMeasurable.nnnorm
 
-/- warning: measure_theory.strongly_measurable.ennnorm -> MeasureTheory.StronglyMeasurable.ennnorm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {β : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u2} β] {f : α -> β}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) m f) -> (Measurable.{u1, 0} α ENNReal m ENNReal.measurableSpace (fun (a : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (NNNorm.nnnorm.{u2} β (SeminormedAddGroup.toNNNorm.{u2} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} β _inst_2)) (f a))))
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {β : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u1} β] {f : α -> β}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} β _inst_2))) m f) -> (Measurable.{u2, 0} α ENNReal m ENNReal.measurableSpace (fun (a : α) => ENNReal.some (NNNorm.nnnorm.{u1} β (SeminormedAddGroup.toNNNorm.{u1} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} β _inst_2)) (f a))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.ennnorm MeasureTheory.StronglyMeasurable.ennnormₓ'. -/
 protected theorem ennnorm {m : MeasurableSpace α} {β : Type _} [SeminormedAddCommGroup β]
     {f : α → β} (hf : StronglyMeasurable f) : Measurable fun a => (‖f a‖₊ : ℝ≥0∞) :=
   (ENNReal.continuous_coe.comp_stronglyMeasurable hf.nnnorm).Measurable
 #align measure_theory.strongly_measurable.ennnorm MeasureTheory.StronglyMeasurable.ennnorm
 
-/- warning: measure_theory.strongly_measurable.real_to_nnreal -> MeasureTheory.StronglyMeasurable.real_toNNReal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {f : α -> Real}, (MeasureTheory.StronglyMeasurable.{u1, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m f) -> (MeasureTheory.StronglyMeasurable.{u1, 0} α NNReal NNReal.topologicalSpace m (fun (x : α) => Real.toNNReal (f x)))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {f : α -> Real}, (MeasureTheory.StronglyMeasurable.{u1, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m f) -> (MeasureTheory.StronglyMeasurable.{u1, 0} α NNReal NNReal.instTopologicalSpaceNNReal m (fun (x : α) => Real.toNNReal (f x)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.real_to_nnreal MeasureTheory.StronglyMeasurable.real_toNNRealₓ'. -/
 protected theorem real_toNNReal {m : MeasurableSpace α} {f : α → ℝ} (hf : StronglyMeasurable f) :
     StronglyMeasurable fun x => (f x).toNNReal :=
   continuous_real_toNNReal.comp_stronglyMeasurable hf
 #align measure_theory.strongly_measurable.real_to_nnreal MeasureTheory.StronglyMeasurable.real_toNNReal
 
-/- warning: measurable_embedding.strongly_measurable_extend -> MeasurableEmbedding.stronglyMeasurable_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : α -> γ} {g' : γ -> β} {mα : MeasurableSpace.{u1} α} {mγ : MeasurableSpace.{u3} γ} [_inst_2 : TopologicalSpace.{u2} β], (MeasurableEmbedding.{u1, u3} α γ mα mγ g) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα f) -> (MeasureTheory.StronglyMeasurable.{u3, u2} γ β _inst_2 mγ g') -> (MeasureTheory.StronglyMeasurable.{u3, u2} γ β _inst_2 mγ (Function.extend.{succ u1, succ u3, succ u2} α γ β g f g'))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {f : α -> β} {g : α -> γ} {g' : γ -> β} {mα : MeasurableSpace.{u3} α} {mγ : MeasurableSpace.{u2} γ} [_inst_2 : TopologicalSpace.{u1} β], (MeasurableEmbedding.{u3, u2} α γ mα mγ g) -> (MeasureTheory.StronglyMeasurable.{u3, u1} α β _inst_2 mα f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} γ β _inst_2 mγ g') -> (MeasureTheory.StronglyMeasurable.{u2, u1} γ β _inst_2 mγ (Function.extend.{succ u3, succ u2, succ u1} α γ β g f g'))
-Case conversion may be inaccurate. Consider using '#align measurable_embedding.strongly_measurable_extend MeasurableEmbedding.stronglyMeasurable_extendₓ'. -/
 theorem MeasurableEmbedding.stronglyMeasurable_extend {f : α → β} {g : α → γ} {g' : γ → β}
     {mα : MeasurableSpace α} {mγ : MeasurableSpace γ} [TopologicalSpace β]
     (hg : MeasurableEmbedding g) (hf : StronglyMeasurable f) (hg' : StronglyMeasurable g') :
@@ -1204,12 +919,6 @@ theorem MeasurableEmbedding.stronglyMeasurable_extend {f : α → β} {g : α �
       hg'.tendsto_approx x
 #align measurable_embedding.strongly_measurable_extend MeasurableEmbedding.stronglyMeasurable_extend
 
-/- warning: measurable_embedding.exists_strongly_measurable_extend -> MeasurableEmbedding.exists_stronglyMeasurable_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : α -> γ} {mα : MeasurableSpace.{u1} α} {mγ : MeasurableSpace.{u3} γ} [_inst_2 : TopologicalSpace.{u2} β], (MeasurableEmbedding.{u1, u3} α γ mα mγ g) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 mα f) -> (γ -> (Nonempty.{succ u2} β)) -> (Exists.{max (succ u3) (succ u2)} (γ -> β) (fun (f' : γ -> β) => And (MeasureTheory.StronglyMeasurable.{u3, u2} γ β _inst_2 mγ f') (Eq.{max (succ u1) (succ u2)} (α -> β) (Function.comp.{succ u1, succ u3, succ u2} α γ β f' g) f)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {f : α -> β} {g : α -> γ} {mα : MeasurableSpace.{u3} α} {mγ : MeasurableSpace.{u2} γ} [_inst_2 : TopologicalSpace.{u1} β], (MeasurableEmbedding.{u3, u2} α γ mα mγ g) -> (MeasureTheory.StronglyMeasurable.{u3, u1} α β _inst_2 mα f) -> (γ -> (Nonempty.{succ u1} β)) -> (Exists.{max (succ u1) (succ u2)} (γ -> β) (fun (f' : γ -> β) => And (MeasureTheory.StronglyMeasurable.{u2, u1} γ β _inst_2 mγ f') (Eq.{max (succ u3) (succ u1)} (α -> β) (Function.comp.{succ u3, succ u2, succ u1} α γ β f' g) f)))
-Case conversion may be inaccurate. Consider using '#align measurable_embedding.exists_strongly_measurable_extend MeasurableEmbedding.exists_stronglyMeasurable_extendₓ'. -/
 theorem MeasurableEmbedding.exists_stronglyMeasurable_extend {f : α → β} {g : α → γ}
     {mα : MeasurableSpace α} {mγ : MeasurableSpace γ} [TopologicalSpace β]
     (hg : MeasurableEmbedding g) (hf : StronglyMeasurable f) (hne : γ → Nonempty β) :
@@ -1219,12 +928,6 @@ theorem MeasurableEmbedding.exists_stronglyMeasurable_extend {f : α → β} {g 
     funext fun x => hg.Injective.extend_apply _ _ _⟩
 #align measurable_embedding.exists_strongly_measurable_extend MeasurableEmbedding.exists_stronglyMeasurable_extend
 
-/- warning: measure_theory.strongly_measurable.measurable_set_eq_fun -> MeasureTheory.StronglyMeasurable.measurableSet_eq_fun is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {E : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} E] [_inst_3 : TopologicalSpace.MetrizableSpace.{u2} E _inst_2] {f : α -> E} {g : α -> E}, (MeasureTheory.StronglyMeasurable.{u1, u2} α E _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α E _inst_2 m g) -> (MeasurableSet.{u1} α m (setOf.{u1} α (fun (x : α) => Eq.{succ u2} E (f x) (g x))))
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {E : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} E] [_inst_3 : TopologicalSpace.MetrizableSpace.{u1} E _inst_2] {f : α -> E} {g : α -> E}, (MeasureTheory.StronglyMeasurable.{u2, u1} α E _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α E _inst_2 m g) -> (MeasurableSet.{u2} α m (setOf.{u2} α (fun (x : α) => Eq.{succ u1} E (f x) (g x))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.measurable_set_eq_fun MeasureTheory.StronglyMeasurable.measurableSet_eq_funₓ'. -/
 theorem measurableSet_eq_fun {m : MeasurableSpace α} {E} [TopologicalSpace E] [MetrizableSpace E]
     {f g : α → E} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     MeasurableSet { x | f x = g x } := by
@@ -1232,12 +935,6 @@ theorem measurableSet_eq_fun {m : MeasurableSpace α} {E} [TopologicalSpace E] [
   exact (hf.prod_mk hg).Measurable is_closed_diagonal.measurable_set
 #align measure_theory.strongly_measurable.measurable_set_eq_fun MeasureTheory.StronglyMeasurable.measurableSet_eq_fun
 
-/- warning: measure_theory.strongly_measurable.measurable_set_lt -> MeasureTheory.StronglyMeasurable.measurableSet_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : LinearOrder.{u2} β] [_inst_4 : OrderClosedTopology.{u2} β _inst_2 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_3))))] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m g) -> (MeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_3))))) (f a) (g a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : LinearOrder.{u1} β] [_inst_4 : OrderClosedTopology.{u1} β _inst_2 (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_3)))))] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m g) -> (MeasurableSet.{u2} α m (setOf.{u2} α (fun (a : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_3)))))) (f a) (g a))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.measurable_set_lt MeasureTheory.StronglyMeasurable.measurableSet_ltₓ'. -/
 theorem measurableSet_lt {m : MeasurableSpace α} [TopologicalSpace β] [LinearOrder β]
     [OrderClosedTopology β] [PseudoMetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : MeasurableSet { a | f a < g a } :=
@@ -1246,12 +943,6 @@ theorem measurableSet_lt {m : MeasurableSpace α} [TopologicalSpace β] [LinearO
   exact (hf.prod_mk hg).Measurable is_open_lt_prod.measurable_set
 #align measure_theory.strongly_measurable.measurable_set_lt MeasureTheory.StronglyMeasurable.measurableSet_lt
 
-/- warning: measure_theory.strongly_measurable.measurable_set_le -> MeasureTheory.StronglyMeasurable.measurableSet_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Preorder.{u2} β] [_inst_4 : OrderClosedTopology.{u2} β _inst_2 _inst_3] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m g) -> (MeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3) (f a) (g a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : Preorder.{u1} β] [_inst_4 : OrderClosedTopology.{u1} β _inst_2 _inst_3] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m g) -> (MeasurableSet.{u2} α m (setOf.{u2} α (fun (a : α) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_3) (f a) (g a))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.measurable_set_le MeasureTheory.StronglyMeasurable.measurableSet_leₓ'. -/
 theorem measurableSet_le {m : MeasurableSpace α} [TopologicalSpace β] [Preorder β]
     [OrderClosedTopology β] [PseudoMetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : MeasurableSet { a | f a ≤ g a } :=
@@ -1260,12 +951,6 @@ theorem measurableSet_le {m : MeasurableSpace α} [TopologicalSpace β] [Preorde
   exact (hf.prod_mk hg).Measurable is_closed_le_prod.measurable_set
 #align measure_theory.strongly_measurable.measurable_set_le MeasureTheory.StronglyMeasurable.measurableSet_le
 
-/- warning: measure_theory.strongly_measurable.strongly_measurable_in_set -> MeasureTheory.StronglyMeasurable.stronglyMeasurable_in_set is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] {s : Set.{u1} α} {f : α -> β}, (MeasurableSet.{u1} α m s) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) -> (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (Eq.{succ u2} β (f x) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))))) -> (Exists.{max 1 (succ u1) (succ u2)} (Nat -> (MeasureTheory.SimpleFunc.{u1, u2} α m β)) (fun (fs : Nat -> (MeasureTheory.SimpleFunc.{u1, u2} α m β)) => And (forall (x : α), Filter.Tendsto.{0, u2} Nat β (fun (n : Nat) => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (fun (_x : MeasureTheory.SimpleFunc.{u1, u2} α m β) => α -> β) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u2} α β m) (fs n) x) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u2} β _inst_2 (f x))) (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (forall (n : Nat), Eq.{succ u2} β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (fun (_x : MeasureTheory.SimpleFunc.{u1, u2} α m β) => α -> β) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u2} α β m) (fs n) x) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : Zero.{u1} β] {s : Set.{u2} α} {f : α -> β}, (MeasurableSet.{u2} α m s) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) -> (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (Eq.{succ u1} β (f x) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)))) -> (Exists.{max (succ u2) (succ u1)} (Nat -> (MeasureTheory.SimpleFunc.{u2, u1} α m β)) (fun (fs : Nat -> (MeasureTheory.SimpleFunc.{u2, u1} α m β)) => And (forall (x : α), Filter.Tendsto.{0, u1} Nat β (fun (n : Nat) => MeasureTheory.SimpleFunc.toFun.{u2, u1} α m β (fs n) x) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} β _inst_2 (f x))) (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (forall (n : Nat), Eq.{succ u1} β (MeasureTheory.SimpleFunc.toFun.{u2, u1} α m β (fs n) x) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.strongly_measurable_in_set MeasureTheory.StronglyMeasurable.stronglyMeasurable_in_setₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
@@ -1292,12 +977,6 @@ theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β]
     exact tendsto_const_nhds
 #align measure_theory.strongly_measurable.strongly_measurable_in_set MeasureTheory.StronglyMeasurable.stronglyMeasurable_in_set
 
-/- warning: measure_theory.strongly_measurable.strongly_measurable_of_measurable_space_le_on -> MeasureTheory.StronglyMeasurable.stronglyMeasurable_of_measurableSpace_le_on is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {m : MeasurableSpace.{u1} α} {m₂ : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} E] [_inst_3 : Zero.{u2} E] {s : Set.{u1} α} {f : α -> E}, (MeasurableSet.{u1} α m s) -> (forall (t : Set.{u1} α), (MeasurableSet.{u1} α m (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (MeasurableSet.{u1} α m₂ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α E _inst_2 m f) -> (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (Eq.{succ u2} E (f x) (OfNat.ofNat.{u2} E 0 (OfNat.mk.{u2} E 0 (Zero.zero.{u2} E _inst_3))))) -> (MeasureTheory.StronglyMeasurable.{u1, u2} α E _inst_2 m₂ f)
-but is expected to have type
-  forall {α : Type.{u2}} {E : Type.{u1}} {m : MeasurableSpace.{u2} α} {m₂ : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} E] [_inst_3 : Zero.{u1} E] {s : Set.{u2} α} {f : α -> E}, (MeasurableSet.{u2} α m s) -> (forall (t : Set.{u2} α), (MeasurableSet.{u2} α m (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s t)) -> (MeasurableSet.{u2} α m₂ (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s t))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α E _inst_2 m f) -> (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (Eq.{succ u1} E (f x) (OfNat.ofNat.{u1} E 0 (Zero.toOfNat0.{u1} E _inst_3)))) -> (MeasureTheory.StronglyMeasurable.{u2, u1} α E _inst_2 m₂ f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.strongly_measurable_of_measurable_space_le_on MeasureTheory.StronglyMeasurable.stronglyMeasurable_of_measurableSpace_le_onₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /-- If the restriction to a set `s` of a σ-algebra `m` is included in the restriction to `s` of
 another σ-algebra `m₂` (hypothesis `hs`), the set `s` is `m` measurable and a function `f` supported
@@ -1340,12 +1019,6 @@ theorem stronglyMeasurable_of_measurableSpace_le_on {α E} {m m₂ : MeasurableS
   exact hg_seq_tendsto x
 #align measure_theory.strongly_measurable.strongly_measurable_of_measurable_space_le_on MeasureTheory.StronglyMeasurable.stronglyMeasurable_of_measurableSpace_le_on
 
-/- warning: measure_theory.strongly_measurable.exists_spanning_measurable_set_norm_le -> MeasureTheory.StronglyMeasurable.exists_spanning_measurableSet_norm_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : SeminormedAddCommGroup.{u2} β] {m : MeasurableSpace.{u1} α} {m0 : MeasurableSpace.{u1} α} (hm : LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.hasLe.{u1} α) m m0), (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) m f) -> (forall (μ : MeasureTheory.Measure.{u1} α m0) [_inst_3 : MeasureTheory.SigmaFinite.{u1} α m (MeasureTheory.Measure.trim.{u1} α m m0 μ hm)], Exists.{succ u1} (Nat -> (Set.{u1} α)) (fun (s : Nat -> (Set.{u1} α)) => And (forall (n : Nat), And (MeasurableSet.{u1} α m (s n)) (And (LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (s n)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s n)) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{u2} β (SeminormedAddCommGroup.toHasNorm.{u2} β _inst_2) (f x)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n))))) (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (i : Nat) => s i)) (Set.univ.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : SeminormedAddCommGroup.{u2} β] {m : MeasurableSpace.{u1} α} {m0 : MeasurableSpace.{u1} α} (hm : LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instLEMeasurableSpace.{u1} α) m m0), (MeasureTheory.StronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) m f) -> (forall (μ : MeasureTheory.Measure.{u1} α m0) [_inst_3 : MeasureTheory.SigmaFinite.{u1} α m (MeasureTheory.Measure.trim.{u1} α m m0 μ hm)], Exists.{succ u1} (Nat -> (Set.{u1} α)) (fun (s : Nat -> (Set.{u1} α)) => And (forall (n : Nat), And (MeasurableSet.{u1} α m (s n)) (And (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (s n)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n)) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{u2} β (SeminormedAddCommGroup.toNorm.{u2} β _inst_2) (f x)) (Nat.cast.{0} Real Real.natCast n))))) (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (i : Nat) => s i)) (Set.univ.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.exists_spanning_measurable_set_norm_le MeasureTheory.StronglyMeasurable.exists_spanning_measurableSet_norm_leₓ'. -/
 /-- If a function `f` is strongly measurable w.r.t. a sub-σ-algebra `m` and the measure is σ-finite
 on `m`, then there exists spanning measurable sets with finite measure on which `f` has bounded
 norm. In particular, `f` is integrable on each of those sets. -/
@@ -1387,12 +1060,6 @@ end StronglyMeasurable
 /-! ## Finitely strongly measurable functions -/
 
 
-/- warning: measure_theory.fin_strongly_measurable_zero -> MeasureTheory.finStronglyMeasurable_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : Zero.{u2} β] [_inst_3 : TopologicalSpace.{u2} β], MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 m (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_2))))) μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : Zero.{u1} β] [_inst_3 : TopologicalSpace.{u1} β], MeasureTheory.FinStronglyMeasurable.{u2, u1} α β _inst_3 _inst_2 m (OfNat.ofNat.{max u2 u1} (α -> β) 0 (Zero.toOfNat0.{max u2 u1} (α -> β) (Pi.instZero.{u2, u1} α (fun (a._@.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic._hyg.11808 : α) => β) (fun (i : α) => _inst_2)))) μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable_zero MeasureTheory.finStronglyMeasurable_zeroₓ'. -/
 theorem finStronglyMeasurable_zero {α β} {m : MeasurableSpace α} {μ : Measure α} [Zero β]
     [TopologicalSpace β] : FinStronglyMeasurable (0 : α → β) μ :=
   ⟨0, by
@@ -1425,12 +1092,6 @@ protected noncomputable def approx : ℕ → α →ₛ β :=
 #align measure_theory.fin_strongly_measurable.approx MeasureTheory.FinStronglyMeasurable.approx
 -/
 
-/- warning: measure_theory.fin_strongly_measurable.fin_support_approx -> MeasureTheory.FinStronglyMeasurable.fin_support_approx is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : Zero.{u2} β] [_inst_3 : TopologicalSpace.{u2} β] (hf : MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 m0 f μ) (n : Nat), LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Function.support.{u1, u2} α β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasureTheory.SimpleFunc.{u1, u2} α m0 β) (fun (_x : MeasureTheory.SimpleFunc.{u1, u2} α m0 β) => α -> β) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u2} α β m0) (MeasureTheory.FinStronglyMeasurable.approx.{u1, u2} α β m0 μ f _inst_2 _inst_3 hf n)))) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} {f : α -> β} [_inst_2 : Zero.{u1} β] [_inst_3 : TopologicalSpace.{u1} β] (hf : MeasureTheory.FinStronglyMeasurable.{u2, u1} α β _inst_3 _inst_2 m0 f μ) (n : Nat), LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m0 μ) (Function.support.{u2, u1} α β _inst_2 (MeasureTheory.SimpleFunc.toFun.{u2, u1} α m0 β (MeasureTheory.FinStronglyMeasurable.approx.{u2, u1} α β m0 μ f _inst_2 _inst_3 hf n)))) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.fin_support_approx MeasureTheory.FinStronglyMeasurable.fin_support_approxₓ'. -/
 protected theorem fin_support_approx : ∀ n, μ (support (hf.approx n)) < ∞ :=
   hf.choose_spec.1
 #align measure_theory.fin_strongly_measurable.fin_support_approx MeasureTheory.FinStronglyMeasurable.fin_support_approx
@@ -1450,12 +1111,6 @@ protected theorem stronglyMeasurable [Zero β] [TopologicalSpace β]
 #align measure_theory.fin_strongly_measurable.strongly_measurable MeasureTheory.FinStronglyMeasurable.stronglyMeasurable
 -/
 
-/- warning: measure_theory.fin_strongly_measurable.exists_set_sigma_finite -> MeasureTheory.FinStronglyMeasurable.exists_set_sigmaFinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : Zero.{u2} β] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : T2Space.{u2} β _inst_3], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 m0 f μ) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (MeasurableSet.{u1} α m0 t) (And (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t)) -> (Eq.{succ u2} β (f x) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_2))))) (MeasureTheory.SigmaFinite.{u1} α m0 (MeasureTheory.Measure.restrict.{u1} α m0 μ t)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : Zero.{u2} β] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : T2Space.{u2} β _inst_3], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 m0 f μ) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (MeasurableSet.{u1} α m0 t) (And (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t)) -> (Eq.{succ u2} β (f x) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_2)))) (MeasureTheory.SigmaFinite.{u1} α m0 (MeasureTheory.Measure.restrict.{u1} α m0 μ t)))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.exists_set_sigma_finite MeasureTheory.FinStronglyMeasurable.exists_set_sigmaFiniteₓ'. -/
 theorem exists_set_sigmaFinite [Zero β] [TopologicalSpace β] [T2Space β]
     (hf : FinStronglyMeasurable f μ) :
     ∃ t, MeasurableSet t ∧ (∀ x ∈ tᶜ, f x = 0) ∧ SigmaFinite (μ.restrict t) :=
@@ -1493,12 +1148,6 @@ section Arithmetic
 
 variable [TopologicalSpace β]
 
-/- warning: measure_theory.fin_strongly_measurable.mul -> MeasureTheory.FinStronglyMeasurable.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : MonoidWithZero.{u2} β] [_inst_4 : ContinuousMul.{u2} β _inst_2 (MulZeroClass.toHasMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3)))], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (MulZeroClass.toHasZero.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (MulZeroClass.toHasZero.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))) m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (MulZeroClass.toHasZero.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))) m0 (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : MonoidWithZero.{u2} β] [_inst_4 : ContinuousMul.{u2} β _inst_2 (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3)))], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (MonoidWithZero.toZero.{u2} β _inst_3) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (MonoidWithZero.toZero.{u2} β _inst_3) m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (MonoidWithZero.toZero.{u2} β _inst_3) m0 (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.mul MeasureTheory.FinStronglyMeasurable.mulₓ'. -/
 protected theorem mul [MonoidWithZero β] [ContinuousMul β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f * g) μ :=
   by
@@ -1509,12 +1158,6 @@ protected theorem mul [MonoidWithZero β] [ContinuousMul β] (hf : FinStronglyMe
   exact (measure_mono (support_mul_subset_left _ _)).trans_lt (hf.fin_support_approx n)
 #align measure_theory.fin_strongly_measurable.mul MeasureTheory.FinStronglyMeasurable.mul
 
-/- warning: measure_theory.fin_strongly_measurable.add -> MeasureTheory.FinStronglyMeasurable.add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : AddMonoid.{u2} β] [_inst_4 : ContinuousAdd.{u2} β _inst_2 (AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3))], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)) m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)) m0 (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHAdd.{max u1 u2} (α -> β) (Pi.instAdd.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : AddMonoid.{u2} β] [_inst_4 : ContinuousAdd.{u2} β _inst_2 (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3))], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_3) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_3) m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_3) m0 (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHAdd.{max u1 u2} (α -> β) (Pi.instAdd.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.add MeasureTheory.FinStronglyMeasurable.addₓ'. -/
 protected theorem add [AddMonoid β] [ContinuousAdd β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f + g) μ :=
   ⟨fun n => hf.approx n + hg.approx n, fun n =>
@@ -1524,12 +1167,6 @@ protected theorem add [AddMonoid β] [ContinuousAdd β] (hf : FinStronglyMeasura
     fun x => (hf.tendsto_approx x).add (hg.tendsto_approx x)⟩
 #align measure_theory.fin_strongly_measurable.add MeasureTheory.FinStronglyMeasurable.add
 
-/- warning: measure_theory.fin_strongly_measurable.neg -> MeasureTheory.FinStronglyMeasurable.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : AddGroup.{u2} β] [_inst_4 : TopologicalAddGroup.{u2} β _inst_2 _inst_3], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m0 (Neg.neg.{max u1 u2} (α -> β) (Pi.instNeg.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3))) f) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : AddGroup.{u2} β] [_inst_4 : TopologicalAddGroup.{u2} β _inst_2 _inst_3], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m0 (Neg.neg.{max u1 u2} (α -> β) (Pi.instNeg.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3))))) f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.neg MeasureTheory.FinStronglyMeasurable.negₓ'. -/
 protected theorem neg [AddGroup β] [TopologicalAddGroup β] (hf : FinStronglyMeasurable f μ) :
     FinStronglyMeasurable (-f) μ :=
   by
@@ -1539,12 +1176,6 @@ protected theorem neg [AddGroup β] [TopologicalAddGroup β] (hf : FinStronglyMe
   exact hf.fin_support_approx n
 #align measure_theory.fin_strongly_measurable.neg MeasureTheory.FinStronglyMeasurable.neg
 
-/- warning: measure_theory.fin_strongly_measurable.sub -> MeasureTheory.FinStronglyMeasurable.sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : AddGroup.{u2} β] [_inst_4 : ContinuousSub.{u2} β _inst_2 (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3))], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m0 (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : AddGroup.{u2} β] [_inst_4 : ContinuousSub.{u2} β _inst_2 (SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3))], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m0 (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.sub MeasureTheory.FinStronglyMeasurable.subₓ'. -/
 protected theorem sub [AddGroup β] [ContinuousSub β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f - g) μ :=
   ⟨fun n => hf.approx n - hg.approx n, fun n =>
@@ -1554,12 +1185,6 @@ protected theorem sub [AddGroup β] [ContinuousSub β] (hf : FinStronglyMeasurab
     fun x => (hf.tendsto_approx x).sub (hg.tendsto_approx x)⟩
 #align measure_theory.fin_strongly_measurable.sub MeasureTheory.FinStronglyMeasurable.sub
 
-/- warning: measure_theory.fin_strongly_measurable.const_smul -> MeasureTheory.FinStronglyMeasurable.const_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] {𝕜 : Type.{u3}} [_inst_3 : TopologicalSpace.{u3} 𝕜] [_inst_4 : AddMonoid.{u2} β] [_inst_5 : Monoid.{u3} 𝕜] [_inst_6 : DistribMulAction.{u3, u2} 𝕜 β _inst_5 _inst_4] [_inst_7 : ContinuousSMul.{u3, u2} 𝕜 β (SMulZeroClass.toHasSmul.{u3, u2} 𝕜 β (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) (DistribSMul.toSmulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6))) _inst_3 _inst_2], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) m0 f μ) -> (forall (c : 𝕜), MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) m0 (SMul.smul.{u3, max u1 u2} 𝕜 (α -> β) (Function.hasSMul.{u1, u3, u2} α 𝕜 β (SMulZeroClass.toHasSmul.{u3, u2} 𝕜 β (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) (DistribSMul.toSmulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6)))) c f) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] {𝕜 : Type.{u3}} [_inst_3 : TopologicalSpace.{u3} 𝕜] [_inst_4 : AddMonoid.{u2} β] [_inst_5 : Monoid.{u3} 𝕜] [_inst_6 : DistribMulAction.{u3, u2} 𝕜 β _inst_5 _inst_4] [_inst_7 : ContinuousSMul.{u3, u2} 𝕜 β (SMulZeroClass.toSMul.{u3, u2} 𝕜 β (AddMonoid.toZero.{u2} β _inst_4) (DistribSMul.toSMulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6))) _inst_3 _inst_2], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_4) m0 f μ) -> (forall (c : 𝕜), MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_4) m0 (HSMul.hSMul.{u3, max u1 u2, max u1 u2} 𝕜 (α -> β) (α -> β) (instHSMul.{u3, max u1 u2} 𝕜 (α -> β) (Pi.instSMul.{u1, u2, u3} α 𝕜 (fun (a._@.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic._hyg.13158 : α) => β) (fun (i : α) => SMulZeroClass.toSMul.{u3, u2} 𝕜 β (AddMonoid.toZero.{u2} β _inst_4) (DistribSMul.toSMulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6))))) c f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.const_smul MeasureTheory.FinStronglyMeasurable.const_smulₓ'. -/
 protected theorem const_smul {𝕜} [TopologicalSpace 𝕜] [AddMonoid β] [Monoid 𝕜]
     [DistribMulAction 𝕜 β] [ContinuousSMul 𝕜 β] (hf : FinStronglyMeasurable f μ) (c : 𝕜) :
     FinStronglyMeasurable (c • f) μ :=
@@ -1575,12 +1200,6 @@ section Order
 
 variable [TopologicalSpace β] [Zero β]
 
-/- warning: measure_theory.fin_strongly_measurable.sup -> MeasureTheory.FinStronglyMeasurable.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeSup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_2 (SemilatticeSup.toHasSup.{u2} β _inst_4)], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_4)) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeSup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_2 (SemilatticeSup.toSup.{u2} β _inst_4)], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 (Sup.sup.{max u2 u1} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_4)) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.sup MeasureTheory.FinStronglyMeasurable.supₓ'. -/
 protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f ⊔ g) μ :=
   by
@@ -1591,12 +1210,6 @@ protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : FinStronglyMe
   exact measure_union_lt_top_iff.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩
 #align measure_theory.fin_strongly_measurable.sup MeasureTheory.FinStronglyMeasurable.sup
 
-/- warning: measure_theory.fin_strongly_measurable.inf -> MeasureTheory.FinStronglyMeasurable.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeInf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_2 (SemilatticeInf.toHasInf.{u2} β _inst_4)], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 (Inf.inf.{max u1 u2} (α -> β) (Pi.hasInf.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeInf.toHasInf.{u2} β _inst_4)) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : α -> β} {g : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeInf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_2 (SemilatticeInf.toInf.{u2} β _inst_4)], (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 f μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 g μ) -> (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m0 (Inf.inf.{max u2 u1} (α -> β) (Pi.instInfForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeInf.toInf.{u2} β _inst_4)) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable.inf MeasureTheory.FinStronglyMeasurable.infₓ'. -/
 protected theorem inf [SemilatticeInf β] [ContinuousInf β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f ⊓ g) μ :=
   by
@@ -1611,12 +1224,6 @@ end Order
 
 end FinStronglyMeasurable
 
-/- warning: measure_theory.fin_strongly_measurable_iff_strongly_measurable_and_exists_set_sigma_finite -> MeasureTheory.finStronglyMeasurable_iff_stronglyMeasurable_and_exists_set_sigmaFinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : T2Space.{u2} β _inst_2] [_inst_4 : Zero.{u2} β] {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m}, Iff (MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_4 m f μ) (And (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (MeasurableSet.{u1} α m t) (And (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t)) -> (Eq.{succ u2} β (f x) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_4))))) (MeasureTheory.SigmaFinite.{u1} α m (MeasureTheory.Measure.restrict.{u1} α m μ t))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : T2Space.{u1} β _inst_2] [_inst_4 : Zero.{u1} β] {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m}, Iff (MeasureTheory.FinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_4 m f μ) (And (MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m f) (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (MeasurableSet.{u2} α m t) (And (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) t)) -> (Eq.{succ u1} β (f x) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_4)))) (MeasureTheory.SigmaFinite.{u2} α m (MeasureTheory.Measure.restrict.{u2} α m μ t))))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable_iff_strongly_measurable_and_exists_set_sigma_finite MeasureTheory.finStronglyMeasurable_iff_stronglyMeasurable_and_exists_set_sigmaFiniteₓ'. -/
 theorem finStronglyMeasurable_iff_stronglyMeasurable_and_exists_set_sigmaFinite {α β} {f : α → β}
     [TopologicalSpace β] [T2Space β] [Zero β] {m : MeasurableSpace α} {μ : Measure α} :
     FinStronglyMeasurable f μ ↔
@@ -1627,12 +1234,6 @@ theorem finStronglyMeasurable_iff_stronglyMeasurable_and_exists_set_sigmaFinite 
       hf.2.choose_spec.2.2⟩
 #align measure_theory.fin_strongly_measurable_iff_strongly_measurable_and_exists_set_sigma_finite MeasureTheory.finStronglyMeasurable_iff_stronglyMeasurable_and_exists_set_sigmaFinite
 
-/- warning: measure_theory.ae_fin_strongly_measurable_zero -> MeasureTheory.aefinStronglyMeasurable_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} (μ : MeasureTheory.Measure.{u1} α m) [_inst_2 : Zero.{u2} β] [_inst_3 : TopologicalSpace.{u2} β], MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 m (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_2))))) μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m) [_inst_2 : Zero.{u1} β] [_inst_3 : TopologicalSpace.{u1} β], MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α β _inst_3 _inst_2 m (OfNat.ofNat.{max u2 u1} (α -> β) 0 (Zero.toOfNat0.{max u2 u1} (α -> β) (Pi.instZero.{u2, u1} α (fun (a._@.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic._hyg.13622 : α) => β) (fun (i : α) => _inst_2)))) μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable_zero MeasureTheory.aefinStronglyMeasurable_zeroₓ'. -/
 theorem aefinStronglyMeasurable_zero {α β} {m : MeasurableSpace α} (μ : Measure α) [Zero β]
     [TopologicalSpace β] : AEFinStronglyMeasurable (0 : α → β) μ :=
   ⟨0, finStronglyMeasurable_zero, EventuallyEq.rfl⟩
@@ -1641,23 +1242,11 @@ theorem aefinStronglyMeasurable_zero {α β} {m : MeasurableSpace α} (μ : Meas
 /-! ## Almost everywhere strongly measurable functions -/
 
 
-/- warning: measure_theory.ae_strongly_measurable_const -> MeasureTheory.aestronglyMeasurable_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {b : β}, MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (a : α) => b) μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {b : β}, MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m (fun (a : α) => b) μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable_const MeasureTheory.aestronglyMeasurable_constₓ'. -/
 theorem aestronglyMeasurable_const {α β} {m : MeasurableSpace α} {μ : Measure α}
     [TopologicalSpace β] {b : β} : AEStronglyMeasurable (fun a : α => b) μ :=
   stronglyMeasurable_const.AEStronglyMeasurable
 #align measure_theory.ae_strongly_measurable_const MeasureTheory.aestronglyMeasurable_const
 
-/- warning: measure_theory.ae_strongly_measurable_one -> MeasureTheory.aestronglyMeasurable_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : One.{u2} β], MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (OfNat.ofNat.{max u1 u2} (α -> β) 1 (OfNat.mk.{max u1 u2} (α -> β) 1 (One.one.{max u1 u2} (α -> β) (Pi.instOne.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_3))))) μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : One.{u1} β], MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m (OfNat.ofNat.{max u2 u1} (α -> β) 1 (One.toOfNat1.{max u2 u1} (α -> β) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic._hyg.13692 : α) => β) (fun (i : α) => _inst_3)))) μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable_one MeasureTheory.aestronglyMeasurable_oneₓ'. -/
 @[to_additive]
 theorem aestronglyMeasurable_one {α β} {m : MeasurableSpace α} {μ : Measure α} [TopologicalSpace β]
     [One β] : AEStronglyMeasurable (1 : α → β) μ :=
@@ -1665,36 +1254,18 @@ theorem aestronglyMeasurable_one {α β} {m : MeasurableSpace α} {μ : Measure 
 #align measure_theory.ae_strongly_measurable_one MeasureTheory.aestronglyMeasurable_one
 #align measure_theory.ae_strongly_measurable_zero MeasureTheory.aestronglyMeasurable_zero
 
-/- warning: measure_theory.subsingleton.ae_strongly_measurable -> MeasureTheory.Subsingleton.aestronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Subsingleton.{succ u2} β] {μ : MeasureTheory.Measure.{u1} α m} (f : α -> β), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : Subsingleton.{succ u1} β] {μ : MeasureTheory.Measure.{u2} α m} (f : α -> β), MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.subsingleton.ae_strongly_measurable MeasureTheory.Subsingleton.aestronglyMeasurableₓ'. -/
 @[simp]
 theorem Subsingleton.aestronglyMeasurable {m : MeasurableSpace α} [TopologicalSpace β]
     [Subsingleton β] {μ : Measure α} (f : α → β) : AEStronglyMeasurable f μ :=
   (Subsingleton.stronglyMeasurable f).AEStronglyMeasurable
 #align measure_theory.subsingleton.ae_strongly_measurable MeasureTheory.Subsingleton.aestronglyMeasurable
 
-/- warning: measure_theory.subsingleton.ae_strongly_measurable' -> MeasureTheory.Subsingleton.aestronglyMeasurable' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : Subsingleton.{succ u1} α] {μ : MeasureTheory.Measure.{u1} α m} (f : α -> β), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : Subsingleton.{succ u2} α] {μ : MeasureTheory.Measure.{u2} α m} (f : α -> β), MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.subsingleton.ae_strongly_measurable' MeasureTheory.Subsingleton.aestronglyMeasurable'ₓ'. -/
 @[simp]
 theorem Subsingleton.aestronglyMeasurable' {m : MeasurableSpace α} [TopologicalSpace β]
     [Subsingleton α] {μ : Measure α} (f : α → β) : AEStronglyMeasurable f μ :=
   (Subsingleton.stronglyMeasurable' f).AEStronglyMeasurable
 #align measure_theory.subsingleton.ae_strongly_measurable' MeasureTheory.Subsingleton.aestronglyMeasurable'
 
-/- warning: measure_theory.ae_strongly_measurable_zero_measure -> MeasureTheory.aestronglyMeasurable_zero_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : TopologicalSpace.{u2} β] (f : α -> β), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_3 _inst_2 f (OfNat.ofNat.{u1} (MeasureTheory.Measure.{u1} α _inst_2) 0 (OfNat.mk.{u1} (MeasureTheory.Measure.{u1} α _inst_2) 0 (Zero.zero.{u1} (MeasureTheory.Measure.{u1} α _inst_2) (MeasureTheory.Measure.instZero.{u1} α _inst_2))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : TopologicalSpace.{u1} β] (f : α -> β), MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_3 _inst_2 f (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α _inst_2) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α _inst_2) (MeasureTheory.Measure.instZero.{u2} α _inst_2)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable_zero_measure MeasureTheory.aestronglyMeasurable_zero_measureₓ'. -/
 @[simp]
 theorem aestronglyMeasurable_zero_measure [MeasurableSpace α] [TopologicalSpace β] (f : α → β) :
     AEStronglyMeasurable f (0 : Measure α) :=
@@ -1704,12 +1275,6 @@ theorem aestronglyMeasurable_zero_measure [MeasurableSpace α] [TopologicalSpace
   exact ⟨fun x => f default, strongly_measurable_const, rfl⟩
 #align measure_theory.ae_strongly_measurable_zero_measure MeasureTheory.aestronglyMeasurable_zero_measure
 
-/- warning: measure_theory.simple_func.ae_strongly_measurable -> MeasureTheory.SimpleFunc.aestronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] (f : MeasureTheory.SimpleFunc.{u1, u2} α m β), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (fun (_x : MeasureTheory.SimpleFunc.{u1, u2} α m β) => α -> β) (MeasureTheory.SimpleFunc.instCoeFun.{u1, u2} α β m) f) μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] (f : MeasureTheory.SimpleFunc.{u2, u1} α m β), MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m (MeasureTheory.SimpleFunc.toFun.{u2, u1} α m β f) μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.ae_strongly_measurable MeasureTheory.SimpleFunc.aestronglyMeasurableₓ'. -/
 theorem SimpleFunc.aestronglyMeasurable {m : MeasurableSpace α} {μ : Measure α} [TopologicalSpace β]
     (f : α →ₛ β) : AEStronglyMeasurable f μ :=
   f.StronglyMeasurable.AEStronglyMeasurable
@@ -1730,12 +1295,6 @@ protected noncomputable def mk (f : α → β) (hf : AEStronglyMeasurable f μ) 
 #align measure_theory.ae_strongly_measurable.mk MeasureTheory.AEStronglyMeasurable.mk
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.strongly_measurable_mk -> MeasureTheory.AEStronglyMeasurable.stronglyMeasurable_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} (hf : MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (MeasureTheory.AEStronglyMeasurable.mk.{u1, u2} α β m μ _inst_2 f hf)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} (hf : MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ), MeasureTheory.StronglyMeasurable.{u2, u1} α β _inst_2 m (MeasureTheory.AEStronglyMeasurable.mk.{u2, u1} α β m μ _inst_2 f hf)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.strongly_measurable_mk MeasureTheory.AEStronglyMeasurable.stronglyMeasurable_mkₓ'. -/
 theorem stronglyMeasurable_mk (hf : AEStronglyMeasurable f μ) : StronglyMeasurable (hf.mk f) :=
   hf.choose_spec.1
 #align measure_theory.ae_strongly_measurable.strongly_measurable_mk MeasureTheory.AEStronglyMeasurable.stronglyMeasurable_mk
@@ -1747,12 +1306,6 @@ theorem measurable_mk [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpac
 #align measure_theory.ae_strongly_measurable.measurable_mk MeasureTheory.AEStronglyMeasurable.measurable_mk
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.ae_eq_mk -> MeasureTheory.AEStronglyMeasurable.ae_eq_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} (hf : MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ), Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m μ) f (MeasureTheory.AEStronglyMeasurable.mk.{u1, u2} α β m μ _inst_2 f hf)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} (hf : MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ), Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m μ) f (MeasureTheory.AEStronglyMeasurable.mk.{u2, u1} α β m μ _inst_2 f hf)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.ae_eq_mk MeasureTheory.AEStronglyMeasurable.ae_eq_mkₓ'. -/
 theorem ae_eq_mk (hf : AEStronglyMeasurable f μ) : f =ᵐ[μ] hf.mk f :=
   hf.choose_spec.2
 #align measure_theory.ae_strongly_measurable.ae_eq_mk MeasureTheory.AEStronglyMeasurable.ae_eq_mk
@@ -1767,88 +1320,40 @@ protected theorem aemeasurable {β} [MeasurableSpace β] [TopologicalSpace β]
 
 end Mk
 
-/- warning: measure_theory.ae_strongly_measurable.congr -> MeasureTheory.AEStronglyMeasurable.congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m μ) f g) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {g : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) -> (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m μ) f g) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m g μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.congr MeasureTheory.AEStronglyMeasurable.congrₓ'. -/
 theorem congr (hf : AEStronglyMeasurable f μ) (h : f =ᵐ[μ] g) : AEStronglyMeasurable g μ :=
   ⟨hf.mk f, hf.stronglyMeasurable_mk, h.symm.trans hf.ae_eq_mk⟩
 #align measure_theory.ae_strongly_measurable.congr MeasureTheory.AEStronglyMeasurable.congr
 
-/- warning: ae_strongly_measurable_congr -> aestronglyMeasurable_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m μ) f g) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m μ) f g) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m g μ))
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_congr aestronglyMeasurable_congrₓ'. -/
 theorem aestronglyMeasurable_congr (h : f =ᵐ[μ] g) :
     AEStronglyMeasurable f μ ↔ AEStronglyMeasurable g μ :=
   ⟨fun hf => hf.congr h, fun hg => hg.congr h.symm⟩
 #align ae_strongly_measurable_congr aestronglyMeasurable_congr
 
-/- warning: measure_theory.ae_strongly_measurable.mono_measure -> MeasureTheory.AEStronglyMeasurable.mono_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {ν : MeasureTheory.Measure.{u1} α m}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toHasLe.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) ν μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f ν)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {ν : MeasureTheory.Measure.{u2} α m}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) -> (LE.le.{u2} (MeasureTheory.Measure.{u2} α m) (Preorder.toLE.{u2} (MeasureTheory.Measure.{u2} α m) (PartialOrder.toPreorder.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instPartialOrder.{u2} α m))) ν μ) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.mono_measure MeasureTheory.AEStronglyMeasurable.mono_measureₓ'. -/
 theorem mono_measure {ν : Measure α} (hf : AEStronglyMeasurable f μ) (h : ν ≤ μ) :
     AEStronglyMeasurable f ν :=
   ⟨hf.mk f, hf.stronglyMeasurable_mk, Eventually.filter_mono (ae_mono h) hf.ae_eq_mk⟩
 #align measure_theory.ae_strongly_measurable.mono_measure MeasureTheory.AEStronglyMeasurable.mono_measure
 
-/- warning: measure_theory.ae_strongly_measurable.mono' -> MeasureTheory.AEStronglyMeasurable.mono' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {ν : MeasureTheory.Measure.{u1} α m}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.Measure.AbsolutelyContinuous.{u1} α m ν μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f ν)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {ν : MeasureTheory.Measure.{u2} α m}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) -> (MeasureTheory.Measure.AbsolutelyContinuous.{u2} α m ν μ) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.mono' MeasureTheory.AEStronglyMeasurable.mono'ₓ'. -/
 protected theorem mono' {ν : Measure α} (h : AEStronglyMeasurable f μ) (h' : ν ≪ μ) :
     AEStronglyMeasurable f ν :=
   ⟨h.mk f, h.stronglyMeasurable_mk, h' h.ae_eq_mk⟩
 #align measure_theory.ae_strongly_measurable.mono' MeasureTheory.AEStronglyMeasurable.mono'
 
-/- warning: measure_theory.ae_strongly_measurable.mono_set -> MeasureTheory.AEStronglyMeasurable.mono_set is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ t)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s t) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ t)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ s))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.mono_set MeasureTheory.AEStronglyMeasurable.mono_setₓ'. -/
 theorem mono_set {s t} (h : s ⊆ t) (ht : AEStronglyMeasurable f (μ.restrict t)) :
     AEStronglyMeasurable f (μ.restrict s) :=
   ht.mono_measure (restrict_mono h le_rfl)
 #align measure_theory.ae_strongly_measurable.mono_set MeasureTheory.AEStronglyMeasurable.mono_set
 
-/- warning: measure_theory.ae_strongly_measurable.restrict -> MeasureTheory.AEStronglyMeasurable.restrict is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (forall {s : Set.{u1} α}, MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) -> (forall {s : Set.{u2} α}, MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ s))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.restrict MeasureTheory.AEStronglyMeasurable.restrictₓ'. -/
 protected theorem restrict (hfm : AEStronglyMeasurable f μ) {s} :
     AEStronglyMeasurable f (μ.restrict s) :=
   hfm.mono_measure Measure.restrict_le_self
 #align measure_theory.ae_strongly_measurable.restrict MeasureTheory.AEStronglyMeasurable.restrict
 
-/- warning: measure_theory.ae_strongly_measurable.ae_mem_imp_eq_mk -> MeasureTheory.AEStronglyMeasurable.ae_mem_imp_eq_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α} (h : MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ s)), Filter.Eventually.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Eq.{succ u2} β (f x) (MeasureTheory.AEStronglyMeasurable.mk.{u1, u2} α β m (MeasureTheory.Measure.restrict.{u1} α m μ s) _inst_2 f h x))) (MeasureTheory.Measure.ae.{u1} α m μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {s : Set.{u2} α} (h : MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ s)), Filter.Eventually.{u2} α (fun (x : α) => (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Eq.{succ u1} β (f x) (MeasureTheory.AEStronglyMeasurable.mk.{u2, u1} α β m (MeasureTheory.Measure.restrict.{u2} α m μ s) _inst_2 f h x))) (MeasureTheory.Measure.ae.{u2} α m μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.ae_mem_imp_eq_mk MeasureTheory.AEStronglyMeasurable.ae_mem_imp_eq_mkₓ'. -/
 theorem ae_mem_imp_eq_mk {s} (h : AEStronglyMeasurable f (μ.restrict s)) :
     ∀ᵐ x ∂μ, x ∈ s → f x = h.mk f x :=
   ae_imp_of_ae_restrict h.ae_eq_mk
 #align measure_theory.ae_strongly_measurable.ae_mem_imp_eq_mk MeasureTheory.AEStronglyMeasurable.ae_mem_imp_eq_mk
 
-/- warning: continuous.comp_ae_strongly_measurable -> Continuous.comp_aestronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] {g : β -> γ} {f : α -> β}, (Continuous.{u2, u3} β γ _inst_2 _inst_3 g) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u3} α γ _inst_3 m (fun (x : α) => g (f x)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] {g : β -> γ} {f : α -> β}, (Continuous.{u3, u2} β γ _inst_2 _inst_3 g) -> (MeasureTheory.AEStronglyMeasurable.{u1, u3} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α γ _inst_3 m (fun (x : α) => g (f x)) μ)
-Case conversion may be inaccurate. Consider using '#align continuous.comp_ae_strongly_measurable Continuous.comp_aestronglyMeasurableₓ'. -/
 /-- The composition of a continuous function and an ae strongly measurable function is ae strongly
 measurable. -/
 theorem Continuous.comp_aestronglyMeasurable {g : β → γ} {f : α → β} (hg : Continuous g)
@@ -1856,12 +1361,6 @@ theorem Continuous.comp_aestronglyMeasurable {g : β → γ} {f : α → β} (hg
   ⟨_, hg.comp_stronglyMeasurable hf.stronglyMeasurable_mk, EventuallyEq.fun_comp hf.ae_eq_mk g⟩
 #align continuous.comp_ae_strongly_measurable Continuous.comp_aestronglyMeasurable
 
-/- warning: continuous.ae_strongly_measurable -> Continuous.aestronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : TopologicalSpace.{u1} α] [_inst_5 : OpensMeasurableSpace.{u1} α _inst_4 m] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_7 : SecondCountableTopologyEither.{u1, u2} α β _inst_4 _inst_2], (Continuous.{u1, u2} α β _inst_4 _inst_2 f) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} [_inst_4 : TopologicalSpace.{u2} α] [_inst_5 : OpensMeasurableSpace.{u2} α _inst_4 m] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] [_inst_7 : SecondCountableTopologyEither.{u2, u1} α β _inst_4 _inst_2], (Continuous.{u2, u1} α β _inst_4 _inst_2 f) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ)
-Case conversion may be inaccurate. Consider using '#align continuous.ae_strongly_measurable Continuous.aestronglyMeasurableₓ'. -/
 /-- A continuous function from `α` to `β` is ae strongly measurable when one of the two spaces is
 second countable. -/
 theorem Continuous.aestronglyMeasurable [TopologicalSpace α] [OpensMeasurableSpace α]
@@ -1870,24 +1369,12 @@ theorem Continuous.aestronglyMeasurable [TopologicalSpace α] [OpensMeasurableSp
   hf.StronglyMeasurable.AEStronglyMeasurable
 #align continuous.ae_strongly_measurable Continuous.aestronglyMeasurable
 
-/- warning: measure_theory.ae_strongly_measurable.prod_mk -> MeasureTheory.AEStronglyMeasurable.prod_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] {f : α -> β} {g : α -> γ}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u3} α γ _inst_3 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, max u2 u3} α (Prod.{u2, u3} β γ) (Prod.topologicalSpace.{u2, u3} β γ _inst_2 _inst_3) m (fun (x : α) => Prod.mk.{u2, u3} β γ (f x) (g x)) μ)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {m : MeasurableSpace.{u3} α} {μ : MeasureTheory.Measure.{u3} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u1} γ] {f : α -> β} {g : α -> γ}, (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u3, u1} α γ _inst_3 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u3, max u1 u2} α (Prod.{u2, u1} β γ) (instTopologicalSpaceProd.{u2, u1} β γ _inst_2 _inst_3) m (fun (x : α) => Prod.mk.{u2, u1} β γ (f x) (g x)) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.prod_mk MeasureTheory.AEStronglyMeasurable.prod_mkₓ'. -/
 protected theorem prod_mk {f : α → β} {g : α → γ} (hf : AEStronglyMeasurable f μ)
     (hg : AEStronglyMeasurable g μ) : AEStronglyMeasurable (fun x => (f x, g x)) μ :=
   ⟨fun x => (hf.mk f x, hg.mk g x), hf.stronglyMeasurable_mk.prod_mk hg.stronglyMeasurable_mk,
     hf.ae_eq_mk.prod_mk hg.ae_eq_mk⟩
 #align measure_theory.ae_strongly_measurable.prod_mk MeasureTheory.AEStronglyMeasurable.prod_mk
 
-/- warning: measurable.ae_strongly_measurable -> Measurable.aestronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_4 : MeasurableSpace.{u2} β] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_6 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_2] [_inst_7 : OpensMeasurableSpace.{u2} β _inst_2 _inst_4], (Measurable.{u1, u2} α β m _inst_4 f) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_4 : MeasurableSpace.{u1} β] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] [_inst_6 : TopologicalSpace.SecondCountableTopology.{u1} β _inst_2] [_inst_7 : OpensMeasurableSpace.{u1} β _inst_2 _inst_4], (Measurable.{u2, u1} α β m _inst_4 f) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ)
-Case conversion may be inaccurate. Consider using '#align measurable.ae_strongly_measurable Measurable.aestronglyMeasurableₓ'. -/
 /-- In a space with second countable topology, measurable implies ae strongly measurable. -/
 theorem Measurable.aestronglyMeasurable {m : MeasurableSpace α} {μ : Measure α} [MeasurableSpace β]
     [PseudoMetrizableSpace β] [SecondCountableTopology β] [OpensMeasurableSpace β]
@@ -1925,12 +1412,6 @@ protected theorem const_mul [Mul β] [ContinuousMul β] (hf : AEStronglyMeasurab
 #align measure_theory.ae_strongly_measurable.const_add MeasureTheory.AEStronglyMeasurable.const_add
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.inv -> MeasureTheory.AEStronglyMeasurable.inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : Group.{u2} β] [_inst_5 : TopologicalGroup.{u2} β _inst_2 _inst_4], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (Inv.inv.{max u1 u2} (α -> β) (Pi.instInv.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => DivInvMonoid.toHasInv.{u2} β (Group.toDivInvMonoid.{u2} β _inst_4))) f) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : Group.{u2} β] [_inst_5 : TopologicalGroup.{u2} β _inst_2 _inst_4], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (Inv.inv.{max u2 u1} (α -> β) (Pi.instInv.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => InvOneClass.toInv.{u2} β (DivInvOneMonoid.toInvOneClass.{u2} β (DivisionMonoid.toDivInvOneMonoid.{u2} β (Group.toDivisionMonoid.{u2} β _inst_4))))) f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.inv MeasureTheory.AEStronglyMeasurable.invₓ'. -/
 @[to_additive]
 protected theorem inv [Group β] [TopologicalGroup β] (hf : AEStronglyMeasurable f μ) :
     AEStronglyMeasurable f⁻¹ μ :=
@@ -1938,12 +1419,6 @@ protected theorem inv [Group β] [TopologicalGroup β] (hf : AEStronglyMeasurabl
 #align measure_theory.ae_strongly_measurable.inv MeasureTheory.AEStronglyMeasurable.inv
 #align measure_theory.ae_strongly_measurable.neg MeasureTheory.AEStronglyMeasurable.neg
 
-/- warning: measure_theory.ae_strongly_measurable.div -> MeasureTheory.AEStronglyMeasurable.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_4 : Group.{u2} β] [_inst_5 : TopologicalGroup.{u2} β _inst_2 _inst_4], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (HDiv.hDiv.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHDiv.{max u1 u2} (α -> β) (Pi.instDiv.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => DivInvMonoid.toHasDiv.{u2} β (Group.toDivInvMonoid.{u2} β _inst_4)))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_4 : Group.{u2} β] [_inst_5 : TopologicalGroup.{u2} β _inst_2 _inst_4], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (HDiv.hDiv.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHDiv.{max u1 u2} (α -> β) (Pi.instDiv.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => DivInvMonoid.toDiv.{u2} β (Group.toDivInvMonoid.{u2} β _inst_4)))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.div MeasureTheory.AEStronglyMeasurable.divₓ'. -/
 @[to_additive]
 protected theorem div [Group β] [TopologicalGroup β] (hf : AEStronglyMeasurable f μ)
     (hg : AEStronglyMeasurable g μ) : AEStronglyMeasurable (f / g) μ :=
@@ -1989,24 +1464,12 @@ end Arithmetic
 
 section Order
 
-/- warning: measure_theory.ae_strongly_measurable.sup -> MeasureTheory.AEStronglyMeasurable.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_4 : SemilatticeSup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_2 (SemilatticeSup.toHasSup.{u2} β _inst_4)], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_4)) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_4 : SemilatticeSup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_2 (SemilatticeSup.toSup.{u2} β _inst_4)], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (Sup.sup.{max u2 u1} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_4)) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.sup MeasureTheory.AEStronglyMeasurable.supₓ'. -/
 protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : AEStronglyMeasurable f μ)
     (hg : AEStronglyMeasurable g μ) : AEStronglyMeasurable (f ⊔ g) μ :=
   ⟨hf.mk f ⊔ hg.mk g, hf.stronglyMeasurable_mk.sup hg.stronglyMeasurable_mk,
     hf.ae_eq_mk.sup hg.ae_eq_mk⟩
 #align measure_theory.ae_strongly_measurable.sup MeasureTheory.AEStronglyMeasurable.sup
 
-/- warning: measure_theory.ae_strongly_measurable.inf -> MeasureTheory.AEStronglyMeasurable.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_4 : SemilatticeInf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_2 (SemilatticeInf.toHasInf.{u2} β _inst_4)], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (Inf.inf.{max u1 u2} (α -> β) (Pi.hasInf.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeInf.toHasInf.{u2} β _inst_4)) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_4 : SemilatticeInf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_2 (SemilatticeInf.toInf.{u2} β _inst_4)], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (Inf.inf.{max u2 u1} (α -> β) (Pi.instInfForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeInf.toInf.{u2} β _inst_4)) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.inf MeasureTheory.AEStronglyMeasurable.infₓ'. -/
 protected theorem inf [SemilatticeInf β] [ContinuousInf β] (hf : AEStronglyMeasurable f μ)
     (hg : AEStronglyMeasurable g μ) : AEStronglyMeasurable (f ⊓ g) μ :=
   ⟨hf.mk f ⊓ hg.mk g, hf.stronglyMeasurable_mk.inf hg.stronglyMeasurable_mk,
@@ -2024,12 +1487,6 @@ section Monoid
 
 variable {M : Type _} [Monoid M] [TopologicalSpace M] [ContinuousMul M]
 
-/- warning: list.ae_strongly_measurable_prod' -> List.aestronglyMeasurable_prod' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {M : Type.{u2}} [_inst_4 : Monoid.{u2} M] [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ContinuousMul.{u2} M _inst_5 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_4))] (l : List.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (List.{max u1 u2} (α -> M)) (List.hasMem.{max u1 u2} (α -> M)) f l) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (List.prod.{max u1 u2} (α -> M) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_4))) (Pi.instOne.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M _inst_4))) l) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {M : Type.{u1}} [_inst_4 : Monoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ContinuousMul.{u1} M _inst_5 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_4))] (l : List.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (List.{max u2 u1} (α -> M)) (List.instMembershipList.{max u2 u1} (α -> M)) f l) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (List.prod.{max u2 u1} (α -> M) (Pi.instMul.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_4))) (Pi.instOne.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Monoid.toOne.{u1} M _inst_4)) l) μ)
-Case conversion may be inaccurate. Consider using '#align list.ae_strongly_measurable_prod' List.aestronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem List.aestronglyMeasurable_prod' (l : List (α → M))
     (hl : ∀ f ∈ l, AEStronglyMeasurable f μ) : AEStronglyMeasurable l.Prod μ :=
@@ -2041,12 +1498,6 @@ theorem List.aestronglyMeasurable_prod' (l : List (α → M))
 #align list.ae_strongly_measurable_prod' List.aestronglyMeasurable_prod'
 #align list.ae_strongly_measurable_sum' List.aestronglyMeasurable_sum'
 
-/- warning: list.ae_strongly_measurable_prod -> List.aestronglyMeasurable_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {M : Type.{u2}} [_inst_4 : Monoid.{u2} M] [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ContinuousMul.{u2} M _inst_5 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_4))] (l : List.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (List.{max u1 u2} (α -> M)) (List.hasMem.{max u1 u2} (α -> M)) f l) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (fun (x : α) => List.prod.{u2} M (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_4)) (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M _inst_4)) (List.map.{max u1 u2, u2} (α -> M) M (fun (f : α -> M) => f x) l)) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {M : Type.{u1}} [_inst_4 : Monoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ContinuousMul.{u1} M _inst_5 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_4))] (l : List.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (List.{max u2 u1} (α -> M)) (List.instMembershipList.{max u2 u1} (α -> M)) f l) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (fun (x : α) => List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_4)) (Monoid.toOne.{u1} M _inst_4) (List.map.{max u2 u1, u1} (α -> M) M (fun (f : α -> M) => f x) l)) μ)
-Case conversion may be inaccurate. Consider using '#align list.ae_strongly_measurable_prod List.aestronglyMeasurable_prodₓ'. -/
 @[to_additive]
 theorem List.aestronglyMeasurable_prod (l : List (α → M)) (hl : ∀ f ∈ l, AEStronglyMeasurable f μ) :
     AEStronglyMeasurable (fun x => (l.map fun f : α → M => f x).Prod) μ := by
@@ -2060,12 +1511,6 @@ section CommMonoid
 
 variable {M : Type _} [CommMonoid M] [TopologicalSpace M] [ContinuousMul M]
 
-/- warning: multiset.ae_strongly_measurable_prod' -> Multiset.aestronglyMeasurable_prod' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {M : Type.{u2}} [_inst_4 : CommMonoid.{u2} M] [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ContinuousMul.{u2} M _inst_5 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4)))] (l : Multiset.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (Multiset.{max u1 u2} (α -> M)) (Multiset.hasMem.{max u1 u2} (α -> M)) f l) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (Multiset.prod.{max u1 u2} (α -> M) (Pi.commMonoid.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_4)) l) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {M : Type.{u1}} [_inst_4 : CommMonoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ContinuousMul.{u1} M _inst_5 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))] (l : Multiset.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (Multiset.{max u2 u1} (α -> M)) (Multiset.instMembershipMultiset.{max u2 u1} (α -> M)) f l) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (Multiset.prod.{max u2 u1} (α -> M) (Pi.commMonoid.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_4)) l) μ)
-Case conversion may be inaccurate. Consider using '#align multiset.ae_strongly_measurable_prod' Multiset.aestronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem Multiset.aestronglyMeasurable_prod' (l : Multiset (α → M))
     (hl : ∀ f ∈ l, AEStronglyMeasurable f μ) : AEStronglyMeasurable l.Prod μ := by
@@ -2073,12 +1518,6 @@ theorem Multiset.aestronglyMeasurable_prod' (l : Multiset (α → M))
 #align multiset.ae_strongly_measurable_prod' Multiset.aestronglyMeasurable_prod'
 #align multiset.ae_strongly_measurable_sum' Multiset.aestronglyMeasurable_sum'
 
-/- warning: multiset.ae_strongly_measurable_prod -> Multiset.aestronglyMeasurable_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {M : Type.{u2}} [_inst_4 : CommMonoid.{u2} M] [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ContinuousMul.{u2} M _inst_5 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4)))] (s : Multiset.{max u1 u2} (α -> M)), (forall (f : α -> M), (Membership.Mem.{max u1 u2, max u1 u2} (α -> M) (Multiset.{max u1 u2} (α -> M)) (Multiset.hasMem.{max u1 u2} (α -> M)) f s) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (fun (x : α) => Multiset.prod.{u2} M _inst_4 (Multiset.map.{max u1 u2, u2} (α -> M) M (fun (f : α -> M) => f x) s)) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {M : Type.{u1}} [_inst_4 : CommMonoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ContinuousMul.{u1} M _inst_5 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))] (s : Multiset.{max u2 u1} (α -> M)), (forall (f : α -> M), (Membership.mem.{max u2 u1, max u2 u1} (α -> M) (Multiset.{max u2 u1} (α -> M)) (Multiset.instMembershipMultiset.{max u2 u1} (α -> M)) f s) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m f μ)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (fun (x : α) => Multiset.prod.{u1} M _inst_4 (Multiset.map.{max u2 u1, u1} (α -> M) M (fun (f : α -> M) => f x) s)) μ)
-Case conversion may be inaccurate. Consider using '#align multiset.ae_strongly_measurable_prod Multiset.aestronglyMeasurable_prodₓ'. -/
 @[to_additive]
 theorem Multiset.aestronglyMeasurable_prod (s : Multiset (α → M))
     (hs : ∀ f ∈ s, AEStronglyMeasurable f μ) :
@@ -2087,12 +1526,6 @@ theorem Multiset.aestronglyMeasurable_prod (s : Multiset (α → M))
 #align multiset.ae_strongly_measurable_prod Multiset.aestronglyMeasurable_prod
 #align multiset.ae_strongly_measurable_sum Multiset.aestronglyMeasurable_sum
 
-/- warning: finset.ae_strongly_measurable_prod' -> Finset.aestronglyMeasurable_prod' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {M : Type.{u2}} [_inst_4 : CommMonoid.{u2} M] [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ContinuousMul.{u2} M _inst_5 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4)))] {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (f i) μ)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (Finset.prod.{max u1 u2, u3} (α -> M) ι (Pi.commMonoid.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_4)) s (fun (i : ι) => f i)) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {M : Type.{u1}} [_inst_4 : CommMonoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ContinuousMul.{u1} M _inst_5 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))] {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (f i) μ)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (Finset.prod.{max u1 u2, u3} (α -> M) ι (Pi.commMonoid.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_4)) s (fun (i : ι) => f i)) μ)
-Case conversion may be inaccurate. Consider using '#align finset.ae_strongly_measurable_prod' Finset.aestronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem Finset.aestronglyMeasurable_prod' {ι : Type _} {f : ι → α → M} (s : Finset ι)
     (hf : ∀ i ∈ s, AEStronglyMeasurable (f i) μ) : AEStronglyMeasurable (∏ i in s, f i) μ :=
@@ -2102,12 +1535,6 @@ theorem Finset.aestronglyMeasurable_prod' {ι : Type _} {f : ι → α → M} (s
 #align finset.ae_strongly_measurable_prod' Finset.aestronglyMeasurable_prod'
 #align finset.ae_strongly_measurable_sum' Finset.aestronglyMeasurable_sum'
 
-/- warning: finset.ae_strongly_measurable_prod -> Finset.aestronglyMeasurable_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {M : Type.{u2}} [_inst_4 : CommMonoid.{u2} M] [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ContinuousMul.{u2} M _inst_5 (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4)))] {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (f i) μ)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α M _inst_5 m (fun (a : α) => Finset.prod.{u2, u3} M ι _inst_4 s (fun (i : ι) => f i a)) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {M : Type.{u1}} [_inst_4 : CommMonoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ContinuousMul.{u1} M _inst_5 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))] {ι : Type.{u3}} {f : ι -> α -> M} (s : Finset.{u3} ι), (forall (i : ι), (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (f i) μ)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u1} α M _inst_5 m (fun (a : α) => Finset.prod.{u1, u3} M ι _inst_4 s (fun (i : ι) => f i a)) μ)
-Case conversion may be inaccurate. Consider using '#align finset.ae_strongly_measurable_prod Finset.aestronglyMeasurable_prodₓ'. -/
 @[to_additive]
 theorem Finset.aestronglyMeasurable_prod {ι : Type _} {f : ι → α → M} (s : Finset ι)
     (hf : ∀ i ∈ s, AEStronglyMeasurable (f i) μ) :
@@ -2163,12 +1590,6 @@ protected theorem norm {β : Type _} [SeminormedAddCommGroup β] {f : α → β}
 #align measure_theory.ae_strongly_measurable.norm MeasureTheory.AEStronglyMeasurable.norm
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.nnnorm -> MeasureTheory.AEStronglyMeasurable.nnnorm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {β : Type.{u2}} [_inst_4 : SeminormedAddCommGroup.{u2} β] {f : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_4))) m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, 0} α NNReal NNReal.topologicalSpace m (fun (x : α) => NNNorm.nnnorm.{u2} β (SeminormedAddGroup.toNNNorm.{u2} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} β _inst_4)) (f x)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {β : Type.{u2}} [_inst_4 : SeminormedAddCommGroup.{u2} β] {f : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_4))) m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, 0} α NNReal NNReal.instTopologicalSpaceNNReal m (fun (x : α) => NNNorm.nnnorm.{u2} β (SeminormedAddGroup.toNNNorm.{u2} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} β _inst_4)) (f x)) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.nnnorm MeasureTheory.AEStronglyMeasurable.nnnormₓ'. -/
 protected theorem nnnorm {β : Type _} [SeminormedAddCommGroup β] {f : α → β}
     (hf : AEStronglyMeasurable f μ) : AEStronglyMeasurable (fun x => ‖f x‖₊) μ :=
   continuous_nnnorm.comp_aestronglyMeasurable hf
@@ -2189,12 +1610,6 @@ protected theorem edist {β : Type _} [SeminormedAddCommGroup β] {f g : α → 
 #align measure_theory.ae_strongly_measurable.edist MeasureTheory.AEStronglyMeasurable.edist
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.real_to_nnreal -> MeasureTheory.AEStronglyMeasurable.real_toNNReal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> Real}, (MeasureTheory.AEStronglyMeasurable.{u1, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, 0} α NNReal NNReal.topologicalSpace m (fun (x : α) => Real.toNNReal (f x)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> Real}, (MeasureTheory.AEStronglyMeasurable.{u1, 0} α Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, 0} α NNReal NNReal.instTopologicalSpaceNNReal m (fun (x : α) => Real.toNNReal (f x)) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.real_to_nnreal MeasureTheory.AEStronglyMeasurable.real_toNNRealₓ'. -/
 protected theorem real_toNNReal {f : α → ℝ} (hf : AEStronglyMeasurable f μ) :
     AEStronglyMeasurable (fun x => (f x).toNNReal) μ :=
   continuous_real_toNNReal.comp_aestronglyMeasurable hf
@@ -2238,12 +1653,6 @@ theorem nullMeasurableSet_eq_fun {E} [TopologicalSpace E] [MetrizableSpace E] {f
 #align measure_theory.ae_strongly_measurable.null_measurable_set_eq_fun MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_eq_fun
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.null_measurable_set_lt -> MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_4 : LinearOrder.{u2} β] [_inst_5 : OrderClosedTopology.{u2} β _inst_2 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_4))))] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_4))))) (f a) (g a))) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_4 : LinearOrder.{u2} β] [_inst_5 : OrderClosedTopology.{u2} β _inst_2 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_4)))))] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_4)))))) (f a) (g a))) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.null_measurable_set_lt MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_ltₓ'. -/
 theorem nullMeasurableSet_lt [LinearOrder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
     {f g : α → β} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     NullMeasurableSet { a | f a < g a } μ :=
@@ -2255,12 +1664,6 @@ theorem nullMeasurableSet_lt [LinearOrder β] [OrderClosedTopology β] [PseudoMe
   simp only [hfx, hgx]
 #align measure_theory.ae_strongly_measurable.null_measurable_set_lt MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_lt
 
-/- warning: measure_theory.ae_strongly_measurable.null_measurable_set_le -> MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_4 : Preorder.{u2} β] [_inst_5 : OrderClosedTopology.{u2} β _inst_2 _inst_4] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_4) (f a) (g a))) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_4 : Preorder.{u2} β] [_inst_5 : OrderClosedTopology.{u2} β _inst_2 _inst_4] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {g : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m g μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4) (f a) (g a))) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.null_measurable_set_le MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_leₓ'. -/
 theorem nullMeasurableSet_le [Preorder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
     {f g : α → β} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     NullMeasurableSet { a | f a ≤ g a } μ :=
@@ -2280,12 +1683,6 @@ theorem aestronglyMeasurable_of_aestronglyMeasurable_trim {α} {m m0 : Measurabl
 #align ae_strongly_measurable_of_ae_strongly_measurable_trim aestronglyMeasurable_of_aestronglyMeasurable_trim
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.comp_ae_measurable -> MeasureTheory.AEStronglyMeasurable.comp_aemeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {g : α -> β} {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u1} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 mα g (MeasureTheory.Measure.map.{u3, u1} γ α mα mγ f μ)) -> (AEMeasurable.{u3, u1} γ α mα mγ f μ) -> (MeasureTheory.AEStronglyMeasurable.{u3, u2} γ β _inst_2 mγ (Function.comp.{succ u3, succ u1, succ u2} γ α β g f) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] {g : α -> β} {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u2} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 mα g (MeasureTheory.Measure.map.{u3, u2} γ α mα mγ f μ)) -> (AEMeasurable.{u3, u2} γ α mα mγ f μ) -> (MeasureTheory.AEStronglyMeasurable.{u3, u1} γ β _inst_2 mγ (Function.comp.{succ u3, succ u2, succ u1} γ α β g f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.comp_ae_measurable MeasureTheory.AEStronglyMeasurable.comp_aemeasurableₓ'. -/
 theorem comp_aemeasurable {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α} {f : γ → α}
     {μ : Measure γ} (hg : AEStronglyMeasurable g (Measure.map f μ)) (hf : AEMeasurable f μ) :
     AEStronglyMeasurable (g ∘ f) μ :=
@@ -2293,36 +1690,18 @@ theorem comp_aemeasurable {γ : Type _} {mγ : MeasurableSpace γ} {mα : Measur
     (ae_eq_comp hf hg.ae_eq_mk).trans (hf.ae_eq_mk.fun_comp (hg.mk g))⟩
 #align measure_theory.ae_strongly_measurable.comp_ae_measurable MeasureTheory.AEStronglyMeasurable.comp_aemeasurable
 
-/- warning: measure_theory.ae_strongly_measurable.comp_measurable -> MeasureTheory.AEStronglyMeasurable.comp_measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {g : α -> β} {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u1} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 mα g (MeasureTheory.Measure.map.{u3, u1} γ α mα mγ f μ)) -> (Measurable.{u3, u1} γ α mγ mα f) -> (MeasureTheory.AEStronglyMeasurable.{u3, u2} γ β _inst_2 mγ (Function.comp.{succ u3, succ u1, succ u2} γ α β g f) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] {g : α -> β} {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u2} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 mα g (MeasureTheory.Measure.map.{u3, u2} γ α mα mγ f μ)) -> (Measurable.{u3, u2} γ α mγ mα f) -> (MeasureTheory.AEStronglyMeasurable.{u3, u1} γ β _inst_2 mγ (Function.comp.{succ u3, succ u2, succ u1} γ α β g f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.comp_measurable MeasureTheory.AEStronglyMeasurable.comp_measurableₓ'. -/
 theorem comp_measurable {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α} {f : γ → α}
     {μ : Measure γ} (hg : AEStronglyMeasurable g (Measure.map f μ)) (hf : Measurable f) :
     AEStronglyMeasurable (g ∘ f) μ :=
   hg.comp_aemeasurable hf.AEMeasurable
 #align measure_theory.ae_strongly_measurable.comp_measurable MeasureTheory.AEStronglyMeasurable.comp_measurable
 
-/- warning: measure_theory.ae_strongly_measurable.comp_quasi_measure_preserving -> MeasureTheory.AEStronglyMeasurable.comp_quasiMeasurePreserving is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {g : α -> β} {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u1} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ} {ν : MeasureTheory.Measure.{u1} α mα}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 mα g ν) -> (MeasureTheory.Measure.QuasiMeasurePreserving.{u3, u1} γ α mα mγ f μ ν) -> (MeasureTheory.AEStronglyMeasurable.{u3, u2} γ β _inst_2 mγ (Function.comp.{succ u3, succ u1, succ u2} γ α β g f) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] {g : α -> β} {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u2} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ} {ν : MeasureTheory.Measure.{u2} α mα}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 mα g ν) -> (MeasureTheory.Measure.QuasiMeasurePreserving.{u3, u2} γ α mα mγ f μ ν) -> (MeasureTheory.AEStronglyMeasurable.{u3, u1} γ β _inst_2 mγ (Function.comp.{succ u3, succ u2, succ u1} γ α β g f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.comp_quasi_measure_preserving MeasureTheory.AEStronglyMeasurable.comp_quasiMeasurePreservingₓ'. -/
 theorem comp_quasiMeasurePreserving {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α}
     {f : γ → α} {μ : Measure γ} {ν : Measure α} (hg : AEStronglyMeasurable g ν)
     (hf : QuasiMeasurePreserving f μ ν) : AEStronglyMeasurable (g ∘ f) μ :=
   (hg.mono' hf.AbsolutelyContinuous).comp_measurable hf.Measurable
 #align measure_theory.ae_strongly_measurable.comp_quasi_measure_preserving MeasureTheory.AEStronglyMeasurable.comp_quasiMeasurePreserving
 
-/- warning: measure_theory.ae_strongly_measurable.is_separable_ae_range -> MeasureTheory.AEStronglyMeasurable.isSeparable_ae_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (TopologicalSpace.IsSeparable.{u2} β _inst_2 t) (Filter.Eventually.{u1} α (fun (x : α) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) t) (MeasureTheory.Measure.ae.{u1} α m μ))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) -> (Exists.{succ u1} (Set.{u1} β) (fun (t : Set.{u1} β) => And (TopologicalSpace.IsSeparable.{u1} β _inst_2 t) (Filter.Eventually.{u2} α (fun (x : α) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) t) (MeasureTheory.Measure.ae.{u2} α m μ))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.is_separable_ae_range MeasureTheory.AEStronglyMeasurable.isSeparable_ae_rangeₓ'. -/
 theorem isSeparable_ae_range (hf : AEStronglyMeasurable f μ) :
     ∃ t : Set β, IsSeparable t ∧ ∀ᵐ x ∂μ, f x ∈ t :=
   by
@@ -2351,12 +1730,6 @@ theorem aestronglyMeasurable_iff_aemeasurable_separable [PseudoMetrizableSpace �
 #align ae_strongly_measurable_iff_ae_measurable_separable aestronglyMeasurable_iff_aemeasurable_separable
 -/
 
-/- warning: measurable_embedding.ae_strongly_measurable_map_iff -> MeasurableEmbedding.aestronglyMeasurable_map_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u1} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ}, (MeasurableEmbedding.{u3, u1} γ α mγ mα f) -> (forall {g : α -> β}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 mα g (MeasureTheory.Measure.map.{u3, u1} γ α mα mγ f μ)) (MeasureTheory.AEStronglyMeasurable.{u3, u2} γ β _inst_2 mγ (Function.comp.{succ u3, succ u1, succ u2} γ α β g f) μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] {γ : Type.{u3}} {mγ : MeasurableSpace.{u3} γ} {mα : MeasurableSpace.{u2} α} {f : γ -> α} {μ : MeasureTheory.Measure.{u3} γ mγ}, (MeasurableEmbedding.{u3, u2} γ α mγ mα f) -> (forall {g : α -> β}, Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 mα g (MeasureTheory.Measure.map.{u3, u2} γ α mα mγ f μ)) (MeasureTheory.AEStronglyMeasurable.{u3, u1} γ β _inst_2 mγ (Function.comp.{succ u3, succ u2, succ u1} γ α β g f) μ))
-Case conversion may be inaccurate. Consider using '#align measurable_embedding.ae_strongly_measurable_map_iff MeasurableEmbedding.aestronglyMeasurable_map_iffₓ'. -/
 theorem MeasurableEmbedding.aestronglyMeasurable_map_iff {γ : Type _} {mγ : MeasurableSpace γ}
     {mα : MeasurableSpace α} {f : γ → α} {μ : Measure γ} (hf : MeasurableEmbedding f) {g : α → β} :
     AEStronglyMeasurable g (Measure.map f μ) ↔ AEStronglyMeasurable (g ∘ f) μ :=
@@ -2367,12 +1740,6 @@ theorem MeasurableEmbedding.aestronglyMeasurable_map_iff {γ : Type _} {mγ : Me
   exact ⟨g₂, hgm₂, hf.ae_map_iff.2 HEq⟩
 #align measurable_embedding.ae_strongly_measurable_map_iff MeasurableEmbedding.aestronglyMeasurable_map_iff
 
-/- warning: embedding.ae_strongly_measurable_comp_iff -> Embedding.aestronglyMeasurable_comp_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u3} γ _inst_3] {g : β -> γ} {f : α -> β}, (Embedding.{u2, u3} β γ _inst_2 _inst_3 g) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u1, u3} α γ _inst_3 m (fun (x : α) => g (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u3} β _inst_2] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u2} γ _inst_3] {g : β -> γ} {f : α -> β}, (Embedding.{u3, u2} β γ _inst_2 _inst_3 g) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α γ _inst_3 m (fun (x : α) => g (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u3} α β _inst_2 m f μ))
-Case conversion may be inaccurate. Consider using '#align embedding.ae_strongly_measurable_comp_iff Embedding.aestronglyMeasurable_comp_iffₓ'. -/
 theorem Embedding.aestronglyMeasurable_comp_iff [PseudoMetrizableSpace β] [PseudoMetrizableSpace γ]
     {g : β → γ} {f : α → β} (hg : Embedding g) :
     AEStronglyMeasurable (fun x => g (f x)) μ ↔ AEStronglyMeasurable f μ :=
@@ -2396,12 +1763,6 @@ theorem Embedding.aestronglyMeasurable_comp_iff [PseudoMetrizableSpace β] [Pseu
     exact ⟨g ⁻¹' t, hg.is_separable_preimage ht, h't⟩
 #align embedding.ae_strongly_measurable_comp_iff Embedding.aestronglyMeasurable_comp_iff
 
-/- warning: measure_theory.measure_preserving.ae_strongly_measurable_comp_iff -> MeasureTheory.MeasurePreserving.aestronglyMeasurable_comp_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} γ] {β : Type.{u3}} {f : α -> β} {mα : MeasurableSpace.{u1} α} {μa : MeasureTheory.Measure.{u1} α mα} {mβ : MeasurableSpace.{u3} β} {μb : MeasureTheory.Measure.{u3} β mβ}, (MeasureTheory.MeasurePreserving.{u1, u3} α β mα mβ f μa μb) -> (MeasurableEmbedding.{u1, u3} α β mα mβ f) -> (forall {g : β -> γ}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α γ _inst_3 mα (Function.comp.{succ u1, succ u3, succ u2} α β γ g f) μa) (MeasureTheory.AEStronglyMeasurable.{u3, u2} β γ _inst_3 mβ g μb))
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} γ] {β : Type.{u3}} {f : α -> β} {mα : MeasurableSpace.{u2} α} {μa : MeasureTheory.Measure.{u2} α mα} {mβ : MeasurableSpace.{u3} β} {μb : MeasureTheory.Measure.{u3} β mβ}, (MeasureTheory.MeasurePreserving.{u2, u3} α β mα mβ f μa μb) -> (MeasurableEmbedding.{u2, u3} α β mα mβ f) -> (forall {g : β -> γ}, Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α γ _inst_3 mα (Function.comp.{succ u2, succ u3, succ u1} α β γ g f) μa) (MeasureTheory.AEStronglyMeasurable.{u3, u1} β γ _inst_3 mβ g μb))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_preserving.ae_strongly_measurable_comp_iff MeasureTheory.MeasurePreserving.aestronglyMeasurable_comp_iffₓ'. -/
 theorem MeasureTheory.MeasurePreserving.aestronglyMeasurable_comp_iff {β : Type _} {f : α → β}
     {mα : MeasurableSpace α} {μa : Measure α} {mβ : MeasurableSpace β} {μb : Measure β}
     (hf : MeasurePreserving f μa μb) (h₂ : MeasurableEmbedding f) {g : β → γ} :
@@ -2452,12 +1813,6 @@ theorem exists_stronglyMeasurable_limit_of_tendsto_ae [PseudoMetrizableSpace β]
 #align exists_strongly_measurable_limit_of_tendsto_ae exists_stronglyMeasurable_limit_of_tendsto_ae
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.sum_measure -> MeasureTheory.AEStronglyMeasurable.sum_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_1 : Countable.{succ u3} ι] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {m : MeasurableSpace.{u1} α} {μ : ι -> (MeasureTheory.Measure.{u1} α m)}, (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (μ i)) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.sum.{u1, u3} α ι m μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] [_inst_2 : TopologicalSpace.{u3} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u3} β _inst_2] {m : MeasurableSpace.{u2} α} {μ : ι -> (MeasureTheory.Measure.{u2} α m)}, (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (μ i)) -> (MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (MeasureTheory.Measure.sum.{u2, u1} α ι m μ))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.sum_measure MeasureTheory.AEStronglyMeasurable.sum_measureₓ'. -/
 theorem sum_measure [PseudoMetrizableSpace β] {m : MeasurableSpace α} {μ : ι → Measure α}
     (h : ∀ i, AEStronglyMeasurable f (μ i)) : AEStronglyMeasurable f (Measure.sum μ) :=
   by
@@ -2475,12 +1830,6 @@ theorem sum_measure [PseudoMetrizableSpace β] {m : MeasurableSpace α} {μ : ι
   exact ⟨i, hx⟩
 #align measure_theory.ae_strongly_measurable.sum_measure MeasureTheory.AEStronglyMeasurable.sum_measure
 
-/- warning: ae_strongly_measurable_sum_measure_iff -> aestronglyMeasurable_sum_measure_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_1 : Countable.{succ u3} ι] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {m : MeasurableSpace.{u1} α} {μ : ι -> (MeasureTheory.Measure.{u1} α m)}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.sum.{u1, u3} α ι m μ)) (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (μ i))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] [_inst_2 : TopologicalSpace.{u3} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u3} β _inst_2] {m : MeasurableSpace.{u2} α} {μ : ι -> (MeasureTheory.Measure.{u2} α m)}, Iff (MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (MeasureTheory.Measure.sum.{u2, u1} α ι m μ)) (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (μ i))
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_sum_measure_iff aestronglyMeasurable_sum_measure_iffₓ'. -/
 @[simp]
 theorem aestronglyMeasurable_sum_measure_iff [PseudoMetrizableSpace β] {m : MeasurableSpace α}
     {μ : ι → Measure α} : AEStronglyMeasurable f (Sum μ) ↔ ∀ i, AEStronglyMeasurable f (μ i) :=
@@ -2503,24 +1852,12 @@ theorem add_measure [PseudoMetrizableSpace β] {ν : Measure α} {f : α → β}
 #align measure_theory.ae_strongly_measurable.add_measure MeasureTheory.AEStronglyMeasurable.add_measure
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.Union -> MeasureTheory.AEStronglyMeasurable.iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_1 : Countable.{succ u3} ι] {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {s : ι -> (Set.{u1} α)}, (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (s i))) -> (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (Set.iUnion.{u1, succ u3} α ι (fun (i : ι) => s i))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u3} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u3} β _inst_2] {s : ι -> (Set.{u2} α)}, (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (s i))) -> (MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.Union MeasureTheory.AEStronglyMeasurable.iUnionₓ'. -/
 protected theorem iUnion [PseudoMetrizableSpace β] {s : ι → Set α}
     (h : ∀ i, AEStronglyMeasurable f (μ.restrict (s i))) :
     AEStronglyMeasurable f (μ.restrict (⋃ i, s i)) :=
   (sum_measure h).mono_measure <| restrict_iUnion_le
 #align measure_theory.ae_strongly_measurable.Union MeasureTheory.AEStronglyMeasurable.iUnion
 
-/- warning: ae_strongly_measurable_Union_iff -> aestronglyMeasurable_iUnion_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_1 : Countable.{succ u3} ι] {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {s : ι -> (Set.{u1} α)}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (Set.iUnion.{u1, succ u3} α ι (fun (i : ι) => s i)))) (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (s i)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u3} β] {f : α -> β} [_inst_4 : TopologicalSpace.PseudoMetrizableSpace.{u3} β _inst_2] {s : ι -> (Set.{u2} α)}, Iff (MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i)))) (forall (i : ι), MeasureTheory.AEStronglyMeasurable.{u2, u3} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (s i)))
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_Union_iff aestronglyMeasurable_iUnion_iffₓ'. -/
 @[simp]
 theorem aestronglyMeasurable_iUnion_iff [PseudoMetrizableSpace β] {s : ι → Set α} :
     AEStronglyMeasurable f (μ.restrict (⋃ i, s i)) ↔
@@ -2538,12 +1875,6 @@ theorem aestronglyMeasurable_union_iff [PseudoMetrizableSpace β] {s t : Set α}
 #align ae_strongly_measurable_union_iff aestronglyMeasurable_union_iff
 -/
 
-/- warning: measure_theory.ae_strongly_measurable.ae_strongly_measurable_uIoc_iff -> MeasureTheory.AEStronglyMeasurable.aestronglyMeasurable_uIoc_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] [_inst_4 : LinearOrder.{u1} α] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_2] {f : α -> β} {a : α} {b : α}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (Set.uIoc.{u1} α _inst_4 a b))) (And (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_4)))) a b))) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u1} α m μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_4)))) b a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] [_inst_4 : LinearOrder.{u2} α] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} β _inst_2] {f : α -> β} {a : α} {b : α}, Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (Set.uIoc.{u2} α _inst_4 a b))) (And (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (Set.Ioc.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_4))))) a b))) (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (MeasureTheory.Measure.restrict.{u2} α m μ (Set.Ioc.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_4))))) b a))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.ae_strongly_measurable_uIoc_iff MeasureTheory.AEStronglyMeasurable.aestronglyMeasurable_uIoc_iffₓ'. -/
 theorem aestronglyMeasurable_uIoc_iff [LinearOrder α] [PseudoMetrizableSpace β] {f : α → β}
     {a b : α} :
     AEStronglyMeasurable f (μ.restrict <| uIoc a b) ↔
@@ -2552,12 +1883,6 @@ theorem aestronglyMeasurable_uIoc_iff [LinearOrder α] [PseudoMetrizableSpace β
   by rw [uIoc_eq_union, aestronglyMeasurable_union_iff]
 #align measure_theory.ae_strongly_measurable.ae_strongly_measurable_uIoc_iff MeasureTheory.AEStronglyMeasurable.aestronglyMeasurable_uIoc_iff
 
-/- warning: measure_theory.ae_strongly_measurable.smul_measure -> MeasureTheory.AEStronglyMeasurable.smul_measure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {R : Type.{u3}} [_inst_4 : Monoid.{u3} R] [_inst_5 : DistribMulAction.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))] [_inst_6 : IsScalarTower.{u3, 0, 0} R ENNReal ENNReal (SMulZeroClass.toHasSmul.{u3, 0} R ENNReal (AddZeroClass.toHasZero.{0} ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)))) (DistribSMul.toSmulZeroClass.{u3, 0} R ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))) (DistribMulAction.toDistribSMul.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)) _inst_5))) (Mul.toSMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (SMulZeroClass.toHasSmul.{u3, 0} R ENNReal (AddZeroClass.toHasZero.{0} ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)))) (DistribSMul.toSmulZeroClass.{u3, 0} R ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))) (DistribMulAction.toDistribSMul.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)) _inst_5)))], (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ) -> (forall (c : R), MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f (SMul.smul.{u3, u1} R (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instSMul.{u1, u3} α R (SMulZeroClass.toHasSmul.{u3, 0} R ENNReal (AddZeroClass.toHasZero.{0} ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)))) (DistribSMul.toSmulZeroClass.{u3, 0} R ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))) (DistribMulAction.toDistribSMul.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)) _inst_5))) _inst_6 m) c μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {R : Type.{u3}} [_inst_4 : Monoid.{u3} R] [_inst_5 : DistribMulAction.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne))] [_inst_6 : IsScalarTower.{u3, 0, 0} R ENNReal ENNReal (SMulZeroClass.toSMul.{u3, 0} R ENNReal instENNRealZero (DistribSMul.toSMulZeroClass.{u3, 0} R ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne))) (DistribMulAction.toDistribSMul.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne)) _inst_5))) (Algebra.toSMul.{0, 0} ENNReal ENNReal (CanonicallyOrderedCommSemiring.toCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal) (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))) (Algebra.id.{0} ENNReal (CanonicallyOrderedCommSemiring.toCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))) (SMulZeroClass.toSMul.{u3, 0} R ENNReal instENNRealZero (DistribSMul.toSMulZeroClass.{u3, 0} R ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne))) (DistribMulAction.toDistribSMul.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne)) _inst_5)))], (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ) -> (forall (c : R), MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f (HSMul.hSMul.{u3, u2, u2} R (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.{u2} α m) (instHSMul.{u3, u2} R (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instSMul.{u2, u3} α R (SMulZeroClass.toSMul.{u3, 0} R ENNReal instENNRealZero (DistribSMul.toSMulZeroClass.{u3, 0} R ENNReal (AddMonoid.toAddZeroClass.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne))) (DistribMulAction.toDistribSMul.{u3, 0} R ENNReal _inst_4 (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne)) _inst_5))) _inst_6 m)) c μ))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.smul_measure MeasureTheory.AEStronglyMeasurable.smul_measureₓ'. -/
 theorem smul_measure {R : Type _} [Monoid R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
     (h : AEStronglyMeasurable f μ) (c : R) : AEStronglyMeasurable f (c • μ) :=
   ⟨h.mk f, h.stronglyMeasurable_mk, ae_smul_measure h.ae_eq_mk c⟩
@@ -2569,9 +1894,6 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜]
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-/- warning: ae_strongly_measurable_smul_const_iff -> aestronglyMeasurable_smul_const_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_smul_const_iff aestronglyMeasurable_smul_const_iffₓ'. -/
 theorem aestronglyMeasurable_smul_const_iff {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
     AEStronglyMeasurable (fun x => f x • c) μ ↔ AEStronglyMeasurable f μ :=
   (closedEmbedding_smul_left hc).toEmbedding.aestronglyMeasurable_comp_iff
@@ -2589,12 +1911,6 @@ variable [Group G] [MulAction G β] [ContinuousConstSMul G β]
 
 variable [GroupWithZero G₀] [MulAction G₀ β] [ContinuousConstSMul G₀ β]
 
-/- warning: ae_strongly_measurable_const_smul_iff -> aestronglyMeasurable_const_smul_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G : Type.{u3}} [_inst_7 : Group.{u3} G] [_inst_8 : MulAction.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_7))] [_inst_9 : ContinuousConstSMul.{u3, u2} G β _inst_2 (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_7)) _inst_8)] (c : G), Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G β (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_7)) _inst_8) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {m : MeasurableSpace.{u3} α} {μ : MeasureTheory.Measure.{u3} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G : Type.{u1}} [_inst_7 : Group.{u1} G] [_inst_8 : MulAction.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_7))] [_inst_9 : ContinuousConstSMul.{u1, u2} G β _inst_2 (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_7)) _inst_8)] (c : G), Iff (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u1, u2, u2} G β β (instHSMul.{u1, u2} G β (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_7)) _inst_8)) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m f μ)
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_const_smul_iff aestronglyMeasurable_const_smul_iffₓ'. -/
 theorem aestronglyMeasurable_const_smul_iff (c : G) :
     AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
@@ -2606,12 +1922,6 @@ theorem IsUnit.aEStronglyMeasurable_const_smul_iff {c : M} (hc : IsUnit c) :
   hu ▸ aestronglyMeasurable_const_smul_iff u
 #align is_unit.ae_strongly_measurable_const_smul_iff IsUnit.aEStronglyMeasurable_const_smul_iff
 
-/- warning: ae_strongly_measurable_const_smul_iff₀ -> aestronglyMeasurable_const_smul_iff₀ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G₀ : Type.{u3}} [_inst_10 : GroupWithZero.{u3} G₀] [_inst_11 : MulAction.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10))] [_inst_12 : ContinuousConstSMul.{u3, u2} G₀ β _inst_2 (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11)] {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (OfNat.mk.{u3} G₀ 0 (Zero.zero.{u3} G₀ (MulZeroClass.toHasZero.{u3} G₀ (MulZeroOneClass.toMulZeroClass.{u3} G₀ (MonoidWithZero.toMulZeroOneClass.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)))))))) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G₀ β (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {G₀ : Type.{u3}} [_inst_10 : GroupWithZero.{u3} G₀] [_inst_11 : MulAction.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10))] [_inst_12 : ContinuousConstSMul.{u3, u1} G₀ β _inst_2 (MulAction.toSMul.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11)] {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (Zero.toOfNat0.{u3} G₀ (MonoidWithZero.toZero.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10))))) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u3, u1, u1} G₀ β β (instHSMul.{u3, u1} G₀ β (MulAction.toSMul.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11)) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ))
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_const_smul_iff₀ aestronglyMeasurable_const_smul_iff₀ₓ'. -/
 theorem aestronglyMeasurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) :
     AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
   (IsUnit.mk0 _ hc).aestronglyMeasurable_const_smul_iff
@@ -2629,25 +1939,16 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 variable {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
-/- warning: strongly_measurable.apply_continuous_linear_map -> StronglyMeasurable.apply_continuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align strongly_measurable.apply_continuous_linear_map StronglyMeasurable.apply_continuousLinearMapₓ'. -/
 theorem StronglyMeasurable.apply_continuousLinearMap {m : MeasurableSpace α} {φ : α → F →L[𝕜] E}
     (hφ : StronglyMeasurable φ) (v : F) : StronglyMeasurable fun a => φ a v :=
   (ContinuousLinearMap.apply 𝕜 E v).Continuous.comp_stronglyMeasurable hφ
 #align strongly_measurable.apply_continuous_linear_map StronglyMeasurable.apply_continuousLinearMap
 
-/- warning: measure_theory.ae_strongly_measurable.apply_continuous_linear_map -> MeasureTheory.AEStronglyMeasurable.apply_continuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_strongly_measurable.apply_continuous_linear_map MeasureTheory.AEStronglyMeasurable.apply_continuousLinearMapₓ'. -/
 theorem apply_continuousLinearMap {φ : α → F →L[𝕜] E} (hφ : AEStronglyMeasurable φ μ) (v : F) :
     AEStronglyMeasurable (fun a => φ a v) μ :=
   (ContinuousLinearMap.apply 𝕜 E v).Continuous.comp_aestronglyMeasurable hφ
 #align measure_theory.ae_strongly_measurable.apply_continuous_linear_map MeasureTheory.AEStronglyMeasurable.apply_continuousLinearMap
 
-/- warning: continuous_linear_map.ae_strongly_measurable_comp₂ -> ContinuousLinearMap.aestronglyMeasurable_comp₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.ae_strongly_measurable_comp₂ ContinuousLinearMap.aestronglyMeasurable_comp₂ₓ'. -/
 theorem ContinuousLinearMap.aestronglyMeasurable_comp₂ (L : E →L[𝕜] F →L[𝕜] G) {f : α → E}
     {g : α → F} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     AEStronglyMeasurable (fun x => L (f x) (g x)) μ :=
@@ -2656,12 +1957,6 @@ theorem ContinuousLinearMap.aestronglyMeasurable_comp₂ (L : E →L[𝕜] F →
 
 end ContinuousLinearMapNontriviallyNormedField
 
-/- warning: ae_strongly_measurable_with_density_iff -> aestronglyMeasurable_withDensity_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {E : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} E] [_inst_5 : NormedSpace.{0, u2} Real E Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)] {f : α -> NNReal}, (Measurable.{u1, 0} α NNReal m NNReal.measurableSpace f) -> (forall {g : α -> E}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))) m g (MeasureTheory.Measure.withDensity.{u1} α m μ (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (f x)))) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))) m (fun (x : α) => SMul.smul.{0, u2} Real E (SMulZeroClass.toHasSmul.{0, u2} Real E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))))) (SMulWithZero.toSmulZeroClass.{0, u2} Real E (MulZeroClass.toHasZero.{0} Real (MulZeroOneClass.toMulZeroClass.{0} Real (MonoidWithZero.toMulZeroOneClass.{0} Real (Semiring.toMonoidWithZero.{0} Real (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real Real.normedField)))))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))))) (MulActionWithZero.toSMulWithZero.{0, u2} Real E (Semiring.toMonoidWithZero.{0} Real (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real Real.normedField))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))))) (Module.toMulActionWithZero.{0, u2} Real E (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real Real.normedField)))) (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4))) (NormedSpace.toModule.{0, u2} Real E Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4) _inst_5))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (f x)) (g x)) μ))
-but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {E : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} E] [_inst_5 : NormedSpace.{0, u2} Real E Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)] {f : α -> NNReal}, (Measurable.{u1, 0} α NNReal m NNReal.measurableSpace f) -> (forall {g : α -> E}, Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))) m g (MeasureTheory.Measure.withDensity.{u1} α m μ (fun (x : α) => ENNReal.some (f x)))) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4)))) m (fun (x : α) => HSMul.hSMul.{0, u2, u2} Real E E (instHSMul.{0, u2} Real E (SMulZeroClass.toSMul.{0, u2} Real E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_4)))))) (SMulWithZero.toSMulZeroClass.{0, u2} Real E Real.instZeroReal (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_4)))))) (MulActionWithZero.toSMulWithZero.{0, u2} Real E Real.instMonoidWithZeroReal (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_4)))))) (Module.toMulActionWithZero.{0, u2} Real E Real.semiring (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_4)) (NormedSpace.toModule.{0, u2} Real E Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_4) _inst_5)))))) (NNReal.toReal (f x)) (g x)) μ))
-Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_with_density_iff aestronglyMeasurable_withDensity_iffₓ'. -/
 theorem aestronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : α → ℝ≥0} (hf : Measurable f) {g : α → E} :
     AEStronglyMeasurable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔
@@ -2710,23 +2005,11 @@ protected noncomputable def mk (f : α → β) (hf : AEFinStronglyMeasurable f �
 #align measure_theory.ae_fin_strongly_measurable.mk MeasureTheory.AEFinStronglyMeasurable.mk
 -/
 
-/- warning: measure_theory.ae_fin_strongly_measurable.fin_strongly_measurable_mk -> MeasureTheory.AEFinStronglyMeasurable.finStronglyMeasurable_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : Zero.{u2} β] (hf : MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ), MeasureTheory.FinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m (MeasureTheory.AEFinStronglyMeasurable.mk.{u1, u2} α β m μ _inst_2 _inst_3 f hf) μ
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} [_inst_3 : Zero.{u1} β] (hf : MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_3 m f μ), MeasureTheory.FinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_3 m (MeasureTheory.AEFinStronglyMeasurable.mk.{u2, u1} α β m μ _inst_2 _inst_3 f hf) μ
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.fin_strongly_measurable_mk MeasureTheory.AEFinStronglyMeasurable.finStronglyMeasurable_mkₓ'. -/
 theorem finStronglyMeasurable_mk (hf : AEFinStronglyMeasurable f μ) :
     FinStronglyMeasurable (hf.mk f) μ :=
   hf.choose_spec.1
 #align measure_theory.ae_fin_strongly_measurable.fin_strongly_measurable_mk MeasureTheory.AEFinStronglyMeasurable.finStronglyMeasurable_mk
 
-/- warning: measure_theory.ae_fin_strongly_measurable.ae_eq_mk -> MeasureTheory.AEFinStronglyMeasurable.ae_eq_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : Zero.{u2} β] (hf : MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ), Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m μ) f (MeasureTheory.AEFinStronglyMeasurable.mk.{u1, u2} α β m μ _inst_2 _inst_3 f hf)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} [_inst_3 : Zero.{u1} β] (hf : MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_3 m f μ), Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m μ) f (MeasureTheory.AEFinStronglyMeasurable.mk.{u2, u1} α β m μ _inst_2 _inst_3 f hf)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.ae_eq_mk MeasureTheory.AEFinStronglyMeasurable.ae_eq_mkₓ'. -/
 theorem ae_eq_mk (hf : AEFinStronglyMeasurable f μ) : f =ᵐ[μ] hf.mk f :=
   hf.choose_spec.2
 #align measure_theory.ae_fin_strongly_measurable.ae_eq_mk MeasureTheory.AEFinStronglyMeasurable.ae_eq_mk
@@ -2743,59 +2026,29 @@ end Mk
 
 section Arithmetic
 
-/- warning: measure_theory.ae_fin_strongly_measurable.mul -> MeasureTheory.AEFinStronglyMeasurable.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : MonoidWithZero.{u2} β] [_inst_4 : ContinuousMul.{u2} β _inst_2 (MulZeroClass.toHasMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3)))], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (MulZeroClass.toHasZero.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (MulZeroClass.toHasZero.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))) m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (MulZeroClass.toHasZero.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))) m (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : MonoidWithZero.{u2} β] [_inst_4 : ContinuousMul.{u2} β _inst_2 (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3)))], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (MonoidWithZero.toZero.{u2} β _inst_3) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (MonoidWithZero.toZero.{u2} β _inst_3) m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (MonoidWithZero.toZero.{u2} β _inst_3) m (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.mul MeasureTheory.AEFinStronglyMeasurable.mulₓ'. -/
 protected theorem mul [MonoidWithZero β] [ContinuousMul β] (hf : AEFinStronglyMeasurable f μ)
     (hg : AEFinStronglyMeasurable g μ) : AEFinStronglyMeasurable (f * g) μ :=
   ⟨hf.mk f * hg.mk g, hf.finStronglyMeasurable_mk.mul hg.finStronglyMeasurable_mk,
     hf.ae_eq_mk.mul hg.ae_eq_mk⟩
 #align measure_theory.ae_fin_strongly_measurable.mul MeasureTheory.AEFinStronglyMeasurable.mul
 
-/- warning: measure_theory.ae_fin_strongly_measurable.add -> MeasureTheory.AEFinStronglyMeasurable.add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : AddMonoid.{u2} β] [_inst_4 : ContinuousAdd.{u2} β _inst_2 (AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3))], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)) m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)) m (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHAdd.{max u1 u2} (α -> β) (Pi.instAdd.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : AddMonoid.{u2} β] [_inst_4 : ContinuousAdd.{u2} β _inst_2 (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3))], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_3) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_3) m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_3) m (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHAdd.{max u1 u2} (α -> β) (Pi.instAdd.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.add MeasureTheory.AEFinStronglyMeasurable.addₓ'. -/
 protected theorem add [AddMonoid β] [ContinuousAdd β] (hf : AEFinStronglyMeasurable f μ)
     (hg : AEFinStronglyMeasurable g μ) : AEFinStronglyMeasurable (f + g) μ :=
   ⟨hf.mk f + hg.mk g, hf.finStronglyMeasurable_mk.add hg.finStronglyMeasurable_mk,
     hf.ae_eq_mk.add hg.ae_eq_mk⟩
 #align measure_theory.ae_fin_strongly_measurable.add MeasureTheory.AEFinStronglyMeasurable.add
 
-/- warning: measure_theory.ae_fin_strongly_measurable.neg -> MeasureTheory.AEFinStronglyMeasurable.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : AddGroup.{u2} β] [_inst_4 : TopologicalAddGroup.{u2} β _inst_2 _inst_3], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m (Neg.neg.{max u1 u2} (α -> β) (Pi.instNeg.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3))) f) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : AddGroup.{u2} β] [_inst_4 : TopologicalAddGroup.{u2} β _inst_2 _inst_3], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m (Neg.neg.{max u1 u2} (α -> β) (Pi.instNeg.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3))))) f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.neg MeasureTheory.AEFinStronglyMeasurable.negₓ'. -/
 protected theorem neg [AddGroup β] [TopologicalAddGroup β] (hf : AEFinStronglyMeasurable f μ) :
     AEFinStronglyMeasurable (-f) μ :=
   ⟨-hf.mk f, hf.finStronglyMeasurable_mk.neg, hf.ae_eq_mk.neg⟩
 #align measure_theory.ae_fin_strongly_measurable.neg MeasureTheory.AEFinStronglyMeasurable.neg
 
-/- warning: measure_theory.ae_fin_strongly_measurable.sub -> MeasureTheory.AEFinStronglyMeasurable.sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : AddGroup.{u2} β] [_inst_4 : ContinuousSub.{u2} β _inst_2 (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3))], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) m (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : AddGroup.{u2} β] [_inst_4 : ContinuousSub.{u2} β _inst_2 (SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3))], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_3)))) m (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_3)))) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.sub MeasureTheory.AEFinStronglyMeasurable.subₓ'. -/
 protected theorem sub [AddGroup β] [ContinuousSub β] (hf : AEFinStronglyMeasurable f μ)
     (hg : AEFinStronglyMeasurable g μ) : AEFinStronglyMeasurable (f - g) μ :=
   ⟨hf.mk f - hg.mk g, hf.finStronglyMeasurable_mk.sub hg.finStronglyMeasurable_mk,
     hf.ae_eq_mk.sub hg.ae_eq_mk⟩
 #align measure_theory.ae_fin_strongly_measurable.sub MeasureTheory.AEFinStronglyMeasurable.sub
 
-/- warning: measure_theory.ae_fin_strongly_measurable.const_smul -> MeasureTheory.AEFinStronglyMeasurable.const_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {𝕜 : Type.{u3}} [_inst_3 : TopologicalSpace.{u3} 𝕜] [_inst_4 : AddMonoid.{u2} β] [_inst_5 : Monoid.{u3} 𝕜] [_inst_6 : DistribMulAction.{u3, u2} 𝕜 β _inst_5 _inst_4] [_inst_7 : ContinuousSMul.{u3, u2} 𝕜 β (SMulZeroClass.toHasSmul.{u3, u2} 𝕜 β (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) (DistribSMul.toSmulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6))) _inst_3 _inst_2], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) m f μ) -> (forall (c : 𝕜), MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) m (SMul.smul.{u3, max u1 u2} 𝕜 (α -> β) (Function.hasSMul.{u1, u3, u2} α 𝕜 β (SMulZeroClass.toHasSmul.{u3, u2} 𝕜 β (AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_4)) (DistribSMul.toSmulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6)))) c f) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {𝕜 : Type.{u3}} [_inst_3 : TopologicalSpace.{u3} 𝕜] [_inst_4 : AddMonoid.{u2} β] [_inst_5 : Monoid.{u3} 𝕜] [_inst_6 : DistribMulAction.{u3, u2} 𝕜 β _inst_5 _inst_4] [_inst_7 : ContinuousSMul.{u3, u2} 𝕜 β (SMulZeroClass.toSMul.{u3, u2} 𝕜 β (AddMonoid.toZero.{u2} β _inst_4) (DistribSMul.toSMulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6))) _inst_3 _inst_2], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_4) m f μ) -> (forall (c : 𝕜), MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 (AddMonoid.toZero.{u2} β _inst_4) m (HSMul.hSMul.{u3, max u1 u2, max u1 u2} 𝕜 (α -> β) (α -> β) (instHSMul.{u3, max u1 u2} 𝕜 (α -> β) (Pi.instSMul.{u1, u2, u3} α 𝕜 (fun (a._@.Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic._hyg.21457 : α) => β) (fun (i : α) => SMulZeroClass.toSMul.{u3, u2} 𝕜 β (AddMonoid.toZero.{u2} β _inst_4) (DistribSMul.toSMulZeroClass.{u3, u2} 𝕜 β (AddMonoid.toAddZeroClass.{u2} β _inst_4) (DistribMulAction.toDistribSMul.{u3, u2} 𝕜 β _inst_5 _inst_4 _inst_6))))) c f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.const_smul MeasureTheory.AEFinStronglyMeasurable.const_smulₓ'. -/
 protected theorem const_smul {𝕜} [TopologicalSpace 𝕜] [AddMonoid β] [Monoid 𝕜]
     [DistribMulAction 𝕜 β] [ContinuousSMul 𝕜 β] (hf : AEFinStronglyMeasurable f μ) (c : 𝕜) :
     AEFinStronglyMeasurable (c • f) μ :=
@@ -2808,24 +2061,12 @@ section Order
 
 variable [Zero β]
 
-/- warning: measure_theory.ae_fin_strongly_measurable.sup -> MeasureTheory.AEFinStronglyMeasurable.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeSup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_2 (SemilatticeSup.toHasSup.{u2} β _inst_4)], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_4)) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeSup.{u2} β] [_inst_5 : ContinuousSup.{u2} β _inst_2 (SemilatticeSup.toSup.{u2} β _inst_4)], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m (Sup.sup.{max u2 u1} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_4)) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.sup MeasureTheory.AEFinStronglyMeasurable.supₓ'. -/
 protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : AEFinStronglyMeasurable f μ)
     (hg : AEFinStronglyMeasurable g μ) : AEFinStronglyMeasurable (f ⊔ g) μ :=
   ⟨hf.mk f ⊔ hg.mk g, hf.finStronglyMeasurable_mk.sup hg.finStronglyMeasurable_mk,
     hf.ae_eq_mk.sup hg.ae_eq_mk⟩
 #align measure_theory.ae_fin_strongly_measurable.sup MeasureTheory.AEFinStronglyMeasurable.sup
 
-/- warning: measure_theory.ae_fin_strongly_measurable.inf -> MeasureTheory.AEFinStronglyMeasurable.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeInf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_2 (SemilatticeInf.toHasInf.{u2} β _inst_4)], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m (Inf.inf.{max u1 u2} (α -> β) (Pi.hasInf.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeInf.toHasInf.{u2} β _inst_4)) f g) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {g : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : SemilatticeInf.{u2} β] [_inst_5 : ContinuousInf.{u2} β _inst_2 (SemilatticeInf.toInf.{u2} β _inst_4)], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m g μ) -> (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m (Inf.inf.{max u2 u1} (α -> β) (Pi.instInfForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeInf.toInf.{u2} β _inst_4)) f g) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.inf MeasureTheory.AEFinStronglyMeasurable.infₓ'. -/
 protected theorem inf [SemilatticeInf β] [ContinuousInf β] (hf : AEFinStronglyMeasurable f μ)
     (hg : AEFinStronglyMeasurable g μ) : AEFinStronglyMeasurable (f ⊓ g) μ :=
   ⟨hf.mk f ⊓ hg.mk g, hf.finStronglyMeasurable_mk.inf hg.finStronglyMeasurable_mk,
@@ -2836,12 +2077,6 @@ end Order
 
 variable [Zero β] [T2Space β]
 
-/- warning: measure_theory.ae_fin_strongly_measurable.exists_set_sigma_finite -> MeasureTheory.AEFinStronglyMeasurable.exists_set_sigmaFinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : T2Space.{u2} β _inst_2], (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (MeasurableSet.{u1} α m t) (And (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m (MeasureTheory.Measure.restrict.{u1} α m μ (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))) f (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_3)))))) (MeasureTheory.SigmaFinite.{u1} α m (MeasureTheory.Measure.restrict.{u1} α m μ t)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} [_inst_3 : Zero.{u1} β] [_inst_4 : T2Space.{u1} β _inst_2], (MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_3 m f μ) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (MeasurableSet.{u2} α m t) (And (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m (MeasureTheory.Measure.restrict.{u2} α m μ (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) t))) f (OfNat.ofNat.{max u2 u1} (α -> β) 0 (Zero.toOfNat0.{max u2 u1} (α -> β) (Pi.instZero.{u2, u1} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => β) (fun (i : α) => _inst_3))))) (MeasureTheory.SigmaFinite.{u2} α m (MeasureTheory.Measure.restrict.{u2} α m μ t)))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.exists_set_sigma_finite MeasureTheory.AEFinStronglyMeasurable.exists_set_sigmaFiniteₓ'. -/
 theorem exists_set_sigmaFinite (hf : AEFinStronglyMeasurable f μ) :
     ∃ t, MeasurableSet t ∧ f =ᵐ[μ.restrict (tᶜ)] 0 ∧ SigmaFinite (μ.restrict t) :=
   by
@@ -2860,23 +2095,11 @@ def sigmaFiniteSet (hf : AEFinStronglyMeasurable f μ) : Set α :=
 #align measure_theory.ae_fin_strongly_measurable.sigma_finite_set MeasureTheory.AEFinStronglyMeasurable.sigmaFiniteSet
 -/
 
-/- warning: measure_theory.ae_fin_strongly_measurable.measurable_set -> MeasureTheory.AEFinStronglyMeasurable.measurableSet is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : T2Space.{u2} β _inst_2] (hf : MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ), MeasurableSet.{u1} α m (MeasureTheory.AEFinStronglyMeasurable.sigmaFiniteSet.{u1, u2} α β m μ _inst_2 f _inst_3 _inst_4 hf)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} [_inst_3 : Zero.{u1} β] [_inst_4 : T2Space.{u1} β _inst_2] (hf : MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_3 m f μ), MeasurableSet.{u2} α m (MeasureTheory.AEFinStronglyMeasurable.sigmaFiniteSet.{u2, u1} α β m μ _inst_2 f _inst_3 _inst_4 hf)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.measurable_set MeasureTheory.AEFinStronglyMeasurable.measurableSetₓ'. -/
 protected theorem measurableSet (hf : AEFinStronglyMeasurable f μ) :
     MeasurableSet hf.sigmaFiniteSet :=
   hf.exists_set_sigmaFinite.choose_spec.1
 #align measure_theory.ae_fin_strongly_measurable.measurable_set MeasureTheory.AEFinStronglyMeasurable.measurableSet
 
-/- warning: measure_theory.ae_fin_strongly_measurable.ae_eq_zero_compl -> MeasureTheory.AEFinStronglyMeasurable.ae_eq_zero_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} [_inst_3 : Zero.{u2} β] [_inst_4 : T2Space.{u2} β _inst_2] (hf : MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α β _inst_2 _inst_3 m f μ), Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m (MeasureTheory.Measure.restrict.{u1} α m μ (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (MeasureTheory.AEFinStronglyMeasurable.sigmaFiniteSet.{u1, u2} α β m μ _inst_2 f _inst_3 _inst_4 hf)))) f (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_3)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} [_inst_3 : Zero.{u1} β] [_inst_4 : T2Space.{u1} β _inst_2] (hf : MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α β _inst_2 _inst_3 m f μ), Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α m (MeasureTheory.Measure.restrict.{u2} α m μ (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) (MeasureTheory.AEFinStronglyMeasurable.sigmaFiniteSet.{u2, u1} α β m μ _inst_2 f _inst_3 _inst_4 hf)))) f (OfNat.ofNat.{max u2 u1} (α -> β) 0 (Zero.toOfNat0.{max u2 u1} (α -> β) (Pi.instZero.{u2, u1} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => β) (fun (i : α) => _inst_3))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable.ae_eq_zero_compl MeasureTheory.AEFinStronglyMeasurable.ae_eq_zero_complₓ'. -/
 theorem ae_eq_zero_compl (hf : AEFinStronglyMeasurable f μ) :
     f =ᵐ[μ.restrict (hf.sigmaFiniteSetᶜ)] 0 :=
   hf.exists_set_sigmaFinite.choose_spec.2.1
@@ -2897,12 +2120,6 @@ variable {G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure
   [SeminormedAddCommGroup G] [MeasurableSpace G] [BorelSpace G] [SecondCountableTopology G]
   {f : α → G}
 
-/- warning: measure_theory.fin_strongly_measurable_iff_measurable -> MeasureTheory.finStronglyMeasurable_iff_measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {G : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u2} G] [_inst_3 : MeasurableSpace.{u2} G] [_inst_4 : BorelSpace.{u2} G (UniformSpace.toTopologicalSpace.{u2} G (PseudoMetricSpace.toUniformSpace.{u2} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} G _inst_2))) _inst_3] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u2} G (UniformSpace.toTopologicalSpace.{u2} G (PseudoMetricSpace.toUniformSpace.{u2} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} G _inst_2)))] {f : α -> G} {m0 : MeasurableSpace.{u1} α} (μ : MeasureTheory.Measure.{u1} α m0) [_inst_6 : MeasureTheory.SigmaFinite.{u1} α m0 μ], Iff (MeasureTheory.FinStronglyMeasurable.{u1, u2} α G (UniformSpace.toTopologicalSpace.{u2} G (PseudoMetricSpace.toUniformSpace.{u2} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} G _inst_2))) (AddZeroClass.toHasZero.{u2} G (AddMonoid.toAddZeroClass.{u2} G (SubNegMonoid.toAddMonoid.{u2} G (AddGroup.toSubNegMonoid.{u2} G (SeminormedAddGroup.toAddGroup.{u2} G (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} G _inst_2)))))) m0 f μ) (Measurable.{u1, u2} α G m0 _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u2}} {G : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u1} G] [_inst_3 : MeasurableSpace.{u1} G] [_inst_4 : BorelSpace.{u1} G (UniformSpace.toTopologicalSpace.{u1} G (PseudoMetricSpace.toUniformSpace.{u1} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} G _inst_2))) _inst_3] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u1} G (UniformSpace.toTopologicalSpace.{u1} G (PseudoMetricSpace.toUniformSpace.{u1} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} G _inst_2)))] {f : α -> G} {m0 : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m0) [_inst_6 : MeasureTheory.SigmaFinite.{u2} α m0 μ], Iff (MeasureTheory.FinStronglyMeasurable.{u2, u1} α G (UniformSpace.toTopologicalSpace.{u1} G (PseudoMetricSpace.toUniformSpace.{u1} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} G _inst_2))) (NegZeroClass.toZero.{u1} G (SubNegZeroMonoid.toNegZeroClass.{u1} G (SubtractionMonoid.toSubNegZeroMonoid.{u1} G (SubtractionCommMonoid.toSubtractionMonoid.{u1} G (AddCommGroup.toDivisionAddCommMonoid.{u1} G (SeminormedAddCommGroup.toAddCommGroup.{u1} G _inst_2)))))) m0 f μ) (Measurable.{u2, u1} α G m0 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.fin_strongly_measurable_iff_measurable MeasureTheory.finStronglyMeasurable_iff_measurableₓ'. -/
 /-- In a space with second countable topology and a sigma-finite measure, `fin_strongly_measurable`
   and `measurable` are equivalent. -/
 theorem finStronglyMeasurable_iff_measurable {m0 : MeasurableSpace α} (μ : Measure α)
@@ -2910,12 +2127,6 @@ theorem finStronglyMeasurable_iff_measurable {m0 : MeasurableSpace α} (μ : Mea
   ⟨fun h => h.Measurable, fun h => (Measurable.stronglyMeasurable h).FinStronglyMeasurable μ⟩
 #align measure_theory.fin_strongly_measurable_iff_measurable MeasureTheory.finStronglyMeasurable_iff_measurable
 
-/- warning: measure_theory.ae_fin_strongly_measurable_iff_ae_measurable -> MeasureTheory.aefinStronglyMeasurable_iff_aemeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {G : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u2} G] [_inst_3 : MeasurableSpace.{u2} G] [_inst_4 : BorelSpace.{u2} G (UniformSpace.toTopologicalSpace.{u2} G (PseudoMetricSpace.toUniformSpace.{u2} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} G _inst_2))) _inst_3] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u2} G (UniformSpace.toTopologicalSpace.{u2} G (PseudoMetricSpace.toUniformSpace.{u2} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} G _inst_2)))] {f : α -> G} {m0 : MeasurableSpace.{u1} α} (μ : MeasureTheory.Measure.{u1} α m0) [_inst_6 : MeasureTheory.SigmaFinite.{u1} α m0 μ], Iff (MeasureTheory.AEFinStronglyMeasurable.{u1, u2} α G (UniformSpace.toTopologicalSpace.{u2} G (PseudoMetricSpace.toUniformSpace.{u2} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} G _inst_2))) (AddZeroClass.toHasZero.{u2} G (AddMonoid.toAddZeroClass.{u2} G (SubNegMonoid.toAddMonoid.{u2} G (AddGroup.toSubNegMonoid.{u2} G (SeminormedAddGroup.toAddGroup.{u2} G (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} G _inst_2)))))) m0 f μ) (AEMeasurable.{u1, u2} α G _inst_3 m0 f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {G : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u1} G] [_inst_3 : MeasurableSpace.{u1} G] [_inst_4 : BorelSpace.{u1} G (UniformSpace.toTopologicalSpace.{u1} G (PseudoMetricSpace.toUniformSpace.{u1} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} G _inst_2))) _inst_3] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u1} G (UniformSpace.toTopologicalSpace.{u1} G (PseudoMetricSpace.toUniformSpace.{u1} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} G _inst_2)))] {f : α -> G} {m0 : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m0) [_inst_6 : MeasureTheory.SigmaFinite.{u2} α m0 μ], Iff (MeasureTheory.AEFinStronglyMeasurable.{u2, u1} α G (UniformSpace.toTopologicalSpace.{u1} G (PseudoMetricSpace.toUniformSpace.{u1} G (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} G _inst_2))) (NegZeroClass.toZero.{u1} G (SubNegZeroMonoid.toNegZeroClass.{u1} G (SubtractionMonoid.toSubNegZeroMonoid.{u1} G (SubtractionCommMonoid.toSubtractionMonoid.{u1} G (AddCommGroup.toDivisionAddCommMonoid.{u1} G (SeminormedAddCommGroup.toAddCommGroup.{u1} G _inst_2)))))) m0 f μ) (AEMeasurable.{u2, u1} α G _inst_3 m0 f μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_fin_strongly_measurable_iff_ae_measurable MeasureTheory.aefinStronglyMeasurable_iff_aemeasurableₓ'. -/
 /-- In a space with second countable topology and a sigma-finite measure,
   `ae_fin_strongly_measurable` and `ae_measurable` are equivalent. -/
 theorem aefinStronglyMeasurable_iff_aemeasurable {m0 : MeasurableSpace α} (μ : Measure α)
@@ -2925,12 +2136,6 @@ theorem aefinStronglyMeasurable_iff_aemeasurable {m0 : MeasurableSpace α} (μ :
 
 end SecondCountableTopology
 
-/- warning: measure_theory.measurable_uncurry_of_continuous_of_measurable -> MeasureTheory.measurable_uncurry_of_continuous_of_measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_2 : TopologicalSpace.{u3} ι] [_inst_3 : TopologicalSpace.MetrizableSpace.{u3} ι _inst_2] [_inst_4 : MeasurableSpace.{u3} ι] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u3} ι _inst_2] [_inst_6 : OpensMeasurableSpace.{u3} ι _inst_2 _inst_4] {mβ : MeasurableSpace.{u2} β} [_inst_7 : TopologicalSpace.{u2} β] [_inst_8 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_7] [_inst_9 : BorelSpace.{u2} β _inst_7 mβ] {m : MeasurableSpace.{u1} α} {u : ι -> α -> β}, (forall (x : α), Continuous.{u3, u2} ι β _inst_2 _inst_7 (fun (i : ι) => u i x)) -> (forall (i : ι), Measurable.{u1, u2} α β m mβ (u i)) -> (Measurable.{max u3 u1, u2} (Prod.{u3, u1} ι α) β (Prod.instMeasurableSpace.{u3, u1} ι α _inst_4 m) mβ (Function.uncurry.{u3, u1, u2} ι α β u))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} ι] [_inst_3 : TopologicalSpace.MetrizableSpace.{u1} ι _inst_2] [_inst_4 : MeasurableSpace.{u1} ι] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u1} ι _inst_2] [_inst_6 : OpensMeasurableSpace.{u1} ι _inst_2 _inst_4] {mβ : MeasurableSpace.{u2} β} [_inst_7 : TopologicalSpace.{u2} β] [_inst_8 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_7] [_inst_9 : BorelSpace.{u2} β _inst_7 mβ] {m : MeasurableSpace.{u3} α} {u : ι -> α -> β}, (forall (x : α), Continuous.{u1, u2} ι β _inst_2 _inst_7 (fun (i : ι) => u i x)) -> (forall (i : ι), Measurable.{u3, u2} α β m mβ (u i)) -> (Measurable.{max u3 u1, u2} (Prod.{u1, u3} ι α) β (Prod.instMeasurableSpace.{u1, u3} ι α _inst_4 m) mβ (Function.uncurry.{u1, u3, u2} ι α β u))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measurable_uncurry_of_continuous_of_measurable MeasureTheory.measurable_uncurry_of_continuous_of_measurableₓ'. -/
 theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type _} [TopologicalSpace ι]
     [MetrizableSpace ι] [MeasurableSpace ι] [SecondCountableTopology ι] [OpensMeasurableSpace ι]
     {mβ : MeasurableSpace β} [TopologicalSpace β] [PseudoMetrizableSpace β] [BorelSpace β]
@@ -2967,12 +2172,6 @@ theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type _} [Topo
   exact ((t_sf n).Measurable.comp measurable_fst).subtype_mk
 #align measure_theory.measurable_uncurry_of_continuous_of_measurable MeasureTheory.measurable_uncurry_of_continuous_of_measurable
 
-/- warning: measure_theory.strongly_measurable_uncurry_of_continuous_of_strongly_measurable -> MeasureTheory.stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_2 : TopologicalSpace.{u3} ι] [_inst_3 : TopologicalSpace.MetrizableSpace.{u3} ι _inst_2] [_inst_4 : MeasurableSpace.{u3} ι] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u3} ι _inst_2] [_inst_6 : OpensMeasurableSpace.{u3} ι _inst_2 _inst_4] [_inst_7 : TopologicalSpace.{u2} β] [_inst_8 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_7] [_inst_9 : MeasurableSpace.{u1} α] {u : ι -> α -> β}, (forall (x : α), Continuous.{u3, u2} ι β _inst_2 _inst_7 (fun (i : ι) => u i x)) -> (forall (i : ι), MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_7 _inst_9 (u i)) -> (MeasureTheory.StronglyMeasurable.{max u3 u1, u2} (Prod.{u3, u1} ι α) β _inst_7 (Prod.instMeasurableSpace.{u3, u1} ι α _inst_4 _inst_9) (Function.uncurry.{u3, u1, u2} ι α β u))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} ι] [_inst_3 : TopologicalSpace.MetrizableSpace.{u1} ι _inst_2] [_inst_4 : MeasurableSpace.{u1} ι] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u1} ι _inst_2] [_inst_6 : OpensMeasurableSpace.{u1} ι _inst_2 _inst_4] [_inst_7 : TopologicalSpace.{u2} β] [_inst_8 : TopologicalSpace.PseudoMetrizableSpace.{u2} β _inst_7] [_inst_9 : MeasurableSpace.{u3} α] {u : ι -> α -> β}, (forall (x : α), Continuous.{u1, u2} ι β _inst_2 _inst_7 (fun (i : ι) => u i x)) -> (forall (i : ι), MeasureTheory.StronglyMeasurable.{u3, u2} α β _inst_7 _inst_9 (u i)) -> (MeasureTheory.StronglyMeasurable.{max u3 u1, u2} (Prod.{u1, u3} ι α) β _inst_7 (Prod.instMeasurableSpace.{u1, u3} ι α _inst_4 _inst_9) (Function.uncurry.{u1, u3, u2} ι α β u))
-Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable_uncurry_of_continuous_of_strongly_measurable MeasureTheory.stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurableₓ'. -/
 theorem stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable {α β ι : Type _}
     [TopologicalSpace ι] [MetrizableSpace ι] [MeasurableSpace ι] [SecondCountableTopology ι]
     [OpensMeasurableSpace ι] [TopologicalSpace β] [PseudoMetrizableSpace β] [MeasurableSpace α]

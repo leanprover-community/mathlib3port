@@ -87,12 +87,6 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
 #align category_theory.curry CategoryTheory.curry
 -/
 
-/- warning: category_theory.currying -> CategoryTheory.currying is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u2, u5} D] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E], CategoryTheory.Equivalence.{max u4 u5 u3, max (max u4 u5) u3, max u1 (max u5 u3) u4 u2 u3 u5 u6, max (max u1 u2) u3 (max u4 u5) u6} (CategoryTheory.Functor.{u1, max u5 u3, u4, max u2 u3 u5 u6} C _inst_2 (CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_3 E _inst_4) (CategoryTheory.Functor.category.{u2, u3, u5, u6} D _inst_3 E _inst_4)) (CategoryTheory.Functor.category.{u1, max u5 u3, u4, max u2 u3 u5 u6} C _inst_2 (CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_3 E _inst_4) (CategoryTheory.Functor.category.{u2, u3, u5, u6} D _inst_3 E _inst_4)) (CategoryTheory.Functor.{max u1 u2, u3, max u4 u5, u6} (Prod.{u4, u5} C D) (CategoryTheory.prod.{u1, u2, u4, u5} C _inst_2 D _inst_3) E _inst_4) (CategoryTheory.Functor.category.{max u1 u2, u3, max u4 u5, u6} (Prod.{u4, u5} C D) (CategoryTheory.prod.{u1, u2, u4, u5} C _inst_2 D _inst_3) E _inst_4)
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u2, u5} D] {E : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u3, u6} E], CategoryTheory.Equivalence.{max (max u4 u5) u3, max (max u4 u5) u3, max (max (max (max (max (max u6 u5) u3) u2) u4) u5 u3) u1, max (max (max u6 u5 u4) u3) u1 u2} (CategoryTheory.Functor.{u1, max u5 u3, u4, max (max (max u6 u5) u3) u2} C _inst_2 (CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_3 E _inst_4) (CategoryTheory.Functor.category.{u2, u3, u5, u6} D _inst_3 E _inst_4)) (CategoryTheory.Functor.{max u1 u2, u3, max u5 u4, u6} (Prod.{u4, u5} C D) (CategoryTheory.prod.{u1, u2, u4, u5} C _inst_2 D _inst_3) E _inst_4) (CategoryTheory.Functor.category.{u1, max u5 u3, u4, max (max (max u5 u6) u2) u3} C _inst_2 (CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_3 E _inst_4) (CategoryTheory.Functor.category.{u2, u3, u5, u6} D _inst_3 E _inst_4)) (CategoryTheory.Functor.category.{max u1 u2, u3, max u4 u5, u6} (Prod.{u4, u5} C D) (CategoryTheory.prod.{u1, u2, u4, u5} C _inst_2 D _inst_3) E _inst_4)
-Case conversion may be inaccurate. Consider using '#align category_theory.currying CategoryTheory.curryingₓ'. -/
 -- create projection simp lemmas even though this isn't a `{ .. }`.
 /-- The equivalence of functor categories given by currying/uncurrying.
 -/
@@ -108,18 +102,12 @@ def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
       (by tidy))
 #align category_theory.currying CategoryTheory.currying
 
-/- warning: category_theory.flip_iso_curry_swap_uncurry -> CategoryTheory.flipIsoCurrySwapUncurry is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.flip_iso_curry_swap_uncurry CategoryTheory.flipIsoCurrySwapUncurryₓ'. -/
 /-- `F.flip` is isomorphic to uncurrying `F`, swapping the variables, and currying. -/
 @[simps]
 def flipIsoCurrySwapUncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (Prod.swap _ _ ⋙ uncurry.obj F) :=
   NatIso.ofComponents (fun d => NatIso.ofComponents (fun c => Iso.refl _) (by tidy)) (by tidy)
 #align category_theory.flip_iso_curry_swap_uncurry CategoryTheory.flipIsoCurrySwapUncurry
 
-/- warning: category_theory.uncurry_obj_flip -> CategoryTheory.uncurryObjFlip is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.uncurry_obj_flip CategoryTheory.uncurryObjFlipₓ'. -/
 /-- The uncurrying of `F.flip` is isomorphic to
 swapping the factors followed by the uncurrying of `F`. -/
 @[simps]

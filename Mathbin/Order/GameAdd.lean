@@ -62,12 +62,6 @@ inductive GameAdd : α × β → α × β → Prop
 #align prod.game_add Prod.GameAdd
 -/
 
-/- warning: prod.game_add_iff -> Prod.gameAdd_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (Prod.GameAdd.{u1, u2} α β rα rβ x y) (Or (And (rα (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (Eq.{succ u2} β (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y))) (And (rβ (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y)) (Eq.{succ u1} α (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Prod.GameAdd.{u2, u1} α β rα rβ x y) (Or (And (rα (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (Eq.{succ u1} β (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y))) (And (rβ (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y)) (Eq.{succ u2} α (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y))))
-Case conversion may be inaccurate. Consider using '#align prod.game_add_iff Prod.gameAdd_iffₓ'. -/
 theorem gameAdd_iff {rα rβ} {x y : α × β} :
     GameAdd rα rβ x y ↔ rα x.1 y.1 ∧ x.2 = y.2 ∨ rβ x.2 y.2 ∧ x.1 = y.1 :=
   by
@@ -79,56 +73,26 @@ theorem gameAdd_iff {rα rβ} {x y : α × β} :
     exacts[game_add.fst h, game_add.snd h]
 #align prod.game_add_iff Prod.gameAdd_iff
 
-/- warning: prod.game_add_mk_iff -> Prod.gameAdd_mk_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Prod.GameAdd.{u1, u2} α β rα rβ (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (Or (And (rα a₁ a₂) (Eq.{succ u2} β b₁ b₂)) (And (rβ b₁ b₂) (Eq.{succ u1} α a₁ a₂)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Prod.GameAdd.{u2, u1} α β rα rβ (Prod.mk.{u2, u1} α β a₁ b₁) (Prod.mk.{u2, u1} α β a₂ b₂)) (Or (And (rα a₁ a₂) (Eq.{succ u1} β b₁ b₂)) (And (rβ b₁ b₂) (Eq.{succ u2} α a₁ a₂)))
-Case conversion may be inaccurate. Consider using '#align prod.game_add_mk_iff Prod.gameAdd_mk_iffₓ'. -/
 theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
     GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ rα a₁ a₂ ∧ b₁ = b₂ ∨ rβ b₁ b₂ ∧ a₁ = a₂ :=
   gameAdd_iff
 #align prod.game_add_mk_iff Prod.gameAdd_mk_iff
 
-/- warning: prod.game_add_swap_swap -> Prod.gameAdd_swap_swap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop) (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β), Iff (Prod.GameAdd.{u2, u1} β α rβ rα (Prod.swap.{u1, u2} α β a) (Prod.swap.{u1, u2} α β b)) (Prod.GameAdd.{u1, u2} α β rα rβ a b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop) (a : Prod.{u2, u1} α β) (b : Prod.{u2, u1} α β), Iff (Prod.GameAdd.{u1, u2} β α rβ rα (Prod.swap.{u2, u1} α β a) (Prod.swap.{u2, u1} α β b)) (Prod.GameAdd.{u2, u1} α β rα rβ a b)
-Case conversion may be inaccurate. Consider using '#align prod.game_add_swap_swap Prod.gameAdd_swap_swapₓ'. -/
 @[simp]
 theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.symm b.symm ↔ GameAdd rα rβ a b :=
   fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm']
 #align prod.game_add_swap_swap Prod.gameAdd_swap_swap
 
-/- warning: prod.game_add_swap_swap_mk -> Prod.gameAdd_swap_swap_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop) (a₁ : α) (a₂ : α) (b₁ : β) (b₂ : β), Iff (Prod.GameAdd.{u1, u2} α β rα rβ (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (Prod.GameAdd.{u2, u1} β α rβ rα (Prod.mk.{u2, u1} β α b₁ a₁) (Prod.mk.{u2, u1} β α b₂ a₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop) (a₁ : α) (a₂ : α) (b₁ : β) (b₂ : β), Iff (Prod.GameAdd.{u2, u1} α β rα rβ (Prod.mk.{u2, u1} α β a₁ b₁) (Prod.mk.{u2, u1} α β a₂ b₂)) (Prod.GameAdd.{u1, u2} β α rβ rα (Prod.mk.{u1, u2} β α b₁ a₁) (Prod.mk.{u1, u2} β α b₂ a₂))
-Case conversion may be inaccurate. Consider using '#align prod.game_add_swap_swap_mk Prod.gameAdd_swap_swap_mkₓ'. -/
 theorem gameAdd_swap_swap_mk (a₁ a₂ : α) (b₁ b₂ : β) :
     GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ GameAdd rβ rα (b₁, a₁) (b₂, a₂) :=
   gameAdd_swap_swap rβ rα (b₁, a₁) (b₂, a₂)
 #align prod.game_add_swap_swap_mk Prod.gameAdd_swap_swap_mk
 
-/- warning: prod.game_add_le_lex -> Prod.gameAdd_le_lex is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop), LE.le.{max u1 u2} ((Prod.{u1, u2} α β) -> (Prod.{u1, u2} α β) -> Prop) (Pi.hasLe.{max u1 u2, max u1 u2} (Prod.{u1, u2} α β) (fun (ᾰ : Prod.{u1, u2} α β) => (Prod.{u1, u2} α β) -> Prop) (fun (i : Prod.{u1, u2} α β) => Pi.hasLe.{max u1 u2, 0} (Prod.{u1, u2} α β) (fun (ᾰ : Prod.{u1, u2} α β) => Prop) (fun (i : Prod.{u1, u2} α β) => Prop.le))) (Prod.GameAdd.{u1, u2} α β rα rβ) (Prod.Lex.{u1, u2} α β rα rβ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop), LE.le.{max u2 u1} ((Prod.{u2, u1} α β) -> (Prod.{u2, u1} α β) -> Prop) (Pi.hasLe.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (fun (ᾰ : Prod.{u2, u1} α β) => (Prod.{u2, u1} α β) -> Prop) (fun (i : Prod.{u2, u1} α β) => Pi.hasLe.{max u2 u1, 0} (Prod.{u2, u1} α β) (fun (ᾰ : Prod.{u2, u1} α β) => Prop) (fun (i : Prod.{u2, u1} α β) => Prop.le))) (Prod.GameAdd.{u2, u1} α β rα rβ) (Prod.Lex.{u2, u1} α β rα rβ)
-Case conversion may be inaccurate. Consider using '#align prod.game_add_le_lex Prod.gameAdd_le_lexₓ'. -/
 /-- `prod.game_add` is a `subrelation` of `prod.lex`. -/
 theorem gameAdd_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
   h.rec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
 #align prod.game_add_le_lex Prod.gameAdd_le_lex
 
-/- warning: prod.rprod_le_trans_gen_game_add -> Prod.rprod_le_transGen_gameAdd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop), LE.le.{max u1 u2} ((Prod.{u1, u2} α β) -> (Prod.{u1, u2} α β) -> Prop) (Pi.hasLe.{max u1 u2, max u1 u2} (Prod.{u1, u2} α β) (fun (ᾰ : Prod.{u1, u2} α β) => (Prod.{u1, u2} α β) -> Prop) (fun (i : Prod.{u1, u2} α β) => Pi.hasLe.{max u1 u2, 0} (Prod.{u1, u2} α β) (fun (ᾰ : Prod.{u1, u2} α β) => Prop) (fun (i : Prod.{u1, u2} α β) => Prop.le))) (Prod.RProd.{u1, u2} α β rα rβ) (Relation.TransGen.{max u1 u2} (Prod.{u1, u2} α β) (Prod.GameAdd.{u1, u2} α β rα rβ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (rα : α -> α -> Prop) (rβ : β -> β -> Prop), LE.le.{max u2 u1} ((Prod.{u2, u1} α β) -> (Prod.{u2, u1} α β) -> Prop) (Pi.hasLe.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (fun (ᾰ : Prod.{u2, u1} α β) => (Prod.{u2, u1} α β) -> Prop) (fun (i : Prod.{u2, u1} α β) => Pi.hasLe.{max u2 u1, 0} (Prod.{u2, u1} α β) (fun (ᾰ : Prod.{u2, u1} α β) => Prop) (fun (i : Prod.{u2, u1} α β) => Prop.le))) (Prod.RProd.{u2, u1} α β rα rβ) (Relation.TransGen.{max u1 u2} (Prod.{u2, u1} α β) (Prod.GameAdd.{u2, u1} α β rα rβ))
-Case conversion may be inaccurate. Consider using '#align prod.rprod_le_trans_gen_game_add Prod.rprod_le_transGen_gameAddₓ'. -/
 /-- `prod.rprod` is a subrelation of the transitive closure of `prod.game_add`. -/
 theorem rprod_le_transGen_gameAdd : RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) := fun _ _ h =>
   h.rec
@@ -139,12 +103,6 @@ theorem rprod_le_transGen_gameAdd : RProd rα rβ ≤ Relation.TransGen (GameAdd
 
 end Prod
 
-/- warning: acc.prod_game_add -> Acc.prod_gameAdd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u1} α rα a) -> (Acc.{succ u2} β rβ b) -> (Acc.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.GameAdd.{u1, u2} α β rα rβ) (Prod.mk.{u1, u2} α β a b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u2} α rα a) -> (Acc.{succ u1} β rβ b) -> (Acc.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.GameAdd.{u2, u1} α β rα rβ) (Prod.mk.{u2, u1} α β a b))
-Case conversion may be inaccurate. Consider using '#align acc.prod_game_add Acc.prod_gameAddₓ'. -/
 /-- If `a` is accessible under `rα` and `b` is accessible under `rβ`, then `(a, b)` is
   accessible under `prod.game_add rα rβ`. Notice that `prod.lex_accessible` requires the
   stronger condition `∀ b, acc rβ b`. -/
@@ -157,12 +115,6 @@ theorem Acc.prod_gameAdd {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.Gam
   exacts[iha _ ra (Acc.intro b hb), ihb _ rb]
 #align acc.prod_game_add Acc.prod_gameAdd
 
-/- warning: well_founded.prod_game_add -> WellFounded.prod_gameAdd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u1} α rα) -> (WellFounded.{succ u2} β rβ) -> (WellFounded.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.GameAdd.{u1, u2} α β rα rβ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u2} α rα) -> (WellFounded.{succ u1} β rβ) -> (WellFounded.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.GameAdd.{u2, u1} α β rα rβ))
-Case conversion may be inaccurate. Consider using '#align well_founded.prod_game_add WellFounded.prod_gameAddₓ'. -/
 /-- The `prod.game_add` relation on well-founded inputs is well-founded.
 
   In particular, the sum of two well-founded games is well-founded. -/
@@ -185,24 +137,12 @@ def GameAdd.fix {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFo
 #align prod.game_add.fix Prod.GameAdd.fix
 -/
 
-/- warning: prod.game_add.fix_eq -> Prod.GameAdd.fix_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {C : α -> β -> Sort.{u3}} (hα : WellFounded.{succ u1} α rα) (hβ : WellFounded.{succ u2} β rβ) (IH : forall (a₁ : α) (b₁ : β), (forall (a₂ : α) (b₂ : β), (Prod.GameAdd.{u1, u2} α β rα rβ (Prod.mk.{u1, u2} α β a₂ b₂) (Prod.mk.{u1, u2} α β a₁ b₁)) -> (C a₂ b₂)) -> (C a₁ b₁)) (a : α) (b : β), Eq.{u3} (C a b) (Prod.GameAdd.fix.{u1, u2, u3} α β rα rβ (fun (a₂ : α) (b₂ : β) => C a₂ b₂) hα hβ IH a b) (IH a b (fun (a' : α) (b' : β) (h : Prod.GameAdd.{u1, u2} α β rα rβ (Prod.mk.{u1, u2} α β a' b') (Prod.mk.{u1, u2} α β a b)) => Prod.GameAdd.fix.{u1, u2, u3} α β rα rβ C hα hβ IH a' b'))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {C : α -> β -> Sort.{u3}} (hα : WellFounded.{succ u2} α rα) (hβ : WellFounded.{succ u1} β rβ) (IH : forall (a₁ : α) (b₁ : β), (forall (a₂ : α) (b₂ : β), (Prod.GameAdd.{u2, u1} α β rα rβ (Prod.mk.{u2, u1} α β a₂ b₂) (Prod.mk.{u2, u1} α β a₁ b₁)) -> (C a₂ b₂)) -> (C a₁ b₁)) (a : α) (b : β), Eq.{u3} (C a b) (Prod.GameAdd.fix.{u2, u1, u3} α β rα rβ (fun (a₂ : α) (b₂ : β) => C a₂ b₂) hα hβ IH a b) (IH a b (fun (a' : α) (b' : β) (h : Prod.GameAdd.{u2, u1} α β rα rβ (Prod.mk.{u2, u1} α β a' b') (Prod.mk.{u2, u1} α β a b)) => Prod.GameAdd.fix.{u2, u1, u3} α β rα rβ (fun (a₂ : α) (b₂ : β) => C a₂ b₂) hα hβ IH a' b'))
-Case conversion may be inaccurate. Consider using '#align prod.game_add.fix_eq Prod.GameAdd.fix_eqₓ'. -/
 theorem GameAdd.fix_eq {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFounded rβ)
     (IH : ∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) (a : α) (b : β) :
     GameAdd.fix hα hβ IH a b = IH a b fun a' b' h => GameAdd.fix hα hβ IH a' b' :=
   WellFounded.fix_eq _ _ _
 #align prod.game_add.fix_eq Prod.GameAdd.fix_eq
 
-/- warning: prod.game_add.induction -> Prod.GameAdd.induction is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {C : α -> β -> Prop}, (WellFounded.{succ u1} α rα) -> (WellFounded.{succ u2} β rβ) -> (forall (a₁ : α) (b₁ : β), (forall (a₂ : α) (b₂ : β), (Prod.GameAdd.{u1, u2} α β rα rβ (Prod.mk.{u1, u2} α β a₂ b₂) (Prod.mk.{u1, u2} α β a₁ b₁)) -> (C a₂ b₂)) -> (C a₁ b₁)) -> (forall (a : α) (b : β), C a b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {C : α -> β -> Prop}, (WellFounded.{succ u2} α rα) -> (WellFounded.{succ u1} β rβ) -> (forall (a₁ : α) (b₁ : β), (forall (a₂ : α) (b₂ : β), (Prod.GameAdd.{u2, u1} α β rα rβ (Prod.mk.{u2, u1} α β a₂ b₂) (Prod.mk.{u2, u1} α β a₁ b₁)) -> (C a₂ b₂)) -> (C a₁ b₁)) -> (forall (a : α) (b : β), C a b)
-Case conversion may be inaccurate. Consider using '#align prod.game_add.induction Prod.GameAdd.inductionₓ'. -/
 /-- Induction on the well-founded `prod.game_add` relation.
 
   Note that it's strictly more general to induct on the lexicographic order instead. -/

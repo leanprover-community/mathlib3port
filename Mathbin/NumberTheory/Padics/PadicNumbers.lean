@@ -87,12 +87,6 @@ section
 
 variable {p : ℕ} [Fact p.Prime]
 
-/- warning: padic_seq.stationary -> PadicSeq.stationary is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)}, (Not (HasEquivₓ.Equiv.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (setoidHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (OfNat.mk.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (Zero.zero.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> (Exists.{1} Nat (fun (N : Nat) => forall (m : Nat) (n : Nat), (LE.le.{0} Nat Nat.hasLe N m) -> (LE.le.{0} Nat Nat.hasLe N n) -> (Eq.{1} Rat (padicNorm p (coeFn.{1, 1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f n)) (padicNorm p (coeFn.{1, 1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f m)))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)}, (Not (HasEquiv.Equiv.{1, 0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (instHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (Zero.toOfNat0.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> (Exists.{1} Nat (fun (N : Nat) => forall (m : Nat) (n : Nat), (LE.le.{0} Nat instLENat N m) -> (LE.le.{0} Nat instLENat N n) -> (Eq.{1} Rat (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f n)) (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f m)))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.stationary PadicSeq.stationaryₓ'. -/
 /-- The `p`-adic norm of the entries of a nonzero Cauchy sequence of rationals is eventually
 constant. -/
 theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
@@ -116,23 +110,11 @@ theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
     apply _root_.lt_irrefl _ this⟩
 #align padic_seq.stationary PadicSeq.stationary
 
-/- warning: padic_seq.stationary_point -> PadicSeq.stationaryPoint is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> Nat
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> Nat
-Case conversion may be inaccurate. Consider using '#align padic_seq.stationary_point PadicSeq.stationaryPointₓ'. -/
 /-- For all `n ≥ stationary_point f hf`, the `p`-adic norm of `f n` is the same. -/
 def stationaryPoint {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
   Classical.choose <| stationary hf
 #align padic_seq.stationary_point PadicSeq.stationaryPoint
 
-/- warning: padic_seq.stationary_point_spec -> PadicSeq.stationaryPoint_spec is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe (PadicSeq.stationaryPoint p _inst_1 f hf) m) -> (LE.le.{0} Nat Nat.hasLe (PadicSeq.stationaryPoint p _inst_1 f hf) n) -> (Eq.{1} Rat (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f n)) (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f m)))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) {m : Nat} {n : Nat}, (LE.le.{0} Nat instLENat (PadicSeq.stationaryPoint p _inst_1 f hf) m) -> (LE.le.{0} Nat instLENat (PadicSeq.stationaryPoint p _inst_1 f hf) n) -> (Eq.{1} Rat (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f n)) (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f m)))
-Case conversion may be inaccurate. Consider using '#align padic_seq.stationary_point_spec PadicSeq.stationaryPoint_specₓ'. -/
 theorem stationaryPoint_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∀ {m n},
       stationaryPoint hf ≤ m → stationaryPoint hf ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
@@ -147,12 +129,6 @@ def norm (f : PadicSeq p) : ℚ :=
 #align padic_seq.norm PadicSeq.norm
 -/
 
-/- warning: padic_seq.norm_zero_iff -> PadicSeq.norm_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : PadicSeq p), Iff (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : PadicSeq p), Iff (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_zero_iff PadicSeq.norm_zero_iffₓ'. -/
 theorem norm_zero_iff (f : PadicSeq p) : f.norm = 0 ↔ f ≈ 0 :=
   by
   constructor
@@ -177,34 +153,16 @@ open CauSeq
 
 variable {p : ℕ} [Fact p.Prime]
 
-/- warning: padic_seq.equiv_zero_of_val_eq_of_equiv_zero -> PadicSeq.equiv_zero_of_val_eq_of_equiv_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (forall (k : Nat), Eq.{1} Rat (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f k)) (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) g k))) -> (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1)))))) -> (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) g (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (forall (k : Nat), Eq.{1} Rat (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f k)) (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) g k))) -> (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))))) -> (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) g (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.equiv_zero_of_val_eq_of_equiv_zero PadicSeq.equiv_zero_of_val_eq_of_equiv_zeroₓ'. -/
 theorem equiv_zero_of_val_eq_of_equiv_zero {f g : PadicSeq p}
     (h : ∀ k, padicNorm p (f k) = padicNorm p (g k)) (hf : f ≈ 0) : g ≈ 0 := fun ε hε =>
   let ⟨i, hi⟩ := hf _ hε
   ⟨i, fun j hj => by simpa [h] using hi _ hj⟩
 #align padic_seq.equiv_zero_of_val_eq_of_equiv_zero PadicSeq.equiv_zero_of_val_eq_of_equiv_zero
 
-/- warning: padic_seq.norm_nonzero_of_not_equiv_zero -> PadicSeq.norm_nonzero_of_not_equiv_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> (Ne.{1} Rat (PadicSeq.norm p _inst_1 f) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> (Ne.{1} Rat (PadicSeq.norm p _inst_1 f) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_nonzero_of_not_equiv_zero PadicSeq.norm_nonzero_of_not_equiv_zeroₓ'. -/
 theorem norm_nonzero_of_not_equiv_zero {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm ≠ 0 :=
   hf ∘ f.norm_zero_iff.1
 #align padic_seq.norm_nonzero_of_not_equiv_zero PadicSeq.norm_nonzero_of_not_equiv_zero
 
-/- warning: padic_seq.norm_eq_norm_app_of_nonzero -> PadicSeq.norm_eq_norm_app_of_nonzero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> (Exists.{1} Rat (fun (k : Rat) => And (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (padicNorm p k)) (Ne.{1} Rat k (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> (Exists.{1} Rat (fun (k : Rat) => And (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (padicNorm p k)) (Ne.{1} Rat k (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_eq_norm_app_of_nonzero PadicSeq.norm_eq_norm_app_of_nonzeroₓ'. -/
 theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∃ k, f.norm = padicNorm p k ∧ k ≠ 0 :=
   have heq : f.norm = padicNorm p (f <| stationaryPoint hf) := by simp [norm, hf]
@@ -212,42 +170,18 @@ theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) :
     norm_nonzero_of_not_equiv_zero hf (by simpa [h] using HEq)⟩
 #align padic_seq.norm_eq_norm_app_of_nonzero PadicSeq.norm_eq_norm_app_of_nonzero
 
-/- warning: padic_seq.not_lim_zero_const_of_nonzero -> PadicSeq.not_limZero_const_of_nonzero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {q : Rat}, (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) -> (Not (CauSeq.LimZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (CauSeq.const.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1) q)))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {q : Rat}, (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) -> (Not (CauSeq.LimZero.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (CauSeq.const.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1) q)))
-Case conversion may be inaccurate. Consider using '#align padic_seq.not_lim_zero_const_of_nonzero PadicSeq.not_limZero_const_of_nonzeroₓ'. -/
 theorem not_limZero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬LimZero (const (padicNorm p) q) :=
   fun h' => hq <| const_limZero.1 h'
 #align padic_seq.not_lim_zero_const_of_nonzero PadicSeq.not_limZero_const_of_nonzero
 
-/- warning: padic_seq.not_equiv_zero_const_of_nonzero -> PadicSeq.not_equiv_zero_const_of_nonzero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {q : Rat}, (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) -> (Not (HasEquivₓ.Equiv.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (setoidHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) (CauSeq.const.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1) q) (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (OfNat.mk.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (Zero.zero.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1)))))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {q : Rat}, (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) -> (Not (HasEquiv.Equiv.{1, 0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (instHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) (CauSeq.const.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1) q) (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (Zero.toOfNat0.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.not_equiv_zero_const_of_nonzero PadicSeq.not_equiv_zero_const_of_nonzeroₓ'. -/
 theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padicNorm p) q ≈ 0 :=
   fun h : LimZero (const (padicNorm p) q - 0) => not_limZero_const_of_nonzero hq <| by simpa using h
 #align padic_seq.not_equiv_zero_const_of_nonzero PadicSeq.not_equiv_zero_const_of_nonzero
 
-/- warning: padic_seq.norm_nonneg -> PadicSeq.norm_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : PadicSeq p), LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (PadicSeq.norm p _inst_1 f)
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : PadicSeq p), LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (PadicSeq.norm p _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_nonneg PadicSeq.norm_nonnegₓ'. -/
 theorem norm_nonneg (f : PadicSeq p) : 0 ≤ f.norm :=
   if hf : f ≈ 0 then by simp [hf, norm] else by simp [norm, hf, padicNorm.nonneg]
 #align padic_seq.norm_nonneg PadicSeq.norm_nonneg
 
-/- warning: padic_seq.lift_index_left_left -> PadicSeq.lift_index_left_left is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) (v2 : Nat) (v3 : Nat), Eq.{1} Rat (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f (PadicSeq.stationaryPoint p _inst_1 f hf))) (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f (LinearOrder.max.{0} Nat Nat.linearOrder (PadicSeq.stationaryPoint p _inst_1 f hf) (LinearOrder.max.{0} Nat Nat.linearOrder v2 v3))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) (v2 : Nat) (v3 : Nat), Eq.{1} Rat (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f (PadicSeq.stationaryPoint p _inst_1 f hf))) (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f (Max.max.{0} Nat Nat.instMaxNat (PadicSeq.stationaryPoint p _inst_1 f hf) (Max.max.{0} Nat Nat.instMaxNat v2 v3))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.lift_index_left_left PadicSeq.lift_index_left_leftₓ'. -/
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_left_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v2 v3 : ℕ) :
     padicNorm p (f (stationaryPoint hf)) = padicNorm p (f (max (stationaryPoint hf) (max v2 v3))) :=
@@ -257,12 +191,6 @@ theorem lift_index_left_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v2 v3 : ℕ) :
   · exact le_rfl
 #align padic_seq.lift_index_left_left PadicSeq.lift_index_left_left
 
-/- warning: padic_seq.lift_index_left -> PadicSeq.lift_index_left is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) (v1 : Nat) (v3 : Nat), Eq.{1} Rat (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f (PadicSeq.stationaryPoint p _inst_1 f hf))) (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f (LinearOrder.max.{0} Nat Nat.linearOrder v1 (LinearOrder.max.{0} Nat Nat.linearOrder (PadicSeq.stationaryPoint p _inst_1 f hf) v3))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) (v1 : Nat) (v3 : Nat), Eq.{1} Rat (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f (PadicSeq.stationaryPoint p _inst_1 f hf))) (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f (Max.max.{0} Nat Nat.instMaxNat v1 (Max.max.{0} Nat Nat.instMaxNat (PadicSeq.stationaryPoint p _inst_1 f hf) v3))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.lift_index_left PadicSeq.lift_index_leftₓ'. -/
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v3 : ℕ) :
     padicNorm p (f (stationaryPoint hf)) = padicNorm p (f (max v1 (max (stationaryPoint hf) v3))) :=
@@ -274,12 +202,6 @@ theorem lift_index_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v3 : ℕ) :
   · exact le_rfl
 #align padic_seq.lift_index_left PadicSeq.lift_index_left
 
-/- warning: padic_seq.lift_index_right -> PadicSeq.lift_index_right is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) (v1 : Nat) (v2 : Nat), Eq.{1} Rat (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f (PadicSeq.stationaryPoint p _inst_1 f hf))) (padicNorm p (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f (LinearOrder.max.{0} Nat Nat.linearOrder v1 (LinearOrder.max.{0} Nat Nat.linearOrder v2 (PadicSeq.stationaryPoint p _inst_1 f hf)))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} (hf : Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) (v1 : Nat) (v2 : Nat), Eq.{1} Rat (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f (PadicSeq.stationaryPoint p _inst_1 f hf))) (padicNorm p (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f (Max.max.{0} Nat Nat.instMaxNat v1 (Max.max.{0} Nat Nat.instMaxNat v2 (PadicSeq.stationaryPoint p _inst_1 f hf)))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.lift_index_right PadicSeq.lift_index_rightₓ'. -/
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_right {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v2 : ℕ) :
     padicNorm p (f (stationaryPoint hf)) = padicNorm p (f (max v1 (max v2 (stationaryPoint hf)))) :=
@@ -310,12 +232,6 @@ def valuation (f : PadicSeq p) : ℤ :=
 #align padic_seq.valuation PadicSeq.valuation
 -/
 
-/- warning: padic_seq.norm_eq_pow_val -> PadicSeq.norm_eq_pow_val is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField)))))))))) p) (Neg.neg.{0} Int Int.hasNeg (PadicSeq.valuation p _inst_1 f))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p}, (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (Neg.neg.{0} Int Int.instNegInt (PadicSeq.valuation p _inst_1 f))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_eq_pow_val PadicSeq.norm_eq_pow_valₓ'. -/
 theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Valuation : ℤ) :=
   by
   rw [norm, Valuation, dif_neg hf, dif_neg hf, padicNorm, if_neg]
@@ -328,12 +244,6 @@ theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Val
   simpa [H] using hε
 #align padic_seq.norm_eq_pow_val PadicSeq.norm_eq_pow_val
 
-/- warning: padic_seq.val_eq_iff_norm_eq -> PadicSeq.val_eq_iff_norm_eq is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) g (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))) -> (Iff (Eq.{1} Int (PadicSeq.valuation p _inst_1 f) (PadicSeq.valuation p _inst_1 g)) (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (PadicSeq.norm p _inst_1 g)))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) g (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))) -> (Iff (Eq.{1} Int (PadicSeq.valuation p _inst_1 f) (PadicSeq.valuation p _inst_1 g)) (Eq.{1} Rat (PadicSeq.norm p _inst_1 f) (PadicSeq.norm p _inst_1 g)))
-Case conversion may be inaccurate. Consider using '#align padic_seq.val_eq_iff_norm_eq PadicSeq.val_eq_iff_norm_eqₓ'. -/
 theorem val_eq_iff_norm_eq {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) :
     f.Valuation = g.Valuation ↔ f.norm = g.norm :=
   by
@@ -381,12 +291,6 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 include hp
 
-/- warning: padic_seq.norm_mul -> PadicSeq.norm_mul is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p) (g : PadicSeq p), Eq.{1} Rat (PadicSeq.norm p hp (HMul.hMul.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHMul.{0} (PadicSeq p) (CauSeq.hasMul.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f g)) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p) (g : PadicSeq p), Eq.{1} Rat (PadicSeq.norm p hp (HMul.hMul.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHMul.{0} (PadicSeq p) (CauSeq.instMulCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f g)) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_mul PadicSeq.norm_mulₓ'. -/
 theorem norm_mul (f g : PadicSeq p) : (f * g).norm = f.norm * g.norm :=
   if hf : f ≈ 0 then by
     have hg : f * g ≈ 0 := mul_equiv_zero' _ hf
@@ -403,22 +307,10 @@ theorem norm_mul (f g : PadicSeq p) : (f * g).norm = f.norm * g.norm :=
       apply padicNorm.mul
 #align padic_seq.norm_mul PadicSeq.norm_mul
 
-/- warning: padic_seq.eq_zero_iff_equiv_zero -> PadicSeq.eq_zero_iff_equiv_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p), Iff (Eq.{1} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) (CauSeq.Completion.mk.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp) f) (OfNat.ofNat.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) 0 (OfNat.mk.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) 0 (Zero.zero.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) (CauSeq.Completion.Cauchy.hasZero.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)))))) (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p), Iff (Eq.{1} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) (CauSeq.Completion.mk.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp) f) (OfNat.ofNat.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) 0 (Zero.toOfNat0.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) (CauSeq.Completion.instZeroCauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))))) (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.eq_zero_iff_equiv_zero PadicSeq.eq_zero_iff_equiv_zeroₓ'. -/
 theorem eq_zero_iff_equiv_zero (f : PadicSeq p) : mk f = 0 ↔ f ≈ 0 :=
   mk_eq
 #align padic_seq.eq_zero_iff_equiv_zero PadicSeq.eq_zero_iff_equiv_zero
 
-/- warning: padic_seq.ne_zero_iff_nequiv_zero -> PadicSeq.ne_zero_iff_nequiv_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p), Iff (Ne.{1} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) (CauSeq.Completion.mk.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp) f) (OfNat.ofNat.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) 0 (OfNat.mk.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) 0 (Zero.zero.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) (CauSeq.Completion.Cauchy.hasZero.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)))))) (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)))))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p), Iff (Ne.{1} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) (CauSeq.Completion.mk.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp) f) (OfNat.ofNat.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) 0 (Zero.toOfNat0.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) (CauSeq.Completion.instZeroCauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))))) (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.ne_zero_iff_nequiv_zero PadicSeq.ne_zero_iff_nequiv_zeroₓ'. -/
 theorem ne_zero_iff_nequiv_zero (f : PadicSeq p) : mk f ≠ 0 ↔ ¬f ≈ 0 :=
   not_iff_not.2 (eq_zero_iff_equiv_zero _)
 #align padic_seq.ne_zero_iff_nequiv_zero PadicSeq.ne_zero_iff_nequiv_zero
@@ -435,24 +327,12 @@ theorem norm_const (q : ℚ) : norm (const (padicNorm p) q) = padicNorm p q :=
 #align padic_seq.norm_const PadicSeq.norm_const
 -/
 
-/- warning: padic_seq.norm_values_discrete -> PadicSeq.norm_values_discrete is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (a : PadicSeq p), (Not (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) a (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))))))) -> (Exists.{1} Int (fun (z : Int) => Eq.{1} Rat (PadicSeq.norm p hp a) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField)))))))))) p) (Neg.neg.{0} Int Int.hasNeg z))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (a : PadicSeq p), (Not (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) a (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)))))) -> (Exists.{1} Int (fun (z : Int) => Eq.{1} Rat (PadicSeq.norm p hp a) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (Neg.neg.{0} Int Int.instNegInt z))))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_values_discrete PadicSeq.norm_values_discreteₓ'. -/
 theorem norm_values_discrete (a : PadicSeq p) (ha : ¬a ≈ 0) : ∃ z : ℤ, a.norm = p ^ (-z) :=
   by
   let ⟨k, hk, hk'⟩ := norm_eq_norm_app_of_nonzero ha
   simpa [hk] using padicNorm.values_discrete hk'
 #align padic_seq.norm_values_discrete PadicSeq.norm_values_discrete
 
-/- warning: padic_seq.norm_one -> PadicSeq.norm_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Rat (PadicSeq.norm p hp (OfNat.ofNat.{0} (PadicSeq p) 1 (OfNat.mk.{0} (PadicSeq p) 1 (One.one.{0} (PadicSeq p) (CauSeq.hasOne.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)))))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Rat (PadicSeq.norm p hp (OfNat.ofNat.{0} (PadicSeq p) 1 (One.toOfNat1.{0} (PadicSeq p) (CauSeq.instOneCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))))) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_one PadicSeq.norm_oneₓ'. -/
 theorem norm_one : norm (1 : PadicSeq p) = 1 :=
   by
   have h1 : ¬(1 : PadicSeq p) ≈ 0 := one_not_equiv_zero _
@@ -493,12 +373,6 @@ private theorem norm_eq_of_equiv {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g �
     apply le_of_not_gt hnlt
     apply h
 
-/- warning: padic_seq.norm_equiv -> PadicSeq.norm_equiv is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f g) -> (Eq.{1} Rat (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f g) -> (Eq.{1} Rat (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_equiv PadicSeq.norm_equivₓ'. -/
 theorem norm_equiv {f g : PadicSeq p} (hfg : f ≈ g) : f.norm = g.norm :=
   if hf : f ≈ 0 then by
     have hg : g ≈ 0 := Setoid.trans (Setoid.symm hfg) hf
@@ -515,12 +389,6 @@ private theorem norm_nonarchimedean_aux {f g : PadicSeq p} (hfg : ¬f + g ≈ 0)
   padic_index_simp [hfg, hf, hg]
   apply padicNorm.nonarchimedean
 
-/- warning: padic_seq.norm_nonarchimedean -> PadicSeq.norm_nonarchimedean is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p) (g : PadicSeq p), LE.le.{0} Rat Rat.hasLe (PadicSeq.norm p hp (HAdd.hAdd.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHAdd.{0} (PadicSeq p) (CauSeq.hasAdd.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f g)) (LinearOrder.max.{0} Rat Rat.linearOrder (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (f : PadicSeq p) (g : PadicSeq p), LE.le.{0} Rat Rat.instLERat (PadicSeq.norm p hp (HAdd.hAdd.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHAdd.{0} (PadicSeq p) (CauSeq.instAddCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f g)) (Max.max.{0} Rat (LinearOrderedRing.toMax.{0} Rat Rat.instLinearOrderedRingRat) (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_nonarchimedean PadicSeq.norm_nonarchimedeanₓ'. -/
 theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.norm :=
   if hfg : f + g ≈ 0 then
     by
@@ -569,22 +437,10 @@ theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (
 #align padic_seq.norm_eq PadicSeq.norm_eq
 -/
 
-/- warning: padic_seq.norm_neg -> PadicSeq.norm_neg is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (a : PadicSeq p), Eq.{1} Rat (PadicSeq.norm p hp (Neg.neg.{0} (PadicSeq p) (CauSeq.hasNeg.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)) a)) (PadicSeq.norm p hp a)
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (a : PadicSeq p), Eq.{1} Rat (PadicSeq.norm p hp (Neg.neg.{0} (PadicSeq p) (CauSeq.instNegCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp)) a)) (PadicSeq.norm p hp a)
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_neg PadicSeq.norm_negₓ'. -/
 theorem norm_neg (a : PadicSeq p) : (-a).norm = a.norm :=
   norm_eq <| by simp
 #align padic_seq.norm_neg PadicSeq.norm_neg
 
-/- warning: padic_seq.norm_eq_of_add_equiv_zero -> PadicSeq.norm_eq_of_add_equiv_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) (HAdd.hAdd.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHAdd.{0} (PadicSeq p) (CauSeq.hasAdd.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f g) (OfNat.ofNat.{0} (PadicSeq p) 0 (OfNat.mk.{0} (PadicSeq p) 0 (Zero.zero.{0} (PadicSeq p) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp)))))) -> (Eq.{1} Rat (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) (HAdd.hAdd.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHAdd.{0} (PadicSeq p) (CauSeq.instAddCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f g) (OfNat.ofNat.{0} (PadicSeq p) 0 (Zero.toOfNat0.{0} (PadicSeq p) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))))) -> (Eq.{1} Rat (PadicSeq.norm p hp f) (PadicSeq.norm p hp g))
-Case conversion may be inaccurate. Consider using '#align padic_seq.norm_eq_of_add_equiv_zero PadicSeq.norm_eq_of_add_equiv_zeroₓ'. -/
 theorem norm_eq_of_add_equiv_zero {f g : PadicSeq p} (h : f + g ≈ 0) : f.norm = g.norm :=
   by
   have : LimZero (f + g - 0) := h
@@ -593,12 +449,6 @@ theorem norm_eq_of_add_equiv_zero {f g : PadicSeq p} (h : f + g ≈ 0) : f.norm 
   simpa only [norm_neg] using this
 #align padic_seq.norm_eq_of_add_equiv_zero PadicSeq.norm_eq_of_add_equiv_zero
 
-/- warning: padic_seq.add_eq_max_of_ne -> PadicSeq.add_eq_max_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (Ne.{1} Rat (PadicSeq.norm p hp f) (PadicSeq.norm p hp g)) -> (Eq.{1} Rat (PadicSeq.norm p hp (HAdd.hAdd.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHAdd.{0} (PadicSeq p) (CauSeq.hasAdd.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p hp))) f g)) (LinearOrder.max.{0} Rat Rat.linearOrder (PadicSeq.norm p hp f) (PadicSeq.norm p hp g)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, (Ne.{1} Rat (PadicSeq.norm p hp f) (PadicSeq.norm p hp g)) -> (Eq.{1} Rat (PadicSeq.norm p hp (HAdd.hAdd.{0, 0, 0} (PadicSeq p) (PadicSeq p) (PadicSeq p) (instHAdd.{0} (PadicSeq p) (CauSeq.instAddCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p hp))) f g)) (Max.max.{0} Rat (LinearOrderedRing.toMax.{0} Rat Rat.instLinearOrderedRingRat) (PadicSeq.norm p hp f) (PadicSeq.norm p hp g)))
-Case conversion may be inaccurate. Consider using '#align padic_seq.add_eq_max_of_ne PadicSeq.add_eq_max_of_neₓ'. -/
 theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) :
     (f + g).norm = max f.norm g.norm :=
   have hfg : ¬f + g ≈ 0 := mt norm_eq_of_add_equiv_zero hfgne
@@ -680,43 +530,19 @@ def mk : PadicSeq p → ℚ_[p] :=
 
 variable (p)
 
-/- warning: padic.zero_def -> Padic.zero_def is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], Eq.{1} (Padic p _inst_1) (OfNat.ofNat.{0} (Padic p _inst_1) 0 (OfNat.mk.{0} (Padic p _inst_1) 0 (Zero.zero.{0} (Padic p _inst_1) (Padic.hasZero p _inst_1)))) (Quotient.mk'.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1)) (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (OfNat.mk.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (Zero.zero.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.hasZero.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))))))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], Eq.{1} (Padic p _inst_1) (OfNat.ofNat.{0} (Padic p _inst_1) 0 (Zero.toOfNat0.{0} (Padic p _inst_1) (Padic.instZeroPadic p _inst_1))) (Quotient.mk.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)) (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) 0 (Zero.toOfNat0.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align padic.zero_def Padic.zero_defₓ'. -/
 theorem zero_def : (0 : ℚ_[p]) = ⟦0⟧ :=
   rfl
 #align padic.zero_def Padic.zero_def
 
-/- warning: padic.mk_eq -> Padic.mk_eq is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, Iff (Eq.{1} (Padic p _inst_1) (Padic.mk p _inst_1 f) (Padic.mk p _inst_1 g)) (HasEquivₓ.Equiv.{1} (PadicSeq p) (setoidHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) f g)
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {f : PadicSeq p} {g : PadicSeq p}, Iff (Eq.{1} (Padic p _inst_1) (Padic.mk p _inst_1 f) (Padic.mk p _inst_1 g)) (HasEquiv.Equiv.{1, 0} (PadicSeq p) (instHasEquiv.{1} (PadicSeq p) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) f g)
-Case conversion may be inaccurate. Consider using '#align padic.mk_eq Padic.mk_eqₓ'. -/
 theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
   Quotient.eq'
 #align padic.mk_eq Padic.mk_eq
 
-/- warning: padic.const_equiv -> Padic.const_equiv is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {q : Rat} {r : Rat}, Iff (HasEquivₓ.Equiv.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (setoidHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1))) (CauSeq.const.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1) q) (CauSeq.const.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1) r)) (Eq.{1} Rat q r)
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {q : Rat} {r : Rat}, Iff (HasEquiv.Equiv.{1, 0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (instHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1))) (CauSeq.const.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1) q) (CauSeq.const.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.instIsAbsoluteValueRatInstOrderedSemiringRatSemiringPadicNorm p _inst_1) r)) (Eq.{1} Rat q r)
-Case conversion may be inaccurate. Consider using '#align padic.const_equiv Padic.const_equivₓ'. -/
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
   ⟨fun heq => eq_of_sub_eq_zero <| const_limZero.1 HEq, fun heq => by
     rw [HEq] <;> apply Setoid.refl _⟩
 #align padic.const_equiv Padic.const_equiv
 
-/- warning: padic.coe_inj -> Padic.coe_inj is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {q : Rat} {r : Rat}, Iff (Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) r)) (Eq.{1} Rat q r)
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {q : Rat} {r : Rat}, Iff (Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) q) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) r)) (Eq.{1} Rat q r)
-Case conversion may be inaccurate. Consider using '#align padic.coe_inj Padic.coe_injₓ'. -/
 @[norm_cast]
 theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
   ⟨(const_equiv p).1 ∘ Quotient.eq'.1, fun h => by rw [h]⟩
@@ -725,78 +551,36 @@ theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
 instance : CharZero ℚ_[p] :=
   ⟨fun m n => by rw [← Rat.cast_coe_nat]; norm_cast; exact id⟩
 
-/- warning: padic.coe_add -> Padic.coe_add is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) x y)) (HAdd.hAdd.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHAdd.{0} (Padic p _inst_1) (Padic.hasAdd p _inst_1)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) y))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) x y)) (HAdd.hAdd.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHAdd.{0} (Padic p _inst_1) (Padic.instAddPadic p _inst_1)) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) x) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) y))
-Case conversion may be inaccurate. Consider using '#align padic.coe_add Padic.coe_addₓ'. -/
 @[norm_cast]
 theorem coe_add : ∀ {x y : ℚ}, (↑(x + y) : ℚ_[p]) = ↑x + ↑y :=
   Rat.cast_add
 #align padic.coe_add Padic.coe_add
 
-/- warning: padic.coe_neg -> Padic.coe_neg is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat}, Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) (Neg.neg.{0} Rat Rat.hasNeg x)) (Neg.neg.{0} (Padic p _inst_1) (Padic.hasNeg p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) x))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat}, Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (Neg.neg.{0} Rat Rat.instNegRat x)) (Neg.neg.{0} (Padic p _inst_1) (Padic.instNegPadic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) x))
-Case conversion may be inaccurate. Consider using '#align padic.coe_neg Padic.coe_negₓ'. -/
 @[norm_cast]
 theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x :=
   Rat.cast_neg
 #align padic.coe_neg Padic.coe_neg
 
-/- warning: padic.coe_mul -> Padic.coe_mul is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) x y)) (HMul.hMul.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHMul.{0} (Padic p _inst_1) (Padic.hasMul p _inst_1)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) y))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) x y)) (HMul.hMul.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHMul.{0} (Padic p _inst_1) (Padic.instMulPadic p _inst_1)) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) x) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) y))
-Case conversion may be inaccurate. Consider using '#align padic.coe_mul Padic.coe_mulₓ'. -/
 @[norm_cast]
 theorem coe_mul : ∀ {x y : ℚ}, (↑(x * y) : ℚ_[p]) = ↑x * ↑y :=
   Rat.cast_mul
 #align padic.coe_mul Padic.coe_mul
 
-/- warning: padic.coe_sub -> Padic.coe_sub is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) x y)) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.hasSub p _inst_1)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) y))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) x y)) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.instSubPadic p _inst_1)) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) x) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) y))
-Case conversion may be inaccurate. Consider using '#align padic.coe_sub Padic.coe_subₓ'. -/
 @[norm_cast]
 theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y :=
   Rat.cast_sub
 #align padic.coe_sub Padic.coe_sub
 
-/- warning: padic.coe_div -> Padic.coe_div is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) x y)) (HDiv.hDiv.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHDiv.{0} (Padic p _inst_1) (Padic.hasDiv p _inst_1)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) y))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] {x : Rat} {y : Rat}, Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) x y)) (HDiv.hDiv.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHDiv.{0} (Padic p _inst_1) (Padic.instDivPadic p _inst_1)) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) x) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) y))
-Case conversion may be inaccurate. Consider using '#align padic.coe_div Padic.coe_divₓ'. -/
 @[norm_cast]
 theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y :=
   Rat.cast_div
 #align padic.coe_div Padic.coe_div
 
-/- warning: padic.coe_one -> Padic.coe_one is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Nat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Nat (Padic p _inst_1) (Nat.castCoe.{0} (Padic p _inst_1) (AddMonoidWithOne.toNatCast.{0} (Padic p _inst_1) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p _inst_1) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p _inst_1) (Ring.toAddCommGroupWithOne.{0} (Padic p _inst_1) (Padic.ring p _inst_1)))))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{0} (Padic p _inst_1) 1 (OfNat.mk.{0} (Padic p _inst_1) 1 (One.one.{0} (Padic p _inst_1) (Padic.hasOne p _inst_1))))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))) (OfNat.ofNat.{0} (Padic p _inst_1) 1 (One.toOfNat1.{0} (Padic p _inst_1) (Padic.instOnePadic p _inst_1)))
-Case conversion may be inaccurate. Consider using '#align padic.coe_one Padic.coe_oneₓ'. -/
 @[norm_cast]
 theorem coe_one : (↑1 : ℚ_[p]) = 1 :=
   rfl
 #align padic.coe_one Padic.coe_one
 
-/- warning: padic.coe_zero -> Padic.coe_zero is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], Eq.{1} (Padic p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Nat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Nat (Padic p _inst_1) (Nat.castCoe.{0} (Padic p _inst_1) (AddMonoidWithOne.toNatCast.{0} (Padic p _inst_1) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p _inst_1) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p _inst_1) (Ring.toAddCommGroupWithOne.{0} (Padic p _inst_1) (Padic.ring p _inst_1)))))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{0} (Padic p _inst_1) 0 (OfNat.mk.{0} (Padic p _inst_1) 0 (Zero.zero.{0} (Padic p _inst_1) (Padic.hasZero p _inst_1))))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], Eq.{1} (Padic p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (OfNat.ofNat.{0} (Padic p _inst_1) 0 (Zero.toOfNat0.{0} (Padic p _inst_1) (Padic.instZeroPadic p _inst_1)))
-Case conversion may be inaccurate. Consider using '#align padic.coe_zero Padic.coe_zeroₓ'. -/
 @[norm_cast]
 theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
   rfl
@@ -806,12 +590,6 @@ end Completion
 
 end Padic
 
-/- warning: padic_norm_e -> padicNormE is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], AbsoluteValue.{0, 0} (Padic p hp) Rat (Ring.toSemiring.{0} (Padic p hp) (Padic.ring p hp)) Rat.orderedSemiring
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], AbsoluteValue.{0, 0} (Padic p hp) Rat (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp)))) Rat.instOrderedSemiringRat
-Case conversion may be inaccurate. Consider using '#align padic_norm_e padicNormEₓ'. -/
 /-- The rational-valued `p`-adic norm on `ℚ_[p]` is lifted from the norm on Cauchy sequences. The
 canonical form of this function is the normed space instance, with notation `‖ ‖`. -/
 def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ
@@ -840,12 +618,6 @@ open PadicSeq
 
 variable {p : ℕ} [Fact p.Prime]
 
-/- warning: padic_norm_e.defn -> padicNormE.defn is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : PadicSeq p) {ε : Rat}, (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) ε) -> (Exists.{1} Nat (fun (N : Nat) => forall (i : Nat), (GE.ge.{0} Nat Nat.hasLe i N) -> (LT.lt.{0} Rat Rat.hasLt (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.hasSub p _inst_1)) (Quotient.mk'.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (padicNorm.isAbsoluteValue p _inst_1)) f) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) (coeFn.{1, 1} (PadicSeq p) (fun (_x : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) => Nat -> Rat) (CauSeq.hasCoeToFun.{0, 0} Rat Rat Rat.linearOrderedField (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p)) f i)))) ε)))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : PadicSeq p) {ε : Rat}, (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) ε) -> (Exists.{1} Nat (fun (N : Nat) => forall (i : Nat), (GE.ge.{0} Nat instLENat i N) -> (LT.lt.{0} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.instSubPadic p _inst_1)) (Padic.mk p _inst_1 f) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f i)))) Rat.instLTRat_1 (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.instSubPadic p _inst_1)) (Padic.mk p _inst_1 f) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) (Subtype.val.{1} (Nat -> Rat) (fun (f : Nat -> Rat) => IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) f) f i)))) ε)))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.defn padicNormE.defnₓ'. -/
 theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i ≥ N, padicNormE (⟦f⟧ - f i) < ε :=
   by
   dsimp [padicNormE]
@@ -864,21 +636,12 @@ theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i ≥ N, pa
     exact hN _ le_rfl _ hi
 #align padic_norm_e.defn padicNormE.defn
 
-/- warning: padic_norm_e.nonarchimedean' -> padicNormE.nonarchimedean' is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (q : Padic p _inst_1) (r : Padic p _inst_1), LE.le.{0} Rat Rat.hasLe (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) (HAdd.hAdd.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHAdd.{0} (Padic p _inst_1) (Padic.hasAdd p _inst_1)) q r)) (LinearOrder.max.{0} Rat Rat.linearOrder (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) q) (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) r))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (q : Padic p _inst_1) (r : Padic p _inst_1), LE.le.{0} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) (HAdd.hAdd.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHAdd.{0} (Padic p _inst_1) (Padic.instAddPadic p _inst_1)) q r)) Rat.instLERat (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) (HAdd.hAdd.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHAdd.{0} (Padic p _inst_1) (Padic.instAddPadic p _inst_1)) q r)) (Max.max.{0} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) q) (LinearOrderedRing.toMax.{0} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) q) Rat.instLinearOrderedRingRat) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) q) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) r))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.nonarchimedean' padicNormE.nonarchimedean'ₓ'. -/
 /-- Theorems about `padic_norm_e` are named with a `'` so the names do not conflict with the
 equivalent theorems about `norm` (`‖ ‖`). -/
 theorem nonarchimedean' (q r : ℚ_[p]) : padicNormE (q + r) ≤ max (padicNormE q) (padicNormE r) :=
   Quotient.induction_on₂ q r <| norm_nonarchimedean
 #align padic_norm_e.nonarchimedean' padicNormE.nonarchimedean'
 
-/- warning: padic_norm_e.add_eq_max_of_ne' -> padicNormE.add_eq_max_of_ne' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.add_eq_max_of_ne' padicNormE.add_eq_max_of_ne'ₓ'. -/
 /-- Theorems about `padic_norm_e` are named with a `'` so the names do not conflict with the
 equivalent theorems about `norm` (`‖ ‖`). -/
 theorem add_eq_max_of_ne' {q r : ℚ_[p]} :
@@ -886,23 +649,11 @@ theorem add_eq_max_of_ne' {q r : ℚ_[p]} :
   Quotient.induction_on₂ q r fun _ _ => PadicSeq.add_eq_max_of_ne
 #align padic_norm_e.add_eq_max_of_ne' padicNormE.add_eq_max_of_ne'
 
-/- warning: padic_norm_e.eq_padic_norm' -> padicNormE.eq_padic_norm' is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (q : Rat), Eq.{1} Rat (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) q)) (padicNorm p q)
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (q : Rat), Eq.{1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) q)) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) q)) (padicNorm p q)
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.eq_padic_norm' padicNormE.eq_padic_norm'ₓ'. -/
 @[simp]
 theorem eq_padic_norm' (q : ℚ) : padicNormE (q : ℚ_[p]) = padicNorm p q :=
   norm_const _
 #align padic_norm_e.eq_padic_norm' padicNormE.eq_padic_norm'
 
-/- warning: padic_norm_e.image' -> padicNormE.image' is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {q : Padic p _inst_1}, (Ne.{1} (Padic p _inst_1) q (OfNat.ofNat.{0} (Padic p _inst_1) 0 (OfNat.mk.{0} (Padic p _inst_1) 0 (Zero.zero.{0} (Padic p _inst_1) (Padic.hasZero p _inst_1))))) -> (Exists.{1} Int (fun (n : Int) => Eq.{1} Rat (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) q) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField)))))))))) p) (Neg.neg.{0} Int Int.hasNeg n))))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] {q : Padic p _inst_1}, (Ne.{1} (Padic p _inst_1) q (OfNat.ofNat.{0} (Padic p _inst_1) 0 (Zero.toOfNat0.{0} (Padic p _inst_1) (Padic.instZeroPadic p _inst_1)))) -> (Exists.{1} Int (fun (n : Int) => Eq.{1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) q) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) q) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (Neg.neg.{0} Int Int.instNegInt n))))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.image' padicNormE.image'ₓ'. -/
 protected theorem image' {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, padicNormE q = p ^ (-n) :=
   Quotient.inductionOn q fun f hf =>
     have : ¬f ≈ 0 := (ne_zero_iff_nequiv_zero f).1 hf
@@ -921,12 +672,6 @@ open PadicSeq Padic
 
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
-/- warning: padic.rat_dense' -> Padic.rat_dense' is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (q : Padic p _inst_1) {ε : Rat}, (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) ε) -> (Exists.{1} Rat (fun (r : Rat) => LT.lt.{0} Rat Rat.hasLt (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.hasSub p _inst_1)) q ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (Field.toDivisionRing.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))) r))) ε))
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (q : Padic p _inst_1) {ε : Rat}, (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) ε) -> (Exists.{1} Rat (fun (r : Rat) => LT.lt.{0} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.instSubPadic p _inst_1)) q (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) r))) Rat.instLTRat_1 (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.instSubPadic p _inst_1)) q (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) r))) ε))
-Case conversion may be inaccurate. Consider using '#align padic.rat_dense' Padic.rat_dense'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   Quotient.inductionOn q fun q' =>
@@ -952,20 +697,11 @@ open Classical
 private theorem div_nat_pos (n : ℕ) : 0 < 1 / (n + 1 : ℚ) :=
   div_pos zero_lt_one (by exact_mod_cast succ_pos _)
 
-/- warning: padic.lim_seq -> Padic.limSeq is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)], (CauSeq.{0, 0} Rat Rat.linearOrderedField (Padic p _inst_1) (Padic.ring p _inst_1) (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1))) -> Nat -> Rat
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)], (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat (Padic p _inst_1) (Padic.instRingPadic p _inst_1) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1))) -> Nat -> Rat
-Case conversion may be inaccurate. Consider using '#align padic.lim_seq Padic.limSeqₓ'. -/
 /-- `lim_seq f`, for `f` a Cauchy sequence of `p`-adic numbers, is a sequence of rationals with the
 same limit point as `f`. -/
 def limSeq : ℕ → ℚ := fun n => Classical.choose (rat_dense' (f n) (div_nat_pos n))
 #align padic.lim_seq Padic.limSeq
 
-/- warning: padic.exi_rat_seq_conv -> Padic.exi_rat_seq_conv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align padic.exi_rat_seq_conv Padic.exi_rat_seq_convₓ'. -/
 theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) :
     ∃ N, ∀ i ≥ N, padicNormE (f i - (limSeq f i : ℚ_[p])) < ε :=
   by
@@ -978,12 +714,6 @@ theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) :
   · apply le_of_lt; simpa
 #align padic.exi_rat_seq_conv Padic.exi_rat_seq_conv
 
-/- warning: padic.exi_rat_seq_conv_cauchy -> Padic.exi_rat_seq_conv_cauchy is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : CauSeq.{0, 0} Rat Rat.linearOrderedField (Padic p _inst_1) (Padic.ring p _inst_1) (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) => (Padic p _inst_1) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p _inst_1) Rat (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) Rat.orderedSemiring) (padicNormE p _inst_1))), IsCauSeq.{0, 0} Rat Rat.linearOrderedField Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (Padic.limSeq p _inst_1 f)
-but is expected to have type
-  forall {p : Nat} [_inst_1 : Fact (Nat.Prime p)] (f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat (Padic p _inst_1) (Padic.instRingPadic p _inst_1) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) (fun (f : Padic p _inst_1) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p _inst_1) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat) (Padic p _inst_1) Rat (Distrib.toAdd.{0} (Padic p _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p _inst_1) (Semiring.toNonAssocSemiring.{0} (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p _inst_1) Rat (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) Rat.instOrderedSemiringRat)) (padicNormE p _inst_1))), IsCauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField))) (padicNorm p) (Padic.limSeq p _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align padic.exi_rat_seq_conv_cauchy Padic.exi_rat_seq_conv_cauchyₓ'. -/
 theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε hε =>
   by
   have hε3 : 0 < ε / 3 := div_pos hε (by norm_num)
@@ -1022,9 +752,6 @@ private def lim' : PadicSeq p :=
 private def lim : ℚ_[p] :=
   ⟦lim' f⟧
 
-/- warning: padic.complete' -> Padic.complete' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align padic.complete' Padic.complete'ₓ'. -/
 theorem complete' : ∃ q : ℚ_[p], ∀ ε > 0, ∃ N, ∀ i ≥ N, padicNormE (q - f i) < ε :=
   ⟨limUnder f, fun ε hε =>
     by
@@ -1072,12 +799,6 @@ instance : NormedField ℚ_[p] :=
     norm_mul' := by simp [Norm.norm, map_mul]
     norm := norm }
 
-/- warning: padic.is_absolute_value -> Padic.isAbsoluteValue is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], IsAbsoluteValue.{0, 0} Real Real.orderedSemiring (Padic p _inst_1) (Ring.toSemiring.{0} (Padic p _inst_1) (Padic.ring p _inst_1)) (fun (a : Padic p _inst_1) => Norm.norm.{0} (Padic p _inst_1) (Padic.hasNorm p _inst_1) a)
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)], IsAbsoluteValue.{0, 0} Real Real.orderedSemiring (Padic p _inst_1) (DivisionSemiring.toSemiring.{0} (Padic p _inst_1) (Semifield.toDivisionSemiring.{0} (Padic p _inst_1) (Field.toSemifield.{0} (Padic p _inst_1) (Padic.field p _inst_1)))) (fun (a : Padic p _inst_1) => Norm.norm.{0} (Padic p _inst_1) (Padic.instNormPadic p _inst_1) a)
-Case conversion may be inaccurate. Consider using '#align padic.is_absolute_value Padic.isAbsoluteValueₓ'. -/
 instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
     where
   abv_nonneg := norm_nonneg
@@ -1086,12 +807,6 @@ instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
   abv_mul := by simp [Norm.norm, map_mul]
 #align padic.is_absolute_value Padic.isAbsoluteValue
 
-/- warning: padic.rat_dense -> Padic.rat_dense is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] (q : Padic p _inst_1) {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Rat (fun (r : Rat) => LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p _inst_1) (Padic.hasNorm p _inst_1) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.hasSub p _inst_1)) q ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p _inst_1) (HasLiftT.mk.{1, 1} Rat (Padic p _inst_1) (CoeTCₓ.coe.{1, 1} Rat (Padic p _inst_1) (Rat.castCoe.{0} (Padic p _inst_1) (DivisionRing.toHasRatCast.{0} (Padic p _inst_1) (NormedDivisionRing.toDivisionRing.{0} (Padic p _inst_1) (NormedField.toNormedDivisionRing.{0} (Padic p _inst_1) (Padic.normedField p _inst_1))))))) r))) ε))
-but is expected to have type
-  forall (p : Nat) [_inst_1 : Fact (Nat.Prime p)] (q : Padic p _inst_1) {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Rat (fun (r : Rat) => LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p _inst_1) (Padic.instNormPadic p _inst_1) (HSub.hSub.{0, 0, 0} (Padic p _inst_1) (Padic p _inst_1) (Padic p _inst_1) (instHSub.{0} (Padic p _inst_1) (Padic.instSubPadic p _inst_1)) q (Rat.cast.{0} (Padic p _inst_1) (Field.toRatCast.{0} (Padic p _inst_1) (Padic.field p _inst_1)) r))) ε))
-Case conversion may be inaccurate. Consider using '#align padic.rat_dense Padic.rat_denseₓ'. -/
 theorem rat_dense (q : ℚ_[p]) {ε : ℝ} (hε : 0 < ε) : ∃ r : ℚ, ‖q - r‖ < ε :=
   let ⟨ε', hε'l, hε'r⟩ := exists_rat_btwn hε
   let ⟨r, hr⟩ := rat_dense' q (by simpa using hε'l)
@@ -1110,44 +825,20 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 include hp
 
-/- warning: padic_norm_e.mul -> padicNormE.mul is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp) (r : Padic p hp), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HMul.hMul.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHMul.{0} (Padic p hp) (Padic.hasMul p hp)) q r)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) r))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp) (r : Padic p hp), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HMul.hMul.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHMul.{0} (Padic p hp) (Padic.instMulPadic p hp)) q r)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) r))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.mul padicNormE.mulₓ'. -/
 @[simp]
 protected theorem mul (q r : ℚ_[p]) : ‖q * r‖ = ‖q‖ * ‖r‖ := by simp [Norm.norm, map_mul]
 #align padic_norm_e.mul padicNormE.mul
 
-/- warning: padic_norm_e.is_norm -> padicNormE.is_norm is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp), Eq.{1} Real ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) (coeFn.{1, 1} (AbsoluteValue.{0, 0} (Padic p hp) Rat (Ring.toSemiring.{0} (Padic p hp) (Padic.ring p hp)) Rat.orderedSemiring) (fun (f : AbsoluteValue.{0, 0} (Padic p hp) Rat (Ring.toSemiring.{0} (Padic p hp) (Padic.ring p hp)) Rat.orderedSemiring) => (Padic p hp) -> Rat) (AbsoluteValue.hasCoeToFun.{0, 0} (Padic p hp) Rat (Ring.toSemiring.{0} (Padic p hp) (Padic.ring p hp)) Rat.orderedSemiring) (padicNormE p hp) q)) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q)
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp), Eq.{1} Real (Rat.cast.{0} Real Real.ratCast (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} (Padic p hp) Rat (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp)))) Rat.instOrderedSemiringRat) (Padic p hp) (fun (f : Padic p hp) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Padic p hp) => Rat) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} (Padic p hp) Rat (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp)))) Rat.instOrderedSemiringRat) (Padic p hp) Rat (Distrib.toAdd.{0} (Padic p hp) (NonUnitalNonAssocSemiring.toDistrib.{0} (Padic p hp) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (Padic p hp) (Semiring.toNonAssocSemiring.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp)))))))) (Distrib.toAdd.{0} Rat (NonUnitalNonAssocSemiring.toDistrib.{0} Rat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat (OrderedSemiring.toSemiring.{0} Rat Rat.instOrderedSemiringRat))))) (Preorder.toLE.{0} Rat (PartialOrder.toPreorder.{0} Rat (OrderedSemiring.toPartialOrder.{0} Rat Rat.instOrderedSemiringRat))) (AbsoluteValue.subadditiveHomClass.{0, 0} (Padic p hp) Rat (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp)))) Rat.instOrderedSemiringRat)) (padicNormE p hp) q)) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q)
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.is_norm padicNormE.is_normₓ'. -/
 protected theorem is_norm (q : ℚ_[p]) : ↑(padicNormE q) = ‖q‖ :=
   rfl
 #align padic_norm_e.is_norm padicNormE.is_norm
 
-/- warning: padic_norm_e.nonarchimedean -> padicNormE.nonarchimedean is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp) (r : Padic p hp), LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) q r)) (LinearOrder.max.{0} Real Real.linearOrder (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) r))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp) (r : Padic p hp), LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) q r)) (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) r))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.nonarchimedean padicNormE.nonarchimedeanₓ'. -/
 theorem nonarchimedean (q r : ℚ_[p]) : ‖q + r‖ ≤ max ‖q‖ ‖r‖ :=
   by
   unfold Norm.norm
   exact_mod_cast nonarchimedean' _ _
 #align padic_norm_e.nonarchimedean padicNormE.nonarchimedean
 
-/- warning: padic_norm_e.add_eq_max_of_ne -> padicNormE.add_eq_max_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Padic p hp} {r : Padic p hp}, (Ne.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) r)) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) q r)) (LinearOrder.max.{0} Real Real.linearOrder (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) r)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Padic p hp} {r : Padic p hp}, (Ne.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) r)) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) q r)) (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) r)))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.add_eq_max_of_ne padicNormE.add_eq_max_of_neₓ'. -/
 theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ‖q‖ ≠ ‖r‖) : ‖q + r‖ = max ‖q‖ ‖r‖ :=
   by
   unfold Norm.norm
@@ -1158,12 +849,6 @@ theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ‖q‖ ≠ ‖r‖) : ‖q + r‖
   exact_mod_cast h'
 #align padic_norm_e.add_eq_max_of_ne padicNormE.add_eq_max_of_ne
 
-/- warning: padic_norm_e.eq_padic_norm -> padicNormE.eq_padicNorm is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Rat), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p hp) (HasLiftT.mk.{1, 1} Rat (Padic p hp) (CoeTCₓ.coe.{1, 1} Rat (Padic p hp) (Rat.castCoe.{0} (Padic p hp) (DivisionRing.toHasRatCast.{0} (Padic p hp) (NormedDivisionRing.toDivisionRing.{0} (Padic p hp) (NormedField.toNormedDivisionRing.{0} (Padic p hp) (Padic.normedField p hp))))))) q)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) (padicNorm p q))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Rat), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Rat.cast.{0} (Padic p hp) (Field.toRatCast.{0} (Padic p hp) (Padic.field p hp)) q)) (Rat.cast.{0} Real Real.ratCast (padicNorm p q))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.eq_padic_norm padicNormE.eq_padicNormₓ'. -/
 @[simp]
 theorem eq_padicNorm (q : ℚ) : ‖(q : ℚ_[p])‖ = padicNorm p q :=
   by
@@ -1171,12 +856,6 @@ theorem eq_padicNorm (q : ℚ) : ‖(q : ℚ_[p])‖ = padicNorm p q :=
   rw [← padicNormE.eq_padic_norm']
 #align padic_norm_e.eq_padic_norm padicNormE.eq_padicNorm
 
-/- warning: padic_norm_e.norm_p -> padicNormE.norm_p is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p hp) (HasLiftT.mk.{1, 1} Nat (Padic p hp) (CoeTCₓ.coe.{1, 1} Nat (Padic p hp) (Nat.castCoe.{0} (Padic p hp) (AddMonoidWithOne.toNatCast.{0} (Padic p hp) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp)))))))) p)) (Inv.inv.{0} Real Real.hasInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Nat.cast.{0} (Padic p hp) (Semiring.toNatCast.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp))))) p)) (Inv.inv.{0} Real Real.instInvReal (Nat.cast.{0} Real Real.natCast p))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_p padicNormE.norm_pₓ'. -/
 @[simp]
 theorem norm_p : ‖(p : ℚ_[p])‖ = p⁻¹ :=
   by
@@ -1187,12 +866,6 @@ theorem norm_p : ‖(p : ℚ_[p])‖ = p⁻¹ :=
   simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Rat.cast_coe_nat]
 #align padic_norm_e.norm_p padicNormE.norm_p
 
-/- warning: padic_norm_e.norm_p_lt_one -> padicNormE.norm_p_lt_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p hp) (HasLiftT.mk.{1, 1} Nat (Padic p hp) (CoeTCₓ.coe.{1, 1} Nat (Padic p hp) (Nat.castCoe.{0} (Padic p hp) (AddMonoidWithOne.toNatCast.{0} (Padic p hp) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp)))))))) p)) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Nat.cast.{0} (Padic p hp) (Semiring.toNatCast.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp))))) p)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_p_lt_one padicNormE.norm_p_lt_oneₓ'. -/
 theorem norm_p_lt_one : ‖(p : ℚ_[p])‖ < 1 :=
   by
   rw [norm_p]
@@ -1200,23 +873,11 @@ theorem norm_p_lt_one : ‖(p : ℚ_[p])‖ < 1 :=
   exact_mod_cast hp.1.one_lt
 #align padic_norm_e.norm_p_lt_one padicNormE.norm_p_lt_one
 
-/- warning: padic_norm_e.norm_p_zpow -> padicNormE.norm_p_zpow is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (n : Int), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HPow.hPow.{0, 0, 0} (Padic p hp) Int (Padic p hp) (instHPow.{0, 0} (Padic p hp) Int (DivInvMonoid.Pow.{0} (Padic p hp) (DivisionRing.toDivInvMonoid.{0} (Padic p hp) (NormedDivisionRing.toDivisionRing.{0} (Padic p hp) (NormedField.toNormedDivisionRing.{0} (Padic p hp) (Padic.normedField p hp)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p hp) (HasLiftT.mk.{1, 1} Nat (Padic p hp) (CoeTCₓ.coe.{1, 1} Nat (Padic p hp) (Nat.castCoe.{0} (Padic p hp) (AddMonoidWithOne.toNatCast.{0} (Padic p hp) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp)))))))) p) n)) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) (Neg.neg.{0} Int Int.hasNeg n))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (n : Int), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HPow.hPow.{0, 0, 0} (Padic p hp) Int (Padic p hp) (instHPow.{0, 0} (Padic p hp) Int (DivInvMonoid.Pow.{0} (Padic p hp) (DivisionRing.toDivInvMonoid.{0} (Padic p hp) (NormedDivisionRing.toDivisionRing.{0} (Padic p hp) (NormedField.toNormedDivisionRing.{0} (Padic p hp) (Padic.normedField p hp)))))) (Nat.cast.{0} (Padic p hp) (Semiring.toNatCast.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp))))) p) n)) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (Neg.neg.{0} Int Int.instNegInt n))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_p_zpow padicNormE.norm_p_zpowₓ'. -/
 @[simp]
 theorem norm_p_zpow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
   rw [norm_zpow, norm_p, zpow_neg, inv_zpow]
 #align padic_norm_e.norm_p_zpow padicNormE.norm_p_zpow
 
-/- warning: padic_norm_e.norm_p_pow -> padicNormE.norm_p_pow is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (n : Nat), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HPow.hPow.{0, 0, 0} (Padic p hp) Nat (Padic p hp) (instHPow.{0, 0} (Padic p hp) Nat (Monoid.Pow.{0} (Padic p hp) (Ring.toMonoid.{0} (Padic p hp) (Padic.ring p hp)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p hp) (HasLiftT.mk.{1, 1} Nat (Padic p hp) (CoeTCₓ.coe.{1, 1} Nat (Padic p hp) (Nat.castCoe.{0} (Padic p hp) (AddMonoidWithOne.toNatCast.{0} (Padic p hp) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp)))))))) p) n)) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) (Neg.neg.{0} Int Int.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (n : Nat), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HPow.hPow.{0, 0, 0} (Padic p hp) Nat (Padic p hp) (instHPow.{0, 0} (Padic p hp) Nat (Monoid.Pow.{0} (Padic p hp) (MonoidWithZero.toMonoid.{0} (Padic p hp) (Semiring.toMonoidWithZero.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp)))))))) (Nat.cast.{0} (Padic p hp) (Semiring.toNatCast.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp))))) p) n)) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (Neg.neg.{0} Int Int.instNegInt (Nat.cast.{0} Int instNatCastInt n)))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_p_pow padicNormE.norm_p_powₓ'. -/
 @[simp]
 theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_ofNat]
 #align padic_norm_e.norm_p_pow padicNormE.norm_p_pow
@@ -1228,12 +889,6 @@ instance : NontriviallyNormedField ℚ_[p] :=
         rw [norm_inv, norm_p, inv_inv]
         exact_mod_cast hp.1.one_lt⟩ }
 
-/- warning: padic_norm_e.image -> padicNormE.image is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Padic p hp}, (Ne.{1} (Padic p hp) q (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) -> (Exists.{1} Int (fun (n : Int) => Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField)))))))))) p) (Neg.neg.{0} Int Int.hasNeg n)))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Padic p hp}, (Ne.{1} (Padic p hp) q (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) -> (Exists.{1} Int (fun (n : Int) => Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Rat.cast.{0} Real Real.ratCast (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (Neg.neg.{0} Int Int.instNegInt n)))))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.image padicNormE.imageₓ'. -/
 protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ‖q‖ = ↑((p : ℚ) ^ (-n)) :=
   Quotient.inductionOn q fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
@@ -1241,12 +896,6 @@ protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ‖q‖ = ↑((
     ⟨n, congr_arg coe hn⟩
 #align padic_norm_e.image padicNormE.image
 
-/- warning: padic_norm_e.is_rat -> padicNormE.is_rat is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp), Exists.{1} Rat (fun (q' : Rat) => Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) q'))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp), Exists.{1} Rat (fun (q' : Rat) => Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Rat.cast.{0} Real Real.ratCast q'))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.is_rat padicNormE.is_ratₓ'. -/
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ‖q‖ = q' :=
   if h : q = 0 then ⟨0, by simp [h]⟩
   else
@@ -1263,22 +912,10 @@ def ratNorm (q : ℚ_[p]) : ℚ :=
 #align padic_norm_e.rat_norm padicNormE.ratNorm
 -/
 
-/- warning: padic_norm_e.eq_rat_norm -> padicNormE.eq_ratNorm is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) (padicNormE.ratNorm p hp q))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (q : Padic p hp), Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) q) (Rat.cast.{0} Real Real.ratCast (padicNormE.ratNorm p hp q))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.eq_rat_norm padicNormE.eq_ratNormₓ'. -/
 theorem eq_ratNorm (q : ℚ_[p]) : ‖q‖ = ratNorm q :=
   Classical.choose_spec (padicNormE.is_rat q)
 #align padic_norm_e.eq_rat_norm padicNormE.eq_ratNorm
 
-/- warning: padic_norm_e.norm_rat_le_one -> padicNormE.norm_rat_le_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Rat}, (Not (Dvd.Dvd.{0} Nat Nat.hasDvd p (Rat.den q))) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (Padic p hp) (HasLiftT.mk.{1, 1} Rat (Padic p hp) (CoeTCₓ.coe.{1, 1} Rat (Padic p hp) (Rat.castCoe.{0} (Padic p hp) (DivisionRing.toHasRatCast.{0} (Padic p hp) (NormedDivisionRing.toDivisionRing.{0} (Padic p hp) (NormedField.toNormedDivisionRing.{0} (Padic p hp) (Padic.normedField p hp))))))) q)) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Rat}, (Not (Dvd.dvd.{0} Nat Nat.instDvdNat p (Rat.den q))) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Rat.cast.{0} (Padic p hp) (Field.toRatCast.{0} (Padic p hp) (Padic.field p hp)) q)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_rat_le_one padicNormE.norm_rat_le_oneₓ'. -/
 theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])‖ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then
@@ -1304,23 +941,11 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])�
         exact hp.1.Pos
 #align padic_norm_e.norm_rat_le_one padicNormE.norm_rat_le_one
 
-/- warning: padic_norm_e.norm_int_le_one -> padicNormE.norm_int_le_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (z : Int), LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Padic p hp) (HasLiftT.mk.{1, 1} Int (Padic p hp) (CoeTCₓ.coe.{1, 1} Int (Padic p hp) (Int.castCoe.{0} (Padic p hp) (AddGroupWithOne.toHasIntCast.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp))))))) z)) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (z : Int), LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Int.cast.{0} (Padic p hp) (Ring.toIntCast.{0} (Padic p hp) (Padic.instRingPadic p hp)) z)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_int_le_one padicNormE.norm_int_le_oneₓ'. -/
 theorem norm_int_le_one (z : ℤ) : ‖(z : ℚ_[p])‖ ≤ 1 :=
   suffices ‖((z : ℚ) : ℚ_[p])‖ ≤ 1 by simpa
   norm_rat_le_one <| by simp [hp.1.ne_one]
 #align padic_norm_e.norm_int_le_one padicNormE.norm_int_le_one
 
-/- warning: padic_norm_e.norm_int_lt_one_iff_dvd -> padicNormE.norm_int_lt_one_iff_dvd is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (k : Int), Iff (LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Padic p hp) (HasLiftT.mk.{1, 1} Int (Padic p hp) (CoeTCₓ.coe.{1, 1} Int (Padic p hp) (Int.castCoe.{0} (Padic p hp) (AddGroupWithOne.toHasIntCast.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp))))))) k)) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) k)
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (k : Int), Iff (LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Int.cast.{0} (Padic p hp) (Ring.toIntCast.{0} (Padic p hp) (Padic.instRingPadic p hp)) k)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt p) k)
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_int_lt_one_iff_dvd padicNormE.norm_int_lt_one_iff_dvdₓ'. -/
 theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣ k :=
   by
   constructor
@@ -1358,12 +983,6 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
       exact_mod_cast hp.1.one_lt
 #align padic_norm_e.norm_int_lt_one_iff_dvd padicNormE.norm_int_lt_one_iff_dvd
 
-/- warning: padic_norm_e.norm_int_le_pow_iff_dvd -> padicNormE.norm_int_le_pow_iff_dvd is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (k : Int) (n : Nat), Iff (LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (Padic p hp) (HasLiftT.mk.{1, 1} Int (Padic p hp) (CoeTCₓ.coe.{1, 1} Int (Padic p hp) (Int.castCoe.{0} (Padic p hp) (AddGroupWithOne.toHasIntCast.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp))))))) k)) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) (Neg.neg.{0} Int Int.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p n)) k)
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (k : Int) (n : Nat), Iff (LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Int.cast.{0} (Padic p hp) (Ring.toIntCast.{0} (Padic p hp) (Padic.instRingPadic p hp)) k)) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (Neg.neg.{0} Int Int.instNegInt (Nat.cast.{0} Int instNatCastInt n)))) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p n)) k)
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.norm_int_le_pow_iff_dvd padicNormE.norm_int_le_pow_iff_dvdₓ'. -/
 theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) : ‖(k : ℚ_[p])‖ ≤ ↑p ^ (-n : ℤ) ↔ ↑(p ^ n) ∣ k :=
   by
   have : (p : ℝ) ^ (-n : ℤ) = ↑(p ^ (-n : ℤ) : ℚ) := by simp
@@ -1372,23 +991,11 @@ theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) : ‖(k : ℚ_[p])‖ ≤ �
   rw [← padicNorm.dvd_iff_norm_le]
 #align padic_norm_e.norm_int_le_pow_iff_dvd padicNormE.norm_int_le_pow_iff_dvd
 
-/- warning: padic_norm_e.eq_of_norm_add_lt_right -> padicNormE.eq_of_norm_add_lt_right is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {z1 : Padic p hp} {z2 : Padic p hp}, (LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) z1 z2)) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) z2)) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) z1) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) z2))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {z1 : Padic p hp} {z2 : Padic p hp}, (LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) z1 z2)) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) z2)) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) z1) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) z2))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.eq_of_norm_add_lt_right padicNormE.eq_of_norm_add_lt_rightₓ'. -/
 theorem eq_of_norm_add_lt_right {z1 z2 : ℚ_[p]} (h : ‖z1 + z2‖ < ‖z2‖) : ‖z1‖ = ‖z2‖ :=
   by_contradiction fun hne =>
     not_lt_of_ge (by rw [padicNormE.add_eq_max_of_ne hne] <;> apply le_max_right) h
 #align padic_norm_e.eq_of_norm_add_lt_right padicNormE.eq_of_norm_add_lt_right
 
-/- warning: padic_norm_e.eq_of_norm_add_lt_left -> padicNormE.eq_of_norm_add_lt_left is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {z1 : Padic p hp} {z2 : Padic p hp}, (LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) z1 z2)) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) z1)) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) z1) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) z2))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {z1 : Padic p hp} {z2 : Padic p hp}, (LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) z1 z2)) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) z1)) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) z1) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) z2))
-Case conversion may be inaccurate. Consider using '#align padic_norm_e.eq_of_norm_add_lt_left padicNormE.eq_of_norm_add_lt_leftₓ'. -/
 theorem eq_of_norm_add_lt_left {z1 z2 : ℚ_[p]} (h : ‖z1 + z2‖ < ‖z1‖) : ‖z1‖ = ‖z2‖ :=
   by_contradiction fun hne =>
     not_lt_of_ge (by rw [padicNormE.add_eq_max_of_ne hne] <;> apply le_max_left) h
@@ -1407,12 +1014,6 @@ include hp
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
-/- warning: padic.complete -> Padic.complete is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], CauSeq.IsComplete.{0, 0} Real Real.linearOrderedField (Padic p hp) (Padic.ring p hp) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp)) (Padic.isAbsoluteValue p hp)
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], CauSeq.IsComplete.{0, 0} Real Real.instLinearOrderedFieldReal (Padic p hp) (Padic.instRingPadic p hp) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp)) (Padic.isAbsoluteValue p hp)
-Case conversion may be inaccurate. Consider using '#align padic.complete Padic.completeₓ'. -/
 instance complete : CauSeq.IsComplete ℚ_[p] norm :=
   by
   constructor; intro f
@@ -1435,12 +1036,6 @@ instance complete : CauSeq.IsComplete ℚ_[p] norm :=
   exact_mod_cast hN i hi
 #align padic.complete Padic.complete
 
-/- warning: padic.padic_norm_e_lim_le -> Padic.padicNormE_lim_le is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : CauSeq.{0, 0} Real Real.linearOrderedField (Padic p hp) (Padic.ring p hp) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp))} {a : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) a) -> (forall (i : Nat), LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (coeFn.{1, 1} (CauSeq.{0, 0} Real Real.linearOrderedField (Padic p hp) (Padic.ring p hp) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp))) (fun (_x : CauSeq.{0, 0} Real Real.linearOrderedField (Padic p hp) (Padic.ring p hp) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp))) => Nat -> (Padic p hp)) (CauSeq.hasCoeToFun.{0, 0} Real (Padic p hp) Real.linearOrderedField (Padic.ring p hp) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp))) f i)) a) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) (CauSeq.lim.{0, 0} Real Real.linearOrderedField (Padic p hp) (Padic.ring p hp) (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp)) (Padic.isAbsoluteValue p hp) (Padic.complete p hp) f)) a)
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {f : CauSeq.{0, 0} Real Real.instLinearOrderedFieldReal (Padic p hp) (Padic.instRingPadic p hp) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp))} {a : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) a) -> (forall (i : Nat), LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (Subtype.val.{1} (Nat -> (Padic p hp)) (fun (f : Nat -> (Padic p hp)) => IsCauSeq.{0, 0} Real Real.instLinearOrderedFieldReal (Padic p hp) (Padic.instRingPadic p hp) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp)) f) f i)) a) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) (CauSeq.lim.{0, 0} Real Real.instLinearOrderedFieldReal (Padic p hp) (Padic.instRingPadic p hp) (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp)) (Padic.isAbsoluteValue p hp) (Padic.complete p hp) f)) a)
-Case conversion may be inaccurate. Consider using '#align padic.padic_norm_e_lim_le Padic.padicNormE_lim_leₓ'. -/
 theorem padicNormE_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf : ∀ i, ‖f i‖ ≤ a) :
     ‖f.lim‖ ≤ a :=
   let ⟨N, hN⟩ := Setoid.symm (CauSeq.equiv_lim f) _ ha
@@ -1481,23 +1076,11 @@ def valuation : ℚ_[p] → ℤ :=
 #align padic.valuation Padic.valuation
 -/
 
-/- warning: padic.valuation_zero -> Padic.valuation_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Int (Padic.valuation p hp (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Int (Padic.valuation p hp (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
-Case conversion may be inaccurate. Consider using '#align padic.valuation_zero Padic.valuation_zeroₓ'. -/
 @[simp]
 theorem valuation_zero : valuation (0 : ℚ_[p]) = 0 :=
   dif_pos ((const_equiv p).2 rfl)
 #align padic.valuation_zero Padic.valuation_zero
 
-/- warning: padic.valuation_one -> Padic.valuation_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Int (Padic.valuation p hp (OfNat.ofNat.{0} (Padic p hp) 1 (OfNat.mk.{0} (Padic p hp) 1 (One.one.{0} (Padic p hp) (Padic.hasOne p hp))))) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Int (Padic.valuation p hp (OfNat.ofNat.{0} (Padic p hp) 1 (One.toOfNat1.{0} (Padic p hp) (Padic.instOnePadic p hp)))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
-Case conversion may be inaccurate. Consider using '#align padic.valuation_one Padic.valuation_oneₓ'. -/
 @[simp]
 theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
   by
@@ -1508,12 +1091,6 @@ theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
   simp
 #align padic.valuation_one Padic.valuation_one
 
-/- warning: padic.norm_eq_pow_val -> Padic.norm_eq_pow_val is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp}, (Ne.{1} (Padic p hp) x (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) (Neg.neg.{0} Int Int.hasNeg (Padic.valuation p hp x))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp}, (Ne.{1} (Padic p hp) x (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) -> (Eq.{1} Real (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (Neg.neg.{0} Int Int.instNegInt (Padic.valuation p hp x))))
-Case conversion may be inaccurate. Consider using '#align padic.norm_eq_pow_val Padic.norm_eq_pow_valₓ'. -/
 theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation) :=
   by
   apply Quotient.inductionOn' x; clear x
@@ -1528,12 +1105,6 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation)
     simpa using hf
 #align padic.norm_eq_pow_val Padic.norm_eq_pow_val
 
-/- warning: padic.valuation_p -> Padic.valuation_p is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Int (Padic.valuation p hp ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Padic p hp) (HasLiftT.mk.{1, 1} Nat (Padic p hp) (CoeTCₓ.coe.{1, 1} Nat (Padic p hp) (Nat.castCoe.{0} (Padic p hp) (AddMonoidWithOne.toNatCast.{0} (Padic p hp) (AddGroupWithOne.toAddMonoidWithOne.{0} (Padic p hp) (AddCommGroupWithOne.toAddGroupWithOne.{0} (Padic p hp) (Ring.toAddCommGroupWithOne.{0} (Padic p hp) (Padic.ring p hp)))))))) p)) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} Int (Padic.valuation p hp (Nat.cast.{0} (Padic p hp) (Semiring.toNatCast.{0} (Padic p hp) (DivisionSemiring.toSemiring.{0} (Padic p hp) (Semifield.toDivisionSemiring.{0} (Padic p hp) (Field.toSemifield.{0} (Padic p hp) (Padic.field p hp))))) p)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))
-Case conversion may be inaccurate. Consider using '#align padic.valuation_p Padic.valuation_pₓ'. -/
 @[simp]
 theorem valuation_p : valuation (p : ℚ_[p]) = 1 :=
   by
@@ -1543,12 +1114,6 @@ theorem valuation_p : valuation (p : ℚ_[p]) = 1 :=
   · simp
 #align padic.valuation_p Padic.valuation_p
 
-/- warning: padic.valuation_map_add -> Padic.valuation_map_add is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp} {y : Padic p hp}, (Ne.{1} (Padic p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) x y) (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) -> (LE.le.{0} Int Int.hasLe (LinearOrder.min.{0} Int Int.linearOrder (Padic.valuation p hp x) (Padic.valuation p hp y)) (Padic.valuation p hp (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) x y)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp} {y : Padic p hp}, (Ne.{1} (Padic p hp) (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) x y) (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) -> (LE.le.{0} Int Int.instLEInt (Min.min.{0} Int Int.instMinInt (Padic.valuation p hp x) (Padic.valuation p hp y)) (Padic.valuation p hp (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) x y)))
-Case conversion may be inaccurate. Consider using '#align padic.valuation_map_add Padic.valuation_map_addₓ'. -/
 theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) :
     min (valuation x) (valuation y) ≤ valuation (x + y) :=
   by
@@ -1566,12 +1131,6 @@ theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) :
         zpow_le_max_iff_min_le hp_one] at h_norm
 #align padic.valuation_map_add Padic.valuation_map_add
 
-/- warning: padic.valuation_map_mul -> Padic.valuation_map_mul is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp} {y : Padic p hp}, (Ne.{1} (Padic p hp) x (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) -> (Ne.{1} (Padic p hp) y (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) -> (Eq.{1} Int (Padic.valuation p hp (HMul.hMul.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHMul.{0} (Padic p hp) (Padic.hasMul p hp)) x y)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (Padic.valuation p hp x) (Padic.valuation p hp y)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp} {y : Padic p hp}, (Ne.{1} (Padic p hp) x (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) -> (Ne.{1} (Padic p hp) y (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) -> (Eq.{1} Int (Padic.valuation p hp (HMul.hMul.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHMul.{0} (Padic p hp) (Padic.instMulPadic p hp)) x y)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (Padic.valuation p hp x) (Padic.valuation p hp y)))
-Case conversion may be inaccurate. Consider using '#align padic.valuation_map_mul Padic.valuation_map_mulₓ'. -/
 @[simp]
 theorem valuation_map_mul {x y : ℚ_[p]} (hx : x ≠ 0) (hy : y ≠ 0) :
     valuation (x * y) = valuation x + valuation y :=
@@ -1595,34 +1154,16 @@ def addValuationDef : ℚ_[p] → WithTop ℤ := fun x => if x = 0 then ⊤ else
 #align padic.add_valuation_def Padic.addValuationDef
 -/
 
-/- warning: padic.add_valuation.map_zero -> Padic.AddValuation.map_zero is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} (WithTop.{0} Int) (Padic.addValuationDef p hp (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) (Top.top.{0} (WithTop.{0} Int) (WithTop.hasTop.{0} Int))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} (WithTop.{0} Int) (Padic.addValuationDef p hp (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) (Top.top.{0} (WithTop.{0} Int) (WithTop.top.{0} Int))
-Case conversion may be inaccurate. Consider using '#align padic.add_valuation.map_zero Padic.AddValuation.map_zeroₓ'. -/
 @[simp]
 theorem AddValuation.map_zero : addValuationDef (0 : ℚ_[p]) = ⊤ := by
   simp only [add_valuation_def, if_pos (Eq.refl _)]
 #align padic.add_valuation.map_zero Padic.AddValuation.map_zero
 
-/- warning: padic.add_valuation.map_one -> Padic.AddValuation.map_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} (WithTop.{0} Int) (Padic.addValuationDef p hp (OfNat.ofNat.{0} (Padic p hp) 1 (OfNat.mk.{0} (Padic p hp) 1 (One.one.{0} (Padic p hp) (Padic.hasOne p hp))))) (OfNat.ofNat.{0} (WithTop.{0} Int) 0 (OfNat.mk.{0} (WithTop.{0} Int) 0 (Zero.zero.{0} (WithTop.{0} Int) (WithTop.zero.{0} Int Int.hasZero))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], Eq.{1} (WithTop.{0} Int) (Padic.addValuationDef p hp (OfNat.ofNat.{0} (Padic p hp) 1 (One.toOfNat1.{0} (Padic p hp) (Padic.instOnePadic p hp)))) (OfNat.ofNat.{0} (WithTop.{0} Int) 0 (Zero.toOfNat0.{0} (WithTop.{0} Int) (WithTop.zero.{0} Int (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))))))
-Case conversion may be inaccurate. Consider using '#align padic.add_valuation.map_one Padic.AddValuation.map_oneₓ'. -/
 @[simp]
 theorem AddValuation.map_one : addValuationDef (1 : ℚ_[p]) = 0 := by
   simp only [add_valuation_def, if_neg one_ne_zero, valuation_one, WithTop.coe_zero]
 #align padic.add_valuation.map_one Padic.AddValuation.map_one
 
-/- warning: padic.add_valuation.map_mul -> Padic.AddValuation.map_mul is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (y : Padic p hp), Eq.{1} (WithTop.{0} Int) (Padic.addValuationDef p hp (HMul.hMul.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHMul.{0} (Padic p hp) (Padic.hasMul p hp)) x y)) (HAdd.hAdd.{0, 0, 0} (WithTop.{0} Int) (WithTop.{0} Int) (WithTop.{0} Int) (instHAdd.{0} (WithTop.{0} Int) (WithTop.add.{0} Int Int.hasAdd)) (Padic.addValuationDef p hp x) (Padic.addValuationDef p hp y))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (y : Padic p hp), Eq.{1} (WithTop.{0} Int) (Padic.addValuationDef p hp (HMul.hMul.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHMul.{0} (Padic p hp) (Padic.instMulPadic p hp)) x y)) (HAdd.hAdd.{0, 0, 0} (WithTop.{0} Int) (WithTop.{0} Int) (WithTop.{0} Int) (instHAdd.{0} (WithTop.{0} Int) (WithTop.add.{0} Int Int.instAddInt)) (Padic.addValuationDef p hp x) (Padic.addValuationDef p hp y))
-Case conversion may be inaccurate. Consider using '#align padic.add_valuation.map_mul Padic.AddValuation.map_mulₓ'. -/
 theorem AddValuation.map_mul (x y : ℚ_[p]) :
     addValuationDef (x * y) = addValuationDef x + addValuationDef y :=
   by
@@ -1636,12 +1177,6 @@ theorem AddValuation.map_mul (x y : ℚ_[p]) :
         valuation_map_mul hx hy]
 #align padic.add_valuation.map_mul Padic.AddValuation.map_mul
 
-/- warning: padic.add_valuation.map_add -> Padic.AddValuation.map_add is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (y : Padic p hp), LE.le.{0} (WithTop.{0} Int) (Preorder.toHasLe.{0} (WithTop.{0} Int) (WithTop.preorder.{0} Int (PartialOrder.toPreorder.{0} Int (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))))) (LinearOrder.min.{0} (WithTop.{0} Int) (WithTop.linearOrder.{0} Int Int.linearOrder) (Padic.addValuationDef p hp x) (Padic.addValuationDef p hp y)) (Padic.addValuationDef p hp (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.hasAdd p hp)) x y))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (y : Padic p hp), LE.le.{0} (WithTop.{0} Int) (Preorder.toLE.{0} (WithTop.{0} Int) (WithTop.preorder.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))))) (Min.min.{0} (WithTop.{0} Int) (LinearOrder.toMin.{0} (WithTop.{0} Int) (WithTop.linearOrder.{0} Int Int.instLinearOrderInt)) (Padic.addValuationDef p hp x) (Padic.addValuationDef p hp y)) (Padic.addValuationDef p hp (HAdd.hAdd.{0, 0, 0} (Padic p hp) (Padic p hp) (Padic p hp) (instHAdd.{0} (Padic p hp) (Padic.instAddPadic p hp)) x y))
-Case conversion may be inaccurate. Consider using '#align padic.add_valuation.map_add Padic.AddValuation.map_addₓ'. -/
 theorem AddValuation.map_add (x y : ℚ_[p]) :
     min (addValuationDef x) (addValuationDef y) ≤ addValuationDef (x + y) :=
   by
@@ -1657,24 +1192,12 @@ theorem AddValuation.map_add (x y : ℚ_[p]) :
         exact valuation_map_add hxy
 #align padic.add_valuation.map_add Padic.AddValuation.map_add
 
-/- warning: padic.add_valuation -> Padic.addValuation is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], AddValuation.{0, 0} (Padic p hp) (Padic.ring p hp) (WithTop.{0} Int) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedRing.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)], AddValuation.{0, 0} (Padic p hp) (Padic.instRingPadic p hp) (WithTop.{0} Int) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing))))
-Case conversion may be inaccurate. Consider using '#align padic.add_valuation Padic.addValuationₓ'. -/
 /-- The additive `p`-adic valuation on `ℚ_[p]`, as an `add_valuation`. -/
 def addValuation : AddValuation ℚ_[p] (WithTop ℤ) :=
   AddValuation.of addValuationDef AddValuation.map_zero AddValuation.map_one AddValuation.map_add
     AddValuation.map_mul
 #align padic.add_valuation Padic.addValuation
 
-/- warning: padic.add_valuation.apply -> Padic.addValuation.apply is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp}, (Ne.{1} (Padic p hp) x (OfNat.ofNat.{0} (Padic p hp) 0 (OfNat.mk.{0} (Padic p hp) 0 (Zero.zero.{0} (Padic p hp) (Padic.hasZero p hp))))) -> (Eq.{1} (WithTop.{0} Int) (coeFn.{1, 1} (AddValuation.{0, 0} (Padic p hp) (Padic.ring p hp) (WithTop.{0} Int) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedRing.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) (fun (_x : AddValuation.{0, 0} (Padic p hp) (Padic.ring p hp) (WithTop.{0} Int) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedRing.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) => (Padic p hp) -> (WithTop.{0} Int)) (AddValuation.hasCoeToFun.{0, 0} (Padic p hp) (WithTop.{0} Int) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedRing.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Padic.ring p hp)) (Padic.addValuation p hp) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (WithTop.{0} Int) (HasLiftT.mk.{1, 1} Int (WithTop.{0} Int) (CoeTCₓ.coe.{1, 1} Int (WithTop.{0} Int) (WithTop.hasCoeT.{0} Int))) (Padic.valuation p hp x)))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {x : Padic p hp}, (Ne.{1} (Padic p hp) x (OfNat.ofNat.{0} (Padic p hp) 0 (Zero.toOfNat0.{0} (Padic p hp) (Padic.instZeroPadic p hp)))) -> (Eq.{1} ((fun (x._@.Mathlib.RingTheory.Valuation.Basic._hyg.8830 : Padic p hp) => WithTop.{0} Int) x) (FunLike.coe.{1, 1, 1} (AddValuation.{0, 0} (Padic p hp) (Padic.instRingPadic p hp) (WithTop.{0} Int) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing))))) (Padic p hp) (fun (_x : Padic p hp) => (fun (x._@.Mathlib.RingTheory.Valuation.Basic._hyg.8830 : Padic p hp) => WithTop.{0} Int) _x) (AddValuation.instFunLikeAddValuation.{0, 0} (Padic p hp) (WithTop.{0} Int) (Padic.instRingPadic p hp) (WithTop.linearOrderedAddCommMonoidWithTop.{0} Int (LinearOrderedSemiring.toLinearOrderedAddCommMonoid.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing))))) (Padic.addValuation p hp) x) (WithTop.some.{0} Int (Padic.valuation p hp x)))
-Case conversion may be inaccurate. Consider using '#align padic.add_valuation.apply Padic.addValuation.applyₓ'. -/
 @[simp]
 theorem addValuation.apply {x : ℚ_[p]} (hx : x ≠ 0) : x.AddValuation = x.Valuation := by
   simp only [AddValuation, AddValuation.of_apply, add_valuation_def, if_neg hx]
@@ -1685,12 +1208,6 @@ section NormLeIff
 /-! ### Various characterizations of open unit balls -/
 
 
-/- warning: padic.norm_le_pow_iff_norm_lt_pow_add_one -> Padic.norm_le_pow_iff_norm_lt_pow_add_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (n : Int), Iff (LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) n)) (LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (n : Int), Iff (LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) n)) (LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))
-Case conversion may be inaccurate. Consider using '#align padic.norm_le_pow_iff_norm_lt_pow_add_one Padic.norm_le_pow_iff_norm_lt_pow_add_oneₓ'. -/
 theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ ≤ p ^ n ↔ ‖x‖ < p ^ (n + 1) :=
   by
   have aux : ∀ n : ℤ, 0 < (p ^ n : ℝ) := by apply Nat.zpow_pos_of_pos; exact hp.1.Pos
@@ -1701,22 +1218,10 @@ theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ �
   rw [H.le_iff_le, H.lt_iff_lt, Int.lt_add_one_iff]
 #align padic.norm_le_pow_iff_norm_lt_pow_add_one Padic.norm_le_pow_iff_norm_lt_pow_add_one
 
-/- warning: padic.norm_lt_pow_iff_norm_le_pow_sub_one -> Padic.norm_lt_pow_iff_norm_le_pow_sub_one is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (n : Int), Iff (LT.lt.{0} Real Real.hasLt (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) n)) (LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) p) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp) (n : Int), Iff (LT.lt.{0} Real Real.instLTReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) n)) (LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) x) (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))
-Case conversion may be inaccurate. Consider using '#align padic.norm_lt_pow_iff_norm_le_pow_sub_one Padic.norm_lt_pow_iff_norm_le_pow_sub_oneₓ'. -/
 theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ < p ^ n ↔ ‖x‖ ≤ p ^ (n - 1) :=
   by rw [norm_le_pow_iff_norm_lt_pow_add_one, sub_add_cancel]
 #align padic.norm_lt_pow_iff_norm_le_pow_sub_one Padic.norm_lt_pow_iff_norm_le_pow_sub_one
 
-/- warning: padic.norm_le_one_iff_val_nonneg -> Padic.norm_le_one_iff_val_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp), Iff (LE.le.{0} Real Real.hasLe (Norm.norm.{0} (Padic p hp) (Padic.hasNorm p hp) x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (Padic.valuation p hp x))
-but is expected to have type
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] (x : Padic p hp), Iff (LE.le.{0} Real Real.instLEReal (Norm.norm.{0} (Padic p hp) (Padic.instNormPadic p hp) x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Padic.valuation p hp x))
-Case conversion may be inaccurate. Consider using '#align padic.norm_le_one_iff_val_nonneg Padic.norm_le_one_iff_val_nonnegₓ'. -/
 theorem norm_le_one_iff_val_nonneg (x : ℚ_[p]) : ‖x‖ ≤ 1 ↔ 0 ≤ x.Valuation :=
   by
   by_cases hx : x = 0

@@ -183,12 +183,6 @@ def node' (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
 #align ordnode.node' Ordnode.node'
 -/
 
-/- warning: ordnode.repr -> Ordnode.repr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Repr.{u1} α], (Ordnode.{u1} α) -> String
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Repr.{u1} α], (Ordnode.{u1} α) -> Nat -> Std.Format
-Case conversion may be inaccurate. Consider using '#align ordnode.repr Ordnode.reprₓ'. -/
 /-- Basic pretty printing for `ordnode α` that shows the structure of the tree.
 
      repr {3, 1, 2, 4} = ((∅ 1 ∅) 2 ((∅ 3 ∅) 4 ∅)) -/
@@ -348,12 +342,6 @@ def All (P : α → Prop) : Ordnode α → Prop
 #align ordnode.all Ordnode.All
 -/
 
-/- warning: ordnode.all.decidable -> Ordnode.All.decidable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {P : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α P] (t : Ordnode.{u1} α), Decidable (Ordnode.All.{u1} α P t)
-but is expected to have type
-  forall {α : Type.{u1}} {P : α -> Prop} (_inst_1 : Ordnode.{u1} α) [t : DecidablePred.{succ u1} α P], Decidable (Ordnode.All.{u1} α P _inst_1)
-Case conversion may be inaccurate. Consider using '#align ordnode.all.decidable Ordnode.All.decidableₓ'. -/
 instance All.decidable {P : α → Prop} [DecidablePred P] (t) : Decidable (All P t) := by
   induction t <;> dsimp only [all] <;> skip <;> infer_instance
 #align ordnode.all.decidable Ordnode.All.decidable
@@ -369,12 +357,6 @@ def Any (P : α → Prop) : Ordnode α → Prop
 #align ordnode.any Ordnode.Any
 -/
 
-/- warning: ordnode.any.decidable -> Ordnode.Any.decidable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {P : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α P] (t : Ordnode.{u1} α), Decidable (Ordnode.Any.{u1} α P t)
-but is expected to have type
-  forall {α : Type.{u1}} {P : α -> Prop} (_inst_1 : Ordnode.{u1} α) [t : DecidablePred.{succ u1} α P], Decidable (Ordnode.Any.{u1} α P _inst_1)
-Case conversion may be inaccurate. Consider using '#align ordnode.any.decidable Ordnode.Any.decidableₓ'. -/
 instance Any.decidable {P : α → Prop} [DecidablePred P] (t) : Decidable (Any P t) := by
   induction t <;> dsimp only [any] <;> skip <;> infer_instance
 #align ordnode.any.decidable Ordnode.Any.decidable
@@ -391,12 +373,6 @@ def Emem (x : α) : Ordnode α → Prop :=
 #align ordnode.emem Ordnode.Emem
 -/
 
-/- warning: ordnode.emem.decidable -> Ordnode.Emem.decidable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α) (t : Ordnode.{u1} α), Decidable (Ordnode.Emem.{u1} α x t)
-but is expected to have type
-  forall {α : Type.{u1}} (_inst_1 : α) [x : DecidableEq.{succ u1} α] (t : Ordnode.{u1} α), Decidable (Ordnode.Emem.{u1} α _inst_1 t)
-Case conversion may be inaccurate. Consider using '#align ordnode.emem.decidable Ordnode.Emem.decidableₓ'. -/
 instance Emem.decidable [DecidableEq α] (x : α) : ∀ t, Decidable (Emem x t) :=
   Any.decidable
 #align ordnode.emem.decidable Ordnode.Emem.decidable

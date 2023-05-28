@@ -39,23 +39,11 @@ instance : PredOrder ℤ where
   le_pred_of_lt a b := le_sub_one_of_lt
   le_of_pred_lt a b := le_of_sub_one_lt
 
-/- warning: int.succ_eq_succ -> Int.succ_eq_succ is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Int -> Int) (Order.succ.{0} Int (PartialOrder.toPreorder.{0} Int (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.succOrder) Int.succ
-but is expected to have type
-  Eq.{1} (Int -> Int) (Order.succ.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) Int.instSuccOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing) Int.succ
-Case conversion may be inaccurate. Consider using '#align int.succ_eq_succ Int.succ_eq_succₓ'. -/
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=
   rfl
 #align int.succ_eq_succ Int.succ_eq_succ
 
-/- warning: int.pred_eq_pred -> Int.pred_eq_pred is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Int -> Int) (Order.pred.{0} Int (PartialOrder.toPreorder.{0} Int (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.predOrder) Int.pred
-but is expected to have type
-  Eq.{1} (Int -> Int) (Order.pred.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) Int.instPredOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing) Int.pred
-Case conversion may be inaccurate. Consider using '#align int.pred_eq_pred Int.pred_eq_predₓ'. -/
 @[simp]
 theorem pred_eq_pred : Order.pred = pred :=
   rfl

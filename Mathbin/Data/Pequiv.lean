@@ -522,12 +522,6 @@ instance : PartialOrder (α ≃. β)
         · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
         · exact gf _ _ h)
 
-/- warning: pequiv.le_def -> PEquiv.le_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toHasLe.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.partialOrder.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => Option.{u2} β) (PEquiv.funLike.{u1, u2} α β)) f a)) -> (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => Option.{u2} β) (PEquiv.funLike.{u1, u2} α β)) g a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.instPartialOrderPEquiv.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.mem.{u2, u2} β ((fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u2} β) a) (Option.instMembershipOption.{u2} β) b (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u2} β) _x) (PEquiv.instFunLikePEquivOption.{u1, u2} α β) f a)) -> (Membership.mem.{u2, u2} β ((fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u2} β) a) (Option.instMembershipOption.{u2} β) b (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u2} β) _x) (PEquiv.instFunLikePEquivOption.{u1, u2} α β) g a)))
-Case conversion may be inaccurate. Consider using '#align pequiv.le_def PEquiv.le_defₓ'. -/
 theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a → b ∈ g a :=
   Iff.rfl
 #align pequiv.le_def PEquiv.le_def
@@ -588,33 +582,15 @@ theorem toPEquiv_refl : (Equiv.refl α).toPEquiv = PEquiv.refl α :=
 #align equiv.to_pequiv_refl Equiv.toPEquiv_refl
 -/
 
-/- warning: equiv.to_pequiv_trans -> Equiv.toPEquiv_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : Equiv.{succ u1, succ u2} α β) (g : Equiv.{succ u2, succ u3} β γ), Eq.{max (succ u1) (succ u3)} (PEquiv.{u1, u3} α γ) (Equiv.toPEquiv.{u1, u3} α γ (Equiv.trans.{succ u1, succ u2, succ u3} α β γ f g)) (PEquiv.trans.{u1, u2, u3} α β γ (Equiv.toPEquiv.{u1, u2} α β f) (Equiv.toPEquiv.{u2, u3} β γ g))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : Equiv.{succ u3, succ u2} α β) (g : Equiv.{succ u2, succ u1} β γ), Eq.{max (succ u3) (succ u1)} (PEquiv.{u3, u1} α γ) (Equiv.toPEquiv.{u3, u1} α γ (Equiv.trans.{succ u3, succ u2, succ u1} α β γ f g)) (PEquiv.trans.{u3, u2, u1} α β γ (Equiv.toPEquiv.{u3, u2} α β f) (Equiv.toPEquiv.{u2, u1} β γ g))
-Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_trans Equiv.toPEquiv_transₓ'. -/
 theorem toPEquiv_trans (f : α ≃ β) (g : β ≃ γ) :
     (f.trans g).toPEquiv = f.toPEquiv.trans g.toPEquiv :=
   rfl
 #align equiv.to_pequiv_trans Equiv.toPEquiv_trans
 
-/- warning: equiv.to_pequiv_symm -> Equiv.toPEquiv_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β), Eq.{max (succ u2) (succ u1)} (PEquiv.{u2, u1} β α) (Equiv.toPEquiv.{u2, u1} β α (Equiv.symm.{succ u1, succ u2} α β f)) (PEquiv.symm.{u1, u2} α β (Equiv.toPEquiv.{u1, u2} α β f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (PEquiv.{u1, u2} β α) (Equiv.toPEquiv.{u1, u2} β α (Equiv.symm.{succ u2, succ u1} α β f)) (PEquiv.symm.{u2, u1} α β (Equiv.toPEquiv.{u2, u1} α β f))
-Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_symm Equiv.toPEquiv_symmₓ'. -/
 theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPEquiv = f.toPEquiv.symm :=
   rfl
 #align equiv.to_pequiv_symm Equiv.toPEquiv_symm
 
-/- warning: equiv.to_pequiv_apply -> Equiv.toPEquiv_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β) (x : α), Eq.{succ u2} (Option.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => Option.{u2} β) (PEquiv.funLike.{u1, u2} α β)) (Equiv.toPEquiv.{u1, u2} α β f) x) (Option.some.{u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) f x))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u1} β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (PEquiv.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u1} β) _x) (PEquiv.instFunLikePEquivOption.{u2, u1} α β) (Equiv.toPEquiv.{u2, u1} α β f) x) (Option.some.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) f x))
-Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_apply Equiv.toPEquiv_applyₓ'. -/
 theorem toPEquiv_apply (f : α ≃ β) (x : α) : f.toPEquiv x = some (f x) :=
   rfl
 #align equiv.to_pequiv_apply Equiv.toPEquiv_apply

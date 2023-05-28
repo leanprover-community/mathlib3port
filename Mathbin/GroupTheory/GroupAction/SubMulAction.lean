@@ -116,12 +116,6 @@ theorem smul_def (r : R) (x : s) : r • x = ⟨r • x, smul_mem r x.2⟩ :=
 
 omit hS
 
-/- warning: set_like.forall_smul_mem_iff -> SetLike.forall_smul_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {S : Type.{u3}} [_inst_3 : Monoid.{u1} R] [_inst_4 : MulAction.{u1, u2} R M _inst_3] [_inst_5 : SetLike.{u3, u2} S M] [_inst_6 : SMulMemClass.{u3, u1, u2} S R M (MulAction.toHasSmul.{u1, u2} R M _inst_3 _inst_4) _inst_5] {N : S} {x : M}, Iff (forall (a : R), Membership.Mem.{u2, u3} M S (SetLike.hasMem.{u3, u2} S M _inst_5) (SMul.smul.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_3 _inst_4) a x) N) (Membership.Mem.{u2, u3} M S (SetLike.hasMem.{u3, u2} S M _inst_5) x N)
-but is expected to have type
-  forall {R : Type.{u3}} {M : Type.{u2}} {S : Type.{u1}} [_inst_3 : Monoid.{u3} R] [_inst_4 : MulAction.{u3, u2} R M _inst_3] [_inst_5 : SetLike.{u1, u2} S M] [_inst_6 : SMulMemClass.{u1, u3, u2} S R M (MulAction.toSMul.{u3, u2} R M _inst_3 _inst_4) _inst_5] {N : S} {x : M}, Iff (forall (a : R), Membership.mem.{u2, u1} M S (SetLike.instMembership.{u1, u2} S M _inst_5) (HSMul.hSMul.{u3, u2, u2} R M M (instHSMul.{u3, u2} R M (MulAction.toSMul.{u3, u2} R M _inst_3 _inst_4)) a x) N) (Membership.mem.{u2, u1} M S (SetLike.instMembership.{u1, u2} S M _inst_5) x N)
-Case conversion may be inaccurate. Consider using '#align set_like.forall_smul_mem_iff SetLike.forall_smul_mem_iffₓ'. -/
 @[simp]
 theorem forall_smul_mem_iff {R M S : Type _} [Monoid R] [MulAction R M] [SetLike S M]
     [SMulMemClass S R M] {N : S} {x : M} : (∀ a : R, a • x ∈ N) ↔ x ∈ N :=
@@ -221,11 +215,6 @@ theorem val_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
 -/
 
 /- warning: sub_mul_action.coe_mk clashes with [anonymous] -> [anonymous]
-warning: sub_mul_action.coe_mk -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : SMul.{u1, u2} R M] {p : SubMulAction.{u1, u2} R M _inst_1} (x : M) (hx : Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p), Eq.{succ u2} M ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p)) M (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p)) M (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p)) M (coeBase.{succ u2, succ u2} (Subtype.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p)) M (coeSubtype.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p))))) (Subtype.mk.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M _inst_1) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M _inst_1) M (SubMulAction.setLike.{u1, u2} R M _inst_1)) x p) x hx)) x
-but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}}, (Nat -> R -> M) -> Nat -> (List.{u1} R) -> (List.{u2} M)
 Case conversion may be inaccurate. Consider using '#align sub_mul_action.coe_mk [anonymous]ₓ'. -/
 @[simp, norm_cast]
 theorem [anonymous] (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
@@ -278,9 +267,6 @@ protected def subtype : S' →[R] M :=
 #align sub_mul_action.smul_mem_class.subtype SubMulAction.SMulMemClass.subtype
 -/
 
-/- warning: sub_mul_action.smul_mem_class.coe_subtype -> SubMulAction.SMulMemClass.coeSubtype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.smul_mem_class.coe_subtype SubMulAction.SMulMemClass.coeSubtypeₓ'. -/
 @[simp]
 protected theorem coeSubtype : (SMulMemClass.subtype S' : S' → M) = coe :=
   rfl
@@ -325,12 +311,6 @@ theorem val_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
 #align sub_mul_action.coe_smul_of_tower SubMulAction.val_smul_of_tower
 -/
 
-/- warning: sub_mul_action.smul_mem_iff' -> SubMulAction.smul_mem_iff' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Monoid.{u1} R] [_inst_2 : MulAction.{u1, u2} R M _inst_1] (p : SubMulAction.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2)) {G : Type.{u3}} [_inst_6 : Group.{u3} G] [_inst_7 : SMul.{u3, u1} G R] [_inst_8 : MulAction.{u3, u2} G M (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6))] [_inst_9 : IsScalarTower.{u3, u1, u2} G R M _inst_7 (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2) (MulAction.toHasSmul.{u3, u2} G M (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6)) _inst_8)] (g : G) {x : M}, Iff (Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2)) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2)) M (SubMulAction.setLike.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2))) (SMul.smul.{u3, u2} G M (MulAction.toHasSmul.{u3, u2} G M (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6)) _inst_8) g x) p) (Membership.Mem.{u2, u2} M (SubMulAction.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2)) (SetLike.hasMem.{u2, u2} (SubMulAction.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2)) M (SubMulAction.setLike.{u1, u2} R M (MulAction.toHasSmul.{u1, u2} R M _inst_1 _inst_2))) x p)
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u3}} [_inst_1 : Monoid.{u2} R] [_inst_2 : MulAction.{u2, u3} R M _inst_1] (p : SubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2)) {G : Type.{u1}} [_inst_6 : Group.{u1} G] [_inst_7 : SMul.{u1, u2} G R] [_inst_8 : MulAction.{u1, u3} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_6))] [_inst_9 : IsScalarTower.{u1, u2, u3} G R M _inst_7 (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2) (MulAction.toSMul.{u1, u3} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_6)) _inst_8)] (g : G) {x : M}, Iff (Membership.mem.{u3, u3} M (SubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2)) (SetLike.instMembership.{u3, u3} (SubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2)) M (SubMulAction.instSetLikeSubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2))) (HSMul.hSMul.{u1, u3, u3} G M M (instHSMul.{u1, u3} G M (MulAction.toSMul.{u1, u3} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_6)) _inst_8)) g x) p) (Membership.mem.{u3, u3} M (SubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2)) (SetLike.instMembership.{u3, u3} (SubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2)) M (SubMulAction.instSetLikeSubMulAction.{u2, u3} R M (MulAction.toSMul.{u2, u3} R M _inst_1 _inst_2))) x p)
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.smul_mem_iff' SubMulAction.smul_mem_iff'ₓ'. -/
 @[simp]
 theorem smul_mem_iff' {G} [Group G] [SMul G R] [MulAction G M] [IsScalarTower G R M] (g : G)
     {x : M} : g • x ∈ p ↔ x ∈ p :=
@@ -410,9 +390,6 @@ variable [Module R M]
 
 variable (p : SubMulAction R M)
 
-/- warning: sub_mul_action.zero_mem -> SubMulAction.zero_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.zero_mem SubMulAction.zero_memₓ'. -/
 theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
   let ⟨x, hx⟩ := h
   zero_smul R (x : M) ▸ p.smul_mem 0 hx
@@ -435,15 +412,9 @@ variable (p p' : SubMulAction R M)
 
 variable {r : R} {x y : M}
 
-/- warning: sub_mul_action.neg_mem -> SubMulAction.neg_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.neg_mem SubMulAction.neg_memₓ'. -/
 theorem neg_mem (hx : x ∈ p) : -x ∈ p := by rw [← neg_one_smul R]; exact p.smul_mem _ hx
 #align sub_mul_action.neg_mem SubMulAction.neg_mem
 
-/- warning: sub_mul_action.neg_mem_iff -> SubMulAction.neg_mem_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.neg_mem_iff SubMulAction.neg_mem_iffₓ'. -/
 @[simp]
 theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
   ⟨fun h => by rw [← neg_neg x]; exact neg_mem _ h, neg_mem _⟩
@@ -452,9 +423,6 @@ theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
 instance : Neg p :=
   ⟨fun x => ⟨-x.1, neg_mem _ x.2⟩⟩
 
-/- warning: sub_mul_action.coe_neg -> SubMulAction.val_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.coe_neg SubMulAction.val_negₓ'. -/
 @[simp, norm_cast]
 theorem val_neg (x : p) : ((-x : p) : M) = -x :=
   rfl
@@ -472,12 +440,6 @@ variable [SMul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M) {s : S} {x y : M}
 
-/- warning: sub_mul_action.smul_mem_iff -> SubMulAction.smul_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {S : Type.{u2}} {R : Type.{u1}} {M : Type.{u3}} [_inst_1 : GroupWithZero.{u2} S] [_inst_2 : Monoid.{u1} R] [_inst_3 : MulAction.{u1, u3} R M _inst_2] [_inst_4 : SMul.{u2, u1} S R] [_inst_5 : MulAction.{u2, u3} S M (MonoidWithZero.toMonoid.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1))] [_inst_6 : IsScalarTower.{u2, u1, u3} S R M _inst_4 (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3) (MulAction.toHasSmul.{u2, u3} S M (MonoidWithZero.toMonoid.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1)) _inst_5)] (p : SubMulAction.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3)) {s : S} {x : M}, (Ne.{succ u2} S s (OfNat.ofNat.{u2} S 0 (OfNat.mk.{u2} S 0 (Zero.zero.{u2} S (MulZeroClass.toHasZero.{u2} S (MulZeroOneClass.toMulZeroClass.{u2} S (MonoidWithZero.toMulZeroOneClass.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1)))))))) -> (Iff (Membership.Mem.{u3, u3} M (SubMulAction.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3)) (SetLike.hasMem.{u3, u3} (SubMulAction.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3)) M (SubMulAction.setLike.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3))) (SMul.smul.{u2, u3} S M (MulAction.toHasSmul.{u2, u3} S M (MonoidWithZero.toMonoid.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1)) _inst_5) s x) p) (Membership.Mem.{u3, u3} M (SubMulAction.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3)) (SetLike.hasMem.{u3, u3} (SubMulAction.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3)) M (SubMulAction.setLike.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_2 _inst_3))) x p))
-but is expected to have type
-  forall {S : Type.{u2}} {R : Type.{u1}} {M : Type.{u3}} [_inst_1 : GroupWithZero.{u2} S] [_inst_2 : Monoid.{u1} R] [_inst_3 : MulAction.{u1, u3} R M _inst_2] [_inst_4 : SMul.{u2, u1} S R] [_inst_5 : MulAction.{u2, u3} S M (MonoidWithZero.toMonoid.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1))] [_inst_6 : IsScalarTower.{u2, u1, u3} S R M _inst_4 (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3) (MulAction.toSMul.{u2, u3} S M (MonoidWithZero.toMonoid.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1)) _inst_5)] (p : SubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3)) {s : S} {x : M}, (Ne.{succ u2} S s (OfNat.ofNat.{u2} S 0 (Zero.toOfNat0.{u2} S (MonoidWithZero.toZero.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1))))) -> (Iff (Membership.mem.{u3, u3} M (SubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3)) (SetLike.instMembership.{u3, u3} (SubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3)) M (SubMulAction.instSetLikeSubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3))) (HSMul.hSMul.{u2, u3, u3} S M M (instHSMul.{u2, u3} S M (MulAction.toSMul.{u2, u3} S M (MonoidWithZero.toMonoid.{u2} S (GroupWithZero.toMonoidWithZero.{u2} S _inst_1)) _inst_5)) s x) p) (Membership.mem.{u3, u3} M (SubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3)) (SetLike.instMembership.{u3, u3} (SubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3)) M (SubMulAction.instSetLikeSubMulAction.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_2 _inst_3))) x p))
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.smul_mem_iff SubMulAction.smul_mem_iffₓ'. -/
 theorem smul_mem_iff (s0 : s ≠ 0) : s • x ∈ p ↔ x ∈ p :=
   p.smul_mem_iff' (Units.mk0 s s0)
 #align sub_mul_action.smul_mem_iff SubMulAction.smul_mem_iff

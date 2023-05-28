@@ -48,12 +48,6 @@ structure Encoding (α : Type u) where
 #align computability.encoding Computability.Encoding
 -/
 
-/- warning: computability.encoding.encode_injective -> Computability.Encoding.encode_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (e : Computability.Encoding.{u1, u2} α), Function.Injective.{succ u1, succ u2} α (List.{u2} (Computability.Encoding.Γ.{u1, u2} α e)) (Computability.Encoding.encode.{u1, u2} α e)
-but is expected to have type
-  forall {α : Type.{u2}} (e : Computability.Encoding.{u2, u1} α), Function.Injective.{succ u2, succ u1} α (List.{u1} (Computability.Encoding.Γ.{u2, u1} α e)) (Computability.Encoding.encode.{u2, u1} α e)
-Case conversion may be inaccurate. Consider using '#align computability.encoding.encode_injective Computability.Encoding.encode_injectiveₓ'. -/
 theorem Encoding.encode_injective {α : Type u} (e : Encoding α) : Function.Injective e.encode :=
   by
   refine' fun _ _ h => Option.some_injective _ _

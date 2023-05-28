@@ -29,9 +29,6 @@ variable {α : Type u} {β : Type _}
 
 namespace Function.Injective
 
-/- warning: function.injective.ordered_semiring -> Function.Injective.orderedSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.ordered_semiring Function.Injective.orderedSemiringₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_semiring` under an injective map. -/
 @[reducible]
@@ -52,9 +49,6 @@ protected def orderedSemiring [OrderedSemiring α] [Zero β] [One β] [Add β] [
         rwa [← zero] }
 #align function.injective.ordered_semiring Function.Injective.orderedSemiring
 
-/- warning: function.injective.ordered_comm_semiring -> Function.Injective.orderedCommSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.ordered_comm_semiring Function.Injective.orderedCommSemiringₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_comm_semiring` under an injective map. -/
 @[reducible]
@@ -67,9 +61,6 @@ protected def orderedCommSemiring [OrderedCommSemiring α] [Zero β] [One β] [A
     hf.OrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.ordered_comm_semiring Function.Injective.orderedCommSemiring
 
-/- warning: function.injective.ordered_ring -> Function.Injective.orderedRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.ordered_ring Function.Injective.orderedRingₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_ring` under an injective map. -/
 @[reducible]
@@ -86,9 +77,6 @@ protected def orderedRing [OrderedRing α] [Zero β] [One β] [Add β] [Mul β] 
       show f 0 ≤ f (a * b) by rw [zero, mul]; apply mul_nonneg <;> rwa [← zero] }
 #align function.injective.ordered_ring Function.Injective.orderedRing
 
-/- warning: function.injective.ordered_comm_ring -> Function.Injective.orderedCommRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.ordered_comm_ring Function.Injective.orderedCommRingₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_comm_ring` under an injective map. -/
 @[reducible]
@@ -103,9 +91,6 @@ protected def orderedCommRing [OrderedCommRing α] [Zero β] [One β] [Add β] [
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.ordered_comm_ring Function.Injective.orderedCommRing
 
-/- warning: function.injective.strict_ordered_semiring -> Function.Injective.strictOrderedSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.strict_ordered_semiring Function.Injective.strictOrderedSemiringₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_semiring` under an injective map. -/
 @[reducible]
@@ -126,9 +111,6 @@ protected def strictOrderedSemiring [StrictOrderedSemiring α] [Zero β] [One β
         simpa only [mul, zero] using mul_lt_mul_of_pos_right ‹f a < f b› (by rwa [← zero]) }
 #align function.injective.strict_ordered_semiring Function.Injective.strictOrderedSemiring
 
-/- warning: function.injective.strict_ordered_comm_semiring -> Function.Injective.strictOrderedCommSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.strict_ordered_comm_semiring Function.Injective.strictOrderedCommSemiringₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_comm_semiring` under an injective map. -/
 @[reducible]
@@ -141,9 +123,6 @@ protected def strictOrderedCommSemiring [StrictOrderedCommSemiring α] [Zero β]
     hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.strict_ordered_comm_semiring Function.Injective.strictOrderedCommSemiring
 
-/- warning: function.injective.strict_ordered_ring -> Function.Injective.strictOrderedRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.strict_ordered_ring Function.Injective.strictOrderedRingₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_ring` under an injective map. -/
 @[reducible]
@@ -160,9 +139,6 @@ protected def strictOrderedRing [StrictOrderedRing α] [Zero β] [One β] [Add �
       show f 0 < f (a * b) by rw [zero, mul]; apply mul_pos <;> rwa [← zero] }
 #align function.injective.strict_ordered_ring Function.Injective.strictOrderedRing
 
-/- warning: function.injective.strict_ordered_comm_ring -> Function.Injective.strictOrderedCommRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.strict_ordered_comm_ring Function.Injective.strictOrderedCommRingₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_comm_ring` under an injective map. -/
 @[reducible]
@@ -177,9 +153,6 @@ protected def strictOrderedCommRing [StrictOrderedCommRing α] [Zero β] [One β
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.strict_ordered_comm_ring Function.Injective.strictOrderedCommRing
 
-/- warning: function.injective.linear_ordered_semiring -> Function.Injective.linearOrderedSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.linear_ordered_semiring Function.Injective.linearOrderedSemiringₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_semiring` under an injective map. -/
 @[reducible]
@@ -193,9 +166,6 @@ protected def linearOrderedSemiring [LinearOrderedSemiring α] [Zero β] [One β
     hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.linear_ordered_semiring Function.Injective.linearOrderedSemiring
 
-/- warning: function.injective.linear_ordered_comm_semiring -> Function.Injective.linearOrderedCommSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.linear_ordered_comm_semiring Function.Injective.linearOrderedCommSemiringₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_semiring` under an injective map. -/
 @[reducible]
@@ -210,9 +180,6 @@ protected def linearOrderedCommSemiring [LinearOrderedCommSemiring α] [Zero β]
     hf.StrictOrderedCommSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.linear_ordered_comm_semiring Function.Injective.linearOrderedCommSemiring
 
-/- warning: function.injective.linear_ordered_ring -> Function.Injective.linearOrderedRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.linear_ordered_ring Function.Injective.linearOrderedRingₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_ring` under an injective map. -/
 @[reducible]
@@ -229,9 +196,6 @@ def linearOrderedRing [LinearOrderedRing α] [Zero β] [One β] [Add β] [Mul β
     hf.StrictOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.linear_ordered_ring Function.Injective.linearOrderedRing
 
-/- warning: function.injective.linear_ordered_comm_ring -> Function.Injective.linearOrderedCommRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.linear_ordered_comm_ring Function.Injective.linearOrderedCommRingₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_comm_ring` under an injective map. -/
 @[reducible]

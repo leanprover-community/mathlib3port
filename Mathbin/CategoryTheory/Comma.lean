@@ -206,9 +206,6 @@ section
 
 variable {L₁ L₂ L₃ : A ⥤ T} {R₁ R₂ R₃ : B ⥤ T}
 
-/- warning: category_theory.comma.iso_mk -> CategoryTheory.Comma.isoMk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.comma.iso_mk CategoryTheory.Comma.isoMkₓ'. -/
 /-- Construct an isomorphism in the comma category given isomorphisms of the objects whose forward
 directions give a commutative square.
 -/

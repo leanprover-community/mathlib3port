@@ -70,12 +70,6 @@ theorem card_functions_sum_skolem₁ :
 #align first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
 -/
 
-/- warning: first_order.language.card_functions_sum_skolem₁_le -> FirstOrder.Language.card_functions_sum_skolem₁_le is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}}, LE.le.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.hasLe.{max u1 u2} (Cardinal.mk.{max u1 u2} (Sigma.{0, max u1 u2} Nat (fun (n : Nat) => FirstOrder.Language.Functions.{max u1 u2, u2} (FirstOrder.Language.sum.{u1, u2, max u1 u2, 0} L (FirstOrder.Language.skolem₁.{u1, u2} L)) n))) (LinearOrder.max.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.linearOrder.{max u1 u2} Cardinal.aleph0.{max u1 u2} (FirstOrder.Language.card.{u1, u2} L))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}}, LE.le.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instLECardinal.{max u1 u2} (Cardinal.mk.{max u1 u2} (Sigma.{0, max u1 u2} Nat (fun (n : Nat) => FirstOrder.Language.Functions.{max u1 u2, u2} (FirstOrder.Language.sum.{u1, u2, max u1 u2, 0} L (FirstOrder.Language.skolem₁.{u1, u2} L)) n))) (Max.max.{succ (max u1 u2)} Cardinal.{max u1 u2} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u2}) Cardinal.aleph0.{max u1 u2} (FirstOrder.Language.card.{u1, u2} L))
-Case conversion may be inaccurate. Consider using '#align first_order.language.card_functions_sum_skolem₁_le FirstOrder.Language.card_functions_sum_skolem₁_leₓ'. -/
 theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card :=
   by
   rw [card_functions_sum_skolem₁]
@@ -99,9 +93,6 @@ noncomputable instance skolem₁Structure : L.skolem₁.Structure M :=
 
 namespace Substructure
 
-/- warning: first_order.language.substructure.skolem₁_reduct_is_elementary -> FirstOrder.Language.Substructure.skolem₁_reduct_isElementary is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.substructure.skolem₁_reduct_is_elementary FirstOrder.Language.Substructure.skolem₁_reduct_isElementaryₓ'. -/
 theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
     (LHom.sumInl.substructureReduct S).IsElementary :=
   by

@@ -36,12 +36,6 @@ def Pi.empty (δ : α → Sort _) : ∀ a ∈ (0 : Multiset α), δ a :=
 
 variable [DecidableEq α] {β : α → Type _} {δ : α → Sort _}
 
-/- warning: multiset.pi.cons -> Multiset.Pi.cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} (m : Multiset.{u1} α) (a : α), (δ a) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (δ a)) -> (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a'))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {δ : α -> Sort.{u1}} (m : Multiset.{u2} α) (a : α), (δ a) -> (forall (a : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a m) -> (δ a)) -> (forall (a' : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a' (Multiset.cons.{u2} α a m)) -> (δ a'))
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons Multiset.Pi.consₓ'. -/
 /-- Given `δ : α → Type*`, a multiset `m` and a term `a`, as well as a term `b : δ a` and a
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
@@ -49,34 +43,16 @@ def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a ∈ m, δ a) : ∀ 
   fun a' ha' => if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
 #align multiset.pi.cons Multiset.Pi.cons
 
-/- warning: multiset.pi.cons_same -> Multiset.Pi.cons_same is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} {b : δ a} {f : forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (δ a)} (h : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a (Multiset.cons.{u1} α a m)), Eq.{u2} (δ a) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) m a b f a h) b
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} {b : δ a} {f : forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (δ a)} (h : Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a (Multiset.cons.{u1} α a m)), Eq.{u2} (δ a) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ m a b f a h) b
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_same Multiset.Pi.cons_sameₓ'. -/
 theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h : a ∈ a ::ₘ m) :
     Pi.cons m a b f a h = b :=
   dif_pos rfl
 #align multiset.pi.cons_same Multiset.Pi.cons_same
 
-/- warning: multiset.pi.cons_ne -> Multiset.Pi.cons_ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} {a' : α} {b : δ a} {f : forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (δ a)} (h' : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) (h : Ne.{succ u1} α a' a), Eq.{u2} (δ a') (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) m a b f a' h') (f a' (Or.resolve_left (Eq.{succ u1} α a' a) (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' m) (Iff.mp (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) (Or (Eq.{succ u1} α a' a) (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' m)) (Multiset.mem_cons.{u1} α a' a m) h') h))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} {a' : α} {b : δ a} {f : forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (δ a)} (h' : Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) (h : Ne.{succ u1} α a' a), Eq.{u2} (δ a') (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ m a b f a' h') (f a' (Or.resolve_left (Eq.{succ u1} α a' a) (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' m) (Iff.mp (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) (Or (Eq.{succ u1} α a' a) (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' m)) (Multiset.mem_cons.{u1} α a' a m) h') h))
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_ne Multiset.Pi.cons_neₓ'. -/
 theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h' : a' ∈ a ::ₘ m)
     (h : a' ≠ a) : Pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
   dif_neg h
 #align multiset.pi.cons_ne Multiset.Pi.cons_ne
 
-/- warning: multiset.pi.cons_swap -> Multiset.Pi.cons_swap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {a' : α} {b : δ a} {b' : δ a'} {m : Multiset.{u1} α} {f : forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (δ a)}, (Ne.{succ u1} α a a') -> (HEq.{imax (succ u1) u2} (forall (a'_1 : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a'_1 (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a' m))) -> (δ a'_1)) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) (Multiset.cons.{u1} α a' m) a b (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => δ a) m a' b' f)) (forall (a'_1 : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a'_1 (Multiset.cons.{u1} α a' (Multiset.cons.{u1} α a m))) -> (δ a'_1)) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a' : α} => δ a') (Multiset.cons.{u1} α a m) a' b' (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => δ a) m a b f)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {a' : α} {b : δ a} {b' : δ a'} {m : Multiset.{u1} α} {f : forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (δ a)}, (Ne.{succ u1} α a a') -> (HEq.{imax (succ u1) u2} (forall (a'_1 : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a'_1 (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a' m))) -> (δ a'_1)) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ (Multiset.cons.{u1} α a' m) a b (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => δ a) m a' b' f)) (forall (a'_1 : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a'_1 (Multiset.cons.{u1} α a' (Multiset.cons.{u1} α a m))) -> (δ a'_1)) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ (Multiset.cons.{u1} α a m) a' b' (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => δ a) m a b f)))
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_swap Multiset.Pi.cons_swapₓ'. -/
 theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a}
     (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) :=
@@ -89,12 +65,6 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
   all_goals simp [*, pi.cons_same, pi.cons_ne]
 #align multiset.pi.cons_swap Multiset.Pi.cons_swap
 
-/- warning: multiset.pi.cons_eta -> Multiset.pi.cons_eta is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} (f : forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')), Eq.{imax (succ u1) u2} (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) m a (f a (Multiset.mem_cons_self.{u1} α a m)) (fun (a' : α) (ha' : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' m) => f a' (Multiset.mem_cons_of_mem.{u1} α a' a m ha'))) f
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} (f : forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')), Eq.{imax (succ u1) u2} (forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ m a (f a (Multiset.mem_cons_self.{u1} α a m)) (fun (a' : α) (ha' : Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' m) => f a' (Multiset.mem_cons_of_mem.{u1} α a' a m ha'))) f
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_eta Multiset.pi.cons_etaₓ'. -/
 @[simp]
 theorem pi.cons_eta {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
     (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f :=
@@ -105,12 +75,6 @@ theorem pi.cons_eta {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a')
   · rw [pi.cons_ne _ h]
 #align multiset.pi.cons_eta Multiset.pi.cons_eta
 
-/- warning: multiset.pi.cons_injective -> Multiset.Pi.cons_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {b : δ a} {s : Multiset.{u1} α}, (Not (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a s)) -> (δ a')) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) s a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {b : δ a} {s : Multiset.{u1} α}, (Not (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a s)) -> (δ a')) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ s a b))
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_injective Multiset.Pi.cons_injectiveₓ'. -/
 theorem Pi.cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
     Function.Injective (Pi.cons s a b) := fun f₁ f₂ eq =>
   funext fun a' =>
@@ -124,12 +88,6 @@ theorem Pi.cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
         
 #align multiset.pi.cons_injective Multiset.Pi.cons_injective
 
-/- warning: multiset.pi -> Multiset.pi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α), (forall (a : α), Multiset.{u2} (β a)) -> (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {β : α -> Type.{u1}} (m : Multiset.{u2} α), (forall (a : α), Multiset.{u1} (β a)) -> (Multiset.{max u1 u2} (forall (a : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a m) -> (β a)))
-Case conversion may be inaccurate. Consider using '#align multiset.pi Multiset.piₓ'. -/
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (β a)) : Multiset (∀ a ∈ m, β a) :=
   m.recOn {Pi.empty β}
@@ -148,43 +106,22 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (β a)) : Multiset (∀ a ∈ m, �
         exact pi.cons_swap Eq)
 #align multiset.pi Multiset.pi
 
-/- warning: multiset.pi_zero -> Multiset.pi_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (t : forall (a : α), Multiset.{u2} (β a)), Eq.{succ (max u1 u2)} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α))))) -> (β a))) (Multiset.pi.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α)))) t) (Singleton.singleton.{max u1 u2, max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α))))) -> (β a)) (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α))))) -> (β a))) (Multiset.hasSingleton.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α))))) -> (β a))) (Multiset.Pi.empty.{u1, succ u2} α β))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (t : forall (a : α), Multiset.{u2} (β a)), Eq.{max (succ u2) (succ u1)} (Multiset.{max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α)))) -> (β a))) (Multiset.pi.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α))) t) (Singleton.singleton.{max u2 u1, max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α)))) -> (β a)) (Multiset.{max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α)))) -> (β a))) (Multiset.instSingletonMultiset.{max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α)))) -> (β a))) (Multiset.Pi.empty.{u1, succ u2} α β))
-Case conversion may be inaccurate. Consider using '#align multiset.pi_zero Multiset.pi_zeroₓ'. -/
 @[simp]
 theorem pi_zero (t : ∀ a, Multiset (β a)) : pi 0 t = {Pi.empty β} :=
   rfl
 #align multiset.pi_zero Multiset.pi_zero
 
-/- warning: multiset.pi_cons -> Multiset.pi_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α) (t : forall (a : α), Multiset.{u2} (β a)) (a : α), Eq.{succ (max u1 u2)} (Multiset.{max u1 u2} (forall (a_1 : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a_1 (Multiset.cons.{u1} α a m)) -> (β a_1))) (Multiset.pi.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) (Multiset.cons.{u1} α a m) t) (Multiset.bind.{u2, max u1 u2} (β a) (forall (a_1 : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a_1 (Multiset.cons.{u1} α a m)) -> (β a_1)) (t a) (fun (b : β a) => Multiset.map.{max u1 u2, max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)) (forall (a_1 : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a_1 (Multiset.cons.{u1} α a m)) -> (β a_1)) (Multiset.Pi.cons.{u1, succ u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) m a b) (Multiset.pi.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) m t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α) (t : forall (a : α), Multiset.{u2} (β a)) (a : α), Eq.{max (succ u2) (succ u1)} (Multiset.{max u2 u1} (forall (a_1 : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a_1 (Multiset.cons.{u1} α a m)) -> (β a_1))) (Multiset.pi.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) (Multiset.cons.{u1} α a m) t) (Multiset.bind.{u2, max u2 u1} (β a) (forall (a_1 : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a_1 (Multiset.cons.{u1} α a m)) -> (β a_1)) (t a) (fun (b : β a) => Multiset.map.{max u2 u1, max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (β a)) (forall (a_1 : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a_1 (Multiset.cons.{u1} α a m)) -> (β a_1)) (Multiset.Pi.cons.{succ u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) β m a b) (Multiset.pi.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) m t)))
-Case conversion may be inaccurate. Consider using '#align multiset.pi_cons Multiset.pi_consₓ'. -/
 @[simp]
 theorem pi_cons (m : Multiset α) (t : ∀ a, Multiset (β a)) (a : α) :
     pi (a ::ₘ m) t = (t a).bind fun b => (pi m t).map <| Pi.cons m a b :=
   recOn_cons a m
 #align multiset.pi_cons Multiset.pi_cons
 
-/- warning: multiset.card_pi -> Multiset.card_pi is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multiset.card_pi Multiset.card_piₓ'. -/
 theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (β a)) :
     card (pi m t) = prod (m.map fun a => card (t a)) :=
   Multiset.induction_on m (by simp) (by simp (config := { contextual := true }) [mul_comm])
 #align multiset.card_pi Multiset.card_pi
 
-/- warning: multiset.nodup.pi -> Multiset.Nodup.pi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} {s : Multiset.{u1} α} {t : forall (a : α), Multiset.{u2} (β a)}, (Multiset.Nodup.{u1} α s) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (Multiset.Nodup.{u2} (β a) (t a))) -> (Multiset.Nodup.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (β a)) (Multiset.pi.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} {s : Multiset.{u1} α} {t : forall (a : α), Multiset.{u2} (β a)}, (Multiset.Nodup.{u1} α s) -> (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (Multiset.Nodup.{u2} (β a) (t a))) -> (Multiset.Nodup.{max u1 u2} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (β a)) (Multiset.pi.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) s t))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.pi Multiset.Nodup.piₓ'. -/
 protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (β a)} :
     Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
@@ -204,12 +141,6 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (β a)} :
           neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
 #align multiset.nodup.pi Multiset.Nodup.pi
 
-/- warning: multiset.mem_pi -> Multiset.mem_pi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α) (t : forall (a : α), Multiset.{u2} (β a)) (f : forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)), Iff (Membership.Mem.{max u1 u2, max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)) (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (Multiset.hasMem.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) f (Multiset.pi.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) m t)) (forall (a : α) (h : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m), Membership.Mem.{u2, u2} (β a) (Multiset.{u2} (β a)) (Multiset.hasMem.{u2} (β a)) (f a h) (t a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α) (t : forall (a : α), Multiset.{u2} (β a)) (f : forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (β a)), Iff (Membership.mem.{max u2 u1, max u1 u2} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (β a)) (Multiset.{max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (β a))) (Multiset.instMembershipMultiset.{max u2 u1} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m) -> (β a))) f (Multiset.pi.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) m t)) (forall (a : α) (h : Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a m), Membership.mem.{u2, u2} (β a) (Multiset.{u2} (β a)) (Multiset.instMembershipMultiset.{u2} (β a)) (f a h) (t a))
-Case conversion may be inaccurate. Consider using '#align multiset.mem_pi Multiset.mem_piₓ'. -/
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (β a)) :
     ∀ f : ∀ a ∈ m, β a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a :=
   by

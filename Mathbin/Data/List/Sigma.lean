@@ -591,12 +591,6 @@ theorem mem_keys_kerase_of_ne {a₁ a₂} {l : List (Sigma β)} (h : a₁ ≠ a�
 #align list.mem_keys_kerase_of_ne List.mem_keys_kerase_of_ne
 -/
 
-/- warning: list.keys_kerase -> List.keys_kerase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l : List.{max u1 u2} (Sigma.{u1, u2} α β)}, Eq.{succ u1} (List.{u1} α) (List.keys.{u1, u2} α β (List.kerase.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a l)) (List.eraseₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.keys.{u1, u2} α β l) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l : List.{max u2 u1} (Sigma.{u1, u2} α β)}, Eq.{succ u1} (List.{u1} α) (List.keys.{u1, u2} α β (List.kerase.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a l)) (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.keys.{u1, u2} α β l) a)
-Case conversion may be inaccurate. Consider using '#align list.keys_kerase List.keys_keraseₓ'. -/
 theorem keys_kerase {a} {l : List (Sigma β)} : (kerase a l).keys = l.keys.eraseₓ a := by
   rw [keys, kerase, ← erasep_map Sigma.fst l, erase_eq_erasep]
 #align list.keys_kerase List.keys_kerase
@@ -706,12 +700,6 @@ theorem kerase_comm (a₁ a₂) (l : List (Sigma β)) :
 #align list.kerase_comm List.kerase_comm
 -/
 
-/- warning: list.sizeof_kerase -> List.sizeOf_kerase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : SizeOf.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α β)] (x : α) (xs : List.{max u1 u2} (Sigma.{u1, u2} α β)), LE.le.{0} Nat Nat.hasLe (SizeOf.sizeOf.{succ (max u1 u2)} (List.{max u1 u2} (Sigma.{u1, u2} α β)) (List.hasSizeof.{max u1 u2} (Sigma.{u1, u2} α β) _inst_3) (List.kerase.{u1, u2} α β (fun (a : α) (b : α) => _inst_2 a b) x xs)) (SizeOf.sizeOf.{succ (max u1 u2)} (List.{max u1 u2} (Sigma.{u1, u2} α β)) (List.hasSizeof.{max u1 u2} (Sigma.{u1, u2} α β) _inst_3) xs)
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : SizeOf.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α β)] (x : α) (xs : List.{max u1 u2} (Sigma.{u2, u1} α β)), LE.le.{0} Nat instLENat (SizeOf.sizeOf.{max (succ u1) (succ u2)} (List.{max u1 u2} (Sigma.{u2, u1} α β)) (List._sizeOf_inst.{max u1 u2} (Sigma.{u2, u1} α β) _inst_3) (List.kerase.{u2, u1} α β (fun (a : α) (b : α) => _inst_2 a b) x xs)) (SizeOf.sizeOf.{max (succ u1) (succ u2)} (List.{max u1 u2} (Sigma.{u2, u1} α β)) (List._sizeOf_inst.{max u1 u2} (Sigma.{u2, u1} α β) _inst_3) xs)
-Case conversion may be inaccurate. Consider using '#align list.sizeof_kerase List.sizeOf_keraseₓ'. -/
 theorem sizeOf_kerase {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (x : α)
     (xs : List (Sigma β)) : SizeOf.sizeOf (List.kerase x xs) ≤ SizeOf.sizeOf xs :=
   by
@@ -840,12 +828,6 @@ theorem dlookup_dedupKeys (a : α) (l : List (Sigma β)) : dlookup a (dedupKeys 
 #align list.lookup_dedupkeys List.dlookup_dedupKeys
 -/
 
-/- warning: list.sizeof_dedupkeys -> List.sizeOf_dedupKeys is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : SizeOf.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α β)] (xs : List.{max u1 u2} (Sigma.{u1, u2} α β)), LE.le.{0} Nat Nat.hasLe (SizeOf.sizeOf.{succ (max u1 u2)} (List.{max u1 u2} (Sigma.{u1, u2} α β)) (List.hasSizeof.{max u1 u2} (Sigma.{u1, u2} α β) _inst_3) (List.dedupKeys.{u1, u2} α β (fun (a : α) (b : α) => _inst_2 a b) xs)) (SizeOf.sizeOf.{succ (max u1 u2)} (List.{max u1 u2} (Sigma.{u1, u2} α β)) (List.hasSizeof.{max u1 u2} (Sigma.{u1, u2} α β) _inst_3) xs)
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : SizeOf.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α β)] (xs : List.{max u1 u2} (Sigma.{u2, u1} α β)), LE.le.{0} Nat instLENat (SizeOf.sizeOf.{max (succ u1) (succ u2)} (List.{max u1 u2} (Sigma.{u2, u1} α β)) (List._sizeOf_inst.{max u1 u2} (Sigma.{u2, u1} α β) _inst_3) (List.dedupKeys.{u2, u1} α β (fun (a : α) (b : α) => _inst_2 a b) xs)) (SizeOf.sizeOf.{max (succ u1) (succ u2)} (List.{max u1 u2} (Sigma.{u2, u1} α β)) (List._sizeOf_inst.{max u1 u2} (Sigma.{u2, u1} α β) _inst_3) xs)
-Case conversion may be inaccurate. Consider using '#align list.sizeof_dedupkeys List.sizeOf_dedupKeysₓ'. -/
 theorem sizeOf_dedupKeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)]
     (xs : List (Sigma β)) : SizeOf.sizeOf (List.dedupKeys xs) ≤ SizeOf.sizeOf xs :=
   by

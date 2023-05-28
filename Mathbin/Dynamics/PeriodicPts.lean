@@ -95,12 +95,6 @@ protected theorem isFixedPt (hf : IsPeriodicPt f n x) : IsFixedPt (f^[n]) x :=
 #align function.is_periodic_pt.is_fixed_pt Function.IsPeriodicPt.isFixedPt
 -/
 
-/- warning: function.is_periodic_pt.map -> Function.IsPeriodicPt.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {fa : α -> α} {fb : β -> β} {x : α} {n : Nat}, (Function.IsPeriodicPt.{u1} α fa n x) -> (forall {g : α -> β}, (Function.Semiconj.{u1, u2} α β g fa fb) -> (Function.IsPeriodicPt.{u2} β fb n (g x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {x : α} {n : Nat}, (Function.IsPeriodicPt.{u2} α fa n x) -> (forall {g : α -> β}, (Function.Semiconj.{u2, u1} α β g fa fb) -> (Function.IsPeriodicPt.{u1} β fb n (g x)))
-Case conversion may be inaccurate. Consider using '#align function.is_periodic_pt.map Function.IsPeriodicPt.mapₓ'. -/
 protected theorem map (hx : IsPeriodicPt fa n x) {g : α → β} (hg : Semiconj g fa fb) :
     IsPeriodicPt fb n (g x) :=
   hx.map (hg.iterate_right n)
@@ -254,12 +248,6 @@ theorem mem_ptsOfPeriod : x ∈ ptsOfPeriod f n ↔ IsPeriodicPt f n x :=
 #align function.mem_pts_of_period Function.mem_ptsOfPeriod
 -/
 
-/- warning: function.semiconj.maps_to_pts_of_period -> Function.Semiconj.mapsTo_ptsOfPeriod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {fa : α -> α} {fb : β -> β} {g : α -> β}, (Function.Semiconj.{u1, u2} α β g fa fb) -> (forall (n : Nat), Set.MapsTo.{u1, u2} α β g (Function.ptsOfPeriod.{u1} α fa n) (Function.ptsOfPeriod.{u2} β fb n))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {g : α -> β}, (Function.Semiconj.{u2, u1} α β g fa fb) -> (forall (n : Nat), Set.MapsTo.{u2, u1} α β g (Function.ptsOfPeriod.{u2} α fa n) (Function.ptsOfPeriod.{u1} β fb n))
-Case conversion may be inaccurate. Consider using '#align function.semiconj.maps_to_pts_of_period Function.Semiconj.mapsTo_ptsOfPeriodₓ'. -/
 theorem Semiconj.mapsTo_ptsOfPeriod {g : α → β} (h : Semiconj g fa fb) (n : ℕ) :
     MapsTo g (ptsOfPeriod fa n) (ptsOfPeriod fb n) :=
   (h.iterate_right n).mapsTo_fixedPoints
@@ -294,12 +282,6 @@ theorem mk_mem_periodicPts (hn : 0 < n) (hx : IsPeriodicPt f n x) : x ∈ period
 #align function.mk_mem_periodic_pts Function.mk_mem_periodicPts
 -/
 
-/- warning: function.mem_periodic_pts -> Function.mem_periodicPts is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : α -> α} {x : α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Function.periodicPts.{u1} α f)) (Exists.{1} Nat (fun (n : Nat) => Exists.{0} (GT.gt.{0} Nat Nat.hasLt n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (fun (H : GT.gt.{0} Nat Nat.hasLt n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Function.IsPeriodicPt.{u1} α f n x)))
-but is expected to have type
-  forall {α : Type.{u1}} {f : α -> α} {x : α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Function.periodicPts.{u1} α f)) (Exists.{1} Nat (fun (n : Nat) => And (GT.gt.{0} Nat instLTNat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Function.IsPeriodicPt.{u1} α f n x)))
-Case conversion may be inaccurate. Consider using '#align function.mem_periodic_pts Function.mem_periodicPtsₓ'. -/
 theorem mem_periodicPts : x ∈ periodicPts f ↔ ∃ n > 0, IsPeriodicPt f n x :=
   Iff.rfl
 #align function.mem_periodic_pts Function.mem_periodicPts
@@ -340,12 +322,6 @@ theorem bijOn_periodicPts : BijOn f (periodicPts f) (periodicPts f) :=
 
 variable {f}
 
-/- warning: function.semiconj.maps_to_periodic_pts -> Function.Semiconj.mapsTo_periodicPts is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {fa : α -> α} {fb : β -> β} {g : α -> β}, (Function.Semiconj.{u1, u2} α β g fa fb) -> (Set.MapsTo.{u1, u2} α β g (Function.periodicPts.{u1} α fa) (Function.periodicPts.{u2} β fb))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {g : α -> β}, (Function.Semiconj.{u2, u1} α β g fa fb) -> (Set.MapsTo.{u2, u1} α β g (Function.periodicPts.{u2} α fa) (Function.periodicPts.{u1} β fb))
-Case conversion may be inaccurate. Consider using '#align function.semiconj.maps_to_periodic_pts Function.Semiconj.mapsTo_periodicPtsₓ'. -/
 theorem Semiconj.mapsTo_periodicPts {g : α → β} (h : Semiconj g fa fb) :
     MapsTo g (periodicPts fa) (periodicPts fb) := fun x ⟨n, hn, hx⟩ => ⟨n, hn, hx.map h⟩
 #align function.semiconj.maps_to_periodic_pts Function.Semiconj.mapsTo_periodicPts
@@ -540,12 +516,6 @@ theorem isPeriodicPt_iff_minimalPeriod_dvd : IsPeriodicPt f n x ↔ minimalPerio
 
 open Nat
 
-/- warning: function.minimal_period_eq_minimal_period_iff -> Function.minimalPeriod_eq_minimalPeriod_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> α} {x : α} {g : β -> β} {y : β}, Iff (Eq.{1} Nat (Function.minimalPeriod.{u1} α f x) (Function.minimalPeriod.{u2} β g y)) (forall (n : Nat), Iff (Function.IsPeriodicPt.{u1} α f n x) (Function.IsPeriodicPt.{u2} β g n y))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> α} {x : α} {g : β -> β} {y : β}, Iff (Eq.{1} Nat (Function.minimalPeriod.{u2} α f x) (Function.minimalPeriod.{u1} β g y)) (forall (n : Nat), Iff (Function.IsPeriodicPt.{u2} α f n x) (Function.IsPeriodicPt.{u1} β g n y))
-Case conversion may be inaccurate. Consider using '#align function.minimal_period_eq_minimal_period_iff Function.minimalPeriod_eq_minimalPeriod_iffₓ'. -/
 theorem minimalPeriod_eq_minimalPeriod_iff {g : β → β} {y : β} :
     minimalPeriod f x = minimalPeriod g y ↔ ∀ n, IsPeriodicPt f n x ↔ IsPeriodicPt g n y := by
   simp_rw [is_periodic_pt_iff_minimal_period_dvd, dvd_right_iff_eq]
@@ -792,12 +762,6 @@ theorem pow_smul_eq_iff_minimalPeriod_dvd {n : ℕ} :
 #align add_action.nsmul_vadd_eq_iff_minimal_period_dvd AddAction.nsmul_vadd_eq_iff_minimalPeriod_dvd
 -/
 
-/- warning: mul_action.zpow_smul_eq_iff_minimal_period_dvd -> MulAction.zpow_smul_eq_iff_minimalPeriod_dvd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] {a : α} {b : β} {n : Int}, Iff (Eq.{succ u2} β (SMul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))) a n) b) b) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Function.minimalPeriod.{u2} β (SMul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2) a) b)) n)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] {a : α} {b : β} {n : Int}, Iff (Eq.{succ u2} β (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))) a n) b) b) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Function.minimalPeriod.{u2} β ((fun (x._@.Mathlib.Dynamics.PeriodicPts._hyg.6834 : α) (x._@.Mathlib.Dynamics.PeriodicPts._hyg.6836 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.Dynamics.PeriodicPts._hyg.6834 x._@.Mathlib.Dynamics.PeriodicPts._hyg.6836) a) b)) n)
-Case conversion may be inaccurate. Consider using '#align mul_action.zpow_smul_eq_iff_minimal_period_dvd MulAction.zpow_smul_eq_iff_minimalPeriod_dvdₓ'. -/
 @[to_additive]
 theorem zpow_smul_eq_iff_minimalPeriod_dvd {n : ℤ} :
     a ^ n • b = b ↔ (Function.minimalPeriod ((· • ·) a) b : ℤ) ∣ n :=

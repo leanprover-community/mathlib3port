@@ -33,9 +33,6 @@ open PowerBasis
 
 open BigOperators
 
-/- warning: algebra.adjoin.power_basis_aux -> Algebra.adjoin.powerBasisAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebra.adjoin.power_basis_aux Algebra.adjoin.powerBasisAuxₓ'. -/
 /-- The elements `1, x, ..., x ^ (d - 1)` for a basis for the `K`-module `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/
 noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
@@ -65,12 +62,6 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
       exact aeval_algebra_map_apply S (⟨x, _⟩ : adjoin K {x}) _
 #align algebra.adjoin.power_basis_aux Algebra.adjoin.powerBasisAux
 
-/- warning: algebra.adjoin.power_basis -> Algebra.adjoin.powerBasis is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} {S : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))] {x : S}, (IsIntegral.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 x) -> (PowerBasis.{u1, u2} K (coeSort.{succ u2, succ (succ u2)} (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3) S (Subalgebra.setLike.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3)) (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) x))) (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (Subalgebra.toRing.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) x))) (Subalgebra.algebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3 (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) x))))
-but is expected to have type
-  forall {K : Type.{u1}} {S : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))] {x : S}, (IsIntegral.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 x) -> (PowerBasis.{u1, u2} K (Subtype.{succ u2} S (fun (x_1 : S) => Membership.mem.{u2, u2} S (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3) S (Subalgebra.instSetLikeSubalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3)) x_1 (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.instSingletonSet.{u2} S) x)))) (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (Subalgebra.toRing.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.instSingletonSet.{u2} S) x))) (Subalgebra.algebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3 (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.instSingletonSet.{u2} S) x))))
-Case conversion may be inaccurate. Consider using '#align algebra.adjoin.power_basis Algebra.adjoin.powerBasisₓ'. -/
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. See `algebra.adjoin.power_basis'` for
 a version over a more general base ring. -/
@@ -88,12 +79,6 @@ end Algebra
 
 open Algebra
 
-/- warning: power_basis.of_gen_mem_adjoin -> PowerBasis.ofGenMemAdjoin is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} {S : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))] {x : S} (B : PowerBasis.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3), (IsIntegral.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 x) -> (Membership.Mem.{u2, u2} S (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3) (SetLike.hasMem.{u2, u2} (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3) S (Subalgebra.setLike.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3)) (PowerBasis.gen.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 B) (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) x))) -> (PowerBasis.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3)
-but is expected to have type
-  forall {K : Type.{u1}} {S : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))] {x : S} (B : PowerBasis.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3), (IsIntegral.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 x) -> (Membership.mem.{u2, u2} S (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3) S (Subalgebra.instSetLikeSubalgebra.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3)) (PowerBasis.gen.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3 B) (Algebra.adjoin.{u1, u2} K S (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.instSingletonSet.{u2} S) x))) -> (PowerBasis.{u1, u2} K S (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (CommRing.toRing.{u2} S _inst_2) _inst_3)
-Case conversion may be inaccurate. Consider using '#align power_basis.of_gen_mem_adjoin PowerBasis.ofGenMemAdjoinₓ'. -/
 /-- The power basis given by `x` if `B.gen ∈ adjoin K {x}`. See `power_basis.of_gen_mem_adjoin'`
 for a version over a more general base ring. -/
 @[simps]
@@ -120,9 +105,6 @@ variable [IsScalarTower R S A] {B : PowerBasis S A} (hB : IsIntegral R B.gen)
 
 include hB
 
-/- warning: power_basis.repr_gen_pow_is_integral -> PowerBasis.repr_gen_pow_isIntegral is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.repr_gen_pow_is_integral PowerBasis.repr_gen_pow_isIntegralₓ'. -/
 /-- If `B : power_basis S A` is such that `is_integral R B.gen`, then
 `is_integral R (B.basis.repr (B.gen ^ n) i)` for all `i` if
 `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD domain
@@ -162,9 +144,6 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
 
 variable {B}
 
-/- warning: power_basis.repr_mul_is_integral -> PowerBasis.repr_mul_isIntegral is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.repr_mul_is_integral PowerBasis.repr_mul_isIntegralₓ'. -/
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x y : A` be elements with
 integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x * y) i)` for all
 `i` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD
@@ -185,9 +164,6 @@ theorem repr_mul_isIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.
   refine' repr_gen_pow_is_integral hB hmin _ _
 #align power_basis.repr_mul_is_integral PowerBasis.repr_mul_isIntegral
 
-/- warning: power_basis.repr_pow_is_integral -> PowerBasis.repr_pow_isIntegral is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.repr_pow_is_integral PowerBasis.repr_pow_isIntegralₓ'. -/
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x : A` be and element
 with integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x ^ n) i)` for
 all `i` and all `n` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case
@@ -210,9 +186,6 @@ theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Ba
     exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
 #align power_basis.repr_pow_is_integral PowerBasis.repr_pow_isIntegral
 
-/- warning: power_basis.to_matrix_is_integral -> PowerBasis.toMatrix_isIntegral is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.to_matrix_is_integral PowerBasis.toMatrix_isIntegralₓ'. -/
 /-- Let `B B' : power_basis K S` be such that `is_integral R B.gen`, and let `P : R[X]` be such that
 `aeval B.gen P = B'.gen`. Then `is_integral R (B.basis.to_matrix B'.basis i j)` for all `i` and `j`
 if `minpoly K B.gen = (minpoly R B.gen).map (algebra_map R L)`. This is the case

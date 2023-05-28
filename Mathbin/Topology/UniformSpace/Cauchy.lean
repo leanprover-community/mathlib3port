@@ -46,12 +46,6 @@ def IsComplete (s : Set α) :=
 #align is_complete IsComplete
 -/
 
-/- warning: filter.has_basis.cauchy_iff -> Filter.HasBasis.cauchy_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (forall {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (i : ι), (p i) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s i)))))))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {f : Filter.{u2} α}, Iff (Cauchy.{u2} α _inst_1 f) (And (Filter.NeBot.{u2} α f) (forall (i : ι), (p i) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) t f) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x t) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (s i)))))))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_iff Filter.HasBasis.cauchy_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
     {f : Filter α} :
@@ -61,24 +55,12 @@ theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α ×
       simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 #align filter.has_basis.cauchy_iff Filter.HasBasis.cauchy_iff
 
-/- warning: cauchy_iff' -> cauchy_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s)))))))
-Case conversion may be inaccurate. Consider using '#align cauchy_iff' cauchy_iff'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 theorem cauchy_iff' {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 #align cauchy_iff' cauchy_iff'
 
-/- warning: cauchy_iff -> cauchy_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasSubset.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α t t) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α t t) s)))))
-Case conversion may be inaccurate. Consider using '#align cauchy_iff cauchy_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cauchy_iff {f : Filter α} : Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, t ×ˢ t ⊆ s :=
   cauchy_iff'.trans <| by
@@ -109,22 +91,10 @@ theorem cauchy_map_iff' {l : Filter β} [hl : NeBot l] {f : β → α} :
 #align cauchy_map_iff' cauchy_map_iff'
 -/
 
-/- warning: cauchy.mono -> Cauchy.mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} [hg : Filter.NeBot.{u1} α g], (Cauchy.{u1} α _inst_1 f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) g f) -> (Cauchy.{u1} α _inst_1 g)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α} [hg : Filter.NeBot.{u1} α g], (Cauchy.{u1} α _inst_1 f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) g f) -> (Cauchy.{u1} α _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align cauchy.mono Cauchy.monoₓ'. -/
 theorem Cauchy.mono {f g : Filter α} [hg : NeBot g] (h_c : Cauchy f) (h_le : g ≤ f) : Cauchy g :=
   ⟨hg, le_trans (Filter.prod_mono h_le h_le) h_c.right⟩
 #align cauchy.mono Cauchy.mono
 
-/- warning: cauchy.mono' -> Cauchy.mono' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, (Cauchy.{u1} α _inst_1 f) -> (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) g f) -> (Cauchy.{u1} α _inst_1 g)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, (Cauchy.{u1} α _inst_1 f) -> (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) g f) -> (Cauchy.{u1} α _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align cauchy.mono' Cauchy.mono'ₓ'. -/
 theorem Cauchy.mono' {f g : Filter α} (h_c : Cauchy f) (hg : NeBot g) (h_le : g ≤ f) : Cauchy g :=
   h_c.mono h_le
 #align cauchy.mono' Cauchy.mono'
@@ -148,12 +118,6 @@ theorem Filter.Tendsto.cauchy_map {l : Filter β} [NeBot l] {f : β → α} {a :
 #align filter.tendsto.cauchy_map Filter.Tendsto.cauchy_map
 -/
 
-/- warning: cauchy.prod -> Cauchy.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : Filter.{u1} α} {g : Filter.{u2} β}, (Cauchy.{u1} α _inst_1 f) -> (Cauchy.{u2} β _inst_2 g) -> (Cauchy.{max u1 u2} (Prod.{u1, u2} α β) (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2) (Filter.prod.{u1, u2} α β f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : Filter.{u1} α} {g : Filter.{u2} β}, (Cauchy.{u1} α _inst_1 f) -> (Cauchy.{u2} β _inst_2 g) -> (Cauchy.{max u2 u1} (Prod.{u1, u2} α β) (instUniformSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Filter.prod.{u1, u2} α β f g))
-Case conversion may be inaccurate. Consider using '#align cauchy.prod Cauchy.prodₓ'. -/
 theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauchy f) (hg : Cauchy g) :
     Cauchy (f ×ᶠ g) := by
   refine' ⟨hf.1.Prod hg.1, _⟩
@@ -163,12 +127,6 @@ theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauc
       le_trans (prod_mono tendsto_snd tendsto_snd) hg.2⟩
 #align cauchy.prod Cauchy.prod
 
-/- warning: le_nhds_of_cauchy_adhp_aux -> le_nhds_of_cauchy_adhp_aux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {x : α}, (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => And (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasSubset.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α t t) s) (Exists.{succ u1} α (fun (y : α) => And (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t))))))) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {x : α}, (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (And (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α t t) s) (Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t))))))) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))
-Case conversion may be inaccurate. Consider using '#align le_nhds_of_cauchy_adhp_aux le_nhds_of_cauchy_adhp_auxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The common part of the proofs of `le_nhds_of_cauchy_adhp` and
 `sequentially_complete.le_nhds_of_seq_tendsto_nhds`: if for any entourage `s`
@@ -188,12 +146,6 @@ theorem le_nhds_of_cauchy_adhp_aux {f : Filter α} {x : α}
   exact fun z hz => hU (prod_mk_mem_compRel hxy (ht <| mk_mem_prod hy hz)) rfl
 #align le_nhds_of_cauchy_adhp_aux le_nhds_of_cauchy_adhp_aux
 
-/- warning: le_nhds_of_cauchy_adhp -> le_nhds_of_cauchy_adhp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {x : α}, (Cauchy.{u1} α _inst_1 f) -> (ClusterPt.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {x : α}, (Cauchy.{u1} α _inst_1 f) -> (ClusterPt.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))
-Case conversion may be inaccurate. Consider using '#align le_nhds_of_cauchy_adhp le_nhds_of_cauchy_adhpₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- If `x` is an adherent (cluster) point for a Cauchy filter `f`, then it is a limit point
 for `f`. -/
@@ -208,12 +160,6 @@ theorem le_nhds_of_cauchy_adhp {f : Filter α} {x : α} (hf : Cauchy f) (adhs : 
       exact forall_mem_nonempty_iff_ne_bot.2 adhs _ (inter_mem_inf (mem_nhds_left x hs) t_mem))
 #align le_nhds_of_cauchy_adhp le_nhds_of_cauchy_adhp
 
-/- warning: le_nhds_iff_adhp_of_cauchy -> le_nhds_iff_adhp_of_cauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {x : α}, (Cauchy.{u1} α _inst_1 f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)) (ClusterPt.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} {x : α}, (Cauchy.{u1} α _inst_1 f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)) (ClusterPt.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x f))
-Case conversion may be inaccurate. Consider using '#align le_nhds_iff_adhp_of_cauchy le_nhds_iff_adhp_of_cauchyₓ'. -/
 theorem le_nhds_iff_adhp_of_cauchy {f : Filter α} {x : α} (hf : Cauchy f) :
     f ≤ 𝓝 x ↔ ClusterPt x f :=
   ⟨fun h => ClusterPt.of_le_nhds' h hf.1, le_nhds_of_cauchy_adhp hf⟩
@@ -231,12 +177,6 @@ theorem Cauchy.map [UniformSpace β] {f : Filter α} {m : α → β} (hf : Cauch
 #align cauchy.map Cauchy.map
 -/
 
-/- warning: cauchy.comap -> Cauchy.comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : Filter.{u2} β} {m : α -> β}, (Cauchy.{u2} β _inst_2 f) -> (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toHasLe.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u2, u2} β β (m (Prod.fst.{u1, u1} α α p)) (m (Prod.snd.{u1, u1} α α p))) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1)) -> (forall [_inst_3 : Filter.NeBot.{u1} α (Filter.comap.{u1, u2} α β m f)], Cauchy.{u1} α _inst_1 (Filter.comap.{u1, u2} α β m f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : Filter.{u2} β} {m : α -> β}, (Cauchy.{u2} β _inst_2 f) -> (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u2, u2} β β (m (Prod.fst.{u1, u1} α α p)) (m (Prod.snd.{u1, u1} α α p))) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1)) -> (forall [_inst_3 : Filter.NeBot.{u1} α (Filter.comap.{u1, u2} α β m f)], Cauchy.{u1} α _inst_1 (Filter.comap.{u1, u2} α β m f))
-Case conversion may be inaccurate. Consider using '#align cauchy.comap Cauchy.comapₓ'. -/
 theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)
     (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) [NeBot (comap m f)] :
     Cauchy (comap m f) :=
@@ -249,12 +189,6 @@ theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cau
       ⟩
 #align cauchy.comap Cauchy.comap
 
-/- warning: cauchy.comap' -> Cauchy.comap' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : Filter.{u2} β} {m : α -> β}, (Cauchy.{u2} β _inst_2 f) -> (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toHasLe.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u2, u2} β β (m (Prod.fst.{u1, u1} α α p)) (m (Prod.snd.{u1, u1} α α p))) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1)) -> (Filter.NeBot.{u1} α (Filter.comap.{u1, u2} α β m f)) -> (Cauchy.{u1} α _inst_1 (Filter.comap.{u1, u2} α β m f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : Filter.{u2} β} {m : α -> β}, (Cauchy.{u2} β _inst_2 f) -> (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (fun (p : Prod.{u1, u1} α α) => Prod.mk.{u2, u2} β β (m (Prod.fst.{u1, u1} α α p)) (m (Prod.snd.{u1, u1} α α p))) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1)) -> (Filter.NeBot.{u1} α (Filter.comap.{u1, u2} α β m f)) -> (Cauchy.{u1} α _inst_1 (Filter.comap.{u1, u2} α β m f))
-Case conversion may be inaccurate. Consider using '#align cauchy.comap' Cauchy.comap'ₓ'. -/
 theorem Cauchy.comap' [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)
     (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) (hb : NeBot (comap m f)) :
     Cauchy (comap m f) :=
@@ -270,12 +204,6 @@ def CauchySeq [SemilatticeSup β] (u : β → α) :=
 #align cauchy_seq CauchySeq
 -/
 
-/- warning: cauchy_seq.tendsto_uniformity -> CauchySeq.tendsto_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {u : β -> α}, (CauchySeq.{u1, u2} α β _inst_1 _inst_2 u) -> (Filter.Tendsto.{u2, u1} (Prod.{u2, u2} β β) (Prod.{u1, u1} α α) (Prod.map.{u2, u1, u2, u1} β α β α u u) (Filter.atTop.{u2} (Prod.{u2, u2} β β) (Prod.preorder.{u2, u2} β β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)))) (uniformity.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {u : β -> α}, (CauchySeq.{u1, u2} α β _inst_1 _inst_2 u) -> (Filter.Tendsto.{u2, u1} (Prod.{u2, u2} β β) (Prod.{u1, u1} α α) (Prod.map.{u2, u1, u2, u1} β α β α u u) (Filter.atTop.{u2} (Prod.{u2, u2} β β) (Prod.instPreorderProd.{u2, u2} β β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)))) (uniformity.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.tendsto_uniformity CauchySeq.tendsto_uniformityₓ'. -/
 theorem CauchySeq.tendsto_uniformity [SemilatticeSup β] {u : β → α} (h : CauchySeq u) :
     Tendsto (Prod.map u u) atTop (𝓤 α) := by
   simpa only [tendsto, prod_map_map_eq', prod_at_top_at_top_eq] using h.right
@@ -287,12 +215,6 @@ theorem CauchySeq.nonempty [SemilatticeSup β] {u : β → α} (hu : CauchySeq u
 #align cauchy_seq.nonempty CauchySeq.nonempty
 -/
 
-/- warning: cauchy_seq.mem_entourage -> CauchySeq.mem_entourage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {β : Type.{u2}} [_inst_2 : SemilatticeSup.{u2} β] {u : β -> α}, (CauchySeq.{u1, u2} α β _inst_1 _inst_2 u) -> (forall {V : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) -> (Exists.{succ u2} β (fun (k₀ : β) => forall (i : β) (j : β), (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) k₀ i) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) k₀ j) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (u i) (u j)) V))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {β : Type.{u1}} [_inst_2 : SemilatticeSup.{u1} β] {u : β -> α}, (CauchySeq.{u2, u1} α β _inst_1 _inst_2 u) -> (forall {V : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) V (uniformity.{u2} α _inst_1)) -> (Exists.{succ u1} β (fun (k₀ : β) => forall (i : β) (j : β), (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_2))) k₀ i) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_2))) k₀ j) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α (u i) (u j)) V))))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.mem_entourage CauchySeq.mem_entourageₓ'. -/
 theorem CauchySeq.mem_entourage {β : Type _} [SemilatticeSup β] {u : β → α} (h : CauchySeq u)
     {V : Set (α × α)} (hV : V ∈ 𝓤 α) : ∃ k₀, ∀ i j, k₀ ≤ i → k₀ ≤ j → (u i, u j) ∈ V :=
   by
@@ -314,34 +236,16 @@ theorem cauchySeq_const [SemilatticeSup β] [Nonempty β] (x : α) : CauchySeq f
 #align cauchy_seq_const cauchySeq_const
 -/
 
-/- warning: cauchy_seq_iff_tendsto -> cauchySeq_iff_tendsto is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β _inst_1 _inst_3 u) (Filter.Tendsto.{u2, u1} (Prod.{u2, u2} β β) (Prod.{u1, u1} α α) (Prod.map.{u2, u1, u2, u1} β α β α u u) (Filter.atTop.{u2} (Prod.{u2, u2} β β) (Prod.preorder.{u2, u2} β β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))) (uniformity.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β _inst_1 _inst_3 u) (Filter.Tendsto.{u2, u1} (Prod.{u2, u2} β β) (Prod.{u1, u1} α α) (Prod.map.{u2, u1, u2, u1} β α β α u u) (Filter.atTop.{u2} (Prod.{u2, u2} β β) (Prod.instPreorderProd.{u2, u2} β β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))) (uniformity.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_iff_tendsto cauchySeq_iff_tendstoₓ'. -/
 theorem cauchySeq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (Prod.map u u) atTop (𝓤 α) :=
   cauchy_map_iff'.trans <| by simp only [prod_at_top_at_top_eq, Prod.map_def]
 #align cauchy_seq_iff_tendsto cauchySeq_iff_tendsto
 
-/- warning: cauchy_seq.comp_tendsto -> CauchySeq.comp_tendsto is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {γ : Type.{u3}} [_inst_2 : SemilatticeSup.{u2} β] [_inst_3 : SemilatticeSup.{u3} γ] [_inst_4 : Nonempty.{succ u3} γ] {f : β -> α}, (CauchySeq.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {g : γ -> β}, (Filter.Tendsto.{u3, u2} γ β g (Filter.atTop.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeSup.toPartialOrder.{u3} γ _inst_3))) (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)))) -> (CauchySeq.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u3, succ u2, succ u1} γ β α f g)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Type.{u1}} [_inst_2 : SemilatticeSup.{u3} β] [_inst_3 : SemilatticeSup.{u1} γ] [_inst_4 : Nonempty.{succ u1} γ] {f : β -> α}, (CauchySeq.{u2, u3} α β _inst_1 _inst_2 f) -> (forall {g : γ -> β}, (Filter.Tendsto.{u1, u3} γ β g (Filter.atTop.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3))) (Filter.atTop.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_2)))) -> (CauchySeq.{u2, u1} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u3, succ u2} γ β α f g)))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.comp_tendsto CauchySeq.comp_tendstoₓ'. -/
 theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Nonempty γ] {f : β → α}
     (hf : CauchySeq f) {g : γ → β} (hg : Tendsto g atTop atTop) : CauchySeq (f ∘ g) :=
   cauchySeq_iff_tendsto.2 <| hf.tendsto_uniformity.comp (hg.prod_atTop hg)
 #align cauchy_seq.comp_tendsto CauchySeq.comp_tendsto
 
-/- warning: cauchy_seq.comp_injective -> CauchySeq.comp_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)))] [_inst_4 : Nonempty.{succ u2} β] {u : Nat -> α}, (CauchySeq.{u1, 0} α Nat _inst_1 (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u) -> (forall {f : β -> Nat}, (Function.Injective.{succ u2, 1} β Nat f) -> (CauchySeq.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u2, 1, succ u1} β Nat α u f)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)))] [_inst_4 : Nonempty.{succ u2} β] {u : Nat -> α}, (CauchySeq.{u1, 0} α Nat _inst_1 (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) u) -> (forall {f : β -> Nat}, (Function.Injective.{succ u2, 1} β Nat f) -> (CauchySeq.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u2, 1, succ u1} β Nat α u f)))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.comp_injective CauchySeq.comp_injectiveₓ'. -/
 theorem CauchySeq.comp_injective [SemilatticeSup β] [NoMaxOrder β] [Nonempty β] {u : ℕ → α}
     (hu : CauchySeq u) {f : β → ℕ} (hf : Injective f) : CauchySeq (u ∘ f) :=
   hu.comp_tendsto <| Nat.cofinite_eq_atTop ▸ hf.tendsto_cofinite.mono_left atTop_le_cofinite
@@ -367,12 +271,6 @@ theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V 
 #align cauchy_seq.subseq_subseq_mem CauchySeq.subseq_subseq_mem
 -/
 
-/- warning: cauchy_seq_iff' -> cauchySeq_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {u : Nat -> α}, Iff (CauchySeq.{u1, 0} α Nat _inst_1 (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u) (forall (V : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) -> (Filter.Eventually.{0} (Prod.{0, 0} Nat Nat) (fun (k : Prod.{0, 0} Nat Nat) => Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.hasMem.{0} (Prod.{0, 0} Nat Nat)) k (Set.preimage.{0, u1} (Prod.{0, 0} Nat Nat) (Prod.{u1, u1} α α) (Prod.map.{0, u1, 0, u1} Nat α Nat α u u) V)) (Filter.atTop.{0} (Prod.{0, 0} Nat Nat) (Prod.preorder.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {u : Nat -> α}, Iff (CauchySeq.{u1, 0} α Nat _inst_1 (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) u) (forall (V : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) -> (Filter.Eventually.{0} (Prod.{0, 0} Nat Nat) (fun (k : Prod.{0, 0} Nat Nat) => Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.instMembershipSet.{0} (Prod.{0, 0} Nat Nat)) k (Set.preimage.{0, u1} (Prod.{0, 0} Nat Nat) (Prod.{u1, u1} α α) (Prod.map.{0, u1, 0, u1} Nat α Nat α u u) V)) (Filter.atTop.{0} (Prod.{0, 0} Nat Nat) (Prod.instPreorderProd.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))))))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_iff' cauchySeq_iff'ₓ'. -/
 theorem cauchySeq_iff' {u : ℕ → α} :
     CauchySeq u ↔ ∀ V ∈ 𝓤 α, ∀ᶠ k in atTop, k ∈ Prod.map u u ⁻¹' V := by
   simpa only [cauchySeq_iff_tendsto]
@@ -385,23 +283,11 @@ theorem cauchySeq_iff {u : ℕ → α} :
 #align cauchy_seq_iff cauchySeq_iff
 -/
 
-/- warning: cauchy_seq.prod_map -> CauchySeq.prod_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {γ : Type.{u3}} {δ : Type.{u4}} [_inst_2 : UniformSpace.{u2} β] [_inst_3 : SemilatticeSup.{u3} γ] [_inst_4 : SemilatticeSup.{u4} δ] {u : γ -> α} {v : δ -> β}, (CauchySeq.{u1, u3} α γ _inst_1 _inst_3 u) -> (CauchySeq.{u2, u4} β δ _inst_2 _inst_4 v) -> (CauchySeq.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2) (Prod.semilatticeSup.{u3, u4} γ δ _inst_3 _inst_4) (Prod.map.{u3, u1, u4, u2} γ α δ β u v))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : UniformSpace.{u3} α] {γ : Type.{u2}} {δ : Type.{u1}} [_inst_2 : UniformSpace.{u4} β] [_inst_3 : SemilatticeSup.{u2} γ] [_inst_4 : SemilatticeSup.{u1} δ] {u : γ -> α} {v : δ -> β}, (CauchySeq.{u3, u2} α γ _inst_1 _inst_3 u) -> (CauchySeq.{u4, u1} β δ _inst_2 _inst_4 v) -> (CauchySeq.{max u4 u3, max u1 u2} (Prod.{u3, u4} α β) (Prod.{u2, u1} γ δ) (instUniformSpaceProd.{u3, u4} α β _inst_1 _inst_2) (Prod.semilatticeSup.{u2, u1} γ δ _inst_3 _inst_4) (Prod.map.{u2, u3, u1, u4} γ α δ β u v))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.prod_map CauchySeq.prod_mapₓ'. -/
 theorem CauchySeq.prod_map {γ δ} [UniformSpace β] [SemilatticeSup γ] [SemilatticeSup δ] {u : γ → α}
     {v : δ → β} (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq (Prod.map u v) := by
   simpa only [CauchySeq, prod_map_map_eq', prod_at_top_at_top_eq] using hu.prod hv
 #align cauchy_seq.prod_map CauchySeq.prod_map
 
-/- warning: cauchy_seq.prod -> CauchySeq.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {γ : Type.{u3}} [_inst_2 : UniformSpace.{u2} β] [_inst_3 : SemilatticeSup.{u3} γ] {u : γ -> α} {v : γ -> β}, (CauchySeq.{u1, u3} α γ _inst_1 _inst_3 u) -> (CauchySeq.{u2, u3} β γ _inst_2 _inst_3 v) -> (CauchySeq.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2) _inst_3 (fun (x : γ) => Prod.mk.{u1, u2} α β (u x) (v x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Type.{u1}} [_inst_2 : UniformSpace.{u3} β] [_inst_3 : SemilatticeSup.{u1} γ] {u : γ -> α} {v : γ -> β}, (CauchySeq.{u2, u1} α γ _inst_1 _inst_3 u) -> (CauchySeq.{u3, u1} β γ _inst_2 _inst_3 v) -> (CauchySeq.{max u3 u2, u1} (Prod.{u2, u3} α β) γ (instUniformSpaceProd.{u2, u3} α β _inst_1 _inst_2) _inst_3 (fun (x : γ) => Prod.mk.{u2, u3} α β (u x) (v x)))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.prod CauchySeq.prodₓ'. -/
 theorem CauchySeq.prod {γ} [UniformSpace β] [SemilatticeSup γ] {u : γ → α} {v : γ → β}
     (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq fun x => (u x, v x) :=
   haveI := hu.nonempty
@@ -415,12 +301,6 @@ theorem CauchySeq.eventually_eventually [SemilatticeSup β] {u : β → α} (hu 
 #align cauchy_seq.eventually_eventually CauchySeq.eventually_eventually
 -/
 
-/- warning: uniform_continuous.comp_cauchy_seq -> UniformContinuous.comp_cauchySeq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {γ : Type.{u3}} [_inst_2 : UniformSpace.{u2} β] [_inst_3 : SemilatticeSup.{u3} γ] {f : α -> β}, (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {u : γ -> α}, (CauchySeq.{u1, u3} α γ _inst_1 _inst_3 u) -> (CauchySeq.{u2, u3} β γ _inst_2 _inst_3 (Function.comp.{succ u3, succ u1, succ u2} γ α β f u)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Type.{u1}} [_inst_2 : UniformSpace.{u3} β] [_inst_3 : SemilatticeSup.{u1} γ] {f : α -> β}, (UniformContinuous.{u2, u3} α β _inst_1 _inst_2 f) -> (forall {u : γ -> α}, (CauchySeq.{u2, u1} α γ _inst_1 _inst_3 u) -> (CauchySeq.{u3, u1} β γ _inst_2 _inst_3 (Function.comp.{succ u1, succ u2, succ u3} γ α β f u)))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous.comp_cauchy_seq UniformContinuous.comp_cauchySeqₓ'. -/
 theorem UniformContinuous.comp_cauchySeq {γ} [UniformSpace β] [SemilatticeSup γ] {f : α → β}
     (hf : UniformContinuous f) {u : γ → α} (hu : CauchySeq u) : CauchySeq (f ∘ u) :=
   hu.map hf
@@ -454,12 +334,6 @@ theorem Filter.Tendsto.subseq_mem_entourage {V : ℕ → Set (α × α)} (hV : �
 #align filter.tendsto.subseq_mem_entourage Filter.Tendsto.subseq_mem_entourage
 -/
 
-/- warning: tendsto_nhds_of_cauchy_seq_of_subseq -> tendsto_nhds_of_cauchySeq_of_subseq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {u : β -> α}, (CauchySeq.{u1, u2} α β _inst_1 _inst_2 u) -> (forall {ι : Type.{u3}} {f : ι -> β} {p : Filter.{u3} ι} [_inst_3 : Filter.NeBot.{u3} ι p], (Filter.Tendsto.{u3, u2} ι β f p (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)))) -> (forall {a : α}, (Filter.Tendsto.{u3, u1} ι α (Function.comp.{succ u3, succ u2, succ u1} ι β α u f) p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) a)) -> (Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : SemilatticeSup.{u3} β] {u : β -> α}, (CauchySeq.{u2, u3} α β _inst_1 _inst_2 u) -> (forall {ι : Type.{u1}} {f : ι -> β} {p : Filter.{u1} ι} [_inst_3 : Filter.NeBot.{u1} ι p], (Filter.Tendsto.{u1, u3} ι β f p (Filter.atTop.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_2)))) -> (forall {a : α}, (Filter.Tendsto.{u1, u2} ι α (Function.comp.{succ u1, succ u3, succ u2} ι β α u f) p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) a)) -> (Filter.Tendsto.{u3, u2} β α u (Filter.atTop.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_2))) (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) a))))
-Case conversion may be inaccurate. Consider using '#align tendsto_nhds_of_cauchy_seq_of_subseq tendsto_nhds_of_cauchySeq_of_subseqₓ'. -/
 /-- If a Cauchy sequence has a convergent subsequence, then it converges. -/
 theorem tendsto_nhds_of_cauchySeq_of_subseq [SemilatticeSup β] {u : β → α} (hu : CauchySeq u)
     {ι : Type _} {f : ι → β} {p : Filter ι} [NeBot p] (hf : Tendsto f p atTop) {a : α}
@@ -467,12 +341,6 @@ theorem tendsto_nhds_of_cauchySeq_of_subseq [SemilatticeSup β] {u : β → α} 
   le_nhds_of_cauchy_adhp hu (mapClusterPt_of_comp hf ha)
 #align tendsto_nhds_of_cauchy_seq_of_subseq tendsto_nhds_of_cauchySeq_of_subseq
 
-/- warning: filter.has_basis.cauchy_seq_iff -> Filter.HasBasis.cauchySeq_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {γ : Sort.{u3}} [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α} {p : γ -> Prop} {s : γ -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u3} (Prod.{u1, u1} α α) γ (uniformity.{u1} α _inst_1) p s) -> (Iff (CauchySeq.{u1, u2} α β _inst_1 _inst_3 u) (forall (i : γ), (p i) -> (Exists.{succ u2} β (fun (N : β) => forall (m : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) m N) -> (forall (n : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (u m) (u n)) (s i)))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Sort.{u1}} [_inst_2 : Nonempty.{succ u3} β] [_inst_3 : SemilatticeSup.{u3} β] {u : β -> α} {p : γ -> Prop} {s : γ -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) γ (uniformity.{u2} α _inst_1) p s) -> (Iff (CauchySeq.{u2, u3} α β _inst_1 _inst_3 u) (forall (i : γ), (p i) -> (Exists.{succ u3} β (fun (N : β) => forall (m : β), (LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) N m) -> (forall (n : β), (LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) N n) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α (u m) (u n)) (s i)))))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_seq_iff Filter.HasBasis.cauchySeq_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
@@ -486,12 +354,6 @@ theorem Filter.HasBasis.cauchySeq_iff {γ} [Nonempty β] [SemilatticeSup β] {u 
     mem_set_of_eq, mem_Ici, and_imp, Prod.map, ge_iff_le, @forall_swap (_ ≤ _) β]
 #align filter.has_basis.cauchy_seq_iff Filter.HasBasis.cauchySeq_iff
 
-/- warning: filter.has_basis.cauchy_seq_iff' -> Filter.HasBasis.cauchySeq_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {γ : Sort.{u3}} [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α} {p : γ -> Prop} {s : γ -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u3} (Prod.{u1, u1} α α) γ (uniformity.{u1} α _inst_1) p s) -> (Iff (CauchySeq.{u1, u2} α β _inst_1 _inst_3 u) (forall (i : γ), (p i) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (u n) (u N)) (s i))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Sort.{u1}} [_inst_2 : Nonempty.{succ u3} β] [_inst_3 : SemilatticeSup.{u3} β] {u : β -> α} {p : γ -> Prop} {s : γ -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) γ (uniformity.{u2} α _inst_1) p s) -> (Iff (CauchySeq.{u2, u3} α β _inst_1 _inst_3 u) (forall (i : γ), (p i) -> (Exists.{succ u3} β (fun (N : β) => forall (n : β), (GE.ge.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) n N) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α (u n) (u N)) (s i))))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_seq_iff' Filter.HasBasis.cauchySeq_iff'ₓ'. -/
 theorem Filter.HasBasis.cauchySeq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u : β → α}
     {p : γ → Prop} {s : γ → Set (α × α)} (H : (𝓤 α).HasBasis p s) :
     CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ n ≥ N, (u n, u N) ∈ s i :=
@@ -505,12 +367,6 @@ theorem Filter.HasBasis.cauchySeq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u
     · exact hN n hn
 #align filter.has_basis.cauchy_seq_iff' Filter.HasBasis.cauchySeq_iff'
 
-/- warning: cauchy_seq_of_controlled -> cauchySeq_of_controlled is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] [_inst_3 : Nonempty.{succ u2} β] (U : β -> (Set.{u1} (Prod.{u1, u1} α α))), (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u2} β (fun (n : β) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasSubset.{u1} (Prod.{u1, u1} α α)) (U n) s))) -> (forall {f : β -> α}, (forall {N : β} {m : β} {n : β}, (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) N m) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) N n) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (f m) (f n)) (U N))) -> (CauchySeq.{u1, u2} α β _inst_1 _inst_2 f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] [_inst_3 : Nonempty.{succ u2} β] (U : β -> (Set.{u1} (Prod.{u1, u1} α α))), (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u2} β (fun (n : β) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) (U n) s))) -> (forall {f : β -> α}, (forall {{N : β}} {{m : β}} {{n : β}}, (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) N m) -> (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) N n) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (f m) (f n)) (U N))) -> (CauchySeq.{u1, u2} α β _inst_1 _inst_2 f))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_of_controlled cauchySeq_of_controlledₓ'. -/
 theorem cauchySeq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Set (α × α))
     (hU : ∀ s ∈ 𝓤 α, ∃ n, U n ⊆ s) {f : β → α}
     (hf : ∀ {N m n : β}, N ≤ m → N ≤ n → (f m, f n) ∈ U N) : CauchySeq f :=
@@ -524,23 +380,11 @@ theorem cauchySeq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Se
       exact hN (hf hmn.1 hmn.2))
 #align cauchy_seq_of_controlled cauchySeq_of_controlled
 
-/- warning: is_complete_iff_cluster_pt -> isComplete_iff_clusterPt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (IsComplete.{u1} α _inst_1 s) (forall (l : Filter.{u1} α), (Cauchy.{u1} α _inst_1 l) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => ClusterPt.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x l))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (IsComplete.{u1} α _inst_1 s) (forall (l : Filter.{u1} α), (Cauchy.{u1} α _inst_1 l) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (ClusterPt.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x l))))
-Case conversion may be inaccurate. Consider using '#align is_complete_iff_cluster_pt isComplete_iff_clusterPtₓ'. -/
 theorem isComplete_iff_clusterPt {s : Set α} :
     IsComplete s ↔ ∀ l, Cauchy l → l ≤ 𝓟 s → ∃ x ∈ s, ClusterPt x l :=
   forall₃_congr fun l hl hls => exists₂_congr fun x hx => le_nhds_iff_adhp_of_cauchy hl
 #align is_complete_iff_cluster_pt isComplete_iff_clusterPt
 
-/- warning: is_complete_iff_ultrafilter -> isComplete_iff_ultrafilter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (IsComplete.{u1} α _inst_1 s) (forall (l : Ultrafilter.{u1} α), (Cauchy.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l)) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l) (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (IsComplete.{u1} α _inst_1 s) (forall (l : Ultrafilter.{u1} α), (Cauchy.{u1} α _inst_1 (Ultrafilter.toFilter.{u1} α l)) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α l) (Filter.principal.{u1} α s)) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α l) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)))))
-Case conversion may be inaccurate. Consider using '#align is_complete_iff_ultrafilter isComplete_iff_ultrafilterₓ'. -/
 theorem isComplete_iff_ultrafilter {s : Set α} :
     IsComplete s ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → ↑l ≤ 𝓟 s → ∃ x ∈ s, ↑l ≤ 𝓝 x :=
   by
@@ -550,23 +394,11 @@ theorem isComplete_iff_ultrafilter {s : Set α} :
   exact ⟨x, hxs, (ClusterPt.of_le_nhds hxl).mono (Ultrafilter.of_le l)⟩
 #align is_complete_iff_ultrafilter isComplete_iff_ultrafilter
 
-/- warning: is_complete_iff_ultrafilter' -> isComplete_iff_ultrafilter' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (IsComplete.{u1} α _inst_1 s) (forall (l : Ultrafilter.{u1} α), (Cauchy.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) s l) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (IsComplete.{u1} α _inst_1 s) (forall (l : Ultrafilter.{u1} α), (Cauchy.{u1} α _inst_1 (Ultrafilter.toFilter.{u1} α l)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) s l) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α l) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)))))
-Case conversion may be inaccurate. Consider using '#align is_complete_iff_ultrafilter' isComplete_iff_ultrafilter'ₓ'. -/
 theorem isComplete_iff_ultrafilter' {s : Set α} :
     IsComplete s ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → s ∈ l → ∃ x ∈ s, ↑l ≤ 𝓝 x :=
   isComplete_iff_ultrafilter.trans <| by simp only [le_principal_iff, Ultrafilter.mem_coe]
 #align is_complete_iff_ultrafilter' isComplete_iff_ultrafilter'
 
-/- warning: is_complete.union -> IsComplete.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsComplete.{u1} α _inst_1 s) -> (IsComplete.{u1} α _inst_1 t) -> (IsComplete.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsComplete.{u1} α _inst_1 s) -> (IsComplete.{u1} α _inst_1 t) -> (IsComplete.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align is_complete.union IsComplete.unionₓ'. -/
 protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsComplete t) :
     IsComplete (s ∪ t) :=
   by
@@ -576,12 +408,6 @@ protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsCo
       (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩
 #align is_complete.union IsComplete.union
 
-/- warning: is_complete_Union_separated -> isComplete_iUnion_separated is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsComplete.{u1} α _inst_1 (s i)) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s i)) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (s j)) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U) -> (Eq.{u2} ι i j))) -> (IsComplete.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsComplete.{u2} α _inst_1 (s i)) -> (forall {U : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) U (uniformity.{u2} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (s i)) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y (s j)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) U) -> (Eq.{u1} ι i j))) -> (IsComplete.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => s i))))
-Case conversion may be inaccurate. Consider using '#align is_complete_Union_separated isComplete_iUnion_separatedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » S) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isComplete_iUnion_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i))
@@ -625,12 +451,6 @@ theorem complete_univ {α : Type u} [UniformSpace α] [CompleteSpace α] : IsCom
 #align complete_univ complete_univ
 -/
 
-/- warning: complete_space.prod -> CompleteSpace.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : CompleteSpace.{u1} α _inst_1] [_inst_4 : CompleteSpace.{u2} β _inst_2], CompleteSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : CompleteSpace.{u1} α _inst_1] [_inst_4 : CompleteSpace.{u2} β _inst_2], CompleteSpace.{max u2 u1} (Prod.{u1, u2} α β) (instUniformSpaceProd.{u1, u2} α β _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align complete_space.prod CompleteSpace.prodₓ'. -/
 instance CompleteSpace.prod [UniformSpace β] [CompleteSpace α] [CompleteSpace β] :
     CompleteSpace (α × β)
     where complete f hf :=
@@ -668,23 +488,11 @@ theorem completeSpace_iff_isComplete_univ : CompleteSpace α ↔ IsComplete (uni
 #align complete_space_iff_is_complete_univ completeSpace_iff_isComplete_univ
 -/
 
-/- warning: complete_space_iff_ultrafilter -> completeSpace_iff_ultrafilter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Iff (CompleteSpace.{u1} α _inst_1) (forall (l : Ultrafilter.{u1} α), (Cauchy.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l)) -> (Exists.{succ u1} α (fun (x : α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) l) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Iff (CompleteSpace.{u1} α _inst_1) (forall (l : Ultrafilter.{u1} α), (Cauchy.{u1} α _inst_1 (Ultrafilter.toFilter.{u1} α l)) -> (Exists.{succ u1} α (fun (x : α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α l) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))))
-Case conversion may be inaccurate. Consider using '#align complete_space_iff_ultrafilter completeSpace_iff_ultrafilterₓ'. -/
 theorem completeSpace_iff_ultrafilter :
     CompleteSpace α ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → ∃ x : α, ↑l ≤ 𝓝 x := by
   simp [completeSpace_iff_isComplete_univ, isComplete_iff_ultrafilter]
 #align complete_space_iff_ultrafilter completeSpace_iff_ultrafilter
 
-/- warning: cauchy_iff_exists_le_nhds -> cauchy_iff_exists_le_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α _inst_1] {l : Filter.{u1} α} [_inst_3 : Filter.NeBot.{u1} α l], Iff (Cauchy.{u1} α _inst_1 l) (Exists.{succ u1} α (fun (x : α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α _inst_1] {l : Filter.{u1} α} [_inst_3 : Filter.NeBot.{u1} α l], Iff (Cauchy.{u1} α _inst_1 l) (Exists.{succ u1} α (fun (x : α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)))
-Case conversion may be inaccurate. Consider using '#align cauchy_iff_exists_le_nhds cauchy_iff_exists_le_nhdsₓ'. -/
 theorem cauchy_iff_exists_le_nhds [CompleteSpace α] {l : Filter α} [NeBot l] :
     Cauchy l ↔ ∃ x, l ≤ 𝓝 x :=
   ⟨CompleteSpace.complete, fun ⟨x, hx⟩ => cauchy_nhds.mono hx⟩
@@ -705,12 +513,6 @@ theorem cauchySeq_tendsto_of_complete [SemilatticeSup β] [CompleteSpace α] {u 
 #align cauchy_seq_tendsto_of_complete cauchySeq_tendsto_of_complete
 -/
 
-/- warning: cauchy_seq_tendsto_of_is_complete -> cauchySeq_tendsto_of_isComplete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {K : Set.{u1} α}, (IsComplete.{u1} α _inst_1 K) -> (forall {u : β -> α}, (forall (n : β), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (u n) K) -> (CauchySeq.{u1, u2} α β _inst_1 _inst_2 u) -> (Exists.{succ u1} α (fun (v : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) v K) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) v K) => Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) v)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {K : Set.{u1} α}, (IsComplete.{u1} α _inst_1 K) -> (forall {u : β -> α}, (forall (n : β), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (u n) K) -> (CauchySeq.{u1, u2} α β _inst_1 _inst_2 u) -> (Exists.{succ u1} α (fun (v : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) v K) (Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) v)))))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_tendsto_of_is_complete cauchySeq_tendsto_of_isCompleteₓ'. -/
 /-- If `K` is a complete subset, then any cauchy sequence in `K` converges to a point in `K` -/
 theorem cauchySeq_tendsto_of_isComplete [SemilatticeSup β] {K : Set α} (h₁ : IsComplete K)
     {u : β → α} (h₂ : ∀ n, u n ∈ K) (h₃ : CauchySeq u) : ∃ v ∈ K, Tendsto u atTop (𝓝 v) :=
@@ -720,12 +522,6 @@ theorem cauchySeq_tendsto_of_isComplete [SemilatticeSup β] {K : Set α} (h₁ :
         ⟨univ, univ_mem, by simp only [image_univ]; rintro _ ⟨n, rfl⟩; exact h₂ n⟩
 #align cauchy_seq_tendsto_of_is_complete cauchySeq_tendsto_of_isComplete
 
-/- warning: cauchy.le_nhds_Lim -> Cauchy.le_nhds_lim is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α _inst_1] [_inst_3 : Nonempty.{succ u1} α] {f : Filter.{u1} α}, (Cauchy.{u1} α _inst_1 f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) _inst_3 f)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α _inst_1] [_inst_3 : Nonempty.{succ u1} α] {f : Filter.{u1} α}, (Cauchy.{u1} α _inst_1 f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) _inst_3 f)))
-Case conversion may be inaccurate. Consider using '#align cauchy.le_nhds_Lim Cauchy.le_nhds_limₓ'. -/
 theorem Cauchy.le_nhds_lim [CompleteSpace α] [Nonempty α] {f : Filter α} (hf : Cauchy f) :
     f ≤ 𝓝 (lim f) :=
   le_nhds_lim (CompleteSpace.complete hf)
@@ -754,12 +550,6 @@ def TotallyBounded (s : Set α) : Prop :=
 #align totally_bounded TotallyBounded
 -/
 
-/- warning: totally_bounded.exists_subset -> TotallyBounded.exists_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.5698 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
-Case conversion may be inaccurate. Consider using '#align totally_bounded.exists_subset TotallyBounded.exists_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)}
     (hU : U ∈ 𝓤 α) : ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } :=
@@ -779,12 +569,6 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
     exact ⟨z, rU <| mem_compRel.2 ⟨y, xy, rs (hfr z)⟩⟩
 #align totally_bounded.exists_subset TotallyBounded.exists_subset
 
-/- warning: totally_bounded_iff_subset -> totallyBounded_iff_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.6626 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
-Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset totallyBounded_iff_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totallyBounded_iff_subset {s : Set α} :
     TotallyBounded s ↔
@@ -794,12 +578,6 @@ theorem totallyBounded_iff_subset {s : Set α} :
     ⟨t, ht⟩⟩
 #align totally_bounded_iff_subset totallyBounded_iff_subset
 
-/- warning: filter.has_basis.totally_bounded_iff -> Filter.HasBasis.totallyBounded_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p U) -> (forall {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (i : ι), (p i) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (U i))))))))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {U : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p U) -> (forall {s : Set.{u2} α}, Iff (TotallyBounded.{u2} α _inst_1 s) (forall (i : ι), (p i) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Set.Finite.{u2} α t) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.iUnion.{u2, succ u2} α α (fun (y : α) => Set.iUnion.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) => setOf.{u2} α (fun (x : α) => Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (U i))))))))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.totally_bounded_iff Filter.HasBasis.totallyBounded_iffₓ'. -/
 theorem Filter.HasBasis.totallyBounded_iff {ι} {p : ι → Prop} {U : ι → Set (α × α)}
     (H : (𝓤 α).HasBasis p U) {s : Set α} :
     TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U i } :=
@@ -855,12 +633,6 @@ theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs 
 #align totally_bounded.image TotallyBounded.image
 -/
 
-/- warning: ultrafilter.cauchy_of_totally_bounded -> Ultrafilter.cauchy_of_totallyBounded is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} (f : Ultrafilter.{u1} α), (TotallyBounded.{u1} α _inst_1 s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (Filter.principal.{u1} α s)) -> (Cauchy.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} (f : Ultrafilter.{u1} α), (TotallyBounded.{u1} α _inst_1 s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (Filter.principal.{u1} α s)) -> (Cauchy.{u1} α _inst_1 (Ultrafilter.toFilter.{u1} α f))
-Case conversion may be inaccurate. Consider using '#align ultrafilter.cauchy_of_totally_bounded Ultrafilter.cauchy_of_totallyBoundedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Ultrafilter.cauchy_of_totallyBounded {s : Set α} (f : Ultrafilter α) (hs : TotallyBounded s)
     (h : ↑f ≤ 𝓟 s) : Cauchy (f : Filter α) :=
@@ -875,12 +647,6 @@ theorem Ultrafilter.cauchy_of_totallyBounded {s : Set α} (f : Ultrafilter α) (
     mem_of_superset (prod_mem_prod hif hif) (Subset.trans this ht'_t)⟩
 #align ultrafilter.cauchy_of_totally_bounded Ultrafilter.cauchy_of_totallyBounded
 
-/- warning: totally_bounded_iff_filter -> totallyBounded_iff_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (f : Filter.{u1} α), (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.principal.{u1} α s)) -> (Exists.{succ u1} (Filter.{u1} α) (fun (c : Filter.{u1} α) => Exists.{0} (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) c f) (fun (H : LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) c f) => Cauchy.{u1} α _inst_1 c))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (f : Filter.{u1} α), (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.principal.{u1} α s)) -> (Exists.{succ u1} (Filter.{u1} α) (fun (c : Filter.{u1} α) => And (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) c f) (Cauchy.{u1} α _inst_1 c))))
-Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_filter totallyBounded_iff_filterₓ'. -/
 theorem totallyBounded_iff_filter {s : Set α} :
     TotallyBounded s ↔ ∀ f, NeBot f → f ≤ 𝓟 s → ∃ c ≤ f, Cauchy c :=
   by
@@ -912,12 +678,6 @@ theorem totallyBounded_iff_filter {s : Set α} :
     simpa [ys] using hmd (mk_mem_prod hxm hym)
 #align totally_bounded_iff_filter totallyBounded_iff_filter
 
-/- warning: totally_bounded_iff_ultrafilter -> totallyBounded_iff_ultrafilter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f) (Filter.principal.{u1} α s)) -> (Cauchy.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) f)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (f : Ultrafilter.{u1} α), (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (Filter.principal.{u1} α s)) -> (Cauchy.{u1} α _inst_1 (Ultrafilter.toFilter.{u1} α f)))
-Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_ultrafilter totallyBounded_iff_ultrafilterₓ'. -/
 theorem totallyBounded_iff_ultrafilter {s : Set α} :
     TotallyBounded s ↔ ∀ f : Ultrafilter α, ↑f ≤ 𝓟 s → Cauchy (f : Filter α) :=
   by
@@ -1007,12 +767,6 @@ open Set Finset
 
 noncomputable section
 
-/- warning: sequentially_complete.set_seq_aux -> SequentiallyComplete.setSeqAux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, (Cauchy.{u1} α _inst_1 f) -> (forall {U : Nat -> (Set.{u1} (Prod.{u1, u1} α α))}, (forall (n : Nat), Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) (U n) (uniformity.{u1} α _inst_1)) -> (forall (n : Nat), Subtype.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) (fun (_x : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasSubset.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α s s) (U n)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, (Cauchy.{u1} α _inst_1 f) -> (forall {U : Nat -> (Set.{u1} (Prod.{u1, u1} α α))}, (forall (n : Nat), Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) (U n) (uniformity.{u1} α _inst_1)) -> (forall (n : Nat), Subtype.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α s s) (U n)))))
-Case conversion may be inaccurate. Consider using '#align sequentially_complete.set_seq_aux SequentiallyComplete.setSeqAuxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An auxiliary sequence of sets approximating a Cauchy filter. -/
 def setSeqAux (n : ℕ) : { s : Set α // ∃ _ : s ∈ f, s ×ˢ s ⊆ U n } :=
@@ -1087,12 +841,6 @@ theorem seq_is_cauchySeq : CauchySeq <| seq hf U_mem :=
 #align sequentially_complete.seq_is_cauchy_seq SequentiallyComplete.seq_is_cauchySeq
 -/
 
-/- warning: sequentially_complete.le_nhds_of_seq_tendsto_nhds -> SequentiallyComplete.le_nhds_of_seq_tendsto_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} (hf : Cauchy.{u1} α _inst_1 f) {U : Nat -> (Set.{u1} (Prod.{u1, u1} α α))} (U_mem : forall (n : Nat), Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) (U n) (uniformity.{u1} α _inst_1)), (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{1} Nat (fun (n : Nat) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasSubset.{u1} (Prod.{u1, u1} α α)) (U n) s))) -> (forall {{a : α}}, (Filter.Tendsto.{0, u1} Nat α (SequentiallyComplete.seq.{u1} α _inst_1 f hf (fun (n : Nat) => U n) U_mem) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) a)) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) a)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α} (hf : Cauchy.{u1} α _inst_1 f) {U : Nat -> (Set.{u1} (Prod.{u1, u1} α α))} (U_mem : forall (n : Nat), Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) (U n) (uniformity.{u1} α _inst_1)), (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{1} Nat (fun (n : Nat) => HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) (U n) s))) -> (forall {{a : α}}, (Filter.Tendsto.{0, u1} Nat α (SequentiallyComplete.seq.{u1} α _inst_1 f hf (fun (n : Nat) => U n) U_mem) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) a)) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) a)))
-Case conversion may be inaccurate. Consider using '#align sequentially_complete.le_nhds_of_seq_tendsto_nhds SequentiallyComplete.le_nhds_of_seq_tendsto_nhdsₓ'. -/
 /-- If the sequence `sequentially_complete.seq` converges to `a`, then `f ≤ 𝓝 a`. -/
 theorem le_nhds_of_seq_tendsto_nhds ⦃a : α⦄ (ha : Tendsto (seq hf U_mem) atTop (𝓝 a)) : f ≤ 𝓝 a :=
   le_nhds_of_cauchy_adhp_aux

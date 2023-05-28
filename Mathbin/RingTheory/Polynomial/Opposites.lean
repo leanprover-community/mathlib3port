@@ -30,12 +30,6 @@ noncomputable section
 
 namespace Polynomial
 
-/- warning: polynomial.op_ring_equiv -> Polynomial.opRingEquiv is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_2 : Semiring.{u1} R], RingEquiv.{u1, u1} (MulOpposite.{u1} (Polynomial.{u1} R _inst_2)) (Polynomial.{u1} (MulOpposite.{u1} R) (MulOpposite.semiring.{u1} R _inst_2)) (MulOpposite.hasMul.{u1} (Polynomial.{u1} R _inst_2) (Polynomial.mul'.{u1} R _inst_2)) (MulOpposite.hasAdd.{u1} (Polynomial.{u1} R _inst_2) (Polynomial.add'.{u1} R _inst_2)) (Polynomial.mul'.{u1} (MulOpposite.{u1} R) (MulOpposite.semiring.{u1} R _inst_2)) (Polynomial.add'.{u1} (MulOpposite.{u1} R) (MulOpposite.semiring.{u1} R _inst_2))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_2 : Semiring.{u1} R], RingEquiv.{u1, u1} (MulOpposite.{u1} (Polynomial.{u1} R _inst_2)) (Polynomial.{u1} (MulOpposite.{u1} R) (MulOpposite.semiring.{u1} R _inst_2)) (MulOpposite.mul.{u1} (Polynomial.{u1} R _inst_2) (Polynomial.mul'.{u1} R _inst_2)) (Polynomial.mul'.{u1} (MulOpposite.{u1} R) (MulOpposite.semiring.{u1} R _inst_2)) (MulOpposite.add.{u1} (Polynomial.{u1} R _inst_2) (Polynomial.add'.{u1} R _inst_2)) (Polynomial.add'.{u1} (MulOpposite.{u1} R) (MulOpposite.semiring.{u1} R _inst_2))
-Case conversion may be inaccurate. Consider using '#align polynomial.op_ring_equiv Polynomial.opRingEquivₓ'. -/
 /-- Ring isomorphism between `R[X]ᵐᵒᵖ` and `Rᵐᵒᵖ[X]` sending each coefficient of a polynomial
 to the corresponding element of the opposite ring. -/
 def opRingEquiv (R : Type _) [Semiring R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=

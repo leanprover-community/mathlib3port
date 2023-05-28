@@ -35,12 +35,6 @@ def sqrt (q : ℚ) : ℚ :=
 #align rat.sqrt Rat.sqrt
 -/
 
-/- warning: rat.sqrt_eq -> Rat.sqrt_eq is a dubious translation:
-lean 3 declaration is
-  forall (q : Rat), Eq.{1} Rat (Rat.sqrt (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) q q)) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) q)
-but is expected to have type
-  forall (q : Rat), Eq.{1} Rat (Rat.sqrt (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) q q)) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) q)
-Case conversion may be inaccurate. Consider using '#align rat.sqrt_eq Rat.sqrt_eqₓ'. -/
 theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = |q| := by
   rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 #align rat.sqrt_eq Rat.sqrt_eq
@@ -51,12 +45,6 @@ theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt
 #align rat.exists_mul_self Rat.exists_mul_self
 -/
 
-/- warning: rat.sqrt_nonneg -> Rat.sqrt_nonneg is a dubious translation:
-lean 3 declaration is
-  forall (q : Rat), LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (Rat.sqrt q)
-but is expected to have type
-  forall (q : Rat), LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Rat.sqrt q)
-Case conversion may be inaccurate. Consider using '#align rat.sqrt_nonneg Rat.sqrt_nonnegₓ'. -/
 theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
   nonneg_iff_zero_le.1 <|
     (divInt_nonneg _ <|

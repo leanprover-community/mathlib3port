@@ -172,54 +172,36 @@ initialize_simps_projections category_theory.monad (toFunctor → coe, η' → �
 
 initialize_simps_projections category_theory.comonad (toFunctor → coe, ε' → ε, δ' → δ)
 
-/- warning: category_theory.monad.assoc -> CategoryTheory.Monad.assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monad.assoc CategoryTheory.Monad.assocₓ'. -/
 @[reassoc]
 theorem Monad.assoc (T : Monad C) (X : C) :
     (T : C ⥤ C).map (T.μ.app X) ≫ T.μ.app _ = T.μ.app _ ≫ T.μ.app _ :=
   T.assoc' X
 #align category_theory.monad.assoc CategoryTheory.Monad.assoc
 
-/- warning: category_theory.monad.left_unit -> CategoryTheory.Monad.left_unit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monad.left_unit CategoryTheory.Monad.left_unitₓ'. -/
 @[simp, reassoc]
 theorem Monad.left_unit (T : Monad C) (X : C) :
     T.η.app ((T : C ⥤ C).obj X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.left_unit' X
 #align category_theory.monad.left_unit CategoryTheory.Monad.left_unit
 
-/- warning: category_theory.monad.right_unit -> CategoryTheory.Monad.right_unit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monad.right_unit CategoryTheory.Monad.right_unitₓ'. -/
 @[simp, reassoc]
 theorem Monad.right_unit (T : Monad C) (X : C) :
     (T : C ⥤ C).map (T.η.app X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.right_unit' X
 #align category_theory.monad.right_unit CategoryTheory.Monad.right_unit
 
-/- warning: category_theory.comonad.coassoc -> CategoryTheory.Comonad.coassoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad.coassoc CategoryTheory.Comonad.coassocₓ'. -/
 @[reassoc]
 theorem Comonad.coassoc (G : Comonad C) (X : C) :
     G.δ.app _ ≫ (G : C ⥤ C).map (G.δ.app X) = G.δ.app _ ≫ G.δ.app _ :=
   G.coassoc' X
 #align category_theory.comonad.coassoc CategoryTheory.Comonad.coassoc
 
-/- warning: category_theory.comonad.left_counit -> CategoryTheory.Comonad.left_counit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad.left_counit CategoryTheory.Comonad.left_counitₓ'. -/
 @[simp, reassoc]
 theorem Comonad.left_counit (G : Comonad C) (X : C) :
     G.δ.app X ≫ G.ε.app ((G : C ⥤ C).obj X) = 𝟙 ((G : C ⥤ C).obj X) :=
   G.left_counit' X
 #align category_theory.comonad.left_counit CategoryTheory.Comonad.left_counit
 
-/- warning: category_theory.comonad.right_counit -> CategoryTheory.Comonad.right_counit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad.right_counit CategoryTheory.Comonad.right_counitₓ'. -/
 @[simp, reassoc]
 theorem Comonad.right_counit (G : Comonad C) (X : C) :
     G.δ.app X ≫ (G : C ⥤ C).map (G.ε.app X) = 𝟙 ((G : C ⥤ C).obj X) :=
@@ -290,12 +272,6 @@ theorem MonadHom.id_toNatTrans (T : Monad C) : (𝟙 T : T ⟶ T).toNatTrans = �
 #align category_theory.monad_hom.id_to_nat_trans CategoryTheory.MonadHom.id_toNatTrans
 -/
 
-/- warning: category_theory.monad_hom.comp_to_nat_trans -> CategoryTheory.MonadHom.comp_toNatTrans is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {T₁ : CategoryTheory.Monad.{u1, u2} C _inst_1} {T₂ : CategoryTheory.Monad.{u1, u2} C _inst_1} {T₃ : CategoryTheory.Monad.{u1, u2} C _inst_1} (f : Quiver.Hom.{succ (max u2 u1), max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Monad.category.{u1, u2} C _inst_1))) T₁ T₂) (g : Quiver.Hom.{succ (max u2 u1), max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Monad.category.{u1, u2} C _inst_1))) T₂ T₃), Eq.{succ (max u2 u1)} (CategoryTheory.NatTrans.{u1, u1, u2, u2} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) T₁) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) T₃)) (CategoryTheory.MonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₃ (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Monad.category.{u1, u2} C _inst_1)) T₁ T₂ T₃ f g)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) T₁) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) T₂) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) T₃) (CategoryTheory.MonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₂ f) (CategoryTheory.MonadHom.toNatTrans.{u1, u2} C _inst_1 T₂ T₃ g))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {T₁ : CategoryTheory.Monad.{u1, u2} C _inst_1} {T₂ : CategoryTheory.Monad.{u1, u2} C _inst_1} {T₃ : CategoryTheory.Monad.{u1, u2} C _inst_1} (f : Quiver.Hom.{max (succ u2) (succ u1), max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonad.{u1, u2} C _inst_1))) T₁ T₂) (g : Quiver.Hom.{max (succ u2) (succ u1), max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonad.{u1, u2} C _inst_1))) T₂ T₃), Eq.{max (succ u2) (succ u1)} (CategoryTheory.NatTrans.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 T₁) (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 T₃)) (CategoryTheory.MonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₃ (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonad.{u1, u2} C _inst_1)) T₁ T₂ T₃ f g)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)) (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 T₁) (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 T₂) (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 T₃) (CategoryTheory.MonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₂ f) (CategoryTheory.MonadHom.toNatTrans.{u1, u2} C _inst_1 T₂ T₃ g))
-Case conversion may be inaccurate. Consider using '#align category_theory.monad_hom.comp_to_nat_trans CategoryTheory.MonadHom.comp_toNatTransₓ'. -/
 @[simp]
 theorem MonadHom.comp_toNatTrans {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     (f ≫ g).toNatTrans = ((f.toNatTrans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.toNatTrans : (T₁ : C ⥤ C) ⟶ T₃) :=
@@ -312,21 +288,12 @@ theorem ComonadHom.id_toNatTrans (T : Comonad C) : (𝟙 T : T ⟶ T).toNatTrans
 #align category_theory.comonad_hom.id_to_nat_trans CategoryTheory.ComonadHom.id_toNatTrans
 -/
 
-/- warning: category_theory.comp_to_nat_trans -> CategoryTheory.comp_toNatTrans is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {T₁ : CategoryTheory.Comonad.{u1, u2} C _inst_1} {T₂ : CategoryTheory.Comonad.{u1, u2} C _inst_1} {T₃ : CategoryTheory.Comonad.{u1, u2} C _inst_1} (f : Quiver.Hom.{succ (max u2 u1), max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Comonad.category.{u1, u2} C _inst_1))) T₁ T₂) (g : Quiver.Hom.{succ (max u2 u1), max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Comonad.category.{u1, u2} C _inst_1))) T₂ T₃), Eq.{succ (max u2 u1)} (CategoryTheory.NatTrans.{u1, u1, u2, u2} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) T₁) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) T₃)) (CategoryTheory.ComonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₃ (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Comonad.category.{u1, u2} C _inst_1)) T₁ T₂ T₃ f g)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) T₁) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) T₂) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) T₃) (CategoryTheory.ComonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₂ f) (CategoryTheory.ComonadHom.toNatTrans.{u1, u2} C _inst_1 T₂ T₃ g))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {T₁ : CategoryTheory.Comonad.{u1, u2} C _inst_1} {T₂ : CategoryTheory.Comonad.{u1, u2} C _inst_1} {T₃ : CategoryTheory.Comonad.{u1, u2} C _inst_1} (f : Quiver.Hom.{max (succ u2) (succ u1), max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryComonad.{u1, u2} C _inst_1))) T₁ T₂) (g : Quiver.Hom.{max (succ u2) (succ u1), max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryComonad.{u1, u2} C _inst_1))) T₂ T₃), Eq.{max (succ u2) (succ u1)} (CategoryTheory.NatTrans.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 T₁) (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 T₃)) (CategoryTheory.ComonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₃ (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryComonad.{u1, u2} C _inst_1)) T₁ T₂ T₃ f g)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)) (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 T₁) (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 T₂) (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 T₃) (CategoryTheory.ComonadHom.toNatTrans.{u1, u2} C _inst_1 T₁ T₂ f) (CategoryTheory.ComonadHom.toNatTrans.{u1, u2} C _inst_1 T₂ T₃ g))
-Case conversion may be inaccurate. Consider using '#align category_theory.comp_to_nat_trans CategoryTheory.comp_toNatTransₓ'. -/
 @[simp]
 theorem comp_toNatTrans {T₁ T₂ T₃ : Comonad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     (f ≫ g).toNatTrans = ((f.toNatTrans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.toNatTrans : (T₁ : C ⥤ C) ⟶ T₃) :=
   rfl
 #align category_theory.comp_to_nat_trans CategoryTheory.comp_toNatTrans
 
-/- warning: category_theory.monad_iso.mk -> CategoryTheory.MonadIso.mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monad_iso.mk CategoryTheory.MonadIso.mkₓ'. -/
 /-- Construct a monad isomorphism from a natural isomorphism of functors where the forward
 direction is a monad morphism. -/
 @[simps]
@@ -346,9 +313,6 @@ def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N
         simp }
 #align category_theory.monad_iso.mk CategoryTheory.MonadIso.mk
 
-/- warning: category_theory.comonad_iso.mk -> CategoryTheory.ComonadIso.mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad_iso.mk CategoryTheory.ComonadIso.mkₓ'. -/
 /-- Construct a comonad isomorphism from a natural isomorphism of functors where the forward
 direction is a comonad morphism. -/
 @[simps]
@@ -370,12 +334,6 @@ def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) : M �
 
 variable (C)
 
-/- warning: category_theory.monad_to_functor -> CategoryTheory.monadToFunctor is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Functor.{max u2 u1, max u2 u1, max u2 u1, max u1 u2} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Monad.category.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Functor.{max u2 u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)
-Case conversion may be inaccurate. Consider using '#align category_theory.monad_to_functor CategoryTheory.monadToFunctorₓ'. -/
 /-- The forgetful functor from the category of monads to the category of endofunctors.
 -/
 @[simps]
@@ -386,9 +344,6 @@ def monadToFunctor : Monad C ⥤ C ⥤ C where
 
 instance : Faithful (monadToFunctor C) where
 
-/- warning: category_theory.monad_to_functor_map_iso_monad_iso_mk -> CategoryTheory.monadToFunctor_mapIso_monad_iso_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mkₓ'. -/
 theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
     (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f := by ext; rfl
 #align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mk
@@ -399,12 +354,6 @@ instance : ReflectsIsomorphisms (monadToFunctor C)
     convert is_iso.of_iso (monad_iso.mk (as_iso ((monad_to_functor C).map f)) f.app_η f.app_μ)
     ext <;> rfl
 
-/- warning: category_theory.comonad_to_functor -> CategoryTheory.comonadToFunctor is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Functor.{max u2 u1, max u2 u1, max u2 u1, max u1 u2} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Comonad.category.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Functor.{max u2 u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryComonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1)
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad_to_functor CategoryTheory.comonadToFunctorₓ'. -/
 /-- The forgetful functor from the category of comonads to the category of endofunctors.
 -/
 @[simps]
@@ -415,9 +364,6 @@ def comonadToFunctor : Comonad C ⥤ C ⥤ C where
 
 instance : Faithful (comonadToFunctor C) where
 
-/- warning: category_theory.comonad_to_functor_map_iso_comonad_iso_mk -> CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mkₓ'. -/
 theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
     (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f := by ext; rfl
 #align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk
@@ -430,12 +376,6 @@ instance : ReflectsIsomorphisms (comonadToFunctor C)
 
 variable {C}
 
-/- warning: category_theory.monad_iso.to_nat_iso -> CategoryTheory.MonadIso.toNatIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {M : CategoryTheory.Monad.{u1, u2} C _inst_1} {N : CategoryTheory.Monad.{u1, u2} C _inst_1}, (CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Monad.category.{u1, u2} C _inst_1) M N) -> (CategoryTheory.Iso.{max u2 u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) M) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u1, u2} C _inst_1)))) N))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {M : CategoryTheory.Monad.{u1, u2} C _inst_1} {N : CategoryTheory.Monad.{u1, u2} C _inst_1}, (CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonad.{u1, u2} C _inst_1) M N) -> (CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 M) (CategoryTheory.Monad.toFunctor.{u1, u2} C _inst_1 N))
-Case conversion may be inaccurate. Consider using '#align category_theory.monad_iso.to_nat_iso CategoryTheory.MonadIso.toNatIsoₓ'. -/
 /-- An isomorphism of monads gives a natural isomorphism of the underlying functors.
 -/
 @[simps (config := { rhsMd := semireducible })]
@@ -443,12 +383,6 @@ def MonadIso.toNatIso {M N : Monad C} (h : M ≅ N) : (M : C ⥤ C) ≅ N :=
   (monadToFunctor C).mapIso h
 #align category_theory.monad_iso.to_nat_iso CategoryTheory.MonadIso.toNatIso
 
-/- warning: category_theory.comonad_iso.to_nat_iso -> CategoryTheory.ComonadIso.toNatIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {M : CategoryTheory.Comonad.{u1, u2} C _inst_1} {N : CategoryTheory.Comonad.{u1, u2} C _inst_1}, (CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Comonad.category.{u1, u2} C _inst_1) M N) -> (CategoryTheory.Iso.{max u2 u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) M) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Type.{max u1 u2}) [self : HasLiftT.{max (succ u2) (succ u1), succ (max u1 u2)} a b] => self.0) (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (coeBase.{max (succ u2) (succ u1), succ (max u1 u2)} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.coeComonad.{u1, u2} C _inst_1)))) N))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {M : CategoryTheory.Comonad.{u1, u2} C _inst_1} {N : CategoryTheory.Comonad.{u1, u2} C _inst_1}, (CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryComonad.{u1, u2} C _inst_1) M N) -> (CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u1, u1, u2, u2} C _inst_1 C _inst_1) (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 M) (CategoryTheory.Comonad.toFunctor.{u1, u2} C _inst_1 N))
-Case conversion may be inaccurate. Consider using '#align category_theory.comonad_iso.to_nat_iso CategoryTheory.ComonadIso.toNatIsoₓ'. -/
 /-- An isomorphism of comonads gives a natural isomorphism of the underlying functors.
 -/
 @[simps (config := { rhsMd := semireducible })]

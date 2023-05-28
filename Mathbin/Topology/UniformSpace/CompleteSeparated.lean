@@ -48,12 +48,6 @@ variable [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
 
 variable {γ : Type _} [UniformSpace γ] [CompleteSpace γ] [SeparatedSpace γ]
 
-/- warning: dense_inducing.continuous_extend_of_cauchy -> DenseInducing.continuous_extend_of_cauchy is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] [_inst_4 : CompleteSpace.{u3} γ _inst_3] [_inst_5 : SeparatedSpace.{u3} γ _inst_3] {e : α -> β} {f : α -> γ} (de : DenseInducing.{u1, u2} α β _inst_1 _inst_2 e), (forall (b : β), Cauchy.{u3} γ _inst_3 (Filter.map.{u1, u3} α γ f (Filter.comap.{u1, u2} α β e (nhds.{u2} β _inst_2 b)))) -> (Continuous.{u2, u3} β γ _inst_2 (UniformSpace.toTopologicalSpace.{u3} γ _inst_3) (DenseInducing.extend.{u1, u2, u3} α β γ _inst_1 _inst_2 e (UniformSpace.toTopologicalSpace.{u3} γ _inst_3) de f))
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] [_inst_4 : CompleteSpace.{u1} γ _inst_3] [_inst_5 : SeparatedSpace.{u1} γ _inst_3] {e : α -> β} {f : α -> γ} (de : DenseInducing.{u3, u2} α β _inst_1 _inst_2 e), (forall (b : β), Cauchy.{u1} γ _inst_3 (Filter.map.{u3, u1} α γ f (Filter.comap.{u3, u2} α β e (nhds.{u2} β _inst_2 b)))) -> (Continuous.{u2, u1} β γ _inst_2 (UniformSpace.toTopologicalSpace.{u1} γ _inst_3) (DenseInducing.extend.{u3, u2, u1} α β γ _inst_1 _inst_2 e (UniformSpace.toTopologicalSpace.{u1} γ _inst_3) de f))
-Case conversion may be inaccurate. Consider using '#align dense_inducing.continuous_extend_of_cauchy DenseInducing.continuous_extend_of_cauchyₓ'. -/
 theorem continuous_extend_of_cauchy {e : α → β} {f : α → γ} (de : DenseInducing e)
     (h : ∀ b : β, Cauchy (map f (comap e <| 𝓝 b))) : Continuous (de.extend f) :=
   de.continuous_extend fun b => CompleteSpace.complete (h b)

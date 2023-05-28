@@ -62,12 +62,6 @@ noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpa
 #align topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 -/
 
-/- warning: topological_space.pseudo_metrizable_space_prod -> TopologicalSpace.pseudoMetrizableSpace_prod is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} X _inst_1] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} Y _inst_2], TopologicalSpace.PseudoMetrizableSpace.{max u1 u2} (Prod.{u1, u2} X Y) (Prod.topologicalSpace.{u1, u2} X Y _inst_1 _inst_2)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_5 : TopologicalSpace.PseudoMetrizableSpace.{u1} X _inst_1] [_inst_6 : TopologicalSpace.PseudoMetrizableSpace.{u2} Y _inst_2], TopologicalSpace.PseudoMetrizableSpace.{max u2 u1} (Prod.{u1, u2} X Y) (instTopologicalSpaceProd.{u1, u2} X Y _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align topological_space.pseudo_metrizable_space_prod TopologicalSpace.pseudoMetrizableSpace_prodₓ'. -/
 instance pseudoMetrizableSpace_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) :=
   by
@@ -152,12 +146,6 @@ instance (priority := 100) t2Space_of_metrizableSpace [MetrizableSpace X] : T2Sp
 #align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2Space_of_metrizableSpace
 -/
 
-/- warning: topological_space.metrizable_space_prod -> TopologicalSpace.metrizableSpace_prod is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_5 : TopologicalSpace.MetrizableSpace.{u1} X _inst_1] [_inst_6 : TopologicalSpace.MetrizableSpace.{u2} Y _inst_2], TopologicalSpace.MetrizableSpace.{max u1 u2} (Prod.{u1, u2} X Y) (Prod.topologicalSpace.{u1, u2} X Y _inst_1 _inst_2)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_5 : TopologicalSpace.MetrizableSpace.{u1} X _inst_1] [_inst_6 : TopologicalSpace.MetrizableSpace.{u2} Y _inst_2], TopologicalSpace.MetrizableSpace.{max u2 u1} (Prod.{u1, u2} X Y) (instTopologicalSpaceProd.{u1, u2} X Y _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align topological_space.metrizable_space_prod TopologicalSpace.metrizableSpace_prodₓ'. -/
 instance metrizableSpace_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) :=
   by
   letI : MetricSpace X := metrizable_space_metric X
@@ -189,12 +177,6 @@ instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (�
 
 variable (X) [T3Space X] [SecondCountableTopology X]
 
-/- warning: topological_space.exists_embedding_l_infty -> TopologicalSpace.exists_embedding_l_infty is a dubious translation:
-lean 3 declaration is
-  forall (X : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_5 : T3Space.{u1} X _inst_1] [_inst_6 : TopologicalSpace.SecondCountableTopology.{u1} X _inst_1], Exists.{succ u1} (X -> (BoundedContinuousFunction.{0, 0} Nat Real Nat.topologicalSpace Real.pseudoMetricSpace)) (fun (f : X -> (BoundedContinuousFunction.{0, 0} Nat Real Nat.topologicalSpace Real.pseudoMetricSpace)) => Embedding.{u1, 0} X (BoundedContinuousFunction.{0, 0} Nat Real Nat.topologicalSpace Real.pseudoMetricSpace) _inst_1 (UniformSpace.toTopologicalSpace.{0} (BoundedContinuousFunction.{0, 0} Nat Real Nat.topologicalSpace Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} (BoundedContinuousFunction.{0, 0} Nat Real Nat.topologicalSpace Real.pseudoMetricSpace) (BoundedContinuousFunction.pseudoMetricSpace.{0, 0} Nat Real Nat.topologicalSpace Real.pseudoMetricSpace))) f)
-but is expected to have type
-  forall (X : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_5 : T3Space.{u1} X _inst_1] [_inst_6 : TopologicalSpace.SecondCountableTopology.{u1} X _inst_1], Exists.{succ u1} (X -> (BoundedContinuousFunction.{0, 0} Nat Real instTopologicalSpaceNat Real.pseudoMetricSpace)) (fun (f : X -> (BoundedContinuousFunction.{0, 0} Nat Real instTopologicalSpaceNat Real.pseudoMetricSpace)) => Embedding.{u1, 0} X (BoundedContinuousFunction.{0, 0} Nat Real instTopologicalSpaceNat Real.pseudoMetricSpace) _inst_1 (UniformSpace.toTopologicalSpace.{0} (BoundedContinuousFunction.{0, 0} Nat Real instTopologicalSpaceNat Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} (BoundedContinuousFunction.{0, 0} Nat Real instTopologicalSpaceNat Real.pseudoMetricSpace) (BoundedContinuousFunction.instPseudoMetricSpaceBoundedContinuousFunction.{0, 0} Nat Real instTopologicalSpaceNat Real.pseudoMetricSpace))) f)
-Case conversion may be inaccurate. Consider using '#align topological_space.exists_embedding_l_infty TopologicalSpace.exists_embedding_l_inftyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/

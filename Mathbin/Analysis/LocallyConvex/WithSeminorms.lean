@@ -86,27 +86,15 @@ def basisSets (p : SeminormFamily 𝕜 E ι) : Set (Set E) :=
 
 variable (p : SeminormFamily 𝕜 E ι)
 
-/- warning: seminorm_family.basis_sets_iff -> SeminormFamily.basisSets_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_iff SeminormFamily.basisSets_iffₓ'. -/
 theorem basisSets_iff {U : Set E} :
     U ∈ p.basis_sets ↔ ∃ (i : Finset ι)(r : _)(hr : 0 < r), U = ball (i.sup p) 0 r := by
   simp only [basis_sets, mem_Union, mem_singleton_iff]
 #align seminorm_family.basis_sets_iff SeminormFamily.basisSets_iff
 
-/- warning: seminorm_family.basis_sets_mem -> SeminormFamily.basisSets_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_mem SeminormFamily.basisSets_memₓ'. -/
 theorem basisSets_mem (i : Finset ι) {r : ℝ} (hr : 0 < r) : (i.sup p).ball 0 r ∈ p.basis_sets :=
   (basisSets_iff _).mpr ⟨i, _, hr, rfl⟩
 #align seminorm_family.basis_sets_mem SeminormFamily.basisSets_mem
 
-/- warning: seminorm_family.basis_sets_singleton_mem -> SeminormFamily.basisSets_singleton_mem is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3) (i : ι) {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) (Seminorm.ball.{u1, u2} 𝕜 E (SeminormedCommRing.toSemiNormedRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1))) _inst_2 (SMulZeroClass.toHasSmul.{u1, u2} 𝕜 E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} 𝕜 E (MulZeroClass.toHasZero.{u1} 𝕜 (MulZeroOneClass.toMulZeroClass.{u1} 𝕜 (MonoidWithZero.toMulZeroOneClass.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} 𝕜 E (Semiring.toMonoidWithZero.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_3)))) (p i) (OfNat.ofNat.{u2} E 0 (OfNat.mk.{u2} E 0 (Zero.zero.{u2} E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))))) r) (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : AddCommGroup.{u3} E] [_inst_3 : Module.{u2, u3} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u3} E _inst_2)] (p : SeminormFamily.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3) (i : ι) {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) (Seminorm.ball.{u2, u3} 𝕜 E (SeminormedCommRing.toSeminormedRing.{u2} 𝕜 (NormedCommRing.toSeminormedCommRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 _inst_1))) _inst_2 (SMulZeroClass.toSMul.{u2, u3} 𝕜 E (NegZeroClass.toZero.{u3} E (SubNegZeroMonoid.toNegZeroClass.{u3} E (SubtractionMonoid.toSubNegZeroMonoid.{u3} E (SubtractionCommMonoid.toSubtractionMonoid.{u3} E (AddCommGroup.toDivisionAddCommMonoid.{u3} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u3} 𝕜 E (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u3} E (SubNegZeroMonoid.toNegZeroClass.{u3} E (SubtractionMonoid.toSubNegZeroMonoid.{u3} E (SubtractionCommMonoid.toSubtractionMonoid.{u3} E (AddCommGroup.toDivisionAddCommMonoid.{u3} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u3} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u3} E (SubNegZeroMonoid.toNegZeroClass.{u3} E (SubtractionMonoid.toSubNegZeroMonoid.{u3} E (SubtractionCommMonoid.toSubtractionMonoid.{u3} E (AddCommGroup.toDivisionAddCommMonoid.{u3} E _inst_2))))) (Module.toMulActionWithZero.{u2, u3} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u3} E _inst_2) _inst_3)))) (p i) (OfNat.ofNat.{u3} E 0 (Zero.toOfNat0.{u3} E (NegZeroClass.toZero.{u3} E (SubNegZeroMonoid.toNegZeroClass.{u3} E (SubtractionMonoid.toSubNegZeroMonoid.{u3} E (SubtractionCommMonoid.toSubtractionMonoid.{u3} E (AddCommGroup.toDivisionAddCommMonoid.{u3} E _inst_2))))))) r) (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p))
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_singleton_mem SeminormFamily.basisSets_singleton_memₓ'. -/
 theorem basisSets_singleton_mem (i : ι) {r : ℝ} (hr : 0 < r) : (p i).ball 0 r ∈ p.basis_sets :=
   (basisSets_iff _).mpr ⟨{i}, _, hr, by rw [Finset.sup_singleton]⟩
 #align seminorm_family.basis_sets_singleton_mem SeminormFamily.basisSets_singleton_mem
@@ -120,12 +108,6 @@ theorem basisSets_nonempty [Nonempty ι] : p.basis_sets.Nonempty :=
 #align seminorm_family.basis_sets_nonempty SeminormFamily.basisSets_nonempty
 -/
 
-/- warning: seminorm_family.basis_sets_intersect -> SeminormFamily.basisSets_intersect is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u2} E) (V : Set.{u2} E), (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) U (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) V (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Exists.{succ u2} (Set.{u2} E) (fun (z : Set.{u2} E) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) z (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) z (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) => HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) z (Inter.inter.{u2} (Set.{u2} E) (Set.hasInter.{u2} E) U V))))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : AddCommGroup.{u3} E] [_inst_3 : Module.{u2, u3} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u3} E _inst_2)] (p : SeminormFamily.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u3} E) (V : Set.{u3} E), (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) U (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) V (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Exists.{succ u3} (Set.{u3} E) (fun (z : Set.{u3} E) => And (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) z (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (HasSubset.Subset.{u3} (Set.{u3} E) (Set.instHasSubsetSet.{u3} E) z (Inter.inter.{u3} (Set.{u3} E) (Set.instInterSet.{u3} E) U V))))
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_intersect SeminormFamily.basisSets_intersectₓ'. -/
 theorem basisSets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
     ∃ (z : Set E)(H : z ∈ p.basis_sets), z ⊆ U ∩ V := by
   classical
@@ -143,12 +125,6 @@ theorem basisSets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ 
           ⟨i, Finset.subset_union_right _ _ hi, ball_mono <| min_le_right _ _⟩)
 #align seminorm_family.basis_sets_intersect SeminormFamily.basisSets_intersect
 
-/- warning: seminorm_family.basis_sets_zero -> SeminormFamily.basisSets_zero is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u2} E), (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) U (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Membership.Mem.{u2, u2} E (Set.{u2} E) (Set.hasMem.{u2} E) (OfNat.ofNat.{u2} E 0 (OfNat.mk.{u2} E 0 (Zero.zero.{u2} E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))))) U)
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : AddCommGroup.{u3} E] [_inst_3 : Module.{u2, u3} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u3} E _inst_2)] (p : SeminormFamily.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u3} E), (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) U (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Membership.mem.{u3, u3} E (Set.{u3} E) (Set.instMembershipSet.{u3} E) (OfNat.ofNat.{u3} E 0 (Zero.toOfNat0.{u3} E (NegZeroClass.toZero.{u3} E (SubNegZeroMonoid.toNegZeroClass.{u3} E (SubtractionMonoid.toSubNegZeroMonoid.{u3} E (SubtractionCommMonoid.toSubtractionMonoid.{u3} E (AddCommGroup.toDivisionAddCommMonoid.{u3} E _inst_2))))))) U)
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_zero SeminormFamily.basisSets_zeroₓ'. -/
 theorem basisSets_zero (U) (hU : U ∈ p.basis_sets) : (0 : E) ∈ U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨ι', r, hr, hU⟩
@@ -156,12 +132,6 @@ theorem basisSets_zero (U) (hU : U ∈ p.basis_sets) : (0 : E) ∈ U :=
   exact hr
 #align seminorm_family.basis_sets_zero SeminormFamily.basisSets_zero
 
-/- warning: seminorm_family.basis_sets_add -> SeminormFamily.basisSets_add is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u2} E), (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) U (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Exists.{succ u2} (Set.{u2} E) (fun (V : Set.{u2} E) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) V (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) V (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) => HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) (HAdd.hAdd.{u2, u2, u2} (Set.{u2} E) (Set.{u2} E) (Set.{u2} E) (instHAdd.{u2} (Set.{u2} E) (Set.add.{u2} E (AddZeroClass.toHasAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2))))))) V V) U)))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : AddCommGroup.{u3} E] [_inst_3 : Module.{u2, u3} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u3} E _inst_2)] (p : SeminormFamily.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u3} E), (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) U (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Exists.{succ u3} (Set.{u3} E) (fun (V : Set.{u3} E) => And (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) V (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (HasSubset.Subset.{u3} (Set.{u3} E) (Set.instHasSubsetSet.{u3} E) (HAdd.hAdd.{u3, u3, u3} (Set.{u3} E) (Set.{u3} E) (Set.{u3} E) (instHAdd.{u3} (Set.{u3} E) (Set.add.{u3} E (AddZeroClass.toAdd.{u3} E (AddMonoid.toAddZeroClass.{u3} E (SubNegMonoid.toAddMonoid.{u3} E (AddGroup.toSubNegMonoid.{u3} E (AddCommGroup.toAddGroup.{u3} E _inst_2))))))) V V) U)))
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_add SeminormFamily.basisSets_addₓ'. -/
 theorem basisSets_add (U) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set E)(H : V ∈ p.basis_sets), V + V ⊆ U :=
   by
@@ -172,12 +142,6 @@ theorem basisSets_add (U) (hU : U ∈ p.basis_sets) :
   rw [hU, add_zero, add_halves']
 #align seminorm_family.basis_sets_add SeminormFamily.basisSets_add
 
-/- warning: seminorm_family.basis_sets_neg -> SeminormFamily.basisSets_neg is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u2} E), (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) U (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Exists.{succ u2} (Set.{u2} E) (fun (V : Set.{u2} E) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) V (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) V (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) => HasSubset.Subset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) V (Set.preimage.{u2, u2} E E (fun (x : E) => Neg.neg.{u2} E (SubNegMonoid.toHasNeg.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2))) x) U))))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : AddCommGroup.{u3} E] [_inst_3 : Module.{u2, u3} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u3} E _inst_2)] (p : SeminormFamily.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3) (U : Set.{u3} E), (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) U (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) -> (Exists.{succ u3} (Set.{u3} E) (fun (V : Set.{u3} E) => And (Membership.mem.{u3, u3} (Set.{u3} E) (Set.{u3} (Set.{u3} E)) (Set.instMembershipSet.{u3} (Set.{u3} E)) V (SeminormFamily.basisSets.{u2, u3, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (HasSubset.Subset.{u3} (Set.{u3} E) (Set.instHasSubsetSet.{u3} E) V (Set.preimage.{u3, u3} E E (fun (x : E) => Neg.neg.{u3} E (NegZeroClass.toNeg.{u3} E (SubNegZeroMonoid.toNegZeroClass.{u3} E (SubtractionMonoid.toSubNegZeroMonoid.{u3} E (SubtractionCommMonoid.toSubtractionMonoid.{u3} E (AddCommGroup.toDivisionAddCommMonoid.{u3} E _inst_2))))) x) U))))
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_neg SeminormFamily.basisSets_negₓ'. -/
 theorem basisSets_neg (U) (hU' : U ∈ p.basis_sets) :
     ∃ (V : Set E)(H : V ∈ p.basis_sets), V ⊆ (fun x : E => -x) ⁻¹' U :=
   by
@@ -194,9 +158,6 @@ protected def addGroupFilterBasis [Nonempty ι] : AddGroupFilterBasis E :=
 #align seminorm_family.add_group_filter_basis SeminormFamily.addGroupFilterBasis
 -/
 
-/- warning: seminorm_family.basis_sets_smul_right -> SeminormFamily.basisSets_smul_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_smul_right SeminormFamily.basisSets_smul_rightₓ'. -/
 theorem basisSets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) :
     ∀ᶠ x : 𝕜 in 𝓝 0, x • v ∈ U :=
   by
@@ -213,9 +174,6 @@ theorem basisSets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) :
 
 variable [Nonempty ι]
 
-/- warning: seminorm_family.basis_sets_smul -> SeminormFamily.basisSets_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_smul SeminormFamily.basisSets_smulₓ'. -/
 theorem basisSets_smul (U) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set 𝕜)(H : V ∈ 𝓝 (0 : 𝕜))(W : Set E)(H : W ∈ p.AddGroupFilterBasis.sets), V • W ⊆ U :=
   by
@@ -226,9 +184,6 @@ theorem basisSets_smul (U) (hU : U ∈ p.basis_sets) :
   rw [hU, Real.mul_self_sqrt (le_of_lt hr)]
 #align seminorm_family.basis_sets_smul SeminormFamily.basisSets_smul
 
-/- warning: seminorm_family.basis_sets_smul_left -> SeminormFamily.basisSets_smul_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.basis_sets_smul_left SeminormFamily.basisSets_smul_leftₓ'. -/
 theorem basisSets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set E)(H : V ∈ p.AddGroupFilterBasis.sets), V ⊆ (fun y : E => x • y) ⁻¹' U :=
   by
@@ -254,9 +209,6 @@ protected def moduleFilterBasis : ModuleFilterBasis 𝕜 E
 #align seminorm_family.module_filter_basis SeminormFamily.moduleFilterBasis
 -/
 
-/- warning: seminorm_family.filter_eq_infi -> SeminormFamily.filter_eq_iInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.filter_eq_infi SeminormFamily.filter_eq_iInfₓ'. -/
 theorem filter_eq_iInf (p : SeminormFamily 𝕜 E ι) :
     p.ModuleFilterBasis.toFilterBasis.filterₓ = ⨅ i, (𝓝 0).comap (p i) :=
   by
@@ -300,18 +252,12 @@ def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜₂ F) (f :
 #align seminorm.is_bounded Seminorm.IsBounded
 -/
 
-/- warning: seminorm.is_bounded_const -> Seminorm.isBounded_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.is_bounded_const Seminorm.isBounded_constₓ'. -/
 theorem isBounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜₂ F}
     (f : E →ₛₗ[σ₁₂] F) :
     IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0), q.comp f ≤ C • s.sup p := by
   simp only [is_bounded, forall_const]
 #align seminorm.is_bounded_const Seminorm.isBounded_const
 
-/- warning: seminorm.const_is_bounded -> Seminorm.const_isBounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.const_is_bounded Seminorm.const_isBoundedₓ'. -/
 theorem const_isBounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F}
     (f : E →ₛₗ[σ₁₂] F) : IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0, (q i).comp f ≤ C • p :=
   by
@@ -322,9 +268,6 @@ theorem const_isBounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : �
   simp only [h, Finset.sup_singleton]
 #align seminorm.const_is_bounded Seminorm.const_isBounded
 
-/- warning: seminorm.is_bounded_sup -> Seminorm.isBounded_sup is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.is_bounded_sup Seminorm.isBounded_supₓ'. -/
 theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F} {f : E →ₛₗ[σ₁₂] F}
     (hf : IsBounded p q f) (s' : Finset ι') :
     ∃ (C : ℝ≥0)(s : Finset ι), (s'.sup q).comp f ≤ C • s.sup p := by
@@ -360,12 +303,6 @@ structure WithSeminorms (p : SeminormFamily 𝕜 E ι) [t : TopologicalSpace E] 
 #align with_seminorms WithSeminorms
 -/
 
-/- warning: with_seminorms.with_seminorms_eq -> WithSeminorms.withSeminorms_eq is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u3} ι] {p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3} [t : TopologicalSpace.{u2} E], (WithSeminorms.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_4 p t) -> (Eq.{succ u2} (TopologicalSpace.{u2} E) t (ModuleFilterBasis.topology.{u1, u2} 𝕜 E (SeminormedCommRing.toCommRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1))) (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (SeminormedCommRing.toSemiNormedRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))))) _inst_2 _inst_3 (SeminormFamily.moduleFilterBasis.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p _inst_4)))
-but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u2}} {ι : Type.{u1}} [_inst_1 : NormedField.{u3} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} 𝕜 E (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u1} ι] {p : SeminormFamily.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3} [t : TopologicalSpace.{u2} E], (WithSeminorms.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_4 p t) -> (Eq.{succ u2} (TopologicalSpace.{u2} E) t (ModuleFilterBasis.topology.{u3, u2} 𝕜 E (EuclideanDomain.toCommRing.{u3} 𝕜 (Field.toEuclideanDomain.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1))) (UniformSpace.toTopologicalSpace.{u3} 𝕜 (PseudoMetricSpace.toUniformSpace.{u3} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u3} 𝕜 (SeminormedCommRing.toSeminormedRing.{u3} 𝕜 (NormedCommRing.toSeminormedCommRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_1)))))) _inst_2 _inst_3 (SeminormFamily.moduleFilterBasis.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p _inst_4)))
-Case conversion may be inaccurate. Consider using '#align with_seminorms.with_seminorms_eq WithSeminorms.withSeminorms_eqₓ'. -/
 theorem WithSeminorms.withSeminorms_eq {p : SeminormFamily 𝕜 E ι} [t : TopologicalSpace E]
     (hp : WithSeminorms p) : t = p.ModuleFilterBasis.topology :=
   hp.1
@@ -375,24 +312,12 @@ variable [TopologicalSpace E]
 
 variable {p : SeminormFamily 𝕜 E ι}
 
-/- warning: with_seminorms.topological_add_group -> WithSeminorms.topologicalAddGroup is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u3} ι] [_inst_5 : TopologicalSpace.{u2} E] {p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3}, (WithSeminorms.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_4 p _inst_5) -> (TopologicalAddGroup.{u2} E _inst_5 (AddCommGroup.toAddGroup.{u2} E _inst_2))
-but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u2}} {ι : Type.{u1}} [_inst_1 : NormedField.{u3} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} 𝕜 E (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u1} ι] [_inst_5 : TopologicalSpace.{u2} E] {p : SeminormFamily.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3}, (WithSeminorms.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_4 p _inst_5) -> (TopologicalAddGroup.{u2} E _inst_5 (AddCommGroup.toAddGroup.{u2} E _inst_2))
-Case conversion may be inaccurate. Consider using '#align with_seminorms.topological_add_group WithSeminorms.topologicalAddGroupₓ'. -/
 theorem WithSeminorms.topologicalAddGroup (hp : WithSeminorms p) : TopologicalAddGroup E :=
   by
   rw [hp.with_seminorms_eq]
   exact AddGroupFilterBasis.isTopologicalAddGroup _
 #align with_seminorms.topological_add_group WithSeminorms.topologicalAddGroup
 
-/- warning: with_seminorms.has_basis -> WithSeminorms.hasBasis is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u3} ι] [_inst_5 : TopologicalSpace.{u2} E] {p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3}, (WithSeminorms.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_4 p _inst_5) -> (Filter.HasBasis.{u2, succ u2} E (Set.{u2} E) (nhds.{u2} E _inst_5 (OfNat.ofNat.{u2} E 0 (OfNat.mk.{u2} E 0 (Zero.zero.{u2} E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2))))))))) (fun (s : Set.{u2} E) => Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) s (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (id.{succ u2} (Set.{u2} E)))
-but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u2}} {ι : Type.{u1}} [_inst_1 : NormedField.{u3} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} 𝕜 E (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u1} ι] [_inst_5 : TopologicalSpace.{u2} E] {p : SeminormFamily.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3}, (WithSeminorms.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_4 p _inst_5) -> (Filter.HasBasis.{u2, succ u2} E (Set.{u2} E) (nhds.{u2} E _inst_5 (OfNat.ofNat.{u2} E 0 (Zero.toOfNat0.{u2} E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2)))))))) (fun (s : Set.{u2} E) => Membership.mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.instMembershipSet.{u2} (Set.{u2} E)) s (SeminormFamily.basisSets.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (id.{succ u2} (Set.{u2} E)))
-Case conversion may be inaccurate. Consider using '#align with_seminorms.has_basis WithSeminorms.hasBasisₓ'. -/
 theorem WithSeminorms.hasBasis (hp : WithSeminorms p) :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id :=
   by
@@ -400,9 +325,6 @@ theorem WithSeminorms.hasBasis (hp : WithSeminorms p) :
   exact AddGroupFilterBasis.nhds_zero_hasBasis _
 #align with_seminorms.has_basis WithSeminorms.hasBasis
 
-/- warning: with_seminorms.has_basis_zero_ball -> WithSeminorms.hasBasis_zero_ball is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.has_basis_zero_ball WithSeminorms.hasBasis_zero_ballₓ'. -/
 theorem WithSeminorms.hasBasis_zero_ball (hp : WithSeminorms p) :
     (𝓝 (0 : E)).HasBasis (fun sr : Finset ι × ℝ => 0 < sr.2) fun sr => (sr.1.sup p).ball 0 sr.2 :=
   by
@@ -415,9 +337,6 @@ theorem WithSeminorms.hasBasis_zero_ball (hp : WithSeminorms p) :
     exact ⟨_, ⟨s, r, hr, rfl⟩, hV⟩
 #align with_seminorms.has_basis_zero_ball WithSeminorms.hasBasis_zero_ball
 
-/- warning: with_seminorms.has_basis_ball -> WithSeminorms.hasBasis_ball is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.has_basis_ball WithSeminorms.hasBasis_ballₓ'. -/
 theorem WithSeminorms.hasBasis_ball (hp : WithSeminorms p) {x : E} :
     (𝓝 (x : E)).HasBasis (fun sr : Finset ι × ℝ => 0 < sr.2) fun sr => (sr.1.sup p).ball x sr.2 :=
   by
@@ -430,9 +349,6 @@ theorem WithSeminorms.hasBasis_ball (hp : WithSeminorms p) {x : E} :
   rwa [vadd_eq_add, add_zero] at this
 #align with_seminorms.has_basis_ball WithSeminorms.hasBasis_ball
 
-/- warning: with_seminorms.mem_nhds_iff -> WithSeminorms.mem_nhds_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.mem_nhds_iff WithSeminorms.mem_nhds_iffₓ'. -/
 /-- The `x`-neighbourhoods of a space whose topology is induced by a family of seminorms
 are exactly the sets which contain seminorm balls around `x`.-/
 theorem WithSeminorms.mem_nhds_iff (hp : WithSeminorms p) (x : E) (U : Set E) :
@@ -440,9 +356,6 @@ theorem WithSeminorms.mem_nhds_iff (hp : WithSeminorms p) (x : E) (U : Set E) :
   rw [hp.has_basis_ball.mem_iff, Prod.exists]
 #align with_seminorms.mem_nhds_iff WithSeminorms.mem_nhds_iff
 
-/- warning: with_seminorms.is_open_iff_mem_balls -> WithSeminorms.isOpen_iff_mem_balls is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.is_open_iff_mem_balls WithSeminorms.isOpen_iff_mem_ballsₓ'. -/
 /-- The open sets of a space whose topology is induced by a family of seminorms
 are exactly the sets which contain seminorm balls around all of their points.-/
 theorem WithSeminorms.isOpen_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
@@ -450,9 +363,6 @@ theorem WithSeminorms.isOpen_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
   simp_rw [← WithSeminorms.mem_nhds_iff hp _ U, isOpen_iff_mem_nhds]
 #align with_seminorms.is_open_iff_mem_balls WithSeminorms.isOpen_iff_mem_balls
 
-/- warning: with_seminorms.t1_of_separating -> WithSeminorms.T1_of_separating is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.t1_of_separating WithSeminorms.T1_of_separatingₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /- Note that through the following lemmas, one also immediately has that separating families
 of seminorms induce T₂ and T₃ topologies by `topological_add_group.t2_space`
@@ -470,9 +380,6 @@ theorem WithSeminorms.T1_of_separating (hp : WithSeminorms p)
   rw [Finset.sup_singleton, mem_ball, zero_sub, map_neg_eq_map, not_lt]
 #align with_seminorms.t1_of_separating WithSeminorms.T1_of_separating
 
-/- warning: with_seminorms.separating_of_t1 -> WithSeminorms.separating_of_T1 is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.separating_of_t1 WithSeminorms.separating_of_T1ₓ'. -/
 /-- A family of seminorms inducing a T₁ topology is separating. -/
 theorem WithSeminorms.separating_of_T1 [T1Space E] (hp : WithSeminorms p) (x : E) (hx : x ≠ 0) :
     ∃ i, p i x ≠ 0 := by
@@ -484,9 +391,6 @@ theorem WithSeminorms.separating_of_T1 [T1Space E] (hp : WithSeminorms p) (x : E
   simp only [ball_finset_sup_eq_Inter _ _ _ hr, mem_Inter₂, mem_ball_zero, h, hr, forall_true_iff]
 #align with_seminorms.separating_of_t1 WithSeminorms.separating_of_T1
 
-/- warning: with_seminorms.separating_iff_t1 -> WithSeminorms.separating_iff_T1 is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.separating_iff_t1 WithSeminorms.separating_iff_T1ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /-- A family of seminorms is separating iff it induces a T₁ topology. -/
 theorem WithSeminorms.separating_iff_T1 (hp : WithSeminorms p) :
@@ -505,9 +409,6 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [Nonempty ι] [Topo
 
 variable {p : SeminormFamily 𝕜 E ι}
 
-/- warning: with_seminorms.tendsto_nhds' -> WithSeminorms.tendsto_nhds' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.tendsto_nhds' WithSeminorms.tendsto_nhds'ₓ'. -/
 /-- Convergence along filters for `with_seminorms`.
 
 Variant with `finset.sup`. -/
@@ -516,9 +417,6 @@ theorem WithSeminorms.tendsto_nhds' (hp : WithSeminorms p) (u : F → E) {f : Fi
   by simp [hp.has_basis_ball.tendsto_right_iff]
 #align with_seminorms.tendsto_nhds' WithSeminorms.tendsto_nhds'
 
-/- warning: with_seminorms.tendsto_nhds -> WithSeminorms.tendsto_nhds is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.tendsto_nhds WithSeminorms.tendsto_nhdsₓ'. -/
 /-- Convergence along filters for `with_seminorms`. -/
 theorem WithSeminorms.tendsto_nhds (hp : WithSeminorms p) (u : F → E) {f : Filter F} (y₀ : E) :
     Filter.Tendsto u f (𝓝 y₀) ↔ ∀ i ε, 0 < ε → ∀ᶠ x in f, p i (u x - y₀) < ε :=
@@ -531,9 +429,6 @@ theorem WithSeminorms.tendsto_nhds (hp : WithSeminorms p) (u : F → E) {f : Fil
 
 variable [SemilatticeSup F] [Nonempty F]
 
-/- warning: with_seminorms.tendsto_nhds_at_top -> WithSeminorms.tendsto_nhds_atTop is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.tendsto_nhds_at_top WithSeminorms.tendsto_nhds_atTopₓ'. -/
 /-- Limit `→ ∞` for `with_seminorms`. -/
 theorem WithSeminorms.tendsto_nhds_atTop (hp : WithSeminorms p) (u : F → E) (y₀ : E) :
     Filter.Tendsto u Filter.atTop (𝓝 y₀) ↔ ∀ i ε, 0 < ε → ∃ x₀, ∀ x, x₀ ≤ x → p i (u x - y₀) < ε :=
@@ -554,12 +449,6 @@ variable [Nonempty ι]
 
 include t
 
-/- warning: seminorm_family.with_seminorms_of_nhds -> SeminormFamily.withSeminorms_of_nhds is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [t : TopologicalSpace.{u2} E] [_inst_4 : TopologicalAddGroup.{u2} E t (AddCommGroup.toAddGroup.{u2} E _inst_2)] [_inst_5 : Nonempty.{succ u3} ι] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3), (Eq.{succ u2} (Filter.{u2} E) (nhds.{u2} E t (OfNat.ofNat.{u2} E 0 (OfNat.mk.{u2} E 0 (Zero.zero.{u2} E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2))))))))) (FilterBasis.filter.{u2} E (AddGroupFilterBasis.toFilterBasis.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2) (ModuleFilterBasis.toAddGroupFilterBasis.{u1, u2} 𝕜 E (SeminormedCommRing.toCommRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1))) (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (SeminormedCommRing.toSemiNormedRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))))) _inst_2 _inst_3 (SeminormFamily.moduleFilterBasis.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p _inst_5))))) -> (WithSeminorms.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_5 p t)
-but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u2}} {ι : Type.{u1}} [_inst_1 : NormedField.{u3} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} 𝕜 E (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [t : Nonempty.{succ u1} ι] [_inst_4 : TopologicalSpace.{u2} E] [_inst_5 : TopologicalAddGroup.{u2} E _inst_4 (AddCommGroup.toAddGroup.{u2} E _inst_2)] (p : SeminormFamily.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3), (Eq.{succ u2} (Filter.{u2} E) (nhds.{u2} E _inst_4 (OfNat.ofNat.{u2} E 0 (Zero.toOfNat0.{u2} E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2)))))))) (FilterBasis.filter.{u2} E (AddGroupFilterBasis.toFilterBasis.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2) (ModuleFilterBasis.toAddGroupFilterBasis.{u3, u2} 𝕜 E (EuclideanDomain.toCommRing.{u3} 𝕜 (Field.toEuclideanDomain.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1))) (UniformSpace.toTopologicalSpace.{u3} 𝕜 (PseudoMetricSpace.toUniformSpace.{u3} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u3} 𝕜 (SeminormedCommRing.toSeminormedRing.{u3} 𝕜 (NormedCommRing.toSeminormedCommRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_1)))))) _inst_2 _inst_3 (SeminormFamily.moduleFilterBasis.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p t))))) -> (WithSeminorms.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 t p _inst_4)
-Case conversion may be inaccurate. Consider using '#align seminorm_family.with_seminorms_of_nhds SeminormFamily.withSeminorms_of_nhdsₓ'. -/
 theorem SeminormFamily.withSeminorms_of_nhds (p : SeminormFamily 𝕜 E ι)
     (h : 𝓝 (0 : E) = p.ModuleFilterBasis.toFilterBasis.filterₓ) : WithSeminorms p :=
   by
@@ -569,21 +458,12 @@ theorem SeminormFamily.withSeminorms_of_nhds (p : SeminormFamily 𝕜 E ι)
   exact h
 #align seminorm_family.with_seminorms_of_nhds SeminormFamily.withSeminorms_of_nhds
 
-/- warning: seminorm_family.with_seminorms_of_has_basis -> SeminormFamily.withSeminorms_of_hasBasis is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [t : TopologicalSpace.{u2} E] [_inst_4 : TopologicalAddGroup.{u2} E t (AddCommGroup.toAddGroup.{u2} E _inst_2)] [_inst_5 : Nonempty.{succ u3} ι] (p : SeminormFamily.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3), (Filter.HasBasis.{u2, succ u2} E (Set.{u2} E) (nhds.{u2} E t (OfNat.ofNat.{u2} E 0 (OfNat.mk.{u2} E 0 (Zero.zero.{u2} E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2))))))))) (fun (s : Set.{u2} E) => Membership.Mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.hasMem.{u2} (Set.{u2} E)) s (SeminormFamily.basisSets.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (id.{succ u2} (Set.{u2} E))) -> (WithSeminorms.{u1, u2, u3} 𝕜 E ι _inst_1 _inst_2 _inst_3 _inst_5 p t)
-but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u2}} {ι : Type.{u1}} [_inst_1 : NormedField.{u3} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} 𝕜 E (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [t : Nonempty.{succ u1} ι] [_inst_4 : TopologicalSpace.{u2} E] [_inst_5 : TopologicalAddGroup.{u2} E _inst_4 (AddCommGroup.toAddGroup.{u2} E _inst_2)] (p : SeminormFamily.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3), (Filter.HasBasis.{u2, succ u2} E (Set.{u2} E) (nhds.{u2} E _inst_4 (OfNat.ofNat.{u2} E 0 (Zero.toOfNat0.{u2} E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2)))))))) (fun (s : Set.{u2} E) => Membership.mem.{u2, u2} (Set.{u2} E) (Set.{u2} (Set.{u2} E)) (Set.instMembershipSet.{u2} (Set.{u2} E)) s (SeminormFamily.basisSets.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 p)) (id.{succ u2} (Set.{u2} E))) -> (WithSeminorms.{u3, u2, u1} 𝕜 E ι _inst_1 _inst_2 _inst_3 t p _inst_4)
-Case conversion may be inaccurate. Consider using '#align seminorm_family.with_seminorms_of_has_basis SeminormFamily.withSeminorms_of_hasBasisₓ'. -/
 theorem SeminormFamily.withSeminorms_of_hasBasis (p : SeminormFamily 𝕜 E ι)
     (h : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id) : WithSeminorms p :=
   p.withSeminorms_of_nhds <|
     Filter.HasBasis.eq_of_same_basis h p.AddGroupFilterBasis.toFilterBasis.HasBasis
 #align seminorm_family.with_seminorms_of_has_basis SeminormFamily.withSeminorms_of_hasBasis
 
-/- warning: seminorm_family.with_seminorms_iff_nhds_eq_infi -> SeminormFamily.withSeminorms_iff_nhds_eq_iInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.withSeminorms_iff_nhds_eq_iInfₓ'. -/
 theorem SeminormFamily.withSeminorms_iff_nhds_eq_iInf (p : SeminormFamily 𝕜 E ι) :
     WithSeminorms p ↔ (𝓝 0 : Filter E) = ⨅ i, (𝓝 0).comap (p i) :=
   by
@@ -593,9 +473,6 @@ theorem SeminormFamily.withSeminorms_iff_nhds_eq_iInf (p : SeminormFamily 𝕜 E
   exact AddGroupFilterBasis.nhds_zero_eq _
 #align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.withSeminorms_iff_nhds_eq_iInf
 
-/- warning: with_seminorms.continuous_seminorm -> WithSeminorms.continuous_seminorm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.continuous_seminorm WithSeminorms.continuous_seminormₓ'. -/
 theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module 𝕝 E]
     [ContinuousConstSMul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
     Continuous (p i) := by
@@ -604,9 +481,6 @@ theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module
   exact Filter.mem_iInf_of_mem i (Filter.preimage_mem_comap <| Metric.ball_mem_nhds _ one_pos)
 #align with_seminorms.continuous_seminorm WithSeminorms.continuous_seminorm
 
-/- warning: seminorm_family.with_seminorms_iff_topological_space_eq_infi -> SeminormFamily.withSeminorms_iff_topologicalSpace_eq_iInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.with_seminorms_iff_topological_space_eq_infi SeminormFamily.withSeminorms_iff_topologicalSpace_eq_iInfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
 /-- The topology induced by a family of seminorms is exactly the infimum of the ones induced by
 each seminorm individually. We express this as a characterization of `with_seminorms p`. -/
@@ -626,9 +500,6 @@ theorem SeminormFamily.withSeminorms_iff_topologicalSpace_eq_iInf (p : SeminormF
 
 omit t
 
-/- warning: seminorm_family.with_seminorms_iff_uniform_space_eq_infi -> SeminormFamily.withSeminorms_iff_uniformSpace_eq_iInf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.with_seminorms_iff_uniform_space_eq_infi SeminormFamily.withSeminorms_iff_uniformSpace_eq_iInfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
 /-- The uniform structure induced by a family of seminorms is exactly the infimum of the ones
 induced by each seminorm individually. We express this as a characterization of
@@ -650,12 +521,6 @@ end TopologicalAddGroup
 
 section NormedSpace
 
-/- warning: norm_with_seminorms -> norm_withSeminorms is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : SeminormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_2], WithSeminorms.{u1, u2, 0} 𝕜 E (Fin (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) _inst_1 (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_2) (NormedSpace.toModule.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3) (instNonempty.{1} (Fin (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Fin.inhabited (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (fun (_x : Fin (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) => normSeminorm.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3) (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E _inst_2)))
-but is expected to have type
-  forall (𝕜 : Type.{u2}) (E : Type.{u1}) [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : SeminormedAddCommGroup.{u1} E] [_inst_3 : NormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2], WithSeminorms.{u2, u1, 0} 𝕜 E (Fin (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) _inst_1 (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2) (NormedSpace.toModule.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) (instNonempty.{1} (Fin (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (instInhabitedFinSucc (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (fun (_x : Fin (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) => normSeminorm.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) (UniformSpace.toTopologicalSpace.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_2)))
-Case conversion may be inaccurate. Consider using '#align norm_with_seminorms norm_withSeminormsₓ'. -/
 /-- The topology of a `normed_space 𝕜 E` is induced by the seminorm `norm_seminorm 𝕜 E`. -/
 theorem norm_withSeminorms (𝕜 E) [NormedField 𝕜] [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] :
     WithSeminorms fun _ : Fin 1 => normSeminorm 𝕜 E :=
@@ -689,9 +554,6 @@ variable {p : SeminormFamily 𝕜 E ι}
 
 variable [TopologicalSpace E]
 
-/- warning: with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded -> WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.isVonNBounded_iff_finset_seminorm_boundedₓ'. -/
 theorem WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ I : Finset ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, I.sup p x < r :=
   by
@@ -717,9 +579,6 @@ theorem WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded {s : Set E} (hp 
   exact (Finset.sup I p).ball_zero_absorbs_ball_zero hr
 #align with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded
 
-/- warning: with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded -> WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_finset_seminorm_boundedₓ'. -/
 theorem WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔
@@ -727,9 +586,6 @@ theorem WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded (f : G →
   by simp_rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded, Set.ball_image_iff]
 #align with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded
 
-/- warning: with_seminorms.is_vonN_bounded_iff_seminorm_bounded -> WithSeminorms.isVonNBounded_iff_seminorm_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.is_vonN_bounded_iff_seminorm_bounded WithSeminorms.isVonNBounded_iff_seminorm_boundedₓ'. -/
 theorem WithSeminorms.isVonNBounded_iff_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i x < r :=
   by
@@ -752,9 +608,6 @@ theorem WithSeminorms.isVonNBounded_iff_seminorm_bounded {s : Set E} (hp : WithS
   exact ⟨1, zero_lt_one, fun _ _ => zero_lt_one⟩
 #align with_seminorms.is_vonN_bounded_iff_seminorm_bounded WithSeminorms.isVonNBounded_iff_seminorm_bounded
 
-/- warning: with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded -> WithSeminorms.image_isVonNBounded_iff_seminorm_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_seminorm_boundedₓ'. -/
 theorem WithSeminorms.image_isVonNBounded_iff_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i (f x) < r :=
@@ -781,9 +634,6 @@ variable {τ₁₂ : 𝕝 →+* 𝕝₂} [RingHomIsometric τ₁₂]
 
 variable [Nonempty ι] [Nonempty ι']
 
-/- warning: seminorm.continuous_of_continuous_comp -> Seminorm.continuous_of_continuous_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.continuous_of_continuous_comp Seminorm.continuous_of_continuous_compₓ'. -/
 theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [TopologicalSpace E]
     [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F] (hq : WithSeminorms q)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i, Continuous ((q i).comp f)) : Continuous f :=
@@ -796,18 +646,12 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [Topolo
   exact (map_zero _).symm
 #align seminorm.continuous_of_continuous_comp Seminorm.continuous_of_continuous_comp
 
-/- warning: seminorm.continuous_iff_continuous_comp -> Seminorm.continuous_iff_continuous_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.continuous_iff_continuous_comp Seminorm.continuous_iff_continuous_compₓ'. -/
 theorem continuous_iff_continuous_comp {q : SeminormFamily 𝕜₂ F ι'} [TopologicalSpace E]
     [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousConstSMul 𝕜₂ F]
     (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) : Continuous f ↔ ∀ i, Continuous ((q i).comp f) :=
   ⟨fun h i => Continuous.comp (hq.continuous_seminorm i) h, continuous_of_continuous_comp hq f⟩
 #align seminorm.continuous_iff_continuous_comp Seminorm.continuous_iff_continuous_comp
 
-/- warning: seminorm.continuous_from_bounded -> Seminorm.continuous_from_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.continuous_from_bounded Seminorm.continuous_from_boundedₓ'. -/
 theorem continuous_from_bounded {p : SeminormFamily 𝕝 E ι} {q : SeminormFamily 𝕝₂ F ι'}
     [TopologicalSpace E] [TopologicalAddGroup E] (hp : WithSeminorms p) [TopologicalSpace F]
     [TopologicalAddGroup F] (hq : WithSeminorms q) (f : E →ₛₗ[τ₁₂] F)
@@ -828,9 +672,6 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕝 E ι} {q : SeminormFami
   simp only [le_add_iff_nonneg_right, zero_le']
 #align seminorm.continuous_from_bounded Seminorm.continuous_from_bounded
 
-/- warning: seminorm.cont_with_seminorms_normed_space -> Seminorm.cont_withSeminorms_normedSpace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.cont_with_seminorms_normed_space Seminorm.cont_withSeminorms_normedSpaceₓ'. -/
 theorem cont_withSeminorms_normedSpace (F) [SeminormedAddCommGroup F] [NormedSpace 𝕝₂ F]
     [UniformSpace E] [UniformAddGroup E] {p : ι → Seminorm 𝕝 E} (hp : WithSeminorms p)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∃ (s : Finset ι)(C : ℝ≥0), (normSeminorm 𝕝₂ F).comp f ≤ C • s.sup p) :
@@ -839,9 +680,6 @@ theorem cont_withSeminorms_normedSpace (F) [SeminormedAddCommGroup F] [NormedSpa
   exact continuous_from_bounded hp (norm_withSeminorms 𝕝₂ F) f hf
 #align seminorm.cont_with_seminorms_normed_space Seminorm.cont_withSeminorms_normedSpace
 
-/- warning: seminorm.cont_normed_space_to_with_seminorms -> Seminorm.cont_normedSpace_to_withSeminorms is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm.cont_normed_space_to_with_seminorms Seminorm.cont_normedSpace_to_withSeminormsₓ'. -/
 theorem cont_normedSpace_to_withSeminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕝 E]
     [UniformSpace F] [UniformAddGroup F] {q : ι → Seminorm 𝕝₂ F} (hq : WithSeminorms q)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, (q i).comp f ≤ C • normSeminorm 𝕝 E) :
@@ -861,9 +699,6 @@ open LocallyConvexSpace
 variable [Nonempty ι] [NormedField 𝕜] [NormedSpace ℝ 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
 
-/- warning: with_seminorms.to_locally_convex_space -> WithSeminorms.toLocallyConvexSpace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align with_seminorms.to_locally_convex_space WithSeminorms.toLocallyConvexSpaceₓ'. -/
 theorem WithSeminorms.toLocallyConvexSpace {p : SeminormFamily 𝕜 E ι} (hp : WithSeminorms p) :
     LocallyConvexSpace ℝ E :=
   by
@@ -883,9 +718,6 @@ section NormedSpace
 
 variable (𝕜) [NormedField 𝕜] [NormedSpace ℝ 𝕜] [SeminormedAddCommGroup E]
 
-/- warning: normed_space.to_locally_convex_space' -> NormedSpace.toLocallyConvexSpace' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align normed_space.to_locally_convex_space' NormedSpace.toLocallyConvexSpace'ₓ'. -/
 /-- Not an instance since `𝕜` can't be inferred. See `normed_space.to_locally_convex_space` for a
 slightly weaker instance version. -/
 theorem NormedSpace.toLocallyConvexSpace' [NormedSpace 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] :
@@ -918,17 +750,11 @@ def SeminormFamily.comp (q : SeminormFamily 𝕜₂ F ι) (f : E →ₛₗ[σ₁
 #align seminorm_family.comp SeminormFamily.comp
 -/
 
-/- warning: seminorm_family.comp_apply -> SeminormFamily.comp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.comp_apply SeminormFamily.comp_applyₓ'. -/
 theorem SeminormFamily.comp_apply (q : SeminormFamily 𝕜₂ F ι) (i : ι) (f : E →ₛₗ[σ₁₂] F) :
     q.comp f i = (q i).comp f :=
   rfl
 #align seminorm_family.comp_apply SeminormFamily.comp_apply
 
-/- warning: seminorm_family.finset_sup_comp -> SeminormFamily.finset_sup_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align seminorm_family.finset_sup_comp SeminormFamily.finset_sup_compₓ'. -/
 theorem SeminormFamily.finset_sup_comp (q : SeminormFamily 𝕜₂ F ι) (s : Finset ι)
     (f : E →ₛₗ[σ₁₂] F) : (s.sup q).comp f = s.sup (q.comp f) :=
   by
@@ -939,9 +765,6 @@ theorem SeminormFamily.finset_sup_comp (q : SeminormFamily 𝕜₂ F ι) (s : Fi
 
 variable [TopologicalSpace F] [TopologicalAddGroup F]
 
-/- warning: linear_map.with_seminorms_induced -> LinearMap.withSeminorms_induced is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.with_seminorms_induced LinearMap.withSeminorms_inducedₓ'. -/
 theorem LinearMap.withSeminorms_induced [hι : Nonempty ι] {q : SeminormFamily 𝕜₂ F ι}
     (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) :
     @WithSeminorms 𝕜 E ι _ _ _ _ (q.comp f) (induced f inferInstance) :=
@@ -954,9 +777,6 @@ theorem LinearMap.withSeminorms_induced [hι : Nonempty ι] {q : SeminormFamily 
   exact Filter.comap_comap
 #align linear_map.with_seminorms_induced LinearMap.withSeminorms_induced
 
-/- warning: inducing.with_seminorms -> Inducing.withSeminorms is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inducing.with_seminorms Inducing.withSeminormsₓ'. -/
 theorem Inducing.withSeminorms [hι : Nonempty ι] {q : SeminormFamily 𝕜₂ F ι} (hq : WithSeminorms q)
     [TopologicalSpace E] {f : E →ₛₗ[σ₁₂] F} (hf : Inducing f) : WithSeminorms (q.comp f) :=
   by
@@ -974,12 +794,6 @@ variable {p : SeminormFamily 𝕜 E ι}
 
 variable [UniformSpace E] [UniformAddGroup E]
 
-/- warning: with_seminorms.first_countable -> WithSeminorms.first_countable is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u3} ι] [_inst_5 : Countable.{succ u3} ι] {p : SeminormFamily.{u1, u2, u3} 𝕜 E ι (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) _inst_2 _inst_3} [_inst_6 : UniformSpace.{u2} E] [_inst_7 : UniformAddGroup.{u2} E _inst_6 (AddCommGroup.toAddGroup.{u2} E _inst_2)], (WithSeminorms.{u1, u2, u3} 𝕜 E ι (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) _inst_2 _inst_3 _inst_4 p (UniformSpace.toTopologicalSpace.{u2} E _inst_6)) -> (TopologicalSpace.FirstCountableTopology.{u2} E (UniformSpace.toTopologicalSpace.{u2} E _inst_6))
-but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u2}} {ι : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} 𝕜 E (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_4 : Nonempty.{succ u1} ι] [_inst_5 : Countable.{succ u1} ι] {p : SeminormFamily.{u3, u2, u1} 𝕜 E ι (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) _inst_2 _inst_3} [_inst_6 : UniformSpace.{u2} E] [_inst_7 : UniformAddGroup.{u2} E _inst_6 (AddCommGroup.toAddGroup.{u2} E _inst_2)], (WithSeminorms.{u3, u2, u1} 𝕜 E ι (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) _inst_2 _inst_3 _inst_4 p (UniformSpace.toTopologicalSpace.{u2} E _inst_6)) -> (TopologicalSpace.FirstCountableTopology.{u2} E (UniformSpace.toTopologicalSpace.{u2} E _inst_6))
-Case conversion may be inaccurate. Consider using '#align with_seminorms.first_countable WithSeminorms.first_countableₓ'. -/
 /-- If the topology of a space is induced by a countable family of seminorms, then the topology
 is first countable. -/
 theorem WithSeminorms.first_countable (hp : WithSeminorms p) :

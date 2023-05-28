@@ -109,12 +109,6 @@ instance : EssSurj (fromSkeleton C) where mem_essImage X := ⟨Quotient.mk' X, Q
 noncomputable instance : IsEquivalence (fromSkeleton C) :=
   Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
 
-/- warning: category_theory.skeleton_equivalence -> CategoryTheory.skeletonEquivalence is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, u1, u2, u2} (CategoryTheory.Skeleton.{u1, u2} C _inst_1) (CategoryTheory.Skeleton.category.{u2, u1} C _inst_1) C _inst_1
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, u1, u2, u2} (CategoryTheory.Skeleton.{u1, u2} C _inst_1) C (CategoryTheory.instCategorySkeleton.{u1, u2} C _inst_1) _inst_1
-Case conversion may be inaccurate. Consider using '#align category_theory.skeleton_equivalence CategoryTheory.skeletonEquivalenceₓ'. -/
 /-- The equivalence between the skeleton and the category itself. -/
 noncomputable def skeletonEquivalence : Skeleton C ≌ C :=
   (fromSkeleton C).asEquivalence
@@ -142,12 +136,6 @@ section
 
 variable {C D}
 
-/- warning: category_theory.equivalence.skeleton_equiv -> CategoryTheory.Equivalence.skeletonEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_2) -> (Equiv.{succ u3, succ u4} (CategoryTheory.Skeleton.{u1, u3} C _inst_1) (CategoryTheory.Skeleton.{u2, u4} D _inst_2))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_2) -> (Equiv.{succ u3, succ u4} (CategoryTheory.Skeleton.{u1, u3} C _inst_1) (CategoryTheory.Skeleton.{u2, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.skeleton_equiv CategoryTheory.Equivalence.skeletonEquivₓ'. -/
 /-- Two categories which are categorically equivalent have skeletons with equivalent objects.
 -/
 noncomputable def Equivalence.skeletonEquiv (e : C ≌ D) : Skeleton C ≃ Skeleton D :=
@@ -302,12 +290,6 @@ noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkel
 #align category_theory.thin_skeleton.from_thin_skeleton_equivalence CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence
 -/
 
-/- warning: category_theory.thin_skeleton.equivalence -> CategoryTheory.ThinSkeleton.equivalence is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_4 : Quiver.IsThin.{u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1))], CategoryTheory.Equivalence.{u2, u1, u2, u2} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) (Preorder.smallCategory.{u2} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) (CategoryTheory.ThinSkeleton.preorder.{u1, u2} C _inst_1)) C _inst_1
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_4 : Quiver.IsThin.{u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1))], CategoryTheory.Equivalence.{u2, u1, u2, u2} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) C (Preorder.smallCategory.{u2} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) (CategoryTheory.ThinSkeleton.preorder.{u1, u2} C _inst_1)) _inst_1
-Case conversion may be inaccurate. Consider using '#align category_theory.thin_skeleton.equivalence CategoryTheory.ThinSkeleton.equivalenceₓ'. -/
 /-- The equivalence between the thin skeleton and the category itself. -/
 noncomputable def equivalence : ThinSkeleton C ≌ C :=
   (fromThinSkeleton C).asEquivalence
@@ -406,12 +388,6 @@ section
 
 variable {C} {α : Type _} [PartialOrder α]
 
-/- warning: category_theory.equivalence.thin_skeleton_order_iso -> CategoryTheory.Equivalence.thinSkeletonOrderIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {α : Type.{u3}} [_inst_4 : PartialOrder.{u3} α] [_inst_5 : Quiver.IsThin.{u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1))], (CategoryTheory.Equivalence.{u1, u3, u2, u3} C _inst_1 α (Preorder.smallCategory.{u3} α (PartialOrder.toPreorder.{u3} α _inst_4))) -> (OrderIso.{u2, u3} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) α (Preorder.toHasLe.{u2} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) (CategoryTheory.ThinSkeleton.preorder.{u1, u2} C _inst_1)) (Preorder.toHasLe.{u3} α (PartialOrder.toPreorder.{u3} α _inst_4)))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {α : Type.{u3}} [_inst_4 : PartialOrder.{u3} α] [_inst_5 : Quiver.IsThin.{u2, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1))], (CategoryTheory.Equivalence.{u1, u3, u2, u3} C α _inst_1 (Preorder.smallCategory.{u3} α (PartialOrder.toPreorder.{u3} α _inst_4))) -> (OrderIso.{u2, u3} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) α (Preorder.toLE.{u2} (CategoryTheory.ThinSkeleton.{u1, u2} C _inst_1) (CategoryTheory.ThinSkeleton.preorder.{u1, u2} C _inst_1)) (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α _inst_4)))
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.thin_skeleton_order_iso CategoryTheory.Equivalence.thinSkeletonOrderIsoₓ'. -/
 /--
 When `e : C ≌ α` is a categorical equivalence from a thin category `C` to some partial order `α`,
 the `thin_skeleton C` is order isomorphic to `α`.

@@ -67,12 +67,6 @@ instance : Inhabited PreordCat :=
 instance (α : PreordCat) : Preorder α :=
   α.str
 
-/- warning: Preord.iso.mk -> PreordCat.Iso.mk is a dubious translation:
-lean 3 declaration is
-  forall {α : PreordCat.{u1}} {β : PreordCat.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} PreordCat.{u1} Type.{u1} PreordCat.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} PreordCat.{u1} Type.{u1} PreordCat.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} PreordCat.{u1} Type.{u1} PreordCat.hasCoeToSort.{u1} α) (PreordCat.preorder.{u1} α)) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} PreordCat.{u1} Type.{u1} PreordCat.hasCoeToSort.{u1} β) (PreordCat.preorder.{u1} β))) -> (CategoryTheory.Iso.{u1, succ u1} PreordCat.{u1} PreordCat.largeCategory.{u1} α β)
-but is expected to have type
-  forall {α : PreordCat.{u1}} {β : PreordCat.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} Preorder.{u1} α) (CategoryTheory.Bundled.α.{u1, u1} Preorder.{u1} β) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} Preorder.{u1} α) (PreordCat.instPreorderα.{u1} α)) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} Preorder.{u1} β) (PreordCat.instPreorderα.{u1} β))) -> (CategoryTheory.Iso.{u1, succ u1} PreordCat.{u1} instPreordCatLargeCategory.{u1} α β)
-Case conversion may be inaccurate. Consider using '#align Preord.iso.mk PreordCat.Iso.mkₓ'. -/
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : PreordCat.{u}} (e : α ≃o β) : α ≅ β
@@ -92,12 +86,6 @@ def dual : PreordCat ⥤ PreordCat where
 #align Preord.dual PreordCat.dual
 -/
 
-/- warning: Preord.dual_equiv -> PreordCat.dualEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} PreordCat.{u1} PreordCat.largeCategory.{u1} PreordCat.{u1} PreordCat.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} PreordCat.{u1} PreordCat.{u1} instPreordCatLargeCategory.{u1} instPreordCatLargeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align Preord.dual_equiv PreordCat.dualEquivₓ'. -/
 /-- The equivalence between `Preord` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PreordCat ≌ PreordCat :=

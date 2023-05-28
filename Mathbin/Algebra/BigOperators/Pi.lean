@@ -28,12 +28,6 @@ open BigOperators
 
 namespace Pi
 
-/- warning: pi.list_prod_apply -> Pi.list_prod_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : forall (a : α), Monoid.{u2} (β a)] (a : α) (l : List.{max u1 u2} (forall (a : α), β a)), Eq.{succ u2} (β a) (List.prod.{max u1 u2} (forall (a : α), β a) (Pi.instMul.{u1, u2} α (fun (a : α) => β a) (fun (i : α) => MulOneClass.toHasMul.{u2} (β i) (Monoid.toMulOneClass.{u2} (β i) (_inst_1 i)))) (Pi.instOne.{u1, u2} α (fun (a : α) => β a) (fun (i : α) => MulOneClass.toHasOne.{u2} (β i) (Monoid.toMulOneClass.{u2} (β i) (_inst_1 i)))) l a) (List.prod.{u2} (β a) (MulOneClass.toHasMul.{u2} (β a) (Monoid.toMulOneClass.{u2} (β a) (_inst_1 a))) (MulOneClass.toHasOne.{u2} (β a) (Monoid.toMulOneClass.{u2} (β a) (_inst_1 a))) (List.map.{max u1 u2, u2} (forall (a : α), β a) (β a) (fun (f : forall (a : α), β a) => f a) l))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Monoid.{u1} (β a)] (a : α) (l : List.{max u2 u1} (forall (a : α), β a)), Eq.{succ u1} (β a) (List.prod.{max u2 u1} (forall (a : α), β a) (Pi.instMul.{u2, u1} α (fun (a : α) => β a) (fun (i : α) => MulOneClass.toMul.{u1} (β i) (Monoid.toMulOneClass.{u1} (β i) (_inst_1 i)))) (Pi.instOne.{u2, u1} α (fun (a : α) => β a) (fun (i : α) => Monoid.toOne.{u1} (β i) (_inst_1 i))) l a) (List.prod.{u1} (β a) (MulOneClass.toMul.{u1} (β a) (Monoid.toMulOneClass.{u1} (β a) (_inst_1 a))) (Monoid.toOne.{u1} (β a) (_inst_1 a)) (List.map.{max u2 u1, u1} (forall (a : α), β a) (β a) (fun (f : forall (a : α), β a) => f a) l))
-Case conversion may be inaccurate. Consider using '#align pi.list_prod_apply Pi.list_prod_applyₓ'. -/
 @[to_additive]
 theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoid (β a)] (a : α)
     (l : List (∀ a, β a)) : l.Prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
@@ -41,12 +35,6 @@ theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoid (β a)
 #align pi.list_prod_apply Pi.list_prod_apply
 #align pi.list_sum_apply Pi.list_sum_apply
 
-/- warning: pi.multiset_prod_apply -> Pi.multiset_prod_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : forall (a : α), CommMonoid.{u2} (β a)] (a : α) (s : Multiset.{max u1 u2} (forall (a : α), β a)), Eq.{succ u2} (β a) (Multiset.prod.{max u1 u2} (forall (a : α), β a) (Pi.commMonoid.{u1, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_1 i)) s a) (Multiset.prod.{u2} (β a) (_inst_1 a) (Multiset.map.{max u1 u2, u2} (forall (a : α), β a) (β a) (fun (f : forall (a : α), β a) => f a) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), CommMonoid.{u1} (β a)] (a : α) (s : Multiset.{max u2 u1} (forall (a : α), β a)), Eq.{succ u1} (β a) (Multiset.prod.{max u2 u1} (forall (a : α), β a) (Pi.commMonoid.{u2, u1} α (fun (a : α) => β a) (fun (i : α) => _inst_1 i)) s a) (Multiset.prod.{u1} (β a) (_inst_1 a) (Multiset.map.{max u2 u1, u1} (forall (a : α), β a) (β a) (fun (f : forall (a : α), β a) => f a) s))
-Case conversion may be inaccurate. Consider using '#align pi.multiset_prod_apply Pi.multiset_prod_applyₓ'. -/
 @[to_additive]
 theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoid (β a)] (a : α)
     (s : Multiset (∀ a, β a)) : s.Prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
@@ -56,12 +44,6 @@ theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoi
 
 end Pi
 
-/- warning: finset.prod_apply -> Finset.prod_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {γ : Type.{u3}} [_inst_1 : forall (a : α), CommMonoid.{u2} (β a)] (a : α) (s : Finset.{u3} γ) (g : γ -> (forall (a : α), β a)), Eq.{succ u2} (β a) (Finset.prod.{max u1 u2, u3} (forall (a : α), β a) γ (Pi.commMonoid.{u1, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_1 i)) s (fun (c : γ) => g c) a) (Finset.prod.{u2, u3} (β a) γ (_inst_1 a) s (fun (c : γ) => g c a))
-but is expected to have type
-  forall {α : Type.{u3}} {β : α -> Type.{u2}} {γ : Type.{u1}} [_inst_1 : forall (a : α), CommMonoid.{u2} (β a)] (a : α) (s : Finset.{u1} γ) (g : γ -> (forall (a : α), β a)), Eq.{succ u2} (β a) (Finset.prod.{max u3 u2, u1} (forall (a : α), β a) γ (Pi.commMonoid.{u3, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_1 i)) s (fun (c : γ) => g c) a) (Finset.prod.{u2, u1} (β a) γ (_inst_1 a) s (fun (c : γ) => g c a))
-Case conversion may be inaccurate. Consider using '#align finset.prod_apply Finset.prod_applyₓ'. -/
 @[simp, to_additive]
 theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (a : α)
     (s : Finset γ) (g : γ → ∀ a, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
@@ -69,12 +51,6 @@ theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMo
 #align finset.prod_apply Finset.prod_apply
 #align finset.sum_apply Finset.sum_apply
 
-/- warning: finset.prod_fn -> Finset.prod_fn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {γ : Type.{u3}} [_inst_1 : forall (a : α), CommMonoid.{u2} (β a)] (s : Finset.{u3} γ) (g : γ -> (forall (a : α), β a)), Eq.{succ (max u1 u2)} (forall (a : α), β a) (Finset.prod.{max u1 u2, u3} (forall (a : α), β a) γ (Pi.commMonoid.{u1, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_1 i)) s (fun (c : γ) => g c)) (fun (a : α) => Finset.prod.{u2, u3} (β a) γ (_inst_1 a) s (fun (c : γ) => g c a))
-but is expected to have type
-  forall {α : Type.{u3}} {β : α -> Type.{u2}} {γ : Type.{u1}} [_inst_1 : forall (a : α), CommMonoid.{u2} (β a)] (s : Finset.{u1} γ) (g : γ -> (forall (a : α), β a)), Eq.{max (succ u3) (succ u2)} (forall (a : α), β a) (Finset.prod.{max u3 u2, u1} (forall (a : α), β a) γ (Pi.commMonoid.{u3, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_1 i)) s (fun (c : γ) => g c)) (fun (a : α) => Finset.prod.{u2, u1} (β a) γ (_inst_1 a) s (fun (c : γ) => g c a))
-Case conversion may be inaccurate. Consider using '#align finset.prod_fn Finset.prod_fnₓ'. -/
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[to_additive "An 'unapplied' analogue of `finset.sum_apply`."]
 theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (s : Finset γ)
@@ -83,12 +59,6 @@ theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoi
 #align finset.prod_fn Finset.prod_fn
 #align finset.sum_fn Finset.sum_fn
 
-/- warning: fintype.prod_apply -> Fintype.prod_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {γ : Type.{u3}} [_inst_1 : Fintype.{u3} γ] [_inst_2 : forall (a : α), CommMonoid.{u2} (β a)] (a : α) (g : γ -> (forall (a : α), β a)), Eq.{succ u2} (β a) (Finset.prod.{max u1 u2, u3} (forall (a : α), β a) γ (Pi.commMonoid.{u1, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_2 i)) (Finset.univ.{u3} γ _inst_1) (fun (c : γ) => g c) a) (Finset.prod.{u2, u3} (β a) γ (_inst_2 a) (Finset.univ.{u3} γ _inst_1) (fun (c : γ) => g c a))
-but is expected to have type
-  forall {α : Type.{u3}} {β : α -> Type.{u2}} {γ : Type.{u1}} [_inst_1 : Fintype.{u1} γ] [_inst_2 : forall (a : α), CommMonoid.{u2} (β a)] (a : α) (g : γ -> (forall (a : α), β a)), Eq.{succ u2} (β a) (Finset.prod.{max u3 u2, u1} (forall (a : α), β a) γ (Pi.commMonoid.{u3, u2} α (fun (a : α) => β a) (fun (i : α) => _inst_2 i)) (Finset.univ.{u1} γ _inst_1) (fun (c : γ) => g c) a) (Finset.prod.{u2, u1} (β a) γ (_inst_2 a) (Finset.univ.{u1} γ _inst_1) (fun (c : γ) => g c a))
-Case conversion may be inaccurate. Consider using '#align fintype.prod_apply Fintype.prod_applyₓ'. -/
 @[simp, to_additive]
 theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintype γ]
     [∀ a, CommMonoid (β a)] (a : α) (g : γ → ∀ a, β a) : (∏ c, g c) a = ∏ c, g c a :=
@@ -96,12 +66,6 @@ theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fin
 #align fintype.prod_apply Fintype.prod_apply
 #align fintype.sum_apply Fintype.sum_apply
 
-/- warning: prod_mk_prod -> prod_mk_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : CommMonoid.{u2} β] (s : Finset.{u3} γ) (f : γ -> α) (g : γ -> β), Eq.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.mk.{u1, u2} α β (Finset.prod.{u1, u3} α γ _inst_1 s (fun (x : γ) => f x)) (Finset.prod.{u2, u3} β γ _inst_2 s (fun (x : γ) => g x))) (Finset.prod.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.commMonoid.{u1, u2} α β _inst_1 _inst_2) s (fun (x : γ) => Prod.mk.{u1, u2} α β (f x) (g x)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : CommMonoid.{u3} α] [_inst_2 : CommMonoid.{u2} β] (s : Finset.{u1} γ) (f : γ -> α) (g : γ -> β), Eq.{max (succ u3) (succ u2)} (Prod.{u3, u2} α β) (Prod.mk.{u3, u2} α β (Finset.prod.{u3, u1} α γ _inst_1 s (fun (x : γ) => f x)) (Finset.prod.{u2, u1} β γ _inst_2 s (fun (x : γ) => g x))) (Finset.prod.{max u2 u3, u1} (Prod.{u3, u2} α β) γ (Prod.instCommMonoidProd.{u3, u2} α β _inst_1 _inst_2) s (fun (x : γ) => Prod.mk.{u3, u2} α β (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align prod_mk_prod prod_mk_prodₓ'. -/
 @[to_additive prod_mk_sum]
 theorem prod_mk_prod {α β γ : Type _} [CommMonoid α] [CommMonoid β] (s : Finset γ) (f : γ → α)
     (g : γ → β) : (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
@@ -116,21 +80,12 @@ variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 
 variable [∀ i, CommMonoid (Z i)]
 
-/- warning: finset.univ_prod_mul_single -> Finset.univ_prod_mulSingle is a dubious translation:
-lean 3 declaration is
-  forall {I : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} I] {Z : I -> Type.{u2}} [_inst_2 : forall (i : I), CommMonoid.{u2} (Z i)] [_inst_3 : Fintype.{u1} I] (f : forall (i : I), Z i), Eq.{succ (max u1 u2)} (forall (i : I), Z i) (Finset.prod.{max u1 u2, u1} (forall (i : I), Z i) I (Pi.commMonoid.{u1, u2} I (fun (i : I) => Z i) (fun (i : I) => _inst_2 i)) (Finset.univ.{u1} I _inst_3) (fun (i : I) => Pi.mulSingle.{u1, u2} I (fun (i : I) => Z i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulOneClass.toHasOne.{u2} (Z i) (Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i)))) i (f i))) f
-but is expected to have type
-  forall {I : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} I] {Z : I -> Type.{u1}} [_inst_2 : forall (i : I), CommMonoid.{u1} (Z i)] [_inst_3 : Fintype.{u2} I] (f : forall (i : I), Z i), Eq.{max (succ u2) (succ u1)} (forall (i : I), Z i) (Finset.prod.{max u1 u2, u2} (forall (i : I), Z i) I (Pi.commMonoid.{u2, u1} I (fun (i : I) => Z i) (fun (i : I) => _inst_2 i)) (Finset.univ.{u2} I _inst_3) (fun (i : I) => Pi.mulSingle.{u2, u1} I (fun (i : I) => Z i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => Monoid.toOne.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i))) i (f i))) f
-Case conversion may be inaccurate. Consider using '#align finset.univ_prod_mul_single Finset.univ_prod_mulSingleₓ'. -/
 @[to_additive]
 theorem Finset.univ_prod_mulSingle [Fintype I] (f : ∀ i, Z i) : (∏ i, Pi.mulSingle i (f i)) = f :=
   by ext a; simp
 #align finset.univ_prod_mul_single Finset.univ_prod_mulSingle
 #align finset.univ_sum_single Finset.univ_sum_single
 
-/- warning: monoid_hom.functions_ext -> MonoidHom.functions_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.functions_ext MonoidHom.functions_extₓ'. -/
 @[to_additive]
 theorem MonoidHom.functions_ext [Finite I] (G : Type _) [CommMonoid G] (g h : (∀ i, Z i) →* G)
     (H : ∀ i x, g (Pi.mulSingle i x) = h (Pi.mulSingle i x)) : g = h :=
@@ -142,12 +97,6 @@ theorem MonoidHom.functions_ext [Finite I] (G : Type _) [CommMonoid G] (g h : (�
 #align monoid_hom.functions_ext MonoidHom.functions_ext
 #align add_monoid_hom.functions_ext AddMonoidHom.functions_ext
 
-/- warning: monoid_hom.functions_ext' -> MonoidHom.functions_ext' is a dubious translation:
-lean 3 declaration is
-  forall {I : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} I] {Z : I -> Type.{u2}} [_inst_2 : forall (i : I), CommMonoid.{u2} (Z i)] [_inst_3 : Finite.{succ u1} I] (M : Type.{u3}) [_inst_4 : CommMonoid.{u3} M] (g : MonoidHom.{max u1 u2, u3} (forall (i : I), Z i) M (Pi.mulOneClass.{u1, u2} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_4))) (h : MonoidHom.{max u1 u2, u3} (forall (i : I), Z i) M (Pi.mulOneClass.{u1, u2} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_4))), (forall (i : I), Eq.{max (succ u3) (succ u2)} (MonoidHom.{u2, u3} (Z i) M (Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i))) (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_4))) (MonoidHom.comp.{u2, max u1 u2, u3} (Z i) (forall (i : I), Z i) M (Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i))) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_4)) g (MonoidHom.single.{u1, u2} I Z (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i))) i)) (MonoidHom.comp.{u2, max u1 u2, u3} (Z i) (forall (i : I), Z i) M (Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i))) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_4)) h (MonoidHom.single.{u1, u2} I Z (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i))) i))) -> (Eq.{max (succ u3) (succ (max u1 u2))} (MonoidHom.{max u1 u2, u3} (forall (i : I), Z i) M (Pi.mulOneClass.{u1, u2} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u2} (Z i) (CommMonoid.toMonoid.{u2} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_4))) g h)
-but is expected to have type
-  forall {I : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} I] {Z : I -> Type.{u1}} [_inst_2 : forall (i : I), CommMonoid.{u1} (Z i)] [_inst_3 : Finite.{succ u3} I] (M : Type.{u2}) [_inst_4 : CommMonoid.{u2} M] (g : MonoidHom.{max u3 u1, u2} (forall (i : I), Z i) M (Pi.mulOneClass.{u3, u1} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4))) (h : MonoidHom.{max u3 u1, u2} (forall (i : I), Z i) M (Pi.mulOneClass.{u3, u1} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4))), (forall (i : I), Eq.{max (succ u1) (succ u2)} (MonoidHom.{u1, u2} (Z i) M (Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i))) (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4))) (MonoidHom.comp.{u1, max u3 u1, u2} (Z i) (forall (i : I), Z i) M (Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i))) (Pi.mulOneClass.{u3, u1} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4)) g (MonoidHom.single.{u3, u1} I Z (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i))) i)) (MonoidHom.comp.{u1, max u3 u1, u2} (Z i) (forall (i : I), Z i) M (Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i))) (Pi.mulOneClass.{u3, u1} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4)) h (MonoidHom.single.{u3, u1} I Z (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i))) i))) -> (Eq.{max (max (succ u3) (succ u1)) (succ u2)} (MonoidHom.{max u3 u1, u2} (forall (i : I), Z i) M (Pi.mulOneClass.{u3, u1} I (fun (i : I) => Z i) (fun (i : I) => Monoid.toMulOneClass.{u1} (Z i) (CommMonoid.toMonoid.{u1} (Z i) (_inst_2 i)))) (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_4))) g h)
-Case conversion may be inaccurate. Consider using '#align monoid_hom.functions_ext' MonoidHom.functions_ext'ₓ'. -/
 /-- This is used as the ext lemma instead of `monoid_hom.functions_ext` for reasons explained in
 note [partially-applied ext lemmas]. -/
 @[ext,
@@ -169,9 +118,6 @@ variable {I : Type _} [DecidableEq I] {f : I → Type _}
 
 variable [∀ i, NonAssocSemiring (f i)]
 
-/- warning: ring_hom.functions_ext -> RingHom.functions_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_hom.functions_ext RingHom.functions_extₓ'. -/
 @[ext]
 theorem RingHom.functions_ext [Finite I] (G : Type _) [NonAssocSemiring G] (g h : (∀ i, f i) →+* G)
     (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
@@ -185,24 +131,12 @@ namespace Prod
 
 variable {α β γ : Type _} [CommMonoid α] [CommMonoid β] {s : Finset γ} {f : γ → α × β}
 
-/- warning: prod.fst_prod -> Prod.fst_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : CommMonoid.{u2} β] {s : Finset.{u3} γ} {f : γ -> (Prod.{u1, u2} α β)}, Eq.{succ u1} α (Prod.fst.{u1, u2} α β (Finset.prod.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.commMonoid.{u1, u2} α β _inst_1 _inst_2) s (fun (c : γ) => f c))) (Finset.prod.{u1, u3} α γ _inst_1 s (fun (c : γ) => Prod.fst.{u1, u2} α β (f c)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : CommMonoid.{u3} α] [_inst_2 : CommMonoid.{u2} β] {s : Finset.{u1} γ} {f : γ -> (Prod.{u3, u2} α β)}, Eq.{succ u3} α (Prod.fst.{u3, u2} α β (Finset.prod.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (Prod.instCommMonoidProd.{u3, u2} α β _inst_1 _inst_2) s (fun (c : γ) => f c))) (Finset.prod.{u3, u1} α γ _inst_1 s (fun (c : γ) => Prod.fst.{u3, u2} α β (f c)))
-Case conversion may be inaccurate. Consider using '#align prod.fst_prod Prod.fst_prodₓ'. -/
 @[to_additive]
 theorem fst_prod : (∏ c in s, f c).1 = ∏ c in s, (f c).1 :=
   (MonoidHom.fst α β).map_prod f s
 #align prod.fst_prod Prod.fst_prod
 #align prod.fst_sum Prod.fst_sum
 
-/- warning: prod.snd_prod -> Prod.snd_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : CommMonoid.{u2} β] {s : Finset.{u3} γ} {f : γ -> (Prod.{u1, u2} α β)}, Eq.{succ u2} β (Prod.snd.{u1, u2} α β (Finset.prod.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.commMonoid.{u1, u2} α β _inst_1 _inst_2) s (fun (c : γ) => f c))) (Finset.prod.{u2, u3} β γ _inst_2 s (fun (c : γ) => Prod.snd.{u1, u2} α β (f c)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} [_inst_1 : CommMonoid.{u2} α] [_inst_2 : CommMonoid.{u3} β] {s : Finset.{u1} γ} {f : γ -> (Prod.{u2, u3} α β)}, Eq.{succ u3} β (Prod.snd.{u2, u3} α β (Finset.prod.{max u2 u3, u1} (Prod.{u2, u3} α β) γ (Prod.instCommMonoidProd.{u2, u3} α β _inst_1 _inst_2) s (fun (c : γ) => f c))) (Finset.prod.{u3, u1} β γ _inst_2 s (fun (c : γ) => Prod.snd.{u2, u3} α β (f c)))
-Case conversion may be inaccurate. Consider using '#align prod.snd_prod Prod.snd_prodₓ'. -/
 @[to_additive]
 theorem snd_prod : (∏ c in s, f c).2 = ∏ c in s, (f c).2 :=
   (MonoidHom.snd α β).map_prod f s

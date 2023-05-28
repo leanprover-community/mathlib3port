@@ -95,17 +95,11 @@ abbrev KernelFork :=
 
 variable {f}
 
-/- warning: category_theory.limits.kernel_fork.condition -> CategoryTheory.Limits.KernelFork.condition is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_fork.condition CategoryTheory.Limits.KernelFork.conditionₓ'. -/
 @[simp, reassoc]
 theorem KernelFork.condition (s : KernelFork f) : Fork.ι s ≫ f = 0 := by
   erw [fork.condition, has_zero_morphisms.comp_zero]
 #align category_theory.limits.kernel_fork.condition CategoryTheory.Limits.KernelFork.condition
 
-/- warning: category_theory.limits.kernel_fork.app_one -> CategoryTheory.Limits.KernelFork.app_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_fork.app_one CategoryTheory.Limits.KernelFork.app_oneₓ'. -/
 @[simp]
 theorem KernelFork.app_one (s : KernelFork f) : s.π.app one = 0 := by
   simp [fork.app_one_eq_ι_comp_right]
@@ -118,9 +112,6 @@ abbrev KernelFork.ofι {Z : C} (ι : Z ⟶ X) (w : ι ≫ f = 0) : KernelFork f 
 #align category_theory.limits.kernel_fork.of_ι CategoryTheory.Limits.KernelFork.ofι
 -/
 
-/- warning: category_theory.limits.kernel_fork.ι_of_ι -> CategoryTheory.Limits.KernelFork.ι_ofι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_fork.ι_of_ι CategoryTheory.Limits.KernelFork.ι_ofιₓ'. -/
 @[simp]
 theorem KernelFork.ι_ofι {X Y P : C} (f : X ⟶ Y) (ι : P ⟶ X) (w : ι ≫ f = 0) :
     Fork.ι (KernelFork.ofι ι w) = ι :=
@@ -146,12 +137,6 @@ def ofιCongr {P : C} {ι ι' : P ⟶ X} {w : ι ≫ f = 0} (h : ι = ι') :
 #align category_theory.limits.of_ι_congr CategoryTheory.Limits.ofιCongr
 -/
 
-/- warning: category_theory.limits.comp_nat_iso -> CategoryTheory.Limits.compNatIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y} {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} D _inst_3] (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.IsEquivalence.{u1, u1, u2, u3} C _inst_1 D _inst_3 F], CategoryTheory.Iso.{u1, max u1 u3} (CategoryTheory.Functor.{0, u1, 0, u3} CategoryTheory.Limits.WalkingParallelPair CategoryTheory.Limits.walkingParallelPairHomCategory D _inst_3) (CategoryTheory.Functor.category.{0, u1, 0, u3} CategoryTheory.Limits.WalkingParallelPair CategoryTheory.Limits.walkingParallelPairHomCategory D _inst_3) (CategoryTheory.Functor.comp.{0, u1, u1, 0, u2, u3} CategoryTheory.Limits.WalkingParallelPair CategoryTheory.Limits.walkingParallelPairHomCategory C _inst_1 D _inst_3 (CategoryTheory.Limits.parallelPair.{u1, u2} C _inst_1 X Y f (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) 0 (OfNat.mk.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) 0 (Zero.zero.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) (CategoryTheory.Limits.HasZeroMorphisms.hasZero.{u1, u2} C _inst_1 _inst_2 X Y))))) F) (CategoryTheory.Limits.parallelPair.{u1, u3} D _inst_3 (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y) (CategoryTheory.Functor.map.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X Y f) (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y)) 0 (OfNat.mk.{u1} (Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y)) 0 (Zero.zero.{u1} (Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y)) (CategoryTheory.Limits.HasZeroMorphisms.hasZero.{u1, u3} D _inst_3 _inst_4 (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y))))))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y} {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} D _inst_3] (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.IsEquivalence.{u1, u1, u2, u3} C _inst_1 D _inst_3 F], CategoryTheory.Iso.{u1, max u3 u1} (CategoryTheory.Functor.{0, u1, 0, u3} CategoryTheory.Limits.WalkingParallelPair CategoryTheory.Limits.walkingParallelPairHomCategory D _inst_3) (CategoryTheory.Functor.category.{0, u1, 0, u3} CategoryTheory.Limits.WalkingParallelPair CategoryTheory.Limits.walkingParallelPairHomCategory D _inst_3) (CategoryTheory.Functor.comp.{0, u1, u1, 0, u2, u3} CategoryTheory.Limits.WalkingParallelPair CategoryTheory.Limits.walkingParallelPairHomCategory C _inst_1 D _inst_3 (CategoryTheory.Limits.parallelPair.{u1, u2} C _inst_1 X Y f (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) 0 (Zero.toOfNat0.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u1, u2} C _inst_1 _inst_2 X Y)))) F) (CategoryTheory.Limits.parallelPair.{u1, u3} D _inst_3 (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) Y) (Prefunctor.map.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X Y f) (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) Y)) 0 (Zero.toOfNat0.{u1} (Quiver.Hom.{succ u1, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) Y)) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u1, u3} D _inst_3 _inst_4 (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) Y)))))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.comp_nat_iso CategoryTheory.Limits.compNatIsoₓ'. -/
 /-- If `F` is an equivalence, then applying `F` to a diagram indexing a (co)kernel of `f` yields
     the diagram indexing the (co)kernel of `F.map f`. -/
 def compNatIso {D : Type u'} [Category.{v} D] [HasZeroMorphisms D] (F : C ⥤ D) [IsEquivalence F] :
@@ -165,9 +150,6 @@ def compNatIso {D : Type u'} [Category.{v} D] [HasZeroMorphisms D] (F : C ⥤ D)
 
 end
 
-/- warning: category_theory.limits.kernel_fork.is_limit.lift' -> CategoryTheory.Limits.KernelFork.IsLimit.lift' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_fork.is_limit.lift' CategoryTheory.Limits.KernelFork.IsLimit.lift'ₓ'. -/
 /-- If `s` is a limit kernel fork and `k : W ⟶ X` satisfies ``k ≫ f = 0`, then there is some
     `l : W ⟶ s.X` such that `l ≫ fork.ι s = k`. -/
 def KernelFork.IsLimit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W ⟶ X)
@@ -175,9 +157,6 @@ def KernelFork.IsLimit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W 
   ⟨hs.lift <| KernelFork.ofι _ h, hs.fac _ _⟩
 #align category_theory.limits.kernel_fork.is_limit.lift' CategoryTheory.Limits.KernelFork.IsLimit.lift'
 
-/- warning: category_theory.limits.is_limit_aux -> CategoryTheory.Limits.isLimitAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_limit_aux CategoryTheory.Limits.isLimitAuxₓ'. -/
 /-- This is a slightly more convenient method to verify that a kernel fork is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
 def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.pt ⟶ t.pt)
@@ -203,9 +182,6 @@ def KernelFork.IsLimit.ofι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0)
 #align category_theory.limits.kernel_fork.is_limit.of_ι CategoryTheory.Limits.KernelFork.IsLimit.ofι
 -/
 
-/- warning: category_theory.limits.is_kernel_comp_mono -> CategoryTheory.Limits.isKernelCompMono is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_kernel_comp_mono CategoryTheory.Limits.isKernelCompMonoₓ'. -/
 /-- Every kernel of `f` induces a kernel of `f ≫ g` if `g` is mono. -/
 def isKernelCompMono {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ Z) [hg : Mono g] {h : X ⟶ Z}
     (hh : h = f ≫ g) : IsLimit (KernelFork.ofι c.ι (by simp [hh]) : KernelFork h) :=
@@ -216,9 +192,6 @@ def isKernelCompMono {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ Z) [hg : 
       apply fork.is_limit.hom_ext i <;> rw [fork.ι_of_ι] at hm <;> rw [hm] <;> exact l.2.symm⟩
 #align category_theory.limits.is_kernel_comp_mono CategoryTheory.Limits.isKernelCompMono
 
-/- warning: category_theory.limits.is_kernel_comp_mono_lift -> CategoryTheory.Limits.isKernelCompMono_lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_kernel_comp_mono_lift CategoryTheory.Limits.isKernelCompMono_liftₓ'. -/
 theorem isKernelCompMono_lift {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ Z) [hg : Mono g]
     {h : X ⟶ Z} (hh : h = f ≫ g) (s : KernelFork h) :
     (isKernelCompMono i g hh).lift s =
@@ -226,9 +199,6 @@ theorem isKernelCompMono_lift {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ 
   rfl
 #align category_theory.limits.is_kernel_comp_mono_lift CategoryTheory.Limits.isKernelCompMono_lift
 
-/- warning: category_theory.limits.is_kernel_of_comp -> CategoryTheory.Limits.isKernelOfComp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_kernel_of_comp CategoryTheory.Limits.isKernelOfCompₓ'. -/
 /-- Every kernel of `f ≫ g` is also a kernel of `f`, as long as `c.ι ≫ f` vanishes. -/
 def isKernelOfComp {W : C} (g : Y ⟶ W) (h : X ⟶ W) {c : KernelFork h} (i : IsLimit c)
     (hf : c.ι ≫ f = 0) (hfg : f ≫ g = h) : IsLimit (KernelFork.ofι c.ι hf) :=
@@ -561,9 +531,6 @@ end HasZeroObject
 
 section Transport
 
-/- warning: category_theory.limits.is_kernel.of_comp_iso -> CategoryTheory.Limits.IsKernel.ofCompIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_kernel.of_comp_iso CategoryTheory.Limits.IsKernel.ofCompIsoₓ'. -/
 /-- If `i` is an isomorphism such that `l ≫ i.hom = f`, then any kernel of `f` is a kernel of `l`.-/
 def IsKernel.ofCompIso {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l ≫ i.Hom = f) {s : KernelFork f}
     (hs : IsLimit s) :
@@ -582,9 +549,6 @@ def kernel.ofCompIso [HasKernel f] {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l �
 #align category_theory.limits.kernel.of_comp_iso CategoryTheory.Limits.kernel.ofCompIso
 -/
 
-/- warning: category_theory.limits.is_kernel.iso_kernel -> CategoryTheory.Limits.IsKernel.isoKernel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_kernel.iso_kernel CategoryTheory.Limits.IsKernel.isoKernelₓ'. -/
 /-- If `s` is any limit kernel cone over `f` and if  `i` is an isomorphism such that
     `i.hom ≫ s.ι  = l`, then `l` is a kernel of `f`. -/
 def IsKernel.isoKernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit s) (i : Z ≅ s.pt)
@@ -627,17 +591,11 @@ abbrev CokernelCofork :=
 
 variable {f}
 
-/- warning: category_theory.limits.cokernel_cofork.condition -> CategoryTheory.Limits.CokernelCofork.condition is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_cofork.condition CategoryTheory.Limits.CokernelCofork.conditionₓ'. -/
 @[simp, reassoc]
 theorem CokernelCofork.condition (s : CokernelCofork f) : f ≫ s.π = 0 := by
   rw [cofork.condition, zero_comp]
 #align category_theory.limits.cokernel_cofork.condition CategoryTheory.Limits.CokernelCofork.condition
 
-/- warning: category_theory.limits.cokernel_cofork.π_eq_zero -> CategoryTheory.Limits.CokernelCofork.π_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_cofork.π_eq_zero CategoryTheory.Limits.CokernelCofork.π_eq_zeroₓ'. -/
 @[simp]
 theorem CokernelCofork.π_eq_zero (s : CokernelCofork f) : s.ι.app zero = 0 := by
   simp [cofork.app_zero_eq_comp_π_right]
@@ -650,9 +608,6 @@ abbrev CokernelCofork.ofπ {Z : C} (π : Y ⟶ Z) (w : f ≫ π = 0) : CokernelC
 #align category_theory.limits.cokernel_cofork.of_π CategoryTheory.Limits.CokernelCofork.ofπ
 -/
 
-/- warning: category_theory.limits.cokernel_cofork.π_of_π -> CategoryTheory.Limits.CokernelCofork.π_ofπ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_cofork.π_of_π CategoryTheory.Limits.CokernelCofork.π_ofπₓ'. -/
 @[simp]
 theorem CokernelCofork.π_ofπ {X Y P : C} (f : X ⟶ Y) (π : Y ⟶ P) (w : f ≫ π = 0) :
     Cofork.π (CokernelCofork.ofπ π w) = π :=
@@ -674,9 +629,6 @@ def ofπCongr {P : C} {π π' : Y ⟶ P} {w : f ≫ π = 0} (h : π = π') :
 #align category_theory.limits.of_π_congr CategoryTheory.Limits.ofπCongr
 -/
 
-/- warning: category_theory.limits.cokernel_cofork.is_colimit.desc' -> CategoryTheory.Limits.CokernelCofork.IsColimit.desc' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_cofork.is_colimit.desc' CategoryTheory.Limits.CokernelCofork.IsColimit.desc'ₓ'. -/
 /-- If `s` is a colimit cokernel cofork, then every `k : Y ⟶ W` satisfying `f ≫ k = 0` induces
     `l : s.X ⟶ W` such that `cofork.π s ≫ l = k`. -/
 def CokernelCofork.IsColimit.desc' {s : CokernelCofork f} (hs : IsColimit s) {W : C} (k : Y ⟶ W)
@@ -684,9 +636,6 @@ def CokernelCofork.IsColimit.desc' {s : CokernelCofork f} (hs : IsColimit s) {W 
   ⟨hs.desc <| CokernelCofork.ofπ _ h, hs.fac _ _⟩
 #align category_theory.limits.cokernel_cofork.is_colimit.desc' CategoryTheory.Limits.CokernelCofork.IsColimit.desc'
 
-/- warning: category_theory.limits.is_colimit_aux -> CategoryTheory.Limits.isColimitAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_colimit_aux CategoryTheory.Limits.isColimitAuxₓ'. -/
 /-- This is a slightly more convenient method to verify that a cokernel cofork is a colimit cocone.
 It only asks for a proof of facts that carry any mathematical content -/
 def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.pt ⟶ s.pt)
@@ -713,9 +662,6 @@ def CokernelCofork.IsColimit.ofπ {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0)
 #align category_theory.limits.cokernel_cofork.is_colimit.of_π CategoryTheory.Limits.CokernelCofork.IsColimit.ofπ
 -/
 
-/- warning: category_theory.limits.is_cokernel_epi_comp -> CategoryTheory.Limits.isCokernelEpiComp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_cokernel_epi_comp CategoryTheory.Limits.isCokernelEpiCompₓ'. -/
 /-- Every cokernel of `f` induces a cokernel of `g ≫ f` if `g` is epi. -/
 def isCokernelEpiComp {c : CokernelCofork f} (i : IsColimit c) {W} (g : W ⟶ X) [hg : Epi g]
     {h : W ⟶ Y} (hh : h = g ≫ f) :
@@ -728,9 +674,6 @@ def isCokernelEpiComp {c : CokernelCofork f} (i : IsColimit c) {W} (g : W ⟶ X)
       apply cofork.is_colimit.hom_ext i <;> rw [cofork.π_of_π] at hm <;> rw [hm] <;> exact l.2.symm⟩
 #align category_theory.limits.is_cokernel_epi_comp CategoryTheory.Limits.isCokernelEpiComp
 
-/- warning: category_theory.limits.is_cokernel_epi_comp_desc -> CategoryTheory.Limits.isCokernelEpiComp_desc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_cokernel_epi_comp_desc CategoryTheory.Limits.isCokernelEpiComp_descₓ'. -/
 @[simp]
 theorem isCokernelEpiComp_desc {c : CokernelCofork f} (i : IsColimit c) {W} (g : W ⟶ X) [hg : Epi g]
     {h : W ⟶ Y} (hh : h = g ≫ f) (s : CokernelCofork h) :
@@ -739,9 +682,6 @@ theorem isCokernelEpiComp_desc {c : CokernelCofork f} (i : IsColimit c) {W} (g :
   rfl
 #align category_theory.limits.is_cokernel_epi_comp_desc CategoryTheory.Limits.isCokernelEpiComp_desc
 
-/- warning: category_theory.limits.is_cokernel_of_comp -> CategoryTheory.Limits.isCokernelOfComp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_cokernel_of_comp CategoryTheory.Limits.isCokernelOfCompₓ'. -/
 /-- Every cokernel of `g ≫ f` is also a cokernel of `f`, as long as `f ≫ c.π` vanishes. -/
 def isCokernelOfComp {W : C} (g : W ⟶ X) (h : W ⟶ Y) {c : CokernelCofork h} (i : IsColimit c)
     (hf : f ≫ c.π = 0) (hfg : g ≫ f = h) : IsColimit (CokernelCofork.ofπ c.π hf) :=
@@ -1172,9 +1112,6 @@ end HasZeroObject
 
 section Transport
 
-/- warning: category_theory.limits.is_cokernel.of_iso_comp -> CategoryTheory.Limits.IsCokernel.ofIsoComp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_cokernel.of_iso_comp CategoryTheory.Limits.IsCokernel.ofIsoCompₓ'. -/
 /-- If `i` is an isomorphism such that `i.hom ≫ l = f`, then any cokernel of `f` is a cokernel of
     `l`. -/
 def IsCokernel.ofIsoComp {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : i.Hom ≫ l = f) {s : CokernelCofork f}
@@ -1196,9 +1133,6 @@ def cokernel.ofIsoComp [HasCokernel f] {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : 
 #align category_theory.limits.cokernel.of_iso_comp CategoryTheory.Limits.cokernel.ofIsoComp
 -/
 
-/- warning: category_theory.limits.is_cokernel.cokernel_iso -> CategoryTheory.Limits.IsCokernel.cokernelIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_cokernel.cokernel_iso CategoryTheory.Limits.IsCokernel.cokernelIsoₓ'. -/
 /-- If `s` is any colimit cokernel cocone over `f` and `i` is an isomorphism such that
     `s.π ≫ i.hom = l`, then `l` is a cokernel of `f`. -/
 def IsCokernel.cokernelIso {Z : C} (l : Y ⟶ Z) {s : CokernelCofork f} (hs : IsColimit s)
@@ -1223,12 +1157,6 @@ variable {D : Type u₂} [Category.{v₂} D] [HasZeroMorphisms D]
 
 variable (G : C ⥤ D) [Functor.PreservesZeroMorphisms G]
 
-/- warning: category_theory.limits.kernel_comparison -> CategoryTheory.Limits.kernelComparison is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} C _inst_1] {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Y) {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u4} D _inst_3] (G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.Functor.PreservesZeroMorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_3 _inst_2 _inst_4 G] [_inst_6 : CategoryTheory.Limits.HasKernel.{u1, u3} C _inst_1 _inst_2 X Y f] [_inst_7 : CategoryTheory.Limits.HasKernel.{u2, u4} D _inst_3 _inst_4 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G Y) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X Y f)], Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G (CategoryTheory.Limits.kernel.{u1, u3} C _inst_1 _inst_2 X Y f _inst_6)) (CategoryTheory.Limits.kernel.{u2, u4} D _inst_3 _inst_4 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G Y) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X Y f) _inst_7)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} C _inst_1] {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Y) {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u4} D _inst_3] (G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.Functor.PreservesZeroMorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_3 _inst_2 _inst_4 G] [_inst_6 : CategoryTheory.Limits.HasKernel.{u1, u3} C _inst_1 _inst_2 X Y f] [_inst_7 : CategoryTheory.Limits.HasKernel.{u2, u4} D _inst_3 _inst_4 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) Y) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X Y f)], Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) (CategoryTheory.Limits.kernel.{u1, u3} C _inst_1 _inst_2 X Y f _inst_6)) (CategoryTheory.Limits.kernel.{u2, u4} D _inst_3 _inst_4 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) Y) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X Y f) _inst_7)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_comparison CategoryTheory.Limits.kernelComparisonₓ'. -/
 /-- The comparison morphism for the kernel of `f`.
 This is an isomorphism iff `G` preserves the kernel of `f`; see
 `category_theory/limits/preserves/shapes/kernels.lean`
@@ -1238,18 +1166,12 @@ def kernelComparison [HasKernel f] [HasKernel (G.map f)] : G.obj (kernel f) ⟶ 
     (by simp only [← G.map_comp, kernel.condition, functor.map_zero])
 #align category_theory.limits.kernel_comparison CategoryTheory.Limits.kernelComparison
 
-/- warning: category_theory.limits.kernel_comparison_comp_ι -> CategoryTheory.Limits.kernelComparison_comp_ι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_comparison_comp_ι CategoryTheory.Limits.kernelComparison_comp_ιₓ'. -/
 @[simp, reassoc]
 theorem kernelComparison_comp_ι [HasKernel f] [HasKernel (G.map f)] :
     kernelComparison f G ≫ kernel.ι (G.map f) = G.map (kernel.ι f) :=
   kernel.lift_ι _ _ _
 #align category_theory.limits.kernel_comparison_comp_ι CategoryTheory.Limits.kernelComparison_comp_ι
 
-/- warning: category_theory.limits.map_lift_kernel_comparison -> CategoryTheory.Limits.map_lift_kernelComparison is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.map_lift_kernel_comparison CategoryTheory.Limits.map_lift_kernelComparisonₓ'. -/
 @[simp, reassoc]
 theorem map_lift_kernelComparison [HasKernel f] [HasKernel (G.map f)] {Z : C} {h : Z ⟶ X}
     (w : h ≫ f = 0) :
@@ -1258,9 +1180,6 @@ theorem map_lift_kernelComparison [HasKernel f] [HasKernel (G.map f)] {Z : C} {h
   by ext; simp [← G.map_comp]
 #align category_theory.limits.map_lift_kernel_comparison CategoryTheory.Limits.map_lift_kernelComparison
 
-/- warning: category_theory.limits.kernel_comparison_comp_kernel_map -> CategoryTheory.Limits.kernelComparison_comp_kernel_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_comparison_comp_kernel_map CategoryTheory.Limits.kernelComparison_comp_kernel_mapₓ'. -/
 @[reassoc]
 theorem kernelComparison_comp_kernel_map {X' Y' : C} [HasKernel f] [HasKernel (G.map f)]
     (g : X' ⟶ Y') [HasKernel g] [HasKernel (G.map g)] (p : X ⟶ X') (q : Y ⟶ Y')
@@ -1273,12 +1192,6 @@ theorem kernelComparison_comp_kernel_map {X' Y' : C} [HasKernel f] [HasKernel (G
     (by simp only [← G.map_comp] <;> exact G.congr_map (kernel.lift_ι _ _ _).symm) _
 #align category_theory.limits.kernel_comparison_comp_kernel_map CategoryTheory.Limits.kernelComparison_comp_kernel_map
 
-/- warning: category_theory.limits.cokernel_comparison -> CategoryTheory.Limits.cokernelComparison is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} C _inst_1] {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Y) {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u4} D _inst_3] (G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.Functor.PreservesZeroMorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_3 _inst_2 _inst_4 G] [_inst_6 : CategoryTheory.Limits.HasCokernel.{u1, u3} C _inst_1 _inst_2 X Y f] [_inst_7 : CategoryTheory.Limits.HasCokernel.{u2, u4} D _inst_3 _inst_4 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G Y) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X Y f)], Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Limits.cokernel.{u2, u4} D _inst_3 _inst_4 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G Y) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_3 G X Y f) _inst_7) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 G (CategoryTheory.Limits.cokernel.{u1, u3} C _inst_1 _inst_2 X Y f _inst_6))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} C _inst_1] {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Y) {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u4} D _inst_3] (G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.Functor.PreservesZeroMorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_3 _inst_2 _inst_4 G] [_inst_6 : CategoryTheory.Limits.HasCokernel.{u1, u3} C _inst_1 _inst_2 X Y f] [_inst_7 : CategoryTheory.Limits.HasCokernel.{u2, u4} D _inst_3 _inst_4 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) Y) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X Y f)], Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Limits.cokernel.{u2, u4} D _inst_3 _inst_4 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) Y) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) X Y f) _inst_7) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 G) (CategoryTheory.Limits.cokernel.{u1, u3} C _inst_1 _inst_2 X Y f _inst_6))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_comparison CategoryTheory.Limits.cokernelComparisonₓ'. -/
 /-- The comparison morphism for the cokernel of `f`. -/
 def cokernelComparison [HasCokernel f] [HasCokernel (G.map f)] :
     cokernel (G.map f) ⟶ G.obj (cokernel f) :=
@@ -1286,18 +1199,12 @@ def cokernelComparison [HasCokernel f] [HasCokernel (G.map f)] :
     (by simp only [← G.map_comp, cokernel.condition, functor.map_zero])
 #align category_theory.limits.cokernel_comparison CategoryTheory.Limits.cokernelComparison
 
-/- warning: category_theory.limits.π_comp_cokernel_comparison -> CategoryTheory.Limits.π_comp_cokernelComparison is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.π_comp_cokernel_comparison CategoryTheory.Limits.π_comp_cokernelComparisonₓ'. -/
 @[simp, reassoc]
 theorem π_comp_cokernelComparison [HasCokernel f] [HasCokernel (G.map f)] :
     cokernel.π (G.map f) ≫ cokernelComparison f G = G.map (cokernel.π _) :=
   cokernel.π_desc _ _ _
 #align category_theory.limits.π_comp_cokernel_comparison CategoryTheory.Limits.π_comp_cokernelComparison
 
-/- warning: category_theory.limits.cokernel_comparison_map_desc -> CategoryTheory.Limits.cokernelComparison_map_desc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_comparison_map_desc CategoryTheory.Limits.cokernelComparison_map_descₓ'. -/
 @[simp, reassoc]
 theorem cokernelComparison_map_desc [HasCokernel f] [HasCokernel (G.map f)] {Z : C} {h : Y ⟶ Z}
     (w : f ≫ h = 0) :
@@ -1306,9 +1213,6 @@ theorem cokernelComparison_map_desc [HasCokernel f] [HasCokernel (G.map f)] {Z :
   by ext; simp [← G.map_comp]
 #align category_theory.limits.cokernel_comparison_map_desc CategoryTheory.Limits.cokernelComparison_map_desc
 
-/- warning: category_theory.limits.cokernel_map_comp_cokernel_comparison -> CategoryTheory.Limits.cokernel_map_comp_cokernelComparison is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.cokernel_map_comp_cokernel_comparison CategoryTheory.Limits.cokernel_map_comp_cokernelComparisonₓ'. -/
 @[reassoc]
 theorem cokernel_map_comp_cokernelComparison {X' Y' : C} [HasCokernel f] [HasCokernel (G.map f)]
     (g : X' ⟶ Y') [HasCokernel g] [HasCokernel (G.map g)] (p : X ⟶ X') (q : Y ⟶ Y')

@@ -69,23 +69,11 @@ theorem empty_right (s : Set X) : IsMetricSeparated s ∅ :=
 #align is_metric_separated.empty_right IsMetricSeparated.empty_right
 -/
 
-/- warning: is_metric_separated.disjoint -> IsMetricSeparated.disjoint is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} X) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} X) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.completeBooleanAlgebra.{u1} X)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} X) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} X) (Set.booleanAlgebra.{u1} X))) s t)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (Disjoint.{u1} (Set.{u1} X) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} X) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.instCompleteBooleanAlgebraSet.{u1} X)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} X) (Preorder.toLE.{u1} (Set.{u1} X) (PartialOrder.toPreorder.{u1} (Set.{u1} X) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} X) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.instCompleteBooleanAlgebraSet.{u1} X)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} X) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} X) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} X) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} X) (Set.instCompleteBooleanAlgebraSet.{u1} X)))))) s t)
-Case conversion may be inaccurate. Consider using '#align is_metric_separated.disjoint IsMetricSeparated.disjointₓ'. -/
 protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   let ⟨r, r0, hr⟩ := h
   Set.disjoint_left.mpr fun x hx1 hx2 => r0 <| by simpa using hr x hx1 x hx2
 #align is_metric_separated.disjoint IsMetricSeparated.disjoint
 
-/- warning: is_metric_separated.subset_compl_right -> IsMetricSeparated.subset_compl_right is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (HasSubset.Subset.{u1} (Set.{u1} X) (Set.hasSubset.{u1} X) s (HasCompl.compl.{u1} (Set.{u1} X) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} X) (Set.booleanAlgebra.{u1} X)) t))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) s (HasCompl.compl.{u1} (Set.{u1} X) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} X) (Set.instBooleanAlgebraSet.{u1} X)) t))
-Case conversion may be inaccurate. Consider using '#align is_metric_separated.subset_compl_right IsMetricSeparated.subset_compl_rightₓ'. -/
 theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht =>
   h.Disjoint.le_bot ⟨hs, ht⟩
 #align is_metric_separated.subset_compl_right IsMetricSeparated.subset_compl_right
@@ -110,12 +98,6 @@ theorem mono_right {t'} (h' : IsMetricSeparated s t') (ht : t ⊆ t') : IsMetric
 #align is_metric_separated.mono_right IsMetricSeparated.mono_right
 -/
 
-/- warning: is_metric_separated.union_left -> IsMetricSeparated.union_left is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {s' : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (IsMetricSeparated.{u1} X _inst_1 s' t) -> (IsMetricSeparated.{u1} X _inst_1 (Union.union.{u1} (Set.{u1} X) (Set.hasUnion.{u1} X) s s') t)
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {s' : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (IsMetricSeparated.{u1} X _inst_1 s' t) -> (IsMetricSeparated.{u1} X _inst_1 (Union.union.{u1} (Set.{u1} X) (Set.instUnionSet.{u1} X) s s') t)
-Case conversion may be inaccurate. Consider using '#align is_metric_separated.union_left IsMetricSeparated.union_leftₓ'. -/
 theorem union_left {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) :
     IsMetricSeparated (s ∪ s') t :=
   by
@@ -127,12 +109,6 @@ theorem union_left {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t
   · exact fun hx => (min_le_right _ _).trans (hr' _ hx _ hy)
 #align is_metric_separated.union_left IsMetricSeparated.union_left
 
-/- warning: is_metric_separated.union_left_iff -> IsMetricSeparated.union_left_iff is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {s' : Set.{u1} X}, Iff (IsMetricSeparated.{u1} X _inst_1 (Union.union.{u1} (Set.{u1} X) (Set.hasUnion.{u1} X) s s') t) (And (IsMetricSeparated.{u1} X _inst_1 s t) (IsMetricSeparated.{u1} X _inst_1 s' t))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {s' : Set.{u1} X}, Iff (IsMetricSeparated.{u1} X _inst_1 (Union.union.{u1} (Set.{u1} X) (Set.instUnionSet.{u1} X) s s') t) (And (IsMetricSeparated.{u1} X _inst_1 s t) (IsMetricSeparated.{u1} X _inst_1 s' t))
-Case conversion may be inaccurate. Consider using '#align is_metric_separated.union_left_iff IsMetricSeparated.union_left_iffₓ'. -/
 @[simp]
 theorem union_left_iff {s'} :
     IsMetricSeparated (s ∪ s') t ↔ IsMetricSeparated s t ∧ IsMetricSeparated s' t :=
@@ -140,23 +116,11 @@ theorem union_left_iff {s'} :
     h.1.union_left h.2⟩
 #align is_metric_separated.union_left_iff IsMetricSeparated.union_left_iff
 
-/- warning: is_metric_separated.union_right -> IsMetricSeparated.union_right is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {t' : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (IsMetricSeparated.{u1} X _inst_1 s t') -> (IsMetricSeparated.{u1} X _inst_1 s (Union.union.{u1} (Set.{u1} X) (Set.hasUnion.{u1} X) t t'))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {t' : Set.{u1} X}, (IsMetricSeparated.{u1} X _inst_1 s t) -> (IsMetricSeparated.{u1} X _inst_1 s t') -> (IsMetricSeparated.{u1} X _inst_1 s (Union.union.{u1} (Set.{u1} X) (Set.instUnionSet.{u1} X) t t'))
-Case conversion may be inaccurate. Consider using '#align is_metric_separated.union_right IsMetricSeparated.union_rightₓ'. -/
 theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t') :
     IsMetricSeparated s (t ∪ t') :=
   (h.symm.union_left h'.symm).symm
 #align is_metric_separated.union_right IsMetricSeparated.union_right
 
-/- warning: is_metric_separated.union_right_iff -> IsMetricSeparated.union_right_iff is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {t' : Set.{u1} X}, Iff (IsMetricSeparated.{u1} X _inst_1 s (Union.union.{u1} (Set.{u1} X) (Set.hasUnion.{u1} X) t t')) (And (IsMetricSeparated.{u1} X _inst_1 s t) (IsMetricSeparated.{u1} X _inst_1 s t'))
-but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : EMetricSpace.{u1} X] {s : Set.{u1} X} {t : Set.{u1} X} {t' : Set.{u1} X}, Iff (IsMetricSeparated.{u1} X _inst_1 s (Union.union.{u1} (Set.{u1} X) (Set.instUnionSet.{u1} X) t t')) (And (IsMetricSeparated.{u1} X _inst_1 s t) (IsMetricSeparated.{u1} X _inst_1 s t'))
-Case conversion may be inaccurate. Consider using '#align is_metric_separated.union_right_iff IsMetricSeparated.union_right_iffₓ'. -/
 @[simp]
 theorem union_right_iff {t'} :
     IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=

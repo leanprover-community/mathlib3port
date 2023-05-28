@@ -126,11 +126,6 @@ instance TopCat.hasForgetToMeas : HasForget₂ TopCat.{u} Meas.{u} :=
 #align Top.has_forget_to_Meas TopCat.hasForgetToMeas
 
 /- warning: Borel clashes with borel -> borel
-warning: Borel -> borel is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Functor.{u1, u1, succ u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} Meas.{u1} Meas.largeCategory.{u1}
-but is expected to have type
-  forall (α : Type.{u1}) [inst._@.Mathlib.MeasureTheory.Constructions.BorelSpace.Basic._hyg.44 : TopologicalSpace.{u1} α], MeasurableSpace.{u1} α
 Case conversion may be inaccurate. Consider using '#align Borel borelₓ'. -/
 /-- The Borel functor, the canonical embedding of topological spaces into measurable spaces. -/
 @[reducible]

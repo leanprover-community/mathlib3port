@@ -25,12 +25,6 @@ This file contains some results on equality up to units in the integers.
 -/
 
 
-/- warning: int.nat_abs_eq_iff_associated -> Int.natAbs_eq_iff_associated is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (Eq.{1} Nat (Int.natAbs a) (Int.natAbs b)) (Associated.{0} Int Int.monoid a b)
-but is expected to have type
-  forall {a : Int} {b : Int}, Iff (Eq.{1} Nat (Int.natAbs a) (Int.natAbs b)) (Associated.{0} Int Int.instMonoidInt a b)
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_eq_iff_associated Int.natAbs_eq_iff_associatedₓ'. -/
 theorem Int.natAbs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Associated a b :=
   by
   refine' int.nat_abs_eq_nat_abs_iff.trans _

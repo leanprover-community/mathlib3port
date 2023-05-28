@@ -47,12 +47,6 @@ def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @limUnder _ ⟨f 
 #align extend_from extendFrom
 -/
 
-/- warning: tendsto_extend_from -> tendsto_extendFrom is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {A : Set.{u1} X} {f : X -> Y} {x : X}, (Exists.{succ u2} Y (fun (y : Y) => Filter.Tendsto.{u1, u2} X Y f (nhdsWithin.{u1} X _inst_1 x A) (nhds.{u2} Y _inst_2 y))) -> (Filter.Tendsto.{u1, u2} X Y f (nhdsWithin.{u1} X _inst_1 x A) (nhds.{u2} Y _inst_2 (extendFrom.{u1, u2} X Y _inst_1 _inst_2 A f x)))
-but is expected to have type
-  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {A : Set.{u2} X} {f : X -> Y} {x : X}, (Exists.{succ u1} Y (fun (y : Y) => Filter.Tendsto.{u2, u1} X Y f (nhdsWithin.{u2} X _inst_1 x A) (nhds.{u1} Y _inst_2 y))) -> (Filter.Tendsto.{u2, u1} X Y f (nhdsWithin.{u2} X _inst_1 x A) (nhds.{u1} Y _inst_2 (extendFrom.{u2, u1} X Y _inst_1 _inst_2 A f x)))
-Case conversion may be inaccurate. Consider using '#align tendsto_extend_from tendsto_extendFromₓ'. -/
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
 theorem tendsto_extendFrom {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) :

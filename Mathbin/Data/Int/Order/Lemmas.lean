@@ -62,12 +62,6 @@ theorem natAbs_le_iff_mul_self_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a * a 
 #align int.nat_abs_le_iff_mul_self_le Int.natAbs_le_iff_mul_self_le
 -/
 
-/- warning: int.dvd_div_of_mul_dvd -> Int.dvd_div_of_mul_dvd is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) b (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) c a))
-but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) -> (Dvd.dvd.{0} Int Int.instDvdInt b (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) c a))
-Case conversion may be inaccurate. Consider using '#align int.dvd_div_of_mul_dvd Int.dvd_div_of_mul_dvdₓ'. -/
 theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a :=
   by
   rcases eq_or_ne a 0 with (rfl | ha)
@@ -80,12 +74,6 @@ theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a :=
 /-! ### units -/
 
 
-/- warning: int.eq_zero_of_abs_lt_dvd -> Int.eq_zero_of_abs_lt_dvd is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {x : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) m x) -> (LT.lt.{0} Int Int.hasLt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) x) m) -> (Eq.{1} Int x (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
-but is expected to have type
-  forall {m : Int} {x : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m x) -> (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) x) m) -> (Eq.{1} Int x (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
-Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_abs_lt_dvd Int.eq_zero_of_abs_lt_dvdₓ'. -/
 theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 :=
   by
   by_cases hm : m = 0; · subst m; exact zero_dvd_iff.mp h1

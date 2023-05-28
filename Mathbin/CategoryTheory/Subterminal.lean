@@ -169,12 +169,6 @@ instance subterminals_thin (X Y : Subterminals C) : Subsingleton (X ⟶ Y) :=
 #align category_theory.subterminals_thin CategoryTheory.subterminals_thin
 -/
 
-/- warning: category_theory.subterminals_equiv_mono_over_terminal -> CategoryTheory.subterminalsEquivMonoOverTerminal is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasTerminal.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, u2, max u2 u1} (CategoryTheory.Subterminals.{u1, u2} C _inst_1) (CategoryTheory.Subterminals.category.{u2, u1} C _inst_1) (CategoryTheory.MonoOver.{u1, u2} C _inst_1 (CategoryTheory.Limits.terminal.{u1, u2} C _inst_1 _inst_2)) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 (CategoryTheory.Limits.terminal.{u1, u2} C _inst_1 _inst_2))
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasTerminal.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, u2, max u2 u1} (CategoryTheory.Subterminals.{u1, u2} C _inst_1) (CategoryTheory.MonoOver.{u1, u2} C _inst_1 (CategoryTheory.Limits.terminal.{u1, u2} C _inst_1 _inst_2)) (CategoryTheory.instCategorySubterminals.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonoOver.{u1, u2} C _inst_1 (CategoryTheory.Limits.terminal.{u1, u2} C _inst_1 _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.subterminals_equiv_mono_over_terminal CategoryTheory.subterminalsEquivMonoOverTerminalₓ'. -/
 /--
 The category of subterminal objects is equivalent to the category of monomorphisms to the terminal
 object (which is in turn equivalent to the subobjects of the terminal object).

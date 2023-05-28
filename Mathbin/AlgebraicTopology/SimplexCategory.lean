@@ -119,35 +119,17 @@ namespace Hom
 
 attribute [local semireducible] SimplexCategory.Hom
 
-/- warning: simplex_category.hom.mk -> SimplexCategory.Hom.mk is a dubious translation:
-lean 3 declaration is
-  forall {a : SimplexCategory} {b : SimplexCategory}, (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (SimplexCategory.Hom a b)
-but is expected to have type
-  forall {a : SimplexCategory} {b : SimplexCategory}, (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (SimplexCategory.Hom a b)
-Case conversion may be inaccurate. Consider using '#align simplex_category.hom.mk SimplexCategory.Hom.mkₓ'. -/
 /-- Make a moprhism in `simplex_category` from a monotone map of fin's. -/
 def mk {a b : SimplexCategory} (f : Fin (a.len + 1) →o Fin (b.len + 1)) : SimplexCategory.Hom a b :=
   f
 #align simplex_category.hom.mk SimplexCategory.Hom.mk
 
-/- warning: simplex_category.hom.to_order_hom -> SimplexCategory.Hom.toOrderHom is a dubious translation:
-lean 3 declaration is
-  forall {a : SimplexCategory} {b : SimplexCategory}, (SimplexCategory.Hom a b) -> (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))
-but is expected to have type
-  forall {a : SimplexCategory} {b : SimplexCategory}, (SimplexCategory.Hom a b) -> (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))
-Case conversion may be inaccurate. Consider using '#align simplex_category.hom.to_order_hom SimplexCategory.Hom.toOrderHomₓ'. -/
 /-- Recover the monotone map from a morphism in the simplex category. -/
 def toOrderHom {a b : SimplexCategory} (f : SimplexCategory.Hom a b) :
     Fin (a.len + 1) →o Fin (b.len + 1) :=
   f
 #align simplex_category.hom.to_order_hom SimplexCategory.Hom.toOrderHom
 
-/- warning: simplex_category.hom.ext -> SimplexCategory.Hom.ext' is a dubious translation:
-lean 3 declaration is
-  forall {a : SimplexCategory} {b : SimplexCategory} (f : SimplexCategory.Hom a b) (g : SimplexCategory.Hom a b), (Eq.{1} (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (SimplexCategory.Hom.toOrderHom a b f) (SimplexCategory.Hom.toOrderHom a b g)) -> (Eq.{1} (SimplexCategory.Hom a b) f g)
-but is expected to have type
-  forall {a : SimplexCategory} {b : SimplexCategory} (f : SimplexCategory.Hom a b) (g : SimplexCategory.Hom a b), (Eq.{1} (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (SimplexCategory.Hom.toOrderHom a b f) (SimplexCategory.Hom.toOrderHom a b g)) -> (Eq.{1} (SimplexCategory.Hom a b) f g)
-Case conversion may be inaccurate. Consider using '#align simplex_category.hom.ext SimplexCategory.Hom.ext'ₓ'. -/
 @[ext]
 theorem ext' {a b : SimplexCategory} (f g : SimplexCategory.Hom a b) :
     f.toOrderHom = g.toOrderHom → f = g :=
@@ -161,21 +143,12 @@ theorem mk_toOrderHom {a b : SimplexCategory} (f : SimplexCategory.Hom a b) : mk
 #align simplex_category.hom.mk_to_order_hom SimplexCategory.Hom.mk_toOrderHom
 -/
 
-/- warning: simplex_category.hom.to_order_hom_mk -> SimplexCategory.Hom.toOrderHom_mk is a dubious translation:
-lean 3 declaration is
-  forall {a : SimplexCategory} {b : SimplexCategory} (f : OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))), Eq.{1} (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (SimplexCategory.Hom.toOrderHom a b (SimplexCategory.Hom.mk a b f)) f
-but is expected to have type
-  forall {a : SimplexCategory} {b : SimplexCategory} (f : OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))), Eq.{1} (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (SimplexCategory.Hom.toOrderHom a b (SimplexCategory.Hom.mk a b f)) f
-Case conversion may be inaccurate. Consider using '#align simplex_category.hom.to_order_hom_mk SimplexCategory.Hom.toOrderHom_mkₓ'. -/
 @[simp]
 theorem toOrderHom_mk {a b : SimplexCategory} (f : Fin (a.len + 1) →o Fin (b.len + 1)) :
     (mk f).toOrderHom = f :=
   rfl
 #align simplex_category.hom.to_order_hom_mk SimplexCategory.Hom.toOrderHom_mk
 
-/- warning: simplex_category.hom.mk_to_order_hom_apply -> SimplexCategory.Hom.mk_toOrderHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.hom.mk_to_order_hom_apply SimplexCategory.Hom.mk_toOrderHom_applyₓ'. -/
 theorem mk_toOrderHom_apply {a b : SimplexCategory} (f : Fin (a.len + 1) →o Fin (b.len + 1))
     (i : Fin (a.len + 1)) : (mk f).toOrderHom i = f i :=
   rfl
@@ -225,12 +198,6 @@ theorem const_comp (x y : SimplexCategory) (i : Fin (x.len + 1)) (f : x ⟶ y) :
 #align simplex_category.const_comp SimplexCategory.const_comp
 -/
 
-/- warning: simplex_category.mk_hom -> SimplexCategory.mkHom is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (SimplexCategory.mk n) (SimplexCategory.mk m))
-but is expected to have type
-  forall {n : Nat} {m : Nat}, (OrderHom.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instPartialOrderFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (SimplexCategory.mk n) (SimplexCategory.mk m))
-Case conversion may be inaccurate. Consider using '#align simplex_category.mk_hom SimplexCategory.mkHomₓ'. -/
 /-- Make a morphism `[n] ⟶ [m]` from a monotone map between fin's.
 This is useful for constructing morphisms beetween `[n]` directly
 without identifying `n` with `[n].len`.
@@ -275,9 +242,6 @@ def σ {n} (i : Fin (n + 1)) : [n + 1] ⟶ [n] :=
 #align simplex_category.σ SimplexCategory.σ
 -/
 
-/- warning: simplex_category.δ_comp_δ -> SimplexCategory.δ_comp_δ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_δ SimplexCategory.δ_comp_δₓ'. -/
 /-- The generic case of the first simplicial identity -/
 theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = δ j ≫ δ i.cast_succ :=
   by
@@ -291,9 +255,6 @@ theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = 
   split_ifs <;> · simp at * <;> linarith
 #align simplex_category.δ_comp_δ SimplexCategory.δ_comp_δ
 
-/- warning: simplex_category.δ_comp_δ' -> SimplexCategory.δ_comp_δ' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_δ' SimplexCategory.δ_comp_δ'ₓ'. -/
 theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
     δ i ≫ δ j = δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) ≫ δ i.cast_succ :=
   by
@@ -304,9 +265,6 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j
       j.succ_pred, Fin.lt_iff_val_lt_val] using H
 #align simplex_category.δ_comp_δ' SimplexCategory.δ_comp_δ'
 
-/- warning: simplex_category.δ_comp_δ'' -> SimplexCategory.δ_comp_δ'' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_δ'' SimplexCategory.δ_comp_δ''ₓ'. -/
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
     δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) ≫ δ j.succ =
       δ j ≫ δ i :=
@@ -316,26 +274,17 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
   · exact H
 #align simplex_category.δ_comp_δ'' SimplexCategory.δ_comp_δ''
 
-/- warning: simplex_category.δ_comp_δ_self -> SimplexCategory.δ_comp_δ_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_δ_self SimplexCategory.δ_comp_δ_selfₓ'. -/
 /-- The special case of the first simplicial identity -/
 @[reassoc]
 theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : δ i ≫ δ i.cast_succ = δ i ≫ δ i.succ :=
   (δ_comp_δ (le_refl i)).symm
 #align simplex_category.δ_comp_δ_self SimplexCategory.δ_comp_δ_self
 
-/- warning: simplex_category.δ_comp_δ_self' -> SimplexCategory.δ_comp_δ_self' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_δ_self' SimplexCategory.δ_comp_δ_self'ₓ'. -/
 @[reassoc]
 theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast_succ) :
     δ i ≫ δ j = δ i ≫ δ i.succ := by subst H; rw [δ_comp_δ_self]
 #align simplex_category.δ_comp_δ_self' SimplexCategory.δ_comp_δ_self'
 
-/- warning: simplex_category.δ_comp_σ_of_le -> SimplexCategory.δ_comp_σ_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_σ_of_le SimplexCategory.δ_comp_σ_of_leₓ'. -/
 /-- The second simplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
@@ -369,9 +318,6 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
   all_goals try first |rfl|simp at * <;> linarith
 #align simplex_category.δ_comp_σ_of_le SimplexCategory.δ_comp_σ_of_le
 
-/- warning: simplex_category.δ_comp_σ_self -> SimplexCategory.δ_comp_σ_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_σ_self SimplexCategory.δ_comp_σ_selfₓ'. -/
 /-- The first part of the third simplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [n] :=
@@ -388,9 +334,6 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [
   split_ifs <;> · simp at * <;> linarith
 #align simplex_category.δ_comp_σ_self SimplexCategory.δ_comp_σ_self
 
-/- warning: simplex_category.δ_comp_σ_self' -> SimplexCategory.δ_comp_σ_self' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_σ_self' SimplexCategory.δ_comp_σ_self'ₓ'. -/
 @[reassoc]
 theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
     δ j ≫ σ i = 𝟙 [n] := by subst H; rw [δ_comp_σ_self]
@@ -417,9 +360,6 @@ theorem δ_comp_σ_succ' {n} (j : Fin (n + 2)) (i : Fin (n + 1)) (H : j = i.succ
 #align simplex_category.δ_comp_σ_succ' SimplexCategory.δ_comp_σ_succ'
 -/
 
-/- warning: simplex_category.δ_comp_σ_of_gt -> SimplexCategory.δ_comp_σ_of_gt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.δ_comp_σ_of_gt SimplexCategory.δ_comp_σ_of_gtₓ'. -/
 /-- The fourth simplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
@@ -480,9 +420,6 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
 
 attribute [local simp] Fin.pred_mk
 
-/- warning: simplex_category.σ_comp_σ -> SimplexCategory.σ_comp_σ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.σ_comp_σ SimplexCategory.σ_comp_σₓ'. -/
 /-- The fifth simplicial identity -/
 @[reassoc]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫ σ j = σ j.succ ≫ σ i :=
@@ -535,9 +472,6 @@ def skeletalFunctor : SimplexCategory ⥤ NonemptyFinLinOrdCat.{v}
 #align simplex_category.skeletal_functor SimplexCategory.skeletalFunctor
 -/
 
-/- warning: simplex_category.skeletal_functor.coe_map -> SimplexCategory.skeletalFunctor.coe_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.skeletal_functor.coe_map SimplexCategory.skeletalFunctor.coe_mapₓ'. -/
 theorem skeletalFunctor.coe_map {Δ₁ Δ₂ : SimplexCategory} (f : Δ₁ ⟶ Δ₂) :
     coeFn (skeletalFunctor.{v}.map f) = ULift.up ∘ f.toOrderHom ∘ ULift.down :=
   rfl
@@ -594,12 +528,6 @@ noncomputable instance isEquivalence : IsEquivalence skeletalFunctor.{v} :=
 
 end SkeletalFunctor
 
-/- warning: simplex_category.skeletal_equivalence -> SimplexCategory.skeletalEquivalence is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{0, u1, 0, succ u1} SimplexCategory SimplexCategory.smallCategory NonemptyFinLinOrdCat.{u1} NonemptyFinLinOrdCat.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{0, u1, 0, succ u1} SimplexCategory NonemptyFinLinOrdCat.{u1} SimplexCategory.smallCategory instNonemptyFinLinOrdCatLargeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align simplex_category.skeletal_equivalence SimplexCategory.skeletalEquivalenceₓ'. -/
 /-- The equivalence that exhibits `simplex_category` as skeleton
 of `NonemptyFinLinOrd` -/
 noncomputable def skeletalEquivalence : SimplexCategory ≌ NonemptyFinLinOrdCat.{v} :=
@@ -765,12 +693,6 @@ theorem isIso_of_bijective {x y : SimplexCategory} {f : x ⟶ y}
 #align simplex_category.is_iso_of_bijective SimplexCategory.isIso_of_bijective
 -/
 
-/- warning: simplex_category.order_iso_of_iso -> SimplexCategory.orderIsoOfIso is a dubious translation:
-lean 3 declaration is
-  forall {x : SimplexCategory} {y : SimplexCategory}, (CategoryTheory.Iso.{0, 0} SimplexCategory SimplexCategory.smallCategory x y) -> (OrderIso.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len y) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Preorder.toHasLe.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (Preorder.toHasLe.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len y) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len y) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (SimplexCategory.len y) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
-but is expected to have type
-  forall {x : SimplexCategory} {y : SimplexCategory}, (CategoryTheory.Iso.{0, 0} SimplexCategory SimplexCategory.smallCategory x y) -> (OrderIso.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len x) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len y) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len x) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (SimplexCategory.len y) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align simplex_category.order_iso_of_iso SimplexCategory.orderIsoOfIsoₓ'. -/
 /-- An isomorphism in `simplex_category` induces an `order_iso`. -/
 @[simp]
 def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Fin (x.len + 1) ≃o Fin (y.len + 1) :=
@@ -804,9 +726,6 @@ theorem eq_id_of_isIso {x : SimplexCategory} (f : x ⟶ x) [hf : IsIso f] : f = 
 #align simplex_category.eq_id_of_is_iso SimplexCategory.eq_id_of_isIso
 -/
 
-/- warning: simplex_category.eq_σ_comp_of_not_injective' -> SimplexCategory.eq_σ_comp_of_not_injective' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simplex_category.eq_σ_comp_of_not_injective' SimplexCategory.eq_σ_comp_of_not_injective'ₓ'. -/
 theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ')
     (i : Fin (n + 1)) (hi : θ.toOrderHom i.cast_succ = θ.toOrderHom i.succ) :
     ∃ θ' : mk n ⟶ Δ', θ = σ i ≫ θ' := by

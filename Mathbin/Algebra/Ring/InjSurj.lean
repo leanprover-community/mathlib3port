@@ -31,12 +31,6 @@ open Function
 -/
 
 
-/- warning: function.injective.distrib -> Function.Injective.distrib is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Mul.{u1} R] [_inst_2 : Add.{u1} R] [_inst_3 : Distrib.{u2} S] (f : R -> S), (Function.Injective.{succ u1, succ u2} R S f) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R _inst_2) x y)) (HAdd.hAdd.{u2, u2, u2} S S S (instHAdd.{u2} S (Distrib.toHasAdd.{u2} S _inst_3)) (f x) (f y))) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_1) x y)) (HMul.hMul.{u2, u2, u2} S S S (instHMul.{u2} S (Distrib.toHasMul.{u2} S _inst_3)) (f x) (f y))) -> (Distrib.{u1} R)
-but is expected to have type
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Mul.{u1} R] [_inst_2 : Add.{u1} R] [_inst_3 : Distrib.{u2} S] (f : R -> S), (Function.Injective.{succ u1, succ u2} R S f) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R _inst_2) x y)) (HAdd.hAdd.{u2, u2, u2} S S S (instHAdd.{u2} S (Distrib.toAdd.{u2} S _inst_3)) (f x) (f y))) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_1) x y)) (HMul.hMul.{u2, u2, u2} S S S (instHMul.{u2} S (Distrib.toMul.{u2} S _inst_3)) (f x) (f y))) -> (Distrib.{u1} R)
-Case conversion may be inaccurate. Consider using '#align function.injective.distrib Function.Injective.distribₓ'. -/
 /-- Pullback a `distrib` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -49,12 +43,6 @@ protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distrib S] (f : R 
   right_distrib x y z := hf <| by simp only [*, right_distrib]
 #align function.injective.distrib Function.Injective.distrib
 
-/- warning: function.surjective.distrib -> Function.Surjective.distrib is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Distrib.{u1} R] [_inst_2 : Add.{u2} S] [_inst_3 : Mul.{u2} S] (f : R -> S), (Function.Surjective.{succ u1, succ u2} R S f) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R _inst_1)) x y)) (HAdd.hAdd.{u2, u2, u2} S S S (instHAdd.{u2} S _inst_2) (f x) (f y))) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R _inst_1)) x y)) (HMul.hMul.{u2, u2, u2} S S S (instHMul.{u2} S _inst_3) (f x) (f y))) -> (Distrib.{u2} S)
-but is expected to have type
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Distrib.{u1} R] [_inst_2 : Add.{u2} S] [_inst_3 : Mul.{u2} S] (f : R -> S), (Function.Surjective.{succ u1, succ u2} R S f) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R _inst_1)) x y)) (HAdd.hAdd.{u2, u2, u2} S S S (instHAdd.{u2} S _inst_2) (f x) (f y))) -> (forall (x : R) (y : R), Eq.{succ u2} S (f (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toMul.{u1} R _inst_1)) x y)) (HMul.hMul.{u2, u2, u2} S S S (instHMul.{u2} S _inst_3) (f x) (f y))) -> (Distrib.{u2} S)
-Case conversion may be inaccurate. Consider using '#align function.surjective.distrib Function.Surjective.distribₓ'. -/
 /-- Pushforward a `distrib` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -76,12 +64,6 @@ section InjectiveSurjectiveMaps
 
 variable [Zero β] [Add β] [Mul β] [SMul ℕ β]
 
-/- warning: function.injective.non_unital_non_assoc_semiring -> Function.Injective.nonUnitalNonAssocSemiring is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalNonAssocSemiring.{u1} α] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_1)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_5)))))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_5))) (f x) (f y))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_5))) (f x) (f y))) -> (forall (x : β) (n : Nat), Eq.{succ u1} α (f (SMul.smul.{0, u2} Nat β _inst_4 n x)) (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_5))) n (f x))) -> (NonUnitalNonAssocSemiring.{u2} β)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalNonAssocSemiring.{u1} α] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_5))))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_5))) (f x) (f y))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_5)) (f x) (f y))) -> (forall (x : β) (n : Nat), Eq.{succ u1} α (f (HSMul.hSMul.{0, u2, u2} Nat β β (instHSMul.{0, u2} Nat β _inst_4) n x)) (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_5)))) n (f x))) -> (NonUnitalNonAssocSemiring.{u2} β)
-Case conversion may be inaccurate. Consider using '#align function.injective.non_unital_non_assoc_semiring Function.Injective.nonUnitalNonAssocSemiringₓ'. -/
 /-- Pullback a `non_unital_non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -92,12 +74,6 @@ protected def Function.Injective.nonUnitalNonAssocSemiring {α : Type u}
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 #align function.injective.non_unital_non_assoc_semiring Function.Injective.nonUnitalNonAssocSemiring
 
-/- warning: function.injective.non_unital_semiring -> Function.Injective.nonUnitalSemiring is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalSemiring.{u1} α] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_1)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))))))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) (f x) (f y))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) (f x) (f y))) -> (forall (x : β) (n : Nat), Eq.{succ u1} α (f (SMul.smul.{0, u2} Nat β _inst_4 n x)) (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) n (f x))) -> (NonUnitalSemiring.{u2} β)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalSemiring.{u1} α] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α _inst_5))))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) (f x) (f y))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))) (f x) (f y))) -> (forall (x : β) (n : Nat), Eq.{succ u1} α (f (HSMul.hSMul.{0, u2, u2} Nat β β (instHSMul.{0, u2} Nat β _inst_4) n x)) (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))))) n (f x))) -> (NonUnitalSemiring.{u2} β)
-Case conversion may be inaccurate. Consider using '#align function.injective.non_unital_semiring Function.Injective.nonUnitalSemiringₓ'. -/
 /-- Pullback a `non_unital_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -108,12 +84,6 @@ protected def Function.Injective.nonUnitalSemiring {α : Type u} [NonUnitalSemir
   { hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.SemigroupWithZero f zero mul with }
 #align function.injective.non_unital_semiring Function.Injective.nonUnitalSemiring
 
-/- warning: function.injective.non_assoc_semiring -> Function.Injective.nonAssocSemiring is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_5 : NonAssocSemiring.{u1} α] {β : Type.{u2}} [_inst_6 : Zero.{u2} β] [_inst_7 : One.{u2} β] [_inst_8 : Mul.{u2} β] [_inst_9 : Add.{u2} β] [_inst_10 : SMul.{0, u2} Nat β] [_inst_11 : NatCast.{u2} β] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_6)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))))))) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β _inst_7)))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5))))))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_9) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) (f x) (f y))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_8) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) (f x) (f y))) -> (forall (x : β) (n : Nat), Eq.{succ u1} α (f (SMul.smul.{0, u2} Nat β _inst_10 n x)) (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5)))) n (f x))) -> (forall (n : Nat), Eq.{succ u1} α (f ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat β (HasLiftT.mk.{1, succ u2} Nat β (CoeTCₓ.coe.{1, succ u2} Nat β (Nat.castCoe.{u2} β _inst_11))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5)))))) n)) -> (NonAssocSemiring.{u2} β)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_5 : NonAssocSemiring.{u1} α] {β : Type.{u2}} [_inst_6 : Zero.{u2} β] [_inst_7 : One.{u2} β] [_inst_8 : Mul.{u2} β] [_inst_9 : Add.{u2} β] [_inst_10 : SMul.{0, u2} Nat β] [_inst_11 : NatCast.{u2} β] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_6))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroOneClass.toZero.{u1} α (NonAssocSemiring.toMulZeroOneClass.{u1} α _inst_5))))) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β _inst_7))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocSemiring.toOne.{u1} α _inst_5)))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_9) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) (f x) (f y))) -> (forall (x : β) (y : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_8) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))) (f x) (f y))) -> (forall (x : β) (n : Nat), Eq.{succ u1} α (f (HSMul.hSMul.{0, u2, u2} Nat β β (instHSMul.{0, u2} Nat β _inst_10) n x)) (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5))))) n (f x))) -> (forall (n : Nat), Eq.{succ u1} α (f (Nat.cast.{u2} β _inst_11 n)) (Nat.cast.{u1} α (NonAssocSemiring.toNatCast.{u1} α _inst_5) n)) -> (NonAssocSemiring.{u2} β)
-Case conversion may be inaccurate. Consider using '#align function.injective.non_assoc_semiring Function.Injective.nonAssocSemiringₓ'. -/
 /-- Pullback a `non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -126,9 +96,6 @@ protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemirin
     hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.MulOneClass f one mul with }
 #align function.injective.non_assoc_semiring Function.Injective.nonAssocSemiring
 
-/- warning: function.injective.semiring -> Function.Injective.semiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.semiring Function.Injective.semiringₓ'. -/
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -141,12 +108,6 @@ protected def Function.Injective.semiring {α : Type u} [Semiring α] {β : Type
     hf.Distrib f add mul with }
 #align function.injective.semiring Function.Injective.semiring
 
-/- warning: function.surjective.non_unital_non_assoc_semiring -> Function.Surjective.nonUnitalNonAssocSemiring is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalNonAssocSemiring.{u1} α] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_5)))))) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_1)))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_5))) x y)) (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_5))) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} β (f (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_5))) n x)) (SMul.smul.{0, u2} Nat β _inst_4 n (f x))) -> (NonUnitalNonAssocSemiring.{u2} β)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalNonAssocSemiring.{u1} α] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α _inst_5))))) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_1))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_5))) x y)) (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_5)) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} β (f (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_5)))) n x)) (HSMul.hSMul.{0, u2, u2} Nat β β (instHSMul.{0, u2} Nat β _inst_4) n (f x))) -> (NonUnitalNonAssocSemiring.{u2} β)
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_unital_non_assoc_semiring Function.Surjective.nonUnitalNonAssocSemiringₓ'. -/
 /-- Pushforward a `non_unital_non_assoc_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -157,12 +118,6 @@ protected def Function.Surjective.nonUnitalNonAssocSemiring {α : Type u}
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 #align function.surjective.non_unital_non_assoc_semiring Function.Surjective.nonUnitalNonAssocSemiring
 
-/- warning: function.surjective.non_unital_semiring -> Function.Surjective.nonUnitalSemiring is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalSemiring.{u1} α] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))))))) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_1)))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) x y)) (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} β (f (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) n x)) (SMul.smul.{0, u2} Nat β _inst_4 n (f x))) -> (NonUnitalSemiring.{u2} β)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Add.{u2} β] [_inst_3 : Mul.{u2} β] [_inst_4 : SMul.{0, u2} Nat β] {α : Type.{u1}} [_inst_5 : NonUnitalSemiring.{u1} α] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α _inst_5))))) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_1))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) x y)) (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_2) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_3) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} β (f (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))))) n x)) (HSMul.hSMul.{0, u2, u2} Nat β β (instHSMul.{0, u2} Nat β _inst_4) n (f x))) -> (NonUnitalSemiring.{u2} β)
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_unital_semiring Function.Surjective.nonUnitalSemiringₓ'. -/
 /-- Pushforward a `non_unital_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -173,12 +128,6 @@ protected def Function.Surjective.nonUnitalSemiring {α : Type u} [NonUnitalSemi
   { hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.SemigroupWithZero f zero mul with }
 #align function.surjective.non_unital_semiring Function.Surjective.nonUnitalSemiring
 
-/- warning: function.surjective.non_assoc_semiring -> Function.Surjective.nonAssocSemiring is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_5 : NonAssocSemiring.{u1} α] {β : Type.{u2}} [_inst_6 : Zero.{u2} β] [_inst_7 : One.{u2} β] [_inst_8 : Add.{u2} β] [_inst_9 : Mul.{u2} β] [_inst_10 : SMul.{0, u2} Nat β] [_inst_11 : NatCast.{u2} β] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))))))) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_6)))) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5))))))) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β _inst_7)))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) x y)) (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_8) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_9) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} β (f (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5)))) n x)) (SMul.smul.{0, u2} Nat β _inst_10 n (f x))) -> (forall (n : Nat), Eq.{succ u2} β (f ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5)))))) n)) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat β (HasLiftT.mk.{1, succ u2} Nat β (CoeTCₓ.coe.{1, succ u2} Nat β (Nat.castCoe.{u2} β _inst_11))) n)) -> (NonAssocSemiring.{u2} β)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_5 : NonAssocSemiring.{u1} α] {β : Type.{u2}} [_inst_6 : Zero.{u2} β] [_inst_7 : One.{u2} β] [_inst_8 : Add.{u2} β] [_inst_9 : Mul.{u2} β] [_inst_10 : SMul.{0, u2} Nat β] [_inst_11 : NatCast.{u2} β] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroOneClass.toZero.{u1} α (NonAssocSemiring.toMulZeroOneClass.{u1} α _inst_5))))) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_6))) -> (Eq.{succ u2} β (f (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocSemiring.toOne.{u1} α _inst_5)))) (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β _inst_7))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5)))) x y)) (HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β _inst_8) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_5))) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_9) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} β (f (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_5))))) n x)) (HSMul.hSMul.{0, u2, u2} Nat β β (instHSMul.{0, u2} Nat β _inst_10) n (f x))) -> (forall (n : Nat), Eq.{succ u2} β (f (Nat.cast.{u1} α (NonAssocSemiring.toNatCast.{u1} α _inst_5) n)) (Nat.cast.{u2} β _inst_11 n)) -> (NonAssocSemiring.{u2} β)
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_assoc_semiring Function.Surjective.nonAssocSemiringₓ'. -/
 /-- Pushforward a `non_assoc_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -191,9 +140,6 @@ protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiri
     hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.MulOneClass f one mul with }
 #align function.surjective.non_assoc_semiring Function.Surjective.nonAssocSemiring
 
-/- warning: function.surjective.semiring -> Function.Surjective.semiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.semiring Function.Surjective.semiringₓ'. -/
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -212,12 +158,6 @@ section NonUnitalCommSemiring
 
 variable [NonUnitalCommSemiring α] [NonUnitalCommSemiring β] {a b c : α}
 
-/- warning: function.injective.non_unital_comm_semiring -> Function.Injective.nonUnitalCommSemiring is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : NonUnitalCommSemiring.{u1} α] [_inst_3 : Zero.{u2} γ] [_inst_4 : Add.{u2} γ] [_inst_5 : Mul.{u2} γ] [_inst_6 : SMul.{0, u2} Nat γ] (f : γ -> α), (Function.Injective.{succ u2, succ u1} γ α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} γ 0 (OfNat.mk.{u2} γ 0 (Zero.zero.{u2} γ _inst_3)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))))))) -> (forall (x : γ) (y : γ), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} γ γ γ (instHAdd.{u2} γ _inst_4) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) (f x) (f y))) -> (forall (x : γ) (y : γ), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} γ γ γ (instHMul.{u2} γ _inst_5) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) (f x) (f y))) -> (forall (x : γ) (n : Nat), Eq.{succ u1} α (f (SMul.smul.{0, u2} Nat γ _inst_6 n x)) (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) n (f x))) -> (NonUnitalCommSemiring.{u2} γ)
-but is expected to have type
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : NonUnitalCommSemiring.{u1} α] [_inst_3 : Zero.{u2} γ] [_inst_4 : Add.{u2} γ] [_inst_5 : Mul.{u2} γ] [_inst_6 : SMul.{0, u2} Nat γ] (f : γ -> α), (Function.Injective.{succ u2, succ u1} γ α f) -> (Eq.{succ u1} α (f (OfNat.ofNat.{u2} γ 0 (Zero.toOfNat0.{u2} γ _inst_3))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))))) -> (forall (x : γ) (y : γ), Eq.{succ u1} α (f (HAdd.hAdd.{u2, u2, u2} γ γ γ (instHAdd.{u2} γ _inst_4) x y)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) (f x) (f y))) -> (forall (x : γ) (y : γ), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} γ γ γ (instHMul.{u2} γ _inst_5) x y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))) (f x) (f y))) -> (forall (x : γ) (n : Nat), Eq.{succ u1} α (f (HSMul.hSMul.{0, u2, u2} Nat γ γ (instHSMul.{0, u2} Nat γ _inst_6) n x)) (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))))) n (f x))) -> (NonUnitalCommSemiring.{u2} γ)
-Case conversion may be inaccurate. Consider using '#align function.injective.non_unital_comm_semiring Function.Injective.nonUnitalCommSemiringₓ'. -/
 /-- Pullback a `non_unital_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -228,12 +168,6 @@ protected def Function.Injective.nonUnitalCommSemiring [Zero γ] [Add γ] [Mul �
   { hf.NonUnitalSemiring f zero add mul nsmul, hf.CommSemigroup f mul with }
 #align function.injective.non_unital_comm_semiring Function.Injective.nonUnitalCommSemiring
 
-/- warning: function.surjective.non_unital_comm_semiring -> Function.Surjective.nonUnitalCommSemiring is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : NonUnitalCommSemiring.{u1} α] [_inst_3 : Zero.{u2} γ] [_inst_4 : Add.{u2} γ] [_inst_5 : Mul.{u2} γ] [_inst_6 : SMul.{0, u2} Nat γ] (f : α -> γ), (Function.Surjective.{succ u1, succ u2} α γ f) -> (Eq.{succ u2} γ (f (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))))))) (OfNat.ofNat.{u2} γ 0 (OfNat.mk.{u2} γ 0 (Zero.zero.{u2} γ _inst_3)))) -> (forall (x : α) (y : α), Eq.{succ u2} γ (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) x y)) (HAdd.hAdd.{u2, u2, u2} γ γ γ (instHAdd.{u2} γ _inst_4) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} γ (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) x y)) (HMul.hMul.{u2, u2, u2} γ γ γ (instHMul.{u2} γ _inst_5) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} γ (f (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) n x)) (SMul.smul.{0, u2} Nat γ _inst_6 n (f x))) -> (NonUnitalCommSemiring.{u2} γ)
-but is expected to have type
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : NonUnitalCommSemiring.{u1} α] [_inst_3 : Zero.{u2} γ] [_inst_4 : Add.{u2} γ] [_inst_5 : Mul.{u2} γ] [_inst_6 : SMul.{0, u2} Nat γ] (f : α -> γ), (Function.Surjective.{succ u1, succ u2} α γ f) -> (Eq.{succ u2} γ (f (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))))) (OfNat.ofNat.{u2} γ 0 (Zero.toOfNat0.{u2} γ _inst_3))) -> (forall (x : α) (y : α), Eq.{succ u2} γ (f (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1))))) x y)) (HAdd.hAdd.{u2, u2, u2} γ γ γ (instHAdd.{u2} γ _inst_4) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} γ (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))) x y)) (HMul.hMul.{u2, u2, u2} γ γ γ (instHMul.{u2} γ _inst_5) (f x) (f y))) -> (forall (x : α) (n : Nat), Eq.{succ u2} γ (f (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} α _inst_1)))))) n x)) (HSMul.hSMul.{0, u2, u2} Nat γ γ (instHSMul.{0, u2} Nat γ _inst_6) n (f x))) -> (NonUnitalCommSemiring.{u2} γ)
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_unital_comm_semiring Function.Surjective.nonUnitalCommSemiringₓ'. -/
 /-- Pushforward a `non_unital_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -250,9 +184,6 @@ section CommSemiring
 
 variable [CommSemiring α] [CommSemiring β] {a b c : α}
 
-/- warning: function.injective.comm_semiring -> Function.Injective.commSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.comm_semiring Function.Injective.commSemiringₓ'. -/
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -264,9 +195,6 @@ protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul �
   { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.CommSemigroup f mul with }
 #align function.injective.comm_semiring Function.Injective.commSemiring
 
-/- warning: function.surjective.comm_semiring -> Function.Surjective.commSemiring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.comm_semiring Function.Surjective.commSemiringₓ'. -/
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -286,12 +214,6 @@ section Mul
 
 variable [Mul α] [HasDistribNeg α]
 
-/- warning: function.injective.has_distrib_neg -> Function.Injective.hasDistribNeg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] [_inst_3 : Neg.{u2} β] [_inst_4 : Mul.{u2} β] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (forall (a : β), Eq.{succ u1} α (f (Neg.neg.{u2} β _inst_3 a)) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) (f a))) -> (forall (a : β) (b : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_4) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (f a) (f b))) -> (HasDistribNeg.{u2} β _inst_4)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] [_inst_3 : Neg.{u2} β] [_inst_4 : Mul.{u2} β] (f : β -> α), (Function.Injective.{succ u2, succ u1} β α f) -> (forall (a : β), Eq.{succ u1} α (f (Neg.neg.{u2} β _inst_3 a)) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) (f a))) -> (forall (a : β) (b : β), Eq.{succ u1} α (f (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_4) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (f a) (f b))) -> (HasDistribNeg.{u2} β _inst_4)
-Case conversion may be inaccurate. Consider using '#align function.injective.has_distrib_neg Function.Injective.hasDistribNegₓ'. -/
 -- See note [reducible non-instances]
 /-- A type endowed with `-` and `*` has distributive negation, if it admits an injective map that
 preserves `-` and `*` to a type which has distributive negation. -/
@@ -304,12 +226,6 @@ protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α)
     mul_neg := fun x y => hf <| by erw [neg, mul, neg, mul_neg, mul] }
 #align function.injective.has_distrib_neg Function.Injective.hasDistribNeg
 
-/- warning: function.surjective.has_distrib_neg -> Function.Surjective.hasDistribNeg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] [_inst_3 : Neg.{u2} β] [_inst_4 : Mul.{u2} β] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (forall (a : α), Eq.{succ u2} β (f (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α _inst_1 _inst_2)) a)) (Neg.neg.{u2} β _inst_3 (f a))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_4) (f a) (f b))) -> (HasDistribNeg.{u2} β _inst_4)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : HasDistribNeg.{u1} α _inst_1] [_inst_3 : Neg.{u2} β] [_inst_4 : Mul.{u2} β] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (forall (a : α), Eq.{succ u2} β (f (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α _inst_1 _inst_2)) a)) (Neg.neg.{u2} β _inst_3 (f a))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_4) (f a) (f b))) -> (HasDistribNeg.{u2} β _inst_4)
-Case conversion may be inaccurate. Consider using '#align function.surjective.has_distrib_neg Function.Surjective.hasDistribNegₓ'. -/
 -- See note [reducible non-instances]
 /-- A type endowed with `-` and `*` has distributive negation, if it admits a surjective map that
 preserves `-` and `*` from a type which has distributive negation. -/
@@ -343,9 +259,6 @@ section NonUnitalNonAssocRing
 
 variable [NonUnitalNonAssocRing α]
 
-/- warning: function.injective.non_unital_non_assoc_ring -> Function.Injective.nonUnitalNonAssocRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.non_unital_non_assoc_ring Function.Injective.nonUnitalNonAssocRingₓ'. -/
 /-- Pullback a `non_unital_non_assoc_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -359,9 +272,6 @@ protected def Function.Injective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul �
     hf.Distrib f add mul with }
 #align function.injective.non_unital_non_assoc_ring Function.Injective.nonUnitalNonAssocRing
 
-/- warning: function.surjective.non_unital_non_assoc_ring -> Function.Surjective.nonUnitalNonAssocRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_unital_non_assoc_ring Function.Surjective.nonUnitalNonAssocRingₓ'. -/
 /-- Pushforward a `non_unital_non_assoc_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -381,9 +291,6 @@ section NonUnitalRing
 
 variable [NonUnitalRing α]
 
-/- warning: function.injective.non_unital_ring -> Function.Injective.nonUnitalRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.non_unital_ring Function.Injective.nonUnitalRingₓ'. -/
 /-- Pullback a `non_unital_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -396,9 +303,6 @@ protected def Function.Injective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg 
     hf.Distrib f add mul, hf.Semigroup f mul with }
 #align function.injective.non_unital_ring Function.Injective.nonUnitalRing
 
-/- warning: function.surjective.non_unital_ring -> Function.Surjective.nonUnitalRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_unital_ring Function.Surjective.nonUnitalRingₓ'. -/
 /-- Pushforward a `non_unital_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -417,9 +321,6 @@ section NonAssocRing
 
 variable [NonAssocRing α]
 
-/- warning: function.injective.non_assoc_ring -> Function.Injective.nonAssocRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.non_assoc_ring Function.Injective.nonAssocRingₓ'. -/
 /-- Pullback a `non_assoc_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -434,9 +335,6 @@ protected def Function.Injective.nonAssocRing [Zero β] [One β] [Add β] [Mul �
     hf.MulZeroClass f zero mul, hf.Distrib f add mul, hf.MulOneClass f one mul with }
 #align function.injective.non_assoc_ring Function.Injective.nonAssocRing
 
-/- warning: function.surjective.non_assoc_ring -> Function.Surjective.nonAssocRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_assoc_ring Function.Surjective.nonAssocRingₓ'. -/
 /-- Pushforward a `non_unital_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -457,9 +355,6 @@ section Ring
 
 variable [Ring α] {a b c d e : α}
 
-/- warning: function.injective.ring -> Function.Injective.ring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.ring Function.Injective.ringₓ'. -/
 /-- Pullback a `ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -475,9 +370,6 @@ protected def Function.Injective.ring [Zero β] [One β] [Add β] [Mul β] [Neg 
     hf.Distrib f add mul with }
 #align function.injective.ring Function.Injective.ring
 
-/- warning: function.surjective.ring -> Function.Surjective.ring is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.ring Function.Surjective.ringₓ'. -/
 /-- Pushforward a `ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -499,9 +391,6 @@ section NonUnitalCommRing
 
 variable [NonUnitalCommRing α] {a b c : α}
 
-/- warning: function.injective.non_unital_comm_ring -> Function.Injective.nonUnitalCommRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.non_unital_comm_ring Function.Injective.nonUnitalCommRingₓ'. -/
 /-- Pullback a `comm_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -514,9 +403,6 @@ protected def Function.Injective.nonUnitalCommRing [Zero β] [Add β] [Mul β] [
   { hf.NonUnitalRing f zero add mul neg sub nsmul zsmul, hf.CommSemigroup f mul with }
 #align function.injective.non_unital_comm_ring Function.Injective.nonUnitalCommRing
 
-/- warning: function.surjective.non_unital_comm_ring -> Function.Surjective.nonUnitalCommRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.non_unital_comm_ring Function.Surjective.nonUnitalCommRingₓ'. -/
 /-- Pushforward a `non_unital_comm_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -535,9 +421,6 @@ section CommRing
 
 variable [CommRing α] {a b c : α}
 
-/- warning: function.injective.comm_ring -> Function.Injective.commRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.injective.comm_ring Function.Injective.commRingₓ'. -/
 /-- Pullback a `comm_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -552,9 +435,6 @@ protected def Function.Injective.commRing [Zero β] [One β] [Add β] [Mul β] [
     hf.CommSemigroup f mul with }
 #align function.injective.comm_ring Function.Injective.commRing
 
-/- warning: function.surjective.comm_ring -> Function.Surjective.commRing is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.comm_ring Function.Surjective.commRingₓ'. -/
 /-- Pushforward a `comm_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]

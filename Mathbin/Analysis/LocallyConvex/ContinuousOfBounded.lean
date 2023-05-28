@@ -49,9 +49,6 @@ variable [UniformAddGroup F]
 
 variable [NontriviallyNormedField 𝕜] [Module 𝕜 E] [Module 𝕜 F] [ContinuousSMul 𝕜 E]
 
-/- warning: linear_map.clm_of_exists_bounded_image -> LinearMap.clmOfExistsBoundedImage is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.clm_of_exists_bounded_image LinearMap.clmOfExistsBoundedImageₓ'. -/
 /-- Construct a continuous linear map from a linear map `f : E →ₗ[𝕜] F` and the existence of a
 neighborhood of zero that gets mapped into a bounded set in `F`. -/
 def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
@@ -84,18 +81,12 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
     exact (smul_zero _).symm⟩
 #align linear_map.clm_of_exists_bounded_image LinearMap.clmOfExistsBoundedImage
 
-/- warning: linear_map.clm_of_exists_bounded_image_coe -> LinearMap.clmOfExistsBoundedImage_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.clm_of_exists_bounded_image_coe LinearMap.clmOfExistsBoundedImage_coeₓ'. -/
 theorem LinearMap.clmOfExistsBoundedImage_coe {f : E →ₗ[𝕜] F}
     {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} :
     (f.clmOfExistsBoundedImage h : E →ₗ[𝕜] F) = f :=
   rfl
 #align linear_map.clm_of_exists_bounded_image_coe LinearMap.clmOfExistsBoundedImage_coe
 
-/- warning: linear_map.clm_of_exists_bounded_image_apply -> LinearMap.clmOfExistsBoundedImage_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.clm_of_exists_bounded_image_apply LinearMap.clmOfExistsBoundedImage_applyₓ'. -/
 @[simp]
 theorem LinearMap.clmOfExistsBoundedImage_apply {f : E →ₗ[𝕜] F}
     {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} {x : E} :
@@ -117,9 +108,6 @@ variable [IsROrC 𝕜'] [Module 𝕜' F] [ContinuousSMul 𝕜' F]
 
 variable {σ : 𝕜 →+* 𝕜'}
 
-/- warning: linear_map.continuous_at_zero_of_locally_bounded -> LinearMap.continuousAt_zero_of_locally_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuousAt_zero_of_locally_boundedₓ'. -/
 theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : ContinuousAt f 0 :=
   by
@@ -194,9 +182,6 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   exact hu' n hn' h''
 #align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuousAt_zero_of_locally_bounded
 
-/- warning: linear_map.continuous_of_locally_bounded -> LinearMap.continuous_of_locally_bounded is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_of_locally_bounded LinearMap.continuous_of_locally_boundedₓ'. -/
 /-- If `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ] F` is continuous. -/
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : Continuous f :=

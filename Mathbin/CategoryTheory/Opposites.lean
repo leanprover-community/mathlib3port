@@ -41,23 +41,11 @@ section Quiver
 
 variable [Quiver.{v₁} C]
 
-/- warning: quiver.hom.op_inj -> Quiver.Hom.op_inj is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : Quiver.{u1, u2} C] {X : C} {Y : C}, Function.Injective.{u1, u1} (Quiver.Hom.{u1, u2} C _inst_1 X Y) (Quiver.Hom.{u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) (Opposite.op.{succ u2} C Y) (Opposite.op.{succ u2} C X)) (Quiver.Hom.op.{u2, u1} C _inst_1 X Y)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : Quiver.{u1, u2} C] {X : C} {Y : C}, Function.Injective.{u1, max 1 u1} (Quiver.Hom.{u1, u2} C _inst_1 X Y) (Quiver.Hom.{max 1 u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) (Opposite.op.{succ u2} C Y) (Opposite.op.{succ u2} C X)) (Quiver.Hom.op.{u2, u1} C _inst_1 X Y)
-Case conversion may be inaccurate. Consider using '#align quiver.hom.op_inj Quiver.Hom.op_injₓ'. -/
 theorem Quiver.Hom.op_inj {X Y : C} :
     Function.Injective (Quiver.Hom.op : (X ⟶ Y) → (op Y ⟶ op X)) := fun _ _ H =>
   congr_arg Quiver.Hom.unop H
 #align quiver.hom.op_inj Quiver.Hom.op_inj
 
-/- warning: quiver.hom.unop_inj -> Quiver.Hom.unop_inj is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : Quiver.{u1, u2} C] {X : Opposite.{succ u2} C} {Y : Opposite.{succ u2} C}, Function.Injective.{u1, u1} (Quiver.Hom.{u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) X Y) (Quiver.Hom.{u1, u2} C _inst_1 (Opposite.unop.{succ u2} C Y) (Opposite.unop.{succ u2} C X)) (Quiver.Hom.unop.{u2, u1} C _inst_1 X Y)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : Quiver.{u1, u2} C] {X : Opposite.{succ u2} C} {Y : Opposite.{succ u2} C}, Function.Injective.{max 1 u1, u1} (Quiver.Hom.{max 1 u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) X Y) (Quiver.Hom.{u1, u2} C _inst_1 (Opposite.unop.{succ u2} C Y) (Opposite.unop.{succ u2} C X)) (Quiver.Hom.unop.{u2, u1} C _inst_1 X Y)
-Case conversion may be inaccurate. Consider using '#align quiver.hom.unop_inj Quiver.Hom.unop_injₓ'. -/
 theorem Quiver.Hom.unop_inj {X Y : Cᵒᵖ} :
     Function.Injective (Quiver.Hom.unop : (X ⟶ Y) → (unop Y ⟶ unop X)) := fun _ _ H =>
   congr_arg Quiver.Hom.op H
@@ -70,12 +58,6 @@ theorem Quiver.Hom.unop_op {X Y : C} (f : X ⟶ Y) : f.op.unop = f :=
 #align quiver.hom.unop_op Quiver.Hom.unop_op
 -/
 
-/- warning: quiver.hom.op_unop -> Quiver.Hom.op_unop is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : Quiver.{u1, u2} C] {X : Opposite.{succ u2} C} {Y : Opposite.{succ u2} C} (f : Quiver.Hom.{u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) X Y), Eq.{u1} (Quiver.Hom.{u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) (Opposite.op.{succ u2} C (Opposite.unop.{succ u2} C X)) (Opposite.op.{succ u2} C (Opposite.unop.{succ u2} C Y))) (Quiver.Hom.op.{u2, u1} C _inst_1 (Opposite.unop.{succ u2} C Y) (Opposite.unop.{succ u2} C X) (Quiver.Hom.unop.{u2, u1} C _inst_1 X Y f)) f
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : Quiver.{u1, u2} C] {X : Opposite.{succ u2} C} {Y : Opposite.{succ u2} C} (f : Quiver.Hom.{max 1 u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) X Y), Eq.{max 1 u1} (Quiver.Hom.{max 1 u1, u2} (Opposite.{succ u2} C) (Quiver.opposite.{u2, u1} C _inst_1) (Opposite.op.{succ u2} C (Opposite.unop.{succ u2} C X)) (Opposite.op.{succ u2} C (Opposite.unop.{succ u2} C Y))) (Quiver.Hom.op.{u2, u1} C _inst_1 (Opposite.unop.{succ u2} C Y) (Opposite.unop.{succ u2} C X) (Quiver.Hom.unop.{u2, u1} C _inst_1 X Y f)) f
-Case conversion may be inaccurate. Consider using '#align quiver.hom.op_unop Quiver.Hom.op_unopₓ'. -/
 @[simp]
 theorem Quiver.Hom.op_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) : f.unop.op = f :=
   rfl
@@ -163,12 +145,6 @@ def unopUnop : C ⥤ Cᵒᵖᵒᵖ where
 #align category_theory.unop_unop CategoryTheory.unopUnop
 -/
 
-/- warning: category_theory.op_op_equivalence -> CategoryTheory.opOpEquivalence is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, u1, u2, u2} (Opposite.{succ u2} (Opposite.{succ u2} C)) (CategoryTheory.Category.opposite.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) C _inst_1
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, u1, u2, u2} (Opposite.{succ u2} (Opposite.{succ u2} C)) C (CategoryTheory.Category.opposite.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) _inst_1
-Case conversion may be inaccurate. Consider using '#align category_theory.op_op_equivalence CategoryTheory.opOpEquivalenceₓ'. -/
 /-- The double opposite category is equivalent to the original. -/
 @[simps]
 def opOpEquivalence : Cᵒᵖᵒᵖ ≌ C where
@@ -661,12 +637,6 @@ namespace Equivalence
 
 variable {D : Type u₂} [Category.{v₂} D]
 
-/- warning: category_theory.equivalence.op -> CategoryTheory.Equivalence.op is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_2) -> (CategoryTheory.Equivalence.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_2) -> (CategoryTheory.Equivalence.{u1, u2, u3, u4} (Opposite.{succ u3} C) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.op CategoryTheory.Equivalence.opₓ'. -/
 /-- An equivalence between categories gives an equivalence between the opposite categories.
 -/
 @[simps]
@@ -678,12 +648,6 @@ def op (e : C ≌ D) : Cᵒᵖ ≌ Dᵒᵖ where
   functor_unitIso_comp' X := by apply Quiver.Hom.unop_inj; dsimp; simp
 #align category_theory.equivalence.op CategoryTheory.Equivalence.op
 
-/- warning: category_theory.equivalence.unop -> CategoryTheory.Equivalence.unop is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2)) -> (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_2)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} (Opposite.{succ u3} C) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2)) -> (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.unop CategoryTheory.Equivalence.unopₓ'. -/
 /-- An equivalence between opposite categories gives an equivalence between the original categories.
 -/
 @[simps]
@@ -758,12 +722,6 @@ variable (C)
 
 variable (D : Type u₂) [Category.{v₂} D]
 
-/- warning: category_theory.functor.op_unop_equiv -> CategoryTheory.Functor.opUnopEquiv is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u1, u3} C] (D : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u2, u4} D], CategoryTheory.Equivalence.{max u3 u2, max u3 u2, max u1 u2 u3 u4, max u1 u2 u3 u4} (Opposite.{succ (max u1 u2 u3 u4)} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2)) (CategoryTheory.Category.opposite.{max u3 u2, max u1 u2 u3 u4} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2)) (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2)) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2))
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u1, u3} C] (D : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u2, u4} D], CategoryTheory.Equivalence.{max u3 u2, max u3 u2, max (max (max u3 u4) u1) u2, max (max (max u4 u3) u2) u1} (Opposite.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2)) (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2)) (CategoryTheory.Category.opposite.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2)) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.op_unop_equiv CategoryTheory.Functor.opUnopEquivₓ'. -/
 /-- The equivalence of functor categories induced by `op` and `unop`.
 -/
 @[simps]
@@ -782,12 +740,6 @@ def opUnopEquiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ
   counitIso := NatIso.ofComponents (fun F => F.unopOpIso) (by tidy)
 #align category_theory.functor.op_unop_equiv CategoryTheory.Functor.opUnopEquiv
 
-/- warning: category_theory.functor.left_op_right_op_equiv -> CategoryTheory.Functor.leftOpRightOpEquiv is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u1, u3} C] (D : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u2, u4} D], CategoryTheory.Equivalence.{max u3 u2, max u3 u2, max u1 u2 u3 u4, max u1 u2 u3 u4} (Opposite.{succ (max u1 u2 u3 u4)} (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) D _inst_2)) (CategoryTheory.Category.opposite.{max u3 u2, max u1 u2 u3 u4} (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) D _inst_2)) (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2)) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2))
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u1, u3} C] (D : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u2, u4} D], CategoryTheory.Equivalence.{max u3 u2, max u3 u2, max (max (max u3 u4) u2) u1, max (max (max u4 u3) u2) u1} (Opposite.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) D _inst_2)) (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2)) (CategoryTheory.Category.opposite.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u1, u3} C _inst_1) D _inst_2)) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 (Opposite.{succ u4} D) (CategoryTheory.Category.opposite.{u2, u4} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.left_op_right_op_equiv CategoryTheory.Functor.leftOpRightOpEquivₓ'. -/
 /-- The equivalence of functor categories induced by `left_op` and `right_op`.
 -/
 @[simps]

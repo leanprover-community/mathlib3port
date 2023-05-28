@@ -88,12 +88,6 @@ def Ultrafilter.semigroup {M} [Semigroup M] : Semigroup (Ultrafilter M) :=
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
-/- warning: ultrafilter.continuous_mul_left -> Ultrafilter.continuous_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (V : Ultrafilter.{u1} M), Continuous.{u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (fun (_x : Ultrafilter.{u1} M) => HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) _x V)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (V : Ultrafilter.{u1} M), Continuous.{u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (fun (_x : Ultrafilter.{u1} M) => HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) _x V)
-Case conversion may be inaccurate. Consider using '#align ultrafilter.continuous_mul_left Ultrafilter.continuous_mul_leftₓ'. -/
 -- We don't prove `continuous_mul_right`, because in general it is false!
 @[to_additive]
 theorem Ultrafilter.continuous_mul_left {M} [Semigroup M] (V : Ultrafilter M) :
@@ -127,12 +121,6 @@ inductive FP {M} [Semigroup M] : Stream' M → Set M
 #align hindman.FS Hindman.FS
 -/
 
-/- warning: hindman.FP.mul -> Hindman.FP.mul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] {a : Stream'.{u1} M} {m : M}, (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) -> (Exists.{1} Nat (fun (n : Nat) => forall (m' : M), (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m' (Hindman.FP.{u1} M _inst_1 (Stream'.drop.{u1} M n a))) -> (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) m m') (Hindman.FP.{u1} M _inst_1 a))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] {a : Stream'.{u1} M} {m : M}, (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) -> (Exists.{1} Nat (fun (n : Nat) => forall (m' : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) m' (Hindman.FP.{u1} M _inst_1 (Stream'.drop.{u1} M n a))) -> (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_1)) m m') (Hindman.FP.{u1} M _inst_1 a))))
-Case conversion may be inaccurate. Consider using '#align hindman.FP.mul Hindman.FP.mulₓ'. -/
 /-- If `m` and `m'` are finite products in `M`, then so is `m * m'`, provided that `m'` is obtained
 from a subsequence of `M` starting sufficiently late. -/
 @[to_additive
@@ -147,12 +135,6 @@ theorem FP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ FP a) :
 #align hindman.FP.mul Hindman.FP.mul
 #align hindman.FS.add Hindman.FS.add
 
-/- warning: hindman.exists_idempotent_ultrafilter_le_FP -> Hindman.exists_idempotent_ultrafilter_le_FP is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M), Exists.{succ u1} (Ultrafilter.{u1} M) (fun (U : Ultrafilter.{u1} M) => And (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) U U) U) (Filter.Eventually.{u1} M (fun (m : M) => Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} M) (Filter.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} M) (Filter.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} M) (Filter.{u1} M) (Ultrafilter.Filter.hasCoeT.{u1} M))) U)))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M), Exists.{succ u1} (Ultrafilter.{u1} M) (fun (U : Ultrafilter.{u1} M) => And (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) U U) U) (Filter.Eventually.{u1} M (fun (m : M) => Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) (Ultrafilter.toFilter.{u1} M U)))
-Case conversion may be inaccurate. Consider using '#align hindman.exists_idempotent_ultrafilter_le_FP Hindman.exists_idempotent_ultrafilter_le_FPₓ'. -/
 @[to_additive exists_idempotent_ultrafilter_le_FS]
 theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
     ∃ U : Ultrafilter M, U * U = U ∧ ∀ᶠ m in U, m ∈ FP a :=
@@ -184,12 +166,6 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
 #align hindman.exists_idempotent_ultrafilter_le_FP Hindman.exists_idempotent_ultrafilter_le_FP
 #align hindman.exists_idempotent_ultrafilter_le_FS Hindman.exists_idempotent_ultrafilter_le_FS
 
-/- warning: hindman.exists_FP_of_large -> Hindman.exists_FP_of_large is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (U : Ultrafilter.{u1} M), (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) U U) U) -> (forall (s₀ : Set.{u1} M), (Membership.Mem.{u1, u1} (Set.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.hasMem.{u1} M) s₀ U) -> (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) s₀)))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (U : Ultrafilter.{u1} M), (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) U U) U) -> (forall (s₀ : Set.{u1} M), (Membership.mem.{u1, u1} (Set.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.instMembershipSetUltrafilter.{u1} M) s₀ U) -> (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) s₀)))
-Case conversion may be inaccurate. Consider using '#align hindman.exists_FP_of_large Hindman.exists_FP_of_largeₓ'. -/
 @[to_additive exists_FS_of_large]
 theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U = U) (s₀ : Set M)
     (sU : s₀ ∈ U) : ∃ a, FP a ⊆ s₀ :=
@@ -224,12 +200,6 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
 #align hindman.exists_FP_of_large Hindman.exists_FP_of_large
 #align hindman.exists_FS_of_large Hindman.exists_FS_of_large
 
-/- warning: hindman.FP_partition_regular -> Hindman.FP_partition_regular is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) => Exists.{succ u1} (Stream'.{u1} M) (fun (b : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 b) c))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => And (Membership.mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.instMembershipSet.{u1} (Set.{u1} M)) c s) (Exists.{succ u1} (Stream'.{u1} M) (fun (b : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 b) c))))
-Case conversion may be inaccurate. Consider using '#align hindman.FP_partition_regular Hindman.FP_partition_regularₓ'. -/
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
 @[to_additive FS_partition_regular
@@ -242,12 +212,6 @@ theorem FP_partition_regular {M} [Semigroup M] (a : Stream' M) (s : Set (Set M))
 #align hindman.FP_partition_regular Hindman.FP_partition_regular
 #align hindman.FS_partition_regular Hindman.FS_partition_regular
 
-/- warning: hindman.exists_FP_of_finite_cover -> Hindman.exists_FP_of_finite_cover is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : Nonempty.{succ u1} M] (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Top.top.{u1} (Set.{u1} M) (CompleteLattice.toHasTop.{u1} (Set.{u1} M) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} M) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} M) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} M) (Set.completeBooleanAlgebra.{u1} M)))))) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) => Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) c))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : Nonempty.{succ u1} M] (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Top.top.{u1} (Set.{u1} M) (CompleteLattice.toTop.{u1} (Set.{u1} M) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} M) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} M) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} M) (Set.instCompleteBooleanAlgebraSet.{u1} M)))))) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => And (Membership.mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.instMembershipSet.{u1} (Set.{u1} M)) c s) (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) c))))
-Case conversion may be inaccurate. Consider using '#align hindman.exists_FP_of_finite_cover Hindman.exists_FP_of_finite_coverₓ'. -/
 /-- The weak form of **Hindman's theorem**: in any finite cover of a nonempty semigroup, one of the
 parts contains an FP-set. -/
 @[to_additive exists_FS_of_finite_cover
@@ -280,12 +244,6 @@ theorem FP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.get? i ∈ 
 #align hindman.FS.singleton Hindman.FS.singleton
 -/
 
-/- warning: hindman.FP.mul_two -> Hindman.FP.mul_two is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (i : Nat) (j : Nat), (LT.lt.{0} Nat Nat.hasLt i j) -> (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) (Stream'.nth.{u1} M a i) (Stream'.nth.{u1} M a j)) (Hindman.FP.{u1} M _inst_1 a))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (i : Nat) (j : Nat), (LT.lt.{0} Nat instLTNat i j) -> (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_1)) (Stream'.nth.{u1} M a i) (Stream'.nth.{u1} M a j)) (Hindman.FP.{u1} M _inst_1 a))
-Case conversion may be inaccurate. Consider using '#align hindman.FP.mul_two Hindman.FP.mul_twoₓ'. -/
 @[to_additive]
 theorem FP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
     a.get? i * a.get? j ∈ FP a := by

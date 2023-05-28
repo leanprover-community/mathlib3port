@@ -610,42 +610,18 @@ instance : Preorder PGame :=
           le_trans_aux (fun i => (IHzl i).1) fun j => (IHyr j).2.1⟩
     lt := fun x y => x ≤ y ∧ x ⧏ y }
 
-/- warning: pgame.lt_iff_le_and_lf -> PGame.lt_iff_le_and_lf is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (And (LE.le.{succ u1} PGame.{u1} PGame.hasLe.{u1} x y) (PGame.Lf.{u1} x y))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (And (LE.le.{succ u1} PGame.{u1} PGame.le.{u1} x y) (PGame.Lf.{u1} x y))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_iff_le_and_lf PGame.lt_iff_le_and_lfₓ'. -/
 theorem lt_iff_le_and_lf {x y : PGame} : x < y ↔ x ≤ y ∧ x ⧏ y :=
   Iff.rfl
 #align pgame.lt_iff_le_and_lf PGame.lt_iff_le_and_lf
 
-/- warning: pgame.lt_of_le_of_lf -> PGame.lt_of_le_of_lf is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LE.le.{succ u1} PGame.{u1} PGame.hasLe.{u1} x y) -> (PGame.Lf.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LE.le.{succ u1} PGame.{u1} PGame.le.{u1} x y) -> (PGame.Lf.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y)
-Case conversion may be inaccurate. Consider using '#align pgame.lt_of_le_of_lf PGame.lt_of_le_of_lfₓ'. -/
 theorem lt_of_le_of_lf {x y : PGame} (h₁ : x ≤ y) (h₂ : x ⧏ y) : x < y :=
   ⟨h₁, h₂⟩
 #align pgame.lt_of_le_of_lf PGame.lt_of_le_of_lf
 
-/- warning: pgame.lf_of_lt -> PGame.lf_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) -> (PGame.Lf.{u1} x y)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) -> (PGame.Lf.{u1} x y)
-Case conversion may be inaccurate. Consider using '#align pgame.lf_of_lt PGame.lf_of_ltₓ'. -/
 theorem lf_of_lt {x y : PGame} (h : x < y) : x ⧏ y :=
   h.2
 #align pgame.lf_of_lt PGame.lf_of_lt
 
-/- warning: has_lt.lt.lf -> LT.lt.lf is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) -> (PGame.Lf.{u1} x y)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) -> (PGame.Lf.{u1} x y)
-Case conversion may be inaccurate. Consider using '#align has_lt.lt.lf LT.lt.lfₓ'. -/
 alias lf_of_lt ← _root_.has_lt.lt.lf
 #align has_lt.lt.lf LT.lt.lf
 
@@ -678,43 +654,19 @@ alias lf_of_le_of_lf ← _root_.has_le.le.trans_lf
 alias lf_of_lf_of_le ← lf.trans_le
 #align pgame.lf.trans_le PGame.Lf.trans_le
 
-/- warning: pgame.lf_of_lt_of_lf -> PGame.lf_of_lt_of_lf is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) -> (PGame.Lf.{u1} y z) -> (PGame.Lf.{u1} x z)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) -> (PGame.Lf.{u1} y z) -> (PGame.Lf.{u1} x z)
-Case conversion may be inaccurate. Consider using '#align pgame.lf_of_lt_of_lf PGame.lf_of_lt_of_lfₓ'. -/
 @[trans]
 theorem lf_of_lt_of_lf {x y z : PGame} (h₁ : x < y) (h₂ : y ⧏ z) : x ⧏ z :=
   h₁.le.trans_lf h₂
 #align pgame.lf_of_lt_of_lf PGame.lf_of_lt_of_lf
 
-/- warning: pgame.lf_of_lf_of_lt -> PGame.lf_of_lf_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) y z) -> (PGame.Lf.{u1} x z)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) y z) -> (PGame.Lf.{u1} x z)
-Case conversion may be inaccurate. Consider using '#align pgame.lf_of_lf_of_lt PGame.lf_of_lf_of_ltₓ'. -/
 @[trans]
 theorem lf_of_lf_of_lt {x y z : PGame} (h₁ : x ⧏ y) (h₂ : y < z) : x ⧏ z :=
   h₁.trans_le h₂.le
 #align pgame.lf_of_lf_of_lt PGame.lf_of_lf_of_lt
 
-/- warning: has_lt.lt.trans_lf -> LT.lt.trans_lf is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) -> (PGame.Lf.{u1} y z) -> (PGame.Lf.{u1} x z)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) -> (PGame.Lf.{u1} y z) -> (PGame.Lf.{u1} x z)
-Case conversion may be inaccurate. Consider using '#align has_lt.lt.trans_lf LT.lt.trans_lfₓ'. -/
 alias lf_of_lt_of_lf ← _root_.has_lt.lt.trans_lf
 #align has_lt.lt.trans_lf LT.lt.trans_lf
 
-/- warning: pgame.lf.trans_lt -> PGame.Lf.trans_lt is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) y z) -> (PGame.Lf.{u1} x z)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) y z) -> (PGame.Lf.{u1} x z)
-Case conversion may be inaccurate. Consider using '#align pgame.lf.trans_lt PGame.Lf.trans_ltₓ'. -/
 alias lf_of_lf_of_lt ← lf.trans_lt
 #align pgame.lf.trans_lt PGame.Lf.trans_lt
 
@@ -742,12 +694,6 @@ theorem mk_lf {xl xr} (xL : xl → PGame) (xR : xr → PGame) (j) : mk xl xr xL 
 #align pgame.mk_lf PGame.mk_lf
 -/
 
-/- warning: pgame.le_of_forall_lt -> PGame.le_of_forall_lt is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (forall (i : PGame.LeftMoves.{u1} x), LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (PGame.moveLeft.{u1} x i) y) -> (forall (j : PGame.RightMoves.{u1} y), LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x (PGame.moveRight.{u1} y j)) -> (LE.le.{succ u1} PGame.{u1} PGame.hasLe.{u1} x y)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (forall (i : PGame.LeftMoves.{u1} x), LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (PGame.moveLeft.{u1} x i) y) -> (forall (j : PGame.RightMoves.{u1} y), LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x (PGame.moveRight.{u1} y j)) -> (LE.le.{succ u1} PGame.{u1} PGame.le.{u1} x y)
-Case conversion may be inaccurate. Consider using '#align pgame.le_of_forall_lt PGame.le_of_forall_ltₓ'. -/
 /-- This special case of `pgame.le_of_forall_lf` is useful when dealing with surreals, where `<` is
 preferred over `⧏`. -/
 theorem le_of_forall_lt {x y : PGame} (h₁ : ∀ i, x.moveLeft i < y) (h₂ : ∀ j, x < y.moveRight j) :
@@ -975,12 +921,6 @@ theorem Lf.not_equiv' {x y} (h : x ⧏ y) : ¬(y ≈ x) := fun h' => h.not_ge h'
 #align pgame.lf.not_equiv' PGame.Lf.not_equiv'
 -/
 
-/- warning: pgame.lf.not_gt -> PGame.Lf.not_gt is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (Not (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) y x))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (Not (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) y x))
-Case conversion may be inaccurate. Consider using '#align pgame.lf.not_gt PGame.Lf.not_gtₓ'. -/
 theorem Lf.not_gt {x y} (h : x ⧏ y) : ¬y < x := fun h' => h.not_ge h'.le
 #align pgame.lf.not_gt PGame.Lf.not_gt
 
@@ -1046,74 +986,32 @@ theorem lf_of_equiv_of_lf {x y z} (h₁ : x ≈ y) : y ⧏ z → x ⧏ z :=
 #align pgame.lf_of_equiv_of_lf PGame.lf_of_equiv_of_lf
 -/
 
-/- warning: pgame.lt_of_lt_of_equiv -> PGame.lt_of_lt_of_equiv is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) -> (PGame.Equiv.{u1} y z) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x z)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) -> (PGame.Equiv.{u1} y z) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x z)
-Case conversion may be inaccurate. Consider using '#align pgame.lt_of_lt_of_equiv PGame.lt_of_lt_of_equivₓ'. -/
 @[trans]
 theorem lt_of_lt_of_equiv {x y z} (h₁ : x < y) (h₂ : y ≈ z) : x < z :=
   h₁.trans_le h₂.1
 #align pgame.lt_of_lt_of_equiv PGame.lt_of_lt_of_equiv
 
-/- warning: pgame.lt_of_equiv_of_lt -> PGame.lt_of_equiv_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (PGame.Equiv.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) y z) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x z)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}} {z : PGame.{u1}}, (PGame.Equiv.{u1} x y) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) y z) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x z)
-Case conversion may be inaccurate. Consider using '#align pgame.lt_of_equiv_of_lt PGame.lt_of_equiv_of_ltₓ'. -/
 @[trans]
 theorem lt_of_equiv_of_lt {x y z} (h₁ : x ≈ y) : y < z → x < z :=
   h₁.1.trans_lt
 #align pgame.lt_of_equiv_of_lt PGame.lt_of_equiv_of_lt
 
-/- warning: pgame.lt_congr_imp -> PGame.lt_congr_imp is a dubious translation:
-lean 3 declaration is
-  forall {x₁ : PGame.{u1}} {y₁ : PGame.{u1}} {x₂ : PGame.{u1}} {y₂ : PGame.{u1}}, (PGame.Equiv.{u1} x₁ x₂) -> (PGame.Equiv.{u1} y₁ y₂) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x₁ y₁) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x₂ y₂)
-but is expected to have type
-  forall {x₁ : PGame.{u1}} {y₁ : PGame.{u1}} {x₂ : PGame.{u1}} {y₂ : PGame.{u1}}, (PGame.Equiv.{u1} x₁ x₂) -> (PGame.Equiv.{u1} y₁ y₂) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x₁ y₁) -> (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x₂ y₂)
-Case conversion may be inaccurate. Consider using '#align pgame.lt_congr_imp PGame.lt_congr_impₓ'. -/
 theorem lt_congr_imp {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) (h : x₁ < y₁) : x₂ < y₂ :=
   hx.2.trans_lt (h.trans_le hy.1)
 #align pgame.lt_congr_imp PGame.lt_congr_imp
 
-/- warning: pgame.lt_congr -> PGame.lt_congr is a dubious translation:
-lean 3 declaration is
-  forall {x₁ : PGame.{u1}} {y₁ : PGame.{u1}} {x₂ : PGame.{u1}} {y₂ : PGame.{u1}}, (PGame.Equiv.{u1} x₁ x₂) -> (PGame.Equiv.{u1} y₁ y₂) -> (Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x₁ y₁) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x₂ y₂))
-but is expected to have type
-  forall {x₁ : PGame.{u1}} {y₁ : PGame.{u1}} {x₂ : PGame.{u1}} {y₂ : PGame.{u1}}, (PGame.Equiv.{u1} x₁ x₂) -> (PGame.Equiv.{u1} y₁ y₂) -> (Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x₁ y₁) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x₂ y₂))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_congr PGame.lt_congrₓ'. -/
 theorem lt_congr {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ < y₁ ↔ x₂ < y₂ :=
   ⟨lt_congr_imp hx hy, lt_congr_imp hx.symm hy.symm⟩
 #align pgame.lt_congr PGame.lt_congr
 
-/- warning: pgame.lt_congr_left -> PGame.lt_congr_left is a dubious translation:
-lean 3 declaration is
-  forall {x₁ : PGame.{u1}} {x₂ : PGame.{u1}} {y : PGame.{u1}}, (PGame.Equiv.{u1} x₁ x₂) -> (Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x₁ y) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x₂ y))
-but is expected to have type
-  forall {x₁ : PGame.{u1}} {x₂ : PGame.{u1}} {y : PGame.{u1}}, (PGame.Equiv.{u1} x₁ x₂) -> (Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x₁ y) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x₂ y))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_congr_left PGame.lt_congr_leftₓ'. -/
 theorem lt_congr_left {x₁ x₂ y} (hx : x₁ ≈ x₂) : x₁ < y ↔ x₂ < y :=
   lt_congr hx equiv_rfl
 #align pgame.lt_congr_left PGame.lt_congr_left
 
-/- warning: pgame.lt_congr_right -> PGame.lt_congr_right is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y₁ : PGame.{u1}} {y₂ : PGame.{u1}}, (PGame.Equiv.{u1} y₁ y₂) -> (Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y₁) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y₂))
-but is expected to have type
-  forall {x : PGame.{u1}} {y₁ : PGame.{u1}} {y₂ : PGame.{u1}}, (PGame.Equiv.{u1} y₁ y₂) -> (Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y₁) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y₂))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_congr_right PGame.lt_congr_rightₓ'. -/
 theorem lt_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x < y₁ ↔ x < y₂ :=
   lt_congr equiv_rfl hy
 #align pgame.lt_congr_right PGame.lt_congr_right
 
-/- warning: pgame.lt_or_equiv_of_le -> PGame.lt_or_equiv_of_le is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LE.le.{succ u1} PGame.{u1} PGame.hasLe.{u1} x y) -> (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (PGame.Equiv.{u1} x y))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (LE.le.{succ u1} PGame.{u1} PGame.le.{u1} x y) -> (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (PGame.Equiv.{u1} x y))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_or_equiv_of_le PGame.lt_or_equiv_of_leₓ'. -/
 theorem lt_or_equiv_of_le {x y : PGame} (h : x ≤ y) : x < y ∨ (x ≈ y) :=
   and_or_left.mp ⟨h, (em <| y ≤ x).symm.imp_left PGame.not_le.1⟩
 #align pgame.lt_or_equiv_of_le PGame.lt_or_equiv_of_le
@@ -1189,12 +1087,6 @@ theorem fuzzy_irrefl (x : PGame) : ¬x ‖ x := fun h => lf_irrefl x h.1
 instance : IsIrrefl _ (· ‖ ·) :=
   ⟨fuzzy_irrefl⟩
 
-/- warning: pgame.lf_iff_lt_or_fuzzy -> PGame.lf_iff_lt_or_fuzzy is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (PGame.Lf.{u1} x y) (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (PGame.Fuzzy.{u1} x y))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (PGame.Lf.{u1} x y) (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (PGame.Fuzzy.{u1} x y))
-Case conversion may be inaccurate. Consider using '#align pgame.lf_iff_lt_or_fuzzy PGame.lf_iff_lt_or_fuzzyₓ'. -/
 theorem lf_iff_lt_or_fuzzy {x y : PGame} : x ⧏ y ↔ x < y ∨ x ‖ y := by
   simp only [lt_iff_le_and_lf, fuzzy, ← PGame.not_le]; tauto
 #align pgame.lf_iff_lt_or_fuzzy PGame.lf_iff_lt_or_fuzzy
@@ -1208,12 +1100,6 @@ theorem lf_of_fuzzy {x y : PGame} (h : x ‖ y) : x ⧏ y :=
 alias lf_of_fuzzy ← fuzzy.lf
 #align pgame.fuzzy.lf PGame.Fuzzy.lf
 
-/- warning: pgame.lt_or_fuzzy_of_lf -> PGame.lt_or_fuzzy_of_lf is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (PGame.Fuzzy.{u1} x y))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, (PGame.Lf.{u1} x y) -> (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (PGame.Fuzzy.{u1} x y))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_or_fuzzy_of_lf PGame.lt_or_fuzzy_of_lfₓ'. -/
 theorem lt_or_fuzzy_of_lf {x y : PGame} : x ⧏ y → x < y ∨ x ‖ y :=
   lf_iff_lt_or_fuzzy.1
 #align pgame.lt_or_fuzzy_of_lf PGame.lt_or_fuzzy_of_lf
@@ -1288,12 +1174,6 @@ theorem fuzzy_of_equiv_of_fuzzy {x y z} (h₁ : x ≈ y) (h₂ : y ‖ z) : x �
 #align pgame.fuzzy_of_equiv_of_fuzzy PGame.fuzzy_of_equiv_of_fuzzy
 -/
 
-/- warning: pgame.lt_or_equiv_or_gt_or_fuzzy -> PGame.lt_or_equiv_or_gt_or_fuzzy is a dubious translation:
-lean 3 declaration is
-  forall (x : PGame.{u1}) (y : PGame.{u1}), Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (Or (PGame.Equiv.{u1} x y) (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) y x) (PGame.Fuzzy.{u1} x y)))
-but is expected to have type
-  forall (x : PGame.{u1}) (y : PGame.{u1}), Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (Or (PGame.Equiv.{u1} x y) (Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) y x) (PGame.Fuzzy.{u1} x y)))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_or_equiv_or_gt_or_fuzzy PGame.lt_or_equiv_or_gt_or_fuzzyₓ'. -/
 /-- Exactly one of the following is true (although we don't prove this here). -/
 theorem lt_or_equiv_or_gt_or_fuzzy (x y : PGame) : x < y ∨ (x ≈ y) ∨ y < x ∨ x ‖ y :=
   by
@@ -1304,12 +1184,6 @@ theorem lt_or_equiv_or_gt_or_fuzzy (x y : PGame) : x < y ∨ (x ≈ y) ∨ y < x
   · right; right; right; exact ⟨h₂, h₁⟩
 #align pgame.lt_or_equiv_or_gt_or_fuzzy PGame.lt_or_equiv_or_gt_or_fuzzy
 
-/- warning: pgame.lt_or_equiv_or_gf -> PGame.lt_or_equiv_or_gf is a dubious translation:
-lean 3 declaration is
-  forall (x : PGame.{u1}) (y : PGame.{u1}), Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (Or (PGame.Equiv.{u1} x y) (PGame.Lf.{u1} y x))
-but is expected to have type
-  forall (x : PGame.{u1}) (y : PGame.{u1}), Or (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (Or (PGame.Equiv.{u1} x y) (PGame.Lf.{u1} y x))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_or_equiv_or_gf PGame.lt_or_equiv_or_gfₓ'. -/
 theorem lt_or_equiv_or_gf (x y : PGame) : x < y ∨ (x ≈ y) ∨ y ⧏ x :=
   by
   rw [lf_iff_lt_or_fuzzy, fuzzy.swap_iff]
@@ -1719,12 +1593,6 @@ theorem neg_lf_neg_iff {x y : PGame} : -y ⧏ -x ↔ x ⧏ y :=
 #align pgame.neg_lf_neg_iff PGame.neg_lf_neg_iff
 -/
 
-/- warning: pgame.neg_lt_neg_iff -> PGame.neg_lt_neg_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} y) (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} x)) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} y) (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} x)) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y)
-Case conversion may be inaccurate. Consider using '#align pgame.neg_lt_neg_iff PGame.neg_lt_neg_iffₓ'. -/
 @[simp]
 theorem neg_lt_neg_iff {x y : PGame} : -y < -x ↔ x < y := by
   rw [lt_iff_le_and_lf, lt_iff_le_and_lf, neg_le_neg_iff, neg_lf_neg_iff]
@@ -1754,12 +1622,6 @@ theorem neg_lf_iff {x y : PGame} : -y ⧏ x ↔ -x ⧏ y := by rw [← neg_neg x
 #align pgame.neg_lf_iff PGame.neg_lf_iff
 -/
 
-/- warning: pgame.neg_lt_iff -> PGame.neg_lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} y) x) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} x) y)
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} y) x) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} x) y)
-Case conversion may be inaccurate. Consider using '#align pgame.neg_lt_iff PGame.neg_lt_iffₓ'. -/
 theorem neg_lt_iff {x y : PGame} : -y < x ↔ -x < y := by rw [← neg_neg x, neg_lt_neg_iff, neg_neg]
 #align pgame.neg_lt_iff PGame.neg_lt_iff
 
@@ -1785,12 +1647,6 @@ theorem lf_neg_iff {x y : PGame} : y ⧏ -x ↔ x ⧏ -y := by rw [← neg_neg x
 #align pgame.lf_neg_iff PGame.lf_neg_iff
 -/
 
-/- warning: pgame.lt_neg_iff -> PGame.lt_neg_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) y (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} x)) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} y))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) y (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} x)) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} y))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_neg_iff PGame.lt_neg_iffₓ'. -/
 theorem lt_neg_iff {x y : PGame} : y < -x ↔ x < -y := by rw [← neg_neg x, neg_lt_neg_iff, neg_neg]
 #align pgame.lt_neg_iff PGame.lt_neg_iff
 
@@ -1818,22 +1674,10 @@ theorem zero_lf_neg_iff {x : PGame} : 0 ⧏ -x ↔ x ⧏ 0 := by rw [lf_neg_iff,
 #align pgame.zero_lf_neg_iff PGame.zero_lf_neg_iff
 -/
 
-/- warning: pgame.neg_lt_zero_iff -> PGame.neg_lt_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} x) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (OfNat.mk.{succ u1} PGame.{u1} 0 (Zero.zero.{succ u1} PGame.{u1} PGame.hasZero.{u1})))) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (OfNat.mk.{succ u1} PGame.{u1} 0 (Zero.zero.{succ u1} PGame.{u1} PGame.hasZero.{u1}))) x)
-but is expected to have type
-  forall {x : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} x) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (Zero.toOfNat0.{succ u1} PGame.{u1} PGame.instZeroPGame.{u1}))) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (Zero.toOfNat0.{succ u1} PGame.{u1} PGame.instZeroPGame.{u1})) x)
-Case conversion may be inaccurate. Consider using '#align pgame.neg_lt_zero_iff PGame.neg_lt_zero_iffₓ'. -/
 @[simp]
 theorem neg_lt_zero_iff {x : PGame} : -x < 0 ↔ 0 < x := by rw [neg_lt_iff, neg_zero]
 #align pgame.neg_lt_zero_iff PGame.neg_lt_zero_iff
 
-/- warning: pgame.zero_lt_neg_iff -> PGame.zero_lt_neg_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (OfNat.mk.{succ u1} PGame.{u1} 0 (Zero.zero.{succ u1} PGame.{u1} PGame.hasZero.{u1}))) (Neg.neg.{succ u1} PGame.{u1} PGame.hasNeg.{u1} x)) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x (OfNat.ofNat.{succ u1} PGame.{u1} 0 (OfNat.mk.{succ u1} PGame.{u1} 0 (Zero.zero.{succ u1} PGame.{u1} PGame.hasZero.{u1}))))
-but is expected to have type
-  forall {x : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (Zero.toOfNat0.{succ u1} PGame.{u1} PGame.instZeroPGame.{u1})) (Neg.neg.{succ u1} PGame.{u1} PGame.instNegPGame.{u1} x)) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x (OfNat.ofNat.{succ u1} PGame.{u1} 0 (Zero.toOfNat0.{succ u1} PGame.{u1} PGame.instZeroPGame.{u1})))
-Case conversion may be inaccurate. Consider using '#align pgame.zero_lt_neg_iff PGame.zero_lt_neg_iffₓ'. -/
 @[simp]
 theorem zero_lt_neg_iff {x : PGame} : 0 < -x ↔ x < 0 := by rw [lt_neg_iff, neg_zero]
 #align pgame.zero_lt_neg_iff PGame.zero_lt_neg_iff
@@ -2277,22 +2121,10 @@ theorem add_lf_add_left {y z : PGame} (h : y ⧏ z) (x) : x + y ⧏ x + z := by
 #align pgame.add_lf_add_left PGame.add_lf_add_left
 -/
 
-/- warning: pgame.covariant_class_swap_add_lt -> PGame.covariantClass_swap_add_lt is a dubious translation:
-lean 3 declaration is
-  CovariantClass.{succ u1, succ u1} PGame.{u1} PGame.{u1} (Function.swap.{succ (succ u1), succ (succ u1), succ (succ u1)} PGame.{u1} PGame.{u1} (fun (ᾰ : PGame.{u1}) (ᾰ : PGame.{u1}) => PGame.{u1}) (HAdd.hAdd.{succ u1, succ u1, succ u1} PGame.{u1} PGame.{u1} PGame.{u1} (instHAdd.{succ u1} PGame.{u1} PGame.hasAdd.{u1}))) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}))
-but is expected to have type
-  CovariantClass.{succ u1, succ u1} PGame.{u1} PGame.{u1} (Function.swap.{succ (succ u1), succ (succ u1), succ (succ u1)} PGame.{u1} PGame.{u1} (fun (ᾰ : PGame.{u1}) (ᾰ : PGame.{u1}) => PGame.{u1}) (fun (x._@.Mathlib.SetTheory.Game.PGame._hyg.22024 : PGame.{u1}) (x._@.Mathlib.SetTheory.Game.PGame._hyg.22026 : PGame.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} PGame.{u1} PGame.{u1} PGame.{u1} (instHAdd.{succ u1} PGame.{u1} PGame.instAddPGame.{u1}) x._@.Mathlib.SetTheory.Game.PGame._hyg.22024 x._@.Mathlib.SetTheory.Game.PGame._hyg.22026)) (fun (x._@.Mathlib.SetTheory.Game.PGame._hyg.22039 : PGame.{u1}) (x._@.Mathlib.SetTheory.Game.PGame._hyg.22041 : PGame.{u1}) => LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x._@.Mathlib.SetTheory.Game.PGame._hyg.22039 x._@.Mathlib.SetTheory.Game.PGame._hyg.22041)
-Case conversion may be inaccurate. Consider using '#align pgame.covariant_class_swap_add_lt PGame.covariantClass_swap_add_ltₓ'. -/
 instance covariantClass_swap_add_lt : CovariantClass PGame PGame (swap (· + ·)) (· < ·) :=
   ⟨fun x y z h => ⟨add_le_add_right h.1 x, add_lf_add_right h.2 x⟩⟩
 #align pgame.covariant_class_swap_add_lt PGame.covariantClass_swap_add_lt
 
-/- warning: pgame.covariant_class_add_lt -> PGame.covariantClass_add_lt is a dubious translation:
-lean 3 declaration is
-  CovariantClass.{succ u1, succ u1} PGame.{u1} PGame.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} PGame.{u1} PGame.{u1} PGame.{u1} (instHAdd.{succ u1} PGame.{u1} PGame.hasAdd.{u1})) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}))
-but is expected to have type
-  CovariantClass.{succ u1, succ u1} PGame.{u1} PGame.{u1} (fun (x._@.Mathlib.SetTheory.Game.PGame._hyg.22077 : PGame.{u1}) (x._@.Mathlib.SetTheory.Game.PGame._hyg.22079 : PGame.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} PGame.{u1} PGame.{u1} PGame.{u1} (instHAdd.{succ u1} PGame.{u1} PGame.instAddPGame.{u1}) x._@.Mathlib.SetTheory.Game.PGame._hyg.22077 x._@.Mathlib.SetTheory.Game.PGame._hyg.22079) (fun (x._@.Mathlib.SetTheory.Game.PGame._hyg.22092 : PGame.{u1}) (x._@.Mathlib.SetTheory.Game.PGame._hyg.22094 : PGame.{u1}) => LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x._@.Mathlib.SetTheory.Game.PGame._hyg.22092 x._@.Mathlib.SetTheory.Game.PGame._hyg.22094)
-Case conversion may be inaccurate. Consider using '#align pgame.covariant_class_add_lt PGame.covariantClass_add_ltₓ'. -/
 instance covariantClass_add_lt : CovariantClass PGame PGame (· + ·) (· < ·) :=
   ⟨fun x y z h => ⟨add_le_add_left h.1 x, add_lf_add_left h.2 x⟩⟩
 #align pgame.covariant_class_add_lt PGame.covariantClass_add_lt
@@ -2372,12 +2204,6 @@ theorem lf_iff_sub_zero_lf {x y : PGame} : x ⧏ y ↔ 0 ⧏ y - x :=
 #align pgame.lf_iff_sub_zero_lf PGame.lf_iff_sub_zero_lf
 -/
 
-/- warning: pgame.lt_iff_sub_pos -> PGame.lt_iff_sub_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) x y) (LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (OfNat.mk.{succ u1} PGame.{u1} 0 (Zero.zero.{succ u1} PGame.{u1} PGame.hasZero.{u1}))) (HSub.hSub.{succ u1, succ u1, succ u1} PGame.{u1} PGame.{u1} PGame.{u1} (instHSub.{succ u1} PGame.{u1} PGame.hasSub.{u1}) y x))
-but is expected to have type
-  forall {x : PGame.{u1}} {y : PGame.{u1}}, Iff (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) x y) (LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (Zero.toOfNat0.{succ u1} PGame.{u1} PGame.instZeroPGame.{u1})) (HSub.hSub.{succ u1, succ u1, succ u1} PGame.{u1} PGame.{u1} PGame.{u1} (instHSub.{succ u1} PGame.{u1} PGame.instSubPGame.{u1}) y x))
-Case conversion may be inaccurate. Consider using '#align pgame.lt_iff_sub_pos PGame.lt_iff_sub_posₓ'. -/
 theorem lt_iff_sub_pos {x y : PGame} : x < y ↔ 0 < y - x :=
   ⟨fun h => lt_of_le_of_lt (zero_le_add_right_neg x) (add_lt_add_right h _), fun h =>
     calc
@@ -2451,12 +2277,6 @@ theorem neg_star : -star = star := by simp [star]
 #align pgame.neg_star PGame.neg_star
 -/
 
-/- warning: pgame.zero_lt_one -> PGame.zero_lt_one is a dubious translation:
-lean 3 declaration is
-  LT.lt.{succ u1} PGame.{u1} (Preorder.toHasLt.{succ u1} PGame.{u1} PGame.preorder.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (OfNat.mk.{succ u1} PGame.{u1} 0 (Zero.zero.{succ u1} PGame.{u1} PGame.hasZero.{u1}))) (OfNat.ofNat.{succ u1} PGame.{u1} 1 (OfNat.mk.{succ u1} PGame.{u1} 1 (One.one.{succ u1} PGame.{u1} PGame.hasOne.{u1})))
-but is expected to have type
-  LT.lt.{succ u1} PGame.{u1} (Preorder.toLT.{succ u1} PGame.{u1} PGame.instPreorderPGame.{u1}) (OfNat.ofNat.{succ u1} PGame.{u1} 0 (Zero.toOfNat0.{succ u1} PGame.{u1} PGame.instZeroPGame.{u1})) (OfNat.ofNat.{succ u1} PGame.{u1} 1 (One.toOfNat1.{succ u1} PGame.{u1} PGame.instOnePGame.{u1}))
-Case conversion may be inaccurate. Consider using '#align pgame.zero_lt_one PGame.zero_lt_oneₓ'. -/
 @[simp]
 protected theorem zero_lt_one : (0 : PGame) < 1 :=
   lt_of_le_of_lf (zero_le_of_isEmpty_rightMoves 1) (zero_lf_le.2 ⟨default, le_rfl⟩)

@@ -58,41 +58,20 @@ variable [CommRing A] [Ring B] [Ring B'] [Algebra A B] [Algebra A B']
 
 variable {x : B}
 
-/- warning: minpoly.monic -> minpoly.monic is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] {x : B}, (IsIntegral.{u1, u2} A B _inst_1 _inst_2 _inst_4 x) -> (Polynomial.Monic.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x))
-but is expected to have type
-  forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_4 : Algebra.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2)] {x : B}, (IsIntegral.{u2, u1} A B _inst_1 _inst_2 _inst_4 x) -> (Polynomial.Monic.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1)) (minpoly.{u2, u1} A B _inst_1 _inst_2 _inst_4 x))
-Case conversion may be inaccurate. Consider using '#align minpoly.monic minpoly.monicₓ'. -/
 /-- A minimal polynomial is monic. -/
 theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) := by delta minpoly; rw [dif_pos hx];
   exact (degree_lt_wf.min_mem _ hx).1
 #align minpoly.monic minpoly.monic
 
-/- warning: minpoly.ne_zero -> minpoly.ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] {x : B} [_inst_6 : Nontrivial.{u1} A], (IsIntegral.{u1, u2} A B _inst_1 _inst_2 _inst_4 x) -> (Ne.{succ u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x) (OfNat.ofNat.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) 0 (OfNat.mk.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) 0 (Zero.zero.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Polynomial.zero.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)))))))
-but is expected to have type
-  forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_4 : Algebra.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2)] {x : B} [_inst_6 : Nontrivial.{u2} A], (IsIntegral.{u2, u1} A B _inst_1 _inst_2 _inst_4 x) -> (Ne.{succ u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (minpoly.{u2, u1} A B _inst_1 _inst_2 _inst_4 x) (OfNat.ofNat.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) 0 (Zero.toOfNat0.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Polynomial.zero.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align minpoly.ne_zero minpoly.ne_zeroₓ'. -/
 /-- A minimal polynomial is nonzero. -/
 theorem ne_zero [Nontrivial A] (hx : IsIntegral A x) : minpoly A x ≠ 0 :=
   (monic hx).NeZero
 #align minpoly.ne_zero minpoly.ne_zero
 
-/- warning: minpoly.eq_zero -> minpoly.eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] {x : B}, (Not (IsIntegral.{u1, u2} A B _inst_1 _inst_2 _inst_4 x)) -> (Eq.{succ u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x) (OfNat.ofNat.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) 0 (OfNat.mk.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) 0 (Zero.zero.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Polynomial.zero.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)))))))
-but is expected to have type
-  forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_4 : Algebra.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2)] {x : B}, (Not (IsIntegral.{u2, u1} A B _inst_1 _inst_2 _inst_4 x)) -> (Eq.{succ u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (minpoly.{u2, u1} A B _inst_1 _inst_2 _inst_4 x) (OfNat.ofNat.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) 0 (Zero.toOfNat0.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Polynomial.zero.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align minpoly.eq_zero minpoly.eq_zeroₓ'. -/
 theorem eq_zero (hx : ¬IsIntegral A x) : minpoly A x = 0 :=
   dif_neg hx
 #align minpoly.eq_zero minpoly.eq_zero
 
-/- warning: minpoly.minpoly_alg_hom -> minpoly.minpoly_algHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align minpoly.minpoly_alg_hom minpoly.minpoly_algHomₓ'. -/
 theorem minpoly_algHom (f : B →ₐ[A] B') (hf : Function.Injective f) (x : B) :
     minpoly A (f x) = minpoly A x :=
   by
@@ -100,9 +79,6 @@ theorem minpoly_algHom (f : B →ₐ[A] B') (hf : Function.Injective f) (x : B) 
   simp_rw [← Polynomial.aeval_def, aeval_alg_hom, AlgHom.comp_apply, _root_.map_eq_zero_iff f hf]
 #align minpoly.minpoly_alg_hom minpoly.minpoly_algHom
 
-/- warning: minpoly.minpoly_alg_equiv -> minpoly.minpoly_algEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align minpoly.minpoly_alg_equiv minpoly.minpoly_algEquivₓ'. -/
 @[simp]
 theorem minpoly_algEquiv (f : B ≃ₐ[A] B') (x : B) : minpoly A (f x) = minpoly A x :=
   minpoly_algHom (f : B →ₐ[A] B') f.Injective x
@@ -131,12 +107,6 @@ theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 :=
 #align minpoly.ne_one minpoly.ne_one
 -/
 
-/- warning: minpoly.map_ne_one -> minpoly.map_ne_one is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] (x : B) [_inst_6 : Nontrivial.{u2} B] {R : Type.{u3}} [_inst_7 : Semiring.{u3} R] [_inst_8 : Nontrivial.{u3} R] (f : RingHom.{u1, u3} A R (NonAssocRing.toNonAssocSemiring.{u1} A (Ring.toNonAssocRing.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Semiring.toNonAssocSemiring.{u3} R _inst_7)), Ne.{succ u3} (Polynomial.{u3} R _inst_7) (Polynomial.map.{u1, u3} A R (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)) _inst_7 f (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x)) (OfNat.ofNat.{u3} (Polynomial.{u3} R _inst_7) 1 (OfNat.mk.{u3} (Polynomial.{u3} R _inst_7) 1 (One.one.{u3} (Polynomial.{u3} R _inst_7) (Polynomial.hasOne.{u3} R _inst_7))))
-but is expected to have type
-  forall (A : Type.{u1}) {B : Type.{u3}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u3} B] [_inst_4 : Algebra.{u1, u3} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u3} B _inst_2)] (x : B) [_inst_6 : Nontrivial.{u3} B] {R : Type.{u2}} [_inst_7 : Semiring.{u2} R] [_inst_8 : Nontrivial.{u2} R] (f : RingHom.{u1, u2} A R (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))) (Semiring.toNonAssocSemiring.{u2} R _inst_7)), Ne.{succ u2} (Polynomial.{u2} R _inst_7) (Polynomial.map.{u1, u2} A R (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)) _inst_7 f (minpoly.{u1, u3} A B _inst_1 _inst_2 _inst_4 x)) (OfNat.ofNat.{u2} (Polynomial.{u2} R _inst_7) 1 (One.toOfNat1.{u2} (Polynomial.{u2} R _inst_7) (Polynomial.one.{u2} R _inst_7)))
-Case conversion may be inaccurate. Consider using '#align minpoly.map_ne_one minpoly.map_ne_oneₓ'. -/
 theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : A →+* R) :
     (minpoly A x).map f ≠ 1 := by
   by_cases hx : IsIntegral A x
@@ -144,12 +114,6 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : 
   · rw [eq_zero hx, Polynomial.map_zero]; exact zero_ne_one
 #align minpoly.map_ne_one minpoly.map_ne_one
 
-/- warning: minpoly.not_is_unit -> minpoly.not_isUnit is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] (x : B) [_inst_6 : Nontrivial.{u2} B], Not (IsUnit.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Ring.toMonoid.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Polynomial.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x))
-but is expected to have type
-  forall (A : Type.{u1}) {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] (x : B) [_inst_6 : Nontrivial.{u2} B], Not (IsUnit.{u1} (Polynomial.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))) (MonoidWithZero.toMonoid.{u1} (Polynomial.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))) (Polynomial.semiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))))) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x))
-Case conversion may be inaccurate. Consider using '#align minpoly.not_is_unit minpoly.not_isUnitₓ'. -/
 /-- A minimal polynomial is not a unit. -/
 theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) :=
   by
@@ -159,12 +123,6 @@ theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) :=
   · rw [eq_zero hx]; exact not_isUnit_zero
 #align minpoly.not_is_unit minpoly.not_isUnit
 
-/- warning: minpoly.mem_range_of_degree_eq_one -> minpoly.mem_range_of_degree_eq_one is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_4 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] (x : B), (Eq.{1} (WithBot.{0} Nat) (Polynomial.degree.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_4 x)) (OfNat.ofNat.{0} (WithBot.{0} Nat) 1 (OfNat.mk.{0} (WithBot.{0} Nat) 1 (One.one.{0} (WithBot.{0} Nat) (WithBot.hasOne.{0} Nat Nat.hasOne))))) -> (Membership.Mem.{u2, u2} B (Subring.{u2} B _inst_2) (SetLike.hasMem.{u2, u2} (Subring.{u2} B _inst_2) B (Subring.setLike.{u2} B _inst_2)) x (RingHom.range.{u1, u2} A B (CommRing.toRing.{u1} A _inst_1) _inst_2 (algebraMap.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2) _inst_4)))
-but is expected to have type
-  forall (A : Type.{u2}) {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_4 : Algebra.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2)] (x : B), (Eq.{1} (WithBot.{0} Nat) (Polynomial.degree.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1)) (minpoly.{u2, u1} A B _inst_1 _inst_2 _inst_4 x)) (OfNat.ofNat.{0} (WithBot.{0} Nat) 1 (One.toOfNat1.{0} (WithBot.{0} Nat) (WithBot.one.{0} Nat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) -> (Membership.mem.{u1, u1} B (Subring.{u1} B _inst_2) (SetLike.instMembership.{u1, u1} (Subring.{u1} B _inst_2) B (Subring.instSetLikeSubring.{u1} B _inst_2)) x (RingHom.range.{u2, u1} A B (CommRing.toRing.{u2} A _inst_1) _inst_2 (algebraMap.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2) _inst_4)))
-Case conversion may be inaccurate. Consider using '#align minpoly.mem_range_of_degree_eq_one minpoly.mem_range_of_degree_eq_oneₓ'. -/
 theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) : x ∈ (algebraMap A B).range :=
   by
   have h : IsIntegral A x := by
@@ -177,9 +135,6 @@ theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) : x ∈ (alge
   exact ⟨-(minpoly A x).coeff 0, key.symm⟩
 #align minpoly.mem_range_of_degree_eq_one minpoly.mem_range_of_degree_eq_one
 
-/- warning: minpoly.min -> minpoly.min is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align minpoly.min minpoly.minₓ'. -/
 /-- The defining property of the minimal polynomial of an element `x`:
 it is the monic polynomial with smallest degree that has `x` as its root. -/
 theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) :
@@ -189,9 +144,6 @@ theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) :
   · simp only [degree_zero, bot_le]
 #align minpoly.min minpoly.min
 
-/- warning: minpoly.unique' -> minpoly.unique' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align minpoly.unique' minpoly.unique'ₓ'. -/
 theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
     (hl : ∀ q : A[X], degree q < degree p → q = 0 ∨ Polynomial.aeval x q ≠ 0) : p = minpoly A x :=
   by
@@ -253,20 +205,11 @@ theorem natDegree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minp
 #align minpoly.nat_degree_pos minpoly.natDegree_pos
 -/
 
-/- warning: minpoly.degree_pos -> minpoly.degree_pos is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_3 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] {x : B} [_inst_4 : Nontrivial.{u2} B], (IsIntegral.{u1, u2} A B _inst_1 _inst_2 _inst_3 x) -> (LT.lt.{0} (WithBot.{0} Nat) (Preorder.toHasLt.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (OfNat.ofNat.{0} (WithBot.{0} Nat) 0 (OfNat.mk.{0} (WithBot.{0} Nat) 0 (Zero.zero.{0} (WithBot.{0} Nat) (WithBot.hasZero.{0} Nat Nat.hasZero)))) (Polynomial.degree.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_3 x)))
-but is expected to have type
-  forall {A : Type.{u1}} {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_3 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] {x : B} [_inst_4 : Nontrivial.{u2} B], (IsIntegral.{u1, u2} A B _inst_1 _inst_2 _inst_3 x) -> (LT.lt.{0} (WithBot.{0} Nat) (Preorder.toLT.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (OfNat.ofNat.{0} (WithBot.{0} Nat) 0 (Zero.toOfNat0.{0} (WithBot.{0} Nat) (WithBot.zero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))) (Polynomial.degree.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_3 x)))
-Case conversion may be inaccurate. Consider using '#align minpoly.degree_pos minpoly.degree_posₓ'. -/
 /-- The degree of a minimal polynomial is positive. -/
 theorem degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
   natDegree_pos_iff_degree_pos.mp (natDegree_pos hx)
 #align minpoly.degree_pos minpoly.degree_pos
 
-/- warning: minpoly.eq_X_sub_C_of_algebra_map_inj -> minpoly.eq_X_sub_C_of_algebraMap_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align minpoly.eq_X_sub_C_of_algebra_map_inj minpoly.eq_X_sub_C_of_algebraMap_injₓ'. -/
 /-- If `B/A` is an injective ring extension, and `a` is an element of `A`,
 then the minimal polynomial of `algebra_map A B a` is `X - C a`. -/
 theorem eq_X_sub_C_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMap A B)) :
@@ -290,9 +233,6 @@ variable [Ring B] [Algebra A B]
 
 variable {x : B}
 
-/- warning: minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly -> minpoly.aeval_ne_zero_of_dvdNotUnit_minpoly is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly minpoly.aeval_ne_zero_of_dvdNotUnit_minpolyₓ'. -/
 /-- If `a` strictly divides the minimal polynomial of `x`, then `x` cannot be a root for `a`. -/
 theorem aeval_ne_zero_of_dvdNotUnit_minpoly {a : A[X]} (hx : IsIntegral A x) (hamonic : a.Monic)
     (hdvd : DvdNotUnit a (minpoly A x)) : Polynomial.aeval x a ≠ 0 :=
@@ -309,12 +249,6 @@ theorem aeval_ne_zero_of_dvdNotUnit_minpoly {a : A[X]} (hx : IsIntegral A x) (ha
 
 variable [IsDomain A] [IsDomain B]
 
-/- warning: minpoly.irreducible -> minpoly.irreducible is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {B : Type.{u2}} [_inst_1 : CommRing.{u1} A] [_inst_2 : Ring.{u2} B] [_inst_3 : Algebra.{u1, u2} A B (CommRing.toCommSemiring.{u1} A _inst_1) (Ring.toSemiring.{u2} B _inst_2)] {x : B} [_inst_4 : IsDomain.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))] [_inst_5 : IsDomain.{u2} B (Ring.toSemiring.{u2} B _inst_2)], (IsIntegral.{u1, u2} A B _inst_1 _inst_2 _inst_3 x) -> (Irreducible.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Ring.toMonoid.{u1} (Polynomial.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (Polynomial.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (minpoly.{u1, u2} A B _inst_1 _inst_2 _inst_3 x))
-but is expected to have type
-  forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_3 : Algebra.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2)] {x : B} [_inst_4 : IsDomain.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))] [_inst_5 : IsDomain.{u1} B (Ring.toSemiring.{u1} B _inst_2)], (IsIntegral.{u2, u1} A B _inst_1 _inst_2 _inst_3 x) -> (Irreducible.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (MonoidWithZero.toMonoid.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toMonoidWithZero.{u2} (Polynomial.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Polynomial.semiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))))) (minpoly.{u2, u1} A B _inst_1 _inst_2 _inst_3 x))
-Case conversion may be inaccurate. Consider using '#align minpoly.irreducible minpoly.irreducibleₓ'. -/
 /-- A minimal polynomial is irreducible. -/
 theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) :=
   by

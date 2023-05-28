@@ -32,11 +32,6 @@ See [Wikipedia, *Methods of computing square roots*]
 namespace Nat
 
 /- warning: nat.sqrt_aux_dec clashes with [anonymous] -> [anonymous]
-warning: nat.sqrt_aux_dec -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {b : Nat}, (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} Nat Nat.hasLt (Nat.shiftr b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) b)
-but is expected to have type
-  forall {b : Type.{u}} {h : Type.{v}}, (Nat -> b -> h) -> Nat -> (List.{u} b) -> (List.{v} h)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_dec [anonymous]ₓ'. -/
 theorem [anonymous] {b} (h : b ≠ 0) : shiftr b 2 < b :=
   by
@@ -47,11 +42,6 @@ theorem [anonymous] {b} (h : b ≠ 0) : shiftr b 2 < b :=
 #align nat.sqrt_aux_dec [anonymous]
 
 /- warning: nat.sqrt_aux clashes with [anonymous] -> [anonymous]
-warning: nat.sqrt_aux -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  Nat -> Nat -> Nat -> Nat
-but is expected to have type
-  forall {ᾰ : Type.{u}} {ᾰ_1 : Type.{v}}, (Nat -> ᾰ -> ᾰ_1) -> Nat -> (List.{u} ᾰ) -> (List.{v} ᾰ_1)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux [anonymous]ₓ'. -/
 /-- Auxiliary function for `nat.sqrt`. See e.g.
 <https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Binary_numeral_system_(base_2)> -/
@@ -78,11 +68,6 @@ def sqrt (n : ℕ) : ℕ :=
 -/
 
 /- warning: nat.sqrt_aux_0 clashes with [anonymous] -> [anonymous]
-warning: nat.sqrt_aux_0 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall (r : Nat) (n : Nat), Eq.{1} Nat ([anonymous] (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) r n) r
-but is expected to have type
-  forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_0 [anonymous]ₓ'. -/
 theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [sqrt_aux] <;> simp
 #align nat.sqrt_aux_0 [anonymous]
@@ -90,11 +75,6 @@ theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [sqrt_aux] <;> simp
 attribute [local simp] sqrt_aux_0
 
 /- warning: nat.sqrt_aux_1 clashes with [anonymous] -> [anonymous]
-warning: nat.sqrt_aux_1 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {r : Nat} {n : Nat} {b : Nat}, (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (forall {n' : Nat}, (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) r b) n') n) -> (Eq.{1} Nat ([anonymous] b r n) ([anonymous] (Nat.shiftr b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Nat.div2 r) b) n')))
-but is expected to have type
-  forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_1 [anonymous]ₓ'. -/
 theorem [anonymous] {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r + b) n' := by
@@ -103,11 +83,6 @@ theorem [anonymous] {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
 #align nat.sqrt_aux_1 [anonymous]
 
 /- warning: nat.sqrt_aux_2 clashes with [anonymous] -> [anonymous]
-warning: nat.sqrt_aux_2 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {r : Nat} {n : Nat} {b : Nat}, (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} Nat Nat.hasLt n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) r b)) -> (Eq.{1} Nat ([anonymous] b r n) ([anonymous] (Nat.shiftr b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Nat.div2 r) n))
-but is expected to have type
-  forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_2 [anonymous]ₓ'. -/
 theorem [anonymous] {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r) n :=

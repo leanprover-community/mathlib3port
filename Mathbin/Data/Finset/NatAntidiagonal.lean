@@ -140,12 +140,6 @@ theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagon
 #align finset.nat.antidiagonal.snd_le Finset.Nat.antidiagonal.snd_le
 -/
 
-/- warning: finset.nat.filter_fst_eq_antidiagonal -> Finset.Nat.filter_fst_eq_antidiagonal is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.filter.{0} (Prod.{0, 0} Nat Nat) (fun (x : Prod.{0, 0} Nat Nat) => Eq.{1} Nat (Prod.fst.{0, 0} Nat Nat x) m) (fun (a : Prod.{0, 0} Nat Nat) => Nat.decidableEq (Prod.fst.{0, 0} Nat Nat a) m) (Finset.Nat.antidiagonal n)) (ite.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (LE.le.{0} Nat Nat.hasLe m n) (Nat.decidableLe m n) (Singleton.singleton.{0, 0} (Prod.{0, 0} Nat Nat) (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasSingleton.{0} (Prod.{0, 0} Nat Nat)) (Prod.mk.{0, 0} Nat Nat m (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n m))) (EmptyCollection.emptyCollection.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasEmptyc.{0} (Prod.{0, 0} Nat Nat))))
-but is expected to have type
-  forall (n : Nat) (m : Nat), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.filter.{0} (Prod.{0, 0} Nat Nat) (fun (x : Prod.{0, 0} Nat Nat) => Eq.{1} Nat (Prod.fst.{0, 0} Nat Nat x) m) (fun (a : Prod.{0, 0} Nat Nat) => instDecidableEqNat (Prod.fst.{0, 0} Nat Nat a) m) (Finset.Nat.antidiagonal n)) (ite.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (LE.le.{0} Nat instLENat m n) (Nat.decLe m n) (Singleton.singleton.{0, 0} (Prod.{0, 0} Nat Nat) (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instSingletonFinset.{0} (Prod.{0, 0} Nat Nat)) (Prod.mk.{0, 0} Nat Nat m (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n m))) (EmptyCollection.emptyCollection.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instEmptyCollectionFinset.{0} (Prod.{0, 0} Nat Nat))))
-Case conversion may be inaccurate. Consider using '#align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonalₓ'. -/
 theorem filter_fst_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
   by
@@ -158,12 +152,6 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
     exact fun hn => ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h)
 #align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonal
 
-/- warning: finset.nat.filter_snd_eq_antidiagonal -> Finset.Nat.filter_snd_eq_antidiagonal is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.filter.{0} (Prod.{0, 0} Nat Nat) (fun (x : Prod.{0, 0} Nat Nat) => Eq.{1} Nat (Prod.snd.{0, 0} Nat Nat x) m) (fun (a : Prod.{0, 0} Nat Nat) => Nat.decidableEq (Prod.snd.{0, 0} Nat Nat a) m) (Finset.Nat.antidiagonal n)) (ite.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (LE.le.{0} Nat Nat.hasLe m n) (Nat.decidableLe m n) (Singleton.singleton.{0, 0} (Prod.{0, 0} Nat Nat) (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasSingleton.{0} (Prod.{0, 0} Nat Nat)) (Prod.mk.{0, 0} Nat Nat (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n m) m)) (EmptyCollection.emptyCollection.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasEmptyc.{0} (Prod.{0, 0} Nat Nat))))
-but is expected to have type
-  forall (n : Nat) (m : Nat), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.filter.{0} (Prod.{0, 0} Nat Nat) (fun (x : Prod.{0, 0} Nat Nat) => Eq.{1} Nat (Prod.snd.{0, 0} Nat Nat x) m) (fun (a : Prod.{0, 0} Nat Nat) => instDecidableEqNat (Prod.snd.{0, 0} Nat Nat a) m) (Finset.Nat.antidiagonal n)) (ite.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (LE.le.{0} Nat instLENat m n) (Nat.decLe m n) (Singleton.singleton.{0, 0} (Prod.{0, 0} Nat Nat) (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instSingletonFinset.{0} (Prod.{0, 0} Nat Nat)) (Prod.mk.{0, 0} Nat Nat (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n m) m)) (EmptyCollection.emptyCollection.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instEmptyCollectionFinset.{0} (Prod.{0, 0} Nat Nat))))
-Case conversion may be inaccurate. Consider using '#align finset.nat.filter_snd_eq_antidiagonal Finset.Nat.filter_snd_eq_antidiagonalₓ'. -/
 theorem filter_snd_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
   by

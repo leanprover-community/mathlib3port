@@ -74,9 +74,6 @@ def Matrix.toLinearMap₂'Aux (f : Matrix n m R) : (n → R₁) →ₛₗ[σ₁]
 
 variable [DecidableEq n] [DecidableEq m]
 
-/- warning: matrix.to_linear_map₂'_aux_std_basis -> Matrix.toLinearMap₂'Aux_stdBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂'_aux_std_basis Matrix.toLinearMap₂'Aux_stdBasisₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i' j') -/
 theorem Matrix.toLinearMap₂'Aux_stdBasis (f : Matrix n m R) (i : n) (j : m) :
     f.toLinearMap₂'Aux σ₁ σ₂ (stdBasis R₁ (fun _ => R₁) i 1) (stdBasis R₂ (fun _ => R₂) j 1) =
@@ -117,9 +114,6 @@ def LinearMap.toMatrix₂Aux (b₁ : n → M₁) (b₂ : m → M₂) :
 #align linear_map.to_matrix₂_aux LinearMap.toMatrix₂Aux
 -/
 
-/- warning: linear_map.to_matrix₂_aux_apply -> LinearMap.toMatrix₂Aux_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_aux_apply LinearMap.toMatrix₂Aux_applyₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix₂Aux_apply (f : M₁ →ₛₗ[σ₁] M₂ →ₛₗ[σ₂] R) (b₁ : n → M₁) (b₂ : m → M₂)
     (i : n) (j : m) : LinearMap.toMatrix₂Aux b₁ b₂ f i j = f (b₁ i) (b₂ j) :=
@@ -140,9 +134,6 @@ variable [DecidableEq n] [DecidableEq m]
 
 variable {σ₁ : R₁ →+* R} {σ₂ : R₂ →+* R}
 
-/- warning: linear_map.to_linear_map₂'_aux_to_matrix₂_aux -> LinearMap.toLinearMap₂'Aux_toMatrix₂Aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_linear_map₂'_aux_to_matrix₂_aux LinearMap.toLinearMap₂'Aux_toMatrix₂Auxₓ'. -/
 theorem LinearMap.toLinearMap₂'Aux_toMatrix₂Aux (f : (n → R₁) →ₛₗ[σ₁] (m → R₂) →ₛₗ[σ₂] R) :
     Matrix.toLinearMap₂'Aux σ₁ σ₂
         (LinearMap.toMatrix₂Aux (fun i => stdBasis R₁ (fun _ => R₁) i 1)
@@ -153,9 +144,6 @@ theorem LinearMap.toLinearMap₂'Aux_toMatrix₂Aux (f : (n → R₁) →ₛₗ[
   simp_rw [Pi.basisFun_apply, Matrix.toLinearMap₂'Aux_stdBasis, LinearMap.toMatrix₂Aux_apply]
 #align linear_map.to_linear_map₂'_aux_to_matrix₂_aux LinearMap.toLinearMap₂'Aux_toMatrix₂Aux
 
-/- warning: matrix.to_matrix₂_aux_to_linear_map₂'_aux -> Matrix.toMatrix₂Aux_toLinearMap₂'Aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_matrix₂_aux_to_linear_map₂'_aux Matrix.toMatrix₂Aux_toLinearMap₂'Auxₓ'. -/
 theorem Matrix.toMatrix₂Aux_toLinearMap₂'Aux (f : Matrix n m R) :
     LinearMap.toMatrix₂Aux (fun i => stdBasis R₁ (fun _ => R₁) i 1)
         (fun j => stdBasis R₂ (fun _ => R₂) j 1) (f.toLinearMap₂'Aux σ₁ σ₂) =
@@ -220,35 +208,23 @@ def Matrix.toLinearMap₂' : Matrix n m R ≃ₗ[R] (n → R) →ₗ[R] (m → R
 #align matrix.to_linear_map₂' Matrix.toLinearMap₂'
 -/
 
-/- warning: matrix.to_linear_mapₛₗ₂'_aux_eq -> Matrix.toLinearMapₛₗ₂'_aux_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_mapₛₗ₂'_aux_eq Matrix.toLinearMapₛₗ₂'_aux_eqₓ'. -/
 theorem Matrix.toLinearMapₛₗ₂'_aux_eq (M : Matrix n m R) :
     Matrix.toLinearMap₂'Aux σ₁ σ₂ M = Matrix.toLinearMapₛₗ₂' σ₁ σ₂ M :=
   rfl
 #align matrix.to_linear_mapₛₗ₂'_aux_eq Matrix.toLinearMapₛₗ₂'_aux_eq
 
-/- warning: matrix.to_linear_mapₛₗ₂'_apply -> Matrix.toLinearMapₛₗ₂'_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_mapₛₗ₂'_apply Matrix.toLinearMapₛₗ₂'_applyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem Matrix.toLinearMapₛₗ₂'_apply (M : Matrix n m R) (x : n → R₁) (y : m → R₂) :
     Matrix.toLinearMapₛₗ₂' σ₁ σ₂ M x y = ∑ (i) (j), σ₁ (x i) * M i j * σ₂ (y j) :=
   rfl
 #align matrix.to_linear_mapₛₗ₂'_apply Matrix.toLinearMapₛₗ₂'_apply
 
-/- warning: matrix.to_linear_map₂'_apply -> Matrix.toLinearMap₂'_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂'_apply Matrix.toLinearMap₂'_applyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem Matrix.toLinearMap₂'_apply (M : Matrix n m R) (x : n → R) (y : m → R) :
     Matrix.toLinearMap₂' M x y = ∑ (i) (j), x i * M i j * y j :=
   rfl
 #align matrix.to_linear_map₂'_apply Matrix.toLinearMap₂'_apply
 
-/- warning: matrix.to_linear_map₂'_apply' -> Matrix.toLinearMap₂'_apply' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂'_apply' Matrix.toLinearMap₂'_apply'ₓ'. -/
 theorem Matrix.toLinearMap₂'_apply' (M : Matrix n m R) (v : n → R) (w : m → R) :
     Matrix.toLinearMap₂' M v w = Matrix.dotProduct v (M.mulVec w) :=
   by
@@ -259,9 +235,6 @@ theorem Matrix.toLinearMap₂'_apply' (M : Matrix n m R) (v : n → R) (w : m �
   rw [← mul_assoc]
 #align matrix.to_linear_map₂'_apply' Matrix.toLinearMap₂'_apply'
 
-/- warning: matrix.to_linear_mapₛₗ₂'_std_basis -> Matrix.toLinearMapₛₗ₂'_stdBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_mapₛₗ₂'_std_basis Matrix.toLinearMapₛₗ₂'_stdBasisₓ'. -/
 @[simp]
 theorem Matrix.toLinearMapₛₗ₂'_stdBasis (M : Matrix n m R) (i : n) (j : m) :
     Matrix.toLinearMapₛₗ₂' σ₁ σ₂ M (stdBasis R₁ (fun _ => R₁) i 1) (stdBasis R₂ (fun _ => R₂) j 1) =
@@ -269,72 +242,48 @@ theorem Matrix.toLinearMapₛₗ₂'_stdBasis (M : Matrix n m R) (i : n) (j : m)
   Matrix.toLinearMap₂'Aux_stdBasis σ₁ σ₂ M i j
 #align matrix.to_linear_mapₛₗ₂'_std_basis Matrix.toLinearMapₛₗ₂'_stdBasis
 
-/- warning: matrix.to_linear_map₂'_std_basis -> Matrix.toLinearMap₂'_stdBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂'_std_basis Matrix.toLinearMap₂'_stdBasisₓ'. -/
 @[simp]
 theorem Matrix.toLinearMap₂'_stdBasis (M : Matrix n m R) (i : n) (j : m) :
     Matrix.toLinearMap₂' M (stdBasis R (fun _ => R) i 1) (stdBasis R (fun _ => R) j 1) = M i j :=
   Matrix.toLinearMap₂'Aux_stdBasis _ _ M i j
 #align matrix.to_linear_map₂'_std_basis Matrix.toLinearMap₂'_stdBasis
 
-/- warning: linear_map.to_matrixₛₗ₂'_symm -> LinearMap.toMatrixₛₗ₂'_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrixₛₗ₂'_symm LinearMap.toMatrixₛₗ₂'_symmₓ'. -/
 @[simp]
 theorem LinearMap.toMatrixₛₗ₂'_symm :
     (LinearMap.toMatrixₛₗ₂'.symm : Matrix n m R ≃ₗ[R] _) = Matrix.toLinearMapₛₗ₂' σ₁ σ₂ :=
   rfl
 #align linear_map.to_matrixₛₗ₂'_symm LinearMap.toMatrixₛₗ₂'_symm
 
-/- warning: matrix.to_linear_mapₛₗ₂'_symm -> Matrix.toLinearMapₛₗ₂'_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_mapₛₗ₂'_symm Matrix.toLinearMapₛₗ₂'_symmₓ'. -/
 @[simp]
 theorem Matrix.toLinearMapₛₗ₂'_symm :
     ((Matrix.toLinearMapₛₗ₂' σ₁ σ₂).symm : _ ≃ₗ[R] Matrix n m R) = LinearMap.toMatrixₛₗ₂' :=
   LinearMap.toMatrixₛₗ₂'.symm_symm
 #align matrix.to_linear_mapₛₗ₂'_symm Matrix.toLinearMapₛₗ₂'_symm
 
-/- warning: matrix.to_linear_mapₛₗ₂'_to_matrix' -> Matrix.toLinearMapₛₗ₂'_toMatrix' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_mapₛₗ₂'_to_matrix' Matrix.toLinearMapₛₗ₂'_toMatrix'ₓ'. -/
 @[simp]
 theorem Matrix.toLinearMapₛₗ₂'_toMatrix' (B : (n → R₁) →ₛₗ[σ₁] (m → R₂) →ₛₗ[σ₂] R) :
     Matrix.toLinearMapₛₗ₂' σ₁ σ₂ (LinearMap.toMatrixₛₗ₂' B) = B :=
   (Matrix.toLinearMapₛₗ₂' σ₁ σ₂).apply_symm_apply B
 #align matrix.to_linear_mapₛₗ₂'_to_matrix' Matrix.toLinearMapₛₗ₂'_toMatrix'
 
-/- warning: matrix.to_linear_map₂'_to_matrix' -> Matrix.toLinearMap₂'_toMatrix' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂'_to_matrix' Matrix.toLinearMap₂'_toMatrix'ₓ'. -/
 @[simp]
 theorem Matrix.toLinearMap₂'_toMatrix' (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) :
     Matrix.toLinearMap₂' (LinearMap.toMatrix₂' B) = B :=
   Matrix.toLinearMap₂'.apply_symm_apply B
 #align matrix.to_linear_map₂'_to_matrix' Matrix.toLinearMap₂'_toMatrix'
 
-/- warning: linear_map.to_matrix'_to_linear_mapₛₗ₂' -> LinearMap.toMatrix'_toLinearMapₛₗ₂' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix'_to_linear_mapₛₗ₂' LinearMap.toMatrix'_toLinearMapₛₗ₂'ₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix'_toLinearMapₛₗ₂' (M : Matrix n m R) :
     LinearMap.toMatrixₛₗ₂' (Matrix.toLinearMapₛₗ₂' σ₁ σ₂ M) = M :=
   LinearMap.toMatrixₛₗ₂'.apply_symm_apply M
 #align linear_map.to_matrix'_to_linear_mapₛₗ₂' LinearMap.toMatrix'_toLinearMapₛₗ₂'
 
-/- warning: linear_map.to_matrix'_to_linear_map₂' -> LinearMap.toMatrix'_toLinearMap₂' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix'_to_linear_map₂' LinearMap.toMatrix'_toLinearMap₂'ₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix'_toLinearMap₂' (M : Matrix n m R) :
     LinearMap.toMatrix₂' (Matrix.toLinearMap₂' M) = M :=
   LinearMap.toMatrixₛₗ₂'.apply_symm_apply M
 #align linear_map.to_matrix'_to_linear_map₂' LinearMap.toMatrix'_toLinearMap₂'
 
-/- warning: linear_map.to_matrixₛₗ₂'_apply -> LinearMap.toMatrixₛₗ₂'_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrixₛₗ₂'_apply LinearMap.toMatrixₛₗ₂'_applyₓ'. -/
 @[simp]
 theorem LinearMap.toMatrixₛₗ₂'_apply (B : (n → R₁) →ₛₗ[σ₁] (m → R₂) →ₛₗ[σ₂] R) (i : n) (j : m) :
     LinearMap.toMatrixₛₗ₂' B i j =
@@ -342,9 +291,6 @@ theorem LinearMap.toMatrixₛₗ₂'_apply (B : (n → R₁) →ₛₗ[σ₁] (m
   rfl
 #align linear_map.to_matrixₛₗ₂'_apply LinearMap.toMatrixₛₗ₂'_apply
 
-/- warning: linear_map.to_matrix₂'_apply -> LinearMap.toMatrix₂'_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_apply LinearMap.toMatrix₂'_applyₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix₂'_apply (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (i : n) (j : m) :
     LinearMap.toMatrix₂' B i j = B (stdBasis R (fun _ => R) i 1) (stdBasis R (fun _ => R) j 1) :=
@@ -355,9 +301,6 @@ variable [Fintype n'] [Fintype m']
 
 variable [DecidableEq n'] [DecidableEq m']
 
-/- warning: linear_map.to_matrix₂'_compl₁₂ -> LinearMap.toMatrix₂'_compl₁₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_compl₁₂ LinearMap.toMatrix₂'_compl₁₂ₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix₂'_compl₁₂ (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (l : (n' → R) →ₗ[R] n → R)
     (r : (m' → R) →ₗ[R] m → R) :
@@ -380,49 +323,31 @@ theorem LinearMap.toMatrix₂'_compl₁₂ (B : (n → R) →ₗ[R] (m → R) �
   · intros ; simp only [zero_smul, Finsupp.sum_zero]
 #align linear_map.to_matrix₂'_compl₁₂ LinearMap.toMatrix₂'_compl₁₂
 
-/- warning: linear_map.to_matrix₂'_comp -> LinearMap.toMatrix₂'_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_comp LinearMap.toMatrix₂'_compₓ'. -/
 theorem LinearMap.toMatrix₂'_comp (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (f : (n' → R) →ₗ[R] n → R) :
     (B.comp f).toMatrix₂' = f.toMatrix'ᵀ ⬝ B.toMatrix₂' := by
   rw [← LinearMap.compl₂_id (B.comp f), ← LinearMap.compl₁₂]; simp
 #align linear_map.to_matrix₂'_comp LinearMap.toMatrix₂'_comp
 
-/- warning: linear_map.to_matrix₂'_compl₂ -> LinearMap.toMatrix₂'_compl₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_compl₂ LinearMap.toMatrix₂'_compl₂ₓ'. -/
 theorem LinearMap.toMatrix₂'_compl₂ (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (f : (m' → R) →ₗ[R] m → R) :
     (B.compl₂ f).toMatrix₂' = B.toMatrix₂' ⬝ f.toMatrix' := by
   rw [← LinearMap.comp_id B, ← LinearMap.compl₁₂]; simp
 #align linear_map.to_matrix₂'_compl₂ LinearMap.toMatrix₂'_compl₂
 
-/- warning: linear_map.mul_to_matrix₂'_mul -> LinearMap.mul_toMatrix₂'_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.mul_to_matrix₂'_mul LinearMap.mul_toMatrix₂'_mulₓ'. -/
 theorem LinearMap.mul_toMatrix₂'_mul (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (M : Matrix n' n R)
     (N : Matrix m m' R) : M ⬝ B.toMatrix₂' ⬝ N = (B.compl₁₂ Mᵀ.toLin' N.toLin').toMatrix₂' := by
   simp
 #align linear_map.mul_to_matrix₂'_mul LinearMap.mul_toMatrix₂'_mul
 
-/- warning: linear_map.mul_to_matrix' -> LinearMap.mul_toMatrix' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.mul_to_matrix' LinearMap.mul_toMatrix'ₓ'. -/
 theorem LinearMap.mul_toMatrix' (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (M : Matrix n' n R) :
     M ⬝ B.toMatrix₂' = (B.comp Mᵀ.toLin').toMatrix₂' := by
   simp only [B.to_matrix₂'_comp, transpose_transpose, to_matrix'_to_lin']
 #align linear_map.mul_to_matrix' LinearMap.mul_toMatrix'
 
-/- warning: linear_map.to_matrix₂'_mul -> LinearMap.toMatrix₂'_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_mul LinearMap.toMatrix₂'_mulₓ'. -/
 theorem LinearMap.toMatrix₂'_mul (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (M : Matrix m m' R) :
     B.toMatrix₂' ⬝ M = (B.compl₂ M.toLin').toMatrix₂' := by
   simp only [B.to_matrix₂'_compl₂, to_matrix'_to_lin']
 #align linear_map.to_matrix₂'_mul LinearMap.toMatrix₂'_mul
 
-/- warning: matrix.to_linear_map₂'_comp -> Matrix.toLinearMap₂'_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂'_comp Matrix.toLinearMap₂'_compₓ'. -/
 theorem Matrix.toLinearMap₂'_comp (M : Matrix n m R) (P : Matrix n n' R) (Q : Matrix m m' R) :
     M.toLinearMap₂'.compl₁₂ P.toLin' Q.toLin' = (Pᵀ ⬝ M ⬝ Q).toLinearMap₂' :=
   LinearMap.toMatrix₂'.Injective (by simp)
@@ -466,9 +391,6 @@ noncomputable def Matrix.toLinearMap₂ : Matrix n m R ≃ₗ[R] M₁ →ₗ[R] 
 #align matrix.to_linear_map₂ Matrix.toLinearMap₂
 -/
 
-/- warning: linear_map.to_matrix₂_apply -> LinearMap.toMatrix₂_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_apply LinearMap.toMatrix₂_applyₓ'. -/
 -- We make this and not `linear_map.to_matrix₂` a `simp` lemma to avoid timeouts
 @[simp]
 theorem LinearMap.toMatrix₂_apply (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (i : n) (j : m) :
@@ -478,9 +400,6 @@ theorem LinearMap.toMatrix₂_apply (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (i : n
     Basis.equivFun_symm_stdBasis, LinearEquiv.refl_apply]
 #align linear_map.to_matrix₂_apply LinearMap.toMatrix₂_apply
 
-/- warning: matrix.to_linear_map₂_apply -> Matrix.toLinearMap₂_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂_apply Matrix.toLinearMap₂_applyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Matrix.toLinearMap₂_apply (M : Matrix n m R) (x : M₁) (y : M₂) :
@@ -488,60 +407,39 @@ theorem Matrix.toLinearMap₂_apply (M : Matrix n m R) (x : M₁) (y : M₂) :
   rfl
 #align matrix.to_linear_map₂_apply Matrix.toLinearMap₂_apply
 
-/- warning: linear_map.to_matrix₂_aux_eq -> LinearMap.toMatrix₂Aux_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_aux_eq LinearMap.toMatrix₂Aux_eqₓ'. -/
 -- Not a `simp` lemma since `linear_map.to_matrix₂` needs an extra argument
 theorem LinearMap.toMatrix₂Aux_eq (B : M₁ →ₗ[R] M₂ →ₗ[R] R) :
     LinearMap.toMatrix₂Aux b₁ b₂ B = LinearMap.toMatrix₂ b₁ b₂ B :=
   ext fun i j => by rw [LinearMap.toMatrix₂_apply, LinearMap.toMatrix₂Aux_apply]
 #align linear_map.to_matrix₂_aux_eq LinearMap.toMatrix₂Aux_eq
 
-/- warning: linear_map.to_matrix₂_symm -> LinearMap.toMatrix₂_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_symm LinearMap.toMatrix₂_symmₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix₂_symm : (LinearMap.toMatrix₂ b₁ b₂).symm = Matrix.toLinearMap₂ b₁ b₂ :=
   rfl
 #align linear_map.to_matrix₂_symm LinearMap.toMatrix₂_symm
 
-/- warning: matrix.to_linear_map₂_symm -> Matrix.toLinearMap₂_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂_symm Matrix.toLinearMap₂_symmₓ'. -/
 @[simp]
 theorem Matrix.toLinearMap₂_symm : (Matrix.toLinearMap₂ b₁ b₂).symm = LinearMap.toMatrix₂ b₁ b₂ :=
   (LinearMap.toMatrix₂ b₁ b₂).symm_symm
 #align matrix.to_linear_map₂_symm Matrix.toLinearMap₂_symm
 
-/- warning: matrix.to_linear_map₂_basis_fun -> Matrix.toLinearMap₂_basisFun is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂_basis_fun Matrix.toLinearMap₂_basisFunₓ'. -/
 theorem Matrix.toLinearMap₂_basisFun :
     Matrix.toLinearMap₂ (Pi.basisFun R n) (Pi.basisFun R m) = Matrix.toLinearMap₂' := by ext M;
   simp only [Matrix.toLinearMap₂_apply, Matrix.toLinearMap₂'_apply, Pi.basisFun_repr, coe_comp,
     Function.comp_apply]
 #align matrix.to_linear_map₂_basis_fun Matrix.toLinearMap₂_basisFun
 
-/- warning: linear_map.to_matrix₂_basis_fun -> LinearMap.toMatrix₂_basisFun is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_basis_fun LinearMap.toMatrix₂_basisFunₓ'. -/
 theorem LinearMap.toMatrix₂_basisFun :
     LinearMap.toMatrix₂ (Pi.basisFun R n) (Pi.basisFun R m) = LinearMap.toMatrix₂' := by ext B;
   rw [LinearMap.toMatrix₂_apply, LinearMap.toMatrix₂'_apply, Pi.basisFun_apply, Pi.basisFun_apply]
 #align linear_map.to_matrix₂_basis_fun LinearMap.toMatrix₂_basisFun
 
-/- warning: matrix.to_linear_map₂_to_matrix₂ -> Matrix.toLinearMap₂_toMatrix₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂_to_matrix₂ Matrix.toLinearMap₂_toMatrix₂ₓ'. -/
 @[simp]
 theorem Matrix.toLinearMap₂_toMatrix₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) :
     Matrix.toLinearMap₂ b₁ b₂ (LinearMap.toMatrix₂ b₁ b₂ B) = B :=
   (Matrix.toLinearMap₂ b₁ b₂).apply_symm_apply B
 #align matrix.to_linear_map₂_to_matrix₂ Matrix.toLinearMap₂_toMatrix₂
 
-/- warning: linear_map.to_matrix₂_to_linear_map₂ -> LinearMap.toMatrix₂_toLinearMap₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_to_linear_map₂ LinearMap.toMatrix₂_toLinearMap₂ₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix₂_toLinearMap₂ (M : Matrix n m R) :
     LinearMap.toMatrix₂ b₁ b₂ (Matrix.toLinearMap₂ b₁ b₂ M) = M :=
@@ -560,9 +458,6 @@ variable [Fintype n'] [Fintype m']
 
 variable [DecidableEq n'] [DecidableEq m']
 
-/- warning: linear_map.to_matrix₂_compl₁₂ -> LinearMap.toMatrix₂_compl₁₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_compl₁₂ LinearMap.toMatrix₂_compl₁₂ₓ'. -/
 -- Cannot be a `simp` lemma because `b₁` and `b₂` must be inferred.
 theorem LinearMap.toMatrix₂_compl₁₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (l : M₁' →ₗ[R] M₁)
     (r : M₂' →ₗ[R] M₂) :
@@ -586,9 +481,6 @@ theorem LinearMap.toMatrix₂_compl₁₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) 
   · intros ; simp only [zero_smul, Finsupp.sum_zero]
 #align linear_map.to_matrix₂_compl₁₂ LinearMap.toMatrix₂_compl₁₂
 
-/- warning: linear_map.to_matrix₂_comp -> LinearMap.toMatrix₂_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_comp LinearMap.toMatrix₂_compₓ'. -/
 theorem LinearMap.toMatrix₂_comp (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M₁' →ₗ[R] M₁) :
     LinearMap.toMatrix₂ b₁' b₂ (B.comp f) = (toMatrix b₁' b₁ f)ᵀ ⬝ LinearMap.toMatrix₂ b₁ b₂ B :=
   by
@@ -596,17 +488,11 @@ theorem LinearMap.toMatrix₂_comp (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M�
   simp
 #align linear_map.to_matrix₂_comp LinearMap.toMatrix₂_comp
 
-/- warning: linear_map.to_matrix₂_compl₂ -> LinearMap.toMatrix₂_compl₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_compl₂ LinearMap.toMatrix₂_compl₂ₓ'. -/
 theorem LinearMap.toMatrix₂_compl₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M₂' →ₗ[R] M₂) :
     LinearMap.toMatrix₂ b₁ b₂' (B.compl₂ f) = LinearMap.toMatrix₂ b₁ b₂ B ⬝ toMatrix b₂' b₂ f := by
   rw [← LinearMap.comp_id B, ← LinearMap.compl₁₂, LinearMap.toMatrix₂_compl₁₂ b₁ b₂]; simp
 #align linear_map.to_matrix₂_compl₂ LinearMap.toMatrix₂_compl₂
 
-/- warning: linear_map.to_matrix₂_mul_basis_to_matrix -> LinearMap.toMatrix₂_mul_basis_toMatrix is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_mul_basis_to_matrix LinearMap.toMatrix₂_mul_basis_toMatrixₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix₂_mul_basis_toMatrix (c₁ : Basis n' R M₁) (c₂ : Basis m' R M₂)
     (B : M₁ →ₗ[R] M₂ →ₗ[R] R) :
@@ -617,9 +503,6 @@ theorem LinearMap.toMatrix₂_mul_basis_toMatrix (c₁ : Basis n' R M₁) (c₂ 
   rw [← LinearMap.toMatrix₂_compl₁₂, LinearMap.compl₁₂_id_id]
 #align linear_map.to_matrix₂_mul_basis_to_matrix LinearMap.toMatrix₂_mul_basis_toMatrix
 
-/- warning: linear_map.mul_to_matrix₂_mul -> LinearMap.mul_toMatrix₂_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.mul_to_matrix₂_mul LinearMap.mul_toMatrix₂_mulₓ'. -/
 theorem LinearMap.mul_toMatrix₂_mul (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (M : Matrix n' n R)
     (N : Matrix m m' R) :
     M ⬝ LinearMap.toMatrix₂ b₁ b₂ B ⬝ N =
@@ -627,25 +510,16 @@ theorem LinearMap.mul_toMatrix₂_mul (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (M :
   by simp_rw [LinearMap.toMatrix₂_compl₁₂ b₁ b₂, to_matrix_to_lin, transpose_transpose]
 #align linear_map.mul_to_matrix₂_mul LinearMap.mul_toMatrix₂_mul
 
-/- warning: linear_map.mul_to_matrix₂ -> LinearMap.mul_toMatrix₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.mul_to_matrix₂ LinearMap.mul_toMatrix₂ₓ'. -/
 theorem LinearMap.mul_toMatrix₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (M : Matrix n' n R) :
     M ⬝ LinearMap.toMatrix₂ b₁ b₂ B = LinearMap.toMatrix₂ b₁' b₂ (B.comp (toLin b₁' b₁ Mᵀ)) := by
   rw [LinearMap.toMatrix₂_comp b₁, to_matrix_to_lin, transpose_transpose]
 #align linear_map.mul_to_matrix₂ LinearMap.mul_toMatrix₂
 
-/- warning: linear_map.to_matrix₂_mul -> LinearMap.toMatrix₂_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_mul LinearMap.toMatrix₂_mulₓ'. -/
 theorem LinearMap.toMatrix₂_mul (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (M : Matrix m m' R) :
     LinearMap.toMatrix₂ b₁ b₂ B ⬝ M = LinearMap.toMatrix₂ b₁ b₂' (B.compl₂ (toLin b₂' b₂ M)) := by
   rw [LinearMap.toMatrix₂_compl₂ b₁, to_matrix_to_lin]
 #align linear_map.to_matrix₂_mul LinearMap.toMatrix₂_mul
 
-/- warning: matrix.to_linear_map₂_compl₁₂ -> Matrix.toLinearMap₂_compl₁₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂_compl₁₂ Matrix.toLinearMap₂_compl₁₂ₓ'. -/
 theorem Matrix.toLinearMap₂_compl₁₂ (M : Matrix n m R) (P : Matrix n n' R) (Q : Matrix m m' R) :
     (Matrix.toLinearMap₂ b₁ b₂ M).compl₁₂ (toLin b₁' b₁ P) (toLin b₂' b₂ Q) =
       Matrix.toLinearMap₂ b₁' b₂' (Pᵀ ⬝ M ⬝ Q) :=
@@ -704,9 +578,6 @@ def Matrix.IsSkewAdjoint :=
 
 variable [DecidableEq n] [DecidableEq n']
 
-/- warning: is_adjoint_pair_to_linear_map₂' -> isAdjointPair_toLinearMap₂' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_adjoint_pair_to_linear_map₂' isAdjointPair_toLinearMap₂'ₓ'. -/
 @[simp]
 theorem isAdjointPair_toLinearMap₂' :
     IsAdjointPair (Matrix.toLinearMap₂' J) (Matrix.toLinearMap₂' J') (Matrix.toLin' A)
@@ -727,9 +598,6 @@ theorem isAdjointPair_toLinearMap₂' :
   rfl
 #align is_adjoint_pair_to_linear_map₂' isAdjointPair_toLinearMap₂'
 
-/- warning: is_adjoint_pair_to_linear_map₂ -> isAdjointPair_toLinearMap₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_adjoint_pair_to_linear_map₂ isAdjointPair_toLinearMap₂ₓ'. -/
 @[simp]
 theorem isAdjointPair_toLinearMap₂ :
     IsAdjointPair (Matrix.toLinearMap₂ b₁ b₁ J) (Matrix.toLinearMap₂ b₂ b₂ J')
@@ -750,12 +618,6 @@ theorem isAdjointPair_toLinearMap₂ :
   rfl
 #align is_adjoint_pair_to_linear_map₂ isAdjointPair_toLinearMap₂
 
-/- warning: matrix.is_adjoint_pair_equiv -> Matrix.isAdjointPair_equiv is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_6 : Fintype.{u2} n] (J : Matrix.{u2, u2, u1} n n R) (A₁ : Matrix.{u2, u2, u1} n n R) [_inst_8 : DecidableEq.{succ u2} n] (P : Matrix.{u2, u2, u1} n n R), (IsUnit.{max u2 u1} (Matrix.{u2, u2, u1} n n R) (Ring.toMonoid.{max u2 u1} (Matrix.{u2, u2, u1} n n R) (Matrix.ring.{u1, u2} n R _inst_6 (fun (a : n) (b : n) => _inst_8 a b) (CommRing.toRing.{u1} R _inst_1))) P) -> (Iff (Matrix.IsAdjointPair.{u1, u2, u2} R n n _inst_1 _inst_6 _inst_6 (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.transpose.{u1, u2, u2} n n R P) J) P) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.transpose.{u1, u2, u2} n n R P) J) P) A₁ A₁) (Matrix.IsAdjointPair.{u1, u2, u2} R n n _inst_1 _inst_6 _inst_6 J J (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) P A₁) (Inv.inv.{max u2 u1} (Matrix.{u2, u2, u1} n n R) (Matrix.hasInv.{u2, u1} n R _inst_6 (fun (a : n) (b : n) => _inst_8 a b) _inst_1) P)) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) P A₁) (Inv.inv.{max u2 u1} (Matrix.{u2, u2, u1} n n R) (Matrix.hasInv.{u2, u1} n R _inst_6 (fun (a : n) (b : n) => _inst_8 a b) _inst_1) P))))
-but is expected to have type
-  forall {R : Type.{u1}} {n : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_6 : Fintype.{u2} n] (J : Matrix.{u2, u2, u1} n n R) (A₁ : Matrix.{u2, u2, u1} n n R) [_inst_8 : DecidableEq.{succ u2} n] (P : Matrix.{u2, u2, u1} n n R), (IsUnit.{max u1 u2} (Matrix.{u2, u2, u1} n n R) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u2, u2, u1} n n R) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u2, u2, u1} n n R) (Matrix.semiring.{u1, u2} n R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) _inst_6 (fun (a : n) (b : n) => _inst_8 a b)))) P) -> (Iff (Matrix.IsAdjointPair.{u1, u2, u2} R n n _inst_1 _inst_6 _inst_6 (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.transpose.{u1, u2, u2} n n R P) J) P) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.transpose.{u1, u2, u2} n n R P) J) P) A₁ A₁) (Matrix.IsAdjointPair.{u1, u2, u2} R n n _inst_1 _inst_6 _inst_6 J J (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) P A₁) (Inv.inv.{max u1 u2} (Matrix.{u2, u2, u1} n n R) (Matrix.inv.{u2, u1} n R _inst_6 (fun (a : n) (b : n) => _inst_8 a b) _inst_1) P)) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.mul.{u1, u2, u2, u2} n n n R _inst_6 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) P A₁) (Inv.inv.{max u1 u2} (Matrix.{u2, u2, u1} n n R) (Matrix.inv.{u2, u1} n R _inst_6 (fun (a : n) (b : n) => _inst_8 a b) _inst_1) P))))
-Case conversion may be inaccurate. Consider using '#align matrix.is_adjoint_pair_equiv Matrix.isAdjointPair_equivₓ'. -/
 theorem Matrix.isAdjointPair_equiv (P : Matrix n n R) (h : IsUnit P) :
     (Pᵀ ⬝ J ⬝ P).IsAdjointPair (Pᵀ ⬝ J ⬝ P) A₁ A₁ ↔
       J.IsAdjointPair J (P ⬝ A₁ ⬝ P⁻¹) (P ⬝ A₁ ⬝ P⁻¹) :=
@@ -799,12 +661,6 @@ def pairSelfAdjointMatricesSubmodule : Submodule R (Matrix n n R) :=
 #align pair_self_adjoint_matrices_submodule pairSelfAdjointMatricesSubmodule
 -/
 
-/- warning: mem_pair_self_adjoint_matrices_submodule -> mem_pairSelfAdjointMatricesSubmodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_6 : Fintype.{u2} n] (J : Matrix.{u2, u2, u1} n n R) (J₂ : Matrix.{u2, u2, u1} n n R) (A₁ : Matrix.{u2, u2, u1} n n R) [_inst_8 : DecidableEq.{succ u2} n], Iff (Membership.Mem.{max u2 u1, max u2 u1} (Matrix.{u2, u2, u1} n n R) (Submodule.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (SetLike.hasMem.{max u2 u1, max u2 u1} (Submodule.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.{u2, u2, u1} n n R) (Submodule.setLike.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) A₁ (pairSelfAdjointMatricesSubmodule.{u1, u2} R n _inst_1 _inst_6 J J₂ (fun (a : n) (b : n) => _inst_8 a b))) (Matrix.IsAdjointPair.{u1, u2, u2} R n n _inst_1 _inst_6 _inst_6 J J₂ A₁ A₁)
-but is expected to have type
-  forall {R : Type.{u2}} {n : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_6 : Fintype.{u1} n] (J : Matrix.{u1, u1, u2} n n R) (J₂ : Matrix.{u1, u1, u2} n n R) (A₁ : Matrix.{u1, u1, u2} n n R) [_inst_8 : DecidableEq.{succ u1} n], Iff (Membership.mem.{max u2 u1, max u1 u2} (Matrix.{u1, u1, u2} n n R) (Submodule.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{max u2 u1, max u2 u1} (Submodule.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Matrix.{u1, u1, u2} n n R) (Submodule.setLike.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) A₁ (pairSelfAdjointMatricesSubmodule.{u2, u1} R n _inst_1 _inst_6 J J₂ (fun (a : n) (b : n) => _inst_8 a b))) (Matrix.IsAdjointPair.{u2, u1, u1} R n n _inst_1 _inst_6 _inst_6 J J₂ A₁ A₁)
-Case conversion may be inaccurate. Consider using '#align mem_pair_self_adjoint_matrices_submodule mem_pairSelfAdjointMatricesSubmoduleₓ'. -/
 @[simp]
 theorem mem_pairSelfAdjointMatricesSubmodule :
     A₁ ∈ pairSelfAdjointMatricesSubmodule J J₂ ↔ Matrix.IsAdjointPair J J₂ A₁ A₁ :=
@@ -828,12 +684,6 @@ def selfAdjointMatricesSubmodule : Submodule R (Matrix n n R) :=
 #align self_adjoint_matrices_submodule selfAdjointMatricesSubmodule
 -/
 
-/- warning: mem_self_adjoint_matrices_submodule -> mem_selfAdjointMatricesSubmodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_6 : Fintype.{u2} n] (J : Matrix.{u2, u2, u1} n n R) (A₁ : Matrix.{u2, u2, u1} n n R) [_inst_8 : DecidableEq.{succ u2} n], Iff (Membership.Mem.{max u2 u1, max u2 u1} (Matrix.{u2, u2, u1} n n R) (Submodule.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (SetLike.hasMem.{max u2 u1, max u2 u1} (Submodule.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.{u2, u2, u1} n n R) (Submodule.setLike.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) A₁ (selfAdjointMatricesSubmodule.{u1, u2} R n _inst_1 _inst_6 J (fun (a : n) (b : n) => _inst_8 a b))) (Matrix.IsSelfAdjoint.{u1, u2} R n _inst_1 _inst_6 J A₁)
-but is expected to have type
-  forall {R : Type.{u2}} {n : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_6 : Fintype.{u1} n] (J : Matrix.{u1, u1, u2} n n R) (A₁ : Matrix.{u1, u1, u2} n n R) [_inst_8 : DecidableEq.{succ u1} n], Iff (Membership.mem.{max u2 u1, max u1 u2} (Matrix.{u1, u1, u2} n n R) (Submodule.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{max u2 u1, max u2 u1} (Submodule.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Matrix.{u1, u1, u2} n n R) (Submodule.setLike.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) A₁ (selfAdjointMatricesSubmodule.{u2, u1} R n _inst_1 _inst_6 J (fun (a : n) (b : n) => _inst_8 a b))) (Matrix.IsSelfAdjoint.{u2, u1} R n _inst_1 _inst_6 J A₁)
-Case conversion may be inaccurate. Consider using '#align mem_self_adjoint_matrices_submodule mem_selfAdjointMatricesSubmoduleₓ'. -/
 @[simp]
 theorem mem_selfAdjointMatricesSubmodule :
     A₁ ∈ selfAdjointMatricesSubmodule J ↔ J.IsSelfAdjoint A₁ := by
@@ -848,12 +698,6 @@ def skewAdjointMatricesSubmodule : Submodule R (Matrix n n R) :=
 #align skew_adjoint_matrices_submodule skewAdjointMatricesSubmodule
 -/
 
-/- warning: mem_skew_adjoint_matrices_submodule -> mem_skewAdjointMatricesSubmodule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {n : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_6 : Fintype.{u2} n] (J : Matrix.{u2, u2, u1} n n R) (A₁ : Matrix.{u2, u2, u1} n n R) [_inst_8 : DecidableEq.{succ u2} n], Iff (Membership.Mem.{max u2 u1, max u2 u1} (Matrix.{u2, u2, u1} n n R) (Submodule.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (SetLike.hasMem.{max u2 u1, max u2 u1} (Submodule.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Matrix.{u2, u2, u1} n n R) (Submodule.setLike.{u1, max u2 u1} R (Matrix.{u2, u2, u1} n n R) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.addCommMonoid.{u1, u2, u2} n n R (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Matrix.module.{u1, u2, u2, u1} n n R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) A₁ (skewAdjointMatricesSubmodule.{u1, u2} R n _inst_1 _inst_6 J (fun (a : n) (b : n) => _inst_8 a b))) (Matrix.IsSkewAdjoint.{u1, u2} R n _inst_1 _inst_6 J A₁)
-but is expected to have type
-  forall {R : Type.{u2}} {n : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_6 : Fintype.{u1} n] (J : Matrix.{u1, u1, u2} n n R) (A₁ : Matrix.{u1, u1, u2} n n R) [_inst_8 : DecidableEq.{succ u1} n], Iff (Membership.mem.{max u2 u1, max u1 u2} (Matrix.{u1, u1, u2} n n R) (Submodule.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{max u2 u1, max u2 u1} (Submodule.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Matrix.{u1, u1, u2} n n R) (Submodule.setLike.{u2, max u2 u1} R (Matrix.{u1, u1, u2} n n R) (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (Matrix.addCommMonoid.{u2, u1, u1} n n R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))))) (Matrix.module.{u2, u1, u1, u2} n n R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))) A₁ (skewAdjointMatricesSubmodule.{u2, u1} R n _inst_1 _inst_6 J (fun (a : n) (b : n) => _inst_8 a b))) (Matrix.IsSkewAdjoint.{u2, u1} R n _inst_1 _inst_6 J A₁)
-Case conversion may be inaccurate. Consider using '#align mem_skew_adjoint_matrices_submodule mem_skewAdjointMatricesSubmoduleₓ'. -/
 @[simp]
 theorem mem_skewAdjointMatricesSubmodule :
     A₁ ∈ skewAdjointMatricesSubmodule J ↔ J.IsSkewAdjoint A₁ :=
@@ -877,9 +721,6 @@ variable [CommRing R₁] [AddCommMonoid M₁] [Module R₁ M₁]
 
 variable [DecidableEq ι] [Fintype ι]
 
-/- warning: matrix.separating_left_to_linear_map₂'_iff_separating_left_to_linear_map₂ -> Matrix.separatingLeft_toLinearMap₂'_iff_separatingLeft_toLinearMap₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.separating_left_to_linear_map₂'_iff_separating_left_to_linear_map₂ Matrix.separatingLeft_toLinearMap₂'_iff_separatingLeft_toLinearMap₂ₓ'. -/
 theorem Matrix.separatingLeft_toLinearMap₂'_iff_separatingLeft_toLinearMap₂ {M : Matrix ι ι R₁}
     (b : Basis ι R₁ M₁) :
     M.toLinearMap₂'.SeparatingLeft ↔ (Matrix.toLinearMap₂ b b M).SeparatingLeft :=
@@ -905,17 +746,11 @@ theorem Matrix.separatingLeft_toLinearMap₂'_iff {M : Matrix ι ι R₁} :
 #align matrix.separating_left_to_linear_map₂'_iff Matrix.separatingLeft_toLinearMap₂'_iff
 -/
 
-/- warning: matrix.nondegenerate.to_linear_map₂ -> Matrix.Nondegenerate.toLinearMap₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.nondegenerate.to_linear_map₂ Matrix.Nondegenerate.toLinearMap₂ₓ'. -/
 theorem Matrix.Nondegenerate.toLinearMap₂ {M : Matrix ι ι R₁} (h : M.Nondegenerate)
     (b : Basis ι R₁ M₁) : (toLinearMap₂ b b M).SeparatingLeft :=
   (Matrix.separatingLeft_toLinearMap₂'_iff_separatingLeft_toLinearMap₂ b).mp h.toLinearMap₂'
 #align matrix.nondegenerate.to_linear_map₂ Matrix.Nondegenerate.toLinearMap₂
 
-/- warning: matrix.separating_left_to_linear_map₂_iff -> Matrix.separatingLeft_toLinearMap₂_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.separating_left_to_linear_map₂_iff Matrix.separatingLeft_toLinearMap₂_iffₓ'. -/
 @[simp]
 theorem Matrix.separatingLeft_toLinearMap₂_iff {M : Matrix ι ι R₁} (b : Basis ι R₁ M₁) :
     (toLinearMap₂ b b M).SeparatingLeft ↔ M.Nondegenerate := by
@@ -923,9 +758,6 @@ theorem Matrix.separatingLeft_toLinearMap₂_iff {M : Matrix ι ι R₁} (b : Ba
     Matrix.separatingLeft_toLinearMap₂'_iff]
 #align matrix.separating_left_to_linear_map₂_iff Matrix.separatingLeft_toLinearMap₂_iff
 
-/- warning: linear_map.nondegenerate_to_matrix₂'_iff -> LinearMap.nondegenerate_toMatrix₂'_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.nondegenerate_to_matrix₂'_iff LinearMap.nondegenerate_toMatrix₂'_iffₓ'. -/
 -- Lemmas transferring nondegeneracy between a bilinear form and its associated matrix
 @[simp]
 theorem nondegenerate_toMatrix₂'_iff {B : (ι → R₁) →ₗ[R₁] (ι → R₁) →ₗ[R₁] R₁} :
@@ -934,17 +766,11 @@ theorem nondegenerate_toMatrix₂'_iff {B : (ι → R₁) →ₗ[R₁] (ι → R
     (Matrix.toLinearMap₂'_toMatrix' B).symm ▸ Iff.rfl
 #align linear_map.nondegenerate_to_matrix₂'_iff LinearMap.nondegenerate_toMatrix₂'_iff
 
-/- warning: linear_map.separating_left.to_matrix₂' -> LinearMap.SeparatingLeft.toMatrix₂' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.separating_left.to_matrix₂' LinearMap.SeparatingLeft.toMatrix₂'ₓ'. -/
 theorem SeparatingLeft.toMatrix₂' {B : (ι → R₁) →ₗ[R₁] (ι → R₁) →ₗ[R₁] R₁} (h : B.SeparatingLeft) :
     B.toMatrix₂'.Nondegenerate :=
   nondegenerate_toMatrix₂'_iff.mpr h
 #align linear_map.separating_left.to_matrix₂' LinearMap.SeparatingLeft.toMatrix₂'
 
-/- warning: linear_map.nondegenerate_to_matrix_iff -> LinearMap.nondegenerate_toMatrix_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.nondegenerate_to_matrix_iff LinearMap.nondegenerate_toMatrix_iffₓ'. -/
 @[simp]
 theorem nondegenerate_toMatrix_iff {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁) :
     (toMatrix₂ b b B).Nondegenerate ↔ B.SeparatingLeft :=
@@ -952,9 +778,6 @@ theorem nondegenerate_toMatrix_iff {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁
     (Matrix.toLinearMap₂_toMatrix₂ b b B).symm ▸ Iff.rfl
 #align linear_map.nondegenerate_to_matrix_iff LinearMap.nondegenerate_toMatrix_iff
 
-/- warning: linear_map.separating_left.to_matrix₂ -> LinearMap.SeparatingLeft.toMatrix₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.separating_left.to_matrix₂ LinearMap.SeparatingLeft.toMatrix₂ₓ'. -/
 theorem SeparatingLeft.toMatrix₂ {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (h : B.SeparatingLeft)
     (b : Basis ι R₁ M₁) : (toMatrix₂ b b B).Nondegenerate :=
   (nondegenerate_toMatrix_iff b).mpr h
@@ -970,25 +793,16 @@ theorem separatingLeft_toLinearMap₂'_iff_det_ne_zero {M : Matrix ι ι R₁} :
 #align linear_map.separating_left_to_linear_map₂'_iff_det_ne_zero LinearMap.separatingLeft_toLinearMap₂'_iff_det_ne_zero
 -/
 
-/- warning: linear_map.separating_left_to_linear_map₂'_of_det_ne_zero' -> LinearMap.separatingLeft_toLinearMap₂'_of_det_ne_zero' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.separating_left_to_linear_map₂'_of_det_ne_zero' LinearMap.separatingLeft_toLinearMap₂'_of_det_ne_zero'ₓ'. -/
 theorem separatingLeft_toLinearMap₂'_of_det_ne_zero' (M : Matrix ι ι R₁) (h : M.det ≠ 0) :
     M.toLinearMap₂'.SeparatingLeft :=
   separatingLeft_toLinearMap₂'_iff_det_ne_zero.mpr h
 #align linear_map.separating_left_to_linear_map₂'_of_det_ne_zero' LinearMap.separatingLeft_toLinearMap₂'_of_det_ne_zero'
 
-/- warning: linear_map.separating_left_iff_det_ne_zero -> LinearMap.separatingLeft_iff_det_ne_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.separating_left_iff_det_ne_zero LinearMap.separatingLeft_iff_det_ne_zeroₓ'. -/
 theorem separatingLeft_iff_det_ne_zero {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁) :
     B.SeparatingLeft ↔ (toMatrix₂ b b B).det ≠ 0 := by
   rw [← Matrix.nondegenerate_iff_det_ne_zero, nondegenerate_to_matrix_iff]
 #align linear_map.separating_left_iff_det_ne_zero LinearMap.separatingLeft_iff_det_ne_zero
 
-/- warning: linear_map.separating_left_of_det_ne_zero -> LinearMap.separatingLeft_of_det_ne_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.separating_left_of_det_ne_zero LinearMap.separatingLeft_of_det_ne_zeroₓ'. -/
 theorem separatingLeft_of_det_ne_zero {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁)
     (h : (toMatrix₂ b b B).det ≠ 0) : B.SeparatingLeft :=
   (separatingLeft_iff_det_ne_zero b).mpr h

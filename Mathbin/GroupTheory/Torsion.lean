@@ -97,12 +97,6 @@ section Group
 
 variable [Group G] {N : Subgroup G} [Group H]
 
-/- warning: is_torsion.subgroup -> IsTorsion.subgroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], (Monoid.IsTorsion.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) -> (forall (H : Subgroup.{u1} G _inst_1), Monoid.IsTorsion.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (Group.toDivInvMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (Subgroup.toGroup.{u1} G _inst_1 H))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], (Monoid.IsTorsion.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) -> (forall (H : Subgroup.{u1} G _inst_1), Monoid.IsTorsion.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Submonoid.toMonoid.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Subgroup.toSubmonoid.{u1} G _inst_1 H)))
-Case conversion may be inaccurate. Consider using '#align is_torsion.subgroup IsTorsion.subgroupₓ'. -/
 /-- Subgroups of torsion groups are torsion groups. -/
 @[to_additive "Subgroups of additive torsion groups are additive torsion groups."]
 theorem IsTorsion.subgroup (tG : IsTorsion G) (H : Subgroup G) : IsTorsion H := fun h =>
@@ -110,12 +104,6 @@ theorem IsTorsion.subgroup (tG : IsTorsion G) (H : Subgroup G) : IsTorsion H := 
 #align is_torsion.subgroup IsTorsion.subgroup
 #align is_torsion.add_subgroup IsTorsion.addSubgroup
 
-/- warning: is_torsion.of_surjective -> IsTorsion.of_surjective is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))}, (Function.Surjective.{succ u1, succ u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) (fun (_x : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) => G -> H) (MonoidHom.hasCoeToFun.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) f)) -> (Monoid.IsTorsion.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) -> (Monoid.IsTorsion.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))}, (Function.Surjective.{succ u2, succ u1} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) G H (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (MulOneClass.toMul.{u1} H (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2))) (MonoidHom.monoidHomClass.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))))) f)) -> (Monoid.IsTorsion.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) -> (Monoid.IsTorsion.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))
-Case conversion may be inaccurate. Consider using '#align is_torsion.of_surjective IsTorsion.of_surjectiveₓ'. -/
 /-- The image of a surjective torsion group homomorphism is torsion. -/
 @[to_additive AddIsTorsion.of_surjective
       "The image of a surjective additive torsion group homomorphism is torsion."]
@@ -127,12 +115,6 @@ theorem IsTorsion.of_surjective {f : G →* H} (hf : Function.Surjective f) (tG 
 #align is_torsion.of_surjective IsTorsion.of_surjective
 #align add_is_torsion.of_surjective AddIsTorsion.of_surjective
 
-/- warning: is_torsion.extension_closed -> IsTorsion.extension_closed is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] {N : Subgroup.{u1} G _inst_1} [_inst_2 : Group.{u2} H] {f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))}, (Eq.{succ u1} (Subgroup.{u1} G _inst_1) N (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f)) -> (Monoid.IsTorsion.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) -> (Monoid.IsTorsion.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) N) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) N) (Group.toDivInvMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) N) (Subgroup.toGroup.{u1} G _inst_1 N)))) -> (Monoid.IsTorsion.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] {N : Subgroup.{u2} G _inst_1} [_inst_2 : Group.{u1} H] {f : MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))}, (Eq.{succ u2} (Subgroup.{u2} G _inst_1) N (MonoidHom.ker.{u2, u1} G _inst_1 H (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2))) f)) -> (Monoid.IsTorsion.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2))) -> (Monoid.IsTorsion.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x N)) (Submonoid.toMonoid.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) (Subgroup.toSubmonoid.{u2} G _inst_1 N))) -> (Monoid.IsTorsion.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))
-Case conversion may be inaccurate. Consider using '#align is_torsion.extension_closed IsTorsion.extension_closedₓ'. -/
 /-- Torsion groups are closed under extensions. -/
 @[to_additive AddIsTorsion.extension_closed "Additive torsion groups are closed under extensions."]
 theorem IsTorsion.extension_closed {f : G →* H} (hN : N = f.ker) (tH : IsTorsion H)
@@ -149,12 +131,6 @@ theorem IsTorsion.extension_closed {f : G →* H} (hN : N = f.ker) (tH : IsTorsi
 #align is_torsion.extension_closed IsTorsion.extension_closed
 #align add_is_torsion.extension_closed AddIsTorsion.extension_closed
 
-/- warning: is_torsion.quotient_iff -> IsTorsion.quotient_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] {N : Subgroup.{u1} G _inst_1} [_inst_2 : Group.{u2} H] {f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))}, (Function.Surjective.{succ u1, succ u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) (fun (_x : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) => G -> H) (MonoidHom.hasCoeToFun.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) f)) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) N (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f)) -> (Monoid.IsTorsion.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) N) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) N) (Group.toDivInvMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) N) (Subgroup.toGroup.{u1} G _inst_1 N)))) -> (Iff (Monoid.IsTorsion.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) (Monoid.IsTorsion.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] {N : Subgroup.{u2} G _inst_1} [_inst_2 : Group.{u1} H] {f : MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))}, (Function.Surjective.{succ u2, succ u1} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) G H (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (MulOneClass.toMul.{u1} H (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))) G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2))) (MonoidHom.monoidHomClass.{u2, u1} G H (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2)))))) f)) -> (Eq.{succ u2} (Subgroup.{u2} G _inst_1) N (MonoidHom.ker.{u2, u1} G _inst_1 H (Monoid.toMulOneClass.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2))) f)) -> (Monoid.IsTorsion.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x N)) (Submonoid.toMonoid.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) (Subgroup.toSubmonoid.{u2} G _inst_1 N))) -> (Iff (Monoid.IsTorsion.{u1} H (DivInvMonoid.toMonoid.{u1} H (Group.toDivInvMonoid.{u1} H _inst_2))) (Monoid.IsTorsion.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))
-Case conversion may be inaccurate. Consider using '#align is_torsion.quotient_iff IsTorsion.quotient_iffₓ'. -/
 /-- The image of a quotient is torsion iff the group is torsion. -/
 @[to_additive AddIsTorsion.quotient_iff
       "The image of a quotient is additively torsion iff the group is torsion."]
@@ -206,12 +182,6 @@ variable (R M : Type _) [AddCommMonoid M]
 
 namespace AddMonoid
 
-/- warning: add_monoid.is_torsion.module_of_torsion -> AddMonoid.IsTorsion.module_of_torsion is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (M : Type.{u2}) [_inst_1 : AddCommMonoid.{u2} M] [_inst_2 : Semiring.{u1} R] [_inst_3 : Module.{u1, u2} R M _inst_2 _inst_1], (AddMonoid.IsTorsion.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_2))))) -> (AddMonoid.IsTorsion.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))
-but is expected to have type
-  forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : AddCommMonoid.{u1} M] [_inst_2 : Semiring.{u2} R] [_inst_3 : Module.{u2, u1} R M _inst_2 _inst_1], (AddMonoid.IsTorsion.{u2} R (AddMonoidWithOne.toAddMonoid.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_2))))) -> (AddMonoid.IsTorsion.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_1))
-Case conversion may be inaccurate. Consider using '#align add_monoid.is_torsion.module_of_torsion AddMonoid.IsTorsion.module_of_torsionₓ'. -/
 /-- A module whose scalars are additively torsion is additively torsion. -/
 theorem IsTorsion.module_of_torsion [Semiring R] [Module R M] (tR : IsTorsion R) : IsTorsion M :=
   fun f =>
@@ -221,12 +191,6 @@ theorem IsTorsion.module_of_torsion [Semiring R] [Module R M] (tR : IsTorsion R)
     exact ⟨n, npos, by simp only [nsmul_eq_smul_cast R _ f, ← nsmul_one, hn, zero_smul]⟩
 #align add_monoid.is_torsion.module_of_torsion AddMonoid.IsTorsion.module_of_torsion
 
-/- warning: add_monoid.is_torsion.module_of_finite -> AddMonoid.IsTorsion.module_of_finite is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (M : Type.{u2}) [_inst_1 : AddCommMonoid.{u2} M] [_inst_2 : Ring.{u1} R] [_inst_3 : Finite.{succ u1} R] [_inst_4 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_2) _inst_1], AddMonoid.IsTorsion.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)
-but is expected to have type
-  forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : AddCommMonoid.{u1} M] [_inst_2 : Ring.{u2} R] [_inst_3 : Finite.{succ u2} R] [_inst_4 : Module.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_2) _inst_1], AddMonoid.IsTorsion.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_1)
-Case conversion may be inaccurate. Consider using '#align add_monoid.is_torsion.module_of_finite AddMonoid.IsTorsion.module_of_finiteₓ'. -/
 /-- A module with a finite ring of scalars is additively torsion. -/
 theorem IsTorsion.module_of_finite [Ring R] [Finite R] [Module R M] : IsTorsion M :=
   (is_add_torsion_of_finite : IsTorsion R).module_of_torsion _ _
@@ -258,12 +222,6 @@ def torsion : Submonoid G where
 
 variable {G}
 
-/- warning: comm_monoid.torsion.is_torsion -> CommMonoid.torsion.isTorsion is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G], Monoid.IsTorsion.{u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) (CommMonoid.torsion.{u1} G _inst_1)) (Submonoid.toMonoid.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1) (CommMonoid.torsion.{u1} G _inst_1))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G], Monoid.IsTorsion.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) x (CommMonoid.torsion.{u1} G _inst_1))) (Submonoid.toMonoid.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1) (CommMonoid.torsion.{u1} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align comm_monoid.torsion.is_torsion CommMonoid.torsion.isTorsionₓ'. -/
 /-- Torsion submonoids are torsion. -/
 @[to_additive "Additive torsion submonoids are additively torsion."]
 theorem torsion.isTorsion : IsTorsion <| torsion G := fun ⟨_, n, npos, hn⟩ =>
@@ -302,12 +260,6 @@ def primaryComponent : Submonoid G
 
 variable {G} {p}
 
-/- warning: comm_monoid.primary_component.exists_order_of_eq_prime_pow -> CommMonoid.primaryComponent.exists_orderOf_eq_prime_pow is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G] {p : Nat} [hp : Fact (Nat.Prime p)] (g : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) (CommMonoid.primaryComponent.{u1} G _inst_1 p hp)), Exists.{1} Nat (fun (n : Nat) => Eq.{1} Nat (orderOf.{u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) (CommMonoid.primaryComponent.{u1} G _inst_1 p hp)) (Submonoid.toMonoid.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1) (CommMonoid.primaryComponent.{u1} G _inst_1 p hp)) g) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p n))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G] {p : Nat} [hp : Fact (Nat.Prime p)] (g : Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) x (CommMonoid.primaryComponent.{u1} G _inst_1 p hp))), Exists.{1} Nat (fun (n : Nat) => Eq.{1} Nat (orderOf.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) x (CommMonoid.primaryComponent.{u1} G _inst_1 p hp))) (Submonoid.toMonoid.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1) (CommMonoid.primaryComponent.{u1} G _inst_1 p hp)) g) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p n))
-Case conversion may be inaccurate. Consider using '#align comm_monoid.primary_component.exists_order_of_eq_prime_pow CommMonoid.primaryComponent.exists_orderOf_eq_prime_powₓ'. -/
 /-- Elements of the `p`-primary component have order `p^n` for some `n`. -/
 @[to_additive "Elements of the `p`-primary component have additive order `p^n` for some `n`"]
 theorem primaryComponent.exists_orderOf_eq_prime_pow (g : CommMonoid.primaryComponent G p) :
@@ -315,12 +267,6 @@ theorem primaryComponent.exists_orderOf_eq_prime_pow (g : CommMonoid.primaryComp
 #align comm_monoid.primary_component.exists_order_of_eq_prime_pow CommMonoid.primaryComponent.exists_orderOf_eq_prime_pow
 #align add_comm_monoid.primary_component.exists_order_of_eq_prime_nsmul AddCommMonoid.primaryComponent.exists_orderOf_eq_prime_nsmul
 
-/- warning: comm_monoid.primary_component.disjoint -> CommMonoid.primaryComponent.disjoint is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G] {p : Nat} [hp : Fact (Nat.Prime p)] {p' : Nat} [hp' : Fact (Nat.Prime p')], (Ne.{1} Nat p p') -> (Disjoint.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) (BoundedOrder.toOrderBot.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Preorder.toHasLe.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))))) (CompleteLattice.toBoundedOrder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Submonoid.completeLattice.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))))) (CommMonoid.primaryComponent.{u1} G _inst_1 p hp) (CommMonoid.primaryComponent.{u1} G _inst_1 p' hp'))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G] {p : Nat} [hp : Fact (Nat.Prime p)] {p' : Nat} [hp' : Fact (Nat.Prime p')], (Ne.{1} Nat p p') -> (Disjoint.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Submonoid.instCompleteLatticeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))))) (BoundedOrder.toOrderBot.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Preorder.toLE.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Submonoid.instCompleteLatticeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))))))) (CompleteLattice.toBoundedOrder.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Submonoid.instCompleteLatticeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))))) (CommMonoid.primaryComponent.{u1} G _inst_1 p hp) (CommMonoid.primaryComponent.{u1} G _inst_1 p' hp'))
-Case conversion may be inaccurate. Consider using '#align comm_monoid.primary_component.disjoint CommMonoid.primaryComponent.disjointₓ'. -/
 /-- The `p`- and `q`-primary components are disjoint for `p ≠ q`. -/
 @[to_additive "The `p`- and `q`-primary components are disjoint for `p ≠ q`."]
 theorem primaryComponent.disjoint {p' : ℕ} [hp' : Fact p'.Prime] (hne : p ≠ p') :
@@ -342,24 +288,12 @@ namespace Monoid.IsTorsion
 
 variable {G}
 
-/- warning: monoid.is_torsion.torsion_eq_top -> Monoid.IsTorsion.torsion_eq_top is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G], (Monoid.IsTorsion.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)) -> (Eq.{succ u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (CommMonoid.torsion.{u1} G _inst_1) (Top.top.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Submonoid.hasTop.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G], (Monoid.IsTorsion.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)) -> (Eq.{succ u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (CommMonoid.torsion.{u1} G _inst_1) (Top.top.{u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (Submonoid.instTopSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align monoid.is_torsion.torsion_eq_top Monoid.IsTorsion.torsion_eq_topₓ'. -/
 /-- The torsion submonoid of a torsion monoid is `⊤`. -/
 @[simp, to_additive "The additive torsion submonoid of an additive torsion monoid is `⊤`."]
 theorem torsion_eq_top (tG : IsTorsion G) : torsion G = ⊤ := by ext <;> tauto
 #align monoid.is_torsion.torsion_eq_top Monoid.IsTorsion.torsion_eq_top
 #align add_monoid.is_torsion.torsion_eq_top AddMonoid.IsTorsion.torsion_eq_top
 
-/- warning: monoid.is_torsion.torsion_mul_equiv -> Monoid.IsTorsion.torsionMulEquiv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G], (Monoid.IsTorsion.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)) -> (MulEquiv.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) (CommMonoid.torsion.{u1} G _inst_1)) G (Submonoid.mul.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)) (CommMonoid.torsion.{u1} G _inst_1)) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommMonoid.{u1} G], (Monoid.IsTorsion.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)) -> (MulEquiv.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)))) x (CommMonoid.torsion.{u1} G _inst_1))) G (Submonoid.mul.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1)) (CommMonoid.torsion.{u1} G _inst_1)) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (CommMonoid.toMonoid.{u1} G _inst_1))))
-Case conversion may be inaccurate. Consider using '#align monoid.is_torsion.torsion_mul_equiv Monoid.IsTorsion.torsionMulEquivₓ'. -/
 /-- A torsion monoid is isomorphic to its torsion submonoid. -/
 @[to_additive "An additive torsion monoid is isomorphic to its torsion submonoid."]
 def torsionMulEquiv (tG : IsTorsion G) : torsion G ≃* G :=
@@ -367,9 +301,6 @@ def torsionMulEquiv (tG : IsTorsion G) : torsion G ≃* G :=
 #align monoid.is_torsion.torsion_mul_equiv Monoid.IsTorsion.torsionMulEquiv
 #align add_monoid.is_torsion.torsion_add_equiv AddMonoid.IsTorsion.torsionAddEquiv
 
-/- warning: monoid.is_torsion.torsion_mul_equiv_apply -> Monoid.IsTorsion.torsionMulEquiv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid.is_torsion.torsion_mul_equiv_apply Monoid.IsTorsion.torsionMulEquiv_applyₓ'. -/
 @[to_additive]
 theorem torsionMulEquiv_apply (tG : IsTorsion G) (a : torsion G) :
     tG.torsionMulEquiv a = MulEquiv.submonoidCongr tG.torsion_eq_top a :=
@@ -377,9 +308,6 @@ theorem torsionMulEquiv_apply (tG : IsTorsion G) (a : torsion G) :
 #align monoid.is_torsion.torsion_mul_equiv_apply Monoid.IsTorsion.torsionMulEquiv_apply
 #align add_monoid.is_torsion.torsion_add_equiv_apply AddMonoid.IsTorsion.torsionAddEquiv_apply
 
-/- warning: monoid.is_torsion.torsion_mul_equiv_symm_apply_coe -> Monoid.IsTorsion.torsionMulEquiv_symm_apply_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid.is_torsion.torsion_mul_equiv_symm_apply_coe Monoid.IsTorsion.torsionMulEquiv_symm_apply_coeₓ'. -/
 @[to_additive]
 theorem torsionMulEquiv_symm_apply_coe (tG : IsTorsion G) (a : G) :
     tG.torsionMulEquiv.symm a = ⟨Submonoid.topEquiv.symm a, tG _⟩ :=
@@ -389,9 +317,6 @@ theorem torsionMulEquiv_symm_apply_coe (tG : IsTorsion G) (a : G) :
 
 end Monoid.IsTorsion
 
-/- warning: torsion.of_torsion -> Torsion.ofTorsion is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align torsion.of_torsion Torsion.ofTorsionₓ'. -/
 /-- Torsion submonoids of a torsion submonoid are isomorphic to the submonoid. -/
 @[simp,
   to_additive AddCommMonoid.Torsion.ofTorsion
@@ -446,12 +371,6 @@ def primaryComponent : Subgroup G :=
 
 variable {G} {p}
 
-/- warning: comm_group.primary_component.is_p_group -> CommGroup.primaryComponent.isPGroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] {p : Nat} [hp : Fact (Nat.Prime p)], IsPGroup.{u1} p (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1)) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1)) G (Subgroup.setLike.{u1} G (CommGroup.toGroup.{u1} G _inst_1))) (CommGroup.primaryComponent.{u1} G _inst_1 p hp)) (Subgroup.toGroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1) (CommGroup.primaryComponent.{u1} G _inst_1 p hp))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] {p : Nat} [hp : Fact (Nat.Prime p)], IsPGroup.{u1} p (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1)) G (Subgroup.instSetLikeSubgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1))) x (CommGroup.primaryComponent.{u1} G _inst_1 p hp))) (Subgroup.toGroup.{u1} G (CommGroup.toGroup.{u1} G _inst_1) (CommGroup.primaryComponent.{u1} G _inst_1 p hp))
-Case conversion may be inaccurate. Consider using '#align comm_group.primary_component.is_p_group CommGroup.primaryComponent.isPGroupₓ'. -/
 /-- The `p`-primary component is a `p` group. -/
 theorem primaryComponent.isPGroup : IsPGroup p <| primaryComponent G p := fun g =>
   (propext exists_orderOf_eq_prime_pow_iff.symm).mpr
@@ -475,12 +394,6 @@ def IsTorsionFree :=
 #align add_monoid.is_torsion_free AddMonoid.IsTorsionFree
 -/
 
-/- warning: monoid.not_is_torsion_free_iff -> Monoid.not_isTorsionFree_iff is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : Monoid.{u1} G], Iff (Not (Monoid.IsTorsionFree.{u1} G _inst_1)) (Exists.{succ u1} G (fun (g : G) => And (Ne.{succ u1} G g (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))) (IsOfFinOrder.{u1} G _inst_1 g)))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : Monoid.{u1} G], Iff (Not (Monoid.IsTorsionFree.{u1} G _inst_1)) (Exists.{succ u1} G (fun (g : G) => And (Ne.{succ u1} G g (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))) (IsOfFinOrder.{u1} G _inst_1 g)))
-Case conversion may be inaccurate. Consider using '#align monoid.not_is_torsion_free_iff Monoid.not_isTorsionFree_iffₓ'. -/
 /-- A nontrivial monoid is not torsion-free if any nontrivial element has finite order. -/
 @[simp,
   to_additive "An additive monoid is not torsion free if any nontrivial element has finite order."]
@@ -523,12 +436,6 @@ theorem IsTorsionFree.not_torsion [hN : Nontrivial G] : IsTorsionFree G → ¬Is
 #align add_monoid.is_torsion_free.not_torsion AddMonoid.IsTorsionFree.not_torsion
 -/
 
-/- warning: is_torsion_free.subgroup -> IsTorsionFree.subgroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], (Monoid.IsTorsionFree.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) -> (forall (H : Subgroup.{u1} G _inst_1), Monoid.IsTorsionFree.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (DivInvMonoid.toMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (Group.toDivInvMonoid.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (Subgroup.toGroup.{u1} G _inst_1 H))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], (Monoid.IsTorsionFree.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) -> (forall (H : Subgroup.{u1} G _inst_1), Monoid.IsTorsionFree.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Submonoid.toMonoid.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Subgroup.toSubmonoid.{u1} G _inst_1 H)))
-Case conversion may be inaccurate. Consider using '#align is_torsion_free.subgroup IsTorsionFree.subgroupₓ'. -/
 /-- Subgroups of torsion-free groups are torsion-free. -/
 @[to_additive "Subgroups of additive torsion-free groups are additively torsion-free."]
 theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsionFree H :=
@@ -538,12 +445,6 @@ theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsi
 #align is_torsion_free.subgroup IsTorsionFree.subgroup
 #align is_torsion_free.add_subgroup IsTorsionFree.addSubgroup
 
-/- warning: is_torsion_free.prod -> IsTorsionFree.prod is a dubious translation:
-lean 3 declaration is
-  forall {η : Type.{u1}} {Gs : η -> Type.{u2}} [_inst_2 : forall (i : η), Group.{u2} (Gs i)], (forall (i : η), Monoid.IsTorsionFree.{u2} (Gs i) (DivInvMonoid.toMonoid.{u2} (Gs i) (Group.toDivInvMonoid.{u2} (Gs i) (_inst_2 i)))) -> (Monoid.IsTorsionFree.{max u1 u2} (forall (i : η), Gs i) (Pi.monoid.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => DivInvMonoid.toMonoid.{u2} (Gs i) (Group.toDivInvMonoid.{u2} (Gs i) (_inst_2 i)))))
-but is expected to have type
-  forall {η : Type.{u2}} {Gs : η -> Type.{u1}} [_inst_2 : forall (i : η), Group.{u1} (Gs i)], (forall (i : η), Monoid.IsTorsionFree.{u1} (Gs i) (DivInvMonoid.toMonoid.{u1} (Gs i) (Group.toDivInvMonoid.{u1} (Gs i) (_inst_2 i)))) -> (Monoid.IsTorsionFree.{max u2 u1} (forall (i : η), Gs i) (Pi.monoid.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => DivInvMonoid.toMonoid.{u1} (Gs i) (Group.toDivInvMonoid.{u1} (Gs i) (_inst_2 i)))))
-Case conversion may be inaccurate. Consider using '#align is_torsion_free.prod IsTorsionFree.prodₓ'. -/
 /-- Direct products of torsion free groups are torsion free. -/
 @[to_additive AddMonoid.IsTorsionFree.prod
       "Direct products of additive torsion free groups are torsion free."]

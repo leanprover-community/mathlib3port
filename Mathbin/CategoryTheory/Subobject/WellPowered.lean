@@ -95,23 +95,11 @@ section Equivalence
 
 variable {D : Type u₂} [Category.{v} D]
 
-/- warning: category_theory.well_powered_of_equiv -> CategoryTheory.wellPowered_of_equiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} D], (CategoryTheory.Equivalence.{u1, u1, u2, u3} C _inst_1 D _inst_2) -> (forall [_inst_3 : CategoryTheory.WellPowered.{u1, u2} C _inst_1], CategoryTheory.WellPowered.{u1, u3} D _inst_2)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} D], (CategoryTheory.Equivalence.{u1, u1, u2, u3} C D _inst_1 _inst_2) -> (forall [_inst_3 : CategoryTheory.WellPowered.{u1, u2} C _inst_1], CategoryTheory.WellPowered.{u1, u3} D _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.well_powered_of_equiv CategoryTheory.wellPowered_of_equivₓ'. -/
 theorem wellPowered_of_equiv (e : C ≌ D) [WellPowered C] : WellPowered D :=
   wellPowered_of_essentiallySmall_monoOver fun X =>
     (essentiallySmall_congr (MonoOver.congr X e.symm)).2 <| by infer_instance
 #align category_theory.well_powered_of_equiv CategoryTheory.wellPowered_of_equiv
 
-/- warning: category_theory.well_powered_congr -> CategoryTheory.wellPowered_congr is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} D], (CategoryTheory.Equivalence.{u1, u1, u2, u3} C _inst_1 D _inst_2) -> (Iff (CategoryTheory.WellPowered.{u1, u2} C _inst_1) (CategoryTheory.WellPowered.{u1, u3} D _inst_2))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u1, u3} D], (CategoryTheory.Equivalence.{u1, u1, u2, u3} C D _inst_1 _inst_2) -> (Iff (CategoryTheory.WellPowered.{u1, u2} C _inst_1) (CategoryTheory.WellPowered.{u1, u3} D _inst_2))
-Case conversion may be inaccurate. Consider using '#align category_theory.well_powered_congr CategoryTheory.wellPowered_congrₓ'. -/
 /-- Being well-powered is preserved by equivalences, as long as the two categories involved have
     their morphisms in the same universe. -/
 theorem wellPowered_congr (e : C ≌ D) : WellPowered C ↔ WellPowered D :=

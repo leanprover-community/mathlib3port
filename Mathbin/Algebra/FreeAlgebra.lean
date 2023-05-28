@@ -60,12 +60,6 @@ variable (X : Type _)
 
 namespace FreeAlgebra
 
-/- warning: free_algebra.pre -> FreeAlgebra.Pre is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R], Type.{u2} -> Sort.{max (succ u1) (succ u2)}
-but is expected to have type
-  Type.{u1} -> Type.{u2} -> Sort.{max (succ u1) (succ u2)}
-Case conversion may be inaccurate. Consider using '#align free_algebra.pre FreeAlgebra.Preₓ'. -/
 /-- This inductive type is used to express representatives of the free algebra.
 -/
 inductive Pre
@@ -80,46 +74,22 @@ namespace Pre
 instance : Inhabited (Pre R X) :=
   ⟨of_scalar 0⟩
 
-/- warning: free_algebra.pre.has_coe_generator -> FreeAlgebra.Pre.hasCoeGenerator is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (X : Type.{u2}), Coe.{succ u2, max (succ u1) (succ u2)} X (FreeAlgebra.Pre.{u1, u2} R _inst_1 X)
-but is expected to have type
-  forall (R : Type.{u1}) (_inst_1 : Type.{u2}), Coe.{succ u2, max (succ u2) (succ u1)} _inst_1 (FreeAlgebra.Pre.{u1, u2} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align free_algebra.pre.has_coe_generator FreeAlgebra.Pre.hasCoeGeneratorₓ'. -/
 -- Note: These instances are only used to simplify the notation.
 /-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
 def hasCoeGenerator : Coe X (Pre R X) :=
   ⟨of⟩
 #align free_algebra.pre.has_coe_generator FreeAlgebra.Pre.hasCoeGenerator
 
-/- warning: free_algebra.pre.has_coe_semiring -> FreeAlgebra.Pre.hasCoeSemiring is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (X : Type.{u2}), Coe.{succ u1, max (succ u1) (succ u2)} R (FreeAlgebra.Pre.{u1, u2} R _inst_1 X)
-but is expected to have type
-  forall (R : Type.{u1}) (_inst_1 : Type.{u2}), Coe.{succ u1, max (succ u2) (succ u1)} R (FreeAlgebra.Pre.{u1, u2} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align free_algebra.pre.has_coe_semiring FreeAlgebra.Pre.hasCoeSemiringₓ'. -/
 /-- Coercion from `R` to `pre R X`. Note: Used for notation only. -/
 def hasCoeSemiring : Coe R (Pre R X) :=
   ⟨of_scalar⟩
 #align free_algebra.pre.has_coe_semiring FreeAlgebra.Pre.hasCoeSemiring
 
-/- warning: free_algebra.pre.has_mul -> FreeAlgebra.Pre.hasMul is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (X : Type.{u2}), Mul.{max u1 u2} (FreeAlgebra.Pre.{u1, u2} R _inst_1 X)
-but is expected to have type
-  forall (R : Type.{u1}) (_inst_1 : Type.{u2}), Mul.{max u2 u1} (FreeAlgebra.Pre.{u1, u2} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align free_algebra.pre.has_mul FreeAlgebra.Pre.hasMulₓ'. -/
 /-- Multiplication in `pre R X` defined as `pre.mul`. Note: Used for notation only. -/
 def hasMul : Mul (Pre R X) :=
   ⟨mul⟩
 #align free_algebra.pre.has_mul FreeAlgebra.Pre.hasMul
 
-/- warning: free_algebra.pre.has_add -> FreeAlgebra.Pre.hasAdd is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (X : Type.{u2}), Add.{max u1 u2} (FreeAlgebra.Pre.{u1, u2} R _inst_1 X)
-but is expected to have type
-  forall (R : Type.{u1}) (_inst_1 : Type.{u2}), Add.{max u2 u1} (FreeAlgebra.Pre.{u1, u2} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align free_algebra.pre.has_add FreeAlgebra.Pre.hasAddₓ'. -/
 /-- Addition in `pre R X` defined as `pre.add`. Note: Used for notation only. -/
 def hasAdd : Add (Pre R X) :=
   ⟨add⟩
@@ -139,12 +109,6 @@ def hasOne : One (Pre R X) :=
 #align free_algebra.pre.has_one FreeAlgebra.Pre.hasOne
 -/
 
-/- warning: free_algebra.pre.has_smul -> FreeAlgebra.Pre.hasSmul is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (X : Type.{u2}), SMul.{u1, max u1 u2} R (FreeAlgebra.Pre.{u1, u2} R _inst_1 X)
-but is expected to have type
-  forall (R : Type.{u1}) (_inst_1 : Type.{u2}), SMul.{u1, max u2 u1} R (FreeAlgebra.Pre.{u1, u2} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align free_algebra.pre.has_smul FreeAlgebra.Pre.hasSmulₓ'. -/
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
@@ -263,12 +227,6 @@ irreducible_def ι : X → FreeAlgebra R X := fun m => Quot.mk _ m
 #align free_algebra.ι FreeAlgebra.ι
 -/
 
-/- warning: free_algebra.quot_mk_eq_ι -> FreeAlgebra.quot_mk_eq_ι is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} (m : X), Eq.{max (succ u1) (succ u2)} (Quot.{max (succ u1) (succ u2)} (FreeAlgebra.Pre.{u1, u2} R _inst_1 X) (FreeAlgebra.Rel.{u1, u2} R _inst_1 X)) (Quot.mk.{max (succ u1) (succ u2)} (FreeAlgebra.Pre.{u1, u2} R _inst_1 X) (FreeAlgebra.Rel.{u1, u2} R _inst_1 X) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) X (FreeAlgebra.Pre.{u1, u2} R _inst_1 X) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} X (FreeAlgebra.Pre.{u1, u2} R _inst_1 X) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} X (FreeAlgebra.Pre.{u1, u2} R _inst_1 X) (coeBase.{succ u2, max (succ u1) (succ u2)} X (FreeAlgebra.Pre.{u1, u2} R _inst_1 X) (FreeAlgebra.Pre.hasCoeGenerator.{u1, u2} R _inst_1 X)))) m)) (FreeAlgebra.ι.{u1, u2} R _inst_1 X m)
-but is expected to have type
-  forall (R : Type.{u2}) [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} (m : X), Eq.{max (succ u2) (succ u1)} (Quot.{max (succ u2) (succ u1)} (FreeAlgebra.Pre.{u2, u1} R X) (FreeAlgebra.Rel.{u2, u1} R _inst_1 X)) (Quot.mk.{max (succ u2) (succ u1)} (FreeAlgebra.Pre.{u2, u1} R X) (FreeAlgebra.Rel.{u2, u1} R _inst_1 X) (FreeAlgebra.Pre.of.{u2, u1} R X m)) (FreeAlgebra.ι.{u2, u1} R _inst_1 X m)
-Case conversion may be inaccurate. Consider using '#align free_algebra.quot_mk_eq_ι FreeAlgebra.quot_mk_eq_ιₓ'. -/
 @[simp]
 theorem quot_mk_eq_ι (m : X) : Quot.mk (FreeAlgebra.Rel R X) m = ι R m := by rw [ι]
 #align free_algebra.quot_mk_eq_ι FreeAlgebra.quot_mk_eq_ι
@@ -319,12 +277,6 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
   map_add' := by rintro ⟨⟩ ⟨⟩; rfl
   commutes' := by tauto
 
-/- warning: free_algebra.lift -> FreeAlgebra.lift is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} {A : Type.{u3}} [_inst_2 : Semiring.{u3} A] [_inst_3 : Algebra.{u1, u3} R A _inst_1 _inst_2], Equiv.{max (succ u2) (succ u3), max (succ (max u1 u2)) (succ u3)} (X -> A) (AlgHom.{u1, max u1 u2, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) _inst_3)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} {A : Type.{u3}} [_inst_2 : Semiring.{u3} A] [_inst_3 : Algebra.{u1, u3} R A _inst_1 _inst_2], Equiv.{max (succ u2) (succ u3), max (succ u3) (succ (max u2 u1))} (X -> A) (AlgHom.{u1, max u2 u1, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u1, u2} R _inst_1 X) _inst_3)
-Case conversion may be inaccurate. Consider using '#align free_algebra.lift FreeAlgebra.liftₓ'. -/
 /-- Given a function `f : X → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
 -/
@@ -353,19 +305,10 @@ irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
         rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb] }
 #align free_algebra.lift FreeAlgebra.lift
 
-/- warning: free_algebra.lift_aux_eq -> FreeAlgebra.liftAux_eq is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} {A : Type.{u3}} [_inst_2 : Semiring.{u3} A] [_inst_3 : Algebra.{u1, u3} R A _inst_1 _inst_2] (f : X -> A), Eq.{max (succ (max u1 u2)) (succ u3)} (AlgHom.{u1, max u1 u2, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) _inst_3) (_Private.2396039455.liftAux.{u1, u2, u3} R _inst_1 X A _inst_2 _inst_3 f) (coeFn.{max 1 (max (max (succ u2) (succ u3)) (succ (max u1 u2)) (succ u3)) (max (succ (max u1 u2)) (succ u3)) (succ u2) (succ u3), max (max (succ u2) (succ u3)) (succ (max u1 u2)) (succ u3)} (Equiv.{max (succ u2) (succ u3), max (succ (max u1 u2)) (succ u3)} (X -> A) (AlgHom.{u1, max u1 u2, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) _inst_3)) (fun (_x : Equiv.{max (succ u2) (succ u3), max (succ (max u1 u2)) (succ u3)} (X -> A) (AlgHom.{u1, max u1 u2, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) _inst_3)) => (X -> A) -> (AlgHom.{u1, max u1 u2, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) _inst_3)) (Equiv.hasCoeToFun.{max (succ u2) (succ u3), max (succ (max u1 u2)) (succ u3)} (X -> A) (AlgHom.{u1, max u1 u2, u3} R (FreeAlgebra.{u1, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) _inst_2 (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) _inst_3)) (FreeAlgebra.lift.{u1, u2, u3} R _inst_1 X A _inst_2 _inst_3) f)
-but is expected to have type
-  forall (R : Type.{u3}) [_inst_1 : CommSemiring.{u3} R] {X : Type.{u2}} {A : Type.{u1}} [_inst_2 : Semiring.{u1} A] [_inst_3 : Algebra.{u3, u1} R A _inst_1 _inst_2] (f : X -> A), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3) (_private.Mathlib.Algebra.FreeAlgebra.0.FreeAlgebra.liftAux.{u3, u2, u1} R _inst_1 X A _inst_2 _inst_3 f) (FunLike.coe.{max (max (succ u3) (succ u1)) (succ u2), max (succ u1) (succ u2), max (max (succ u3) (succ u1)) (succ u2)} (Equiv.{max (succ u2) (succ u1), max (succ u1) (succ (max u2 u3))} (X -> A) (AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3)) (X -> A) (fun (_x : X -> A) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : X -> A) => AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3) _x) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (max (succ u3) (succ u1)) (succ u2)} (X -> A) (AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3)) (FreeAlgebra.lift.{u3, u2, u1} R _inst_1 X A _inst_2 _inst_3) f)
-Case conversion may be inaccurate. Consider using '#align free_algebra.lift_aux_eq FreeAlgebra.liftAux_eqₓ'. -/
 @[simp]
 theorem liftAux_eq (f : X → A) : liftAux R f = lift R f := by rw [lift]; rfl
 #align free_algebra.lift_aux_eq FreeAlgebra.liftAux_eq
 
-/- warning: free_algebra.lift_symm_apply -> FreeAlgebra.lift_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.lift_symm_apply FreeAlgebra.lift_symm_applyₓ'. -/
 @[simp]
 theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R := by rw [lift];
   rfl
@@ -373,24 +316,15 @@ theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F 
 
 variable {R X}
 
-/- warning: free_algebra.ι_comp_lift -> FreeAlgebra.ι_comp_lift is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.ι_comp_lift FreeAlgebra.ι_comp_liftₓ'. -/
 @[simp]
 theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R = f := by ext;
   rw [ι, lift]; rfl
 #align free_algebra.ι_comp_lift FreeAlgebra.ι_comp_lift
 
-/- warning: free_algebra.lift_ι_apply -> FreeAlgebra.lift_ι_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.lift_ι_apply FreeAlgebra.lift_ι_applyₓ'. -/
 @[simp]
 theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x := by rw [ι, lift]; rfl
 #align free_algebra.lift_ι_apply FreeAlgebra.lift_ι_apply
 
-/- warning: free_algebra.lift_unique -> FreeAlgebra.lift_unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.lift_unique FreeAlgebra.lift_uniqueₓ'. -/
 @[simp]
 theorem lift_unique (f : X → A) (g : FreeAlgebra R X →ₐ[R] A) :
     (g : FreeAlgebra R X → A) ∘ ι R = f ↔ g = lift R f := by rw [← (lift R).symm_apply_eq, lift];
@@ -403,9 +337,6 @@ should only use the universal properties of the free algebra, and consider the a
 as a quotient of an inductive type as completely hidden. -/
 
 
-/- warning: free_algebra.lift_comp_ι -> FreeAlgebra.lift_comp_ι is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.lift_comp_ι FreeAlgebra.lift_comp_ιₓ'. -/
 -- Marking `free_algebra` irreducible makes `ring` instances inaccessible on quotients.
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/algebra.2Esemiring_to_ring.20breaks.20semimodule.20typeclass.20lookup/near/212580241
 -- For now, we avoid this by not marking it irreducible.
@@ -414,9 +345,6 @@ theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebr
   by rw [← lift_symm_apply]; exact (lift R).apply_symm_apply g
 #align free_algebra.lift_comp_ι FreeAlgebra.lift_comp_ι
 
-/- warning: free_algebra.hom_ext -> FreeAlgebra.hom_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.hom_ext FreeAlgebra.hom_extₓ'. -/
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
@@ -426,12 +354,6 @@ theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
   exact (lift R).symm.Injective w
 #align free_algebra.hom_ext FreeAlgebra.hom_ext
 
-/- warning: free_algebra.equiv_monoid_algebra_free_monoid -> FreeAlgebra.equivMonoidAlgebraFreeMonoid is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}}, AlgEquiv.{u1, max u1 u2, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (MonoidAlgebra.{u1, u2} R (FreeMonoid.{u2} X) (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (MonoidAlgebra.semiring.{u1, u2} R (FreeMonoid.{u2} X) (CommSemiring.toSemiring.{u1} R _inst_1) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} X) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} X) (FreeMonoid.cancelMonoid.{u2} X)))) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) (MonoidAlgebra.algebra.{u1, u2, u1} R (FreeMonoid.{u2} X) R _inst_1 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} X) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} X) (FreeMonoid.cancelMonoid.{u2} X))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}}, AlgEquiv.{u1, max u2 u1, max u2 u1} R (FreeAlgebra.{u1, u2} R _inst_1 X) (MonoidAlgebra.{u1, u2} R (FreeMonoid.{u2} X) (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u1, u2} R _inst_1 X) (MonoidAlgebra.semiring.{u1, u2} R (FreeMonoid.{u2} X) (CommSemiring.toSemiring.{u1} R _inst_1) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} X) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} X) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} X)))) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u1, u2} R _inst_1 X) (MonoidAlgebra.algebra.{u1, u2, u1} R (FreeMonoid.{u2} X) R _inst_1 (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} X) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} X) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} X))))
-Case conversion may be inaccurate. Consider using '#align free_algebra.equiv_monoid_algebra_free_monoid FreeAlgebra.equivMonoidAlgebraFreeMonoidₓ'. -/
 /-- The free algebra on `X` is "just" the monoid algebra on the free monoid on `X`.
 
 This would be useful when constructing linear maps out of a free algebra,
@@ -454,65 +376,32 @@ instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
 
 section
 
-/- warning: free_algebra.algebra_map_inv -> FreeAlgebra.algebraMapInv is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}}, AlgHom.{u1, max u1 u2, u1} R (FreeAlgebra.{u1, u2} R _inst_1 X) R _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (CommSemiring.toSemiring.{u1} R _inst_1) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X) (Algebra.id.{u1} R _inst_1)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}}, AlgHom.{u1, max u2 u1, u1} R (FreeAlgebra.{u1, u2} R _inst_1 X) R _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u1, u2} R _inst_1 X) (CommSemiring.toSemiring.{u1} R _inst_1) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u1, u2} R _inst_1 X) (Algebra.id.{u1} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align free_algebra.algebra_map_inv FreeAlgebra.algebraMapInvₓ'. -/
 /-- The left-inverse of `algebra_map`. -/
 def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 #align free_algebra.algebra_map_inv FreeAlgebra.algebraMapInv
 
-/- warning: free_algebra.algebra_map_left_inverse -> FreeAlgebra.algebraMap_leftInverse is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_algebra.algebra_map_left_inverse FreeAlgebra.algebraMap_leftInverseₓ'. -/
 theorem algebraMap_leftInverse :
     Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
   simp [algebra_map_inv]
 #align free_algebra.algebra_map_left_inverse FreeAlgebra.algebraMap_leftInverse
 
-/- warning: free_algebra.algebra_map_inj -> FreeAlgebra.algebraMap_inj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} (x : R) (y : R), Iff (Eq.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (coeFn.{max (succ u1) (succ (max u1 u2)), max (succ u1) (succ (max u1 u2))} (RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (fun (_x : RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) => R -> (FreeAlgebra.{u1, u2} R _inst_1 X)) (RingHom.hasCoeToFun.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (algebraMap.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X)) x) (coeFn.{max (succ u1) (succ (max u1 u2)), max (succ u1) (succ (max u1 u2))} (RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (fun (_x : RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) => R -> (FreeAlgebra.{u1, u2} R _inst_1 X)) (RingHom.hasCoeToFun.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (algebraMap.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X)) y)) (Eq.{succ u1} R x y)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} (x : R) (y : R), Iff (Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) (RingHom.instRingHomClassRingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (algebraMap.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) (RingHom.instRingHomClassRingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (algebraMap.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) y)) (Eq.{succ u2} R x y)
-Case conversion may be inaccurate. Consider using '#align free_algebra.algebra_map_inj FreeAlgebra.algebraMap_injₓ'. -/
 @[simp]
 theorem algebraMap_inj (x y : R) :
     algebraMap R (FreeAlgebra R X) x = algebraMap R (FreeAlgebra R X) y ↔ x = y :=
   algebraMap_leftInverse.Injective.eq_iff
 #align free_algebra.algebra_map_inj FreeAlgebra.algebraMap_inj
 
-/- warning: free_algebra.algebra_map_eq_zero_iff -> FreeAlgebra.algebraMap_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} (x : R), Iff (Eq.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (coeFn.{max (succ u1) (succ (max u1 u2)), max (succ u1) (succ (max u1 u2))} (RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (fun (_x : RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) => R -> (FreeAlgebra.{u1, u2} R _inst_1 X)) (RingHom.hasCoeToFun.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (algebraMap.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X)) x) (OfNat.ofNat.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 0 (OfNat.mk.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 0 (Zero.zero.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (MulZeroClass.toHasZero.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonUnitalNonAssocSemiring.toMulZeroClass.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))))))))) (Eq.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))))))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} (x : R), Iff (Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) (RingHom.instRingHomClassRingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (algebraMap.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) x) (OfNat.ofNat.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) 0 (Zero.toOfNat0.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (MonoidWithZero.toZero.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (Semiring.toMonoidWithZero.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (Eq.{succ u2} R x (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align free_algebra.algebra_map_eq_zero_iff FreeAlgebra.algebraMap_eq_zero_iffₓ'. -/
 @[simp]
 theorem algebraMap_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 ↔ x = 0 :=
   map_eq_zero_iff (algebraMap _ _) algebraMap_leftInverse.Injective
 #align free_algebra.algebra_map_eq_zero_iff FreeAlgebra.algebraMap_eq_zero_iff
 
-/- warning: free_algebra.algebra_map_eq_one_iff -> FreeAlgebra.algebraMap_eq_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} (x : R), Iff (Eq.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (coeFn.{max (succ u1) (succ (max u1 u2)), max (succ u1) (succ (max u1 u2))} (RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (fun (_x : RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) => R -> (FreeAlgebra.{u1, u2} R _inst_1 X)) (RingHom.hasCoeToFun.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (algebraMap.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X)) x) (OfNat.ofNat.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 1 (OfNat.mk.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 1 (One.one.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (AddMonoidWithOne.toOne.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (AddCommMonoidWithOne.toAddMonoidWithOne.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonAssocSemiring.toAddCommMonoidWithOne.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))))))))) (Eq.{succ u1} R x (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))))))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} (x : R), Iff (Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) (RingHom.instRingHomClassRingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (algebraMap.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) x) (OfNat.ofNat.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) 1 (One.toOfNat1.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (Semiring.toOne.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) x) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))))) (Eq.{succ u2} R x (OfNat.ofNat.{u2} R 1 (One.toOfNat1.{u2} R (Semiring.toOne.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align free_algebra.algebra_map_eq_one_iff FreeAlgebra.algebraMap_eq_one_iffₓ'. -/
 @[simp]
 theorem algebraMap_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) algebraMap_leftInverse.Injective
 #align free_algebra.algebra_map_eq_one_iff FreeAlgebra.algebraMap_eq_one_iff
 
-/- warning: free_algebra.ι_injective -> FreeAlgebra.ι_injective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} [_inst_4 : Nontrivial.{u1} R], Function.Injective.{succ u2, max (succ u1) (succ u2)} X (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.ι.{u1, u2} R _inst_1 X)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} [_inst_4 : Nontrivial.{u2} R], Function.Injective.{succ u1, max (succ u2) (succ u1)} X (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.ι.{u2, u1} R _inst_1 X)
-Case conversion may be inaccurate. Consider using '#align free_algebra.ι_injective FreeAlgebra.ι_injectiveₓ'. -/
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) :=
   fun x y hoxy =>
@@ -525,23 +414,11 @@ theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgeb
         one_ne_zero <| hfy1.symm.trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
 
-/- warning: free_algebra.ι_inj -> FreeAlgebra.ι_inj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} [_inst_4 : Nontrivial.{u1} R] (x : X) (y : X), Iff (Eq.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.ι.{u1, u2} R _inst_1 X x) (FreeAlgebra.ι.{u1, u2} R _inst_1 X y)) (Eq.{succ u2} X x y)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} [_inst_4 : Nontrivial.{u2} R] (x : X) (y : X), Iff (Eq.{max (succ u2) (succ u1)} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.ι.{u2, u1} R _inst_1 X x) (FreeAlgebra.ι.{u2, u1} R _inst_1 X y)) (Eq.{succ u1} X x y)
-Case conversion may be inaccurate. Consider using '#align free_algebra.ι_inj FreeAlgebra.ι_injₓ'. -/
 @[simp]
 theorem ι_inj [Nontrivial R] (x y : X) : ι R x = ι R y ↔ x = y :=
   ι_injective.eq_iff
 #align free_algebra.ι_inj FreeAlgebra.ι_inj
 
-/- warning: free_algebra.ι_ne_algebra_map -> FreeAlgebra.ι_ne_algebraMap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} [_inst_4 : Nontrivial.{u1} R] (x : X) (r : R), Ne.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.ι.{u1, u2} R _inst_1 X x) (coeFn.{max (succ u1) (succ (max u1 u2)), max (succ u1) (succ (max u1 u2))} (RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (fun (_x : RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) => R -> (FreeAlgebra.{u1, u2} R _inst_1 X)) (RingHom.hasCoeToFun.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (algebraMap.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X)) r)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} [_inst_4 : Nontrivial.{u2} R] (x : X) (r : R), Ne.{max (succ u2) (succ u1)} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.ι.{u2, u1} R _inst_1 X x) (FunLike.coe.{max (succ u2) (succ (max u2 u1)), succ u2, succ (max u2 u1)} (RingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) (RingHom.instRingHomClassRingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (algebraMap.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) r)
-Case conversion may be inaccurate. Consider using '#align free_algebra.ι_ne_algebra_map FreeAlgebra.ι_ne_algebraMapₓ'. -/
 @[simp]
 theorem ι_ne_algebraMap [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap R _ r := fun h =>
   by
@@ -554,23 +431,11 @@ theorem ι_ne_algebraMap [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap 
   exact zero_ne_one (hf0.symm.trans hf1)
 #align free_algebra.ι_ne_algebra_map FreeAlgebra.ι_ne_algebraMap
 
-/- warning: free_algebra.ι_ne_zero -> FreeAlgebra.ι_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} [_inst_4 : Nontrivial.{u1} R] (x : X), Ne.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.ι.{u1, u2} R _inst_1 X x) (OfNat.ofNat.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 0 (OfNat.mk.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 0 (Zero.zero.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (MulZeroClass.toHasZero.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonUnitalNonAssocSemiring.toMulZeroClass.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))))))))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} [_inst_4 : Nontrivial.{u2} R] (x : X), Ne.{max (succ u2) (succ u1)} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.ι.{u2, u1} R _inst_1 X x) (OfNat.ofNat.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) 0 (Zero.toOfNat0.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (MonoidWithZero.toZero.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toMonoidWithZero.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))
-Case conversion may be inaccurate. Consider using '#align free_algebra.ι_ne_zero FreeAlgebra.ι_ne_zeroₓ'. -/
 @[simp]
 theorem ι_ne_zero [Nontrivial R] (x : X) : ι R x ≠ 0 :=
   ι_ne_algebraMap x 0
 #align free_algebra.ι_ne_zero FreeAlgebra.ι_ne_zero
 
-/- warning: free_algebra.ι_ne_one -> FreeAlgebra.ι_ne_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {X : Type.{u2}} [_inst_4 : Nontrivial.{u1} R] (x : X), Ne.{max (succ u1) (succ u2)} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.ι.{u1, u2} R _inst_1 X x) (OfNat.ofNat.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 1 (OfNat.mk.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) 1 (One.one.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (AddMonoidWithOne.toOne.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (AddCommMonoidWithOne.toAddMonoidWithOne.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonAssocSemiring.toAddCommMonoidWithOne.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))))))))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {X : Type.{u1}} [_inst_4 : Nontrivial.{u2} R] (x : X), Ne.{max (succ u2) (succ u1)} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.ι.{u2, u1} R _inst_1 X x) (OfNat.ofNat.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) 1 (One.toOfNat1.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toOne.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))))
-Case conversion may be inaccurate. Consider using '#align free_algebra.ι_ne_one FreeAlgebra.ι_ne_oneₓ'. -/
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : X) : ι R x ≠ 1 :=
   ι_ne_algebraMap x 1
@@ -584,12 +449,6 @@ end FreeAlgebra
 `has_coe_to_sort` below. Closing it and reopening it fixes it... -/
 namespace FreeAlgebra
 
-/- warning: free_algebra.induction -> FreeAlgebra.induction is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (X : Type.{u2}) {C : (FreeAlgebra.{u1, u2} R _inst_1 X) -> Prop}, (forall (r : R), C (coeFn.{max (succ u1) (succ (max u1 u2)), max (succ u1) (succ (max u1 u2))} (RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (fun (_x : RingHom.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) => R -> (FreeAlgebra.{u1, u2} R _inst_1 X)) (RingHom.hasCoeToFun.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X))) (algebraMap.{u1, max u1 u2} R (FreeAlgebra.{u1, u2} R _inst_1 X) _inst_1 (FreeAlgebra.semiring.{u1, u2} R _inst_1 X) (FreeAlgebra.algebra.{u1, u2} R _inst_1 X)) r)) -> (forall (x : X), C (FreeAlgebra.ι.{u1, u2} R _inst_1 X x)) -> (forall (a : FreeAlgebra.{u1, u2} R _inst_1 X) (b : FreeAlgebra.{u1, u2} R _inst_1 X), (C a) -> (C b) -> (C (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.{u1, u2} R _inst_1 X) (instHMul.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Distrib.toHasMul.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonUnitalNonAssocSemiring.toDistrib.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X)))))) a b))) -> (forall (a : FreeAlgebra.{u1, u2} R _inst_1 X) (b : FreeAlgebra.{u1, u2} R _inst_1 X), (C a) -> (C b) -> (C (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.{u1, u2} R _inst_1 X) (instHAdd.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Distrib.toHasAdd.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonUnitalNonAssocSemiring.toDistrib.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u1, u2} R _inst_1 X) (FreeAlgebra.semiring.{u1, u2} R _inst_1 X)))))) a b))) -> (forall (a : FreeAlgebra.{u1, u2} R _inst_1 X), C a)
-but is expected to have type
-  forall (R : Type.{u2}) [_inst_1 : CommSemiring.{u2} R] (X : Type.{u1}) {C : (FreeAlgebra.{u2, u1} R _inst_1 X) -> Prop}, (forall (r : R), C (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => FreeAlgebra.{u2, u1} R _inst_1 X) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, max u2 u1} (RingHom.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))) R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) (RingHom.instRingHomClassRingHom.{u2, max u2 u1} R (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u1 u2} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) (algebraMap.{u2, max u1 u2} R (FreeAlgebra.{u2, u1} R _inst_1 X) _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u2, u1} R _inst_1 X)) r)) -> (forall (x : X), C (FreeAlgebra.ι.{u2, u1} R _inst_1 X x)) -> (forall (a : FreeAlgebra.{u2, u1} R _inst_1 X) (b : FreeAlgebra.{u2, u1} R _inst_1 X), (C a) -> (C b) -> (C (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.{u2, u1} R _inst_1 X) (instHMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X))))) a b))) -> (forall (a : FreeAlgebra.{u2, u1} R _inst_1 X) (b : FreeAlgebra.{u2, u1} R _inst_1 X), (C a) -> (C b) -> (C (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.{u2, u1} R _inst_1 X) (instHAdd.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Distrib.toAdd.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (Semiring.toNonAssocSemiring.{max u2 u1} (FreeAlgebra.{u2, u1} R _inst_1 X) (FreeAlgebra.instSemiringFreeAlgebra.{u2, u1} R _inst_1 X)))))) a b))) -> (forall (a : FreeAlgebra.{u2, u1} R _inst_1 X), C a)
-Case conversion may be inaccurate. Consider using '#align free_algebra.induction FreeAlgebra.inductionₓ'. -/
 /-- An induction principle for the free algebra.
 
 If `C` holds for the `algebra_map` of `r : R` into `free_algebra R X`, the `ι` of `x : X`, and is

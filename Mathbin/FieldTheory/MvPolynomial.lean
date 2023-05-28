@@ -41,9 +41,6 @@ variable {σ : Type u} {K : Type v}
 
 variable (σ K) [Field K]
 
-/- warning: mv_polynomial.quotient_mk_comp_C_injective -> MvPolynomial.quotient_mk_comp_C_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.quotient_mk_comp_C_injective MvPolynomial.quotient_mk_comp_C_injectiveₓ'. -/
 theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠ ⊤) :
     Function.Injective ((Ideal.Quotient.mk I).comp MvPolynomial.C) :=
   by

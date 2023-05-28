@@ -56,12 +56,6 @@ open BigOperators Affine
 
 namespace Finset
 
-/- warning: finset.univ_fin2 -> Finset.univ_fin2 is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Insert.insert.{0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Finset.hasInsert.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (fun (a : Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (b : Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) => Fin.decidableEq (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) a b)) (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (CharZero.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (StrictOrderedSemiring.to_charZero.{0} Nat Nat.strictOrderedSemiring)))))) (Singleton.singleton.{0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Finset.hasSingleton.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 1 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 1 (One.one.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasOneOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (CharZero.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (StrictOrderedSemiring.to_charZero.{0} Nat Nat.strictOrderedSemiring))))))))
-but is expected to have type
-  Eq.{1} (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Insert.insert.{0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Finset.instInsertFinset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (fun (a : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (b : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) => instDecidableEqFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) a b)) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Singleton.singleton.{0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Finset.instSingletonFinset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align finset.univ_fin2 Finset.univ_fin2ₓ'. -/
 theorem univ_fin2 : (univ : Finset (Fin 2)) = {0, 1} := by ext x; fin_cases x <;> simp
 #align finset.univ_fin2 Finset.univ_fin2
 
@@ -87,18 +81,12 @@ def weightedVSubOfPoint (p : ι → P) (b : P) : (ι → k) →ₗ[k] V :=
 #align finset.weighted_vsub_of_point Finset.weightedVSubOfPoint
 -/
 
-/- warning: finset.weighted_vsub_of_point_apply -> Finset.weightedVSubOfPoint_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_apply Finset.weightedVSubOfPoint_applyₓ'. -/
 @[simp]
 theorem weightedVSubOfPoint_apply (w : ι → k) (p : ι → P) (b : P) :
     s.weightedVSubOfPoint p b w = ∑ i in s, w i • (p i -ᵥ b) := by
   simp [weighted_vsub_of_point, LinearMap.sum_apply]
 #align finset.weighted_vsub_of_point_apply Finset.weightedVSubOfPoint_apply
 
-/- warning: finset.weighted_vsub_of_point_apply_const -> Finset.weightedVSubOfPoint_apply_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_apply_const Finset.weightedVSubOfPoint_apply_constₓ'. -/
 /-- The value of `weighted_vsub_of_point`, where the given points are equal. -/
 @[simp]
 theorem weightedVSubOfPoint_apply_const (w : ι → k) (p : P) (b : P) :
@@ -106,9 +94,6 @@ theorem weightedVSubOfPoint_apply_const (w : ι → k) (p : P) (b : P) :
   rw [weighted_vsub_of_point_apply, sum_smul]
 #align finset.weighted_vsub_of_point_apply_const Finset.weightedVSubOfPoint_apply_const
 
-/- warning: finset.weighted_vsub_of_point_congr -> Finset.weightedVSubOfPoint_congr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_congr Finset.weightedVSubOfPoint_congrₓ'. -/
 /-- `weighted_vsub_of_point` gives equal results for two families of weights and two families of
 points that are equal on `s`. -/
 theorem weightedVSubOfPoint_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w₂ i) {p₁ p₂ : ι → P}
@@ -120,9 +105,6 @@ theorem weightedVSubOfPoint_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁
   rw [hw i hi, hp i hi]
 #align finset.weighted_vsub_of_point_congr Finset.weightedVSubOfPoint_congr
 
-/- warning: finset.weighted_vsub_of_point_eq_of_weights_eq -> Finset.weightedVSubOfPoint_eq_of_weights_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_eq_of_weights_eq Finset.weightedVSubOfPoint_eq_of_weights_eqₓ'. -/
 /-- Given a family of points, if we use a member of the family as a base point, the
 `weighted_vsub_of_point` does not depend on the value of the weights at this point. -/
 theorem weightedVSubOfPoint_eq_of_weights_eq (p : ι → P) (j : ι) (w₁ w₂ : ι → k)
@@ -137,9 +119,6 @@ theorem weightedVSubOfPoint_eq_of_weights_eq (p : ι → P) (j : ι) (w₁ w₂ 
   · simp [hw i h]
 #align finset.weighted_vsub_of_point_eq_of_weights_eq Finset.weightedVSubOfPoint_eq_of_weights_eq
 
-/- warning: finset.weighted_vsub_of_point_eq_of_sum_eq_zero -> Finset.weightedVSubOfPoint_eq_of_sum_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_eq_of_sum_eq_zero Finset.weightedVSubOfPoint_eq_of_sum_eq_zeroₓ'. -/
 /-- The weighted sum is independent of the base point when the sum of
 the weights is 0. -/
 theorem weightedVSubOfPoint_eq_of_sum_eq_zero (w : ι → k) (p : ι → P) (h : (∑ i in s, w i) = 0)
@@ -155,9 +134,6 @@ theorem weightedVSubOfPoint_eq_of_sum_eq_zero (w : ι → k) (p : ι → P) (h :
   rw [← sum_smul, h, zero_smul]
 #align finset.weighted_vsub_of_point_eq_of_sum_eq_zero Finset.weightedVSubOfPoint_eq_of_sum_eq_zero
 
-/- warning: finset.weighted_vsub_of_point_vadd_eq_of_sum_eq_one -> Finset.weightedVSubOfPoint_vadd_eq_of_sum_eq_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_vadd_eq_of_sum_eq_one Finset.weightedVSubOfPoint_vadd_eq_of_sum_eq_oneₓ'. -/
 /-- The weighted sum, added to the base point, is independent of the
 base point when the sum of the weights is 1. -/
 theorem weightedVSubOfPoint_vadd_eq_of_sum_eq_one (w : ι → k) (p : ι → P) (h : (∑ i in s, w i) = 1)
@@ -176,9 +152,6 @@ theorem weightedVSubOfPoint_vadd_eq_of_sum_eq_one (w : ι → k) (p : ι → P) 
   rw [← sum_smul, h, one_smul, vsub_add_vsub_cancel, vsub_self]
 #align finset.weighted_vsub_of_point_vadd_eq_of_sum_eq_one Finset.weightedVSubOfPoint_vadd_eq_of_sum_eq_one
 
-/- warning: finset.weighted_vsub_of_point_erase -> Finset.weightedVSubOfPoint_erase is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_erase Finset.weightedVSubOfPoint_eraseₓ'. -/
 /-- The weighted sum is unaffected by removing the base point, if
 present, from the set of points. -/
 @[simp]
@@ -190,9 +163,6 @@ theorem weightedVSubOfPoint_erase [DecidableEq ι] (w : ι → k) (p : ι → P)
   rw [vsub_self, smul_zero]
 #align finset.weighted_vsub_of_point_erase Finset.weightedVSubOfPoint_erase
 
-/- warning: finset.weighted_vsub_of_point_insert -> Finset.weightedVSubOfPoint_insert is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_insert Finset.weightedVSubOfPoint_insertₓ'. -/
 /-- The weighted sum is unaffected by adding the base point, whether
 or not present, to the set of points. -/
 @[simp]
@@ -204,9 +174,6 @@ theorem weightedVSubOfPoint_insert [DecidableEq ι] (w : ι → k) (p : ι → P
   rw [vsub_self, smul_zero]
 #align finset.weighted_vsub_of_point_insert Finset.weightedVSubOfPoint_insert
 
-/- warning: finset.weighted_vsub_of_point_indicator_subset -> Finset.weightedVSubOfPoint_indicator_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_indicator_subset Finset.weightedVSubOfPoint_indicator_subsetₓ'. -/
 /-- The weighted sum is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem weightedVSubOfPoint_indicator_subset (w : ι → k) (p : ι → P) (b : P) {s₁ s₂ : Finset ι}
@@ -218,9 +185,6 @@ theorem weightedVSubOfPoint_indicator_subset (w : ι → k) (p : ι → P) (b : 
     Set.sum_indicator_subset_of_eq_zero w (fun i wi => wi • (p i -ᵥ b : V)) h fun i => zero_smul k _
 #align finset.weighted_vsub_of_point_indicator_subset Finset.weightedVSubOfPoint_indicator_subset
 
-/- warning: finset.weighted_vsub_of_point_map -> Finset.weightedVSubOfPoint_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_map Finset.weightedVSubOfPoint_mapₓ'. -/
 /-- A weighted sum, over the image of an embedding, equals a weighted
 sum with the same points and weights over the original
 `finset`. -/
@@ -231,9 +195,6 @@ theorem weightedVSubOfPoint_map (e : ι₂ ↪ ι) (w : ι → k) (p : ι → P)
   exact Finset.sum_map _ _ _
 #align finset.weighted_vsub_of_point_map Finset.weightedVSubOfPoint_map
 
-/- warning: finset.sum_smul_vsub_eq_weighted_vsub_of_point_sub -> Finset.sum_smul_vsub_eq_weightedVSubOfPoint_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_vsub_eq_weighted_vsub_of_point_sub Finset.sum_smul_vsub_eq_weightedVSubOfPoint_subₓ'. -/
 /-- A weighted sum of pairwise subtractions, expressed as a subtraction of two
 `weighted_vsub_of_point` expressions. -/
 theorem sum_smul_vsub_eq_weightedVSubOfPoint_sub (w : ι → k) (p₁ p₂ : ι → P) (b : P) :
@@ -243,9 +204,6 @@ theorem sum_smul_vsub_eq_weightedVSubOfPoint_sub (w : ι → k) (p₁ p₂ : ι 
   simp_rw [weighted_vsub_of_point_apply, ← sum_sub_distrib, ← smul_sub, vsub_sub_vsub_cancel_right]
 #align finset.sum_smul_vsub_eq_weighted_vsub_of_point_sub Finset.sum_smul_vsub_eq_weightedVSubOfPoint_sub
 
-/- warning: finset.sum_smul_vsub_const_eq_weighted_vsub_of_point_sub -> Finset.sum_smul_vsub_const_eq_weightedVSubOfPoint_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_vsub_const_eq_weighted_vsub_of_point_sub Finset.sum_smul_vsub_const_eq_weightedVSubOfPoint_subₓ'. -/
 /-- A weighted sum of pairwise subtractions, where the point on the right is constant,
 expressed as a subtraction involving a `weighted_vsub_of_point` expression. -/
 theorem sum_smul_vsub_const_eq_weightedVSubOfPoint_sub (w : ι → k) (p₁ : ι → P) (p₂ b : P) :
@@ -253,9 +211,6 @@ theorem sum_smul_vsub_const_eq_weightedVSubOfPoint_sub (w : ι → k) (p₁ : ι
   by rw [sum_smul_vsub_eq_weighted_vsub_of_point_sub, weighted_vsub_of_point_apply_const]
 #align finset.sum_smul_vsub_const_eq_weighted_vsub_of_point_sub Finset.sum_smul_vsub_const_eq_weightedVSubOfPoint_sub
 
-/- warning: finset.sum_smul_const_vsub_eq_sub_weighted_vsub_of_point -> Finset.sum_smul_const_vsub_eq_sub_weightedVSubOfPoint is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_const_vsub_eq_sub_weighted_vsub_of_point Finset.sum_smul_const_vsub_eq_sub_weightedVSubOfPointₓ'. -/
 /-- A weighted sum of pairwise subtractions, where the point on the left is constant,
 expressed as a subtraction involving a `weighted_vsub_of_point` expression. -/
 theorem sum_smul_const_vsub_eq_sub_weightedVSubOfPoint (w : ι → k) (p₂ : ι → P) (p₁ b : P) :
@@ -263,9 +218,6 @@ theorem sum_smul_const_vsub_eq_sub_weightedVSubOfPoint (w : ι → k) (p₂ : ι
   by rw [sum_smul_vsub_eq_weighted_vsub_of_point_sub, weighted_vsub_of_point_apply_const]
 #align finset.sum_smul_const_vsub_eq_sub_weighted_vsub_of_point Finset.sum_smul_const_vsub_eq_sub_weightedVSubOfPoint
 
-/- warning: finset.weighted_vsub_of_point_sdiff -> Finset.weightedVSubOfPoint_sdiff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_sdiff Finset.weightedVSubOfPoint_sdiffₓ'. -/
 /-- A weighted sum may be split into such sums over two subsets. -/
 theorem weightedVSubOfPoint_sdiff [DecidableEq ι] {s₂ : Finset ι} (h : s₂ ⊆ s) (w : ι → k)
     (p : ι → P) (b : P) :
@@ -274,9 +226,6 @@ theorem weightedVSubOfPoint_sdiff [DecidableEq ι] {s₂ : Finset ι} (h : s₂ 
   by simp_rw [weighted_vsub_of_point_apply, sum_sdiff h]
 #align finset.weighted_vsub_of_point_sdiff Finset.weightedVSubOfPoint_sdiff
 
-/- warning: finset.weighted_vsub_of_point_sdiff_sub -> Finset.weightedVSubOfPoint_sdiff_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_sdiff_sub Finset.weightedVSubOfPoint_sdiff_subₓ'. -/
 /-- A weighted sum may be split into a subtraction of such sums over two subsets. -/
 theorem weightedVSubOfPoint_sdiff_sub [DecidableEq ι] {s₂ : Finset ι} (h : s₂ ⊆ s) (w : ι → k)
     (p : ι → P) (b : P) :
@@ -285,9 +234,6 @@ theorem weightedVSubOfPoint_sdiff_sub [DecidableEq ι] {s₂ : Finset ι} (h : s
   by rw [map_neg, sub_neg_eq_add, s.weighted_vsub_of_point_sdiff h]
 #align finset.weighted_vsub_of_point_sdiff_sub Finset.weightedVSubOfPoint_sdiff_sub
 
-/- warning: finset.weighted_vsub_of_point_subtype_eq_filter -> Finset.weightedVSubOfPoint_subtype_eq_filter is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_subtype_eq_filter Finset.weightedVSubOfPoint_subtype_eq_filterₓ'. -/
 /-- A weighted sum over `s.subtype pred` equals one over `s.filter pred`. -/
 theorem weightedVSubOfPoint_subtype_eq_filter (w : ι → k) (p : ι → P) (b : P) (pred : ι → Prop)
     [DecidablePred pred] :
@@ -296,9 +242,6 @@ theorem weightedVSubOfPoint_subtype_eq_filter (w : ι → k) (p : ι → P) (b :
   by rw [weighted_vsub_of_point_apply, weighted_vsub_of_point_apply, ← sum_subtype_eq_sum_filter]
 #align finset.weighted_vsub_of_point_subtype_eq_filter Finset.weightedVSubOfPoint_subtype_eq_filter
 
-/- warning: finset.weighted_vsub_of_point_filter_of_ne -> Finset.weightedVSubOfPoint_filter_of_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_filter_of_ne Finset.weightedVSubOfPoint_filter_of_neₓ'. -/
 /-- A weighted sum over `s.filter pred` equals one over `s` if all the weights at indices in `s`
 not satisfying `pred` are zero. -/
 theorem weightedVSubOfPoint_filter_of_ne (w : ι → k) (p : ι → P) (b : P) {pred : ι → Prop}
@@ -312,9 +255,6 @@ theorem weightedVSubOfPoint_filter_of_ne (w : ι → k) (p : ι → P) (b : P) {
   simpa [hw] using hne
 #align finset.weighted_vsub_of_point_filter_of_ne Finset.weightedVSubOfPoint_filter_of_ne
 
-/- warning: finset.weighted_vsub_of_point_const_smul -> Finset.weightedVSubOfPoint_const_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_of_point_const_smul Finset.weightedVSubOfPoint_const_smulₓ'. -/
 /-- A constant multiplier of the weights in `weighted_vsub_of_point` may be moved outside the
 sum. -/
 theorem weightedVSubOfPoint_const_smul (w : ι → k) (p : ι → P) (b : P) (c : k) :
@@ -332,12 +272,6 @@ def weightedVSub (p : ι → P) : (ι → k) →ₗ[k] V :=
 #align finset.weighted_vsub Finset.weightedVSub
 -/
 
-/- warning: finset.weighted_vsub_apply -> Finset.weightedVSub_apply is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} (s : Finset.{u4} ι) (w : ι -> k) (p : ι -> P), Eq.{succ u2} V (coeFn.{max (succ (max u4 u1)) (succ u2), max (succ (max u4 u1)) (succ u2)} (LinearMap.{u1, u1, max u4 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u4, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) (fun (_x : LinearMap.{u1, u1, max u4 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u4, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) => (ι -> k) -> V) (LinearMap.hasCoeToFun.{u1, u1, max u4 u1, u2} k k (ι -> k) V (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (Pi.addCommMonoid.{u4, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3 (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1)))) (Finset.weightedVSub.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 S ι s p) w) (Finset.sum.{u2, u4} V ι (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) s (fun (i : ι) => SMul.smul.{u1, u2} k V (SMulZeroClass.toHasSmul.{u1, u2} k V (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} k V (MulZeroClass.toHasZero.{u1} k (MulZeroOneClass.toMulZeroClass.{u1} k (MonoidWithZero.toMulZeroOneClass.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} k V (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1)) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (Module.toMulActionWithZero.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)))) (w i) (VSub.vsub.{u2, u3} V P (AddTorsor.toHasVsub.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2) S) (p i) (Classical.choice.{succ u3} P (AddTorsor.nonempty.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2) S)))))
-but is expected to have type
-  forall {k : Type.{u2}} {V : Type.{u4}} {P : Type.{u1}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u4} V] [_inst_3 : Module.{u2, u4} k V (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2)] [S : AddTorsor.{u4, u1} V P (AddCommGroup.toAddGroup.{u4} V _inst_2)] {ι : Type.{u3}} (s : Finset.{u3} ι) (w : ι -> k) (p : ι -> P), Eq.{succ u4} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : ι -> k) => V) w) (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u3) (succ u2), succ u4} (LinearMap.{u2, u2, max u2 u3, u4} k k (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u3, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2) (Pi.module.{u3, u2, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) k (Ring.toSemiring.{u2} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1))) _inst_3) (ι -> k) (fun (_x : ι -> k) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : ι -> k) => V) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, max u3 u2, u4} k k (ι -> k) V (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (Pi.addCommMonoid.{u3, u2} ι (fun (ᾰ : ι) => k) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2) (Pi.module.{u3, u2, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) k (Ring.toSemiring.{u2} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1))) _inst_3 (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1)))) (Finset.weightedVSub.{u2, u4, u1, u3} k V P _inst_1 _inst_2 _inst_3 S ι s p) w) (Finset.sum.{u4, u3} V ι (AddCommGroup.toAddCommMonoid.{u4} V _inst_2) s (fun (i : ι) => HSMul.hSMul.{u2, u4, u4} k V V (instHSMul.{u2, u4} k V (SMulZeroClass.toSMul.{u2, u4} k V (NegZeroClass.toZero.{u4} V (SubNegZeroMonoid.toNegZeroClass.{u4} V (SubtractionMonoid.toSubNegZeroMonoid.{u4} V (SubtractionCommMonoid.toSubtractionMonoid.{u4} V (AddCommGroup.toDivisionAddCommMonoid.{u4} V _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u4} k V (MonoidWithZero.toZero.{u2} k (Semiring.toMonoidWithZero.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (NegZeroClass.toZero.{u4} V (SubNegZeroMonoid.toNegZeroClass.{u4} V (SubtractionMonoid.toSubNegZeroMonoid.{u4} V (SubtractionCommMonoid.toSubtractionMonoid.{u4} V (AddCommGroup.toDivisionAddCommMonoid.{u4} V _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u4} k V (Semiring.toMonoidWithZero.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (NegZeroClass.toZero.{u4} V (SubNegZeroMonoid.toNegZeroClass.{u4} V (SubtractionMonoid.toSubNegZeroMonoid.{u4} V (SubtractionCommMonoid.toSubtractionMonoid.{u4} V (AddCommGroup.toDivisionAddCommMonoid.{u4} V _inst_2))))) (Module.toMulActionWithZero.{u2, u4} k V (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2) _inst_3))))) (w i) (VSub.vsub.{u4, u1} V P (AddTorsor.toVSub.{u4, u1} V P (AddCommGroup.toAddGroup.{u4} V _inst_2) S) (p i) (Classical.choice.{succ u1} P (AddTorsor.Nonempty.{u4, u1} V P (AddCommGroup.toAddGroup.{u4} V _inst_2) S)))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_apply Finset.weightedVSub_applyₓ'. -/
 /-- Applying `weighted_vsub` with given weights.  This is for the case
 where a result involving a default base point is OK (for example, when
 that base point will cancel out later); a more typical use case for
@@ -349,9 +283,6 @@ theorem weightedVSub_apply (w : ι → k) (p : ι → P) :
   simp [weighted_vsub, LinearMap.sum_apply]
 #align finset.weighted_vsub_apply Finset.weightedVSub_apply
 
-/- warning: finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero -> Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zeroₓ'. -/
 /-- `weighted_vsub` gives the sum of the results of subtracting any
 base point, when the sum of the weights is 0. -/
 theorem weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero (w : ι → k) (p : ι → P)
@@ -359,9 +290,6 @@ theorem weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero (w : ι → k) (p : �
   s.weightedVSubOfPoint_eq_of_sum_eq_zero w p h _ _
 #align finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero
 
-/- warning: finset.weighted_vsub_apply_const -> Finset.weightedVSub_apply_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_apply_const Finset.weightedVSub_apply_constₓ'. -/
 /-- The value of `weighted_vsub`, where the given points are equal and the sum of the weights
 is 0. -/
 @[simp]
@@ -370,21 +298,12 @@ theorem weightedVSub_apply_const (w : ι → k) (p : P) (h : (∑ i in s, w i) =
   rw [weighted_vsub, weighted_vsub_of_point_apply_const, h, zero_smul]
 #align finset.weighted_vsub_apply_const Finset.weightedVSub_apply_const
 
-/- warning: finset.weighted_vsub_empty -> Finset.weightedVSub_empty is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} (w : ι -> k) (p : ι -> P), Eq.{succ u2} V (coeFn.{max (succ (max u4 u1)) (succ u2), max (succ (max u4 u1)) (succ u2)} (LinearMap.{u1, u1, max u4 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u4, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) (fun (_x : LinearMap.{u1, u1, max u4 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u4, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) => (ι -> k) -> V) (LinearMap.hasCoeToFun.{u1, u1, max u4 u1, u2} k k (ι -> k) V (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (Pi.addCommMonoid.{u4, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3 (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1)))) (Finset.weightedVSub.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 S ι (EmptyCollection.emptyCollection.{u4} (Finset.{u4} ι) (Finset.hasEmptyc.{u4} ι)) p) w) (OfNat.ofNat.{u2} V 0 (OfNat.mk.{u2} V 0 (Zero.zero.{u2} V (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (SubNegMonoid.toAddMonoid.{u2} V (AddGroup.toSubNegMonoid.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2))))))))
-but is expected to have type
-  forall {k : Type.{u2}} {V : Type.{u4}} {P : Type.{u1}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u4} V] [_inst_3 : Module.{u2, u4} k V (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2)] [S : AddTorsor.{u4, u1} V P (AddCommGroup.toAddGroup.{u4} V _inst_2)] {ι : Type.{u3}} (w : ι -> k) (p : ι -> P), Eq.{succ u4} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : ι -> k) => V) w) (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u3) (succ u2), succ u4} (LinearMap.{u2, u2, max u2 u3, u4} k k (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u3, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2) (Pi.module.{u3, u2, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) k (Ring.toSemiring.{u2} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1))) _inst_3) (ι -> k) (fun (_x : ι -> k) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : ι -> k) => V) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, max u3 u2, u4} k k (ι -> k) V (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (Pi.addCommMonoid.{u3, u2} ι (fun (ᾰ : ι) => k) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u4} V _inst_2) (Pi.module.{u3, u2, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) k (Ring.toSemiring.{u2} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1))) _inst_3 (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1)))) (Finset.weightedVSub.{u2, u4, u1, u3} k V P _inst_1 _inst_2 _inst_3 S ι (EmptyCollection.emptyCollection.{u3} (Finset.{u3} ι) (Finset.instEmptyCollectionFinset.{u3} ι)) p) w) (OfNat.ofNat.{u4} V 0 (Zero.toOfNat0.{u4} V (NegZeroClass.toZero.{u4} V (SubNegZeroMonoid.toNegZeroClass.{u4} V (SubtractionMonoid.toSubNegZeroMonoid.{u4} V (SubtractionCommMonoid.toSubtractionMonoid.{u4} V (AddCommGroup.toDivisionAddCommMonoid.{u4} V _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_empty Finset.weightedVSub_emptyₓ'. -/
 /-- The `weighted_vsub` for an empty set is 0. -/
 @[simp]
 theorem weightedVSub_empty (w : ι → k) (p : ι → P) : (∅ : Finset ι).weightedVSub p w = (0 : V) := by
   simp [weighted_vsub_apply]
 #align finset.weighted_vsub_empty Finset.weightedVSub_empty
 
-/- warning: finset.weighted_vsub_congr -> Finset.weightedVSub_congr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_congr Finset.weightedVSub_congrₓ'. -/
 /-- `weighted_vsub` gives equal results for two families of weights and two families of points
 that are equal on `s`. -/
 theorem weightedVSub_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w₂ i) {p₁ p₂ : ι → P}
@@ -392,9 +311,6 @@ theorem weightedVSub_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w�
   s.weightedVSubOfPoint_congr hw hp _
 #align finset.weighted_vsub_congr Finset.weightedVSub_congr
 
-/- warning: finset.weighted_vsub_indicator_subset -> Finset.weightedVSub_indicator_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_indicator_subset Finset.weightedVSub_indicator_subsetₓ'. -/
 /-- The weighted sum is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem weightedVSub_indicator_subset (w : ι → k) (p : ι → P) {s₁ s₂ : Finset ι} (h : s₁ ⊆ s₂) :
@@ -402,9 +318,6 @@ theorem weightedVSub_indicator_subset (w : ι → k) (p : ι → P) {s₁ s₂ :
   weightedVSubOfPoint_indicator_subset _ _ _ h
 #align finset.weighted_vsub_indicator_subset Finset.weightedVSub_indicator_subset
 
-/- warning: finset.weighted_vsub_map -> Finset.weightedVSub_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_map Finset.weightedVSub_mapₓ'. -/
 /-- A weighted subtraction, over the image of an embedding, equals a
 weighted subtraction with the same points and weights over the
 original `finset`. -/
@@ -413,9 +326,6 @@ theorem weightedVSub_map (e : ι₂ ↪ ι) (w : ι → k) (p : ι → P) :
   s₂.weightedVSubOfPoint_map _ _ _ _
 #align finset.weighted_vsub_map Finset.weightedVSub_map
 
-/- warning: finset.sum_smul_vsub_eq_weighted_vsub_sub -> Finset.sum_smul_vsub_eq_weightedVSub_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_vsub_eq_weighted_vsub_sub Finset.sum_smul_vsub_eq_weightedVSub_subₓ'. -/
 /-- A weighted sum of pairwise subtractions, expressed as a subtraction of two `weighted_vsub`
 expressions. -/
 theorem sum_smul_vsub_eq_weightedVSub_sub (w : ι → k) (p₁ p₂ : ι → P) :
@@ -423,9 +333,6 @@ theorem sum_smul_vsub_eq_weightedVSub_sub (w : ι → k) (p₁ p₂ : ι → P) 
   s.sum_smul_vsub_eq_weightedVSubOfPoint_sub _ _ _ _
 #align finset.sum_smul_vsub_eq_weighted_vsub_sub Finset.sum_smul_vsub_eq_weightedVSub_sub
 
-/- warning: finset.sum_smul_vsub_const_eq_weighted_vsub -> Finset.sum_smul_vsub_const_eq_weightedVSub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_vsub_const_eq_weighted_vsub Finset.sum_smul_vsub_const_eq_weightedVSubₓ'. -/
 /-- A weighted sum of pairwise subtractions, where the point on the right is constant and the
 sum of the weights is 0. -/
 theorem sum_smul_vsub_const_eq_weightedVSub (w : ι → k) (p₁ : ι → P) (p₂ : P)
@@ -433,9 +340,6 @@ theorem sum_smul_vsub_const_eq_weightedVSub (w : ι → k) (p₁ : ι → P) (p�
   rw [sum_smul_vsub_eq_weighted_vsub_sub, s.weighted_vsub_apply_const _ _ h, sub_zero]
 #align finset.sum_smul_vsub_const_eq_weighted_vsub Finset.sum_smul_vsub_const_eq_weightedVSub
 
-/- warning: finset.sum_smul_const_vsub_eq_neg_weighted_vsub -> Finset.sum_smul_const_vsub_eq_neg_weightedVSub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_const_vsub_eq_neg_weighted_vsub Finset.sum_smul_const_vsub_eq_neg_weightedVSubₓ'. -/
 /-- A weighted sum of pairwise subtractions, where the point on the left is constant and the
 sum of the weights is 0. -/
 theorem sum_smul_const_vsub_eq_neg_weightedVSub (w : ι → k) (p₂ : ι → P) (p₁ : P)
@@ -443,27 +347,18 @@ theorem sum_smul_const_vsub_eq_neg_weightedVSub (w : ι → k) (p₂ : ι → P)
   rw [sum_smul_vsub_eq_weighted_vsub_sub, s.weighted_vsub_apply_const _ _ h, zero_sub]
 #align finset.sum_smul_const_vsub_eq_neg_weighted_vsub Finset.sum_smul_const_vsub_eq_neg_weightedVSub
 
-/- warning: finset.weighted_vsub_sdiff -> Finset.weightedVSub_sdiff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_sdiff Finset.weightedVSub_sdiffₓ'. -/
 /-- A weighted sum may be split into such sums over two subsets. -/
 theorem weightedVSub_sdiff [DecidableEq ι] {s₂ : Finset ι} (h : s₂ ⊆ s) (w : ι → k) (p : ι → P) :
     (s \ s₂).weightedVSub p w + s₂.weightedVSub p w = s.weightedVSub p w :=
   s.weightedVSubOfPoint_sdiff h _ _ _
 #align finset.weighted_vsub_sdiff Finset.weightedVSub_sdiff
 
-/- warning: finset.weighted_vsub_sdiff_sub -> Finset.weightedVSub_sdiff_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_sdiff_sub Finset.weightedVSub_sdiff_subₓ'. -/
 /-- A weighted sum may be split into a subtraction of such sums over two subsets. -/
 theorem weightedVSub_sdiff_sub [DecidableEq ι] {s₂ : Finset ι} (h : s₂ ⊆ s) (w : ι → k)
     (p : ι → P) : (s \ s₂).weightedVSub p w - s₂.weightedVSub p (-w) = s.weightedVSub p w :=
   s.weightedVSubOfPoint_sdiff_sub h _ _ _
 #align finset.weighted_vsub_sdiff_sub Finset.weightedVSub_sdiff_sub
 
-/- warning: finset.weighted_vsub_subtype_eq_filter -> Finset.weightedVSub_subtype_eq_filter is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_subtype_eq_filter Finset.weightedVSub_subtype_eq_filterₓ'. -/
 /-- A weighted sum over `s.subtype pred` equals one over `s.filter pred`. -/
 theorem weightedVSub_subtype_eq_filter (w : ι → k) (p : ι → P) (pred : ι → Prop)
     [DecidablePred pred] :
@@ -472,9 +367,6 @@ theorem weightedVSub_subtype_eq_filter (w : ι → k) (p : ι → P) (pred : ι 
   s.weightedVSubOfPoint_subtype_eq_filter _ _ _ _
 #align finset.weighted_vsub_subtype_eq_filter Finset.weightedVSub_subtype_eq_filter
 
-/- warning: finset.weighted_vsub_filter_of_ne -> Finset.weightedVSub_filter_of_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_filter_of_ne Finset.weightedVSub_filter_of_neₓ'. -/
 /-- A weighted sum over `s.filter pred` equals one over `s` if all the weights at indices in `s`
 not satisfying `pred` are zero. -/
 theorem weightedVSub_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι → Prop} [DecidablePred pred]
@@ -482,9 +374,6 @@ theorem weightedVSub_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι → P
   s.weightedVSubOfPoint_filter_of_ne _ _ _ h
 #align finset.weighted_vsub_filter_of_ne Finset.weightedVSub_filter_of_ne
 
-/- warning: finset.weighted_vsub_const_smul -> Finset.weightedVSub_const_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_const_smul Finset.weightedVSub_const_smulₓ'. -/
 /-- A constant multiplier of the weights in `weighted_vsub_of` may be moved outside the sum. -/
 theorem weightedVSub_const_smul (w : ι → k) (p : ι → P) (c : k) :
     s.weightedVSub p (c • w) = c • s.weightedVSub p w :=
@@ -493,12 +382,6 @@ theorem weightedVSub_const_smul (w : ι → k) (p : ι → P) (c : k) :
 
 variable (k)
 
-/- warning: finset.affine_combination -> Finset.affineCombination is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}}, (Finset.{u4} ι) -> (ι -> P) -> (AffineMap.{u1, max u4 u1, max u4 u1, u2, u3} k (ι -> k) (ι -> k) V P _inst_1 (Pi.addCommGroup.{u4, u1} ι (fun (i : ι) => k) (fun (i : ι) => NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Pi.module.{u4, u1, u1} ι (fun (i : ι) => k) k (Ring.toSemiring.{u1} k _inst_1) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (Pi.addTorsor.{u4, u1, u1} ι (fun (i : ι) => k) (fun (i : ι) => AddGroupWithOne.toAddGroup.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))) (fun (ᾰ : ι) => k) (fun (i : ι) => addGroupIsAddTorsor.{u1} k (AddGroupWithOne.toAddGroup.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))) _inst_2 _inst_3 S)
-but is expected to have type
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}}, (Finset.{u4} ι) -> (ι -> P) -> (AffineMap.{u1, max u1 u4, max u1 u4, u2, u3} k (ι -> k) (ι -> k) V P _inst_1 (Pi.addCommGroup.{u4, u1} ι (fun (i : ι) => k) (fun (i : ι) => Ring.toAddCommGroup.{u1} k _inst_1)) (Pi.module.{u4, u1, u1} ι (fun (i : ι) => k) k (Ring.toSemiring.{u1} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (Finset.instAddTorsorForAllAddGroupToAddGroupToAddGroupWithOne.{u1, u4} k _inst_1 ι) _inst_2 _inst_3 S)
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination Finset.affineCombinationₓ'. -/
 /-- A weighted sum of the results of subtracting a default base point
 from the given points, added to that base point, as an affine map on
 the weights.  This is intended to be used when the sum of the weights
@@ -512,12 +395,6 @@ def affineCombination (p : ι → P) : (ι → k) →ᵃ[k] P
   map_vadd' w₁ w₂ := by simp_rw [vadd_vadd, weighted_vsub, vadd_eq_add, LinearMap.map_add]
 #align finset.affine_combination Finset.affineCombination
 
-/- warning: finset.affine_combination_linear -> Finset.affineCombination_linear is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} (s : Finset.{u4} ι) (p : ι -> P), Eq.{max (succ (max u4 u1)) (succ u2)} (LinearMap.{u1, u1, max u4 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (AddCommGroup.toAddCommMonoid.{max u4 u1} (ι -> k) (Pi.addCommGroup.{u4, u1} ι (fun (i : ι) => k) (fun (i : ι) => NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.module.{u4, u1, u1} ι (fun (i : ι) => k) k (Ring.toSemiring.{u1} k _inst_1) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) (AffineMap.linear.{u1, max u4 u1, max u4 u1, u2, u3} k (ι -> k) (ι -> k) V P _inst_1 (Pi.addCommGroup.{u4, u1} ι (fun (i : ι) => k) (fun (i : ι) => NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Pi.module.{u4, u1, u1} ι (fun (i : ι) => k) k (Ring.toSemiring.{u1} k _inst_1) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (Pi.addTorsor.{u4, u1, u1} ι (fun (i : ι) => k) (fun (i : ι) => AddGroupWithOne.toAddGroup.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))) (fun (ᾰ : ι) => k) (fun (i : ι) => addGroupIsAddTorsor.{u1} k (AddGroupWithOne.toAddGroup.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))) _inst_2 _inst_3 S (Finset.affineCombination.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 S ι s p)) (Finset.weightedVSub.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 S ι s p)
-but is expected to have type
-  forall (k : Type.{u4}) {V : Type.{u3}} {P : Type.{u1}} [_inst_1 : Ring.{u4} k] [_inst_2 : AddCommGroup.{u3} V] [_inst_3 : Module.{u4, u3} k V (Ring.toSemiring.{u4} k _inst_1) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2)] [S : AddTorsor.{u3, u1} V P (AddCommGroup.toAddGroup.{u3} V _inst_2)] {ι : Type.{u2}} (s : Finset.{u2} ι) (p : ι -> P), Eq.{max (max (succ u4) (succ u3)) (succ u2)} (LinearMap.{u4, u4, max u4 u2, u3} k k (Ring.toSemiring.{u4} k _inst_1) (Ring.toSemiring.{u4} k _inst_1) (RingHom.id.{u4} k (Semiring.toNonAssocSemiring.{u4} k (Ring.toSemiring.{u4} k _inst_1))) (ι -> k) V (AddCommGroup.toAddCommMonoid.{max u4 u2} (ι -> k) (Pi.addCommGroup.{u2, u4} ι (fun (i : ι) => k) (fun (i : ι) => Ring.toAddCommGroup.{u4} k _inst_1))) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) (Pi.module.{u2, u4, u4} ι (fun (i : ι) => k) k (Ring.toSemiring.{u4} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} k (NonAssocRing.toNonUnitalNonAssocRing.{u4} k (Ring.toNonAssocRing.{u4} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u4} k (Ring.toSemiring.{u4} k _inst_1))) _inst_3) (AffineMap.linear.{u4, max u4 u2, max u4 u2, u3, u1} k (ι -> k) (ι -> k) V P _inst_1 (Pi.addCommGroup.{u2, u4} ι (fun (i : ι) => k) (fun (i : ι) => Ring.toAddCommGroup.{u4} k _inst_1)) (Pi.module.{u2, u4, u4} ι (fun (i : ι) => k) k (Ring.toSemiring.{u4} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} k (NonAssocRing.toNonUnitalNonAssocRing.{u4} k (Ring.toNonAssocRing.{u4} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u4} k (Ring.toSemiring.{u4} k _inst_1))) (Finset.instAddTorsorForAllAddGroupToAddGroupToAddGroupWithOne.{u4, u2} k _inst_1 ι) _inst_2 _inst_3 S (Finset.affineCombination.{u4, u3, u1, u2} k V P _inst_1 _inst_2 _inst_3 S ι s p)) (Finset.weightedVSub.{u4, u3, u1, u2} k V P _inst_1 _inst_2 _inst_3 S ι s p)
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_linear Finset.affineCombination_linearₓ'. -/
 /-- The linear map corresponding to `affine_combination` is
 `weighted_vsub`. -/
 @[simp]
@@ -528,9 +405,6 @@ theorem affineCombination_linear (p : ι → P) :
 
 variable {k}
 
-/- warning: finset.affine_combination_apply -> Finset.affineCombination_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_apply Finset.affineCombination_applyₓ'. -/
 /-- Applying `affine_combination` with given weights.  This is for the
 case where a result involving a default base point is OK (for example,
 when that base point will cancel out later); a more typical use case
@@ -544,9 +418,6 @@ theorem affineCombination_apply (w : ι → k) (p : ι → P) :
   rfl
 #align finset.affine_combination_apply Finset.affineCombination_apply
 
-/- warning: finset.affine_combination_apply_const -> Finset.affineCombination_apply_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_apply_const Finset.affineCombination_apply_constₓ'. -/
 /-- The value of `affine_combination`, where the given points are equal. -/
 @[simp]
 theorem affineCombination_apply_const (w : ι → k) (p : P) (h : (∑ i in s, w i) = 1) :
@@ -554,9 +425,6 @@ theorem affineCombination_apply_const (w : ι → k) (p : P) (h : (∑ i in s, w
   rw [affine_combination_apply, s.weighted_vsub_of_point_apply_const, h, one_smul, vsub_vadd]
 #align finset.affine_combination_apply_const Finset.affineCombination_apply_const
 
-/- warning: finset.affine_combination_congr -> Finset.affineCombination_congr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_congr Finset.affineCombination_congrₓ'. -/
 /-- `affine_combination` gives equal results for two families of weights and two families of
 points that are equal on `s`. -/
 theorem affineCombination_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i = w₂ i) {p₁ p₂ : ι → P}
@@ -564,9 +432,6 @@ theorem affineCombination_congr {w₁ w₂ : ι → k} (hw : ∀ i ∈ s, w₁ i
   simp_rw [affine_combination_apply, s.weighted_vsub_of_point_congr hw hp]
 #align finset.affine_combination_congr Finset.affineCombination_congr
 
-/- warning: finset.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one -> Finset.affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one Finset.affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_oneₓ'. -/
 /-- `affine_combination` gives the sum with any base point, when the
 sum of the weights is 1. -/
 theorem affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one (w : ι → k) (p : ι → P)
@@ -575,27 +440,18 @@ theorem affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one (w : ι → 
   s.weightedVSubOfPoint_vadd_eq_of_sum_eq_one w p h _ _
 #align finset.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one Finset.affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one
 
-/- warning: finset.weighted_vsub_vadd_affine_combination -> Finset.weightedVSub_vadd_affineCombination is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_vadd_affine_combination Finset.weightedVSub_vadd_affineCombinationₓ'. -/
 /-- Adding a `weighted_vsub` to an `affine_combination`. -/
 theorem weightedVSub_vadd_affineCombination (w₁ w₂ : ι → k) (p : ι → P) :
     s.weightedVSub p w₁ +ᵥ s.affineCombination k p w₂ = s.affineCombination k p (w₁ + w₂) := by
   rw [← vadd_eq_add, AffineMap.map_vadd, affine_combination_linear]
 #align finset.weighted_vsub_vadd_affine_combination Finset.weightedVSub_vadd_affineCombination
 
-/- warning: finset.affine_combination_vsub -> Finset.affineCombination_vsub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_vsub Finset.affineCombination_vsubₓ'. -/
 /-- Subtracting two `affine_combination`s. -/
 theorem affineCombination_vsub (w₁ w₂ : ι → k) (p : ι → P) :
     s.affineCombination k p w₁ -ᵥ s.affineCombination k p w₂ = s.weightedVSub p (w₁ - w₂) := by
   rw [← AffineMap.linearMap_vsub, affine_combination_linear, vsub_eq_sub]
 #align finset.affine_combination_vsub Finset.affineCombination_vsub
 
-/- warning: finset.attach_affine_combination_of_injective -> Finset.attach_affineCombination_of_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.attach_affine_combination_of_injective Finset.attach_affineCombination_of_injectiveₓ'. -/
 theorem attach_affineCombination_of_injective [DecidableEq P] (s : Finset P) (w : P → k) (f : s → P)
     (hf : Function.Injective f) :
     s.attach.affineCombination k f (w ∘ f) = (image f univ).affineCombination k id w :=
@@ -610,9 +466,6 @@ theorem attach_affineCombination_of_injective [DecidableEq P] (s : Finset P) (w 
   exact fun _ _ _ _ hxy => hf hxy
 #align finset.attach_affine_combination_of_injective Finset.attach_affineCombination_of_injective
 
-/- warning: finset.attach_affine_combination_coe -> Finset.attach_affineCombination_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.attach_affine_combination_coe Finset.attach_affineCombination_coeₓ'. -/
 theorem attach_affineCombination_coe (s : Finset P) (w : P → k) :
     s.attach.affineCombination k (coe : s → P) (w ∘ coe) = s.affineCombination k id w := by
   classical rw [attach_affine_combination_of_injective s w (coe : s → P) Subtype.coe_injective,
@@ -621,12 +474,6 @@ theorem attach_affineCombination_coe (s : Finset P) (w : P → k) :
 
 omit S
 
-/- warning: finset.weighted_vsub_eq_linear_combination -> Finset.weightedVSub_eq_linear_combination is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {V : Type.{u2}} [_inst_1 : Ring.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] {ι : Type.{u3}} (s : Finset.{u3} ι) {w : ι -> k} {p : ι -> V}, (Eq.{succ u1} k (Finset.sum.{u1, u3} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s w) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))))))) -> (Eq.{succ u2} V (coeFn.{max (succ (max u3 u1)) (succ u2), max (succ (max u3 u1)) (succ u2)} (LinearMap.{u1, u1, max u3 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u3, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u3, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) (fun (_x : LinearMap.{u1, u1, max u3 u1, u2} k k (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u3, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u3, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3) => (ι -> k) -> V) (LinearMap.hasCoeToFun.{u1, u1, max u3 u1, u2} k k (ι -> k) V (Ring.toSemiring.{u1} k _inst_1) (Ring.toSemiring.{u1} k _inst_1) (Pi.addCommMonoid.{u3, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u3, u1, u1} ι k k (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (Ring.toSemiring.{u1} k _inst_1))) _inst_3 (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (Ring.toSemiring.{u1} k _inst_1)))) (Finset.weightedVSub.{u1, u2, u2, u3} k V V _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2)) ι s p) w) (Finset.sum.{u2, u3} V ι (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) s (fun (i : ι) => SMul.smul.{u1, u2} k V (SMulZeroClass.toHasSmul.{u1, u2} k V (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} k V (MulZeroClass.toHasZero.{u1} k (MulZeroOneClass.toMulZeroClass.{u1} k (MonoidWithZero.toMulZeroOneClass.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} k V (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1)) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (Module.toMulActionWithZero.{u1, u2} k V (Ring.toSemiring.{u1} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)))) (w i) (p i))))
-but is expected to have type
-  forall {k : Type.{u2}} {V : Type.{u1}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] {ι : Type.{u3}} (s : Finset.{u3} ι) {w : ι -> k} {p : ι -> V}, (Eq.{succ u2} k (Finset.sum.{u2, u3} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) s w) (OfNat.ofNat.{u2} k 0 (Zero.toOfNat0.{u2} k (MonoidWithZero.toZero.{u2} k (Semiring.toMonoidWithZero.{u2} k (Ring.toSemiring.{u2} k _inst_1)))))) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : ι -> k) => V) w) (FunLike.coe.{max (max (succ u1) (succ u3)) (succ u2), max (succ u3) (succ u2), succ u1} (LinearMap.{u2, u2, max u2 u3, u1} k k (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (ι -> k) V (Pi.addCommMonoid.{u3, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) (Pi.module.{u3, u2, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) k (Ring.toSemiring.{u2} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1))) _inst_3) (ι -> k) (fun (_x : ι -> k) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : ι -> k) => V) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, max u3 u2, u1} k k (ι -> k) V (Ring.toSemiring.{u2} k _inst_1) (Ring.toSemiring.{u2} k _inst_1) (Pi.addCommMonoid.{u3, u2} ι (fun (ᾰ : ι) => k) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1))))) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) (Pi.module.{u3, u2, u2} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.2389 : ι) => k) k (Ring.toSemiring.{u2} k _inst_1) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_1)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1))) _inst_3 (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_1)))) (Finset.weightedVSub.{u2, u1, u1, u3} k V V _inst_1 _inst_2 _inst_3 (addGroupIsAddTorsor.{u1} V (AddCommGroup.toAddGroup.{u1} V _inst_2)) ι s p) w) (Finset.sum.{u1, u3} V ι (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) s (fun (i : ι) => HSMul.hSMul.{u2, u1, u1} k V V (instHSMul.{u2, u1} k V (SMulZeroClass.toSMul.{u2, u1} k V (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} k V (MonoidWithZero.toZero.{u2} k (Semiring.toMonoidWithZero.{u2} k (Ring.toSemiring.{u2} k _inst_1))) (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} k V (Semiring.toMonoidWithZero.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (Module.toMulActionWithZero.{u2, u1} k V (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) _inst_3))))) (w i) (p i))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_eq_linear_combination Finset.weightedVSub_eq_linear_combinationₓ'. -/
 /-- Viewing a module as an affine space modelled on itself, a `weighted_vsub` is just a linear
 combination. -/
 @[simp]
@@ -635,9 +482,6 @@ theorem weightedVSub_eq_linear_combination {ι} (s : Finset ι) {w : ι → k} {
   simp [s.weighted_vsub_apply, vsub_eq_sub, smul_sub, ← Finset.sum_smul, hw]
 #align finset.weighted_vsub_eq_linear_combination Finset.weightedVSub_eq_linear_combination
 
-/- warning: finset.affine_combination_eq_linear_combination -> Finset.affineCombination_eq_linear_combination is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_eq_linear_combination Finset.affineCombination_eq_linear_combinationₓ'. -/
 /-- Viewing a module as an affine space modelled on itself, affine combinations are just linear
 combinations. -/
 @[simp]
@@ -648,9 +492,6 @@ theorem affineCombination_eq_linear_combination (s : Finset ι) (p : ι → V) (
 
 include S
 
-/- warning: finset.affine_combination_of_eq_one_of_eq_zero -> Finset.affineCombination_of_eq_one_of_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_of_eq_one_of_eq_zero Finset.affineCombination_of_eq_one_of_eq_zeroₓ'. -/
 /-- An `affine_combination` equals a point if that point is in the set
 and has weight 1 and the other points in the set have weight 0. -/
 @[simp]
@@ -668,9 +509,6 @@ theorem affineCombination_of_eq_one_of_eq_zero (w : ι → k) (p : ι → P) {i 
   · simp [hw0 i2 hi2 h]
 #align finset.affine_combination_of_eq_one_of_eq_zero Finset.affineCombination_of_eq_one_of_eq_zero
 
-/- warning: finset.affine_combination_indicator_subset -> Finset.affineCombination_indicator_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_indicator_subset Finset.affineCombination_indicator_subsetₓ'. -/
 /-- An affine combination is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem affineCombination_indicator_subset (w : ι → k) (p : ι → P) {s₁ s₂ : Finset ι}
@@ -680,9 +518,6 @@ theorem affineCombination_indicator_subset (w : ι → k) (p : ι → P) {s₁ s
     weighted_vsub_of_point_indicator_subset _ _ _ h]
 #align finset.affine_combination_indicator_subset Finset.affineCombination_indicator_subset
 
-/- warning: finset.affine_combination_map -> Finset.affineCombination_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_map Finset.affineCombination_mapₓ'. -/
 /-- An affine combination, over the image of an embedding, equals an
 affine combination with the same points and weights over the original
 `finset`. -/
@@ -691,9 +526,6 @@ theorem affineCombination_map (e : ι₂ ↪ ι) (w : ι → k) (p : ι → P) :
   simp_rw [affine_combination_apply, weighted_vsub_of_point_map]
 #align finset.affine_combination_map Finset.affineCombination_map
 
-/- warning: finset.sum_smul_vsub_eq_affine_combination_vsub -> Finset.sum_smul_vsub_eq_affineCombination_vsub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_vsub_eq_affine_combination_vsub Finset.sum_smul_vsub_eq_affineCombination_vsubₓ'. -/
 /-- A weighted sum of pairwise subtractions, expressed as a subtraction of two `affine_combination`
 expressions. -/
 theorem sum_smul_vsub_eq_affineCombination_vsub (w : ι → k) (p₁ p₂ : ι → P) :
@@ -703,9 +535,6 @@ theorem sum_smul_vsub_eq_affineCombination_vsub (w : ι → k) (p₁ p₂ : ι �
   exact s.sum_smul_vsub_eq_weighted_vsub_of_point_sub _ _ _ _
 #align finset.sum_smul_vsub_eq_affine_combination_vsub Finset.sum_smul_vsub_eq_affineCombination_vsub
 
-/- warning: finset.sum_smul_vsub_const_eq_affine_combination_vsub -> Finset.sum_smul_vsub_const_eq_affineCombination_vsub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_vsub_const_eq_affine_combination_vsub Finset.sum_smul_vsub_const_eq_affineCombination_vsubₓ'. -/
 /-- A weighted sum of pairwise subtractions, where the point on the right is constant and the
 sum of the weights is 1. -/
 theorem sum_smul_vsub_const_eq_affineCombination_vsub (w : ι → k) (p₁ : ι → P) (p₂ : P)
@@ -713,9 +542,6 @@ theorem sum_smul_vsub_const_eq_affineCombination_vsub (w : ι → k) (p₁ : ι 
   by rw [sum_smul_vsub_eq_affine_combination_vsub, affine_combination_apply_const _ _ _ h]
 #align finset.sum_smul_vsub_const_eq_affine_combination_vsub Finset.sum_smul_vsub_const_eq_affineCombination_vsub
 
-/- warning: finset.sum_smul_const_vsub_eq_vsub_affine_combination -> Finset.sum_smul_const_vsub_eq_vsub_affineCombination is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sum_smul_const_vsub_eq_vsub_affine_combination Finset.sum_smul_const_vsub_eq_vsub_affineCombinationₓ'. -/
 /-- A weighted sum of pairwise subtractions, where the point on the left is constant and the
 sum of the weights is 1. -/
 theorem sum_smul_const_vsub_eq_vsub_affineCombination (w : ι → k) (p₂ : ι → P) (p₁ : P)
@@ -723,9 +549,6 @@ theorem sum_smul_const_vsub_eq_vsub_affineCombination (w : ι → k) (p₂ : ι 
   by rw [sum_smul_vsub_eq_affine_combination_vsub, affine_combination_apply_const _ _ _ h]
 #align finset.sum_smul_const_vsub_eq_vsub_affine_combination Finset.sum_smul_const_vsub_eq_vsub_affineCombination
 
-/- warning: finset.affine_combination_sdiff_sub -> Finset.affineCombination_sdiff_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_sdiff_sub Finset.affineCombination_sdiff_subₓ'. -/
 /-- A weighted sum may be split into a subtraction of affine combinations over two subsets. -/
 theorem affineCombination_sdiff_sub [DecidableEq ι] {s₂ : Finset ι} (h : s₂ ⊆ s) (w : ι → k)
     (p : ι → P) :
@@ -735,9 +558,6 @@ theorem affineCombination_sdiff_sub [DecidableEq ι] {s₂ : Finset ι} (h : s�
   exact s.weighted_vsub_sdiff_sub h _ _
 #align finset.affine_combination_sdiff_sub Finset.affineCombination_sdiff_sub
 
-/- warning: finset.affine_combination_eq_of_weighted_vsub_eq_zero_of_eq_neg_one -> Finset.affineCombination_eq_of_weightedVSub_eq_zero_of_eq_neg_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_eq_of_weighted_vsub_eq_zero_of_eq_neg_one Finset.affineCombination_eq_of_weightedVSub_eq_zero_of_eq_neg_oneₓ'. -/
 /-- If a weighted sum is zero and one of the weights is `-1`, the corresponding point is
 the affine combination of the other points with the given weights. -/
 theorem affineCombination_eq_of_weightedVSub_eq_zero_of_eq_neg_one {w : ι → k} {p : ι → P}
@@ -753,9 +573,6 @@ theorem affineCombination_eq_of_weightedVSub_eq_zero_of_eq_neg_one {w : ι → k
     · simp
 #align finset.affine_combination_eq_of_weighted_vsub_eq_zero_of_eq_neg_one Finset.affineCombination_eq_of_weightedVSub_eq_zero_of_eq_neg_one
 
-/- warning: finset.affine_combination_subtype_eq_filter -> Finset.affineCombination_subtype_eq_filter is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_subtype_eq_filter Finset.affineCombination_subtype_eq_filterₓ'. -/
 /-- An affine combination over `s.subtype pred` equals one over `s.filter pred`. -/
 theorem affineCombination_subtype_eq_filter (w : ι → k) (p : ι → P) (pred : ι → Prop)
     [DecidablePred pred] :
@@ -765,9 +582,6 @@ theorem affineCombination_subtype_eq_filter (w : ι → k) (p : ι → P) (pred 
   rw [affine_combination_apply, affine_combination_apply, weighted_vsub_of_point_subtype_eq_filter]
 #align finset.affine_combination_subtype_eq_filter Finset.affineCombination_subtype_eq_filter
 
-/- warning: finset.affine_combination_filter_of_ne -> Finset.affineCombination_filter_of_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_filter_of_ne Finset.affineCombination_filter_of_neₓ'. -/
 /-- An affine combination over `s.filter pred` equals one over `s` if all the weights at indices
 in `s` not satisfying `pred` are zero. -/
 theorem affineCombination_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι → Prop}
@@ -779,9 +593,6 @@ theorem affineCombination_filter_of_ne (w : ι → k) (p : ι → P) {pred : ι 
 
 variable {V}
 
-/- warning: finset.eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype -> Finset.eq_weightedVSubOfPoint_subset_iff_eq_weightedVSubOfPoint_subtype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype Finset.eq_weightedVSubOfPoint_subset_iff_eq_weightedVSubOfPoint_subtypeₓ'. -/
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as
 `weighted_vsub_of_point` using a `finset` lying within that subset and
@@ -810,9 +621,6 @@ theorem eq_weightedVSubOfPoint_subset_iff_eq_weightedVSubOfPoint_subtype {v : V}
 
 variable (k)
 
-/- warning: finset.eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype -> Finset.eq_weightedVSub_subset_iff_eq_weightedVSub_subtype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype Finset.eq_weightedVSub_subset_iff_eq_weightedVSub_subtypeₓ'. -/
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as `weighted_vsub` using
 a `finset` lying within that subset and with sum of weights 0 if and
@@ -829,9 +637,6 @@ theorem eq_weightedVSub_subset_iff_eq_weightedVSub_subtype {v : V} {s : Set ι} 
 
 variable (V)
 
-/- warning: finset.eq_affine_combination_subset_iff_eq_affine_combination_subtype -> Finset.eq_affineCombination_subset_iff_eq_affineCombination_subtype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.eq_affine_combination_subset_iff_eq_affine_combination_subtype Finset.eq_affineCombination_subset_iff_eq_affineCombination_subtypeₓ'. -/
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A point can be expressed as an
 `affine_combination` using a `finset` lying within that subset and
@@ -852,9 +657,6 @@ theorem eq_affineCombination_subset_iff_eq_affineCombination_subtype {p0 : P} {s
 
 variable {k V}
 
-/- warning: finset.map_affine_combination -> Finset.map_affineCombination is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.map_affine_combination Finset.map_affineCombinationₓ'. -/
 /-- Affine maps commute with affine combinations. -/
 theorem map_affineCombination {V₂ P₂ : Type _} [AddCommGroup V₂] [Module k V₂] [affine_space V₂ P₂]
     (p : ι → P) (w : ι → k) (hw : s.Sum w = 1) (f : P →ᵃ[k] P₂) :
@@ -880,34 +682,16 @@ def affineCombinationSingleWeights [DecidableEq ι] (i : ι) : ι → k :=
 #align finset.affine_combination_single_weights Finset.affineCombinationSingleWeights
 -/
 
-/- warning: finset.affine_combination_single_weights_apply_self -> Finset.affineCombinationSingleWeights_apply_self is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] (i : ι), Eq.{succ u1} k (Finset.affineCombinationSingleWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i i) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1)))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] (i : ι), Eq.{succ u1} k (Finset.affineCombinationSingleWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i i) (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (Ring.toSemiring.{u1} k _inst_1))))
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_single_weights_apply_self Finset.affineCombinationSingleWeights_apply_selfₓ'. -/
 @[simp]
 theorem affineCombinationSingleWeights_apply_self [DecidableEq ι] (i : ι) :
     affineCombinationSingleWeights k i i = 1 := by simp [affine_combination_single_weights]
 #align finset.affine_combination_single_weights_apply_self Finset.affineCombinationSingleWeights_apply_self
 
-/- warning: finset.affine_combination_single_weights_apply_of_ne -> Finset.affineCombinationSingleWeights_apply_of_ne is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι j i) -> (Eq.{succ u1} k (Finset.affineCombinationSingleWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι j i) -> (Eq.{succ u1} k (Finset.affineCombinationSingleWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j) (OfNat.ofNat.{u1} k 0 (Zero.toOfNat0.{u1} k (MonoidWithZero.toZero.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_single_weights_apply_of_ne Finset.affineCombinationSingleWeights_apply_of_neₓ'. -/
 @[simp]
 theorem affineCombinationSingleWeights_apply_of_ne [DecidableEq ι] {i j : ι} (h : j ≠ i) :
     affineCombinationSingleWeights k i j = 0 := by simp [affine_combination_single_weights, h]
 #align finset.affine_combination_single_weights_apply_of_ne Finset.affineCombinationSingleWeights_apply_of_ne
 
-/- warning: finset.sum_affine_combination_single_weights -> Finset.sum_affineCombinationSingleWeights is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_4 : DecidableEq.{succ u2} ι] {i : ι}, (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s (fun (j : ι) => Finset.affineCombinationSingleWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_4 : DecidableEq.{succ u2} ι] {i : ι}, (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s (fun (j : ι) => Finset.affineCombinationSingleWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j)) (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (Ring.toSemiring.{u1} k _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_affine_combination_single_weights Finset.sum_affineCombinationSingleWeightsₓ'. -/
 @[simp]
 theorem sum_affineCombinationSingleWeights [DecidableEq ι] {i : ι} (h : i ∈ s) :
     (∑ j in s, affineCombinationSingleWeights k i j) = 1 :=
@@ -923,56 +707,26 @@ def weightedVSubVSubWeights [DecidableEq ι] (i j : ι) : ι → k :=
 #align finset.weighted_vsub_vsub_weights Finset.weightedVSubVSubWeights
 -/
 
-/- warning: finset.weighted_vsub_vsub_weights_self -> Finset.weightedVSubVSubWeights_self is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] (i : ι), Eq.{max (succ u2) (succ u1)} (ι -> k) (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i i) (OfNat.ofNat.{max u2 u1} (ι -> k) 0 (OfNat.mk.{max u2 u1} (ι -> k) 0 (Zero.zero.{max u2 u1} (ι -> k) (Pi.instZero.{u2, u1} ι (fun (ᾰ : ι) => k) (fun (i : ι) => MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] (i : ι), Eq.{max (succ u1) (succ u2)} (ι -> k) (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i i) (OfNat.ofNat.{max u1 u2} (ι -> k) 0 (Zero.toOfNat0.{max u1 u2} (ι -> k) (Pi.instZero.{u2, u1} ι (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.Combination._hyg.7165 : ι) => k) (fun (i : ι) => MonoidWithZero.toZero.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_vsub_weights_self Finset.weightedVSubVSubWeights_selfₓ'. -/
 @[simp]
 theorem weightedVSubVSubWeights_self [DecidableEq ι] (i : ι) : weightedVSubVSubWeights k i i = 0 :=
   by simp [weighted_vsub_vsub_weights]
 #align finset.weighted_vsub_vsub_weights_self Finset.weightedVSubVSubWeights_self
 
-/- warning: finset.weighted_vsub_vsub_weights_apply_left -> Finset.weightedVSubVSubWeights_apply_left is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Eq.{succ u1} k (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j i) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Eq.{succ u1} k (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j i) (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (Ring.toSemiring.{u1} k _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_vsub_weights_apply_left Finset.weightedVSubVSubWeights_apply_leftₓ'. -/
 @[simp]
 theorem weightedVSubVSubWeights_apply_left [DecidableEq ι] {i j : ι} (h : i ≠ j) :
     weightedVSubVSubWeights k i j i = 1 := by simp [weighted_vsub_vsub_weights, h]
 #align finset.weighted_vsub_vsub_weights_apply_left Finset.weightedVSubVSubWeights_apply_left
 
-/- warning: finset.weighted_vsub_vsub_weights_apply_right -> Finset.weightedVSubVSubWeights_apply_right is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Eq.{succ u1} k (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j j) (Neg.neg.{u1} k (SubNegMonoid.toHasNeg.{u1} k (AddGroup.toSubNegMonoid.{u1} k (AddGroupWithOne.toAddGroup.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Eq.{succ u1} k (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j j) (Neg.neg.{u1} k (Ring.toNeg.{u1} k _inst_1) (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (Ring.toSemiring.{u1} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_vsub_weights_apply_right Finset.weightedVSubVSubWeights_apply_rightₓ'. -/
 @[simp]
 theorem weightedVSubVSubWeights_apply_right [DecidableEq ι] {i j : ι} (h : i ≠ j) :
     weightedVSubVSubWeights k i j j = -1 := by simp [weighted_vsub_vsub_weights, h.symm]
 #align finset.weighted_vsub_vsub_weights_apply_right Finset.weightedVSubVSubWeights_apply_right
 
-/- warning: finset.weighted_vsub_vsub_weights_apply_of_ne -> Finset.weightedVSubVSubWeights_apply_of_ne is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι} {t : ι}, (Ne.{succ u2} ι t i) -> (Ne.{succ u2} ι t j) -> (Eq.{succ u1} k (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j t) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι} {t : ι}, (Ne.{succ u2} ι t i) -> (Ne.{succ u2} ι t j) -> (Eq.{succ u1} k (Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j t) (OfNat.ofNat.{u1} k 0 (Zero.toOfNat0.{u1} k (MonoidWithZero.toZero.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_vsub_weights_apply_of_ne Finset.weightedVSubVSubWeights_apply_of_neₓ'. -/
 @[simp]
 theorem weightedVSubVSubWeights_apply_of_ne [DecidableEq ι] {i j t : ι} (hi : t ≠ i) (hj : t ≠ j) :
     weightedVSubVSubWeights k i j t = 0 := by simp [weighted_vsub_vsub_weights, hi, hj]
 #align finset.weighted_vsub_vsub_weights_apply_of_ne Finset.weightedVSubVSubWeights_apply_of_ne
 
-/- warning: finset.sum_weighted_vsub_vsub_weights -> Finset.sum_weightedVSubVSubWeights is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) j s) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s (fun (t : ι) => Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j t)) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) j s) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s (fun (t : ι) => Finset.weightedVSubVSubWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j t)) (OfNat.ofNat.{u1} k 0 (Zero.toOfNat0.{u1} k (MonoidWithZero.toZero.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_weighted_vsub_vsub_weights Finset.sum_weightedVSubVSubWeightsₓ'. -/
 @[simp]
 theorem sum_weightedVSubVSubWeights [DecidableEq ι] {i j : ι} (hi : i ∈ s) (hj : j ∈ s) :
     (∑ t in s, weightedVSubVSubWeights k i j t) = 0 :=
@@ -998,12 +752,6 @@ theorem affineCombinationLineMapWeights_self [DecidableEq ι] (i : ι) (c : k) :
 #align finset.affine_combination_line_map_weights_self Finset.affineCombinationLineMapWeights_self
 -/
 
-/- warning: finset.affine_combination_line_map_weights_apply_left -> Finset.affineCombinationLineMapWeights_apply_left is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (forall (c : k), Eq.{succ u1} k (Finset.affineCombinationLineMapWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j c i) (HSub.hSub.{u1, u1, u1} k k k (instHSub.{u1} k (SubNegMonoid.toHasSub.{u1} k (AddGroup.toSubNegMonoid.{u1} k (AddGroupWithOne.toAddGroup.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1)))))) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))))) c))
-but is expected to have type
-  forall {k : Type.{u1}} [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (forall (c : k), Eq.{succ u1} k (Finset.affineCombinationLineMapWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j c i) (HSub.hSub.{u1, u1, u1} k k k (instHSub.{u1} k (Ring.toSub.{u1} k _inst_1)) (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (Ring.toSemiring.{u1} k _inst_1)))) c))
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_line_map_weights_apply_left Finset.affineCombinationLineMapWeights_apply_leftₓ'. -/
 @[simp]
 theorem affineCombinationLineMapWeights_apply_left [DecidableEq ι] {i j : ι} (h : i ≠ j) (c : k) :
     affineCombinationLineMapWeights i j c i = 1 - c := by
@@ -1018,24 +766,12 @@ theorem affineCombinationLineMapWeights_apply_right [DecidableEq ι] {i j : ι} 
 #align finset.affine_combination_line_map_weights_apply_right Finset.affineCombinationLineMapWeights_apply_right
 -/
 
-/- warning: finset.affine_combination_line_map_weights_apply_of_ne -> Finset.affineCombinationLineMapWeights_apply_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι} {t : ι}, (Ne.{succ u2} ι t i) -> (Ne.{succ u2} ι t j) -> (forall (c : k), Eq.{succ u1} k (Finset.affineCombinationLineMapWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j c t) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall {k : Type.{u1}} [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι} {t : ι}, (Ne.{succ u2} ι t i) -> (Ne.{succ u2} ι t j) -> (forall (c : k), Eq.{succ u1} k (Finset.affineCombinationLineMapWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j c t) (OfNat.ofNat.{u1} k 0 (Zero.toOfNat0.{u1} k (MonoidWithZero.toZero.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_line_map_weights_apply_of_ne Finset.affineCombinationLineMapWeights_apply_of_neₓ'. -/
 @[simp]
 theorem affineCombinationLineMapWeights_apply_of_ne [DecidableEq ι] {i j t : ι} (hi : t ≠ i)
     (hj : t ≠ j) (c : k) : affineCombinationLineMapWeights i j c t = 0 := by
   simp [affine_combination_line_map_weights, hi, hj]
 #align finset.affine_combination_line_map_weights_apply_of_ne Finset.affineCombinationLineMapWeights_apply_of_ne
 
-/- warning: finset.sum_affine_combination_line_map_weights -> Finset.sum_affineCombinationLineMapWeights is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) j s) -> (forall (c : k), Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s (fun (t : ι) => Finset.affineCombinationLineMapWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j c t)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k _inst_1))))))))
-but is expected to have type
-  forall {k : Type.{u1}} [_inst_1 : Ring.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) j s) -> (forall (c : k), Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k _inst_1)))) s (fun (t : ι) => Finset.affineCombinationLineMapWeights.{u1, u2} k _inst_1 ι (fun (a : ι) (b : ι) => _inst_4 a b) i j c t)) (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (Ring.toSemiring.{u1} k _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_affine_combination_line_map_weights Finset.sum_affineCombinationLineMapWeightsₓ'. -/
 @[simp]
 theorem sum_affineCombinationLineMapWeights [DecidableEq ι] {i j : ι} (hi : i ∈ s) (hj : j ∈ s)
     (c : k) : (∑ t in s, affineCombinationLineMapWeights i j c t) = 1 :=
@@ -1048,9 +784,6 @@ include S
 
 variable (k)
 
-/- warning: finset.affine_combination_affine_combination_single_weights -> Finset.affineCombination_affineCombinationSingleWeights is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_affine_combination_single_weights Finset.affineCombination_affineCombinationSingleWeightsₓ'. -/
 /-- An affine combination with `affine_combination_single_weights` gives the specified point. -/
 @[simp]
 theorem affineCombination_affineCombinationSingleWeights [DecidableEq ι] (p : ι → P) {i : ι}
@@ -1061,9 +794,6 @@ theorem affineCombination_affineCombinationSingleWeights [DecidableEq ι] (p : �
   simp [hj]
 #align finset.affine_combination_affine_combination_single_weights Finset.affineCombination_affineCombinationSingleWeights
 
-/- warning: finset.weighted_vsub_weighted_vsub_vsub_weights -> Finset.weightedVSub_weightedVSubVSubWeights is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.weighted_vsub_weighted_vsub_vsub_weights Finset.weightedVSub_weightedVSubVSubWeightsₓ'. -/
 /-- A weighted subtraction with `weighted_vsub_vsub_weights` gives the result of subtracting the
 specified points. -/
 @[simp]
@@ -1076,9 +806,6 @@ theorem weightedVSub_weightedVSubVSubWeights [DecidableEq ι] (p : ι → P) {i 
 
 variable {k}
 
-/- warning: finset.affine_combination_affine_combination_line_map_weights -> Finset.affineCombination_affineCombinationLineMapWeights is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.affine_combination_affine_combination_line_map_weights Finset.affineCombination_affineCombinationLineMapWeightsₓ'. -/
 /-- An affine combination with `affine_combination_line_map_weights` gives the result of
 `line_map`. -/
 @[simp]
@@ -1107,24 +834,12 @@ def centroidWeights : ι → k :=
 #align finset.centroid_weights Finset.centroidWeights
 -/
 
-/- warning: finset.centroid_weights_apply -> Finset.centroidWeights_apply is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) (i : ι), Eq.{succ u1} k (Finset.centroidWeights.{u1, u2} k _inst_1 ι s i) (Inv.inv.{u1} k (DivInvMonoid.toHasInv.{u1} k (DivisionRing.toDivInvMonoid.{u1} k _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat k (HasLiftT.mk.{1, succ u1} Nat k (CoeTCₓ.coe.{1, succ u1} Nat k (Nat.castCoe.{u1} k (AddMonoidWithOne.toNatCast.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))) (Finset.card.{u2} ι s)))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) (i : ι), Eq.{succ u2} k (Finset.centroidWeights.{u2, u1} k _inst_1 ι s i) (Inv.inv.{u2} k (DivisionRing.toInv.{u2} k _inst_1) (Nat.cast.{u2} k (Semiring.toNatCast.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))) (Finset.card.{u1} ι s)))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_weights_apply Finset.centroidWeights_applyₓ'. -/
 /-- `centroid_weights` at any point. -/
 @[simp]
 theorem centroidWeights_apply (i : ι) : s.centroidWeights k i = (card s : k)⁻¹ :=
   rfl
 #align finset.centroid_weights_apply Finset.centroidWeights_apply
 
-/- warning: finset.centroid_weights_eq_const -> Finset.centroidWeights_eq_const is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι), Eq.{max (succ u2) (succ u1)} (ι -> k) (Finset.centroidWeights.{u1, u2} k _inst_1 ι s) (Function.const.{succ u1, succ u2} k ι (Inv.inv.{u1} k (DivInvMonoid.toHasInv.{u1} k (DivisionRing.toDivInvMonoid.{u1} k _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat k (HasLiftT.mk.{1, succ u1} Nat k (CoeTCₓ.coe.{1, succ u1} Nat k (Nat.castCoe.{u1} k (AddMonoidWithOne.toNatCast.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))) (Finset.card.{u2} ι s))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι), Eq.{max (succ u2) (succ u1)} (ι -> k) (Finset.centroidWeights.{u2, u1} k _inst_1 ι s) (Function.const.{succ u2, succ u1} k ι (Inv.inv.{u2} k (DivisionRing.toInv.{u2} k _inst_1) (Nat.cast.{u2} k (Semiring.toNatCast.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))) (Finset.card.{u1} ι s))))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_weights_eq_const Finset.centroidWeights_eq_constₓ'. -/
 /-- `centroid_weights` equals a constant function. -/
 theorem centroidWeights_eq_const : s.centroidWeights k = Function.const ι (card s : k)⁻¹ :=
   rfl
@@ -1132,12 +847,6 @@ theorem centroidWeights_eq_const : s.centroidWeights k = Function.const ι (card
 
 variable {k}
 
-/- warning: finset.sum_centroid_weights_eq_one_of_cast_card_ne_zero -> Finset.sum_centroidWeights_eq_one_of_cast_card_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι), (Ne.{succ u1} k ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat k (HasLiftT.mk.{1, succ u1} Nat k (CoeTCₓ.coe.{1, succ u1} Nat k (Nat.castCoe.{u1} k (AddMonoidWithOne.toNatCast.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))) (Finset.card.{u2} ι s)) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall {k : Type.{u2}} [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι), (Ne.{succ u2} k (Nat.cast.{u2} k (Semiring.toNatCast.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))) (Finset.card.{u1} ι s)) (OfNat.ofNat.{u2} k 0 (Zero.toOfNat0.{u2} k (MonoidWithZero.toZero.{u2} k (Semiring.toMonoidWithZero.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_eq_one_of_cast_card_ne_zero Finset.sum_centroidWeights_eq_one_of_cast_card_ne_zeroₓ'. -/
 /-- The weights in the centroid sum to 1, if the number of points,
 converted to `k`, is not zero. -/
 theorem sum_centroidWeights_eq_one_of_cast_card_ne_zero (h : (card s : k) ≠ 0) :
@@ -1146,24 +855,12 @@ theorem sum_centroidWeights_eq_one_of_cast_card_ne_zero (h : (card s : k) ≠ 0)
 
 variable (k)
 
-/- warning: finset.sum_centroid_weights_eq_one_of_card_ne_zero -> Finset.sum_centroidWeights_eq_one_of_card_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))], (Ne.{1} Nat (Finset.card.{u2} ι s) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) [_inst_5 : CharZero.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (Ring.toAddGroupWithOne.{u2} k (DivisionRing.toRing.{u2} k _inst_1)))], (Ne.{1} Nat (Finset.card.{u1} ι s) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_eq_one_of_card_ne_zero Finset.sum_centroidWeights_eq_one_of_card_ne_zeroₓ'. -/
 /-- In the characteristic zero case, the weights in the centroid sum
 to 1 if the number of points is not zero. -/
 theorem sum_centroidWeights_eq_one_of_card_ne_zero [CharZero k] (h : card s ≠ 0) :
     (∑ i in s, s.centroidWeights k i) = 1 := by simp [h]
 #align finset.sum_centroid_weights_eq_one_of_card_ne_zero Finset.sum_centroidWeights_eq_one_of_card_ne_zero
 
-/- warning: finset.sum_centroid_weights_eq_one_of_nonempty -> Finset.sum_centroidWeights_eq_one_of_nonempty is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))], (Finset.Nonempty.{u2} ι s) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) [_inst_5 : CharZero.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (Ring.toAddGroupWithOne.{u2} k (DivisionRing.toRing.{u2} k _inst_1)))], (Finset.Nonempty.{u1} ι s) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_eq_one_of_nonempty Finset.sum_centroidWeights_eq_one_of_nonemptyₓ'. -/
 /-- In the characteristic zero case, the weights in the centroid sum
 to 1 if the set is nonempty. -/
 theorem sum_centroidWeights_eq_one_of_nonempty [CharZero k] (h : s.Nonempty) :
@@ -1171,12 +868,6 @@ theorem sum_centroidWeights_eq_one_of_nonempty [CharZero k] (h : s.Nonempty) :
   s.sum_centroidWeights_eq_one_of_card_ne_zero k (ne_of_gt (card_pos.2 h))
 #align finset.sum_centroid_weights_eq_one_of_nonempty Finset.sum_centroidWeights_eq_one_of_nonempty
 
-/- warning: finset.sum_centroid_weights_eq_one_of_card_eq_add_one -> Finset.sum_centroidWeights_eq_one_of_card_eq_add_one is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] {n : Nat}, (Eq.{1} Nat (Finset.card.{u2} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) [_inst_5 : CharZero.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (Ring.toAddGroupWithOne.{u2} k (DivisionRing.toRing.{u2} k _inst_1)))] {n : Nat}, (Eq.{1} Nat (Finset.card.{u1} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) s (fun (i : ι) => Finset.centroidWeights.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_eq_one_of_card_eq_add_one Finset.sum_centroidWeights_eq_one_of_card_eq_add_oneₓ'. -/
 /-- In the characteristic zero case, the weights in the centroid sum
 to 1 if the number of points is `n + 1`. -/
 theorem sum_centroidWeights_eq_one_of_card_eq_add_one [CharZero k] {n : ℕ} (h : card s = n + 1) :
@@ -1195,42 +886,21 @@ def centroid (p : ι → P) : P :=
 #align finset.centroid Finset.centroid
 -/
 
-/- warning: finset.centroid_def -> Finset.centroid_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.centroid_def Finset.centroid_defₓ'. -/
 /-- The definition of the centroid. -/
 theorem centroid_def (p : ι → P) : s.centroid k p = s.affineCombination k p (s.centroidWeights k) :=
   rfl
 #align finset.centroid_def Finset.centroid_def
 
-/- warning: finset.centroid_univ -> Finset.centroid_univ is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] (s : Finset.{u3} P), Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 (coeSort.{succ u3, succ (succ u3)} (Finset.{u3} P) Type.{u3} (Finset.hasCoeToSort.{u3} P) s) (Finset.univ.{u3} (coeSort.{succ u3, succ (succ u3)} (Finset.{u3} P) Type.{u3} (Finset.hasCoeToSort.{u3} P) s) (Finset.Subtype.fintype.{u3} P s)) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (coeSort.{succ u3, succ (succ u3)} (Finset.{u3} P) Type.{u3} (Finset.hasCoeToSort.{u3} P) s) P (HasLiftT.mk.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Finset.{u3} P) Type.{u3} (Finset.hasCoeToSort.{u3} P) s) P (CoeTCₓ.coe.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Finset.{u3} P) Type.{u3} (Finset.hasCoeToSort.{u3} P) s) P (coeBase.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Finset.{u3} P) Type.{u3} (Finset.hasCoeToSort.{u3} P) s) P (coeSubtype.{succ u3} P (fun (x : P) => Membership.Mem.{u3, u3} P (Finset.{u3} P) (Finset.hasMem.{u3} P) x s))))))) (Finset.centroid.{u1, u2, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 P s (id.{succ u3} P))
-but is expected to have type
-  forall (k : Type.{u2}) {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] (s : Finset.{u3} P), Eq.{succ u3} P (Finset.centroid.{u2, u1, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 (Subtype.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Finset.{u3} P) (Finset.instMembershipFinset.{u3} P) x s)) (Finset.univ.{u3} (Subtype.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Finset.{u3} P) (Finset.instMembershipFinset.{u3} P) x s)) (Finset.Subtype.fintype.{u3} P s)) (Subtype.val.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Finset.{u3} P) (Finset.instMembershipFinset.{u3} P) x s))) (Finset.centroid.{u2, u1, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 P s (id.{succ u3} P))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_univ Finset.centroid_univₓ'. -/
 theorem centroid_univ (s : Finset P) : univ.centroid k (coe : s → P) = s.centroid k id := by
   rw [centroid, centroid, ← s.attach_affine_combination_coe]; congr ; ext; simp
 #align finset.centroid_univ Finset.centroid_univ
 
-/- warning: finset.centroid_singleton -> Finset.centroid_singleton is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} (p : ι -> P) (i : ι), Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι (Singleton.singleton.{u4, u4} ι (Finset.{u4} ι) (Finset.hasSingleton.{u4} ι) i) p) (p i)
-but is expected to have type
-  forall (k : Type.{u3}) {V : Type.{u2}} {P : Type.{u4}} [_inst_1 : DivisionRing.{u3} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u3, u2} k V (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u4} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u1}} (p : ι -> P) (i : ι), Eq.{succ u4} P (Finset.centroid.{u3, u2, u4, u1} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι (Singleton.singleton.{u1, u1} ι (Finset.{u1} ι) (Finset.instSingletonFinset.{u1} ι) i) p) (p i)
-Case conversion may be inaccurate. Consider using '#align finset.centroid_singleton Finset.centroid_singletonₓ'. -/
 /-- The centroid of a single point. -/
 @[simp]
 theorem centroid_singleton (p : ι → P) (i : ι) : ({i} : Finset ι).centroid k p = p i := by
   simp [centroid_def, affine_combination_apply]
 #align finset.centroid_singleton Finset.centroid_singleton
 
-/- warning: finset.centroid_pair -> Finset.centroid_pair is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} [_inst_5 : DecidableEq.{succ u4} ι] [_inst_6 : Invertible.{u1} k (Distrib.toHasMul.{u1} k (Ring.toDistrib.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) (OfNat.ofNat.{u1} k 2 (OfNat.mk.{u1} k 2 (bit0.{u1} k (Distrib.toHasAdd.{u1} k (Ring.toDistrib.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))] (p : ι -> P) (i₁ : ι) (i₂ : ι), Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι (Insert.insert.{u4, u4} ι (Finset.{u4} ι) (Finset.hasInsert.{u4} ι (fun (a : ι) (b : ι) => _inst_5 a b)) i₁ (Singleton.singleton.{u4, u4} ι (Finset.{u4} ι) (Finset.hasSingleton.{u4} ι) i₂)) p) (VAdd.vadd.{u2, u3} V P (AddAction.toHasVadd.{u2, u3} V P (SubNegMonoid.toAddMonoid.{u2} V (AddGroup.toSubNegMonoid.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2))) (AddTorsor.toAddAction.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2) _inst_4)) (SMul.smul.{u1, u2} k V (SMulZeroClass.toHasSmul.{u1, u2} k V (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} k V (MulZeroClass.toHasZero.{u1} k (MulZeroOneClass.toMulZeroClass.{u1} k (MonoidWithZero.toMulZeroOneClass.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} k V (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (Module.toMulActionWithZero.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)))) (Inv.inv.{u1} k (DivInvMonoid.toHasInv.{u1} k (DivisionRing.toDivInvMonoid.{u1} k _inst_1)) (OfNat.ofNat.{u1} k 2 (OfNat.mk.{u1} k 2 (bit0.{u1} k (Distrib.toHasAdd.{u1} k (Ring.toDistrib.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))) (VSub.vsub.{u2, u3} V P (AddTorsor.toHasVsub.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2) _inst_4) (p i₂) (p i₁))) (p i₁))
-but is expected to have type
-  forall (k : Type.{u3}) {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : DivisionRing.{u3} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u3, u1} k V (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u4}} [_inst_5 : DecidableEq.{succ u4} ι] [_inst_6 : Invertible.{u3} k (NonUnitalNonAssocRing.toMul.{u3} k (NonAssocRing.toNonUnitalNonAssocRing.{u3} k (Ring.toNonAssocRing.{u3} k (DivisionRing.toRing.{u3} k _inst_1)))) (Semiring.toOne.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (OfNat.ofNat.{u3} k 2 (instOfNat.{u3} k 2 (Semiring.toNatCast.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))] (p : ι -> P) (i₁ : ι) (i₂ : ι), Eq.{succ u2} P (Finset.centroid.{u3, u1, u2, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι (Insert.insert.{u4, u4} ι (Finset.{u4} ι) (Finset.instInsertFinset.{u4} ι (fun (a : ι) (b : ι) => _inst_5 a b)) i₁ (Singleton.singleton.{u4, u4} ι (Finset.{u4} ι) (Finset.instSingletonFinset.{u4} ι) i₂)) p) (HVAdd.hVAdd.{u1, u2, u2} V P P (instHVAdd.{u1, u2} V P (AddAction.toVAdd.{u1, u2} V P (SubNegMonoid.toAddMonoid.{u1} V (AddGroup.toSubNegMonoid.{u1} V (AddCommGroup.toAddGroup.{u1} V _inst_2))) (AddTorsor.toAddAction.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2) _inst_4))) (HSMul.hSMul.{u3, u1, u1} k V V (instHSMul.{u3, u1} k V (SMulZeroClass.toSMul.{u3, u1} k V (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (SMulWithZero.toSMulZeroClass.{u3, u1} k V (MonoidWithZero.toZero.{u3} k (Semiring.toMonoidWithZero.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)))) (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (MulActionWithZero.toSMulWithZero.{u3, u1} k V (Semiring.toMonoidWithZero.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (Module.toMulActionWithZero.{u3, u1} k V (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) _inst_3))))) (Inv.inv.{u3} k (DivisionRing.toInv.{u3} k _inst_1) (OfNat.ofNat.{u3} k 2 (instOfNat.{u3} k 2 (Semiring.toNatCast.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2) _inst_4) (p i₂) (p i₁))) (p i₁))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_pair Finset.centroid_pairₓ'. -/
 /-- The centroid of two points, expressed directly as adding a vector
 to a point. -/
 theorem centroid_pair [DecidableEq ι] [Invertible (2 : k)] (p : ι → P) (i₁ i₂ : ι) :
@@ -1249,12 +919,6 @@ theorem centroid_pair [DecidableEq ι] [Invertible (2 : k)] (p : ι → P) (i₁
     simp [h]
 #align finset.centroid_pair Finset.centroid_pair
 
-/- warning: finset.centroid_pair_fin -> Finset.centroid_pair_fin is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] [_inst_5 : Invertible.{u1} k (Distrib.toHasMul.{u1} k (Ring.toDistrib.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) (OfNat.ofNat.{u1} k 2 (OfNat.mk.{u1} k 2 (bit0.{u1} k (Distrib.toHasAdd.{u1} k (Ring.toDistrib.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))] (p : (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) -> P), Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, 0} k V P _inst_1 _inst_2 _inst_3 _inst_4 (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) p) (VAdd.vadd.{u2, u3} V P (AddAction.toHasVadd.{u2, u3} V P (SubNegMonoid.toAddMonoid.{u2} V (AddGroup.toSubNegMonoid.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2))) (AddTorsor.toAddAction.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2) _inst_4)) (SMul.smul.{u1, u2} k V (SMulZeroClass.toHasSmul.{u1, u2} k V (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} k V (MulZeroClass.toHasZero.{u1} k (MulZeroOneClass.toMulZeroClass.{u1} k (MonoidWithZero.toMulZeroOneClass.{u1} k (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} k V (Semiring.toMonoidWithZero.{u1} k (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (AddZeroClass.toHasZero.{u2} V (AddMonoid.toAddZeroClass.{u2} V (AddCommMonoid.toAddMonoid.{u2} V (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)))) (Module.toMulActionWithZero.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)))) (Inv.inv.{u1} k (DivInvMonoid.toHasInv.{u1} k (DivisionRing.toDivInvMonoid.{u1} k _inst_1)) (OfNat.ofNat.{u1} k 2 (OfNat.mk.{u1} k 2 (bit0.{u1} k (Distrib.toHasAdd.{u1} k (Ring.toDistrib.{u1} k (DivisionRing.toRing.{u1} k _inst_1))) (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))) (VSub.vsub.{u2, u3} V P (AddTorsor.toHasVsub.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2) _inst_4) (p (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 1 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 1 (One.one.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasOneOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (CharZero.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (StrictOrderedSemiring.to_charZero.{0} Nat Nat.strictOrderedSemiring))))))) (p (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (CharZero.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (StrictOrderedSemiring.to_charZero.{0} Nat Nat.strictOrderedSemiring))))))))) (p (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (CharZero.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (StrictOrderedSemiring.to_charZero.{0} Nat Nat.strictOrderedSemiring))))))))
-but is expected to have type
-  forall (k : Type.{u3}) {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : DivisionRing.{u3} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u3, u1} k V (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] [_inst_5 : Invertible.{u3} k (NonUnitalNonAssocRing.toMul.{u3} k (NonAssocRing.toNonUnitalNonAssocRing.{u3} k (Ring.toNonAssocRing.{u3} k (DivisionRing.toRing.{u3} k _inst_1)))) (Semiring.toOne.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (OfNat.ofNat.{u3} k 2 (instOfNat.{u3} k 2 (Semiring.toNatCast.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))] (p : (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> P), Eq.{succ u2} P (Finset.centroid.{u3, u1, u2, 0} k V P _inst_1 _inst_2 _inst_3 _inst_4 (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) p) (HVAdd.hVAdd.{u1, u2, u2} V P P (instHVAdd.{u1, u2} V P (AddAction.toVAdd.{u1, u2} V P (SubNegMonoid.toAddMonoid.{u1} V (AddGroup.toSubNegMonoid.{u1} V (AddCommGroup.toAddGroup.{u1} V _inst_2))) (AddTorsor.toAddAction.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2) _inst_4))) (HSMul.hSMul.{u3, u1, u1} k V V (instHSMul.{u3, u1} k V (SMulZeroClass.toSMul.{u3, u1} k V (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (SMulWithZero.toSMulZeroClass.{u3, u1} k V (MonoidWithZero.toZero.{u3} k (Semiring.toMonoidWithZero.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)))) (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (MulActionWithZero.toSMulWithZero.{u3, u1} k V (Semiring.toMonoidWithZero.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (NegZeroClass.toZero.{u1} V (SubNegZeroMonoid.toNegZeroClass.{u1} V (SubtractionMonoid.toSubNegZeroMonoid.{u1} V (SubtractionCommMonoid.toSubtractionMonoid.{u1} V (AddCommGroup.toDivisionAddCommMonoid.{u1} V _inst_2))))) (Module.toMulActionWithZero.{u3, u1} k V (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) _inst_3))))) (Inv.inv.{u3} k (DivisionRing.toInv.{u3} k _inst_1) (OfNat.ofNat.{u3} k 2 (instOfNat.{u3} k 2 (Semiring.toNatCast.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2) _inst_4) (p (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (p (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))) (p (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_pair_fin Finset.centroid_pair_finₓ'. -/
 /-- The centroid of two points indexed by `fin 2`, expressed directly
 as adding a vector to the first point. -/
 theorem centroid_pair_fin [Invertible (2 : k)] (p : Fin 2 → P) :
@@ -1264,12 +928,6 @@ theorem centroid_pair_fin [Invertible (2 : k)] (p : Fin 2 → P) :
   convert centroid_pair k p 0 1
 #align finset.centroid_pair_fin Finset.centroid_pair_fin
 
-/- warning: finset.centroid_map -> Finset.centroid_map is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} {ι₂ : Type.{u5}} (s₂ : Finset.{u5} ι₂) (e : Function.Embedding.{succ u5, succ u4} ι₂ ι) (p : ι -> P), Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι (Finset.map.{u5, u4} ι₂ ι e s₂) p) (Finset.centroid.{u1, u2, u3, u5} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι₂ s₂ (Function.comp.{succ u5, succ u4, succ u3} ι₂ ι P p (coeFn.{max 1 (succ u5) (succ u4), max (succ u5) (succ u4)} (Function.Embedding.{succ u5, succ u4} ι₂ ι) (fun (_x : Function.Embedding.{succ u5, succ u4} ι₂ ι) => ι₂ -> ι) (Function.Embedding.hasCoeToFun.{succ u5, succ u4} ι₂ ι) e)))
-but is expected to have type
-  forall (k : Type.{u2}) {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u4}} {ι₂ : Type.{u5}} (s₂ : Finset.{u5} ι₂) (e : Function.Embedding.{succ u5, succ u4} ι₂ ι) (p : ι -> P), Eq.{succ u3} P (Finset.centroid.{u2, u1, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι (Finset.map.{u5, u4} ι₂ ι e s₂) p) (Finset.centroid.{u2, u1, u3, u5} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι₂ s₂ (Function.comp.{succ u5, succ u4, succ u3} ι₂ ι P p (FunLike.coe.{max (succ u4) (succ u5), succ u5, succ u4} (Function.Embedding.{succ u5, succ u4} ι₂ ι) ι₂ (fun (_x : ι₂) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : ι₂) => ι) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u5), succ u5, succ u4} (Function.Embedding.{succ u5, succ u4} ι₂ ι) ι₂ ι (Function.instEmbeddingLikeEmbedding.{succ u5, succ u4} ι₂ ι)) e)))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_map Finset.centroid_mapₓ'. -/
 /-- A centroid, over the image of an embedding, equals a centroid with
 the same points and weights over the original `finset`. -/
 theorem centroid_map (e : ι₂ ↪ ι) (p : ι → P) : (s₂.map e).centroid k p = s₂.centroid k (p ∘ e) :=
@@ -1290,12 +948,6 @@ def centroidWeightsIndicator : ι → k :=
 #align finset.centroid_weights_indicator Finset.centroidWeightsIndicator
 -/
 
-/- warning: finset.centroid_weights_indicator_def -> Finset.centroidWeightsIndicator_def is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι), Eq.{max (succ u2) (succ u1)} (ι -> k) (Finset.centroidWeightsIndicator.{u1, u2} k _inst_1 ι s) (Set.indicator.{u2, u1} ι k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) (Finset.centroidWeights.{u1, u2} k _inst_1 ι s))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι), Eq.{max (succ u2) (succ u1)} (ι -> k) (Finset.centroidWeightsIndicator.{u2, u1} k _inst_1 ι s) (Set.indicator.{u1, u2} ι k (MonoidWithZero.toZero.{u2} k (Semiring.toMonoidWithZero.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1)))) (Finset.toSet.{u1} ι s) (Finset.centroidWeights.{u2, u1} k _inst_1 ι s))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_weights_indicator_def Finset.centroidWeightsIndicator_defₓ'. -/
 /-- The definition of `centroid_weights_indicator`. -/
 theorem centroidWeightsIndicator_def :
     s.centroidWeightsIndicator k = Set.indicator (↑s) (s.centroidWeights k) :=
@@ -1310,12 +962,6 @@ theorem sum_centroidWeightsIndicator [Fintype ι] :
 #align finset.sum_centroid_weights_indicator Finset.sum_centroidWeightsIndicator
 -/
 
-/- warning: finset.sum_centroid_weights_indicator_eq_one_of_card_ne_zero -> Finset.sum_centroidWeightsIndicator_eq_one_of_card_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] [_inst_6 : Fintype.{u2} ι], (Ne.{1} Nat (Finset.card.{u2} ι s) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) (Finset.univ.{u2} ι _inst_6) (fun (i : ι) => Finset.centroidWeightsIndicator.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) [_inst_5 : CharZero.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (Ring.toAddGroupWithOne.{u2} k (DivisionRing.toRing.{u2} k _inst_1)))] [_inst_6 : Fintype.{u1} ι], (Ne.{1} Nat (Finset.card.{u1} ι s) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) (Finset.univ.{u1} ι _inst_6) (fun (i : ι) => Finset.centroidWeightsIndicator.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_indicator_eq_one_of_card_ne_zero Finset.sum_centroidWeightsIndicator_eq_one_of_card_ne_zeroₓ'. -/
 /-- In the characteristic zero case, the weights in the centroid
 indexed by a `fintype` sum to 1 if the number of points is not
 zero. -/
@@ -1326,12 +972,6 @@ theorem sum_centroidWeightsIndicator_eq_one_of_card_ne_zero [CharZero k] [Fintyp
   exact s.sum_centroid_weights_eq_one_of_card_ne_zero k h
 #align finset.sum_centroid_weights_indicator_eq_one_of_card_ne_zero Finset.sum_centroidWeightsIndicator_eq_one_of_card_ne_zero
 
-/- warning: finset.sum_centroid_weights_indicator_eq_one_of_nonempty -> Finset.sum_centroidWeightsIndicator_eq_one_of_nonempty is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] [_inst_6 : Fintype.{u2} ι], (Finset.Nonempty.{u2} ι s) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) (Finset.univ.{u2} ι _inst_6) (fun (i : ι) => Finset.centroidWeightsIndicator.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) [_inst_5 : CharZero.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (Ring.toAddGroupWithOne.{u2} k (DivisionRing.toRing.{u2} k _inst_1)))] [_inst_6 : Fintype.{u1} ι], (Finset.Nonempty.{u1} ι s) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) (Finset.univ.{u1} ι _inst_6) (fun (i : ι) => Finset.centroidWeightsIndicator.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_indicator_eq_one_of_nonempty Finset.sum_centroidWeightsIndicator_eq_one_of_nonemptyₓ'. -/
 /-- In the characteristic zero case, the weights in the centroid
 indexed by a `fintype` sum to 1 if the set is nonempty. -/
 theorem sum_centroidWeightsIndicator_eq_one_of_nonempty [CharZero k] [Fintype ι] (h : s.Nonempty) :
@@ -1341,12 +981,6 @@ theorem sum_centroidWeightsIndicator_eq_one_of_nonempty [CharZero k] [Fintype ι
   exact s.sum_centroid_weights_eq_one_of_nonempty k h
 #align finset.sum_centroid_weights_indicator_eq_one_of_nonempty Finset.sum_centroidWeightsIndicator_eq_one_of_nonempty
 
-/- warning: finset.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one -> Finset.sum_centroidWeightsIndicator_eq_one_of_card_eq_add_one is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : DivisionRing.{u1} k] {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] [_inst_6 : Fintype.{u2} ι] {n : Nat}, (Eq.{1} Nat (Finset.card.{u2} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> (Eq.{succ u1} k (Finset.sum.{u1, u2} k ι (AddCommGroup.toAddCommMonoid.{u1} k (NonUnitalNonAssocRing.toAddCommGroup.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))) (Finset.univ.{u2} ι _inst_6) (fun (i : ι) => Finset.centroidWeightsIndicator.{u1, u2} k _inst_1 ι s i)) (OfNat.ofNat.{u1} k 1 (OfNat.mk.{u1} k 1 (One.one.{u1} k (AddMonoidWithOne.toOne.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))
-but is expected to have type
-  forall (k : Type.{u2}) [_inst_1 : DivisionRing.{u2} k] {ι : Type.{u1}} (s : Finset.{u1} ι) [_inst_5 : CharZero.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (Ring.toAddGroupWithOne.{u2} k (DivisionRing.toRing.{u2} k _inst_1)))] [_inst_6 : Fintype.{u1} ι] {n : Nat}, (Eq.{1} Nat (Finset.card.{u1} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> (Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k (DivisionRing.toRing.{u2} k _inst_1))))) (Finset.univ.{u1} ι _inst_6) (fun (i : ι) => Finset.centroidWeightsIndicator.{u2, u1} k _inst_1 ι s i)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one Finset.sum_centroidWeightsIndicator_eq_one_of_card_eq_add_oneₓ'. -/
 /-- In the characteristic zero case, the weights in the centroid
 indexed by a `fintype` sum to 1 if the number of points is `n + 1`. -/
 theorem sum_centroidWeightsIndicator_eq_one_of_card_eq_add_one [CharZero k] [Fintype ι] {n : ℕ}
@@ -1358,21 +992,12 @@ theorem sum_centroidWeightsIndicator_eq_one_of_card_eq_add_one [CharZero k] [Fin
 
 include V
 
-/- warning: finset.centroid_eq_affine_combination_fintype -> Finset.centroid_eq_affineCombination_fintype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.centroid_eq_affine_combination_fintype Finset.centroid_eq_affineCombination_fintypeₓ'. -/
 /-- The centroid as an affine combination over a `fintype`. -/
 theorem centroid_eq_affineCombination_fintype [Fintype ι] (p : ι → P) :
     s.centroid k p = univ.affineCombination k p (s.centroidWeightsIndicator k) :=
   affineCombination_indicator_subset _ _ (subset_univ _)
 #align finset.centroid_eq_affine_combination_fintype Finset.centroid_eq_affineCombination_fintype
 
-/- warning: finset.centroid_eq_centroid_image_of_inj_on -> Finset.centroid_eq_centroid_image_of_inj_on is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} (s : Finset.{u4} ι) {p : ι -> P}, (forall (i : ι), (Membership.Mem.{u4, u4} ι (Finset.{u4} ι) (Finset.hasMem.{u4} ι) i s) -> (forall (j : ι), (Membership.Mem.{u4, u4} ι (Finset.{u4} ι) (Finset.hasMem.{u4} ι) j s) -> (Eq.{succ u3} P (p i) (p j)) -> (Eq.{succ u4} ι i j))) -> (forall {ps : Set.{u3} P} [_inst_5 : Fintype.{u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps)], (Eq.{succ u3} (Set.{u3} P) ps (Set.image.{u4, u3} ι P p ((fun (a : Type.{u4}) (b : Type.{u4}) [self : HasLiftT.{succ u4, succ u4} a b] => self.0) (Finset.{u4} ι) (Set.{u4} ι) (HasLiftT.mk.{succ u4, succ u4} (Finset.{u4} ι) (Set.{u4} ι) (CoeTCₓ.coe.{succ u4, succ u4} (Finset.{u4} ι) (Set.{u4} ι) (Finset.Set.hasCoeT.{u4} ι))) s))) -> (Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (Finset.centroid.{u1, u2, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) (Finset.univ.{u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) _inst_5) (fun (x : coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) => (fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) P (HasLiftT.mk.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) P (CoeTCₓ.coe.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) P (coeBase.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} P) Type.{u3} (Set.hasCoeToSort.{u3} P) ps) P (coeSubtype.{succ u3} P (fun (x : P) => Membership.Mem.{u3, u3} P (Set.{u3} P) (Set.hasMem.{u3} P) x ps))))) x))))
-but is expected to have type
-  forall (k : Type.{u2}) {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u4}} (s : Finset.{u4} ι) {p : ι -> P}, (forall (i : ι), (Membership.mem.{u4, u4} ι (Finset.{u4} ι) (Finset.instMembershipFinset.{u4} ι) i s) -> (forall (j : ι), (Membership.mem.{u4, u4} ι (Finset.{u4} ι) (Finset.instMembershipFinset.{u4} ι) j s) -> (Eq.{succ u3} P (p i) (p j)) -> (Eq.{succ u4} ι i j))) -> (forall {ps : Set.{u3} P} [_inst_5 : Fintype.{u3} (Set.Elem.{u3} P ps)], (Eq.{succ u3} (Set.{u3} P) ps (Set.image.{u4, u3} ι P p (Finset.toSet.{u4} ι s))) -> (Eq.{succ u3} P (Finset.centroid.{u2, u1, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (Finset.centroid.{u2, u1, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 (Set.Elem.{u3} P ps) (Finset.univ.{u3} (Set.Elem.{u3} P ps) _inst_5) (fun (x : Set.Elem.{u3} P ps) => Subtype.val.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Set.{u3} P) (Set.instMembershipSet.{u3} P) x ps) x))))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_eq_centroid_image_of_inj_on Finset.centroid_eq_centroid_image_of_inj_onₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 /-- An indexed family of points that is injective on the given
 `finset` has the same centroid as the image of that `finset`.  This is
@@ -1408,12 +1033,6 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P}
   rw [(hf' x).2]
 #align finset.centroid_eq_centroid_image_of_inj_on Finset.centroid_eq_centroid_image_of_inj_on
 
-/- warning: finset.centroid_eq_of_inj_on_of_image_eq -> Finset.centroid_eq_of_inj_on_of_image_eq is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} (s : Finset.{u4} ι) {ι₂ : Type.{u5}} (s₂ : Finset.{u5} ι₂) {p : ι -> P}, (forall (i : ι), (Membership.Mem.{u4, u4} ι (Finset.{u4} ι) (Finset.hasMem.{u4} ι) i s) -> (forall (j : ι), (Membership.Mem.{u4, u4} ι (Finset.{u4} ι) (Finset.hasMem.{u4} ι) j s) -> (Eq.{succ u3} P (p i) (p j)) -> (Eq.{succ u4} ι i j))) -> (forall {p₂ : ι₂ -> P}, (forall (i : ι₂), (Membership.Mem.{u5, u5} ι₂ (Finset.{u5} ι₂) (Finset.hasMem.{u5} ι₂) i s₂) -> (forall (j : ι₂), (Membership.Mem.{u5, u5} ι₂ (Finset.{u5} ι₂) (Finset.hasMem.{u5} ι₂) j s₂) -> (Eq.{succ u3} P (p₂ i) (p₂ j)) -> (Eq.{succ u5} ι₂ i j))) -> (Eq.{succ u3} (Set.{u3} P) (Set.image.{u4, u3} ι P p ((fun (a : Type.{u4}) (b : Type.{u4}) [self : HasLiftT.{succ u4, succ u4} a b] => self.0) (Finset.{u4} ι) (Set.{u4} ι) (HasLiftT.mk.{succ u4, succ u4} (Finset.{u4} ι) (Set.{u4} ι) (CoeTCₓ.coe.{succ u4, succ u4} (Finset.{u4} ι) (Set.{u4} ι) (Finset.Set.hasCoeT.{u4} ι))) s)) (Set.image.{u5, u3} ι₂ P p₂ ((fun (a : Type.{u5}) (b : Type.{u5}) [self : HasLiftT.{succ u5, succ u5} a b] => self.0) (Finset.{u5} ι₂) (Set.{u5} ι₂) (HasLiftT.mk.{succ u5, succ u5} (Finset.{u5} ι₂) (Set.{u5} ι₂) (CoeTCₓ.coe.{succ u5, succ u5} (Finset.{u5} ι₂) (Set.{u5} ι₂) (Finset.Set.hasCoeT.{u5} ι₂))) s₂))) -> (Eq.{succ u3} P (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (Finset.centroid.{u1, u2, u3, u5} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι₂ s₂ p₂)))
-but is expected to have type
-  forall (k : Type.{u2}) {V : Type.{u1}} {P : Type.{u4}} [_inst_1 : DivisionRing.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u4} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u5}} (s : Finset.{u5} ι) {ι₂ : Type.{u3}} (s₂ : Finset.{u3} ι₂) {p : ι -> P}, (forall (i : ι), (Membership.mem.{u5, u5} ι (Finset.{u5} ι) (Finset.instMembershipFinset.{u5} ι) i s) -> (forall (j : ι), (Membership.mem.{u5, u5} ι (Finset.{u5} ι) (Finset.instMembershipFinset.{u5} ι) j s) -> (Eq.{succ u4} P (p i) (p j)) -> (Eq.{succ u5} ι i j))) -> (forall {p₂ : ι₂ -> P}, (forall (i : ι₂), (Membership.mem.{u3, u3} ι₂ (Finset.{u3} ι₂) (Finset.instMembershipFinset.{u3} ι₂) i s₂) -> (forall (j : ι₂), (Membership.mem.{u3, u3} ι₂ (Finset.{u3} ι₂) (Finset.instMembershipFinset.{u3} ι₂) j s₂) -> (Eq.{succ u4} P (p₂ i) (p₂ j)) -> (Eq.{succ u3} ι₂ i j))) -> (Eq.{succ u4} (Set.{u4} P) (Set.image.{u5, u4} ι P p (Finset.toSet.{u5} ι s)) (Set.image.{u3, u4} ι₂ P p₂ (Finset.toSet.{u3} ι₂ s₂))) -> (Eq.{succ u4} P (Finset.centroid.{u2, u1, u4, u5} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (Finset.centroid.{u2, u1, u4, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι₂ s₂ p₂)))
-Case conversion may be inaccurate. Consider using '#align finset.centroid_eq_of_inj_on_of_image_eq Finset.centroid_eq_of_inj_on_of_image_eqₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s₂) -/
 /-- Two indexed families of points that are injective on the given
@@ -1438,9 +1057,6 @@ variable {ι : Type _}
 
 include V
 
-/- warning: weighted_vsub_mem_vector_span -> weightedVSub_mem_vectorSpan is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weighted_vsub_mem_vector_span weightedVSub_mem_vectorSpanₓ'. -/
 /-- A `weighted_vsub` with sum of weights 0 is in the `vector_span` of
 an indexed family. -/
 theorem weightedVSub_mem_vectorSpan {s : Finset ι} {w : ι → k} (h : (∑ i in s, w i) = 0)
@@ -1462,9 +1078,6 @@ theorem weightedVSub_mem_vectorSpan {s : Finset ι} {w : ι → k} (h : (∑ i i
       · exact fun _ => zero_smul k _
 #align weighted_vsub_mem_vector_span weightedVSub_mem_vectorSpan
 
-/- warning: affine_combination_mem_affine_span -> affineCombination_mem_affineSpan is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_combination_mem_affine_span affineCombination_mem_affineSpanₓ'. -/
 /-- An `affine_combination` with sum of weights 1 is in the
 `affine_span` of an indexed family, if the underlying ring is
 nontrivial. -/
@@ -1492,9 +1105,6 @@ theorem affineCombination_mem_affineSpan [Nontrivial k] {s : Finset ι} {w : ι 
 
 variable (k) {V}
 
-/- warning: mem_vector_span_iff_eq_weighted_vsub -> mem_vectorSpan_iff_eq_weightedVSub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mem_vector_span_iff_eq_weighted_vsub mem_vectorSpan_iff_eq_weightedVSubₓ'. -/
 /-- A vector is in the `vector_span` of an indexed family if and only
 if it is a `weighted_vsub` with sum of weights 0. -/
 theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
@@ -1540,9 +1150,6 @@ theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
 
 variable {k}
 
-/- warning: eq_affine_combination_of_mem_affine_span -> eq_affineCombination_of_mem_affineSpan is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_affine_combination_of_mem_affine_span eq_affineCombination_of_mem_affineSpanₓ'. -/
 /-- A point in the `affine_span` of an indexed family is an
 `affine_combination` with sum of weights 1. See also
 `eq_affine_combination_of_mem_affine_span_of_fintype`. -/
@@ -1578,9 +1185,6 @@ theorem eq_affineCombination_of_mem_affineSpan {p1 : P} {p : ι → P}
     · rw [add_comm, ← Finset.weightedVSub_vadd_affineCombination, hw0s, hs', vsub_vadd]
 #align eq_affine_combination_of_mem_affine_span eq_affineCombination_of_mem_affineSpan
 
-/- warning: eq_affine_combination_of_mem_affine_span_of_fintype -> eq_affineCombination_of_mem_affineSpan_of_fintype is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_affine_combination_of_mem_affine_span_of_fintype eq_affineCombination_of_mem_affineSpan_of_fintypeₓ'. -/
 theorem eq_affineCombination_of_mem_affineSpan_of_fintype [Fintype ι] {p1 : P} {p : ι → P}
     (h : p1 ∈ affineSpan k (Set.range p)) :
     ∃ (w : ι → k)(hw : (∑ i, w i) = 1), p1 = Finset.univ.affineCombination k p w := by
@@ -1594,9 +1198,6 @@ theorem eq_affineCombination_of_mem_affineSpan_of_fintype [Fintype ι] {p1 : P} 
 
 variable (k V)
 
-/- warning: mem_affine_span_iff_eq_affine_combination -> mem_affineSpan_iff_eq_affineCombination is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mem_affine_span_iff_eq_affine_combination mem_affineSpan_iff_eq_affineCombinationₓ'. -/
 /-- A point is in the `affine_span` of an indexed family if and only
 if it is an `affine_combination` with sum of weights 1, provided the
 underlying ring is nontrivial. -/
@@ -1610,9 +1211,6 @@ theorem mem_affineSpan_iff_eq_affineCombination [Nontrivial k] {p1 : P} {p : ι 
     exact affineCombination_mem_affineSpan hw p
 #align mem_affine_span_iff_eq_affine_combination mem_affineSpan_iff_eq_affineCombination
 
-/- warning: mem_affine_span_iff_eq_weighted_vsub_of_point_vadd -> mem_affineSpan_iff_eq_weightedVSubOfPoint_vadd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mem_affine_span_iff_eq_weighted_vsub_of_point_vadd mem_affineSpan_iff_eq_weightedVSubOfPoint_vaddₓ'. -/
 /-- Given a family of points together with a chosen base point in that family, membership of the
 affine span of this family corresponds to an identity in terms of `weighted_vsub_of_point`, with
 weights that are not required to sum to 1. -/
@@ -1640,9 +1238,6 @@ theorem mem_affineSpan_iff_eq_weightedVSubOfPoint_vadd [Nontrivial k] (p : ι �
 
 variable {k V}
 
-/- warning: affine_span_eq_affine_span_line_map_units -> affineSpan_eq_affineSpan_lineMap_units is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_span_eq_affine_span_line_map_units affineSpan_eq_affineSpan_lineMap_unitsₓ'. -/
 /-- Given a set of points, together with a chosen base point in this set, if we affinely transport
 all other members of the set along the line joining them to this base point, the affine span is
 unchanged. -/
@@ -1672,12 +1267,6 @@ include V
 
 open Set Finset
 
-/- warning: centroid_mem_affine_span_of_cast_card_ne_zero -> centroid_mem_affineSpan_of_cast_card_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} {s : Finset.{u4} ι} (p : ι -> P), (Ne.{succ u1} k ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat k (HasLiftT.mk.{1, succ u1} Nat k (CoeTCₓ.coe.{1, succ u1} Nat k (Nat.castCoe.{u1} k (AddMonoidWithOne.toNatCast.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))) (Finset.card.{u4} ι s)) (OfNat.ofNat.{u1} k 0 (OfNat.mk.{u1} k 0 (Zero.zero.{u1} k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (DivisionRing.toRing.{u1} k _inst_1)))))))))) -> (Membership.Mem.{u3, u3} P (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.hasMem.{u3, u3} (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.setLike.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u3, succ u4} P ι p)))
-but is expected to have type
-  forall {k : Type.{u3}} {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : DivisionRing.{u3} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u3, u1} k V (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u4}} {s : Finset.{u4} ι} (p : ι -> P), (Ne.{succ u3} k (Nat.cast.{u3} k (Semiring.toNatCast.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))) (Finset.card.{u4} ι s)) (OfNat.ofNat.{u3} k 0 (Zero.toOfNat0.{u3} k (MonoidWithZero.toZero.{u3} k (Semiring.toMonoidWithZero.{u3} k (DivisionSemiring.toSemiring.{u3} k (DivisionRing.toDivisionSemiring.{u3} k _inst_1))))))) -> (Membership.mem.{u2, u2} P (AffineSubspace.{u3, u1, u2} k V P (DivisionRing.toRing.{u3} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.instMembership.{u2, u2} (AffineSubspace.{u3, u1, u2} k V P (DivisionRing.toRing.{u3} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.instSetLikeAffineSubspace.{u3, u1, u2} k V P (DivisionRing.toRing.{u3} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u3, u1, u2, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u3, u1, u2} k V P (DivisionRing.toRing.{u3} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u2, succ u4} P ι p)))
-Case conversion may be inaccurate. Consider using '#align centroid_mem_affine_span_of_cast_card_ne_zero centroid_mem_affineSpan_of_cast_card_ne_zeroₓ'. -/
 /-- The centroid lies in the affine span if the number of points,
 converted to `k`, is not zero. -/
 theorem centroid_mem_affineSpan_of_cast_card_ne_zero {s : Finset ι} (p : ι → P)
@@ -1687,12 +1276,6 @@ theorem centroid_mem_affineSpan_of_cast_card_ne_zero {s : Finset ι} (p : ι →
 
 variable (k)
 
-/- warning: centroid_mem_affine_span_of_card_ne_zero -> centroid_mem_affineSpan_of_card_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] {s : Finset.{u4} ι} (p : ι -> P), (Ne.{1} Nat (Finset.card.{u4} ι s) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Membership.Mem.{u3, u3} P (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.hasMem.{u3, u3} (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.setLike.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u3, succ u4} P ι p)))
-but is expected to have type
-  forall (k : Type.{u4}) {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : DivisionRing.{u4} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u4, u1} k V (DivisionSemiring.toSemiring.{u4} k (DivisionRing.toDivisionSemiring.{u4} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u3}} [_inst_5 : CharZero.{u4} k (AddGroupWithOne.toAddMonoidWithOne.{u4} k (Ring.toAddGroupWithOne.{u4} k (DivisionRing.toRing.{u4} k _inst_1)))] {s : Finset.{u3} ι} (p : ι -> P), (Ne.{1} Nat (Finset.card.{u3} ι s) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Membership.mem.{u2, u2} P (AffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.instMembership.{u2, u2} (AffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.instSetLikeAffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u4, u1, u2, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u2, succ u3} P ι p)))
-Case conversion may be inaccurate. Consider using '#align centroid_mem_affine_span_of_card_ne_zero centroid_mem_affineSpan_of_card_ne_zeroₓ'. -/
 /-- In the characteristic zero case, the centroid lies in the affine
 span if the number of points is not zero. -/
 theorem centroid_mem_affineSpan_of_card_ne_zero [CharZero k] {s : Finset ι} (p : ι → P)
@@ -1700,12 +1283,6 @@ theorem centroid_mem_affineSpan_of_card_ne_zero [CharZero k] {s : Finset ι} (p 
   affineCombination_mem_affineSpan (s.sum_centroidWeights_eq_one_of_card_ne_zero k h) p
 #align centroid_mem_affine_span_of_card_ne_zero centroid_mem_affineSpan_of_card_ne_zero
 
-/- warning: centroid_mem_affine_span_of_nonempty -> centroid_mem_affineSpan_of_nonempty is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] {s : Finset.{u4} ι} (p : ι -> P), (Finset.Nonempty.{u4} ι s) -> (Membership.Mem.{u3, u3} P (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.hasMem.{u3, u3} (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.setLike.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u3, succ u4} P ι p)))
-but is expected to have type
-  forall (k : Type.{u4}) {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : DivisionRing.{u4} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u4, u1} k V (DivisionSemiring.toSemiring.{u4} k (DivisionRing.toDivisionSemiring.{u4} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u3}} [_inst_5 : CharZero.{u4} k (AddGroupWithOne.toAddMonoidWithOne.{u4} k (Ring.toAddGroupWithOne.{u4} k (DivisionRing.toRing.{u4} k _inst_1)))] {s : Finset.{u3} ι} (p : ι -> P), (Finset.Nonempty.{u3} ι s) -> (Membership.mem.{u2, u2} P (AffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.instMembership.{u2, u2} (AffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.instSetLikeAffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u4, u1, u2, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u2, succ u3} P ι p)))
-Case conversion may be inaccurate. Consider using '#align centroid_mem_affine_span_of_nonempty centroid_mem_affineSpan_of_nonemptyₓ'. -/
 /-- In the characteristic zero case, the centroid lies in the affine
 span if the set is nonempty. -/
 theorem centroid_mem_affineSpan_of_nonempty [CharZero k] {s : Finset ι} (p : ι → P)
@@ -1713,12 +1290,6 @@ theorem centroid_mem_affineSpan_of_nonempty [CharZero k] {s : Finset ι} (p : ι
   affineCombination_mem_affineSpan (s.sum_centroidWeights_eq_one_of_nonempty k h) p
 #align centroid_mem_affine_span_of_nonempty centroid_mem_affineSpan_of_nonempty
 
-/- warning: centroid_mem_affine_span_of_card_eq_add_one -> centroid_mem_affineSpan_of_card_eq_add_one is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) {V : Type.{u2}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (DivisionRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}} [_inst_5 : CharZero.{u1} k (AddGroupWithOne.toAddMonoidWithOne.{u1} k (AddCommGroupWithOne.toAddGroupWithOne.{u1} k (Ring.toAddCommGroupWithOne.{u1} k (DivisionRing.toRing.{u1} k _inst_1))))] {s : Finset.{u4} ι} (p : ι -> P) {n : Nat}, (Eq.{1} Nat (Finset.card.{u4} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> (Membership.Mem.{u3, u3} P (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.hasMem.{u3, u3} (AffineSubspace.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.setLike.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u1, u2, u3, u4} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u1, u2, u3} k V P (DivisionRing.toRing.{u1} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u3, succ u4} P ι p)))
-but is expected to have type
-  forall (k : Type.{u4}) {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : DivisionRing.{u4} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u4, u1} k V (DivisionSemiring.toSemiring.{u4} k (DivisionRing.toDivisionSemiring.{u4} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {ι : Type.{u3}} [_inst_5 : CharZero.{u4} k (AddGroupWithOne.toAddMonoidWithOne.{u4} k (Ring.toAddGroupWithOne.{u4} k (DivisionRing.toRing.{u4} k _inst_1)))] {s : Finset.{u3} ι} (p : ι -> P) {n : Nat}, (Eq.{1} Nat (Finset.card.{u3} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> (Membership.mem.{u2, u2} P (AffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4) (SetLike.instMembership.{u2, u2} (AffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4) P (AffineSubspace.instSetLikeAffineSubspace.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4)) (Finset.centroid.{u4, u1, u2, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 ι s p) (affineSpan.{u4, u1, u2} k V P (DivisionRing.toRing.{u4} k _inst_1) _inst_2 _inst_3 _inst_4 (Set.range.{u2, succ u3} P ι p)))
-Case conversion may be inaccurate. Consider using '#align centroid_mem_affine_span_of_card_eq_add_one centroid_mem_affineSpan_of_card_eq_add_oneₓ'. -/
 /-- In the characteristic zero case, the centroid lies in the affine
 span if the number of points is `n + 1`. -/
 theorem centroid_mem_affineSpan_of_card_eq_add_one [CharZero k] {s : Finset ι} (p : ι → P) {n : ℕ}
@@ -1736,12 +1307,6 @@ variable [affine_space V P] {ι : Type _} (s : Finset ι)
 
 include V
 
-/- warning: affine_map.weighted_vsub_of_point -> AffineMap.weightedVSubOfPoint is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {V : Type.{u2}} (P : Type.{u3}) [_inst_1 : CommRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (Ring.toSemiring.{u1} k (CommRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}}, (Finset.{u4} ι) -> (ι -> k) -> (AffineMap.{u1, max u4 u2, max u4 u3, u2, u2} k (Prod.{max u4 u2, u2} (ι -> V) V) (Prod.{max u4 u3, u3} (ι -> P) P) V V (CommRing.toRing.{u1} k _inst_1) (Prod.addCommGroup.{max u4 u2, u2} (ι -> V) V (Pi.addCommGroup.{u4, u2} ι (fun (i : ι) => V) (fun (i : ι) => _inst_2)) _inst_2) (Prod.module.{u1, max u4 u2, u2} k (ι -> V) V (Ring.toSemiring.{u1} k (CommRing.toRing.{u1} k _inst_1)) (Pi.addCommMonoid.{u4, u2} ι (fun (i : ι) => V) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u2} V _inst_2)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.Function.module.{u4, u1, u2} ι k V (Ring.toSemiring.{u1} k (CommRing.toRing.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) _inst_3) (Prod.addTorsor.{max u4 u2, max u4 u3, u2, u3} (ι -> V) (ι -> P) V P (Pi.addGroup.{u4, u2} ι (fun (i : ι) => V) (fun (i : ι) => AddCommGroup.toAddGroup.{u2} V _inst_2)) (AddCommGroup.toAddGroup.{u2} V _inst_2) (Pi.addTorsor.{u4, u2, u3} ι (fun (i : ι) => V) (fun (i : ι) => AddCommGroup.toAddGroup.{u2} V _inst_2) (fun (ᾰ : ι) => P) (fun (i : ι) => _inst_4)) _inst_4) _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2)))
-but is expected to have type
-  forall {k : Type.{u1}} {V : Type.{u2}} (P : Type.{u3}) [_inst_1 : CommRing.{u1} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} k V (CommSemiring.toSemiring.{u1} k (CommRing.toCommSemiring.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u3} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] {ι : Type.{u4}}, (Finset.{u4} ι) -> (ι -> k) -> (AffineMap.{u1, max u2 u4, max u3 u4, u2, u2} k (Prod.{max u2 u4, u2} (ι -> V) V) (Prod.{max u3 u4, u3} (ι -> P) P) V V (CommRing.toRing.{u1} k _inst_1) (Prod.instAddCommGroupSum.{max u2 u4, u2} (ι -> V) V (Pi.addCommGroup.{u4, u2} ι (fun (i : ι) => V) (fun (i : ι) => _inst_2)) _inst_2) (Prod.module.{u1, max u2 u4, u2} k (ι -> V) V (Ring.toSemiring.{u1} k (CommRing.toRing.{u1} k _inst_1)) (Pi.addCommMonoid.{u4, u2} ι (fun (i : ι) => V) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u2} V _inst_2)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (Pi.module.{u4, u2, u1} ι (fun (i : ι) => V) k (Ring.toSemiring.{u1} k (CommRing.toRing.{u1} k _inst_1)) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u2} V _inst_2) (fun (i : ι) => _inst_3)) _inst_3) (Prod.instAddTorsorProdProdInstAddGroupSum.{u2, max u3 u4, u3, max u2 u4} V (ι -> P) P (ι -> V) (Pi.addGroup.{u4, u2} ι (fun (i : ι) => V) (fun (i : ι) => AddCommGroup.toAddGroup.{u2} V _inst_2)) (AddCommGroup.toAddGroup.{u2} V _inst_2) (Pi.instAddTorsorForAllForAllAddGroup.{u4, u2, u3} ι (fun (i : ι) => V) (fun (i : ι) => AddCommGroup.toAddGroup.{u2} V _inst_2) (fun (ᾰ : ι) => P) (fun (i : ι) => _inst_4)) _inst_4) _inst_2 _inst_3 (addGroupIsAddTorsor.{u2} V (AddCommGroup.toAddGroup.{u2} V _inst_2)))
-Case conversion may be inaccurate. Consider using '#align affine_map.weighted_vsub_of_point AffineMap.weightedVSubOfPointₓ'. -/
 -- TODO: define `affine_map.proj`, `affine_map.fst`, `affine_map.snd`
 /-- A weighted sum, as an affine map on the points involved. -/
 def weightedVSubOfPoint (w : ι → k) : (ι → P) × P →ᵃ[k] V

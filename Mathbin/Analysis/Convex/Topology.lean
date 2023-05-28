@@ -37,22 +37,10 @@ open Pointwise Convex
 
 variable {ι 𝕜 E : Type _}
 
-/- warning: real.convex_iff_is_preconnected -> Real.convex_iff_isPreconnected is a dubious translation:
-lean 3 declaration is
-  forall {s : Set.{0} Real}, Iff (Convex.{0, 0} Real Real Real.orderedSemiring Real.addCommMonoid (Mul.toSMul.{0} Real Real.hasMul) s) (IsPreconnected.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) s)
-but is expected to have type
-  forall {s : Set.{0} Real}, Iff (Convex.{0, 0} Real Real Real.orderedSemiring Real.instAddCommMonoidReal (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (Algebra.id.{0} Real Real.instCommSemiringReal)) s) (IsPreconnected.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) s)
-Case conversion may be inaccurate. Consider using '#align real.convex_iff_is_preconnected Real.convex_iff_isPreconnectedₓ'. -/
 theorem Real.convex_iff_isPreconnected {s : Set ℝ} : Convex ℝ s ↔ IsPreconnected s :=
   convex_iff_ordConnected.trans isPreconnected_iff_ordConnected.symm
 #align real.convex_iff_is_preconnected Real.convex_iff_isPreconnected
 
-/- warning: is_preconnected.convex -> IsPreconnected.convex is a dubious translation:
-lean 3 declaration is
-  forall {s : Set.{0} Real}, (IsPreconnected.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) s) -> (Convex.{0, 0} Real Real Real.orderedSemiring Real.addCommMonoid (Mul.toSMul.{0} Real Real.hasMul) s)
-but is expected to have type
-  forall {s : Set.{0} Real}, (IsPreconnected.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) s) -> (Convex.{0, 0} Real Real Real.orderedSemiring Real.instAddCommMonoidReal (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (Algebra.id.{0} Real Real.instCommSemiringReal)) s)
-Case conversion may be inaccurate. Consider using '#align is_preconnected.convex IsPreconnected.convexₓ'. -/
 alias Real.convex_iff_isPreconnected ↔ _ IsPreconnected.convex
 #align is_preconnected.convex IsPreconnected.convex
 
@@ -63,12 +51,6 @@ section stdSimplex
 
 variable [Fintype ι]
 
-/- warning: std_simplex_subset_closed_ball -> stdSimplex_subset_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι], HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (stdSimplex.{0, u1} Real ι Real.orderedSemiring _inst_1) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (b : ι) => Real.pseudoMetricSpace)) (OfNat.ofNat.{u1} (ι -> Real) 0 (OfNat.mk.{u1} (ι -> Real) 0 (Zero.zero.{u1} (ι -> Real) (Pi.instZero.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasZero))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι], HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (stdSimplex.{0, u1} Real ι Real.orderedSemiring _inst_1) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (b : ι) => Real.pseudoMetricSpace)) (OfNat.ofNat.{u1} (ι -> Real) 0 (Zero.toOfNat0.{u1} (ι -> Real) (Pi.instZero.{u1, 0} ι (fun (a._@.Mathlib.Analysis.Convex.Basic._hyg.7298 : ι) => Real) (fun (i : ι) => Real.instZeroReal)))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align std_simplex_subset_closed_ball stdSimplex_subset_closedBallₓ'. -/
 /-- Every vector in `std_simplex 𝕜 ι` has `max`-norm at most `1`. -/
 theorem stdSimplex_subset_closedBall : stdSimplex ℝ ι ⊆ Metric.closedBall 0 1 :=
   by
@@ -115,9 +97,6 @@ variable [LinearOrderedRing 𝕜] [DenselyOrdered 𝕜] [TopologicalSpace 𝕜] 
   [AddCommGroup E] [TopologicalSpace E] [ContinuousAdd E] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
   {x y : E}
 
-/- warning: segment_subset_closure_open_segment -> segment_subset_closure_openSegment is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align segment_subset_closure_open_segment segment_subset_closure_openSegmentₓ'. -/
 theorem segment_subset_closure_openSegment : [x -[𝕜] y] ⊆ closure (openSegment 𝕜 x y) :=
   by
   rw [segment_eq_image, openSegment_eq_image, ← closure_Ioo (zero_ne_one' 𝕜)]
@@ -132,9 +111,6 @@ variable [LinearOrderedRing 𝕜] [DenselyOrdered 𝕜] [PseudoMetricSpace 𝕜]
   [ProperSpace 𝕜] [CompactIccSpace 𝕜] [AddCommGroup E] [TopologicalSpace E] [T2Space E]
   [ContinuousAdd E] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
 
-/- warning: closure_open_segment -> closure_openSegment is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align closure_open_segment closure_openSegmentₓ'. -/
 @[simp]
 theorem closure_openSegment (x y : E) : closure (openSegment 𝕜 x y) = [x -[𝕜] y] :=
   by
@@ -151,9 +127,6 @@ section ContinuousConstSMul
 variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
   [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
-/- warning: convex.combo_interior_closure_subset_interior -> Convex.combo_interior_closure_subset_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_interior_closure_subset_interior Convex.combo_interior_closure_subset_interiorₓ'. -/
 /-- If `s` is a convex set, then `a • interior s + b • closure s ⊆ interior s` for all `0 < a`,
 `0 ≤ b`, `a + b = 1`. See also `convex.combo_interior_self_subset_interior` for a weaker version. -/
 theorem Convex.combo_interior_closure_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
@@ -168,9 +141,6 @@ theorem Convex.combo_interior_closure_subset_interior {s : Set E} (hs : Convex �
       
 #align convex.combo_interior_closure_subset_interior Convex.combo_interior_closure_subset_interior
 
-/- warning: convex.combo_interior_self_subset_interior -> Convex.combo_interior_self_subset_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_interior_self_subset_interior Convex.combo_interior_self_subset_interiorₓ'. -/
 /-- If `s` is a convex set, then `a • interior s + b • s ⊆ interior s` for all `0 < a`, `0 ≤ b`,
 `a + b = 1`. See also `convex.combo_interior_closure_subset_interior` for a stronger version. -/
 theorem Convex.combo_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
@@ -182,9 +152,6 @@ theorem Convex.combo_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜
     
 #align convex.combo_interior_self_subset_interior Convex.combo_interior_self_subset_interior
 
-/- warning: convex.combo_closure_interior_subset_interior -> Convex.combo_closure_interior_subset_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_closure_interior_subset_interior Convex.combo_closure_interior_subset_interiorₓ'. -/
 /-- If `s` is a convex set, then `a • closure s + b • interior s ⊆ interior s` for all `0 ≤ a`,
 `0 < b`, `a + b = 1`. See also `convex.combo_self_interior_subset_interior` for a weaker version. -/
 theorem Convex.combo_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
@@ -192,9 +159,6 @@ theorem Convex.combo_closure_interior_subset_interior {s : Set E} (hs : Convex �
   rw [add_comm]; exact hs.combo_interior_closure_subset_interior hb ha (add_comm a b ▸ hab)
 #align convex.combo_closure_interior_subset_interior Convex.combo_closure_interior_subset_interior
 
-/- warning: convex.combo_self_interior_subset_interior -> Convex.combo_self_interior_subset_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_self_interior_subset_interior Convex.combo_self_interior_subset_interiorₓ'. -/
 /-- If `s` is a convex set, then `a • s + b • interior s ⊆ interior s` for all `0 ≤ a`, `0 < b`,
 `a + b = 1`. See also `convex.combo_closure_interior_subset_interior` for a stronger version. -/
 theorem Convex.combo_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
@@ -202,9 +166,6 @@ theorem Convex.combo_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜
   rw [add_comm]; exact hs.combo_interior_self_subset_interior hb ha (add_comm a b ▸ hab)
 #align convex.combo_self_interior_subset_interior Convex.combo_self_interior_subset_interior
 
-/- warning: convex.combo_interior_closure_mem_interior -> Convex.combo_interior_closure_mem_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_interior_closure_mem_interior Convex.combo_interior_closure_mem_interiorₓ'. -/
 theorem Convex.combo_interior_closure_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ interior s) (hy : y ∈ closure s) {a b : 𝕜} (ha : 0 < a) (hb : 0 ≤ b)
     (hab : a + b = 1) : a • x + b • y ∈ interior s :=
@@ -212,18 +173,12 @@ theorem Convex.combo_interior_closure_mem_interior {s : Set E} (hs : Convex 𝕜
     add_mem_add (smul_mem_smul_set hx) (smul_mem_smul_set hy)
 #align convex.combo_interior_closure_mem_interior Convex.combo_interior_closure_mem_interior
 
-/- warning: convex.combo_interior_self_mem_interior -> Convex.combo_interior_self_mem_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_interior_self_mem_interior Convex.combo_interior_self_mem_interiorₓ'. -/
 theorem Convex.combo_interior_self_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ interior s) (hy : y ∈ s) {a b : 𝕜} (ha : 0 < a) (hb : 0 ≤ b) (hab : a + b = 1) :
     a • x + b • y ∈ interior s :=
   hs.combo_interior_closure_mem_interior hx (subset_closure hy) ha hb hab
 #align convex.combo_interior_self_mem_interior Convex.combo_interior_self_mem_interior
 
-/- warning: convex.combo_closure_interior_mem_interior -> Convex.combo_closure_interior_mem_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_closure_interior_mem_interior Convex.combo_closure_interior_mem_interiorₓ'. -/
 theorem Convex.combo_closure_interior_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ closure s) (hy : y ∈ interior s) {a b : 𝕜} (ha : 0 ≤ a) (hb : 0 < b)
     (hab : a + b = 1) : a • x + b • y ∈ interior s :=
@@ -231,9 +186,6 @@ theorem Convex.combo_closure_interior_mem_interior {s : Set E} (hs : Convex 𝕜
     add_mem_add (smul_mem_smul_set hx) (smul_mem_smul_set hy)
 #align convex.combo_closure_interior_mem_interior Convex.combo_closure_interior_mem_interior
 
-/- warning: convex.combo_self_interior_mem_interior -> Convex.combo_self_interior_mem_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.combo_self_interior_mem_interior Convex.combo_self_interior_mem_interiorₓ'. -/
 theorem Convex.combo_self_interior_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s)
     (hy : y ∈ interior s) {a b : 𝕜} (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) :
     a • x + b • y ∈ interior s :=
@@ -272,9 +224,6 @@ theorem Convex.openSegment_self_interior_subset_interior {s : Set E} (hs : Conve
 #align convex.open_segment_self_interior_subset_interior Convex.openSegment_self_interior_subset_interior
 -/
 
-/- warning: convex.add_smul_sub_mem_interior' -> Convex.add_smul_sub_mem_interior' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.add_smul_sub_mem_interior' Convex.add_smul_sub_mem_interior'ₓ'. -/
 /-- If `x ∈ closure s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`.
 -/
 theorem Convex.add_smul_sub_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E}
@@ -285,27 +234,18 @@ theorem Convex.add_smul_sub_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y 
       (add_sub_cancel'_right _ _)
 #align convex.add_smul_sub_mem_interior' Convex.add_smul_sub_mem_interior'
 
-/- warning: convex.add_smul_sub_mem_interior -> Convex.add_smul_sub_mem_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.add_smul_sub_mem_interior Convex.add_smul_sub_mem_interiorₓ'. -/
 /-- If `x ∈ s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`. -/
 theorem Convex.add_smul_sub_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s)
     (hy : y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • (y - x) ∈ interior s :=
   hs.add_smul_sub_mem_interior' (subset_closure hx) hy ht
 #align convex.add_smul_sub_mem_interior Convex.add_smul_sub_mem_interior
 
-/- warning: convex.add_smul_mem_interior' -> Convex.add_smul_mem_interior' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.add_smul_mem_interior' Convex.add_smul_mem_interior'ₓ'. -/
 /-- If `x ∈ closure s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ closure s)
     (hy : x + y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ interior s := by
   simpa only [add_sub_cancel'] using hs.add_smul_sub_mem_interior' hx hy ht
 #align convex.add_smul_mem_interior' Convex.add_smul_mem_interior'
 
-/- warning: convex.add_smul_mem_interior -> Convex.add_smul_mem_interior is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.add_smul_mem_interior Convex.add_smul_mem_interiorₓ'. -/
 /-- If `x ∈ s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s)
     (hy : x + y ∈ interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ interior s :=
@@ -333,9 +273,6 @@ protected theorem Convex.closure {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 
 
 open AffineMap
 
-/- warning: convex.strict_convex' -> Convex.strictConvex' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.strict_convex' Convex.strictConvex'ₓ'. -/
 /-- A convex set `s` is strictly convex provided that for any two distinct points of
 `s \ interior s`, the line passing through these points has nonempty intersection with
 `interior s`. -/
@@ -352,9 +289,6 @@ protected theorem Convex.strictConvex' {s : Set E} (hs : Convex 𝕜 s)
     hs.open_segment_interior_self_subset_interior hc hy]
 #align convex.strict_convex' Convex.strictConvex'
 
-/- warning: convex.strict_convex -> Convex.strictConvex is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.strict_convex Convex.strictConvexₓ'. -/
 /-- A convex set `s` is strictly convex provided that for any two distinct points `x`, `y` of
 `s \ interior s`, the segment with endpoints `x`, `y` has nonempty intersection with
 `interior s`. -/
@@ -397,9 +331,6 @@ theorem Set.Finite.isClosed_convexHull [T2Space E] {s : Set E} (hs : s.Finite) :
 
 open AffineMap
 
-/- warning: convex.closure_subset_image_homothety_interior_of_one_lt -> Convex.closure_subset_image_homothety_interior_of_one_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.closure_subset_image_homothety_interior_of_one_lt Convex.closure_subset_image_homothety_interior_of_one_ltₓ'. -/
 /-- If we dilate the interior of a convex set about a point in its interior by a scale `t > 1`,
 the result includes the closure of the original set.
 
@@ -417,9 +348,6 @@ theorem Convex.closure_subset_image_homothety_interior_of_one_lt {s : Set E} (hs
   exact mem_image_of_mem _ ht
 #align convex.closure_subset_image_homothety_interior_of_one_lt Convex.closure_subset_image_homothety_interior_of_one_lt
 
-/- warning: convex.closure_subset_interior_image_homothety_of_one_lt -> Convex.closure_subset_interior_image_homothety_of_one_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.closure_subset_interior_image_homothety_of_one_lt Convex.closure_subset_interior_image_homothety_of_one_ltₓ'. -/
 /-- If we dilate a convex set about a point in its interior by a scale `t > 1`, the interior of
 the result includes the closure of the original set.
 
@@ -431,9 +359,6 @@ theorem Convex.closure_subset_interior_image_homothety_of_one_lt {s : Set E} (hs
     (homothety_isOpenMap x t (one_pos.trans ht).ne').image_interior_subset _
 #align convex.closure_subset_interior_image_homothety_of_one_lt Convex.closure_subset_interior_image_homothety_of_one_lt
 
-/- warning: convex.subset_interior_image_homothety_of_one_lt -> Convex.subset_interior_image_homothety_of_one_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex.subset_interior_image_homothety_of_one_lt Convex.subset_interior_image_homothety_of_one_ltₓ'. -/
 /-- If we dilate a convex set about a point in its interior by a scale `t > 1`, the interior of
 the result includes the closure of the original set.
 

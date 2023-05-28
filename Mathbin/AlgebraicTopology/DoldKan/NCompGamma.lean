@@ -41,9 +41,6 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C]
 
-/- warning: algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero -> AlgebraicTopology.DoldKan.PInfty_comp_map_mono_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero AlgebraicTopology.DoldKan.PInfty_comp_map_mono_eq_zeroₓ'. -/
 theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : SimplexCategory}
     (i : Δ' ⟶ [n]) [hi : Mono i] (h₁ : Δ'.len ≠ n) (h₂ : ¬Isδ₀ i) : PInfty.f n ≫ X.map i.op = 0 :=
   by
@@ -87,9 +84,6 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
       exact hj₁ (by simp only [Fin.ext_iff, Fin.val_zero]; linarith)
 #align algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero AlgebraicTopology.DoldKan.PInfty_comp_map_mono_eq_zero
 
-/- warning: algebraic_topology.dold_kan.Γ₀_obj_termwise_map_mono_comp_P_infty -> AlgebraicTopology.DoldKan.Γ₀_obj_termwise_mapMono_comp_PInfty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₀_obj_termwise_map_mono_comp_P_infty AlgebraicTopology.DoldKan.Γ₀_obj_termwise_mapMono_comp_PInftyₓ'. -/
 @[reassoc]
 theorem Γ₀_obj_termwise_mapMono_comp_PInfty (X : SimplicialObject C) {Δ Δ' : SimplexCategory}
     (i : Δ ⟶ Δ') [Mono i] :
@@ -134,9 +128,6 @@ variable [HasFiniteCoproducts C]
 
 namespace Γ₂N₁
 
-/- warning: algebraic_topology.dold_kan.Γ₂N₁.nat_trans -> AlgebraicTopology.DoldKan.Γ₂N₁.natTrans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₂N₁.nat_trans AlgebraicTopology.DoldKan.Γ₂N₁.natTransₓ'. -/
 /-- The natural transformation `N₁ ⋙ Γ₂ ⟶ to_karoubi (simplicial_object C)`. -/
 @[simps]
 def natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶ toKaroubi _
@@ -176,9 +167,6 @@ def natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶ toKaroubi _
 
 end Γ₂N₁
 
-/- warning: algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂ -> AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂ AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂ₓ'. -/
 /-- The compatibility isomorphism relating `N₂ ⋙ Γ₂` and `N₁ ⋙ Γ₂`. -/
 @[simps]
 def compatibility_Γ₂N₁_Γ₂N₂ : toKaroubi (SimplicialObject C) ⋙ N₂ ⋙ Γ₂ ≅ N₁ ⋙ Γ₂ :=
@@ -187,17 +175,11 @@ def compatibility_Γ₂N₁_Γ₂N₂ : toKaroubi (SimplicialObject C) ⋙ N₂ 
 
 namespace Γ₂N₂
 
-/- warning: algebraic_topology.dold_kan.Γ₂N₂.nat_trans -> AlgebraicTopology.DoldKan.Γ₂N₂.natTrans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₂N₂.nat_trans AlgebraicTopology.DoldKan.Γ₂N₂.natTransₓ'. -/
 /-- The natural transformation `N₂ ⋙ Γ₂ ⟶ 𝟭 (simplicial_object C)`. -/
 def natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ ⟶ 𝟭 _ :=
   ((whiskeringLeft _ _ _).obj _).Preimage (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans)
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans AlgebraicTopology.DoldKan.Γ₂N₂.natTrans
 
-/- warning: algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app -> AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_appₓ'. -/
 theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
     Γ₂N₂.natTrans.app P =
       (N₂ ⋙ Γ₂).map P.decompId_i ≫
@@ -207,9 +189,6 @@ theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
 
 end Γ₂N₂
 
-/- warning: algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans -> AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTrans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTransₓ'. -/
 theorem compatibility_Γ₂N₁_Γ₂N₂_natTrans (X : SimplicialObject C) :
     Γ₂N₁.natTrans.app X =
       (compatibility_Γ₂N₁_Γ₂N₂.app X).inv ≫ Γ₂N₂.natTrans.app ((toKaroubi _).obj X) :=
@@ -222,9 +201,6 @@ theorem compatibility_Γ₂N₁_Γ₂N₂_natTrans (X : SimplicialObject C) :
       X
 #align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTrans
 
-/- warning: algebraic_topology.dold_kan.identity_N₂_objectwise -> AlgebraicTopology.DoldKan.identity_N₂_objectwise is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.identity_N₂_objectwise AlgebraicTopology.DoldKan.identity_N₂_objectwiseₓ'. -/
 theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
     N₂Γ₂.inv.app (N₂.obj P) ≫ N₂.map (Γ₂N₂.natTrans.app P) = 𝟙 (N₂.obj P) :=
   by
@@ -255,9 +231,6 @@ theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
     P_infty_f_naturality_assoc, app_idem, P_infty_f_idem_assoc]
 #align algebraic_topology.dold_kan.identity_N₂_objectwise AlgebraicTopology.DoldKan.identity_N₂_objectwise
 
-/- warning: algebraic_topology.dold_kan.identity_N₂ -> AlgebraicTopology.DoldKan.identity_N₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.identity_N₂ AlgebraicTopology.DoldKan.identity_N₂ₓ'. -/
 theorem identity_N₂ :
     ((𝟙 (N₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ N₂Γ₂.inv) ≫ Γ₂N₂.natTrans ◫ 𝟙 N₂ : N₂ ⟶ N₂) =
       𝟙 N₂ :=
@@ -287,21 +260,12 @@ instance : IsIso (Γ₂N₁.natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ _ �
     infer_instance
   apply nat_iso.is_iso_of_is_iso_app
 
-/- warning: algebraic_topology.dold_kan.Γ₂N₂ -> AlgebraicTopology.DoldKan.Γ₂N₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₂N₂ AlgebraicTopology.DoldKan.Γ₂N₂ₓ'. -/
 /-- The unit isomorphism of the Dold-Kan equivalence. -/
 @[simp]
 def Γ₂N₂ : 𝟭 _ ≅ (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ :=
   (asIso Γ₂N₂.natTrans).symm
 #align algebraic_topology.dold_kan.Γ₂N₂ AlgebraicTopology.DoldKan.Γ₂N₂
 
-/- warning: algebraic_topology.dold_kan.Γ₂N₁ -> AlgebraicTopology.DoldKan.Γ₂N₁ is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1], CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Functor.{u2, u2, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.CategoryTheory.category.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1))) (CategoryTheory.Functor.category.{u2, u2, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.CategoryTheory.category.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1))) (CategoryTheory.Idempotents.toKaroubi.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1)) (CategoryTheory.Functor.comp.{u2, u2, u2, max u2 u1, max u1 u2, max u2 u1} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u1 u2, u2} (ChainComplex.{u2, u1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u2, u1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne))) (CategoryTheory.Idempotents.Karoubi.CategoryTheory.category.{max u1 u2, u2} (ChainComplex.{u2, u1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u2, u1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne))) (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.CategoryTheory.category.{max u2 u1, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.SimplicialObject.category.{u2, u1} C _inst_1)) (AlgebraicTopology.DoldKan.N₁.{u1, u2} C _inst_1 _inst_2) (AlgebraicTopology.DoldKan.Γ₂.{u1, u2} C _inst_1 _inst_2 _inst_3))
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1], CategoryTheory.Iso.{max u1 u2, max u1 u2} (CategoryTheory.Functor.{u2, u2, max u1 u2, max u1 u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1))) (CategoryTheory.Functor.category.{u2, u2, max u1 u2, max u1 u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1))) (CategoryTheory.Idempotents.toKaroubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1)) (CategoryTheory.Functor.comp.{u2, u2, u2, max u1 u2, max u1 u2, max u1 u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u1 u2, u2} (ChainComplex.{u2, u1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u2, u1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)))) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (ChainComplex.{u2, u1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u2, u1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)))) (CategoryTheory.Idempotents.Karoubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (CategoryTheory.instCategorySimplicialObject.{u2, u1} C _inst_1)) (AlgebraicTopology.DoldKan.N₁.{u1, u2} C _inst_1 _inst_2) (AlgebraicTopology.DoldKan.Γ₂.{u1, u2} C _inst_1 _inst_2 _inst_3))
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₂N₁ AlgebraicTopology.DoldKan.Γ₂N₁ₓ'. -/
 /-- The natural isomorphism `to_karoubi (simplicial_object C) ≅ N₁ ⋙ Γ₂`. -/
 @[simps]
 def Γ₂N₁ : toKaroubi _ ≅ (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ :=

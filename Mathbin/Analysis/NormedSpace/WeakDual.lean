@@ -126,25 +126,16 @@ def toWeakDual : Dual 𝕜 E ≃ₗ[𝕜] WeakDual 𝕜 E :=
 #align normed_space.dual.to_weak_dual NormedSpace.Dual.toWeakDual
 -/
 
-/- warning: normed_space.dual.coe_to_weak_dual -> NormedSpace.Dual.coe_toWeakDual is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align normed_space.dual.coe_to_weak_dual NormedSpace.Dual.coe_toWeakDualₓ'. -/
 @[simp]
 theorem coe_toWeakDual (x' : Dual 𝕜 E) : ⇑x'.toWeakDual = x' :=
   rfl
 #align normed_space.dual.coe_to_weak_dual NormedSpace.Dual.coe_toWeakDual
 
-/- warning: normed_space.dual.to_weak_dual_eq_iff -> NormedSpace.Dual.toWeakDual_eq_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align normed_space.dual.to_weak_dual_eq_iff NormedSpace.Dual.toWeakDual_eq_iffₓ'. -/
 @[simp]
 theorem toWeakDual_eq_iff (x' y' : Dual 𝕜 E) : x'.toWeakDual = y'.toWeakDual ↔ x' = y' :=
   toWeakDual.Injective.eq_iff
 #align normed_space.dual.to_weak_dual_eq_iff NormedSpace.Dual.toWeakDual_eq_iff
 
-/- warning: normed_space.dual.to_weak_dual_continuous -> NormedSpace.Dual.toWeakDual_continuous is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align normed_space.dual.to_weak_dual_continuous NormedSpace.Dual.toWeakDual_continuousₓ'. -/
 theorem toWeakDual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDual :=
   WeakBilin.continuous_of_continuous_eval _ fun z => (inclusionInDoubleDual 𝕜 E z).Continuous
 #align normed_space.dual.to_weak_dual_continuous NormedSpace.Dual.toWeakDual_continuous
@@ -158,9 +149,6 @@ def continuousLinearMapToWeakDual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
 #align normed_space.dual.continuous_linear_map_to_weak_dual NormedSpace.Dual.continuousLinearMapToWeakDual
 -/
 
-/- warning: normed_space.dual.dual_norm_topology_le_weak_dual_topology -> NormedSpace.Dual.dual_norm_topology_le_weak_dual_topology is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align normed_space.dual.dual_norm_topology_le_weak_dual_topology NormedSpace.Dual.dual_norm_topology_le_weak_dual_topologyₓ'. -/
 /-- The weak-star topology is coarser than the dual-norm topology. -/
 theorem dual_norm_topology_le_weak_dual_topology :
     (by infer_instance : TopologicalSpace (Dual 𝕜 E)) ≤
@@ -185,32 +173,20 @@ def toNormedDual : WeakDual 𝕜 E ≃ₗ[𝕜] Dual 𝕜 E :=
 #align weak_dual.to_normed_dual WeakDual.toNormedDual
 -/
 
-/- warning: weak_dual.to_normed_dual_apply -> WeakDual.toNormedDual_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.to_normed_dual_apply WeakDual.toNormedDual_applyₓ'. -/
 theorem toNormedDual_apply (x : WeakDual 𝕜 E) (y : E) : (toNormedDual x) y = x y :=
   rfl
 #align weak_dual.to_normed_dual_apply WeakDual.toNormedDual_apply
 
-/- warning: weak_dual.coe_to_normed_dual -> WeakDual.coe_toNormedDual is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.coe_to_normed_dual WeakDual.coe_toNormedDualₓ'. -/
 @[simp]
 theorem coe_toNormedDual (x' : WeakDual 𝕜 E) : ⇑x'.toNormedDual = x' :=
   rfl
 #align weak_dual.coe_to_normed_dual WeakDual.coe_toNormedDual
 
-/- warning: weak_dual.to_normed_dual_eq_iff -> WeakDual.toNormedDual_eq_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.to_normed_dual_eq_iff WeakDual.toNormedDual_eq_iffₓ'. -/
 @[simp]
 theorem toNormedDual_eq_iff (x' y' : WeakDual 𝕜 E) : x'.toNormedDual = y'.toNormedDual ↔ x' = y' :=
   WeakDual.toNormedDual.Injective.eq_iff
 #align weak_dual.to_normed_dual_eq_iff WeakDual.toNormedDual_eq_iff
 
-/- warning: weak_dual.is_closed_closed_ball -> WeakDual.isClosed_closedBall is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.is_closed_closed_ball WeakDual.isClosed_closedBallₓ'. -/
 theorem isClosed_closedBall (x' : Dual 𝕜 E) (r : ℝ) : IsClosed (toNormedDual ⁻¹' closedBall x' r) :=
   isClosed_induced_iff'.2 (ContinuousLinearMap.is_weak_closed_closedBall x' r)
 #align weak_dual.is_closed_closed_ball WeakDual.isClosed_closedBall
@@ -230,9 +206,6 @@ def polar (s : Set E) : Set (WeakDual 𝕜 E) :=
 #align weak_dual.polar WeakDual.polar
 -/
 
-/- warning: weak_dual.polar_def -> WeakDual.polar_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.polar_def WeakDual.polar_defₓ'. -/
 theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈ s, ‖f x‖ ≤ 1 } :=
   rfl
 #align weak_dual.polar_def WeakDual.polar_def
@@ -249,9 +222,6 @@ theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
 
 variable {𝕜}
 
-/- warning: weak_dual.is_closed_image_coe_of_bounded_of_closed -> WeakDual.isClosed_image_coe_of_bounded_of_closed is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.isClosed_image_coe_of_bounded_of_closedₓ'. -/
 /-- While the coercion `coe_fn : weak_dual 𝕜 E → (E → 𝕜)` is not a closed map, it sends *bounded*
 closed sets to closed sets. -/
 theorem isClosed_image_coe_of_bounded_of_closed {s : Set (WeakDual 𝕜 E)}
@@ -260,9 +230,6 @@ theorem isClosed_image_coe_of_bounded_of_closed {s : Set (WeakDual 𝕜 E)}
   ContinuousLinearMap.isClosed_image_coe_of_bounded_of_weak_closed hb (isClosed_induced_iff'.1 hc)
 #align weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.isClosed_image_coe_of_bounded_of_closed
 
-/- warning: weak_dual.is_compact_of_bounded_of_closed -> WeakDual.isCompact_of_bounded_of_closed is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.is_compact_of_bounded_of_closed WeakDual.isCompact_of_bounded_of_closedₓ'. -/
 theorem isCompact_of_bounded_of_closed [ProperSpace 𝕜] {s : Set (WeakDual 𝕜 E)}
     (hb : Bounded (Dual.toWeakDual ⁻¹' s)) (hc : IsClosed s) : IsCompact s :=
   (Embedding.isCompact_iff_isCompact_image FunLike.coe_injective.embedding_induced).mpr <|
@@ -272,9 +239,6 @@ theorem isCompact_of_bounded_of_closed [ProperSpace 𝕜] {s : Set (WeakDual �
 
 variable (𝕜)
 
-/- warning: weak_dual.is_closed_image_polar_of_mem_nhds -> WeakDual.isClosed_image_polar_of_mem_nhds is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.is_closed_image_polar_of_mem_nhds WeakDual.isClosed_image_polar_of_mem_nhdsₓ'. -/
 /-- The image under `coe_fn : weak_dual 𝕜 E → (E → 𝕜)` of a polar `weak_dual.polar 𝕜 s` of a
 neighborhood `s` of the origin is a closed set. -/
 theorem isClosed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
@@ -283,9 +247,6 @@ theorem isClosed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)
     (isClosed_polar _ _)
 #align weak_dual.is_closed_image_polar_of_mem_nhds WeakDual.isClosed_image_polar_of_mem_nhds
 
-/- warning: normed_space.dual.is_closed_image_polar_of_mem_nhds -> NormedSpace.Dual.isClosed_image_polar_of_mem_nhds is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align normed_space.dual.is_closed_image_polar_of_mem_nhds NormedSpace.Dual.isClosed_image_polar_of_mem_nhdsₓ'. -/
 /-- The image under `coe_fn : normed_space.dual 𝕜 E → (E → 𝕜)` of a polar `polar 𝕜 s` of a
 neighborhood `s` of the origin is a closed set. -/
 theorem NormedSpace.Dual.isClosed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
@@ -293,9 +254,6 @@ theorem NormedSpace.Dual.isClosed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s
   isClosed_image_polar_of_mem_nhds 𝕜 s_nhd
 #align normed_space.dual.is_closed_image_polar_of_mem_nhds NormedSpace.Dual.isClosed_image_polar_of_mem_nhds
 
-/- warning: weak_dual.is_compact_polar -> WeakDual.isCompact_polar is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.is_compact_polar WeakDual.isCompact_polarₓ'. -/
 /-- The **Banach-Alaoglu theorem**: the polar set of a neighborhood `s` of the origin in a
 normed space `E` is a compact subset of `weak_dual 𝕜 E`. -/
 theorem isCompact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
@@ -303,9 +261,6 @@ theorem isCompact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : 
   isCompact_of_bounded_of_closed (bounded_polar_of_mem_nhds_zero 𝕜 s_nhd) (isClosed_polar _ _)
 #align weak_dual.is_compact_polar WeakDual.isCompact_polar
 
-/- warning: weak_dual.is_compact_closed_ball -> WeakDual.isCompact_closedBall is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align weak_dual.is_compact_closed_ball WeakDual.isCompact_closedBallₓ'. -/
 /-- The **Banach-Alaoglu theorem**: closed balls of the dual of a normed space `E` are compact in
 the weak-star topology. -/
 theorem isCompact_closedBall [ProperSpace 𝕜] (x' : Dual 𝕜 E) (r : ℝ) :

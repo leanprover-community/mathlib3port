@@ -107,12 +107,6 @@ instance (priority := 100) isFiltered_of_semilatticeSup_nonempty (α : Type u) [
 #align category_theory.is_filtered_of_semilattice_sup_nonempty CategoryTheory.isFiltered_of_semilatticeSup_nonempty
 -/
 
-/- warning: category_theory.is_filtered_or_empty_of_directed_le -> CategoryTheory.isFilteredOrEmpty_of_directed_le is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))], CategoryTheory.IsFilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.210 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.212 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.210 x._@.Mathlib.CategoryTheory.Filtered._hyg.212)], CategoryTheory.IsFilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.isFilteredOrEmpty_of_directed_leₓ'. -/
 instance (priority := 100) isFilteredOrEmpty_of_directed_le (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] : IsFilteredOrEmpty α
     where
@@ -122,12 +116,6 @@ instance (priority := 100) isFilteredOrEmpty_of_directed_le (α : Type u) [Preor
   cocone_maps X Y f g := ⟨Y, 𝟙 _, by simp⟩
 #align category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.isFilteredOrEmpty_of_directed_le
 
-/- warning: category_theory.is_filtered_of_directed_le_nonempty -> CategoryTheory.isFiltered_of_directed_le_nonempty is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsFiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.309 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.311 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.309 x._@.Mathlib.CategoryTheory.Filtered._hyg.311)] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsFiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.isFiltered_of_directed_le_nonemptyₓ'. -/
 instance (priority := 100) isFiltered_of_directed_le_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] [Nonempty α] : IsFiltered α where
 #align category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.isFiltered_of_directed_le_nonempty
@@ -360,12 +348,6 @@ theorem of_isRightAdjoint (R : C ⥤ D) [IsRightAdjoint R] : IsFiltered D :=
 #align category_theory.is_filtered.of_is_right_adjoint CategoryTheory.IsFiltered.of_isRightAdjoint
 -/
 
-/- warning: category_theory.is_filtered.of_equivalence -> CategoryTheory.IsFiltered.of_equivalence is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.IsFiltered.{u1, u3} C _inst_1] {D : Type.{u4}} [_inst_5 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_5) -> (CategoryTheory.IsFiltered.{u2, u4} D _inst_5)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.IsFiltered.{u1, u3} C _inst_1] {D : Type.{u4}} [_inst_5 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_5) -> (CategoryTheory.IsFiltered.{u2, u4} D _inst_5)
-Case conversion may be inaccurate. Consider using '#align category_theory.is_filtered.of_equivalence CategoryTheory.IsFiltered.of_equivalenceₓ'. -/
 /-- Being filtered is preserved by equivalence of categories. -/
 theorem of_equivalence (h : C ≌ D) : IsFiltered D :=
   of_right_adjoint h.symm.toAdjunction
@@ -571,12 +553,6 @@ instance (priority := 100) isCofiltered_of_semilatticeInf_nonempty (α : Type u)
 #align category_theory.is_cofiltered_of_semilattice_inf_nonempty CategoryTheory.isCofiltered_of_semilatticeInf_nonempty
 -/
 
-/- warning: category_theory.is_cofiltered_or_empty_of_directed_ge -> CategoryTheory.isCofilteredOrEmpty_of_directed_ge is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_2))], CategoryTheory.IsCofilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.3767 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.3769 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.3767 x._@.Mathlib.CategoryTheory.Filtered._hyg.3769)], CategoryTheory.IsCofilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.isCofilteredOrEmpty_of_directed_geₓ'. -/
 instance (priority := 100) isCofilteredOrEmpty_of_directed_ge (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] : IsCofilteredOrEmpty α
     where
@@ -586,12 +562,6 @@ instance (priority := 100) isCofilteredOrEmpty_of_directed_ge (α : Type u) [Pre
   cone_maps X Y f g := ⟨X, 𝟙 _, by simp⟩
 #align category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.isCofilteredOrEmpty_of_directed_ge
 
-/- warning: category_theory.is_cofiltered_of_directed_ge_nonempty -> CategoryTheory.isCofiltered_of_directed_ge_nonempty is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsCofiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.3866 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.3868 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.3866 x._@.Mathlib.CategoryTheory.Filtered._hyg.3868)] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsCofiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.isCofiltered_of_directed_ge_nonemptyₓ'. -/
 instance (priority := 100) isCofiltered_of_directed_ge_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] [Nonempty α] : IsCofiltered α where
 #align category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.isCofiltered_of_directed_ge_nonempty
@@ -691,12 +661,6 @@ theorem cospan {i j j' : C} (f : j ⟶ i) (f' : j' ⟶ i) :
 #align category_theory.is_cofiltered.cospan CategoryTheory.IsCofiltered.cospan
 -/
 
-/- warning: category_theory.functor.ranges_directed -> CategoryTheory.Functor.ranges_directed is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.IsCofilteredOrEmpty.{u1, u2} C _inst_1] (F : CategoryTheory.Functor.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3}) (j : C), Directed.{u3, max 1 (succ u2) (succ u1)} (Set.{u3} (CategoryTheory.Functor.obj.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3} F j)) (PSigma.{succ u2, succ u1} C (fun (i : C) => Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) i j)) (Superset.{u3} (Set.{u3} (CategoryTheory.Functor.obj.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3} F j)) (Set.hasSubset.{u3} (CategoryTheory.Functor.obj.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3} F j))) (fun (f : PSigma.{succ u2, succ u1} C (fun (i : C) => Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) i j)) => Set.range.{u3, succ u3} (CategoryTheory.Functor.obj.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3} F j) (CategoryTheory.Functor.obj.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3} F (PSigma.fst.{succ u2, succ u1} C (fun (i : C) => Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) i j) f)) (CategoryTheory.Functor.map.{u1, u3, u2, succ u3} C _inst_1 Type.{u3} CategoryTheory.types.{u3} F (PSigma.fst.{succ u2, succ u1} C (fun (i : C) => Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) i j) f) j (PSigma.snd.{succ u2, succ u1} C (fun (i : C) => Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) i j) f)))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.IsCofilteredOrEmpty.{u2, u3} C _inst_1] (F : CategoryTheory.Functor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1}) (j : C), Directed.{u1, max (succ u3) (succ u2)} (Set.{u1} (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) j)) (PSigma.{succ u3, succ u2} C (fun (i : C) => Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) i j)) (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.4396 : Set.{u1} (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) j)) (x._@.Mathlib.CategoryTheory.Filtered._hyg.4398 : Set.{u1} (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) j)) => Superset.{u1} (Set.{u1} (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) j)) (Set.instHasSubsetSet.{u1} (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) j)) x._@.Mathlib.CategoryTheory.Filtered._hyg.4396 x._@.Mathlib.CategoryTheory.Filtered._hyg.4398) (fun (f : PSigma.{succ u3, succ u2} C (fun (i : C) => Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) i j)) => Set.range.{u1, succ u1} (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) j) (Prefunctor.obj.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) (PSigma.fst.{succ u3, succ u2} C (fun (i : C) => Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) i j) f)) (Prefunctor.map.{succ u2, succ u1, u3, succ u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u3, succ u1} C _inst_1 Type.{u1} CategoryTheory.types.{u1} F) (PSigma.fst.{succ u3, succ u2} C (fun (i : C) => Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) i j) f) j (PSigma.snd.{succ u3, succ u2} C (fun (i : C) => Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) i j) f)))
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.ranges_directed CategoryTheory.Functor.ranges_directedₓ'. -/
 theorem CategoryTheory.Functor.ranges_directed (F : C ⥤ Type _) (j : C) :
     Directed (· ⊇ ·) fun f : Σ'i, i ⟶ j => Set.range (F.map f.2) := fun ⟨i, ij⟩ ⟨k, kj⟩ =>
   by
@@ -851,12 +815,6 @@ theorem of_isLeftAdjoint (L : C ⥤ D) [IsLeftAdjoint L] : IsCofiltered D :=
 #align category_theory.is_cofiltered.of_is_left_adjoint CategoryTheory.IsCofiltered.of_isLeftAdjoint
 -/
 
-/- warning: category_theory.is_cofiltered.of_equivalence -> CategoryTheory.IsCofiltered.of_equivalence is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.IsCofiltered.{u1, u3} C _inst_1] {D : Type.{u4}} [_inst_5 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C _inst_1 D _inst_5) -> (CategoryTheory.IsCofiltered.{u2, u4} D _inst_5)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.IsCofiltered.{u1, u3} C _inst_1] {D : Type.{u4}} [_inst_5 : CategoryTheory.Category.{u2, u4} D], (CategoryTheory.Equivalence.{u1, u2, u3, u4} C D _inst_1 _inst_5) -> (CategoryTheory.IsCofiltered.{u2, u4} D _inst_5)
-Case conversion may be inaccurate. Consider using '#align category_theory.is_cofiltered.of_equivalence CategoryTheory.IsCofiltered.of_equivalenceₓ'. -/
 /-- Being cofiltered is preserved by equivalence of categories. -/
 theorem of_equivalence (h : C ≌ D) : IsCofiltered D :=
   of_left_adjoint h.toAdjunction

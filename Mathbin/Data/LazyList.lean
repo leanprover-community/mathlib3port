@@ -87,12 +87,6 @@ def tail : LazyList α → LazyList α
 #align lazy_list.tail LazyList.tail
 -/
 
-/- warning: lazy_list.append -> LazyList.append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, (LazyList.{u1} α) -> (Thunkₓ.{u1} (LazyList.{u1} α)) -> (LazyList.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, (LazyList.{u1} α) -> (Thunk.{u1} (LazyList.{u1} α)) -> (LazyList.{u1} α)
-Case conversion may be inaccurate. Consider using '#align lazy_list.append LazyList.appendₓ'. -/
 /-- Appends two lazy lists.  -/
 def append : LazyList α → Thunk (LazyList α) → LazyList α
   | nil, l => l ()

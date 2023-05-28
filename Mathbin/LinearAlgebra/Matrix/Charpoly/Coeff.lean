@@ -67,9 +67,6 @@ namespace Matrix
 
 variable (M)
 
-/- warning: matrix.charpoly_sub_diagonal_degree_lt -> Matrix.charpoly_sub_diagonal_degree_lt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.charpoly_sub_diagonal_degree_lt Matrix.charpoly_sub_diagonal_degree_ltₓ'. -/
 theorem charpoly_sub_diagonal_degree_lt :
     (M.charpoly - ∏ i : n, X - C (M i i)).degree < ↑(Fintype.card n - 1) :=
   by
@@ -87,9 +84,6 @@ theorem charpoly_sub_diagonal_degree_lt :
   intros ; apply charmatrix_apply_natDegree_le
 #align matrix.charpoly_sub_diagonal_degree_lt Matrix.charpoly_sub_diagonal_degree_lt
 
-/- warning: matrix.charpoly_coeff_eq_prod_coeff_of_le -> Matrix.charpoly_coeff_eq_prod_coeff_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.charpoly_coeff_eq_prod_coeff_of_le Matrix.charpoly_coeff_eq_prod_coeff_of_leₓ'. -/
 theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤ k) :
     M.charpoly.coeff k = (∏ i : n, X - C (M i i)).coeff k :=
   by
@@ -97,12 +91,6 @@ theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤
   apply lt_of_lt_of_le (charpoly_sub_diagonal_degree_lt M) _; rw [WithBot.coe_le_coe]; apply h
 #align matrix.charpoly_coeff_eq_prod_coeff_of_le Matrix.charpoly_coeff_eq_prod_coeff_of_le
 
-/- warning: matrix.det_of_card_zero -> Matrix.det_of_card_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n], (Eq.{1} Nat (Fintype.card.{u2} n _inst_3) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (forall (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.det.{u1, u2} n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 R _inst_1 M) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n], (Eq.{1} Nat (Fintype.card.{u2} n _inst_3) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.det.{u1, u2} n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 R _inst_1 M) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align matrix.det_of_card_zero Matrix.det_of_card_zeroₓ'. -/
 theorem det_of_card_zero (h : Fintype.card n = 0) (M : Matrix n n R) : M.det = 1 := by
   rw [Fintype.card_eq_zero_iff] at h; suffices M = 1 by simp [this]; ext i; exact h.elim i
 #align matrix.det_of_card_zero Matrix.det_of_card_zero
@@ -147,12 +135,6 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic :=
 #align matrix.charpoly_monic Matrix.charpoly_monic
 -/
 
-/- warning: matrix.trace_eq_neg_charpoly_coeff -> Matrix.trace_eq_neg_charpoly_coeff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n] [_inst_5 : Nonempty.{succ u2} n] (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.trace.{u2, u1} n R _inst_3 (AddCommGroup.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) M) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.charpoly.{u1, u2} R _inst_1 n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 M) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u2} n _inst_3) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n] [_inst_5 : Nonempty.{succ u2} n] (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.trace.{u2, u1} n R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) M) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Polynomial.coeff.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (Matrix.charpoly.{u1, u2} R _inst_1 n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 M) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u2} n _inst_3) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align matrix.trace_eq_neg_charpoly_coeff Matrix.trace_eq_neg_charpoly_coeffₓ'. -/
 theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
     trace M = -M.charpoly.coeff (Fintype.card n - 1) :=
   by
@@ -162,9 +144,6 @@ theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
   rfl
 #align matrix.trace_eq_neg_charpoly_coeff Matrix.trace_eq_neg_charpoly_coeff
 
-/- warning: matrix.mat_poly_equiv_eval -> Matrix.matPolyEquiv_eval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.mat_poly_equiv_eval Matrix.matPolyEquiv_evalₓ'. -/
 -- I feel like this should use polynomial.alg_hom_eval₂_algebra_map
 theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     (matPolyEquiv M).eval ((scalar n) r) i j = (M i j).eval r :=
@@ -183,9 +162,6 @@ theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     simp only [h'n, MulZeroClass.zero_mul]
 #align matrix.mat_poly_equiv_eval Matrix.matPolyEquiv_eval
 
-/- warning: matrix.eval_det -> Matrix.eval_det is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.eval_det Matrix.eval_detₓ'. -/
 theorem eval_det (M : Matrix n n R[X]) (r : R) :
     Polynomial.eval r M.det = (Polynomial.eval (scalar n r) (matPolyEquiv M)).det :=
   by
@@ -193,12 +169,6 @@ theorem eval_det (M : Matrix n n R[X]) (r : R) :
   apply congr_arg det; ext; symm; convert mat_poly_equiv_eval _ _ _ _
 #align matrix.eval_det Matrix.eval_det
 
-/- warning: matrix.det_eq_sign_charpoly_coeff -> Matrix.det_eq_sign_charpoly_coeff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n] (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.det.{u1, u2} n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 R _inst_1 M) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))))))) (Fintype.card.{u2} n _inst_3)) (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Matrix.charpoly.{u1, u2} R _inst_1 n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 M) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n] (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.det.{u1, u2} n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 R _inst_1 M) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (Fintype.card.{u2} n _inst_3)) (Polynomial.coeff.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (Matrix.charpoly.{u1, u2} R _inst_1 n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 M) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
-Case conversion may be inaccurate. Consider using '#align matrix.det_eq_sign_charpoly_coeff Matrix.det_eq_sign_charpoly_coeffₓ'. -/
 theorem det_eq_sign_charpoly_coeff (M : Matrix n n R) :
     M.det = (-1) ^ Fintype.card n * M.charpoly.coeff 0 :=
   by
@@ -210,9 +180,6 @@ end Matrix
 
 variable {p : ℕ} [Fact p.Prime]
 
-/- warning: mat_poly_equiv_eq_X_pow_sub_C -> matPolyEquiv_eq_x_pow_sub_c is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mat_poly_equiv_eq_X_pow_sub_C matPolyEquiv_eq_x_pow_sub_cₓ'. -/
 theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
     matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (charmatrix (M ^ k))) =
       X ^ k - C (M ^ k) :=
@@ -241,9 +208,6 @@ theorem aeval_eq_aeval_mod_charpoly (M : Matrix n n R) (p : R[X]) :
 #align matrix.aeval_eq_aeval_mod_charpoly Matrix.aeval_eq_aeval_mod_charpoly
 -/
 
-/- warning: matrix.pow_eq_aeval_mod_charpoly -> Matrix.pow_eq_aeval_mod_charpoly is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.pow_eq_aeval_mod_charpoly Matrix.pow_eq_aeval_mod_charpolyₓ'. -/
 /-- Any matrix power can be computed as the sum of matrix powers less than `fintype.card n`.
 
 TODO: add the statement for negative powers phrased with `zpow`. -/

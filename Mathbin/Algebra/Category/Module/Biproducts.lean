@@ -68,30 +68,18 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
 -/
 
-/- warning: Module.binary_product_limit_cone_cone_π_app_left -> ModuleCat.binaryProductLimitCone_cone_π_app_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.binary_product_limit_cone_cone_π_app_left ModuleCat.binaryProductLimitCone_cone_π_app_leftₓ'. -/
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_left (M N : ModuleCat.{v} R) :
     (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.left⟩ = LinearMap.fst R M N :=
   rfl
 #align Module.binary_product_limit_cone_cone_π_app_left ModuleCat.binaryProductLimitCone_cone_π_app_left
 
-/- warning: Module.binary_product_limit_cone_cone_π_app_right -> ModuleCat.binaryProductLimitCone_cone_π_app_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.binary_product_limit_cone_cone_π_app_right ModuleCat.binaryProductLimitCone_cone_π_app_rightₓ'. -/
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_right (M N : ModuleCat.{v} R) :
     (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.right⟩ = LinearMap.snd R M N :=
   rfl
 #align Module.binary_product_limit_cone_cone_π_app_right ModuleCat.binaryProductLimitCone_cone_π_app_right
 
-/- warning: Module.biprod_iso_prod -> ModuleCat.biprodIsoProd is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] (M : ModuleCat.{u1, u2} R _inst_1) (N : ModuleCat.{u1, u2} R _inst_1), CategoryTheory.Iso.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Limits.biprod.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.CategoryTheory.preadditive.{u1, u2} R _inst_1)) M N (ModuleCat.biprodIsoProd._proof_1.{u2, u1} R _inst_1 M N)) (ModuleCat.of.{u1, u2} R _inst_1 (Prod.{u1, u1} (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) M) (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) N)) (Prod.addCommGroup.{u1, u1} (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) M) (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) N) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 M) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 N)) (Prod.module.{u2, u1, u1} R (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) M) (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) N) (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) M) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 M)) (AddCommGroup.toAddCommMonoid.{u1} (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) N) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 N)) (ModuleCat.isModule.{u1, u2} R _inst_1 M) (ModuleCat.isModule.{u1, u2} R _inst_1 N)))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] (M : ModuleCat.{u1, u2} R _inst_1) (N : ModuleCat.{u1, u2} R _inst_1), CategoryTheory.Iso.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Limits.biprod.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) M N (CategoryTheory.Limits.HasBinaryBiproducts.has_binary_biproduct.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) (ModuleCat.instHasBinaryBiproductsModuleCatModuleCategoryPreadditiveHasZeroMorphismsInstPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1) M N)) (ModuleCat.of.{u1, u2} R _inst_1 (Prod.{u1, u1} (ModuleCat.carrier.{u1, u2} R _inst_1 M) (ModuleCat.carrier.{u1, u2} R _inst_1 N)) (Prod.instAddCommGroupSum.{u1, u1} (ModuleCat.carrier.{u1, u2} R _inst_1 M) (ModuleCat.carrier.{u1, u2} R _inst_1 N) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 M) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 N)) (Prod.module.{u2, u1, u1} R (ModuleCat.carrier.{u1, u2} R _inst_1 M) (ModuleCat.carrier.{u1, u2} R _inst_1 N) (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} (ModuleCat.carrier.{u1, u2} R _inst_1 M) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 M)) (AddCommGroup.toAddCommMonoid.{u1} (ModuleCat.carrier.{u1, u2} R _inst_1 N) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 N)) (ModuleCat.isModule.{u1, u2} R _inst_1 M) (ModuleCat.isModule.{u1, u2} R _inst_1 N)))
-Case conversion may be inaccurate. Consider using '#align Module.biprod_iso_prod ModuleCat.biprodIsoProdₓ'. -/
 /-- We verify that the biproduct in `Module R` is isomorphic to
 the cartesian product of the underlying types:
 -/
@@ -101,18 +89,12 @@ noncomputable def biprodIsoProd (M N : ModuleCat.{v} R) :
   IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit M N) (binaryProductLimitCone M N).IsLimit
 #align Module.biprod_iso_prod ModuleCat.biprodIsoProd
 
-/- warning: Module.biprod_iso_prod_inv_comp_fst -> ModuleCat.biprodIsoProd_inv_comp_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.biprod_iso_prod_inv_comp_fst ModuleCat.biprodIsoProd_inv_comp_fstₓ'. -/
 @[simp, elementwise]
 theorem biprodIsoProd_inv_comp_fst (M N : ModuleCat.{v} R) :
     (biprodIsoProd M N).inv ≫ biprod.fst = LinearMap.fst R M N :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ _ (Discrete.mk WalkingPair.left)
 #align Module.biprod_iso_prod_inv_comp_fst ModuleCat.biprodIsoProd_inv_comp_fst
 
-/- warning: Module.biprod_iso_prod_inv_comp_snd -> ModuleCat.biprodIsoProd_inv_comp_snd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.biprod_iso_prod_inv_comp_snd ModuleCat.biprodIsoProd_inv_comp_sndₓ'. -/
 @[simp, elementwise]
 theorem biprodIsoProd_inv_comp_snd (M N : ModuleCat.{v} R) :
     (biprodIsoProd M N).inv ≫ biprod.snd = LinearMap.snd R M N :=
@@ -162,12 +144,6 @@ open HasLimit
 
 variable {J : Type} (f : J → ModuleCat.{v} R)
 
-/- warning: Module.biproduct_iso_pi -> ModuleCat.biproductIsoPi is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {J : Type} [_inst_2 : Fintype.{0} J] (f : J -> (ModuleCat.{u1, u2} R _inst_1)), CategoryTheory.Iso.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Limits.biproduct.{0, u1, max u2 (succ u1)} J (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.CategoryTheory.preadditive.{u1, u2} R _inst_1)) f (ModuleCat.biproductIsoPi._proof_1.{u2, u1} R _inst_1 J _inst_2 f)) (ModuleCat.of.{u1, u2} R _inst_1 (forall (j : J), coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) (f j)) (Pi.addCommGroup.{0, u1} J (fun (j : J) => coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) (f j)) (fun (i : J) => ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 (f i))) (Pi.module.{0, u1, u2} J (fun (j : J) => coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) (f j)) R (Ring.toSemiring.{u2} R _inst_1) (fun (i : J) => AddCommGroup.toAddCommMonoid.{u1} (coeSort.{max (succ u2) (succ (succ u1)), succ (succ u1)} (ModuleCat.{u1, u2} R _inst_1) Type.{u1} (ModuleCat.hasCoeToSort.{u1, u2} R _inst_1) (f i)) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 (f i))) (fun (i : J) => ModuleCat.isModule.{u1, u2} R _inst_1 (f i))))
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {J : Type} [_inst_2 : Fintype.{0} J] (f : J -> (ModuleCat.{u1, u2} R _inst_1)), CategoryTheory.Iso.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Limits.biproduct.{0, u1, max u2 (succ u1)} J (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) f (CategoryTheory.Limits.HasBiproductsOfShape.has_biproduct.{0, u1, max u2 (succ u1)} J (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) (CategoryTheory.Limits.hasBiproductsOfShape_finite.{0, u1, max u2 (succ u1)} J (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) (ModuleCat.instHasFiniteBiproductsModuleCatModuleCategoryPreadditiveHasZeroMorphismsInstPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1) (Finite.of_fintype.{0} J _inst_2)) f)) (ModuleCat.of.{u1, u2} R _inst_1 (forall (j : J), ModuleCat.carrier.{u1, u2} R _inst_1 (f j)) (Pi.addCommGroup.{0, u1} J (fun (j : J) => ModuleCat.carrier.{u1, u2} R _inst_1 (f j)) (fun (i : J) => ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 (f i))) (Pi.module.{0, u1, u2} J (fun (j : J) => ModuleCat.carrier.{u1, u2} R _inst_1 (f j)) R (Ring.toSemiring.{u2} R _inst_1) (fun (i : J) => AddCommGroup.toAddCommMonoid.{u1} (ModuleCat.carrier.{u1, u2} R _inst_1 (f i)) (ModuleCat.isAddCommGroup.{u1, u2} R _inst_1 (f i))) (fun (i : J) => ModuleCat.isModule.{u1, u2} R _inst_1 (f i))))
-Case conversion may be inaccurate. Consider using '#align Module.biproduct_iso_pi ModuleCat.biproductIsoPiₓ'. -/
 /-- We verify that the biproduct we've just defined is isomorphic to the `Module R` structure
 on the dependent function type
 -/
@@ -177,9 +153,6 @@ noncomputable def biproductIsoPi [Fintype J] (f : J → ModuleCat.{v} R) :
   IsLimit.conePointUniqueUpToIso (biproduct.isLimit f) (productLimitCone f).IsLimit
 #align Module.biproduct_iso_pi ModuleCat.biproductIsoPi
 
-/- warning: Module.biproduct_iso_pi_inv_comp_π -> ModuleCat.biproductIsoPi_inv_comp_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.biproduct_iso_pi_inv_comp_π ModuleCat.biproductIsoPi_inv_comp_πₓ'. -/
 @[simp, elementwise]
 theorem biproductIsoPi_inv_comp_π [Fintype J] (f : J → ModuleCat.{v} R) (j : J) :
     (biproductIsoPi f).inv ≫ biproduct.π f j = (LinearMap.proj j : (∀ j, f j) →ₗ[R] f j) :=
@@ -197,9 +170,6 @@ variable {j : A →ₗ[R] M} {g : M →ₗ[R] B}
 
 open ModuleCat
 
-/- warning: lequiv_prod_of_right_split_exact -> lequivProdOfRightSplitExact is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExactₓ'. -/
 /-- The isomorphism `A × B ≃ₗ[R] M` coming from a right split exact sequence `0 ⟶ A ⟶ M ⟶ B ⟶ 0`
 of modules.-/
 noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function.Injective j)
@@ -210,9 +180,6 @@ noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExact
 
-/- warning: lequiv_prod_of_left_split_exact -> lequivProdOfLeftSplitExact is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align lequiv_prod_of_left_split_exact lequivProdOfLeftSplitExactₓ'. -/
 /-- The isomorphism `A × B ≃ₗ[R] M` coming from a left split exact sequence `0 ⟶ A ⟶ M ⟶ B ⟶ 0`
 of modules.-/
 noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.Surjective g)

@@ -116,12 +116,6 @@ instance : CoeFun (AlternatingMap R M N ι) fun _ => (ι → M) → N :=
 
 initialize_simps_projections AlternatingMap (toFun → apply)
 
-/- warning: alternating_map.to_fun_eq_coe -> AlternatingMap.toFun_eq_coe is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u4) (succ u2)) (succ u3)} ((forall (i : ι), (fun (i : ι) => M) i) -> N) (AlternatingMap.toFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}} (f : AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u4) (succ u3)) (succ u2)} ((ι -> M) -> N) (MultilinearMap.toFun.{u1, u4, u3, u2} R ι (fun (x._@.Mathlib.LinearAlgebra.Alternating._hyg.259 : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5 (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f)) (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u4) (succ u2), succ u3} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f)
-Case conversion may be inaccurate. Consider using '#align alternating_map.to_fun_eq_coe AlternatingMap.toFun_eq_coeₓ'. -/
 @[simp]
 theorem toFun_eq_coe : f.toFun = f :=
   rfl
@@ -132,64 +126,28 @@ theorem coe_mk (f : (ι → M) → N) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h
   rfl
 #align alternating_map.coe_mk AlternatingMap.coe_mkₓ
 
-/- warning: alternating_map.congr_fun -> AlternatingMap.congr_fun is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {g : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, (Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g) -> (forall (x : ι -> M), Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) g x))
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} {f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {g : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, (Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g) -> (forall (x : ι -> M), Eq.{succ u2} N (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) g x))
-Case conversion may be inaccurate. Consider using '#align alternating_map.congr_fun AlternatingMap.congr_funₓ'. -/
 theorem congr_fun {f g : AlternatingMap R M N ι} (h : f = g) (x : ι → M) : f x = g x :=
   congr_arg (fun h : AlternatingMap R M N ι => h x) h
 #align alternating_map.congr_fun AlternatingMap.congr_fun
 
-/- warning: alternating_map.congr_arg -> AlternatingMap.congr_arg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) {x : ι -> M} {y : ι -> M}, (Eq.{max (succ u4) (succ u2)} (ι -> M) x y) -> (Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f y))
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} (f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) {x : ι -> M} {y : ι -> M}, (Eq.{max (succ u3) (succ u1)} (ι -> M) x y) -> (Eq.{succ u2} N (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f y))
-Case conversion may be inaccurate. Consider using '#align alternating_map.congr_arg AlternatingMap.congr_argₓ'. -/
 theorem congr_arg (f : AlternatingMap R M N ι) {x y : ι → M} (h : x = y) : f x = f y :=
   congr_arg (fun x : ι → M => f x) h
 #align alternating_map.congr_arg AlternatingMap.congr_arg
 
-/- warning: alternating_map.coe_injective -> AlternatingMap.coe_injective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}}, Function.Injective.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) ((ι -> M) -> N) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (ᾰ : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}}, Function.Injective.{max (max (succ u4) (succ u3)) (succ u2), max (max (succ u4) (succ u3)) (succ u2)} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) ((ι -> M) -> N) (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u4) (succ u2), succ u3} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (ᾰ : ι -> M) => N) (AlternatingMap.funLike.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_injective AlternatingMap.coe_injectiveₓ'. -/
 theorem coe_injective : Injective (coeFn : AlternatingMap R M N ι → (ι → M) → N) :=
   FunLike.coe_injective
 #align alternating_map.coe_injective AlternatingMap.coe_injective
 
-/- warning: alternating_map.coe_inj -> AlternatingMap.coe_inj is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {g : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, Iff (Eq.{max (max (succ u4) (succ u2)) (succ u3)} ((fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) f) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) g)) (Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g)
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} {f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {g : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, Iff (Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((ι -> M) -> N) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) g)) (Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g)
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_inj AlternatingMap.coe_injₓ'. -/
 @[simp, norm_cast]
 theorem coe_inj {f g : AlternatingMap R M N ι} : (f : (ι → M) → N) = g ↔ f = g :=
   coe_injective.eq_iff
 #align alternating_map.coe_inj AlternatingMap.coe_inj
 
-/- warning: alternating_map.ext -> AlternatingMap.ext is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {f' : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, (forall (x : ι -> M), Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f' x)) -> (Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f f')
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} {f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {f' : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, (forall (x : ι -> M), Eq.{succ u2} N (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f' x)) -> (Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f f')
-Case conversion may be inaccurate. Consider using '#align alternating_map.ext AlternatingMap.extₓ'. -/
 @[ext]
 theorem ext {f f' : AlternatingMap R M N ι} (H : ∀ x, f x = f' x) : f = f' :=
   FunLike.ext _ _ H
 #align alternating_map.ext AlternatingMap.ext
 
-/- warning: alternating_map.ext_iff -> AlternatingMap.ext_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {g : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, Iff (Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g) (forall (x : ι -> M), Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) g x))
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} {f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι} {g : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι}, Iff (Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g) (forall (x : ι -> M), Eq.{succ u2} N (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f x) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), succ u2} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) g x))
-Case conversion may be inaccurate. Consider using '#align alternating_map.ext_iff AlternatingMap.ext_iffₓ'. -/
 theorem ext_iff {f g : AlternatingMap R M N ι} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => ext h⟩
 #align alternating_map.ext_iff AlternatingMap.ext_iff
@@ -197,43 +155,23 @@ theorem ext_iff {f g : AlternatingMap R M N ι} : f = g ↔ ∀ x, f x = g x :=
 instance : Coe (AlternatingMap R M N ι) (MultilinearMap R (fun i : ι => M) N) :=
   ⟨fun x => x.toMultilinearMap⟩
 
-/- warning: alternating_map.coe_multilinear_map -> AlternatingMap.coe_multilinearMap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u4) (succ u2)) (succ u3)} ((ι -> M) -> N) (coeFn.{max (succ u4) (succ u2) (succ u3), max (max (succ u4) (succ u2)) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (fun (f : MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) => (ι -> M) -> N) (MultilinearMap.hasCoeToFun.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) f)) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}} (f : AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u4) (succ u3)) (succ u2)} (forall (ᾰ : ι -> M), (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : ι -> M) => N) ᾰ) (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u4) (succ u2), succ u3} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (x._@.Mathlib.LinearAlgebra.Alternating._hyg.259 : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (ι -> M) (fun (f : ι -> M) => (fun (x._@.Mathlib.LinearAlgebra.Multilinear.Basic._hyg.418 : ι -> M) => N) f) (MultilinearMap.instFunLikeMultilinearMapForAll.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f)) (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u4) (succ u2), succ u3} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f)
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_multilinear_map AlternatingMap.coe_multilinearMapₓ'. -/
 @[simp, norm_cast]
 theorem coe_multilinearMap : ⇑(f : MultilinearMap R (fun i : ι => M) N) = f :=
   rfl
 #align alternating_map.coe_multilinear_map AlternatingMap.coe_multilinearMap
 
-/- warning: alternating_map.coe_multilinear_map_injective -> AlternatingMap.coe_multilinearMap_injective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}}, Function.Injective.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}}, Function.Injective.{max (max (succ u4) (succ u3)) (succ u2), max (max (succ u4) (succ u3)) (succ u2)} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_multilinear_map_injective AlternatingMap.coe_multilinearMap_injectiveₓ'. -/
 theorem coe_multilinearMap_injective :
     Function.Injective (coe : AlternatingMap R M N ι → MultilinearMap R (fun i : ι => M) N) :=
   fun x y h => ext <| MultilinearMap.congr_fun h
 #align alternating_map.coe_multilinear_map_injective AlternatingMap.coe_multilinearMap_injective
 
 /- warning: alternating_map.to_multilinear_map_eq_coe clashes with [anonymous] -> [anonymous]
-warning: alternating_map.to_multilinear_map_eq_coe -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u_1}} [_inst_1 : Semiring.{u_1} R] {M : Type.{u_2}} [_inst_2 : AddCommMonoid.{u_2} M] [_inst_3 : Module.{u_1, u_2} R M _inst_1 _inst_2] {N : Type.{u_3}} [_inst_4 : AddCommMonoid.{u_3} N] [_inst_5 : Module.{u_1, u_3} R N _inst_1 _inst_4] {ι : Type.{u_7}} (f : AlternatingMap.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (succ u_7) (succ u_2) (succ u_3)} (MultilinearMap.{u_1, u_2, u_3, u_7} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.toMultilinearMap.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f) ((fun (a : Sort.{max (succ u_2) (succ u_3) (succ u_7)}) (b : Sort.{max (succ u_7) (succ u_2) (succ u_3)}) [self : HasLiftT.{max (succ u_2) (succ u_3) (succ u_7), max (succ u_7) (succ u_2) (succ u_3)} a b] => self.0) (AlternatingMap.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u_1, u_2, u_3, u_7} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u_2) (succ u_3) (succ u_7), max (succ u_7) (succ u_2) (succ u_3)} (AlternatingMap.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u_1, u_2, u_3, u_7} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u_2) (succ u_3) (succ u_7), max (succ u_7) (succ u_2) (succ u_3)} (AlternatingMap.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u_1, u_2, u_3, u_7} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u_2) (succ u_3) (succ u_7), max (succ u_7) (succ u_2) (succ u_3)} (AlternatingMap.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u_1, u_2, u_3, u_7} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u_1, u_2, u_3, u_7} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) f)
-but is expected to have type
-  forall {R : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> R -> _inst_1) -> Nat -> (List.{u} R) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align alternating_map.to_multilinear_map_eq_coe [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] : f.toMultilinearMap = f :=
   rfl
 #align alternating_map.to_multilinear_map_eq_coe [anonymous]
 
-/- warning: alternating_map.coe_multilinear_map_mk -> AlternatingMap.coe_multilinearMap_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_multilinear_map_mk AlternatingMap.coe_multilinearMap_mkₓ'. -/
 @[simp]
 theorem coe_multilinearMap_mk (f : (ι → M) → N) (h₁ h₂ h₃) :
     ((⟨f, h₁, h₂, h₃⟩ : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) =
@@ -250,27 +188,18 @@ These are expressed in terms of `⇑f` instead of `f.to_fun`.
 -/
 
 
-/- warning: alternating_map.map_add -> AlternatingMap.map_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_add AlternatingMap.map_addₓ'. -/
 @[simp]
 theorem map_add [DecidableEq ι] (i : ι) (x y : M) :
     f (update v i (x + y)) = f (update v i x) + f (update v i y) :=
   f.toMultilinearMap.map_add' v i x y
 #align alternating_map.map_add AlternatingMap.map_add
 
-/- warning: alternating_map.map_sub -> AlternatingMap.map_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_sub AlternatingMap.map_subₓ'. -/
 @[simp]
 theorem map_sub [DecidableEq ι] (i : ι) (x y : M') :
     g' (update v' i (x - y)) = g' (update v' i x) - g' (update v' i y) :=
   g'.toMultilinearMap.map_sub v' i x y
 #align alternating_map.map_sub AlternatingMap.map_sub
 
-/- warning: alternating_map.map_neg -> AlternatingMap.map_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_neg AlternatingMap.map_negₓ'. -/
 @[simp]
 theorem map_neg [DecidableEq ι] (i : ι) (x : M') : g' (update v' i (-x)) = -g' (update v' i x) :=
   g'.toMultilinearMap.map_neg v' i x
@@ -284,52 +213,25 @@ theorem map_smul [DecidableEq ι] (i : ι) (r : R) (x : M) :
 #align alternating_map.map_smul AlternatingMap.map_smul
 -/
 
-/- warning: alternating_map.map_eq_zero_of_eq -> AlternatingMap.map_eq_zero_of_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_eq_zero_of_eq AlternatingMap.map_eq_zero_of_eqₓ'. -/
 @[simp]
 theorem map_eq_zero_of_eq (v : ι → M) {i j : ι} (h : v i = v j) (hij : i ≠ j) : f v = 0 :=
   f.map_eq_zero_of_eq' v i j h hij
 #align alternating_map.map_eq_zero_of_eq AlternatingMap.map_eq_zero_of_eq
 
-/- warning: alternating_map.map_coord_zero -> AlternatingMap.map_coord_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) {m : ι -> M} (i : ι), (Eq.{succ u2} M (m i) (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))))))) -> (Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f m) (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}} (f : AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) {m : ι -> M} (i : ι), (Eq.{succ u4} M (m i) (OfNat.ofNat.{u4} M 0 (Zero.toOfNat0.{u4} M (AddMonoid.toZero.{u4} M (AddCommMonoid.toAddMonoid.{u4} M _inst_2))))) -> (Eq.{succ u3} N (FunLike.coe.{max (max (succ u4) (succ u3)) (succ u2), max (succ u4) (succ u2), succ u3} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f m) (OfNat.ofNat.{u3} N 0 (Zero.toOfNat0.{u3} N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4)))))
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_coord_zero AlternatingMap.map_coord_zeroₓ'. -/
 theorem map_coord_zero {m : ι → M} (i : ι) (h : m i = 0) : f m = 0 :=
   f.toMultilinearMap.map_coord_zero i h
 #align alternating_map.map_coord_zero AlternatingMap.map_coord_zero
 
-/- warning: alternating_map.map_update_zero -> AlternatingMap.map_update_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) [_inst_12 : DecidableEq.{succ u4} ι] (m : ι -> M) (i : ι), Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f (Function.update.{succ u4, succ u2} ι (fun (ᾰ : ι) => M) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))))) (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) [_inst_12 : DecidableEq.{succ u4} ι] (m : ι -> M) (i : ι), Eq.{succ u3} N (FunLike.coe.{max (max (succ u2) (succ u3)) (succ u4), max (succ u2) (succ u4), succ u3} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f (Function.update.{succ u4, succ u2} ι (fun (ᾰ : ι) => M) (fun (a : ι) (b : ι) => _inst_12 a b) m i (OfNat.ofNat.{u2} M 0 (Zero.toOfNat0.{u2} M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))) (OfNat.ofNat.{u3} N 0 (Zero.toOfNat0.{u3} N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))))
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_update_zero AlternatingMap.map_update_zeroₓ'. -/
 @[simp]
 theorem map_update_zero [DecidableEq ι] (m : ι → M) (i : ι) : f (update m i 0) = 0 :=
   f.toMultilinearMap.map_update_zero m i
 #align alternating_map.map_update_zero AlternatingMap.map_update_zero
 
-/- warning: alternating_map.map_zero -> AlternatingMap.map_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) [_inst_12 : Nonempty.{succ u4} ι], Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f (OfNat.ofNat.{max u4 u2} (ι -> M) 0 (OfNat.mk.{max u4 u2} (ι -> M) 0 (Zero.zero.{max u4 u2} (ι -> M) (Pi.instZero.{u4, u2} ι (fun (ᾰ : ι) => M) (fun (i : ι) => AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))))) (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) [_inst_12 : Nonempty.{succ u4} ι], Eq.{succ u3} N (FunLike.coe.{max (max (succ u2) (succ u3)) (succ u4), max (succ u2) (succ u4), succ u3} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f (OfNat.ofNat.{max u2 u4} (ι -> M) 0 (Zero.toOfNat0.{max u2 u4} (ι -> M) (Pi.instZero.{u4, u2} ι (fun (a._@.Mathlib.LinearAlgebra.Alternating._hyg.836 : ι) => M) (fun (i : ι) => AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))) (OfNat.ofNat.{u3} N 0 (Zero.toOfNat0.{u3} N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))))
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_zero AlternatingMap.map_zeroₓ'. -/
 @[simp]
 theorem map_zero [Nonempty ι] : f 0 = 0 :=
   f.toMultilinearMap.map_zero
 #align alternating_map.map_zero AlternatingMap.map_zero
 
-/- warning: alternating_map.map_eq_zero_of_not_injective -> AlternatingMap.map_eq_zero_of_not_injective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (v : ι -> M), (Not (Function.Injective.{succ u4, succ u2} ι M v)) -> (Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f v) (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u1, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u1, u2} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (v : ι -> M), (Not (Function.Injective.{succ u4, succ u3} ι M v)) -> (Eq.{succ u2} N (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u4), max (succ u3) (succ u4), succ u2} (AlternatingMap.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f v) (OfNat.ofNat.{u2} N 0 (Zero.toOfNat0.{u2} N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_4)))))
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_eq_zero_of_not_injective AlternatingMap.map_eq_zero_of_not_injectiveₓ'. -/
 theorem map_eq_zero_of_not_injective (v : ι → M) (hv : ¬Function.Injective v) : f v = 0 :=
   by
   rw [Function.Injective] at hv
@@ -355,26 +257,17 @@ instance : SMul S (AlternatingMap R M N ι) :=
     { (c • f : MultilinearMap R (fun i : ι => M) N) with
       map_eq_zero_of_eq' := fun v i j h hij => by simp [f.map_eq_zero_of_eq v h hij] }⟩
 
-/- warning: alternating_map.smul_apply -> AlternatingMap.smul_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.smul_apply AlternatingMap.smul_applyₓ'. -/
 @[simp]
 theorem smul_apply (c : S) (m : ι → M) : (c • f) m = c • f m :=
   rfl
 #align alternating_map.smul_apply AlternatingMap.smul_apply
 
-/- warning: alternating_map.coe_smul -> AlternatingMap.coe_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_smul AlternatingMap.coe_smulₓ'. -/
 @[norm_cast]
 theorem coe_smul (c : S) :
     ((c • f : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = c • f :=
   rfl
 #align alternating_map.coe_smul AlternatingMap.coe_smul
 
-/- warning: alternating_map.coe_fn_smul -> AlternatingMap.coeFn_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_fn_smul AlternatingMap.coeFn_smulₓ'. -/
 theorem coeFn_smul (c : S) (f : AlternatingMap R M N ι) : ⇑(c • f) = c • f :=
   rfl
 #align alternating_map.coe_fn_smul AlternatingMap.coeFn_smul
@@ -437,20 +330,11 @@ instance : Add (AlternatingMap R M N ι) :=
       map_eq_zero_of_eq' := fun v i j h hij => by
         simp [a.map_eq_zero_of_eq v h hij, b.map_eq_zero_of_eq v h hij] }⟩
 
-/- warning: alternating_map.add_apply -> AlternatingMap.add_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.add_apply AlternatingMap.add_applyₓ'. -/
 @[simp]
 theorem add_apply : (f + f') v = f v + f' v :=
   rfl
 #align alternating_map.add_apply AlternatingMap.add_apply
 
-/- warning: alternating_map.coe_add -> AlternatingMap.coe_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (f' : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (succ u4) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) ((fun (a : Type.{max u2 u3 u4}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{succ (max u2 u3 u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{succ (max u2 u3 u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{succ (max u2 u3 u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{succ (max u2 u3 u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) (HAdd.hAdd.{max u2 u3 u4, max u2 u3 u4, max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (instHAdd.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.add.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)) f f')) (HAdd.hAdd.{max u4 u2 u3, max u4 u2 u3, max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (instHAdd.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.hasAdd.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5)) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) f) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) f'))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}} (f : AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (f' : AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u4) (succ u3)) (succ u2)} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι (HAdd.hAdd.{max (max u4 u3) u2, max (max u4 u3) u2, max (max u4 u3) u2} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (instHAdd.{max (max u4 u3) u2} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.add.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)) f f')) (HAdd.hAdd.{max (max u4 u3) u2, max (max u4 u3) u2, max (max u4 u3) u2} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (instHAdd.{max (max u4 u3) u2} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.instAddMultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5)) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f'))
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_add AlternatingMap.coe_addₓ'. -/
 @[norm_cast]
 theorem coe_add : (↑(f + f') : MultilinearMap R (fun i : ι => M) N) = f + f' :=
   rfl
@@ -460,23 +344,11 @@ instance : Zero (AlternatingMap R M N ι) :=
   ⟨{ (0 : MultilinearMap R (fun i : ι => M) N) with
       map_eq_zero_of_eq' := fun v i j h hij => by simp }⟩
 
-/- warning: alternating_map.zero_apply -> AlternatingMap.zero_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (v : ι -> M), Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) => (ι -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (OfNat.ofNat.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (OfNat.mk.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.zero.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) v) (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u1, u3} R M _inst_1 _inst_2] {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u4} N] [_inst_5 : Module.{u1, u4} R N _inst_1 _inst_4] {ι : Type.{u2}} (v : ι -> M), Eq.{succ u4} N (FunLike.coe.{max (max (succ u3) (succ u4)) (succ u2), max (succ u3) (succ u2), succ u4} (AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (ι -> M) (fun (_x : ι -> M) => N) (AlternatingMap.funLike.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (OfNat.ofNat.{max (max u3 u4) u2} (AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u3 u4) u2} (AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))) v) (OfNat.ofNat.{u4} N 0 (Zero.toOfNat0.{u4} N (AddMonoid.toZero.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_4))))
-Case conversion may be inaccurate. Consider using '#align alternating_map.zero_apply AlternatingMap.zero_applyₓ'. -/
 @[simp]
 theorem zero_apply : (0 : AlternatingMap R M N ι) v = 0 :=
   rfl
 #align alternating_map.zero_apply AlternatingMap.zero_apply
 
-/- warning: alternating_map.coe_zero -> AlternatingMap.coe_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}}, Eq.{max (succ u4) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) (OfNat.ofNat.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (OfNat.mk.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.zero.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))))) (OfNat.ofNat.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) 0 (OfNat.mk.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) 0 (Zero.zero.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.hasZero.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u2}}, Eq.{max (max (succ u4) (succ u3)) (succ u2)} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι (OfNat.ofNat.{max (max u4 u3) u2} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u4 u3) u2} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) (OfNat.ofNat.{max (max u4 u3) u2} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) 0 (Zero.toOfNat0.{max (max u4 u3) u2} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (x._@.Mathlib.LinearAlgebra.Alternating._hyg.259 : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (MultilinearMap.instZeroMultilinearMap.{u1, u4, u3, u2} R ι (fun (x._@.Mathlib.LinearAlgebra.Alternating._hyg.259 : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5)))
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_zero AlternatingMap.coe_zeroₓ'. -/
 @[norm_cast]
 theorem coe_zero : ((0 : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = 0 :=
   rfl
@@ -493,23 +365,11 @@ instance : Neg (AlternatingMap R M N' ι) :=
     { -(f : MultilinearMap R (fun i : ι => M) N') with
       map_eq_zero_of_eq' := fun v i j h hij => by simp [f.map_eq_zero_of_eq v h hij] }⟩
 
-/- warning: alternating_map.neg_apply -> AlternatingMap.neg_apply is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N' : Type.{u3}} [_inst_10 : AddCommGroup.{u3} N'] [_inst_11 : Module.{u1, u3} R N' _inst_1 (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10)] {ι : Type.{u4}} (g : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (m : ι -> M), Eq.{succ u3} N' (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) => (ι -> M) -> N') (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (Neg.neg.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AlternatingMap.neg.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' _inst_10 _inst_11 ι) g) m) (Neg.neg.{u3} N' (SubNegMonoid.toHasNeg.{u3} N' (AddGroup.toSubNegMonoid.{u3} N' (AddCommGroup.toAddGroup.{u3} N' _inst_10))) (coeFn.{max (succ u2) (succ u3) (succ u4), max (max (succ u4) (succ u2)) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (fun (_x : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) => (ι -> M) -> N') (AlternatingMap.coeFun.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) g m))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u1, u3} R M _inst_1 _inst_2] {N' : Type.{u4}} [_inst_10 : AddCommGroup.{u4} N'] [_inst_11 : Module.{u1, u4} R N' _inst_1 (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10)] {ι : Type.{u2}} (g : AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10) _inst_11 ι) (m : ι -> M), Eq.{succ u4} N' (FunLike.coe.{max (max (succ u3) (succ u4)) (succ u2), max (succ u3) (succ u2), succ u4} (AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10) _inst_11 ι) (ι -> M) (fun (_x : ι -> M) => N') (AlternatingMap.funLike.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10) _inst_11 ι) (Neg.neg.{max (max u3 u4) u2} (AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10) _inst_11 ι) (AlternatingMap.neg.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' _inst_10 _inst_11 ι) g) m) (Neg.neg.{u4} N' (NegZeroClass.toNeg.{u4} N' (SubNegZeroMonoid.toNegZeroClass.{u4} N' (SubtractionMonoid.toSubNegZeroMonoid.{u4} N' (SubtractionCommMonoid.toSubtractionMonoid.{u4} N' (AddCommGroup.toDivisionAddCommMonoid.{u4} N' _inst_10))))) (FunLike.coe.{max (max (succ u3) (succ u4)) (succ u2), max (succ u3) (succ u2), succ u4} (AlternatingMap.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10) _inst_11 ι) (ι -> M) (fun (_x : ι -> M) => N') (AlternatingMap.funLike.{u1, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u4} N' _inst_10) _inst_11 ι) g m))
-Case conversion may be inaccurate. Consider using '#align alternating_map.neg_apply AlternatingMap.neg_applyₓ'. -/
 @[simp]
 theorem neg_apply (m : ι → M) : (-g) m = -g m :=
   rfl
 #align alternating_map.neg_apply AlternatingMap.neg_apply
 
-/- warning: alternating_map.coe_neg -> AlternatingMap.coe_neg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N' : Type.{u3}} [_inst_10 : AddCommGroup.{u3} N'] [_inst_11 : Module.{u1, u3} R N' _inst_1 (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10)] {ι : Type.{u4}} (g : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι), Eq.{max (succ u4) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι)))) (Neg.neg.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AlternatingMap.neg.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' _inst_10 _inst_11 ι) g)) (Neg.neg.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (MultilinearMap.hasNeg.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) _inst_10 (fun (i : ι) => _inst_3) _inst_11) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι)))) g))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} M] [_inst_3 : Module.{u1, u4} R M _inst_1 _inst_2] {N' : Type.{u3}} [_inst_10 : AddCommGroup.{u3} N'] [_inst_11 : Module.{u1, u3} R N' _inst_1 (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10)] {ι : Type.{u2}} (g : AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι), Eq.{max (max (succ u4) (succ u3)) (succ u2)} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι (Neg.neg.{max (max u4 u3) u2} (AlternatingMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AlternatingMap.neg.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N' _inst_10 _inst_11 ι) g)) (Neg.neg.{max (max u4 u3) u2} (MultilinearMap.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (MultilinearMap.instNegMultilinearMapToAddCommMonoid.{u1, u4, u3, u2} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) _inst_10 (fun (i : ι) => _inst_3) _inst_11) (AlternatingMap.toMultilinearMap.{u1, u4, u3, u2} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι g))
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_neg AlternatingMap.coe_negₓ'. -/
 @[norm_cast]
 theorem coe_neg : ((-g : AlternatingMap R M N' ι) : MultilinearMap R (fun i : ι => M) N') = -g :=
   rfl
@@ -521,17 +381,11 @@ instance : Sub (AlternatingMap R M N' ι) :=
       map_eq_zero_of_eq' := fun v i j h hij => by
         simp [f.map_eq_zero_of_eq v h hij, g.map_eq_zero_of_eq v h hij] }⟩
 
-/- warning: alternating_map.sub_apply -> AlternatingMap.sub_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.sub_apply AlternatingMap.sub_applyₓ'. -/
 @[simp]
 theorem sub_apply (m : ι → M) : (g - g₂) m = g m - g₂ m :=
   rfl
 #align alternating_map.sub_apply AlternatingMap.sub_apply
 
-/- warning: alternating_map.coe_sub -> AlternatingMap.coe_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_sub AlternatingMap.coe_subₓ'. -/
 @[norm_cast]
 theorem coe_sub : (↑(g - g₂) : MultilinearMap R (fun i : ι => M) N') = g - g₂ :=
   rfl
@@ -637,18 +491,12 @@ def compAlternatingMap (g : N →ₗ[R] N₂) : AlternatingMap R M N ι →+ Alt
 #align linear_map.comp_alternating_map LinearMap.compAlternatingMap
 -/
 
-/- warning: linear_map.coe_comp_alternating_map -> LinearMap.coe_compAlternatingMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_comp_alternating_map LinearMap.coe_compAlternatingMapₓ'. -/
 @[simp]
 theorem coe_compAlternatingMap (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) :
     ⇑(g.compAlternatingMap f) = g ∘ f :=
   rfl
 #align linear_map.coe_comp_alternating_map LinearMap.coe_compAlternatingMap
 
-/- warning: linear_map.comp_alternating_map_apply -> LinearMap.compAlternatingMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.comp_alternating_map_apply LinearMap.compAlternatingMap_applyₓ'. -/
 @[simp]
 theorem compAlternatingMap_apply (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) (m : ι → M) :
     g.compAlternatingMap f m = g (f m) :=
@@ -661,18 +509,12 @@ theorem smulRight_eq_comp {R M₁ M₂ ι : Type _} [CommSemiring R] [AddCommMon
   rfl
 #align linear_map.smul_right_eq_comp LinearMap.smulRight_eq_comp
 
-/- warning: linear_map.subtype_comp_alternating_map_cod_restrict -> LinearMap.subtype_compAlternatingMap_codRestrict is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.subtype_comp_alternating_map_cod_restrict LinearMap.subtype_compAlternatingMap_codRestrictₓ'. -/
 @[simp]
 theorem subtype_compAlternatingMap_codRestrict (f : AlternatingMap R M N ι) (p : Submodule R N)
     (h) : p.Subtype.compAlternatingMap (f.codRestrict p h) = f :=
   AlternatingMap.ext fun v => rfl
 #align linear_map.subtype_comp_alternating_map_cod_restrict LinearMap.subtype_compAlternatingMap_codRestrict
 
-/- warning: linear_map.comp_alternating_map_cod_restrict -> LinearMap.compAlternatingMap_codRestrict is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.comp_alternating_map_cod_restrict LinearMap.compAlternatingMap_codRestrictₓ'. -/
 @[simp]
 theorem compAlternatingMap_codRestrict (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι)
     (p : Submodule R N₂) (h) :
@@ -698,26 +540,17 @@ def compLinearMap (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) : Alterna
 #align alternating_map.comp_linear_map AlternatingMap.compLinearMap
 -/
 
-/- warning: alternating_map.coe_comp_linear_map -> AlternatingMap.coe_compLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_comp_linear_map AlternatingMap.coe_compLinearMapₓ'. -/
 theorem coe_compLinearMap (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) :
     ⇑(f.compLinearMap g) = f ∘ (· ∘ ·) g :=
   rfl
 #align alternating_map.coe_comp_linear_map AlternatingMap.coe_compLinearMap
 
-/- warning: alternating_map.comp_linear_map_apply -> AlternatingMap.compLinearMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_map_apply AlternatingMap.compLinearMap_applyₓ'. -/
 @[simp]
 theorem compLinearMap_apply (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) (v : ι → M₂) :
     f.compLinearMap g v = f fun i => g (v i) :=
   rfl
 #align alternating_map.comp_linear_map_apply AlternatingMap.compLinearMap_apply
 
-/- warning: alternating_map.comp_linear_map_assoc -> AlternatingMap.compLinearMap_assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_map_assoc AlternatingMap.compLinearMap_assocₓ'. -/
 /-- Composing an alternating map twice with the same linear map in each argument is
 the same as composing with their composition. -/
 theorem compLinearMap_assoc (f : AlternatingMap R M N ι) (g₁ : M₂ →ₗ[R] M) (g₂ : M₃ →ₗ[R] M₂) :
@@ -725,29 +558,17 @@ theorem compLinearMap_assoc (f : AlternatingMap R M N ι) (g₁ : M₂ →ₗ[R]
   rfl
 #align alternating_map.comp_linear_map_assoc AlternatingMap.compLinearMap_assoc
 
-/- warning: alternating_map.zero_comp_linear_map -> AlternatingMap.zero_compLinearMap is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {M₂ : Type.{u5}} [_inst_12 : AddCommMonoid.{u5} M₂] [_inst_13 : Module.{u1, u5} R M₂ _inst_1 _inst_12] (g : LinearMap.{u1, u1, u5, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) M₂ M _inst_12 _inst_2 _inst_13 _inst_3), Eq.{max (succ u5) (succ u3) (succ u4)} (AlternatingMap.{u1, u5, u3, u4} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) (AlternatingMap.compLinearMap.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι M₂ _inst_12 _inst_13 (OfNat.ofNat.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (OfNat.mk.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.zero.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) g) (OfNat.ofNat.{max u5 u3 u4} (AlternatingMap.{u1, u5, u3, u4} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) 0 (OfNat.mk.{max u5 u3 u4} (AlternatingMap.{u1, u5, u3, u4} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) 0 (Zero.zero.{max u5 u3 u4} (AlternatingMap.{u1, u5, u3, u4} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u5, u3, u4} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι))))
-but is expected to have type
-  forall {R : Type.{u5}} [_inst_1 : Semiring.{u5} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u5, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u5, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} {M₂ : Type.{u4}} [_inst_12 : AddCommMonoid.{u4} M₂] [_inst_13 : Module.{u5, u4} R M₂ _inst_1 _inst_12] (g : LinearMap.{u5, u5, u4, u3} R R _inst_1 _inst_1 (RingHom.id.{u5} R (Semiring.toNonAssocSemiring.{u5} R _inst_1)) M₂ M _inst_12 _inst_2 _inst_13 _inst_3), Eq.{max (max (succ u2) (succ u1)) (succ u4)} (AlternatingMap.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) (AlternatingMap.compLinearMap.{u5, u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι M₂ _inst_12 _inst_13 (OfNat.ofNat.{max (max u3 u2) u1} (AlternatingMap.{u5, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u3 u2) u1} (AlternatingMap.{u5, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u5, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))) g) (OfNat.ofNat.{max (max u2 u1) u4} (AlternatingMap.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u2 u1) u4} (AlternatingMap.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι)))
-Case conversion may be inaccurate. Consider using '#align alternating_map.zero_comp_linear_map AlternatingMap.zero_compLinearMapₓ'. -/
 @[simp]
 theorem zero_compLinearMap (g : M₂ →ₗ[R] M) : (0 : AlternatingMap R M N ι).compLinearMap g = 0 := by
   ext; simp only [comp_linear_map_apply, zero_apply]
 #align alternating_map.zero_comp_linear_map AlternatingMap.zero_compLinearMap
 
-/- warning: alternating_map.add_comp_linear_map -> AlternatingMap.add_compLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.add_comp_linear_map AlternatingMap.add_compLinearMapₓ'. -/
 @[simp]
 theorem add_compLinearMap (f₁ f₂ : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) :
     (f₁ + f₂).compLinearMap g = f₁.compLinearMap g + f₂.compLinearMap g := by ext;
   simp only [comp_linear_map_apply, add_apply]
 #align alternating_map.add_comp_linear_map AlternatingMap.add_compLinearMap
 
-/- warning: alternating_map.comp_linear_map_zero -> AlternatingMap.compLinearMap_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_map_zero AlternatingMap.compLinearMap_zeroₓ'. -/
 @[simp]
 theorem compLinearMap_zero [Nonempty ι] (f : AlternatingMap R M N ι) :
     f.compLinearMap (0 : M₂ →ₗ[R] M) = 0 := by
@@ -755,30 +576,18 @@ theorem compLinearMap_zero [Nonempty ι] (f : AlternatingMap R M N ι) :
   simp_rw [comp_linear_map_apply, LinearMap.zero_apply, ← Pi.zero_def, map_zero, zero_apply]
 #align alternating_map.comp_linear_map_zero AlternatingMap.compLinearMap_zero
 
-/- warning: alternating_map.comp_linear_map_id -> AlternatingMap.compLinearMap_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.compLinearMap.{u1, u2, u3, u4, u2} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι M _inst_2 _inst_3 f (LinearMap.id.{u1, u2} R M _inst_1 _inst_2 _inst_3)) f
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} (f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.compLinearMap.{u4, u3, u2, u1, u3} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι M _inst_2 _inst_3 f (LinearMap.id.{u4, u3} R M _inst_1 _inst_2 _inst_3)) f
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_map_id AlternatingMap.compLinearMap_idₓ'. -/
 /-- Composing an alternating map with the identity linear map in each argument. -/
 @[simp]
 theorem compLinearMap_id (f : AlternatingMap R M N ι) : f.compLinearMap LinearMap.id = f :=
   ext fun _ => rfl
 #align alternating_map.comp_linear_map_id AlternatingMap.compLinearMap_id
 
-/- warning: alternating_map.comp_linear_map_injective -> AlternatingMap.compLinearMap_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_map_injective AlternatingMap.compLinearMap_injectiveₓ'. -/
 /-- Composing with a surjective linear map is injective. -/
 theorem compLinearMap_injective (f : M₂ →ₗ[R] M) (hf : Function.Surjective f) :
     Function.Injective fun g : AlternatingMap R M N ι => g.compLinearMap f := fun g₁ g₂ h =>
   ext fun x => by simpa [Function.surjInv_eq hf] using ext_iff.mp h (Function.surjInv hf ∘ x)
 #align alternating_map.comp_linear_map_injective AlternatingMap.compLinearMap_injective
 
-/- warning: alternating_map.comp_linear_map_inj -> AlternatingMap.compLinearMap_inj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_map_inj AlternatingMap.compLinearMap_injₓ'. -/
 theorem compLinearMap_inj (f : M₂ →ₗ[R] M) (hf : Function.Surjective f)
     (g₁ g₂ : AlternatingMap R M N ι) : g₁.compLinearMap f = g₂.compLinearMap f ↔ g₁ = g₂ :=
   (compLinearMap_injective _ hf).eq_iff
@@ -802,25 +611,16 @@ def domLCongr (e : M ≃ₗ[R] M₂) : AlternatingMap R M N ι ≃ₗ[S] Alterna
 #align alternating_map.dom_lcongr AlternatingMap.domLCongr
 -/
 
-/- warning: alternating_map.dom_lcongr_refl -> AlternatingMap.domLCongr_refl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_lcongr_refl AlternatingMap.domLCongr_reflₓ'. -/
 @[simp]
 theorem domLCongr_refl : domLCongr R N ι S (LinearEquiv.refl R M) = LinearEquiv.refl S _ :=
   LinearEquiv.ext fun _ => AlternatingMap.ext fun v => rfl
 #align alternating_map.dom_lcongr_refl AlternatingMap.domLCongr_refl
 
-/- warning: alternating_map.dom_lcongr_symm -> AlternatingMap.domLCongr_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_lcongr_symm AlternatingMap.domLCongr_symmₓ'. -/
 @[simp]
 theorem domLCongr_symm (e : M ≃ₗ[R] M₂) : (domLCongr R N ι S e).symm = domLCongr R N ι S e.symm :=
   rfl
 #align alternating_map.dom_lcongr_symm AlternatingMap.domLCongr_symm
 
-/- warning: alternating_map.dom_lcongr_trans -> AlternatingMap.domLCongr_trans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_lcongr_trans AlternatingMap.domLCongr_transₓ'. -/
 theorem domLCongr_trans (e : M ≃ₗ[R] M₂) (f : M₂ ≃ₗ[R] M₃) :
     (domLCongr R N ι S e).trans (domLCongr R N ι S f) = domLCongr R N ι S (e.trans f) :=
   rfl
@@ -828,9 +628,6 @@ theorem domLCongr_trans (e : M ≃ₗ[R] M₂) (f : M₂ ≃ₗ[R] M₃) :
 
 end DomLcongr
 
-/- warning: alternating_map.comp_linear_equiv_eq_zero_iff -> AlternatingMap.compLinearEquiv_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.comp_linear_equiv_eq_zero_iff AlternatingMap.compLinearEquiv_eq_zero_iffₓ'. -/
 /-- Composing an alternating map with the same linear equiv on each argument gives the zero map
 if and only if the alternating map is the zero map. -/
 @[simp]
@@ -875,26 +672,17 @@ Various properties of reordered and repeated inputs which follow from
 -/
 
 
-/- warning: alternating_map.map_update_self -> AlternatingMap.map_update_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_update_self AlternatingMap.map_update_selfₓ'. -/
 theorem map_update_self [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     f (Function.update v i (v j)) = 0 :=
   f.map_eq_zero_of_eq _ (by rw [Function.update_same, Function.update_noteq hij.symm]) hij
 #align alternating_map.map_update_self AlternatingMap.map_update_self
 
-/- warning: alternating_map.map_update_update -> AlternatingMap.map_update_update is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_update_update AlternatingMap.map_update_updateₓ'. -/
 theorem map_update_update [DecidableEq ι] {i j : ι} (hij : i ≠ j) (m : M) :
     f (Function.update (Function.update v i m) j m) = 0 :=
   f.map_eq_zero_of_eq _
     (by rw [Function.update_same, Function.update_noteq hij, Function.update_same]) hij
 #align alternating_map.map_update_update AlternatingMap.map_update_update
 
-/- warning: alternating_map.map_swap_add -> AlternatingMap.map_swap_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_swap_add AlternatingMap.map_swap_addₓ'. -/
 theorem map_swap_add [DecidableEq ι] {i j : ι} (hij : i ≠ j) : f (v ∘ Equiv.swap i j) + f v = 0 :=
   by
   rw [Equiv.comp_swap_eq_update]
@@ -903,9 +691,6 @@ theorem map_swap_add [DecidableEq ι] {i j : ι} (hij : i ≠ j) : f (v ∘ Equi
     Function.update_comm hij (v i + v j) (v _) v, Function.update_comm hij.symm (v i) (v i) v]
 #align alternating_map.map_swap_add AlternatingMap.map_swap_add
 
-/- warning: alternating_map.map_add_swap -> AlternatingMap.map_add_swap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_add_swap AlternatingMap.map_add_swapₓ'. -/
 theorem map_add_swap [DecidableEq ι] {i j : ι} (hij : i ≠ j) : f v + f (v ∘ Equiv.swap i j) = 0 :=
   by rw [add_comm]; exact f.map_swap_add v hij
 #align alternating_map.map_add_swap AlternatingMap.map_add_swap
@@ -927,9 +712,6 @@ theorem map_perm [DecidableEq ι] [Fintype ι] (v : ι → M) (σ : Equiv.Perm �
 #align alternating_map.map_perm AlternatingMap.map_perm
 -/
 
-/- warning: alternating_map.map_congr_perm -> AlternatingMap.map_congr_perm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_congr_perm AlternatingMap.map_congr_permₓ'. -/
 theorem map_congr_perm [DecidableEq ι] [Fintype ι] (σ : Equiv.Perm ι) : g v = σ.sign • g (v ∘ σ) :=
   by rw [g.map_perm, smul_smul]; simp
 #align alternating_map.map_congr_perm AlternatingMap.map_congr_perm
@@ -951,42 +733,21 @@ def domDomCongr (σ : ι ≃ ι') (f : AlternatingMap R M N ι) : AlternatingMap
 #align alternating_map.dom_dom_congr AlternatingMap.domDomCongr
 -/
 
-/- warning: alternating_map.dom_dom_congr_refl -> AlternatingMap.domDomCongr_refl is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι (Equiv.refl.{succ u4} ι) f) f
-but is expected to have type
-  forall {R : Type.{u4}} [_inst_1 : Semiring.{u4} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u4, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u4, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} (f : AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlternatingMap.{u4, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.domDomCongr.{u4, u3, u2, u1, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι (Equiv.refl.{succ u1} ι) f) f
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_refl AlternatingMap.domDomCongr_reflₓ'. -/
 @[simp]
 theorem domDomCongr_refl (f : AlternatingMap R M N ι) : f.domDomCongr (Equiv.refl ι) = f :=
   ext fun v => rfl
 #align alternating_map.dom_dom_congr_refl AlternatingMap.domDomCongr_refl
 
-/- warning: alternating_map.dom_dom_congr_trans -> AlternatingMap.domDomCongr_trans is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {ι' : Type.{u5}} {ι'' : Type.{u6}} (σ₁ : Equiv.{succ u4, succ u5} ι ι') (σ₂ : Equiv.{succ u5, succ u6} ι' ι'') (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (succ u2) (succ u3) (succ u6)} (AlternatingMap.{u1, u2, u3, u6} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι'') (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u6} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι'' (Equiv.trans.{succ u4, succ u5, succ u6} ι ι' ι'' σ₁ σ₂) f) (AlternatingMap.domDomCongr.{u1, u2, u3, u5, u6} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι' ι'' σ₂ (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ₁ f))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : Semiring.{u3} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u3, u2} R M _inst_1 _inst_2] {N : Type.{u1}} [_inst_4 : AddCommMonoid.{u1} N] [_inst_5 : Module.{u3, u1} R N _inst_1 _inst_4] {ι : Type.{u6}} {ι' : Type.{u5}} {ι'' : Type.{u4}} (σ₁ : Equiv.{succ u6, succ u5} ι ι') (σ₂ : Equiv.{succ u5, succ u4} ι' ι'') (f : AlternatingMap.{u3, u2, u1, u6} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Eq.{max (max (succ u2) (succ u1)) (succ u4)} (AlternatingMap.{u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι'') (AlternatingMap.domDomCongr.{u3, u2, u1, u6, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι'' (Equiv.trans.{succ u6, succ u5, succ u4} ι ι' ι'' σ₁ σ₂) f) (AlternatingMap.domDomCongr.{u3, u2, u1, u5, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι' ι'' σ₂ (AlternatingMap.domDomCongr.{u3, u2, u1, u6, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ₁ f))
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_trans AlternatingMap.domDomCongr_transₓ'. -/
 theorem domDomCongr_trans (σ₁ : ι ≃ ι') (σ₂ : ι' ≃ ι'') (f : AlternatingMap R M N ι) :
     f.domDomCongr (σ₁.trans σ₂) = (f.domDomCongr σ₁).domDomCongr σ₂ :=
   rfl
 #align alternating_map.dom_dom_congr_trans AlternatingMap.domDomCongr_trans
 
-/- warning: alternating_map.dom_dom_congr_zero -> AlternatingMap.domDomCongr_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {ι' : Type.{u5}} (σ : Equiv.{succ u4, succ u5} ι ι'), Eq.{max (succ u2) (succ u3) (succ u5)} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ (OfNat.ofNat.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (OfNat.mk.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.zero.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))))) (OfNat.ofNat.{max u2 u3 u5} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') 0 (OfNat.mk.{max u2 u3 u5} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') 0 (Zero.zero.{max u2 u3 u5} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.zero.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι'))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u1, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u1, u2} R N _inst_1 _inst_4] {ι : Type.{u5}} {ι' : Type.{u4}} (σ : Equiv.{succ u5, succ u4} ι ι'), Eq.{max (max (succ u3) (succ u2)) (succ u4)} (AlternatingMap.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.domDomCongr.{u1, u3, u2, u5, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ (OfNat.ofNat.{max (max u3 u2) u5} (AlternatingMap.{u1, u3, u2, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u3 u2) u5} (AlternatingMap.{u1, u3, u2, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u3, u2, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) (OfNat.ofNat.{max (max u3 u2) u4} (AlternatingMap.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') 0 (Zero.toOfNat0.{max (max u3 u2) u4} (AlternatingMap.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.zero.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι')))
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_zero AlternatingMap.domDomCongr_zeroₓ'. -/
 @[simp]
 theorem domDomCongr_zero (σ : ι ≃ ι') : (0 : AlternatingMap R M N ι).domDomCongr σ = 0 :=
   rfl
 #align alternating_map.dom_dom_congr_zero AlternatingMap.domDomCongr_zero
 
-/- warning: alternating_map.dom_dom_congr_add -> AlternatingMap.domDomCongr_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_add AlternatingMap.domDomCongr_addₓ'. -/
 @[simp]
 theorem domDomCongr_add (σ : ι ≃ ι') (f g : AlternatingMap R M N ι) :
     (f + g).domDomCongr σ = f.domDomCongr σ + g.domDomCongr σ :=
@@ -1008,12 +769,6 @@ def domDomCongrEquiv (σ : ι ≃ ι') : AlternatingMap R M N ι ≃+ Alternatin
 #align alternating_map.dom_dom_congr_equiv AlternatingMap.domDomCongrEquiv
 -/
 
-/- warning: alternating_map.dom_dom_congr_eq_iff -> AlternatingMap.domDomCongr_eq_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {ι' : Type.{u5}} (σ : Equiv.{succ u4, succ u5} ι ι') (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (g : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Iff (Eq.{max (succ u2) (succ u3) (succ u5)} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ f) (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ g)) (Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g)
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : Semiring.{u3} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u3, u2} R M _inst_1 _inst_2] {N : Type.{u1}} [_inst_4 : AddCommMonoid.{u1} N] [_inst_5 : Module.{u3, u1} R N _inst_1 _inst_4] {ι : Type.{u5}} {ι' : Type.{u4}} (σ : Equiv.{succ u5, succ u4} ι ι') (f : AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (g : AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Iff (Eq.{max (max (succ u2) (succ u1)) (succ u4)} (AlternatingMap.{u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.domDomCongr.{u3, u2, u1, u5, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ f) (AlternatingMap.domDomCongr.{u3, u2, u1, u5, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ g)) (Eq.{max (max (succ u2) (succ u1)) (succ u5)} (AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f g)
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_eq_iff AlternatingMap.domDomCongr_eq_iffₓ'. -/
 /-- The results of applying `dom_dom_congr` to two maps are equal if and only if those maps are. -/
 @[simp]
 theorem domDomCongr_eq_iff (σ : ι ≃ ι') (f g : AlternatingMap R M N ι) :
@@ -1021,32 +776,17 @@ theorem domDomCongr_eq_iff (σ : ι ≃ ι') (f g : AlternatingMap R M N ι) :
   (domDomCongrEquiv σ : _ ≃+ AlternatingMap R M N ι').apply_eq_iff_eq
 #align alternating_map.dom_dom_congr_eq_iff AlternatingMap.domDomCongr_eq_iff
 
-/- warning: alternating_map.dom_dom_congr_eq_zero_iff -> AlternatingMap.domDomCongr_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {ι' : Type.{u5}} (σ : Equiv.{succ u4, succ u5} ι ι') (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Iff (Eq.{max (succ u2) (succ u3) (succ u5)} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ f) (OfNat.ofNat.{max u2 u3 u5} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') 0 (OfNat.mk.{max u2 u3 u5} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') 0 (Zero.zero.{max u2 u3 u5} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.zero.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι'))))) (Eq.{max (succ u2) (succ u3) (succ u4)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f (OfNat.ofNat.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (OfNat.mk.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.zero.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : Semiring.{u3} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u3, u2} R M _inst_1 _inst_2] {N : Type.{u1}} [_inst_4 : AddCommMonoid.{u1} N] [_inst_5 : Module.{u3, u1} R N _inst_1 _inst_4] {ι : Type.{u5}} {ι' : Type.{u4}} (σ : Equiv.{succ u5, succ u4} ι ι') (f : AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι), Iff (Eq.{max (max (succ u2) (succ u1)) (succ u4)} (AlternatingMap.{u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.domDomCongr.{u3, u2, u1, u5, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ f) (OfNat.ofNat.{max (max u2 u1) u4} (AlternatingMap.{u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') 0 (Zero.toOfNat0.{max (max u2 u1) u4} (AlternatingMap.{u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (AlternatingMap.zero.{u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι')))) (Eq.{max (max (succ u2) (succ u1)) (succ u5)} (AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) f (OfNat.ofNat.{max (max u2 u1) u5} (AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u2 u1) u5} (AlternatingMap.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u3, u2, u1, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))))
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_eq_zero_iff AlternatingMap.domDomCongr_eq_zero_iffₓ'. -/
 @[simp]
 theorem domDomCongr_eq_zero_iff (σ : ι ≃ ι') (f : AlternatingMap R M N ι) :
     f.domDomCongr σ = 0 ↔ f = 0 :=
   (domDomCongrEquiv σ : AlternatingMap R M N ι ≃+ AlternatingMap R M N ι').map_eq_zero_iff
 #align alternating_map.dom_dom_congr_eq_zero_iff AlternatingMap.domDomCongr_eq_zero_iff
 
-/- warning: alternating_map.dom_dom_congr_perm -> AlternatingMap.domDomCongr_perm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_dom_congr_perm AlternatingMap.domDomCongr_permₓ'. -/
 theorem domDomCongr_perm [Fintype ι] [DecidableEq ι] (σ : Equiv.Perm ι) :
     g.domDomCongr σ = σ.sign • g :=
   AlternatingMap.ext fun v => g.map_perm v σ
 #align alternating_map.dom_dom_congr_perm AlternatingMap.domDomCongr_perm
 
-/- warning: alternating_map.coe_dom_dom_congr -> AlternatingMap.coe_domDomCongr is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {ι : Type.{u4}} {ι' : Type.{u5}} (f : AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (σ : Equiv.{succ u4, succ u5} ι ι'), Eq.{max (succ u5) (succ u2) (succ u3)} (MultilinearMap.{u1, u2, u3, u5} R ι' (fun (i : ι') => M) N _inst_1 (fun (i : ι') => _inst_2) _inst_4 (fun (i : ι') => _inst_3) _inst_5) ((fun (a : Sort.{max (succ u2) (succ u3) (succ u5)}) (b : Sort.{max (succ u5) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u5), max (succ u5) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (MultilinearMap.{u1, u2, u3, u5} R ι' (fun (i : ι') => M) N _inst_1 (fun (i : ι') => _inst_2) _inst_4 (fun (i : ι') => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u5), max (succ u5) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (MultilinearMap.{u1, u2, u3, u5} R ι' (fun (i : ι') => M) N _inst_1 (fun (i : ι') => _inst_2) _inst_4 (fun (i : ι') => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u5), max (succ u5) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (MultilinearMap.{u1, u2, u3, u5} R ι' (fun (i : ι') => M) N _inst_1 (fun (i : ι') => _inst_2) _inst_4 (fun (i : ι') => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u5), max (succ u5) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι') (MultilinearMap.{u1, u2, u3, u5} R ι' (fun (i : ι') => M) N _inst_1 (fun (i : ι') => _inst_2) _inst_4 (fun (i : ι') => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι')))) (AlternatingMap.domDomCongr.{u1, u2, u3, u4, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ f)) (MultilinearMap.domDomCongr.{u1, u2, u3, u4, u5} R M N _inst_1 _inst_2 _inst_4 _inst_3 _inst_5 ι ι' σ ((fun (a : Sort.{max (succ u2) (succ u3) (succ u4)}) (b : Sort.{max (succ u4) (succ u2) (succ u3)}) [self : HasLiftT.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} a b] => self.0) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (_x : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (HasLiftT.mk.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (_x : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (CoeTCₓ.coe.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (_x : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (coeBase.{max (succ u2) (succ u3) (succ u4), max (succ u4) (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (MultilinearMap.{u1, u2, u3, u4} R ι (fun (_x : ι) => M) N _inst_1 (fun (i : ι) => _inst_2) _inst_4 (fun (i : ι) => _inst_3) _inst_5) (AlternatingMap.coe.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι)))) f))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u1, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u1, u2} R N _inst_1 _inst_4] {ι : Type.{u5}} {ι' : Type.{u4}} (f : AlternatingMap.{u1, u3, u2, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (σ : Equiv.{succ u5, succ u4} ι ι'), Eq.{max (max (succ u3) (succ u2)) (succ u4)} (MultilinearMap.{u1, u3, u2, u4} R ι' (fun (i : ι') => M) N _inst_1 (fun (i : ι') => _inst_2) _inst_4 (fun (i : ι') => _inst_3) _inst_5) (AlternatingMap.toMultilinearMap.{u1, u3, u2, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι' (AlternatingMap.domDomCongr.{u1, u3, u2, u5, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι ι' σ f)) (MultilinearMap.domDomCongr.{u1, u3, u2, u5, u4} R M N _inst_1 _inst_2 _inst_4 _inst_3 _inst_5 ι ι' σ (AlternatingMap.toMultilinearMap.{u1, u3, u2, u5} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι f))
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_dom_dom_congr AlternatingMap.coe_domDomCongrₓ'. -/
 @[norm_cast]
 theorem coe_domDomCongr (σ : ι ≃ ι') :
     ↑(f.domDomCongr σ) = (f : MultilinearMap R (fun _ : ι => M) N).domDomCongr σ :=
@@ -1055,9 +795,6 @@ theorem coe_domDomCongr (σ : ι ≃ ι') :
 
 end DomDomCongr
 
-/- warning: alternating_map.map_linear_dependent -> AlternatingMap.map_linearDependent is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_linear_dependent AlternatingMap.map_linearDependentₓ'. -/
 /-- If the arguments are linearly dependent then the result is `0`. -/
 theorem map_linearDependent {K : Type _} [Ring K] {M : Type _} [AddCommGroup M] [Module K M]
     {N : Type _} [AddCommGroup N] [Module K N] [NoZeroSMulDivisors K N] (f : AlternatingMap K M N ι)
@@ -1082,21 +819,12 @@ section Fin
 
 open Fin
 
-/- warning: alternating_map.map_vec_cons_add -> AlternatingMap.map_vecCons_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_vec_cons_add AlternatingMap.map_vecCons_addₓ'. -/
 /-- A version of `multilinear_map.cons_add` for `alternating_map`. -/
 theorem map_vecCons_add {n : ℕ} (f : AlternatingMap R M N (Fin n.succ)) (m : Fin n → M) (x y : M) :
     f (Matrix.vecCons (x + y) m) = f (Matrix.vecCons x m) + f (Matrix.vecCons y m) :=
   f.toMultilinearMap.cons_add _ _ _
 #align alternating_map.map_vec_cons_add AlternatingMap.map_vecCons_add
 
-/- warning: alternating_map.map_vec_cons_smul -> AlternatingMap.map_vecCons_smul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u3} N] [_inst_5 : Module.{u1, u3} R N _inst_1 _inst_4] {n : Nat} (f : AlternatingMap.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) (m : (Fin n) -> M) (c : R) (x : M), Eq.{succ u3} N (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) (fun (_x : AlternatingMap.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) => ((Fin (Nat.succ n)) -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) f (Matrix.vecCons.{u2} M n (SMul.smul.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R _inst_1) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Module.toMulActionWithZero.{u1, u2} R M _inst_1 _inst_2 _inst_3)))) c x) m)) (SMul.smul.{u1, u3} R N (SMulZeroClass.toHasSmul.{u1, u3} R N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u3} R N (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u3} R N (Semiring.toMonoidWithZero.{u1} R _inst_1) (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_4))) (Module.toMulActionWithZero.{u1, u3} R N _inst_1 _inst_4 _inst_5)))) c (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (AlternatingMap.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) (fun (_x : AlternatingMap.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) => ((Fin (Nat.succ n)) -> M) -> N) (AlternatingMap.coeFun.{u1, u2, u3, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) f (Matrix.vecCons.{u2} M n x m)))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : Semiring.{u3} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u3, u2} R M _inst_1 _inst_2] {N : Type.{u1}} [_inst_4 : AddCommMonoid.{u1} N] [_inst_5 : Module.{u3, u1} R N _inst_1 _inst_4] {n : Nat} (f : AlternatingMap.{u3, u2, u1, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) (m : (Fin n) -> M) (c : R) (x : M), Eq.{succ u1} N (FunLike.coe.{max (max (succ u2) (succ u1)) 1, succ u2, succ u1} (AlternatingMap.{u3, u2, u1, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) ((Fin (Nat.succ n)) -> M) (fun (_x : (Fin (Nat.succ n)) -> M) => N) (AlternatingMap.funLike.{u3, u2, u1, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) f (Matrix.vecCons.{u2} M n (HSMul.hSMul.{u3, u2, u2} R M M (instHSMul.{u3, u2} R M (SMulZeroClass.toSMul.{u3, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u3, u2} R M (MonoidWithZero.toZero.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_1)) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u3, u2} R M (Semiring.toMonoidWithZero.{u3} R _inst_1) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (Module.toMulActionWithZero.{u3, u2} R M _inst_1 _inst_2 _inst_3))))) c x) m)) (HSMul.hSMul.{u3, u1, u1} R N N (instHSMul.{u3, u1} R N (SMulZeroClass.toSMul.{u3, u1} R N (AddMonoid.toZero.{u1} N (AddCommMonoid.toAddMonoid.{u1} N _inst_4)) (SMulWithZero.toSMulZeroClass.{u3, u1} R N (MonoidWithZero.toZero.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_1)) (AddMonoid.toZero.{u1} N (AddCommMonoid.toAddMonoid.{u1} N _inst_4)) (MulActionWithZero.toSMulWithZero.{u3, u1} R N (Semiring.toMonoidWithZero.{u3} R _inst_1) (AddMonoid.toZero.{u1} N (AddCommMonoid.toAddMonoid.{u1} N _inst_4)) (Module.toMulActionWithZero.{u3, u1} R N _inst_1 _inst_4 _inst_5))))) c (FunLike.coe.{max (max (succ u2) (succ u1)) 1, succ u2, succ u1} (AlternatingMap.{u3, u2, u1, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) ((Fin (Nat.succ n)) -> M) (fun (_x : (Fin (Nat.succ n)) -> M) => N) (AlternatingMap.funLike.{u3, u2, u1, 0} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 (Fin (Nat.succ n))) f (Matrix.vecCons.{u2} M n x m)))
-Case conversion may be inaccurate. Consider using '#align alternating_map.map_vec_cons_smul AlternatingMap.map_vecCons_smulₓ'. -/
 /-- A version of `multilinear_map.cons_smul` for `alternating_map`. -/
 theorem map_vecCons_smul {n : ℕ} (f : AlternatingMap R M N (Fin n.succ)) (m : Fin n → M) (c : R)
     (x : M) : f (Matrix.vecCons (c • x) m) = c • f (Matrix.vecCons x m) :=
@@ -1126,12 +854,6 @@ private theorem alternization_map_eq_zero_of_eq_aux (m : MultilinearMap R (fun i
       (fun σ _ _ => (not_congr swap_mul_eq_iff).mpr i_ne_j) (fun σ _ => Finset.mem_univ _)
       fun σ _ => swap_mul_involutive i j σ
 
-/- warning: multilinear_map.alternatization -> MultilinearMap.alternatization is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N' : Type.{u3}} [_inst_10 : AddCommGroup.{u3} N'] [_inst_11 : Module.{u1, u3} R N' _inst_1 (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10)] {ι : Type.{u4}} [_inst_12 : Fintype.{u4} ι] [_inst_13 : DecidableEq.{succ u4} ι], AddMonoidHom.{max u4 u2 u3, max u2 u3 u4} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AddMonoid.toAddZeroClass.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (SubNegMonoid.toAddMonoid.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AddGroup.toSubNegMonoid.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AddCommGroup.toAddGroup.{max u4 u2 u3} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (MultilinearMap.addCommGroup.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) _inst_10 (fun (i : ι) => _inst_3) _inst_11))))) (AddMonoid.toAddZeroClass.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (SubNegMonoid.toAddMonoid.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AddGroup.toSubNegMonoid.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AddCommGroup.toAddGroup.{max u2 u3 u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AlternatingMap.addCommGroup.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' _inst_10 _inst_11 ι)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {M : Type.{u2}} [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {N' : Type.{u3}} [_inst_10 : AddCommGroup.{u3} N'] [_inst_11 : Module.{u1, u3} R N' _inst_1 (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10)] {ι : Type.{u4}} [_inst_12 : Fintype.{u4} ι] [_inst_13 : DecidableEq.{succ u4} ι], AddMonoidHom.{max (max u4 u3) u2, max (max u4 u3) u2} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AddMonoid.toAddZeroClass.{max (max u2 u3) u4} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (SubNegMonoid.toAddMonoid.{max (max u2 u3) u4} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AddGroup.toSubNegMonoid.{max (max u2 u3) u4} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (AddCommGroup.toAddGroup.{max (max u2 u3) u4} (MultilinearMap.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) (fun (i : ι) => _inst_3) _inst_11) (MultilinearMap.instAddCommGroupMultilinearMapToAddCommMonoid.{u1, u2, u3, u4} R ι (fun (i : ι) => M) N' _inst_1 (fun (i : ι) => _inst_2) _inst_10 (fun (i : ι) => _inst_3) _inst_11))))) (AddMonoid.toAddZeroClass.{max (max u2 u3) u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (SubNegMonoid.toAddMonoid.{max (max u2 u3) u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AddGroup.toSubNegMonoid.{max (max u2 u3) u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AddCommGroup.toAddGroup.{max (max u2 u3) u4} (AlternatingMap.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' (AddCommGroup.toAddCommMonoid.{u3} N' _inst_10) _inst_11 ι) (AlternatingMap.addCommGroup.{u1, u2, u3, u4} R _inst_1 M _inst_2 _inst_3 N' _inst_10 _inst_11 ι)))))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.alternatization MultilinearMap.alternatizationₓ'. -/
 /-- Produce an `alternating_map` out of a `multilinear_map`, by summing over all argument
 permutations. -/
 def alternatization : MultilinearMap R (fun i : ι => M) N' →+ AlternatingMap R M N' ι
@@ -1155,25 +877,16 @@ def alternatization : MultilinearMap R (fun i : ι => M) N' →+ AlternatingMap 
       AlternatingMap.zero_apply, AlternatingMap.coe_mk, smul_apply, sum_apply]
 #align multilinear_map.alternatization MultilinearMap.alternatization
 
-/- warning: multilinear_map.alternatization_def -> MultilinearMap.alternatization_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.alternatization_def MultilinearMap.alternatization_defₓ'. -/
 theorem alternatization_def (m : MultilinearMap R (fun i : ι => M) N') :
     ⇑(alternatization m) = (∑ σ : Perm ι, σ.sign • m.domDomCongr σ : _) :=
   rfl
 #align multilinear_map.alternatization_def MultilinearMap.alternatization_def
 
-/- warning: multilinear_map.alternatization_coe -> MultilinearMap.alternatization_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.alternatization_coe MultilinearMap.alternatization_coeₓ'. -/
 theorem alternatization_coe (m : MultilinearMap R (fun i : ι => M) N') :
     ↑m.alternatization = (∑ σ : Perm ι, σ.sign • m.domDomCongr σ : _) :=
   coe_injective rfl
 #align multilinear_map.alternatization_coe MultilinearMap.alternatization_coe
 
-/- warning: multilinear_map.alternatization_apply -> MultilinearMap.alternatization_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.alternatization_apply MultilinearMap.alternatization_applyₓ'. -/
 theorem alternatization_apply (m : MultilinearMap R (fun i : ι => M) N') (v : ι → M) :
     alternatization m v = ∑ σ : Perm ι, σ.sign • m.domDomCongr σ v := by
   simp only [alternatization_def, smul_apply, sum_apply]
@@ -1183,9 +896,6 @@ end MultilinearMap
 
 namespace AlternatingMap
 
-/- warning: alternating_map.coe_alternatization -> AlternatingMap.coe_alternatization is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.coe_alternatization AlternatingMap.coe_alternatizationₓ'. -/
 /-- Alternatizing a multilinear map that is already alternating results in a scale factor of `n!`,
 where `n` is the number of inputs. -/
 theorem coe_alternatization [DecidableEq ι] [Fintype ι] (a : AlternatingMap R M N' ι) :
@@ -1203,9 +913,6 @@ namespace LinearMap
 
 variable {N'₂ : Type _} [AddCommGroup N'₂] [Module R N'₂] [DecidableEq ι] [Fintype ι]
 
-/- warning: linear_map.comp_multilinear_map_alternatization -> LinearMap.compMultilinearMap_alternatization is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.comp_multilinear_map_alternatization LinearMap.compMultilinearMap_alternatizationₓ'. -/
 /-- Composition with a linear map before and after alternatization are equivalent. -/
 theorem compMultilinearMap_alternatization (g : N' →ₗ[R] N'₂)
     (f : MultilinearMap R (fun _ : ι => M) N') :
@@ -1235,12 +942,6 @@ abbrev ModSumCongr (α β : Type _) :=
 #align equiv.perm.mod_sum_congr Equiv.Perm.ModSumCongr
 -/
 
-/- warning: equiv.perm.mod_sum_congr.swap_smul_involutive -> Equiv.Perm.ModSumCongr.swap_smul_involutive is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_21 : DecidableEq.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)] (i : Sum.{u1, u2} α β) (j : Sum.{u1, u2} α β), Function.Involutive.{succ (max u1 u2)} (Equiv.Perm.ModSumCongr.{u1, u2} α β) (SMul.smul.{max u1 u2, max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.ModSumCongr.{u1, u2} α β) (MulAction.toHasSmul.{max u1 u2, max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.ModSumCongr.{u1, u2} α β) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))) (MulAction.quotient.{max u1 u2, max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)))) (Monoid.toMulAction.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (DivInvMonoid.toMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Group.toDivInvMonoid.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β))))) (MonoidHom.range.{max u1 u2, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Prod.group.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u1} α) (Equiv.Perm.permGroup.{u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)) (Equiv.Perm.sumCongrHom.{u1, u2} α β)) (MulAction.left_quotientAction.{max u1 u2} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)) (MonoidHom.range.{max u1 u2, max u1 u2} (Prod.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β)) (Prod.group.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u1} α) (Equiv.Perm.permGroup.{u2} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.permGroup.{max u1 u2} (Sum.{u1, u2} α β)) (Equiv.Perm.sumCongrHom.{u1, u2} α β))))) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β) (fun (a : Sum.{u1, u2} α β) (b : Sum.{u1, u2} α β) => _inst_21 a b) i j))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_21 : DecidableEq.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)] (i : Sum.{u2, u1} α β) (j : Sum.{u2, u1} α β), Function.Involutive.{max (succ u2) (succ u1)} (Equiv.Perm.ModSumCongr.{u2, u1} α β) (SMul.smul.{max u2 u1, max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Equiv.Perm.ModSumCongr.{u2, u1} α β) (MulAction.toSMul.{max u2 u1, max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Equiv.Perm.ModSumCongr.{u2, u1} α β) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))) (MulAction.quotient.{max u2 u1, max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)))) (Monoid.toMulAction.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (DivInvMonoid.toMonoid.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Group.toDivInvMonoid.{max u2 u1} (Equiv.Perm.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β))))) (MonoidHom.range.{max u2 u1, max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Prod.instGroupProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u2} α) (Equiv.Perm.permGroup.{u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)) (Equiv.Perm.sumCongrHom.{u2, u1} α β)) (MulAction.left_quotientAction.{max u2 u1} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)) (MonoidHom.range.{max u2 u1, max u2 u1} (Prod.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β)) (Prod.instGroupProd.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u2} α) (Equiv.Perm.permGroup.{u1} β)) (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.permGroup.{max u2 u1} (Sum.{u2, u1} α β)) (Equiv.Perm.sumCongrHom.{u2, u1} α β))))) (Equiv.swap.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (fun (a : Sum.{u2, u1} α β) (b : Sum.{u2, u1} α β) => _inst_21 a b) i j))
-Case conversion may be inaccurate. Consider using '#align equiv.perm.mod_sum_congr.swap_smul_involutive Equiv.Perm.ModSumCongr.swap_smul_involutiveₓ'. -/
 theorem ModSumCongr.swap_smul_involutive {α β : Type _} [DecidableEq (Sum α β)] (i j : Sum α β) :
     Function.Involutive (SMul.smul (Equiv.swap i j) : ModSumCongr α β → ModSumCongr α β) := fun σ =>
   by
@@ -1256,9 +957,6 @@ open Equiv
 
 variable [DecidableEq ιa] [DecidableEq ιb]
 
-/- warning: alternating_map.dom_coprod.summand -> AlternatingMap.domCoprod.summand is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod.summand AlternatingMap.domCoprod.summandₓ'. -/
 /-- summand used in `alternating_map.dom_coprod` -/
 def domCoprod.summand (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb)
     (σ : Perm.ModSumCongr ιa ιb) : MultilinearMap R' (fun _ : Sum ιa ιb => Mᵢ) (N₁ ⊗[R'] N₂) :=
@@ -1281,9 +979,6 @@ def domCoprod.summand (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap 
     rw [← a.map_congr_perm fun i => v (σ₁ _), ← b.map_congr_perm fun i => v (σ₁ _)]
 #align alternating_map.dom_coprod.summand AlternatingMap.domCoprod.summand
 
-/- warning: alternating_map.dom_coprod.summand_mk' -> AlternatingMap.domCoprod.summand_mk'' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod.summand_mk' AlternatingMap.domCoprod.summand_mk''ₓ'. -/
 theorem domCoprod.summand_mk'' (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb)
     (σ : Equiv.Perm (Sum ιa ιb)) :
     domCoprod.summand a b (Quotient.mk'' σ) =
@@ -1293,9 +988,6 @@ theorem domCoprod.summand_mk'' (a : AlternatingMap R' Mᵢ N₁ ιa) (b : Altern
   rfl
 #align alternating_map.dom_coprod.summand_mk' AlternatingMap.domCoprod.summand_mk''
 
-/- warning: alternating_map.dom_coprod.summand_add_swap_smul_eq_zero -> AlternatingMap.domCoprod.summand_add_swap_smul_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod.summand_add_swap_smul_eq_zero AlternatingMap.domCoprod.summand_add_swap_smul_eq_zeroₓ'. -/
 /-- Swapping elements in `σ` with equal values in `v` results in an addition that cancels -/
 theorem domCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁ ιa)
     (b : AlternatingMap R' Mᵢ N₂ ιb) (σ : Perm.ModSumCongr ιa ιb) {v : Sum ιa ιb → Mᵢ}
@@ -1312,9 +1004,6 @@ theorem domCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁
   convert add_right_neg _ <;> · ext k; rw [Equiv.apply_swap_eq_self hv]
 #align alternating_map.dom_coprod.summand_add_swap_smul_eq_zero AlternatingMap.domCoprod.summand_add_swap_smul_eq_zero
 
-/- warning: alternating_map.dom_coprod.summand_eq_zero_of_smul_invariant -> AlternatingMap.domCoprod.summand_eq_zero_of_smul_invariant is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod.summand_eq_zero_of_smul_invariant AlternatingMap.domCoprod.summand_eq_zero_of_smul_invariantₓ'. -/
 /-- Swapping elements in `σ` with equal values in `v` result in zero if the swap has no effect
 on the quotient. -/
 theorem domCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ N₁ ιa)
@@ -1350,9 +1039,6 @@ theorem domCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     all_goals exact AlternatingMap.map_eq_zero_of_eq _ _ hv fun hij' => hij (hij' ▸ rfl)
 #align alternating_map.dom_coprod.summand_eq_zero_of_smul_invariant AlternatingMap.domCoprod.summand_eq_zero_of_smul_invariant
 
-/- warning: alternating_map.dom_coprod -> AlternatingMap.domCoprod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod AlternatingMap.domCoprodₓ'. -/
 /-- Like `multilinear_map.dom_coprod`, but ensures the result is also alternating.
 
 Note that this is usually defined (for instance, as used in Proposition 22.24 in [Gallier2011Notes])
@@ -1392,9 +1078,6 @@ def domCoprod (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ 
           Equiv.Perm.ModSumCongr.swap_smul_involutive i j σ }
 #align alternating_map.dom_coprod AlternatingMap.domCoprod
 
-/- warning: alternating_map.dom_coprod_coe -> AlternatingMap.domCoprod_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod_coe AlternatingMap.domCoprod_coeₓ'. -/
 theorem domCoprod_coe (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb) :
     (↑(a.domCoprod b) : MultilinearMap R' (fun _ => Mᵢ) _) =
       ∑ σ : Perm.ModSumCongr ιa ιb, domCoprod.summand a b σ :=
@@ -1426,9 +1109,6 @@ def domCoprod' :
 #align alternating_map.dom_coprod' AlternatingMap.domCoprod'
 -/
 
-/- warning: alternating_map.dom_coprod'_apply -> AlternatingMap.domCoprod'_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.dom_coprod'_apply AlternatingMap.domCoprod'_applyₓ'. -/
 @[simp]
 theorem domCoprod'_apply (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb) :
     domCoprod' (a ⊗ₜ[R'] b) = domCoprod a b :=
@@ -1439,9 +1119,6 @@ end AlternatingMap
 
 open Equiv
 
-/- warning: multilinear_map.dom_coprod_alternization_coe -> MultilinearMap.domCoprod_alternization_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_coprod_alternization_coe MultilinearMap.domCoprod_alternization_coeₓ'. -/
 /-- A helper lemma for `multilinear_map.dom_coprod_alternization`. -/
 theorem MultilinearMap.domCoprod_alternization_coe [DecidableEq ιa] [DecidableEq ιb]
     (a : MultilinearMap R' (fun _ : ιa => Mᵢ) N₁) (b : MultilinearMap R' (fun _ : ιb => Mᵢ) N₂) :
@@ -1456,9 +1133,6 @@ theorem MultilinearMap.domCoprod_alternization_coe [DecidableEq ιa] [DecidableE
 
 open AlternatingMap
 
-/- warning: multilinear_map.dom_coprod_alternization -> MultilinearMap.domCoprod_alternization is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_coprod_alternization MultilinearMap.domCoprod_alternizationₓ'. -/
 /-- Computing the `multilinear_map.alternatization` of the `multilinear_map.dom_coprod` is the same
 as computing the `alternating_map.dom_coprod` of the `multilinear_map.alternatization`s.
 -/
@@ -1498,9 +1172,6 @@ theorem MultilinearMap.domCoprod_alternization [DecidableEq ιa] [DecidableEq ι
     MultilinearMap.domCoprod_domDomCongr_sumCongr, perm.sign_sum_congr, mul_smul, mul_smul]
 #align multilinear_map.dom_coprod_alternization MultilinearMap.domCoprod_alternization
 
-/- warning: multilinear_map.dom_coprod_alternization_eq -> MultilinearMap.domCoprod_alternization_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_coprod_alternization_eq MultilinearMap.domCoprod_alternization_eqₓ'. -/
 /-- Taking the `multilinear_map.alternatization` of the `multilinear_map.dom_coprod` of two
 `alternating_map`s gives a scaled version of the `alternating_map.coprod` of those maps.
 -/
@@ -1530,9 +1201,6 @@ variable {R' : Type _} {N₁ N₂ : Type _} [CommSemiring R'] [AddCommMonoid N�
 
 variable [Module R' N₁] [Module R' N₂]
 
-/- warning: basis.ext_alternating -> Basis.ext_alternating is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.ext_alternating Basis.ext_alternatingₓ'. -/
 /-- Two alternating maps indexed by a `fintype` are equal if they are equal when all arguments
 are distinct basis vectors. -/
 theorem Basis.ext_alternating {f g : AlternatingMap R' N₁ N₂ ι} (e : Basis ι₁ R' N₁)
@@ -1584,26 +1252,17 @@ def curryLeft {n : ℕ} (f : AlternatingMap R' M'' N'' (Fin n.succ)) :
 #align alternating_map.curry_left AlternatingMap.curryLeft
 -/
 
-/- warning: alternating_map.curry_left_zero -> AlternatingMap.curryLeft_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.curry_left_zero AlternatingMap.curryLeft_zeroₓ'. -/
 @[simp]
 theorem curryLeft_zero {n : ℕ} : curryLeft (0 : AlternatingMap R' M'' N'' (Fin n.succ)) = 0 :=
   rfl
 #align alternating_map.curry_left_zero AlternatingMap.curryLeft_zero
 
-/- warning: alternating_map.curry_left_add -> AlternatingMap.curryLeft_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.curry_left_add AlternatingMap.curryLeft_addₓ'. -/
 @[simp]
 theorem curryLeft_add {n : ℕ} (f g : AlternatingMap R' M'' N'' (Fin n.succ)) :
     curryLeft (f + g) = curryLeft f + curryLeft g :=
   rfl
 #align alternating_map.curry_left_add AlternatingMap.curryLeft_add
 
-/- warning: alternating_map.curry_left_smul -> AlternatingMap.curryLeft_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.curry_left_smul AlternatingMap.curryLeft_smulₓ'. -/
 @[simp]
 theorem curryLeft_smul {n : ℕ} (r : R') (f : AlternatingMap R' M'' N'' (Fin n.succ)) :
     curryLeft (r • f) = r • curryLeft f :=
@@ -1623,9 +1282,6 @@ def curryLeftLinearMap {n : ℕ} :
 #align alternating_map.curry_left_linear_map AlternatingMap.curryLeftLinearMap
 -/
 
-/- warning: alternating_map.curry_left_same -> AlternatingMap.curryLeft_same is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.curry_left_same AlternatingMap.curryLeft_sameₓ'. -/
 /-- Currying with the same element twice gives the zero map. -/
 @[simp]
 theorem curryLeft_same {n : ℕ} (f : AlternatingMap R' M'' N'' (Fin n.succ.succ)) (m : M'') :
@@ -1633,9 +1289,6 @@ theorem curryLeft_same {n : ℕ} (f : AlternatingMap R' M'' N'' (Fin n.succ.succ
   ext fun x => f.map_eq_zero_of_eq _ (by simp) Fin.zero_ne_one
 #align alternating_map.curry_left_same AlternatingMap.curryLeft_same
 
-/- warning: alternating_map.curry_left_comp_alternating_map -> AlternatingMap.curryLeft_compAlternatingMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.curry_left_comp_alternating_map AlternatingMap.curryLeft_compAlternatingMapₓ'. -/
 @[simp]
 theorem curryLeft_compAlternatingMap {n : ℕ} (g : N'' →ₗ[R'] N₂'')
     (f : AlternatingMap R' M'' N'' (Fin n.succ)) (m : M'') :
@@ -1643,9 +1296,6 @@ theorem curryLeft_compAlternatingMap {n : ℕ} (g : N'' →ₗ[R'] N₂'')
   rfl
 #align alternating_map.curry_left_comp_alternating_map AlternatingMap.curryLeft_compAlternatingMap
 
-/- warning: alternating_map.curry_left_comp_linear_map -> AlternatingMap.curryLeft_compLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align alternating_map.curry_left_comp_linear_map AlternatingMap.curryLeft_compLinearMapₓ'. -/
 @[simp]
 theorem curryLeft_compLinearMap {n : ℕ} (g : M₂'' →ₗ[R'] M'')
     (f : AlternatingMap R' M'' N'' (Fin n.succ)) (m : M₂'') :

@@ -149,30 +149,15 @@ variable {α β γ : Type u}
 
 open IsLawfulTraversable Functor
 
-/- warning: equiv.id_traverse -> Equiv.id_traverse is a dubious translation:
-lean 3 declaration is
-  forall {t : Type.{u1} -> Type.{u1}} {t' : Type.{u1} -> Type.{u1}} (eqv : forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (t α) (t' α)) [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {α : Type.{u1}} (x : t' α), Eq.{succ u1} (id.{succ (succ u1)} Type.{u1} (t' α)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}) α α (id.mk.{succ u1} α) x) x
-but is expected to have type
-  forall {t : Type.{u1} -> Type.{u1}} {t' : Type.{u1} -> Type.{u1}} (eqv : forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (t α) (t' α)) [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {α : Type.{u1}} (x : t' α), Eq.{succ u1} (Id.{u1} (t' α)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) α α (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) α) x) x
-Case conversion may be inaccurate. Consider using '#align equiv.id_traverse Equiv.id_traverseₓ'. -/
 protected theorem id_traverse (x : t' α) : Equiv.traverse eqv id.mk x = x := by
   simp! [Equiv.traverse, idBind, id_traverse, Functor.map, functor_norm]
 #align equiv.id_traverse Equiv.id_traverse
 
-/- warning: equiv.traverse_eq_map_id -> Equiv.traverse_eq_map_id is a dubious translation:
-lean 3 declaration is
-  forall {t : Type.{u1} -> Type.{u1}} {t' : Type.{u1} -> Type.{u1}} (eqv : forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (t α) (t' α)) [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (x : t' α), Eq.{succ u1} (id.{succ (succ u1)} Type.{u1} (t' β)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}) α β (Function.comp.{succ u1, succ u1, succ u1} α β (id.{succ (succ u1)} Type.{u1} β) (id.mk.{succ u1} β) f) x) (id.mk.{succ u1} (t' β) (Equiv.map.{u1} (fun (α : Type.{u1}) => t α) t' eqv (Traversable.toFunctor.{u1} (fun (α : Type.{u1}) => t α) _inst_1) α β f x))
-but is expected to have type
-  forall {t : Type.{u1} -> Type.{u1}} {t' : Type.{u1} -> Type.{u1}} (eqv : forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (t α) (t' α)) [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (x : t' α), Eq.{succ u1} (Id.{u1} (t' β)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) α β (Function.comp.{succ u1, succ u1, succ u1} α β (Id.{u1} β) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) β) f) x) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) (t' β) (Equiv.map.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv (Traversable.toFunctor.{u1} (fun (α : Type.{u1}) => t α) _inst_1) α β f x))
-Case conversion may be inaccurate. Consider using '#align equiv.traverse_eq_map_id Equiv.traverse_eq_map_idₓ'. -/
 protected theorem traverse_eq_map_id (f : α → β) (x : t' α) :
     Equiv.traverse eqv (id.mk ∘ f) x = id.mk (Equiv.map eqv f x) := by
   simp [Equiv.traverse, traverse_eq_map_id, functor_norm] <;> rfl
 #align equiv.traverse_eq_map_id Equiv.traverse_eq_map_id
 
-/- warning: equiv.comp_traverse -> Equiv.comp_traverse is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align equiv.comp_traverse Equiv.comp_traverseₓ'. -/
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) (x : t' α) :
     Equiv.traverse eqv (Comp.mk ∘ Functor.map f ∘ g) x =
       Comp.mk (Equiv.traverse eqv f <$> Equiv.traverse eqv g x) :=

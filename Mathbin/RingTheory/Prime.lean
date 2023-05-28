@@ -28,9 +28,6 @@ open Finset
 
 open BigOperators
 
-/- warning: mul_eq_mul_prime_prod -> mul_eq_mul_prime_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mul_eq_mul_prime_prod mul_eq_mul_prime_prodₓ'. -/
 /-- If `x * y = a * ∏ i in s, p i` where `p i` is always prime, then
   `x` and `y` can both be written as a divisor of `a` multiplied by
   a product over a subset of `s`  -/
@@ -59,9 +56,6 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
           simp [← hbc, prod_insert hiu, mul_assoc, mul_comm, mul_left_comm]⟩
 #align mul_eq_mul_prime_prod mul_eq_mul_prime_prod
 
-/- warning: mul_eq_mul_prime_pow -> mul_eq_mul_prime_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mul_eq_mul_prime_pow mul_eq_mul_prime_powₓ'. -/
 /-- If ` x * y = a * p ^ n` where `p` is prime, then `x` and `y` can both be written
   as the product of a power of `p` and a divisor of `a`. -/
 theorem mul_eq_mul_prime_pow {x y a p : R} {n : ℕ} (hp : Prime p) (hx : x * y = a * p ^ n) :
@@ -79,24 +73,12 @@ section CommRing
 
 variable {α : Type _} [CommRing α]
 
-/- warning: prime.neg -> Prime.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] {p : α}, (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) p) -> (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (CommRing.toRing.{u1} α _inst_1)))))) p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] {p : α}, (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) p) -> (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Neg.neg.{u1} α (Ring.toNeg.{u1} α (CommRing.toRing.{u1} α _inst_1)) p))
-Case conversion may be inaccurate. Consider using '#align prime.neg Prime.negₓ'. -/
 theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) :=
   by
   obtain ⟨h1, h2, h3⟩ := hp
   exact ⟨neg_ne_zero.mpr h1, by rwa [IsUnit.neg_iff], by simpa [neg_dvd] using h3⟩
 #align prime.neg Prime.neg
 
-/- warning: prime.abs -> Prime.abs is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : LinearOrder.{u1} α] {p : α}, (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) p) -> (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (CommRing.toRing.{u1} α _inst_1)))))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (LinearOrder.toLattice.{u1} α _inst_2)))) p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : LinearOrder.{u1} α] {p : α}, (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) p) -> (Prime.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (CommRing.toRing.{u1} α _inst_1)) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))) p))
-Case conversion may be inaccurate. Consider using '#align prime.abs Prime.absₓ'. -/
 theorem Prime.abs [LinearOrder α] {p : α} (hp : Prime p) : Prime (abs p) :=
   by
   obtain h | h := abs_choice p <;> rw [h]

@@ -116,12 +116,6 @@ theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
 #align add_opposite.unop_comp_op AddOpposite.unop_comp_op
 -/
 
-/- warning: mul_opposite.rec -> MulOpposite.rec' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : (MulOpposite.{u1} α) -> Sort.{u2}}, (forall (X : α), F (MulOpposite.op.{u1} α X)) -> (forall (X : MulOpposite.{u1} α), F X)
-but is expected to have type
-  forall {α : Type.{u2}} {F : (MulOpposite.{u2} α) -> Sort.{u1}}, (forall (X : α), F (MulOpposite.op.{u2} α X)) -> (forall (X : MulOpposite.{u2} α), F X)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.rec MulOpposite.rec'ₓ'. -/
 /-- A recursor for `mul_opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp, to_additive "A recursor for `add_opposite`. Use as `induction x using add_opposite.rec`."]
 protected def rec' {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)

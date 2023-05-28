@@ -60,12 +60,6 @@ def splitCenterBox (I : Box ι) (s : Set ι) : Box ι
 #align box_integral.box.split_center_box BoxIntegral.Box.splitCenterBox
 -/
 
-/- warning: box_integral.box.mem_split_center_box -> BoxIntegral.Box.mem_splitCenterBox is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {s : Set.{u1} ι} {y : ι -> Real}, Iff (Membership.Mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasMem.{u1} ι) y (BoxIntegral.Box.splitCenterBox.{u1} ι I s)) (And (Membership.Mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasMem.{u1} ι) y I) (forall (i : ι), Iff (LT.lt.{0} Real Real.hasLt (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i)) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (y i)) (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s)))
-but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {s : Set.{u1} ι} {y : ι -> Real}, Iff (Membership.mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instMembershipForAllRealBox.{u1} ι) y (BoxIntegral.Box.splitCenterBox.{u1} ι I s)) (And (Membership.mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instMembershipForAllRealBox.{u1} ι) y I) (forall (i : ι), Iff (LT.lt.{0} Real Real.instLTReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (BoxIntegral.Box.lower.{u1} ι I i) (BoxIntegral.Box.upper.{u1} ι I i)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (y i)) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s)))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.mem_split_center_box BoxIntegral.Box.mem_splitCenterBoxₓ'. -/
 theorem mem_splitCenterBox {s : Set ι} {y : ι → ℝ} :
     y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s :=
   by
@@ -85,12 +79,6 @@ theorem splitCenterBox_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I :
 #align box_integral.box.split_center_box_le BoxIntegral.Box.splitCenterBox_le
 -/
 
-/- warning: box_integral.box.disjoint_split_center_box -> BoxIntegral.Box.disjoint_splitCenterBox is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) {s : Set.{u1} ι} {t : Set.{u1} ι}, (Ne.{succ u1} (Set.{u1} ι) s t) -> (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) (BoxIntegral.Box.splitCenterBox.{u1} ι I s)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) (BoxIntegral.Box.splitCenterBox.{u1} ι I t)))
-but is expected to have type
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) {s : Set.{u1} ι} {t : Set.{u1} ι}, (Ne.{succ u1} (Set.{u1} ι) s t) -> (Disjoint.{u1} (Set.{u1} (ι -> Real)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Box.toSet.{u1} ι (BoxIntegral.Box.splitCenterBox.{u1} ι I s)) (BoxIntegral.Box.toSet.{u1} ι (BoxIntegral.Box.splitCenterBox.{u1} ι I t)))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_splitCenterBoxₓ'. -/
 theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
     Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) :=
   by
@@ -130,21 +118,12 @@ theorem iUnion_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : S
 #align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.iUnion_coe_splitCenterBox
 -/
 
-/- warning: box_integral.box.upper_sub_lower_split_center_box -> BoxIntegral.Box.upper_sub_lower_splitCenterBox is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) (s : Set.{u1} ι) (i : ι), Eq.{1} Real (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (BoxIntegral.Box.upper.{u1} ι (BoxIntegral.Box.splitCenterBox.{u1} ι I s) i) (BoxIntegral.Box.lower.{u1} ι (BoxIntegral.Box.splitCenterBox.{u1} ι I s) i)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (BoxIntegral.Box.upper.{u1} ι I i) (BoxIntegral.Box.lower.{u1} ι I i)) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))))
-but is expected to have type
-  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι) (s : Set.{u1} ι) (i : ι), Eq.{1} Real (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (BoxIntegral.Box.upper.{u1} ι (BoxIntegral.Box.splitCenterBox.{u1} ι I s) i) (BoxIntegral.Box.lower.{u1} ι (BoxIntegral.Box.splitCenterBox.{u1} ι I s) i)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (BoxIntegral.Box.upper.{u1} ι I i) (BoxIntegral.Box.lower.{u1} ι I i)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))
-Case conversion may be inaccurate. Consider using '#align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_splitCenterBoxₓ'. -/
 @[simp]
 theorem upper_sub_lower_splitCenterBox (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
   by_cases hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
 #align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_splitCenterBox
 
-/- warning: box_integral.box.subbox_induction_on' -> BoxIntegral.Box.subbox_induction_on' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align box_integral.box.subbox_induction_on' BoxIntegral.Box.subbox_induction_on'ₓ'. -/
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
 

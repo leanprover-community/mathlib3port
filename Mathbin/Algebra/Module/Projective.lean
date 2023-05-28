@@ -91,24 +91,15 @@ section Semiring
 variable {R : Type _} [Semiring R] {P : Type _} [AddCommMonoid P] [Module R P] {M : Type _}
   [AddCommMonoid M] [Module R M] {N : Type _} [AddCommMonoid N] [Module R N]
 
-/- warning: module.projective_def -> Module.projective_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.projective_def Module.projective_defₓ'. -/
 theorem projective_def :
     Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align module.projective_def Module.projective_def
 
-/- warning: module.projective_def' -> Module.projective_def' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.projective_def' Module.projective_def'ₓ'. -/
 theorem projective_def' : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Finsupp.total P P R id ∘ₗ s = id :=
   by simp_rw [projective_def, FunLike.ext_iff, Function.LeftInverse, coe_comp, id_coe, id.def]
 #align module.projective_def' Module.projective_def'
 
-/- warning: module.projective_lifting_property -> Module.projective_lifting_property is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.projective_lifting_property Module.projective_lifting_propertyₓ'. -/
 /-- A projective R-module has the property that maps from it lift along surjections. -/
 theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N)
     (hf : Function.Surjective f) : ∃ h : P →ₗ[R] M, f.comp h = g :=
@@ -183,12 +174,6 @@ section Ring
 
 variable {R : Type _} [Ring R] {P : Type _} [AddCommGroup P] [Module R P]
 
-/- warning: module.projective_of_basis -> Module.Projective.of_basis is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {P : Type.{u2}} [_inst_2 : AddCommGroup.{u2} P] [_inst_3 : Module.{u1, u2} R P (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} P _inst_2)] {ι : Type.{u3}}, (Basis.{u3, u1, u2} ι R P (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} P _inst_2) _inst_3) -> (Module.Projective.{u1, u2} R (Ring.toSemiring.{u1} R _inst_1) P (AddCommGroup.toAddCommMonoid.{u2} P _inst_2) _inst_3)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {P : Type.{u1}} [_inst_2 : AddCommGroup.{u1} P] [_inst_3 : Module.{u2, u1} R P (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} P _inst_2)] {ι : Type.{u3}}, (Basis.{u3, u2, u1} ι R P (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} P _inst_2) _inst_3) -> (Module.Projective.{u2, u1} R (Ring.toSemiring.{u2} R _inst_1) P (AddCommGroup.toAddCommMonoid.{u1} P _inst_2) _inst_3)
-Case conversion may be inaccurate. Consider using '#align module.projective_of_basis Module.Projective.of_basisₓ'. -/
 /-- Free modules are projective. -/
 theorem Module.Projective.of_basis {ι : Type _} (b : Basis ι R P) : Projective R P :=
   by
@@ -212,9 +197,6 @@ end Ring
 --This is in a different section because special universe restrictions are required.
 section OfLiftingProperty
 
-/- warning: module.projective_of_lifting_property' -> Module.Projective.of_lifting_property' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.projective_of_lifting_property' Module.Projective.of_lifting_property'ₓ'. -/
 /-- A module which satisfies the universal property is projective. Note that the universe variables
 in `huniv` are somewhat restricted. -/
 theorem Module.Projective.of_lifting_property' {R : Type u} [Semiring R] {P : Type max u v}
@@ -239,9 +221,6 @@ theorem Module.Projective.of_lifting_property' {R : Type u} [Semiring R] {P : Ty
     simp
 #align module.projective_of_lifting_property' Module.Projective.of_lifting_property'
 
-/- warning: module.projective_of_lifting_property -> Module.Projective.of_lifting_property is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align module.projective_of_lifting_property Module.Projective.of_lifting_propertyₓ'. -/
 /-- A variant of `of_lifting_property'` when we're working over a `[ring R]`,
 which only requires quantifying over modules with an `add_comm_group` instance. -/
 theorem Module.Projective.of_lifting_property {R : Type u} [Ring R] {P : Type max u v}

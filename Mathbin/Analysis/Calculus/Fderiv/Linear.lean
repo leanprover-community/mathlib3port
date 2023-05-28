@@ -64,60 +64,36 @@ There are currently two variants of these in mathlib, the bundled version
 predicate `is_bounded_linear_map`). We give statements for both versions. -/
 
 
-/- warning: continuous_linear_map.has_strict_fderiv_at -> ContinuousLinearMap.hasStrictFDerivAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_strict_fderiv_at ContinuousLinearMap.hasStrictFDerivAtₓ'. -/
 protected theorem ContinuousLinearMap.hasStrictFDerivAt {x : E} : HasStrictFDerivAt e e x :=
   (isLittleO_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
 #align continuous_linear_map.has_strict_fderiv_at ContinuousLinearMap.hasStrictFDerivAt
 
-/- warning: continuous_linear_map.has_fderiv_at_filter -> ContinuousLinearMap.hasFDerivAtFilter is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_fderiv_at_filter ContinuousLinearMap.hasFDerivAtFilterₓ'. -/
 protected theorem ContinuousLinearMap.hasFDerivAtFilter : HasFDerivAtFilter e e x L :=
   (isLittleO_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
 #align continuous_linear_map.has_fderiv_at_filter ContinuousLinearMap.hasFDerivAtFilter
 
-/- warning: continuous_linear_map.has_fderiv_within_at -> ContinuousLinearMap.hasFDerivWithinAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_fderiv_within_at ContinuousLinearMap.hasFDerivWithinAtₓ'. -/
 protected theorem ContinuousLinearMap.hasFDerivWithinAt : HasFDerivWithinAt e e s x :=
   e.HasFDerivAtFilter
 #align continuous_linear_map.has_fderiv_within_at ContinuousLinearMap.hasFDerivWithinAt
 
-/- warning: continuous_linear_map.has_fderiv_at -> ContinuousLinearMap.hasFDerivAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_fderiv_at ContinuousLinearMap.hasFDerivAtₓ'. -/
 protected theorem ContinuousLinearMap.hasFDerivAt : HasFDerivAt e e x :=
   e.HasFDerivAtFilter
 #align continuous_linear_map.has_fderiv_at ContinuousLinearMap.hasFDerivAt
 
-/- warning: continuous_linear_map.differentiable_at -> ContinuousLinearMap.differentiableAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.differentiable_at ContinuousLinearMap.differentiableAtₓ'. -/
 @[simp]
 protected theorem ContinuousLinearMap.differentiableAt : DifferentiableAt 𝕜 e x :=
   e.HasFDerivAt.DifferentiableAt
 #align continuous_linear_map.differentiable_at ContinuousLinearMap.differentiableAt
 
-/- warning: continuous_linear_map.differentiable_within_at -> ContinuousLinearMap.differentiableWithinAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.differentiable_within_at ContinuousLinearMap.differentiableWithinAtₓ'. -/
 protected theorem ContinuousLinearMap.differentiableWithinAt : DifferentiableWithinAt 𝕜 e s x :=
   e.DifferentiableAt.DifferentiableWithinAt
 #align continuous_linear_map.differentiable_within_at ContinuousLinearMap.differentiableWithinAt
 
-/- warning: continuous_linear_map.fderiv -> ContinuousLinearMap.fderiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.fderiv ContinuousLinearMap.fderivₓ'. -/
 @[simp]
 protected theorem ContinuousLinearMap.fderiv : fderiv 𝕜 e x = e :=
   e.HasFDerivAt.fderiv
 #align continuous_linear_map.fderiv ContinuousLinearMap.fderiv
 
-/- warning: continuous_linear_map.fderiv_within -> ContinuousLinearMap.fderivWithin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.fderiv_within ContinuousLinearMap.fderivWithinₓ'. -/
 protected theorem ContinuousLinearMap.fderivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 e s x = e :=
   by
@@ -125,86 +101,44 @@ protected theorem ContinuousLinearMap.fderivWithin (hxs : UniqueDiffWithinAt �
   exact e.fderiv
 #align continuous_linear_map.fderiv_within ContinuousLinearMap.fderivWithin
 
-/- warning: continuous_linear_map.differentiable -> ContinuousLinearMap.differentiable is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.differentiable ContinuousLinearMap.differentiableₓ'. -/
 @[simp]
 protected theorem ContinuousLinearMap.differentiable : Differentiable 𝕜 e := fun x =>
   e.DifferentiableAt
 #align continuous_linear_map.differentiable ContinuousLinearMap.differentiable
 
-/- warning: continuous_linear_map.differentiable_on -> ContinuousLinearMap.differentiableOn is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.differentiable_on ContinuousLinearMap.differentiableOnₓ'. -/
 protected theorem ContinuousLinearMap.differentiableOn : DifferentiableOn 𝕜 e s :=
   e.Differentiable.DifferentiableOn
 #align continuous_linear_map.differentiable_on ContinuousLinearMap.differentiableOn
 
-/- warning: is_bounded_linear_map.has_fderiv_at_filter -> IsBoundedLinearMap.hasFDerivAtFilter is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F} {x : E} {L : Filter.{u2} E} (h : IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f), HasFDerivAtFilter.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f (IsBoundedLinearMap.toContinuousLinearMap.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f h) x L
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {x : E} {L : Filter.{u2} E} (h : IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f), HasFDerivAtFilter.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f (IsBoundedLinearMap.toContinuousLinearMap.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f h) x L
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.has_fderiv_at_filter IsBoundedLinearMap.hasFDerivAtFilterₓ'. -/
 theorem IsBoundedLinearMap.hasFDerivAtFilter (h : IsBoundedLinearMap 𝕜 f) :
     HasFDerivAtFilter f h.toContinuousLinearMap x L :=
   h.toContinuousLinearMap.HasFDerivAtFilter
 #align is_bounded_linear_map.has_fderiv_at_filter IsBoundedLinearMap.hasFDerivAtFilter
 
-/- warning: is_bounded_linear_map.has_fderiv_within_at -> IsBoundedLinearMap.hasFDerivWithinAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F} {x : E} {s : Set.{u2} E} (h : IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f), HasFDerivWithinAt.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f (IsBoundedLinearMap.toContinuousLinearMap.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f h) s x
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {x : E} {s : Set.{u2} E} (h : IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f), HasFDerivWithinAt.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f (IsBoundedLinearMap.toContinuousLinearMap.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f h) s x
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.has_fderiv_within_at IsBoundedLinearMap.hasFDerivWithinAtₓ'. -/
 theorem IsBoundedLinearMap.hasFDerivWithinAt (h : IsBoundedLinearMap 𝕜 f) :
     HasFDerivWithinAt f h.toContinuousLinearMap s x :=
   h.HasFDerivAtFilter
 #align is_bounded_linear_map.has_fderiv_within_at IsBoundedLinearMap.hasFDerivWithinAt
 
-/- warning: is_bounded_linear_map.has_fderiv_at -> IsBoundedLinearMap.hasFDerivAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F} {x : E} (h : IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f), HasFDerivAt.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f (IsBoundedLinearMap.toContinuousLinearMap.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f h) x
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {x : E} (h : IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f), HasFDerivAt.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f (IsBoundedLinearMap.toContinuousLinearMap.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f h) x
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.has_fderiv_at IsBoundedLinearMap.hasFDerivAtₓ'. -/
 theorem IsBoundedLinearMap.hasFDerivAt (h : IsBoundedLinearMap 𝕜 f) :
     HasFDerivAt f h.toContinuousLinearMap x :=
   h.HasFDerivAtFilter
 #align is_bounded_linear_map.has_fderiv_at IsBoundedLinearMap.hasFDerivAt
 
-/- warning: is_bounded_linear_map.differentiable_at -> IsBoundedLinearMap.differentiableAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F} {x : E}, (IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (DifferentiableAt.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f x)
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {x : E}, (IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (DifferentiableAt.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f x)
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.differentiable_at IsBoundedLinearMap.differentiableAtₓ'. -/
 theorem IsBoundedLinearMap.differentiableAt (h : IsBoundedLinearMap 𝕜 f) : DifferentiableAt 𝕜 f x :=
   h.HasFDerivAt.DifferentiableAt
 #align is_bounded_linear_map.differentiable_at IsBoundedLinearMap.differentiableAt
 
-/- warning: is_bounded_linear_map.differentiable_within_at -> IsBoundedLinearMap.differentiableWithinAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F} {x : E} {s : Set.{u2} E}, (IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (DifferentiableWithinAt.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f s x)
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {x : E} {s : Set.{u2} E}, (IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (DifferentiableWithinAt.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f s x)
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.differentiable_within_at IsBoundedLinearMap.differentiableWithinAtₓ'. -/
 theorem IsBoundedLinearMap.differentiableWithinAt (h : IsBoundedLinearMap 𝕜 f) :
     DifferentiableWithinAt 𝕜 f s x :=
   h.DifferentiableAt.DifferentiableWithinAt
 #align is_bounded_linear_map.differentiable_within_at IsBoundedLinearMap.differentiableWithinAt
 
-/- warning: is_bounded_linear_map.fderiv -> IsBoundedLinearMap.fderiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.fderiv IsBoundedLinearMap.fderivₓ'. -/
 theorem IsBoundedLinearMap.fderiv (h : IsBoundedLinearMap 𝕜 f) :
     fderiv 𝕜 f x = h.toContinuousLinearMap :=
   HasFDerivAt.fderiv h.HasFDerivAt
 #align is_bounded_linear_map.fderiv IsBoundedLinearMap.fderiv
 
-/- warning: is_bounded_linear_map.fderiv_within -> IsBoundedLinearMap.fderivWithin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.fderiv_within IsBoundedLinearMap.fderivWithinₓ'. -/
 theorem IsBoundedLinearMap.fderivWithin (h : IsBoundedLinearMap 𝕜 f)
     (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 f s x = h.toContinuousLinearMap :=
   by
@@ -212,22 +146,10 @@ theorem IsBoundedLinearMap.fderivWithin (h : IsBoundedLinearMap 𝕜 f)
   exact h.fderiv
 #align is_bounded_linear_map.fderiv_within IsBoundedLinearMap.fderivWithin
 
-/- warning: is_bounded_linear_map.differentiable -> IsBoundedLinearMap.differentiable is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F}, (IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (Differentiable.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F}, (IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (Differentiable.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.differentiable IsBoundedLinearMap.differentiableₓ'. -/
 theorem IsBoundedLinearMap.differentiable (h : IsBoundedLinearMap 𝕜 f) : Differentiable 𝕜 f :=
   fun x => h.DifferentiableAt
 #align is_bounded_linear_map.differentiable IsBoundedLinearMap.differentiable
 
-/- warning: is_bounded_linear_map.differentiable_on -> IsBoundedLinearMap.differentiableOn is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {f : E -> F} {s : Set.{u2} E}, (IsBoundedLinearMap.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (DifferentiableOn.{u1, u2, u3} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f s)
-but is expected to have type
-  forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {s : Set.{u2} E}, (IsBoundedLinearMap.{u3, u2, u1} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) E _inst_2 _inst_3 F _inst_4 _inst_5 f) -> (DifferentiableOn.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f s)
-Case conversion may be inaccurate. Consider using '#align is_bounded_linear_map.differentiable_on IsBoundedLinearMap.differentiableOnₓ'. -/
 theorem IsBoundedLinearMap.differentiableOn (h : IsBoundedLinearMap 𝕜 f) : DifferentiableOn 𝕜 f s :=
   h.Differentiable.DifferentiableOn
 #align is_bounded_linear_map.differentiable_on IsBoundedLinearMap.differentiableOn

@@ -176,12 +176,6 @@ theorem testBit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = f
 #align nat.test_bit_two_pow_of_ne Nat.testBit_two_pow_of_ne
 -/
 
-/- warning: nat.test_bit_two_pow -> Nat.testBit_two_pow is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat), Eq.{1} Bool (Nat.testBit (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n) m) (Decidable.decide (Eq.{1} Nat n m) (Nat.decidableEq n m))
-but is expected to have type
-  forall (n : Nat) (m : Nat), Eq.{1} Prop (Eq.{1} Bool (Nat.testBit (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n) m) Bool.true) (Eq.{1} Nat n m)
-Case conversion may be inaccurate. Consider using '#align nat.test_bit_two_pow Nat.testBit_two_powₓ'. -/
 theorem testBit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) :=
   by
   by_cases n = m

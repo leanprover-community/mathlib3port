@@ -23,12 +23,6 @@ open Nat
 
 namespace Int
 
-/- warning: int.coe_nat_dvd -> Int.coe_nat_dvd is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Dvd.Dvd.{0} Nat Nat.hasDvd m n)
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat m n)
-Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd Int.coe_nat_dvdₓ'. -/
 @[norm_cast]
 theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
   ⟨fun ⟨a, ae⟩ =>
@@ -42,44 +36,20 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
     fun ⟨k, e⟩ => Dvd.intro k <| by rw [e, Int.ofNat_mul]⟩
 #align int.coe_nat_dvd Int.coe_nat_dvd
 
-/- warning: int.coe_nat_dvd_left -> Int.coe_nat_dvd_left is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {z : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) z) (Dvd.Dvd.{0} Nat Nat.hasDvd n (Int.natAbs z))
-but is expected to have type
-  forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt n) z) (Dvd.dvd.{0} Nat Nat.instDvdNat n (Int.natAbs z))
-Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd_left Int.coe_nat_dvd_leftₓ'. -/
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
 #align int.coe_nat_dvd_left Int.coe_nat_dvd_left
 
-/- warning: int.coe_nat_dvd_right -> Int.coe_nat_dvd_right is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {z : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) z ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Dvd.Dvd.{0} Nat Nat.hasDvd (Int.natAbs z) n)
-but is expected to have type
-  forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt z (Nat.cast.{0} Int instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.natAbs z) n)
-Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd_right Int.coe_nat_dvd_rightₓ'. -/
 theorem coe_nat_dvd_right {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
 #align int.coe_nat_dvd_right Int.coe_nat_dvd_right
 
-/- warning: int.le_of_dvd -> Int.le_of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b) -> (LE.le.{0} Int Int.hasLe a b)
-but is expected to have type
-  forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (LE.le.{0} Int Int.instLEInt a b)
-Case conversion may be inaccurate. Consider using '#align int.le_of_dvd Int.le_of_dvdₓ'. -/
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
   | (m : ℕ), _, ⟨n, rfl⟩, H => ofNat_le_ofNat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
   | -[m+1], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt <| negSucc_lt_zero _) (ofNat_zero_le _)
 #align int.le_of_dvd Int.le_of_dvd
 
-/- warning: int.eq_one_of_dvd_one -> Int.eq_one_of_dvd_one is a dubious translation:
-lean 3 declaration is
-  forall {a : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) -> (Eq.{1} Int a (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
-but is expected to have type
-  forall {a : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (Dvd.dvd.{0} Int Int.instDvdInt a (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) -> (Eq.{1} Int a (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
-Case conversion may be inaccurate. Consider using '#align int.eq_one_of_dvd_one Int.eq_one_of_dvd_oneₓ'. -/
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
   match a, eq_ofNat_of_zero_le H, H' with
   | _, ⟨n, rfl⟩, H' => congr_arg coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
@@ -97,12 +67,6 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
 #align int.eq_one_of_mul_eq_one_left Int.eq_one_of_mul_eq_one_left
 -/
 
-/- warning: int.dvd_antisymm -> Int.dvd_antisymm is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int a b)
-but is expected to have type
-  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int a b)
-Case conversion may be inaccurate. Consider using '#align int.dvd_antisymm Int.dvd_antisymmₓ'. -/
 theorem dvd_antisymm {a b : ℤ} (H1 : 0 ≤ a) (H2 : 0 ≤ b) : a ∣ b → b ∣ a → a = b :=
   by
   rw [← abs_of_nonneg H1, ← abs_of_nonneg H2, abs_eq_nat_abs, abs_eq_nat_abs]

@@ -80,12 +80,6 @@ initialize_simps_projections PowerBasis (-Basis)
 
 namespace PowerBasis
 
-/- warning: power_basis.coe_basis -> PowerBasis.coe_basis is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Ring.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2)] (pb : PowerBasis.{u1, u2} R S _inst_1 _inst_2 _inst_3), Eq.{succ u2} ((Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) -> S) (coeFn.{max 1 (succ u1) (succ u2), succ u2} (Basis.{0, u1, u2} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) R S (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} S (NonUnitalNonAssocRing.toAddCommGroup.{u2} S (NonAssocRing.toNonUnitalNonAssocRing.{u2} S (Ring.toNonAssocRing.{u2} S _inst_2)))) (Algebra.toModule.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3)) (fun (_x : Basis.{0, u1, u2} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) R S (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} S (NonUnitalNonAssocRing.toAddCommGroup.{u2} S (NonAssocRing.toNonUnitalNonAssocRing.{u2} S (Ring.toNonAssocRing.{u2} S _inst_2)))) (Algebra.toModule.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3)) => (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) -> S) (FunLike.hasCoeToFun.{max 1 (succ u1) (succ u2), 1, succ u2} (Basis.{0, u1, u2} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) R S (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} S (NonUnitalNonAssocRing.toAddCommGroup.{u2} S (NonAssocRing.toNonUnitalNonAssocRing.{u2} S (Ring.toNonAssocRing.{u2} S _inst_2)))) (Algebra.toModule.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3)) (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) (fun (_x : Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) => S) (Basis.funLike.{0, u1, u2} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) R S (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} S (NonUnitalNonAssocRing.toAddCommGroup.{u2} S (NonAssocRing.toNonUnitalNonAssocRing.{u2} S (Ring.toNonAssocRing.{u2} S _inst_2)))) (Algebra.toModule.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3))) (PowerBasis.basis.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) (fun (i : Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) => HPow.hPow.{u2, 0, u2} S Nat S (instHPow.{u2, 0} S Nat (Monoid.Pow.{u2} S (Ring.toMonoid.{u2} S _inst_2))) (PowerBasis.gen.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) Nat (HasLiftT.mk.{1, 1} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) Nat (CoeTCₓ.coe.{1, 1} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) Nat (coeBase.{1, 1} (Fin (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb)) Nat (Fin.coeToNat (PowerBasis.dim.{u1, u2} R S _inst_1 _inst_2 _inst_3 pb))))) i))
-but is expected to have type
-  forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : Ring.{u1} S] [_inst_3 : Algebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2)] (pb : PowerBasis.{u2, u1} R S _inst_1 _inst_2 _inst_3), Eq.{succ u1} (forall (a : Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)), (fun (x._@.Mathlib.LinearAlgebra.Basis._hyg.548 : Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) => S) a) (FunLike.coe.{max (succ u2) (succ u1), 1, succ u1} (Basis.{0, u2, u1} (Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) R S (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S _inst_2)))) (Algebra.toModule.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3)) (Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) (fun (_x : Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) => (fun (x._@.Mathlib.LinearAlgebra.Basis._hyg.548 : Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) => S) _x) (Basis.funLike.{0, u2, u1} (Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) R S (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S _inst_2)))) (Algebra.toModule.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3)) (PowerBasis.basis.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) (fun (i : Fin (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb)) => HPow.hPow.{u1, 0, u1} S Nat S (instHPow.{u1, 0} S Nat (Monoid.Pow.{u1} S (MonoidWithZero.toMonoid.{u1} S (Semiring.toMonoidWithZero.{u1} S (Ring.toSemiring.{u1} S _inst_2))))) (PowerBasis.gen.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb) (Fin.val (PowerBasis.dim.{u2, u1} R S _inst_1 _inst_2 _inst_3 pb) i))
-Case conversion may be inaccurate. Consider using '#align power_basis.coe_basis PowerBasis.coe_basisₓ'. -/
 @[simp]
 theorem coe_basis (pb : PowerBasis R S) : ⇑pb.Basis = fun i : Fin pb.dim => pb.gen ^ (i : ℕ) :=
   funext pb.basis_eq_pow
@@ -104,9 +98,6 @@ theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank 
 #align power_basis.finrank PowerBasis.finrank
 -/
 
-/- warning: power_basis.mem_span_pow' -> PowerBasis.mem_span_pow' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.mem_span_pow' PowerBasis.mem_span_pow'ₓ'. -/
 theorem mem_span_pow' {x y : S} {d : ℕ} :
     y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔
       ∃ f : R[X], f.degree < d ∧ y = aeval x f :=
@@ -125,9 +116,6 @@ theorem mem_span_pow' {x y : S} {d : ℕ} :
   exact Iff.rfl
 #align power_basis.mem_span_pow' PowerBasis.mem_span_pow'
 
-/- warning: power_basis.mem_span_pow -> PowerBasis.mem_span_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.mem_span_pow PowerBasis.mem_span_powₓ'. -/
 theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
     y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔
       ∃ f : R[X], f.natDegree < d ∧ y = aeval x f :=
@@ -161,9 +149,6 @@ theorem exists_eq_aeval [Nontrivial S] (pb : PowerBasis R S) (y : S) :
 #align power_basis.exists_eq_aeval PowerBasis.exists_eq_aeval
 -/
 
-/- warning: power_basis.exists_eq_aeval' -> PowerBasis.exists_eq_aeval' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.exists_eq_aeval' PowerBasis.exists_eq_aeval'ₓ'. -/
 theorem exists_eq_aeval' (pb : PowerBasis R S) (y : S) : ∃ f : R[X], y = aeval pb.gen f :=
   by
   nontriviality S
@@ -171,9 +156,6 @@ theorem exists_eq_aeval' (pb : PowerBasis R S) (y : S) : ∃ f : R[X], y = aeval
   exact ⟨f, hf⟩
 #align power_basis.exists_eq_aeval' PowerBasis.exists_eq_aeval'
 
-/- warning: power_basis.alg_hom_ext -> PowerBasis.algHom_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.alg_hom_ext PowerBasis.algHom_extₓ'. -/
 theorem algHom_ext {S' : Type _} [Semiring S'] [Algebra R S'] (pb : PowerBasis R S)
     ⦃f g : S →ₐ[R] S'⦄ (h : f pb.gen = g pb.gen) : f = g :=
   by
@@ -314,9 +296,6 @@ section Equiv
 
 variable [Algebra A S] {S' : Type _} [Ring S'] [Algebra A S']
 
-/- warning: power_basis.constr_pow_aeval -> PowerBasis.constr_pow_aeval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.constr_pow_aeval PowerBasis.constr_pow_aevalₓ'. -/
 theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (f : A[X]) : pb.Basis.constr A (fun i => y ^ (i : ℕ)) (aeval pb.gen f) = aeval y f :=
   by
@@ -339,25 +318,16 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
   rw [← Fin.val_mk hi, ← pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
 #align power_basis.constr_pow_aeval PowerBasis.constr_pow_aeval
 
-/- warning: power_basis.constr_pow_gen -> PowerBasis.constr_pow_gen is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.constr_pow_gen PowerBasis.constr_pow_genₓ'. -/
 theorem constr_pow_gen (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) :
     pb.Basis.constr A (fun i => y ^ (i : ℕ)) pb.gen = y := by
   convert pb.constr_pow_aeval hy X <;> rw [aeval_X]
 #align power_basis.constr_pow_gen PowerBasis.constr_pow_gen
 
-/- warning: power_basis.constr_pow_algebra_map -> PowerBasis.constr_pow_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.constr_pow_algebra_map PowerBasis.constr_pow_algebraMapₓ'. -/
 theorem constr_pow_algebraMap (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (x : A) : pb.Basis.constr A (fun i => y ^ (i : ℕ)) (algebraMap A S x) = algebraMap A S' x := by
   convert pb.constr_pow_aeval hy (C x) <;> rw [aeval_C]
 #align power_basis.constr_pow_algebra_map PowerBasis.constr_pow_algebraMap
 
-/- warning: power_basis.constr_pow_mul -> PowerBasis.constr_pow_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.constr_pow_mul PowerBasis.constr_pow_mulₓ'. -/
 theorem constr_pow_mul (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (x x' : S) :
     pb.Basis.constr A (fun i => y ^ (i : ℕ)) (x * x') =
@@ -388,18 +358,12 @@ noncomputable def lift (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A p
 #align power_basis.lift PowerBasis.lift
 -/
 
-/- warning: power_basis.lift_gen -> PowerBasis.lift_gen is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.lift_gen PowerBasis.lift_genₓ'. -/
 @[simp]
 theorem lift_gen (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) :
     pb.lift y hy pb.gen = y :=
   pb.constr_pow_gen hy
 #align power_basis.lift_gen PowerBasis.lift_gen
 
-/- warning: power_basis.lift_aeval -> PowerBasis.lift_aeval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.lift_aeval PowerBasis.lift_aevalₓ'. -/
 @[simp]
 theorem lift_aeval (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) (f : A[X]) :
     pb.lift y hy (aeval pb.gen f) = aeval y f :=
@@ -465,9 +429,6 @@ noncomputable def equivOfRoot (pb : PowerBasis A S) (pb' : PowerBasis A S')
 #align power_basis.equiv_of_root PowerBasis.equivOfRoot
 -/
 
-/- warning: power_basis.equiv_of_root_aeval -> PowerBasis.equivOfRoot_aeval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_root_aeval PowerBasis.equivOfRoot_aevalₓ'. -/
 @[simp]
 theorem equivOfRoot_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0)
@@ -475,9 +436,6 @@ theorem equivOfRoot_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
   pb.lift_aeval _ h₂ _
 #align power_basis.equiv_of_root_aeval PowerBasis.equivOfRoot_aeval
 
-/- warning: power_basis.equiv_of_root_gen -> PowerBasis.equivOfRoot_gen is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_root_gen PowerBasis.equivOfRoot_genₓ'. -/
 @[simp]
 theorem equivOfRoot_gen (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) :
@@ -485,9 +443,6 @@ theorem equivOfRoot_gen (pb : PowerBasis A S) (pb' : PowerBasis A S')
   pb.lift_gen _ h₂
 #align power_basis.equiv_of_root_gen PowerBasis.equivOfRoot_gen
 
-/- warning: power_basis.equiv_of_root_symm -> PowerBasis.equivOfRoot_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_root_symm PowerBasis.equivOfRoot_symmₓ'. -/
 @[simp]
 theorem equivOfRoot_symm (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) :
@@ -509,9 +464,6 @@ noncomputable def equivOfMinpoly (pb : PowerBasis A S) (pb' : PowerBasis A S')
 #align power_basis.equiv_of_minpoly PowerBasis.equivOfMinpoly
 -/
 
-/- warning: power_basis.equiv_of_minpoly_aeval -> PowerBasis.equivOfMinpoly_aeval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_minpoly_aeval PowerBasis.equivOfMinpoly_aevalₓ'. -/
 @[simp]
 theorem equivOfMinpoly_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) (f : A[X]) :
@@ -519,21 +471,12 @@ theorem equivOfMinpoly_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
   pb.equivOfRoot_aeval pb' _ _ _
 #align power_basis.equiv_of_minpoly_aeval PowerBasis.equivOfMinpoly_aeval
 
-/- warning: power_basis.equiv_of_minpoly_gen -> PowerBasis.equivOfMinpoly_gen is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_minpoly_gen PowerBasis.equivOfMinpoly_genₓ'. -/
 @[simp]
 theorem equivOfMinpoly_gen (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) : pb.equivOfMinpoly pb' h pb.gen = pb'.gen :=
   pb.equivOfRoot_gen pb' _ _
 #align power_basis.equiv_of_minpoly_gen PowerBasis.equivOfMinpoly_gen
 
-/- warning: power_basis.equiv_of_minpoly_symm -> PowerBasis.equivOfMinpoly_symm is a dubious translation:
-lean 3 declaration is
-  forall {S : Type.{u1}} [_inst_2 : Ring.{u1} S] {A : Type.{u2}} [_inst_4 : CommRing.{u2} A] [_inst_9 : Algebra.{u2, u1} A S (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2)] {S' : Type.{u3}} [_inst_10 : Ring.{u3} S'] [_inst_11 : Algebra.{u2, u3} A S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u3} S' _inst_10)] (pb : PowerBasis.{u2, u1} A S _inst_4 _inst_2 _inst_9) (pb' : PowerBasis.{u2, u3} A S' _inst_4 _inst_10 _inst_11) (h : Eq.{succ u2} (Polynomial.{u2} A (Ring.toSemiring.{u2} A (CommRing.toRing.{u2} A _inst_4))) (minpoly.{u2, u1} A S _inst_4 _inst_2 _inst_9 (PowerBasis.gen.{u2, u1} A S _inst_4 _inst_2 _inst_9 pb)) (minpoly.{u2, u3} A S' _inst_4 _inst_10 _inst_11 (PowerBasis.gen.{u2, u3} A S' _inst_4 _inst_10 _inst_11 pb'))), Eq.{max (succ u3) (succ u1)} (AlgEquiv.{u2, u3, u1} A S' S (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u3} S' _inst_10) (Ring.toSemiring.{u1} S _inst_2) _inst_11 _inst_9) (AlgEquiv.symm.{u2, u1, u3} A S S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2) (Ring.toSemiring.{u3} S' _inst_10) _inst_9 _inst_11 (PowerBasis.equivOfMinpoly.{u1, u2, u3} S _inst_2 A _inst_4 _inst_9 S' _inst_10 _inst_11 pb pb' h)) (PowerBasis.equivOfMinpoly.{u3, u2, u1} S' _inst_10 A _inst_4 _inst_11 S _inst_2 _inst_9 pb' pb (Eq.symm.{succ u2} (Polynomial.{u2} A (Ring.toSemiring.{u2} A (CommRing.toRing.{u2} A _inst_4))) (minpoly.{u2, u1} A S _inst_4 _inst_2 _inst_9 (PowerBasis.gen.{u2, u1} A S _inst_4 _inst_2 _inst_9 pb)) (minpoly.{u2, u3} A S' _inst_4 _inst_10 _inst_11 (PowerBasis.gen.{u2, u3} A S' _inst_4 _inst_10 _inst_11 pb')) h))
-but is expected to have type
-  forall {S : Type.{u2}} [_inst_2 : Ring.{u2} S] {A : Type.{u3}} [_inst_4 : CommRing.{u3} A] [_inst_9 : Algebra.{u3, u2} A S (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2)] {S' : Type.{u1}} [_inst_10 : Ring.{u1} S'] [_inst_11 : Algebra.{u3, u1} A S' (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u1} S' _inst_10)] (pb : PowerBasis.{u3, u2} A S _inst_4 _inst_2 _inst_9) (pb' : PowerBasis.{u3, u1} A S' _inst_4 _inst_10 _inst_11) (h : Eq.{succ u3} (Polynomial.{u3} A (CommSemiring.toSemiring.{u3} A (CommRing.toCommSemiring.{u3} A _inst_4))) (minpoly.{u3, u2} A S _inst_4 _inst_2 _inst_9 (PowerBasis.gen.{u3, u2} A S _inst_4 _inst_2 _inst_9 pb)) (minpoly.{u3, u1} A S' _inst_4 _inst_10 _inst_11 (PowerBasis.gen.{u3, u1} A S' _inst_4 _inst_10 _inst_11 pb'))), Eq.{max (succ u2) (succ u1)} (AlgEquiv.{u3, u1, u2} A S' S (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u1} S' _inst_10) (Ring.toSemiring.{u2} S _inst_2) _inst_11 _inst_9) (AlgEquiv.symm.{u3, u2, u1} A S S' (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2) (Ring.toSemiring.{u1} S' _inst_10) _inst_9 _inst_11 (PowerBasis.equivOfMinpoly.{u2, u3, u1} S _inst_2 A _inst_4 _inst_9 S' _inst_10 _inst_11 pb pb' h)) (PowerBasis.equivOfMinpoly.{u1, u3, u2} S' _inst_10 A _inst_4 _inst_11 S _inst_2 _inst_9 pb' pb (Eq.symm.{succ u3} (Polynomial.{u3} A (CommSemiring.toSemiring.{u3} A (CommRing.toCommSemiring.{u3} A _inst_4))) (minpoly.{u3, u2} A S _inst_4 _inst_2 _inst_9 (PowerBasis.gen.{u3, u2} A S _inst_4 _inst_2 _inst_9 pb)) (minpoly.{u3, u1} A S' _inst_4 _inst_10 _inst_11 (PowerBasis.gen.{u3, u1} A S' _inst_4 _inst_10 _inst_11 pb')) h))
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_minpoly_symm PowerBasis.equivOfMinpoly_symmₓ'. -/
 @[simp]
 theorem equivOfMinpoly_symm (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) :
@@ -547,12 +490,6 @@ end PowerBasis
 
 open PowerBasis
 
-/- warning: linear_independent_pow -> linearIndependent_pow is a dubious translation:
-lean 3 declaration is
-  forall {S : Type.{u1}} [_inst_2 : Ring.{u1} S] {K : Type.{u2}} [_inst_8 : Field.{u2} K] [_inst_9 : Algebra.{u2, u1} K S (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_8)) (Ring.toSemiring.{u1} S _inst_2)] (x : S), LinearIndependent.{0, u2, u1} (Fin (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) K S (fun (i : Fin (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) => HPow.hPow.{u1, 0, u1} S Nat S (instHPow.{u1, 0} S Nat (Monoid.Pow.{u1} S (Ring.toMonoid.{u1} S _inst_2))) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) Nat (HasLiftT.mk.{1, 1} (Fin (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) Nat (CoeTCₓ.coe.{1, 1} (Fin (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) Nat (coeBase.{1, 1} (Fin (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) Nat (Fin.coeToNat (Polynomial.natDegree.{u2} K (Ring.toSemiring.{u2} K (CommRing.toRing.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x)))))) i)) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_8))) (AddCommGroup.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toAddCommGroup.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S _inst_2)))) (Algebra.toModule.{u2, u1} K S (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_8)) (Ring.toSemiring.{u1} S _inst_2) _inst_9)
-but is expected to have type
-  forall {S : Type.{u1}} [_inst_2 : Ring.{u1} S] {K : Type.{u2}} [_inst_8 : Field.{u2} K] [_inst_9 : Algebra.{u2, u1} K S (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_8)) (Ring.toSemiring.{u1} S _inst_2)] (x : S), LinearIndependent.{0, u2, u1} (Fin (Polynomial.natDegree.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) K S (fun (i : Fin (Polynomial.natDegree.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x))) => HPow.hPow.{u1, 0, u1} S Nat S (instHPow.{u1, 0} S Nat (Monoid.Pow.{u1} S (MonoidWithZero.toMonoid.{u1} S (Semiring.toMonoidWithZero.{u1} S (Ring.toSemiring.{u1} S _inst_2))))) x (Fin.val (Polynomial.natDegree.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)))) (minpoly.{u2, u1} K S (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_8)) _inst_2 _inst_9 x)) i)) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_8))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} S (NonAssocRing.toNonUnitalNonAssocRing.{u1} S (Ring.toNonAssocRing.{u1} S _inst_2)))) (Algebra.toModule.{u2, u1} K S (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_8)) (Ring.toSemiring.{u1} S _inst_2) _inst_9)
-Case conversion may be inaccurate. Consider using '#align linear_independent_pow linearIndependent_powₓ'. -/
 /-- Useful lemma to show `x` generates a power basis:
 the powers of `x` less than the degree of `x`'s minimal polynomial are linearly independent. -/
 theorem linearIndependent_pow [Algebra K S] (x : S) :
@@ -571,9 +508,6 @@ theorem linearIndependent_pow [Algebra K S] (x : S) :
     exact (if_pos <| Finset.mem_univ _).symm.trans h0
 #align linear_independent_pow linearIndependent_pow
 
-/- warning: is_integral.mem_span_pow -> IsIntegral.mem_span_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral.mem_span_pow IsIntegral.mem_span_powₓ'. -/
 theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x)
     (hy : ∃ f : R[X], y = aeval x f) :
     y ∈ Submodule.span R (Set.range fun i : Fin (minpoly R x).natDegree => x ^ (i : ℕ)) :=
@@ -606,12 +540,6 @@ noncomputable def map (pb : PowerBasis R S) (e : S ≃ₐ[R] S') : PowerBasis R 
 
 variable [Algebra A S] [Algebra A S']
 
-/- warning: power_basis.minpoly_gen_map -> PowerBasis.minpolyGen_map is a dubious translation:
-lean 3 declaration is
-  forall {S : Type.{u1}} [_inst_2 : Ring.{u1} S] {A : Type.{u2}} [_inst_4 : CommRing.{u2} A] {S' : Type.{u3}} [_inst_9 : CommRing.{u3} S'] [_inst_11 : Algebra.{u2, u1} A S (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2)] [_inst_12 : Algebra.{u2, u3} A S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u3} S' (CommRing.toRing.{u3} S' _inst_9))] (pb : PowerBasis.{u2, u1} A S _inst_4 _inst_2 _inst_11) (e : AlgEquiv.{u2, u1, u3} A S S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2) (Ring.toSemiring.{u3} S' (CommRing.toRing.{u3} S' _inst_9)) _inst_11 _inst_12), Eq.{succ u2} (Polynomial.{u2} A (Ring.toSemiring.{u2} A (CommRing.toRing.{u2} A _inst_4))) (PowerBasis.minpolyGen.{u3, u2} S' (CommRing.toRing.{u3} S' _inst_9) A _inst_4 _inst_12 (PowerBasis.map.{u2, u1, u3} A S _inst_4 _inst_2 _inst_11 S' _inst_9 _inst_12 pb e)) (PowerBasis.minpolyGen.{u1, u2} S _inst_2 A _inst_4 _inst_11 pb)
-but is expected to have type
-  forall {S : Type.{u2}} [_inst_2 : Ring.{u2} S] {A : Type.{u3}} [_inst_4 : CommRing.{u3} A] {S' : Type.{u1}} [_inst_9 : CommRing.{u1} S'] [_inst_11 : Algebra.{u3, u2} A S (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2)] [_inst_12 : Algebra.{u3, u1} A S' (CommRing.toCommSemiring.{u3} A _inst_4) (CommSemiring.toSemiring.{u1} S' (CommRing.toCommSemiring.{u1} S' _inst_9))] (pb : PowerBasis.{u3, u2} A S _inst_4 _inst_2 _inst_11) (e : AlgEquiv.{u3, u2, u1} A S S' (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2) (CommSemiring.toSemiring.{u1} S' (CommRing.toCommSemiring.{u1} S' _inst_9)) _inst_11 _inst_12), Eq.{succ u3} (Polynomial.{u3} A (CommSemiring.toSemiring.{u3} A (CommRing.toCommSemiring.{u3} A _inst_4))) (PowerBasis.minpolyGen.{u1, u3} S' (CommRing.toRing.{u1} S' _inst_9) A _inst_4 _inst_12 (PowerBasis.map.{u3, u2, u1} A S _inst_4 _inst_2 _inst_11 S' _inst_9 _inst_12 pb e)) (PowerBasis.minpolyGen.{u2, u3} S _inst_2 A _inst_4 _inst_11 pb)
-Case conversion may be inaccurate. Consider using '#align power_basis.minpoly_gen_map PowerBasis.minpolyGen_mapₓ'. -/
 @[simp]
 theorem minpolyGen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') :
     (pb.map e).minpolyGen = pb.minpolyGen :=
@@ -623,21 +551,12 @@ theorem minpolyGen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') :
     AlgEquiv.symm_apply_apply, sub_right_inj]
 #align power_basis.minpoly_gen_map PowerBasis.minpolyGen_map
 
-/- warning: power_basis.equiv_of_root_map -> PowerBasis.equivOfRoot_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_root_map PowerBasis.equivOfRoot_mapₓ'. -/
 @[simp]
 theorem equivOfRoot_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h₁ h₂) :
     pb.equivOfRoot (pb.map e) h₁ h₂ = e := by ext x; obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x;
   simp [aeval_alg_equiv]
 #align power_basis.equiv_of_root_map PowerBasis.equivOfRoot_map
 
-/- warning: power_basis.equiv_of_minpoly_map -> PowerBasis.equivOfMinpoly_map is a dubious translation:
-lean 3 declaration is
-  forall {S : Type.{u1}} [_inst_2 : Ring.{u1} S] {A : Type.{u2}} [_inst_4 : CommRing.{u2} A] {S' : Type.{u3}} [_inst_9 : CommRing.{u3} S'] [_inst_11 : Algebra.{u2, u1} A S (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2)] [_inst_12 : Algebra.{u2, u3} A S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u3} S' (CommRing.toRing.{u3} S' _inst_9))] (pb : PowerBasis.{u2, u1} A S _inst_4 _inst_2 _inst_11) (e : AlgEquiv.{u2, u1, u3} A S S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2) (Ring.toSemiring.{u3} S' (CommRing.toRing.{u3} S' _inst_9)) _inst_11 _inst_12) (h : Eq.{succ u2} (Polynomial.{u2} A (Ring.toSemiring.{u2} A (CommRing.toRing.{u2} A _inst_4))) (minpoly.{u2, u1} A S _inst_4 _inst_2 _inst_11 (PowerBasis.gen.{u2, u1} A S _inst_4 _inst_2 _inst_11 pb)) (minpoly.{u2, u3} A S' _inst_4 (CommRing.toRing.{u3} S' _inst_9) _inst_12 (PowerBasis.gen.{u2, u3} A S' _inst_4 (CommRing.toRing.{u3} S' _inst_9) _inst_12 (PowerBasis.map.{u2, u1, u3} A S _inst_4 _inst_2 _inst_11 S' _inst_9 _inst_12 pb e)))), Eq.{max (succ u1) (succ u3)} (AlgEquiv.{u2, u1, u3} A S S' (CommRing.toCommSemiring.{u2} A _inst_4) (Ring.toSemiring.{u1} S _inst_2) (Ring.toSemiring.{u3} S' (CommRing.toRing.{u3} S' _inst_9)) _inst_11 _inst_12) (PowerBasis.equivOfMinpoly.{u1, u2, u3} S _inst_2 A _inst_4 _inst_11 S' (CommRing.toRing.{u3} S' _inst_9) _inst_12 pb (PowerBasis.map.{u2, u1, u3} A S _inst_4 _inst_2 _inst_11 S' _inst_9 _inst_12 pb e) h) e
-but is expected to have type
-  forall {S : Type.{u2}} [_inst_2 : Ring.{u2} S] {A : Type.{u3}} [_inst_4 : CommRing.{u3} A] {S' : Type.{u1}} [_inst_9 : CommRing.{u1} S'] [_inst_11 : Algebra.{u3, u2} A S (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2)] [_inst_12 : Algebra.{u3, u1} A S' (CommRing.toCommSemiring.{u3} A _inst_4) (CommSemiring.toSemiring.{u1} S' (CommRing.toCommSemiring.{u1} S' _inst_9))] (pb : PowerBasis.{u3, u2} A S _inst_4 _inst_2 _inst_11) (e : AlgEquiv.{u3, u2, u1} A S S' (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2) (CommSemiring.toSemiring.{u1} S' (CommRing.toCommSemiring.{u1} S' _inst_9)) _inst_11 _inst_12) (h : Eq.{succ u3} (Polynomial.{u3} A (CommSemiring.toSemiring.{u3} A (CommRing.toCommSemiring.{u3} A _inst_4))) (minpoly.{u3, u2} A S _inst_4 _inst_2 _inst_11 (PowerBasis.gen.{u3, u2} A S _inst_4 _inst_2 _inst_11 pb)) (minpoly.{u3, u1} A S' _inst_4 (CommRing.toRing.{u1} S' _inst_9) _inst_12 (PowerBasis.gen.{u3, u1} A S' _inst_4 (CommRing.toRing.{u1} S' _inst_9) _inst_12 (PowerBasis.map.{u3, u2, u1} A S _inst_4 _inst_2 _inst_11 S' _inst_9 _inst_12 pb e)))), Eq.{max (succ u2) (succ u1)} (AlgEquiv.{u3, u2, u1} A S S' (CommRing.toCommSemiring.{u3} A _inst_4) (Ring.toSemiring.{u2} S _inst_2) (Ring.toSemiring.{u1} S' (CommRing.toRing.{u1} S' _inst_9)) _inst_11 _inst_12) (PowerBasis.equivOfMinpoly.{u2, u3, u1} S _inst_2 A _inst_4 _inst_11 S' (CommRing.toRing.{u1} S' _inst_9) _inst_12 pb (PowerBasis.map.{u3, u2, u1} A S _inst_4 _inst_2 _inst_11 S' _inst_9 _inst_12 pb e) h) e
-Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_minpoly_map PowerBasis.equivOfMinpoly_mapₓ'. -/
 @[simp]
 theorem equivOfMinpoly_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S')
     (h : minpoly A pb.gen = minpoly A (pb.map e).gen) : pb.equivOfMinpoly (pb.map e) h = e :=
@@ -650,12 +569,6 @@ section Adjoin
 
 open Algebra
 
-/- warning: power_basis.adjoin_gen_eq_top -> PowerBasis.adjoin_gen_eq_top is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Ring.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2)] (B : PowerBasis.{u1, u2} R S _inst_1 _inst_2 _inst_3), Eq.{succ u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (Algebra.adjoin.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) (PowerBasis.gen.{u1, u2} R S _inst_1 _inst_2 _inst_3 B))) (Top.top.{u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (CompleteLattice.toHasTop.{u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (Algebra.Subalgebra.completeLattice.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3)))
-but is expected to have type
-  forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : Ring.{u1} S] [_inst_3 : Algebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2)] (B : PowerBasis.{u2, u1} R S _inst_1 _inst_2 _inst_3), Eq.{succ u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (Algebra.adjoin.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3 (Singleton.singleton.{u1, u1} S (Set.{u1} S) (Set.instSingletonSet.{u1} S) (PowerBasis.gen.{u2, u1} R S _inst_1 _inst_2 _inst_3 B))) (Top.top.{u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (CompleteLattice.toTop.{u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (Algebra.instCompleteLatticeSubalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3)))
-Case conversion may be inaccurate. Consider using '#align power_basis.adjoin_gen_eq_top PowerBasis.adjoin_gen_eq_topₓ'. -/
 theorem adjoin_gen_eq_top (B : PowerBasis R S) : adjoin R ({B.gen} : Set S) = ⊤ :=
   by
   rw [← to_submodule_eq_top, _root_.eq_top_iff, ← B.basis.span_eq, Submodule.span_le]
@@ -664,12 +577,6 @@ theorem adjoin_gen_eq_top (B : PowerBasis R S) : adjoin R ({B.gen} : Set S) = �
   exact Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
 #align power_basis.adjoin_gen_eq_top PowerBasis.adjoin_gen_eq_top
 
-/- warning: power_basis.adjoin_eq_top_of_gen_mem_adjoin -> PowerBasis.adjoin_eq_top_of_gen_mem_adjoin is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Ring.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2)] {B : PowerBasis.{u1, u2} R S _inst_1 _inst_2 _inst_3} {x : S}, (Membership.Mem.{u2, u2} S (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (SetLike.hasMem.{u2, u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) S (Subalgebra.setLike.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3)) (PowerBasis.gen.{u1, u2} R S _inst_1 _inst_2 _inst_3 B) (Algebra.adjoin.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) x))) -> (Eq.{succ u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (Algebra.adjoin.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3 (Singleton.singleton.{u2, u2} S (Set.{u2} S) (Set.hasSingleton.{u2} S) x)) (Top.top.{u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (CompleteLattice.toHasTop.{u2} (Subalgebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3) (Algebra.Subalgebra.completeLattice.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S _inst_2) _inst_3))))
-but is expected to have type
-  forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : Ring.{u1} S] [_inst_3 : Algebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2)] {B : PowerBasis.{u2, u1} R S _inst_1 _inst_2 _inst_3} {x : S}, (Membership.mem.{u1, u1} S (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (SetLike.instMembership.{u1, u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) S (Subalgebra.instSetLikeSubalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3)) (PowerBasis.gen.{u2, u1} R S _inst_1 _inst_2 _inst_3 B) (Algebra.adjoin.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3 (Singleton.singleton.{u1, u1} S (Set.{u1} S) (Set.instSingletonSet.{u1} S) x))) -> (Eq.{succ u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (Algebra.adjoin.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3 (Singleton.singleton.{u1, u1} S (Set.{u1} S) (Set.instSingletonSet.{u1} S) x)) (Top.top.{u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (CompleteLattice.toTop.{u1} (Subalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3) (Algebra.instCompleteLatticeSubalgebra.{u2, u1} R S (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} S _inst_2) _inst_3))))
-Case conversion may be inaccurate. Consider using '#align power_basis.adjoin_eq_top_of_gen_mem_adjoin PowerBasis.adjoin_eq_top_of_gen_mem_adjoinₓ'. -/
 theorem adjoin_eq_top_of_gen_mem_adjoin {B : PowerBasis R S} {x : S}
     (hx : B.gen ∈ adjoin R ({x} : Set S)) : adjoin R ({x} : Set S) = ⊤ :=
   by

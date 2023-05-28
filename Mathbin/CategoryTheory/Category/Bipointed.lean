@@ -130,12 +130,6 @@ def swap : Bipointed ⥤ Bipointed where
 #align Bipointed.swap Bipointed.swap
 -/
 
-/- warning: Bipointed.swap_equiv -> Bipointed.swapEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.{u1} Bipointed.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} Bipointed.{u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.largeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align Bipointed.swap_equiv Bipointed.swapEquivₓ'. -/
 /-- The equivalence between `Bipointed` and itself induced by `prod.swap` both ways. -/
 @[simps]
 def swapEquiv : Bipointed ≌ Bipointed :=
@@ -152,12 +146,6 @@ def swapEquiv : Bipointed ≌ Bipointed :=
       fun X Y f => rfl)
 #align Bipointed.swap_equiv Bipointed.swapEquiv
 
-/- warning: Bipointed.swap_equiv_symm -> Bipointed.swapEquiv_symm is a dubious translation:
-lean 3 declaration is
-  Eq.{succ (succ u1)} (CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.{u1} Bipointed.largeCategory.{u1}) (CategoryTheory.Equivalence.symm.{u1, u1, succ u1, succ u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.swapEquiv.{u1}) Bipointed.swapEquiv.{u1}
-but is expected to have type
-  Eq.{succ (succ u1)} (CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} Bipointed.{u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.largeCategory.{u1}) (CategoryTheory.Equivalence.symm.{u1, u1, succ u1, succ u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.{u1} Bipointed.largeCategory.{u1} Bipointed.swapEquiv.{u1}) Bipointed.swapEquiv.{u1}
-Case conversion may be inaccurate. Consider using '#align Bipointed.swap_equiv_symm Bipointed.swapEquiv_symmₓ'. -/
 @[simp]
 theorem swapEquiv_symm : swapEquiv.symm = swapEquiv :=
   rfl

@@ -140,12 +140,6 @@ theorem hyperoperation_ge_three_one (n : ℕ) : ∀ k : ℕ, hyperoperation (n +
 #align hyperoperation_ge_three_one hyperoperation_ge_three_one
 -/
 
-/- warning: hyperoperation_ge_four_zero -> hyperoperation_ge_four_zero is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (k : Nat), Eq.{1} Nat (hyperoperation (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) k) (ite.{1} Nat (Even.{0} Nat Nat.hasAdd k) (Nat.Even.decidablePred k) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
-but is expected to have type
-  forall (n : Nat) (k : Nat), Eq.{1} Nat (hyperoperation (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) k) (ite.{1} Nat (Even.{0} Nat instAddNat k) (Nat.instDecidablePredNatEvenInstAddNat k) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
-Case conversion may be inaccurate. Consider using '#align hyperoperation_ge_four_zero hyperoperation_ge_four_zeroₓ'. -/
 theorem hyperoperation_ge_four_zero (n k : ℕ) :
     hyperoperation (n + 4) 0 k = if Even k then 1 else 0 :=
   by

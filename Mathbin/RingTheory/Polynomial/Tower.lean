@@ -42,9 +42,6 @@ variable [IsScalarTower R A B]
 
 variable {R B}
 
-/- warning: polynomial.aeval_map_algebra_map -> Polynomial.aeval_map_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.aeval_map_algebra_map Polynomial.aeval_map_algebraMapₓ'. -/
 @[simp]
 theorem aeval_map_algebraMap (x : B) (p : R[X]) : aeval x (map (algebraMap R A) p) = aeval x p := by
   rw [aeval_def, aeval_def, eval₂_map, IsScalarTower.algebraMap_eq R A B]
@@ -60,17 +57,11 @@ variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
 variable {R A}
 
-/- warning: polynomial.aeval_algebra_map_apply -> Polynomial.aeval_algebraMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.aeval_algebra_map_apply Polynomial.aeval_algebraMap_applyₓ'. -/
 theorem aeval_algebraMap_apply (x : A) (p : R[X]) :
     aeval (algebraMap A B x) p = algebraMap A B (aeval x p) := by
   rw [aeval_def, aeval_def, hom_eval₂, ← IsScalarTower.algebraMap_eq]
 #align polynomial.aeval_algebra_map_apply Polynomial.aeval_algebraMap_apply
 
-/- warning: polynomial.aeval_algebra_map_eq_zero_iff -> Polynomial.aeval_algebraMap_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.aeval_algebra_map_eq_zero_iff Polynomial.aeval_algebraMap_eq_zero_iffₓ'. -/
 @[simp]
 theorem aeval_algebraMap_eq_zero_iff [NoZeroSMulDivisors A B] [Nontrivial B] (x : A) (p : R[X]) :
     aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
@@ -80,9 +71,6 @@ theorem aeval_algebraMap_eq_zero_iff [NoZeroSMulDivisors A B] [Nontrivial B] (x 
 
 variable {B}
 
-/- warning: polynomial.aeval_algebra_map_eq_zero_iff_of_injective -> Polynomial.aeval_algebraMap_eq_zero_iff_of_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.aeval_algebra_map_eq_zero_iff_of_injective Polynomial.aeval_algebraMap_eq_zero_iff_of_injectiveₓ'. -/
 theorem aeval_algebraMap_eq_zero_iff_of_injective {x : A} {p : R[X]}
     (h : Function.Injective (algebraMap A B)) : aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
   rw [aeval_algebra_map_apply, ← (algebraMap A B).map_zero, h.eq_iff]
@@ -100,9 +88,6 @@ section CommSemiring
 
 variable {R A} [CommSemiring R] [CommSemiring A] [Algebra R A]
 
-/- warning: subalgebra.aeval_coe -> Subalgebra.aeval_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subalgebra.aeval_coe Subalgebra.aeval_coeₓ'. -/
 @[simp]
 theorem aeval_coe (S : Subalgebra R A) (x : S) (p : R[X]) : aeval (x : A) p = aeval x p :=
   aeval_algebraMap_apply A x p

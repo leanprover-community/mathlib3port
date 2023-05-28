@@ -92,12 +92,6 @@ instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
     one_mul := by intros ; ext; simp only [mul_apply, one_apply, one_mul]
     mul_one := by intros ; ext; simp only [mul_apply, one_apply, mul_one] }
 
-/- warning: locally_constant.coe_fn_monoid_hom -> LocallyConstant.coeFnMonoidHom is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulOneClass.{u2} Y], MonoidHom.{max u1 u2, max u1 u2} (LocallyConstant.{u1, u2} X Y _inst_1) (X -> Y) (LocallyConstant.mulOneClass.{u1, u2} X Y _inst_1 _inst_2) (Pi.mulOneClass.{u1, u2} X (fun (ᾰ : X) => Y) (fun (i : X) => _inst_2))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulOneClass.{u2} Y], MonoidHom.{max u2 u1, max u1 u2} (LocallyConstant.{u1, u2} X Y _inst_1) (X -> Y) (LocallyConstant.instMulOneClassLocallyConstant.{u1, u2} X Y _inst_1 _inst_2) (Pi.mulOneClass.{u1, u2} X (fun (ᾰ : X) => Y) (fun (i : X) => _inst_2))
-Case conversion may be inaccurate. Consider using '#align locally_constant.coe_fn_monoid_hom LocallyConstant.coeFnMonoidHomₓ'. -/
 /-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
 def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y
@@ -108,12 +102,6 @@ def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y
 #align locally_constant.coe_fn_monoid_hom LocallyConstant.coeFnMonoidHom
 #align locally_constant.coe_fn_add_monoid_hom LocallyConstant.coeFnAddMonoidHom
 
-/- warning: locally_constant.const_monoid_hom -> LocallyConstant.constMonoidHom is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulOneClass.{u2} Y], MonoidHom.{u2, max u1 u2} Y (LocallyConstant.{u1, u2} X Y _inst_1) _inst_2 (LocallyConstant.mulOneClass.{u1, u2} X Y _inst_1 _inst_2)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulOneClass.{u2} Y], MonoidHom.{u2, max u2 u1} Y (LocallyConstant.{u1, u2} X Y _inst_1) _inst_2 (LocallyConstant.instMulOneClassLocallyConstant.{u1, u2} X Y _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align locally_constant.const_monoid_hom LocallyConstant.constMonoidHomₓ'. -/
 /-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
 def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y
@@ -145,32 +133,14 @@ noncomputable def charFn (hU : IsClopen U) : LocallyConstant X Y :=
 #align locally_constant.char_fn LocallyConstant.charFn
 -/
 
-/- warning: locally_constant.coe_char_fn -> LocallyConstant.coe_charFn is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} (Y : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulZeroOneClass.{u2} Y] {U : Set.{u1} X} (hU : IsClopen.{u1} X _inst_1 U), Eq.{max (succ u1) (succ u2)} ((fun (_x : LocallyConstant.{u1, u2} X Y _inst_1) => X -> Y) (LocallyConstant.charFn.{u1, u2} X Y _inst_1 _inst_2 U hU)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocallyConstant.{u1, u2} X Y _inst_1) (fun (_x : LocallyConstant.{u1, u2} X Y _inst_1) => X -> Y) (LocallyConstant.hasCoeToFun.{u1, u2} X Y _inst_1) (LocallyConstant.charFn.{u1, u2} X Y _inst_1 _inst_2 U hU)) (Set.indicator.{u1, u2} X Y (MulZeroClass.toHasZero.{u2} Y (MulZeroOneClass.toMulZeroClass.{u2} Y _inst_2)) U (OfNat.ofNat.{max u1 u2} (X -> Y) 1 (OfNat.mk.{max u1 u2} (X -> Y) 1 (One.one.{max u1 u2} (X -> Y) (Pi.instOne.{u1, u2} X (fun (ᾰ : X) => Y) (fun (i : X) => MulOneClass.toHasOne.{u2} Y (MulZeroOneClass.toMulOneClass.{u2} Y _inst_2)))))))
-but is expected to have type
-  forall {X : Type.{u2}} (Y : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : MulZeroOneClass.{u1} Y] {U : Set.{u2} X} (hU : IsClopen.{u2} X _inst_1 U), Eq.{max (succ u2) (succ u1)} (forall (a : X), (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => Y) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LocallyConstant.{u2, u1} X Y _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => Y) _x) (LocallyConstant.instFunLikeLocallyConstant.{u2, u1} X Y _inst_1) (LocallyConstant.charFn.{u2, u1} X Y _inst_1 _inst_2 U hU)) (Set.indicator.{u2, u1} X Y (MulZeroOneClass.toZero.{u1} Y _inst_2) U (OfNat.ofNat.{max u2 u1} (X -> Y) 1 (One.toOfNat1.{max u2 u1} (X -> Y) (Pi.instOne.{u2, u1} X (fun (a._@.Mathlib.Algebra.IndicatorFunction._hyg.77 : X) => Y) (fun (i : X) => MulOneClass.toOne.{u1} Y (MulZeroOneClass.toMulOneClass.{u1} Y _inst_2))))))
-Case conversion may be inaccurate. Consider using '#align locally_constant.coe_char_fn LocallyConstant.coe_charFnₓ'. -/
 theorem coe_charFn (hU : IsClopen U) : (charFn Y hU : X → Y) = Set.indicator U 1 :=
   rfl
 #align locally_constant.coe_char_fn LocallyConstant.coe_charFn
 
-/- warning: locally_constant.char_fn_eq_one -> LocallyConstant.charFn_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} (Y : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulZeroOneClass.{u2} Y] {U : Set.{u1} X} [_inst_3 : Nontrivial.{u2} Y] (x : X) (hU : IsClopen.{u1} X _inst_1 U), Iff (Eq.{succ u2} Y (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocallyConstant.{u1, u2} X Y _inst_1) (fun (_x : LocallyConstant.{u1, u2} X Y _inst_1) => X -> Y) (LocallyConstant.hasCoeToFun.{u1, u2} X Y _inst_1) (LocallyConstant.charFn.{u1, u2} X Y _inst_1 _inst_2 U hU) x) (OfNat.ofNat.{u2} Y 1 (OfNat.mk.{u2} Y 1 (One.one.{u2} Y (MulOneClass.toHasOne.{u2} Y (MulZeroOneClass.toMulOneClass.{u2} Y _inst_2)))))) (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x U)
-but is expected to have type
-  forall {X : Type.{u1}} (Y : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulZeroOneClass.{u2} Y] {U : Set.{u1} X} [_inst_3 : Nontrivial.{u2} Y] (x : X) (hU : IsClopen.{u1} X _inst_1 U), Iff (Eq.{succ u2} ((fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => Y) x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (LocallyConstant.{u1, u2} X Y _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => Y) _x) (LocallyConstant.instFunLikeLocallyConstant.{u1, u2} X Y _inst_1) (LocallyConstant.charFn.{u1, u2} X Y _inst_1 _inst_2 U hU) x) (OfNat.ofNat.{u2} Y 1 (One.toOfNat1.{u2} Y (MulOneClass.toOne.{u2} Y (MulZeroOneClass.toMulOneClass.{u2} Y _inst_2))))) (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x U)
-Case conversion may be inaccurate. Consider using '#align locally_constant.char_fn_eq_one LocallyConstant.charFn_eq_oneₓ'. -/
 theorem charFn_eq_one [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (1 : Y) ↔ x ∈ U :=
   Set.indicator_eq_one_iff_mem _
 #align locally_constant.char_fn_eq_one LocallyConstant.charFn_eq_one
 
-/- warning: locally_constant.char_fn_eq_zero -> LocallyConstant.charFn_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} (Y : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulZeroOneClass.{u2} Y] {U : Set.{u1} X} [_inst_3 : Nontrivial.{u2} Y] (x : X) (hU : IsClopen.{u1} X _inst_1 U), Iff (Eq.{succ u2} Y (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocallyConstant.{u1, u2} X Y _inst_1) (fun (_x : LocallyConstant.{u1, u2} X Y _inst_1) => X -> Y) (LocallyConstant.hasCoeToFun.{u1, u2} X Y _inst_1) (LocallyConstant.charFn.{u1, u2} X Y _inst_1 _inst_2 U hU) x) (OfNat.ofNat.{u2} Y 0 (OfNat.mk.{u2} Y 0 (Zero.zero.{u2} Y (MulZeroClass.toHasZero.{u2} Y (MulZeroOneClass.toMulZeroClass.{u2} Y _inst_2)))))) (Not (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x U))
-but is expected to have type
-  forall {X : Type.{u1}} (Y : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : MulZeroOneClass.{u2} Y] {U : Set.{u1} X} [_inst_3 : Nontrivial.{u2} Y] (x : X) (hU : IsClopen.{u1} X _inst_1 U), Iff (Eq.{succ u2} ((fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => Y) x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (LocallyConstant.{u1, u2} X Y _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => Y) _x) (LocallyConstant.instFunLikeLocallyConstant.{u1, u2} X Y _inst_1) (LocallyConstant.charFn.{u1, u2} X Y _inst_1 _inst_2 U hU) x) (OfNat.ofNat.{u2} Y 0 (Zero.toOfNat0.{u2} Y (MulZeroOneClass.toZero.{u2} Y _inst_2)))) (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x U))
-Case conversion may be inaccurate. Consider using '#align locally_constant.char_fn_eq_zero LocallyConstant.charFn_eq_zeroₓ'. -/
 theorem charFn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (0 : Y) ↔ x ∉ U :=
   Set.indicator_eq_zero_iff_not_mem _
 #align locally_constant.char_fn_eq_zero LocallyConstant.charFn_eq_zero
@@ -258,12 +228,6 @@ instance [NonAssocSemiring Y] : NonAssocSemiring (LocallyConstant X Y) :=
   { LocallyConstant.mulOneClass, LocallyConstant.addMonoidWithOne,
     LocallyConstant.nonUnitalNonAssocSemiring with }
 
-/- warning: locally_constant.const_ring_hom -> LocallyConstant.constRingHom is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NonAssocSemiring.{u2} Y], RingHom.{u2, max u1 u2} Y (LocallyConstant.{u1, u2} X Y _inst_1) _inst_2 (LocallyConstant.nonAssocSemiring.{u1, u2} X Y _inst_1 _inst_2)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NonAssocSemiring.{u2} Y], RingHom.{u2, max u2 u1} Y (LocallyConstant.{u1, u2} X Y _inst_1) _inst_2 (LocallyConstant.instNonAssocSemiringLocallyConstant.{u1, u2} X Y _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align locally_constant.const_ring_hom LocallyConstant.constRingHomₓ'. -/
 /-- The constant-function embedding, as a ring hom.  -/
 @[simps]
 def constRingHom [NonAssocSemiring Y] : Y →+* LocallyConstant X Y :=
@@ -338,9 +302,6 @@ instance : Algebra R (LocallyConstant X Y)
   commutes' := by intros ; ext; exact Algebra.commutes' _ _
   smul_def' := by intros ; ext; exact Algebra.smul_def' _ _
 
-/- warning: locally_constant.coe_algebra_map -> LocallyConstant.coe_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align locally_constant.coe_algebra_map LocallyConstant.coe_algebraMapₓ'. -/
 @[simp]
 theorem coe_algebraMap (r : R) : ⇑(algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
   rfl

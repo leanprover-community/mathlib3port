@@ -31,9 +31,6 @@ open LinearIsometry ContinuousLinearMap
 
 open RealInnerProductSpace
 
-/- warning: is_conformal_map_iff -> isConformalMap_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_conformal_map_iff isConformalMap_iffₓ'. -/
 /-- A map between two inner product spaces is a conformal map if and only if it preserves inner
 products up to a scalar factor, i.e., there exists a positive `c : ℝ` such that `⟪f u, f v⟫ = c *
 ⟪u, v⟫` for all `u`, `v`. -/

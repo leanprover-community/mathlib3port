@@ -162,12 +162,6 @@ section Monotone
 
 variable {n : ℕ} {α : Type uu} [Preorder α] {f : Fin n → α}
 
-/- warning: list.monotone_iff_of_fn_sorted -> List.monotone_iff_ofFn_sorted is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, Iff (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) _inst_1 f) (List.Sorted.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (List.ofFn.{u1} α n f))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, Iff (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) _inst_1 f) (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.Sort._hyg.1419 : α) (x._@.Mathlib.Data.List.Sort._hyg.1421 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.Sort._hyg.1419 x._@.Mathlib.Data.List.Sort._hyg.1421) (List.ofFn.{u1} α n f))
-Case conversion may be inaccurate. Consider using '#align list.monotone_iff_of_fn_sorted List.monotone_iff_ofFn_sortedₓ'. -/
 /-- A tuple is monotone if and only if the list obtained from it is sorted. -/
 theorem monotone_iff_ofFn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) :=
   by
@@ -175,12 +169,6 @@ theorem monotone_iff_ofFn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) :=
   exact ⟨fun h i j hj hij => h <| fin.mk_lt_mk.mpr hij, fun h ⟨i, _⟩ ⟨j, hj⟩ hij => h i j hj hij⟩
 #align list.monotone_iff_of_fn_sorted List.monotone_iff_ofFn_sorted
 
-/- warning: list.monotone.of_fn_sorted -> Monotone.ofFn_sorted is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) _inst_1 f) -> (List.Sorted.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (List.ofFn.{u1} α n f))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) _inst_1 f) -> (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.Sort._hyg.1378 : α) (x._@.Mathlib.Data.List.Sort._hyg.1380 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.Sort._hyg.1378 x._@.Mathlib.Data.List.Sort._hyg.1380) (List.ofFn.{u1} α n f))
-Case conversion may be inaccurate. Consider using '#align list.monotone.of_fn_sorted Monotone.ofFn_sortedₓ'. -/
 /-- The list obtained from a monotone tuple is sorted. -/
 theorem Monotone.ofFn_sorted (h : Monotone f) : (ofFn f).Sorted (· ≤ ·) :=
   monotone_iff_ofFn_sorted.1 h

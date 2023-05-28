@@ -81,12 +81,6 @@ variable {𝕜 : Type u} [hnorm : NontriviallyNormedField 𝕜] {E : Type v} [Ad
 
 include hnorm
 
-/- warning: unique_topology_of_t2 -> unique_topology_of_t2 is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [hnorm : NontriviallyNormedField.{u1} 𝕜] {t : TopologicalSpace.{u1} 𝕜}, (TopologicalAddGroup.{u1} 𝕜 t (NormedAddGroup.toAddGroup.{u1} 𝕜 (NormedAddCommGroup.toNormedAddGroup.{u1} 𝕜 (NonUnitalNormedRing.toNormedAddCommGroup.{u1} 𝕜 (NormedRing.toNonUnitalNormedRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm)))))))) -> (ContinuousSMul.{u1, u1} 𝕜 𝕜 (Mul.toSMul.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (Ring.toDistrib.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm))))))) (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (MetricSpace.toPseudoMetricSpace.{u1} 𝕜 (NormedField.toMetricSpace.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm))))) t) -> (T2Space.{u1} 𝕜 t) -> (Eq.{succ u1} (TopologicalSpace.{u1} 𝕜) t (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (MetricSpace.toPseudoMetricSpace.{u1} 𝕜 (NormedField.toMetricSpace.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm))))))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} [hnorm : NontriviallyNormedField.{u1} 𝕜] {t : TopologicalSpace.{u1} 𝕜}, (TopologicalAddGroup.{u1} 𝕜 t (NormedAddGroup.toAddGroup.{u1} 𝕜 (NormedAddCommGroup.toNormedAddGroup.{u1} 𝕜 (NonUnitalNormedRing.toNormedAddCommGroup.{u1} 𝕜 (NormedRing.toNonUnitalNormedRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm)))))))) -> (ContinuousSMul.{u1, u1} 𝕜 𝕜 (Algebra.toSMul.{u1, u1} 𝕜 𝕜 (Semifield.toCommSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm)))) (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm))))) (NormedAlgebra.toAlgebra.{u1, u1} 𝕜 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm) (SeminormedCommRing.toSeminormedRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm)))) (NormedAlgebra.id.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm)))) (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (MetricSpace.toPseudoMetricSpace.{u1} 𝕜 (NormedField.toMetricSpace.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm))))) t) -> (T2Space.{u1} 𝕜 t) -> (Eq.{succ u1} (TopologicalSpace.{u1} 𝕜) t (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (MetricSpace.toPseudoMetricSpace.{u1} 𝕜 (NormedField.toMetricSpace.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 hnorm))))))
-Case conversion may be inaccurate. Consider using '#align unique_topology_of_t2 unique_topology_of_t2ₓ'. -/
 /-- If `𝕜` is a nontrivially normed field, any T2 topology on `𝕜` which makes it a topological
 vector space over itself (with the norm topology) is *equal* to the norm topology. -/
 theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAddGroup 𝕜 t _)
@@ -145,9 +139,6 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
       
 #align unique_topology_of_t2 unique_topology_of_t2
 
-/- warning: linear_map.continuous_of_is_closed_ker -> LinearMap.continuous_of_isClosed_ker is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_of_is_closed_ker LinearMap.continuous_of_isClosed_kerₓ'. -/
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     its kernel is closed. -/
 theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsClosed (l.ker : Set E)) :
@@ -196,9 +187,6 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
     exact continuous_coinduced_rng
 #align linear_map.continuous_of_is_closed_ker LinearMap.continuous_of_isClosed_ker
 
-/- warning: linear_map.continuous_iff_is_closed_ker -> LinearMap.continuous_iff_isClosed_ker is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_iff_is_closed_ker LinearMap.continuous_iff_isClosed_kerₓ'. -/
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     and only if its kernel is closed. -/
 theorem LinearMap.continuous_iff_isClosed_ker (l : E →ₗ[𝕜] 𝕜) :
@@ -206,9 +194,6 @@ theorem LinearMap.continuous_iff_isClosed_ker (l : E →ₗ[𝕜] 𝕜) :
   ⟨fun h => isClosed_singleton.Preimage h, l.continuous_of_isClosed_ker⟩
 #align linear_map.continuous_iff_is_closed_ker LinearMap.continuous_iff_isClosed_ker
 
-/- warning: linear_map.continuous_of_nonzero_on_open -> LinearMap.continuous_of_nonzero_on_open is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_of_nonzero_on_open LinearMap.continuous_of_nonzero_on_openₓ'. -/
 /-- Over a nontrivially normed field, any linear form which is nonzero on a nonempty open set is
     automatically continuous. -/
 theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : Set E) (hs₁ : IsOpen s)
@@ -276,9 +261,6 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     change Continuous (ξ.coord i)
     exact H₂ (ξ.coord i)
 
-/- warning: linear_map.continuous_of_finite_dimensional -> LinearMap.continuous_of_finiteDimensional is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.continuous_of_finite_dimensional LinearMap.continuous_of_finiteDimensionalₓ'. -/
 /-- Any linear map on a finite dimensional space over a complete field is continuous. -/
 theorem LinearMap.continuous_of_finiteDimensional [T2Space E] [FiniteDimensional 𝕜 E]
     (f : E →ₗ[𝕜] F') : Continuous f :=
@@ -306,9 +288,6 @@ instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [Fini
 #align linear_map.continuous_linear_map_class_of_finite_dimensional LinearMap.continuousLinearMapClassOfFiniteDimensional
 -/
 
-/- warning: continuous_equiv_fun_basis -> continuous_equivFun_basis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_equiv_fun_basis continuous_equivFun_basisₓ'. -/
 /-- In finite dimensions over a non-discrete complete normed field, the canonical identification
 (in terms of a basis) with `𝕜^n` (endowed with the product topology) is continuous.
 This is the key fact wich makes all linear maps from a T2 finite dimensional TVS over such a field
@@ -337,58 +316,37 @@ def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F'
 #align linear_map.to_continuous_linear_map LinearMap.toContinuousLinearMap
 -/
 
-/- warning: linear_map.coe_to_continuous_linear_map' -> LinearMap.coe_to_continuous_linear_map' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_to_continuous_linear_map' LinearMap.coe_to_continuous_linear_map'ₓ'. -/
 @[simp]
 theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : ⇑f.toContinuousLinearMap = f :=
   rfl
 #align linear_map.coe_to_continuous_linear_map' LinearMap.coe_to_continuous_linear_map'
 
-/- warning: linear_map.coe_to_continuous_linear_map -> LinearMap.coe_toContinuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_to_continuous_linear_map LinearMap.coe_toContinuousLinearMapₓ'. -/
 @[simp]
 theorem coe_toContinuousLinearMap (f : E →ₗ[𝕜] F') : (f.toContinuousLinearMap : E →ₗ[𝕜] F') = f :=
   rfl
 #align linear_map.coe_to_continuous_linear_map LinearMap.coe_toContinuousLinearMap
 
-/- warning: linear_map.coe_to_continuous_linear_map_symm -> LinearMap.coe_toContinuousLinearMap_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_to_continuous_linear_map_symm LinearMap.coe_toContinuousLinearMap_symmₓ'. -/
 @[simp]
 theorem coe_toContinuousLinearMap_symm :
     ⇑(toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
   rfl
 #align linear_map.coe_to_continuous_linear_map_symm LinearMap.coe_toContinuousLinearMap_symm
 
-/- warning: linear_map.det_to_continuous_linear_map -> LinearMap.det_toContinuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.det_to_continuous_linear_map LinearMap.det_toContinuousLinearMapₓ'. -/
 @[simp]
 theorem det_toContinuousLinearMap (f : E →ₗ[𝕜] E) : f.toContinuousLinearMap.det = f.det :=
   rfl
 #align linear_map.det_to_continuous_linear_map LinearMap.det_toContinuousLinearMap
 
-/- warning: linear_map.ker_to_continuous_linear_map -> LinearMap.ker_toContinuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ker_to_continuous_linear_map LinearMap.ker_toContinuousLinearMapₓ'. -/
 @[simp]
 theorem ker_toContinuousLinearMap (f : E →ₗ[𝕜] F') : ker f.toContinuousLinearMap = ker f :=
   rfl
 #align linear_map.ker_to_continuous_linear_map LinearMap.ker_toContinuousLinearMap
 
-/- warning: linear_map.range_to_continuous_linear_map -> LinearMap.range_toContinuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.range_to_continuous_linear_map LinearMap.range_toContinuousLinearMapₓ'. -/
 @[simp]
 theorem range_toContinuousLinearMap (f : E →ₗ[𝕜] F') : range f.toContinuousLinearMap = range f :=
   rfl
 #align linear_map.range_to_continuous_linear_map LinearMap.range_toContinuousLinearMap
 
-/- warning: linear_map.is_open_map_of_finite_dimensional -> LinearMap.isOpenMap_of_finiteDimensional is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.is_open_map_of_finite_dimensional LinearMap.isOpenMap_of_finiteDimensionalₓ'. -/
 /-- A surjective linear map `f` with finite dimensional codomain is an open map. -/
 theorem isOpenMap_of_finiteDimensional (f : F →ₗ[𝕜] E) (hf : Function.Surjective f) : IsOpenMap f :=
   by
@@ -435,9 +393,6 @@ theorem coe_toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLine
 #align linear_equiv.coe_to_continuous_linear_equiv LinearEquiv.coe_toContinuousLinearEquiv
 -/
 
-/- warning: linear_equiv.coe_to_continuous_linear_equiv' -> LinearEquiv.coe_to_continuous_linear_equiv' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.coe_to_continuous_linear_equiv' LinearEquiv.coe_to_continuous_linear_equiv'ₓ'. -/
 @[simp]
 theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E → F) = e :=
   rfl
@@ -451,9 +406,6 @@ theorem coe_toContinuousLinearEquiv_symm (e : E ≃ₗ[𝕜] F) :
 #align linear_equiv.coe_to_continuous_linear_equiv_symm LinearEquiv.coe_toContinuousLinearEquiv_symm
 -/
 
-/- warning: linear_equiv.coe_to_continuous_linear_equiv_symm' -> LinearEquiv.coe_toContinuousLinearEquiv_symm' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv.coe_to_continuous_linear_equiv_symm' LinearEquiv.coe_toContinuousLinearEquiv_symm'ₓ'. -/
 @[simp]
 theorem coe_toContinuousLinearEquiv_symm' (e : E ≃ₗ[𝕜] F) :
     (e.toContinuousLinearEquiv.symm : F → E) = e.symm :=
@@ -526,9 +478,6 @@ def constrL (v : Basis ι 𝕜 E) (f : ι → F) : E →L[𝕜] F :=
 #align basis.constrL Basis.constrL
 -/
 
-/- warning: basis.coe_constrL -> Basis.coe_constrL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.coe_constrL Basis.coe_constrLₓ'. -/
 @[simp, norm_cast]
 theorem coe_constrL (v : Basis ι 𝕜 E) (f : ι → F) : (v.constrL f : E →ₗ[𝕜] F) = v.constr 𝕜 f :=
   rfl
@@ -549,18 +498,12 @@ def equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
 #align basis.equiv_funL Basis.equivFunL
 -/
 
-/- warning: basis.constrL_apply -> Basis.constrL_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.constrL_apply Basis.constrL_applyₓ'. -/
 @[simp]
 theorem constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) :
     (v.constrL f) e = ∑ i, v.equivFun e i • f i :=
   v.constr_apply_fintype 𝕜 _ _
 #align basis.constrL_apply Basis.constrL_apply
 
-/- warning: basis.constrL_basis -> Basis.constrL_basis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align basis.constrL_basis Basis.constrL_basisₓ'. -/
 @[simp]
 theorem constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
   v.constr_basis 𝕜 _ _
@@ -572,35 +515,23 @@ namespace ContinuousLinearMap
 
 variable [T2Space E] [FiniteDimensional 𝕜 E]
 
-/- warning: continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero -> ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.toContinuousLinearEquivOfDetNeZeroₓ'. -/
 /-- Builds a continuous linear equivalence from a continuous linear map on a finite-dimensional
 vector space whose determinant is nonzero. -/
 def toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) : E ≃L[𝕜] E :=
   ((f : E →ₗ[𝕜] E).equivOfDetNeZero hf).toContinuousLinearEquiv
 #align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero
 
-/- warning: continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero -> ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZeroₓ'. -/
 @[simp]
 theorem coe_toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) :
     (f.toContinuousLinearEquivOfDetNeZero hf : E →L[𝕜] E) = f := by ext x; rfl
 #align continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero
 
-/- warning: continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply -> ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_applyₓ'. -/
 @[simp]
 theorem toContinuousLinearEquivOfDetNeZero_apply (f : E →L[𝕜] E) (hf : f.det ≠ 0) (x : E) :
     f.toContinuousLinearEquivOfDetNeZero hf x = f x :=
   rfl
 #align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply
 
-/- warning: matrix.to_lin_fin_two_prod_to_continuous_linear_map -> Matrix.toLin_finTwoProd_toContinuousLinearMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_lin_fin_two_prod_to_continuous_linear_map Matrix.toLin_finTwoProd_toContinuousLinearMapₓ'. -/
 theorem Matrix.toLin_finTwoProd_toContinuousLinearMap (a b c d : 𝕜) :
     (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜) !![a, b; c, d]).toContinuousLinearMap =
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod

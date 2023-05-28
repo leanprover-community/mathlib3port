@@ -133,12 +133,6 @@ class ContravariantClass : Prop where
 #align contravariant_class ContravariantClass
 -/
 
-/- warning: rel_iff_cov -> rel_iff_cov is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) (r : N -> N -> Prop) [_inst_1 : CovariantClass.{u1, u2} M N μ r] [_inst_2 : ContravariantClass.{u1, u2} M N μ r] (m : M) {a : N} {b : N}, Iff (r (μ m a) (μ m b)) (r a b)
-but is expected to have type
-  forall (M : Type.{u2}) (N : Type.{u1}) (μ : M -> N -> N) (r : N -> N -> Prop) [_inst_1 : CovariantClass.{u2, u1} M N μ r] [_inst_2 : ContravariantClass.{u2, u1} M N μ r] (m : M) {a : N} {b : N}, Iff (r (μ m a) (μ m b)) (r a b)
-Case conversion may be inaccurate. Consider using '#align rel_iff_cov rel_iff_covₓ'. -/
 theorem rel_iff_cov [CovariantClass M N μ r] [ContravariantClass M N μ r] (m : M) {a b : N} :
     r (μ m a) (μ m b) ↔ r a b :=
   ⟨ContravariantClass.elim _, CovariantClass.elim _⟩
@@ -148,22 +142,10 @@ section flip
 
 variable {M N μ r}
 
-/- warning: covariant.flip -> Covariant.flip is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {μ : M -> N -> N} {r : N -> N -> Prop}, (Covariant.{u1, u2} M N μ r) -> (Covariant.{u1, u2} M N μ (flip.{succ u2, succ u2, 1} N N Prop r))
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} {μ : M -> N -> N} {r : N -> N -> Prop}, (Covariant.{u2, u1} M N μ r) -> (Covariant.{u2, u1} M N μ (flip.{succ u1, succ u1, 1} N N Prop r))
-Case conversion may be inaccurate. Consider using '#align covariant.flip Covariant.flipₓ'. -/
 theorem Covariant.flip (h : Covariant M N μ r) : Covariant M N μ (flip r) := fun a b c hbc =>
   h a hbc
 #align covariant.flip Covariant.flip
 
-/- warning: contravariant.flip -> Contravariant.flip is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {μ : M -> N -> N} {r : N -> N -> Prop}, (Contravariant.{u1, u2} M N μ r) -> (Contravariant.{u1, u2} M N μ (flip.{succ u2, succ u2, 1} N N Prop r))
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} {μ : M -> N -> N} {r : N -> N -> Prop}, (Contravariant.{u2, u1} M N μ r) -> (Contravariant.{u2, u1} M N μ (flip.{succ u1, succ u1, 1} N N Prop r))
-Case conversion may be inaccurate. Consider using '#align contravariant.flip Contravariant.flipₓ'. -/
 theorem Contravariant.flip (h : Contravariant M N μ r) : Contravariant M N μ (flip r) :=
   fun a b c hbc => h a hbc
 #align contravariant.flip Contravariant.flip
@@ -180,12 +162,6 @@ theorem act_rel_act_of_rel (m : M) {a b : N} (ab : r a b) : r (μ m a) (μ m b) 
 #align act_rel_act_of_rel act_rel_act_of_rel
 -/
 
-/- warning: group.covariant_iff_contravariant -> Group.covariant_iff_contravariant is a dubious translation:
-lean 3 declaration is
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N], Iff (Covariant.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2)))))) r) (Contravariant.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2)))))) r)
-but is expected to have type
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N], Iff (Covariant.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.425 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.427 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.425 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.427) r) (Contravariant.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.444 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.446 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.444 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.446) r)
-Case conversion may be inaccurate. Consider using '#align group.covariant_iff_contravariant Group.covariant_iff_contravariantₓ'. -/
 @[to_additive]
 theorem Group.covariant_iff_contravariant [Group N] :
     Covariant N N (· * ·) r ↔ Contravariant N N (· * ·) r :=
@@ -198,12 +174,6 @@ theorem Group.covariant_iff_contravariant [Group N] :
 #align group.covariant_iff_contravariant Group.covariant_iff_contravariant
 #align add_group.covariant_iff_contravariant AddGroup.covariant_iff_contravariant
 
-/- warning: group.covconv -> Group.covconv is a dubious translation:
-lean 3 declaration is
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2)))))) r], ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2)))))) r
-but is expected to have type
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.600 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.602 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.600 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.602) r], ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.619 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.621 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.619 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.621) r
-Case conversion may be inaccurate. Consider using '#align group.covconv Group.covconvₓ'. -/
 @[to_additive]
 instance (priority := 100) Group.covconv [Group N] [CovariantClass N N (· * ·) r] :
     ContravariantClass N N (· * ·) r :=
@@ -211,12 +181,6 @@ instance (priority := 100) Group.covconv [Group N] [CovariantClass N N (· * ·)
 #align group.covconv Group.covconv
 #align add_group.covconv AddGroup.covconv
 
-/- warning: group.covariant_swap_iff_contravariant_swap -> Group.covariant_swap_iff_contravariant_swap is a dubious translation:
-lean 3 declaration is
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N], Iff (Covariant.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))))) r) (Contravariant.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))))) r)
-but is expected to have type
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N], Iff (Covariant.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.674 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.676 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.674 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.676)) r) (Contravariant.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.696 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.698 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.696 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.698)) r)
-Case conversion may be inaccurate. Consider using '#align group.covariant_swap_iff_contravariant_swap Group.covariant_swap_iff_contravariant_swapₓ'. -/
 @[to_additive]
 theorem Group.covariant_swap_iff_contravariant_swap [Group N] :
     Covariant N N (swap (· * ·)) r ↔ Contravariant N N (swap (· * ·)) r :=
@@ -229,12 +193,6 @@ theorem Group.covariant_swap_iff_contravariant_swap [Group N] :
 #align group.covariant_swap_iff_contravariant_swap Group.covariant_swap_iff_contravariant_swap
 #align add_group.covariant_swap_iff_contravariant_swap AddGroup.covariant_swap_iff_contravariant_swap
 
-/- warning: group.covconv_swap -> Group.covconv_swap is a dubious translation:
-lean 3 declaration is
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))))) r], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toHasMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))))) r
-but is expected to have type
-  forall {N : Type.{u1}} {r : N -> N -> Prop} [_inst_2 : Group.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.855 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.857 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.855 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.857)) r], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.877 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.879 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_2))))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.877 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.879)) r
-Case conversion may be inaccurate. Consider using '#align group.covconv_swap Group.covconv_swapₓ'. -/
 @[to_additive]
 instance (priority := 100) Group.covconv_swap [Group N] [CovariantClass N N (swap (· * ·)) r] :
     ContravariantClass N N (swap (· * ·)) r :=
@@ -316,23 +274,11 @@ variable {α : Type _} {M N μ} [Preorder α] [Preorder N]
 
 variable {f : N → α}
 
-/- warning: covariant.monotone_of_const -> Covariant.monotone_of_const is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {μ : M -> N -> N} [_inst_2 : Preorder.{u2} N] [_inst_3 : CovariantClass.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N _inst_2))] (m : M), Monotone.{u2, u2} N N _inst_2 _inst_2 (μ m)
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} {μ : M -> N -> N} [_inst_2 : Preorder.{u1} N] [_inst_3 : CovariantClass.{u2, u1} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1485 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1487 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N _inst_2) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1485 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1487)] (m : M), Monotone.{u1, u1} N N _inst_2 _inst_2 (μ m)
-Case conversion may be inaccurate. Consider using '#align covariant.monotone_of_const Covariant.monotone_of_constₓ'. -/
 /-- The partial application of a constant to a covariant operator is monotone. -/
 theorem Covariant.monotone_of_const [CovariantClass M N μ (· ≤ ·)] (m : M) : Monotone (μ m) :=
   fun a b ha => CovariantClass.elim m ha
 #align covariant.monotone_of_const Covariant.monotone_of_const
 
-/- warning: monotone.covariant_of_const -> Monotone.covariant_of_const is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {μ : M -> N -> N} {α : Type.{u3}} [_inst_1 : Preorder.{u3} α] [_inst_2 : Preorder.{u2} N] {f : N -> α} [_inst_3 : CovariantClass.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N _inst_2))], (Monotone.{u2, u3} N α _inst_2 _inst_1 f) -> (forall (m : M), Monotone.{u2, u3} N α _inst_2 _inst_1 (fun (n : N) => f (μ m n)))
-but is expected to have type
-  forall {M : Type.{u3}} {N : Type.{u2}} {μ : M -> N -> N} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} N] {f : N -> α} [_inst_3 : CovariantClass.{u3, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1549 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1551 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N _inst_2) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1549 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1551)], (Monotone.{u2, u1} N α _inst_2 _inst_1 f) -> (forall (m : M), Monotone.{u2, u1} N α _inst_2 _inst_1 (fun (n : N) => f (μ m n)))
-Case conversion may be inaccurate. Consider using '#align monotone.covariant_of_const Monotone.covariant_of_constₓ'. -/
 /-- A monotone function remains monotone when composed with the partial application
 of a covariant operator. E.g., `∀ (m : ℕ), monotone f → monotone (λ n, f (m + n))`. -/
 theorem Monotone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Monotone f) (m : M) :
@@ -340,12 +286,6 @@ theorem Monotone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Mo
   hf.comp <| Covariant.monotone_of_const m
 #align monotone.covariant_of_const Monotone.covariant_of_const
 
-/- warning: monotone.covariant_of_const' -> Monotone.covariant_of_const' is a dubious translation:
-lean 3 declaration is
-  forall {N : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} N] {f : N -> α} {μ : N -> N -> N} [_inst_3 : CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) μ) (LE.le.{u1} N (Preorder.toHasLe.{u1} N _inst_2))], (Monotone.{u1, u2} N α _inst_2 _inst_1 f) -> (forall (m : N), Monotone.{u1, u2} N α _inst_2 _inst_1 (fun (n : N) => f (μ n m)))
-but is expected to have type
-  forall {N : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} N] {f : N -> α} {μ : N -> N -> N} [_inst_3 : CovariantClass.{u2, u2} N N (Function.swap.{succ u2, succ u2, succ u2} N N (fun (ᾰ : N) (ᾰ : N) => N) μ) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1631 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1633 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N _inst_2) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1631 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1633)], (Monotone.{u2, u1} N α _inst_2 _inst_1 f) -> (forall (m : N), Monotone.{u2, u1} N α _inst_2 _inst_1 (fun (n : N) => f (μ n m)))
-Case conversion may be inaccurate. Consider using '#align monotone.covariant_of_const' Monotone.covariant_of_const'ₓ'. -/
 /-- Same as `monotone.covariant_of_const`, but with the constant on the other side of
 the operator.  E.g., `∀ (m : ℕ), monotone f → monotone (λ n, f (n + m))`. -/
 theorem Monotone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (swap μ) (· ≤ ·)]
@@ -353,24 +293,12 @@ theorem Monotone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (s
   hf.comp <| Covariant.monotone_of_const m
 #align monotone.covariant_of_const' Monotone.covariant_of_const'
 
-/- warning: antitone.covariant_of_const -> Antitone.covariant_of_const is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {μ : M -> N -> N} {α : Type.{u3}} [_inst_1 : Preorder.{u3} α] [_inst_2 : Preorder.{u2} N] {f : N -> α} [_inst_3 : CovariantClass.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N _inst_2))], (Antitone.{u2, u3} N α _inst_2 _inst_1 f) -> (forall (m : M), Antitone.{u2, u3} N α _inst_2 _inst_1 (fun (n : N) => f (μ m n)))
-but is expected to have type
-  forall {M : Type.{u3}} {N : Type.{u2}} {μ : M -> N -> N} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} N] {f : N -> α} [_inst_3 : CovariantClass.{u3, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1713 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1715 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N _inst_2) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1713 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1715)], (Antitone.{u2, u1} N α _inst_2 _inst_1 f) -> (forall (m : M), Antitone.{u2, u1} N α _inst_2 _inst_1 (fun (n : N) => f (μ m n)))
-Case conversion may be inaccurate. Consider using '#align antitone.covariant_of_const Antitone.covariant_of_constₓ'. -/
 /-- Dual of `monotone.covariant_of_const` -/
 theorem Antitone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Antitone f) (m : M) :
     Antitone fun n => f (μ m n) :=
   hf.comp_monotone <| Covariant.monotone_of_const m
 #align antitone.covariant_of_const Antitone.covariant_of_const
 
-/- warning: antitone.covariant_of_const' -> Antitone.covariant_of_const' is a dubious translation:
-lean 3 declaration is
-  forall {N : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} N] {f : N -> α} {μ : N -> N -> N} [_inst_3 : CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) μ) (LE.le.{u1} N (Preorder.toHasLe.{u1} N _inst_2))], (Antitone.{u1, u2} N α _inst_2 _inst_1 f) -> (forall (m : N), Antitone.{u1, u2} N α _inst_2 _inst_1 (fun (n : N) => f (μ n m)))
-but is expected to have type
-  forall {N : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} N] {f : N -> α} {μ : N -> N -> N} [_inst_3 : CovariantClass.{u2, u2} N N (Function.swap.{succ u2, succ u2, succ u2} N N (fun (ᾰ : N) (ᾰ : N) => N) μ) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1787 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1789 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N _inst_2) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1787 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1789)], (Antitone.{u2, u1} N α _inst_2 _inst_1 f) -> (forall (m : N), Antitone.{u2, u1} N α _inst_2 _inst_1 (fun (n : N) => f (μ n m)))
-Case conversion may be inaccurate. Consider using '#align antitone.covariant_of_const' Antitone.covariant_of_const'ₓ'. -/
 /-- Dual of `monotone.covariant_of_const'` -/
 theorem Antitone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (swap μ) (· ≤ ·)]
     (hf : Antitone f) (m : N) : Antitone fun n => f (μ n m) :=
@@ -379,12 +307,6 @@ theorem Antitone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (s
 
 end Monotone
 
-/- warning: covariant_le_of_covariant_lt -> covariant_le_of_covariant_lt is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : PartialOrder.{u2} N], (Covariant.{u1, u2} M N μ (LT.lt.{u2} N (Preorder.toHasLt.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1)))) -> (Covariant.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1))))
-but is expected to have type
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : PartialOrder.{u2} N], (Covariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1850 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1852 : N) => LT.lt.{u2} N (Preorder.toLT.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1850 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1852)) -> (Covariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1869 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1871 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1869 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1871))
-Case conversion may be inaccurate. Consider using '#align covariant_le_of_covariant_lt covariant_le_of_covariant_ltₓ'. -/
 theorem covariant_le_of_covariant_lt [PartialOrder N] :
     Covariant M N μ (· < ·) → Covariant M N μ (· ≤ ·) :=
   by
@@ -394,12 +316,6 @@ theorem covariant_le_of_covariant_lt [PartialOrder N] :
   · exact (h _ bc).le
 #align covariant_le_of_covariant_lt covariant_le_of_covariant_lt
 
-/- warning: contravariant_lt_of_contravariant_le -> contravariant_lt_of_contravariant_le is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : PartialOrder.{u2} N], (Contravariant.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1)))) -> (Contravariant.{u1, u2} M N μ (LT.lt.{u2} N (Preorder.toHasLt.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1))))
-but is expected to have type
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : PartialOrder.{u2} N], (Contravariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1940 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1942 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1940 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1942)) -> (Contravariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1959 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1961 : N) => LT.lt.{u2} N (Preorder.toLT.{u2} N (PartialOrder.toPreorder.{u2} N _inst_1)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1959 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.1961))
-Case conversion may be inaccurate. Consider using '#align contravariant_lt_of_contravariant_le contravariant_lt_of_contravariant_leₓ'. -/
 theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
     Contravariant M N μ (· ≤ ·) → Contravariant M N μ (· < ·) :=
   by
@@ -408,60 +324,30 @@ theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
   exact lt_irrefl _ bc
 #align contravariant_lt_of_contravariant_le contravariant_lt_of_contravariant_le
 
-/- warning: covariant_le_iff_contravariant_lt -> covariant_le_iff_contravariant_lt is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : LinearOrder.{u2} N], Iff (Covariant.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1))))) (Contravariant.{u1, u2} M N μ (LT.lt.{u2} N (Preorder.toHasLt.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1)))))
-but is expected to have type
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : LinearOrder.{u2} N], Iff (Covariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2022 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2024 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2022 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2024)) (Contravariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2041 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2043 : N) => LT.lt.{u2} N (Preorder.toLT.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2041 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2043))
-Case conversion may be inaccurate. Consider using '#align covariant_le_iff_contravariant_lt covariant_le_iff_contravariant_ltₓ'. -/
 theorem covariant_le_iff_contravariant_lt [LinearOrder N] :
     Covariant M N μ (· ≤ ·) ↔ Contravariant M N μ (· < ·) :=
   ⟨fun h a b c bc => not_le.mp fun k => not_le.mpr bc (h _ k), fun h a b c bc =>
     not_lt.mp fun k => not_lt.mpr bc (h _ k)⟩
 #align covariant_le_iff_contravariant_lt covariant_le_iff_contravariant_lt
 
-/- warning: covariant_lt_iff_contravariant_le -> covariant_lt_iff_contravariant_le is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : LinearOrder.{u2} N], Iff (Covariant.{u1, u2} M N μ (LT.lt.{u2} N (Preorder.toHasLt.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1))))) (Contravariant.{u1, u2} M N μ (LE.le.{u2} N (Preorder.toHasLe.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1)))))
-but is expected to have type
-  forall (M : Type.{u1}) (N : Type.{u2}) (μ : M -> N -> N) [_inst_1 : LinearOrder.{u2} N], Iff (Covariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2124 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2126 : N) => LT.lt.{u2} N (Preorder.toLT.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2124 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2126)) (Contravariant.{u1, u2} M N μ (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2143 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2145 : N) => LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N (LinearOrder.toPartialOrder.{u2} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2143 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2145))
-Case conversion may be inaccurate. Consider using '#align covariant_lt_iff_contravariant_le covariant_lt_iff_contravariant_leₓ'. -/
 theorem covariant_lt_iff_contravariant_le [LinearOrder N] :
     Covariant M N μ (· < ·) ↔ Contravariant M N μ (· ≤ ·) :=
   ⟨fun h a b c bc => not_lt.mp fun k => not_lt.mpr bc (h _ k), fun h a b c bc =>
     not_le.mp fun k => not_le.mpr bc (h _ k)⟩
 #align covariant_lt_iff_contravariant_le covariant_lt_iff_contravariant_le
 
-/- warning: covariant_flip_mul_iff -> covariant_flip_mul_iff is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) (r : N -> N -> Prop) [_inst_1 : CommSemigroup.{u1} N], Iff (Covariant.{u1, u1} N N (flip.{succ u1, succ u1, succ u1} N N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))))) r) (Covariant.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1)))) r)
-but is expected to have type
-  forall (N : Type.{u1}) (r : N -> N -> Prop) [_inst_1 : CommSemigroup.{u1} N], Iff (Covariant.{u1, u1} N N (flip.{succ u1, succ u1, succ u1} N N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2299 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2301 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2299 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2301)) r) (Covariant.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2318 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2320 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2318 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2320) r)
-Case conversion may be inaccurate. Consider using '#align covariant_flip_mul_iff covariant_flip_mul_iffₓ'. -/
 @[to_additive]
 theorem covariant_flip_mul_iff [CommSemigroup N] :
     Covariant N N (flip (· * ·)) r ↔ Covariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
 #align covariant_flip_mul_iff covariant_flip_mul_iff
 #align covariant_flip_add_iff covariant_flip_add_iff
 
-/- warning: contravariant_flip_mul_iff -> contravariant_flip_mul_iff is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) (r : N -> N -> Prop) [_inst_1 : CommSemigroup.{u1} N], Iff (Contravariant.{u1, u1} N N (flip.{succ u1, succ u1, succ u1} N N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))))) r) (Contravariant.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1)))) r)
-but is expected to have type
-  forall (N : Type.{u1}) (r : N -> N -> Prop) [_inst_1 : CommSemigroup.{u1} N], Iff (Contravariant.{u1, u1} N N (flip.{succ u1, succ u1, succ u1} N N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2389 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2391 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2389 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2391)) r) (Contravariant.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2408 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2410 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2408 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2410) r)
-Case conversion may be inaccurate. Consider using '#align contravariant_flip_mul_iff contravariant_flip_mul_iffₓ'. -/
 @[to_additive]
 theorem contravariant_flip_mul_iff [CommSemigroup N] :
     Contravariant N N (flip (· * ·)) r ↔ Contravariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
 #align contravariant_flip_mul_iff contravariant_flip_mul_iff
 #align contravariant_flip_add_iff contravariant_flip_add_iff
 
-/- warning: contravariant_mul_lt_of_covariant_mul_le -> contravariant_mul_lt_of_covariant_mul_le is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : Mul.{u1} N] [_inst_2 : LinearOrder.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1)) (LE.le.{u1} N (Preorder.toHasLe.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))))], ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1)) (LT.lt.{u1} N (Preorder.toHasLt.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))))
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : Mul.{u1} N] [_inst_2 : LinearOrder.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2477 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2479 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2477 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2479) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2492 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2494 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2492 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2494)], ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2510 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2512 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2510 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2512) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2525 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2527 : N) => LT.lt.{u1} N (Preorder.toLT.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2525 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2527)
-Case conversion may be inaccurate. Consider using '#align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_leₓ'. -/
 @[to_additive]
 instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (· * ·) (· < ·)
@@ -469,12 +355,6 @@ instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N]
 #align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_le
 #align contravariant_add_lt_of_covariant_add_le contravariant_add_lt_of_covariant_add_le
 
-/- warning: covariant_mul_lt_of_contravariant_mul_le -> covariant_mul_lt_of_contravariant_mul_le is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : Mul.{u1} N] [_inst_2 : LinearOrder.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1)) (LE.le.{u1} N (Preorder.toHasLe.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))))], CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1)) (LT.lt.{u1} N (Preorder.toHasLt.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))))
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : Mul.{u1} N] [_inst_2 : LinearOrder.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2589 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2591 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2589 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2591) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2604 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2606 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2604 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2606)], CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2622 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2624 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N _inst_1) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2622 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2624) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2637 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2639 : N) => LT.lt.{u1} N (Preorder.toLT.{u1} N (PartialOrder.toPreorder.{u1} N (LinearOrder.toPartialOrder.{u1} N _inst_2))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2637 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2639)
-Case conversion may be inaccurate. Consider using '#align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_leₓ'. -/
 @[to_additive]
 instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
@@ -482,12 +362,6 @@ instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N]
 #align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_le
 #align covariant_add_lt_of_contravariant_add_le covariant_add_lt_of_contravariant_add_le
 
-/- warning: covariant_swap_mul_le_of_covariant_mul_le -> covariant_swap_mul_le_of_covariant_mul_le is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LE.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1)))) (LE.le.{u1} N _inst_2)], CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))))) (LE.le.{u1} N _inst_2)
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LE.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2701 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2703 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2701 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2703) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2716 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2718 : N) => LE.le.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2716 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2718)], CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2737 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2739 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2737 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2739)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2752 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2754 : N) => LE.le.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2752 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2754)
-Case conversion may be inaccurate. Consider using '#align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_leₓ'. -/
 @[to_additive]
 instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (swap (· * ·)) (· ≤ ·)
@@ -495,12 +369,6 @@ instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N]
 #align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_le
 #align covariant_swap_add_le_of_covariant_add_le covariant_swap_add_le_of_covariant_add_le
 
-/- warning: contravariant_swap_mul_le_of_contravariant_mul_le -> contravariant_swap_mul_le_of_contravariant_mul_le is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LE.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1)))) (LE.le.{u1} N _inst_2)], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))))) (LE.le.{u1} N _inst_2)
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LE.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2815 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2817 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2815 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2817) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2830 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2832 : N) => LE.le.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2830 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2832)], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2851 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2853 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2851 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2853)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2866 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2868 : N) => LE.le.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2866 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2868)
-Case conversion may be inaccurate. Consider using '#align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_leₓ'. -/
 @[to_additive]
 instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroup N] [LE N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (swap (· * ·)) (· ≤ ·)
@@ -508,12 +376,6 @@ instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroup N] [LE
 #align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_le
 #align contravariant_swap_add_le_of_contravariant_add_le contravariant_swap_add_le_of_contravariant_add_le
 
-/- warning: contravariant_swap_mul_lt_of_contravariant_mul_lt -> contravariant_swap_mul_lt_of_contravariant_mul_lt is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LT.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1)))) (LT.lt.{u1} N _inst_2)], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))))) (LT.lt.{u1} N _inst_2)
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LT.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2929 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2931 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2929 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2931) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2944 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2946 : N) => LT.lt.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2944 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2946)], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2965 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2967 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2965 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2967)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2980 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2982 : N) => LT.lt.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2980 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.2982)
-Case conversion may be inaccurate. Consider using '#align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_ltₓ'. -/
 @[to_additive]
 instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroup N] [LT N]
     [ContravariantClass N N (· * ·) (· < ·)] : ContravariantClass N N (swap (· * ·)) (· < ·)
@@ -521,12 +383,6 @@ instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroup N] [LT
 #align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_lt
 #align contravariant_swap_add_lt_of_contravariant_add_lt contravariant_swap_add_lt_of_contravariant_add_lt
 
-/- warning: covariant_swap_mul_lt_of_covariant_mul_lt -> covariant_swap_mul_lt_of_covariant_mul_lt is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LT.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1)))) (LT.lt.{u1} N _inst_2)], CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))))) (LT.lt.{u1} N _inst_2)
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : CommSemigroup.{u1} N] [_inst_2 : LT.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3043 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3045 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3043 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3045) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3058 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3060 : N) => LT.lt.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3058 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3060)], CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3079 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3081 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3079 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3081)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3094 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3096 : N) => LT.lt.{u1} N _inst_2 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3094 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3096)
-Case conversion may be inaccurate. Consider using '#align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_ltₓ'. -/
 @[to_additive]
 instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroup N] [LT N]
     [CovariantClass N N (· * ·) (· < ·)] : CovariantClass N N (swap (· * ·)) (· < ·)
@@ -534,12 +390,6 @@ instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroup N] [LT N]
 #align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_lt
 #align covariant_swap_add_lt_of_covariant_add_lt covariant_swap_add_lt_of_covariant_add_lt
 
-/- warning: left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le -> LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : LeftCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1)))) (LE.le.{u1} N (Preorder.toHasLe.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))], CovariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1)))) (LT.lt.{u1} N (Preorder.toHasLt.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : LeftCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3160 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3162 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3160 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3162) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3175 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3177 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3175 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3177)], CovariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3193 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3195 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3193 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3195) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3208 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3210 : N) => LT.lt.{u1} N (Preorder.toLT.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3208 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3210)
-Case conversion may be inaccurate. Consider using '#align left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_leₓ'. -/
 @[to_additive]
 instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSemigroup N]
     [PartialOrder N] [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
@@ -549,12 +399,6 @@ instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSem
 #align left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le
 #align add_left_cancel_semigroup.covariant_add_lt_of_covariant_add_le AddLeftCancelSemigroup.covariant_add_lt_of_covariant_add_le
 
-/- warning: right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le -> RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : RightCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))))) (LE.le.{u1} N (Preorder.toHasLe.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))], CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))))) (LT.lt.{u1} N (Preorder.toHasLt.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : RightCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3285 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3287 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3285 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3287)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3300 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3302 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3300 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3302)], CovariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3321 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3323 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3321 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3323)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3336 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3338 : N) => LT.lt.{u1} N (Preorder.toLT.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3336 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3338)
-Case conversion may be inaccurate. Consider using '#align right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_leₓ'. -/
 @[to_additive]
 instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
     [RightCancelSemigroup N] [PartialOrder N] [CovariantClass N N (swap (· * ·)) (· ≤ ·)] :
@@ -565,12 +409,6 @@ instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
 #align right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
 #align add_right_cancel_semigroup.covariant_swap_add_lt_of_covariant_swap_add_le AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le
 
-/- warning: left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt -> LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : LeftCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1)))) (LT.lt.{u1} N (Preorder.toHasLt.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))], ContravariantClass.{u1, u1} N N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1)))) (LE.le.{u1} N (Preorder.toHasLe.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : LeftCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3410 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3412 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3410 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3412) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3425 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3427 : N) => LT.lt.{u1} N (Preorder.toLT.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3425 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3427)], ContravariantClass.{u1, u1} N N (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3443 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3445 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (LeftCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3443 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3445) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3458 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3460 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3458 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3460)
-Case conversion may be inaccurate. Consider using '#align left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_ltₓ'. -/
 @[to_additive]
 instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftCancelSemigroup N]
     [PartialOrder N] [ContravariantClass N N (· * ·) (· < ·)] :
@@ -582,12 +420,6 @@ instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftC
 #align left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt
 #align add_left_cancel_semigroup.contravariant_add_le_of_contravariant_add_lt AddLeftCancelSemigroup.contravariant_add_le_of_contravariant_add_lt
 
-/- warning: right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt -> RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt is a dubious translation:
-lean 3 declaration is
-  forall (N : Type.{u1}) [_inst_1 : RightCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))))) (LT.lt.{u1} N (Preorder.toHasLt.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toHasMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))))) (LE.le.{u1} N (Preorder.toHasLe.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)))
-but is expected to have type
-  forall (N : Type.{u1}) [_inst_1 : RightCancelSemigroup.{u1} N] [_inst_2 : PartialOrder.{u1} N] [_inst_3 : ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3544 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3546 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3544 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3546)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3559 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3561 : N) => LT.lt.{u1} N (Preorder.toLT.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3559 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3561)], ContravariantClass.{u1, u1} N N (Function.swap.{succ u1, succ u1, succ u1} N N (fun (ᾰ : N) (ᾰ : N) => N) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3580 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3582 : N) => HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (Semigroup.toMul.{u1} N (RightCancelSemigroup.toSemigroup.{u1} N _inst_1))) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3580 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3582)) (fun (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3595 : N) (x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3597 : N) => LE.le.{u1} N (Preorder.toLE.{u1} N (PartialOrder.toPreorder.{u1} N _inst_2)) x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3595 x._@.Mathlib.Algebra.CovariantAndContravariant._hyg.3597)
-Case conversion may be inaccurate. Consider using '#align right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_ltₓ'. -/
 @[to_additive]
 instance RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
     [RightCancelSemigroup N] [PartialOrder N] [ContravariantClass N N (swap (· * ·)) (· < ·)] :

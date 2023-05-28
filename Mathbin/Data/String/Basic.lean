@@ -51,12 +51,6 @@ instance decidableLT : @DecidableRel String (· < ·) := by infer_instance
 #align string.decidable_lt String.decidableLT
 -/
 
-/- warning: string.lt_iff_to_list_lt -> String.lt_iff_toList_lt is a dubious translation:
-lean 3 declaration is
-  forall {s₁ : String} {s₂ : String}, Iff (LT.lt.{0} String String.LT' s₁ s₂) (LT.lt.{0} (List.{0} Char) (List.LT'.{0} Char Char.hasLt) (String.toList s₁) (String.toList s₂))
-but is expected to have type
-  forall {s₁ : String} {s₂ : String}, Iff (LT.lt.{0} String String.LT' s₁ s₂) (LT.lt.{0} (List.{0} Char) (List.LT'.{0} Char Char.instLTChar) (String.toList s₁) (String.toList s₂))
-Case conversion may be inaccurate. Consider using '#align string.lt_iff_to_list_lt String.lt_iff_toList_ltₓ'. -/
 -- short-circuit type class inference
 @[simp]
 theorem lt_iff_toList_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toList < s₂.toList
@@ -87,12 +81,6 @@ instance decidableLE : @DecidableRel String (· ≤ ·) := by infer_instance
 #align string.decidable_le String.decidableLE
 -/
 
-/- warning: string.le_iff_to_list_le -> String.le_iff_toList_le is a dubious translation:
-lean 3 declaration is
-  forall {s₁ : String} {s₂ : String}, Iff (LE.le.{0} String String.LE s₁ s₂) (LE.le.{0} (List.{0} Char) (List.LE'.{0} Char Char.linearOrder) (String.toList s₁) (String.toList s₂))
-but is expected to have type
-  forall {s₁ : String} {s₂ : String}, Iff (LE.le.{0} String String.LE s₁ s₂) (LE.le.{0} (List.{0} Char) (List.LE'.{0} Char instLinearOrderChar) (String.toList s₁) (String.toList s₂))
-Case conversion may be inaccurate. Consider using '#align string.le_iff_to_list_le String.le_iff_toList_leₓ'. -/
 -- short-circuit type class inference
 @[simp]
 theorem le_iff_toList_le {s₁ s₂ : String} : s₁ ≤ s₂ ↔ s₁.toList ≤ s₂.toList :=
@@ -105,22 +93,10 @@ theorem toList_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
 #align string.to_list_inj String.toList_inj
 -/
 
-/- warning: string.nil_as_string_eq_empty -> String.nil_asString_eq_empty is a dubious translation:
-lean 3 declaration is
-  Eq.{1} String (List.asString (List.nil.{0} Char)) String.empty
-but is expected to have type
-  Eq.{1} String (List.asString (List.nil.{0} Char)) ""
-Case conversion may be inaccurate. Consider using '#align string.nil_as_string_eq_empty String.nil_asString_eq_emptyₓ'. -/
 theorem nil_asString_eq_empty : [].asString = "" :=
   rfl
 #align string.nil_as_string_eq_empty String.nil_asString_eq_empty
 
-/- warning: string.to_list_empty -> String.toList_empty is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (List.{0} Char) (String.toList String.empty) (List.nil.{0} Char)
-but is expected to have type
-  Eq.{1} (List.{0} Char) (String.toList "") (List.nil.{0} Char)
-Case conversion may be inaccurate. Consider using '#align string.to_list_empty String.toList_emptyₓ'. -/
 @[simp]
 theorem toList_empty : "".toList = [] :=
   rfl
@@ -138,33 +114,15 @@ theorem data_singleton (c : Char) : (String.singleton c).toList = [c] :=
 #align string.to_list_singleton String.data_singleton
 -/
 
-/- warning: string.to_list_nonempty -> String.toList_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {s : String}, (Ne.{1} String s String.empty) -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.drop s (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))
-but is expected to have type
-  forall {s : String}, (Ne.{1} String s "") -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.drop s (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))
-Case conversion may be inaccurate. Consider using '#align string.to_list_nonempty String.toList_nonemptyₓ'. -/
 theorem toList_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.headI :: (s.drop 1).toList
   | ⟨s⟩, h => by cases s <;> [cases h rfl;rfl]
 #align string.to_list_nonempty String.toList_nonempty
 
-/- warning: string.head_empty -> String.head_empty is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Char (String.head String.empty) (Inhabited.default.{1} Char Char.inhabited)
-but is expected to have type
-  Eq.{1} Char (List.head!.{0} Char Char.instInhabitedChar (String.data "")) (Inhabited.default.{1} Char Char.instInhabitedChar)
-Case conversion may be inaccurate. Consider using '#align string.head_empty String.head_emptyₓ'. -/
 @[simp]
 theorem head_empty : "".headI = default :=
   rfl
 #align string.head_empty String.head_empty
 
-/- warning: string.popn_empty -> String.drop_empty is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} String (String.drop String.empty n) String.empty
-but is expected to have type
-  forall {n : Nat}, Eq.{1} String (String.drop "" n) ""
-Case conversion may be inaccurate. Consider using '#align string.popn_empty String.drop_emptyₓ'. -/
 @[simp]
 theorem drop_empty {n : ℕ} : "".drop n = "" :=
   by

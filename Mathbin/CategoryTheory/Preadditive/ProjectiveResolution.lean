@@ -121,9 +121,6 @@ end
 
 namespace ProjectiveResolution
 
-/- warning: category_theory.ProjectiveResolution.π_f_succ -> CategoryTheory.ProjectiveResolution.π_f_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.π_f_succ CategoryTheory.ProjectiveResolution.π_f_succₓ'. -/
 @[simp]
 theorem π_f_succ {Z : C} (P : ProjectiveResolution Z) (n : ℕ) : P.π.f (n + 1) = 0 :=
   by
@@ -131,9 +128,6 @@ theorem π_f_succ {Z : C} (P : ProjectiveResolution Z) (n : ℕ) : P.π.f (n + 1
   dsimp; rfl
 #align category_theory.ProjectiveResolution.π_f_succ CategoryTheory.ProjectiveResolution.π_f_succ
 
-/- warning: category_theory.ProjectiveResolution.complex_d_comp_π_f_zero -> CategoryTheory.ProjectiveResolution.complex_d_comp_π_f_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.complex_d_comp_π_f_zero CategoryTheory.ProjectiveResolution.complex_d_comp_π_f_zeroₓ'. -/
 @[simp]
 theorem complex_d_comp_π_f_zero {Z : C} (P : ProjectiveResolution Z) :
     P.complex.d 1 0 ≫ P.π.f 0 = 0 :=
@@ -218,9 +212,6 @@ def lift {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveRes
 #align category_theory.ProjectiveResolution.lift CategoryTheory.ProjectiveResolution.lift
 -/
 
-/- warning: category_theory.ProjectiveResolution.lift_commutes -> CategoryTheory.ProjectiveResolution.lift_commutes is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.lift_commutes CategoryTheory.ProjectiveResolution.lift_commutesₓ'. -/
 /-- The resolution maps intertwine the lift of a morphism and that morphism. -/
 @[simp, reassoc]
 theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y)
@@ -238,9 +229,6 @@ namespace ProjectiveResolution
 
 variable [HasZeroObject C] [Preadditive C] [HasEqualizers C] [HasImages C]
 
-/- warning: category_theory.ProjectiveResolution.lift_homotopy_zero_zero -> CategoryTheory.ProjectiveResolution.liftHomotopyZeroZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.lift_homotopy_zero_zero CategoryTheory.ProjectiveResolution.liftHomotopyZeroZeroₓ'. -/
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
     (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.pt 0 ⟶ Q.complex.pt 1 :=
@@ -248,9 +236,6 @@ def liftHomotopyZeroZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveR
     (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 #align category_theory.ProjectiveResolution.lift_homotopy_zero_zero CategoryTheory.ProjectiveResolution.liftHomotopyZeroZero
 
-/- warning: category_theory.ProjectiveResolution.lift_homotopy_zero_one -> CategoryTheory.ProjectiveResolution.liftHomotopyZeroOne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.lift_homotopy_zero_one CategoryTheory.ProjectiveResolution.liftHomotopyZeroOneₓ'. -/
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroOne {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
     (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.pt 1 ⟶ Q.complex.pt 2 :=
@@ -258,9 +243,6 @@ def liftHomotopyZeroOne {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveRe
     (Q.complex.d 1 0) (Q.exact _) (by simp [lift_homotopy_zero_zero])
 #align category_theory.ProjectiveResolution.lift_homotopy_zero_one CategoryTheory.ProjectiveResolution.liftHomotopyZeroOne
 
-/- warning: category_theory.ProjectiveResolution.lift_homotopy_zero_succ -> CategoryTheory.ProjectiveResolution.liftHomotopyZeroSucc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.lift_homotopy_zero_succ CategoryTheory.ProjectiveResolution.liftHomotopyZeroSuccₓ'. -/
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroSucc {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
     (f : P.complex ⟶ Q.complex) (n : ℕ) (g : P.complex.pt n ⟶ Q.complex.pt (n + 1))
@@ -271,9 +253,6 @@ def liftHomotopyZeroSucc {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveR
     (Q.complex.d (n + 2) (n + 1)) (Q.exact _) (by simp [w])
 #align category_theory.ProjectiveResolution.lift_homotopy_zero_succ CategoryTheory.ProjectiveResolution.liftHomotopyZeroSucc
 
-/- warning: category_theory.ProjectiveResolution.lift_homotopy_zero -> CategoryTheory.ProjectiveResolution.liftHomotopyZero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.lift_homotopy_zero CategoryTheory.ProjectiveResolution.liftHomotopyZeroₓ'. -/
 /-- Any lift of the zero morphism is homotopic to zero. -/
 def liftHomotopyZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
     (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : Homotopy f 0 :=
@@ -282,9 +261,6 @@ def liftHomotopyZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResol
     ⟨liftHomotopyZeroSucc f n g g' w, by simp [lift_homotopy_zero_succ, w]⟩
 #align category_theory.ProjectiveResolution.lift_homotopy_zero CategoryTheory.ProjectiveResolution.liftHomotopyZero
 
-/- warning: category_theory.ProjectiveResolution.lift_homotopy -> CategoryTheory.ProjectiveResolution.liftHomotopy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.lift_homotopy CategoryTheory.ProjectiveResolution.liftHomotopyₓ'. -/
 /-- Two lifts of the same morphism are homotopic. -/
 def liftHomotopy {Y Z : C} (f : Y ⟶ Z) {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
     (g h : P.complex ⟶ Q.complex) (g_comm : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f)
@@ -327,17 +303,11 @@ def homotopyEquiv {X : C} (P Q : ProjectiveResolution X) : HomotopyEquiv P.compl
 #align category_theory.ProjectiveResolution.homotopy_equiv CategoryTheory.ProjectiveResolution.homotopyEquiv
 -/
 
-/- warning: category_theory.ProjectiveResolution.homotopy_equiv_hom_π -> CategoryTheory.ProjectiveResolution.homotopyEquiv_hom_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.homotopy_equiv_hom_π CategoryTheory.ProjectiveResolution.homotopyEquiv_hom_πₓ'. -/
 @[simp, reassoc]
 theorem homotopyEquiv_hom_π {X : C} (P Q : ProjectiveResolution X) :
     (homotopyEquiv P Q).Hom ≫ Q.π = P.π := by simp [HomotopyEquiv]
 #align category_theory.ProjectiveResolution.homotopy_equiv_hom_π CategoryTheory.ProjectiveResolution.homotopyEquiv_hom_π
 
-/- warning: category_theory.ProjectiveResolution.homotopy_equiv_inv_π -> CategoryTheory.ProjectiveResolution.homotopyEquiv_inv_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.homotopy_equiv_inv_π CategoryTheory.ProjectiveResolution.homotopyEquiv_inv_πₓ'. -/
 @[simp, reassoc]
 theorem homotopyEquiv_inv_π {X : C} (P Q : ProjectiveResolution X) :
     (homotopyEquiv P Q).inv ≫ P.π = Q.π := by simp [HomotopyEquiv]
@@ -357,12 +327,6 @@ abbrev CategoryTheory.projectiveResolution.complex (Z : C) [HasProjectiveResolut
 #align category_theory.projective_resolution CategoryTheory.projectiveResolution.complex
 -/
 
-/- warning: category_theory.projective_resolution.π -> CategoryTheory.projectiveResolution.π is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] [_inst_4 : CategoryTheory.Limits.HasEqualizers.{u1, u2} C _inst_1] [_inst_5 : CategoryTheory.Limits.HasImages.{u1, u2} C _inst_1] (Z : C) [_inst_6 : CategoryTheory.HasProjectiveResolution.{u1, u2} C _inst_1 _inst_3 _inst_2 _inst_4 _inst_5 Z], Quiver.Hom.{succ u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u1, u2, 0} Nat C _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)))) (CategoryTheory.projectiveResolution.complex.{u1, u2} C _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 Z _inst_6) (CategoryTheory.Functor.obj.{u1, u1, u2, max u2 u1} C _inst_1 (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (HomologicalComplex.CategoryTheory.category.{u1, u2, 0} Nat C _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (ChainComplex.single₀.{u1, u2} C _inst_1 _inst_2 _inst_3) Z)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] [_inst_4 : CategoryTheory.Limits.HasEqualizers.{u1, u2} C _inst_1] [_inst_5 : CategoryTheory.Limits.HasImages.{u1, u2} C _inst_1] (Z : C) [_inst_6 : CategoryTheory.HasProjectiveResolution.{u1, u2} C _inst_1 _inst_3 _inst_2 _inst_4 _inst_5 Z], Quiver.Hom.{succ u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat C _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) (CategoryTheory.projectiveResolution.complex.{u1, u2} C _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 Z _inst_6) (Prefunctor.obj.{succ u1, succ u1, u2, max u2 u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat C _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} C _inst_1 (ChainComplex.{u1, u2, 0} C _inst_1 _inst_2 Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, 0} Nat C _inst_1 _inst_2 (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))) (ChainComplex.single₀.{u1, u2} C _inst_1 _inst_2 _inst_3)) Z)
-Case conversion may be inaccurate. Consider using '#align category_theory.projective_resolution.π CategoryTheory.projectiveResolution.πₓ'. -/
 /-- The chain map from the arbitrarily chosen projective resolution `projective_resolution Z`
 back to the chain complex consisting of `Z` supported in degree `0`. -/
 abbrev projectiveResolution.π (Z : C) [HasProjectiveResolution Z] :

@@ -62,12 +62,6 @@ structure IsSubgroup (s : Set G) extends IsSubmonoid s : Prop where
 #align is_add_subgroup IsAddSubgroup
 -/
 
-/- warning: is_subgroup.div_mem -> IsSubgroup.div_mem is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (forall {x : G} {y : G}, (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) y s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x y) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (forall {x : G} {y : G}, (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) y s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x y) s))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.div_mem IsSubgroup.div_memₓ'. -/
 @[to_additive]
 theorem IsSubgroup.div_mem {s : Set G} (hs : IsSubgroup s) {x y : G} (hx : x ∈ s) (hy : y ∈ s) :
     x / y ∈ s := by simpa only [div_eq_mul_inv] using hs.mul_mem hx (hs.inv_mem hy)
@@ -103,12 +97,6 @@ theorem Multiplicative.isSubgroup_iff {s : Set A} :
 #align multiplicative.is_subgroup_iff Multiplicative.isSubgroup_iff
 -/
 
-/- warning: is_subgroup.of_div -> IsSubgroup.of_div is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (s : Set.{u1} G), (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))) s) -> (forall {a : G} {b : G}, (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) a s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) b s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)) s)) -> (IsSubgroup.{u1} G _inst_1 s)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (s : Set.{u1} G), (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))) s) -> (forall {a : G} {b : G}, (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) b s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) b)) s)) -> (IsSubgroup.{u1} G _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align is_subgroup.of_div IsSubgroup.of_divₓ'. -/
 @[to_additive ofAdd_neg]
 theorem IsSubgroup.of_div (s : Set G) (one_mem : (1 : G) ∈ s)
     (div_mem : ∀ {a b : G}, a ∈ s → b ∈ s → a * b⁻¹ ∈ s) : IsSubgroup s :=
@@ -125,24 +113,12 @@ theorem IsSubgroup.of_div (s : Set G) (one_mem : (1 : G) ∈ s)
 #align is_subgroup.of_div IsSubgroup.of_div
 #align is_add_subgroup.of_add_neg IsAddSubgroup.of_add_neg
 
-/- warning: is_add_subgroup.of_sub -> IsAddSubgroup.of_sub is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} [_inst_2 : AddGroup.{u1} A] (s : Set.{u1} A), (Membership.Mem.{u1, u1} A (Set.{u1} A) (Set.hasMem.{u1} A) (OfNat.ofNat.{u1} A 0 (OfNat.mk.{u1} A 0 (Zero.zero.{u1} A (AddZeroClass.toHasZero.{u1} A (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_2))))))) s) -> (forall {a : A} {b : A}, (Membership.Mem.{u1, u1} A (Set.{u1} A) (Set.hasMem.{u1} A) a s) -> (Membership.Mem.{u1, u1} A (Set.{u1} A) (Set.hasMem.{u1} A) b s) -> (Membership.Mem.{u1, u1} A (Set.{u1} A) (Set.hasMem.{u1} A) (HSub.hSub.{u1, u1, u1} A A A (instHSub.{u1} A (SubNegMonoid.toHasSub.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_2))) a b) s)) -> (IsAddSubgroup.{u1} A _inst_2 s)
-but is expected to have type
-  forall {A : Type.{u1}} [_inst_2 : AddGroup.{u1} A] (s : Set.{u1} A), (Membership.mem.{u1, u1} A (Set.{u1} A) (Set.instMembershipSet.{u1} A) (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (NegZeroClass.toZero.{u1} A (SubNegZeroMonoid.toNegZeroClass.{u1} A (SubtractionMonoid.toSubNegZeroMonoid.{u1} A (AddGroup.toSubtractionMonoid.{u1} A _inst_2)))))) s) -> (forall {a : A} {b : A}, (Membership.mem.{u1, u1} A (Set.{u1} A) (Set.instMembershipSet.{u1} A) a s) -> (Membership.mem.{u1, u1} A (Set.{u1} A) (Set.instMembershipSet.{u1} A) b s) -> (Membership.mem.{u1, u1} A (Set.{u1} A) (Set.instMembershipSet.{u1} A) (HSub.hSub.{u1, u1, u1} A A A (instHSub.{u1} A (SubNegMonoid.toSub.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_2))) a b) s)) -> (IsAddSubgroup.{u1} A _inst_2 s)
-Case conversion may be inaccurate. Consider using '#align is_add_subgroup.of_sub IsAddSubgroup.of_subₓ'. -/
 theorem IsAddSubgroup.of_sub (s : Set A) (zero_mem : (0 : A) ∈ s)
     (sub_mem : ∀ {a b : A}, a ∈ s → b ∈ s → a - b ∈ s) : IsAddSubgroup s :=
   IsAddSubgroup.of_add_neg s zero_mem fun x y hx hy => by
     simpa only [sub_eq_add_neg] using sub_mem hx hy
 #align is_add_subgroup.of_sub IsAddSubgroup.of_sub
 
-/- warning: is_subgroup.inter -> IsSubgroup.inter is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s₁ : Set.{u1} G} {s₂ : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s₁) -> (IsSubgroup.{u1} G _inst_1 s₂) -> (IsSubgroup.{u1} G _inst_1 (Inter.inter.{u1} (Set.{u1} G) (Set.hasInter.{u1} G) s₁ s₂))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s₁ : Set.{u1} G} {s₂ : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s₁) -> (IsSubgroup.{u1} G _inst_1 s₂) -> (IsSubgroup.{u1} G _inst_1 (Inter.inter.{u1} (Set.{u1} G) (Set.instInterSet.{u1} G) s₁ s₂))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.inter IsSubgroup.interₓ'. -/
 @[to_additive]
 theorem IsSubgroup.inter {s₁ s₂ : Set G} (hs₁ : IsSubgroup s₁) (hs₂ : IsSubgroup s₂) :
     IsSubgroup (s₁ ∩ s₂) :=
@@ -185,36 +161,18 @@ variable [Group G] {s : Set G} (hs : IsSubgroup s)
 
 include hs
 
-/- warning: is_subgroup.inv_mem_iff -> IsSubgroup.inv_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {a : G} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) s) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) a s))
-but is expected to have type
-  forall {G : Type.{u1}} {a : G} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) a) s) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a s))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.inv_mem_iff IsSubgroup.inv_mem_iffₓ'. -/
 @[to_additive]
 theorem inv_mem_iff : a⁻¹ ∈ s ↔ a ∈ s :=
   ⟨fun h => by simpa using hs.inv_mem h, inv_mem hs⟩
 #align is_subgroup.inv_mem_iff IsSubgroup.inv_mem_iff
 #align is_add_subgroup.neg_mem_iff IsAddSubgroup.neg_mem_iff
 
-/- warning: is_subgroup.mul_mem_cancel_right -> IsSubgroup.mul_mem_cancel_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {a : G} {b : G} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) a s) -> (Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a) s) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) b s))
-but is expected to have type
-  forall {G : Type.{u1}} {a : G} {b : G} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a s) -> (Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a) s) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) b s))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.mul_mem_cancel_right IsSubgroup.mul_mem_cancel_rightₓ'. -/
 @[to_additive]
 theorem mul_mem_cancel_right (h : a ∈ s) : b * a ∈ s ↔ b ∈ s :=
   ⟨fun hba => by simpa using hs.mul_mem hba (hs.inv_mem h), fun hb => hs.mul_mem hb h⟩
 #align is_subgroup.mul_mem_cancel_right IsSubgroup.mul_mem_cancel_right
 #align is_add_subgroup.add_mem_cancel_right IsAddSubgroup.add_mem_cancel_right
 
-/- warning: is_subgroup.mul_mem_cancel_left -> IsSubgroup.mul_mem_cancel_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {a : G} {b : G} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) a s) -> (Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) s) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) b s))
-but is expected to have type
-  forall {G : Type.{u1}} {a : G} {b : G} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a s) -> (Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) s) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) b s))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.mul_mem_cancel_left IsSubgroup.mul_mem_cancel_leftₓ'. -/
 @[to_additive]
 theorem mul_mem_cancel_left (h : a ∈ s) : a * b ∈ s ↔ b ∈ s :=
   ⟨fun hab => by simpa using hs.mul_mem (hs.inv_mem h) hab, hs.mul_mem h⟩
@@ -290,12 +248,6 @@ namespace IsSubgroup
 
 variable [Group G]
 
-/- warning: is_subgroup.mem_norm_comm -> IsSubgroup.mem_norm_comm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsNormalSubgroup.{u1} G _inst_1 s) -> (forall {a : G} {b : G}, (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsNormalSubgroup.{u1} G _inst_1 s) -> (forall {a : G} {b : G}, (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a) s))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.mem_norm_comm IsSubgroup.mem_norm_commₓ'. -/
 -- Normal subgroup properties
 @[to_additive]
 theorem mem_norm_comm {s : Set G} (hs : IsNormalSubgroup s) {a b : G} (hab : a * b ∈ s) :
@@ -305,12 +257,6 @@ theorem mem_norm_comm {s : Set G} (hs : IsNormalSubgroup s) {a b : G} (hab : a *
 #align is_subgroup.mem_norm_comm IsSubgroup.mem_norm_comm
 #align is_add_subgroup.mem_norm_comm IsAddSubgroup.mem_norm_comm
 
-/- warning: is_subgroup.mem_norm_comm_iff -> IsSubgroup.mem_norm_comm_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsNormalSubgroup.{u1} G _inst_1 s) -> (forall {a : G} {b : G}, Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) s) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsNormalSubgroup.{u1} G _inst_1 s) -> (forall {a : G} {b : G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) s) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a) s))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.mem_norm_comm_iff IsSubgroup.mem_norm_comm_iffₓ'. -/
 @[to_additive]
 theorem mem_norm_comm_iff {s : Set G} (hs : IsNormalSubgroup s) {a b : G} : a * b ∈ s ↔ b * a ∈ s :=
   ⟨mem_norm_comm hs, mem_norm_comm hs⟩
@@ -326,12 +272,6 @@ def trivial (G : Type _) [Group G] : Set G :=
 #align is_add_subgroup.trivial IsAddSubgroup.trivial
 -/
 
-/- warning: is_subgroup.mem_trivial -> IsSubgroup.mem_trivial is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g (IsSubgroup.trivial.{u1} G _inst_1)) (Eq.{succ u1} G g (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g (IsSubgroup.trivial.{u1} G _inst_1)) (Eq.{succ u1} G g (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.mem_trivial IsSubgroup.mem_trivialₓ'. -/
 @[simp, to_additive]
 theorem mem_trivial {g : G} : g ∈ trivial G ↔ g = 1 :=
   mem_singleton_iff
@@ -346,12 +286,6 @@ theorem trivial_normal : IsNormalSubgroup (trivial G) := by
 #align is_add_subgroup.trivial_normal IsAddSubgroup.trivial_normal
 -/
 
-/- warning: is_subgroup.eq_trivial_iff -> IsSubgroup.eq_trivial_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Iff (Eq.{succ u1} (Set.{u1} G) s (IsSubgroup.trivial.{u1} G _inst_1)) (forall (x : G), (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x s) -> (Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (Iff (Eq.{succ u1} (Set.{u1} G) s (IsSubgroup.trivial.{u1} G _inst_1)) (forall (x : G), (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x s) -> (Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.eq_trivial_iff IsSubgroup.eq_trivial_iffₓ'. -/
 @[to_additive]
 theorem eq_trivial_iff {s : Set G} (hs : IsSubgroup s) : s = trivial G ↔ ∀ x ∈ s, x = (1 : G) := by
   simp only [Set.ext_iff, IsSubgroup.mem_trivial] <;>
@@ -375,12 +309,6 @@ def center (G : Type _) [Group G] : Set G :=
 #align is_add_subgroup.add_center IsAddSubgroup.addCenter
 -/
 
-/- warning: is_subgroup.mem_center -> IsSubgroup.mem_center is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G}, Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) a (IsSubgroup.center.{u1} G _inst_1)) (forall (g : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) g a) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a g))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a (IsSubgroup.center.{u1} G _inst_1)) (forall (g : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) g a) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a g))
-Case conversion may be inaccurate. Consider using '#align is_subgroup.mem_center IsSubgroup.mem_centerₓ'. -/
 @[to_additive mem_add_center]
 theorem mem_center {a : G} : a ∈ center G ↔ ∀ g, g * a = a * g :=
   Iff.rfl
@@ -456,12 +384,6 @@ def ker [Group H] (f : G → H) : Set G :=
 #align is_add_group_hom.ker IsAddGroupHom.ker
 -/
 
-/- warning: is_group_hom.mem_ker -> IsGroupHom.mem_ker is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u2} H] (f : G -> H) {x : G}, Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x (IsGroupHom.ker.{u1, u2} G H _inst_1 f)) (Eq.{succ u2} H (f x) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_1))))))))
-but is expected to have type
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u2} H] (f : G -> H) {x : G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x (IsGroupHom.ker.{u1, u2} G H _inst_1 f)) (Eq.{succ u2} H (f x) (OfNat.ofNat.{u2} H 1 (One.toOfNat1.{u2} H (InvOneClass.toOne.{u2} H (DivInvOneMonoid.toInvOneClass.{u2} H (DivisionMonoid.toDivInvOneMonoid.{u2} H (Group.toDivisionMonoid.{u2} H _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.mem_ker IsGroupHom.mem_kerₓ'. -/
 @[to_additive]
 theorem mem_ker [Group H] (f : G → H) {x : G} : x ∈ ker f ↔ f x = 1 :=
   mem_trivial
@@ -470,12 +392,6 @@ theorem mem_ker [Group H] (f : G → H) {x : G} : x ∈ ker f ↔ f x = 1 :=
 
 variable [Group G] [Group H]
 
-/- warning: is_group_hom.one_ker_inv -> IsGroupHom.one_ker_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u2} H (f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b))) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))) -> (Eq.{succ u2} H (f a) (f b)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u1} H (f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) a (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) b))) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))) -> (Eq.{succ u1} H (f a) (f b)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.one_ker_inv IsGroupHom.one_ker_invₓ'. -/
 @[to_additive]
 theorem one_ker_inv {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a * b⁻¹) = 1) : f a = f b :=
   by
@@ -484,12 +400,6 @@ theorem one_ker_inv {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a * b⁻
 #align is_group_hom.one_ker_inv IsGroupHom.one_ker_inv
 #align is_add_group_hom.zero_ker_neg IsAddGroupHom.zero_ker_neg
 
-/- warning: is_group_hom.one_ker_inv' -> IsGroupHom.one_ker_inv' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u2} H (f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) b)) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))) -> (Eq.{succ u2} H (f a) (f b)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u1} H (f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) a) b)) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))) -> (Eq.{succ u1} H (f a) (f b)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.one_ker_inv' IsGroupHom.one_ker_inv'ₓ'. -/
 @[to_additive]
 theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ * b) = 1) : f a = f b :=
   by
@@ -499,12 +409,6 @@ theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ 
 #align is_group_hom.one_ker_inv' IsGroupHom.one_ker_inv'
 #align is_add_group_hom.zero_ker_neg' IsAddGroupHom.zero_ker_neg'
 
-/- warning: is_group_hom.inv_ker_one -> IsGroupHom.inv_ker_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u2} H (f a) (f b)) -> (Eq.{succ u2} H (f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b))) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u1} H (f a) (f b)) -> (Eq.{succ u1} H (f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) a (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) b))) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.inv_ker_one IsGroupHom.inv_ker_oneₓ'. -/
 @[to_additive]
 theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a * b⁻¹) = 1 :=
   by
@@ -513,12 +417,6 @@ theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) 
 #align is_group_hom.inv_ker_one IsGroupHom.inv_ker_one
 #align is_add_group_hom.neg_ker_zero IsAddGroupHom.neg_ker_zero
 
-/- warning: is_group_hom.inv_ker_one' -> IsGroupHom.inv_ker_one' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u2} H (f a) (f b)) -> (Eq.{succ u2} H (f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) b)) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {a : G} {b : G}, (Eq.{succ u1} H (f a) (f b)) -> (Eq.{succ u1} H (f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) a) b)) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.inv_ker_one' IsGroupHom.inv_ker_one'ₓ'. -/
 @[to_additive]
 theorem inv_ker_one' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a⁻¹ * b) = 1 :=
   by
@@ -527,60 +425,30 @@ theorem inv_ker_one' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b)
 #align is_group_hom.inv_ker_one' IsGroupHom.inv_ker_one'
 #align is_add_group_hom.neg_ker_zero' IsAddGroupHom.neg_ker_zero'
 
-/- warning: is_group_hom.one_iff_ker_inv -> IsGroupHom.one_iff_ker_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u2} H (f a) (f b)) (Eq.{succ u2} H (f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b))) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u1} H (f a) (f b)) (Eq.{succ u1} H (f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) a (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) b))) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.one_iff_ker_inv IsGroupHom.one_iff_ker_invₓ'. -/
 @[to_additive]
 theorem one_iff_ker_inv {f : G → H} (hf : IsGroupHom f) (a b : G) : f a = f b ↔ f (a * b⁻¹) = 1 :=
   ⟨hf.inv_ker_one, hf.one_ker_inv⟩
 #align is_group_hom.one_iff_ker_inv IsGroupHom.one_iff_ker_inv
 #align is_add_group_hom.zero_iff_ker_neg IsAddGroupHom.zero_iff_ker_neg
 
-/- warning: is_group_hom.one_iff_ker_inv' -> IsGroupHom.one_iff_ker_inv' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u2} H (f a) (f b)) (Eq.{succ u2} H (f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) b)) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u1} H (f a) (f b)) (Eq.{succ u1} H (f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) a) b)) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.one_iff_ker_inv' IsGroupHom.one_iff_ker_inv'ₓ'. -/
 @[to_additive]
 theorem one_iff_ker_inv' {f : G → H} (hf : IsGroupHom f) (a b : G) : f a = f b ↔ f (a⁻¹ * b) = 1 :=
   ⟨hf.inv_ker_one', hf.one_ker_inv'⟩
 #align is_group_hom.one_iff_ker_inv' IsGroupHom.one_iff_ker_inv'
 #align is_add_group_hom.zero_iff_ker_neg' IsAddGroupHom.zero_iff_ker_neg'
 
-/- warning: is_group_hom.inv_iff_ker -> IsGroupHom.inv_iff_ker is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u2} H (f a) (f b)) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)) (IsGroupHom.ker.{u1, u2} G H _inst_2 f)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u1} H (f a) (f b)) (Membership.mem.{u2, u2} G (Set.{u2} G) (Set.instMembershipSet.{u2} G) (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) a (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) b)) (IsGroupHom.ker.{u2, u1} G H _inst_2 f)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.inv_iff_ker IsGroupHom.inv_iff_kerₓ'. -/
 @[to_additive]
 theorem inv_iff_ker {f : G → H} (hf : IsGroupHom f) (a b : G) : f a = f b ↔ a * b⁻¹ ∈ ker f := by
   rw [mem_ker] <;> exact one_iff_ker_inv hf _ _
 #align is_group_hom.inv_iff_ker IsGroupHom.inv_iff_ker
 #align is_add_group_hom.neg_iff_ker IsAddGroupHom.neg_iff_ker
 
-/- warning: is_group_hom.inv_iff_ker' -> IsGroupHom.inv_iff_ker' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u2} H (f a) (f b)) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) b) (IsGroupHom.ker.{u1, u2} G H _inst_2 f)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall (a : G) (b : G), Iff (Eq.{succ u1} H (f a) (f b)) (Membership.mem.{u2, u2} G (Set.{u2} G) (Set.instMembershipSet.{u2} G) (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))))) (Inv.inv.{u2} G (InvOneClass.toInv.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))) a) b) (IsGroupHom.ker.{u2, u1} G H _inst_2 f)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.inv_iff_ker' IsGroupHom.inv_iff_ker'ₓ'. -/
 @[to_additive]
 theorem inv_iff_ker' {f : G → H} (hf : IsGroupHom f) (a b : G) : f a = f b ↔ a⁻¹ * b ∈ ker f := by
   rw [mem_ker] <;> exact one_iff_ker_inv' hf _ _
 #align is_group_hom.inv_iff_ker' IsGroupHom.inv_iff_ker'
 #align is_add_group_hom.neg_iff_ker' IsAddGroupHom.neg_iff_ker'
 
-/- warning: is_group_hom.image_subgroup -> IsGroupHom.image_subgroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {s : Set.{u1} G}, (IsSubgroup.{u1} G _inst_1 s) -> (IsSubgroup.{u2} H _inst_2 (Set.image.{u1, u2} G H f s)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {s : Set.{u2} G}, (IsSubgroup.{u2} G _inst_1 s) -> (IsSubgroup.{u1} H _inst_2 (Set.image.{u2, u1} G H f s)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.image_subgroup IsGroupHom.image_subgroupₓ'. -/
 @[to_additive]
 theorem image_subgroup {f : G → H} (hf : IsGroupHom f) {s : Set G} (hs : IsSubgroup s) :
     IsSubgroup (f '' s) :=
@@ -591,12 +459,6 @@ theorem image_subgroup {f : G → H} (hf : IsGroupHom f) {s : Set G} (hs : IsSub
 #align is_group_hom.image_subgroup IsGroupHom.image_subgroup
 #align is_add_group_hom.image_add_subgroup IsAddGroupHom.image_addSubgroup
 
-/- warning: is_group_hom.range_subgroup -> IsGroupHom.range_subgroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (IsSubgroup.{u2} H _inst_2 (Set.range.{u2, succ u1} H G f))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (IsSubgroup.{u1} H _inst_2 (Set.range.{u1, succ u2} H G f))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.range_subgroup IsGroupHom.range_subgroupₓ'. -/
 @[to_additive]
 theorem range_subgroup {f : G → H} (hf : IsGroupHom f) : IsSubgroup (Set.range f) :=
   @Set.image_univ _ _ f ▸ hf.image_subgroup univ_subgroup.to_isSubgroup
@@ -605,12 +467,6 @@ theorem range_subgroup {f : G → H} (hf : IsGroupHom f) : IsSubgroup (Set.range
 
 attribute [local simp] one_mem inv_mem mul_mem IsNormalSubgroup.normal
 
-/- warning: is_group_hom.preimage -> IsGroupHom.preimage is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {s : Set.{u2} H}, (IsSubgroup.{u2} H _inst_2 s) -> (IsSubgroup.{u1} G _inst_1 (Set.preimage.{u1, u2} G H f s)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {s : Set.{u1} H}, (IsSubgroup.{u1} H _inst_2 s) -> (IsSubgroup.{u2} G _inst_1 (Set.preimage.{u2, u1} G H f s)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.preimage IsGroupHom.preimageₓ'. -/
 @[to_additive]
 theorem preimage {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsSubgroup s) :
     IsSubgroup (f ⁻¹' s) := by
@@ -620,12 +476,6 @@ theorem preimage {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsSubgroup 
 #align is_group_hom.preimage IsGroupHom.preimage
 #align is_add_group_hom.preimage IsAddGroupHom.preimage
 
-/- warning: is_group_hom.preimage_normal -> IsGroupHom.preimage_normal is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (forall {s : Set.{u2} H}, (IsNormalSubgroup.{u2} H _inst_2 s) -> (IsNormalSubgroup.{u1} G _inst_1 (Set.preimage.{u1, u2} G H f s)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (forall {s : Set.{u1} H}, (IsNormalSubgroup.{u1} H _inst_2 s) -> (IsNormalSubgroup.{u2} G _inst_1 (Set.preimage.{u2, u1} G H f s)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.preimage_normal IsGroupHom.preimage_normalₓ'. -/
 @[to_additive]
 theorem preimage_normal {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsNormalSubgroup s) :
     IsNormalSubgroup (f ⁻¹' s) :=
@@ -636,24 +486,12 @@ theorem preimage_normal {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsNo
 #align is_group_hom.preimage_normal IsGroupHom.preimage_normal
 #align is_add_group_hom.preimage_normal IsAddGroupHom.preimage_normal
 
-/- warning: is_group_hom.is_normal_subgroup_ker -> IsGroupHom.isNormalSubgroup_ker is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (IsNormalSubgroup.{u1} G _inst_1 (IsGroupHom.ker.{u1, u2} G H _inst_2 f))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (IsNormalSubgroup.{u2} G _inst_1 (IsGroupHom.ker.{u2, u1} G H _inst_2 f))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.is_normal_subgroup_ker IsGroupHom.isNormalSubgroup_kerₓ'. -/
 @[to_additive]
 theorem isNormalSubgroup_ker {f : G → H} (hf : IsGroupHom f) : IsNormalSubgroup (ker f) :=
   hf.preimage_normal trivial_normal
 #align is_group_hom.is_normal_subgroup_ker IsGroupHom.isNormalSubgroup_ker
 #align is_add_group_hom.is_normal_add_subgroup_ker IsAddGroupHom.isNormalAddSubgroup_ker
 
-/- warning: is_group_hom.injective_of_trivial_ker -> IsGroupHom.injective_of_trivial_ker is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (Eq.{succ u1} (Set.{u1} G) (IsGroupHom.ker.{u1, u2} G H _inst_2 f) (IsSubgroup.trivial.{u1} G _inst_1)) -> (Function.Injective.{succ u1, succ u2} G H f)
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (Eq.{succ u2} (Set.{u2} G) (IsGroupHom.ker.{u2, u1} G H _inst_2 f) (IsSubgroup.trivial.{u2} G _inst_1)) -> (Function.Injective.{succ u2, succ u1} G H f)
-Case conversion may be inaccurate. Consider using '#align is_group_hom.injective_of_trivial_ker IsGroupHom.injective_of_trivial_kerₓ'. -/
 @[to_additive]
 theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : ker f = trivial G) :
     Function.Injective f := by
@@ -664,12 +502,6 @@ theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : ker f = 
 #align is_group_hom.injective_of_trivial_ker IsGroupHom.injective_of_trivial_ker
 #align is_add_group_hom.injective_of_trivial_ker IsAddGroupHom.injective_of_trivial_ker
 
-/- warning: is_group_hom.trivial_ker_of_injective -> IsGroupHom.trivial_ker_of_injective is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (Function.Injective.{succ u1, succ u2} G H f) -> (Eq.{succ u1} (Set.{u1} G) (IsGroupHom.ker.{u1, u2} G H _inst_2 f) (IsSubgroup.trivial.{u1} G _inst_1))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (Function.Injective.{succ u2, succ u1} G H f) -> (Eq.{succ u2} (Set.{u2} G) (IsGroupHom.ker.{u2, u1} G H _inst_2 f) (IsSubgroup.trivial.{u2} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.trivial_ker_of_injective IsGroupHom.trivial_ker_of_injectiveₓ'. -/
 @[to_additive]
 theorem trivial_ker_of_injective {f : G → H} (hf : IsGroupHom f) (h : Function.Injective f) :
     ker f = trivial G :=
@@ -682,12 +514,6 @@ theorem trivial_ker_of_injective {f : G → H} (hf : IsGroupHom f) (h : Function
 #align is_group_hom.trivial_ker_of_injective IsGroupHom.trivial_ker_of_injective
 #align is_add_group_hom.trivial_ker_of_injective IsAddGroupHom.trivial_ker_of_injective
 
-/- warning: is_group_hom.injective_iff_trivial_ker -> IsGroupHom.injective_iff_trivial_ker is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (Iff (Function.Injective.{succ u1, succ u2} G H f) (Eq.{succ u1} (Set.{u1} G) (IsGroupHom.ker.{u1, u2} G H _inst_2 f) (IsSubgroup.trivial.{u1} G _inst_1)))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (Iff (Function.Injective.{succ u2, succ u1} G H f) (Eq.{succ u2} (Set.{u2} G) (IsGroupHom.ker.{u2, u1} G H _inst_2 f) (IsSubgroup.trivial.{u2} G _inst_1)))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.injective_iff_trivial_ker IsGroupHom.injective_iff_trivial_kerₓ'. -/
 @[to_additive]
 theorem injective_iff_trivial_ker {f : G → H} (hf : IsGroupHom f) :
     Function.Injective f ↔ ker f = trivial G :=
@@ -695,12 +521,6 @@ theorem injective_iff_trivial_ker {f : G → H} (hf : IsGroupHom f) :
 #align is_group_hom.injective_iff_trivial_ker IsGroupHom.injective_iff_trivial_ker
 #align is_add_group_hom.injective_iff_trivial_ker IsAddGroupHom.injective_iff_trivial_ker
 
-/- warning: is_group_hom.trivial_ker_iff_eq_one -> IsGroupHom.trivial_ker_iff_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] {f : G -> H}, (IsGroupHom.{u1, u2} G H _inst_1 _inst_2 f) -> (Iff (Eq.{succ u1} (Set.{u1} G) (IsGroupHom.ker.{u1, u2} G H _inst_2 f) (IsSubgroup.trivial.{u1} G _inst_1)) (forall (x : G), (Eq.{succ u2} H (f x) (OfNat.ofNat.{u2} H 1 (OfNat.mk.{u2} H 1 (One.one.{u2} H (MulOneClass.toHasOne.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))))) -> (Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))))
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} H] {f : G -> H}, (IsGroupHom.{u2, u1} G H _inst_1 _inst_2 f) -> (Iff (Eq.{succ u2} (Set.{u2} G) (IsGroupHom.ker.{u2, u1} G H _inst_2 f) (IsSubgroup.trivial.{u2} G _inst_1)) (forall (x : G), (Eq.{succ u1} H (f x) (OfNat.ofNat.{u1} H 1 (One.toOfNat1.{u1} H (InvOneClass.toOne.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (Group.toDivisionMonoid.{u1} H _inst_2))))))) -> (Eq.{succ u2} G x (OfNat.ofNat.{u2} G 1 (One.toOfNat1.{u2} G (InvOneClass.toOne.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))))))))
-Case conversion may be inaccurate. Consider using '#align is_group_hom.trivial_ker_iff_eq_one IsGroupHom.trivial_ker_iff_eq_oneₓ'. -/
 @[to_additive]
 theorem trivial_ker_iff_eq_one {f : G → H} (hf : IsGroupHom f) :
     ker f = trivial G ↔ ∀ x, f x = 1 → x = 1 := by
@@ -814,12 +634,6 @@ theorem closure_subgroup {s : Set G} (hs : IsSubgroup s) : closure s = s :=
 #align add_group.closure_add_subgroup AddGroup.closure_addSubgroup
 -/
 
-/- warning: group.exists_list_of_mem_closure -> Group.exists_list_of_mem_closure is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G} {a : G}, (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) a (Group.closure.{u1} G _inst_1 s)) -> (Exists.{succ u1} (List.{u1} G) (fun (l : List.{u1} G) => And (forall (x : G), (Membership.Mem.{u1, u1} G (List.{u1} G) (List.hasMem.{u1} G) x l) -> (Or (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x s) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x) s))) (Eq.{succ u1} G (List.prod.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) l) a)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G} {a : G}, (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a (Group.closure.{u1} G _inst_1 s)) -> (Exists.{succ u1} (List.{u1} G) (fun (l : List.{u1} G) => And (forall (x : G), (Membership.mem.{u1, u1} G (List.{u1} G) (List.instMembershipList.{u1} G) x l) -> (Or (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x s) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) x) s))) (Eq.{succ u1} G (List.prod.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) l) a)))
-Case conversion may be inaccurate. Consider using '#align group.exists_list_of_mem_closure Group.exists_list_of_mem_closureₓ'. -/
 @[to_additive]
 theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
     ∃ l : List G, (∀ x ∈ l, x ∈ s ∨ x⁻¹ ∈ s) ∧ l.Prod = a :=
@@ -867,12 +681,6 @@ theorem mclosure_subset {s : Set G} : Monoid.Closure s ⊆ closure s :=
 #align add_group.mclosure_subset AddGroup.mclosure_subset
 -/
 
-/- warning: group.mclosure_inv_subset -> Group.mclosure_inv_subset is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) (Monoid.Closure.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Set.preimage.{u1, u1} G G (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) s)) (Group.closure.{u1} G _inst_1 s)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (Monoid.Closure.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Set.preimage.{u1, u1} G G (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))) s)) (Group.closure.{u1} G _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align group.mclosure_inv_subset Group.mclosure_inv_subsetₓ'. -/
 @[to_additive]
 theorem mclosure_inv_subset {s : Set G} : Monoid.Closure (Inv.inv ⁻¹' s) ⊆ closure s :=
   Monoid.closure_subset (closure.isSubgroup _).to_isSubmonoid fun x hx =>
@@ -880,12 +688,6 @@ theorem mclosure_inv_subset {s : Set G} : Monoid.Closure (Inv.inv ⁻¹' s) ⊆ 
 #align group.mclosure_inv_subset Group.mclosure_inv_subset
 #align add_group.mclosure_neg_subset AddGroup.mclosure_neg_subset
 
-/- warning: group.closure_eq_mclosure -> Group.closure_eq_mclosure is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, Eq.{succ u1} (Set.{u1} G) (Group.closure.{u1} G _inst_1 s) (Monoid.Closure.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Union.union.{u1} (Set.{u1} G) (Set.hasUnion.{u1} G) s (Set.preimage.{u1, u1} G G (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) s)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G}, Eq.{succ u1} (Set.{u1} G) (Group.closure.{u1} G _inst_1 s) (Monoid.Closure.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Union.union.{u1} (Set.{u1} G) (Set.instUnionSet.{u1} G) s (Set.preimage.{u1, u1} G G (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))) s)))
-Case conversion may be inaccurate. Consider using '#align group.closure_eq_mclosure Group.closure_eq_mclosureₓ'. -/
 @[to_additive]
 theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.Closure (s ∪ Inv.inv ⁻¹' s) :=
   Set.Subset.antisymm
@@ -909,12 +711,6 @@ theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.Closure (s ∪ Inv.
 #align group.closure_eq_mclosure Group.closure_eq_mclosure
 #align add_group.closure_eq_mclosure AddGroup.closure_eq_mclosure
 
-/- warning: group.mem_closure_union_iff -> Group.mem_closure_union_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_2 : CommGroup.{u1} G] {s : Set.{u1} G} {t : Set.{u1} G} {x : G}, Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) (Union.union.{u1} (Set.{u1} G) (Set.hasUnion.{u1} G) s t))) (Exists.{succ u1} G (fun (y : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) y (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) s)) (fun (H : Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) y (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) s)) => Exists.{succ u1} G (fun (z : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) z (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) t)) (fun (H : Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) z (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) t)) => Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_2)))))) y z) x)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_2 : CommGroup.{u1} G] {s : Set.{u1} G} {t : Set.{u1} G} {x : G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) (Union.union.{u1} (Set.{u1} G) (Set.instUnionSet.{u1} G) s t))) (Exists.{succ u1} G (fun (y : G) => And (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) y (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) s)) (Exists.{succ u1} G (fun (z : G) => And (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) z (Group.closure.{u1} G (CommGroup.toGroup.{u1} G _inst_2) t)) (Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_2)))))) y z) x)))))
-Case conversion may be inaccurate. Consider using '#align group.mem_closure_union_iff Group.mem_closure_union_iffₓ'. -/
 @[to_additive]
 theorem mem_closure_union_iff {G : Type _} [CommGroup G] {s t : Set G} {x : G} :
     x ∈ closure (s ∪ t) ↔ ∃ y ∈ closure s, ∃ z ∈ closure t, y * z = x :=
@@ -1053,12 +849,6 @@ def Subgroup.of [Group G] {s : Set G} (h : IsSubgroup s) : Subgroup G
 #align add_subgroup.of AddSubgroup.of
 -/
 
-/- warning: subgroup.is_subgroup -> Subgroup.isSubgroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (K : Subgroup.{u1} G _inst_1), IsSubgroup.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) K)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (K : Subgroup.{u1} G _inst_1), IsSubgroup.{u1} G _inst_1 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) K)
-Case conversion may be inaccurate. Consider using '#align subgroup.is_subgroup Subgroup.isSubgroupₓ'. -/
 @[to_additive]
 theorem Subgroup.isSubgroup [Group G] (K : Subgroup G) : IsSubgroup (K : Set G) :=
   { one_mem := K.one_mem'

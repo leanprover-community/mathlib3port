@@ -41,12 +41,6 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 instance : NoncompactSpace ℝ :=
   Int.closedEmbedding_coe_real.NoncompactSpace
 
-/- warning: real.uniform_continuous_add -> Real.uniformContinuous_add is a dubious translation:
-lean 3 declaration is
-  UniformContinuous.{0, 0} (Prod.{0, 0} Real Real) Real (Prod.uniformSpace.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Prod.{0, 0} Real Real) => HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Prod.fst.{0, 0} Real Real p) (Prod.snd.{0, 0} Real Real p))
-but is expected to have type
-  UniformContinuous.{0, 0} (Prod.{0, 0} Real Real) Real (instUniformSpaceProd.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Prod.{0, 0} Real Real) => HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Prod.fst.{0, 0} Real Real p) (Prod.snd.{0, 0} Real Real p))
-Case conversion may be inaccurate. Consider using '#align real.uniform_continuous_add Real.uniformContinuous_addₓ'. -/
 theorem Real.uniformContinuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abs ε0
@@ -55,12 +49,6 @@ theorem Real.uniformContinuous_add : UniformContinuous fun p : ℝ × ℝ => p.1
       Hδ h₁ h₂⟩
 #align real.uniform_continuous_add Real.uniformContinuous_add
 
-/- warning: real.uniform_continuous_neg -> Real.uniformContinuous_neg is a dubious translation:
-lean 3 declaration is
-  UniformContinuous.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (Neg.neg.{0} Real Real.hasNeg)
-but is expected to have type
-  UniformContinuous.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (Neg.neg.{0} Real Real.instNegReal)
-Case conversion may be inaccurate. Consider using '#align real.uniform_continuous_neg Real.uniformContinuous_negₓ'. -/
 theorem Real.uniformContinuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
@@ -81,12 +69,6 @@ instance : ProperSpace ℝ
 instance : SecondCountableTopology ℝ :=
   secondCountable_of_proper
 
-/- warning: real.is_topological_basis_Ioo_rat -> Real.isTopologicalBasis_Ioo_rat is a dubious translation:
-lean 3 declaration is
-  TopologicalSpace.IsTopologicalBasis.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.hasLt a b) (fun (h : LT.lt.{0} Rat Rat.hasLt a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b))))))
-but is expected to have type
-  TopologicalSpace.IsTopologicalBasis.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.instLTRat_1 a b) (fun (h : LT.lt.{0} Rat Rat.instLTRat_1 a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b))))))
-Case conversion may be inaccurate. Consider using '#align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_Ioo_ratₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem Real.isTopologicalBasis_Ioo_rat :
     @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
@@ -99,24 +81,12 @@ theorem Real.isTopologicalBasis_Ioo_rat :
       ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ => h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
 #align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_Ioo_rat
 
-/- warning: real.cocompact_eq -> Real.cocompact_eq is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Filter.{0} Real) (Filter.cocompact.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (Sup.sup.{0} (Filter.{0} Real) (SemilatticeSup.toHasSup.{0} (Filter.{0} Real) (Lattice.toSemilatticeSup.{0} (Filter.{0} Real) (ConditionallyCompleteLattice.toLattice.{0} (Filter.{0} Real) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} Real) (Filter.completeLattice.{0} Real))))) (Filter.atBot.{0} Real Real.preorder) (Filter.atTop.{0} Real Real.preorder))
-but is expected to have type
-  Eq.{1} (Filter.{0} Real) (Filter.cocompact.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (Sup.sup.{0} (Filter.{0} Real) (SemilatticeSup.toSup.{0} (Filter.{0} Real) (Lattice.toSemilatticeSup.{0} (Filter.{0} Real) (ConditionallyCompleteLattice.toLattice.{0} (Filter.{0} Real) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} Real) (Filter.instCompleteLatticeFilter.{0} Real))))) (Filter.atBot.{0} Real Real.instPreorderReal) (Filter.atTop.{0} Real Real.instPreorderReal))
-Case conversion may be inaccurate. Consider using '#align real.cocompact_eq Real.cocompact_eqₓ'. -/
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = atBot ⊔ atTop := by
   simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero,
     comap_abs_at_top]
 #align real.cocompact_eq Real.cocompact_eq
 
-/- warning: real.mem_closure_iff -> Real.mem_closure_iff is a dubious translation:
-lean 3 declaration is
-  forall {s : Set.{0} Real} {x : Real}, Iff (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (closure.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) s)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (y : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y s) => LT.lt.{0} Real Real.hasLt (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) y x)) ε))))
-but is expected to have type
-  forall {s : Set.{0} Real} {x : Real}, Iff (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (closure.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) s)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (y : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) y s) (LT.lt.{0} Real Real.instLTReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y x)) ε))))
-Case conversion may be inaccurate. Consider using '#align real.mem_closure_iff Real.mem_closure_iffₓ'. -/
 /- TODO(Mario): Prove that these are uniform isomorphisms instead of uniform embeddings
 lemma uniform_embedding_add_rat {r : ℚ} : uniform_embedding (λp:ℚ, p + r) :=
 _
@@ -127,12 +97,6 @@ theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ closure s ↔ ∀ �
   by simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 #align real.mem_closure_iff Real.mem_closure_iff
 
-/- warning: real.uniform_continuous_inv -> Real.uniformContinuous_inv is a dubious translation:
-lean 3 declaration is
-  forall (s : Set.{0} Real) {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) -> (LE.le.{0} Real Real.hasLe r (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) x))) -> (UniformContinuous.{0, 0} (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) s) Real (Subtype.uniformSpace.{0} Real (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) s) => Inv.inv.{0} Real Real.hasInv (Subtype.val.{1} Real (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) p)))
-but is expected to have type
-  forall (s : Set.{0} Real) {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) -> (LE.le.{0} Real Real.instLEReal r (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) x))) -> (UniformContinuous.{0, 0} (Set.Elem.{0} Real s) Real (instUniformSpaceSubtype.{0} Real (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Set.Elem.{0} Real s) => Inv.inv.{0} Real Real.instInvReal (Subtype.val.{1} Real (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) p)))
-Case conversion may be inaccurate. Consider using '#align real.uniform_continuous_inv Real.uniformContinuous_invₓ'. -/
 theorem Real.uniformContinuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ |x|) :
     UniformContinuous fun p : s => p.1⁻¹ :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
@@ -140,23 +104,11 @@ theorem Real.uniformContinuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀
     ⟨δ, δ0, fun a b h => Hδ (H _ a.2) (H _ b.2) h⟩
 #align real.uniform_continuous_inv Real.uniformContinuous_inv
 
-/- warning: real.uniform_continuous_abs -> Real.uniformContinuous_abs is a dubious translation:
-lean 3 declaration is
-  UniformContinuous.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup))
-but is expected to have type
-  UniformContinuous.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal))
-Case conversion may be inaccurate. Consider using '#align real.uniform_continuous_abs Real.uniformContinuous_absₓ'. -/
 theorem Real.uniformContinuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
 #align real.uniform_continuous_abs Real.uniformContinuous_abs
 
-/- warning: real.tendsto_inv -> Real.tendsto_inv is a dubious translation:
-lean 3 declaration is
-  forall {r : Real}, (Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Tendsto.{0, 0} Real Real (fun (q : Real) => Inv.inv.{0} Real Real.hasInv q) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) r) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Inv.inv.{0} Real Real.hasInv r)))
-but is expected to have type
-  forall {r : Real}, (Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Tendsto.{0, 0} Real Real (fun (q : Real) => Inv.inv.{0} Real Real.instInvReal q) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) r) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Inv.inv.{0} Real Real.instInvReal r)))
-Case conversion may be inaccurate. Consider using '#align real.tendsto_inv Real.tendsto_invₓ'. -/
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
   rw [← abs_pos] at r0 <;>
     exact
@@ -165,45 +117,21 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (�
         (IsOpen.mem_nhds ((isOpen_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
 #align real.tendsto_inv Real.tendsto_inv
 
-/- warning: real.continuous_inv -> Real.continuous_inv is a dubious translation:
-lean 3 declaration is
-  Continuous.{0, 0} (Subtype.{1} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) Real (Subtype.topologicalSpace.{0} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (a : Subtype.{1} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) => Inv.inv.{0} Real Real.hasInv (Subtype.val.{1} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) a))
-but is expected to have type
-  Continuous.{0, 0} (Subtype.{1} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) Real (instTopologicalSpaceSubtype.{0} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (a : Subtype.{1} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) => Inv.inv.{0} Real Real.instInvReal (Subtype.val.{1} Real (fun (r : Real) => Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) a))
-Case conversion may be inaccurate. Consider using '#align real.continuous_inv Real.continuous_invₓ'. -/
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
   continuous_iff_continuousAt.mpr fun ⟨r, hr⟩ =>
     Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuousAt.mp continuous_subtype_val _)
 #align real.continuous_inv Real.continuous_inv
 
-/- warning: real.continuous.inv -> Real.Continuous.inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {f : α -> Real}, (forall (a : α), Ne.{1} Real (f a) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Continuous.{u1, 0} α Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) f) -> (Continuous.{u1, 0} α Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (a : α) => Inv.inv.{0} Real Real.hasInv (f a)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {f : α -> Real}, (forall (a : α), Ne.{1} Real (f a) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Continuous.{u1, 0} α Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) f) -> (Continuous.{u1, 0} α Real _inst_1 (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (a : α) => Inv.inv.{0} Real Real.instInvReal (f a)))
-Case conversion may be inaccurate. Consider using '#align real.continuous.inv Real.Continuous.invₓ'. -/
 theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0)
     (hf : Continuous f) : Continuous fun a => (f a)⁻¹ :=
   show Continuous ((Inv.inv ∘ @Subtype.val ℝ fun r => r ≠ 0) ∘ fun a => ⟨f a, h a⟩) from
     Real.continuous_inv.comp (hf.subtype_mk _)
 #align real.continuous.inv Real.Continuous.inv
 
-/- warning: real.uniform_continuous_const_mul -> Real.uniformContinuous_const_mul is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, UniformContinuous.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) x)
-but is expected to have type
-  forall {x : Real}, UniformContinuous.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) ((fun (x._@.Mathlib.Topology.Instances.Real._hyg.946 : Real) (x._@.Mathlib.Topology.Instances.Real._hyg.948 : Real) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) x._@.Mathlib.Topology.Instances.Real._hyg.946 x._@.Mathlib.Topology.Instances.Real._hyg.948) x)
-Case conversion may be inaccurate. Consider using '#align real.uniform_continuous_const_mul Real.uniformContinuous_const_mulₓ'. -/
 theorem Real.uniformContinuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
   uniformContinuous_const_smul x
 #align real.uniform_continuous_const_mul Real.uniformContinuous_const_mul
 
-/- warning: real.uniform_continuous_mul -> Real.uniformContinuous_mul is a dubious translation:
-lean 3 declaration is
-  forall (s : Set.{0} (Prod.{0, 0} Real Real)) {r₁ : Real} {r₂ : Real}, (forall (x : Prod.{0, 0} Real Real), (Membership.Mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.hasMem.{0} (Prod.{0, 0} Real Real)) x s) -> (And (LT.lt.{0} Real Real.hasLt (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (Prod.fst.{0, 0} Real Real x)) r₁) (LT.lt.{0} Real Real.hasLt (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (Prod.snd.{0, 0} Real Real x)) r₂))) -> (UniformContinuous.{0, 0} (coeSort.{1, 2} (Set.{0} (Prod.{0, 0} Real Real)) Type (Set.hasCoeToSort.{0} (Prod.{0, 0} Real Real)) s) Real (Subtype.uniformSpace.{0} (Prod.{0, 0} Real Real) (fun (x : Prod.{0, 0} Real Real) => Membership.Mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.hasMem.{0} (Prod.{0, 0} Real Real)) x s) (Prod.uniformSpace.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : coeSort.{1, 2} (Set.{0} (Prod.{0, 0} Real Real)) Type (Set.hasCoeToSort.{0} (Prod.{0, 0} Real Real)) s) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Prod.fst.{0, 0} Real Real (Subtype.val.{1} (Prod.{0, 0} Real Real) (fun (x : Prod.{0, 0} Real Real) => Membership.Mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.hasMem.{0} (Prod.{0, 0} Real Real)) x s) p)) (Prod.snd.{0, 0} Real Real (Subtype.val.{1} (Prod.{0, 0} Real Real) (fun (x : Prod.{0, 0} Real Real) => Membership.Mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.hasMem.{0} (Prod.{0, 0} Real Real)) x s) p))))
-but is expected to have type
-  forall (s : Set.{0} (Prod.{0, 0} Real Real)) {r₁ : Real} {r₂ : Real}, (forall (x : Prod.{0, 0} Real Real), (Membership.mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.instMembershipSet.{0} (Prod.{0, 0} Real Real)) x s) -> (And (LT.lt.{0} Real Real.instLTReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (Prod.fst.{0, 0} Real Real x)) r₁) (LT.lt.{0} Real Real.instLTReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (Prod.snd.{0, 0} Real Real x)) r₂))) -> (UniformContinuous.{0, 0} (Set.Elem.{0} (Prod.{0, 0} Real Real) s) Real (instUniformSpaceSubtype.{0} (Prod.{0, 0} Real Real) (fun (x : Prod.{0, 0} Real Real) => Membership.mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.instMembershipSet.{0} (Prod.{0, 0} Real Real)) x s) (instUniformSpaceProd.{0, 0} Real Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Set.Elem.{0} (Prod.{0, 0} Real Real) s) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Prod.fst.{0, 0} Real Real (Subtype.val.{1} (Prod.{0, 0} Real Real) (fun (x : Prod.{0, 0} Real Real) => Membership.mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.instMembershipSet.{0} (Prod.{0, 0} Real Real)) x s) p)) (Prod.snd.{0, 0} Real Real (Subtype.val.{1} (Prod.{0, 0} Real Real) (fun (x : Prod.{0, 0} Real Real) => Membership.mem.{0, 0} (Prod.{0, 0} Real Real) (Set.{0} (Prod.{0, 0} Real Real)) (Set.instMembershipSet.{0} (Prod.{0, 0} Real Real)) x s) p))))
-Case conversion may be inaccurate. Consider using '#align real.uniform_continuous_mul Real.uniformContinuous_mulₓ'. -/
 theorem Real.uniformContinuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
     (H : ∀ x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) :
     UniformContinuous fun p : s => p.1.1 * p.1.2 :=
@@ -214,12 +142,6 @@ theorem Real.uniformContinuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
       Hδ (H _ a.2).1 (H _ b.2).2 h₁ h₂⟩
 #align real.uniform_continuous_mul Real.uniformContinuous_mul
 
-/- warning: real.continuous_mul -> Real.continuous_mul is a dubious translation:
-lean 3 declaration is
-  Continuous.{0, 0} (Prod.{0, 0} Real Real) Real (Prod.topologicalSpace.{0, 0} Real Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (p : Prod.{0, 0} Real Real) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Prod.fst.{0, 0} Real Real p) (Prod.snd.{0, 0} Real Real p))
-but is expected to have type
-  Continuous.{0, 0} (Prod.{0, 0} Real Real) Real (instTopologicalSpaceProd.{0, 0} Real Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (p : Prod.{0, 0} Real Real) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Prod.fst.{0, 0} Real Real p) (Prod.snd.{0, 0} Real Real p))
-Case conversion may be inaccurate. Consider using '#align real.continuous_mul Real.continuous_mulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuousAt.2 fun ⟨a₁, a₂⟩ =>
@@ -252,12 +174,6 @@ theorem Real.totallyBounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
 
 section
 
-/- warning: closure_of_rat_image_lt -> closure_of_rat_image_lt is a dubious translation:
-lean 3 declaration is
-  forall {q : Rat}, Eq.{1} (Set.{0} Real) (closure.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.image.{0, 0} Rat Real ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast)))) (setOf.{0} Rat (fun (x : Rat) => LT.lt.{0} Rat Rat.hasLt q x)))) (setOf.{0} Real (fun (r : Real) => LE.le.{0} Real Real.hasLe ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) q) r))
-but is expected to have type
-  forall {q : Rat}, Eq.{1} (Set.{0} Real) (closure.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.image.{0, 0} Rat Real (Rat.cast.{0} Real Real.ratCast) (setOf.{0} Rat (fun (x : Rat) => LT.lt.{0} Rat Rat.instLTRat_1 q x)))) (setOf.{0} Real (fun (r : Real) => LE.le.{0} Real Real.instLEReal (Rat.cast.{0} Real Real.ratCast q) r))
-Case conversion may be inaccurate. Consider using '#align closure_of_rat_image_lt closure_of_rat_image_ltₓ'. -/
 theorem closure_of_rat_image_lt {q : ℚ} :
     closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   Subset.antisymm
@@ -291,12 +207,6 @@ theorem Real.bounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelo
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bddBelow_bddAbove
 -/
 
-/- warning: real.subset_Icc_Inf_Sup_of_bounded -> Real.subset_Icc_sInf_sSup_of_bounded is a dubious translation:
-lean 3 declaration is
-  forall {s : Set.{0} Real}, (Metric.Bounded.{0} Real Real.pseudoMetricSpace s) -> (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Icc.{0} Real Real.preorder (InfSet.sInf.{0} Real Real.hasInf s) (SupSet.sSup.{0} Real Real.hasSup s)))
-but is expected to have type
-  forall {s : Set.{0} Real}, (Metric.Bounded.{0} Real Real.pseudoMetricSpace s) -> (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Icc.{0} Real Real.instPreorderReal (InfSet.sInf.{0} Real Real.instInfSetReal s) (SupSet.sSup.{0} Real Real.instSupSetReal s)))
-Case conversion may be inaccurate. Consider using '#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_sInf_sSup_of_boundedₓ'. -/
 theorem Real.subset_Icc_sInf_sSup_of_bounded {s : Set ℝ} (h : Bounded s) :
     s ⊆ Icc (sInf s) (sSup s) :=
   subset_Icc_csInf_csSup (Real.bounded_iff_bddBelow_bddAbove.1 h).1
@@ -309,12 +219,6 @@ section Periodic
 
 namespace Function
 
-/- warning: function.periodic.compact_of_continuous' -> Function.Periodic.compact_of_continuous' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {f : Real -> α} {c : Real}, (Function.Periodic.{0, u1} Real α Real.hasAdd f c) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) c) -> (Continuous.{0, u1} Real α (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) _inst_1 f) -> (IsCompact.{u1} α _inst_1 (Set.range.{u1, 1} α Real f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {f : Real -> α} {c : Real}, (Function.Periodic.{0, u1} Real α Real.instAddReal f c) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) c) -> (Continuous.{0, u1} Real α (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) _inst_1 f) -> (IsCompact.{u1} α _inst_1 (Set.range.{u1, 1} α Real f))
-Case conversion may be inaccurate. Consider using '#align function.periodic.compact_of_continuous' Function.Periodic.compact_of_continuous'ₓ'. -/
 theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
     (hc : 0 < c) (hf : Continuous f) : IsCompact (range f) :=
   by
@@ -326,12 +230,6 @@ theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
   exact ⟨z, mem_Icc_of_Ico hz, h2.symm.trans h1⟩
 #align function.periodic.compact_of_continuous' Function.Periodic.compact_of_continuous'
 
-/- warning: function.periodic.compact_of_continuous -> Function.Periodic.compact_of_continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {f : Real -> α} {c : Real}, (Function.Periodic.{0, u1} Real α Real.hasAdd f c) -> (Ne.{1} Real c (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Continuous.{0, u1} Real α (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) _inst_1 f) -> (IsCompact.{u1} α _inst_1 (Set.range.{u1, 1} α Real f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {f : Real -> α} {c : Real}, (Function.Periodic.{0, u1} Real α Real.instAddReal f c) -> (Ne.{1} Real c (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Continuous.{0, u1} Real α (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) _inst_1 f) -> (IsCompact.{u1} α _inst_1 (Set.range.{u1, 1} α Real f))
-Case conversion may be inaccurate. Consider using '#align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuousₓ'. -/
 /-- A continuous, periodic function has compact range. -/
 theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
     (hc : c ≠ 0) (hf : Continuous f) : IsCompact (range f) :=
@@ -340,12 +238,6 @@ theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 #align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuous
 
-/- warning: function.periodic.bounded_of_continuous -> Function.Periodic.bounded_of_continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Real -> α} {c : Real}, (Function.Periodic.{0, u1} Real α Real.hasAdd f c) -> (Ne.{1} Real c (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Continuous.{0, u1} Real α (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) -> (Metric.Bounded.{u1} α _inst_1 (Set.range.{u1, 1} α Real f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Real -> α} {c : Real}, (Function.Periodic.{0, u1} Real α Real.instAddReal f c) -> (Ne.{1} Real c (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Continuous.{0, u1} Real α (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) -> (Metric.Bounded.{u1} α _inst_1 (Set.range.{u1, 1} α Real f))
-Case conversion may be inaccurate. Consider using '#align function.periodic.bounded_of_continuous Function.Periodic.bounded_of_continuousₓ'. -/
 /-- A continuous, periodic function is bounded. -/
 theorem Periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
     (hc : c ≠ 0) (hf : Continuous f) : Bounded (range f) :=
@@ -362,12 +254,6 @@ namespace Int
 
 open Metric
 
-/- warning: int.tendsto_coe_cofinite -> Int.tendsto_coe_cofinite is a dubious translation:
-lean 3 declaration is
-  Filter.Tendsto.{0, 0} Int Real ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Real (HasLiftT.mk.{1, 1} Int Real (CoeTCₓ.coe.{1, 1} Int Real (Int.castCoe.{0} Real Real.hasIntCast)))) (Filter.cofinite.{0} Int) (Filter.cocompact.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)))
-but is expected to have type
-  Filter.Tendsto.{0, 0} Int Real (Int.cast.{0} Real Real.intCast) (Filter.cofinite.{0} Int) (Filter.cocompact.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)))
-Case conversion may be inaccurate. Consider using '#align int.tendsto_coe_cofinite Int.tendsto_coe_cofiniteₓ'. -/
 /-- Under the coercion from `ℤ` to `ℝ`, inverse images of compact sets are finite. -/
 theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) :=
   by
@@ -377,12 +263,6 @@ theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact �
   simp [Real.ball_eq_Ioo, Set.finite_Ioo]
 #align int.tendsto_coe_cofinite Int.tendsto_coe_cofinite
 
-/- warning: int.tendsto_zmultiples_hom_cofinite -> Int.tendsto_zmultiplesHom_cofinite is a dubious translation:
-lean 3 declaration is
-  forall {a : Real}, (Ne.{1} Real a (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Tendsto.{0, 0} Int Real (coeFn.{1, 1} (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup)))) (fun (_x : AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup)))) => Int -> Real) (AddMonoidHom.hasCoeToFun.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup)))) (coeFn.{1, 1} (Equiv.{1, 1} Real (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup))))) (fun (_x : Equiv.{1, 1} Real (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup))))) => Real -> (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup))))) (Equiv.hasCoeToFun.{1, 1} Real (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup))))) (zmultiplesHom.{0} Real Real.addGroup) a)) (Filter.cofinite.{0} Int) (Filter.cocompact.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))))
-but is expected to have type
-  forall {a : Real}, (Ne.{1} Real a (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Tendsto.{0, 0} Int Real (FunLike.coe.{1, 1, 1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Real) => AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal)))) a) Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => Real) _x) (AddHomClass.toFunLike.{0, 0, 0} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Real) => AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal)))) a) Int Real (AddZeroClass.toAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt)) (AddZeroClass.toAdd.{0} Real (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal)))) (AddMonoidHomClass.toAddHomClass.{0, 0, 0} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Real) => AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal)))) a) Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal))) (AddMonoidHom.addMonoidHomClass.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal)))))) (FunLike.coe.{1, 1, 1} (Equiv.{1, 1} Real (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal))))) Real (fun (_x : Real) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Real) => AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal)))) _x) (Equiv.instFunLikeEquiv.{1, 1} Real (AddMonoidHom.{0, 0} Int Real (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{0} Real (SubNegMonoid.toAddMonoid.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal))))) (zmultiplesHom.{0} Real Real.instAddGroupReal) a)) (Filter.cofinite.{0} Int) (Filter.cocompact.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))))
-Case conversion may be inaccurate. Consider using '#align int.tendsto_zmultiples_hom_cofinite Int.tendsto_zmultiplesHom_cofiniteₓ'. -/
 /-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.
 inverse images of compact sets are finite. -/
 theorem tendsto_zmultiplesHom_cofinite {a : ℝ} (ha : a ≠ 0) :
@@ -397,9 +277,6 @@ end Int
 
 namespace AddSubgroup
 
-/- warning: add_subgroup.tendsto_zmultiples_subtype_cofinite -> AddSubgroup.tendsto_zmultiples_subtype_cofinite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofiniteₓ'. -/
 /-- The subgroup "multiples of `a`" (`zmultiples a`) is a discrete subgroup of `ℝ`, i.e. its
 intersection with compact sets is finite. -/
 theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :

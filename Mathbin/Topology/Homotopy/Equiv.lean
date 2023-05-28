@@ -63,23 +63,11 @@ namespace HomotopyEquiv
 instance : CoeFun (HomotopyEquiv X Y) fun _ => X → Y :=
   ⟨fun h => h.toFun⟩
 
-/- warning: continuous_map.homotopy_equiv.to_fun_eq_coe -> ContinuousMap.HomotopyEquiv.toFun_eq_coe is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} ((fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.HomotopyEquiv.toFun.{u1, u2} X Y _inst_1 _inst_2 h)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) (ContinuousMap.HomotopyEquiv.toFun.{u1, u2} X Y _inst_1 _inst_2 h)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.HomotopyEquiv.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) h)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (forall (a : X), (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) a) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) (ContinuousMap.HomotopyEquiv.toFun.{u1, u2} X Y _inst_1 _inst_2 h)) (ContinuousMap.HomotopyEquiv.toFun'.{u1, u2} X Y _inst_1 _inst_2 h)
-Case conversion may be inaccurate. Consider using '#align continuous_map.homotopy_equiv.to_fun_eq_coe ContinuousMap.HomotopyEquiv.toFun_eq_coeₓ'. -/
 @[simp]
 theorem toFun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
   rfl
 #align continuous_map.homotopy_equiv.to_fun_eq_coe ContinuousMap.HomotopyEquiv.toFun_eq_coe
 
-/- warning: continuous_map.homotopy_equiv.continuous -> ContinuousMap.HomotopyEquiv.continuous is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2), Continuous.{u1, u2} X Y _inst_1 _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.HomotopyEquiv.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) h)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2), Continuous.{u1, u2} X Y _inst_1 _inst_2 (ContinuousMap.HomotopyEquiv.toFun'.{u1, u2} X Y _inst_1 _inst_2 h)
-Case conversion may be inaccurate. Consider using '#align continuous_map.homotopy_equiv.continuous ContinuousMap.HomotopyEquiv.continuousₓ'. -/
 @[continuity]
 theorem continuous (h : HomotopyEquiv X Y) : Continuous h :=
   h.toFun.Continuous
@@ -105,12 +93,6 @@ def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y
 #align homeomorph.to_homotopy_equiv Homeomorph.toHomotopyEquiv
 -/
 
-/- warning: homeomorph.coe_to_homotopy_equiv -> Homeomorph.coe_toHomotopyEquiv is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : Homeomorph.{u1, u2} X Y _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (X -> Y) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.HomotopyEquiv.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) (Homeomorph.toHomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2 h)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : Homeomorph.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (Homeomorph.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) h)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : Homeomorph.{u1, u2} X Y _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (X -> Y) (ContinuousMap.HomotopyEquiv.toFun'.{u1, u2} X Y _inst_1 _inst_2 (Homeomorph.toHomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2 h)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => Y) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} X Y _inst_1 _inst_2) X Y (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} X Y _inst_1 _inst_2) X Y (Homeomorph.instEquivLikeHomeomorph.{u1, u2} X Y _inst_1 _inst_2))) h)
-Case conversion may be inaccurate. Consider using '#align homeomorph.coe_to_homotopy_equiv Homeomorph.coe_toHomotopyEquivₓ'. -/
 @[simp]
 theorem coe_toHomotopyEquiv (h : X ≃ₜ Y) : ⇑h.toHomotopyEquiv = h :=
   rfl
@@ -133,12 +115,6 @@ def symm (h : X ≃ₕ Y) : Y ≃ₕ X where
 #align continuous_map.homotopy_equiv.symm ContinuousMap.HomotopyEquiv.symm
 -/
 
-/- warning: continuous_map.homotopy_equiv.coe_inv_fun -> ContinuousMap.HomotopyEquiv.coe_invFun is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (Y -> X) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (ContinuousMap.{u2, u1} Y X _inst_2 _inst_1) (fun (_x : ContinuousMap.{u2, u1} Y X _inst_2 _inst_1) => Y -> X) (ContinuousMap.hasCoeToFun.{u2, u1} Y X _inst_2 _inst_1) (ContinuousMap.HomotopyEquiv.invFun.{u1, u2} X Y _inst_1 _inst_2 h)) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (ContinuousMap.HomotopyEquiv.{u2, u1} Y X _inst_2 _inst_1) (fun (_x : ContinuousMap.HomotopyEquiv.{u2, u1} Y X _inst_2 _inst_1) => Y -> X) (ContinuousMap.HomotopyEquiv.hasCoeToFun.{u2, u1} Y X _inst_2 _inst_1) (ContinuousMap.HomotopyEquiv.symm.{u1, u2} X Y _inst_1 _inst_2 h))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (h : ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (forall (ᾰ : Y), (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : Y) => X) ᾰ) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (ContinuousMap.{u2, u1} Y X _inst_2 _inst_1) Y (fun (_x : Y) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : Y) => X) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u2, u1} (ContinuousMap.{u2, u1} Y X _inst_2 _inst_1) Y X _inst_2 _inst_1 (ContinuousMap.instContinuousMapClassContinuousMap.{u2, u1} Y X _inst_2 _inst_1)) (ContinuousMap.HomotopyEquiv.invFun.{u1, u2} X Y _inst_1 _inst_2 h)) (ContinuousMap.HomotopyEquiv.toFun'.{u2, u1} Y X _inst_2 _inst_1 (ContinuousMap.HomotopyEquiv.symm.{u1, u2} X Y _inst_1 _inst_2 h))
-Case conversion may be inaccurate. Consider using '#align continuous_map.homotopy_equiv.coe_inv_fun ContinuousMap.HomotopyEquiv.coe_invFunₓ'. -/
 @[simp]
 theorem coe_invFun (h : HomotopyEquiv X Y) : (⇑h.invFun : Y → X) = ⇑h.symm :=
   rfl

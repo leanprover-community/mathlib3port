@@ -48,11 +48,6 @@ theorem sublists'_singleton (a : α) : sublists' [a] = [[], [a]] :=
 -/
 
 /- warning: list.map_sublists'_aux clashes with [anonymous] -> [anonymous]
-warning: list.map_sublists'_aux -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} (g : (List.{v} β) -> (List.{w} γ)) (l : List.{u} α) (f : (List.{u} α) -> (List.{v} β)) (r : List.{v} (List.{v} β)), Eq.{succ w} (List.{w} (List.{w} γ)) (List.map.{v, w} (List.{v} β) (List.{w} γ) g (List.sublists'Aux.{u, v} α β l f r)) (List.sublists'Aux.{u, w} α γ l (Function.comp.{succ u, succ v, succ w} (List.{u} α) (List.{v} β) (List.{w} γ) g f) (List.map.{v, w} (List.{v} β) (List.{w} γ) g r))
-but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}}, (Nat -> α -> β) -> Nat -> (List.{u} α) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align list.map_sublists'_aux [anonymous]ₓ'. -/
 theorem [anonymous] (g : List β → List γ) (l : List α) (f r) :
     map g (sublists'Aux l f r) = sublists'Aux l (g ∘ f) (map g r) := by
@@ -60,11 +55,6 @@ theorem [anonymous] (g : List β → List γ) (l : List α) (f r) :
 #align list.map_sublists'_aux [anonymous]
 
 /- warning: list.sublists'_aux_append clashes with [anonymous] -> [anonymous]
-warning: list.sublists'_aux_append -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r' : List.{u2} (List.{u2} β)) (l : List.{u1} α) (f : (List.{u1} α) -> (List.{u2} β)) (r : List.{u2} (List.{u2} β)), Eq.{succ u2} (List.{u2} (List.{u2} β)) (List.sublists'Aux.{u1, u2} α β l f (Append.append.{u2} (List.{u2} (List.{u2} β)) (List.hasAppend.{u2} (List.{u2} β)) r r')) (Append.append.{u2} (List.{u2} (List.{u2} β)) (List.hasAppend.{u2} (List.{u2} β)) (List.sublists'Aux.{u1, u2} α β l f r) r')
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists'_aux_append [anonymous]ₓ'. -/
 theorem [anonymous] (r' : List (List β)) (l : List α) (f r) :
     sublists'Aux l f (r ++ r') = sublists'Aux l f r ++ r' := by
@@ -72,11 +62,6 @@ theorem [anonymous] (r' : List (List β)) (l : List α) (f r) :
 #align list.sublists'_aux_append [anonymous]
 
 /- warning: list.sublists'_aux_eq_sublists' clashes with [anonymous] -> [anonymous]
-warning: list.sublists'_aux_eq_sublists' -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : List.{u1} α) (f : (List.{u1} α) -> (List.{u2} β)) (r : List.{u2} (List.{u2} β)), Eq.{succ u2} (List.{u2} (List.{u2} β)) (List.sublists'Aux.{u1, u2} α β l f r) (Append.append.{u2} (List.{u2} (List.{u2} β)) (List.hasAppend.{u2} (List.{u2} β)) (List.map.{u1, u2} (List.{u1} α) (List.{u2} β) f (List.sublists'.{u1} α l)) r)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists'_aux_eq_sublists' [anonymous]ₓ'. -/
 theorem [anonymous] (l f r) : @sublists'Aux α β l f r = map f (sublists' l) ++ r := by
   rw [sublists', map_sublists'_aux, ← sublists'_aux_append] <;> rfl
@@ -133,11 +118,6 @@ theorem sublists_singleton (a : α) : sublists [a] = [[], [a]] :=
 -/
 
 /- warning: list.sublists_aux₁_eq_sublists_aux clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux₁_eq_sublists_aux -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : List.{u1} α) (f : (List.{u1} α) -> (List.{u2} β)), Eq.{succ u2} (List.{u2} β) (List.sublistsAux₁.{u1, u2} α β l f) (List.sublistsAux.{u1, u2} α β l (fun (ys : List.{u1} α) (r : List.{u2} β) => Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (f ys) r))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_eq_sublists_aux [anonymous]ₓ'. -/
 theorem [anonymous] :
     ∀ (l) (f : List α → List β), sublistsAux₁ l f = sublistsAux l fun ys r => f ys ++ r
@@ -146,22 +126,12 @@ theorem [anonymous] :
 #align list.sublists_aux₁_eq_sublists_aux [anonymous]
 
 /- warning: list.sublists_aux_cons_eq_sublists_aux₁ clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux_cons_eq_sublists_aux₁ -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (l : List.{u} α), Eq.{succ u} (List.{u} (List.{u} α)) (List.sublistsAux.{u, u} α (List.{u} α) l (List.cons.{u} (List.{u} α))) (List.sublistsAux₁.{u, u} α (List.{u} α) l (fun (x : List.{u} α) => List.cons.{u} (List.{u} α) x (List.nil.{u} (List.{u} α))))
-but is expected to have type
-  forall {α : Type.{u}} {l : Type.{v}}, (Nat -> α -> l) -> Nat -> (List.{u} α) -> (List.{v} l)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux_cons_eq_sublists_aux₁ [anonymous]ₓ'. -/
 theorem [anonymous] (l : List α) : sublistsAux l cons = sublistsAux₁ l fun x => [x] := by
   rw [sublists_aux₁_eq_sublists_aux] <;> rfl
 #align list.sublists_aux_cons_eq_sublists_aux₁ [anonymous]
 
 /- warning: list.sublists_aux_eq_foldr.aux clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux_eq_foldr.aux -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {a : α} {l : List.{u1} α}, (forall (f : (List.{u1} α) -> (List.{u2} β) -> (List.{u2} β)), Eq.{succ u2} (List.{u2} β) (List.sublistsAux.{u1, u2} α β l f) (List.foldr.{u1, u2} (List.{u1} α) (List.{u2} β) f (List.nil.{u2} β) (List.sublistsAux.{u1, u1} α (List.{u1} α) l (List.cons.{u1} (List.{u1} α))))) -> (forall (f : (List.{u1} α) -> (List.{u1} (List.{u1} α)) -> (List.{u1} (List.{u1} α))), Eq.{succ u1} (List.{u1} (List.{u1} α)) (List.sublistsAux.{u1, u1} α (List.{u1} α) l f) (List.foldr.{u1, u1} (List.{u1} α) (List.{u1} (List.{u1} α)) f (List.nil.{u1} (List.{u1} α)) (List.sublistsAux.{u1, u1} α (List.{u1} α) l (List.cons.{u1} (List.{u1} α))))) -> (forall (f : (List.{u1} α) -> (List.{u2} β) -> (List.{u2} β)), Eq.{succ u2} (List.{u2} β) (List.sublistsAux.{u1, u2} α β (List.cons.{u1} α a l) f) (List.foldr.{u1, u2} (List.{u1} α) (List.{u2} β) f (List.nil.{u2} β) (List.sublistsAux.{u1, u1} α (List.{u1} α) (List.cons.{u1} α a l) (List.cons.{u1} (List.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux_eq_foldr.aux [anonymous]ₓ'. -/
 theorem [anonymous] {a : α} {l : List α}
     (IH₁ : ∀ f : List α → List β → List β, sublistsAux l f = foldr f [] (sublistsAux l cons))
@@ -177,11 +147,6 @@ theorem [anonymous] {a : α} {l : List α}
 #align list.sublists_aux_eq_foldr.aux [anonymous]
 
 /- warning: list.sublists_aux_eq_foldr clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux_eq_foldr -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : List.{u1} α) (f : (List.{u1} α) -> (List.{u2} β) -> (List.{u2} β)), Eq.{succ u2} (List.{u2} β) (List.sublistsAux.{u1, u2} α β l f) (List.foldr.{u1, u2} (List.{u1} α) (List.{u2} β) f (List.nil.{u2} β) (List.sublistsAux.{u1, u1} α (List.{u1} α) l (List.cons.{u1} (List.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux_eq_foldr [anonymous]ₓ'. -/
 theorem [anonymous] (l : List α) :
     ∀ f : List α → List β → List β, sublistsAux l f = foldr f [] (sublistsAux l cons) :=
@@ -196,11 +161,6 @@ theorem [anonymous] (l : List α) :
 #align list.sublists_aux_eq_foldr [anonymous]
 
 /- warning: list.sublists_aux_cons_cons clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux_cons_cons -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (l : List.{u} α) (a : α), Eq.{succ u} (List.{u} (List.{u} α)) (List.sublistsAux.{u, u} α (List.{u} α) (List.cons.{u} α a l) (List.cons.{u} (List.{u} α))) (List.cons.{u} (List.{u} α) (List.cons.{u} α a (List.nil.{u} α)) (List.foldr.{u, u} (List.{u} α) (List.{u} (List.{u} α)) (fun (ys : List.{u} α) (r : List.{u} (List.{u} α)) => List.cons.{u} (List.{u} α) ys (List.cons.{u} (List.{u} α) (List.cons.{u} α a ys) r)) (List.nil.{u} (List.{u} α)) (List.sublistsAux.{u, u} α (List.{u} α) l (List.cons.{u} (List.{u} α)))))
-but is expected to have type
-  forall {α : Type.{u}} {l : Type.{v}}, (Nat -> α -> l) -> Nat -> (List.{u} α) -> (List.{v} l)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux_cons_cons [anonymous]ₓ'. -/
 theorem [anonymous] (l : List α) (a : α) :
     sublistsAux (a :: l) cons =
@@ -209,11 +169,6 @@ theorem [anonymous] (l : List α) (a : α) :
 #align list.sublists_aux_cons_cons [anonymous]
 
 /- warning: list.sublists_aux₁_append clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux₁_append -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : List.{u1} α) (l₂ : List.{u1} α) (f : (List.{u1} α) -> (List.{u2} β)), Eq.{succ u2} (List.{u2} β) (List.sublistsAux₁.{u1, u2} α β (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l₁ l₂) f) (Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (List.sublistsAux₁.{u1, u2} α β l₁ f) (List.sublistsAux₁.{u1, u2} α β l₂ (fun (x : List.{u1} α) => Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (f x) (List.sublistsAux₁.{u1, u2} α β l₁ (Function.comp.{succ u1, succ u1, succ u2} (List.{u1} α) (List.{u1} α) (List.{u2} β) f (fun (_x : List.{u1} α) => Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) _x x))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_append [anonymous]ₓ'. -/
 theorem [anonymous] :
     ∀ (l₁ l₂ : List α) (f : List α → List β),
@@ -225,11 +180,6 @@ theorem [anonymous] :
 #align list.sublists_aux₁_append [anonymous]
 
 /- warning: list.sublists_aux₁_concat clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux₁_concat -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : List.{u1} α) (a : α) (f : (List.{u1} α) -> (List.{u2} β)), Eq.{succ u2} (List.{u2} β) (List.sublistsAux₁.{u1, u2} α β (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l (List.cons.{u1} α a (List.nil.{u1} α))) f) (Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (List.sublistsAux₁.{u1, u2} α β l f) (f (List.cons.{u1} α a (List.nil.{u1} α)))) (List.sublistsAux₁.{u1, u2} α β l (fun (x : List.{u1} α) => f (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) x (List.cons.{u1} α a (List.nil.{u1} α))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_concat [anonymous]ₓ'. -/
 theorem [anonymous] (l : List α) (a : α) (f : List α → List β) :
     sublistsAux₁ (l ++ [a]) f = sublistsAux₁ l f ++ f [a] ++ sublistsAux₁ l fun x => f (x ++ [a]) :=
@@ -237,11 +187,6 @@ theorem [anonymous] (l : List α) (a : α) (f : List α → List β) :
 #align list.sublists_aux₁_concat [anonymous]
 
 /- warning: list.sublists_aux₁_bind clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux₁_bind -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} (l : List.{u} α) (f : (List.{u} α) -> (List.{v} β)) (g : β -> (List.{w} γ)), Eq.{succ w} (List.{w} γ) (List.bind.{v, w} β γ (List.sublistsAux₁.{u, v} α β l f) g) (List.sublistsAux₁.{u, w} α γ l (fun (x : List.{u} α) => List.bind.{v, w} β γ (f x) g))
-but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}}, (Nat -> α -> β) -> Nat -> (List.{u} α) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_bind [anonymous]ₓ'. -/
 theorem [anonymous] :
     ∀ (l : List α) (f : List α → List β) (g : β → List γ),
@@ -251,11 +196,6 @@ theorem [anonymous] :
 #align list.sublists_aux₁_bind [anonymous]
 
 /- warning: list.sublists_aux_cons_append clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux_cons_append -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (l₁ : List.{u} α) (l₂ : List.{u} α), Eq.{succ u} (List.{u} (List.{u} α)) (List.sublistsAux.{u, u} α (List.{u} α) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂) (List.cons.{u} (List.{u} α))) (Append.append.{u} (List.{u} (List.{u} α)) (List.hasAppend.{u} (List.{u} α)) (List.sublistsAux.{u, u} α (List.{u} α) l₁ (List.cons.{u} (List.{u} α))) (Bind.bind.{u, u} List.{u} (Monad.toHasBind.{u, u} List.{u} List.monad.{u}) (List.{u} α) (List.{u} α) (List.sublistsAux.{u, u} α (List.{u} α) l₂ (List.cons.{u} (List.{u} α))) (fun (x : List.{u} α) => Functor.map.{u, u} List.{u} (Traversable.toFunctor.{u} List.{u} List.traversable.{u}) (List.{u} α) (List.{u} α) (fun (_x : List.{u} α) => Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) _x x) (List.sublists.{u} α l₁))))
-but is expected to have type
-  forall {α : Type.{u}} {l₁ : Type.{v}}, (Nat -> α -> l₁) -> Nat -> (List.{u} α) -> (List.{v} l₁)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux_cons_append [anonymous]ₓ'. -/
 theorem [anonymous] (l₁ l₂ : List α) :
     sublistsAux (l₁ ++ l₂) cons =
@@ -269,12 +209,6 @@ theorem [anonymous] (l₁ l₂ : List α) :
   rw [← bind_ret_eq_map, sublists_aux₁_bind]; exact (append_nil _).symm
 #align list.sublists_aux_cons_append [anonymous]
 
-/- warning: list.sublists_append -> List.sublists_append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : List.{u1} α) (l₂ : List.{u1} α), Eq.{succ u1} (List.{u1} (List.{u1} α)) (List.sublists.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l₁ l₂)) (Bind.bind.{u1, u1} List.{u1} (Monad.toHasBind.{u1, u1} List.{u1} List.monad.{u1}) (List.{u1} α) (List.{u1} α) (List.sublists.{u1} α l₂) (fun (x : List.{u1} α) => Functor.map.{u1, u1} List.{u1} (Traversable.toFunctor.{u1} List.{u1} List.traversable.{u1}) (List.{u1} α) (List.{u1} α) (fun (_x : List.{u1} α) => Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) _x x) (List.sublists.{u1} α l₁)))
-but is expected to have type
-  forall {α : Type.{u1}} (l₁ : List.{u1} α) (l₂ : List.{u1} α), Eq.{succ u1} (List.{u1} (List.{u1} α)) (List.sublists.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l₁ l₂)) (Bind.bind.{u1, u1} List.{u1} (Monad.toBind.{u1, u1} List.{u1} List.instMonadList.{u1}) (List.{u1} α) (List.{u1} α) (List.sublists.{u1} α l₂) (fun (x : List.{u1} α) => List.map.{u1, u1} (List.{u1} α) (List.{u1} α) (fun (_x : List.{u1} α) => HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) _x x) (List.sublists.{u1} α l₁)))
-Case conversion may be inaccurate. Consider using '#align list.sublists_append List.sublists_appendₓ'. -/
 theorem sublists_append (l₁ l₂ : List α) :
     sublists (l₁ ++ l₂) = do
       let x ← sublists l₂
@@ -323,11 +257,6 @@ theorem sublists'_eq_sublists (l : List α) : sublists' l = map reverse (sublist
 -/
 
 /- warning: list.sublists_aux_ne_nil clashes with [anonymous] -> [anonymous]
-warning: list.sublists_aux_ne_nil -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (l : List.{u} α), Not (Membership.Mem.{u, u} (List.{u} α) (List.{u} (List.{u} α)) (List.hasMem.{u} (List.{u} α)) (List.nil.{u} α) (List.sublistsAux.{u, u} α (List.{u} α) l (List.cons.{u} (List.{u} α))))
-but is expected to have type
-  forall {α : Type.{u}} {l : Type.{v}}, (Nat -> α -> l) -> Nat -> (List.{u} α) -> (List.{v} l)
 Case conversion may be inaccurate. Consider using '#align list.sublists_aux_ne_nil [anonymous]ₓ'. -/
 theorem [anonymous] : ∀ l : List α, [] ∉ sublistsAux l cons
   | [] => id
@@ -389,12 +318,6 @@ def sublistsLen {α : Type _} (n : ℕ) (l : List α) : List (List α) :=
 #align list.sublists_len List.sublistsLen
 -/
 
-/- warning: list.sublists_len_aux_append -> List.sublistsLenAux_append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (n : Nat) (l : List.{u1} α) (f : (List.{u1} α) -> β) (g : β -> γ) (r : List.{u2} β) (s : List.{u3} γ), Eq.{succ u3} (List.{u3} γ) (List.sublistsLenAux.{u1, u3} α γ n l (Function.comp.{succ u1, succ u2, succ u3} (List.{u1} α) β γ g f) (Append.append.{u3} (List.{u3} γ) (List.hasAppend.{u3} γ) (List.map.{u2, u3} β γ g r) s)) (Append.append.{u3} (List.{u3} γ) (List.hasAppend.{u3} γ) (List.map.{u2, u3} β γ g (List.sublistsLenAux.{u1, u2} α β n l f r)) s)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (n : Nat) (l : List.{u3} α) (f : (List.{u3} α) -> β) (g : β -> γ) (r : List.{u2} β) (s : List.{u1} γ), Eq.{succ u1} (List.{u1} γ) (List.sublistsLenAux.{u3, u1} α γ n l (Function.comp.{succ u3, succ u2, succ u1} (List.{u3} α) β γ g f) (HAppend.hAppend.{u1, u1, u1} (List.{u1} γ) (List.{u1} γ) (List.{u1} γ) (instHAppend.{u1} (List.{u1} γ) (List.instAppendList.{u1} γ)) (List.map.{u2, u1} β γ g r) s)) (HAppend.hAppend.{u1, u1, u1} (List.{u1} γ) (List.{u1} γ) (List.{u1} γ) (instHAppend.{u1} (List.{u1} γ) (List.instAppendList.{u1} γ)) (List.map.{u2, u1} β γ g (List.sublistsLenAux.{u3, u2} α β n l f r)) s)
-Case conversion may be inaccurate. Consider using '#align list.sublists_len_aux_append List.sublistsLenAux_appendₓ'. -/
 theorem sublistsLenAux_append {α β γ : Type _} :
     ∀ (n : ℕ) (l : List α) (f : List α → β) (g : β → γ) (r : List β) (s : List γ),
       sublistsLenAux n l (g ∘ f) (r.map g ++ s) = (sublistsLenAux n l f r).map g ++ s
@@ -406,23 +329,11 @@ theorem sublistsLenAux_append {α β γ : Type _} :
       sublists_len_aux_append]
 #align list.sublists_len_aux_append List.sublistsLenAux_append
 
-/- warning: list.sublists_len_aux_eq -> List.sublistsLenAux_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : List.{u1} α) (n : Nat) (f : (List.{u1} α) -> β) (r : List.{u2} β), Eq.{succ u2} (List.{u2} β) (List.sublistsLenAux.{u1, u2} α β n l f r) (Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (List.map.{u1, u2} (List.{u1} α) β f (List.sublistsLen.{u1} α n l)) r)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (l : List.{u2} α) (n : Nat) (f : (List.{u2} α) -> β) (r : List.{u1} β), Eq.{succ u1} (List.{u1} β) (List.sublistsLenAux.{u2, u1} α β n l f r) (HAppend.hAppend.{u1, u1, u1} (List.{u1} β) (List.{u1} β) (List.{u1} β) (instHAppend.{u1} (List.{u1} β) (List.instAppendList.{u1} β)) (List.map.{u2, u1} (List.{u2} α) β f (List.sublistsLen.{u2} α n l)) r)
-Case conversion may be inaccurate. Consider using '#align list.sublists_len_aux_eq List.sublistsLenAux_eqₓ'. -/
 theorem sublistsLenAux_eq {α β : Type _} (l : List α) (n) (f : List α → β) (r) :
     sublistsLenAux n l f r = (sublistsLen n l).map f ++ r := by
   rw [sublists_len, ← sublists_len_aux_append] <;> rfl
 #align list.sublists_len_aux_eq List.sublistsLenAux_eq
 
-/- warning: list.sublists_len_aux_zero -> List.sublistsLenAux_zero is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {α : Type.{u2}} (l : List.{u2} α) (f : (List.{u2} α) -> β) (r : List.{u1} β), Eq.{succ u1} (List.{u1} β) (List.sublistsLenAux.{u2, u1} α β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) l f r) (List.cons.{u1} β (f (List.nil.{u2} α)) r)
-but is expected to have type
-  forall {β : Type.{u2}} {α : Type.{u1}} (l : List.{u1} α) (f : (List.{u1} α) -> β) (r : List.{u2} β), Eq.{succ u2} (List.{u2} β) (List.sublistsLenAux.{u1, u2} α β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) l f r) (List.cons.{u2} β (f (List.nil.{u1} α)) r)
-Case conversion may be inaccurate. Consider using '#align list.sublists_len_aux_zero List.sublistsLenAux_zeroₓ'. -/
 theorem sublistsLenAux_zero {α : Type _} (l : List α) (f : List α → β) (r) :
     sublistsLenAux 0 l f r = f [] :: r := by cases l <;> rfl
 #align list.sublists_len_aux_zero List.sublistsLenAux_zero

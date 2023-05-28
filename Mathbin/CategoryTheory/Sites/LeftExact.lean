@@ -40,9 +40,6 @@ noncomputable section
 
 namespace CategoryTheory.GrothendieckTopology
 
-/- warning: category_theory.grothendieck_topology.cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation -> CategoryTheory.GrothendieckTopology.coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation CategoryTheory.GrothendieckTopology.coneCompEvaluationOfConeCompDiagramFunctorCompEvaluationₓ'. -/
 /-- An auxiliary definition to be used in the proof of the fact that
 `J.diagram_functor D X` preserves limits. -/
 @[simps]
@@ -62,9 +59,6 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
         simp only [multiequalizer.lift_ι, category.assoc] }
 #align category_theory.grothendieck_topology.cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation CategoryTheory.GrothendieckTopology.coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation
 
-/- warning: category_theory.grothendieck_topology.lift_to_diagram_limit_obj -> CategoryTheory.GrothendieckTopology.liftToDiagramLimitObj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.lift_to_diagram_limit_obj CategoryTheory.GrothendieckTopology.liftToDiagramLimitObjₓ'. -/
 /-- An auxiliary definition to be used in the proof of the fact that
 `J.diagram_functor D X` preserves limits. -/
 abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLimitsOfShape K D]
@@ -128,9 +122,6 @@ variable [ConcreteCategory.{max v u} D]
 
 variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
-/- warning: category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj -> CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObjₓ'. -/
 /-- An auxiliary definition to be used in the proof that `J.plus_functor D` commutes
 with finite limits. -/
 def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
@@ -160,9 +151,6 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
   limit.lift _ S ≫ (HasLimit.isoOfNatIso s.symm).Hom ≫ e.inv ≫ p.inv
 #align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj
 
-/- warning: category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj_fac -> CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj_fac is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj_fac CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj_facₓ'. -/
 -- This lemma should not be used directly. Instead, one should use the fact that
 -- `J.plus_functor D` preserves finite limits, along with the fact that
 -- evaluation preserves limits.

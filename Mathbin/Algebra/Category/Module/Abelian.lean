@@ -35,12 +35,6 @@ namespace ModuleCat
 
 variable {R : Type u} [Ring R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
-/- warning: Module.normal_mono -> ModuleCat.normalMono is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {M : ModuleCat.{u1, u2} R _inst_1} {N : ModuleCat.{u1, u2} R _inst_1} (f : Quiver.Hom.{succ u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1))) M N), (CategoryTheory.Mono.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N f) -> (CategoryTheory.NormalMono.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.CategoryTheory.preadditive.{u1, u2} R _inst_1)) f)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {M : ModuleCat.{u1, u2} R _inst_1} {N : ModuleCat.{u1, u2} R _inst_1} (f : Quiver.Hom.{succ u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1))) M N), (CategoryTheory.Mono.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N f) -> (CategoryTheory.NormalMono.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) f)
-Case conversion may be inaccurate. Consider using '#align Module.normal_mono ModuleCat.normalMonoₓ'. -/
 /-- In the category of modules, every monomorphism is normal. -/
 def normalMono (hf : Mono f) : NormalMono f
     where
@@ -64,12 +58,6 @@ def normalMono (hf : Mono f) : NormalMono f
       by ext; rfl
 #align Module.normal_mono ModuleCat.normalMono
 
-/- warning: Module.normal_epi -> ModuleCat.normalEpi is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {M : ModuleCat.{u1, u2} R _inst_1} {N : ModuleCat.{u1, u2} R _inst_1} (f : Quiver.Hom.{succ u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1))) M N), (CategoryTheory.Epi.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N f) -> (CategoryTheory.NormalEpi.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.CategoryTheory.preadditive.{u1, u2} R _inst_1)) f)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {M : ModuleCat.{u1, u2} R _inst_1} {N : ModuleCat.{u1, u2} R _inst_1} (f : Quiver.Hom.{succ u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1))) M N), (CategoryTheory.Epi.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N f) -> (CategoryTheory.NormalEpi.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) M N (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, max u2 (succ u1)} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1) (ModuleCat.instPreadditiveModuleCatModuleCategory.{u1, u2} R _inst_1)) f)
-Case conversion may be inaccurate. Consider using '#align Module.normal_epi ModuleCat.normalEpiₓ'. -/
 /-- In the category of modules, every epimorphism is normal. -/
 def normalEpi (hf : Epi f) : NormalEpi f
     where
@@ -93,12 +81,6 @@ def normalEpi (hf : Epi f) : NormalEpi f
       by ext; rfl
 #align Module.normal_epi ModuleCat.normalEpi
 
-/- warning: Module.abelian -> ModuleCat.abelian is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], CategoryTheory.Abelian.{u2, max u1 (succ u2)} (ModuleCat.{u2, u1} R _inst_1) (ModuleCat.moduleCategory.{u2, u1} R _inst_1)
-but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R], CategoryTheory.Abelian.{u1, max (succ u1) u2} (ModuleCat.{u1, u2} R _inst_1) (ModuleCat.moduleCategory.{u1, u2} R _inst_1)
-Case conversion may be inaccurate. Consider using '#align Module.abelian ModuleCat.abelianₓ'. -/
 /-- The category of R-modules is abelian. -/
 instance abelian : Abelian (ModuleCat R)
     where
@@ -147,9 +129,6 @@ open LinearMap
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
-/- warning: Module.exact_iff -> ModuleCat.exact_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Module.exact_iff ModuleCat.exact_iffₓ'. -/
 theorem exact_iff : Exact f g ↔ f.range = g.ker :=
   by
   rw [abelian.exact_iff' f g (kernel_is_limit _) (cokernel_is_colimit _)]

@@ -63,12 +63,6 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {X ι : Type _}
 
-/- warning: uniform_space_of_dist -> UniformSpace.ofDist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (dist : α -> α -> Real), (forall (x : α), Eq.{1} Real (dist x x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (dist y x)) -> (forall (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (dist x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (dist x y) (dist y z))) -> (UniformSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} (dist : α -> α -> Real), (forall (x : α), Eq.{1} Real (dist x x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (dist y x)) -> (forall (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (dist x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (dist x y) (dist y z))) -> (UniformSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align uniform_space_of_dist UniformSpace.ofDistₓ'. -/
 /-- Construct a uniform structure from a distance function and metric space axioms -/
 def UniformSpace.ofDist (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
     (dist_comm : ∀ x y : α, dist x y = dist y x)
@@ -213,12 +207,6 @@ instance (priority := 200) PseudoMetricSpace.toEDist : EDist α :=
 #align pseudo_metric_space.to_has_edist PseudoMetricSpace.toEDist
 -/
 
-/- warning: pseudo_metric_space.of_dist_topology -> PseudoMetricSpace.ofDistTopology is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α), Eq.{1} Real (dist x x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (dist y x)) -> (forall (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (dist x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (dist x y) (dist y z))) -> (forall (s : Set.{u1} α), Iff (IsOpen.{u1} α _inst_2 s) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (y : α), (LT.lt.{0} Real Real.hasLt (dist x y) ε) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s)))))) -> (PseudoMetricSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α), Eq.{1} Real (dist x x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (dist y x)) -> (forall (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (dist x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (dist x y) (dist y z))) -> (forall (s : Set.{u1} α), Iff (IsOpen.{u1} α _inst_2 s) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (y : α), (LT.lt.{0} Real Real.instLTReal (dist x y) ε) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s)))))) -> (PseudoMetricSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align pseudo_metric_space.of_dist_topology PseudoMetricSpace.ofDistTopologyₓ'. -/
 /-- Construct a pseudo-metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
@@ -244,12 +232,6 @@ def PseudoMetricSpace.ofDistTopology {α : Type u} [TopologicalSpace α] (dist :
     cobounded_sets := rfl }
 #align pseudo_metric_space.of_dist_topology PseudoMetricSpace.ofDistTopology
 
-/- warning: dist_self -> dist_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{1} Real (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{1} Real (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align dist_self dist_selfₓ'. -/
 @[simp]
 theorem dist_self (x : α) : dist x x = 0 :=
   PseudoMetricSpace.dist_self x
@@ -267,42 +249,18 @@ theorem edist_dist (x y : α) : edist x y = ENNReal.ofReal (dist x y) :=
 #align edist_dist edist_dist
 -/
 
-/- warning: dist_triangle -> dist_triangle is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align dist_triangle dist_triangleₓ'. -/
 theorem dist_triangle (x y z : α) : dist x z ≤ dist x y + dist y z :=
   PseudoMetricSpace.dist_triangle x y z
 #align dist_triangle dist_triangle
 
-/- warning: dist_triangle_left -> dist_triangle_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) z x) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) z y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) z x) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) z y))
-Case conversion may be inaccurate. Consider using '#align dist_triangle_left dist_triangle_leftₓ'. -/
 theorem dist_triangle_left (x y z : α) : dist x y ≤ dist z x + dist z y := by
   rw [dist_comm z] <;> apply dist_triangle
 #align dist_triangle_left dist_triangle_left
 
-/- warning: dist_triangle_right -> dist_triangle_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x z) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x z) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align dist_triangle_right dist_triangle_rightₓ'. -/
 theorem dist_triangle_right (x y z : α) : dist x y ≤ dist x z + dist y z := by
   rw [dist_comm y] <;> apply dist_triangle
 #align dist_triangle_right dist_triangle_right
 
-/- warning: dist_triangle4 -> dist_triangle4 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α) (w : α), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x w) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y z)) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) z w))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α) (w : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x w) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y z)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) z w))
-Case conversion may be inaccurate. Consider using '#align dist_triangle4 dist_triangle4ₓ'. -/
 theorem dist_triangle4 (x y z w : α) : dist x w ≤ dist x y + dist y z + dist z w :=
   calc
     dist x w ≤ dist x z + dist z w := dist_triangle x z w
@@ -310,34 +268,16 @@ theorem dist_triangle4 (x y z w : α) : dist x w ≤ dist x y + dist y z + dist 
     
 #align dist_triangle4 dist_triangle4
 
-/- warning: dist_triangle4_left -> dist_triangle4_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x₁ : α) (y₁ : α) (x₂ : α) (y₂ : α), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₂ y₂) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ y₁) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y₁ y₂)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x₁ : α) (y₁ : α) (x₂ : α) (y₂ : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₂ y₂) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ y₁) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y₁ y₂)))
-Case conversion may be inaccurate. Consider using '#align dist_triangle4_left dist_triangle4_leftₓ'. -/
 theorem dist_triangle4_left (x₁ y₁ x₂ y₂ : α) :
     dist x₂ y₂ ≤ dist x₁ y₁ + (dist x₁ x₂ + dist y₁ y₂) := by
   rw [add_left_comm, dist_comm x₁, ← add_assoc]; apply dist_triangle4
 #align dist_triangle4_left dist_triangle4_left
 
-/- warning: dist_triangle4_right -> dist_triangle4_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x₁ : α) (y₁ : α) (x₂ : α) (y₂ : α), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ y₁) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y₁ y₂)) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₂ y₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x₁ : α) (y₁ : α) (x₂ : α) (y₂ : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ y₁) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y₁ y₂)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₂ y₂))
-Case conversion may be inaccurate. Consider using '#align dist_triangle4_right dist_triangle4_rightₓ'. -/
 theorem dist_triangle4_right (x₁ y₁ x₂ y₂ : α) :
     dist x₁ y₁ ≤ dist x₁ x₂ + dist y₁ y₂ + dist x₂ y₂ := by rw [add_right_comm, dist_comm y₁];
   apply dist_triangle4
 #align dist_triangle4_right dist_triangle4_right
 
-/- warning: dist_le_Ico_sum_dist -> dist_le_Ico_sum_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (f : Nat -> α) {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f m) (f n)) (Finset.sum.{0, 0} Real Nat Real.addCommMonoid (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder m n) (fun (i : Nat) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f i) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) i (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (f : Nat -> α) {m : Nat} {n : Nat}, (LE.le.{0} Nat instLENat m n) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f m) (f n)) (Finset.sum.{0, 0} Real Nat Real.instAddCommMonoidReal (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring m n) (fun (i : Nat) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f i) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align dist_le_Ico_sum_dist dist_le_Ico_sum_distₓ'. -/
 /-- The triangle (polygon) inequality for sequences of points; `finset.Ico` version. -/
 theorem dist_le_Ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
     dist (f m) (f n) ≤ ∑ i in Finset.Ico m n, dist (f i) (f (i + 1)) :=
@@ -354,24 +294,12 @@ theorem dist_le_Ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
       
 #align dist_le_Ico_sum_dist dist_le_Ico_sum_dist
 
-/- warning: dist_le_range_sum_dist -> dist_le_range_sum_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (f : Nat -> α) (n : Nat), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (f n)) (Finset.sum.{0, 0} Real Nat Real.addCommMonoid (Finset.range n) (fun (i : Nat) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f i) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) i (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (f : Nat -> α) (n : Nat), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f n)) (Finset.sum.{0, 0} Real Nat Real.instAddCommMonoidReal (Finset.range n) (fun (i : Nat) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f i) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))
-Case conversion may be inaccurate. Consider using '#align dist_le_range_sum_dist dist_le_range_sum_distₓ'. -/
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
 theorem dist_le_range_sum_dist (f : ℕ → α) (n : ℕ) :
     dist (f 0) (f n) ≤ ∑ i in Finset.range n, dist (f i) (f (i + 1)) :=
   Nat.Ico_zero_eq_range ▸ dist_le_Ico_sum_dist f (Nat.zero_le n)
 #align dist_le_range_sum_dist dist_le_range_sum_dist
 
-/- warning: dist_le_Ico_sum_of_dist_le -> dist_le_Ico_sum_of_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Nat -> α} {m : Nat} {n : Nat}, (LE.le.{0} Nat Nat.hasLe m n) -> (forall {d : Nat -> Real}, (forall {k : Nat}, (LE.le.{0} Nat Nat.hasLe m k) -> (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f k) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (d k))) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f m) (f n)) (Finset.sum.{0, 0} Real Nat Real.addCommMonoid (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder m n) (fun (i : Nat) => d i))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Nat -> α} {m : Nat} {n : Nat}, (LE.le.{0} Nat instLENat m n) -> (forall {d : Nat -> Real}, (forall {k : Nat}, (LE.le.{0} Nat instLENat m k) -> (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f k) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (d k))) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f m) (f n)) (Finset.sum.{0, 0} Real Nat Real.instAddCommMonoidReal (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring m n) (fun (i : Nat) => d i))))
-Case conversion may be inaccurate. Consider using '#align dist_le_Ico_sum_of_dist_le dist_le_Ico_sum_of_dist_leₓ'. -/
 /-- A version of `dist_le_Ico_sum_dist` with each intermediate distance replaced
 with an upper estimate. -/
 theorem dist_le_Ico_sum_of_dist_le {f : ℕ → α} {m n} (hmn : m ≤ n) {d : ℕ → ℝ}
@@ -381,12 +309,6 @@ theorem dist_le_Ico_sum_of_dist_le {f : ℕ → α} {m n} (hmn : m ≤ n) {d : �
     Finset.sum_le_sum fun k hk => hd (Finset.mem_Ico.1 hk).1 (Finset.mem_Ico.1 hk).2
 #align dist_le_Ico_sum_of_dist_le dist_le_Ico_sum_of_dist_le
 
-/- warning: dist_le_range_sum_of_dist_le -> dist_le_range_sum_of_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Nat -> α} (n : Nat) {d : Nat -> Real}, (forall {k : Nat}, (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f k) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (d k))) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (f n)) (Finset.sum.{0, 0} Real Nat Real.addCommMonoid (Finset.range n) (fun (i : Nat) => d i)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Nat -> α} (n : Nat) {d : Nat -> Real}, (forall {k : Nat}, (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f k) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (d k))) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f n)) (Finset.sum.{0, 0} Real Nat Real.instAddCommMonoidReal (Finset.range n) (fun (i : Nat) => d i)))
-Case conversion may be inaccurate. Consider using '#align dist_le_range_sum_of_dist_le dist_le_range_sum_of_dist_leₓ'. -/
 /-- A version of `dist_le_range_sum_dist` with each intermediate distance replaced
 with an upper estimate. -/
 theorem dist_le_range_sum_of_dist_le {f : ℕ → α} (n : ℕ) {d : ℕ → ℝ}
@@ -400,23 +322,11 @@ theorem swap_dist : Function.swap (@dist α _) = dist := by funext x y <;> exact
 #align swap_dist swap_dist
 -/
 
-/- warning: abs_dist_sub_le -> abs_dist_sub_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x z) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y z))) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x z) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y z))) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align abs_dist_sub_le abs_dist_sub_leₓ'. -/
 theorem abs_dist_sub_le (x y z : α) : |dist x z - dist y z| ≤ dist x y :=
   abs_sub_le_iff.2
     ⟨sub_le_iff_le_add.2 (dist_triangle _ _ _), sub_le_iff_le_add.2 (dist_triangle_left _ _ _)⟩
 #align abs_dist_sub_le abs_dist_sub_le
 
-/- warning: dist_nonneg -> dist_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α}, LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α}, LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align dist_nonneg dist_nonnegₓ'. -/
 theorem dist_nonneg {x y : α} : 0 ≤ dist x y :=
   PseudoMetricSpace.dist_nonneg' dist dist_self dist_comm dist_triangle
 #align dist_nonneg dist_nonneg
@@ -434,12 +344,6 @@ unsafe def _root_.tactic.positivity_dist : expr → tactic strictness
 
 end
 
-/- warning: abs_dist -> abs_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {a : α} {b : α}, Eq.{1} Real (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b)) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {a : α} {b : α}, Eq.{1} Real (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b)
-Case conversion may be inaccurate. Consider using '#align abs_dist abs_distₓ'. -/
 @[simp]
 theorem abs_dist {a b : α} : |dist a b| = dist a b :=
   abs_of_nonneg dist_nonneg
@@ -483,123 +387,57 @@ theorem coe_nnreal_ennreal_nndist (x y : α) : ↑(nndist x y) = edist x y :=
 #align coe_nnreal_ennreal_nndist coe_nnreal_ennreal_nndist
 -/
 
-/- warning: edist_lt_coe -> edist_lt_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) c)) (LT.lt.{0} NNReal (Preorder.toHasLt.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (ENNReal.some c)) (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-Case conversion may be inaccurate. Consider using '#align edist_lt_coe edist_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem edist_lt_coe {x y : α} {c : ℝ≥0} : edist x y < c ↔ nndist x y < c := by
   rw [edist_nndist, ENNReal.coe_lt_coe]
 #align edist_lt_coe edist_lt_coe
 
-/- warning: edist_le_coe -> edist_le_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) c)) (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (ENNReal.some c)) (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-Case conversion may be inaccurate. Consider using '#align edist_le_coe edist_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem edist_le_coe {x y : α} {c : ℝ≥0} : edist x y ≤ c ↔ nndist x y ≤ c := by
   rw [edist_nndist, ENNReal.coe_le_coe]
 #align edist_le_coe edist_le_coe
 
-/- warning: edist_lt_top -> edist_lt_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] (x : α) (y : α), LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_2) x y) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] (x : α) (y : α), LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_2) x y) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align edist_lt_top edist_lt_topₓ'. -/
 /-- In a pseudometric space, the extended distance is always finite-/
 theorem edist_lt_top {α : Type _} [PseudoMetricSpace α] (x y : α) : edist x y < ⊤ :=
   (edist_dist x y).symm ▸ ENNReal.ofReal_lt_top
 #align edist_lt_top edist_lt_top
 
-/- warning: edist_ne_top -> edist_ne_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align edist_ne_top edist_ne_topₓ'. -/
 /-- In a pseudometric space, the extended distance is always finite-/
 theorem edist_ne_top (x y : α) : edist x y ≠ ⊤ :=
   (edist_lt_top x y).Ne
 #align edist_ne_top edist_ne_top
 
-/- warning: nndist_self -> nndist_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (a : α), Eq.{1} NNReal (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) a a) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (a : α), Eq.{1} NNReal (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) a a) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))
-Case conversion may be inaccurate. Consider using '#align nndist_self nndist_selfₓ'. -/
 /-- `nndist x x` vanishes-/
 @[simp]
 theorem nndist_self (a : α) : nndist a a = 0 :=
   (NNReal.coe_eq_zero _).1 (dist_self a)
 #align nndist_self nndist_self
 
-/- warning: dist_nndist -> dist_nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α), Eq.{1} Real (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α), Eq.{1} Real (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (NNReal.toReal (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y))
-Case conversion may be inaccurate. Consider using '#align dist_nndist dist_nndistₓ'. -/
 /-- Express `dist` in terms of `nndist`-/
 theorem dist_nndist (x y : α) : dist x y = ↑(nndist x y) :=
   rfl
 #align dist_nndist dist_nndist
 
-/- warning: coe_nndist -> coe_nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α), Eq.{1} Real ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y)) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α), Eq.{1} Real (NNReal.toReal (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align coe_nndist coe_nndistₓ'. -/
 @[simp, norm_cast]
 theorem coe_nndist (x y : α) : ↑(nndist x y) = dist x y :=
   (dist_nndist x y).symm
 #align coe_nndist coe_nndist
 
-/- warning: dist_lt_coe -> dist_lt_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) c)) (LT.lt.{0} NNReal (Preorder.toHasLt.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (NNReal.toReal c)) (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-Case conversion may be inaccurate. Consider using '#align dist_lt_coe dist_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem dist_lt_coe {x y : α} {c : ℝ≥0} : dist x y < c ↔ nndist x y < c :=
   Iff.rfl
 #align dist_lt_coe dist_lt_coe
 
-/- warning: dist_le_coe -> dist_le_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) c)) (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {c : NNReal}, Iff (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (NNReal.toReal c)) (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) c)
-Case conversion may be inaccurate. Consider using '#align dist_le_coe dist_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem dist_le_coe {x y : α} {c : ℝ≥0} : dist x y ≤ c ↔ nndist x y ≤ c :=
   Iff.rfl
 #align dist_le_coe dist_le_coe
 
-/- warning: edist_lt_of_real -> edist_lt_ofReal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {r : Real}, Iff (LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (ENNReal.ofReal r)) (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) r)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {r : Real}, Iff (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (ENNReal.ofReal r)) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) r)
-Case conversion may be inaccurate. Consider using '#align edist_lt_of_real edist_lt_ofRealₓ'. -/
 @[simp]
 theorem edist_lt_ofReal {x y : α} {r : ℝ} : edist x y < ENNReal.ofReal r ↔ dist x y < r := by
   rw [edist_dist, ENNReal.ofReal_lt_ofReal_iff_of_nonneg dist_nonneg]
 #align edist_lt_of_real edist_lt_ofReal
 
-/- warning: edist_le_of_real -> edist_le_ofReal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {r : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Iff (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (ENNReal.ofReal r)) (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) r))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {r : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Iff (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) x y) (ENNReal.ofReal r)) (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) r))
-Case conversion may be inaccurate. Consider using '#align edist_le_of_real edist_le_ofRealₓ'. -/
 @[simp]
 theorem edist_le_ofReal {x y : α} {r : ℝ} (hr : 0 ≤ r) :
     edist x y ≤ ENNReal.ofReal r ↔ dist x y ≤ r := by
@@ -619,33 +457,15 @@ theorem nndist_comm (x y : α) : nndist x y = nndist y x := by
 #align nndist_comm nndist_comm
 -/
 
-/- warning: nndist_triangle -> nndist_triangle is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x z) (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x z) (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align nndist_triangle nndist_triangleₓ'. -/
 /-- Triangle inequality for the nonnegative distance-/
 theorem nndist_triangle (x y z : α) : nndist x z ≤ nndist x y + nndist y z :=
   dist_triangle _ _ _
 #align nndist_triangle nndist_triangle
 
-/- warning: nndist_triangle_left -> nndist_triangle_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) z x) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) z y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) z x) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) z y))
-Case conversion may be inaccurate. Consider using '#align nndist_triangle_left nndist_triangle_leftₓ'. -/
 theorem nndist_triangle_left (x y z : α) : nndist x y ≤ nndist z x + nndist z y :=
   dist_triangle_left _ _ _
 #align nndist_triangle_left nndist_triangle_left
 
-/- warning: nndist_triangle_right -> nndist_triangle_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x z) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) (y : α) (z : α), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x z) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align nndist_triangle_right nndist_triangle_rightₓ'. -/
 theorem nndist_triangle_right (x y z : α) : nndist x y ≤ nndist x z + nndist y z :=
   dist_triangle_right _ _ _
 #align nndist_triangle_right nndist_triangle_right
@@ -669,84 +489,36 @@ def ball (x : α) (ε : ℝ) : Set α :=
 #align metric.ball Metric.ball
 -/
 
-/- warning: metric.mem_ball -> Metric.mem_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y x) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y x) ε)
-Case conversion may be inaccurate. Consider using '#align metric.mem_ball Metric.mem_ballₓ'. -/
 @[simp]
 theorem mem_ball : y ∈ ball x ε ↔ dist y x < ε :=
   Iff.rfl
 #align metric.mem_ball Metric.mem_ball
 
-/- warning: metric.mem_ball' -> Metric.mem_ball' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) ε)
-Case conversion may be inaccurate. Consider using '#align metric.mem_ball' Metric.mem_ball'ₓ'. -/
 theorem mem_ball' : y ∈ ball x ε ↔ dist x y < ε := by rw [dist_comm, mem_ball]
 #align metric.mem_ball' Metric.mem_ball'
 
-/- warning: metric.pos_of_mem_ball -> Metric.pos_of_mem_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)
-Case conversion may be inaccurate. Consider using '#align metric.pos_of_mem_ball Metric.pos_of_mem_ballₓ'. -/
 theorem pos_of_mem_ball (hy : y ∈ ball x ε) : 0 < ε :=
   dist_nonneg.trans_lt hy
 #align metric.pos_of_mem_ball Metric.pos_of_mem_ball
 
-/- warning: metric.mem_ball_self -> Metric.mem_ball_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Metric.ball.{u1} α _inst_1 x ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Metric.ball.{u1} α _inst_1 x ε))
-Case conversion may be inaccurate. Consider using '#align metric.mem_ball_self Metric.mem_ball_selfₓ'. -/
 theorem mem_ball_self (h : 0 < ε) : x ∈ ball x ε :=
   show dist x x < ε by rw [dist_self] <;> assumption
 #align metric.mem_ball_self Metric.mem_ball_self
 
-/- warning: metric.nonempty_ball -> Metric.nonempty_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Set.Nonempty.{u1} α (Metric.ball.{u1} α _inst_1 x ε)) (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Set.Nonempty.{u1} α (Metric.ball.{u1} α _inst_1 x ε)) (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)
-Case conversion may be inaccurate. Consider using '#align metric.nonempty_ball Metric.nonempty_ballₓ'. -/
 @[simp]
 theorem nonempty_ball : (ball x ε).Nonempty ↔ 0 < ε :=
   ⟨fun ⟨x, hx⟩ => pos_of_mem_ball hx, fun h => ⟨x, mem_ball_self h⟩⟩
 #align metric.nonempty_ball Metric.nonempty_ball
 
-/- warning: metric.ball_eq_empty -> Metric.ball_eq_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Eq.{succ u1} (Set.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (LE.le.{0} Real Real.hasLe ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Eq.{succ u1} (Set.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (LE.le.{0} Real Real.instLEReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align metric.ball_eq_empty Metric.ball_eq_emptyₓ'. -/
 @[simp]
 theorem ball_eq_empty : ball x ε = ∅ ↔ ε ≤ 0 := by
   rw [← not_nonempty_iff_eq_empty, nonempty_ball, not_lt]
 #align metric.ball_eq_empty Metric.ball_eq_empty
 
-/- warning: metric.ball_zero -> Metric.ball_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Eq.{succ u1} (Set.{u1} α) (Metric.ball.{u1} α _inst_1 x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Eq.{succ u1} (Set.{u1} α) (Metric.ball.{u1} α _inst_1 x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))
-Case conversion may be inaccurate. Consider using '#align metric.ball_zero Metric.ball_zeroₓ'. -/
 @[simp]
 theorem ball_zero : ball x 0 = ∅ := by rw [ball_eq_empty]
 #align metric.ball_zero Metric.ball_zero
 
-/- warning: metric.exists_lt_mem_ball_of_mem_ball -> Metric.exists_lt_mem_ball_of_mem_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Metric.ball.{u1} α _inst_1 y ε)) -> (Exists.{1} Real (fun (ε' : Real) => Exists.{0} (LT.lt.{0} Real Real.hasLt ε' ε) (fun (H : LT.lt.{0} Real Real.hasLt ε' ε) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Metric.ball.{u1} α _inst_1 y ε'))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Metric.ball.{u1} α _inst_1 y ε)) -> (Exists.{1} Real (fun (ε' : Real) => And (LT.lt.{0} Real Real.instLTReal ε' ε) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Metric.ball.{u1} α _inst_1 y ε'))))
-Case conversion may be inaccurate. Consider using '#align metric.exists_lt_mem_ball_of_mem_ball Metric.exists_lt_mem_ball_of_mem_ballₓ'. -/
 /-- If a point belongs to an open ball, then there is a strictly smaller radius whose ball also
 contains it.
 
@@ -757,45 +529,21 @@ theorem exists_lt_mem_ball_of_mem_ball (h : x ∈ ball y ε) : ∃ ε' < ε, x �
   exact ⟨(ε + dist x y) / 2, by linarith, by linarith⟩
 #align metric.exists_lt_mem_ball_of_mem_ball Metric.exists_lt_mem_ball_of_mem_ball
 
-/- warning: metric.ball_eq_ball -> Metric.ball_eq_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (ε : Real) (x : α), Eq.{succ u1} (Set.{u1} α) (UniformSpace.ball.{u1} α x (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.snd.{u1, u1} α α p) (Prod.fst.{u1, u1} α α p)) ε))) (Metric.ball.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (ε : Real) (x : α), Eq.{succ u1} (Set.{u1} α) (UniformSpace.ball.{u1} α x (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.snd.{u1, u1} α α p) (Prod.fst.{u1, u1} α α p)) ε))) (Metric.ball.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.ball_eq_ball Metric.ball_eq_ballₓ'. -/
 theorem ball_eq_ball (ε : ℝ) (x : α) :
     UniformSpace.ball x { p | dist p.2 p.1 < ε } = Metric.ball x ε :=
   rfl
 #align metric.ball_eq_ball Metric.ball_eq_ball
 
-/- warning: metric.ball_eq_ball' -> Metric.ball_eq_ball' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (ε : Real) (x : α), Eq.{succ u1} (Set.{u1} α) (UniformSpace.ball.{u1} α x (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))) (Metric.ball.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (ε : Real) (x : α), Eq.{succ u1} (Set.{u1} α) (UniformSpace.ball.{u1} α x (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))) (Metric.ball.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.ball_eq_ball' Metric.ball_eq_ball'ₓ'. -/
 theorem ball_eq_ball' (ε : ℝ) (x : α) :
     UniformSpace.ball x { p | dist p.1 p.2 < ε } = Metric.ball x ε := by ext;
   simp [dist_comm, UniformSpace.ball]
 #align metric.ball_eq_ball' Metric.ball_eq_ball'
 
-/- warning: metric.Union_ball_nat -> Metric.iUnion_ball_nat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (Nat.cast.{0} Real Real.natCast n))) (Set.univ.{u1} α)
-Case conversion may be inaccurate. Consider using '#align metric.Union_ball_nat Metric.iUnion_ball_natₓ'. -/
 @[simp]
 theorem iUnion_ball_nat (x : α) : (⋃ n : ℕ, ball x n) = univ :=
   iUnion_eq_univ_iff.2 fun y => exists_nat_gt (dist y x)
 #align metric.Union_ball_nat Metric.iUnion_ball_nat
 
-/- warning: metric.Union_ball_nat_succ -> Metric.iUnion_ball_nat_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Nat.cast.{0} Real Real.natCast n) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))) (Set.univ.{u1} α)
-Case conversion may be inaccurate. Consider using '#align metric.Union_ball_nat_succ Metric.iUnion_ball_nat_succₓ'. -/
 @[simp]
 theorem iUnion_ball_nat_succ (x : α) : (⋃ n : ℕ, ball x (n + 1)) = univ :=
   iUnion_eq_univ_iff.2 fun y => (exists_nat_gt (dist y x)).imp fun n hn => hn.trans (lt_add_one _)
@@ -808,23 +556,11 @@ def closedBall (x : α) (ε : ℝ) :=
 #align metric.closed_ball Metric.closedBall
 -/
 
-/- warning: metric.mem_closed_ball -> Metric.mem_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.closedBall.{u1} α _inst_1 x ε)) (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y x) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.closedBall.{u1} α _inst_1 x ε)) (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y x) ε)
-Case conversion may be inaccurate. Consider using '#align metric.mem_closed_ball Metric.mem_closedBallₓ'. -/
 @[simp]
 theorem mem_closedBall : y ∈ closedBall x ε ↔ dist y x ≤ ε :=
   Iff.rfl
 #align metric.mem_closed_ball Metric.mem_closedBall
 
-/- warning: metric.mem_closed_ball' -> Metric.mem_closedBall' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.closedBall.{u1} α _inst_1 x ε)) (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.closedBall.{u1} α _inst_1 x ε)) (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) ε)
-Case conversion may be inaccurate. Consider using '#align metric.mem_closed_ball' Metric.mem_closedBall'ₓ'. -/
 theorem mem_closedBall' : y ∈ closedBall x ε ↔ dist x y ≤ ε := by rw [dist_comm, mem_closed_ball]
 #align metric.mem_closed_ball' Metric.mem_closedBall'
 
@@ -847,63 +583,27 @@ theorem mem_sphere' : y ∈ sphere x ε ↔ dist x y = ε := by rw [dist_comm, m
 #align metric.mem_sphere' Metric.mem_sphere'
 -/
 
-/- warning: metric.ne_of_mem_sphere -> Metric.ne_of_mem_sphere is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.sphere.{u1} α _inst_1 x ε)) -> (Ne.{1} Real ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Ne.{succ u1} α y x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.sphere.{u1} α _inst_1 x ε)) -> (Ne.{1} Real ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Ne.{succ u1} α y x)
-Case conversion may be inaccurate. Consider using '#align metric.ne_of_mem_sphere Metric.ne_of_mem_sphereₓ'. -/
 theorem ne_of_mem_sphere (h : y ∈ sphere x ε) (hε : ε ≠ 0) : y ≠ x := by contrapose! hε; symm;
   simpa [hε] using h
 #align metric.ne_of_mem_sphere Metric.ne_of_mem_sphere
 
-/- warning: metric.sphere_eq_empty_of_subsingleton -> Metric.sphere_eq_empty_of_subsingleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real} [_inst_2 : Subsingleton.{succ u1} α], (Ne.{1} Real ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{succ u1} (Set.{u1} α) (Metric.sphere.{u1} α _inst_1 x ε) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real} [_inst_2 : Subsingleton.{succ u1} α], (Ne.{1} Real ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{succ u1} (Set.{u1} α) (Metric.sphere.{u1} α _inst_1 x ε) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align metric.sphere_eq_empty_of_subsingleton Metric.sphere_eq_empty_of_subsingletonₓ'. -/
 theorem sphere_eq_empty_of_subsingleton [Subsingleton α] (hε : ε ≠ 0) : sphere x ε = ∅ :=
   Set.eq_empty_iff_forall_not_mem.mpr fun y hy => ne_of_mem_sphere hy hε (Subsingleton.elim _ _)
 #align metric.sphere_eq_empty_of_subsingleton Metric.sphere_eq_empty_of_subsingleton
 
-/- warning: metric.sphere_is_empty_of_subsingleton -> Metric.sphere_isEmpty_of_subsingleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real} [_inst_2 : Subsingleton.{succ u1} α], (Ne.{1} Real ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (IsEmpty.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Metric.sphere.{u1} α _inst_1 x ε)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real} [_inst_2 : Subsingleton.{succ u1} α], (Ne.{1} Real ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (IsEmpty.{succ u1} (Set.Elem.{u1} α (Metric.sphere.{u1} α _inst_1 x ε)))
-Case conversion may be inaccurate. Consider using '#align metric.sphere_is_empty_of_subsingleton Metric.sphere_isEmpty_of_subsingletonₓ'. -/
 theorem sphere_isEmpty_of_subsingleton [Subsingleton α] (hε : ε ≠ 0) : IsEmpty (sphere x ε) := by
   simp only [sphere_eq_empty_of_subsingleton hε, Set.hasEmptyc.Emptyc.isEmpty α]
 #align metric.sphere_is_empty_of_subsingleton Metric.sphere_isEmpty_of_subsingleton
 
-/- warning: metric.mem_closed_ball_self -> Metric.mem_closedBall_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Metric.closedBall.{u1} α _inst_1 x ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Metric.closedBall.{u1} α _inst_1 x ε))
-Case conversion may be inaccurate. Consider using '#align metric.mem_closed_ball_self Metric.mem_closedBall_selfₓ'. -/
 theorem mem_closedBall_self (h : 0 ≤ ε) : x ∈ closedBall x ε :=
   show dist x x ≤ ε by rw [dist_self] <;> assumption
 #align metric.mem_closed_ball_self Metric.mem_closedBall_self
 
-/- warning: metric.nonempty_closed_ball -> Metric.nonempty_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Set.Nonempty.{u1} α (Metric.closedBall.{u1} α _inst_1 x ε)) (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Set.Nonempty.{u1} α (Metric.closedBall.{u1} α _inst_1 x ε)) (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)
-Case conversion may be inaccurate. Consider using '#align metric.nonempty_closed_ball Metric.nonempty_closedBallₓ'. -/
 @[simp]
 theorem nonempty_closedBall : (closedBall x ε).Nonempty ↔ 0 ≤ ε :=
   ⟨fun ⟨x, hx⟩ => dist_nonneg.trans hx, fun h => ⟨x, mem_closedBall_self h⟩⟩
 #align metric.nonempty_closed_ball Metric.nonempty_closedBall
 
-/- warning: metric.closed_ball_eq_empty -> Metric.closedBall_eq_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Eq.{succ u1} (Set.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (LT.lt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Iff (Eq.{succ u1} (Set.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (LT.lt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_eq_empty Metric.closedBall_eq_emptyₓ'. -/
 @[simp]
 theorem closedBall_eq_empty : closedBall x ε = ∅ ↔ ε < 0 := by
   rw [← not_nonempty_iff_eq_empty, nonempty_closed_ball, not_le]
@@ -919,98 +619,44 @@ theorem sphere_subset_closedBall : sphere x ε ⊆ closedBall x ε := fun y => l
 #align metric.sphere_subset_closed_ball Metric.sphere_subset_closedBall
 -/
 
-/- warning: metric.closed_ball_disjoint_ball -> Metric.closedBall_disjoint_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Metric.closedBall.{u1} α _inst_1 x δ) (Metric.ball.{u1} α _inst_1 y ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Metric.closedBall.{u1} α _inst_1 x δ) (Metric.ball.{u1} α _inst_1 y ε))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_disjoint_ball Metric.closedBall_disjoint_ballₓ'. -/
 theorem closedBall_disjoint_ball (h : δ + ε ≤ dist x y) : Disjoint (closedBall x δ) (ball y ε) :=
   Set.disjoint_left.mpr fun a ha1 ha2 =>
     (h.trans <| dist_triangle_left _ _ _).not_lt <| add_lt_add_of_le_of_lt ha1 ha2
 #align metric.closed_ball_disjoint_ball Metric.closedBall_disjoint_ball
 
-/- warning: metric.ball_disjoint_closed_ball -> Metric.ball_disjoint_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Metric.ball.{u1} α _inst_1 x δ) (Metric.closedBall.{u1} α _inst_1 y ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Metric.ball.{u1} α _inst_1 x δ) (Metric.closedBall.{u1} α _inst_1 y ε))
-Case conversion may be inaccurate. Consider using '#align metric.ball_disjoint_closed_ball Metric.ball_disjoint_closedBallₓ'. -/
 theorem ball_disjoint_closedBall (h : δ + ε ≤ dist x y) : Disjoint (ball x δ) (closedBall y ε) :=
   (closedBall_disjoint_ball <| by rwa [add_comm, dist_comm]).symm
 #align metric.ball_disjoint_closed_ball Metric.ball_disjoint_closedBall
 
-/- warning: metric.ball_disjoint_ball -> Metric.ball_disjoint_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Metric.ball.{u1} α _inst_1 x δ) (Metric.ball.{u1} α _inst_1 y ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Metric.ball.{u1} α _inst_1 x δ) (Metric.ball.{u1} α _inst_1 y ε))
-Case conversion may be inaccurate. Consider using '#align metric.ball_disjoint_ball Metric.ball_disjoint_ballₓ'. -/
 theorem ball_disjoint_ball (h : δ + ε ≤ dist x y) : Disjoint (ball x δ) (ball y ε) :=
   (closedBall_disjoint_ball h).mono_left ball_subset_closedBall
 #align metric.ball_disjoint_ball Metric.ball_disjoint_ball
 
-/- warning: metric.closed_ball_disjoint_closed_ball -> Metric.closedBall_disjoint_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Metric.closedBall.{u1} α _inst_1 x δ) (Metric.closedBall.{u1} α _inst_1 y ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {δ : Real} {ε : Real}, (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) δ ε) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Metric.closedBall.{u1} α _inst_1 x δ) (Metric.closedBall.{u1} α _inst_1 y ε))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_disjoint_closed_ball Metric.closedBall_disjoint_closedBallₓ'. -/
 theorem closedBall_disjoint_closedBall (h : δ + ε < dist x y) :
     Disjoint (closedBall x δ) (closedBall y ε) :=
   Set.disjoint_left.mpr fun a ha1 ha2 =>
     h.not_le <| (dist_triangle_left _ _ _).trans <| add_le_add ha1 ha2
 #align metric.closed_ball_disjoint_closed_ball Metric.closedBall_disjoint_closedBall
 
-/- warning: metric.sphere_disjoint_ball -> Metric.sphere_disjoint_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Metric.sphere.{u1} α _inst_1 x ε) (Metric.ball.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Metric.sphere.{u1} α _inst_1 x ε) (Metric.ball.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.sphere_disjoint_ball Metric.sphere_disjoint_ballₓ'. -/
 theorem sphere_disjoint_ball : Disjoint (sphere x ε) (ball x ε) :=
   Set.disjoint_left.mpr fun y hy₁ hy₂ => absurd hy₁ <| ne_of_lt hy₂
 #align metric.sphere_disjoint_ball Metric.sphere_disjoint_ball
 
-/- warning: metric.ball_union_sphere -> Metric.ball_union_sphere is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) (Metric.sphere.{u1} α _inst_1 x ε)) (Metric.closedBall.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) (Metric.sphere.{u1} α _inst_1 x ε)) (Metric.closedBall.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.ball_union_sphere Metric.ball_union_sphereₓ'. -/
 @[simp]
 theorem ball_union_sphere : ball x ε ∪ sphere x ε = closedBall x ε :=
   Set.ext fun y => (@le_iff_lt_or_eq ℝ _ _ _).symm
 #align metric.ball_union_sphere Metric.ball_union_sphere
 
-/- warning: metric.sphere_union_ball -> Metric.sphere_union_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Metric.sphere.{u1} α _inst_1 x ε) (Metric.ball.{u1} α _inst_1 x ε)) (Metric.closedBall.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Metric.sphere.{u1} α _inst_1 x ε) (Metric.ball.{u1} α _inst_1 x ε)) (Metric.closedBall.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.sphere_union_ball Metric.sphere_union_ballₓ'. -/
 @[simp]
 theorem sphere_union_ball : sphere x ε ∪ ball x ε = closedBall x ε := by
   rw [union_comm, ball_union_sphere]
 #align metric.sphere_union_ball Metric.sphere_union_ball
 
-/- warning: metric.closed_ball_diff_sphere -> Metric.closedBall_diff_sphere is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Metric.closedBall.{u1} α _inst_1 x ε) (Metric.sphere.{u1} α _inst_1 x ε)) (Metric.ball.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (Metric.sphere.{u1} α _inst_1 x ε)) (Metric.ball.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_diff_sphere Metric.closedBall_diff_sphereₓ'. -/
 @[simp]
 theorem closedBall_diff_sphere : closedBall x ε \ sphere x ε = ball x ε := by
   rw [← ball_union_sphere, Set.union_diff_cancel_right sphere_disjoint_ball.symm.le_bot]
 #align metric.closed_ball_diff_sphere Metric.closedBall_diff_sphere
 
-/- warning: metric.closed_ball_diff_ball -> Metric.closedBall_diff_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Metric.closedBall.{u1} α _inst_1 x ε) (Metric.ball.{u1} α _inst_1 x ε)) (Metric.sphere.{u1} α _inst_1 x ε)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (Metric.ball.{u1} α _inst_1 x ε)) (Metric.sphere.{u1} α _inst_1 x ε)
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_diff_ball Metric.closedBall_diff_ballₓ'. -/
 @[simp]
 theorem closedBall_diff_ball : closedBall x ε \ ball x ε = sphere x ε := by
   rw [← ball_union_sphere, Set.union_diff_cancel_left sphere_disjoint_ball.symm.le_bot]
@@ -1032,32 +678,14 @@ theorem mem_sphere_comm : x ∈ sphere y ε ↔ y ∈ sphere x ε := by rw [mem_
 #align metric.mem_sphere_comm Metric.mem_sphere_comm
 -/
 
-/- warning: metric.ball_subset_ball -> Metric.ball_subset_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.hasLe ε₁ ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 x ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.instLEReal ε₁ ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 x ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.ball_subset_ball Metric.ball_subset_ballₓ'. -/
 theorem ball_subset_ball (h : ε₁ ≤ ε₂) : ball x ε₁ ⊆ ball x ε₂ := fun y (yx : _ < ε₁) =>
   lt_of_lt_of_le yx h
 #align metric.ball_subset_ball Metric.ball_subset_ball
 
-/- warning: metric.closed_ball_eq_bInter_ball -> Metric.closedBall_eq_bInter_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (GT.gt.{0} Real Real.hasLt δ ε) (fun (H : GT.gt.{0} Real Real.hasLt δ ε) => Metric.ball.{u1} α _inst_1 x δ)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, Eq.{succ u1} (Set.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (GT.gt.{0} Real Real.instLTReal δ ε) (fun (H : GT.gt.{0} Real Real.instLTReal δ ε) => Metric.ball.{u1} α _inst_1 x δ)))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_eq_bInter_ball Metric.closedBall_eq_bInter_ballₓ'. -/
 theorem closedBall_eq_bInter_ball : closedBall x ε = ⋂ δ > ε, ball x δ := by
   ext y <;> rw [mem_closed_ball, ← forall_lt_iff_le', mem_Inter₂] <;> rfl
 #align metric.closed_ball_eq_bInter_ball Metric.closedBall_eq_bInter_ball
 
-/- warning: metric.ball_subset_ball' -> Metric.ball_subset_ball' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.ball_subset_ball' Metric.ball_subset_ball'ₓ'. -/
 theorem ball_subset_ball' (h : ε₁ + dist x y ≤ ε₂) : ball x ε₁ ⊆ ball y ε₂ := fun z hz =>
   calc
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
@@ -1066,22 +694,10 @@ theorem ball_subset_ball' (h : ε₁ + dist x y ≤ ε₂) : ball x ε₁ ⊆ ba
     
 #align metric.ball_subset_ball' Metric.ball_subset_ball'
 
-/- warning: metric.closed_ball_subset_closed_ball -> Metric.closedBall_subset_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.hasLe ε₁ ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 x ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.instLEReal ε₁ ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 x ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_subset_closed_ball Metric.closedBall_subset_closedBallₓ'. -/
 theorem closedBall_subset_closedBall (h : ε₁ ≤ ε₂) : closedBall x ε₁ ⊆ closedBall x ε₂ :=
   fun y (yx : _ ≤ ε₁) => le_trans yx h
 #align metric.closed_ball_subset_closed_ball Metric.closedBall_subset_closedBall
 
-/- warning: metric.closed_ball_subset_closed_ball' -> Metric.closedBall_subset_closedBall' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 y ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 y ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_subset_closed_ball' Metric.closedBall_subset_closedBall'ₓ'. -/
 theorem closedBall_subset_closedBall' (h : ε₁ + dist x y ≤ ε₂) :
     closedBall x ε₁ ⊆ closedBall y ε₂ := fun z hz =>
   calc
@@ -1091,22 +707,10 @@ theorem closedBall_subset_closedBall' (h : ε₁ + dist x y ≤ ε₂) :
     
 #align metric.closed_ball_subset_closed_ball' Metric.closedBall_subset_closedBall'
 
-/- warning: metric.closed_ball_subset_ball -> Metric.closedBall_subset_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε₁ : Real} {ε₂ : Real}, (LT.lt.{0} Real Real.hasLt ε₁ ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 x ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε₁ : Real} {ε₂ : Real}, (LT.lt.{0} Real Real.instLTReal ε₁ ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 x ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_subset_ball Metric.closedBall_subset_ballₓ'. -/
 theorem closedBall_subset_ball (h : ε₁ < ε₂) : closedBall x ε₁ ⊆ ball x ε₂ :=
   fun y (yh : dist y x ≤ ε₁) => lt_of_le_of_lt yh h
 #align metric.closed_ball_subset_ball Metric.closedBall_subset_ball
 
-/- warning: metric.closed_ball_subset_ball' -> Metric.closedBall_subset_ball' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) ε₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_subset_ball' Metric.closedBall_subset_ball'ₓ'. -/
 theorem closedBall_subset_ball' (h : ε₁ + dist x y < ε₂) : closedBall x ε₁ ⊆ ball y ε₂ :=
   fun z hz =>
   calc
@@ -1116,12 +720,6 @@ theorem closedBall_subset_ball' (h : ε₁ + dist x y < ε₂) : closedBall x ε
     
 #align metric.closed_ball_subset_ball' Metric.closedBall_subset_ball'
 
-/- warning: metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball -> Metric.dist_le_add_of_nonempty_closedBall_inter_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 y ε₂))) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 y ε₂))) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball Metric.dist_le_add_of_nonempty_closedBall_inter_closedBallₓ'. -/
 theorem dist_le_add_of_nonempty_closedBall_inter_closedBall
     (h : (closedBall x ε₁ ∩ closedBall y ε₂).Nonempty) : dist x y ≤ ε₁ + ε₂ :=
   let ⟨z, hz⟩ := h
@@ -1131,12 +729,6 @@ theorem dist_le_add_of_nonempty_closedBall_inter_closedBall
     
 #align metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball Metric.dist_le_add_of_nonempty_closedBall_inter_closedBall
 
-/- warning: metric.dist_lt_add_of_nonempty_closed_ball_inter_ball -> Metric.dist_lt_add_of_nonempty_closedBall_inter_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.dist_lt_add_of_nonempty_closed_ball_inter_ball Metric.dist_lt_add_of_nonempty_closedBall_inter_ballₓ'. -/
 theorem dist_lt_add_of_nonempty_closedBall_inter_ball (h : (closedBall x ε₁ ∩ ball y ε₂).Nonempty) :
     dist x y < ε₁ + ε₂ :=
   let ⟨z, hz⟩ := h
@@ -1146,12 +738,6 @@ theorem dist_lt_add_of_nonempty_closedBall_inter_ball (h : (closedBall x ε₁ �
     
 #align metric.dist_lt_add_of_nonempty_closed_ball_inter_ball Metric.dist_lt_add_of_nonempty_closedBall_inter_ball
 
-/- warning: metric.dist_lt_add_of_nonempty_ball_inter_closed_ball -> Metric.dist_lt_add_of_nonempty_ball_inter_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 y ε₂))) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.closedBall.{u1} α _inst_1 y ε₂))) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.dist_lt_add_of_nonempty_ball_inter_closed_ball Metric.dist_lt_add_of_nonempty_ball_inter_closedBallₓ'. -/
 theorem dist_lt_add_of_nonempty_ball_inter_closedBall (h : (ball x ε₁ ∩ closedBall y ε₂).Nonempty) :
     dist x y < ε₁ + ε₂ := by
   rw [inter_comm] at h
@@ -1159,66 +745,30 @@ theorem dist_lt_add_of_nonempty_ball_inter_closedBall (h : (ball x ε₁ ∩ clo
   exact dist_lt_add_of_nonempty_closed_ball_inter_ball h
 #align metric.dist_lt_add_of_nonempty_ball_inter_closed_ball Metric.dist_lt_add_of_nonempty_ball_inter_closedBall
 
-/- warning: metric.dist_lt_add_of_nonempty_ball_inter_ball -> Metric.dist_lt_add_of_nonempty_ball_inter_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ε₁ ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) ε₁ ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.dist_lt_add_of_nonempty_ball_inter_ball Metric.dist_lt_add_of_nonempty_ball_inter_ballₓ'. -/
 theorem dist_lt_add_of_nonempty_ball_inter_ball (h : (ball x ε₁ ∩ ball y ε₂).Nonempty) :
     dist x y < ε₁ + ε₂ :=
   dist_lt_add_of_nonempty_closedBall_inter_ball <|
     h.mono (inter_subset_inter ball_subset_closedBall Subset.rfl)
 #align metric.dist_lt_add_of_nonempty_ball_inter_ball Metric.dist_lt_add_of_nonempty_ball_inter_ball
 
-/- warning: metric.Union_closed_ball_nat -> Metric.iUnion_closedBall_nat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Metric.closedBall.{u1} α _inst_1 x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Metric.closedBall.{u1} α _inst_1 x (Nat.cast.{0} Real Real.natCast n))) (Set.univ.{u1} α)
-Case conversion may be inaccurate. Consider using '#align metric.Union_closed_ball_nat Metric.iUnion_closedBall_natₓ'. -/
 @[simp]
 theorem iUnion_closedBall_nat (x : α) : (⋃ n : ℕ, closedBall x n) = univ :=
   iUnion_eq_univ_iff.2 fun y => exists_nat_ge (dist y x)
 #align metric.Union_closed_ball_nat Metric.iUnion_closedBall_nat
 
-/- warning: metric.Union_inter_closed_ball_nat -> Metric.iUnion_inter_closedBall_nat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (s : Set.{u1} α) (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Metric.closedBall.{u1} α _inst_1 x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)))) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (s : Set.{u1} α) (x : α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Metric.closedBall.{u1} α _inst_1 x (Nat.cast.{0} Real Real.natCast n)))) s
-Case conversion may be inaccurate. Consider using '#align metric.Union_inter_closed_ball_nat Metric.iUnion_inter_closedBall_natₓ'. -/
 theorem iUnion_inter_closedBall_nat (s : Set α) (x : α) : (⋃ n : ℕ, s ∩ closedBall x n) = s := by
   rw [← inter_Union, Union_closed_ball_nat, inter_univ]
 #align metric.Union_inter_closed_ball_nat Metric.iUnion_inter_closedBall_nat
 
-/- warning: metric.ball_subset -> Metric.ball_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) ε₂ ε₁)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε₁ : Real} {ε₂ : Real}, (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) ε₂ ε₁)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε₁) (Metric.ball.{u1} α _inst_1 y ε₂))
-Case conversion may be inaccurate. Consider using '#align metric.ball_subset Metric.ball_subsetₓ'. -/
 theorem ball_subset (h : dist x y ≤ ε₂ - ε₁) : ball x ε₁ ⊆ ball y ε₂ := fun z zx => by
   rw [← add_sub_cancel'_right ε₁ ε₂] <;>
     exact lt_of_le_of_lt (dist_triangle z x y) (add_lt_add_of_lt_of_le zx h)
 #align metric.ball_subset Metric.ball_subset
 
-/- warning: metric.ball_half_subset -> Metric.ball_half_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real} (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.ball.{u1} α _inst_1 x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ε (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) ε (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))))) (Metric.ball.{u1} α _inst_1 x ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real} (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.ball.{u1} α _inst_1 x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) ε (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) ε (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))) (Metric.ball.{u1} α _inst_1 x ε))
-Case conversion may be inaccurate. Consider using '#align metric.ball_half_subset Metric.ball_half_subsetₓ'. -/
 theorem ball_half_subset (y) (h : y ∈ ball x (ε / 2)) : ball y (ε / 2) ⊆ ball x ε :=
   ball_subset <| by rw [sub_self_div_two] <;> exact le_of_lt h
 #align metric.ball_half_subset Metric.ball_half_subset
 
-/- warning: metric.exists_ball_subset_ball -> Metric.exists_ball_subset_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) -> (Exists.{1} Real (fun (ε' : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε' (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε' (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 y ε') (Metric.ball.{u1} α _inst_1 x ε))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {ε : Real}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) -> (Exists.{1} Real (fun (ε' : Real) => And (GT.gt.{0} Real Real.instLTReal ε' (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 y ε') (Metric.ball.{u1} α _inst_1 x ε))))
-Case conversion may be inaccurate. Consider using '#align metric.exists_ball_subset_ball Metric.exists_ball_subset_ballₓ'. -/
 theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ ε' > 0, ball y ε' ⊆ ball x ε :=
   ⟨_, sub_pos.2 h, ball_subset <| by rw [sub_sub_self]⟩
 #align metric.exists_ball_subset_ball Metric.exists_ball_subset_ball
@@ -1247,24 +797,12 @@ theorem forall_of_forall_mem_ball (p : α → Prop) (x : α)
 #align metric.forall_of_forall_mem_ball Metric.forall_of_forall_mem_ball
 -/
 
-/- warning: metric.is_bounded_iff -> Metric.isBounded_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Exists.{1} Real (fun (C : Real) => forall {{x : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall {{y : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) C))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Exists.{1} Real (fun (C : Real) => forall {{x : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall {{y : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) C))))
-Case conversion may be inaccurate. Consider using '#align metric.is_bounded_iff Metric.isBounded_iffₓ'. -/
 theorem isBounded_iff {s : Set α} :
     IsBounded s ↔ ∃ C : ℝ, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C := by
   rw [is_bounded_def, ← Filter.mem_sets, (@PseudoMetricSpace.cobounded_sets α _).out, mem_set_of_eq,
     compl_compl]
 #align metric.is_bounded_iff Metric.isBounded_iff
 
-/- warning: metric.is_bounded_iff_eventually -> Metric.isBounded_iff_eventually is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Filter.Eventually.{0} Real (fun (C : Real) => forall {{x : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall {{y : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) C))) (Filter.atTop.{0} Real Real.preorder))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Filter.Eventually.{0} Real (fun (C : Real) => forall {{x : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall {{y : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) C))) (Filter.atTop.{0} Real Real.instPreorderReal))
-Case conversion may be inaccurate. Consider using '#align metric.is_bounded_iff_eventually Metric.isBounded_iff_eventuallyₓ'. -/
 theorem isBounded_iff_eventually {s : Set α} :
     IsBounded s ↔ ∀ᶠ C in atTop, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C :=
   isBounded_iff.trans
@@ -1272,24 +810,12 @@ theorem isBounded_iff_eventually {s : Set α} :
       Eventually.exists⟩
 #align metric.is_bounded_iff_eventually Metric.isBounded_iff_eventually
 
-/- warning: metric.is_bounded_iff_exists_ge -> Metric.isBounded_iff_exists_ge is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} (c : Real), Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Exists.{1} Real (fun (C : Real) => And (LE.le.{0} Real Real.hasLe c C) (forall {{x : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall {{y : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) C)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} (c : Real), Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Exists.{1} Real (fun (C : Real) => And (LE.le.{0} Real Real.instLEReal c C) (forall {{x : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall {{y : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) C)))))
-Case conversion may be inaccurate. Consider using '#align metric.is_bounded_iff_exists_ge Metric.isBounded_iff_exists_geₓ'. -/
 theorem isBounded_iff_exists_ge {s : Set α} (c : ℝ) :
     IsBounded s ↔ ∃ C, c ≤ C ∧ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C :=
   ⟨fun h => ((eventually_ge_atTop c).And (isBounded_iff_eventually.1 h)).exists, fun h =>
     isBounded_iff.2 <| h.imp fun _ => And.right⟩
 #align metric.is_bounded_iff_exists_ge Metric.isBounded_iff_exists_ge
 
-/- warning: metric.is_bounded_iff_nndist -> Metric.isBounded_iff_nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Exists.{1} NNReal (fun (C : NNReal) => forall {{x : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall {{y : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) C))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (PseudoMetricSpace.toBornology.{u1} α _inst_1) s) (Exists.{1} NNReal (fun (C : NNReal) => forall {{x : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall {{y : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) x y) C))))
-Case conversion may be inaccurate. Consider using '#align metric.is_bounded_iff_nndist Metric.isBounded_iff_nndistₓ'. -/
 theorem isBounded_iff_nndist {s : Set α} :
     IsBounded s ↔ ∃ C : ℝ≥0, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → nndist x y ≤ C := by
   simp only [is_bounded_iff_exists_ge 0, NNReal.exists, ← NNReal.coe_le_coe, ← dist_nndist,
@@ -1304,12 +830,6 @@ theorem toUniformSpace_eq :
 #align metric.to_uniform_space_eq Metric.toUniformSpace_eq
 -/
 
-/- warning: metric.uniformity_basis_dist -> Metric.uniformity_basis_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Real (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (ε : Real) => LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) (fun (ε : Real) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Real (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (ε : Real) => LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) (fun (ε : Real) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist Metric.uniformity_basis_distₓ'. -/
 theorem uniformity_basis_dist :
     (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } :=
   by
@@ -1317,12 +837,6 @@ theorem uniformity_basis_dist :
   exact UniformSpace.hasBasis_ofFun (exists_gt _) _ _ _ _ _
 #align metric.uniformity_basis_dist Metric.uniformity_basis_dist
 
-/- warning: metric.mk_uniformity_basis -> Metric.mk_uniformity_basis is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {β : Type.{u2}} {p : β -> Prop} {f : β -> Real}, (forall (i : β), (p i) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (f i))) -> (forall {{ε : Real}}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{succ u2} β (fun (i : β) => Exists.{0} (p i) (fun (hi : p i) => LE.le.{0} Real Real.hasLe (f i) ε)))) -> (Filter.HasBasis.{u1, succ u2} (Prod.{u1, u1} α α) β (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) p (fun (i : β) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (f i))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {β : Type.{u1}} {p : β -> Prop} {f : β -> Real}, (forall (i : β), (p i) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (f i))) -> (forall {{ε : Real}}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{succ u1} β (fun (i : β) => And (p i) (LE.le.{0} Real Real.instLEReal (f i) ε)))) -> (Filter.HasBasis.{u2, succ u1} (Prod.{u2, u2} α α) β (uniformity.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) p (fun (i : β) => setOf.{u2} (Prod.{u2, u2} α α) (fun (p : Prod.{u2, u2} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (Prod.fst.{u2, u2} α α p) (Prod.snd.{u2, u2} α α p)) (f i))))
-Case conversion may be inaccurate. Consider using '#align metric.mk_uniformity_basis Metric.mk_uniformity_basisₓ'. -/
 /-- Given `f : β → ℝ`, if `f` sends `{i | p i}` to a set of positive numbers
 accumulating to zero, then `f i`-neighborhoods of the diagonal form a basis of `𝓤 α`.
 
@@ -1340,12 +854,6 @@ protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β �
   · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
 #align metric.mk_uniformity_basis Metric.mk_uniformity_basis
 
-/- warning: metric.uniformity_basis_dist_rat -> Metric.uniformity_basis_dist_rat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Rat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (r : Rat) => LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) r) (fun (r : Rat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) r)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Rat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (r : Rat) => LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) r) (fun (r : Rat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (Rat.cast.{0} Real Real.ratCast r)))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_rat Metric.uniformity_basis_dist_ratₓ'. -/
 theorem uniformity_basis_dist_rat :
     (𝓤 α).HasBasis (fun r : ℚ => 0 < r) fun r => { p : α × α | dist p.1 p.2 < r } :=
   Metric.mk_uniformity_basis (fun _ => Rat.cast_pos.2) fun ε hε =>
@@ -1353,24 +861,12 @@ theorem uniformity_basis_dist_rat :
     ⟨r, Rat.cast_pos.1 hr0, hrε.le⟩
 #align metric.uniformity_basis_dist_rat Metric.uniformity_basis_dist_rat
 
-/- warning: metric.uniformity_basis_dist_inv_nat_succ -> Metric.uniformity_basis_dist_inv_nat_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (_x : Nat) => True) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (_x : Nat) => True) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Nat.cast.{0} Real Real.natCast n) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_inv_nat_succ Metric.uniformity_basis_dist_inv_nat_succₓ'. -/
 theorem uniformity_basis_dist_inv_nat_succ :
     (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / (↑n + 1) } :=
   Metric.mk_uniformity_basis (fun n _ => div_pos zero_lt_one <| Nat.cast_add_one_pos n) fun ε ε0 =>
     (exists_nat_one_div_lt ε0).imp fun n hn => ⟨trivial, le_of_lt hn⟩
 #align metric.uniformity_basis_dist_inv_nat_succ Metric.uniformity_basis_dist_inv_nat_succ
 
-/- warning: metric.uniformity_basis_dist_inv_nat_pos -> Metric.uniformity_basis_dist_inv_nat_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (Nat.cast.{0} Real Real.natCast n))))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_inv_nat_pos Metric.uniformity_basis_dist_inv_nat_posₓ'. -/
 theorem uniformity_basis_dist_inv_nat_pos :
     (𝓤 α).HasBasis (fun n : ℕ => 0 < n) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / ↑n } :=
   Metric.mk_uniformity_basis (fun n hn => div_pos zero_lt_one <| Nat.cast_pos.2 hn) fun ε ε0 =>
@@ -1378,12 +874,6 @@ theorem uniformity_basis_dist_inv_nat_pos :
     ⟨n + 1, Nat.succ_pos n, by exact_mod_cast hn.le⟩
 #align metric.uniformity_basis_dist_inv_nat_pos Metric.uniformity_basis_dist_inv_nat_pos
 
-/- warning: metric.uniformity_basis_dist_pow -> Metric.uniformity_basis_dist_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (LT.lt.{0} Real Real.hasLt r (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (n : Nat) => True) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) r n))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (LT.lt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (n : Nat) => True) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) r n))))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_pow Metric.uniformity_basis_dist_powₓ'. -/
 theorem uniformity_basis_dist_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
     (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < r ^ n } :=
   Metric.mk_uniformity_basis (fun n hn => pow_pos h0 _) fun ε ε0 =>
@@ -1391,12 +881,6 @@ theorem uniformity_basis_dist_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
     ⟨n, trivial, hn.le⟩
 #align metric.uniformity_basis_dist_pow Metric.uniformity_basis_dist_pow
 
-/- warning: metric.uniformity_basis_dist_lt -> Metric.uniformity_basis_dist_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {R : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) R) -> (Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Real (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (r : Real) => And (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) (LT.lt.{0} Real Real.hasLt r R)) (fun (r : Real) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) r)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {R : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) R) -> (Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Real (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (r : Real) => And (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) (LT.lt.{0} Real Real.instLTReal r R)) (fun (r : Real) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) r)))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_lt Metric.uniformity_basis_dist_ltₓ'. -/
 theorem uniformity_basis_dist_lt {R : ℝ} (hR : 0 < R) :
     (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => { p : α × α | dist p.1 p.2 < r } :=
   Metric.mk_uniformity_basis (fun r => And.left) fun r hr =>
@@ -1404,12 +888,6 @@ theorem uniformity_basis_dist_lt {R : ℝ} (hR : 0 < R) :
       min_le_left _ _⟩
 #align metric.uniformity_basis_dist_lt Metric.uniformity_basis_dist_lt
 
-/- warning: metric.mk_uniformity_basis_le -> Metric.mk_uniformity_basis_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {β : Type.{u2}} {p : β -> Prop} {f : β -> Real}, (forall (x : β), (p x) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (f x))) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{succ u2} β (fun (x : β) => Exists.{0} (p x) (fun (hx : p x) => LE.le.{0} Real Real.hasLe (f x) ε)))) -> (Filter.HasBasis.{u1, succ u2} (Prod.{u1, u1} α α) β (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) p (fun (x : β) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (f x))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {β : Type.{u1}} {p : β -> Prop} {f : β -> Real}, (forall (x : β), (p x) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (f x))) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{succ u1} β (fun (x : β) => And (p x) (LE.le.{0} Real Real.instLEReal (f x) ε)))) -> (Filter.HasBasis.{u2, succ u1} (Prod.{u2, u2} α α) β (uniformity.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) p (fun (x : β) => setOf.{u2} (Prod.{u2, u2} α α) (fun (p : Prod.{u2, u2} α α) => LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (Prod.fst.{u2, u2} α α p) (Prod.snd.{u2, u2} α α p)) (f x))))
-Case conversion may be inaccurate. Consider using '#align metric.mk_uniformity_basis_le Metric.mk_uniformity_basis_leₓ'. -/
 /-- Given `f : β → ℝ`, if `f` sends `{i | p i}` to a set of positive numbers
 accumulating to zero, then closed neighborhoods of the diagonal of sizes `{f i | p i}`
 form a basis of `𝓤 α`.
@@ -1429,12 +907,6 @@ protected theorem mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β
   · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x (hx : _ < _) => H (le_of_lt hx)⟩
 #align metric.mk_uniformity_basis_le Metric.mk_uniformity_basis_le
 
-/- warning: metric.uniformity_basis_dist_le -> Metric.uniformity_basis_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Real (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (ε : Real) => LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) (fun (ε : Real) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Real (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (ε : Real) => LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) (fun (ε : Real) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_le Metric.uniformity_basis_dist_leₓ'. -/
 /-- Contant size closed neighborhoods of the diagonal form a basis
 of the uniformity filter. -/
 theorem uniformity_basis_dist_le :
@@ -1442,12 +914,6 @@ theorem uniformity_basis_dist_le :
   Metric.mk_uniformity_basis_le (fun _ => id) fun ε ε₀ => ⟨ε, ε₀, le_refl ε⟩
 #align metric.uniformity_basis_dist_le Metric.uniformity_basis_dist_le
 
-/- warning: metric.uniformity_basis_dist_le_pow -> Metric.uniformity_basis_dist_le_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (LT.lt.{0} Real Real.hasLt r (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (n : Nat) => True) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) r n))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (LT.lt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) Nat (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (n : Nat) => True) (fun (n : Nat) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) r n))))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_basis_dist_le_pow Metric.uniformity_basis_dist_le_powₓ'. -/
 theorem uniformity_basis_dist_le_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
     (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 ≤ r ^ n } :=
   Metric.mk_uniformity_basis_le (fun n hn => pow_pos h0 _) fun ε ε0 =>
@@ -1455,45 +921,21 @@ theorem uniformity_basis_dist_le_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
     ⟨n, trivial, hn.le⟩
 #align metric.uniformity_basis_dist_le_pow Metric.uniformity_basis_dist_le_pow
 
-/- warning: metric.mem_uniformity_dist -> Metric.mem_uniformity_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} (Prod.{u1, u1} α α)}, Iff (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : α} {b : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) ε) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α a b) s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} (Prod.{u1, u1} α α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : α} {b : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) ε) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α a b) s))))
-Case conversion may be inaccurate. Consider using '#align metric.mem_uniformity_dist Metric.mem_uniformity_distₓ'. -/
 theorem mem_uniformity_dist {s : Set (α × α)} :
     s ∈ 𝓤 α ↔ ∃ ε > 0, ∀ {a b : α}, dist a b < ε → (a, b) ∈ s :=
   uniformity_basis_dist.mem_uniformity_iff
 #align metric.mem_uniformity_dist Metric.mem_uniformity_dist
 
-/- warning: metric.dist_mem_uniformity -> Metric.dist_mem_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε)) (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε)) (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align metric.dist_mem_uniformity Metric.dist_mem_uniformityₓ'. -/
 /-- A constant size neighborhood of the diagonal is an entourage. -/
 theorem dist_mem_uniformity {ε : ℝ} (ε0 : 0 < ε) : { p : α × α | dist p.1 p.2 < ε } ∈ 𝓤 α :=
   mem_uniformity_dist.2 ⟨ε, ε0, fun a b => id⟩
 #align metric.dist_mem_uniformity Metric.dist_mem_uniformity
 
-/- warning: metric.uniform_continuous_iff -> Metric.uniformContinuous_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, Iff (UniformContinuous.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : α} {b : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f a) (f b)) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, Iff (UniformContinuous.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : α} {b : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f a) (f b)) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_continuous_iff Metric.uniformContinuous_iffₓ'. -/
 theorem uniformContinuous_iff [PseudoMetricSpace β] {f : α → β} :
     UniformContinuous f ↔ ∀ ε > 0, ∃ δ > 0, ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
   uniformity_basis_dist.uniformContinuous_iff uniformity_basis_dist
 #align metric.uniform_continuous_iff Metric.uniformContinuous_iff
 
-/- warning: metric.uniform_continuous_on_iff -> Metric.uniformContinuousOn_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (UniformContinuousOn.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) (f y)) ε))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (UniformContinuousOn.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) (f y)) ε))))))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1501,12 +943,6 @@ theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set 
   Metric.uniformity_basis_dist.uniformContinuousOn_iff Metric.uniformity_basis_dist
 #align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iff
 
-/- warning: metric.uniform_continuous_on_iff_le -> Metric.uniformContinuousOn_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (UniformContinuousOn.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) δ) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) (f y)) ε))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (UniformContinuousOn.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) δ) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) (f y)) ε))))))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_continuous_on_iff_le Metric.uniformContinuousOn_iff_leₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1514,12 +950,6 @@ theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : S
   Metric.uniformity_basis_dist_le.uniformContinuousOn_iff Metric.uniformity_basis_dist_le
 #align metric.uniform_continuous_on_iff_le Metric.uniformContinuousOn_iff_le
 
-/- warning: metric.uniform_embedding_iff -> Metric.uniformEmbedding_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, Iff (UniformEmbedding.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) (And (Function.Injective.{succ u1, succ u2} α β f) (And (UniformContinuous.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) (forall (δ : Real), (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : α} {b : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f a) (f b)) ε) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) δ)))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, Iff (UniformEmbedding.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) (And (Function.Injective.{succ u1, succ u2} α β f) (And (UniformContinuous.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) (forall (δ : Real), (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : α} {b : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f a) (f b)) ε) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) δ)))))))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_embedding_iff Metric.uniformEmbedding_iffₓ'. -/
 theorem uniformEmbedding_iff [PseudoMetricSpace β] {f : α → β} :
     UniformEmbedding f ↔
       Function.Injective f ∧
@@ -1529,12 +959,6 @@ theorem uniformEmbedding_iff [PseudoMetricSpace β] {f : α → β} :
   rfl
 #align metric.uniform_embedding_iff Metric.uniformEmbedding_iff
 
-/- warning: metric.controlled_of_uniform_embedding -> Metric.controlled_of_uniformEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, (UniformEmbedding.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) -> (And (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : α} {b : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f a) (f b)) ε))))) (forall (δ : Real), (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : α} {b : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f a) (f b)) ε) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) δ))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, (UniformEmbedding.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2) f) -> (And (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : α} {b : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f a) (f b)) ε))))) (forall (δ : Real), (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : α} {b : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f a) (f b)) ε) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) δ))))))
-Case conversion may be inaccurate. Consider using '#align metric.controlled_of_uniform_embedding Metric.controlled_of_uniformEmbeddingₓ'. -/
 /-- If a map between pseudometric spaces is a uniform embedding then the distance between `f x`
 and `f y` is controlled in terms of the distance between `x` and `y`. -/
 theorem controlled_of_uniformEmbedding [PseudoMetricSpace β] {f : α → β} :
@@ -1546,12 +970,6 @@ theorem controlled_of_uniformEmbedding [PseudoMetricSpace β] {f : α → β} :
   exact ⟨uniformContinuous_iff.1 (uniformEmbedding_iff.1 h).2.1, (uniformEmbedding_iff.1 h).2.2⟩
 #align metric.controlled_of_uniform_embedding Metric.controlled_of_uniformEmbedding
 
-/- warning: metric.totally_bounded_iff -> Metric.totallyBounded_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => Metric.ball.{u1} α _inst_1 y ε)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => Metric.ball.{u1} α _inst_1 y ε)))))))
-Case conversion may be inaccurate. Consider using '#align metric.totally_bounded_iff Metric.totallyBounded_iffₓ'. -/
 theorem totallyBounded_iff {s : Set α} :
     TotallyBounded s ↔ ∀ ε > 0, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   ⟨fun H ε ε0 => H _ (dist_mem_uniformity ε0), fun H r ru =>
@@ -1560,9 +978,6 @@ theorem totallyBounded_iff {s : Set α} :
     ⟨t, ft, h.trans <| iUnion₂_mono fun y yt z => hε⟩⟩
 #align metric.totally_bounded_iff Metric.totallyBounded_iff
 
-/- warning: metric.totally_bounded_of_finite_discretization -> Metric.totallyBounded_of_finite_discretization is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretizationₓ'. -/
 /-- A pseudometric space is totally bounded if one can reconstruct up to any ε>0 any element of the
 space from finitely many data. -/
 theorem totallyBounded_of_finite_discretization {s : Set α}
@@ -1585,12 +1000,6 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
 #align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretization
 
-/- warning: metric.finite_approx_of_totally_bounded -> Metric.finite_approx_of_totallyBounded is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) s) -> (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => Metric.ball.{u1} α _inst_1 y ε))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) s) -> (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.MetricSpace.Basic._hyg.11021 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => Metric.ball.{u1} α _inst_1 y ε))))))))
-Case conversion may be inaccurate. Consider using '#align metric.finite_approx_of_totally_bounded Metric.finite_approx_of_totallyBoundedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
@@ -1600,12 +1009,6 @@ theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
   exact hs _ (dist_mem_uniformity ε_pos)
 #align metric.finite_approx_of_totally_bounded Metric.finite_approx_of_totallyBounded
 
-/- warning: metric.tendsto_uniformly_on_filter_iff -> Metric.tendstoUniformlyOnFilter_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u3}} {F : ι -> β -> α} {f : β -> α} {p : Filter.{u3} ι} {p' : Filter.{u2} β}, Iff (TendstoUniformlyOnFilter.{u2, u1, u3} β α ι (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) F f p p') (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{max u3 u2} (Prod.{u3, u2} ι β) (fun (n : Prod.{u3, u2} ι β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f (Prod.snd.{u3, u2} ι β n)) (F (Prod.fst.{u3, u2} ι β n) (Prod.snd.{u3, u2} ι β n))) ε) (Filter.prod.{u3, u2} ι β p p')))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {F : ι -> β -> α} {f : β -> α} {p : Filter.{u1} ι} {p' : Filter.{u3} β}, Iff (TendstoUniformlyOnFilter.{u3, u2, u1} β α ι (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1) F f p p') (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{max u3 u1} (Prod.{u1, u3} ι β) (fun (n : Prod.{u1, u3} ι β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f (Prod.snd.{u1, u3} ι β n)) (F (Prod.fst.{u1, u3} ι β n) (Prod.snd.{u1, u3} ι β n))) ε) (Filter.prod.{u1, u3} ι β p p')))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_uniformly_on_filter_iff Metric.tendstoUniformlyOnFilter_iffₓ'. -/
 /-- Expressing uniform convergence using `dist` -/
 theorem tendstoUniformlyOnFilter_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι}
     {p' : Filter β} :
@@ -1617,12 +1020,6 @@ theorem tendstoUniformlyOnFilter_iff {ι : Type _} {F : ι → β → α} {f : �
   refine' (H ε εpos).mono fun n hn => hε hn
 #align metric.tendsto_uniformly_on_filter_iff Metric.tendstoUniformlyOnFilter_iff
 
-/- warning: metric.tendsto_locally_uniformly_on_iff -> Metric.tendstoLocallyUniformlyOn_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] {F : ι -> β -> α} {f : β -> α} {p : Filter.{u3} ι} {s : Set.{u2} β}, Iff (TendstoLocallyUniformlyOn.{u2, u1, u3} β α ι (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_2 F f p s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t (nhdsWithin.{u2} β _inst_2 x s)) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t (nhdsWithin.{u2} β _inst_2 x s)) => Filter.Eventually.{u3} ι (fun (n : ι) => forall (y : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) y t) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f y) (F n y)) ε)) p)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] {F : ι -> β -> α} {f : β -> α} {p : Filter.{u1} ι} {s : Set.{u3} β}, Iff (TendstoLocallyUniformlyOn.{u3, u2, u1} β α ι (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1) _inst_2 F f p s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall (x : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x s) -> (Exists.{succ u3} (Set.{u3} β) (fun (t : Set.{u3} β) => And (Membership.mem.{u3, u3} (Set.{u3} β) (Filter.{u3} β) (instMembershipSetFilter.{u3} β) t (nhdsWithin.{u3} β _inst_2 x s)) (Filter.Eventually.{u1} ι (fun (n : ι) => forall (y : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) y t) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f y) (F n y)) ε)) p)))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_locally_uniformly_on_iff Metric.tendstoLocallyUniformlyOn_iffₓ'. -/
 /-- Expressing locally uniform convergence on a set using `dist`. -/
 theorem tendstoLocallyUniformlyOn_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α}
     {p : Filter ι} {s : Set β} :
@@ -1635,12 +1032,6 @@ theorem tendstoLocallyUniformlyOn_iff {ι : Type _} [TopologicalSpace β] {F : �
   exact ⟨t, ht, Ht.mono fun n hs x hx => hε (hs x hx)⟩
 #align metric.tendsto_locally_uniformly_on_iff Metric.tendstoLocallyUniformlyOn_iff
 
-/- warning: metric.tendsto_uniformly_on_iff -> Metric.tendstoUniformlyOn_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u3}} {F : ι -> β -> α} {f : β -> α} {p : Filter.{u3} ι} {s : Set.{u2} β}, Iff (TendstoUniformlyOn.{u2, u1, u3} β α ι (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) F f p s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u3} ι (fun (n : ι) => forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (F n x)) ε)) p))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {F : ι -> β -> α} {f : β -> α} {p : Filter.{u1} ι} {s : Set.{u3} β}, Iff (TendstoUniformlyOn.{u3, u2, u1} β α ι (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1) F f p s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u1} ι (fun (n : ι) => forall (x : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f x) (F n x)) ε)) p))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_uniformly_on_iff Metric.tendstoUniformlyOn_iffₓ'. -/
 /-- Expressing uniform convergence on a set using `dist`. -/
 theorem tendstoUniformlyOn_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} {s : Set β} :
     TendstoUniformlyOn F f p s ↔ ∀ ε > 0, ∀ᶠ n in p, ∀ x ∈ s, dist (f x) (F n x) < ε :=
@@ -1650,12 +1041,6 @@ theorem tendstoUniformlyOn_iff {ι : Type _} {F : ι → β → α} {f : β → 
   exact (H ε εpos).mono fun n hs x hx => hε (hs x hx)
 #align metric.tendsto_uniformly_on_iff Metric.tendstoUniformlyOn_iff
 
-/- warning: metric.tendsto_locally_uniformly_iff -> Metric.tendstoLocallyUniformly_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] {F : ι -> β -> α} {f : β -> α} {p : Filter.{u3} ι}, Iff (TendstoLocallyUniformly.{u2, u1, u3} β α ι (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_2 F f p) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (forall (x : β), Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t (nhds.{u2} β _inst_2 x)) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t (nhds.{u2} β _inst_2 x)) => Filter.Eventually.{u3} ι (fun (n : ι) => forall (y : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) y t) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f y) (F n y)) ε)) p))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} [_inst_2 : TopologicalSpace.{u3} β] {F : ι -> β -> α} {f : β -> α} {p : Filter.{u1} ι}, Iff (TendstoLocallyUniformly.{u3, u2, u1} β α ι (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1) _inst_2 F f p) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall (x : β), Exists.{succ u3} (Set.{u3} β) (fun (t : Set.{u3} β) => And (Membership.mem.{u3, u3} (Set.{u3} β) (Filter.{u3} β) (instMembershipSetFilter.{u3} β) t (nhds.{u3} β _inst_2 x)) (Filter.Eventually.{u1} ι (fun (n : ι) => forall (y : β), (Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) y t) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f y) (F n y)) ε)) p))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_locally_uniformly_iff Metric.tendstoLocallyUniformly_iffₓ'. -/
 /-- Expressing locally uniform convergence using `dist`. -/
 theorem tendstoLocallyUniformly_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α}
     {p : Filter ι} :
@@ -1666,78 +1051,36 @@ theorem tendstoLocallyUniformly_iff {ι : Type _} [TopologicalSpace β] {F : ι 
     mem_univ, forall_const, exists_prop]
 #align metric.tendsto_locally_uniformly_iff Metric.tendstoLocallyUniformly_iff
 
-/- warning: metric.tendsto_uniformly_iff -> Metric.tendstoUniformly_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u3}} {F : ι -> β -> α} {f : β -> α} {p : Filter.{u3} ι}, Iff (TendstoUniformly.{u2, u1, u3} β α ι (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) F f p) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u3} ι (fun (n : ι) => forall (x : β), LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (F n x)) ε) p))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {F : ι -> β -> α} {f : β -> α} {p : Filter.{u1} ι}, Iff (TendstoUniformly.{u3, u2, u1} β α ι (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1) F f p) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u1} ι (fun (n : ι) => forall (x : β), LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f x) (F n x)) ε) p))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iffₓ'. -/
 /-- Expressing uniform convergence using `dist`. -/
 theorem tendstoUniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} :
     TendstoUniformly F f p ↔ ∀ ε > 0, ∀ᶠ n in p, ∀ x, dist (f x) (F n x) < ε := by
   rw [← tendstoUniformlyOn_univ, tendsto_uniformly_on_iff]; simp
 #align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iff
 
-/- warning: metric.cauchy_iff -> Metric.cauchy_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) f) (And (Filter.NeBot.{u1} α f) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ε)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) f) (And (Filter.NeBot.{u1} α f) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) ε)))))))
-Case conversion may be inaccurate. Consider using '#align metric.cauchy_iff Metric.cauchy_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
 #align metric.cauchy_iff Metric.cauchy_iff
 
-/- warning: metric.nhds_basis_ball -> Metric.nhds_basis_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Real (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (ε : Real) => LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) (Metric.ball.{u1} α _inst_1 x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Real (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (ε : Real) => LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) (Metric.ball.{u1} α _inst_1 x)
-Case conversion may be inaccurate. Consider using '#align metric.nhds_basis_ball Metric.nhds_basis_ballₓ'. -/
 theorem nhds_basis_ball : (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) (ball x) :=
   nhds_basis_uniformity uniformity_basis_dist
 #align metric.nhds_basis_ball Metric.nhds_basis_ball
 
-/- warning: metric.mem_nhds_iff -> Metric.mem_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s)))
-Case conversion may be inaccurate. Consider using '#align metric.mem_nhds_iff Metric.mem_nhds_iffₓ'. -/
 theorem mem_nhds_iff : s ∈ 𝓝 x ↔ ∃ ε > 0, ball x ε ⊆ s :=
   nhds_basis_ball.mem_iff
 #align metric.mem_nhds_iff Metric.mem_nhds_iff
 
-/- warning: metric.eventually_nhds_iff -> Metric.eventually_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (y : α) => p y) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {{y : α}}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y x) ε) -> (p y))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (y : α) => p y) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {{y : α}}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y x) ε) -> (p y))))
-Case conversion may be inaccurate. Consider using '#align metric.eventually_nhds_iff Metric.eventually_nhds_iffₓ'. -/
 theorem eventually_nhds_iff {p : α → Prop} :
     (∀ᶠ y in 𝓝 x, p y) ↔ ∃ ε > 0, ∀ ⦃y⦄, dist y x < ε → p y :=
   mem_nhds_iff
 #align metric.eventually_nhds_iff Metric.eventually_nhds_iff
 
-/- warning: metric.eventually_nhds_iff_ball -> Metric.eventually_nhds_iff_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (y : α) => p y) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) -> (p y))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (y : α) => p y) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (Metric.ball.{u1} α _inst_1 x ε)) -> (p y))))
-Case conversion may be inaccurate. Consider using '#align metric.eventually_nhds_iff_ball Metric.eventually_nhds_iff_ballₓ'. -/
 theorem eventually_nhds_iff_ball {p : α → Prop} :
     (∀ᶠ y in 𝓝 x, p y) ↔ ∃ ε > 0, ∀ y ∈ ball x ε, p y :=
   mem_nhds_iff
 #align metric.eventually_nhds_iff_ball Metric.eventually_nhds_iff_ball
 
-/- warning: metric.eventually_prod_nhds_iff -> Metric.eventually_prod_nhds_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Filter.{u2} ι} {x₀ : α} {p : (Prod.{u2, u1} ι α) -> Prop}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} ι α) (fun (x : Prod.{u2, u1} ι α) => p x) (Filter.prod.{u2, u1} ι α f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x₀))) (Exists.{succ u2} (ι -> Prop) (fun (pa : ι -> Prop) => Exists.{0} (Filter.Eventually.{u2} ι (fun (i : ι) => pa i) f) (fun (ha : Filter.Eventually.{u2} ι (fun (i : ι) => pa i) f) => Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {i : ι}, (pa i) -> (forall {x : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x x₀) ε) -> (p (Prod.mk.{u2, u1} ι α i x))))))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u2} α] {f : Filter.{u1} ι} {x₀ : α} {p : (Prod.{u1, u2} ι α) -> Prop}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u1, u2} ι α) (fun (x : Prod.{u1, u2} ι α) => p x) (Filter.prod.{u1, u2} ι α f (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) x₀))) (Exists.{succ u1} (ι -> Prop) (fun (pa : ι -> Prop) => And (Filter.Eventually.{u1} ι (fun (i : ι) => pa i) f) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {i : ι}, (pa i) -> (forall {x : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) x x₀) ε) -> (p (Prod.mk.{u1, u2} ι α i x))))))))
-Case conversion may be inaccurate. Consider using '#align metric.eventually_prod_nhds_iff Metric.eventually_prod_nhds_iffₓ'. -/
 /-- A version of `filter.eventually_prod_iff` where the second filter consists of neighborhoods
 in a pseudo-metric space.-/
 theorem eventually_prod_nhds_iff {f : Filter ι} {x₀ : α} {p : ι × α → Prop} :
@@ -1752,12 +1095,6 @@ theorem eventually_prod_nhds_iff {f : Filter ι} {x₀ : α} {p : ι × α → P
   · rintro ⟨ε, hε, hp⟩; exact ⟨fun x => dist x x₀ < ε, ⟨ε, hε, fun y => id⟩, @hp⟩
 #align metric.eventually_prod_nhds_iff Metric.eventually_prod_nhds_iff
 
-/- warning: metric.eventually_nhds_prod_iff -> Metric.eventually_nhds_prod_iff is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_2 : PseudoMetricSpace.{u2} α] {f : Filter.{u1} ι} {x₀ : α} {p : (Prod.{u2, u1} α ι) -> Prop}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α ι) (fun (x : Prod.{u2, u1} α ι) => p x) (Filter.prod.{u2, u1} α ι (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_2)) x₀) f)) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => Exists.{succ u1} (ι -> Prop) (fun (pa : ι -> Prop) => Exists.{0} (Filter.Eventually.{u1} ι (fun (i : ι) => pa i) f) (fun (ha : Filter.Eventually.{u1} ι (fun (i : ι) => pa i) f) => forall {x : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} α (PseudoMetricSpace.toHasDist.{u2} α _inst_2) x x₀) ε) -> (forall {i : ι}, (pa i) -> (p (Prod.mk.{u2, u1} α ι x i))))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {f : Filter.{u2} ι} {x₀ : α} {p : (Prod.{u1, u2} α ι) -> Prop}, Iff (Filter.Eventually.{max u1 u2} (Prod.{u1, u2} α ι) (fun (x : Prod.{u1, u2} α ι) => p x) (Filter.prod.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) x₀) f)) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Exists.{succ u2} (ι -> Prop) (fun (pa : ι -> Prop) => And (Filter.Eventually.{u2} ι (fun (i : ι) => pa i) f) (forall {x : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_2) x x₀) ε) -> (forall {i : ι}, (pa i) -> (p (Prod.mk.{u1, u2} α ι x i))))))))
-Case conversion may be inaccurate. Consider using '#align metric.eventually_nhds_prod_iff Metric.eventually_nhds_prod_iffₓ'. -/
 /-- A version of `filter.eventually_prod_iff` where the first filter consists of neighborhoods
 in a pseudo-metric space.-/
 theorem eventually_nhds_prod_iff {ι α} [PseudoMetricSpace α] {f : Filter ι} {x₀ : α}
@@ -1771,66 +1108,30 @@ theorem eventually_nhds_prod_iff {ι α} [PseudoMetricSpace α] {f : Filter ι} 
     · rintro ⟨a1, a2, a3, a4, a5⟩; refine' ⟨a3, a4, a1, a2, fun b1 b2 b3 b4 => a5 b4 b2⟩
 #align metric.eventually_nhds_prod_iff Metric.eventually_nhds_prod_iff
 
-/- warning: metric.nhds_basis_closed_ball -> Metric.nhds_basis_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Real (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (ε : Real) => LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) (Metric.closedBall.{u1} α _inst_1 x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Real (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (ε : Real) => LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) (Metric.closedBall.{u1} α _inst_1 x)
-Case conversion may be inaccurate. Consider using '#align metric.nhds_basis_closed_ball Metric.nhds_basis_closedBallₓ'. -/
 theorem nhds_basis_closedBall : (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) (closedBall x) :=
   nhds_basis_uniformity uniformity_basis_dist_le
 #align metric.nhds_basis_closed_ball Metric.nhds_basis_closedBall
 
-/- warning: metric.nhds_basis_ball_inv_nat_succ -> Metric.nhds_basis_ball_inv_nat_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (_x : Nat) => True) (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (_x : Nat) => True) (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Nat.cast.{0} Real Real.natCast n) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))))
-Case conversion may be inaccurate. Consider using '#align metric.nhds_basis_ball_inv_nat_succ Metric.nhds_basis_ball_inv_nat_succₓ'. -/
 theorem nhds_basis_ball_inv_nat_succ :
     (𝓝 x).HasBasis (fun _ => True) fun n : ℕ => ball x (1 / (↑n + 1)) :=
   nhds_basis_uniformity uniformity_basis_dist_inv_nat_succ
 #align metric.nhds_basis_ball_inv_nat_succ Metric.nhds_basis_ball_inv_nat_succ
 
-/- warning: metric.nhds_basis_ball_inv_nat_pos -> Metric.nhds_basis_ball_inv_nat_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (Nat.cast.{0} Real Real.natCast n)))
-Case conversion may be inaccurate. Consider using '#align metric.nhds_basis_ball_inv_nat_pos Metric.nhds_basis_ball_inv_nat_posₓ'. -/
 theorem nhds_basis_ball_inv_nat_pos :
     (𝓝 x).HasBasis (fun n => 0 < n) fun n : ℕ => ball x (1 / ↑n) :=
   nhds_basis_uniformity uniformity_basis_dist_inv_nat_pos
 #align metric.nhds_basis_ball_inv_nat_pos Metric.nhds_basis_ball_inv_nat_pos
 
-/- warning: metric.nhds_basis_ball_pow -> Metric.nhds_basis_ball_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (LT.lt.{0} Real Real.hasLt r (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (n : Nat) => True) (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) r n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (LT.lt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (n : Nat) => True) (fun (n : Nat) => Metric.ball.{u1} α _inst_1 x (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) r n)))
-Case conversion may be inaccurate. Consider using '#align metric.nhds_basis_ball_pow Metric.nhds_basis_ball_powₓ'. -/
 theorem nhds_basis_ball_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
     (𝓝 x).HasBasis (fun n => True) fun n : ℕ => ball x (r ^ n) :=
   nhds_basis_uniformity (uniformity_basis_dist_pow h0 h1)
 #align metric.nhds_basis_ball_pow Metric.nhds_basis_ball_pow
 
-/- warning: metric.nhds_basis_closed_ball_pow -> Metric.nhds_basis_closedBall_pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (LT.lt.{0} Real Real.hasLt r (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (n : Nat) => True) (fun (n : Nat) => Metric.closedBall.{u1} α _inst_1 x (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) r n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (LT.lt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (Filter.HasBasis.{u1, 1} α Nat (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x) (fun (n : Nat) => True) (fun (n : Nat) => Metric.closedBall.{u1} α _inst_1 x (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) r n)))
-Case conversion may be inaccurate. Consider using '#align metric.nhds_basis_closed_ball_pow Metric.nhds_basis_closedBall_powₓ'. -/
 theorem nhds_basis_closedBall_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
     (𝓝 x).HasBasis (fun n => True) fun n : ℕ => closedBall x (r ^ n) :=
   nhds_basis_uniformity (uniformity_basis_dist_le_pow h0 h1)
 #align metric.nhds_basis_closed_ball_pow Metric.nhds_basis_closedBall_pow
 
-/- warning: metric.is_open_iff -> Metric.isOpen_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s))))
-Case conversion may be inaccurate. Consider using '#align metric.is_open_iff Metric.isOpen_iffₓ'. -/
 theorem isOpen_iff : IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ball x ε ⊆ s := by
   simp only [isOpen_iff_mem_nhds, mem_nhds_iff]
 #align metric.is_open_iff Metric.isOpen_iff
@@ -1841,22 +1142,10 @@ theorem isOpen_ball : IsOpen (ball x ε) :=
 #align metric.is_open_ball Metric.isOpen_ball
 -/
 
-/- warning: metric.ball_mem_nhds -> Metric.ball_mem_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x))
-Case conversion may be inaccurate. Consider using '#align metric.ball_mem_nhds Metric.ball_mem_nhdsₓ'. -/
 theorem ball_mem_nhds (x : α) {ε : ℝ} (ε0 : 0 < ε) : ball x ε ∈ 𝓝 x :=
   isOpen_ball.mem_nhds (mem_ball_self ε0)
 #align metric.ball_mem_nhds Metric.ball_mem_nhds
 
-/- warning: metric.closed_ball_mem_nhds -> Metric.closedBall_mem_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α) {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_mem_nhds Metric.closedBall_mem_nhdsₓ'. -/
 theorem closedBall_mem_nhds (x : α) {ε : ℝ} (ε0 : 0 < ε) : closedBall x ε ∈ 𝓝 x :=
   mem_of_superset (ball_mem_nhds x ε0) ball_subset_closedBall
 #align metric.closed_ball_mem_nhds Metric.closedBall_mem_nhds
@@ -1867,33 +1156,15 @@ theorem closedBall_mem_nhds_of_mem {x c : α} {ε : ℝ} (h : x ∈ ball c ε) :
 #align metric.closed_ball_mem_nhds_of_mem Metric.closedBall_mem_nhds_of_mem
 -/
 
-/- warning: metric.nhds_within_basis_ball -> Metric.nhdsWithin_basis_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {s : Set.{u1} α}, Filter.HasBasis.{u1, 1} α Real (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x s) (fun (ε : Real) => LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) (fun (ε : Real) => Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {s : Set.{u1} α}, Filter.HasBasis.{u1, 1} α Real (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x s) (fun (ε : Real) => LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) (fun (ε : Real) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s)
-Case conversion may be inaccurate. Consider using '#align metric.nhds_within_basis_ball Metric.nhdsWithin_basis_ballₓ'. -/
 theorem nhdsWithin_basis_ball {s : Set α} :
     (𝓝[s] x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => ball x ε ∩ s :=
   nhdsWithin_hasBasis nhds_basis_ball s
 #align metric.nhds_within_basis_ball Metric.nhdsWithin_basis_ball
 
-/- warning: metric.mem_nhds_within_iff -> Metric.mem_nhdsWithin_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x t)) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) t) s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x t)) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) t) s)))
-Case conversion may be inaccurate. Consider using '#align metric.mem_nhds_within_iff Metric.mem_nhdsWithin_iffₓ'. -/
 theorem mem_nhdsWithin_iff {t : Set α} : s ∈ 𝓝[t] x ↔ ∃ ε > 0, ball x ε ∩ t ⊆ s :=
   nhdsWithin_basis_ball.mem_iff
 #align metric.mem_nhds_within_iff Metric.mem_nhdsWithin_iff
 
-/- warning: metric.tendsto_nhds_within_nhds_within -> Metric.tendsto_nhdsWithin_nhdsWithin is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : PseudoMetricSpace.{u2} β] {t : Set.{u2} β} {f : α -> β} {a : α} {b : β}, Iff (Filter.Tendsto.{u1, u2} α β f (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a s) (nhdsWithin.{u2} β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) b t)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x a) δ) -> (And (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) t) (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) b) ε))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : PseudoMetricSpace.{u2} β] {t : Set.{u2} β} {f : α -> β} {a : α} {b : β}, Iff (Filter.Tendsto.{u1, u2} α β f (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a s) (nhdsWithin.{u2} β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) b t)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x a) δ) -> (And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (f x) t) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) b) ε))))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_nhds_within_nhds_within Metric.tendsto_nhdsWithin_nhdsWithinₓ'. -/
 theorem tendsto_nhdsWithin_nhdsWithin [PseudoMetricSpace β] {t : Set β} {f : α → β} {a b} :
     Tendsto f (𝓝[s] a) (𝓝[t] b) ↔
       ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → f x ∈ t ∧ dist (f x) b < ε :=
@@ -1901,12 +1172,6 @@ theorem tendsto_nhdsWithin_nhdsWithin [PseudoMetricSpace β] {t : Set β} {f : �
     forall₂_congr fun ε hε => exists₂_congr fun δ hδ => forall_congr' fun x => by simp <;> itauto
 #align metric.tendsto_nhds_within_nhds_within Metric.tendsto_nhdsWithin_nhdsWithin
 
-/- warning: metric.tendsto_nhds_within_nhds -> Metric.tendsto_nhdsWithin_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α} {b : β}, Iff (Filter.Tendsto.{u1, u2} α β f (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a s) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) b)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) b) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α} {b : β}, Iff (Filter.Tendsto.{u1, u2} α β f (nhdsWithin.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a s) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) b)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) b) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_nhds_within_nhds Metric.tendsto_nhdsWithin_nhdsₓ'. -/
 theorem tendsto_nhdsWithin_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
     Tendsto f (𝓝[s] a) (𝓝 b) ↔
       ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) b < ε :=
@@ -1915,134 +1180,62 @@ theorem tendsto_nhdsWithin_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
   simp only [mem_univ, true_and_iff]
 #align metric.tendsto_nhds_within_nhds Metric.tendsto_nhdsWithin_nhds
 
-/- warning: metric.tendsto_nhds_nhds -> Metric.tendsto_nhds_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α} {b : β}, Iff (Filter.Tendsto.{u1, u2} α β f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) b)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {x : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) b) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α} {b : β}, Iff (Filter.Tendsto.{u1, u2} α β f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) b)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {x : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) b) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_nhds_nhds Metric.tendsto_nhds_nhdsₓ'. -/
 theorem tendsto_nhds_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
     Tendsto f (𝓝 a) (𝓝 b) ↔ ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, dist x a < δ → dist (f x) b < ε :=
   nhds_basis_ball.tendsto_iffₓ nhds_basis_ball
 #align metric.tendsto_nhds_nhds Metric.tendsto_nhds_nhds
 
-/- warning: metric.continuous_at_iff -> Metric.continuousAt_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α}, Iff (ContinuousAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f a) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {x : α}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) (f a)) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α}, Iff (ContinuousAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f a) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {x : α}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) (f a)) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_at_iff Metric.continuousAt_iffₓ'. -/
 theorem continuousAt_iff [PseudoMetricSpace β] {f : α → β} {a : α} :
     ContinuousAt f a ↔ ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, dist x a < δ → dist (f x) (f a) < ε := by
   rw [ContinuousAt, tendsto_nhds_nhds]
 #align metric.continuous_at_iff Metric.continuousAt_iff
 
-/- warning: metric.continuous_within_at_iff -> Metric.continuousWithinAt_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, Iff (ContinuousWithinAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f s a) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f x) (f a)) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, Iff (ContinuousWithinAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f s a) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x a) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) (f a)) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_within_at_iff Metric.continuousWithinAt_iffₓ'. -/
 theorem continuousWithinAt_iff [PseudoMetricSpace β] {f : α → β} {a : α} {s : Set α} :
     ContinuousWithinAt f s a ↔
       ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) (f a) < ε :=
   by rw [ContinuousWithinAt, tendsto_nhds_within_nhds]
 #align metric.continuous_within_at_iff Metric.continuousWithinAt_iff
 
-/- warning: metric.continuous_on_iff -> Metric.continuousOn_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (ContinuousOn.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f s) (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f a) (f b)) ε))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (ContinuousOn.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f s) (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (a : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f a) (f b)) ε))))))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_on_iff Metric.continuousOn_iffₓ'. -/
 theorem continuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     ContinuousOn f s ↔ ∀ b ∈ s, ∀ ε > 0, ∃ δ > 0, ∀ a ∈ s, dist a b < δ → dist (f a) (f b) < ε := by
   simp [ContinuousOn, continuous_within_at_iff]
 #align metric.continuous_on_iff Metric.continuousOn_iff
 
-/- warning: metric.continuous_iff -> Metric.continuous_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, Iff (Continuous.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f) (forall (b : α) (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (a : α), (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (f a) (f b)) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {f : α -> β}, Iff (Continuous.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β _inst_2)) f) (forall (b : α) (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (a : α), (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f a) (f b)) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_iff Metric.continuous_iffₓ'. -/
 theorem continuous_iff [PseudoMetricSpace β] {f : α → β} :
     Continuous f ↔ ∀ (b), ∀ ε > 0, ∃ δ > 0, ∀ a, dist a b < δ → dist (f a) (f b) < ε :=
   continuous_iff_continuousAt.trans <| forall_congr' fun b => tendsto_nhds_nhds
 #align metric.continuous_iff Metric.continuous_iff
 
-/- warning: metric.tendsto_nhds -> Metric.tendsto_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Filter.{u2} β} {u : β -> α} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α u f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u x) a) ε) f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : Filter.{u2} β} {u : β -> α} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α u f (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u x) a) ε) f))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_nhds Metric.tendsto_nhdsₓ'. -/
 theorem tendsto_nhds {f : Filter β} {u : β → α} {a : α} :
     Tendsto u f (𝓝 a) ↔ ∀ ε > 0, ∀ᶠ x in f, dist (u x) a < ε :=
   nhds_basis_ball.tendsto_right_iff
 #align metric.tendsto_nhds Metric.tendsto_nhds
 
-/- warning: metric.continuous_at_iff' -> Metric.continuousAt_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {b : β}, Iff (ContinuousAt.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f b) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (f b)) ε) (nhds.{u2} β _inst_2 b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {b : β}, Iff (ContinuousAt.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f b) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f x) (f b)) ε) (nhds.{u2} β _inst_2 b)))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_at_iff' Metric.continuousAt_iff'ₓ'. -/
 theorem continuousAt_iff' [TopologicalSpace β] {f : β → α} {b : β} :
     ContinuousAt f b ↔ ∀ ε > 0, ∀ᶠ x in 𝓝 b, dist (f x) (f b) < ε := by
   rw [ContinuousAt, tendsto_nhds]
 #align metric.continuous_at_iff' Metric.continuousAt_iff'
 
-/- warning: metric.continuous_within_at_iff' -> Metric.continuousWithinAt_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {b : β} {s : Set.{u2} β}, Iff (ContinuousWithinAt.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s b) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (f b)) ε) (nhdsWithin.{u2} β _inst_2 b s)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {b : β} {s : Set.{u2} β}, Iff (ContinuousWithinAt.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s b) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f x) (f b)) ε) (nhdsWithin.{u2} β _inst_2 b s)))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_within_at_iff' Metric.continuousWithinAt_iff'ₓ'. -/
 theorem continuousWithinAt_iff' [TopologicalSpace β] {f : β → α} {b : β} {s : Set β} :
     ContinuousWithinAt f s b ↔ ∀ ε > 0, ∀ᶠ x in 𝓝[s] b, dist (f x) (f b) < ε := by
   rw [ContinuousWithinAt, tendsto_nhds]
 #align metric.continuous_within_at_iff' Metric.continuousWithinAt_iff'
 
-/- warning: metric.continuous_on_iff' -> Metric.continuousOn_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {s : Set.{u2} β}, Iff (ContinuousOn.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s) (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (f b)) ε) (nhdsWithin.{u2} β _inst_2 b s))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {s : Set.{u2} β}, Iff (ContinuousOn.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s) (forall (b : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b s) -> (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f x) (f b)) ε) (nhdsWithin.{u2} β _inst_2 b s))))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_on_iff' Metric.continuousOn_iff'ₓ'. -/
 theorem continuousOn_iff' [TopologicalSpace β] {f : β → α} {s : Set β} :
     ContinuousOn f s ↔ ∀ b ∈ s, ∀ ε > 0, ∀ᶠ x in 𝓝[s] b, dist (f x) (f b) < ε := by
   simp [ContinuousOn, continuous_within_at_iff']
 #align metric.continuous_on_iff' Metric.continuousOn_iff'
 
-/- warning: metric.continuous_iff' -> Metric.continuous_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α}, Iff (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) (forall (a : β) (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (f a)) ε) (nhds.{u2} β _inst_2 a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α}, Iff (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) (forall (a : β) (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Filter.Eventually.{u2} β (fun (x : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f x) (f a)) ε) (nhds.{u2} β _inst_2 a)))
-Case conversion may be inaccurate. Consider using '#align metric.continuous_iff' Metric.continuous_iff'ₓ'. -/
 theorem continuous_iff' [TopologicalSpace β] {f : β → α} :
     Continuous f ↔ ∀ (a), ∀ ε > 0, ∀ᶠ x in 𝓝 a, dist (f x) (f a) < ε :=
   continuous_iff_continuousAt.trans <| forall_congr' fun b => tendsto_nhds
 #align metric.continuous_iff' Metric.continuous_iff'
 
-/- warning: metric.tendsto_at_top -> Metric.tendsto_atTop is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u n) a) ε))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GE.ge.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u n) a) ε))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_at_top Metric.tendsto_atTopₓ'. -/
 theorem tendsto_atTop [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, dist (u n) a < ε :=
   (atTop_basis.tendsto_iffₓ nhds_basis_ball).trans <| by simp only [exists_prop, true_and_iff]; rfl
 #align metric.tendsto_at_top Metric.tendsto_atTop
 
-/- warning: metric.tendsto_at_top' -> Metric.tendsto_atTop' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] [_inst_4 : NoMaxOrder.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))] {u : β -> α} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GT.gt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u n) a) ε))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] [_inst_4 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))] {u : β -> α} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α u (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GT.gt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u n) a) ε))))
-Case conversion may be inaccurate. Consider using '#align metric.tendsto_at_top' Metric.tendsto_atTop'ₓ'. -/
 /-- A variant of `tendsto_at_top` that
 uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
@@ -2052,23 +1245,11 @@ theorem tendsto_atTop' [Nonempty β] [SemilatticeSup β] [NoMaxOrder β] {u : β
     rfl
 #align metric.tendsto_at_top' Metric.tendsto_atTop'
 
-/- warning: metric.is_open_singleton_iff -> Metric.isOpen_singleton_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {x : α}, Iff (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)) (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (y : α), (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_2) y x) ε) -> (Eq.{succ u1} α y x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {x : α}, Iff (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (y : α), (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_2) y x) ε) -> (Eq.{succ u1} α y x))))
-Case conversion may be inaccurate. Consider using '#align metric.is_open_singleton_iff Metric.isOpen_singleton_iffₓ'. -/
 theorem isOpen_singleton_iff {α : Type _} [PseudoMetricSpace α] {x : α} :
     IsOpen ({x} : Set α) ↔ ∃ ε > 0, ∀ y, dist y x < ε → y = x := by
   simp [is_open_iff, subset_singleton_iff, mem_ball]
 #align metric.is_open_singleton_iff Metric.isOpen_singleton_iff
 
-/- warning: metric.exists_ball_inter_eq_singleton_of_mem_discrete -> Metric.exists_ball_inter_eq_singleton_of_mem_discrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))] {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))] {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.ball.{u1} α _inst_1 x ε) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))))
-Case conversion may be inaccurate. Consider using '#align metric.exists_ball_inter_eq_singleton_of_mem_discrete Metric.exists_ball_inter_eq_singleton_of_mem_discreteₓ'. -/
 /-- Given a point `x` in a discrete subset `s` of a pseudometric space, there is an open ball
 centered at `x` and intersecting `s` only at `x`. -/
 theorem exists_ball_inter_eq_singleton_of_mem_discrete [DiscreteTopology s] {x : α} (hx : x ∈ s) :
@@ -2076,12 +1257,6 @@ theorem exists_ball_inter_eq_singleton_of_mem_discrete [DiscreteTopology s] {x :
   nhds_basis_ball.exists_inter_eq_singleton_of_mem_discrete hx
 #align metric.exists_ball_inter_eq_singleton_of_mem_discrete Metric.exists_ball_inter_eq_singleton_of_mem_discrete
 
-/- warning: metric.exists_closed_ball_inter_eq_singleton_of_discrete -> Metric.exists_closedBall_inter_eq_singleton_of_discrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))] {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} [_inst_2 : DiscreteTopology.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))] {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x ε) s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))))
-Case conversion may be inaccurate. Consider using '#align metric.exists_closed_ball_inter_eq_singleton_of_discrete Metric.exists_closedBall_inter_eq_singleton_of_discreteₓ'. -/
 /-- Given a point `x` in a discrete subset `s` of a pseudometric space, there is a closed ball
 of positive radius centered at `x` and intersecting `s` only at `x`. -/
 theorem exists_closedBall_inter_eq_singleton_of_discrete [DiscreteTopology s] {x : α} (hx : x ∈ s) :
@@ -2089,12 +1264,6 @@ theorem exists_closedBall_inter_eq_singleton_of_discrete [DiscreteTopology s] {x
   nhds_basis_closedBall.exists_inter_eq_singleton_of_mem_discrete hx
 #align metric.exists_closed_ball_inter_eq_singleton_of_discrete Metric.exists_closedBall_inter_eq_singleton_of_discrete
 
-/- warning: dense.exists_dist_lt -> Dense.exists_dist_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Dense.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall (x : α) {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ε))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Dense.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall (x : α) {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) ε))))
-Case conversion may be inaccurate. Consider using '#align dense.exists_dist_lt Dense.exists_dist_ltₓ'. -/
 theorem Dense.exists_dist_lt {s : Set α} (hs : Dense s) (x : α) {ε : ℝ} (hε : 0 < ε) :
     ∃ y ∈ s, dist x y < ε :=
   by
@@ -2102,12 +1271,6 @@ theorem Dense.exists_dist_lt {s : Set α} (hs : Dense s) (x : α) {ε : ℝ} (h�
   simpa only [mem_ball'] using hs.exists_mem_open is_open_ball this
 #align dense.exists_dist_lt Dense.exists_dist_lt
 
-/- warning: dense_range.exists_dist_lt -> DenseRange.exists_dist_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {β : Type.{u2}} {f : β -> α}, (DenseRange.{u1, u2} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) β f) -> (forall (x : α) {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{succ u2} β (fun (y : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x (f y)) ε)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {β : Type.{u1}} {f : β -> α}, (DenseRange.{u2, u1} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) β f) -> (forall (x : α) {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{succ u1} β (fun (y : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) x (f y)) ε)))
-Case conversion may be inaccurate. Consider using '#align dense_range.exists_dist_lt DenseRange.exists_dist_ltₓ'. -/
 theorem DenseRange.exists_dist_lt {β : Type _} {f : β → α} (hf : DenseRange f) (x : α) {ε : ℝ}
     (hε : 0 < ε) : ∃ y, dist x (f y) < ε :=
   exists_range_iff.1 (hf.exists_dist_lt x hε)
@@ -2117,12 +1280,6 @@ end Metric
 
 open Metric
 
-/- warning: pseudo_metric.uniformity_basis_edist -> Metric.uniformity_basis_edist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) ENNReal (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (ε : ENNReal) => LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))) ε) (fun (ε : ENNReal) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Filter.HasBasis.{u1, 1} (Prod.{u1, u1} α α) ENNReal (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (fun (ε : ENNReal) => LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) ε) (fun (ε : ENNReal) => setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε))
-Case conversion may be inaccurate. Consider using '#align pseudo_metric.uniformity_basis_edist Metric.uniformity_basis_edistₓ'. -/
 /-Instantiate a pseudometric space as a pseudoemetric space. Before we can state the instance,
 we need to show that the uniform structure coming from the edistance and the
 distance coincide. -/
@@ -2142,12 +1299,6 @@ protected theorem Metric.uniformity_basis_edist :
       rwa [edist_dist, ENNReal.ofReal_lt_ofReal_iff ε0']⟩
 #align pseudo_metric.uniformity_basis_edist Metric.uniformity_basis_edist
 
-/- warning: metric.uniformity_edist -> Metric.uniformity_edist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (iInf.{u1, 1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) ENNReal (fun (ε : ENNReal) => iInf.{u1, 0} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) (GT.gt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) ε (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (fun (H : GT.gt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) ε (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) => Filter.principal.{u1} (Prod.{u1, u1} α α) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (iInf.{u1, 1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) ENNReal (fun (ε : ENNReal) => iInf.{u1, 0} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) (GT.gt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) ε (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (fun (H : GT.gt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) ε (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) => Filter.principal.{u1} (Prod.{u1, u1} α α) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_edist Metric.uniformity_edistₓ'. -/
 theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } :=
   Metric.uniformity_basis_edist.eq_biInf
 #align metric.uniformity_edist Metric.uniformity_edist
@@ -2170,12 +1321,6 @@ instance (priority := 100) PseudoMetricSpace.toPseudoEMetricSpace : PseudoEMetri
 #align pseudo_metric_space.to_pseudo_emetric_space PseudoMetricSpace.toPseudoEMetricSpace
 -/
 
-/- warning: metric.eball_top_eq_univ -> Metric.eball_top_eq_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (EMetric.ball.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (EMetric.ball.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Set.univ.{u1} α)
-Case conversion may be inaccurate. Consider using '#align metric.eball_top_eq_univ Metric.eball_top_eq_univₓ'. -/
 /-- In a pseudometric space, an open ball of infinite radius is the whole space -/
 theorem Metric.eball_top_eq_univ (x : α) : EMetric.ball x ∞ = Set.univ :=
   Set.eq_univ_iff_forall.mpr fun y => edist_lt_top y x
@@ -2192,59 +1337,29 @@ theorem Metric.emetric_ball {x : α} {ε : ℝ} : EMetric.ball x (ENNReal.ofReal
 #align metric.emetric_ball Metric.emetric_ball
 -/
 
-/- warning: metric.emetric_ball_nnreal -> Metric.emetric_ball_nnreal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : NNReal}, Eq.{succ u1} (Set.{u1} α) (EMetric.ball.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) ε)) (Metric.ball.{u1} α _inst_1 x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : NNReal}, Eq.{succ u1} (Set.{u1} α) (EMetric.ball.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (ENNReal.some ε)) (Metric.ball.{u1} α _inst_1 x (NNReal.toReal ε))
-Case conversion may be inaccurate. Consider using '#align metric.emetric_ball_nnreal Metric.emetric_ball_nnrealₓ'. -/
 /-- Balls defined using the distance or the edistance coincide -/
 @[simp]
 theorem Metric.emetric_ball_nnreal {x : α} {ε : ℝ≥0} : EMetric.ball x ε = ball x ε := by
   convert Metric.emetric_ball; simp
 #align metric.emetric_ball_nnreal Metric.emetric_ball_nnreal
 
-/- warning: metric.emetric_closed_ball -> Metric.emetric_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Eq.{succ u1} (Set.{u1} α) (EMetric.closedBall.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (ENNReal.ofReal ε)) (Metric.closedBall.{u1} α _inst_1 x ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Eq.{succ u1} (Set.{u1} α) (EMetric.closedBall.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (ENNReal.ofReal ε)) (Metric.closedBall.{u1} α _inst_1 x ε))
-Case conversion may be inaccurate. Consider using '#align metric.emetric_closed_ball Metric.emetric_closedBallₓ'. -/
 /-- Closed balls defined using the distance or the edistance coincide -/
 theorem Metric.emetric_closedBall {x : α} {ε : ℝ} (h : 0 ≤ ε) :
     EMetric.closedBall x (ENNReal.ofReal ε) = closedBall x ε := by
   ext y <;> simp [edist_dist] <;> rw [ENNReal.ofReal_le_ofReal_iff h]
 #align metric.emetric_closed_ball Metric.emetric_closedBall
 
-/- warning: metric.emetric_closed_ball_nnreal -> Metric.emetric_closedBall_nnreal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : NNReal}, Eq.{succ u1} (Set.{u1} α) (EMetric.closedBall.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) ε)) (Metric.closedBall.{u1} α _inst_1 x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) ε))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {ε : NNReal}, Eq.{succ u1} (Set.{u1} α) (EMetric.closedBall.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (ENNReal.some ε)) (Metric.closedBall.{u1} α _inst_1 x (NNReal.toReal ε))
-Case conversion may be inaccurate. Consider using '#align metric.emetric_closed_ball_nnreal Metric.emetric_closedBall_nnrealₓ'. -/
 /-- Closed balls defined using the distance or the edistance coincide -/
 @[simp]
 theorem Metric.emetric_closedBall_nnreal {x : α} {ε : ℝ≥0} :
     EMetric.closedBall x ε = closedBall x ε := by convert Metric.emetric_closedBall ε.2; simp
 #align metric.emetric_closed_ball_nnreal Metric.emetric_closedBall_nnreal
 
-/- warning: metric.emetric_ball_top -> Metric.emetric_ball_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (EMetric.ball.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (Set.univ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (EMetric.ball.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) x (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Set.univ.{u1} α)
-Case conversion may be inaccurate. Consider using '#align metric.emetric_ball_top Metric.emetric_ball_topₓ'. -/
 @[simp]
 theorem Metric.emetric_ball_top (x : α) : EMetric.ball x ⊤ = univ :=
   eq_univ_of_forall fun y => edist_lt_top _ _
 #align metric.emetric_ball_top Metric.emetric_ball_top
 
-/- warning: metric.inseparable_iff -> Metric.inseparable_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α}, Iff (Inseparable.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x y) (Eq.{1} Real (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α}, Iff (Inseparable.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x y) (Eq.{1} Real (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align metric.inseparable_iff Metric.inseparable_iffₓ'. -/
 theorem Metric.inseparable_iff {x y : α} : Inseparable x y ↔ dist x y = 0 := by
   rw [EMetric.inseparable_iff, edist_nndist, dist_nndist, ENNReal.coe_eq_zero, NNReal.coe_eq_zero]
 #align metric.inseparable_iff Metric.inseparable_iff
@@ -2292,12 +1407,6 @@ theorem PseudoMetricSpace.replaceTopology_eq {γ} [U : TopologicalSpace γ] (m :
 #align pseudo_metric_space.replace_topology_eq PseudoMetricSpace.replaceTopology_eq
 -/
 
-/- warning: pseudo_emetric_space.to_pseudo_metric_space_of_dist -> PseudoEMetricSpace.toPseudoMetricSpaceOfDist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [e : PseudoEMetricSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α e) x y) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (ENNReal.toReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α e) x y))) -> (PseudoMetricSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [e : PseudoEMetricSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α e) x y) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (ENNReal.toReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α e) x y))) -> (PseudoMetricSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align pseudo_emetric_space.to_pseudo_metric_space_of_dist PseudoEMetricSpace.toPseudoMetricSpaceOfDistₓ'. -/
 /-- One gets a pseudometric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the pseudometric space and the pseudoemetric space. In this definition, the
@@ -2321,12 +1430,6 @@ def PseudoEMetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEMetri
   m.replaceUniformity <| by rw [uniformity_pseudoedist, Metric.uniformity_edist]; rfl
 #align pseudo_emetric_space.to_pseudo_metric_space_of_dist PseudoEMetricSpace.toPseudoMetricSpaceOfDist
 
-/- warning: pseudo_emetric_space.to_pseudo_metric_space -> PseudoEMetricSpace.toPseudoMetricSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [e : PseudoEMetricSpace.{u1} α], (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α e) x y) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (PseudoMetricSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [e : PseudoEMetricSpace.{u1} α], (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α e) x y) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (PseudoMetricSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align pseudo_emetric_space.to_pseudo_metric_space PseudoEMetricSpace.toPseudoMetricSpaceₓ'. -/
 /-- One gets a pseudometric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the pseudometric space and the emetric space. -/
@@ -2360,12 +1463,6 @@ theorem PseudoMetricSpace.replaceBornology_eq {α} [m : PseudoMetricSpace α] [B
 #align pseudo_metric_space.replace_bornology_eq PseudoMetricSpace.replaceBornology_eq
 -/
 
-/- warning: metric.complete_of_convergent_controlled_sequences -> Metric.complete_of_convergent_controlled_sequences is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (B : Nat -> Real), (forall (n : Nat), LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (B n)) -> (forall (u : Nat -> α), (forall (N : Nat) (n : Nat) (m : Nat), (LE.le.{0} Nat Nat.hasLe N n) -> (LE.le.{0} Nat Nat.hasLe N m) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u n) (u m)) (B N))) -> (Exists.{succ u1} α (fun (x : α) => Filter.Tendsto.{0, u1} Nat α u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)))) -> (CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (B : Nat -> Real), (forall (n : Nat), LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (B n)) -> (forall (u : Nat -> α), (forall (N : Nat) (n : Nat) (m : Nat), (LE.le.{0} Nat instLENat N n) -> (LE.le.{0} Nat instLENat N m) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u n) (u m)) (B N))) -> (Exists.{succ u1} α (fun (x : α) => Filter.Tendsto.{0, u1} Nat α u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)))) -> (CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align metric.complete_of_convergent_controlled_sequences Metric.complete_of_convergent_controlled_sequencesₓ'. -/
 /-- A very useful criterion to show that a space is complete is to show that all sequences
 which satisfy a bound of the form `dist (u n) (u m) < B N` for all `n m ≥ N` are
 converging. This is often applied for `B N = 2^{-N}`, i.e., with a very fast convergence to
@@ -2400,94 +1497,40 @@ instance Real.pseudoMetricSpace : PseudoMetricSpace ℝ
 #align real.pseudo_metric_space Real.pseudoMetricSpace
 -/
 
-/- warning: real.dist_eq -> Real.dist_eq is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x y) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) x y))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x y) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) x y))
-Case conversion may be inaccurate. Consider using '#align real.dist_eq Real.dist_eqₓ'. -/
 theorem Real.dist_eq (x y : ℝ) : dist x y = |x - y| :=
   rfl
 #align real.dist_eq Real.dist_eq
 
-/- warning: real.nndist_eq -> Real.nndist_eq is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} NNReal (NNDist.nndist.{0} Real (PseudoMetricSpace.toNNDist.{0} Real Real.pseudoMetricSpace) x y) (coeFn.{1, 1} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (NonAssocRing.toNonAssocSemiring.{0} Real (Ring.toNonAssocRing.{0} Real Real.ring))) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))) (fun (_x : MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (NonAssocRing.toNonAssocSemiring.{0} Real (Ring.toNonAssocRing.{0} Real Real.ring))) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))) => Real -> NNReal) (MonoidWithZeroHom.hasCoeToFun.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (NonAssocRing.toNonAssocSemiring.{0} Real (Ring.toNonAssocRing.{0} Real Real.ring))) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))) Real.nnabs (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) x y))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} NNReal (NNDist.nndist.{0} Real (PseudoMetricSpace.toNNDist.{0} Real Real.pseudoMetricSpace) x y) (FunLike.coe.{1, 1, 1} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real (fun (_x : Real) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Real) => NNReal) _x) (MulHomClass.toFunLike.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulOneClass.toMul.{0} Real (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)))) (MulOneClass.toMul.{0} NNReal (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))) (MonoidHomClass.toMulHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) (MonoidWithZeroHomClass.toMonoidHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)) (MonoidWithZeroHom.monoidWithZeroHomClass.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))))) Real.nnabs (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) x y))
-Case conversion may be inaccurate. Consider using '#align real.nndist_eq Real.nndist_eqₓ'. -/
 theorem Real.nndist_eq (x y : ℝ) : nndist x y = Real.nnabs (x - y) :=
   rfl
 #align real.nndist_eq Real.nndist_eq
 
-/- warning: real.nndist_eq' -> Real.nndist_eq' is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} NNReal (NNDist.nndist.{0} Real (PseudoMetricSpace.toNNDist.{0} Real Real.pseudoMetricSpace) x y) (coeFn.{1, 1} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (NonAssocRing.toNonAssocSemiring.{0} Real (Ring.toNonAssocRing.{0} Real Real.ring))) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))) (fun (_x : MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (NonAssocRing.toNonAssocSemiring.{0} Real (Ring.toNonAssocRing.{0} Real Real.ring))) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))) => Real -> NNReal) (MonoidWithZeroHom.hasCoeToFun.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (NonAssocRing.toNonAssocSemiring.{0} Real (Ring.toNonAssocRing.{0} Real Real.ring))) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))) Real.nnabs (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) y x))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} NNReal (NNDist.nndist.{0} Real (PseudoMetricSpace.toNNDist.{0} Real Real.pseudoMetricSpace) x y) (FunLike.coe.{1, 1, 1} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real (fun (_x : Real) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Real) => NNReal) _x) (MulHomClass.toFunLike.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulOneClass.toMul.{0} Real (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)))) (MulOneClass.toMul.{0} NNReal (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))) (MonoidHomClass.toMulHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) (MonoidWithZeroHomClass.toMonoidHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)) (MonoidWithZeroHom.monoidWithZeroHomClass.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))))) Real.nnabs (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y x))
-Case conversion may be inaccurate. Consider using '#align real.nndist_eq' Real.nndist_eq'ₓ'. -/
 theorem Real.nndist_eq' (x y : ℝ) : nndist x y = Real.nnabs (y - x) :=
   nndist_comm _ _
 #align real.nndist_eq' Real.nndist_eq'
 
-/- warning: real.dist_0_eq_abs -> Real.dist_0_eq_abs is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) x)
-but is expected to have type
-  forall (x : Real), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) x)
-Case conversion may be inaccurate. Consider using '#align real.dist_0_eq_abs Real.dist_0_eq_absₓ'. -/
 theorem Real.dist_0_eq_abs (x : ℝ) : dist x 0 = |x| := by simp [Real.dist_eq]
 #align real.dist_0_eq_abs Real.dist_0_eq_abs
 
-/- warning: real.dist_left_le_of_mem_uIcc -> Real.dist_left_le_of_mem_uIcc is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real} {z : Real}, (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y (Set.uIcc.{0} Real Real.lattice x z)) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x y) (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x z))
-but is expected to have type
-  forall {x : Real} {y : Real} {z : Real}, (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) y (Set.uIcc.{0} Real Real.lattice x z)) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x y) (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x z))
-Case conversion may be inaccurate. Consider using '#align real.dist_left_le_of_mem_uIcc Real.dist_left_le_of_mem_uIccₓ'. -/
 theorem Real.dist_left_le_of_mem_uIcc {x y z : ℝ} (h : y ∈ uIcc x z) : dist x y ≤ dist x z := by
   simpa only [dist_comm x] using abs_sub_left_of_mem_uIcc h
 #align real.dist_left_le_of_mem_uIcc Real.dist_left_le_of_mem_uIcc
 
-/- warning: real.dist_right_le_of_mem_uIcc -> Real.dist_right_le_of_mem_uIcc is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real} {z : Real}, (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y (Set.uIcc.{0} Real Real.lattice x z)) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) y z) (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x z))
-but is expected to have type
-  forall {x : Real} {y : Real} {z : Real}, (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) y (Set.uIcc.{0} Real Real.lattice x z)) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) y z) (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x z))
-Case conversion may be inaccurate. Consider using '#align real.dist_right_le_of_mem_uIcc Real.dist_right_le_of_mem_uIccₓ'. -/
 theorem Real.dist_right_le_of_mem_uIcc {x y z : ℝ} (h : y ∈ uIcc x z) : dist y z ≤ dist x z := by
   simpa only [dist_comm _ z] using abs_sub_right_of_mem_uIcc h
 #align real.dist_right_le_of_mem_uIcc Real.dist_right_le_of_mem_uIcc
 
-/- warning: real.dist_le_of_mem_uIcc -> Real.dist_le_of_mem_uIcc is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real} {x' : Real} {y' : Real}, (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.uIcc.{0} Real Real.lattice x' y')) -> (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y (Set.uIcc.{0} Real Real.lattice x' y')) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x y) (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x' y'))
-but is expected to have type
-  forall {x : Real} {y : Real} {x' : Real} {y' : Real}, (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.uIcc.{0} Real Real.lattice x' y')) -> (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) y (Set.uIcc.{0} Real Real.lattice x' y')) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x y) (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x' y'))
-Case conversion may be inaccurate. Consider using '#align real.dist_le_of_mem_uIcc Real.dist_le_of_mem_uIccₓ'. -/
 theorem Real.dist_le_of_mem_uIcc {x y x' y' : ℝ} (hx : x ∈ uIcc x' y') (hy : y ∈ uIcc x' y') :
     dist x y ≤ dist x' y' :=
   abs_sub_le_of_uIcc_subset_uIcc <| uIcc_subset_uIcc (by rwa [uIcc_comm]) (by rwa [uIcc_comm])
 #align real.dist_le_of_mem_uIcc Real.dist_le_of_mem_uIcc
 
-/- warning: real.dist_le_of_mem_Icc -> Real.dist_le_of_mem_Icc is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real} {x' : Real} {y' : Real}, (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Icc.{0} Real Real.preorder x' y')) -> (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y (Set.Icc.{0} Real Real.preorder x' y')) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x y) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) y' x'))
-but is expected to have type
-  forall {x : Real} {y : Real} {x' : Real} {y' : Real}, (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Icc.{0} Real Real.instPreorderReal x' y')) -> (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) y (Set.Icc.{0} Real Real.instPreorderReal x' y')) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x y) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y' x'))
-Case conversion may be inaccurate. Consider using '#align real.dist_le_of_mem_Icc Real.dist_le_of_mem_Iccₓ'. -/
 theorem Real.dist_le_of_mem_Icc {x y x' y' : ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ y' - x' := by
   simpa only [Real.dist_eq, abs_of_nonpos (sub_nonpos.2 <| hx.1.trans hx.2), neg_sub] using
     Real.dist_le_of_mem_uIcc (Icc_subset_uIcc hx) (Icc_subset_uIcc hy)
 #align real.dist_le_of_mem_Icc Real.dist_le_of_mem_Icc
 
-/- warning: real.dist_le_of_mem_Icc_01 -> Real.dist_le_of_mem_Icc_01 is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real}, (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Icc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) -> (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) y (Set.Icc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) x y) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {x : Real} {y : Real}, (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Icc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) -> (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) y (Set.Icc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) x y) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align real.dist_le_of_mem_Icc_01 Real.dist_le_of_mem_Icc_01ₓ'. -/
 theorem Real.dist_le_of_mem_Icc_01 {x y : ℝ} (hx : x ∈ Icc (0 : ℝ) 1) (hy : y ∈ Icc (0 : ℝ) 1) :
     dist x y ≤ 1 := by simpa only [sub_zero] using Real.dist_le_of_mem_Icc hx hy
 #align real.dist_le_of_mem_Icc_01 Real.dist_le_of_mem_Icc_01
@@ -2496,47 +1539,23 @@ instance : OrderTopology ℝ :=
   orderTopology_of_nhds_abs fun x => by
     simp only [nhds_basis_ball.eq_binfi, ball, Real.dist_eq, abs_sub_comm]
 
-/- warning: real.ball_eq_Ioo -> Real.ball_eq_Ioo is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (r : Real), Eq.{1} (Set.{0} Real) (Metric.ball.{0} Real Real.pseudoMetricSpace x r) (Set.Ioo.{0} Real Real.preorder (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) x r) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x r))
-but is expected to have type
-  forall (x : Real) (r : Real), Eq.{1} (Set.{0} Real) (Metric.ball.{0} Real Real.pseudoMetricSpace x r) (Set.Ioo.{0} Real Real.instPreorderReal (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) x r) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) x r))
-Case conversion may be inaccurate. Consider using '#align real.ball_eq_Ioo Real.ball_eq_Iooₓ'. -/
 theorem Real.ball_eq_Ioo (x r : ℝ) : ball x r = Ioo (x - r) (x + r) :=
   Set.ext fun y => by
     rw [mem_ball, dist_comm, Real.dist_eq, abs_sub_lt_iff, mem_Ioo, ← sub_lt_iff_lt_add',
       sub_lt_comm]
 #align real.ball_eq_Ioo Real.ball_eq_Ioo
 
-/- warning: real.closed_ball_eq_Icc -> Real.closedBall_eq_Icc is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {r : Real}, Eq.{1} (Set.{0} Real) (Metric.closedBall.{0} Real Real.pseudoMetricSpace x r) (Set.Icc.{0} Real Real.preorder (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) x r) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x r))
-but is expected to have type
-  forall {x : Real} {r : Real}, Eq.{1} (Set.{0} Real) (Metric.closedBall.{0} Real Real.pseudoMetricSpace x r) (Set.Icc.{0} Real Real.instPreorderReal (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) x r) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) x r))
-Case conversion may be inaccurate. Consider using '#align real.closed_ball_eq_Icc Real.closedBall_eq_Iccₓ'. -/
 theorem Real.closedBall_eq_Icc {x r : ℝ} : closedBall x r = Icc (x - r) (x + r) := by
   ext y <;>
     rw [mem_closed_ball, dist_comm, Real.dist_eq, abs_sub_le_iff, mem_Icc, ← sub_le_iff_le_add',
       sub_le_comm]
 #align real.closed_ball_eq_Icc Real.closedBall_eq_Icc
 
-/- warning: real.Ioo_eq_ball -> Real.Ioo_eq_ball is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} (Set.{0} Real) (Set.Ioo.{0} Real Real.preorder x y) (Metric.ball.{0} Real Real.pseudoMetricSpace (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x y) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) y x) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} (Set.{0} Real) (Set.Ioo.{0} Real Real.instPreorderReal x y) (Metric.ball.{0} Real Real.pseudoMetricSpace (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) x y) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y x) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))
-Case conversion may be inaccurate. Consider using '#align real.Ioo_eq_ball Real.Ioo_eq_ballₓ'. -/
 theorem Real.Ioo_eq_ball (x y : ℝ) : Ioo x y = ball ((x + y) / 2) ((y - x) / 2) := by
   rw [Real.ball_eq_Ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
     add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
 #align real.Ioo_eq_ball Real.Ioo_eq_ball
 
-/- warning: real.Icc_eq_closed_ball -> Real.Icc_eq_closedBall is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} (Set.{0} Real) (Set.Icc.{0} Real Real.preorder x y) (Metric.closedBall.{0} Real Real.pseudoMetricSpace (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x y) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) y x) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} (Set.{0} Real) (Set.Icc.{0} Real Real.instPreorderReal x y) (Metric.closedBall.{0} Real Real.pseudoMetricSpace (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) x y) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y x) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))
-Case conversion may be inaccurate. Consider using '#align real.Icc_eq_closed_ball Real.Icc_eq_closedBallₓ'. -/
 theorem Real.Icc_eq_closedBall (x y : ℝ) : Icc x y = closedBall ((x + y) / 2) ((y - x) / 2) := by
   rw [Real.closedBall_eq_Icc, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
     add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
@@ -2572,12 +1591,6 @@ theorem totallyBounded_Ioo (a b : α) : TotallyBounded (Ioo a b) :=
 
 end MetricOrdered
 
-/- warning: squeeze_zero' -> squeeze_zero' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : α -> Real} {g : α -> Real} {t₀ : Filter.{u1} α}, (Filter.Eventually.{u1} α (fun (t : α) => LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (f t)) t₀) -> (Filter.Eventually.{u1} α (fun (t : α) => LE.le.{0} Real Real.hasLe (f t) (g t)) t₀) -> (Filter.Tendsto.{u1, 0} α Real g t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Filter.Tendsto.{u1, 0} α Real f t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : α -> Real} {g : α -> Real} {t₀ : Filter.{u1} α}, (Filter.Eventually.{u1} α (fun (t : α) => LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (f t)) t₀) -> (Filter.Eventually.{u1} α (fun (t : α) => LE.le.{0} Real Real.instLEReal (f t) (g t)) t₀) -> (Filter.Tendsto.{u1, 0} α Real g t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Filter.Tendsto.{u1, 0} α Real f t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align squeeze_zero' squeeze_zero'ₓ'. -/
 /-- Special case of the sandwich theorem; see `tendsto_of_tendsto_of_tendsto_of_le_of_le'` for the
 general case. -/
 theorem squeeze_zero' {α} {f g : α → ℝ} {t₀ : Filter α} (hf : ∀ᶠ t in t₀, 0 ≤ f t)
@@ -2585,12 +1598,6 @@ theorem squeeze_zero' {α} {f g : α → ℝ} {t₀ : Filter α} (hf : ∀ᶠ t 
   tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds g0 hf hft
 #align squeeze_zero' squeeze_zero'
 
-/- warning: squeeze_zero -> squeeze_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : α -> Real} {g : α -> Real} {t₀ : Filter.{u1} α}, (forall (t : α), LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (f t)) -> (forall (t : α), LE.le.{0} Real Real.hasLe (f t) (g t)) -> (Filter.Tendsto.{u1, 0} α Real g t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Filter.Tendsto.{u1, 0} α Real f t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : α -> Real} {g : α -> Real} {t₀ : Filter.{u1} α}, (forall (t : α), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (f t)) -> (forall (t : α), LE.le.{0} Real Real.instLEReal (f t) (g t)) -> (Filter.Tendsto.{u1, 0} α Real g t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Filter.Tendsto.{u1, 0} α Real f t₀ (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align squeeze_zero squeeze_zeroₓ'. -/
 /-- Special case of the sandwich theorem; see `tendsto_of_tendsto_of_tendsto_of_le_of_le`
 and  `tendsto_of_tendsto_of_tendsto_of_le_of_le'` for the general case. -/
 theorem squeeze_zero {α} {f g : α → ℝ} {t₀ : Filter α} (hf : ∀ t, 0 ≤ f t) (hft : ∀ t, f t ≤ g t)
@@ -2598,12 +1605,6 @@ theorem squeeze_zero {α} {f g : α → ℝ} {t₀ : Filter α} (hf : ∀ t, 0 �
   squeeze_zero' (eventually_of_forall hf) (eventually_of_forall hft) g0
 #align squeeze_zero squeeze_zero
 
-/- warning: metric.uniformity_eq_comap_nhds_zero -> Metric.uniformity_eq_comap_nhds_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Filter.comap.{u1, 0} (Prod.{u1, u1} α α) Real (fun (p : Prod.{u1, u1} α α) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Filter.comap.{u1, 0} (Prod.{u1, u1} α α) Real (fun (p : Prod.{u1, u1} α α) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align metric.uniformity_eq_comap_nhds_zero Metric.uniformity_eq_comap_nhds_zeroₓ'. -/
 theorem Metric.uniformity_eq_comap_nhds_zero :
     𝓤 α = comap (fun p : α × α => dist p.1 p.2) (𝓝 (0 : ℝ)) :=
   by
@@ -2611,66 +1612,30 @@ theorem Metric.uniformity_eq_comap_nhds_zero :
   simp [mem_uniformity_dist, (nhds_basis_ball.comap _).mem_iff, subset_def, Real.dist_0_eq_abs]
 #align metric.uniformity_eq_comap_nhds_zero Metric.uniformity_eq_comap_nhds_zero
 
-/- warning: cauchy_seq_iff_tendsto_dist_at_top_0 -> cauchySeq_iff_tendsto_dist_atTop_0 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 u) (Filter.Tendsto.{u2, 0} (Prod.{u2, u2} β β) Real (fun (n : Prod.{u2, u2} β β) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u (Prod.fst.{u2, u2} β β n)) (u (Prod.snd.{u2, u2} β β n))) (Filter.atTop.{u2} (Prod.{u2, u2} β β) (Prod.preorder.{u2, u2} β β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 u) (Filter.Tendsto.{u2, 0} (Prod.{u2, u2} β β) Real (fun (n : Prod.{u2, u2} β β) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u (Prod.fst.{u2, u2} β β n)) (u (Prod.snd.{u2, u2} β β n))) (Filter.atTop.{u2} (Prod.{u2, u2} β β) (Prod.instPreorderProd.{u2, u2} β β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_iff_tendsto_dist_at_top_0 cauchySeq_iff_tendsto_dist_atTop_0ₓ'. -/
 theorem cauchySeq_iff_tendsto_dist_atTop_0 [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (fun n : β × β => dist (u n.1) (u n.2)) atTop (𝓝 0) := by
   rw [cauchySeq_iff_tendsto, Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff, Prod.map_def]
 #align cauchy_seq_iff_tendsto_dist_at_top_0 cauchySeq_iff_tendsto_dist_atTop_0
 
-/- warning: tendsto_uniformity_iff_dist_tendsto_zero -> tendsto_uniformity_iff_dist_tendsto_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u2}} {f : ι -> (Prod.{u1, u1} α α)} {p : Filter.{u2} ι}, Iff (Filter.Tendsto.{u2, u1} ι (Prod.{u1, u1} α α) f p (uniformity.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (Filter.Tendsto.{u2, 0} ι Real (fun (x : ι) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α (f x)) (Prod.snd.{u1, u1} α α (f x))) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {f : ι -> (Prod.{u2, u2} α α)} {p : Filter.{u1} ι}, Iff (Filter.Tendsto.{u1, u2} ι (Prod.{u2, u2} α α) f p (uniformity.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1))) (Filter.Tendsto.{u1, 0} ι Real (fun (x : ι) => Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (Prod.fst.{u2, u2} α α (f x)) (Prod.snd.{u2, u2} α α (f x))) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformity_iff_dist_tendsto_zero tendsto_uniformity_iff_dist_tendsto_zeroₓ'. -/
 theorem tendsto_uniformity_iff_dist_tendsto_zero {ι : Type _} {f : ι → α × α} {p : Filter ι} :
     Tendsto f p (𝓤 α) ↔ Tendsto (fun x => dist (f x).1 (f x).2) p (𝓝 0) := by
   rw [Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff]
 #align tendsto_uniformity_iff_dist_tendsto_zero tendsto_uniformity_iff_dist_tendsto_zero
 
-/- warning: filter.tendsto.congr_dist -> Filter.Tendsto.congr_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u2}} {f₁ : ι -> α} {f₂ : ι -> α} {p : Filter.{u2} ι} {a : α}, (Filter.Tendsto.{u2, u1} ι α f₁ p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) -> (Filter.Tendsto.{u2, 0} ι Real (fun (x : ι) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f₁ x) (f₂ x)) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Filter.Tendsto.{u2, u1} ι α f₂ p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {f₁ : ι -> α} {f₂ : ι -> α} {p : Filter.{u1} ι} {a : α}, (Filter.Tendsto.{u1, u2} ι α f₁ p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) a)) -> (Filter.Tendsto.{u1, 0} ι Real (fun (x : ι) => Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f₁ x) (f₂ x)) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Filter.Tendsto.{u1, u2} ι α f₂ p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) a))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.congr_dist Filter.Tendsto.congr_distₓ'. -/
 theorem Filter.Tendsto.congr_dist {ι : Type _} {f₁ f₂ : ι → α} {p : Filter ι} {a : α}
     (h₁ : Tendsto f₁ p (𝓝 a)) (h : Tendsto (fun x => dist (f₁ x) (f₂ x)) p (𝓝 0)) :
     Tendsto f₂ p (𝓝 a) :=
   h₁.congr_uniformity <| tendsto_uniformity_iff_dist_tendsto_zero.2 h
 #align filter.tendsto.congr_dist Filter.Tendsto.congr_dist
 
-/- warning: tendsto_of_tendsto_of_dist -> tendsto_of_tendsto_of_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u2}} {f₁ : ι -> α} {f₂ : ι -> α} {p : Filter.{u2} ι} {a : α}, (Filter.Tendsto.{u2, u1} ι α f₁ p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) -> (Filter.Tendsto.{u2, 0} ι Real (fun (x : ι) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f₁ x) (f₂ x)) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Filter.Tendsto.{u2, u1} ι α f₂ p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {f₁ : ι -> α} {f₂ : ι -> α} {p : Filter.{u1} ι} {a : α}, (Filter.Tendsto.{u1, u2} ι α f₁ p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) a)) -> (Filter.Tendsto.{u1, 0} ι Real (fun (x : ι) => Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f₁ x) (f₂ x)) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Filter.Tendsto.{u1, u2} ι α f₂ p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) a))
-Case conversion may be inaccurate. Consider using '#align tendsto_of_tendsto_of_dist tendsto_of_tendsto_of_distₓ'. -/
 alias Filter.Tendsto.congr_dist ← tendsto_of_tendsto_of_dist
 #align tendsto_of_tendsto_of_dist tendsto_of_tendsto_of_dist
 
-/- warning: tendsto_iff_of_dist -> tendsto_iff_of_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {ι : Type.{u2}} {f₁ : ι -> α} {f₂ : ι -> α} {p : Filter.{u2} ι} {a : α}, (Filter.Tendsto.{u2, 0} ι Real (fun (x : ι) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f₁ x) (f₂ x)) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Iff (Filter.Tendsto.{u2, u1} ι α f₁ p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (Filter.Tendsto.{u2, u1} ι α f₂ p (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {ι : Type.{u1}} {f₁ : ι -> α} {f₂ : ι -> α} {p : Filter.{u1} ι} {a : α}, (Filter.Tendsto.{u1, 0} ι Real (fun (x : ι) => Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f₁ x) (f₂ x)) p (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Iff (Filter.Tendsto.{u1, u2} ι α f₁ p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) a)) (Filter.Tendsto.{u1, u2} ι α f₂ p (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) a)))
-Case conversion may be inaccurate. Consider using '#align tendsto_iff_of_dist tendsto_iff_of_distₓ'. -/
 theorem tendsto_iff_of_dist {ι : Type _} {f₁ f₂ : ι → α} {p : Filter ι} {a : α}
     (h : Tendsto (fun x => dist (f₁ x) (f₂ x)) p (𝓝 0)) : Tendsto f₁ p (𝓝 a) ↔ Tendsto f₂ p (𝓝 a) :=
   Uniform.tendsto_congr <| tendsto_uniformity_iff_dist_tendsto_zero.2 h
 #align tendsto_iff_of_dist tendsto_iff_of_dist
 
-/- warning: eventually_closed_ball_subset -> eventually_closedBall_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {u : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) -> (Filter.Eventually.{0} Real (fun (r : Real) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.closedBall.{u1} α _inst_1 x r) u) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {u : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) x)) -> (Filter.Eventually.{0} Real (fun (r : Real) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.closedBall.{u1} α _inst_1 x r) u) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align eventually_closed_ball_subset eventually_closedBall_subsetₓ'. -/
 /-- If `u` is a neighborhood of `x`, then for small enough `r`, the closed ball
 `closed_ball x r` is contained in `u`. -/
 theorem eventually_closedBall_subset {x : α} {u : Set α} (hu : u ∈ 𝓝 x) :
@@ -2688,12 +1653,6 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- warning: metric.cauchy_seq_iff -> Metric.cauchySeq_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 u) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (N : β) => forall (m : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) m N) -> (forall (n : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u m) (u n)) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 u) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u2} β (fun (N : β) => forall (m : β), (GE.ge.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) m N) -> (forall (n : β), (GE.ge.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u m) (u n)) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.cauchy_seq_iff Metric.cauchySeq_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
@@ -2704,24 +1663,12 @@ theorem Metric.cauchySeq_iff {u : β → α} :
   uniformity_basis_dist.cauchySeq_iff
 #align metric.cauchy_seq_iff Metric.cauchySeq_iff
 
-/- warning: metric.cauchy_seq_iff' -> Metric.cauchySeq_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 u) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u n) (u N)) ε))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {u : β -> α}, Iff (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 u) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u2} β (fun (N : β) => forall (n : β), (GE.ge.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u n) (u N)) ε))))
-Case conversion may be inaccurate. Consider using '#align metric.cauchy_seq_iff' Metric.cauchySeq_iff'ₓ'. -/
 /-- A variation around the pseudometric characterization of Cauchy sequences -/
 theorem Metric.cauchySeq_iff' {u : β → α} :
     CauchySeq u ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, dist (u n) (u N) < ε :=
   uniformity_basis_dist.cauchySeq_iff'
 #align metric.cauchy_seq_iff' Metric.cauchySeq_iff'
 
-/- warning: metric.uniform_cauchy_seq_on_iff -> Metric.uniformCauchySeqOn_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {γ : Type.{u3}} {F : β -> γ -> α} {s : Set.{u3} γ}, Iff (UniformCauchySeqOn.{u3, u1, u2} γ α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) F (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (N : β) => forall (m : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) m N) -> (forall (n : β), (GE.ge.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n N) -> (forall (x : γ), (Membership.Mem.{u3, u3} γ (Set.{u3} γ) (Set.hasMem.{u3} γ) x s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (F m x) (F n x)) ε))))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : PseudoMetricSpace.{u2} α] [_inst_2 : Nonempty.{succ u3} β] [_inst_3 : SemilatticeSup.{u3} β] {γ : Type.{u1}} {F : β -> γ -> α} {s : Set.{u1} γ}, Iff (UniformCauchySeqOn.{u1, u2, u3} γ α β (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1) F (Filter.atTop.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u3} β (fun (N : β) => forall (m : β), (GE.ge.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) m N) -> (forall (n : β), (GE.ge.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) n N) -> (forall (x : γ), (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) x s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (F m x) (F n x)) ε))))))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_cauchy_seq_on_iff Metric.uniformCauchySeqOn_iffₓ'. -/
 -- see Note [nolint_ge]
 /-- In a pseudometric space, unifom Cauchy sequences are characterized by the fact that, eventually,
 the distance between all its elements is uniformly, arbitrarily small -/
@@ -2752,12 +1699,6 @@ theorem Metric.uniformCauchySeqOn_iff {γ : Type _} {F : β → γ → α} {s : 
     exact hab (hN b.fst hbl.ge b.snd hbr.ge x hx)
 #align metric.uniform_cauchy_seq_on_iff Metric.uniformCauchySeqOn_iff
 
-/- warning: cauchy_seq_of_le_tendsto_0' -> cauchySeq_of_le_tendsto_0' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {s : β -> α} (b : β -> Real), (forall (n : β) (m : β), (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n m) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (s n) (s m)) (b n))) -> (Filter.Tendsto.{u2, 0} β Real b (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 s)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {s : β -> α} (b : β -> Real), (forall (n : β) (m : β), (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) n m) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (s n) (s m)) (b n))) -> (Filter.Tendsto.{u2, 0} β Real b (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 s)
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_of_le_tendsto_0' cauchySeq_of_le_tendsto_0'ₓ'. -/
 /-- If the distance between `s n` and `s m`, `n ≤ m` is bounded above by `b n`
 and `b` converges to zero, then `s` is a Cauchy sequence.  -/
 theorem cauchySeq_of_le_tendsto_0' {s : β → α} (b : β → ℝ)
@@ -2771,12 +1712,6 @@ theorem cauchySeq_of_le_tendsto_0' {s : β → α} (b : β → ℝ)
         
 #align cauchy_seq_of_le_tendsto_0' cauchySeq_of_le_tendsto_0'
 
-/- warning: cauchy_seq_of_le_tendsto_0 -> cauchySeq_of_le_tendsto_0 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {s : β -> α} (b : β -> Real), (forall (n : β) (m : β) (N : β), (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) N n) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) N m) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (s n) (s m)) (b N))) -> (Filter.Tendsto.{u2, 0} β Real b (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 s)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Nonempty.{succ u2} β] [_inst_3 : SemilatticeSup.{u2} β] {s : β -> α} (b : β -> Real), (forall (n : β) (m : β) (N : β), (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) N n) -> (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) N m) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (s n) (s m)) (b N))) -> (Filter.Tendsto.{u2, 0} β Real b (Filter.atTop.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (CauchySeq.{u1, u2} α β (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) _inst_3 s)
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_of_le_tendsto_0 cauchySeq_of_le_tendsto_0ₓ'. -/
 /-- If the distance between `s n` and `s m`, `n, m ≥ N` is bounded above by `b N`
 and `b` converges to zero, then `s` is a Cauchy sequence.  -/
 theorem cauchySeq_of_le_tendsto_0 {s : β → α} (b : β → ℝ)
@@ -2785,12 +1720,6 @@ theorem cauchySeq_of_le_tendsto_0 {s : β → α} (b : β → ℝ)
   cauchySeq_of_le_tendsto_0' b (fun n m hnm => h _ _ _ le_rfl hnm) h₀
 #align cauchy_seq_of_le_tendsto_0 cauchySeq_of_le_tendsto_0
 
-/- warning: cauchy_seq_bdd -> cauchySeq_bdd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {u : Nat -> α}, (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u) -> (Exists.{1} Real (fun (R : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt R (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt R (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (m : Nat) (n : Nat), LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (u m) (u n)) R)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {u : Nat -> α}, (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) u) -> (Exists.{1} Real (fun (R : Real) => And (GT.gt.{0} Real Real.instLTReal R (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (m : Nat) (n : Nat), LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (u m) (u n)) R)))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_bdd cauchySeq_bddₓ'. -/
 /-- A Cauchy sequence on the natural numbers is bounded. -/
 theorem cauchySeq_bdd {u : ℕ → α} (hu : CauchySeq u) : ∃ R > 0, ∀ m n, dist (u m) (u n) < R :=
   by
@@ -2808,12 +1737,6 @@ theorem cauchySeq_bdd {u : ℕ → α} (hu : CauchySeq u) : ∃ R > 0, ∀ m n, 
     exact lt_of_le_of_lt this (lt_add_of_pos_right _ zero_lt_one)
 #align cauchy_seq_bdd cauchySeq_bdd
 
-/- warning: cauchy_seq_iff_le_tendsto_0 -> cauchySeq_iff_le_tendsto_0 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Nat -> α}, Iff (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) s) (Exists.{1} (Nat -> Real) (fun (b : Nat -> Real) => And (forall (n : Nat), LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (b n)) (And (forall (n : Nat) (m : Nat) (N : Nat), (LE.le.{0} Nat Nat.hasLe N n) -> (LE.le.{0} Nat Nat.hasLe N m) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (s n) (s m)) (b N))) (Filter.Tendsto.{0, 0} Nat Real b (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Nat -> α}, Iff (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) s) (Exists.{1} (Nat -> Real) (fun (b : Nat -> Real) => And (forall (n : Nat), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (b n)) (And (forall (n : Nat) (m : Nat) (N : Nat), (LE.le.{0} Nat instLENat N n) -> (LE.le.{0} Nat instLENat N m) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (s n) (s m)) (b N))) (Filter.Tendsto.{0, 0} Nat Real b (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))))))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq_iff_le_tendsto_0 cauchySeq_iff_le_tendsto_0ₓ'. -/
 /-- Yet another metric characterization of Cauchy sequences on integers. This one is often the
 most efficient. -/
 theorem cauchySeq_iff_le_tendsto_0 {s : ℕ → α} :
@@ -2958,22 +1881,10 @@ section NNReal
 instance : PseudoMetricSpace ℝ≥0 :=
   Subtype.pseudoMetricSpace
 
-/- warning: nnreal.dist_eq -> NNReal.dist_eq is a dubious translation:
-lean 3 declaration is
-  forall (a : NNReal) (b : NNReal), Eq.{1} Real (Dist.dist.{0} NNReal (PseudoMetricSpace.toHasDist.{0} NNReal NNReal.pseudoMetricSpace) a b) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) b)))
-but is expected to have type
-  forall (a : NNReal) (b : NNReal), Eq.{1} Real (Dist.dist.{0} NNReal (PseudoMetricSpace.toDist.{0} NNReal instPseudoMetricSpaceNNReal) a b) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (NNReal.toReal a) (NNReal.toReal b)))
-Case conversion may be inaccurate. Consider using '#align nnreal.dist_eq NNReal.dist_eqₓ'. -/
 theorem NNReal.dist_eq (a b : ℝ≥0) : dist a b = |(a : ℝ) - b| :=
   rfl
 #align nnreal.dist_eq NNReal.dist_eq
 
-/- warning: nnreal.nndist_eq -> NNReal.nndist_eq is a dubious translation:
-lean 3 declaration is
-  forall (a : NNReal) (b : NNReal), Eq.{1} NNReal (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal NNReal.pseudoMetricSpace) a b) (LinearOrder.max.{0} NNReal (ConditionallyCompleteLinearOrder.toLinearOrder.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.conditionallyCompleteLinearOrderBot)) (HSub.hSub.{0, 0, 0} NNReal NNReal NNReal (instHSub.{0} NNReal NNReal.hasSub) a b) (HSub.hSub.{0, 0, 0} NNReal NNReal NNReal (instHSub.{0} NNReal NNReal.hasSub) b a))
-but is expected to have type
-  forall (a : NNReal) (b : NNReal), Eq.{1} NNReal (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal instPseudoMetricSpaceNNReal) a b) (Max.max.{0} NNReal (CanonicallyLinearOrderedSemifield.toMax.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal) (HSub.hSub.{0, 0, 0} NNReal NNReal NNReal (instHSub.{0} NNReal NNReal.instSubNNReal) a b) (HSub.hSub.{0, 0, 0} NNReal NNReal NNReal (instHSub.{0} NNReal NNReal.instSubNNReal) b a))
-Case conversion may be inaccurate. Consider using '#align nnreal.nndist_eq NNReal.nndist_eqₓ'. -/
 theorem NNReal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) :=
   by
   wlog h : b ≤ a
@@ -2982,34 +1893,16 @@ theorem NNReal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) :=
     max_eq_left (zero_le <| a - b), ← NNReal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
 #align nnreal.nndist_eq NNReal.nndist_eq
 
-/- warning: nnreal.nndist_zero_eq_val -> NNReal.nndist_zero_eq_val is a dubious translation:
-lean 3 declaration is
-  forall (z : NNReal), Eq.{1} NNReal (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal NNReal.pseudoMetricSpace) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) z) z
-but is expected to have type
-  forall (z : NNReal), Eq.{1} NNReal (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal instPseudoMetricSpaceNNReal) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) z) z
-Case conversion may be inaccurate. Consider using '#align nnreal.nndist_zero_eq_val NNReal.nndist_zero_eq_valₓ'. -/
 @[simp]
 theorem NNReal.nndist_zero_eq_val (z : ℝ≥0) : nndist 0 z = z := by
   simp only [NNReal.nndist_eq, max_eq_right, tsub_zero, zero_tsub, zero_le']
 #align nnreal.nndist_zero_eq_val NNReal.nndist_zero_eq_val
 
-/- warning: nnreal.nndist_zero_eq_val' -> NNReal.nndist_zero_eq_val' is a dubious translation:
-lean 3 declaration is
-  forall (z : NNReal), Eq.{1} NNReal (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal NNReal.pseudoMetricSpace) z (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) z
-but is expected to have type
-  forall (z : NNReal), Eq.{1} NNReal (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal instPseudoMetricSpaceNNReal) z (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))) z
-Case conversion may be inaccurate. Consider using '#align nnreal.nndist_zero_eq_val' NNReal.nndist_zero_eq_val'ₓ'. -/
 @[simp]
 theorem NNReal.nndist_zero_eq_val' (z : ℝ≥0) : nndist z 0 = z := by rw [nndist_comm];
   exact NNReal.nndist_zero_eq_val z
 #align nnreal.nndist_zero_eq_val' NNReal.nndist_zero_eq_val'
 
-/- warning: nnreal.le_add_nndist -> NNReal.le_add_nndist is a dubious translation:
-lean 3 declaration is
-  forall (a : NNReal) (b : NNReal), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) a (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) b (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal NNReal.pseudoMetricSpace) a b))
-but is expected to have type
-  forall (a : NNReal) (b : NNReal), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) a (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))))) b (NNDist.nndist.{0} NNReal (PseudoMetricSpace.toNNDist.{0} NNReal instPseudoMetricSpaceNNReal) a b))
-Case conversion may be inaccurate. Consider using '#align nnreal.le_add_nndist NNReal.le_add_nndistₓ'. -/
 theorem NNReal.le_add_nndist (a b : ℝ≥0) : a ≤ b + nndist a b :=
   by
   suffices (a : ℝ) ≤ (b : ℝ) + dist a b by exact nnreal.coe_le_coe.mp this
@@ -3025,43 +1918,19 @@ variable [PseudoMetricSpace β]
 instance : PseudoMetricSpace (ULift β) :=
   PseudoMetricSpace.induced ULift.down ‹_›
 
-/- warning: ulift.dist_eq -> ULift.dist_eq is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] (x : ULift.{u2, u1} β) (y : ULift.{u2, u1} β), Eq.{1} Real (Dist.dist.{max u1 u2} (ULift.{u2, u1} β) (PseudoMetricSpace.toHasDist.{max u1 u2} (ULift.{u2, u1} β) (ULift.pseudoMetricSpace.{u1, u2} β _inst_2)) x y) (Dist.dist.{u1} β (PseudoMetricSpace.toHasDist.{u1} β _inst_2) (ULift.down.{u2, u1} β x) (ULift.down.{u2, u1} β y))
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_2 : PseudoMetricSpace.{u2} β] (x : ULift.{u1, u2} β) (y : ULift.{u1, u2} β), Eq.{1} Real (Dist.dist.{max u2 u1} (ULift.{u1, u2} β) (PseudoMetricSpace.toDist.{max u2 u1} (ULift.{u1, u2} β) (instPseudoMetricSpaceULift.{u2, u1} β _inst_2)) x y) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (ULift.down.{u1, u2} β x) (ULift.down.{u1, u2} β y))
-Case conversion may be inaccurate. Consider using '#align ulift.dist_eq ULift.dist_eqₓ'. -/
 theorem ULift.dist_eq (x y : ULift β) : dist x y = dist x.down y.down :=
   rfl
 #align ulift.dist_eq ULift.dist_eq
 
-/- warning: ulift.nndist_eq -> ULift.nndist_eq is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] (x : ULift.{u2, u1} β) (y : ULift.{u2, u1} β), Eq.{1} NNReal (NNDist.nndist.{max u1 u2} (ULift.{u2, u1} β) (PseudoMetricSpace.toNNDist.{max u1 u2} (ULift.{u2, u1} β) (ULift.pseudoMetricSpace.{u1, u2} β _inst_2)) x y) (NNDist.nndist.{u1} β (PseudoMetricSpace.toNNDist.{u1} β _inst_2) (ULift.down.{u2, u1} β x) (ULift.down.{u2, u1} β y))
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_2 : PseudoMetricSpace.{u2} β] (x : ULift.{u1, u2} β) (y : ULift.{u1, u2} β), Eq.{1} NNReal (NNDist.nndist.{max u2 u1} (ULift.{u1, u2} β) (PseudoMetricSpace.toNNDist.{max u2 u1} (ULift.{u1, u2} β) (instPseudoMetricSpaceULift.{u2, u1} β _inst_2)) x y) (NNDist.nndist.{u2} β (PseudoMetricSpace.toNNDist.{u2} β _inst_2) (ULift.down.{u1, u2} β x) (ULift.down.{u1, u2} β y))
-Case conversion may be inaccurate. Consider using '#align ulift.nndist_eq ULift.nndist_eqₓ'. -/
 theorem ULift.nndist_eq (x y : ULift β) : nndist x y = nndist x.down y.down :=
   rfl
 #align ulift.nndist_eq ULift.nndist_eq
 
-/- warning: ulift.dist_up_up -> ULift.dist_up_up is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] (x : β) (y : β), Eq.{1} Real (Dist.dist.{max u1 u2} (ULift.{u2, u1} β) (PseudoMetricSpace.toHasDist.{max u1 u2} (ULift.{u2, u1} β) (ULift.pseudoMetricSpace.{u1, u2} β _inst_2)) (ULift.up.{u2, u1} β x) (ULift.up.{u2, u1} β y)) (Dist.dist.{u1} β (PseudoMetricSpace.toHasDist.{u1} β _inst_2) x y)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_2 : PseudoMetricSpace.{u2} β] (x : β) (y : β), Eq.{1} Real (Dist.dist.{max u2 u1} (ULift.{u1, u2} β) (PseudoMetricSpace.toDist.{max u2 u1} (ULift.{u1, u2} β) (instPseudoMetricSpaceULift.{u2, u1} β _inst_2)) (ULift.up.{u1, u2} β x) (ULift.up.{u1, u2} β y)) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) x y)
-Case conversion may be inaccurate. Consider using '#align ulift.dist_up_up ULift.dist_up_upₓ'. -/
 @[simp]
 theorem ULift.dist_up_up (x y : β) : dist (ULift.up x) (ULift.up y) = dist x y :=
   rfl
 #align ulift.dist_up_up ULift.dist_up_up
 
-/- warning: ulift.nndist_up_up -> ULift.nndist_up_up is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] (x : β) (y : β), Eq.{1} NNReal (NNDist.nndist.{max u1 u2} (ULift.{u2, u1} β) (PseudoMetricSpace.toNNDist.{max u1 u2} (ULift.{u2, u1} β) (ULift.pseudoMetricSpace.{u1, u2} β _inst_2)) (ULift.up.{u2, u1} β x) (ULift.up.{u2, u1} β y)) (NNDist.nndist.{u1} β (PseudoMetricSpace.toNNDist.{u1} β _inst_2) x y)
-but is expected to have type
-  forall {β : Type.{u2}} [_inst_2 : PseudoMetricSpace.{u2} β] (x : β) (y : β), Eq.{1} NNReal (NNDist.nndist.{max u2 u1} (ULift.{u1, u2} β) (PseudoMetricSpace.toNNDist.{max u2 u1} (ULift.{u1, u2} β) (instPseudoMetricSpaceULift.{u2, u1} β _inst_2)) (ULift.up.{u1, u2} β x) (ULift.up.{u1, u2} β y)) (NNDist.nndist.{u2} β (PseudoMetricSpace.toNNDist.{u2} β _inst_2) x y)
-Case conversion may be inaccurate. Consider using '#align ulift.nndist_up_up ULift.nndist_up_upₓ'. -/
 @[simp]
 theorem ULift.nndist_up_up (x y : β) : nndist (ULift.up x) (ULift.up y) = nndist x y :=
   rfl
@@ -3087,12 +1956,6 @@ instance Prod.pseudoMetricSpaceMax : PseudoMetricSpace (α × β) :=
 #align prod.pseudo_metric_space_max Prod.pseudoMetricSpaceMax
 -/
 
-/- warning: prod.dist_eq -> Prod.dist_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Eq.{1} Real (Dist.dist.{max u1 u2} (Prod.{u1, u2} α β) (PseudoMetricSpace.toHasDist.{max u1 u2} (Prod.{u1, u2} α β) (Prod.pseudoMetricSpaceMax.{u1, u2} α β _inst_1 _inst_2)) x y) (LinearOrder.max.{0} Real Real.linearOrder (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Eq.{1} Real (Dist.dist.{max u1 u2} (Prod.{u1, u2} α β) (PseudoMetricSpace.toDist.{max u1 u2} (Prod.{u1, u2} α β) (Prod.pseudoMetricSpaceMax.{u1, u2} α β _inst_1 _inst_2)) x y) (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y)))
-Case conversion may be inaccurate. Consider using '#align prod.dist_eq Prod.dist_eqₓ'. -/
 theorem Prod.dist_eq {x y : α × β} : dist x y = max (dist x.1 y.1) (dist x.2 y.2) :=
   rfl
 #align prod.dist_eq Prod.dist_eq
@@ -3128,12 +1991,6 @@ theorem closedBall_prod_same (x : α) (y : β) (r : ℝ) :
 
 end Prod
 
-/- warning: uniform_continuous_dist -> uniformContinuous_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], UniformContinuous.{u1, 0} (Prod.{u1, u1} α α) Real (Prod.uniformSpace.{u1, u1} α α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Prod.{u1, u1} α α) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], UniformContinuous.{u1, 0} (Prod.{u1, u1} α α) Real (instUniformSpaceProd.{u1, u1} α α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Prod.{u1, u1} α α) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_dist uniformContinuous_distₓ'. -/
 theorem uniformContinuous_dist : UniformContinuous fun p : α × α => dist p.1 p.2 :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨ε / 2, half_pos ε0, by
@@ -3159,12 +2016,6 @@ theorem UniformContinuous.dist [UniformSpace β] {f g : β → α} (hf : Uniform
 #align uniform_continuous.dist UniformContinuous.dist
 -/
 
-/- warning: continuous_dist -> continuous_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Continuous.{u1, 0} (Prod.{u1, u1} α α) Real (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (p : Prod.{u1, u1} α α) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Continuous.{u1, 0} (Prod.{u1, u1} α α) Real (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (p : Prod.{u1, u1} α α) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align continuous_dist continuous_distₓ'. -/
 @[continuity]
 theorem continuous_dist : Continuous fun p : α × α => dist p.1 p.2 :=
   uniformContinuous_dist.Continuous
@@ -3185,34 +2036,16 @@ theorem Filter.Tendsto.dist {f g : β → α} {x : Filter β} {a b : α} (hf : T
 #align filter.tendsto.dist Filter.Tendsto.dist
 -/
 
-/- warning: nhds_comap_dist -> nhds_comap_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (a : α), Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, 0} α Real (fun (a' : α) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a' a) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (a : α), Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, 0} α Real (fun (a' : α) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a' a) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)
-Case conversion may be inaccurate. Consider using '#align nhds_comap_dist nhds_comap_distₓ'. -/
 theorem nhds_comap_dist (a : α) : ((𝓝 (0 : ℝ)).comap fun a' => dist a' a) = 𝓝 a := by
   simp only [@nhds_eq_comap_uniformity α, Metric.uniformity_eq_comap_nhds_zero, comap_comap,
     (· ∘ ·), dist_comm]
 #align nhds_comap_dist nhds_comap_dist
 
-/- warning: tendsto_iff_dist_tendsto_zero -> tendsto_iff_dist_tendsto_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α} {x : Filter.{u2} β} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α f x (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (Filter.Tendsto.{u2, 0} β Real (fun (b : β) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f b) a) x (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α} {x : Filter.{u2} β} {a : α}, Iff (Filter.Tendsto.{u2, u1} β α f x (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) (Filter.Tendsto.{u2, 0} β Real (fun (b : β) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f b) a) x (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align tendsto_iff_dist_tendsto_zero tendsto_iff_dist_tendsto_zeroₓ'. -/
 theorem tendsto_iff_dist_tendsto_zero {f : β → α} {x : Filter β} {a : α} :
     Tendsto f x (𝓝 a) ↔ Tendsto (fun b => dist (f b) a) x (𝓝 0) := by
   rw [← nhds_comap_dist a, tendsto_comap_iff]
 #align tendsto_iff_dist_tendsto_zero tendsto_iff_dist_tendsto_zero
 
-/- warning: continuous_iff_continuous_dist -> continuous_iff_continuous_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α}, Iff (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) (Continuous.{u2, 0} (Prod.{u2, u2} β β) Real (Prod.topologicalSpace.{u2, u2} β β _inst_2 _inst_2) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (x : Prod.{u2, u2} β β) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f (Prod.fst.{u2, u2} β β x)) (f (Prod.snd.{u2, u2} β β x))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α}, Iff (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) (Continuous.{u2, 0} (Prod.{u2, u2} β β) Real (instTopologicalSpaceProd.{u2, u2} β β _inst_2 _inst_2) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (x : Prod.{u2, u2} β β) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f (Prod.fst.{u2, u2} β β x)) (f (Prod.snd.{u2, u2} β β x))))
-Case conversion may be inaccurate. Consider using '#align continuous_iff_continuous_dist continuous_iff_continuous_distₓ'. -/
 theorem continuous_iff_continuous_dist [TopologicalSpace β] {f : β → α} :
     Continuous f ↔ Continuous fun x : β × β => dist (f x.1) (f x.2) :=
   ⟨fun h => (h.comp continuous_fst).dist (h.comp continuous_snd), fun h =>
@@ -3221,54 +2054,24 @@ theorem continuous_iff_continuous_dist [TopologicalSpace β] {f : β → α} :
         (h.comp (continuous_id.prod_mk continuous_const)).tendsto' _ _ <| dist_self _⟩
 #align continuous_iff_continuous_dist continuous_iff_continuous_dist
 
-/- warning: uniform_continuous_nndist -> uniformContinuous_nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], UniformContinuous.{u1, 0} (Prod.{u1, u1} α α) NNReal (Prod.uniformSpace.{u1, u1} α α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (PseudoMetricSpace.toUniformSpace.{0} NNReal NNReal.pseudoMetricSpace) (fun (p : Prod.{u1, u1} α α) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], UniformContinuous.{u1, 0} (Prod.{u1, u1} α α) NNReal (instUniformSpaceProd.{u1, u1} α α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (PseudoMetricSpace.toUniformSpace.{0} NNReal instPseudoMetricSpaceNNReal) (fun (p : Prod.{u1, u1} α α) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_nndist uniformContinuous_nndistₓ'. -/
 theorem uniformContinuous_nndist : UniformContinuous fun p : α × α => nndist p.1 p.2 :=
   uniformContinuous_dist.subtype_mk _
 #align uniform_continuous_nndist uniformContinuous_nndist
 
-/- warning: uniform_continuous.nndist -> UniformContinuous.nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : β -> α} {g : β -> α}, (UniformContinuous.{u2, u1} β α _inst_2 (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) f) -> (UniformContinuous.{u2, u1} β α _inst_2 (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) g) -> (UniformContinuous.{u2, 0} β NNReal _inst_2 (PseudoMetricSpace.toUniformSpace.{0} NNReal NNReal.pseudoMetricSpace) (fun (b : β) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (f b) (g b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : β -> α} {g : β -> α}, (UniformContinuous.{u2, u1} β α _inst_2 (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) f) -> (UniformContinuous.{u2, u1} β α _inst_2 (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) g) -> (UniformContinuous.{u2, 0} β NNReal _inst_2 (PseudoMetricSpace.toUniformSpace.{0} NNReal instPseudoMetricSpaceNNReal) (fun (b : β) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (f b) (g b)))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous.nndist UniformContinuous.nndistₓ'. -/
 theorem UniformContinuous.nndist [UniformSpace β] {f g : β → α} (hf : UniformContinuous f)
     (hg : UniformContinuous g) : UniformContinuous fun b => nndist (f b) (g b) :=
   uniformContinuous_nndist.comp (hf.prod_mk hg)
 #align uniform_continuous.nndist UniformContinuous.nndist
 
-/- warning: continuous_nndist -> continuous_nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Continuous.{u1, 0} (Prod.{u1, u1} α α) NNReal (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (UniformSpace.toTopologicalSpace.{0} NNReal (PseudoMetricSpace.toUniformSpace.{0} NNReal NNReal.pseudoMetricSpace)) (fun (p : Prod.{u1, u1} α α) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Continuous.{u1, 0} (Prod.{u1, u1} α α) NNReal (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))) (UniformSpace.toTopologicalSpace.{0} NNReal (PseudoMetricSpace.toUniformSpace.{0} NNReal instPseudoMetricSpaceNNReal)) (fun (p : Prod.{u1, u1} α α) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align continuous_nndist continuous_nndistₓ'. -/
 theorem continuous_nndist : Continuous fun p : α × α => nndist p.1 p.2 :=
   uniformContinuous_nndist.Continuous
 #align continuous_nndist continuous_nndist
 
-/- warning: continuous.nndist -> Continuous.nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {g : β -> α}, (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) -> (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) g) -> (Continuous.{u2, 0} β NNReal _inst_2 (UniformSpace.toTopologicalSpace.{0} NNReal (PseudoMetricSpace.toUniformSpace.{0} NNReal NNReal.pseudoMetricSpace)) (fun (b : β) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (f b) (g b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : β -> α} {g : β -> α}, (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f) -> (Continuous.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) g) -> (Continuous.{u2, 0} β NNReal _inst_2 (UniformSpace.toTopologicalSpace.{0} NNReal (PseudoMetricSpace.toUniformSpace.{0} NNReal instPseudoMetricSpaceNNReal)) (fun (b : β) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (f b) (g b)))
-Case conversion may be inaccurate. Consider using '#align continuous.nndist Continuous.nndistₓ'. -/
 theorem Continuous.nndist [TopologicalSpace β] {f g : β → α} (hf : Continuous f)
     (hg : Continuous g) : Continuous fun b => nndist (f b) (g b) :=
   continuous_nndist.comp (hf.prod_mk hg : _)
 #align continuous.nndist Continuous.nndist
 
-/- warning: filter.tendsto.nndist -> Filter.Tendsto.nndist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α} {g : β -> α} {x : Filter.{u2} β} {a : α} {b : α}, (Filter.Tendsto.{u2, u1} β α f x (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) -> (Filter.Tendsto.{u2, u1} β α g x (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) b)) -> (Filter.Tendsto.{u2, 0} β NNReal (fun (x : β) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (f x) (g x)) x (nhds.{0} NNReal (UniformSpace.toTopologicalSpace.{0} NNReal (PseudoMetricSpace.toUniformSpace.{0} NNReal NNReal.pseudoMetricSpace)) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) a b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α} {g : β -> α} {x : Filter.{u2} β} {a : α} {b : α}, (Filter.Tendsto.{u2, u1} β α f x (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) a)) -> (Filter.Tendsto.{u2, u1} β α g x (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) b)) -> (Filter.Tendsto.{u2, 0} β NNReal (fun (x : β) => NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) (f x) (g x)) x (nhds.{0} NNReal (UniformSpace.toTopologicalSpace.{0} NNReal (PseudoMetricSpace.toUniformSpace.{0} NNReal instPseudoMetricSpaceNNReal)) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) a b)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.nndist Filter.Tendsto.nndistₓ'. -/
 theorem Filter.Tendsto.nndist {f g : β → α} {x : Filter β} {a b : α} (hf : Tendsto f x (𝓝 a))
     (hg : Tendsto g x (𝓝 b)) : Tendsto (fun x => nndist (f x) (g x)) x (𝓝 (nndist a b)) :=
   (continuous_nndist.Tendsto (a, b)).comp (hf.prod_mk_nhds hg)
@@ -3328,57 +2131,27 @@ theorem ball_subset_interior_closedBall : ball x ε ⊆ interior (closedBall x �
 #align metric.ball_subset_interior_closed_ball Metric.ball_subset_interior_closedBall
 -/
 
-/- warning: metric.mem_closure_iff -> Metric.mem_closure_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {a : α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s)) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) ε))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {a : α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s)) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) ε))))
-Case conversion may be inaccurate. Consider using '#align metric.mem_closure_iff Metric.mem_closure_iffₓ'. -/
 /-- ε-characterization of the closure in pseudometric spaces-/
 theorem mem_closure_iff {s : Set α} {a : α} : a ∈ closure s ↔ ∀ ε > 0, ∃ b ∈ s, dist a b < ε :=
   (mem_closure_iff_nhds_basis nhds_basis_ball).trans <| by simp only [mem_ball, dist_comm]
 #align metric.mem_closure_iff Metric.mem_closure_iff
 
-/- warning: metric.mem_closure_range_iff -> Metric.mem_closure_range_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {e : β -> α} {a : α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Set.range.{u1, succ u2} α β e))) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (k : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a (e k)) ε)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {e : β -> α} {a : α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Set.range.{u1, succ u2} α β e))) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u2} β (fun (k : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a (e k)) ε)))
-Case conversion may be inaccurate. Consider using '#align metric.mem_closure_range_iff Metric.mem_closure_range_iffₓ'. -/
 theorem mem_closure_range_iff {e : β → α} {a : α} :
     a ∈ closure (range e) ↔ ∀ ε > 0, ∃ k : β, dist a (e k) < ε := by
   simp only [mem_closure_iff, exists_range_iff]
 #align metric.mem_closure_range_iff Metric.mem_closure_range_iff
 
-/- warning: metric.mem_closure_range_iff_nat -> Metric.mem_closure_range_iff_nat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {e : β -> α} {a : α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Set.range.{u1, succ u2} α β e))) (forall (n : Nat), Exists.{succ u2} β (fun (k : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a (e k)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {e : β -> α} {a : α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Set.range.{u1, succ u2} α β e))) (forall (n : Nat), Exists.{succ u2} β (fun (k : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a (e k)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Nat.cast.{0} Real Real.natCast n) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))))
-Case conversion may be inaccurate. Consider using '#align metric.mem_closure_range_iff_nat Metric.mem_closure_range_iff_natₓ'. -/
 theorem mem_closure_range_iff_nat {e : β → α} {a : α} :
     a ∈ closure (range e) ↔ ∀ n : ℕ, ∃ k : β, dist a (e k) < 1 / ((n : ℝ) + 1) :=
   (mem_closure_iff_nhds_basis nhds_basis_ball_inv_nat_succ).trans <| by
     simp only [mem_ball, dist_comm, exists_range_iff, forall_const]
 #align metric.mem_closure_range_iff_nat Metric.mem_closure_range_iff_nat
 
-/- warning: metric.mem_of_closed' -> Metric.mem_of_closed' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall {a : α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b) ε)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall {a : α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b) ε)))))
-Case conversion may be inaccurate. Consider using '#align metric.mem_of_closed' Metric.mem_of_closed'ₓ'. -/
 theorem mem_of_closed' {s : Set α} (hs : IsClosed s) {a : α} :
     a ∈ s ↔ ∀ ε > 0, ∃ b ∈ s, dist a b < ε := by
   simpa only [hs.closure_eq] using @mem_closure_iff _ _ s a
 #align metric.mem_of_closed' Metric.mem_of_closed'
 
-/- warning: metric.closed_ball_zero' -> Metric.closedBall_zero' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Metric.closedBall.{u1} α _inst_1 x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), Eq.{succ u1} (Set.{u1} α) (Metric.closedBall.{u1} α _inst_1 x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_zero' Metric.closedBall_zero'ₓ'. -/
 theorem closedBall_zero' (x : α) : closedBall x 0 = closure {x} :=
   Subset.antisymm
     (fun y hy =>
@@ -3386,33 +2159,15 @@ theorem closedBall_zero' (x : α) : closedBall x 0 = closure {x} :=
     (closure_minimal (singleton_subset_iff.2 (dist_self x).le) isClosed_ball)
 #align metric.closed_ball_zero' Metric.closedBall_zero'
 
-/- warning: metric.dense_iff -> Metric.dense_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Dense.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) (forall (x : α) (r : Real), (GT.gt.{0} Real Real.hasLt r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Metric.ball.{u1} α _inst_1 x r) s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Dense.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) (forall (x : α) (r : Real), (GT.gt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Metric.ball.{u1} α _inst_1 x r) s)))
-Case conversion may be inaccurate. Consider using '#align metric.dense_iff Metric.dense_iffₓ'. -/
 theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀ r > 0, (ball x r ∩ s).Nonempty :=
   forall_congr' fun x => by
     simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_iff, mem_ball', and_comm']
 #align metric.dense_iff Metric.dense_iff
 
-/- warning: metric.dense_range_iff -> Metric.denseRange_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α}, Iff (DenseRange.{u1, u2} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) β f) (forall (x : α) (r : Real), (GT.gt.{0} Real Real.hasLt r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u2} β (fun (y : β) => LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x (f y)) r)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α}, Iff (DenseRange.{u1, u2} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) β f) (forall (x : α) (r : Real), (GT.gt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u2} β (fun (y : β) => LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (f y)) r)))
-Case conversion may be inaccurate. Consider using '#align metric.dense_range_iff Metric.denseRange_iffₓ'. -/
 theorem denseRange_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀ r > 0, ∃ y, dist x (f y) < r :=
   forall_congr' fun x => by simp only [mem_closure_iff, exists_range_iff]
 #align metric.dense_range_iff Metric.denseRange_iff
 
-/- warning: topological_space.is_separable.separable_space -> TopologicalSpace.IsSeparable.separableSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (TopologicalSpace.IsSeparable.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (TopologicalSpace.SeparableSpace.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {s : Set.{u1} α}, (TopologicalSpace.IsSeparable.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (TopologicalSpace.SeparableSpace.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1))))
-Case conversion may be inaccurate. Consider using '#align topological_space.is_separable.separable_space TopologicalSpace.IsSeparable.separableSpaceₓ'. -/
 /-- If a set `s` is separable, then the corresponding subtype is separable in a metric space.
 This is not obvious, as the countable set whose closure covers `s` does not need in general to
 be contained in `s`. -/
@@ -3522,42 +2277,18 @@ instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) :=
 #align pseudo_metric_space_pi pseudoMetricSpacePi
 -/
 
-/- warning: nndist_pi_def -> nndist_pi_def is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b), Eq.{1} NNReal (NNDist.nndist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toNNDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) (Finset.sup.{0, u1} NNReal β NNReal.semilatticeSup NNReal.orderBot (Finset.univ.{u1} β _inst_2) (fun (b : β) => NNDist.nndist.{u2} (π b) (PseudoMetricSpace.toNNDist.{u2} (π b) (_inst_3 b)) (f b) (g b)))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b), Eq.{1} NNReal (NNDist.nndist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toNNDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) (Finset.sup.{0, u2} NNReal β instNNRealSemilatticeSup NNReal.instOrderBotNNRealToLEToPreorderToPartialOrderInstNNRealStrictOrderedSemiring (Finset.univ.{u2} β _inst_2) (fun (b : β) => NNDist.nndist.{u1} (π b) (PseudoMetricSpace.toNNDist.{u1} (π b) (_inst_3 b)) (f b) (g b)))
-Case conversion may be inaccurate. Consider using '#align nndist_pi_def nndist_pi_defₓ'. -/
 theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndist (f b) (g b) :=
   NNReal.eq rfl
 #align nndist_pi_def nndist_pi_def
 
-/- warning: dist_pi_def -> dist_pi_def is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b), Eq.{1} Real (Dist.dist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toHasDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (Finset.sup.{0, u1} NNReal β NNReal.semilatticeSup NNReal.orderBot (Finset.univ.{u1} β _inst_2) (fun (b : β) => NNDist.nndist.{u2} (π b) (PseudoMetricSpace.toNNDist.{u2} (π b) (_inst_3 b)) (f b) (g b))))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b), Eq.{1} Real (Dist.dist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) (NNReal.toReal (Finset.sup.{0, u2} NNReal β instNNRealSemilatticeSup NNReal.instOrderBotNNRealToLEToPreorderToPartialOrderInstNNRealStrictOrderedSemiring (Finset.univ.{u2} β _inst_2) (fun (b : β) => NNDist.nndist.{u1} (π b) (PseudoMetricSpace.toNNDist.{u1} (π b) (_inst_3 b)) (f b) (g b))))
-Case conversion may be inaccurate. Consider using '#align dist_pi_def dist_pi_defₓ'. -/
 theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (f b) (g b) : ℝ≥0) :=
   rfl
 #align dist_pi_def dist_pi_def
 
-/- warning: nndist_pi_le_iff -> nndist_pi_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : NNReal}, Iff (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toNNDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u2} (π b) (PseudoMetricSpace.toNNDist.{u2} (π b) (_inst_3 b)) (f b) (g b)) r)
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : NNReal}, Iff (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toNNDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} (π b) (PseudoMetricSpace.toNNDist.{u1} (π b) (_inst_3 b)) (f b) (g b)) r)
-Case conversion may be inaccurate. Consider using '#align nndist_pi_le_iff nndist_pi_le_iffₓ'. -/
 theorem nndist_pi_le_iff {f g : ∀ b, π b} {r : ℝ≥0} :
     nndist f g ≤ r ↔ ∀ b, nndist (f b) (g b) ≤ r := by simp [nndist_pi_def]
 #align nndist_pi_le_iff nndist_pi_le_iff
 
-/- warning: dist_pi_lt_iff -> dist_pi_lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Iff (LT.lt.{0} Real Real.hasLt (Dist.dist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toHasDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} (π b) (PseudoMetricSpace.toHasDist.{u2} (π b) (_inst_3 b)) (f b) (g b)) r))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Iff (LT.lt.{0} Real Real.instLTReal (Dist.dist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} (π b) (PseudoMetricSpace.toDist.{u1} (π b) (_inst_3 b)) (f b) (g b)) r))
-Case conversion may be inaccurate. Consider using '#align dist_pi_lt_iff dist_pi_lt_iffₓ'. -/
 theorem dist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) :
     dist f g < r ↔ ∀ b, dist (f b) (g b) < r :=
   by
@@ -3565,12 +2296,6 @@ theorem dist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) :
   simp [dist_pi_def, Finset.sup_lt_iff (show ⊥ < r from hr)]
 #align dist_pi_lt_iff dist_pi_lt_iff
 
-/- warning: dist_pi_le_iff -> dist_pi_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Iff (LE.le.{0} Real Real.hasLe (Dist.dist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toHasDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} (π b) (PseudoMetricSpace.toHasDist.{u2} (π b) (_inst_3 b)) (f b) (g b)) r))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Iff (LE.le.{0} Real Real.instLEReal (Dist.dist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (π b) (PseudoMetricSpace.toDist.{u1} (π b) (_inst_3 b)) (f b) (g b)) r))
-Case conversion may be inaccurate. Consider using '#align dist_pi_le_iff dist_pi_le_iffₓ'. -/
 theorem dist_pi_le_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 ≤ r) :
     dist f g ≤ r ↔ ∀ b, dist (f b) (g b) ≤ r :=
   by
@@ -3578,12 +2303,6 @@ theorem dist_pi_le_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 ≤ r) :
   exact nndist_pi_le_iff
 #align dist_pi_le_iff dist_pi_le_iff
 
-/- warning: dist_pi_le_iff' -> dist_pi_le_iff' is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] [_inst_4 : Nonempty.{succ u1} β] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : Real}, Iff (LE.le.{0} Real Real.hasLe (Dist.dist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toHasDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} (π b) (PseudoMetricSpace.toHasDist.{u2} (π b) (_inst_3 b)) (f b) (g b)) r)
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] [_inst_4 : Nonempty.{succ u2} β] {f : forall (b : β), π b} {g : forall (b : β), π b} {r : Real}, Iff (LE.le.{0} Real Real.instLEReal (Dist.dist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g) r) (forall (b : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (π b) (PseudoMetricSpace.toDist.{u1} (π b) (_inst_3 b)) (f b) (g b)) r)
-Case conversion may be inaccurate. Consider using '#align dist_pi_le_iff' dist_pi_le_iff'ₓ'. -/
 theorem dist_pi_le_iff' [Nonempty β] {f g : ∀ b, π b} {r : ℝ} :
     dist f g ≤ r ↔ ∀ b, dist (f b) (g b) ≤ r :=
   by
@@ -3595,22 +2314,10 @@ theorem dist_pi_le_iff' [Nonempty β] {f g : ∀ b, π b} {r : ℝ} :
         hr <| dist_nonneg.trans <| h <| Classical.arbitrary _
 #align dist_pi_le_iff' dist_pi_le_iff'
 
-/- warning: dist_pi_const_le -> dist_pi_const_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Fintype.{u2} β] (a : α) (b : α), LE.le.{0} Real Real.hasLe (Dist.dist.{max u2 u1} (β -> α) (PseudoMetricSpace.toHasDist.{max u2 u1} (β -> α) (pseudoMetricSpacePi.{u2, u1} β (fun (_x : β) => α) _inst_2 (fun (b : β) => _inst_1))) (fun (_x : β) => a) (fun (_x : β) => b)) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) a b)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Fintype.{u2} β] (a : α) (b : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{max u1 u2} (β -> α) (PseudoMetricSpace.toDist.{max u1 u2} (β -> α) (pseudoMetricSpacePi.{u2, u1} β (fun (_x : β) => α) _inst_2 (fun (b : β) => _inst_1))) (fun (_x : β) => a) (fun (_x : β) => b)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) a b)
-Case conversion may be inaccurate. Consider using '#align dist_pi_const_le dist_pi_const_leₓ'. -/
 theorem dist_pi_const_le (a b : α) : (dist (fun _ : β => a) fun _ => b) ≤ dist a b :=
   (dist_pi_le_iff dist_nonneg).2 fun _ => le_rfl
 #align dist_pi_const_le dist_pi_const_le
 
-/- warning: nndist_pi_const_le -> nndist_pi_const_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Fintype.{u2} β] (a : α) (b : α), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{max u2 u1} (β -> α) (PseudoMetricSpace.toNNDist.{max u2 u1} (β -> α) (pseudoMetricSpacePi.{u2, u1} β (fun (_x : β) => α) _inst_2 (fun (b : β) => _inst_1))) (fun (_x : β) => a) (fun (_x : β) => b)) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) a b)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : Fintype.{u2} β] (a : α) (b : α), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{max u1 u2} (β -> α) (PseudoMetricSpace.toNNDist.{max u1 u2} (β -> α) (pseudoMetricSpacePi.{u2, u1} β (fun (_x : β) => α) _inst_2 (fun (b : β) => _inst_1))) (fun (_x : β) => a) (fun (_x : β) => b)) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α _inst_1) a b)
-Case conversion may be inaccurate. Consider using '#align nndist_pi_const_le nndist_pi_const_leₓ'. -/
 theorem nndist_pi_const_le (a b : α) : (nndist (fun _ : β => a) fun _ => b) ≤ nndist a b :=
   nndist_pi_le_iff.2 fun _ => le_rfl
 #align nndist_pi_const_le nndist_pi_const_le
@@ -3630,44 +2337,20 @@ theorem nndist_pi_const [Nonempty β] (a b : α) :
 #align nndist_pi_const nndist_pi_const
 -/
 
-/- warning: nndist_le_pi_nndist -> nndist_le_pi_nndist is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b) (b : β), LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (NNDist.nndist.{u2} (π b) (PseudoMetricSpace.toNNDist.{u2} (π b) (_inst_3 b)) (f b) (g b)) (NNDist.nndist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toNNDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g)
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b) (b : β), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u1} (π b) (PseudoMetricSpace.toNNDist.{u1} (π b) (_inst_3 b)) (f b) (g b)) (NNDist.nndist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toNNDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g)
-Case conversion may be inaccurate. Consider using '#align nndist_le_pi_nndist nndist_le_pi_nndistₓ'. -/
 theorem nndist_le_pi_nndist (f g : ∀ b, π b) (b : β) : nndist (f b) (g b) ≤ nndist f g := by
   rw [nndist_pi_def]; exact Finset.le_sup (Finset.mem_univ b)
 #align nndist_le_pi_nndist nndist_le_pi_nndist
 
-/- warning: dist_le_pi_dist -> dist_le_pi_dist is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b) (b : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} (π b) (PseudoMetricSpace.toHasDist.{u2} (π b) (_inst_3 b)) (f b) (g b)) (Dist.dist.{max u1 u2} (forall (b : β), π b) (PseudoMetricSpace.toHasDist.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g)
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] (f : forall (b : β), π b) (g : forall (b : β), π b) (b : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (π b) (PseudoMetricSpace.toDist.{u1} (π b) (_inst_3 b)) (f b) (g b)) (Dist.dist.{max u2 u1} (forall (b : β), π b) (PseudoMetricSpace.toDist.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b))) f g)
-Case conversion may be inaccurate. Consider using '#align dist_le_pi_dist dist_le_pi_distₓ'. -/
 theorem dist_le_pi_dist (f g : ∀ b, π b) (b : β) : dist (f b) (g b) ≤ dist f g := by
   simp only [dist_nndist, NNReal.coe_le_coe, nndist_le_pi_nndist f g b]
 #align dist_le_pi_dist dist_le_pi_dist
 
-/- warning: ball_pi -> ball_pi is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] (x : forall (b : β), π b) {r : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (b : β), π b)) (Metric.ball.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u1, u2} β (fun (b : β) => π b) (Set.univ.{u1} β) (fun (b : β) => Metric.ball.{u2} (π b) (_inst_3 b) (x b) r)))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] (x : forall (b : β), π b) {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (b : β), π b)) (Metric.ball.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u2, u1} β (fun (b : β) => π b) (Set.univ.{u2} β) (fun (b : β) => Metric.ball.{u1} (π b) (_inst_3 b) (x b) r)))
-Case conversion may be inaccurate. Consider using '#align ball_pi ball_piₓ'. -/
 /-- An open ball in a product space is a product of open balls. See also `metric.ball_pi'`
 for a version assuming `nonempty β` instead of `0 < r`. -/
 theorem ball_pi (x : ∀ b, π b) {r : ℝ} (hr : 0 < r) :
     ball x r = Set.pi univ fun b => ball (x b) r := by ext p; simp [dist_pi_lt_iff hr]
 #align ball_pi ball_pi
 
-/- warning: ball_pi' -> ball_pi' is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] [_inst_4 : Nonempty.{succ u1} β] (x : forall (b : β), π b) (r : Real), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (b : β), π b)) (Metric.ball.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u1, u2} β (fun (b : β) => π b) (Set.univ.{u1} β) (fun (b : β) => Metric.ball.{u2} (π b) (_inst_3 b) (x b) r))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] [_inst_4 : Nonempty.{succ u2} β] (x : forall (b : β), π b) (r : Real), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (b : β), π b)) (Metric.ball.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u2, u1} β (fun (b : β) => π b) (Set.univ.{u2} β) (fun (b : β) => Metric.ball.{u1} (π b) (_inst_3 b) (x b) r))
-Case conversion may be inaccurate. Consider using '#align ball_pi' ball_pi'ₓ'. -/
 /-- An open ball in a product space is a product of open balls. See also `metric.ball_pi`
 for a version assuming `0 < r` instead of `nonempty β`. -/
 theorem ball_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
@@ -3675,24 +2358,12 @@ theorem ball_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
   (lt_or_le 0 r).elim (ball_pi x) fun hr => by simp [ball_eq_empty.2 hr]
 #align ball_pi' ball_pi'
 
-/- warning: closed_ball_pi -> closedBall_pi is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] (x : forall (b : β), π b) {r : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (b : β), π b)) (Metric.closedBall.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u1, u2} β (fun (b : β) => π b) (Set.univ.{u1} β) (fun (b : β) => Metric.closedBall.{u2} (π b) (_inst_3 b) (x b) r)))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] (x : forall (b : β), π b) {r : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (b : β), π b)) (Metric.closedBall.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u2, u1} β (fun (b : β) => π b) (Set.univ.{u2} β) (fun (b : β) => Metric.closedBall.{u1} (π b) (_inst_3 b) (x b) r)))
-Case conversion may be inaccurate. Consider using '#align closed_ball_pi closedBall_piₓ'. -/
 /-- A closed ball in a product space is a product of closed balls. See also `metric.closed_ball_pi'`
 for a version assuming `nonempty β` instead of `0 ≤ r`. -/
 theorem closedBall_pi (x : ∀ b, π b) {r : ℝ} (hr : 0 ≤ r) :
     closedBall x r = Set.pi univ fun b => closedBall (x b) r := by ext p; simp [dist_pi_le_iff hr]
 #align closed_ball_pi closedBall_pi
 
-/- warning: closed_ball_pi' -> closedBall_pi' is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {π : β -> Type.{u2}} [_inst_2 : Fintype.{u1} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u2} (π b)] [_inst_4 : Nonempty.{succ u1} β] (x : forall (b : β), π b) (r : Real), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (b : β), π b)) (Metric.closedBall.{max u1 u2} (forall (b : β), π b) (pseudoMetricSpacePi.{u1, u2} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u1, u2} β (fun (b : β) => π b) (Set.univ.{u1} β) (fun (b : β) => Metric.closedBall.{u2} (π b) (_inst_3 b) (x b) r))
-but is expected to have type
-  forall {β : Type.{u2}} {π : β -> Type.{u1}} [_inst_2 : Fintype.{u2} β] [_inst_3 : forall (b : β), PseudoMetricSpace.{u1} (π b)] [_inst_4 : Nonempty.{succ u2} β] (x : forall (b : β), π b) (r : Real), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (b : β), π b)) (Metric.closedBall.{max u2 u1} (forall (b : β), π b) (pseudoMetricSpacePi.{u2, u1} β (fun (b : β) => π b) _inst_2 (fun (b : β) => _inst_3 b)) x r) (Set.pi.{u2, u1} β (fun (b : β) => π b) (Set.univ.{u2} β) (fun (b : β) => Metric.closedBall.{u1} (π b) (_inst_3 b) (x b) r))
-Case conversion may be inaccurate. Consider using '#align closed_ball_pi' closedBall_pi'ₓ'. -/
 /-- A closed ball in a product space is a product of closed balls. See also `metric.closed_ball_pi`
 for a version assuming `0 ≤ r` instead of `nonempty β`. -/
 theorem closedBall_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
@@ -3700,9 +2371,6 @@ theorem closedBall_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
   (le_or_lt 0 r).elim (closedBall_pi x) fun hr => by simp [closed_ball_eq_empty.2 hr]
 #align closed_ball_pi' closedBall_pi'
 
-/- warning: fin.nndist_insert_nth_insert_nth -> Fin.nndist_insertNth_insertNth is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align fin.nndist_insert_nth_insert_nth Fin.nndist_insertNth_insertNthₓ'. -/
 @[simp]
 theorem Fin.nndist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
     [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i) (f g : ∀ j, α (i.succAbove j)) :
@@ -3710,9 +2378,6 @@ theorem Fin.nndist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
   eq_of_forall_ge_iff fun c => by simp [nndist_pi_le_iff, i.forall_iff_succ_above]
 #align fin.nndist_insert_nth_insert_nth Fin.nndist_insertNth_insertNth
 
-/- warning: fin.dist_insert_nth_insert_nth -> Fin.dist_insertNth_insertNth is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align fin.dist_insert_nth_insert_nth Fin.dist_insertNth_insertNthₓ'. -/
 @[simp]
 theorem Fin.dist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
     [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i) (f g : ∀ j, α (i.succAbove j)) :
@@ -3720,12 +2385,6 @@ theorem Fin.dist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
   simp only [dist_nndist, Fin.nndist_insertNth_insertNth, NNReal.coe_max]
 #align fin.dist_insert_nth_insert_nth Fin.dist_insertNth_insertNth
 
-/- warning: real.dist_le_of_mem_pi_Icc -> Real.dist_le_of_mem_pi_Icc is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : Fintype.{u1} β] {x : β -> Real} {y : β -> Real} {x' : β -> Real} {y' : β -> Real}, (Membership.Mem.{u1, u1} (β -> Real) (Set.{u1} (β -> Real)) (Set.hasMem.{u1} (β -> Real)) x (Set.Icc.{u1} (β -> Real) (Pi.preorder.{u1, 0} β (fun (ᾰ : β) => Real) (fun (i : β) => Real.preorder)) x' y')) -> (Membership.Mem.{u1, u1} (β -> Real) (Set.{u1} (β -> Real)) (Set.hasMem.{u1} (β -> Real)) y (Set.Icc.{u1} (β -> Real) (Pi.preorder.{u1, 0} β (fun (ᾰ : β) => Real) (fun (i : β) => Real.preorder)) x' y')) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} (β -> Real) (PseudoMetricSpace.toHasDist.{u1} (β -> Real) (pseudoMetricSpacePi.{u1, 0} β (fun (ᾰ : β) => Real) _inst_2 (fun (b : β) => Real.pseudoMetricSpace))) x y) (Dist.dist.{u1} (β -> Real) (PseudoMetricSpace.toHasDist.{u1} (β -> Real) (pseudoMetricSpacePi.{u1, 0} β (fun (ᾰ : β) => Real) _inst_2 (fun (b : β) => Real.pseudoMetricSpace))) x' y'))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : Fintype.{u1} β] {x : β -> Real} {y : β -> Real} {x' : β -> Real} {y' : β -> Real}, (Membership.mem.{u1, u1} (β -> Real) (Set.{u1} (β -> Real)) (Set.instMembershipSet.{u1} (β -> Real)) x (Set.Icc.{u1} (β -> Real) (Pi.preorder.{u1, 0} β (fun (ᾰ : β) => Real) (fun (i : β) => Real.instPreorderReal)) x' y')) -> (Membership.mem.{u1, u1} (β -> Real) (Set.{u1} (β -> Real)) (Set.instMembershipSet.{u1} (β -> Real)) y (Set.Icc.{u1} (β -> Real) (Pi.preorder.{u1, 0} β (fun (ᾰ : β) => Real) (fun (i : β) => Real.instPreorderReal)) x' y')) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (β -> Real) (PseudoMetricSpace.toDist.{u1} (β -> Real) (pseudoMetricSpacePi.{u1, 0} β (fun (ᾰ : β) => Real) _inst_2 (fun (b : β) => Real.pseudoMetricSpace))) x y) (Dist.dist.{u1} (β -> Real) (PseudoMetricSpace.toDist.{u1} (β -> Real) (pseudoMetricSpacePi.{u1, 0} β (fun (ᾰ : β) => Real) _inst_2 (fun (b : β) => Real.pseudoMetricSpace))) x' y'))
-Case conversion may be inaccurate. Consider using '#align real.dist_le_of_mem_pi_Icc Real.dist_le_of_mem_pi_Iccₓ'. -/
 theorem Real.dist_le_of_mem_pi_Icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ dist x' y' :=
   by
@@ -3740,12 +2399,6 @@ end Pi
 
 section Compact
 
-/- warning: finite_cover_balls_of_compact -> finite_cover_balls_of_compact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) s) -> (forall {e : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) e) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) => Metric.ball.{u1} α _inst_2 x e))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) s) -> (forall {e : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) e) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) (fun (h._@.Mathlib.Topology.MetricSpace.Basic._hyg.25799 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) => Metric.ball.{u1} α _inst_2 x e))))))))
-Case conversion may be inaccurate. Consider using '#align finite_cover_balls_of_compact finite_cover_balls_of_compactₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
@@ -3760,12 +2413,6 @@ theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : 
     exact ⟨x, ⟨xs, by simpa⟩⟩
 #align finite_cover_balls_of_compact finite_cover_balls_of_compact
 
-/- warning: is_compact.finite_cover_balls -> IsCompact.finite_cover_balls is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) s) -> (forall {e : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) e) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) => Metric.ball.{u1} α _inst_2 x e))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) s) -> (forall {e : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) e) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) (fun (h._@.Mathlib.Topology.MetricSpace.Basic._hyg.25799 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) => Metric.ball.{u1} α _inst_2 x e))))))))
-Case conversion may be inaccurate. Consider using '#align is_compact.finite_cover_balls IsCompact.finite_cover_ballsₓ'. -/
 alias finite_cover_balls_of_compact ← IsCompact.finite_cover_balls
 #align is_compact.finite_cover_balls IsCompact.finite_cover_balls
 
@@ -3826,12 +2473,6 @@ theorem tendsto_dist_left_cocompact_atTop [ProperSpace α] (x : α) :
 #align tendsto_dist_left_cocompact_at_top tendsto_dist_left_cocompact_atTop
 -/
 
-/- warning: proper_space_of_compact_closed_ball_of_le -> properSpace_of_compact_closedBall_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (R : Real), (forall (x : α) (r : Real), (LE.le.{0} Real Real.hasLe R r) -> (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Metric.closedBall.{u1} α _inst_1 x r))) -> (ProperSpace.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (R : Real), (forall (x : α) (r : Real), (LE.le.{0} Real Real.instLEReal R r) -> (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (Metric.closedBall.{u1} α _inst_1 x r))) -> (ProperSpace.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align proper_space_of_compact_closed_ball_of_le properSpace_of_compact_closedBall_of_leₓ'. -/
 /-- If all closed balls of large enough radius are compact, then the space is proper. Especially
 useful when the lower bound for the radius is 0. -/
 theorem properSpace_of_compact_closedBall_of_le (R : ℝ)
@@ -3911,12 +2552,6 @@ instance pi_properSpace {π : β → Type _} [Fintype β] [∀ b, PseudoMetricSp
 
 variable [ProperSpace α] {x : α} {r : ℝ} {s : Set α}
 
-/- warning: exists_pos_lt_subset_ball -> exists_pos_lt_subset_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] {x : α} {r : Real} {s : Set.{u1} α}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Metric.ball.{u1} α _inst_1 x r)) -> (Exists.{1} Real (fun (r' : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) r' (Set.Ioo.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r)) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) r' (Set.Ioo.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r)) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Metric.ball.{u1} α _inst_1 x r'))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] {x : α} {r : Real} {s : Set.{u1} α}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Metric.ball.{u1} α _inst_1 x r)) -> (Exists.{1} Real (fun (r' : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) r' (Set.Ioo.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Metric.ball.{u1} α _inst_1 x r'))))
-Case conversion may be inaccurate. Consider using '#align exists_pos_lt_subset_ball exists_pos_lt_subset_ballₓ'. -/
 /-- If a nonempty ball in a proper space includes a closed set `s`, then there exists a nonempty
 ball with the same center and a strictly smaller radius that includes `s`. -/
 theorem exists_pos_lt_subset_ball (hr : 0 < r) (hs : IsClosed s) (h : s ⊆ ball x r) :
@@ -3934,12 +2569,6 @@ theorem exists_pos_lt_subset_ball (hr : 0 < r) (hs : IsClosed s) (h : s ⊆ ball
   exact ⟨r', ⟨dist_nonneg.trans_lt hyr', hrr'⟩, subset.trans hy <| closed_ball_subset_ball hyr'⟩
 #align exists_pos_lt_subset_ball exists_pos_lt_subset_ball
 
-/- warning: exists_lt_subset_ball -> exists_lt_subset_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] {x : α} {r : Real} {s : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Metric.ball.{u1} α _inst_1 x r)) -> (Exists.{1} Real (fun (r' : Real) => Exists.{0} (LT.lt.{0} Real Real.hasLt r' r) (fun (H : LT.lt.{0} Real Real.hasLt r' r) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Metric.ball.{u1} α _inst_1 x r'))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] {x : α} {r : Real} {s : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Metric.ball.{u1} α _inst_1 x r)) -> (Exists.{1} Real (fun (r' : Real) => And (LT.lt.{0} Real Real.instLTReal r' r) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Metric.ball.{u1} α _inst_1 x r'))))
-Case conversion may be inaccurate. Consider using '#align exists_lt_subset_ball exists_lt_subset_ballₓ'. -/
 /-- If a ball in a proper space includes a closed set `s`, then there exists a ball with the same
 center and a strictly smaller radius that includes `s`. -/
 theorem exists_lt_subset_ball (hs : IsClosed s) (h : s ⊆ ball x r) : ∃ r' < r, s ⊆ ball x r' :=
@@ -3965,12 +2594,6 @@ section SecondCountable
 
 open TopologicalSpace
 
-/- warning: metric.second_countable_of_almost_dense_set -> Metric.secondCountable_of_almost_dense_set is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Set.Countable.{u1} α s) (forall (x : α), Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) => LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) ε)))))) -> (TopologicalSpace.SecondCountableTopology.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Set.Countable.{u1} α s) (forall (x : α), Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) ε)))))) -> (TopologicalSpace.SecondCountableTopology.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align metric.second_countable_of_almost_dense_set Metric.secondCountable_of_almost_dense_setₓ'. -/
 /-- A pseudometric space is second countable if, for every `ε > 0`, there is a countable set which
 is `ε`-dense. -/
 theorem secondCountable_of_almost_dense_set
@@ -3988,12 +2611,6 @@ end SecondCountable
 
 end Metric
 
-/- warning: lebesgue_number_lemma_of_metric -> lebesgue_number_lemma_of_metric is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {c : ι -> (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall (i : ι), IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (c i)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, u2} α ι (fun (i : ι) => c i))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x δ) (c i))))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {s : Set.{u2} α} {ι : Sort.{u1}} {c : ι -> (Set.{u2} α)}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) s) -> (forall (i : ι), IsOpen.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) (c i)) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.iUnion.{u2, u1} α ι (fun (i : ι) => c i))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Exists.{u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Metric.ball.{u2} α _inst_1 x δ) (c i))))))
-Case conversion may be inaccurate. Consider using '#align lebesgue_number_lemma_of_metric lebesgue_number_lemma_of_metricₓ'. -/
 theorem lebesgue_number_lemma_of_metric {s : Set α} {ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀ x ∈ s, ∃ i, ball x δ ⊆ c i :=
   let ⟨n, en, hn⟩ := lebesgue_number_lemma hs hc₁ hc₂
@@ -4003,12 +2620,6 @@ theorem lebesgue_number_lemma_of_metric {s : Set α} {ι} {c : ι → Set α} (h
     ⟨i, fun y hy => hi (hδ (mem_ball'.mp hy))⟩⟩
 #align lebesgue_number_lemma_of_metric lebesgue_number_lemma_of_metric
 
-/- warning: lebesgue_number_lemma_of_metric_sUnion -> lebesgue_number_lemma_of_metric_sUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {c : Set.{u1} (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) -> (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.sUnion.{u1} α c)) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.ball.{u1} α _inst_1 x δ) t))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {c : Set.{u1} (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t c) -> (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.sUnion.{u1} α c)) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t c) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.ball.{u1} α _inst_1 x δ) t))))))
-Case conversion may be inaccurate. Consider using '#align lebesgue_number_lemma_of_metric_sUnion lebesgue_number_lemma_of_metric_sUnionₓ'. -/
 theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (hs : IsCompact s)
     (hc₁ : ∀ t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀ c) : ∃ δ > 0, ∀ x ∈ s, ∃ t ∈ c, ball x δ ⊆ t := by
   rw [sUnion_eq_Union] at hc₂ <;> simpa using lebesgue_number_lemma_of_metric hs (by simpa) hc₂
@@ -4108,12 +2719,6 @@ theorem Bounded.subset_ball (h : Bounded s) (c : α) : ∃ r, s ⊆ closedBall c
 #align metric.bounded.subset_ball Metric.Bounded.subset_ball
 -/
 
-/- warning: metric.bounded.subset_ball_lt -> Metric.Bounded.subset_ball_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Metric.Bounded.{u1} α _inst_1 s) -> (forall (a : Real) (c : α), Exists.{1} Real (fun (r : Real) => And (LT.lt.{0} Real Real.hasLt a r) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Metric.closedBall.{u1} α _inst_1 c r))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Metric.Bounded.{u1} α _inst_1 s) -> (forall (a : Real) (c : α), Exists.{1} Real (fun (r : Real) => And (LT.lt.{0} Real Real.instLTReal a r) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Metric.closedBall.{u1} α _inst_1 c r))))
-Case conversion may be inaccurate. Consider using '#align metric.bounded.subset_ball_lt Metric.Bounded.subset_ball_ltₓ'. -/
 theorem Bounded.subset_ball_lt (h : Bounded s) (a : ℝ) (c : α) : ∃ r, a < r ∧ s ⊆ closedBall c r :=
   by
   rcases h.subset_ball c with ⟨r, hr⟩
@@ -4138,12 +2743,6 @@ theorem bounded_closure_iff : Bounded (closure s) ↔ Bounded s :=
 #align metric.bounded_closure_iff Metric.bounded_closure_iff
 -/
 
-/- warning: metric.bounded.union -> Metric.Bounded.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Metric.Bounded.{u1} α _inst_1 s) -> (Metric.Bounded.{u1} α _inst_1 t) -> (Metric.Bounded.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Metric.Bounded.{u1} α _inst_1 s) -> (Metric.Bounded.{u1} α _inst_1 t) -> (Metric.Bounded.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align metric.bounded.union Metric.Bounded.unionₓ'. -/
 /-- The union of two bounded sets is bounded. -/
 theorem Bounded.union (hs : Bounded s) (ht : Bounded t) : Bounded (s ∪ t) :=
   by
@@ -4156,12 +2755,6 @@ theorem Bounded.union (hs : Bounded s) (ht : Bounded t) : Bounded (s ∪ t) :=
         (subset.trans hCt <| closed_ball_subset_closed_ball <| le_max_right _ _)⟩
 #align metric.bounded.union Metric.Bounded.union
 
-/- warning: metric.bounded_union -> Metric.bounded_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Metric.Bounded.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (And (Metric.Bounded.{u1} α _inst_1 s) (Metric.Bounded.{u1} α _inst_1 t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Metric.Bounded.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (And (Metric.Bounded.{u1} α _inst_1 s) (Metric.Bounded.{u1} α _inst_1 t))
-Case conversion may be inaccurate. Consider using '#align metric.bounded_union Metric.bounded_unionₓ'. -/
 /-- The union of two sets is bounded iff each of the sets is bounded. -/
 @[simp]
 theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
@@ -4230,12 +2823,6 @@ theorem bounded_singleton {x : α} : Bounded ({x} : Set α) :=
 #align metric.bounded_singleton Metric.bounded_singleton
 -/
 
-/- warning: metric.bounded_range_iff -> Metric.bounded_range_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α}, Iff (Metric.Bounded.{u1} α _inst_1 (Set.range.{u1, succ u2} α β f)) (Exists.{1} Real (fun (C : Real) => forall (x : β) (y : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (f y)) C))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] {f : β -> α}, Iff (Metric.Bounded.{u1} α _inst_1 (Set.range.{u1, succ u2} α β f)) (Exists.{1} Real (fun (C : Real) => forall (x : β) (y : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) (f x) (f y)) C))
-Case conversion may be inaccurate. Consider using '#align metric.bounded_range_iff Metric.bounded_range_iffₓ'. -/
 /-- Characterization of the boundedness of the range of a function -/
 theorem bounded_range_iff {f : β → α} : Bounded (range f) ↔ ∃ C, ∀ x y, dist (f x) (f y) ≤ C :=
   exists_congr fun C =>
@@ -4290,12 +2877,6 @@ theorem bounded_range_of_tendsto (u : ℕ → α) {x : α} (hu : Tendsto u atTop
 #align metric.bounded_range_of_tendsto Metric.bounded_range_of_tendsto
 -/
 
-/- warning: metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at -> Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {k : Set.{u2} β} {s : Set.{u2} β} {f : β -> α}, (IsCompact.{u2} β _inst_2 k) -> (forall (x : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x k) -> (ContinuousWithinAt.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s x)) -> (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) k t) (And (IsOpen.{u2} β _inst_2 t) (Metric.Bounded.{u1} α _inst_1 (Set.image.{u2, u1} β α f (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t s))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {k : Set.{u2} β} {s : Set.{u2} β} {f : β -> α}, (IsCompact.{u2} β _inst_2 k) -> (forall (x : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x k) -> (ContinuousWithinAt.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s x)) -> (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) k t) (And (IsOpen.{u2} β _inst_2 t) (Metric.Bounded.{u1} α _inst_1 (Set.image.{u2, u1} β α f (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet.{u2} β) t s))))))
-Case conversion may be inaccurate. Consider using '#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAtₓ'. -/
 /-- If a function is continuous within a set `s` at every point of a compact set `k`, then it is
 bounded on some open neighborhood of `k` in `s`. -/
 theorem exists_isOpen_bounded_image_inter_of_isCompact_of_forall_continuousWithinAt
@@ -4335,12 +2916,6 @@ theorem exists_isOpen_bounded_image_of_isCompact_of_forall_continuousAt [Topolog
 #align metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_isOpen_bounded_image_of_isCompact_of_forall_continuousAt
 -/
 
-/- warning: metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on -> Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_continuousOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {k : Set.{u2} β} {s : Set.{u2} β} {f : β -> α}, (IsCompact.{u2} β _inst_2 k) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) k s) -> (ContinuousOn.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s) -> (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) k t) (And (IsOpen.{u2} β _inst_2 t) (Metric.Bounded.{u1} α _inst_1 (Set.image.{u2, u1} β α f (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t s))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {k : Set.{u2} β} {s : Set.{u2} β} {f : β -> α}, (IsCompact.{u2} β _inst_2 k) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) k s) -> (ContinuousOn.{u2, u1} β α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) f s) -> (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) k t) (And (IsOpen.{u2} β _inst_2 t) (Metric.Bounded.{u1} α _inst_1 (Set.image.{u2, u1} β α f (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet.{u2} β) t s))))))
-Case conversion may be inaccurate. Consider using '#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on Metric.exists_isOpen_bounded_image_inter_of_isCompact_of_continuousOnₓ'. -/
 /-- If a function is continuous on a set `s` containing a compact set `k`, then it is bounded on
 some open neighborhood of `k` in `s`. -/
 theorem exists_isOpen_bounded_image_inter_of_isCompact_of_continuousOn [TopologicalSpace β]
@@ -4449,45 +3024,21 @@ noncomputable def diam (s : Set α) : ℝ :=
 #align metric.diam Metric.diam
 -/
 
-/- warning: metric.diam_nonneg -> Metric.diam_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Metric.diam.{u1} α _inst_1 s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Metric.diam.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align metric.diam_nonneg Metric.diam_nonnegₓ'. -/
 /-- The diameter of a set is always nonnegative -/
 theorem diam_nonneg : 0 ≤ diam s :=
   ENNReal.toReal_nonneg
 #align metric.diam_nonneg Metric.diam_nonneg
 
-/- warning: metric.diam_subsingleton -> Metric.diam_subsingleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Eq.{1} Real (Metric.diam.{u1} α _inst_1 s) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Eq.{1} Real (Metric.diam.{u1} α _inst_1 s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align metric.diam_subsingleton Metric.diam_subsingletonₓ'. -/
 theorem diam_subsingleton (hs : s.Subsingleton) : diam s = 0 := by
   simp only [diam, EMetric.diam_subsingleton hs, ENNReal.zero_toReal]
 #align metric.diam_subsingleton Metric.diam_subsingleton
 
-/- warning: metric.diam_empty -> Metric.diam_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Eq.{1} Real (Metric.diam.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α], Eq.{1} Real (Metric.diam.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align metric.diam_empty Metric.diam_emptyₓ'. -/
 /-- The empty set has zero diameter -/
 @[simp]
 theorem diam_empty : diam (∅ : Set α) = 0 :=
   diam_subsingleton subsingleton_empty
 #align metric.diam_empty Metric.diam_empty
 
-/- warning: metric.diam_singleton -> Metric.diam_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Eq.{1} Real (Metric.diam.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α}, Eq.{1} Real (Metric.diam.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align metric.diam_singleton Metric.diam_singletonₓ'. -/
 /-- A singleton has zero diameter -/
 @[simp]
 theorem diam_singleton : diam ({x} : Set α) = 0 :=
@@ -4501,12 +3052,6 @@ theorem diam_pair : diam ({x, y} : Set α) = dist x y := by
 #align metric.diam_pair Metric.diam_pair
 -/
 
-/- warning: metric.diam_triple -> Metric.diam_triple is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {z : α}, Eq.{1} Real (Metric.diam.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) x (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) y (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) z)))) (LinearOrder.max.{0} Real Real.linearOrder (LinearOrder.max.{0} Real Real.linearOrder (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x z)) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {y : α} {z : α}, Eq.{1} Real (Metric.diam.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) x (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) y (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) z)))) (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x z)) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align metric.diam_triple Metric.diam_tripleₓ'. -/
 -- Does not work as a simp-lemma, since {x, y, z} reduces to (insert z (insert y {x}))
 theorem diam_triple :
     Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (dist x z)) (dist y z) :=
@@ -4515,12 +3060,6 @@ theorem diam_triple :
   rw [ENNReal.toReal_max, ENNReal.toReal_max] <;> apply_rules [ne_of_lt, edist_lt_top, max_lt]
 #align metric.diam_triple Metric.diam_triple
 
-/- warning: metric.ediam_le_of_forall_dist_le -> Metric.ediam_le_of_forall_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {C : Real}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) C))) -> (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (ENNReal.ofReal C))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {C : Real}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) C))) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (ENNReal.ofReal C))
-Case conversion may be inaccurate. Consider using '#align metric.ediam_le_of_forall_dist_le Metric.ediam_le_of_forall_dist_leₓ'. -/
 /-- If the distance between any two points in a set is bounded by some constant `C`,
 then `ennreal.of_real C`  bounds the emetric diameter of this set. -/
 theorem ediam_le_of_forall_dist_le {C : ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, dist x y ≤ C) :
@@ -4528,12 +3067,6 @@ theorem ediam_le_of_forall_dist_le {C : ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, dist
   EMetric.diam_le fun x hx y hy => (edist_dist x y).symm ▸ ENNReal.ofReal_le_ofReal (h x hx y hy)
 #align metric.ediam_le_of_forall_dist_le Metric.ediam_le_of_forall_dist_le
 
-/- warning: metric.diam_le_of_forall_dist_le -> Metric.diam_le_of_forall_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {C : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) C) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) C))) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 s) C)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {C : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) C) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) C))) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 s) C)
-Case conversion may be inaccurate. Consider using '#align metric.diam_le_of_forall_dist_le Metric.diam_le_of_forall_dist_leₓ'. -/
 /-- If the distance between any two points in a set is bounded by some non-negative constant,
 this constant bounds the diameter. -/
 theorem diam_le_of_forall_dist_le {C : ℝ} (h₀ : 0 ≤ C) (h : ∀ x ∈ s, ∀ y ∈ s, dist x y ≤ C) :
@@ -4541,12 +3074,6 @@ theorem diam_le_of_forall_dist_le {C : ℝ} (h₀ : 0 ≤ C) (h : ∀ x ∈ s, �
   ENNReal.toReal_le_of_le_ofReal h₀ (ediam_le_of_forall_dist_le h)
 #align metric.diam_le_of_forall_dist_le Metric.diam_le_of_forall_dist_le
 
-/- warning: metric.diam_le_of_forall_dist_le_of_nonempty -> Metric.diam_le_of_forall_dist_le_of_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (forall {C : Real}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) C))) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 s) C))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (forall {C : Real}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) C))) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 s) C))
-Case conversion may be inaccurate. Consider using '#align metric.diam_le_of_forall_dist_le_of_nonempty Metric.diam_le_of_forall_dist_le_of_nonemptyₓ'. -/
 /-- If the distance between any two points in a nonempty set is bounded by some constant,
 this constant bounds the diameter. -/
 theorem diam_le_of_forall_dist_le_of_nonempty (hs : s.Nonempty) {C : ℝ}
@@ -4557,12 +3084,6 @@ theorem diam_le_of_forall_dist_le_of_nonempty (hs : s.Nonempty) {C : ℝ}
   diam_le_of_forall_dist_le h₀ h
 #align metric.diam_le_of_forall_dist_le_of_nonempty Metric.diam_le_of_forall_dist_le_of_nonempty
 
-/- warning: metric.dist_le_diam_of_mem' -> Metric.dist_le_diam_of_mem' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {y : α}, (Ne.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (Metric.diam.{u1} α _inst_1 s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {y : α}, (Ne.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (Metric.diam.{u1} α _inst_1 s))
-Case conversion may be inaccurate. Consider using '#align metric.dist_le_diam_of_mem' Metric.dist_le_diam_of_mem'ₓ'. -/
 /-- The distance between two points in a set is controlled by the diameter of the set. -/
 theorem dist_le_diam_of_mem' (h : EMetric.diam s ≠ ⊤) (hx : x ∈ s) (hy : y ∈ s) :
     dist x y ≤ diam s := by
@@ -4571,12 +3092,6 @@ theorem dist_le_diam_of_mem' (h : EMetric.diam s ≠ ⊤) (hx : x ∈ s) (hy : y
   exact EMetric.edist_le_diam_of_mem hx hy
 #align metric.dist_le_diam_of_mem' Metric.dist_le_diam_of_mem'
 
-/- warning: metric.bounded_iff_ediam_ne_top -> Metric.bounded_iff_ediam_ne_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Metric.Bounded.{u1} α _inst_1 s) (Ne.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, Iff (Metric.Bounded.{u1} α _inst_1 s) (Ne.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
-Case conversion may be inaccurate. Consider using '#align metric.bounded_iff_ediam_ne_top Metric.bounded_iff_ediam_ne_topₓ'. -/
 /-- Characterize the boundedness of a set in terms of the finiteness of its emetric.diameter. -/
 theorem bounded_iff_ediam_ne_top : Bounded s ↔ EMetric.diam s ≠ ⊤ :=
   Iff.intro
@@ -4584,90 +3099,42 @@ theorem bounded_iff_ediam_ne_top : Bounded s ↔ EMetric.diam s ≠ ⊤ :=
     fun h => ⟨diam s, fun x hx y hy => dist_le_diam_of_mem' h hx hy⟩
 #align metric.bounded_iff_ediam_ne_top Metric.bounded_iff_ediam_ne_top
 
-/- warning: metric.bounded.ediam_ne_top -> Metric.Bounded.ediam_ne_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Metric.Bounded.{u1} α _inst_1 s) -> (Ne.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Metric.Bounded.{u1} α _inst_1 s) -> (Ne.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
-Case conversion may be inaccurate. Consider using '#align metric.bounded.ediam_ne_top Metric.Bounded.ediam_ne_topₓ'. -/
 theorem Bounded.ediam_ne_top (h : Bounded s) : EMetric.diam s ≠ ⊤ :=
   bounded_iff_ediam_ne_top.1 h
 #align metric.bounded.ediam_ne_top Metric.Bounded.ediam_ne_top
 
-/- warning: metric.ediam_univ_eq_top_iff_noncompact -> Metric.ediam_univ_eq_top_iff_noncompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1], Iff (Eq.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) (Set.univ.{u1} α)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (NoncompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1], Iff (Eq.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) (Set.univ.{u1} α)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (NoncompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align metric.ediam_univ_eq_top_iff_noncompact Metric.ediam_univ_eq_top_iff_noncompactₓ'. -/
 theorem ediam_univ_eq_top_iff_noncompact [ProperSpace α] :
     EMetric.diam (univ : Set α) = ∞ ↔ NoncompactSpace α := by
   rw [← not_compactSpace_iff, compact_space_iff_bounded_univ, bounded_iff_ediam_ne_top,
     Classical.not_not]
 #align metric.ediam_univ_eq_top_iff_noncompact Metric.ediam_univ_eq_top_iff_noncompact
 
-/- warning: metric.ediam_univ_of_noncompact -> Metric.ediam_univ_of_noncompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] [_inst_3 : NoncompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))], Eq.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) (Set.univ.{u1} α)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] [_inst_3 : NoncompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))], Eq.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) (Set.univ.{u1} α)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align metric.ediam_univ_of_noncompact Metric.ediam_univ_of_noncompactₓ'. -/
 @[simp]
 theorem ediam_univ_of_noncompact [ProperSpace α] [NoncompactSpace α] :
     EMetric.diam (univ : Set α) = ∞ :=
   ediam_univ_eq_top_iff_noncompact.mpr ‹_›
 #align metric.ediam_univ_of_noncompact Metric.ediam_univ_of_noncompact
 
-/- warning: metric.diam_univ_of_noncompact -> Metric.diam_univ_of_noncompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] [_inst_3 : NoncompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))], Eq.{1} Real (Metric.diam.{u1} α _inst_1 (Set.univ.{u1} α)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] [_inst_3 : NoncompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1))], Eq.{1} Real (Metric.diam.{u1} α _inst_1 (Set.univ.{u1} α)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align metric.diam_univ_of_noncompact Metric.diam_univ_of_noncompactₓ'. -/
 @[simp]
 theorem diam_univ_of_noncompact [ProperSpace α] [NoncompactSpace α] : diam (univ : Set α) = 0 := by
   simp [diam]
 #align metric.diam_univ_of_noncompact Metric.diam_univ_of_noncompact
 
-/- warning: metric.dist_le_diam_of_mem -> Metric.dist_le_diam_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {y : α}, (Metric.Bounded.{u1} α _inst_1 s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y) (Metric.diam.{u1} α _inst_1 s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {y : α}, (Metric.Bounded.{u1} α _inst_1 s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y) (Metric.diam.{u1} α _inst_1 s))
-Case conversion may be inaccurate. Consider using '#align metric.dist_le_diam_of_mem Metric.dist_le_diam_of_memₓ'. -/
 /-- The distance between two points in a set is controlled by the diameter of the set. -/
 theorem dist_le_diam_of_mem (h : Bounded s) (hx : x ∈ s) (hy : y ∈ s) : dist x y ≤ diam s :=
   dist_le_diam_of_mem' h.ediam_ne_top hx hy
 #align metric.dist_le_diam_of_mem Metric.dist_le_diam_of_mem
 
-/- warning: metric.ediam_of_unbounded -> Metric.ediam_of_unbounded is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Not (Metric.Bounded.{u1} α _inst_1 s)) -> (Eq.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Not (Metric.Bounded.{u1} α _inst_1 s)) -> (Eq.{1} ENNReal (EMetric.diam.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
-Case conversion may be inaccurate. Consider using '#align metric.ediam_of_unbounded Metric.ediam_of_unboundedₓ'. -/
 theorem ediam_of_unbounded (h : ¬Bounded s) : EMetric.diam s = ∞ := by
   rwa [bounded_iff_ediam_ne_top, Classical.not_not] at h
 #align metric.ediam_of_unbounded Metric.ediam_of_unbounded
 
-/- warning: metric.diam_eq_zero_of_unbounded -> Metric.diam_eq_zero_of_unbounded is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Not (Metric.Bounded.{u1} α _inst_1 s)) -> (Eq.{1} Real (Metric.diam.{u1} α _inst_1 s) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Not (Metric.Bounded.{u1} α _inst_1 s)) -> (Eq.{1} Real (Metric.diam.{u1} α _inst_1 s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align metric.diam_eq_zero_of_unbounded Metric.diam_eq_zero_of_unboundedₓ'. -/
 /-- An unbounded set has zero diameter. If you would prefer to get the value ∞, use `emetric.diam`.
 This lemma makes it possible to avoid side conditions in some situations -/
 theorem diam_eq_zero_of_unbounded (h : ¬Bounded s) : diam s = 0 := by
   rw [diam, ediam_of_unbounded h, ENNReal.top_toReal]
 #align metric.diam_eq_zero_of_unbounded Metric.diam_eq_zero_of_unbounded
 
-/- warning: metric.diam_mono -> Metric.diam_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Metric.Bounded.{u1} α _inst_1 t) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 s) (Metric.diam.{u1} α _inst_1 t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (Metric.Bounded.{u1} α _inst_1 t) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 s) (Metric.diam.{u1} α _inst_1 t))
-Case conversion may be inaccurate. Consider using '#align metric.diam_mono Metric.diam_monoₓ'. -/
 /-- If `s ⊆ t`, then the diameter of `s` is bounded by that of `t`, provided `t` is bounded. -/
 theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ diam t :=
   by
@@ -4676,12 +3143,6 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
   exact EMetric.diam_mono h
 #align metric.diam_mono Metric.diam_mono
 
-/- warning: metric.diam_union -> Metric.diam_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {y : α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Metric.diam.{u1} α _inst_1 s) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x y)) (Metric.diam.{u1} α _inst_1 t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {y : α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Metric.diam.{u1} α _inst_1 s) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)) (Metric.diam.{u1} α _inst_1 t)))
-Case conversion may be inaccurate. Consider using '#align metric.diam_union Metric.diam_unionₓ'. -/
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
 any two points in each of the sets. This lemma is true without any side condition, since it is
 obviously true if `s ∪ t` is unbounded. -/
@@ -4702,12 +3163,6 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
     apply_rules [add_nonneg, diam_nonneg, dist_nonneg]
 #align metric.diam_union Metric.diam_union
 
-/- warning: metric.diam_union' -> Metric.diam_union' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Metric.diam.{u1} α _inst_1 s) (Metric.diam.{u1} α _inst_1 t)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Metric.diam.{u1} α _inst_1 s) (Metric.diam.{u1} α _inst_1 t)))
-Case conversion may be inaccurate. Consider using '#align metric.diam_union' Metric.diam_union'ₓ'. -/
 /-- If two sets intersect, the diameter of the union is bounded by the sum of the diameters. -/
 theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ diam s + diam t :=
   by
@@ -4715,12 +3170,6 @@ theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ d
   simpa using diam_union xs xt
 #align metric.diam_union' Metric.diam_union'
 
-/- warning: metric.diam_le_of_subset_closed_ball -> Metric.diam_le_of_subset_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {r : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Metric.closedBall.{u1} α _inst_1 x r)) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 s) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) r))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α} {r : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Metric.closedBall.{u1} α _inst_1 x r)) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 s) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) r))
-Case conversion may be inaccurate. Consider using '#align metric.diam_le_of_subset_closed_ball Metric.diam_le_of_subset_closedBallₓ'. -/
 theorem diam_le_of_subset_closedBall {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closedBall x r) :
     diam s ≤ 2 * r :=
   diam_le_of_forall_dist_le (mul_nonneg zero_le_two hr) fun a ha b hb =>
@@ -4731,34 +3180,16 @@ theorem diam_le_of_subset_closedBall {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closedB
       
 #align metric.diam_le_of_subset_closed_ball Metric.diam_le_of_subset_closedBall
 
-/- warning: metric.diam_closed_ball -> Metric.diam_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 (Metric.closedBall.{u1} α _inst_1 x r)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) r))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 (Metric.closedBall.{u1} α _inst_1 x r)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) r))
-Case conversion may be inaccurate. Consider using '#align metric.diam_closed_ball Metric.diam_closedBallₓ'. -/
 /-- The diameter of a closed ball of radius `r` is at most `2 r`. -/
 theorem diam_closedBall {r : ℝ} (h : 0 ≤ r) : diam (closedBall x r) ≤ 2 * r :=
   diam_le_of_subset_closedBall h Subset.rfl
 #align metric.diam_closed_ball Metric.diam_closedBall
 
-/- warning: metric.diam_ball -> Metric.diam_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) r) -> (LE.le.{0} Real Real.hasLe (Metric.diam.{u1} α _inst_1 (Metric.ball.{u1} α _inst_1 x r)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) r))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {x : α} {r : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (LE.le.{0} Real Real.instLEReal (Metric.diam.{u1} α _inst_1 (Metric.ball.{u1} α _inst_1 x r)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) r))
-Case conversion may be inaccurate. Consider using '#align metric.diam_ball Metric.diam_ballₓ'. -/
 /-- The diameter of a ball of radius `r` is at most `2 r`. -/
 theorem diam_ball {r : ℝ} (h : 0 ≤ r) : diam (ball x r) ≤ 2 * r :=
   diam_le_of_subset_closedBall h ball_subset_closedBall
 #align metric.diam_ball Metric.diam_ball
 
-/- warning: is_complete.nonempty_Inter_of_nonempty_bInter -> IsComplete.nonempty_iInter_of_nonempty_biInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Nat -> (Set.{u1} α)}, (IsComplete.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (s (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => Set.iInter.{u1, 0} α (LE.le.{0} Nat Nat.hasLe n N) (fun (H : LE.le.{0} Nat Nat.hasLe n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => s n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Nat -> (Set.{u1} α)}, (IsComplete.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (s (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => Set.iInter.{u1, 0} α (LE.le.{0} Nat instLENat n N) (fun (H : LE.le.{0} Nat instLENat n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => s n)))
-Case conversion may be inaccurate. Consider using '#align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_iInter_of_nonempty_biInterₓ'. -/
 /-- If a family of complete sets with diameter tending to `0` is such that each finite intersection
 is nonempty, then the total intersection is also nonempty. -/
 theorem IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set α} (h0 : IsComplete (s 0))
@@ -4785,12 +3216,6 @@ theorem IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set α} (h0 
   exact I n p hp
 #align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_iInter_of_nonempty_biInter
 
-/- warning: metric.nonempty_Inter_of_nonempty_bInter -> Metric.nonempty_iInter_of_nonempty_biInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)] {s : Nat -> (Set.{u1} α)}, (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => Set.iInter.{u1, 0} α (LE.le.{0} Nat Nat.hasLe n N) (fun (H : LE.le.{0} Nat Nat.hasLe n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => s n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)] {s : Nat -> (Set.{u1} α)}, (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => Set.iInter.{u1, 0} α (LE.le.{0} Nat instLENat n N) (fun (H : LE.le.{0} Nat instLENat n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Set.Nonempty.{u1} α (Set.iInter.{u1, 1} α Nat (fun (n : Nat) => s n)))
-Case conversion may be inaccurate. Consider using '#align metric.nonempty_Inter_of_nonempty_bInter Metric.nonempty_iInter_of_nonempty_biInterₓ'. -/
 /-- In a complete space, if a family of closed sets with diameter tending to `0` is such that each
 finite intersection is nonempty, then the total intersection is also nonempty. -/
 theorem nonempty_iInter_of_nonempty_biInter [CompleteSpace α] {s : ℕ → Set α}
@@ -4801,12 +3226,6 @@ theorem nonempty_iInter_of_nonempty_biInter [CompleteSpace α] {s : ℕ → Set 
 
 end Diam
 
-/- warning: metric.exists_local_min_mem_ball -> Metric.exists_local_min_mem_ball is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : ConditionallyCompleteLinearOrder.{u2} β] [_inst_5 : OrderTopology.{u2} β _inst_3 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_4)))))] {f : α -> β} {a : α} {z : α} {r : Real}, (ContinuousOn.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) _inst_3 f (Metric.closedBall.{u1} α _inst_1 a r)) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z (Metric.closedBall.{u1} α _inst_1 a r)) -> (forall (z' : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z' (Metric.sphere.{u1} α _inst_1 a r)) -> (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_4)))))) (f z) (f z'))) -> (Exists.{succ u1} α (fun (z : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z (Metric.ball.{u1} α _inst_1 a r)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z (Metric.ball.{u1} α _inst_1 a r)) => IsLocalMin.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_4))))) f z)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : ProperSpace.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : ConditionallyCompleteLinearOrder.{u2} β] [_inst_5 : OrderTopology.{u2} β _inst_3 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_4)))))] {f : α -> β} {a : α} {z : α} {r : Real}, (ContinuousOn.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) _inst_3 f (Metric.closedBall.{u1} α _inst_1 a r)) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z (Metric.closedBall.{u1} α _inst_1 a r)) -> (forall (z' : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z' (Metric.sphere.{u1} α _inst_1 a r)) -> (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_4)))))) (f z) (f z'))) -> (Exists.{succ u1} α (fun (z : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z (Metric.ball.{u1} α _inst_1 a r)) (IsLocalMin.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} β _inst_4))))) f z)))
-Case conversion may be inaccurate. Consider using '#align metric.exists_local_min_mem_ball Metric.exists_local_min_mem_ballₓ'. -/
 theorem exists_local_min_mem_ball [ProperSpace α] [TopologicalSpace β]
     [ConditionallyCompleteLinearOrder β] [OrderTopology β] {f : α → β} {a z : α} {r : ℝ}
     (hf : ContinuousOn f (closedBall a r)) (hz : z ∈ closedBall a r)
@@ -4833,12 +3252,6 @@ unsafe def positivity_diam : expr → tactic strictness
 
 end Tactic
 
-/- warning: comap_dist_right_at_top_le_cocompact -> comap_dist_right_atTop_le_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.comap.{u1, 0} α Real (fun (y : α) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) y x) (Filter.atTop.{0} Real Real.preorder)) (Filter.cocompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.comap.{u1, 0} α Real (fun (y : α) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) y x) (Filter.atTop.{0} Real Real.instPreorderReal)) (Filter.cocompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align comap_dist_right_at_top_le_cocompact comap_dist_right_atTop_le_cocompactₓ'. -/
 theorem comap_dist_right_atTop_le_cocompact (x : α) :
     comap (fun y => dist y x) atTop ≤ cocompact α :=
   by
@@ -4847,12 +3260,6 @@ theorem comap_dist_right_atTop_le_cocompact (x : α) :
   exact ⟨Ioi r, Ioi_mem_at_top r, fun y hy hys => (mem_closed_ball.1 <| hr hys).not_lt hy⟩
 #align comap_dist_right_at_top_le_cocompact comap_dist_right_atTop_le_cocompact
 
-/- warning: comap_dist_left_at_top_le_cocompact -> comap_dist_left_atTop_le_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.comap.{u1, 0} α Real (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x) (Filter.atTop.{0} Real Real.preorder)) (Filter.cocompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] (x : α), LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.comap.{u1, 0} α Real (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x) (Filter.atTop.{0} Real Real.instPreorderReal)) (Filter.cocompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align comap_dist_left_at_top_le_cocompact comap_dist_left_atTop_le_cocompactₓ'. -/
 theorem comap_dist_left_atTop_le_cocompact (x : α) : comap (dist x) atTop ≤ cocompact α := by
   simpa only [dist_comm _ x] using comap_dist_right_atTop_le_cocompact x
 #align comap_dist_left_at_top_le_cocompact comap_dist_left_atTop_le_cocompact
@@ -4899,12 +3306,6 @@ theorem MetricSpace.ext {α : Type _} {m m' : MetricSpace α} (h : m.toHasDist =
 #align metric_space.ext MetricSpace.ext
 -/
 
-/- warning: metric_space.of_dist_topology -> MetricSpace.ofDistTopology is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α), Eq.{1} Real (dist x x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (dist y x)) -> (forall (x : α) (y : α) (z : α), LE.le.{0} Real Real.hasLe (dist x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (dist x y) (dist y z))) -> (forall (s : Set.{u1} α), Iff (IsOpen.{u1} α _inst_2 s) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (y : α), (LT.lt.{0} Real Real.hasLt (dist x y) ε) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s)))))) -> (forall (x : α) (y : α), (Eq.{1} Real (dist x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{succ u1} α x y)) -> (MetricSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α), Eq.{1} Real (dist x x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (dist y x)) -> (forall (x : α) (y : α) (z : α), LE.le.{0} Real Real.instLEReal (dist x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (dist x y) (dist y z))) -> (forall (s : Set.{u1} α), Iff (IsOpen.{u1} α _inst_2 s) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (y : α), (LT.lt.{0} Real Real.instLTReal (dist x y) ε) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s)))))) -> (forall (x : α) (y : α), (Eq.{1} Real (dist x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{succ u1} α x y)) -> (MetricSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align metric_space.of_dist_topology MetricSpace.ofDistTopologyₓ'. -/
 /-- Construct a metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
@@ -4919,108 +3320,48 @@ def MetricSpace.ofDistTopology {α : Type u} [TopologicalSpace α] (dist : α �
 
 variable {γ : Type w} [MetricSpace γ]
 
-/- warning: eq_of_dist_eq_zero -> eq_of_dist_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, (Eq.{1} Real (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, (Eq.{1} Real (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align eq_of_dist_eq_zero eq_of_dist_eq_zeroₓ'. -/
 theorem eq_of_dist_eq_zero {x y : γ} : dist x y = 0 → x = y :=
   MetricSpace.eq_of_dist_eq_zero
 #align eq_of_dist_eq_zero eq_of_dist_eq_zero
 
-/- warning: dist_eq_zero -> dist_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} Real (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} Real (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align dist_eq_zero dist_eq_zeroₓ'. -/
 @[simp]
 theorem dist_eq_zero {x y : γ} : dist x y = 0 ↔ x = y :=
   Iff.intro eq_of_dist_eq_zero fun this : x = y => this ▸ dist_self _
 #align dist_eq_zero dist_eq_zero
 
-/- warning: zero_eq_dist -> zero_eq_dist is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} Real (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y)) (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} Real (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y)) (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align zero_eq_dist zero_eq_distₓ'. -/
 @[simp]
 theorem zero_eq_dist {x y : γ} : 0 = dist x y ↔ x = y := by rw [eq_comm, dist_eq_zero]
 #align zero_eq_dist zero_eq_dist
 
-/- warning: dist_ne_zero -> dist_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Ne.{1} Real (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Ne.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Ne.{1} Real (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Ne.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align dist_ne_zero dist_ne_zeroₓ'. -/
 theorem dist_ne_zero {x y : γ} : dist x y ≠ 0 ↔ x ≠ y := by
   simpa only [not_iff_not] using dist_eq_zero
 #align dist_ne_zero dist_ne_zero
 
-/- warning: dist_le_zero -> dist_le_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align dist_le_zero dist_le_zeroₓ'. -/
 @[simp]
 theorem dist_le_zero {x y : γ} : dist x y ≤ 0 ↔ x = y := by
   simpa [le_antisymm_iff, dist_nonneg] using @dist_eq_zero _ _ x y
 #align dist_le_zero dist_le_zero
 
-/- warning: dist_pos -> dist_pos is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y)) (Ne.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y)) (Ne.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align dist_pos dist_posₓ'. -/
 @[simp]
 theorem dist_pos {x y : γ} : 0 < dist x y ↔ x ≠ y := by
   simpa only [not_le] using not_congr dist_le_zero
 #align dist_pos dist_pos
 
-/- warning: eq_of_forall_dist_le -> eq_of_forall_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) ε)) -> (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) ε)) -> (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align eq_of_forall_dist_le eq_of_forall_dist_leₓ'. -/
 theorem eq_of_forall_dist_le {x y : γ} (h : ∀ ε > 0, dist x y ≤ ε) : x = y :=
   eq_of_dist_eq_zero (eq_of_le_of_forall_le_of_dense dist_nonneg h)
 #align eq_of_forall_dist_le eq_of_forall_dist_le
 
-/- warning: eq_of_nndist_eq_zero -> eq_of_nndist_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, (Eq.{1} NNReal (NNDist.nndist.{u1} γ (PseudoMetricSpace.toNNDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) -> (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, (Eq.{1} NNReal (NNDist.nndist.{u1} γ (PseudoMetricSpace.toNNDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))) -> (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align eq_of_nndist_eq_zero eq_of_nndist_eq_zeroₓ'. -/
 /-- Deduce the equality of points with the vanishing of the nonnegative distance-/
 theorem eq_of_nndist_eq_zero {x y : γ} : nndist x y = 0 → x = y := by
   simp only [← NNReal.eq_iff, ← dist_nndist, imp_self, NNReal.coe_zero, dist_eq_zero]
 #align eq_of_nndist_eq_zero eq_of_nndist_eq_zero
 
-/- warning: nndist_eq_zero -> nndist_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} NNReal (NNDist.nndist.{u1} γ (PseudoMetricSpace.toNNDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} NNReal (NNDist.nndist.{u1} γ (PseudoMetricSpace.toNNDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))) (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align nndist_eq_zero nndist_eq_zeroₓ'. -/
 /-- Characterize the equality of points with the vanishing of the nonnegative distance-/
 @[simp]
 theorem nndist_eq_zero {x y : γ} : nndist x y = 0 ↔ x = y := by
   simp only [← NNReal.eq_iff, ← dist_nndist, imp_self, NNReal.coe_zero, dist_eq_zero]
 #align nndist_eq_zero nndist_eq_zero
 
-/- warning: zero_eq_nndist -> zero_eq_nndist is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} NNReal (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (NNDist.nndist.{u1} γ (PseudoMetricSpace.toNNDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y)) (Eq.{succ u1} γ x y)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ} {y : γ}, Iff (Eq.{1} NNReal (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) (NNDist.nndist.{u1} γ (PseudoMetricSpace.toNNDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y)) (Eq.{succ u1} γ x y)
-Case conversion may be inaccurate. Consider using '#align zero_eq_nndist zero_eq_nndistₓ'. -/
 @[simp]
 theorem zero_eq_nndist {x y : γ} : 0 = nndist x y ↔ x = y := by
   simp only [← NNReal.eq_iff, ← dist_nndist, imp_self, NNReal.coe_zero, zero_eq_dist]
@@ -5030,34 +3371,16 @@ namespace Metric
 
 variable {x : γ} {s : Set γ}
 
-/- warning: metric.closed_ball_zero -> Metric.closedBall_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ}, Eq.{succ u1} (Set.{u1} γ) (Metric.closedBall.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.hasSingleton.{u1} γ) x)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ}, Eq.{succ u1} (Set.{u1} γ) (Metric.closedBall.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.instSingletonSet.{u1} γ) x)
-Case conversion may be inaccurate. Consider using '#align metric.closed_ball_zero Metric.closedBall_zeroₓ'. -/
 @[simp]
 theorem closedBall_zero : closedBall x 0 = {x} :=
   Set.ext fun y => dist_le_zero
 #align metric.closed_ball_zero Metric.closedBall_zero
 
-/- warning: metric.sphere_zero -> Metric.sphere_zero is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ}, Eq.{succ u1} (Set.{u1} γ) (Metric.sphere.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.hasSingleton.{u1} γ) x)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {x : γ}, Eq.{succ u1} (Set.{u1} γ) (Metric.sphere.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.instSingletonSet.{u1} γ) x)
-Case conversion may be inaccurate. Consider using '#align metric.sphere_zero Metric.sphere_zeroₓ'. -/
 @[simp]
 theorem sphere_zero : sphere x 0 = {x} :=
   Set.ext fun y => dist_eq_zero
 #align metric.sphere_zero Metric.sphere_zero
 
-/- warning: metric.subsingleton_closed_ball -> Metric.subsingleton_closedBall is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] (x : γ) {r : Real}, (LE.le.{0} Real Real.hasLe r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Set.Subsingleton.{u1} γ (Metric.closedBall.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x r))
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] (x : γ) {r : Real}, (LE.le.{0} Real Real.instLEReal r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Set.Subsingleton.{u1} γ (Metric.closedBall.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x r))
-Case conversion may be inaccurate. Consider using '#align metric.subsingleton_closed_ball Metric.subsingleton_closedBallₓ'. -/
 theorem subsingleton_closedBall (x : γ) {r : ℝ} (hr : r ≤ 0) : (closedBall x r).Subsingleton :=
   by
   rcases hr.lt_or_eq with (hr | rfl)
@@ -5065,12 +3388,6 @@ theorem subsingleton_closedBall (x : γ) {r : ℝ} (hr : r ≤ 0) : (closedBall 
   · rw [closed_ball_zero]; exact subsingleton_singleton
 #align metric.subsingleton_closed_ball Metric.subsingleton_closedBall
 
-/- warning: metric.subsingleton_sphere -> Metric.subsingleton_sphere is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] (x : γ) {r : Real}, (LE.le.{0} Real Real.hasLe r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Set.Subsingleton.{u1} γ (Metric.sphere.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x r))
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] (x : γ) {r : Real}, (LE.le.{0} Real Real.instLEReal r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Set.Subsingleton.{u1} γ (Metric.sphere.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2) x r))
-Case conversion may be inaccurate. Consider using '#align metric.subsingleton_sphere Metric.subsingleton_sphereₓ'. -/
 theorem subsingleton_sphere (x : γ) {r : ℝ} (hr : r ≤ 0) : (sphere x r).Subsingleton :=
   (subsingleton_closedBall x hr).anti sphere_subset_closedBall
 #align metric.subsingleton_sphere Metric.subsingleton_sphere
@@ -5083,12 +3400,6 @@ instance (priority := 100) MetricSpace.to_separated : SeparatedSpace γ :=
 #align metric_space.to_separated MetricSpace.to_separated
 -/
 
-/- warning: metric.uniform_embedding_iff' -> Metric.uniformEmbedding_iff' is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {γ : Type.{u2}} [_inst_2 : MetricSpace.{u2} γ] [_inst_3 : MetricSpace.{u1} β] {f : γ -> β}, Iff (UniformEmbedding.{u2, u1} γ β (PseudoMetricSpace.toUniformSpace.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) (PseudoMetricSpace.toUniformSpace.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_3)) f) (And (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : γ} {b : γ}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} γ (PseudoMetricSpace.toHasDist.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) a b) δ) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} β (PseudoMetricSpace.toHasDist.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_3)) (f a) (f b)) ε))))) (forall (δ : Real), (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall {a : γ} {b : γ}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} β (PseudoMetricSpace.toHasDist.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_3)) (f a) (f b)) ε) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} γ (PseudoMetricSpace.toHasDist.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) a b) δ))))))
-but is expected to have type
-  forall {β : Type.{u1}} {γ : Type.{u2}} [_inst_2 : MetricSpace.{u2} γ] [_inst_3 : MetricSpace.{u1} β] {f : γ -> β}, Iff (UniformEmbedding.{u2, u1} γ β (PseudoMetricSpace.toUniformSpace.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) (PseudoMetricSpace.toUniformSpace.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_3)) f) (And (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : γ} {b : γ}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} γ (PseudoMetricSpace.toDist.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) a b) δ) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} β (PseudoMetricSpace.toDist.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_3)) (f a) (f b)) ε))))) (forall (δ : Real), (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall {a : γ} {b : γ}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} β (PseudoMetricSpace.toDist.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_3)) (f a) (f b)) ε) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} γ (PseudoMetricSpace.toDist.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) a b) δ))))))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_embedding_iff' Metric.uniformEmbedding_iff'ₓ'. -/
 /-- A map between metric spaces is a uniform embedding if and only if the distance between `f x`
 and `f y` is controlled in terms of the distance between `x` and `y` and conversely. -/
 theorem uniformEmbedding_iff' [MetricSpace β] {f : γ → β} :
@@ -5118,35 +3429,17 @@ instance (priority := 100) MetricSpace.toEMetricSpace : EMetricSpace γ :=
 #align metric_space.to_emetric_space MetricSpace.toEMetricSpace
 -/
 
-/- warning: metric.is_closed_of_pairwise_le_dist -> Metric.isClosed_of_pairwise_le_dist is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {s : Set.{u1} γ} {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Set.Pairwise.{u1} γ s (fun (x : γ) (y : γ) => LE.le.{0} Real Real.hasLe ε (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y))) -> (IsClosed.{u1} γ (UniformSpace.toTopologicalSpace.{u1} γ (PseudoMetricSpace.toUniformSpace.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2))) s)
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {s : Set.{u1} γ} {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Set.Pairwise.{u1} γ s (fun (x : γ) (y : γ) => LE.le.{0} Real Real.instLEReal ε (Dist.dist.{u1} γ (PseudoMetricSpace.toDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) x y))) -> (IsClosed.{u1} γ (UniformSpace.toTopologicalSpace.{u1} γ (PseudoMetricSpace.toUniformSpace.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2))) s)
-Case conversion may be inaccurate. Consider using '#align metric.is_closed_of_pairwise_le_dist Metric.isClosed_of_pairwise_le_distₓ'. -/
 theorem isClosed_of_pairwise_le_dist {s : Set γ} {ε : ℝ} (hε : 0 < ε)
     (hs : s.Pairwise fun x y => ε ≤ dist x y) : IsClosed s :=
   isClosed_of_spaced_out (dist_mem_uniformity hε) <| by simpa using hs
 #align metric.is_closed_of_pairwise_le_dist Metric.isClosed_of_pairwise_le_dist
 
-/- warning: metric.closed_embedding_of_pairwise_le_dist -> Metric.closedEmbedding_of_pairwise_le_dist is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_2 : MetricSpace.{u1} γ] {α : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : DiscreteTopology.{u2} α _inst_3] {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (forall {f : α -> γ}, (Pairwise.{u2} α (fun (x : α) (y : α) => LE.le.{0} Real Real.hasLe ε (Dist.dist.{u1} γ (PseudoMetricSpace.toHasDist.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2)) (f x) (f y)))) -> (ClosedEmbedding.{u2, u1} α γ _inst_3 (UniformSpace.toTopologicalSpace.{u1} γ (PseudoMetricSpace.toUniformSpace.{u1} γ (MetricSpace.toPseudoMetricSpace.{u1} γ _inst_2))) f))
-but is expected to have type
-  forall {γ : Type.{u2}} [_inst_2 : MetricSpace.{u2} γ] {α : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : DiscreteTopology.{u1} α _inst_3] {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (forall {f : α -> γ}, (Pairwise.{u1} α (fun (x : α) (y : α) => LE.le.{0} Real Real.instLEReal ε (Dist.dist.{u2} γ (PseudoMetricSpace.toDist.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2)) (f x) (f y)))) -> (ClosedEmbedding.{u1, u2} α γ _inst_3 (UniformSpace.toTopologicalSpace.{u2} γ (PseudoMetricSpace.toUniformSpace.{u2} γ (MetricSpace.toPseudoMetricSpace.{u2} γ _inst_2))) f))
-Case conversion may be inaccurate. Consider using '#align metric.closed_embedding_of_pairwise_le_dist Metric.closedEmbedding_of_pairwise_le_distₓ'. -/
 theorem closedEmbedding_of_pairwise_le_dist {α : Type _} [TopologicalSpace α] [DiscreteTopology α]
     {ε : ℝ} (hε : 0 < ε) {f : α → γ} (hf : Pairwise fun x y => ε ≤ dist (f x) (f y)) :
     ClosedEmbedding f :=
   closedEmbedding_of_spaced_out (dist_mem_uniformity hε) <| by simpa using hf
 #align metric.closed_embedding_of_pairwise_le_dist Metric.closedEmbedding_of_pairwise_le_dist
 
-/- warning: metric.uniform_embedding_bot_of_pairwise_le_dist -> Metric.uniformEmbedding_bot_of_pairwise_le_dist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {β : Type.{u2}} {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (forall {f : β -> α}, (Pairwise.{u2} β (fun (x : β) (y : β) => LE.le.{0} Real Real.hasLe ε (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) (f x) (f y)))) -> (UniformEmbedding.{u2, u1} β α (Bot.bot.{u2} (UniformSpace.{u2} β) (UniformSpace.hasBot.{u2} β)) (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) f))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {β : Type.{u1}} {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (forall {f : β -> α}, (Pairwise.{u1} β (fun (x : β) (y : β) => LE.le.{0} Real Real.instLEReal ε (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f x) (f y)))) -> (UniformEmbedding.{u1, u2} β α (Bot.bot.{u1} (UniformSpace.{u1} β) (instBotUniformSpace.{u1} β)) (inferInstance.{succ u2} (UniformSpace.{u2} α) (PseudoMetricSpace.toUniformSpace.{u2} α _inst_1)) f))
-Case conversion may be inaccurate. Consider using '#align metric.uniform_embedding_bot_of_pairwise_le_dist Metric.uniformEmbedding_bot_of_pairwise_le_distₓ'. -/
 /-- If `f : β → α` sends any two distinct points to points at distance at least `ε > 0`, then
 `f` is a uniform embedding with respect to the discrete uniformity on `β`. -/
 theorem uniformEmbedding_bot_of_pairwise_le_dist {β : Type _} {ε : ℝ} (hε : 0 < ε) {f : β → α}
@@ -5194,12 +3487,6 @@ theorem MetricSpace.replaceTopology_eq {γ} [U : TopologicalSpace γ] (m : Metri
 #align metric_space.replace_topology_eq MetricSpace.replaceTopology_eq
 -/
 
-/- warning: emetric_space.to_metric_space_of_dist -> EMetricSpace.toMetricSpaceOfDist is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [e : EMetricSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α (EMetricSpace.toPseudoEmetricSpace.{u1} α e)) x y) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (ENNReal.toReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α (EMetricSpace.toPseudoEmetricSpace.{u1} α e)) x y))) -> (MetricSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [e : EMetricSpace.{u1} α] (dist : α -> α -> Real), (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α e)) x y) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (forall (x : α) (y : α), Eq.{1} Real (dist x y) (ENNReal.toReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α e)) x y))) -> (MetricSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align emetric_space.to_metric_space_of_dist EMetricSpace.toMetricSpaceOfDistₓ'. -/
 /-- One gets a metric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the metric space and the emetric space. In this definition, the distance
@@ -5212,12 +3499,6 @@ def EMetricSpace.toMetricSpaceOfDist {α : Type u} [e : EMetricSpace α] (dist :
     (PseudoEMetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h) _
 #align emetric_space.to_metric_space_of_dist EMetricSpace.toMetricSpaceOfDist
 
-/- warning: emetric_space.to_metric_space -> EMetricSpace.toMetricSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_3 : EMetricSpace.{u1} α], (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α (EMetricSpace.toPseudoEmetricSpace.{u1} α _inst_3)) x y) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (MetricSpace.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_3 : EMetricSpace.{u1} α], (forall (x : α) (y : α), Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_3)) x y) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (MetricSpace.{u1} α)
-Case conversion may be inaccurate. Consider using '#align emetric_space.to_metric_space EMetricSpace.toMetricSpaceₓ'. -/
 /-- One gets a metric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the metric space and the emetric space. -/
@@ -5379,12 +3660,6 @@ section SecondCountable
 
 open TopologicalSpace
 
-/- warning: metric.second_countable_of_countable_discretization -> Metric.secondCountable_of_countable_discretization is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_3 : MetricSpace.{u1} α], (forall (ε : Real), (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{succ (succ u2)} Type.{u2} (fun (β : Type.{u2}) => Exists.{succ u2} (Encodable.{u2} β) (fun (_x : Encodable.{u2} β) => Exists.{max (succ u1) (succ u2)} (α -> β) (fun (F : α -> β) => forall (x : α) (y : α), (Eq.{succ u2} β (F x) (F y)) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_3)) x y) ε)))))) -> (TopologicalSpace.SecondCountableTopology.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_3))))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_3 : MetricSpace.{u2} α], (forall (ε : Real), (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{succ (succ u1)} Type.{u1} (fun (β : Type.{u1}) => Exists.{succ u1} (Encodable.{u1} β) (fun (_x : Encodable.{u1} β) => Exists.{max (succ u2) (succ u1)} (α -> β) (fun (F : α -> β) => forall (x : α) (y : α), (Eq.{succ u1} β (F x) (F y)) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α (MetricSpace.toPseudoMetricSpace.{u2} α _inst_3)) x y) ε)))))) -> (TopologicalSpace.SecondCountableTopology.{u2} α (UniformSpace.toTopologicalSpace.{u2} α (PseudoMetricSpace.toUniformSpace.{u2} α (MetricSpace.toPseudoMetricSpace.{u2} α _inst_3))))
-Case conversion may be inaccurate. Consider using '#align metric.second_countable_of_countable_discretization Metric.secondCountable_of_countable_discretizationₓ'. -/
 /-- A metric space is second countable if one can reconstruct up to any `ε>0` any element of the
 space from countably many data. -/
 theorem secondCountable_of_countable_discretization {α : Type u} [MetricSpace α]

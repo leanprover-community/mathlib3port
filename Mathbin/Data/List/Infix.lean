@@ -348,46 +348,22 @@ theorem prefix_of_prefix_length_le :
 #align list.prefix_of_prefix_length_le List.prefix_of_prefix_length_le
 -/
 
-/- warning: list.prefix_or_prefix_of_prefix -> List.prefix_or_prefix_of_prefix is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isPrefix.{u1} α l₁ l₃) -> (List.isPrefix.{u1} α l₂ l₃) -> (Or (List.isPrefix.{u1} α l₁ l₂) (List.isPrefix.{u1} α l₂ l₁))
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isPrefix.{u1} α l₁ l₂) -> (List.isPrefix.{u1} α l₃ l₂) -> (Or (List.isPrefix.{u1} α l₁ l₃) (List.isPrefix.{u1} α l₃ l₁))
-Case conversion may be inaccurate. Consider using '#align list.prefix_or_prefix_of_prefix List.prefix_or_prefix_of_prefixₓ'. -/
 theorem prefix_or_prefix_of_prefix (h₁ : l₁ <+: l₃) (h₂ : l₂ <+: l₃) : l₁ <+: l₂ ∨ l₂ <+: l₁ :=
   (le_total (length l₁) (length l₂)).imp (prefix_of_prefix_length_le h₁ h₂)
     (prefix_of_prefix_length_le h₂ h₁)
 #align list.prefix_or_prefix_of_prefix List.prefix_or_prefix_of_prefix
 
-/- warning: list.suffix_of_suffix_length_le -> List.suffix_of_suffix_length_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₃) -> (List.isSuffix.{u1} α l₂ l₃) -> (LE.le.{0} Nat Nat.hasLe (List.length.{u1} α l₁) (List.length.{u1} α l₂)) -> (List.isSuffix.{u1} α l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α l₃ l₂) -> (LE.le.{0} Nat instLENat (List.length.{u1} α l₁) (List.length.{u1} α l₃)) -> (List.isSuffix.{u1} α l₁ l₃)
-Case conversion may be inaccurate. Consider using '#align list.suffix_of_suffix_length_le List.suffix_of_suffix_length_leₓ'. -/
 theorem suffix_of_suffix_length_le (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) (ll : length l₁ ≤ length l₂) :
     l₁ <:+ l₂ :=
   reverse_prefix.1 <|
     prefix_of_prefix_length_le (reverse_prefix.2 h₁) (reverse_prefix.2 h₂) (by simp [ll])
 #align list.suffix_of_suffix_length_le List.suffix_of_suffix_length_le
 
-/- warning: list.suffix_or_suffix_of_suffix -> List.suffix_or_suffix_of_suffix is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₃) -> (List.isSuffix.{u1} α l₂ l₃) -> (Or (List.isSuffix.{u1} α l₁ l₂) (List.isSuffix.{u1} α l₂ l₁))
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α l₃ l₂) -> (Or (List.isSuffix.{u1} α l₁ l₃) (List.isSuffix.{u1} α l₃ l₁))
-Case conversion may be inaccurate. Consider using '#align list.suffix_or_suffix_of_suffix List.suffix_or_suffix_of_suffixₓ'. -/
 theorem suffix_or_suffix_of_suffix (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) : l₁ <:+ l₂ ∨ l₂ <:+ l₁ :=
   (prefix_or_prefix_of_prefix (reverse_prefix.2 h₁) (reverse_prefix.2 h₂)).imp reverse_prefix.1
     reverse_prefix.1
 #align list.suffix_or_suffix_of_suffix List.suffix_or_suffix_of_suffix
 
-/- warning: list.suffix_cons_iff -> List.suffix_cons_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {a : α}, Iff (List.isSuffix.{u1} α l₁ (List.cons.{u1} α a l₂)) (Or (Eq.{succ u1} (List.{u1} α) l₁ (List.cons.{u1} α a l₂)) (List.isSuffix.{u1} α l₁ l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : α} {a : List.{u1} α}, Iff (List.isSuffix.{u1} α l₁ (List.cons.{u1} α l₂ a)) (Or (Eq.{succ u1} (List.{u1} α) l₁ (List.cons.{u1} α l₂ a)) (List.isSuffix.{u1} α l₁ a))
-Case conversion may be inaccurate. Consider using '#align list.suffix_cons_iff List.suffix_cons_iffₓ'. -/
 theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l₂ :=
   by
   constructor
@@ -400,12 +376,6 @@ theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l
     · exact hl₁.trans (l₂.suffix_cons _)
 #align list.suffix_cons_iff List.suffix_cons_iff
 
-/- warning: list.infix_cons_iff -> List.infix_cons_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {a : α}, Iff (List.isInfix.{u1} α l₁ (List.cons.{u1} α a l₂)) (Or (List.isPrefix.{u1} α l₁ (List.cons.{u1} α a l₂)) (List.isInfix.{u1} α l₁ l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : α} {a : List.{u1} α}, Iff (List.isInfix.{u1} α l₁ (List.cons.{u1} α l₂ a)) (Or (List.isPrefix.{u1} α l₁ (List.cons.{u1} α l₂ a)) (List.isInfix.{u1} α l₁ a))
-Case conversion may be inaccurate. Consider using '#align list.infix_cons_iff List.infix_cons_iffₓ'. -/
 theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+: l₂ :=
   by
   constructor
@@ -473,22 +443,10 @@ theorem drop_subset (n) (l : List α) : drop n l ⊆ l :=
 #align list.drop_subset List.drop_subset
 -/
 
-/- warning: list.mem_of_mem_take -> List.mem_of_mem_take is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {n : Nat}, (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.take.{u1} α n l)) -> (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l)
-but is expected to have type
-  forall {α : Type.{u1}} {l : α} {a : Nat} {n : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l (List.take.{u1} α a n)) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l n)
-Case conversion may be inaccurate. Consider using '#align list.mem_of_mem_take List.mem_of_mem_takeₓ'. -/
 theorem mem_of_mem_take (h : a ∈ l.take n) : a ∈ l :=
   take_subset n l h
 #align list.mem_of_mem_take List.mem_of_mem_take
 
-/- warning: list.mem_of_mem_drop -> List.mem_of_mem_drop is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {n : Nat}, (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.drop.{u1} α n l)) -> (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l)
-but is expected to have type
-  forall {α : Type.{u1}} {l : α} {a : Nat} {n : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l (List.drop.{u1} α a n)) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l n)
-Case conversion may be inaccurate. Consider using '#align list.mem_of_mem_drop List.mem_of_mem_dropₓ'. -/
 theorem mem_of_mem_drop (h : a ∈ l.drop n) : a ∈ l :=
   drop_subset n l h
 #align list.mem_of_mem_drop List.mem_of_mem_drop
@@ -515,22 +473,10 @@ theorem mem_of_mem_dropSlice {n m : ℕ} {l : List α} {a : α} (h : a ∈ l.sli
 #align list.mem_of_mem_slice List.mem_of_mem_dropSlice
 -/
 
-/- warning: list.take_while_prefix -> List.takeWhile_prefix is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], List.isPrefix.{u1} α (List.takeWhile.{u1} α p (fun (a : α) => _inst_1 a) l) l
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isPrefix.{u1} α (List.takeWhile.{u1} α p l) l
-Case conversion may be inaccurate. Consider using '#align list.take_while_prefix List.takeWhile_prefixₓ'. -/
 theorem takeWhile_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
   ⟨l.dropWhileₓ p, takeWhile_append_dropWhile p l⟩
 #align list.take_while_prefix List.takeWhile_prefix
 
-/- warning: list.drop_while_suffix -> List.dropWhile_suffix is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], List.isSuffix.{u1} α (List.dropWhileₓ.{u1} α p (fun (a : α) => _inst_1 a) l) l
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isSuffix.{u1} α (List.dropWhile.{u1} α p l) l
-Case conversion may be inaccurate. Consider using '#align list.drop_while_suffix List.dropWhile_suffixₓ'. -/
 theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhileₓ p <:+ l :=
   ⟨l.takeWhile p, takeWhile_append_dropWhile p l⟩
 #align list.drop_while_suffix List.dropWhile_suffix
@@ -676,12 +622,6 @@ theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
 #align list.cons_prefix_iff List.cons_prefix_iff
 -/
 
-/- warning: list.is_prefix.map -> List.isPrefix.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.isPrefix.{u1} α l₁ l₂) -> (forall (f : α -> β), List.isPrefix.{u2} β (List.map.{u1, u2} α β f l₁) (List.map.{u1, u2} α β f l₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {l₁ : List.{u2} α} {l₂ : List.{u2} α}, (List.isPrefix.{u2} α l₁ l₂) -> (forall (f : α -> β), List.isPrefix.{u1} β (List.map.{u2, u1} α β f l₁) (List.map.{u2, u1} α β f l₂))
-Case conversion may be inaccurate. Consider using '#align list.is_prefix.map List.isPrefix.mapₓ'. -/
 theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f :=
   by
   induction' l₁ with hd tl hl generalizing l₂
@@ -692,12 +632,6 @@ theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.m
       simp only [h, prefix_cons_inj, hl, map]
 #align list.is_prefix.map List.isPrefix.map
 
-/- warning: list.is_prefix.filter_map -> List.isPrefix.filter_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.isPrefix.{u1} α l₁ l₂) -> (forall (f : α -> (Option.{u2} β)), List.isPrefix.{u2} β (List.filterMap.{u1, u2} α β f l₁) (List.filterMap.{u1, u2} α β f l₂))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {l₁ : List.{u2} α} {l₂ : List.{u2} α}, (List.isPrefix.{u2} α l₁ l₂) -> (forall (f : α -> (Option.{u1} β)), List.isPrefix.{u1} β (List.filterMap.{u2, u1} α β f l₁) (List.filterMap.{u2, u1} α β f l₂))
-Case conversion may be inaccurate. Consider using '#align list.is_prefix.filter_map List.isPrefix.filter_mapₓ'. -/
 theorem isPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
     l₁.filterMap f <+: l₂.filterMap f :=
   by
@@ -718,12 +652,6 @@ theorem isPrefix.reduceOption {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂)
 #align list.is_prefix.reduce_option List.isPrefix.reduceOption
 -/
 
-/- warning: list.is_prefix.filter -> List.isPrefix.filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isPrefix.{u1} α l₁ l₂) -> (List.isPrefix.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isPrefix.{u1} α _inst_1 l₁) -> (List.isPrefix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
-Case conversion may be inaccurate. Consider using '#align list.is_prefix.filter List.isPrefix.filterₓ'. -/
 theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
     l₁.filterₓ p <+: l₂.filterₓ p := by
   obtain ⟨xs, rfl⟩ := h
@@ -731,12 +659,6 @@ theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List 
   exact prefix_append _ _
 #align list.is_prefix.filter List.isPrefix.filter
 
-/- warning: list.is_suffix.filter -> List.isSuffix.filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isSuffix.{u1} α _inst_1 l₁) -> (List.isSuffix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
-Case conversion may be inaccurate. Consider using '#align list.is_suffix.filter List.isSuffix.filterₓ'. -/
 theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
     l₁.filterₓ p <:+ l₂.filterₓ p := by
   obtain ⟨xs, rfl⟩ := h
@@ -744,12 +666,6 @@ theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List 
   exact suffix_append _ _
 #align list.is_suffix.filter List.isSuffix.filter
 
-/- warning: list.is_infix.filter -> List.isInfix.filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isInfix.{u1} α l₁ l₂) -> (List.isInfix.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isInfix.{u1} α _inst_1 l₁) -> (List.isInfix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
-Case conversion may be inaccurate. Consider using '#align list.is_infix.filter List.isInfix.filterₓ'. -/
 theorem isInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
     l₁.filterₓ p <:+: l₂.filterₓ p :=
   by
@@ -951,43 +867,19 @@ theorem insert_nil (a : α) : insert a nil = [a] :=
 #align list.insert_nil List.insert_nil
 -/
 
-/- warning: list.insert.def -> List.insert.def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) (ite.{succ u1} (List.{u1} α) (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) (List.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l) l (List.cons.{u1} α a l))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (Insert.insert.{u1, u1} α (List.{u1} α) (List.instInsertList.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) (ite.{succ u1} (List.{u1} α) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l) (List.instDecidableMemListInstMembershipList.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l) l (List.cons.{u1} α a l))
-Case conversion may be inaccurate. Consider using '#align list.insert.def List.insert.defₓ'. -/
 theorem insert.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
   rfl
 #align list.insert.def List.insert.def
 
-/- warning: list.insert_of_mem -> List.insert_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α], (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) -> (Eq.{succ u1} (List.{u1} α) (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) l)
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {_inst_1 : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1) -> (Eq.{succ u1} (List.{u1} α) (List.insert.{u1} α (fun (a : α) (b : α) => l a b) a _inst_1) _inst_1)
-Case conversion may be inaccurate. Consider using '#align list.insert_of_mem List.insert_of_memₓ'. -/
 @[simp]
 theorem insert_of_mem (h : a ∈ l) : insert a l = l := by simp only [insert.def, if_pos h]
 #align list.insert_of_mem List.insert_of_mem
 
-/- warning: list.insert_of_not_mem -> List.insert_of_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α], (Not (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l)) -> (Eq.{succ u1} (List.{u1} α) (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) (List.cons.{u1} α a l))
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {_inst_1 : List.{u1} α}, (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1)) -> (Eq.{succ u1} (List.{u1} α) (List.insert.{u1} α (fun (a : α) (b : α) => l a b) a _inst_1) (List.cons.{u1} α a _inst_1))
-Case conversion may be inaccurate. Consider using '#align list.insert_of_not_mem List.insert_of_not_memₓ'. -/
 @[simp]
 theorem insert_of_not_mem (h : a ∉ l) : insert a l = a :: l := by
   simp only [insert.def, if_neg h] <;> constructor <;> rfl
 #align list.insert_of_not_mem List.insert_of_not_mem
 
-/- warning: list.mem_insert_iff -> List.mem_insert_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u1} α], Iff (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) b l)) (Or (Eq.{succ u1} α a b) (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l))
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {b : α} {_inst_1 : List.{u1} α}, Iff (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.insert.{u1} α (fun (a : α) (b : α) => l a b) b _inst_1)) (Or (Eq.{succ u1} α a b) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1))
-Case conversion may be inaccurate. Consider using '#align list.mem_insert_iff List.mem_insert_iffₓ'. -/
 @[simp]
 theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l :=
   by
@@ -1030,43 +922,19 @@ theorem mem_insert_self (a : α) (l : List α) : a ∈ l.insert a :=
 #align list.mem_insert_self List.mem_insert_self
 -/
 
-/- warning: list.mem_insert_of_mem -> List.mem_insert_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u1} α], (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) -> (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) b l))
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {b : α} {_inst_1 : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.insert.{u1} α (fun (a : α) (b : α) => l a b) b _inst_1))
-Case conversion may be inaccurate. Consider using '#align list.mem_insert_of_mem List.mem_insert_of_memₓ'. -/
 theorem mem_insert_of_mem (h : a ∈ l) : a ∈ insert b l :=
   mem_insert_iff.2 (Or.inr h)
 #align list.mem_insert_of_mem List.mem_insert_of_mem
 
-/- warning: list.eq_or_mem_of_mem_insert -> List.eq_or_mem_of_mem_insert is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u1} α], (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) b l)) -> (Or (Eq.{succ u1} α a b) (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l))
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {b : α} {_inst_1 : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.insert.{u1} α (fun (a : α) (b : α) => l a b) b _inst_1)) -> (Or (Eq.{succ u1} α a b) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1))
-Case conversion may be inaccurate. Consider using '#align list.eq_or_mem_of_mem_insert List.eq_or_mem_of_mem_insertₓ'. -/
 theorem eq_or_mem_of_mem_insert (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
   mem_insert_iff.1 h
 #align list.eq_or_mem_of_mem_insert List.eq_or_mem_of_mem_insert
 
-/- warning: list.length_insert_of_mem -> List.length_insert_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α], (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) -> (Eq.{1} Nat (List.length.{u1} α (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (List.length.{u1} α l))
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {_inst_1 : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1) -> (Eq.{1} Nat (List.length.{u1} α (List.insert.{u1} α (fun (a : α) (b : α) => l a b) a _inst_1)) (List.length.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align list.length_insert_of_mem List.length_insert_of_memₓ'. -/
 @[simp]
 theorem length_insert_of_mem (h : a ∈ l) : (insert a l).length = l.length :=
   congr_arg _ <| insert_of_mem h
 #align list.length_insert_of_mem List.length_insert_of_mem
 
-/- warning: list.length_insert_of_not_mem -> List.length_insert_of_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α], (Not (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l)) -> (Eq.{1} Nat (List.length.{u1} α (Insert.insert.{u1, u1} α (List.{u1} α) (List.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u1} α l) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {_inst_1 : List.{u1} α}, (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1)) -> (Eq.{1} Nat (List.length.{u1} α (List.insert.{u1} α (fun (a : α) (b : α) => l a b) a _inst_1)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α _inst_1) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align list.length_insert_of_not_mem List.length_insert_of_not_memₓ'. -/
 @[simp]
 theorem length_insert_of_not_mem (h : a ∉ l) : (insert a l).length = l.length + 1 :=
   congr_arg _ <| insert_of_not_mem h

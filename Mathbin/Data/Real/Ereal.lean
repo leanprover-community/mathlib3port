@@ -80,12 +80,6 @@ def Real.toEReal : ℝ → EReal :=
 
 namespace EReal
 
-/- warning: ereal.decidable_lt -> EReal.decidableLt is a dubious translation:
-lean 3 declaration is
-  DecidableRel.{1} EReal (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))))
-but is expected to have type
-  DecidableRel.{1} EReal (fun (x._@.Mathlib.Data.Real.EReal._hyg.238 : EReal) (x._@.Mathlib.Data.Real.EReal._hyg.240 : EReal) => LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x._@.Mathlib.Data.Real.EReal._hyg.238 x._@.Mathlib.Data.Real.EReal._hyg.240)
-Case conversion may be inaccurate. Consider using '#align ereal.decidable_lt EReal.decidableLtₓ'. -/
 -- things unify with `with_bot.decidable_lt` later if we we don't provide this explicitly.
 instance decidableLt : DecidableRel ((· < ·) : EReal → EReal → Prop) :=
   WithBot.decidableLT
@@ -98,12 +92,6 @@ instance : Top EReal :=
 instance : Coe ℝ EReal :=
   ⟨Real.toEReal⟩
 
-/- warning: ereal.coe_strict_mono -> EReal.coe_strictMono is a dubious translation:
-lean 3 declaration is
-  StrictMono.{0, 0} Real EReal Real.preorder (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))))
-but is expected to have type
-  StrictMono.{0, 0} Real EReal Real.instPreorderReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) Real.toEReal
-Case conversion may be inaccurate. Consider using '#align ereal.coe_strict_mono EReal.coe_strictMonoₓ'. -/
 theorem coe_strictMono : StrictMono (coe : ℝ → EReal) :=
   WithBot.coe_strictMono.comp WithTop.coe_strictMono
 #align ereal.coe_strict_mono EReal.coe_strictMono
@@ -114,23 +102,11 @@ theorem coe_injective : Injective (coe : ℝ → EReal) :=
 #align ereal.coe_injective EReal.coe_injective
 -/
 
-/- warning: ereal.coe_le_coe_iff -> EReal.coe_le_coe_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real}, Iff (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y)) (LE.le.{0} Real Real.hasLe x y)
-but is expected to have type
-  forall {x : Real} {y : Real}, Iff (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) (Real.toEReal y)) (LE.le.{0} Real Real.instLEReal x y)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_le_coe_iff EReal.coe_le_coe_iffₓ'. -/
 @[simp, norm_cast]
 protected theorem coe_le_coe_iff {x y : ℝ} : (x : EReal) ≤ (y : EReal) ↔ x ≤ y :=
   coe_strictMono.le_iff_le
 #align ereal.coe_le_coe_iff EReal.coe_le_coe_iff
 
-/- warning: ereal.coe_lt_coe_iff -> EReal.coe_lt_coe_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : Real} {y : Real}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y)) (LT.lt.{0} Real Real.hasLt x y)
-but is expected to have type
-  forall {x : Real} {y : Real}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) (Real.toEReal y)) (LT.lt.{0} Real Real.instLTReal x y)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_lt_coe_iff EReal.coe_lt_coe_iffₓ'. -/
 @[simp, norm_cast]
 protected theorem coe_lt_coe_iff {x y : ℝ} : (x : EReal) < (y : EReal) ↔ x < y :=
   coe_strictMono.lt_iff_lt
@@ -166,23 +142,11 @@ instance hasCoeENNReal : Coe ℝ≥0∞ EReal :=
 instance : Inhabited EReal :=
   ⟨0⟩
 
-/- warning: ereal.coe_zero -> EReal.coe_zero is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))
-but is expected to have type
-  Eq.{1} EReal (Real.toEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_zero EReal.coe_zeroₓ'. -/
 @[simp, norm_cast]
 theorem coe_zero : ((0 : ℝ) : EReal) = 0 :=
   rfl
 #align ereal.coe_zero EReal.coe_zero
 
-/- warning: ereal.coe_one -> EReal.coe_one is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))
-but is expected to have type
-  Eq.{1} EReal (Real.toEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_one EReal.coe_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_one : ((1 : ℝ) : EReal) = 1 :=
   rfl
@@ -223,12 +187,6 @@ protected def mul : EReal → EReal → EReal
 instance : Mul EReal :=
   ⟨EReal.mul⟩
 
-/- warning: ereal.induction₂ -> EReal.induction₂ is a dubious translation:
-lean 3 declaration is
-  forall {P : EReal -> EReal -> Prop}, (P (Top.top.{0} EReal EReal.hasTop) (Top.top.{0} EReal EReal.hasTop)) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (P (Top.top.{0} EReal EReal.hasTop) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))) -> (P (Top.top.{0} EReal EReal.hasTop) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (P (Top.top.{0} EReal EReal.hasTop) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))) -> (P (Top.top.{0} EReal EReal.hasTop) (Bot.bot.{0} EReal EReal.hasBot)) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (P ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Top.top.{0} EReal EReal.hasTop))) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (P ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Bot.bot.{0} EReal EReal.hasBot))) -> (P (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) (Top.top.{0} EReal EReal.hasTop)) -> (forall (x : Real) (y : Real), P ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y)) -> (P (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) (Bot.bot.{0} EReal EReal.hasBot)) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (P ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Top.top.{0} EReal EReal.hasTop))) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (P ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Bot.bot.{0} EReal EReal.hasBot))) -> (P (Bot.bot.{0} EReal EReal.hasBot) (Top.top.{0} EReal EReal.hasTop)) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (P (Bot.bot.{0} EReal EReal.hasBot) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))) -> (P (Bot.bot.{0} EReal EReal.hasBot) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) -> (forall (x : Real), (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (P (Bot.bot.{0} EReal EReal.hasBot) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))) -> (P (Bot.bot.{0} EReal EReal.hasBot) (Bot.bot.{0} EReal EReal.hasBot)) -> (forall (x : EReal) (y : EReal), P x y)
-but is expected to have type
-  forall {P : EReal -> EReal -> Prop}, (P (Top.top.{0} EReal EReal.instTopEReal) (Top.top.{0} EReal EReal.instTopEReal)) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (P (Top.top.{0} EReal EReal.instTopEReal) (Real.toEReal x))) -> (P (Top.top.{0} EReal EReal.instTopEReal) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (P (Top.top.{0} EReal EReal.instTopEReal) (Real.toEReal x))) -> (P (Top.top.{0} EReal EReal.instTopEReal) (Bot.bot.{0} EReal instERealBot)) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (P (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal))) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (P (Real.toEReal x) (Bot.bot.{0} EReal instERealBot))) -> (P (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Top.top.{0} EReal EReal.instTopEReal)) -> (forall (x : Real) (y : Real), P (Real.toEReal x) (Real.toEReal y)) -> (P (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Bot.bot.{0} EReal instERealBot)) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (P (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal))) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (P (Real.toEReal x) (Bot.bot.{0} EReal instERealBot))) -> (P (Bot.bot.{0} EReal instERealBot) (Top.top.{0} EReal EReal.instTopEReal)) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (P (Bot.bot.{0} EReal instERealBot) (Real.toEReal x))) -> (P (Bot.bot.{0} EReal instERealBot) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (forall (x : Real), (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (P (Bot.bot.{0} EReal instERealBot) (Real.toEReal x))) -> (P (Bot.bot.{0} EReal instERealBot) (Bot.bot.{0} EReal instERealBot)) -> (forall (x : EReal) (y : EReal), P x y)
-Case conversion may be inaccurate. Consider using '#align ereal.induction₂ EReal.induction₂ₓ'. -/
 /-- Induct on two ereals by performing case splits on the sign of one whenever the other is
 infinite. -/
 @[elab_as_elim]
@@ -305,45 +263,21 @@ def toReal : EReal → ℝ
 #align ereal.to_real EReal.toReal
 -/
 
-/- warning: ereal.to_real_top -> EReal.toReal_top is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Real (EReal.toReal (Top.top.{0} EReal EReal.hasTop)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  Eq.{1} Real (EReal.toReal (Top.top.{0} EReal EReal.instTopEReal)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_top EReal.toReal_topₓ'. -/
 @[simp]
 theorem toReal_top : toReal ⊤ = 0 :=
   rfl
 #align ereal.to_real_top EReal.toReal_top
 
-/- warning: ereal.to_real_bot -> EReal.toReal_bot is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Real (EReal.toReal (Bot.bot.{0} EReal EReal.hasBot)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  Eq.{1} Real (EReal.toReal (Bot.bot.{0} EReal instERealBot)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_bot EReal.toReal_botₓ'. -/
 @[simp]
 theorem toReal_bot : toReal ⊥ = 0 :=
   rfl
 #align ereal.to_real_bot EReal.toReal_bot
 
-/- warning: ereal.to_real_zero -> EReal.toReal_zero is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Real (EReal.toReal (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  Eq.{1} Real (EReal.toReal (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_zero EReal.toReal_zeroₓ'. -/
 @[simp]
 theorem toReal_zero : toReal 0 = 0 :=
   rfl
 #align ereal.to_real_zero EReal.toReal_zero
 
-/- warning: ereal.to_real_one -> EReal.toReal_one is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Real (EReal.toReal (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))
-but is expected to have type
-  Eq.{1} Real (EReal.toReal (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_one EReal.toReal_oneₓ'. -/
 @[simp]
 theorem toReal_one : toReal 1 = 1 :=
   rfl
@@ -356,12 +290,6 @@ theorem toReal_coe (x : ℝ) : toReal (x : EReal) = x :=
 #align ereal.to_real_coe EReal.toReal_coe
 -/
 
-/- warning: ereal.bot_lt_coe -> EReal.bot_lt_coe is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Bot.bot.{0} EReal EReal.hasBot) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)
-but is expected to have type
-  forall (x : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Bot.bot.{0} EReal instERealBot) (Real.toEReal x)
-Case conversion may be inaccurate. Consider using '#align ereal.bot_lt_coe EReal.bot_lt_coeₓ'. -/
 @[simp]
 theorem bot_lt_coe (x : ℝ) : (⊥ : EReal) < x :=
   WithBot.bot_lt_coe _
@@ -381,12 +309,6 @@ theorem bot_ne_coe (x : ℝ) : (⊥ : EReal) ≠ x :=
 #align ereal.bot_ne_coe EReal.bot_ne_coe
 -/
 
-/- warning: ereal.coe_lt_top -> EReal.coe_lt_top is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  forall (x : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_lt_top EReal.coe_lt_topₓ'. -/
 @[simp]
 theorem coe_lt_top (x : ℝ) : (x : EReal) < ⊤ := by apply WithBot.coe_lt_coe.2;
   exact WithTop.coe_lt_top _
@@ -406,111 +328,52 @@ theorem top_ne_coe (x : ℝ) : (⊤ : EReal) ≠ x :=
 #align ereal.top_ne_coe EReal.top_ne_coe
 -/
 
-/- warning: ereal.bot_lt_zero -> EReal.bot_lt_zero is a dubious translation:
-lean 3 declaration is
-  LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Bot.bot.{0} EReal EReal.hasBot) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))
-but is expected to have type
-  LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Bot.bot.{0} EReal instERealBot) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_lt_zero EReal.bot_lt_zeroₓ'. -/
 @[simp]
 theorem bot_lt_zero : (⊥ : EReal) < 0 :=
   bot_lt_coe 0
 #align ereal.bot_lt_zero EReal.bot_lt_zero
 
-/- warning: ereal.bot_ne_zero -> EReal.bot_ne_zero is a dubious translation:
-lean 3 declaration is
-  Ne.{1} EReal (Bot.bot.{0} EReal EReal.hasBot) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))
-but is expected to have type
-  Ne.{1} EReal (Bot.bot.{0} EReal instERealBot) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_ne_zero EReal.bot_ne_zeroₓ'. -/
 @[simp]
 theorem bot_ne_zero : (⊥ : EReal) ≠ 0 :=
   (coe_ne_bot 0).symm
 #align ereal.bot_ne_zero EReal.bot_ne_zero
 
-/- warning: ereal.zero_ne_bot -> EReal.zero_ne_bot is a dubious translation:
-lean 3 declaration is
-  Ne.{1} EReal (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) (Bot.bot.{0} EReal EReal.hasBot)
-but is expected to have type
-  Ne.{1} EReal (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Bot.bot.{0} EReal instERealBot)
-Case conversion may be inaccurate. Consider using '#align ereal.zero_ne_bot EReal.zero_ne_botₓ'. -/
 @[simp]
 theorem zero_ne_bot : (0 : EReal) ≠ ⊥ :=
   coe_ne_bot 0
 #align ereal.zero_ne_bot EReal.zero_ne_bot
 
-/- warning: ereal.zero_lt_top -> EReal.zero_lt_top is a dubious translation:
-lean 3 declaration is
-  LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.zero_lt_top EReal.zero_lt_topₓ'. -/
 @[simp]
 theorem zero_lt_top : (0 : EReal) < ⊤ :=
   coe_lt_top 0
 #align ereal.zero_lt_top EReal.zero_lt_top
 
-/- warning: ereal.zero_ne_top -> EReal.zero_ne_top is a dubious translation:
-lean 3 declaration is
-  Ne.{1} EReal (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  Ne.{1} EReal (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.zero_ne_top EReal.zero_ne_topₓ'. -/
 @[simp]
 theorem zero_ne_top : (0 : EReal) ≠ ⊤ :=
   coe_ne_top 0
 #align ereal.zero_ne_top EReal.zero_ne_top
 
-/- warning: ereal.top_ne_zero -> EReal.top_ne_zero is a dubious translation:
-lean 3 declaration is
-  Ne.{1} EReal (Top.top.{0} EReal EReal.hasTop) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))
-but is expected to have type
-  Ne.{1} EReal (Top.top.{0} EReal EReal.instTopEReal) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))
-Case conversion may be inaccurate. Consider using '#align ereal.top_ne_zero EReal.top_ne_zeroₓ'. -/
 @[simp]
 theorem top_ne_zero : (⊤ : EReal) ≠ 0 :=
   (coe_ne_top 0).symm
 #align ereal.top_ne_zero EReal.top_ne_zero
 
-/- warning: ereal.coe_add -> EReal.coe_add is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x y)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} EReal (Real.toEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) x y)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Real.toEReal x) (Real.toEReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_add EReal.coe_addₓ'. -/
 @[simp, norm_cast]
 theorem coe_add (x y : ℝ) : (↑(x + y) : EReal) = x + y :=
   rfl
 #align ereal.coe_add EReal.coe_add
 
-/- warning: ereal.coe_mul -> EReal.coe_mul is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) x y)) (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} EReal (Real.toEReal (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) x y)) (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Real.toEReal x) (Real.toEReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_mul EReal.coe_mulₓ'. -/
 @[simp, norm_cast]
 theorem coe_mul (x y : ℝ) : (↑(x * y) : EReal) = x * y :=
   rfl
 #align ereal.coe_mul EReal.coe_mul
 
-/- warning: ereal.coe_nsmul -> EReal.coe_nsmul is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (SMul.smul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.addMonoid) n x)) (SMul.smul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal EReal.addMonoid) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
-but is expected to have type
-  forall (n : Nat) (x : Real), Eq.{1} EReal (Real.toEReal (HSMul.hSMul.{0, 0, 0} Nat Real Real (instHSMul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.instAddMonoidReal)) n x)) (HSMul.hSMul.{0, 0, 0} Nat EReal EReal (instHSMul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal instERealAddMonoid)) n (Real.toEReal x))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_nsmul EReal.coe_nsmulₓ'. -/
 @[norm_cast]
 theorem coe_nsmul (n : ℕ) (x : ℝ) : (↑(n • x) : EReal) = n • x :=
   map_nsmul (⟨coe, coe_zero, coe_add⟩ : ℝ →+ EReal) _ _
 #align ereal.coe_nsmul EReal.coe_nsmul
 
 /- warning: ereal.coe_bit0 clashes with [anonymous] -> [anonymous]
-warning: ereal.coe_bit0 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (bit0.{0} Real Real.hasAdd x)) (bit0.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
-but is expected to have type
-  forall {x : Type.{u}} {β : Type.{v}}, (Nat -> x -> β) -> Nat -> (List.{u} x) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align ereal.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
 theorem [anonymous] (x : ℝ) : (↑(bit0 x) : EReal) = bit0 x :=
@@ -518,109 +381,50 @@ theorem [anonymous] (x : ℝ) : (↑(bit0 x) : EReal) = bit0 x :=
 #align ereal.coe_bit0 [anonymous]
 
 /- warning: ereal.coe_bit1 clashes with [anonymous] -> [anonymous]
-warning: ereal.coe_bit1 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (bit1.{0} Real Real.hasOne Real.hasAdd x)) (bit1.{0} EReal EReal.hasOne (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
-but is expected to have type
-  forall {x : Type.{u}} {β : Type.{v}}, (Nat -> x -> β) -> Nat -> (List.{u} x) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align ereal.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
 theorem [anonymous] (x : ℝ) : (↑(bit1 x) : EReal) = bit1 x :=
   rfl
 #align ereal.coe_bit1 [anonymous]
 
-/- warning: ereal.coe_eq_zero -> EReal.coe_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (Eq.{1} Real x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {x : Real}, Iff (Eq.{1} EReal (Real.toEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (Eq.{1} Real x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_eq_zero EReal.coe_eq_zeroₓ'. -/
 @[simp, norm_cast]
 theorem coe_eq_zero {x : ℝ} : (x : EReal) = 0 ↔ x = 0 :=
   EReal.coe_eq_coe_iff
 #align ereal.coe_eq_zero EReal.coe_eq_zero
 
-/- warning: ereal.coe_eq_one -> EReal.coe_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))) (Eq.{1} Real x (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {x : Real}, Iff (Eq.{1} EReal (Real.toEReal x) (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))) (Eq.{1} Real x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_eq_one EReal.coe_eq_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_eq_one {x : ℝ} : (x : EReal) = 1 ↔ x = 1 :=
   EReal.coe_eq_coe_iff
 #align ereal.coe_eq_one EReal.coe_eq_one
 
-/- warning: ereal.coe_ne_zero -> EReal.coe_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (Ne.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (Ne.{1} Real x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {x : Real}, Iff (Ne.{1} EReal (Real.toEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (Ne.{1} Real x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ne_zero EReal.coe_ne_zeroₓ'. -/
 theorem coe_ne_zero {x : ℝ} : (x : EReal) ≠ 0 ↔ x ≠ 0 :=
   EReal.coe_ne_coe_iff
 #align ereal.coe_ne_zero EReal.coe_ne_zero
 
-/- warning: ereal.coe_ne_one -> EReal.coe_ne_one is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (Ne.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))) (Ne.{1} Real x (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))
-but is expected to have type
-  forall {x : Real}, Iff (Ne.{1} EReal (Real.toEReal x) (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))) (Ne.{1} Real x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ne_one EReal.coe_ne_oneₓ'. -/
 theorem coe_ne_one {x : ℝ} : (x : EReal) ≠ 1 ↔ x ≠ 1 :=
   EReal.coe_ne_coe_iff
 #align ereal.coe_ne_one EReal.coe_ne_one
 
-/- warning: ereal.coe_nonneg -> EReal.coe_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)
-but is expected to have type
-  forall {x : Real}, Iff (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Real.toEReal x)) (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_nonneg EReal.coe_nonnegₓ'. -/
 @[simp, norm_cast]
 protected theorem coe_nonneg {x : ℝ} : (0 : EReal) ≤ x ↔ 0 ≤ x :=
   EReal.coe_le_coe_iff
 #align ereal.coe_nonneg EReal.coe_nonneg
 
-/- warning: ereal.coe_nonpos -> EReal.coe_nonpos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (LE.le.{0} Real Real.hasLe x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {x : Real}, Iff (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_nonpos EReal.coe_nonposₓ'. -/
 @[simp, norm_cast]
 protected theorem coe_nonpos {x : ℝ} : (x : EReal) ≤ 0 ↔ x ≤ 0 :=
   EReal.coe_le_coe_iff
 #align ereal.coe_nonpos EReal.coe_nonpos
 
-/- warning: ereal.coe_pos -> EReal.coe_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)
-but is expected to have type
-  forall {x : Real}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (Real.toEReal x)) (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_pos EReal.coe_posₓ'. -/
 @[simp, norm_cast]
 protected theorem coe_pos {x : ℝ} : (0 : EReal) < x ↔ 0 < x :=
   EReal.coe_lt_coe_iff
 #align ereal.coe_pos EReal.coe_pos
 
-/- warning: ereal.coe_neg' -> EReal.coe_neg' is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {x : Real}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_neg' EReal.coe_neg'ₓ'. -/
 @[simp, norm_cast]
 protected theorem coe_neg' {x : ℝ} : (x : EReal) < 0 ↔ x < 0 :=
   EReal.coe_lt_coe_iff
 #align ereal.coe_neg' EReal.coe_neg'
 
-/- warning: ereal.to_real_le_to_real -> EReal.toReal_le_toReal is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (Ne.{1} EReal x (Bot.bot.{0} EReal EReal.hasBot)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.hasTop)) -> (LE.le.{0} Real Real.hasLe (EReal.toReal x) (EReal.toReal y))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (Ne.{1} EReal x (Bot.bot.{0} EReal instERealBot)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.instTopEReal)) -> (LE.le.{0} Real Real.instLEReal (EReal.toReal x) (EReal.toReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_le_to_real EReal.toReal_le_toRealₓ'. -/
 theorem toReal_le_toReal {x y : EReal} (h : x ≤ y) (hx : x ≠ ⊥) (hy : y ≠ ⊤) :
     x.toReal ≤ y.toReal := by
   lift x to ℝ
@@ -640,12 +444,6 @@ theorem coe_toReal {x : EReal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) : (x.toReal : 
 #align ereal.coe_to_real EReal.coe_toReal
 -/
 
-/- warning: ereal.le_coe_to_real -> EReal.le_coe_toReal is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.hasTop)) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (EReal.toReal x)))
-but is expected to have type
-  forall {x : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.instTopEReal)) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (Real.toEReal (EReal.toReal x)))
-Case conversion may be inaccurate. Consider using '#align ereal.le_coe_to_real EReal.le_coe_toRealₓ'. -/
 theorem le_coe_toReal {x : EReal} (h : x ≠ ⊤) : x ≤ x.toReal :=
   by
   by_cases h' : x = ⊥
@@ -653,12 +451,6 @@ theorem le_coe_toReal {x : EReal} (h : x ≠ ⊤) : x ≤ x.toReal :=
   · simp only [le_refl, coe_to_real h h']
 #align ereal.le_coe_to_real EReal.le_coe_toReal
 
-/- warning: ereal.coe_to_real_le -> EReal.coe_toReal_le is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (Ne.{1} EReal x (Bot.bot.{0} EReal EReal.hasBot)) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (EReal.toReal x)) x)
-but is expected to have type
-  forall {x : EReal}, (Ne.{1} EReal x (Bot.bot.{0} EReal instERealBot)) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal (EReal.toReal x)) x)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_to_real_le EReal.coe_toReal_leₓ'. -/
 theorem coe_toReal_le {x : EReal} (h : x ≠ ⊥) : ↑x.toReal ≤ x :=
   by
   by_cases h' : x = ⊤
@@ -666,12 +458,6 @@ theorem coe_toReal_le {x : EReal} (h : x ≠ ⊥) : ↑x.toReal ≤ x :=
   · simp only [le_refl, coe_to_real h' h]
 #align ereal.coe_to_real_le EReal.coe_toReal_le
 
-/- warning: ereal.eq_top_iff_forall_lt -> EReal.eq_top_iff_forall_lt is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Iff (Eq.{1} EReal x (Top.top.{0} EReal EReal.hasTop)) (forall (y : Real), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y) x)
-but is expected to have type
-  forall (x : EReal), Iff (Eq.{1} EReal x (Top.top.{0} EReal EReal.instTopEReal)) (forall (y : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal y) x)
-Case conversion may be inaccurate. Consider using '#align ereal.eq_top_iff_forall_lt EReal.eq_top_iff_forall_ltₓ'. -/
 theorem eq_top_iff_forall_lt (x : EReal) : x = ⊤ ↔ ∀ y : ℝ, (y : EReal) < x :=
   by
   constructor
@@ -681,12 +467,6 @@ theorem eq_top_iff_forall_lt (x : EReal) : x = ⊤ ↔ ∀ y : ℝ, (y : EReal) 
     exact ⟨x.to_real, le_coe_to_real h⟩
 #align ereal.eq_top_iff_forall_lt EReal.eq_top_iff_forall_lt
 
-/- warning: ereal.eq_bot_iff_forall_lt -> EReal.eq_bot_iff_forall_lt is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Iff (Eq.{1} EReal x (Bot.bot.{0} EReal EReal.hasBot)) (forall (y : Real), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y))
-but is expected to have type
-  forall (x : EReal), Iff (Eq.{1} EReal x (Bot.bot.{0} EReal instERealBot)) (forall (y : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (Real.toEReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.eq_bot_iff_forall_lt EReal.eq_bot_iff_forall_ltₓ'. -/
 theorem eq_bot_iff_forall_lt (x : EReal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : EReal) :=
   by
   constructor
@@ -707,66 +487,30 @@ theorem toReal_coe_ennreal : ∀ {x : ℝ≥0∞}, toReal (x : EReal) = ENNReal.
 #align ereal.to_real_coe_ennreal EReal.toReal_coe_ennreal
 -/
 
-/- warning: ereal.coe_ennreal_of_real -> EReal.coe_ennreal_ofReal is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (ENNReal.ofReal x)) (LinearOrder.max.{0} EReal (ConditionallyCompleteLinearOrder.toLinearOrder.{0} EReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} EReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} EReal EReal.completeLinearOrder))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))))
-but is expected to have type
-  forall {x : Real}, Eq.{1} EReal (ENNReal.toEReal (ENNReal.ofReal x)) (Real.toEReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_of_real EReal.coe_ennreal_ofRealₓ'. -/
 @[simp]
 theorem coe_ennreal_ofReal {x : ℝ} : (ENNReal.ofReal x : EReal) = max x 0 :=
   rfl
 #align ereal.coe_ennreal_of_real EReal.coe_ennreal_ofReal
 
-/- warning: ereal.coe_nnreal_eq_coe_real -> EReal.coe_nnreal_eq_coe_real is a dubious translation:
-lean 3 declaration is
-  forall (x : NNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) x)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) x))
-but is expected to have type
-  forall (x : NNReal), Eq.{1} EReal (ENNReal.toEReal (ENNReal.some x)) (Real.toEReal (NNReal.toReal x))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_nnreal_eq_coe_real EReal.coe_nnreal_eq_coe_realₓ'. -/
 theorem coe_nnreal_eq_coe_real (x : ℝ≥0) : ((x : ℝ≥0∞) : EReal) = (x : ℝ) :=
   rfl
 #align ereal.coe_nnreal_eq_coe_real EReal.coe_nnreal_eq_coe_real
 
-/- warning: ereal.coe_ennreal_zero -> EReal.coe_ennreal_zero is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))
-but is expected to have type
-  Eq.{1} EReal (ENNReal.toEReal (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_zero EReal.coe_ennreal_zeroₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_zero : ((0 : ℝ≥0∞) : EReal) = 0 :=
   rfl
 #align ereal.coe_ennreal_zero EReal.coe_ennreal_zero
 
-/- warning: ereal.coe_ennreal_one -> EReal.coe_ennreal_one is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (OfNat.ofNat.{0} ENNReal 1 (OfNat.mk.{0} ENNReal 1 (One.one.{0} ENNReal (AddMonoidWithOne.toOne.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)))))) (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))
-but is expected to have type
-  Eq.{1} EReal (ENNReal.toEReal (OfNat.ofNat.{0} ENNReal 1 (One.toOfNat1.{0} ENNReal (CanonicallyOrderedCommSemiring.toOne.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))) (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_one EReal.coe_ennreal_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_one : ((1 : ℝ≥0∞) : EReal) = 1 :=
   rfl
 #align ereal.coe_ennreal_one EReal.coe_ennreal_one
 
-/- warning: ereal.coe_ennreal_top -> EReal.coe_ennreal_top is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  Eq.{1} EReal (ENNReal.toEReal (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_top EReal.coe_ennreal_topₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_top : ((⊤ : ℝ≥0∞) : EReal) = ⊤ :=
   rfl
 #align ereal.coe_ennreal_top EReal.coe_ennreal_top
 
-/- warning: ereal.coe_ennreal_eq_top_iff -> EReal.coe_ennreal_eq_top_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal}, Iff (Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) (Top.top.{0} EReal EReal.hasTop)) (Eq.{1} ENNReal x (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))
-but is expected to have type
-  forall {x : ENNReal}, Iff (Eq.{1} EReal (ENNReal.toEReal x) (Top.top.{0} EReal EReal.instTopEReal)) (Eq.{1} ENNReal x (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_eq_top_iff EReal.coe_ennreal_eq_top_iffₓ'. -/
 @[simp]
 theorem coe_ennreal_eq_top_iff : ∀ {x : ℝ≥0∞}, (x : EReal) = ⊤ ↔ x = ⊤
   | ⊤ => by simp
@@ -778,22 +522,10 @@ theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : EReal) ≠ ⊤ := 
 #align ereal.coe_nnreal_ne_top EReal.coe_nnreal_ne_top
 -/
 
-/- warning: ereal.coe_nnreal_lt_top -> EReal.coe_nnreal_lt_top is a dubious translation:
-lean 3 declaration is
-  forall (x : NNReal), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) x)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  forall (x : NNReal), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (ENNReal.toEReal (ENNReal.some x)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_nnreal_lt_top EReal.coe_nnreal_lt_topₓ'. -/
 @[simp]
 theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : EReal) < ⊤ := by decide
 #align ereal.coe_nnreal_lt_top EReal.coe_nnreal_lt_top
 
-/- warning: ereal.coe_ennreal_strict_mono -> EReal.coe_ennreal_strictMono is a dubious translation:
-lean 3 declaration is
-  StrictMono.{0, 0} ENNReal EReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))))
-but is expected to have type
-  StrictMono.{0, 0} ENNReal EReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))) (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) ENNReal.toEReal
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_strict_mono EReal.coe_ennreal_strictMonoₓ'. -/
 theorem coe_ennreal_strictMono : StrictMono (coe : ℝ≥0∞ → EReal)
   | ⊤, ⊤ => by simp
   | some x, ⊤ => by simp
@@ -807,23 +539,11 @@ theorem coe_ennreal_injective : Injective (coe : ℝ≥0∞ → EReal) :=
 #align ereal.coe_ennreal_injective EReal.coe_ennreal_injective
 -/
 
-/- warning: ereal.coe_ennreal_le_coe_ennreal_iff -> EReal.coe_ennreal_le_coe_ennreal_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal} {y : ENNReal}, Iff (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) y)) (LE.le.{0} ENNReal (Preorder.toHasLe.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) x y)
-but is expected to have type
-  forall {x : ENNReal} {y : ENNReal}, Iff (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (ENNReal.toEReal x) (ENNReal.toEReal y)) (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) x y)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_le_coe_ennreal_iff EReal.coe_ennreal_le_coe_ennreal_iffₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_le_coe_ennreal_iff {x y : ℝ≥0∞} : (x : EReal) ≤ (y : EReal) ↔ x ≤ y :=
   coe_ennreal_strictMono.le_iff_le
 #align ereal.coe_ennreal_le_coe_ennreal_iff EReal.coe_ennreal_le_coe_ennreal_iff
 
-/- warning: ereal.coe_ennreal_lt_coe_ennreal_iff -> EReal.coe_ennreal_lt_coe_ennreal_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal} {y : ENNReal}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) y)) (LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) x y)
-but is expected to have type
-  forall {x : ENNReal} {y : ENNReal}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (ENNReal.toEReal x) (ENNReal.toEReal y)) (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) x y)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_lt_coe_ennreal_iff EReal.coe_ennreal_lt_coe_ennreal_iffₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_lt_coe_ennreal_iff {x y : ℝ≥0∞} : (x : EReal) < (y : EReal) ↔ x < y :=
   coe_ennreal_strictMono.lt_iff_lt
@@ -842,77 +562,35 @@ theorem coe_ennreal_ne_coe_ennreal_iff {x y : ℝ≥0∞} : (x : EReal) ≠ (y :
 #align ereal.coe_ennreal_ne_coe_ennreal_iff EReal.coe_ennreal_ne_coe_ennreal_iff
 -/
 
-/- warning: ereal.coe_ennreal_eq_zero -> EReal.coe_ennreal_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal}, Iff (Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (Eq.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))
-but is expected to have type
-  forall {x : ENNReal}, Iff (Eq.{1} EReal (ENNReal.toEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (Eq.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_eq_zero EReal.coe_ennreal_eq_zeroₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_eq_zero {x : ℝ≥0∞} : (x : EReal) = 0 ↔ x = 0 := by
   rw [← coe_ennreal_eq_coe_ennreal_iff, coe_ennreal_zero]
 #align ereal.coe_ennreal_eq_zero EReal.coe_ennreal_eq_zero
 
-/- warning: ereal.coe_ennreal_eq_one -> EReal.coe_ennreal_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal}, Iff (Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))) (Eq.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 1 (OfNat.mk.{0} ENNReal 1 (One.one.{0} ENNReal (AddMonoidWithOne.toOne.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))))))
-but is expected to have type
-  forall {x : ENNReal}, Iff (Eq.{1} EReal (ENNReal.toEReal x) (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))) (Eq.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 1 (One.toOfNat1.{0} ENNReal (CanonicallyOrderedCommSemiring.toOne.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_eq_one EReal.coe_ennreal_eq_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_eq_one {x : ℝ≥0∞} : (x : EReal) = 1 ↔ x = 1 := by
   rw [← coe_ennreal_eq_coe_ennreal_iff, coe_ennreal_one]
 #align ereal.coe_ennreal_eq_one EReal.coe_ennreal_eq_one
 
-/- warning: ereal.coe_ennreal_ne_zero -> EReal.coe_ennreal_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal}, Iff (Ne.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (Ne.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))
-but is expected to have type
-  forall {x : ENNReal}, Iff (Ne.{1} EReal (ENNReal.toEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (Ne.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_ne_zero EReal.coe_ennreal_ne_zeroₓ'. -/
 @[norm_cast]
 theorem coe_ennreal_ne_zero {x : ℝ≥0∞} : (x : EReal) ≠ 0 ↔ x ≠ 0 :=
   coe_ennreal_eq_zero.Not
 #align ereal.coe_ennreal_ne_zero EReal.coe_ennreal_ne_zero
 
-/- warning: ereal.coe_ennreal_ne_one -> EReal.coe_ennreal_ne_one is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal}, Iff (Ne.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) (OfNat.ofNat.{0} EReal 1 (OfNat.mk.{0} EReal 1 (One.one.{0} EReal EReal.hasOne)))) (Ne.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 1 (OfNat.mk.{0} ENNReal 1 (One.one.{0} ENNReal (AddMonoidWithOne.toOne.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))))))
-but is expected to have type
-  forall {x : ENNReal}, Iff (Ne.{1} EReal (ENNReal.toEReal x) (OfNat.ofNat.{0} EReal 1 (One.toOfNat1.{0} EReal instERealOne))) (Ne.{1} ENNReal x (OfNat.ofNat.{0} ENNReal 1 (One.toOfNat1.{0} ENNReal (CanonicallyOrderedCommSemiring.toOne.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_ne_one EReal.coe_ennreal_ne_oneₓ'. -/
 @[norm_cast]
 theorem coe_ennreal_ne_one {x : ℝ≥0∞} : (x : EReal) ≠ 1 ↔ x ≠ 1 :=
   coe_ennreal_eq_one.Not
 #align ereal.coe_ennreal_ne_one EReal.coe_ennreal_ne_one
 
-/- warning: ereal.coe_ennreal_nonneg -> EReal.coe_ennreal_nonneg is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal), LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x)
-but is expected to have type
-  forall (x : ENNReal), LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (ENNReal.toEReal x)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_nonneg EReal.coe_ennreal_nonnegₓ'. -/
 theorem coe_ennreal_nonneg (x : ℝ≥0∞) : (0 : EReal) ≤ x :=
   coe_ennreal_le_coe_ennreal_iff.2 (zero_le x)
 #align ereal.coe_ennreal_nonneg EReal.coe_ennreal_nonneg
 
-/- warning: ereal.coe_ennreal_pos -> EReal.coe_ennreal_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : ENNReal}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x)) (LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))) x)
-but is expected to have type
-  forall {x : ENNReal}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) (ENNReal.toEReal x)) (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) x)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_pos EReal.coe_ennreal_posₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_pos {x : ℝ≥0∞} : (0 : EReal) < x ↔ 0 < x := by
   rw [← coe_ennreal_zero, coe_ennreal_lt_coe_ennreal_iff]
 #align ereal.coe_ennreal_pos EReal.coe_ennreal_pos
 
-/- warning: ereal.bot_lt_coe_ennreal -> EReal.bot_lt_coe_ennreal is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Bot.bot.{0} EReal EReal.hasBot) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x)
-but is expected to have type
-  forall (x : ENNReal), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Bot.bot.{0} EReal instERealBot) (ENNReal.toEReal x)
-Case conversion may be inaccurate. Consider using '#align ereal.bot_lt_coe_ennreal EReal.bot_lt_coe_ennrealₓ'. -/
 @[simp]
 theorem bot_lt_coe_ennreal (x : ℝ≥0∞) : (⊥ : EReal) < x :=
   (bot_lt_coe 0).trans_le (coe_ennreal_nonneg _)
@@ -925,23 +603,11 @@ theorem coe_ennreal_ne_bot (x : ℝ≥0∞) : (x : EReal) ≠ ⊥ :=
 #align ereal.coe_ennreal_ne_bot EReal.coe_ennreal_ne_bot
 -/
 
-/- warning: ereal.coe_ennreal_add -> EReal.coe_ennreal_add is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal) (y : ENNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) x y)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) y))
-but is expected to have type
-  forall (x : ENNReal) (y : ENNReal), Eq.{1} EReal (ENNReal.toEReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) x y)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (ENNReal.toEReal x) (ENNReal.toEReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_add EReal.coe_ennreal_addₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_add (x y : ENNReal) : ((x + y : ℝ≥0∞) : EReal) = x + y := by
   cases x <;> cases y <;> rfl
 #align ereal.coe_ennreal_add EReal.coe_ennreal_add
 
-/- warning: ereal.coe_ennreal_mul -> EReal.coe_ennreal_mul is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal) (y : ENNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) x y)) (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) y))
-but is expected to have type
-  forall (x : ENNReal) (y : ENNReal), Eq.{1} EReal (ENNReal.toEReal (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) x y)) (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (ENNReal.toEReal x) (ENNReal.toEReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_mul EReal.coe_ennreal_mulₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : EReal) = x * y
   | ⊤, ⊤ => rfl
@@ -963,23 +629,12 @@ theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : EReal) =
     simp only [← ENNReal.coe_mul, coe_nnreal_eq_coe_real, NNReal.coe_mul, EReal.coe_mul]
 #align ereal.coe_ennreal_mul EReal.coe_ennreal_mul
 
-/- warning: ereal.coe_ennreal_nsmul -> EReal.coe_ennreal_nsmul is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (x : ENNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (SMul.smul.{0, 0} Nat ENNReal (AddMonoid.SMul.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))) n x)) (SMul.smul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal EReal.addMonoid) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x))
-but is expected to have type
-  forall (n : Nat) (x : ENNReal), Eq.{1} EReal (ENNReal.toEReal (HSMul.hSMul.{0, 0, 0} Nat ENNReal ENNReal (instHSMul.{0, 0} Nat ENNReal (AddMonoid.SMul.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne)))) n x)) (HSMul.hSMul.{0, 0, 0} Nat EReal EReal (instHSMul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal instERealAddMonoid)) n (ENNReal.toEReal x))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_nsmul EReal.coe_ennreal_nsmulₓ'. -/
 @[norm_cast]
 theorem coe_ennreal_nsmul (n : ℕ) (x : ℝ≥0∞) : (↑(n • x) : EReal) = n • x :=
   map_nsmul (⟨coe, coe_ennreal_zero, coe_ennreal_add⟩ : ℝ≥0∞ →+ EReal) _ _
 #align ereal.coe_ennreal_nsmul EReal.coe_ennreal_nsmul
 
 /- warning: ereal.coe_ennreal_bit0 clashes with [anonymous] -> [anonymous]
-warning: ereal.coe_ennreal_bit0 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (bit0.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))))) x)) (bit0.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x))
-but is expected to have type
-  forall {x : Type.{u}} {β : Type.{v}}, (Nat -> x -> β) -> Nat -> (List.{u} x) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
 theorem [anonymous] (x : ℝ≥0∞) : (↑(bit0 x) : EReal) = bit0 x :=
@@ -987,11 +642,6 @@ theorem [anonymous] (x : ℝ≥0∞) : (↑(bit0 x) : EReal) = bit0 x :=
 #align ereal.coe_ennreal_bit0 [anonymous]
 
 /- warning: ereal.coe_ennreal_bit1 clashes with [anonymous] -> [anonymous]
-warning: ereal.coe_ennreal_bit1 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (bit1.{0} ENNReal (AddMonoidWithOne.toOne.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne)) (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))))) x)) (bit1.{0} EReal EReal.hasOne (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x))
-but is expected to have type
-  forall {x : Type.{u}} {β : Type.{v}}, (Nat -> x -> β) -> Nat -> (List.{u} x) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
 theorem [anonymous] (x : ℝ≥0∞) : (↑(bit1 x) : EReal) = bit1 x := by
@@ -1001,12 +651,6 @@ theorem [anonymous] (x : ℝ≥0∞) : (↑(bit1 x) : EReal) = bit1 x := by
 /-! ### Order -/
 
 
-/- warning: ereal.exists_rat_btwn_of_lt -> EReal.exists_rat_btwn_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a b) -> (Exists.{1} Rat (fun (x : Rat) => And (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) x))) (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) x)) b)))
-but is expected to have type
-  forall {a : EReal} {b : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a b) -> (Exists.{1} Rat (fun (x : Rat) => And (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a (Real.toEReal (Rat.cast.{0} Real Real.ratCast x))) (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal (Rat.cast.{0} Real Real.ratCast x)) b)))
-Case conversion may be inaccurate. Consider using '#align ereal.exists_rat_btwn_of_lt EReal.exists_rat_btwn_of_ltₓ'. -/
 theorem exists_rat_btwn_of_lt :
     ∀ {a b : EReal} (hab : a < b), ∃ x : ℚ, a < (x : ℝ) ∧ ((x : ℝ) : EReal) < b
   | ⊤, b, h => (not_top_lt h).elim
@@ -1022,23 +666,11 @@ theorem exists_rat_btwn_of_lt :
   | ⊥, ⊤, h => ⟨0, bot_lt_coe _, coe_lt_top _⟩
 #align ereal.exists_rat_btwn_of_lt EReal.exists_rat_btwn_of_lt
 
-/- warning: ereal.lt_iff_exists_rat_btwn -> EReal.lt_iff_exists_rat_btwn is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a b) (Exists.{1} Rat (fun (x : Rat) => And (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) x))) (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) x)) b)))
-but is expected to have type
-  forall {a : EReal} {b : EReal}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a b) (Exists.{1} Rat (fun (x : Rat) => And (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a (Real.toEReal (Rat.cast.{0} Real Real.ratCast x))) (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal (Rat.cast.{0} Real Real.ratCast x)) b)))
-Case conversion may be inaccurate. Consider using '#align ereal.lt_iff_exists_rat_btwn EReal.lt_iff_exists_rat_btwnₓ'. -/
 theorem lt_iff_exists_rat_btwn {a b : EReal} :
     a < b ↔ ∃ x : ℚ, a < (x : ℝ) ∧ ((x : ℝ) : EReal) < b :=
   ⟨fun hab => exists_rat_btwn_of_lt hab, fun ⟨x, ax, xb⟩ => ax.trans xb⟩
 #align ereal.lt_iff_exists_rat_btwn EReal.lt_iff_exists_rat_btwn
 
-/- warning: ereal.lt_iff_exists_real_btwn -> EReal.lt_iff_exists_real_btwn is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a b) (Exists.{1} Real (fun (x : Real) => And (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) b)))
-but is expected to have type
-  forall {a : EReal} {b : EReal}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a b) (Exists.{1} Real (fun (x : Real) => And (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a (Real.toEReal x)) (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) b)))
-Case conversion may be inaccurate. Consider using '#align ereal.lt_iff_exists_real_btwn EReal.lt_iff_exists_real_btwnₓ'. -/
 theorem lt_iff_exists_real_btwn {a b : EReal} : a < b ↔ ∃ x : ℝ, a < x ∧ (x : EReal) < b :=
   ⟨fun hab =>
     let ⟨x, ax, xb⟩ := exists_rat_btwn_of_lt hab
@@ -1046,12 +678,6 @@ theorem lt_iff_exists_real_btwn {a b : EReal} : a < b ↔ ∃ x : ℝ, a < x ∧
     fun ⟨x, ax, xb⟩ => ax.trans xb⟩
 #align ereal.lt_iff_exists_real_btwn EReal.lt_iff_exists_real_btwn
 
-/- warning: ereal.ne_top_bot_equiv_real -> EReal.neTopBotEquivReal is a dubious translation:
-lean 3 declaration is
-  Equiv.{1, 1} (coeSort.{1, 2} (Set.{0} EReal) Type (Set.hasCoeToSort.{0} EReal) (HasCompl.compl.{0} (Set.{0} EReal) (BooleanAlgebra.toHasCompl.{0} (Set.{0} EReal) (Set.booleanAlgebra.{0} EReal)) (Insert.insert.{0, 0} EReal (Set.{0} EReal) (Set.hasInsert.{0} EReal) (Bot.bot.{0} EReal EReal.hasBot) (Singleton.singleton.{0, 0} EReal (Set.{0} EReal) (Set.hasSingleton.{0} EReal) (Top.top.{0} EReal EReal.hasTop))))) Real
-but is expected to have type
-  Equiv.{1, 1} (Set.Elem.{0} EReal (HasCompl.compl.{0} (Set.{0} EReal) (BooleanAlgebra.toHasCompl.{0} (Set.{0} EReal) (Set.instBooleanAlgebraSet.{0} EReal)) (Insert.insert.{0, 0} EReal (Set.{0} EReal) (Set.instInsertSet.{0} EReal) (Bot.bot.{0} EReal instERealBot) (Singleton.singleton.{0, 0} EReal (Set.{0} EReal) (Set.instSingletonSet.{0} EReal) (Top.top.{0} EReal EReal.instTopEReal))))) Real
-Case conversion may be inaccurate. Consider using '#align ereal.ne_top_bot_equiv_real EReal.neTopBotEquivRealₓ'. -/
 /-- The set of numbers in `ereal` that are not equal to `±∞` is equivalent to `ℝ`. -/
 def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set EReal) ≃ ℝ
     where
@@ -1068,67 +694,31 @@ def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set EReal) ≃ ℝ
 /-! ### Addition -/
 
 
-/- warning: ereal.add_bot -> EReal.add_bot is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x (Bot.bot.{0} EReal EReal.hasBot)) (Bot.bot.{0} EReal EReal.hasBot)
-but is expected to have type
-  forall (x : EReal), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x (Bot.bot.{0} EReal instERealBot)) (Bot.bot.{0} EReal instERealBot)
-Case conversion may be inaccurate. Consider using '#align ereal.add_bot EReal.add_botₓ'. -/
 @[simp]
 theorem add_bot (x : EReal) : x + ⊥ = ⊥ :=
   WithBot.add_bot _
 #align ereal.add_bot EReal.add_bot
 
-/- warning: ereal.bot_add -> EReal.bot_add is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) (Bot.bot.{0} EReal EReal.hasBot) x) (Bot.bot.{0} EReal EReal.hasBot)
-but is expected to have type
-  forall (x : EReal), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Bot.bot.{0} EReal instERealBot) x) (Bot.bot.{0} EReal instERealBot)
-Case conversion may be inaccurate. Consider using '#align ereal.bot_add EReal.bot_addₓ'. -/
 @[simp]
 theorem bot_add (x : EReal) : ⊥ + x = ⊥ :=
   WithBot.bot_add _
 #align ereal.bot_add EReal.bot_add
 
-/- warning: ereal.top_add_top -> EReal.top_add_top is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) (Top.top.{0} EReal EReal.hasTop) (Top.top.{0} EReal EReal.hasTop)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Top.top.{0} EReal EReal.instTopEReal) (Top.top.{0} EReal EReal.instTopEReal)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.top_add_top EReal.top_add_topₓ'. -/
 @[simp]
 theorem top_add_top : (⊤ : EReal) + ⊤ = ⊤ :=
   rfl
 #align ereal.top_add_top EReal.top_add_top
 
-/- warning: ereal.top_add_coe -> EReal.top_add_coe is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) (Top.top.{0} EReal EReal.hasTop) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Top.top.{0} EReal EReal.instTopEReal) (Real.toEReal x)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.top_add_coe EReal.top_add_coeₓ'. -/
 @[simp]
 theorem top_add_coe (x : ℝ) : (⊤ : EReal) + x = ⊤ :=
   rfl
 #align ereal.top_add_coe EReal.top_add_coe
 
-/- warning: ereal.coe_add_top -> EReal.coe_add_top is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Top.top.{0} EReal EReal.hasTop)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_add_top EReal.coe_add_topₓ'. -/
 @[simp]
 theorem coe_add_top (x : ℝ) : (x : EReal) + ⊤ = ⊤ :=
   rfl
 #align ereal.coe_add_top EReal.coe_add_top
 
-/- warning: ereal.to_real_add -> EReal.toReal_add is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.hasTop)) -> (Ne.{1} EReal x (Bot.bot.{0} EReal EReal.hasBot)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.hasTop)) -> (Ne.{1} EReal y (Bot.bot.{0} EReal EReal.hasBot)) -> (Eq.{1} Real (EReal.toReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x y)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (EReal.toReal x) (EReal.toReal y)))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.instTopEReal)) -> (Ne.{1} EReal x (Bot.bot.{0} EReal instERealBot)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.instTopEReal)) -> (Ne.{1} EReal y (Bot.bot.{0} EReal instERealBot)) -> (Eq.{1} Real (EReal.toReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x y)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (EReal.toReal x) (EReal.toReal y)))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_add EReal.toReal_addₓ'. -/
 theorem toReal_add :
     ∀ {x y : EReal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥),
       toReal (x + y) = toReal x + toReal y
@@ -1139,12 +729,6 @@ theorem toReal_add :
   | (x : ℝ), (y : ℝ), hx, h'x, hy, h'y => by simp [← EReal.coe_add]
 #align ereal.to_real_add EReal.toReal_add
 
-/- warning: ereal.add_lt_add_right_coe -> EReal.add_lt_add_right_coe is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (forall (z : Real), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) z)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) y ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) z)))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (forall (z : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x (Real.toEReal z)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) y (Real.toEReal z)))
-Case conversion may be inaccurate. Consider using '#align ereal.add_lt_add_right_coe EReal.add_lt_add_right_coeₓ'. -/
 theorem add_lt_add_right_coe {x y : EReal} (h : x < y) (z : ℝ) : x + z < y + z :=
   by
   induction x using EReal.rec <;> induction y using EReal.rec
@@ -1159,12 +743,6 @@ theorem add_lt_add_right_coe {x y : EReal} (h : x < y) (z : ℝ) : x + z < y + z
   · exact (lt_irrefl _ (h.trans_le le_top)).elim
 #align ereal.add_lt_add_right_coe EReal.add_lt_add_right_coe
 
-/- warning: ereal.add_lt_add_of_lt_of_le -> EReal.add_lt_add_of_lt_of_le is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) z t) -> (Ne.{1} EReal z (Bot.bot.{0} EReal EReal.hasBot)) -> (Ne.{1} EReal t (Top.top.{0} EReal EReal.hasTop)) -> (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x z) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) y t))
-but is expected to have type
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) z t) -> (Ne.{1} EReal z (Bot.bot.{0} EReal instERealBot)) -> (Ne.{1} EReal t (Top.top.{0} EReal EReal.instTopEReal)) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x z) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) y t))
-Case conversion may be inaccurate. Consider using '#align ereal.add_lt_add_of_lt_of_le EReal.add_lt_add_of_lt_of_leₓ'. -/
 theorem add_lt_add_of_lt_of_le {x y z t : EReal} (h : x < y) (h' : z ≤ t) (hz : z ≠ ⊥)
     (ht : t ≠ ⊤) : x + z < y + t := by
   induction z using EReal.rec
@@ -1177,22 +755,10 @@ theorem add_lt_add_of_lt_of_le {x y z t : EReal} (h : x < y) (h' : z ≤ t) (hz 
   · exact (ht (top_le_iff.1 h')).elim
 #align ereal.add_lt_add_of_lt_of_le EReal.add_lt_add_of_lt_of_le
 
-/- warning: ereal.add_lt_add_left_coe -> EReal.add_lt_add_left_coe is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (forall (z : Real), LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) z) x) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) z) y))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (forall (z : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Real.toEReal z) x) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) (Real.toEReal z) y))
-Case conversion may be inaccurate. Consider using '#align ereal.add_lt_add_left_coe EReal.add_lt_add_left_coeₓ'. -/
 theorem add_lt_add_left_coe {x y : EReal} (h : x < y) (z : ℝ) : (z : EReal) + x < z + y := by
   simpa [add_comm] using add_lt_add_right_coe h z
 #align ereal.add_lt_add_left_coe EReal.add_lt_add_left_coe
 
-/- warning: ereal.add_lt_add -> EReal.add_lt_add is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) z t) -> (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x z) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) y t))
-but is expected to have type
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) z t) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x z) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) y t))
-Case conversion may be inaccurate. Consider using '#align ereal.add_lt_add EReal.add_lt_addₓ'. -/
 theorem add_lt_add {x y z t : EReal} (h1 : x < y) (h2 : z < t) : x + z < y + t :=
   by
   induction x using EReal.rec
@@ -1205,34 +771,16 @@ theorem add_lt_add {x y z t : EReal} (h1 : x < y) (h2 : z < t) : x + z < y + t :
   · exact (lt_irrefl _ (h1.trans_le le_top)).elim
 #align ereal.add_lt_add EReal.add_lt_add
 
-/- warning: ereal.add_eq_bot_iff -> EReal.add_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, Iff (Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x y) (Bot.bot.{0} EReal EReal.hasBot)) (Or (Eq.{1} EReal x (Bot.bot.{0} EReal EReal.hasBot)) (Eq.{1} EReal y (Bot.bot.{0} EReal EReal.hasBot)))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, Iff (Eq.{1} EReal (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x y) (Bot.bot.{0} EReal instERealBot)) (Or (Eq.{1} EReal x (Bot.bot.{0} EReal instERealBot)) (Eq.{1} EReal y (Bot.bot.{0} EReal instERealBot)))
-Case conversion may be inaccurate. Consider using '#align ereal.add_eq_bot_iff EReal.add_eq_bot_iffₓ'. -/
 @[simp]
 theorem add_eq_bot_iff {x y : EReal} : x + y = ⊥ ↔ x = ⊥ ∨ y = ⊥ := by
   induction x using EReal.rec <;> induction y using EReal.rec <;> simp [← EReal.coe_add]
 #align ereal.add_eq_bot_iff EReal.add_eq_bot_iff
 
-/- warning: ereal.bot_lt_add_iff -> EReal.bot_lt_add_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Bot.bot.{0} EReal EReal.hasBot) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x y)) (And (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Bot.bot.{0} EReal EReal.hasBot) x) (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Bot.bot.{0} EReal EReal.hasBot) y))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Bot.bot.{0} EReal instERealBot) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x y)) (And (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Bot.bot.{0} EReal instERealBot) x) (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Bot.bot.{0} EReal instERealBot) y))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_lt_add_iff EReal.bot_lt_add_iffₓ'. -/
 @[simp]
 theorem bot_lt_add_iff {x y : EReal} : ⊥ < x + y ↔ ⊥ < x ∧ ⊥ < y := by
   simp [bot_lt_iff_ne_bot, not_or]
 #align ereal.bot_lt_add_iff EReal.bot_lt_add_iff
 
-/- warning: ereal.add_lt_top -> EReal.add_lt_top is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.hasTop)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.hasTop)) -> (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toHasAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal EReal.addMonoid))) x y) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.instTopEReal)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.instTopEReal)) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x y) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.add_lt_top EReal.add_lt_topₓ'. -/
 theorem add_lt_top {x y : EReal} (hx : x ≠ ⊤) (hy : y ≠ ⊤) : x + y < ⊤ := by
   rw [← EReal.top_add_top]; exact EReal.add_lt_add hx.lt_top hy.lt_top
 #align ereal.add_lt_top EReal.add_lt_top
@@ -1256,11 +804,6 @@ instance : SubNegZeroMonoid EReal :=
   { EReal.addMonoid, EReal.hasNeg with neg_zero := by change ((-0 : ℝ) : EReal) = 0; simp }
 
 /- warning: ereal.neg_def clashes with ereal.coe_neg -> EReal.coe_neg
-warning: ereal.neg_def -> EReal.coe_neg is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (Neg.neg.{0} Real Real.hasNeg x)) (Neg.neg.{0} EReal EReal.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (Real.toEReal (Neg.neg.{0} Real Real.instNegReal x)) (Neg.neg.{0} EReal EReal.instNegEReal (Real.toEReal x))
 Case conversion may be inaccurate. Consider using '#align ereal.neg_def EReal.coe_negₓ'. -/
 @[norm_cast]
 protected theorem coe_neg (x : ℝ) : ((-x : ℝ) : EReal) = -x :=
@@ -1281,34 +824,16 @@ theorem neg_bot : -(⊥ : EReal) = ⊤ :=
 #align ereal.neg_bot EReal.neg_bot
 -/
 
-/- warning: ereal.coe_neg -> EReal.coe_neg is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (Neg.neg.{0} Real Real.hasNeg x)) (Neg.neg.{0} EReal EReal.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (Real.toEReal (Neg.neg.{0} Real Real.instNegReal x)) (Neg.neg.{0} EReal EReal.instNegEReal (Real.toEReal x))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_neg EReal.coe_negₓ'. -/
 @[simp, norm_cast]
 theorem coe_neg (x : ℝ) : (↑(-x) : EReal) = -x :=
   rfl
 #align ereal.coe_neg EReal.coe_neg
 
-/- warning: ereal.coe_sub -> EReal.coe_sub is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (y : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) x y)) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) y))
-but is expected to have type
-  forall (x : Real) (y : Real), Eq.{1} EReal (Real.toEReal (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) x y)) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) (Real.toEReal x) (Real.toEReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_sub EReal.coe_subₓ'. -/
 @[simp, norm_cast]
 theorem coe_sub (x y : ℝ) : (↑(x - y) : EReal) = x - y :=
   rfl
 #align ereal.coe_sub EReal.coe_sub
 
-/- warning: ereal.coe_zsmul -> EReal.coe_zsmul is a dubious translation:
-lean 3 declaration is
-  forall (n : Int) (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (SMul.smul.{0, 0} Int Real (SubNegMonoid.SMulInt.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.addGroup)) n x)) (SMul.smul.{0, 0} Int EReal (SubNegMonoid.SMulInt.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid)) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
-but is expected to have type
-  forall (n : Int) (x : Real), Eq.{1} EReal (Real.toEReal (HSMul.hSMul.{0, 0, 0} Int Real Real (instHSMul.{0, 0} Int Real (SubNegMonoid.SMulInt.{0} Real (AddGroup.toSubNegMonoid.{0} Real Real.instAddGroupReal))) n x)) (HSMul.hSMul.{0, 0, 0} Int EReal EReal (instHSMul.{0, 0} Int EReal (SubNegMonoid.SMulInt.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) n (Real.toEReal x))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_zsmul EReal.coe_zsmulₓ'. -/
 @[norm_cast]
 theorem coe_zsmul (n : ℤ) (x : ℝ) : (↑(n • x) : EReal) = n • x :=
   map_zsmul' (⟨coe, coe_zero, coe_add⟩ : ℝ →+ EReal) coe_neg _ _
@@ -1322,12 +847,6 @@ instance : InvolutiveNeg EReal where
     | ⊤ => rfl
     | (a : ℝ) => by norm_cast; simp [neg_neg a]
 
-/- warning: ereal.to_real_neg -> EReal.toReal_neg is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal}, Eq.{1} Real (EReal.toReal (Neg.neg.{0} EReal EReal.hasNeg a)) (Neg.neg.{0} Real Real.hasNeg (EReal.toReal a))
-but is expected to have type
-  forall {a : EReal}, Eq.{1} Real (EReal.toReal (Neg.neg.{0} EReal EReal.instNegEReal a)) (Neg.neg.{0} Real Real.instNegReal (EReal.toReal a))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_neg EReal.toReal_negₓ'. -/
 @[simp]
 theorem toReal_neg : ∀ {a : EReal}, toReal (-a) = -toReal a
   | ⊤ => by simp
@@ -1349,22 +868,10 @@ theorem neg_eq_bot_iff {x : EReal} : -x = ⊥ ↔ x = ⊤ :=
 #align ereal.neg_eq_bot_iff EReal.neg_eq_bot_iff
 -/
 
-/- warning: ereal.neg_eq_zero_iff -> EReal.neg_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, Iff (Eq.{1} EReal (Neg.neg.{0} EReal EReal.hasNeg x) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (Eq.{1} EReal x (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))))
-but is expected to have type
-  forall {x : EReal}, Iff (Eq.{1} EReal (Neg.neg.{0} EReal EReal.instNegEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (Eq.{1} EReal x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)))
-Case conversion may be inaccurate. Consider using '#align ereal.neg_eq_zero_iff EReal.neg_eq_zero_iffₓ'. -/
 @[simp]
 theorem neg_eq_zero_iff {x : EReal} : -x = 0 ↔ x = 0 := by rw [neg_eq_iff_eq_neg, neg_zero]
 #align ereal.neg_eq_zero_iff EReal.neg_eq_zero_iff
 
-/- warning: ereal.neg_le_of_neg_le -> EReal.neg_le_of_neg_le is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg a) b) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg b) a)
-but is expected to have type
-  forall {a : EReal} {b : EReal}, (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal a) b) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal b) a)
-Case conversion may be inaccurate. Consider using '#align ereal.neg_le_of_neg_le EReal.neg_le_of_neg_leₓ'. -/
 /-- if `-a ≤ b` then `-b ≤ a` on `ereal`. -/
 protected theorem neg_le_of_neg_le {a b : EReal} (h : -a ≤ b) : -b ≤ a :=
   by
@@ -1380,44 +887,20 @@ protected theorem neg_le_of_neg_le {a b : EReal} (h : -a ≤ b) : -b ≤ a :=
   · exact le_top
 #align ereal.neg_le_of_neg_le EReal.neg_le_of_neg_le
 
-/- warning: ereal.neg_le -> EReal.neg_le is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, Iff (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg a) b) (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg b) a)
-but is expected to have type
-  forall {a : EReal} {b : EReal}, Iff (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal a) b) (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal b) a)
-Case conversion may be inaccurate. Consider using '#align ereal.neg_le EReal.neg_leₓ'. -/
 /-- `-a ≤ b ↔ -b ≤ a` on `ereal`. -/
 protected theorem neg_le {a b : EReal} : -a ≤ b ↔ -b ≤ a :=
   ⟨EReal.neg_le_of_neg_le, EReal.neg_le_of_neg_le⟩
 #align ereal.neg_le EReal.neg_le
 
-/- warning: ereal.le_neg_of_le_neg -> EReal.le_neg_of_le_neg is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) a (Neg.neg.{0} EReal EReal.hasNeg b)) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) b (Neg.neg.{0} EReal EReal.hasNeg a))
-but is expected to have type
-  forall {a : EReal} {b : EReal}, (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) a (Neg.neg.{0} EReal EReal.instNegEReal b)) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) b (Neg.neg.{0} EReal EReal.instNegEReal a))
-Case conversion may be inaccurate. Consider using '#align ereal.le_neg_of_le_neg EReal.le_neg_of_le_negₓ'. -/
 /-- `a ≤ -b → b ≤ -a` on ereal -/
 theorem le_neg_of_le_neg {a b : EReal} (h : a ≤ -b) : b ≤ -a := by
   rwa [← neg_neg b, EReal.neg_le, neg_neg]
 #align ereal.le_neg_of_le_neg EReal.le_neg_of_le_neg
 
-/- warning: ereal.neg_le_neg_iff -> EReal.neg_le_neg_iff is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, Iff (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg a) (Neg.neg.{0} EReal EReal.hasNeg b)) (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) b a)
-but is expected to have type
-  forall {a : EReal} {b : EReal}, Iff (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal a) (Neg.neg.{0} EReal EReal.instNegEReal b)) (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) b a)
-Case conversion may be inaccurate. Consider using '#align ereal.neg_le_neg_iff EReal.neg_le_neg_iffₓ'. -/
 @[simp]
 theorem neg_le_neg_iff {a b : EReal} : -a ≤ -b ↔ b ≤ a := by conv_lhs => rw [EReal.neg_le, neg_neg]
 #align ereal.neg_le_neg_iff EReal.neg_le_neg_iff
 
-/- warning: ereal.neg_order_iso -> EReal.negOrderIso is a dubious translation:
-lean 3 declaration is
-  OrderIso.{0, 0} EReal (OrderDual.{0} EReal) (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OrderDual.hasLe.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))))
-but is expected to have type
-  OrderIso.{0, 0} EReal (OrderDual.{0} EReal) (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OrderDual.instLEOrderDual.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)))
-Case conversion may be inaccurate. Consider using '#align ereal.neg_order_iso EReal.negOrderIsoₓ'. -/
 /-- Negation as an order reversing isomorphism on `ereal`. -/
 def negOrderIso : EReal ≃o ERealᵒᵈ :=
   { Equiv.neg EReal with
@@ -1426,12 +909,6 @@ def negOrderIso : EReal ≃o ERealᵒᵈ :=
     map_rel_iff' := fun x y => neg_le_neg_iff }
 #align ereal.neg_order_iso EReal.negOrderIso
 
-/- warning: ereal.neg_lt_of_neg_lt -> EReal.neg_lt_of_neg_lt is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg a) b) -> (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg b) a)
-but is expected to have type
-  forall {a : EReal} {b : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal a) b) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal b) a)
-Case conversion may be inaccurate. Consider using '#align ereal.neg_lt_of_neg_lt EReal.neg_lt_of_neg_ltₓ'. -/
 theorem neg_lt_of_neg_lt {a b : EReal} (h : -a < b) : -b < a :=
   by
   apply lt_of_le_of_ne (EReal.neg_le_of_neg_le h.le)
@@ -1440,12 +917,6 @@ theorem neg_lt_of_neg_lt {a b : EReal} (h : -a < b) : -b < a :=
   exact lt_irrefl _ h
 #align ereal.neg_lt_of_neg_lt EReal.neg_lt_of_neg_lt
 
-/- warning: ereal.neg_lt_iff_neg_lt -> EReal.neg_lt_iff_neg_lt is a dubious translation:
-lean 3 declaration is
-  forall {a : EReal} {b : EReal}, Iff (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg a) b) (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (Neg.neg.{0} EReal EReal.hasNeg b) a)
-but is expected to have type
-  forall {a : EReal} {b : EReal}, Iff (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal a) b) (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Neg.neg.{0} EReal EReal.instNegEReal b) a)
-Case conversion may be inaccurate. Consider using '#align ereal.neg_lt_iff_neg_lt EReal.neg_lt_iff_neg_ltₓ'. -/
 theorem neg_lt_iff_neg_lt {a b : EReal} : -a < b ↔ -b < a :=
   ⟨fun h => EReal.neg_lt_of_neg_lt h, fun h => EReal.neg_lt_of_neg_lt h⟩
 #align ereal.neg_lt_iff_neg_lt EReal.neg_lt_iff_neg_lt
@@ -1459,88 +930,40 @@ registered on `ereal`, beyond `sub_neg_zero_monoid`, because of this bad behavio
 -/
 
 
-/- warning: ereal.bot_sub -> EReal.bot_sub is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) (Bot.bot.{0} EReal EReal.hasBot) x) (Bot.bot.{0} EReal EReal.hasBot)
-but is expected to have type
-  forall (x : EReal), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) (Bot.bot.{0} EReal instERealBot) x) (Bot.bot.{0} EReal instERealBot)
-Case conversion may be inaccurate. Consider using '#align ereal.bot_sub EReal.bot_subₓ'. -/
 @[simp]
 theorem bot_sub (x : EReal) : ⊥ - x = ⊥ :=
   bot_add x
 #align ereal.bot_sub EReal.bot_sub
 
-/- warning: ereal.sub_top -> EReal.sub_top is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) x (Top.top.{0} EReal EReal.hasTop)) (Bot.bot.{0} EReal EReal.hasBot)
-but is expected to have type
-  forall (x : EReal), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) x (Top.top.{0} EReal EReal.instTopEReal)) (Bot.bot.{0} EReal instERealBot)
-Case conversion may be inaccurate. Consider using '#align ereal.sub_top EReal.sub_topₓ'. -/
 @[simp]
 theorem sub_top (x : EReal) : x - ⊤ = ⊥ :=
   add_bot x
 #align ereal.sub_top EReal.sub_top
 
-/- warning: ereal.top_sub_bot -> EReal.top_sub_bot is a dubious translation:
-lean 3 declaration is
-  Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) (Top.top.{0} EReal EReal.hasTop) (Bot.bot.{0} EReal EReal.hasBot)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) (Top.top.{0} EReal EReal.instTopEReal) (Bot.bot.{0} EReal instERealBot)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.top_sub_bot EReal.top_sub_botₓ'. -/
 @[simp]
 theorem top_sub_bot : (⊤ : EReal) - ⊥ = ⊤ :=
   rfl
 #align ereal.top_sub_bot EReal.top_sub_bot
 
-/- warning: ereal.top_sub_coe -> EReal.top_sub_coe is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) (Top.top.{0} EReal EReal.hasTop) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) (Top.top.{0} EReal EReal.instTopEReal) (Real.toEReal x)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.top_sub_coe EReal.top_sub_coeₓ'. -/
 @[simp]
 theorem top_sub_coe (x : ℝ) : (⊤ : EReal) - x = ⊤ :=
   rfl
 #align ereal.top_sub_coe EReal.top_sub_coe
 
-/- warning: ereal.coe_sub_bot -> EReal.coe_sub_bot is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Bot.bot.{0} EReal EReal.hasBot)) (Top.top.{0} EReal EReal.hasTop)
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) (Real.toEReal x) (Bot.bot.{0} EReal instERealBot)) (Top.top.{0} EReal EReal.instTopEReal)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_sub_bot EReal.coe_sub_botₓ'. -/
 @[simp]
 theorem coe_sub_bot (x : ℝ) : (x : EReal) - ⊥ = ⊤ :=
   rfl
 #align ereal.coe_sub_bot EReal.coe_sub_bot
 
-/- warning: ereal.sub_le_sub -> EReal.sub_le_sub is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) t z) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) x z) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) y t))
-but is expected to have type
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) t z) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) x z) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) y t))
-Case conversion may be inaccurate. Consider using '#align ereal.sub_le_sub EReal.sub_le_subₓ'. -/
 theorem sub_le_sub {x y z t : EReal} (h : x ≤ y) (h' : t ≤ z) : x - z ≤ y - t :=
   add_le_add h (neg_le_neg_iff.2 h')
 #align ereal.sub_le_sub EReal.sub_le_sub
 
-/- warning: ereal.sub_lt_sub_of_lt_of_le -> EReal.sub_lt_sub_of_lt_of_le is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x y) -> (LE.le.{0} EReal (Preorder.toHasLe.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) z t) -> (Ne.{1} EReal z (Bot.bot.{0} EReal EReal.hasBot)) -> (Ne.{1} EReal t (Top.top.{0} EReal EReal.hasTop)) -> (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) x t) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) y z))
-but is expected to have type
-  forall {x : EReal} {y : EReal} {z : EReal} {t : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x y) -> (LE.le.{0} EReal (Preorder.toLE.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) z t) -> (Ne.{1} EReal z (Bot.bot.{0} EReal instERealBot)) -> (Ne.{1} EReal t (Top.top.{0} EReal EReal.instTopEReal)) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) x t) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) y z))
-Case conversion may be inaccurate. Consider using '#align ereal.sub_lt_sub_of_lt_of_le EReal.sub_lt_sub_of_lt_of_leₓ'. -/
 theorem sub_lt_sub_of_lt_of_le {x y z t : EReal} (h : x < y) (h' : z ≤ t) (hz : z ≠ ⊥)
     (ht : t ≠ ⊤) : x - t < y - z :=
   add_lt_add_of_lt_of_le h (neg_le_neg_iff.2 h') (by simp [ht]) (by simp [hz])
 #align ereal.sub_lt_sub_of_lt_of_le EReal.sub_lt_sub_of_lt_of_le
 
-/- warning: ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal -> EReal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal EReal (HasLiftT.mk.{1, 1} NNReal EReal (CoeTCₓ.coe.{1, 1} NNReal EReal (coeTrans.{1, 1, 1} NNReal ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal) ENNReal.hasCoe))) (Real.toNNReal x)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal EReal (HasLiftT.mk.{1, 1} NNReal EReal (CoeTCₓ.coe.{1, 1} NNReal EReal (coeTrans.{1, 1, 1} NNReal ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal) ENNReal.hasCoe))) (Real.toNNReal (Neg.neg.{0} Real Real.hasNeg x))))
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (Real.toEReal x) (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) (ENNReal.toEReal (ENNReal.some (Real.toNNReal x))) (ENNReal.toEReal (ENNReal.some (Real.toNNReal (Neg.neg.{0} Real Real.instNegReal x)))))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal EReal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNRealₓ'. -/
 theorem coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (x : ℝ) :
     (x : EReal) = Real.toNNReal x - Real.toNNReal (-x) :=
   by
@@ -1557,12 +980,6 @@ theorem coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (x : ℝ) :
     rfl
 #align ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal EReal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal
 
-/- warning: ereal.to_real_sub -> EReal.toReal_sub is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.hasTop)) -> (Ne.{1} EReal x (Bot.bot.{0} EReal EReal.hasBot)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.hasTop)) -> (Ne.{1} EReal y (Bot.bot.{0} EReal EReal.hasBot)) -> (Eq.{1} Real (EReal.toReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toHasSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.subNegZeroMonoid))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (EReal.toReal x) (EReal.toReal y)))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.instTopEReal)) -> (Ne.{1} EReal x (Bot.bot.{0} EReal instERealBot)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.instTopEReal)) -> (Ne.{1} EReal y (Bot.bot.{0} EReal instERealBot)) -> (Eq.{1} Real (EReal.toReal (HSub.hSub.{0, 0, 0} EReal EReal EReal (instHSub.{0} EReal (SubNegMonoid.toSub.{0} EReal (SubNegZeroMonoid.toSubNegMonoid.{0} EReal EReal.instSubNegZeroMonoidEReal))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (EReal.toReal x) (EReal.toReal y)))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_sub EReal.toReal_subₓ'. -/
 theorem toReal_sub {x y : EReal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
     toReal (x - y) = toReal x - toReal y :=
   by
@@ -1612,12 +1029,6 @@ theorem bot_mul_bot : (⊥ : EReal) * ⊥ = ⊤ :=
 #align ereal.bot_mul_bot EReal.bot_mul_bot
 -/
 
-/- warning: ereal.mul_top_of_pos -> EReal.mul_top_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x (Top.top.{0} EReal EReal.hasTop)) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x (Top.top.{0} EReal EReal.instTopEReal)) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.mul_top_of_pos EReal.mul_top_of_posₓ'. -/
 theorem mul_top_of_pos {x : EReal} (h : 0 < x) : x * ⊤ = ⊤ :=
   by
   induction x using EReal.rec
@@ -1626,12 +1037,6 @@ theorem mul_top_of_pos {x : EReal} (h : 0 < x) : x * ⊤ = ⊤ :=
   · rfl
 #align ereal.mul_top_of_pos EReal.mul_top_of_pos
 
-/- warning: ereal.mul_top_of_neg -> EReal.mul_top_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x (Top.top.{0} EReal EReal.hasTop)) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x (Top.top.{0} EReal EReal.instTopEReal)) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.mul_top_of_neg EReal.mul_top_of_negₓ'. -/
 theorem mul_top_of_neg {x : EReal} (h : x < 0) : x * ⊤ = ⊥ :=
   by
   induction x using EReal.rec
@@ -1641,72 +1046,30 @@ theorem mul_top_of_neg {x : EReal} (h : x < 0) : x * ⊤ = ⊥ :=
   · simpa only [not_top_lt] using h
 #align ereal.mul_top_of_neg EReal.mul_top_of_neg
 
-/- warning: ereal.top_mul_of_pos -> EReal.top_mul_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Top.top.{0} EReal EReal.hasTop) x) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Top.top.{0} EReal EReal.instTopEReal) x) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.top_mul_of_pos EReal.top_mul_of_posₓ'. -/
 theorem top_mul_of_pos {x : EReal} (h : 0 < x) : ⊤ * x = ⊤ := by rw [EReal.mul_comm];
   exact mul_top_of_pos h
 #align ereal.top_mul_of_pos EReal.top_mul_of_pos
 
-/- warning: ereal.top_mul_of_neg -> EReal.top_mul_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Top.top.{0} EReal EReal.hasTop) x) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Top.top.{0} EReal EReal.instTopEReal) x) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.top_mul_of_neg EReal.top_mul_of_negₓ'. -/
 theorem top_mul_of_neg {x : EReal} (h : x < 0) : ⊤ * x = ⊥ := by rw [EReal.mul_comm];
   exact mul_top_of_neg h
 #align ereal.top_mul_of_neg EReal.top_mul_of_neg
 
-/- warning: ereal.coe_mul_top_of_pos -> EReal.coe_mul_top_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Top.top.{0} EReal EReal.hasTop)) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal)) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_mul_top_of_pos EReal.coe_mul_top_of_posₓ'. -/
 theorem coe_mul_top_of_pos {x : ℝ} (h : 0 < x) : (x : EReal) * ⊤ = ⊤ :=
   mul_top_of_pos (EReal.coe_pos.2 h)
 #align ereal.coe_mul_top_of_pos EReal.coe_mul_top_of_pos
 
-/- warning: ereal.coe_mul_top_of_neg -> EReal.coe_mul_top_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Top.top.{0} EReal EReal.hasTop)) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal)) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_mul_top_of_neg EReal.coe_mul_top_of_negₓ'. -/
 theorem coe_mul_top_of_neg {x : ℝ} (h : x < 0) : (x : EReal) * ⊤ = ⊥ :=
   mul_top_of_neg (EReal.coe_neg'.2 h)
 #align ereal.coe_mul_top_of_neg EReal.coe_mul_top_of_neg
 
-/- warning: ereal.top_mul_coe_of_pos -> EReal.top_mul_coe_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Top.top.{0} EReal EReal.hasTop) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Top.top.{0} EReal EReal.instTopEReal) (Real.toEReal x)) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.top_mul_coe_of_pos EReal.top_mul_coe_of_posₓ'. -/
 theorem top_mul_coe_of_pos {x : ℝ} (h : 0 < x) : (⊤ : EReal) * x = ⊤ :=
   top_mul_of_pos (EReal.coe_pos.2 h)
 #align ereal.top_mul_coe_of_pos EReal.top_mul_coe_of_pos
 
-/- warning: ereal.top_mul_coe_of_neg -> EReal.top_mul_coe_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Top.top.{0} EReal EReal.hasTop) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Top.top.{0} EReal EReal.instTopEReal) (Real.toEReal x)) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.top_mul_coe_of_neg EReal.top_mul_coe_of_negₓ'. -/
 theorem top_mul_coe_of_neg {x : ℝ} (h : x < 0) : (⊤ : EReal) * x = ⊥ :=
   top_mul_of_neg (EReal.coe_neg'.2 h)
 #align ereal.top_mul_coe_of_neg EReal.top_mul_coe_of_neg
 
-/- warning: ereal.mul_bot_of_pos -> EReal.mul_bot_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x (Bot.bot.{0} EReal EReal.hasBot)) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x (Bot.bot.{0} EReal instERealBot)) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.mul_bot_of_pos EReal.mul_bot_of_posₓ'. -/
 theorem mul_bot_of_pos {x : EReal} (h : 0 < x) : x * ⊥ = ⊥ :=
   by
   induction x using EReal.rec
@@ -1715,12 +1078,6 @@ theorem mul_bot_of_pos {x : EReal} (h : 0 < x) : x * ⊥ = ⊥ :=
   · rfl
 #align ereal.mul_bot_of_pos EReal.mul_bot_of_pos
 
-/- warning: ereal.mul_bot_of_neg -> EReal.mul_bot_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x (Bot.bot.{0} EReal EReal.hasBot)) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x (Bot.bot.{0} EReal instERealBot)) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.mul_bot_of_neg EReal.mul_bot_of_negₓ'. -/
 theorem mul_bot_of_neg {x : EReal} (h : x < 0) : x * ⊥ = ⊤ :=
   by
   induction x using EReal.rec
@@ -1730,72 +1087,30 @@ theorem mul_bot_of_neg {x : EReal} (h : x < 0) : x * ⊥ = ⊤ :=
   · simpa only [not_top_lt] using h
 #align ereal.mul_bot_of_neg EReal.mul_bot_of_neg
 
-/- warning: ereal.bot_mul_of_pos -> EReal.bot_mul_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Bot.bot.{0} EReal EReal.hasBot) x) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Bot.bot.{0} EReal instERealBot) x) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_mul_of_pos EReal.bot_mul_of_posₓ'. -/
 theorem bot_mul_of_pos {x : EReal} (h : 0 < x) : ⊥ * x = ⊥ := by rw [EReal.mul_comm];
   exact mul_bot_of_pos h
 #align ereal.bot_mul_of_pos EReal.bot_mul_of_pos
 
-/- warning: ereal.bot_mul_of_neg -> EReal.bot_mul_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toHasLt.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))) x (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Bot.bot.{0} EReal EReal.hasBot) x) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Bot.bot.{0} EReal instERealBot) x) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_mul_of_neg EReal.bot_mul_of_negₓ'. -/
 theorem bot_mul_of_neg {x : EReal} (h : x < 0) : ⊥ * x = ⊤ := by rw [EReal.mul_comm];
   exact mul_bot_of_neg h
 #align ereal.bot_mul_of_neg EReal.bot_mul_of_neg
 
-/- warning: ereal.coe_mul_bot_of_pos -> EReal.coe_mul_bot_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Bot.bot.{0} EReal EReal.hasBot)) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Real.toEReal x) (Bot.bot.{0} EReal instERealBot)) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_mul_bot_of_pos EReal.coe_mul_bot_of_posₓ'. -/
 theorem coe_mul_bot_of_pos {x : ℝ} (h : 0 < x) : (x : EReal) * ⊥ = ⊥ :=
   mul_bot_of_pos (EReal.coe_pos.2 h)
 #align ereal.coe_mul_bot_of_pos EReal.coe_mul_bot_of_pos
 
-/- warning: ereal.coe_mul_bot_of_neg -> EReal.coe_mul_bot_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) (Bot.bot.{0} EReal EReal.hasBot)) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Real.toEReal x) (Bot.bot.{0} EReal instERealBot)) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_mul_bot_of_neg EReal.coe_mul_bot_of_negₓ'. -/
 theorem coe_mul_bot_of_neg {x : ℝ} (h : x < 0) : (x : EReal) * ⊥ = ⊤ :=
   mul_bot_of_neg (EReal.coe_neg'.2 h)
 #align ereal.coe_mul_bot_of_neg EReal.coe_mul_bot_of_neg
 
-/- warning: ereal.bot_mul_coe_of_pos -> EReal.bot_mul_coe_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Bot.bot.{0} EReal EReal.hasBot) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Bot.bot.{0} EReal EReal.hasBot))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Bot.bot.{0} EReal instERealBot) (Real.toEReal x)) (Bot.bot.{0} EReal instERealBot))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_mul_coe_of_pos EReal.bot_mul_coe_of_posₓ'. -/
 theorem bot_mul_coe_of_pos {x : ℝ} (h : 0 < x) : (⊥ : EReal) * x = ⊥ :=
   bot_mul_of_pos (EReal.coe_pos.2 h)
 #align ereal.bot_mul_coe_of_pos EReal.bot_mul_coe_of_pos
 
-/- warning: ereal.bot_mul_coe_of_neg -> EReal.bot_mul_coe_of_neg is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LT.lt.{0} Real Real.hasLt x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) (Bot.bot.{0} EReal EReal.hasBot) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Top.top.{0} EReal EReal.hasTop))
-but is expected to have type
-  forall {x : Real}, (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Bot.bot.{0} EReal instERealBot) (Real.toEReal x)) (Top.top.{0} EReal EReal.instTopEReal))
-Case conversion may be inaccurate. Consider using '#align ereal.bot_mul_coe_of_neg EReal.bot_mul_coe_of_negₓ'. -/
 theorem bot_mul_coe_of_neg {x : ℝ} (h : x < 0) : (⊥ : EReal) * x = ⊤ :=
   bot_mul_of_neg (EReal.coe_neg'.2 h)
 #align ereal.bot_mul_coe_of_neg EReal.bot_mul_coe_of_neg
 
-/- warning: ereal.to_real_mul -> EReal.toReal_mul is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, Eq.{1} Real (EReal.toReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (EReal.toReal x) (EReal.toReal y))
-but is expected to have type
-  forall {x : EReal} {y : EReal}, Eq.{1} Real (EReal.toReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (EReal.toReal x) (EReal.toReal y))
-Case conversion may be inaccurate. Consider using '#align ereal.to_real_mul EReal.toReal_mulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:145:2: warning: unsupported: with_cases -/
 theorem toReal_mul {x y : EReal} : toReal (x * y) = toReal x * toReal y :=
   by
@@ -1871,54 +1186,24 @@ protected def abs : EReal → ℝ≥0∞
 #align ereal.abs EReal.abs
 -/
 
-/- warning: ereal.abs_top -> EReal.abs_top is a dubious translation:
-lean 3 declaration is
-  Eq.{1} ENNReal (EReal.abs (Top.top.{0} EReal EReal.hasTop)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  Eq.{1} ENNReal (EReal.abs (Top.top.{0} EReal EReal.instTopEReal)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_top EReal.abs_topₓ'. -/
 @[simp]
 theorem abs_top : (⊤ : EReal).abs = ⊤ :=
   rfl
 #align ereal.abs_top EReal.abs_top
 
-/- warning: ereal.abs_bot -> EReal.abs_bot is a dubious translation:
-lean 3 declaration is
-  Eq.{1} ENNReal (EReal.abs (Bot.bot.{0} EReal EReal.hasBot)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  Eq.{1} ENNReal (EReal.abs (Bot.bot.{0} EReal instERealBot)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_bot EReal.abs_botₓ'. -/
 @[simp]
 theorem abs_bot : (⊥ : EReal).abs = ⊤ :=
   rfl
 #align ereal.abs_bot EReal.abs_bot
 
-/- warning: ereal.abs_def -> EReal.abs_def is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} ENNReal (EReal.abs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (ENNReal.ofReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) x))
-but is expected to have type
-  forall (x : Real), Eq.{1} ENNReal (EReal.abs (Real.toEReal x)) (ENNReal.ofReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) x))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_def EReal.abs_defₓ'. -/
 theorem abs_def (x : ℝ) : (x : EReal).abs = ENNReal.ofReal (|x|) :=
   rfl
 #align ereal.abs_def EReal.abs_def
 
-/- warning: ereal.abs_coe_lt_top -> EReal.abs_coe_lt_top is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), LT.lt.{0} ENNReal (Preorder.toHasLt.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) (EReal.abs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))
-but is expected to have type
-  forall (x : Real), LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) (EReal.abs (Real.toEReal x)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_coe_lt_top EReal.abs_coe_lt_topₓ'. -/
 theorem abs_coe_lt_top (x : ℝ) : (x : EReal).abs < ⊤ :=
   ENNReal.ofReal_lt_top
 #align ereal.abs_coe_lt_top EReal.abs_coe_lt_top
 
-/- warning: ereal.abs_eq_zero_iff -> EReal.abs_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal}, Iff (Eq.{1} ENNReal (EReal.abs x) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (Eq.{1} EReal x (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero))))
-but is expected to have type
-  forall {x : EReal}, Iff (Eq.{1} ENNReal (EReal.abs x) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (Eq.{1} EReal x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_eq_zero_iff EReal.abs_eq_zero_iffₓ'. -/
 @[simp]
 theorem abs_eq_zero_iff {x : EReal} : x.abs = 0 ↔ x = 0 :=
   by
@@ -1928,33 +1213,15 @@ theorem abs_eq_zero_iff {x : EReal} : x.abs = 0 ↔ x = 0 :=
   · simp only [abs_top, ENNReal.top_ne_zero, top_ne_zero]
 #align ereal.abs_eq_zero_iff EReal.abs_eq_zero_iff
 
-/- warning: ereal.abs_zero -> EReal.abs_zero is a dubious translation:
-lean 3 declaration is
-  Eq.{1} ENNReal (EReal.abs (OfNat.ofNat.{0} EReal 0 (OfNat.mk.{0} EReal 0 (Zero.zero.{0} EReal EReal.hasZero)))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))
-but is expected to have type
-  Eq.{1} ENNReal (EReal.abs (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_zero EReal.abs_zeroₓ'. -/
 @[simp]
 theorem abs_zero : (0 : EReal).abs = 0 := by rw [abs_eq_zero_iff]
 #align ereal.abs_zero EReal.abs_zero
 
-/- warning: ereal.coe_abs -> EReal.coe_abs is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (EReal.abs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) x))
-but is expected to have type
-  forall (x : Real), Eq.{1} EReal (ENNReal.toEReal (EReal.abs (Real.toEReal x))) (Real.toEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) x))
-Case conversion may be inaccurate. Consider using '#align ereal.coe_abs EReal.coe_absₓ'. -/
 @[simp]
 theorem coe_abs (x : ℝ) : ((x : EReal).abs : EReal) = (|x| : ℝ) := by
   rcases lt_trichotomy 0 x with (hx | rfl | hx) <;> simp [abs_def]
 #align ereal.coe_abs EReal.coe_abs
 
-/- warning: ereal.abs_mul -> EReal.abs_mul is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal) (y : EReal), Eq.{1} ENNReal (EReal.abs (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x y)) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (EReal.abs x) (EReal.abs y))
-but is expected to have type
-  forall (x : EReal) (y : EReal), Eq.{1} ENNReal (EReal.abs (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x y)) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) (EReal.abs x) (EReal.abs y))
-Case conversion may be inaccurate. Consider using '#align ereal.abs_mul EReal.abs_mulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:145:2: warning: unsupported: with_cases -/
 @[simp]
 theorem abs_mul (x y : EReal) : (x * y).abs = x.abs * y.abs :=
@@ -2009,23 +1276,11 @@ theorem sign_bot : SignType.sign (⊥ : EReal) = -1 :=
 #align ereal.sign_bot EReal.sign_bot
 -/
 
-/- warning: ereal.sign_coe -> EReal.sign_coe is a dubious translation:
-lean 3 declaration is
-  forall (x : Real), Eq.{1} SignType (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x)) (coeFn.{1, 1} (OrderHom.{0, 0} Real SignType Real.preorder (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} Real SignType Real.preorder (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => Real -> SignType) (OrderHom.hasCoeToFun.{0, 0} Real SignType Real.preorder (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} Real Real.hasZero Real.preorder (fun (a : Real) (b : Real) => Real.decidableLT a b)) x)
-but is expected to have type
-  forall (x : Real), Eq.{1} SignType (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) (Real.toEReal x)) (OrderHom.toFun.{0, 0} Real SignType Real.instPreorderReal (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} Real Real.instZeroReal Real.instPreorderReal (fun (a : Real) (b : Real) => Real.decidableLT a b)) x)
-Case conversion may be inaccurate. Consider using '#align ereal.sign_coe EReal.sign_coeₓ'. -/
 @[simp]
 theorem sign_coe (x : ℝ) : SignType.sign (x : EReal) = SignType.sign x := by
   simp only [SignType.sign, OrderHom.coe_fun_mk, EReal.coe_pos, EReal.coe_neg']
 #align ereal.sign_coe EReal.sign_coe
 
-/- warning: ereal.sign_mul -> EReal.sign_mul is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal) (y : EReal), Eq.{1} SignType (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) x y)) (HMul.hMul.{0, 0, 0} SignType SignType SignType (instHMul.{0} SignType SignType.hasMul) (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) x) (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) y))
-but is expected to have type
-  forall (x : EReal) (y : EReal), Eq.{1} SignType (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) x y)) (HMul.hMul.{0, 0, 0} SignType SignType SignType (instHMul.{0} SignType SignType.instMulSignType) (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) x) (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) y))
-Case conversion may be inaccurate. Consider using '#align ereal.sign_mul EReal.sign_mulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:145:2: warning: unsupported: with_cases -/
 @[simp]
 theorem sign_mul (x y : EReal) : SignType.sign (x * y) = SignType.sign x * SignType.sign y :=
@@ -2051,12 +1306,6 @@ theorem sign_mul (x y : EReal) : SignType.sign (x * y) = SignType.sign x * SignT
     simp_rw [bot_mul_coe_of_neg hy, sign_coe, sign_neg hy, sign_top, sign_bot, neg_one_mul, neg_neg]
 #align ereal.sign_mul EReal.sign_mul
 
-/- warning: ereal.sign_mul_abs -> EReal.sign_mul_abs is a dubious translation:
-lean 3 declaration is
-  forall (x : EReal), Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) SignType EReal (HasLiftT.mk.{1, 1} SignType EReal (CoeTCₓ.coe.{1, 1} SignType EReal (SignType.hasCoeT.{0} EReal EReal.hasZero EReal.hasOne EReal.hasNeg))) (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) x)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (EReal.abs x))) x
-but is expected to have type
-  forall (x : EReal), Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (SignType.cast.{0} EReal instERealZero instERealOne EReal.instNegEReal (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) x)) (ENNReal.toEReal (EReal.abs x))) x
-Case conversion may be inaccurate. Consider using '#align ereal.sign_mul_abs EReal.sign_mul_absₓ'. -/
 theorem sign_mul_abs (x : EReal) : (SignType.sign x * x.abs : EReal) = x :=
   by
   induction x using EReal.rec
@@ -2068,12 +1317,6 @@ theorem sign_mul_abs (x : EReal) : (SignType.sign x * x.abs : EReal) = x :=
   · simp
 #align ereal.sign_mul_abs EReal.sign_mul_abs
 
-/- warning: ereal.sign_eq_and_abs_eq_iff_eq -> EReal.sign_eq_and_abs_eq_iff_eq is a dubious translation:
-lean 3 declaration is
-  forall {x : EReal} {y : EReal}, Iff (And (Eq.{1} ENNReal (EReal.abs x) (EReal.abs y)) (Eq.{1} SignType (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) x) (coeFn.{1, 1} (OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (fun (_x : OrderHom.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) => EReal -> SignType) (OrderHom.hasCoeToFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (LinearOrder.toLattice.{0} SignType SignType.linearOrder))))) (SignType.sign.{0} EReal EReal.hasZero (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) y))) (Eq.{1} EReal x y)
-but is expected to have type
-  forall {x : EReal} {y : EReal}, Iff (And (Eq.{1} ENNReal (EReal.abs x) (EReal.abs y)) (Eq.{1} SignType (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) x) (OrderHom.toFun.{0, 0} EReal SignType (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (PartialOrder.toPreorder.{0} SignType (SemilatticeInf.toPartialOrder.{0} SignType (Lattice.toSemilatticeInf.{0} SignType (DistribLattice.toLattice.{0} SignType (instDistribLattice.{0} SignType SignType.instLinearOrderSignType))))) (SignType.sign.{0} EReal instERealZero (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (fun (a : EReal) (b : EReal) => EReal.decidableLt a b)) y))) (Eq.{1} EReal x y)
-Case conversion may be inaccurate. Consider using '#align ereal.sign_eq_and_abs_eq_iff_eq EReal.sign_eq_and_abs_eq_iff_eqₓ'. -/
 theorem sign_eq_and_abs_eq_iff_eq {x y : EReal} :
     x.abs = y.abs ∧ SignType.sign x = SignType.sign y ↔ x = y :=
   by
@@ -2082,9 +1325,6 @@ theorem sign_eq_and_abs_eq_iff_eq {x y : EReal} :
   · rintro rfl; simp only [eq_self_iff_true, and_self_iff]
 #align ereal.sign_eq_and_abs_eq_iff_eq EReal.sign_eq_and_abs_eq_iff_eq
 
-/- warning: ereal.le_iff_sign -> EReal.le_iff_sign is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ereal.le_iff_sign EReal.le_iff_signₓ'. -/
 theorem le_iff_sign {x y : EReal} :
     x ≤ y ↔
       SignType.sign x < SignType.sign y ∨
@@ -2135,23 +1375,11 @@ instance : PosMulReflectLT EReal :=
 instance : MulPosReflectLT EReal :=
   MulPosMono.toMulPosReflectLT
 
-/- warning: ereal.coe_pow -> EReal.coe_pow is a dubious translation:
-lean 3 declaration is
-  forall (x : Real) (n : Nat), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) x n)) (HPow.hPow.{0, 0, 0} EReal Nat EReal (instHPow.{0, 0} EReal Nat (Monoid.Pow.{0} EReal (MonoidWithZero.toMonoid.{0} EReal (CommMonoidWithZero.toMonoidWithZero.{0} EReal EReal.commMonoidWithZero)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x) n)
-but is expected to have type
-  forall (x : Real) (n : Nat), Eq.{1} EReal (Real.toEReal (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) x n)) (HPow.hPow.{0, 0, 0} EReal Nat EReal (instHPow.{0, 0} EReal Nat (Monoid.Pow.{0} EReal (MonoidWithZero.toMonoid.{0} EReal (CommMonoidWithZero.toMonoidWithZero.{0} EReal EReal.instCommMonoidWithZeroEReal)))) (Real.toEReal x) n)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_pow EReal.coe_powₓ'. -/
 @[simp, norm_cast]
 theorem coe_pow (x : ℝ) (n : ℕ) : (↑(x ^ n) : EReal) = x ^ n :=
   map_pow (⟨coe, coe_one, coe_mul⟩ : ℝ →* EReal) _ _
 #align ereal.coe_pow EReal.coe_pow
 
-/- warning: ereal.coe_ennreal_pow -> EReal.coe_ennreal_pow is a dubious translation:
-lean 3 declaration is
-  forall (x : ENNReal) (n : Nat), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (HPow.hPow.{0, 0, 0} ENNReal Nat ENNReal (instHPow.{0, 0} ENNReal Nat (Monoid.Pow.{0} ENNReal (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))))) x n)) (HPow.hPow.{0, 0, 0} EReal Nat EReal (instHPow.{0, 0} EReal Nat (Monoid.Pow.{0} EReal (MonoidWithZero.toMonoid.{0} EReal (CommMonoidWithZero.toMonoidWithZero.{0} EReal EReal.commMonoidWithZero)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x) n)
-but is expected to have type
-  forall (x : ENNReal) (n : Nat), Eq.{1} EReal (ENNReal.toEReal (HPow.hPow.{0, 0, 0} ENNReal Nat ENNReal (instHPow.{0, 0} ENNReal Nat (Monoid.Pow.{0} ENNReal (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))))) x n)) (HPow.hPow.{0, 0, 0} EReal Nat EReal (instHPow.{0, 0} EReal Nat (Monoid.Pow.{0} EReal (MonoidWithZero.toMonoid.{0} EReal (CommMonoidWithZero.toMonoidWithZero.{0} EReal EReal.instCommMonoidWithZeroEReal)))) (ENNReal.toEReal x) n)
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_pow EReal.coe_ennreal_powₓ'. -/
 @[simp, norm_cast]
 theorem coe_ennreal_pow (x : ℝ≥0∞) (n : ℕ) : (↑(x ^ n) : EReal) = x ^ n :=
   map_pow (⟨coe, coe_ennreal_one, coe_ennreal_mul⟩ : ℝ≥0∞ →* EReal) _ _

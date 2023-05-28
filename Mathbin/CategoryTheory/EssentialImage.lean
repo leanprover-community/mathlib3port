@@ -56,12 +56,6 @@ def essImage.witness {Y : D} (h : Y ∈ F.essImage) : C :=
 #align category_theory.functor.ess_image.witness CategoryTheory.Functor.essImage.witness
 -/
 
-/- warning: category_theory.functor.ess_image.get_iso -> CategoryTheory.Functor.essImage.getIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {Y : D} (h : Membership.Mem.{u4, u4} D (Set.{u4} D) (Set.hasMem.{u4} D) Y (CategoryTheory.Functor.essImage.{u1, u2, u3, u4} C D _inst_1 _inst_2 F)), CategoryTheory.Iso.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F (CategoryTheory.Functor.essImage.witness.{u1, u2, u3, u4} C D _inst_1 _inst_2 F Y h)) Y
-but is expected to have type
-  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {Y : D} (h : Membership.mem.{u4, u4} D (Set.{u4} D) (Set.instMembershipSet.{u4} D) Y (CategoryTheory.Functor.essImage.{u1, u2, u3, u4} C D _inst_1 _inst_2 F)), CategoryTheory.Iso.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) (CategoryTheory.Functor.essImage.witness.{u1, u2, u3, u4} C D _inst_1 _inst_2 F Y h)) Y
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.ess_image.get_iso CategoryTheory.Functor.essImage.getIsoₓ'. -/
 /-- Extract the isomorphism between `F.obj h.witness` and `Y` itself. -/
 def essImage.getIso {Y : D} (h : Y ∈ F.essImage) : F.obj h.witness ≅ Y :=
   Classical.choice h.choose_spec
@@ -91,12 +85,6 @@ theorem essImage_eq_of_natIso {F' : C ⥤ D} (h : F ≅ F') : essImage F = essIm
 #align category_theory.functor.ess_image_eq_of_nat_iso CategoryTheory.Functor.essImage_eq_of_natIso
 -/
 
-/- warning: category_theory.functor.obj_mem_ess_image -> CategoryTheory.Functor.obj_mem_essImage is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) (Y : D), Membership.Mem.{u3, u3} C (Set.{u3} C) (Set.hasMem.{u3} C) (CategoryTheory.Functor.obj.{u2, u1, u4, u3} D _inst_2 C _inst_1 F Y) (CategoryTheory.Functor.essImage.{u2, u1, u4, u3} D C _inst_2 _inst_1 F)
-but is expected to have type
-  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) (Y : D), Membership.mem.{u3, u3} C (Set.{u3} C) (Set.instMembershipSet.{u3} C) (Prefunctor.obj.{succ u2, succ u1, u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u4, u3} D _inst_2 C _inst_1 F) Y) (CategoryTheory.Functor.essImage.{u2, u1, u4, u3} D C _inst_2 _inst_1 F)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.obj_mem_ess_image CategoryTheory.Functor.obj_mem_essImageₓ'. -/
 /-- An object in the image is in the essential image. -/
 theorem obj_mem_essImage (F : D ⥤ C) (Y : D) : F.obj Y ∈ essImage F :=
   ⟨Y, ⟨Iso.refl _⟩⟩
@@ -167,12 +155,6 @@ def Functor.objPreimage (Y : D) : C :=
 #align category_theory.functor.obj_preimage CategoryTheory.Functor.objPreimage
 -/
 
-/- warning: category_theory.functor.obj_obj_preimage_iso -> CategoryTheory.Functor.objObjPreimageIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.EssSurj.{u1, u2, u3, u4} C D _inst_1 _inst_2 F] (Y : D), CategoryTheory.Iso.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F (CategoryTheory.Functor.objPreimage.{u1, u2, u3, u4} C D _inst_1 _inst_2 F _inst_3 Y)) Y
-but is expected to have type
-  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_3 : CategoryTheory.EssSurj.{u1, u2, u3, u4} C D _inst_1 _inst_2 F] (Y : D), CategoryTheory.Iso.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) (CategoryTheory.Functor.objPreimage.{u1, u2, u3, u4} C D _inst_1 _inst_2 F _inst_3 Y)) Y
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.obj_obj_preimage_iso CategoryTheory.Functor.objObjPreimageIsoₓ'. -/
 /-- Applying an essentially surjective functor to a preimage of `Y` yields an object that is
     isomorphic to `Y`. -/
 def Functor.objObjPreimageIso (Y : D) : F.obj (F.objPreimage Y) ≅ Y :=

@@ -30,12 +30,6 @@ instance [DecidableEq α] {r : α → α → Prop} [DecidableRel r] {s : Finset 
     Decidable ((s : Set α).Pairwise r) :=
   decidable_of_iff' (∀ a ∈ s, ∀ b ∈ s, a ≠ b → r a b) Iff.rfl
 
-/- warning: finset.pairwise_disjoint_range_singleton -> Finset.pairwiseDisjoint_range_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Set.PairwiseDisjoint.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Set.range.{u1, succ u1} (Finset.{u1} α) α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α))) (id.{succ u1} (Finset.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Set.PairwiseDisjoint.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Set.range.{u1, succ u1} (Finset.{u1} α) α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α))) (id.{succ u1} (Finset.{u1} α))
-Case conversion may be inaccurate. Consider using '#align finset.pairwise_disjoint_range_singleton Finset.pairwiseDisjoint_range_singletonₓ'. -/
 theorem Finset.pairwiseDisjoint_range_singleton :
     (Set.range (singleton : α → Finset α)).PairwiseDisjoint id :=
   by
@@ -45,23 +39,11 @@ theorem Finset.pairwiseDisjoint_range_singleton :
 
 namespace Set
 
-/- warning: set.pairwise_disjoint.elim_finset -> Set.PairwiseDisjoint.elim_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (f i)) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a (f j)) -> (Eq.{succ u2} ι i j)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s f) -> (forall {i : ι} {j : ι}, (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) j s) -> (forall (a : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a (f i)) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a (f j)) -> (Eq.{succ u2} ι i j)))
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.elim_finset Set.PairwiseDisjoint.elim_finsetₓ'. -/
 theorem PairwiseDisjoint.elim_finset {s : Set ι} {f : ι → Finset α} (hs : s.PairwiseDisjoint f)
     {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (a : α) (hai : a ∈ f i) (haj : a ∈ f j) : i = j :=
   hs.elim hi hj (Finset.not_disjoint_iff.2 ⟨a, hai, haj⟩)
 #align set.pairwise_disjoint.elim_finset Set.PairwiseDisjoint.elim_finset
 
-/- warning: set.pairwise_disjoint.image_finset_of_le -> Set.PairwiseDisjoint.image_finset_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : SemilatticeInf.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2)))] {s : Finset.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) f) -> (forall {g : ι -> ι}, (forall (a : ι), LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2))) (f (g a)) (f a)) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) (Finset.image.{u2, u2} ι ι (fun (a : ι) (b : ι) => _inst_1 a b) g s)) f))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : SemilatticeInf.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2)))] {s : Finset.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3 (Finset.toSet.{u2} ι s) f) -> (forall {g : ι -> ι}, (forall (a : ι), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2))) (f (g a)) (f a)) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3 (Finset.toSet.{u2} ι (Finset.image.{u2, u2} ι ι (fun (a : ι) (b : ι) => _inst_1 a b) g s)) f))
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.image_finset_of_le Set.PairwiseDisjoint.image_finset_of_leₓ'. -/
 theorem PairwiseDisjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α] [OrderBot α]
     {s : Finset ι} {f : ι → α} (hs : (s : Set ι).PairwiseDisjoint f) {g : ι → ι}
     (hf : ∀ a, f (g a) ≤ f a) : (s.image g : Set ι).PairwiseDisjoint f :=
@@ -72,12 +54,6 @@ theorem PairwiseDisjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α]
 
 variable [Lattice α] [OrderBot α]
 
-/- warning: set.pairwise_disjoint.bUnion_finset -> Set.PairwiseDisjoint.biUnion_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Set.{u3} ι'} {g : ι' -> (Finset.{u2} ι)} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u3} α ι' (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 s (fun (i' : ι') => Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 (g i') f)) -> (forall (i : ι'), (Membership.Mem.{u3, u3} ι' (Set.{u3} ι') (Set.hasMem.{u3} ι') i s) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) (g i)) f)) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (Set.iUnion.{u2, succ u3} ι ι' (fun (i : ι') => Set.iUnion.{u2, 0} ι (Membership.Mem.{u3, u3} ι' (Set.{u3} ι') (Set.hasMem.{u3} ι') i s) (fun (H : Membership.Mem.{u3, u3} ι' (Set.{u3} ι') (Set.hasMem.{u3} ι') i s) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) (g i)))) f)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Set.{u3} ι'} {g : ι' -> (Finset.{u2} ι)} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u3} α ι' (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 s (fun (i' : ι') => Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 (g i') f)) -> (forall (i : ι'), (Membership.mem.{u3, u3} ι' (Set.{u3} ι') (Set.instMembershipSet.{u3} ι') i s) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (Finset.toSet.{u2} ι (g i)) f)) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (Set.iUnion.{u2, succ u3} ι ι' (fun (i : ι') => Set.iUnion.{u2, 0} ι (Membership.mem.{u3, u3} ι' (Set.{u3} ι') (Set.instMembershipSet.{u3} ι') i s) (fun (H : Membership.mem.{u3, u3} ι' (Set.{u3} ι') (Set.instMembershipSet.{u3} ι') i s) => Finset.toSet.{u2} ι (g i)))) f)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.bUnion_finset Set.PairwiseDisjoint.biUnion_finsetₓ'. -/
 /-- Bind operation for `set.pairwise_disjoint`. In a complete lattice, you can use
 `set.pairwise_disjoint.bUnion`. -/
 theorem PairwiseDisjoint.biUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f : ι → α}
@@ -112,24 +88,12 @@ theorem pairwise_iff_coe_toFinset_pairwise (hn : l.Nodup) (hs : Symmetric r) :
 #align list.pairwise_iff_coe_to_finset_pairwise List.pairwise_iff_coe_toFinset_pairwise
 -/
 
-/- warning: list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint -> List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_2 : SemilatticeInf.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableEq.{succ u2} ι] {l : List.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) (List.toFinset.{u2} ι (fun (a : ι) (b : ι) => _inst_4 a b) l)) f) -> (List.Nodup.{u2} ι l) -> (List.Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3) f) l)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_2 : SemilatticeInf.{u2} α] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2)))] [_inst_4 : DecidableEq.{succ u1} ι] {l : List.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α _inst_2) _inst_3 (Finset.toSet.{u1} ι (List.toFinset.{u1} ι (fun (a : ι) (b : ι) => _inst_4 a b) l)) f) -> (List.Nodup.{u1} ι l) -> (List.Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2) _inst_3) f) l)
-Case conversion may be inaccurate. Consider using '#align list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjointₓ'. -/
 theorem pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint {α ι} [SemilatticeInf α] [OrderBot α]
     [DecidableEq ι] {l : List ι} {f : ι → α} (hl : (l.toFinset : Set ι).PairwiseDisjoint f)
     (hn : l.Nodup) : l.Pairwise (Disjoint on f) :=
   pairwise_of_coe_toFinset_pairwise hl hn
 #align list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint
 
-/- warning: list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint -> List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_2 : SemilatticeInf.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableEq.{succ u2} ι] {l : List.{u2} ι} {f : ι -> α}, (List.Nodup.{u2} ι l) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) (List.toFinset.{u2} ι (fun (a : ι) (b : ι) => _inst_4 a b) l)) f) (List.Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2) _inst_3) f) l))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_2 : SemilatticeInf.{u2} α] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2)))] [_inst_4 : DecidableEq.{succ u1} ι] {l : List.{u1} ι} {f : ι -> α}, (List.Nodup.{u1} ι l) -> (Iff (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α _inst_2) _inst_3 (Finset.toSet.{u1} ι (List.toFinset.{u1} ι (fun (a : ι) (b : ι) => _inst_4 a b) l)) f) (List.Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2) _inst_3) f) l))
-Case conversion may be inaccurate. Consider using '#align list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjointₓ'. -/
 theorem pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint {α ι} [SemilatticeInf α] [OrderBot α]
     [DecidableEq ι] {l : List ι} {f : ι → α} (hn : l.Nodup) :
     (l.toFinset : Set ι).PairwiseDisjoint f ↔ l.Pairwise (Disjoint on f) :=

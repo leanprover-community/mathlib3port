@@ -71,9 +71,6 @@ def crossProduct : (Fin 3 → R) →ₗ[R] (Fin 3 → R) →ₗ[R] Fin 3 → R :
 -- mathport name: cross_product
 scoped[Matrix] infixl:74 " ×₃ " => crossProduct
 
-/- warning: cross_apply -> cross_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cross_apply cross_applyₓ'. -/
 theorem cross_apply (a b : Fin 3 → R) :
     a ×₃ b = ![a 1 * b 2 - a 2 * b 1, a 2 * b 0 - a 0 * b 2, a 0 * b 1 - a 1 * b 0] :=
   rfl
@@ -81,55 +78,34 @@ theorem cross_apply (a b : Fin 3 → R) :
 
 section ProductsProperties
 
-/- warning: cross_anticomm -> cross_anticomm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cross_anticomm cross_anticommₓ'. -/
 @[simp]
 theorem cross_anticomm (v w : Fin 3 → R) : -(v ×₃ w) = w ×₃ v := by simp [cross_apply, mul_comm]
 #align cross_anticomm cross_anticomm
 
-/- warning: neg_cross -> neg_cross is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align neg_cross neg_crossₓ'. -/
 alias cross_anticomm ← neg_cross
 #align neg_cross neg_cross
 
-/- warning: cross_anticomm' -> cross_anticomm' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cross_anticomm' cross_anticomm'ₓ'. -/
 @[simp]
 theorem cross_anticomm' (v w : Fin 3 → R) : v ×₃ w + w ×₃ v = 0 := by
   rw [add_eq_zero_iff_eq_neg, cross_anticomm]
 #align cross_anticomm' cross_anticomm'
 
-/- warning: cross_self -> cross_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cross_self cross_selfₓ'. -/
 @[simp]
 theorem cross_self (v : Fin 3 → R) : v ×₃ v = 0 := by simp [cross_apply, mul_comm]
 #align cross_self cross_self
 
-/- warning: dot_self_cross -> dot_self_cross is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dot_self_cross dot_self_crossₓ'. -/
 /-- The cross product of two vectors is perpendicular to the first vector. -/
 @[simp]
 theorem dot_self_cross (v w : Fin 3 → R) : v ⬝ᵥ v ×₃ w = 0 := by
   simp [cross_apply, vec3_dot_product, mul_sub, mul_assoc, mul_left_comm]
 #align dot_self_cross dot_self_cross
 
-/- warning: dot_cross_self -> dot_cross_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dot_cross_self dot_cross_selfₓ'. -/
 /-- The cross product of two vectors is perpendicular to the second vector. -/
 @[simp]
 theorem dot_cross_self (v w : Fin 3 → R) : w ⬝ᵥ v ×₃ w = 0 := by
   rw [← cross_anticomm, Matrix.dotProduct_neg, dot_self_cross, neg_zero]
 #align dot_cross_self dot_cross_self
 
-/- warning: triple_product_permutation -> triple_product_permutation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align triple_product_permutation triple_product_permutationₓ'. -/
 /-- Cyclic permutations preserve the triple product. See also `triple_product_eq_det`. -/
 theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = v ⬝ᵥ w ×₃ u :=
   by
@@ -139,9 +115,6 @@ theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = 
   ring
 #align triple_product_permutation triple_product_permutation
 
-/- warning: triple_product_eq_det -> triple_product_eq_det is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align triple_product_eq_det triple_product_eq_detₓ'. -/
 /-- The triple product of `u`, `v`, and `w` is equal to the determinant of the matrix
     with those vectors as its rows. -/
 theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matrix.det ![u, v, w] :=
@@ -153,9 +126,6 @@ theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matri
   ring
 #align triple_product_eq_det triple_product_eq_det
 
-/- warning: cross_dot_cross -> cross_dot_cross is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cross_dot_cross cross_dot_crossₓ'. -/
 /-- The scalar quadruple product identity, related to the Binet-Cauchy identity. -/
 theorem cross_dot_cross (u v w x : Fin 3 → R) :
     u ×₃ v ⬝ᵥ w ×₃ x = u ⬝ᵥ w * v ⬝ᵥ x - u ⬝ᵥ x * v ⬝ᵥ w :=
@@ -169,9 +139,6 @@ end ProductsProperties
 
 section LeibnizProperties
 
-/- warning: leibniz_cross -> leibniz_cross is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align leibniz_cross leibniz_crossₓ'. -/
 /-- The cross product satisfies the Leibniz lie property. -/
 theorem leibniz_cross (u v w : Fin 3 → R) : u ×₃ (v ×₃ w) = u ×₃ v ×₃ w + v ×₃ (u ×₃ w) :=
   by
@@ -196,16 +163,10 @@ def Cross.lieRing : LieRing (Fin 3 → R) :=
 
 attribute [local instance] Cross.lieRing
 
-/- warning: cross_cross -> cross_cross is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align cross_cross cross_crossₓ'. -/
 theorem cross_cross (u v w : Fin 3 → R) : u ×₃ v ×₃ w = u ×₃ (v ×₃ w) - v ×₃ (u ×₃ w) :=
   lie_lie u v w
 #align cross_cross cross_cross
 
-/- warning: jacobi_cross -> jacobi_cross is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align jacobi_cross jacobi_crossₓ'. -/
 /-- Jacobi identity: For a cross product of three vectors,
     their sum over the three even permutations is equal to the zero vector. -/
 theorem jacobi_cross (u v w : Fin 3 → R) : u ×₃ (v ×₃ w) + v ×₃ (w ×₃ u) + w ×₃ (u ×₃ v) = 0 :=

@@ -58,399 +58,174 @@ def IsTheta (l : Filter α) (f : α → E) (g : α → F) : Prop :=
 -- mathport name: «expr =Θ[ ] »
 notation:100 f " =Θ[" l "] " g:100 => IsTheta l f g
 
-/- warning: asymptotics.is_O.antisymm -> Asymptotics.IsBigO.antisymm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α}, (Asymptotics.IsBigO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsBigO.{u1, u3, u2} α F E _inst_2 _inst_1 l g f) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α}, (Asymptotics.IsBigO.{u3, u2, u1} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsBigO.{u3, u1, u2} α F E _inst_2 _inst_1 l g f) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_O.antisymm Asymptotics.IsBigO.antisymmₓ'. -/
 theorem IsBigO.antisymm (h₁ : f =O[l] g) (h₂ : g =O[l] f) : f =Θ[l] g :=
   ⟨h₁, h₂⟩
 #align asymptotics.is_O.antisymm Asymptotics.IsBigO.antisymm
 
-/- warning: asymptotics.is_Theta_refl -> Asymptotics.isTheta_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} [_inst_1 : Norm.{u2} E] (f : α -> E) (l : Filter.{u1} α), Asymptotics.IsTheta.{u1, u2, u2} α E E _inst_1 _inst_1 l f f
-but is expected to have type
-  forall {α : Type.{u2}} {E : Type.{u1}} [_inst_1 : Norm.{u1} E] (f : α -> E) (l : Filter.{u2} α), Asymptotics.IsTheta.{u2, u1, u1} α E E _inst_1 _inst_1 l f f
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_refl Asymptotics.isTheta_reflₓ'. -/
 @[refl]
 theorem isTheta_refl (f : α → E) (l : Filter α) : f =Θ[l] f :=
   ⟨isBigO_refl _ _, isBigO_refl _ _⟩
 #align asymptotics.is_Theta_refl Asymptotics.isTheta_refl
 
-/- warning: asymptotics.is_Theta_rfl -> Asymptotics.isTheta_rfl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} [_inst_1 : Norm.{u2} E] {f : α -> E} {l : Filter.{u1} α}, Asymptotics.IsTheta.{u1, u2, u2} α E E _inst_1 _inst_1 l f f
-but is expected to have type
-  forall {α : Type.{u2}} {E : Type.{u1}} [_inst_1 : Norm.{u1} E] {f : α -> E} {l : Filter.{u2} α}, Asymptotics.IsTheta.{u2, u1, u1} α E E _inst_1 _inst_1 l f f
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_rfl Asymptotics.isTheta_rflₓ'. -/
 theorem isTheta_rfl : f =Θ[l] f :=
   isTheta_refl _ _
 #align asymptotics.is_Theta_rfl Asymptotics.isTheta_rfl
 
-/- warning: asymptotics.is_Theta.symm -> Asymptotics.IsTheta.symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsTheta.{u1, u3, u2} α F E _inst_2 _inst_1 l g f)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsTheta.{u3, u1, u2} α F E _inst_2 _inst_1 l g f)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.symm Asymptotics.IsTheta.symmₓ'. -/
 @[symm]
 theorem IsTheta.symm (h : f =Θ[l] g) : g =Θ[l] f :=
   h.symm
 #align asymptotics.is_Theta.symm Asymptotics.IsTheta.symm
 
-/- warning: asymptotics.is_Theta_comm -> Asymptotics.isTheta_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α}, Iff (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) (Asymptotics.IsTheta.{u1, u3, u2} α F E _inst_2 _inst_1 l g f)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α}, Iff (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g) (Asymptotics.IsTheta.{u3, u1, u2} α F E _inst_2 _inst_1 l g f)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_comm Asymptotics.isTheta_commₓ'. -/
 theorem isTheta_comm : f =Θ[l] g ↔ g =Θ[l] f :=
   ⟨fun h => h.symm, fun h => h.symm⟩
 #align asymptotics.is_Theta_comm Asymptotics.isTheta_comm
 
-/- warning: asymptotics.is_Theta.trans -> Asymptotics.IsTheta.trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {G : Type.{u3}} {F' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_3 : Norm.{u3} G] [_inst_5 : SeminormedAddCommGroup.{u4} F'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsTheta.{u1, u2, u4} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) l f g) -> (Asymptotics.IsTheta.{u1, u4, u3} α F' G (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsTheta.{u1, u2, u3} α E G _inst_1 _inst_3 l f k)
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u3}} {G : Type.{u1}} {F' : Type.{u2}} [_inst_1 : Norm.{u3} E] [_inst_3 : Norm.{u1} G] [_inst_5 : SeminormedAddCommGroup.{u2} F'] {l : Filter.{u4} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsTheta.{u4, u3, u2} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) l f g) -> (Asymptotics.IsTheta.{u4, u2, u1} α F' G (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsTheta.{u4, u3, u1} α E G _inst_1 _inst_3 l f k)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.trans Asymptotics.IsTheta.transₓ'. -/
 @[trans]
 theorem IsTheta.trans {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =Θ[l] k) :
     f =Θ[l] k :=
   ⟨h₁.1.trans h₂.1, h₂.2.trans h₁.2⟩
 #align asymptotics.is_Theta.trans Asymptotics.IsTheta.trans
 
-/- warning: asymptotics.is_O.trans_is_Theta -> Asymptotics.IsBigO.trans_isTheta is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {G : Type.{u3}} {F' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_3 : Norm.{u3} G] [_inst_5 : SeminormedAddCommGroup.{u4} F'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsBigO.{u1, u2, u4} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) l f g) -> (Asymptotics.IsTheta.{u1, u4, u3} α F' G (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsBigO.{u1, u2, u3} α E G _inst_1 _inst_3 l f k)
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u3}} {G : Type.{u1}} {F' : Type.{u2}} [_inst_1 : Norm.{u3} E] [_inst_3 : Norm.{u1} G] [_inst_5 : SeminormedAddCommGroup.{u2} F'] {l : Filter.{u4} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsBigO.{u4, u3, u2} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) l f g) -> (Asymptotics.IsTheta.{u4, u2, u1} α F' G (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsBigO.{u4, u3, u1} α E G _inst_1 _inst_3 l f k)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_O.trans_is_Theta Asymptotics.IsBigO.trans_isThetaₓ'. -/
 @[trans]
 theorem IsBigO.trans_isTheta {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =O[l] g)
     (h₂ : g =Θ[l] k) : f =O[l] k :=
   h₁.trans h₂.1
 #align asymptotics.is_O.trans_is_Theta Asymptotics.IsBigO.trans_isTheta
 
-/- warning: asymptotics.is_Theta.trans_is_O -> Asymptotics.IsTheta.trans_isBigO is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {G : Type.{u3}} {F' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_3 : Norm.{u3} G] [_inst_5 : SeminormedAddCommGroup.{u4} F'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsTheta.{u1, u2, u4} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) l f g) -> (Asymptotics.IsBigO.{u1, u4, u3} α F' G (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsBigO.{u1, u2, u3} α E G _inst_1 _inst_3 l f k)
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u3}} {G : Type.{u1}} {F' : Type.{u2}} [_inst_1 : Norm.{u3} E] [_inst_3 : Norm.{u1} G] [_inst_5 : SeminormedAddCommGroup.{u2} F'] {l : Filter.{u4} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsTheta.{u4, u3, u2} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) l f g) -> (Asymptotics.IsBigO.{u4, u2, u1} α F' G (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsBigO.{u4, u3, u1} α E G _inst_1 _inst_3 l f k)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.trans_is_O Asymptotics.IsTheta.trans_isBigOₓ'. -/
 @[trans]
 theorem IsTheta.trans_isBigO {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g)
     (h₂ : g =O[l] k) : f =O[l] k :=
   h₁.1.trans h₂
 #align asymptotics.is_Theta.trans_is_O Asymptotics.IsTheta.trans_isBigO
 
-/- warning: asymptotics.is_o.trans_is_Theta -> Asymptotics.IsLittleO.trans_isTheta is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F} {k : α -> G'}, (Asymptotics.IsLittleO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsTheta.{u1, u3, u4} α F G' _inst_2 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l g k) -> (Asymptotics.IsLittleO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f k)
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u3}} {F : Type.{u2}} {G' : Type.{u1}} [_inst_1 : Norm.{u3} E] [_inst_2 : Norm.{u2} F] [_inst_6 : SeminormedAddCommGroup.{u1} G'] {l : Filter.{u4} α} {f : α -> E} {g : α -> F} {k : α -> G'}, (Asymptotics.IsLittleO.{u4, u3, u2} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsTheta.{u4, u2, u1} α F G' _inst_2 (SeminormedAddCommGroup.toNorm.{u1} G' _inst_6) l g k) -> (Asymptotics.IsLittleO.{u4, u3, u1} α E G' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} G' _inst_6) l f k)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_is_Theta Asymptotics.IsLittleO.trans_isThetaₓ'. -/
 @[trans]
 theorem IsLittleO.trans_isTheta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g)
     (h₂ : g =Θ[l] k) : f =o[l] k :=
   h₁.trans_isBigO h₂.1
 #align asymptotics.is_o.trans_is_Theta Asymptotics.IsLittleO.trans_isTheta
 
-/- warning: asymptotics.is_Theta.trans_is_o -> Asymptotics.IsTheta.trans_isLittleO is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {G : Type.{u3}} {F' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_3 : Norm.{u3} G] [_inst_5 : SeminormedAddCommGroup.{u4} F'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsTheta.{u1, u2, u4} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) l f g) -> (Asymptotics.IsLittleO.{u1, u4, u3} α F' G (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsLittleO.{u1, u2, u3} α E G _inst_1 _inst_3 l f k)
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u3}} {G : Type.{u1}} {F' : Type.{u2}} [_inst_1 : Norm.{u3} E] [_inst_3 : Norm.{u1} G] [_inst_5 : SeminormedAddCommGroup.{u2} F'] {l : Filter.{u4} α} {f : α -> E} {g : α -> F'} {k : α -> G}, (Asymptotics.IsTheta.{u4, u3, u2} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) l f g) -> (Asymptotics.IsLittleO.{u4, u2, u1} α F' G (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) _inst_3 l g k) -> (Asymptotics.IsLittleO.{u4, u3, u1} α E G _inst_1 _inst_3 l f k)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.trans_is_o Asymptotics.IsTheta.trans_isLittleOₓ'. -/
 @[trans]
 theorem IsTheta.trans_isLittleO {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g)
     (h₂ : g =o[l] k) : f =o[l] k :=
   h₁.1.trans_isLittleO h₂
 #align asymptotics.is_Theta.trans_is_o Asymptotics.IsTheta.trans_isLittleO
 
-/- warning: asymptotics.is_Theta.trans_eventually_eq -> Asymptotics.IsTheta.trans_eventuallyEq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {l : Filter.{u1} α} {f : α -> E} {g₁ : α -> F} {g₂ : α -> F}, (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g₁) -> (Filter.EventuallyEq.{u1, u3} α F l g₁ g₂) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g₂)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {l : Filter.{u3} α} {f : α -> E} {g₁ : α -> F} {g₂ : α -> F}, (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g₁) -> (Filter.EventuallyEq.{u3, u1} α F l g₁ g₂) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g₂)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.trans_eventually_eq Asymptotics.IsTheta.trans_eventuallyEqₓ'. -/
 @[trans]
 theorem IsTheta.trans_eventuallyEq {f : α → E} {g₁ g₂ : α → F} (h : f =Θ[l] g₁) (hg : g₁ =ᶠ[l] g₂) :
     f =Θ[l] g₂ :=
   ⟨h.1.trans_eventuallyEq hg, hg.symm.trans_isBigO h.2⟩
 #align asymptotics.is_Theta.trans_eventually_eq Asymptotics.IsTheta.trans_eventuallyEq
 
-/- warning: filter.eventually_eq.trans_is_Theta -> Filter.EventuallyEq.trans_isTheta is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {l : Filter.{u1} α} {f₁ : α -> E} {f₂ : α -> E} {g : α -> F}, (Filter.EventuallyEq.{u1, u2} α E l f₁ f₂) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f₂ g) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f₁ g)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {l : Filter.{u3} α} {f₁ : α -> E} {f₂ : α -> E} {g : α -> F}, (Filter.EventuallyEq.{u3, u2} α E l f₁ f₂) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f₂ g) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f₁ g)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.trans_is_Theta Filter.EventuallyEq.trans_isThetaₓ'. -/
 @[trans]
 theorem Filter.EventuallyEq.trans_isTheta {f₁ f₂ : α → E} {g : α → F} (hf : f₁ =ᶠ[l] f₂)
     (h : f₂ =Θ[l] g) : f₁ =Θ[l] g :=
   ⟨hf.trans_isBigO h.1, h.2.trans_eventuallyEq hf.symm⟩
 #align filter.eventually_eq.trans_is_Theta Filter.EventuallyEq.trans_isTheta
 
-/- warning: asymptotics.is_Theta_norm_left -> Asymptotics.isTheta_norm_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Type.{u2}} {E' : Type.{u3}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u3} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u1} α}, Iff (Asymptotics.IsTheta.{u1, 0, u2} α Real F Real.hasNorm _inst_2 l (fun (x : α) => Norm.norm.{u3} E' (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) (f' x)) g) (Asymptotics.IsTheta.{u1, u3, u2} α E' F (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_2 l f' g)
-but is expected to have type
-  forall {α : Type.{u3}} {F : Type.{u2}} {E' : Type.{u1}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u1} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, Iff (Asymptotics.IsTheta.{u3, 0, u2} α Real F Real.norm _inst_2 l (fun (x : α) => Norm.norm.{u1} E' (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) (f' x)) g) (Asymptotics.IsTheta.{u3, u1, u2} α E' F (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) _inst_2 l f' g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_norm_left Asymptotics.isTheta_norm_leftₓ'. -/
 @[simp]
 theorem isTheta_norm_left : (fun x => ‖f' x‖) =Θ[l] g ↔ f' =Θ[l] g := by simp [is_Theta]
 #align asymptotics.is_Theta_norm_left Asymptotics.isTheta_norm_left
 
-/- warning: asymptotics.is_Theta_norm_right -> Asymptotics.isTheta_norm_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F' : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u1} α}, Iff (Asymptotics.IsTheta.{u1, u2, 0} α E Real _inst_1 Real.hasNorm l f (fun (x : α) => Norm.norm.{u3} F' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (g' x))) (Asymptotics.IsTheta.{u1, u2, u3} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f g')
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, Iff (Asymptotics.IsTheta.{u3, u2, 0} α E Real _inst_1 Real.norm l f (fun (x : α) => Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (g' x))) (Asymptotics.IsTheta.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g')
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_norm_right Asymptotics.isTheta_norm_rightₓ'. -/
 @[simp]
 theorem isTheta_norm_right : (f =Θ[l] fun x => ‖g' x‖) ↔ f =Θ[l] g' := by simp [is_Theta]
 #align asymptotics.is_Theta_norm_right Asymptotics.isTheta_norm_right
 
-/- warning: asymptotics.is_Theta.of_norm_left -> Asymptotics.IsTheta.of_norm_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Type.{u2}} {E' : Type.{u3}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u3} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, 0, u2} α Real F Real.hasNorm _inst_2 l (fun (x : α) => Norm.norm.{u3} E' (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) (f' x)) g) -> (Asymptotics.IsTheta.{u1, u3, u2} α E' F (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_2 l f' g)
-but is expected to have type
-  forall {α : Type.{u3}} {F : Type.{u2}} {E' : Type.{u1}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u1} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, 0, u2} α Real F Real.norm _inst_2 l (fun (x : α) => Norm.norm.{u1} E' (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) (f' x)) g) -> (Asymptotics.IsTheta.{u3, u1, u2} α E' F (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) _inst_2 l f' g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.of_norm_left Asymptotics.IsTheta.of_norm_leftₓ'. -/
-/- warning: asymptotics.is_Theta.norm_left -> Asymptotics.IsTheta.norm_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Type.{u2}} {E' : Type.{u3}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u3} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u3, u2} α E' F (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_2 l f' g) -> (Asymptotics.IsTheta.{u1, 0, u2} α Real F Real.hasNorm _inst_2 l (fun (x : α) => Norm.norm.{u3} E' (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) (f' x)) g)
-but is expected to have type
-  forall {α : Type.{u3}} {F : Type.{u2}} {E' : Type.{u1}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u1} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u1, u2} α E' F (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) _inst_2 l f' g) -> (Asymptotics.IsTheta.{u3, 0, u2} α Real F Real.norm _inst_2 l (fun (x : α) => Norm.norm.{u1} E' (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) (f' x)) g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.norm_left Asymptotics.IsTheta.norm_leftₓ'. -/
 alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 #align asymptotics.is_Theta.of_norm_left Asymptotics.IsTheta.of_norm_left
 #align asymptotics.is_Theta.norm_left Asymptotics.IsTheta.norm_left
 
-/- warning: asymptotics.is_Theta.of_norm_right -> Asymptotics.IsTheta.of_norm_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F' : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, 0} α E Real _inst_1 Real.hasNorm l f (fun (x : α) => Norm.norm.{u3} F' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (g' x))) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f g')
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, 0} α E Real _inst_1 Real.norm l f (fun (x : α) => Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (g' x))) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g')
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.of_norm_right Asymptotics.IsTheta.of_norm_rightₓ'. -/
-/- warning: asymptotics.is_Theta.norm_right -> Asymptotics.IsTheta.norm_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F' : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f g') -> (Asymptotics.IsTheta.{u1, u2, 0} α E Real _inst_1 Real.hasNorm l f (fun (x : α) => Norm.norm.{u3} F' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (g' x)))
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g') -> (Asymptotics.IsTheta.{u3, u2, 0} α E Real _inst_1 Real.norm l f (fun (x : α) => Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (g' x)))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.norm_right Asymptotics.IsTheta.norm_rightₓ'. -/
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 #align asymptotics.is_Theta.of_norm_right Asymptotics.IsTheta.of_norm_right
 #align asymptotics.is_Theta.norm_right Asymptotics.IsTheta.norm_right
 
-/- warning: asymptotics.is_Theta_of_norm_eventually_eq -> Asymptotics.isTheta_of_norm_eventuallyEq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Real l (fun (x : α) => Norm.norm.{u2} E _inst_1 (f x)) (fun (x : α) => Norm.norm.{u3} F _inst_2 (g x))) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α}, (Filter.EventuallyEq.{u3, 0} α Real l (fun (x : α) => Norm.norm.{u2} E _inst_1 (f x)) (fun (x : α) => Norm.norm.{u1} F _inst_2 (g x))) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_of_norm_eventually_eq Asymptotics.isTheta_of_norm_eventuallyEqₓ'. -/
 theorem isTheta_of_norm_eventuallyEq (h : (fun x => ‖f x‖) =ᶠ[l] fun x => ‖g x‖) : f =Θ[l] g :=
   ⟨IsBigO.of_bound 1 <| by simpa only [one_mul] using h.le,
     IsBigO.of_bound 1 <| by simpa only [one_mul] using h.symm.le⟩
 #align asymptotics.is_Theta_of_norm_eventually_eq Asymptotics.isTheta_of_norm_eventuallyEq
 
-/- warning: asymptotics.is_Theta_of_norm_eventually_eq' -> Asymptotics.isTheta_of_norm_eventuallyEq' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E' : Type.{u2}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] {f' : α -> E'} {l : Filter.{u1} α} {g : α -> Real}, (Filter.EventuallyEq.{u1, 0} α Real l (fun (x : α) => Norm.norm.{u2} E' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (f' x)) g) -> (Asymptotics.IsTheta.{u1, u2, 0} α E' Real (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) Real.hasNorm l f' g)
-but is expected to have type
-  forall {α : Type.{u2}} {E' : Type.{u1}} [_inst_4 : SeminormedAddCommGroup.{u1} E'] {f' : α -> E'} {l : Filter.{u2} α} {g : α -> Real}, (Filter.EventuallyEq.{u2, 0} α Real l (fun (x : α) => Norm.norm.{u1} E' (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) (f' x)) g) -> (Asymptotics.IsTheta.{u2, u1, 0} α E' Real (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) Real.norm l f' g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_of_norm_eventually_eq' Asymptotics.isTheta_of_norm_eventuallyEq'ₓ'. -/
 theorem isTheta_of_norm_eventuallyEq' {g : α → ℝ} (h : (fun x => ‖f' x‖) =ᶠ[l] g) : f' =Θ[l] g :=
   isTheta_of_norm_eventuallyEq <| h.mono fun x hx => by simp only [← hx, norm_norm]
 #align asymptotics.is_Theta_of_norm_eventually_eq' Asymptotics.isTheta_of_norm_eventuallyEq'
 
-/- warning: asymptotics.is_Theta.is_o_congr_left -> Asymptotics.IsTheta.isLittleO_congr_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {G : Type.{u2}} {E' : Type.{u3}} {F' : Type.{u4}} [_inst_3 : Norm.{u2} G] [_inst_4 : SeminormedAddCommGroup.{u3} E'] [_inst_5 : SeminormedAddCommGroup.{u4} F'] {k : α -> G} {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u3, u4} α E' F' (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) l f' g') -> (Iff (Asymptotics.IsLittleO.{u1, u3, u2} α E' G (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_3 l f' k) (Asymptotics.IsLittleO.{u1, u4, u2} α F' G (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) _inst_3 l g' k))
-but is expected to have type
-  forall {α : Type.{u4}} {G : Type.{u1}} {E' : Type.{u3}} {F' : Type.{u2}} [_inst_3 : Norm.{u1} G] [_inst_4 : SeminormedAddCommGroup.{u3} E'] [_inst_5 : SeminormedAddCommGroup.{u2} F'] {k : α -> G} {f' : α -> E'} {g' : α -> F'} {l : Filter.{u4} α}, (Asymptotics.IsTheta.{u4, u3, u2} α E' F' (SeminormedAddCommGroup.toNorm.{u3} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) l f' g') -> (Iff (Asymptotics.IsLittleO.{u4, u3, u1} α E' G (SeminormedAddCommGroup.toNorm.{u3} E' _inst_4) _inst_3 l f' k) (Asymptotics.IsLittleO.{u4, u2, u1} α F' G (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) _inst_3 l g' k))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_o_congr_left Asymptotics.IsTheta.isLittleO_congr_leftₓ'. -/
 theorem IsTheta.isLittleO_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
   ⟨h.symm.trans_isLittleO, h.trans_isLittleO⟩
 #align asymptotics.is_Theta.is_o_congr_left Asymptotics.IsTheta.isLittleO_congr_left
 
-/- warning: asymptotics.is_Theta.is_o_congr_right -> Asymptotics.IsTheta.isLittleO_congr_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F' : Type.{u3}} {G' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {f : α -> E} {g' : α -> F'} {k' : α -> G'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u3, u4} α F' G' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l g' k') -> (Iff (Asymptotics.IsLittleO.{u1, u2, u3} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f g') (Asymptotics.IsLittleO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f k'))
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u1}} {F' : Type.{u3}} {G' : Type.{u2}} [_inst_1 : Norm.{u1} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] [_inst_6 : SeminormedAddCommGroup.{u2} G'] {f : α -> E} {g' : α -> F'} {k' : α -> G'} {l : Filter.{u4} α}, (Asymptotics.IsTheta.{u4, u3, u2} α F' G' (SeminormedAddCommGroup.toNorm.{u3} F' _inst_5) (SeminormedAddCommGroup.toNorm.{u2} G' _inst_6) l g' k') -> (Iff (Asymptotics.IsLittleO.{u4, u1, u3} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u3} F' _inst_5) l f g') (Asymptotics.IsLittleO.{u4, u1, u2} α E G' _inst_1 (SeminormedAddCommGroup.toNorm.{u2} G' _inst_6) l f k'))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_o_congr_right Asymptotics.IsTheta.isLittleO_congr_rightₓ'. -/
 theorem IsTheta.isLittleO_congr_right (h : g' =Θ[l] k') : f =o[l] g' ↔ f =o[l] k' :=
   ⟨fun H => H.trans_isTheta h, fun H => H.trans_isTheta h.symm⟩
 #align asymptotics.is_Theta.is_o_congr_right Asymptotics.IsTheta.isLittleO_congr_right
 
-/- warning: asymptotics.is_Theta.is_O_congr_left -> Asymptotics.IsTheta.isBigO_congr_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {G : Type.{u2}} {E' : Type.{u3}} {F' : Type.{u4}} [_inst_3 : Norm.{u2} G] [_inst_4 : SeminormedAddCommGroup.{u3} E'] [_inst_5 : SeminormedAddCommGroup.{u4} F'] {k : α -> G} {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u3, u4} α E' F' (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) l f' g') -> (Iff (Asymptotics.IsBigO.{u1, u3, u2} α E' G (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_3 l f' k) (Asymptotics.IsBigO.{u1, u4, u2} α F' G (SeminormedAddCommGroup.toHasNorm.{u4} F' _inst_5) _inst_3 l g' k))
-but is expected to have type
-  forall {α : Type.{u4}} {G : Type.{u1}} {E' : Type.{u3}} {F' : Type.{u2}} [_inst_3 : Norm.{u1} G] [_inst_4 : SeminormedAddCommGroup.{u3} E'] [_inst_5 : SeminormedAddCommGroup.{u2} F'] {k : α -> G} {f' : α -> E'} {g' : α -> F'} {l : Filter.{u4} α}, (Asymptotics.IsTheta.{u4, u3, u2} α E' F' (SeminormedAddCommGroup.toNorm.{u3} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) l f' g') -> (Iff (Asymptotics.IsBigO.{u4, u3, u1} α E' G (SeminormedAddCommGroup.toNorm.{u3} E' _inst_4) _inst_3 l f' k) (Asymptotics.IsBigO.{u4, u2, u1} α F' G (SeminormedAddCommGroup.toNorm.{u2} F' _inst_5) _inst_3 l g' k))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_O_congr_left Asymptotics.IsTheta.isBigO_congr_leftₓ'. -/
 theorem IsTheta.isBigO_congr_left (h : f' =Θ[l] g') : f' =O[l] k ↔ g' =O[l] k :=
   ⟨h.symm.trans_isBigO, h.trans_isBigO⟩
 #align asymptotics.is_Theta.is_O_congr_left Asymptotics.IsTheta.isBigO_congr_left
 
-/- warning: asymptotics.is_Theta.is_O_congr_right -> Asymptotics.IsTheta.isBigO_congr_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F' : Type.{u3}} {G' : Type.{u4}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {f : α -> E} {g' : α -> F'} {k' : α -> G'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u3, u4} α F' G' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l g' k') -> (Iff (Asymptotics.IsBigO.{u1, u2, u3} α E F' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f g') (Asymptotics.IsBigO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f k'))
-but is expected to have type
-  forall {α : Type.{u4}} {E : Type.{u1}} {F' : Type.{u3}} {G' : Type.{u2}} [_inst_1 : Norm.{u1} E] [_inst_5 : SeminormedAddCommGroup.{u3} F'] [_inst_6 : SeminormedAddCommGroup.{u2} G'] {f : α -> E} {g' : α -> F'} {k' : α -> G'} {l : Filter.{u4} α}, (Asymptotics.IsTheta.{u4, u3, u2} α F' G' (SeminormedAddCommGroup.toNorm.{u3} F' _inst_5) (SeminormedAddCommGroup.toNorm.{u2} G' _inst_6) l g' k') -> (Iff (Asymptotics.IsBigO.{u4, u1, u3} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u3} F' _inst_5) l f g') (Asymptotics.IsBigO.{u4, u1, u2} α E G' _inst_1 (SeminormedAddCommGroup.toNorm.{u2} G' _inst_6) l f k'))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_O_congr_right Asymptotics.IsTheta.isBigO_congr_rightₓ'. -/
 theorem IsTheta.isBigO_congr_right (h : g' =Θ[l] k') : f =O[l] g' ↔ f =O[l] k' :=
   ⟨fun H => H.trans_isTheta h, fun H => H.trans_isTheta h.symm⟩
 #align asymptotics.is_Theta.is_O_congr_right Asymptotics.IsTheta.isBigO_congr_right
 
-/- warning: asymptotics.is_Theta.mono -> Asymptotics.IsTheta.mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (Asymptotics.IsTheta.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g)
-but is expected to have type
-  forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α} {l' : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l f g) -> (LE.le.{u3} (Filter.{u3} α) (Preorder.toLE.{u3} (Filter.{u3} α) (PartialOrder.toPreorder.{u3} (Filter.{u3} α) (Filter.instPartialOrderFilter.{u3} α))) l' l) -> (Asymptotics.IsTheta.{u3, u2, u1} α E F _inst_1 _inst_2 l' f g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.mono Asymptotics.IsTheta.monoₓ'. -/
 theorem IsTheta.mono (h : f =Θ[l] g) (hl : l' ≤ l) : f =Θ[l'] g :=
   ⟨h.1.mono hl, h.2.mono hl⟩
 #align asymptotics.is_Theta.mono Asymptotics.IsTheta.mono
 
-/- warning: asymptotics.is_Theta.sup -> Asymptotics.IsTheta.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f' g') -> (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l' f' g') -> (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l l') f' g')
-but is expected to have type
-  forall {α : Type.{u3}} {E' : Type.{u2}} {F' : Type.{u1}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u3} α} {l' : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f' g') -> (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l' f' g') -> (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (Sup.sup.{u3} (Filter.{u3} α) (SemilatticeSup.toSup.{u3} (Filter.{u3} α) (Lattice.toSemilatticeSup.{u3} (Filter.{u3} α) (ConditionallyCompleteLattice.toLattice.{u3} (Filter.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (Filter.{u3} α) (Filter.instCompleteLatticeFilter.{u3} α))))) l l') f' g')
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.sup Asymptotics.IsTheta.supₓ'. -/
 theorem IsTheta.sup (h : f' =Θ[l] g') (h' : f' =Θ[l'] g') : f' =Θ[l ⊔ l'] g' :=
   ⟨h.1.sup h'.1, h.2.sup h'.2⟩
 #align asymptotics.is_Theta.sup Asymptotics.IsTheta.sup
 
-/- warning: asymptotics.is_Theta_sup -> Asymptotics.isTheta_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α} {l' : Filter.{u1} α}, Iff (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l l') f' g') (And (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f' g') (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l' f' g'))
-but is expected to have type
-  forall {α : Type.{u3}} {E' : Type.{u2}} {F' : Type.{u1}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u3} α} {l' : Filter.{u3} α}, Iff (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (Sup.sup.{u3} (Filter.{u3} α) (SemilatticeSup.toSup.{u3} (Filter.{u3} α) (Lattice.toSemilatticeSup.{u3} (Filter.{u3} α) (ConditionallyCompleteLattice.toLattice.{u3} (Filter.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (Filter.{u3} α) (Filter.instCompleteLatticeFilter.{u3} α))))) l l') f' g') (And (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f' g') (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l' f' g'))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_sup Asymptotics.isTheta_supₓ'. -/
 @[simp]
 theorem isTheta_sup : f' =Θ[l ⊔ l'] g' ↔ f' =Θ[l] g' ∧ f' =Θ[l'] g' :=
   ⟨fun h => ⟨h.mono le_sup_left, h.mono le_sup_right⟩, fun h => h.1.sup h.2⟩
 #align asymptotics.is_Theta_sup Asymptotics.isTheta_sup
 
-/- warning: asymptotics.is_Theta.eq_zero_iff -> Asymptotics.IsTheta.eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E'' : Type.{u2}} {F'' : Type.{u3}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u3} F''] {f'' : α -> E''} {g'' : α -> F''} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E'' F'' (NormedAddCommGroup.toHasNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toHasNorm.{u3} F'' _inst_8) l f'' g'') -> (Filter.Eventually.{u1} α (fun (x : α) => Iff (Eq.{succ u2} E'' (f'' x) (OfNat.ofNat.{u2} E'' 0 (OfNat.mk.{u2} E'' 0 (Zero.zero.{u2} E'' (AddZeroClass.toHasZero.{u2} E'' (AddMonoid.toAddZeroClass.{u2} E'' (SubNegMonoid.toAddMonoid.{u2} E'' (AddGroup.toSubNegMonoid.{u2} E'' (NormedAddGroup.toAddGroup.{u2} E'' (NormedAddCommGroup.toNormedAddGroup.{u2} E'' _inst_7)))))))))) (Eq.{succ u3} F'' (g'' x) (OfNat.ofNat.{u3} F'' 0 (OfNat.mk.{u3} F'' 0 (Zero.zero.{u3} F'' (AddZeroClass.toHasZero.{u3} F'' (AddMonoid.toAddZeroClass.{u3} F'' (SubNegMonoid.toAddMonoid.{u3} F'' (AddGroup.toSubNegMonoid.{u3} F'' (NormedAddGroup.toAddGroup.{u3} F'' (NormedAddCommGroup.toNormedAddGroup.{u3} F'' _inst_8))))))))))) l)
-but is expected to have type
-  forall {α : Type.{u3}} {E'' : Type.{u2}} {F'' : Type.{u1}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u1} F''] {f'' : α -> E''} {g'' : α -> F''} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E'' F'' (NormedAddCommGroup.toNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toNorm.{u1} F'' _inst_8) l f'' g'') -> (Filter.Eventually.{u3} α (fun (x : α) => Iff (Eq.{succ u2} E'' (f'' x) (OfNat.ofNat.{u2} E'' 0 (Zero.toOfNat0.{u2} E'' (NegZeroClass.toZero.{u2} E'' (SubNegZeroMonoid.toNegZeroClass.{u2} E'' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E'' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E'' (AddCommGroup.toDivisionAddCommMonoid.{u2} E'' (NormedAddCommGroup.toAddCommGroup.{u2} E'' _inst_7))))))))) (Eq.{succ u1} F'' (g'' x) (OfNat.ofNat.{u1} F'' 0 (Zero.toOfNat0.{u1} F'' (NegZeroClass.toZero.{u1} F'' (SubNegZeroMonoid.toNegZeroClass.{u1} F'' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F'' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F'' (AddCommGroup.toDivisionAddCommMonoid.{u1} F'' (NormedAddCommGroup.toAddCommGroup.{u1} F'' _inst_8)))))))))) l)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.eq_zero_iff Asymptotics.IsTheta.eq_zero_iffₓ'. -/
 theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ g'' x = 0 :=
   h.1.eq_zero_imp.mp <| h.2.eq_zero_imp.mono fun x => Iff.intro
 #align asymptotics.is_Theta.eq_zero_iff Asymptotics.IsTheta.eq_zero_iff
 
-/- warning: asymptotics.is_Theta.tendsto_zero_iff -> Asymptotics.IsTheta.tendsto_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E'' : Type.{u2}} {F'' : Type.{u3}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u3} F''] {f'' : α -> E''} {g'' : α -> F''} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E'' F'' (NormedAddCommGroup.toHasNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toHasNorm.{u3} F'' _inst_8) l f'' g'') -> (Iff (Filter.Tendsto.{u1, u2} α E'' f'' l (nhds.{u2} E'' (UniformSpace.toTopologicalSpace.{u2} E'' (PseudoMetricSpace.toUniformSpace.{u2} E'' (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E'' (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E'' _inst_7)))) (OfNat.ofNat.{u2} E'' 0 (OfNat.mk.{u2} E'' 0 (Zero.zero.{u2} E'' (AddZeroClass.toHasZero.{u2} E'' (AddMonoid.toAddZeroClass.{u2} E'' (SubNegMonoid.toAddMonoid.{u2} E'' (AddGroup.toSubNegMonoid.{u2} E'' (NormedAddGroup.toAddGroup.{u2} E'' (NormedAddCommGroup.toNormedAddGroup.{u2} E'' _inst_7))))))))))) (Filter.Tendsto.{u1, u3} α F'' g'' l (nhds.{u3} F'' (UniformSpace.toTopologicalSpace.{u3} F'' (PseudoMetricSpace.toUniformSpace.{u3} F'' (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F'' (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F'' _inst_8)))) (OfNat.ofNat.{u3} F'' 0 (OfNat.mk.{u3} F'' 0 (Zero.zero.{u3} F'' (AddZeroClass.toHasZero.{u3} F'' (AddMonoid.toAddZeroClass.{u3} F'' (SubNegMonoid.toAddMonoid.{u3} F'' (AddGroup.toSubNegMonoid.{u3} F'' (NormedAddGroup.toAddGroup.{u3} F'' (NormedAddCommGroup.toNormedAddGroup.{u3} F'' _inst_8))))))))))))
-but is expected to have type
-  forall {α : Type.{u3}} {E'' : Type.{u2}} {F'' : Type.{u1}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u1} F''] {f'' : α -> E''} {g'' : α -> F''} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E'' F'' (NormedAddCommGroup.toNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toNorm.{u1} F'' _inst_8) l f'' g'') -> (Iff (Filter.Tendsto.{u3, u2} α E'' f'' l (nhds.{u2} E'' (UniformSpace.toTopologicalSpace.{u2} E'' (PseudoMetricSpace.toUniformSpace.{u2} E'' (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E'' (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E'' _inst_7)))) (OfNat.ofNat.{u2} E'' 0 (Zero.toOfNat0.{u2} E'' (NegZeroClass.toZero.{u2} E'' (SubNegZeroMonoid.toNegZeroClass.{u2} E'' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E'' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E'' (AddCommGroup.toDivisionAddCommMonoid.{u2} E'' (NormedAddCommGroup.toAddCommGroup.{u2} E'' _inst_7)))))))))) (Filter.Tendsto.{u3, u1} α F'' g'' l (nhds.{u1} F'' (UniformSpace.toTopologicalSpace.{u1} F'' (PseudoMetricSpace.toUniformSpace.{u1} F'' (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} F'' (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F'' _inst_8)))) (OfNat.ofNat.{u1} F'' 0 (Zero.toOfNat0.{u1} F'' (NegZeroClass.toZero.{u1} F'' (SubNegZeroMonoid.toNegZeroClass.{u1} F'' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F'' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F'' (AddCommGroup.toDivisionAddCommMonoid.{u1} F'' (NormedAddCommGroup.toAddCommGroup.{u1} F'' _inst_8)))))))))))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.tendsto_zero_iff Asymptotics.IsTheta.tendsto_zero_iffₓ'. -/
 theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) :=
   by simp only [← is_o_one_iff ℝ, h.is_o_congr_left]
 #align asymptotics.is_Theta.tendsto_zero_iff Asymptotics.IsTheta.tendsto_zero_iff
 
-/- warning: asymptotics.is_Theta.tendsto_norm_at_top_iff -> Asymptotics.IsTheta.tendsto_norm_atTop_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f' g') -> (Iff (Filter.Tendsto.{u1, 0} α Real (Function.comp.{succ u1, succ u2, 1} α E' Real (Norm.norm.{u2} E' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4)) f') l (Filter.atTop.{0} Real Real.preorder)) (Filter.Tendsto.{u1, 0} α Real (Function.comp.{succ u1, succ u3, 1} α F' Real (Norm.norm.{u3} F' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5)) g') l (Filter.atTop.{0} Real Real.preorder)))
-but is expected to have type
-  forall {α : Type.{u3}} {E' : Type.{u2}} {F' : Type.{u1}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f' g') -> (Iff (Filter.Tendsto.{u3, 0} α Real (Function.comp.{succ u3, succ u2, 1} α E' Real (Norm.norm.{u2} E' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4)) f') l (Filter.atTop.{0} Real Real.instPreorderReal)) (Filter.Tendsto.{u3, 0} α Real (Function.comp.{succ u3, succ u1, 1} α F' Real (Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5)) g') l (Filter.atTop.{0} Real Real.instPreorderReal)))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.tendsto_norm_at_top_iff Asymptotics.IsTheta.tendsto_norm_atTop_iffₓ'. -/
 theorem IsTheta.tendsto_norm_atTop_iff (h : f' =Θ[l] g') :
     Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop := by
   simp only [← is_o_const_left_of_ne (one_ne_zero' ℝ), h.is_o_congr_right]
 #align asymptotics.is_Theta.tendsto_norm_at_top_iff Asymptotics.IsTheta.tendsto_norm_atTop_iff
 
-/- warning: asymptotics.is_Theta.is_bounded_under_le_iff -> Asymptotics.IsTheta.isBoundedUnder_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α}, (Asymptotics.IsTheta.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f' g') -> (Iff (Filter.IsBoundedUnder.{0, u1} Real α (LE.le.{0} Real Real.hasLe) l (Function.comp.{succ u1, succ u2, 1} α E' Real (Norm.norm.{u2} E' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4)) f')) (Filter.IsBoundedUnder.{0, u1} Real α (LE.le.{0} Real Real.hasLe) l (Function.comp.{succ u1, succ u3, 1} α F' Real (Norm.norm.{u3} F' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5)) g')))
-but is expected to have type
-  forall {α : Type.{u3}} {E' : Type.{u2}} {F' : Type.{u1}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u3} α}, (Asymptotics.IsTheta.{u3, u2, u1} α E' F' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f' g') -> (Iff (Filter.IsBoundedUnder.{0, u3} Real α (fun (x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6023 : Real) (x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6025 : Real) => LE.le.{0} Real Real.instLEReal x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6023 x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6025) l (Function.comp.{succ u3, succ u2, 1} α E' Real (Norm.norm.{u2} E' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4)) f')) (Filter.IsBoundedUnder.{0, u3} Real α (fun (x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6047 : Real) (x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6049 : Real) => LE.le.{0} Real Real.instLEReal x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6047 x._@.Mathlib.Analysis.Asymptotics.Theta._hyg.6049) l (Function.comp.{succ u3, succ u1, 1} α F' Real (Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5)) g')))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_bounded_under_le_iff Asymptotics.IsTheta.isBoundedUnder_le_iffₓ'. -/
 theorem IsTheta.isBoundedUnder_le_iff (h : f' =Θ[l] g') :
     IsBoundedUnder (· ≤ ·) l (norm ∘ f') ↔ IsBoundedUnder (· ≤ ·) l (norm ∘ g') := by
   simp only [← is_O_const_of_ne (one_ne_zero' ℝ), h.is_O_congr_left]
 #align asymptotics.is_Theta.is_bounded_under_le_iff Asymptotics.IsTheta.isBoundedUnder_le_iff
 
-/- warning: asymptotics.is_Theta.smul -> Asymptotics.IsTheta.smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.smul Asymptotics.IsTheta.smulₓ'. -/
 theorem IsTheta.smul [NormedSpace 𝕜 E'] [NormedSpace 𝕜' F'] {f₁ : α → 𝕜} {f₂ : α → 𝕜'} {g₁ : α → E'}
     {g₂ : α → F'} (hf : f₁ =Θ[l] f₂) (hg : g₁ =Θ[l] g₂) :
     (fun x => f₁ x • g₁ x) =Θ[l] fun x => f₂ x • g₂ x :=
   ⟨hf.1.smul hg.1, hf.2.smul hg.2⟩
 #align asymptotics.is_Theta.smul Asymptotics.IsTheta.smul
 
-/- warning: asymptotics.is_Theta.mul -> Asymptotics.IsTheta.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} {𝕜' : Type.{u3}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u3} 𝕜'] {l : Filter.{u1} α} {f₁ : α -> 𝕜} {f₂ : α -> 𝕜} {g₁ : α -> 𝕜'} {g₂ : α -> 𝕜'}, (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f₁ g₁) -> (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f₂ g₂) -> (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l (fun (x : α) => HMul.hMul.{u2, u2, u2} 𝕜 𝕜 𝕜 (instHMul.{u2} 𝕜 (Distrib.toHasMul.{u2} 𝕜 (Ring.toDistrib.{u2} 𝕜 (NormedRing.toRing.{u2} 𝕜 (NormedCommRing.toNormedRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 _inst_12)))))) (f₁ x) (f₂ x)) (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜' 𝕜' 𝕜' (instHMul.{u3} 𝕜' (Distrib.toHasMul.{u3} 𝕜' (Ring.toDistrib.{u3} 𝕜' (NormedRing.toRing.{u3} 𝕜' (NormedCommRing.toNormedRing.{u3} 𝕜' (NormedField.toNormedCommRing.{u3} 𝕜' _inst_13)))))) (g₁ x) (g₂ x)))
-but is expected to have type
-  forall {α : Type.{u3}} {𝕜 : Type.{u2}} {𝕜' : Type.{u1}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u1} 𝕜'] {l : Filter.{u3} α} {f₁ : α -> 𝕜} {f₂ : α -> 𝕜} {g₁ : α -> 𝕜'} {g₂ : α -> 𝕜'}, (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f₁ g₁) -> (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f₂ g₂) -> (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l (fun (x : α) => HMul.hMul.{u2, u2, u2} 𝕜 𝕜 𝕜 (instHMul.{u2} 𝕜 (NonUnitalNonAssocRing.toMul.{u2} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u2} 𝕜 (Ring.toNonAssocRing.{u2} 𝕜 (NormedRing.toRing.{u2} 𝕜 (NormedCommRing.toNormedRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 _inst_12))))))) (f₁ x) (f₂ x)) (fun (x : α) => HMul.hMul.{u1, u1, u1} 𝕜' 𝕜' 𝕜' (instHMul.{u1} 𝕜' (NonUnitalNonAssocRing.toMul.{u1} 𝕜' (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜' (Ring.toNonAssocRing.{u1} 𝕜' (NormedRing.toRing.{u1} 𝕜' (NormedCommRing.toNormedRing.{u1} 𝕜' (NormedField.toNormedCommRing.{u1} 𝕜' _inst_13))))))) (g₁ x) (g₂ x)))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.mul Asymptotics.IsTheta.mulₓ'. -/
 theorem IsTheta.mul {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ : f₁ =Θ[l] g₁) (h₂ : f₂ =Θ[l] g₂) :
     (fun x => f₁ x * f₂ x) =Θ[l] fun x => g₁ x * g₂ x :=
   h₁.smul h₂
 #align asymptotics.is_Theta.mul Asymptotics.IsTheta.mul
 
-/- warning: asymptotics.is_Theta.inv -> Asymptotics.IsTheta.inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} {𝕜' : Type.{u3}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u3} 𝕜'] {l : Filter.{u1} α} {f : α -> 𝕜} {g : α -> 𝕜'}, (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f g) -> (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l (fun (x : α) => Inv.inv.{u2} 𝕜 (DivInvMonoid.toHasInv.{u2} 𝕜 (DivisionRing.toDivInvMonoid.{u2} 𝕜 (NormedDivisionRing.toDivisionRing.{u2} 𝕜 (NormedField.toNormedDivisionRing.{u2} 𝕜 _inst_12)))) (f x)) (fun (x : α) => Inv.inv.{u3} 𝕜' (DivInvMonoid.toHasInv.{u3} 𝕜' (DivisionRing.toDivInvMonoid.{u3} 𝕜' (NormedDivisionRing.toDivisionRing.{u3} 𝕜' (NormedField.toNormedDivisionRing.{u3} 𝕜' _inst_13)))) (g x)))
-but is expected to have type
-  forall {α : Type.{u3}} {𝕜 : Type.{u2}} {𝕜' : Type.{u1}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u1} 𝕜'] {l : Filter.{u3} α} {f : α -> 𝕜} {g : α -> 𝕜'}, (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f g) -> (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l (fun (x : α) => Inv.inv.{u2} 𝕜 (Field.toInv.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_12)) (f x)) (fun (x : α) => Inv.inv.{u1} 𝕜' (Field.toInv.{u1} 𝕜' (NormedField.toField.{u1} 𝕜' _inst_13)) (g x)))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.inv Asymptotics.IsTheta.invₓ'. -/
 theorem IsTheta.inv {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) :
     (fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹ :=
   ⟨h.2.inv_rev h.1.eq_zero_imp, h.1.inv_rev h.2.eq_zero_imp⟩
 #align asymptotics.is_Theta.inv Asymptotics.IsTheta.inv
 
-/- warning: asymptotics.is_Theta_inv -> Asymptotics.isTheta_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} {𝕜' : Type.{u3}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u3} 𝕜'] {l : Filter.{u1} α} {f : α -> 𝕜} {g : α -> 𝕜'}, Iff (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l (fun (x : α) => Inv.inv.{u2} 𝕜 (DivInvMonoid.toHasInv.{u2} 𝕜 (DivisionRing.toDivInvMonoid.{u2} 𝕜 (NormedDivisionRing.toDivisionRing.{u2} 𝕜 (NormedField.toNormedDivisionRing.{u2} 𝕜 _inst_12)))) (f x)) (fun (x : α) => Inv.inv.{u3} 𝕜' (DivInvMonoid.toHasInv.{u3} 𝕜' (DivisionRing.toDivInvMonoid.{u3} 𝕜' (NormedDivisionRing.toDivisionRing.{u3} 𝕜' (NormedField.toNormedDivisionRing.{u3} 𝕜' _inst_13)))) (g x))) (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f g)
-but is expected to have type
-  forall {α : Type.{u3}} {𝕜 : Type.{u2}} {𝕜' : Type.{u1}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u1} 𝕜'] {l : Filter.{u3} α} {f : α -> 𝕜} {g : α -> 𝕜'}, Iff (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l (fun (x : α) => Inv.inv.{u2} 𝕜 (Field.toInv.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_12)) (f x)) (fun (x : α) => Inv.inv.{u1} 𝕜' (Field.toInv.{u1} 𝕜' (NormedField.toField.{u1} 𝕜' _inst_13)) (g x))) (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_inv Asymptotics.isTheta_invₓ'. -/
 @[simp]
 theorem isTheta_inv {f : α → 𝕜} {g : α → 𝕜'} :
     ((fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹) ↔ f =Θ[l] g :=
   ⟨fun h => by simpa only [inv_inv] using h.inv, IsTheta.inv⟩
 #align asymptotics.is_Theta_inv Asymptotics.isTheta_inv
 
-/- warning: asymptotics.is_Theta.div -> Asymptotics.IsTheta.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} {𝕜' : Type.{u3}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u3} 𝕜'] {l : Filter.{u1} α} {f₁ : α -> 𝕜} {f₂ : α -> 𝕜} {g₁ : α -> 𝕜'} {g₂ : α -> 𝕜'}, (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f₁ g₁) -> (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f₂ g₂) -> (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l (fun (x : α) => HDiv.hDiv.{u2, u2, u2} 𝕜 𝕜 𝕜 (instHDiv.{u2} 𝕜 (DivInvMonoid.toHasDiv.{u2} 𝕜 (DivisionRing.toDivInvMonoid.{u2} 𝕜 (NormedDivisionRing.toDivisionRing.{u2} 𝕜 (NormedField.toNormedDivisionRing.{u2} 𝕜 _inst_12))))) (f₁ x) (f₂ x)) (fun (x : α) => HDiv.hDiv.{u3, u3, u3} 𝕜' 𝕜' 𝕜' (instHDiv.{u3} 𝕜' (DivInvMonoid.toHasDiv.{u3} 𝕜' (DivisionRing.toDivInvMonoid.{u3} 𝕜' (NormedDivisionRing.toDivisionRing.{u3} 𝕜' (NormedField.toNormedDivisionRing.{u3} 𝕜' _inst_13))))) (g₁ x) (g₂ x)))
-but is expected to have type
-  forall {α : Type.{u3}} {𝕜 : Type.{u2}} {𝕜' : Type.{u1}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u1} 𝕜'] {l : Filter.{u3} α} {f₁ : α -> 𝕜} {f₂ : α -> 𝕜} {g₁ : α -> 𝕜'} {g₂ : α -> 𝕜'}, (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f₁ g₁) -> (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f₂ g₂) -> (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l (fun (x : α) => HDiv.hDiv.{u2, u2, u2} 𝕜 𝕜 𝕜 (instHDiv.{u2} 𝕜 (Field.toDiv.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_12))) (f₁ x) (f₂ x)) (fun (x : α) => HDiv.hDiv.{u1, u1, u1} 𝕜' 𝕜' 𝕜' (instHDiv.{u1} 𝕜' (Field.toDiv.{u1} 𝕜' (NormedField.toField.{u1} 𝕜' _inst_13))) (g₁ x) (g₂ x)))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.div Asymptotics.IsTheta.divₓ'. -/
 theorem IsTheta.div {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ : f₁ =Θ[l] g₁) (h₂ : f₂ =Θ[l] g₂) :
     (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by
   simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
 #align asymptotics.is_Theta.div Asymptotics.IsTheta.div
 
-/- warning: asymptotics.is_Theta.pow -> Asymptotics.IsTheta.pow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} {𝕜' : Type.{u3}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u3} 𝕜'] {l : Filter.{u1} α} {f : α -> 𝕜} {g : α -> 𝕜'}, (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f g) -> (forall (n : Nat), Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l (fun (x : α) => HPow.hPow.{u2, 0, u2} 𝕜 Nat 𝕜 (instHPow.{u2, 0} 𝕜 Nat (Monoid.Pow.{u2} 𝕜 (Ring.toMonoid.{u2} 𝕜 (NormedRing.toRing.{u2} 𝕜 (NormedCommRing.toNormedRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 _inst_12)))))) (f x) n) (fun (x : α) => HPow.hPow.{u3, 0, u3} 𝕜' Nat 𝕜' (instHPow.{u3, 0} 𝕜' Nat (Monoid.Pow.{u3} 𝕜' (Ring.toMonoid.{u3} 𝕜' (NormedRing.toRing.{u3} 𝕜' (NormedCommRing.toNormedRing.{u3} 𝕜' (NormedField.toNormedCommRing.{u3} 𝕜' _inst_13)))))) (g x) n))
-but is expected to have type
-  forall {α : Type.{u3}} {𝕜 : Type.{u2}} {𝕜' : Type.{u1}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u1} 𝕜'] {l : Filter.{u3} α} {f : α -> 𝕜} {g : α -> 𝕜'}, (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f g) -> (forall (n : Nat), Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l (fun (x : α) => HPow.hPow.{u2, 0, u2} 𝕜 Nat 𝕜 (instHPow.{u2, 0} 𝕜 Nat (Monoid.Pow.{u2} 𝕜 (MonoidWithZero.toMonoid.{u2} 𝕜 (Semiring.toMonoidWithZero.{u2} 𝕜 (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_12)))))))) (f x) n) (fun (x : α) => HPow.hPow.{u1, 0, u1} 𝕜' Nat 𝕜' (instHPow.{u1, 0} 𝕜' Nat (Monoid.Pow.{u1} 𝕜' (MonoidWithZero.toMonoid.{u1} 𝕜' (Semiring.toMonoidWithZero.{u1} 𝕜' (DivisionSemiring.toSemiring.{u1} 𝕜' (Semifield.toDivisionSemiring.{u1} 𝕜' (Field.toSemifield.{u1} 𝕜' (NormedField.toField.{u1} 𝕜' _inst_13)))))))) (g x) n))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.pow Asymptotics.IsTheta.powₓ'. -/
 theorem IsTheta.pow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℕ) :
     (fun x => f x ^ n) =Θ[l] fun x => g x ^ n :=
   ⟨h.1.pow n, h.2.pow n⟩
 #align asymptotics.is_Theta.pow Asymptotics.IsTheta.pow
 
-/- warning: asymptotics.is_Theta.zpow -> Asymptotics.IsTheta.zpow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} {𝕜' : Type.{u3}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u3} 𝕜'] {l : Filter.{u1} α} {f : α -> 𝕜} {g : α -> 𝕜'}, (Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l f g) -> (forall (n : Int), Asymptotics.IsTheta.{u1, u2, u3} α 𝕜 𝕜' (NormedField.toHasNorm.{u2} 𝕜 _inst_12) (NormedField.toHasNorm.{u3} 𝕜' _inst_13) l (fun (x : α) => HPow.hPow.{u2, 0, u2} 𝕜 Int 𝕜 (instHPow.{u2, 0} 𝕜 Int (DivInvMonoid.Pow.{u2} 𝕜 (DivisionRing.toDivInvMonoid.{u2} 𝕜 (NormedDivisionRing.toDivisionRing.{u2} 𝕜 (NormedField.toNormedDivisionRing.{u2} 𝕜 _inst_12))))) (f x) n) (fun (x : α) => HPow.hPow.{u3, 0, u3} 𝕜' Int 𝕜' (instHPow.{u3, 0} 𝕜' Int (DivInvMonoid.Pow.{u3} 𝕜' (DivisionRing.toDivInvMonoid.{u3} 𝕜' (NormedDivisionRing.toDivisionRing.{u3} 𝕜' (NormedField.toNormedDivisionRing.{u3} 𝕜' _inst_13))))) (g x) n))
-but is expected to have type
-  forall {α : Type.{u3}} {𝕜 : Type.{u2}} {𝕜' : Type.{u1}} [_inst_12 : NormedField.{u2} 𝕜] [_inst_13 : NormedField.{u1} 𝕜'] {l : Filter.{u3} α} {f : α -> 𝕜} {g : α -> 𝕜'}, (Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l f g) -> (forall (n : Int), Asymptotics.IsTheta.{u3, u2, u1} α 𝕜 𝕜' (NormedField.toNorm.{u2} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜' _inst_13) l (fun (x : α) => HPow.hPow.{u2, 0, u2} 𝕜 Int 𝕜 (instHPow.{u2, 0} 𝕜 Int (DivInvMonoid.Pow.{u2} 𝕜 (DivisionRing.toDivInvMonoid.{u2} 𝕜 (NormedDivisionRing.toDivisionRing.{u2} 𝕜 (NormedField.toNormedDivisionRing.{u2} 𝕜 _inst_12))))) (f x) n) (fun (x : α) => HPow.hPow.{u1, 0, u1} 𝕜' Int 𝕜' (instHPow.{u1, 0} 𝕜' Int (DivInvMonoid.Pow.{u1} 𝕜' (DivisionRing.toDivInvMonoid.{u1} 𝕜' (NormedDivisionRing.toDivisionRing.{u1} 𝕜' (NormedField.toNormedDivisionRing.{u1} 𝕜' _inst_13))))) (g x) n))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.zpow Asymptotics.IsTheta.zpowₓ'. -/
 theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℤ) :
     (fun x => f x ^ n) =Θ[l] fun x => g x ^ n :=
   by
@@ -459,137 +234,59 @@ theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : 
   · simpa only [zpow_negSucc] using (h.pow _).inv
 #align asymptotics.is_Theta.zpow Asymptotics.IsTheta.zpow
 
-/- warning: asymptotics.is_Theta_const_const -> Asymptotics.isTheta_const_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E'' : Type.{u2}} {F'' : Type.{u3}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u3} F''] {l : Filter.{u1} α} {c₁ : E''} {c₂ : F''}, (Ne.{succ u2} E'' c₁ (OfNat.ofNat.{u2} E'' 0 (OfNat.mk.{u2} E'' 0 (Zero.zero.{u2} E'' (AddZeroClass.toHasZero.{u2} E'' (AddMonoid.toAddZeroClass.{u2} E'' (SubNegMonoid.toAddMonoid.{u2} E'' (AddGroup.toSubNegMonoid.{u2} E'' (NormedAddGroup.toAddGroup.{u2} E'' (NormedAddCommGroup.toNormedAddGroup.{u2} E'' _inst_7)))))))))) -> (Ne.{succ u3} F'' c₂ (OfNat.ofNat.{u3} F'' 0 (OfNat.mk.{u3} F'' 0 (Zero.zero.{u3} F'' (AddZeroClass.toHasZero.{u3} F'' (AddMonoid.toAddZeroClass.{u3} F'' (SubNegMonoid.toAddMonoid.{u3} F'' (AddGroup.toSubNegMonoid.{u3} F'' (NormedAddGroup.toAddGroup.{u3} F'' (NormedAddCommGroup.toNormedAddGroup.{u3} F'' _inst_8)))))))))) -> (Asymptotics.IsTheta.{u1, u2, u3} α E'' F'' (NormedAddCommGroup.toHasNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toHasNorm.{u3} F'' _inst_8) l (fun (x : α) => c₁) (fun (x : α) => c₂))
-but is expected to have type
-  forall {α : Type.{u1}} {E'' : Type.{u3}} {F'' : Type.{u2}} [_inst_7 : NormedAddCommGroup.{u3} E''] [_inst_8 : NormedAddCommGroup.{u2} F''] {l : Filter.{u1} α} {c₁ : E''} {c₂ : F''}, (Ne.{succ u3} E'' c₁ (OfNat.ofNat.{u3} E'' 0 (Zero.toOfNat0.{u3} E'' (NegZeroClass.toZero.{u3} E'' (SubNegZeroMonoid.toNegZeroClass.{u3} E'' (SubtractionMonoid.toSubNegZeroMonoid.{u3} E'' (SubtractionCommMonoid.toSubtractionMonoid.{u3} E'' (AddCommGroup.toDivisionAddCommMonoid.{u3} E'' (NormedAddCommGroup.toAddCommGroup.{u3} E'' _inst_7))))))))) -> (Ne.{succ u2} F'' c₂ (OfNat.ofNat.{u2} F'' 0 (Zero.toOfNat0.{u2} F'' (NegZeroClass.toZero.{u2} F'' (SubNegZeroMonoid.toNegZeroClass.{u2} F'' (SubtractionMonoid.toSubNegZeroMonoid.{u2} F'' (SubtractionCommMonoid.toSubtractionMonoid.{u2} F'' (AddCommGroup.toDivisionAddCommMonoid.{u2} F'' (NormedAddCommGroup.toAddCommGroup.{u2} F'' _inst_8))))))))) -> (Asymptotics.IsTheta.{u1, u3, u2} α E'' F'' (NormedAddCommGroup.toNorm.{u3} E'' _inst_7) (NormedAddCommGroup.toNorm.{u2} F'' _inst_8) l (fun (x : α) => c₁) (fun (x : α) => c₂))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_const_const Asymptotics.isTheta_const_constₓ'. -/
 theorem isTheta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ : c₂ ≠ 0) :
     (fun x : α => c₁) =Θ[l] fun x => c₂ :=
   ⟨isBigO_const_const _ h₂ _, isBigO_const_const _ h₁ _⟩
 #align asymptotics.is_Theta_const_const Asymptotics.isTheta_const_const
 
-/- warning: asymptotics.is_Theta_const_const_iff -> Asymptotics.isTheta_const_const_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E'' : Type.{u2}} {F'' : Type.{u3}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u3} F''] {l : Filter.{u1} α} [_inst_14 : Filter.NeBot.{u1} α l] {c₁ : E''} {c₂ : F''}, Iff (Asymptotics.IsTheta.{u1, u2, u3} α E'' F'' (NormedAddCommGroup.toHasNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toHasNorm.{u3} F'' _inst_8) l (fun (x : α) => c₁) (fun (x : α) => c₂)) (Iff (Eq.{succ u2} E'' c₁ (OfNat.ofNat.{u2} E'' 0 (OfNat.mk.{u2} E'' 0 (Zero.zero.{u2} E'' (AddZeroClass.toHasZero.{u2} E'' (AddMonoid.toAddZeroClass.{u2} E'' (SubNegMonoid.toAddMonoid.{u2} E'' (AddGroup.toSubNegMonoid.{u2} E'' (NormedAddGroup.toAddGroup.{u2} E'' (NormedAddCommGroup.toNormedAddGroup.{u2} E'' _inst_7)))))))))) (Eq.{succ u3} F'' c₂ (OfNat.ofNat.{u3} F'' 0 (OfNat.mk.{u3} F'' 0 (Zero.zero.{u3} F'' (AddZeroClass.toHasZero.{u3} F'' (AddMonoid.toAddZeroClass.{u3} F'' (SubNegMonoid.toAddMonoid.{u3} F'' (AddGroup.toSubNegMonoid.{u3} F'' (NormedAddGroup.toAddGroup.{u3} F'' (NormedAddCommGroup.toNormedAddGroup.{u3} F'' _inst_8)))))))))))
-but is expected to have type
-  forall {α : Type.{u3}} {E'' : Type.{u2}} {F'' : Type.{u1}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u1} F''] {l : Filter.{u3} α} [_inst_14 : Filter.NeBot.{u3} α l] {c₁ : E''} {c₂ : F''}, Iff (Asymptotics.IsTheta.{u3, u2, u1} α E'' F'' (NormedAddCommGroup.toNorm.{u2} E'' _inst_7) (NormedAddCommGroup.toNorm.{u1} F'' _inst_8) l (fun (x : α) => c₁) (fun (x : α) => c₂)) (Iff (Eq.{succ u2} E'' c₁ (OfNat.ofNat.{u2} E'' 0 (Zero.toOfNat0.{u2} E'' (NegZeroClass.toZero.{u2} E'' (SubNegZeroMonoid.toNegZeroClass.{u2} E'' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E'' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E'' (AddCommGroup.toDivisionAddCommMonoid.{u2} E'' (NormedAddCommGroup.toAddCommGroup.{u2} E'' _inst_7))))))))) (Eq.{succ u1} F'' c₂ (OfNat.ofNat.{u1} F'' 0 (Zero.toOfNat0.{u1} F'' (NegZeroClass.toZero.{u1} F'' (SubNegZeroMonoid.toNegZeroClass.{u1} F'' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F'' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F'' (AddCommGroup.toDivisionAddCommMonoid.{u1} F'' (NormedAddCommGroup.toAddCommGroup.{u1} F'' _inst_8))))))))))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_const_const_iff Asymptotics.isTheta_const_const_iffₓ'. -/
 @[simp]
 theorem isTheta_const_const_iff [NeBot l] {c₁ : E''} {c₂ : F''} :
     ((fun x : α => c₁) =Θ[l] fun x => c₂) ↔ (c₁ = 0 ↔ c₂ = 0) := by
   simpa only [is_Theta, is_O_const_const_iff, ← iff_def] using Iff.comm
 #align asymptotics.is_Theta_const_const_iff Asymptotics.isTheta_const_const_iff
 
-/- warning: asymptotics.is_Theta_zero_left -> Asymptotics.isTheta_zero_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E' : Type.{u2}} {F'' : Type.{u3}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_8 : NormedAddCommGroup.{u3} F''] {g'' : α -> F''} {l : Filter.{u1} α}, Iff (Asymptotics.IsTheta.{u1, u2, u3} α E' F'' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (NormedAddCommGroup.toHasNorm.{u3} F'' _inst_8) l (fun (x : α) => OfNat.ofNat.{u2} E' 0 (OfNat.mk.{u2} E' 0 (Zero.zero.{u2} E' (AddZeroClass.toHasZero.{u2} E' (AddMonoid.toAddZeroClass.{u2} E' (SubNegMonoid.toAddMonoid.{u2} E' (AddGroup.toSubNegMonoid.{u2} E' (SeminormedAddGroup.toAddGroup.{u2} E' (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} E' _inst_4))))))))) g'') (Filter.EventuallyEq.{u1, u3} α F'' l g'' (OfNat.ofNat.{max u1 u3} (α -> F'') 0 (OfNat.mk.{max u1 u3} (α -> F'') 0 (Zero.zero.{max u1 u3} (α -> F'') (Pi.instZero.{u1, u3} α (fun (ᾰ : α) => F'') (fun (i : α) => AddZeroClass.toHasZero.{u3} F'' (AddMonoid.toAddZeroClass.{u3} F'' (SubNegMonoid.toAddMonoid.{u3} F'' (AddGroup.toSubNegMonoid.{u3} F'' (NormedAddGroup.toAddGroup.{u3} F'' (NormedAddCommGroup.toNormedAddGroup.{u3} F'' _inst_8)))))))))))
-but is expected to have type
-  forall {α : Type.{u3}} {E' : Type.{u2}} {F'' : Type.{u1}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_8 : NormedAddCommGroup.{u1} F''] {g'' : α -> F''} {l : Filter.{u3} α}, Iff (Asymptotics.IsTheta.{u3, u2, u1} α E' F'' (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) (NormedAddCommGroup.toNorm.{u1} F'' _inst_8) l (fun (x : α) => OfNat.ofNat.{u2} E' 0 (Zero.toOfNat0.{u2} E' (NegZeroClass.toZero.{u2} E' (SubNegZeroMonoid.toNegZeroClass.{u2} E' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E' (AddCommGroup.toDivisionAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4)))))))) g'') (Filter.EventuallyEq.{u3, u1} α F'' l g'' (OfNat.ofNat.{max u3 u1} (α -> F'') 0 (Zero.toOfNat0.{max u3 u1} (α -> F'') (Pi.instZero.{u3, u1} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => F'') (fun (i : α) => NegZeroClass.toZero.{u1} F'' (SubNegZeroMonoid.toNegZeroClass.{u1} F'' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F'' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F'' (AddCommGroup.toDivisionAddCommMonoid.{u1} F'' (NormedAddCommGroup.toAddCommGroup.{u1} F'' _inst_8))))))))))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_zero_left Asymptotics.isTheta_zero_leftₓ'. -/
 @[simp]
 theorem isTheta_zero_left : (fun x => (0 : E')) =Θ[l] g'' ↔ g'' =ᶠ[l] 0 := by
   simp only [is_Theta, is_O_zero, is_O_zero_right_iff, true_and_iff]
 #align asymptotics.is_Theta_zero_left Asymptotics.isTheta_zero_left
 
-/- warning: asymptotics.is_Theta_zero_right -> Asymptotics.isTheta_zero_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F' : Type.{u2}} {E'' : Type.{u3}} [_inst_5 : SeminormedAddCommGroup.{u2} F'] [_inst_7 : NormedAddCommGroup.{u3} E''] {f'' : α -> E''} {l : Filter.{u1} α}, Iff (Asymptotics.IsTheta.{u1, u3, u2} α E'' F' (NormedAddCommGroup.toHasNorm.{u3} E'' _inst_7) (SeminormedAddCommGroup.toHasNorm.{u2} F' _inst_5) l f'' (fun (x : α) => OfNat.ofNat.{u2} F' 0 (OfNat.mk.{u2} F' 0 (Zero.zero.{u2} F' (AddZeroClass.toHasZero.{u2} F' (AddMonoid.toAddZeroClass.{u2} F' (SubNegMonoid.toAddMonoid.{u2} F' (AddGroup.toSubNegMonoid.{u2} F' (SeminormedAddGroup.toAddGroup.{u2} F' (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} F' _inst_5)))))))))) (Filter.EventuallyEq.{u1, u3} α E'' l f'' (OfNat.ofNat.{max u1 u3} (α -> E'') 0 (OfNat.mk.{max u1 u3} (α -> E'') 0 (Zero.zero.{max u1 u3} (α -> E'') (Pi.instZero.{u1, u3} α (fun (ᾰ : α) => E'') (fun (i : α) => AddZeroClass.toHasZero.{u3} E'' (AddMonoid.toAddZeroClass.{u3} E'' (SubNegMonoid.toAddMonoid.{u3} E'' (AddGroup.toSubNegMonoid.{u3} E'' (NormedAddGroup.toAddGroup.{u3} E'' (NormedAddCommGroup.toNormedAddGroup.{u3} E'' _inst_7)))))))))))
-but is expected to have type
-  forall {α : Type.{u3}} {F' : Type.{u1}} {E'' : Type.{u2}} [_inst_5 : SeminormedAddCommGroup.{u1} F'] [_inst_7 : NormedAddCommGroup.{u2} E''] {f'' : α -> E''} {l : Filter.{u3} α}, Iff (Asymptotics.IsTheta.{u3, u2, u1} α E'' F' (NormedAddCommGroup.toNorm.{u2} E'' _inst_7) (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f'' (fun (x : α) => OfNat.ofNat.{u1} F' 0 (Zero.toOfNat0.{u1} F' (NegZeroClass.toZero.{u1} F' (SubNegZeroMonoid.toNegZeroClass.{u1} F' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F' (AddCommGroup.toDivisionAddCommMonoid.{u1} F' (SeminormedAddCommGroup.toAddCommGroup.{u1} F' _inst_5))))))))) (Filter.EventuallyEq.{u3, u2} α E'' l f'' (OfNat.ofNat.{max u3 u2} (α -> E'') 0 (Zero.toOfNat0.{max u3 u2} (α -> E'') (Pi.instZero.{u3, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => E'') (fun (i : α) => NegZeroClass.toZero.{u2} E'' (SubNegZeroMonoid.toNegZeroClass.{u2} E'' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E'' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E'' (AddCommGroup.toDivisionAddCommMonoid.{u2} E'' (NormedAddCommGroup.toAddCommGroup.{u2} E'' _inst_7))))))))))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_zero_right Asymptotics.isTheta_zero_rightₓ'. -/
 @[simp]
 theorem isTheta_zero_right : (f'' =Θ[l] fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 :=
   isTheta_comm.trans isTheta_zero_left
 #align asymptotics.is_Theta_zero_right Asymptotics.isTheta_zero_right
 
-/- warning: asymptotics.is_Theta_const_smul_left -> Asymptotics.isTheta_const_smul_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_const_smul_left Asymptotics.isTheta_const_smul_leftₓ'. -/
 theorem isTheta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0) :
     (fun x => c • f' x) =Θ[l] g ↔ f' =Θ[l] g :=
   and_congr (isBigO_const_smul_left hc) (isBigO_const_smul_right hc)
 #align asymptotics.is_Theta_const_smul_left Asymptotics.isTheta_const_smul_left
 
-/- warning: asymptotics.is_Theta.of_const_smul_left -> Asymptotics.IsTheta.of_const_smul_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.of_const_smul_left Asymptotics.IsTheta.of_const_smul_leftₓ'. -/
-/- warning: asymptotics.is_Theta.const_smul_left -> Asymptotics.IsTheta.const_smul_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.const_smul_left Asymptotics.IsTheta.const_smul_leftₓ'. -/
 alias is_Theta_const_smul_left ↔ is_Theta.of_const_smul_left is_Theta.const_smul_left
 #align asymptotics.is_Theta.of_const_smul_left Asymptotics.IsTheta.of_const_smul_left
 #align asymptotics.is_Theta.const_smul_left Asymptotics.IsTheta.const_smul_left
 
-/- warning: asymptotics.is_Theta_const_smul_right -> Asymptotics.isTheta_const_smul_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_const_smul_right Asymptotics.isTheta_const_smul_rightₓ'. -/
 theorem isTheta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0) :
     (f =Θ[l] fun x => c • g' x) ↔ f =Θ[l] g' :=
   and_congr (isBigO_const_smul_right hc) (isBigO_const_smul_left hc)
 #align asymptotics.is_Theta_const_smul_right Asymptotics.isTheta_const_smul_right
 
-/- warning: asymptotics.is_Theta.of_const_smul_right -> Asymptotics.IsTheta.of_const_smul_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.of_const_smul_right Asymptotics.IsTheta.of_const_smul_rightₓ'. -/
-/- warning: asymptotics.is_Theta.const_smul_right -> Asymptotics.IsTheta.const_smul_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.const_smul_right Asymptotics.IsTheta.const_smul_rightₓ'. -/
 alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
 #align asymptotics.is_Theta.of_const_smul_right Asymptotics.IsTheta.of_const_smul_right
 #align asymptotics.is_Theta.const_smul_right Asymptotics.IsTheta.const_smul_right
 
-/- warning: asymptotics.is_Theta_const_mul_left -> Asymptotics.isTheta_const_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Type.{u2}} {𝕜 : Type.{u3}} [_inst_2 : Norm.{u2} F] [_inst_12 : NormedField.{u3} 𝕜] {g : α -> F} {l : Filter.{u1} α} {c : 𝕜} {f : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (OfNat.mk.{u3} 𝕜 0 (Zero.zero.{u3} 𝕜 (MulZeroClass.toHasZero.{u3} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))))))))) -> (Iff (Asymptotics.IsTheta.{u1, u3, u2} α 𝕜 F (NormedField.toHasNorm.{u3} 𝕜 _inst_12) _inst_2 l (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (Distrib.toHasMul.{u3} 𝕜 (Ring.toDistrib.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) c (f x)) g) (Asymptotics.IsTheta.{u1, u3, u2} α 𝕜 F (NormedField.toHasNorm.{u3} 𝕜 _inst_12) _inst_2 l f g))
-but is expected to have type
-  forall {α : Type.{u2}} {F : Type.{u1}} {𝕜 : Type.{u3}} [_inst_2 : Norm.{u1} F] [_inst_12 : NormedField.{u3} 𝕜] {g : α -> F} {l : Filter.{u2} α} {c : 𝕜} {f : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (Zero.toOfNat0.{u3} 𝕜 (CommMonoidWithZero.toZero.{u3} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u3} 𝕜 (Semifield.toCommGroupWithZero.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_12)))))))) -> (Iff (Asymptotics.IsTheta.{u2, u3, u1} α 𝕜 F (NormedField.toNorm.{u3} 𝕜 _inst_12) _inst_2 l (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (NonUnitalNonAssocRing.toMul.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) c (f x)) g) (Asymptotics.IsTheta.{u2, u3, u1} α 𝕜 F (NormedField.toNorm.{u3} 𝕜 _inst_12) _inst_2 l f g))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_const_mul_left Asymptotics.isTheta_const_mul_leftₓ'. -/
 theorem isTheta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) :
     (fun x => c * f x) =Θ[l] g ↔ f =Θ[l] g := by
   simpa only [← smul_eq_mul] using is_Theta_const_smul_left hc
 #align asymptotics.is_Theta_const_mul_left Asymptotics.isTheta_const_mul_left
 
-/- warning: asymptotics.is_Theta.of_const_mul_left -> Asymptotics.IsTheta.of_const_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Type.{u2}} {𝕜 : Type.{u3}} [_inst_2 : Norm.{u2} F] [_inst_12 : NormedField.{u3} 𝕜] {g : α -> F} {l : Filter.{u1} α} {c : 𝕜} {f : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (OfNat.mk.{u3} 𝕜 0 (Zero.zero.{u3} 𝕜 (MulZeroClass.toHasZero.{u3} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))))))))) -> (Asymptotics.IsTheta.{u1, u3, u2} α 𝕜 F (NormedField.toHasNorm.{u3} 𝕜 _inst_12) _inst_2 l (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (Distrib.toHasMul.{u3} 𝕜 (Ring.toDistrib.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) c (f x)) g) -> (Asymptotics.IsTheta.{u1, u3, u2} α 𝕜 F (NormedField.toHasNorm.{u3} 𝕜 _inst_12) _inst_2 l f g)
-but is expected to have type
-  forall {α : Type.{u2}} {F : Type.{u1}} {𝕜 : Type.{u3}} [_inst_2 : Norm.{u1} F] [_inst_12 : NormedField.{u3} 𝕜] {g : α -> F} {l : Filter.{u2} α} {c : 𝕜} {f : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (Zero.toOfNat0.{u3} 𝕜 (CommMonoidWithZero.toZero.{u3} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u3} 𝕜 (Semifield.toCommGroupWithZero.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_12)))))))) -> (Asymptotics.IsTheta.{u2, u3, u1} α 𝕜 F (NormedField.toNorm.{u3} 𝕜 _inst_12) _inst_2 l (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (NonUnitalNonAssocRing.toMul.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) c (f x)) g) -> (Asymptotics.IsTheta.{u2, u3, u1} α 𝕜 F (NormedField.toNorm.{u3} 𝕜 _inst_12) _inst_2 l f g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.of_const_mul_left Asymptotics.IsTheta.of_const_mul_leftₓ'. -/
-/- warning: asymptotics.is_Theta.const_mul_left -> Asymptotics.IsTheta.const_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Type.{u2}} {𝕜 : Type.{u3}} [_inst_2 : Norm.{u2} F] [_inst_12 : NormedField.{u3} 𝕜] {g : α -> F} {l : Filter.{u1} α} {c : 𝕜} {f : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (OfNat.mk.{u3} 𝕜 0 (Zero.zero.{u3} 𝕜 (MulZeroClass.toHasZero.{u3} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))))))))) -> (Asymptotics.IsTheta.{u1, u3, u2} α 𝕜 F (NormedField.toHasNorm.{u3} 𝕜 _inst_12) _inst_2 l f g) -> (Asymptotics.IsTheta.{u1, u3, u2} α 𝕜 F (NormedField.toHasNorm.{u3} 𝕜 _inst_12) _inst_2 l (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (Distrib.toHasMul.{u3} 𝕜 (Ring.toDistrib.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) c (f x)) g)
-but is expected to have type
-  forall {α : Type.{u2}} {F : Type.{u1}} {𝕜 : Type.{u3}} [_inst_2 : Norm.{u1} F] [_inst_12 : NormedField.{u3} 𝕜] {g : α -> F} {l : Filter.{u2} α} {c : 𝕜} {f : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (Zero.toOfNat0.{u3} 𝕜 (CommMonoidWithZero.toZero.{u3} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u3} 𝕜 (Semifield.toCommGroupWithZero.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_12)))))))) -> (Asymptotics.IsTheta.{u2, u3, u1} α 𝕜 F (NormedField.toNorm.{u3} 𝕜 _inst_12) _inst_2 l f g) -> (Asymptotics.IsTheta.{u2, u3, u1} α 𝕜 F (NormedField.toNorm.{u3} 𝕜 _inst_12) _inst_2 l (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (NonUnitalNonAssocRing.toMul.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) c (f x)) g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.const_mul_left Asymptotics.IsTheta.const_mul_leftₓ'. -/
 alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_left
 #align asymptotics.is_Theta.of_const_mul_left Asymptotics.IsTheta.of_const_mul_left
 #align asymptotics.is_Theta.const_mul_left Asymptotics.IsTheta.const_mul_left
 
-/- warning: asymptotics.is_Theta_const_mul_right -> Asymptotics.isTheta_const_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {𝕜 : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_12 : NormedField.{u3} 𝕜] {f : α -> E} {l : Filter.{u1} α} {c : 𝕜} {g : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (OfNat.mk.{u3} 𝕜 0 (Zero.zero.{u3} 𝕜 (MulZeroClass.toHasZero.{u3} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))))))))) -> (Iff (Asymptotics.IsTheta.{u1, u2, u3} α E 𝕜 _inst_1 (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (Distrib.toHasMul.{u3} 𝕜 (Ring.toDistrib.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) c (g x))) (Asymptotics.IsTheta.{u1, u2, u3} α E 𝕜 _inst_1 (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f g))
-but is expected to have type
-  forall {α : Type.{u2}} {E : Type.{u1}} {𝕜 : Type.{u3}} [_inst_1 : Norm.{u1} E] [_inst_12 : NormedField.{u3} 𝕜] {f : α -> E} {l : Filter.{u2} α} {c : 𝕜} {g : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (Zero.toOfNat0.{u3} 𝕜 (CommMonoidWithZero.toZero.{u3} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u3} 𝕜 (Semifield.toCommGroupWithZero.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_12)))))))) -> (Iff (Asymptotics.IsTheta.{u2, u1, u3} α E 𝕜 _inst_1 (NormedField.toNorm.{u3} 𝕜 _inst_12) l f (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (NonUnitalNonAssocRing.toMul.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) c (g x))) (Asymptotics.IsTheta.{u2, u1, u3} α E 𝕜 _inst_1 (NormedField.toNorm.{u3} 𝕜 _inst_12) l f g))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta_const_mul_right Asymptotics.isTheta_const_mul_rightₓ'. -/
 theorem isTheta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) :
     (f =Θ[l] fun x => c * g x) ↔ f =Θ[l] g := by
   simpa only [← smul_eq_mul] using is_Theta_const_smul_right hc
 #align asymptotics.is_Theta_const_mul_right Asymptotics.isTheta_const_mul_right
 
-/- warning: asymptotics.is_Theta.of_const_mul_right -> Asymptotics.IsTheta.of_const_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {𝕜 : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_12 : NormedField.{u3} 𝕜] {f : α -> E} {l : Filter.{u1} α} {c : 𝕜} {g : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (OfNat.mk.{u3} 𝕜 0 (Zero.zero.{u3} 𝕜 (MulZeroClass.toHasZero.{u3} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))))))))) -> (Asymptotics.IsTheta.{u1, u2, u3} α E 𝕜 _inst_1 (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (Distrib.toHasMul.{u3} 𝕜 (Ring.toDistrib.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) c (g x))) -> (Asymptotics.IsTheta.{u1, u2, u3} α E 𝕜 _inst_1 (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f g)
-but is expected to have type
-  forall {α : Type.{u2}} {E : Type.{u1}} {𝕜 : Type.{u3}} [_inst_1 : Norm.{u1} E] [_inst_12 : NormedField.{u3} 𝕜] {f : α -> E} {l : Filter.{u2} α} {c : 𝕜} {g : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (Zero.toOfNat0.{u3} 𝕜 (CommMonoidWithZero.toZero.{u3} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u3} 𝕜 (Semifield.toCommGroupWithZero.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_12)))))))) -> (Asymptotics.IsTheta.{u2, u1, u3} α E 𝕜 _inst_1 (NormedField.toNorm.{u3} 𝕜 _inst_12) l f (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (NonUnitalNonAssocRing.toMul.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) c (g x))) -> (Asymptotics.IsTheta.{u2, u1, u3} α E 𝕜 _inst_1 (NormedField.toNorm.{u3} 𝕜 _inst_12) l f g)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.of_const_mul_right Asymptotics.IsTheta.of_const_mul_rightₓ'. -/
-/- warning: asymptotics.is_Theta.const_mul_right -> Asymptotics.IsTheta.const_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {𝕜 : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_12 : NormedField.{u3} 𝕜] {f : α -> E} {l : Filter.{u1} α} {c : 𝕜} {g : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (OfNat.mk.{u3} 𝕜 0 (Zero.zero.{u3} 𝕜 (MulZeroClass.toHasZero.{u3} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))))))))) -> (Asymptotics.IsTheta.{u1, u2, u3} α E 𝕜 _inst_1 (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f g) -> (Asymptotics.IsTheta.{u1, u2, u3} α E 𝕜 _inst_1 (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (Distrib.toHasMul.{u3} 𝕜 (Ring.toDistrib.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) c (g x)))
-but is expected to have type
-  forall {α : Type.{u2}} {E : Type.{u1}} {𝕜 : Type.{u3}} [_inst_1 : Norm.{u1} E] [_inst_12 : NormedField.{u3} 𝕜] {f : α -> E} {l : Filter.{u2} α} {c : 𝕜} {g : α -> 𝕜}, (Ne.{succ u3} 𝕜 c (OfNat.ofNat.{u3} 𝕜 0 (Zero.toOfNat0.{u3} 𝕜 (CommMonoidWithZero.toZero.{u3} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u3} 𝕜 (Semifield.toCommGroupWithZero.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 _inst_12)))))))) -> (Asymptotics.IsTheta.{u2, u1, u3} α E 𝕜 _inst_1 (NormedField.toNorm.{u3} 𝕜 _inst_12) l f g) -> (Asymptotics.IsTheta.{u2, u1, u3} α E 𝕜 _inst_1 (NormedField.toNorm.{u3} 𝕜 _inst_12) l f (fun (x : α) => HMul.hMul.{u3, u3, u3} 𝕜 𝕜 𝕜 (instHMul.{u3} 𝕜 (NonUnitalNonAssocRing.toMul.{u3} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u3} 𝕜 (Ring.toNonAssocRing.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) c (g x)))
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.const_mul_right Asymptotics.IsTheta.const_mul_rightₓ'. -/
 alias is_Theta_const_mul_right ↔ is_Theta.of_const_mul_right is_Theta.const_mul_right
 #align asymptotics.is_Theta.of_const_mul_right Asymptotics.IsTheta.of_const_mul_right
 #align asymptotics.is_Theta.const_mul_right Asymptotics.IsTheta.const_mul_right

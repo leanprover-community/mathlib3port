@@ -69,12 +69,6 @@ theorem tendsto_star (a : R) : Tendsto star (𝓝 a) (𝓝 (star a)) :=
 #align tendsto_star tendsto_star
 -/
 
-/- warning: filter.tendsto.star -> Filter.Tendsto.star is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} R] [_inst_2 : Star.{u2} R] [_inst_3 : ContinuousStar.{u2} R _inst_1 _inst_2] {f : α -> R} {l : Filter.{u1} α} {y : R}, (Filter.Tendsto.{u1, u2} α R f l (nhds.{u2} R _inst_1 y)) -> (Filter.Tendsto.{u1, u2} α R (fun (x : α) => Star.star.{u2} R _inst_2 (f x)) l (nhds.{u2} R _inst_1 (Star.star.{u2} R _inst_2 y)))
-but is expected to have type
-  forall {α : Type.{u1}} [R : TopologicalSpace.{u1} α] [_inst_1 : Star.{u1} α] [_inst_2 : ContinuousStar.{u1} α R _inst_1] {_inst_3 : Type.{u2}} {f : _inst_3 -> α} {l : Filter.{u2} _inst_3} {y : α}, (Filter.Tendsto.{u2, u1} _inst_3 α f l (nhds.{u1} α R y)) -> (Filter.Tendsto.{u2, u1} _inst_3 α (fun (x : _inst_3) => Star.star.{u1} α _inst_1 (f x)) l (nhds.{u1} α R (Star.star.{u1} α _inst_1 y)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.star Filter.Tendsto.starₓ'. -/
 theorem Filter.Tendsto.star {f : α → R} {l : Filter α} {y : R} (h : Tendsto f l (𝓝 y)) :
     Tendsto (fun x => star (f x)) l (𝓝 (star y)) :=
   (continuous_star.Tendsto y).comp h
@@ -82,43 +76,19 @@ theorem Filter.Tendsto.star {f : α → R} {l : Filter α} {y : R} (h : Tendsto 
 
 variable [TopologicalSpace α] {f : α → R} {s : Set α} {x : α}
 
-/- warning: continuous.star -> Continuous.star is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} R] [_inst_2 : Star.{u2} R] [_inst_3 : ContinuousStar.{u2} R _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} α] {f : α -> R}, (Continuous.{u1, u2} α R _inst_4 _inst_1 f) -> (Continuous.{u1, u2} α R _inst_4 _inst_1 (fun (x : α) => Star.star.{u2} R _inst_2 (f x)))
-but is expected to have type
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Star.{u1} α] [_inst_3 : ContinuousStar.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} R] {f : R -> α}, (Continuous.{u2, u1} R α _inst_4 _inst_1 f) -> (Continuous.{u2, u1} R α _inst_4 _inst_1 (fun (x : R) => Star.star.{u1} α _inst_2 (f x)))
-Case conversion may be inaccurate. Consider using '#align continuous.star Continuous.starₓ'. -/
 @[continuity]
 theorem Continuous.star (hf : Continuous f) : Continuous fun x => star (f x) :=
   continuous_star.comp hf
 #align continuous.star Continuous.star
 
-/- warning: continuous_at.star -> ContinuousAt.star is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} R] [_inst_2 : Star.{u2} R] [_inst_3 : ContinuousStar.{u2} R _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} α] {f : α -> R} {x : α}, (ContinuousAt.{u1, u2} α R _inst_4 _inst_1 f x) -> (ContinuousAt.{u1, u2} α R _inst_4 _inst_1 (fun (x : α) => Star.star.{u2} R _inst_2 (f x)) x)
-but is expected to have type
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Star.{u1} α] [_inst_3 : ContinuousStar.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} R] {f : R -> α} {x : R}, (ContinuousAt.{u2, u1} R α _inst_4 _inst_1 f x) -> (ContinuousAt.{u2, u1} R α _inst_4 _inst_1 (fun (x : R) => Star.star.{u1} α _inst_2 (f x)) x)
-Case conversion may be inaccurate. Consider using '#align continuous_at.star ContinuousAt.starₓ'. -/
 theorem ContinuousAt.star (hf : ContinuousAt f x) : ContinuousAt (fun x => star (f x)) x :=
   continuousAt_star.comp hf
 #align continuous_at.star ContinuousAt.star
 
-/- warning: continuous_on.star -> ContinuousOn.star is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} R] [_inst_2 : Star.{u2} R] [_inst_3 : ContinuousStar.{u2} R _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} α] {f : α -> R} {s : Set.{u1} α}, (ContinuousOn.{u1, u2} α R _inst_4 _inst_1 f s) -> (ContinuousOn.{u1, u2} α R _inst_4 _inst_1 (fun (x : α) => Star.star.{u2} R _inst_2 (f x)) s)
-but is expected to have type
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Star.{u1} α] [_inst_3 : ContinuousStar.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} R] {f : R -> α} {s : Set.{u2} R}, (ContinuousOn.{u2, u1} R α _inst_4 _inst_1 f s) -> (ContinuousOn.{u2, u1} R α _inst_4 _inst_1 (fun (x : R) => Star.star.{u1} α _inst_2 (f x)) s)
-Case conversion may be inaccurate. Consider using '#align continuous_on.star ContinuousOn.starₓ'. -/
 theorem ContinuousOn.star (hf : ContinuousOn f s) : ContinuousOn (fun x => star (f x)) s :=
   continuous_star.comp_continuousOn hf
 #align continuous_on.star ContinuousOn.star
 
-/- warning: continuous_within_at.star -> ContinuousWithinAt.star is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} R] [_inst_2 : Star.{u2} R] [_inst_3 : ContinuousStar.{u2} R _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} α] {f : α -> R} {s : Set.{u1} α} {x : α}, (ContinuousWithinAt.{u1, u2} α R _inst_4 _inst_1 f s x) -> (ContinuousWithinAt.{u1, u2} α R _inst_4 _inst_1 (fun (x : α) => Star.star.{u2} R _inst_2 (f x)) s x)
-but is expected to have type
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Star.{u1} α] [_inst_3 : ContinuousStar.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} R] {f : R -> α} {s : Set.{u2} R} {x : R}, (ContinuousWithinAt.{u2, u1} R α _inst_4 _inst_1 f s x) -> (ContinuousWithinAt.{u2, u1} R α _inst_4 _inst_1 (fun (x : R) => Star.star.{u1} α _inst_2 (f x)) s x)
-Case conversion may be inaccurate. Consider using '#align continuous_within_at.star ContinuousWithinAt.starₓ'. -/
 theorem ContinuousWithinAt.star (hf : ContinuousWithinAt f s x) :
     ContinuousWithinAt (fun x => star (f x)) s x :=
   hf.unit

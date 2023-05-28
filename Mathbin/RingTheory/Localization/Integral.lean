@@ -62,24 +62,12 @@ noncomputable def coeffIntegerNormalization (p : S[X]) (i : ℕ) : R :=
 #align is_localization.coeff_integer_normalization IsLocalization.coeffIntegerNormalization
 -/
 
-/- warning: is_localization.coeff_integer_normalization_of_not_mem_support -> IsLocalization.coeffIntegerNormalization_of_not_mem_support is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {S : Type.{u2}} [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))] [_inst_5 : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u2} S _inst_2) _inst_3] (p : Polynomial.{u2} S (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))) (i : Nat), (Eq.{succ u2} S (Polynomial.coeff.{u2} S (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) p i) (OfNat.ofNat.{u2} S 0 (OfNat.mk.{u2} S 0 (Zero.zero.{u2} S (MulZeroClass.toHasZero.{u2} S (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} S (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} S (NonAssocRing.toNonUnitalNonAssocRing.{u2} S (Ring.toNonAssocRing.{u2} S (CommRing.toRing.{u2} S _inst_2)))))))))) -> (Eq.{succ u1} R (IsLocalization.coeffIntegerNormalization.{u1, u2} R _inst_1 M S _inst_2 _inst_3 _inst_5 p i) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) {S : Type.{u2}} [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))] [_inst_5 : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u2} S _inst_2) _inst_3] (p : Polynomial.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))) (i : Nat), (Eq.{succ u2} S (Polynomial.coeff.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) p i) (OfNat.ofNat.{u2} S 0 (Zero.toOfNat0.{u2} S (CommMonoidWithZero.toZero.{u2} S (CommSemiring.toCommMonoidWithZero.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))) -> (Eq.{succ u1} R (IsLocalization.coeffIntegerNormalization.{u1, u2} R _inst_1 M S _inst_2 _inst_3 _inst_5 p i) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align is_localization.coeff_integer_normalization_of_not_mem_support IsLocalization.coeffIntegerNormalization_of_not_mem_supportₓ'. -/
 theorem coeffIntegerNormalization_of_not_mem_support (p : S[X]) (i : ℕ) (h : coeff p i = 0) :
     coeffIntegerNormalization M p i = 0 := by
   simp only [coeff_integer_normalization, h, mem_support_iff, eq_self_iff_true, not_true, Ne.def,
     dif_neg, not_false_iff]
 #align is_localization.coeff_integer_normalization_of_not_mem_support IsLocalization.coeffIntegerNormalization_of_not_mem_support
 
-/- warning: is_localization.coeff_integer_normalization_mem_support -> IsLocalization.coeffIntegerNormalization_mem_support is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {S : Type.{u2}} [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))] [_inst_5 : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u2} S _inst_2) _inst_3] (p : Polynomial.{u2} S (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))) (i : Nat), (Ne.{succ u1} R (IsLocalization.coeffIntegerNormalization.{u1, u2} R _inst_1 M S _inst_2 _inst_3 _inst_5 p i) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))))) -> (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) i (Polynomial.support.{u2} S (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) p))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) {S : Type.{u2}} [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))] [_inst_5 : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u2} S _inst_2) _inst_3] (p : Polynomial.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))) (i : Nat), (Ne.{succ u1} R (IsLocalization.coeffIntegerNormalization.{u1, u2} R _inst_1 M S _inst_2 _inst_3 _inst_5 p i) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) i (Polynomial.support.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) p))
-Case conversion may be inaccurate. Consider using '#align is_localization.coeff_integer_normalization_mem_support IsLocalization.coeffIntegerNormalization_mem_supportₓ'. -/
 theorem coeffIntegerNormalization_mem_support (p : S[X]) (i : ℕ)
     (h : coeffIntegerNormalization M p i ≠ 0) : i ∈ p.support :=
   by
@@ -104,9 +92,6 @@ theorem integerNormalization_coeff (p : S[X]) (i : ℕ) :
 #align is_localization.integer_normalization_coeff IsLocalization.integerNormalization_coeff
 -/
 
-/- warning: is_localization.integer_normalization_spec -> IsLocalization.integerNormalization_spec is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localization.integer_normalization_spec IsLocalization.integerNormalization_specₓ'. -/
 theorem integerNormalization_spec (p : S[X]) :
     ∃ b : M, ∀ i, algebraMap R S ((integerNormalization M p).coeff i) = (b : R) • p.coeff i :=
   by
@@ -124,9 +109,6 @@ theorem integerNormalization_spec (p : S[X]) :
     · exact not_mem_support_iff.mp hi
 #align is_localization.integer_normalization_spec IsLocalization.integerNormalization_spec
 
-/- warning: is_localization.integer_normalization_map_to_map -> IsLocalization.integerNormalization_map_to_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localization.integer_normalization_map_to_map IsLocalization.integerNormalization_map_to_mapₓ'. -/
 theorem integerNormalization_map_to_map (p : S[X]) :
     ∃ b : M, (integerNormalization M p).map (algebraMap R S) = (b : R) • p :=
   let ⟨b, hb⟩ := integerNormalization_spec M p
@@ -135,12 +117,6 @@ theorem integerNormalization_map_to_map (p : S[X]) :
 
 variable {R' : Type _} [CommRing R']
 
-/- warning: is_localization.integer_normalization_eval₂_eq_zero -> IsLocalization.integerNormalization_eval₂_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) {S : Type.{u2}} [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))] [_inst_5 : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u2} S _inst_2) _inst_3] {R' : Type.{u3}} [_inst_6 : CommRing.{u3} R'] (g : RingHom.{u2, u3} S R' (NonAssocRing.toNonAssocSemiring.{u2} S (Ring.toNonAssocRing.{u2} S (CommRing.toRing.{u2} S _inst_2))) (NonAssocRing.toNonAssocSemiring.{u3} R' (Ring.toNonAssocRing.{u3} R' (CommRing.toRing.{u3} R' _inst_6)))) (p : Polynomial.{u2} S (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2))) {x : R'}, (Eq.{succ u3} R' (Polynomial.eval₂.{u2, u3} S R' (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) (Ring.toSemiring.{u3} R' (CommRing.toRing.{u3} R' _inst_6)) g x p) (OfNat.ofNat.{u3} R' 0 (OfNat.mk.{u3} R' 0 (Zero.zero.{u3} R' (MulZeroClass.toHasZero.{u3} R' (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} R' (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} R' (NonAssocRing.toNonUnitalNonAssocRing.{u3} R' (Ring.toNonAssocRing.{u3} R' (CommRing.toRing.{u3} R' _inst_6)))))))))) -> (Eq.{succ u3} R' (Polynomial.eval₂.{u1, u3} R R' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (Ring.toSemiring.{u3} R' (CommRing.toRing.{u3} R' _inst_6)) (RingHom.comp.{u1, u2, u3} R S R' (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{u2} S (Ring.toNonAssocRing.{u2} S (CommRing.toRing.{u2} S _inst_2))) (NonAssocRing.toNonAssocSemiring.{u3} R' (Ring.toNonAssocRing.{u3} R' (CommRing.toRing.{u3} R' _inst_6))) g (algebraMap.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} S (CommRing.toRing.{u2} S _inst_2)) _inst_3)) x (IsLocalization.integerNormalization.{u1, u2} R _inst_1 M S _inst_2 _inst_3 _inst_5 p)) (OfNat.ofNat.{u3} R' 0 (OfNat.mk.{u3} R' 0 (Zero.zero.{u3} R' (MulZeroClass.toHasZero.{u3} R' (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} R' (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} R' (NonAssocRing.toNonUnitalNonAssocRing.{u3} R' (Ring.toNonAssocRing.{u3} R' (CommRing.toRing.{u3} R' _inst_6))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) {S : Type.{u3}} [_inst_2 : CommRing.{u3} S] [_inst_3 : Algebra.{u1, u3} R S (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2))] [_inst_5 : IsLocalization.{u1, u3} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u3} S _inst_2) _inst_3] {R' : Type.{u2}} [_inst_6 : CommRing.{u2} R'] (g : RingHom.{u3, u2} S R' (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2))) (Semiring.toNonAssocSemiring.{u2} R' (CommSemiring.toSemiring.{u2} R' (CommRing.toCommSemiring.{u2} R' _inst_6)))) (p : Polynomial.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2))) {x : R'}, (Eq.{succ u2} R' (Polynomial.eval₂.{u3, u2} S R' (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)) (CommSemiring.toSemiring.{u2} R' (CommRing.toCommSemiring.{u2} R' _inst_6)) g x p) (OfNat.ofNat.{u2} R' 0 (Zero.toOfNat0.{u2} R' (CommMonoidWithZero.toZero.{u2} R' (CommSemiring.toCommMonoidWithZero.{u2} R' (CommRing.toCommSemiring.{u2} R' _inst_6)))))) -> (Eq.{succ u2} R' (Polynomial.eval₂.{u1, u2} R R' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u2} R' (CommRing.toCommSemiring.{u2} R' _inst_6)) (RingHom.comp.{u1, u3, u2} R S R' (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2))) (Semiring.toNonAssocSemiring.{u2} R' (CommSemiring.toSemiring.{u2} R' (CommRing.toCommSemiring.{u2} R' _inst_6))) g (algebraMap.{u1, u3} R S (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)) _inst_3)) x (IsLocalization.integerNormalization.{u1, u3} R _inst_1 M S _inst_2 _inst_3 _inst_5 p)) (OfNat.ofNat.{u2} R' 0 (Zero.toOfNat0.{u2} R' (CommMonoidWithZero.toZero.{u2} R' (CommSemiring.toCommMonoidWithZero.{u2} R' (CommRing.toCommSemiring.{u2} R' _inst_6))))))
-Case conversion may be inaccurate. Consider using '#align is_localization.integer_normalization_eval₂_eq_zero IsLocalization.integerNormalization_eval₂_eq_zeroₓ'. -/
 theorem integerNormalization_eval₂_eq_zero (g : S →+* R') (p : S[X]) {x : R'}
     (hx : eval₂ g x p = 0) : eval₂ (g.comp (algebraMap R S)) x (integerNormalization M p) = 0 :=
   let ⟨b, hb⟩ := integerNormalization_map_to_map M p
@@ -148,9 +124,6 @@ theorem integerNormalization_eval₂_eq_zero (g : S →+* R') (p : S[X]) {x : R'
     (by rw [hb, ← IsScalarTower.algebraMap_smul S (b : R) p, eval₂_smul, hx, MulZeroClass.mul_zero])
 #align is_localization.integer_normalization_eval₂_eq_zero IsLocalization.integerNormalization_eval₂_eq_zero
 
-/- warning: is_localization.integer_normalization_aeval_eq_zero -> IsLocalization.integerNormalization_aeval_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localization.integer_normalization_aeval_eq_zero IsLocalization.integerNormalization_aeval_eq_zeroₓ'. -/
 theorem integerNormalization_aeval_eq_zero [Algebra R R'] [Algebra S R'] [IsScalarTower R S R']
     (p : S[X]) {x : R'} (hx : aeval x p = 0) : aeval x (integerNormalization M p) = 0 := by
   rw [aeval_def, IsScalarTower.algebraMap_eq R S R', integer_normalization_eval₂_eq_zero _ _ _ hx]
@@ -190,12 +163,6 @@ theorem integerNormalization_eq_zero_iff {p : K[X]} :
 
 variable (A K C)
 
-/- warning: is_fraction_ring.is_algebraic_iff -> IsFractionRing.isAlgebraic_iff is a dubious translation:
-lean 3 declaration is
-  forall (A : Type.{u1}) (K : Type.{u2}) (C : Type.{u3}) [_inst_5 : CommRing.{u1} A] [_inst_6 : IsDomain.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_5))] [_inst_7 : Field.{u2} K] [_inst_8 : Algebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7)))] [_inst_9 : IsFractionRing.{u1, u2} A _inst_5 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_7)) _inst_8] [_inst_10 : CommRing.{u3} C] [_inst_11 : Algebra.{u1, u3} A C (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))] [_inst_12 : Algebra.{u2, u3} K C (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7)) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))] [_inst_13 : IsScalarTower.{u1, u2, u3} A K C (SMulZeroClass.toHasSmul.{u1, u2} A K (AddZeroClass.toHasZero.{u2} K (AddMonoid.toAddZeroClass.{u2} K (AddCommMonoid.toAddMonoid.{u2} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))))))))) (SMulWithZero.toSmulZeroClass.{u1, u2} A K (MulZeroClass.toHasZero.{u1} A (MulZeroOneClass.toMulZeroClass.{u1} A (MonoidWithZero.toMulZeroOneClass.{u1} A (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)))))) (AddZeroClass.toHasZero.{u2} K (AddMonoid.toAddZeroClass.{u2} K (AddCommMonoid.toAddMonoid.{u2} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))))))))) (MulActionWithZero.toSMulWithZero.{u1, u2} A K (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5))) (AddZeroClass.toHasZero.{u2} K (AddMonoid.toAddZeroClass.{u2} K (AddCommMonoid.toAddMonoid.{u2} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))))))))) (Module.toMulActionWithZero.{u1, u2} A K (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7)))))) (Algebra.toModule.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))) _inst_8))))) (SMulZeroClass.toHasSmul.{u2, u3} K C (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (SMulWithZero.toSmulZeroClass.{u2, u3} K C (MulZeroClass.toHasZero.{u2} K (MulZeroOneClass.toMulZeroClass.{u2} K (MonoidWithZero.toMulZeroOneClass.{u2} K (Semiring.toMonoidWithZero.{u2} K (CommSemiring.toSemiring.{u2} K (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7))))))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (MulActionWithZero.toSMulWithZero.{u2, u3} K C (Semiring.toMonoidWithZero.{u2} K (CommSemiring.toSemiring.{u2} K (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7)))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (Module.toMulActionWithZero.{u2, u3} K C (CommSemiring.toSemiring.{u2} K (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))))) (Algebra.toModule.{u2, u3} K C (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7)) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)) _inst_12))))) (SMulZeroClass.toHasSmul.{u1, u3} A C (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (SMulWithZero.toSmulZeroClass.{u1, u3} A C (MulZeroClass.toHasZero.{u1} A (MulZeroOneClass.toMulZeroClass.{u1} A (MonoidWithZero.toMulZeroOneClass.{u1} A (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)))))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (MulActionWithZero.toSMulWithZero.{u1, u3} A C (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (Module.toMulActionWithZero.{u1, u3} A C (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))))) (Algebra.toModule.{u1, u3} A C (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)) _inst_11)))))] {x : C}, Iff (IsAlgebraic.{u1, u3} A C _inst_5 (CommRing.toRing.{u3} C _inst_10) _inst_11 x) (IsAlgebraic.{u2, u3} K C (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_7)) (CommRing.toRing.{u3} C _inst_10) _inst_12 x)
-but is expected to have type
-  forall (A : Type.{u3}) (K : Type.{u1}) (C : Type.{u2}) [_inst_5 : CommRing.{u3} A] [_inst_6 : IsDomain.{u3} A (CommSemiring.toSemiring.{u3} A (CommRing.toCommSemiring.{u3} A _inst_5))] [_inst_7 : Field.{u1} K] [_inst_8 : Algebra.{u3, u1} A K (CommRing.toCommSemiring.{u3} A _inst_5) (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7)))] [_inst_9 : IsFractionRing.{u3, u1} A _inst_5 K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_7)) _inst_8] [_inst_10 : CommRing.{u2} C] [_inst_11 : Algebra.{u3, u2} A C (CommRing.toCommSemiring.{u3} A _inst_5) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10))] [_inst_12 : Algebra.{u1, u2} K C (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7)) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10))] [_inst_13 : IsScalarTower.{u3, u1, u2} A K C (Algebra.toSMul.{u3, u1} A K (CommRing.toCommSemiring.{u3} A _inst_5) (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7))) _inst_8) (Algebra.toSMul.{u1, u2} K C (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7)) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10)) _inst_12) (Algebra.toSMul.{u3, u2} A C (CommRing.toCommSemiring.{u3} A _inst_5) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10)) _inst_11)] {x : C}, Iff (IsAlgebraic.{u3, u2} A C _inst_5 (CommRing.toRing.{u2} C _inst_10) _inst_11 x) (IsAlgebraic.{u1, u2} K C (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_7)) (CommRing.toRing.{u2} C _inst_10) _inst_12 x)
-Case conversion may be inaccurate. Consider using '#align is_fraction_ring.is_algebraic_iff IsFractionRing.isAlgebraic_iffₓ'. -/
 /-- An element of a ring is algebraic over the ring `A` iff it is algebraic
 over the field of fractions of `A`.
 -/
@@ -215,12 +182,6 @@ theorem isAlgebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] {x : C
 
 variable {A K C}
 
-/- warning: is_fraction_ring.comap_is_algebraic_iff -> IsFractionRing.comap_isAlgebraic_iff is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} {K : Type.{u2}} {C : Type.{u3}} [_inst_5 : CommRing.{u1} A] [_inst_6 : IsDomain.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_5))] [_inst_7 : Field.{u2} K] [_inst_8 : Algebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7)))] [_inst_9 : IsFractionRing.{u1, u2} A _inst_5 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_7)) _inst_8] [_inst_10 : CommRing.{u3} C] [_inst_11 : Algebra.{u1, u3} A C (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))] [_inst_12 : Algebra.{u2, u3} K C (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7)) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))] [_inst_13 : IsScalarTower.{u1, u2, u3} A K C (SMulZeroClass.toHasSmul.{u1, u2} A K (AddZeroClass.toHasZero.{u2} K (AddMonoid.toAddZeroClass.{u2} K (AddCommMonoid.toAddMonoid.{u2} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))))))))) (SMulWithZero.toSmulZeroClass.{u1, u2} A K (MulZeroClass.toHasZero.{u1} A (MulZeroOneClass.toMulZeroClass.{u1} A (MonoidWithZero.toMulZeroOneClass.{u1} A (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)))))) (AddZeroClass.toHasZero.{u2} K (AddMonoid.toAddZeroClass.{u2} K (AddCommMonoid.toAddMonoid.{u2} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))))))))) (MulActionWithZero.toSMulWithZero.{u1, u2} A K (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5))) (AddZeroClass.toHasZero.{u2} K (AddMonoid.toAddZeroClass.{u2} K (AddCommMonoid.toAddMonoid.{u2} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))))))))) (Module.toMulActionWithZero.{u1, u2} A K (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7)))))) (Algebra.toModule.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_7))) _inst_8))))) (SMulZeroClass.toHasSmul.{u2, u3} K C (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (SMulWithZero.toSmulZeroClass.{u2, u3} K C (MulZeroClass.toHasZero.{u2} K (MulZeroOneClass.toMulZeroClass.{u2} K (MonoidWithZero.toMulZeroOneClass.{u2} K (Semiring.toMonoidWithZero.{u2} K (CommSemiring.toSemiring.{u2} K (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7))))))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (MulActionWithZero.toSMulWithZero.{u2, u3} K C (Semiring.toMonoidWithZero.{u2} K (CommSemiring.toSemiring.{u2} K (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7)))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (Module.toMulActionWithZero.{u2, u3} K C (CommSemiring.toSemiring.{u2} K (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))))) (Algebra.toModule.{u2, u3} K C (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_7)) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)) _inst_12))))) (SMulZeroClass.toHasSmul.{u1, u3} A C (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (SMulWithZero.toSmulZeroClass.{u1, u3} A C (MulZeroClass.toHasZero.{u1} A (MulZeroOneClass.toMulZeroClass.{u1} A (MonoidWithZero.toMulZeroOneClass.{u1} A (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)))))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (MulActionWithZero.toSMulWithZero.{u1, u3} A C (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5))) (AddZeroClass.toHasZero.{u3} C (AddMonoid.toAddZeroClass.{u3} C (AddCommMonoid.toAddMonoid.{u3} C (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)))))))) (Module.toMulActionWithZero.{u1, u3} A C (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_5)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} C (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} C (Semiring.toNonAssocSemiring.{u3} C (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10))))) (Algebra.toModule.{u1, u3} A C (CommRing.toCommSemiring.{u1} A _inst_5) (Ring.toSemiring.{u3} C (CommRing.toRing.{u3} C _inst_10)) _inst_11)))))], Iff (Algebra.IsAlgebraic.{u1, u3} A C _inst_5 (CommRing.toRing.{u3} C _inst_10) _inst_11) (Algebra.IsAlgebraic.{u2, u3} K C (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_7)) (CommRing.toRing.{u3} C _inst_10) _inst_12)
-but is expected to have type
-  forall {A : Type.{u3}} {K : Type.{u1}} {C : Type.{u2}} [_inst_5 : CommRing.{u3} A] [_inst_6 : IsDomain.{u3} A (CommSemiring.toSemiring.{u3} A (CommRing.toCommSemiring.{u3} A _inst_5))] [_inst_7 : Field.{u1} K] [_inst_8 : Algebra.{u3, u1} A K (CommRing.toCommSemiring.{u3} A _inst_5) (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7)))] [_inst_9 : IsFractionRing.{u3, u1} A _inst_5 K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_7)) _inst_8] [_inst_10 : CommRing.{u2} C] [_inst_11 : Algebra.{u3, u2} A C (CommRing.toCommSemiring.{u3} A _inst_5) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10))] [_inst_12 : Algebra.{u1, u2} K C (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7)) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10))] [_inst_13 : IsScalarTower.{u3, u1, u2} A K C (Algebra.toSMul.{u3, u1} A K (CommRing.toCommSemiring.{u3} A _inst_5) (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7))) _inst_8) (Algebra.toSMul.{u1, u2} K C (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_7)) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10)) _inst_12) (Algebra.toSMul.{u3, u2} A C (CommRing.toCommSemiring.{u3} A _inst_5) (CommSemiring.toSemiring.{u2} C (CommRing.toCommSemiring.{u2} C _inst_10)) _inst_11)], Iff (Algebra.IsAlgebraic.{u3, u2} A C _inst_5 (CommRing.toRing.{u2} C _inst_10) _inst_11) (Algebra.IsAlgebraic.{u1, u2} K C (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_7)) (CommRing.toRing.{u2} C _inst_10) _inst_12)
-Case conversion may be inaccurate. Consider using '#align is_fraction_ring.comap_is_algebraic_iff IsFractionRing.comap_isAlgebraic_iffₓ'. -/
 /-- A ring is algebraic over the ring `A` iff it is algebraic over the field of fractions of `A`.
 -/
 theorem comap_isAlgebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] :
@@ -244,9 +205,6 @@ variable {S M}
 
 open Polynomial
 
-/- warning: ring_hom.is_integral_elem_localization_at_leading_coeff -> RingHom.isIntegralElem_localization_at_leadingCoeff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_hom.is_integral_elem_localization_at_leading_coeff RingHom.isIntegralElem_localization_at_leadingCoeffₓ'. -/
 theorem RingHom.isIntegralElem_localization_at_leadingCoeff {R S : Type _} [CommRing R] [CommRing S]
     (f : R →+* S) (x : S) (p : R[X]) (hf : p.eval₂ f x = 0) (M : Submonoid R)
     (hM : p.leadingCoeff ∈ M) {Rₘ Sₘ : Type _} [CommRing Rₘ] [CommRing Sₘ] [Algebra R Rₘ]
@@ -266,9 +224,6 @@ theorem RingHom.isIntegralElem_localization_at_leadingCoeff {R S : Type _} [Comm
     exact trans (congr_arg (algebraMap S Sₘ) hf) (RingHom.map_zero _)
 #align ring_hom.is_integral_elem_localization_at_leading_coeff RingHom.isIntegralElem_localization_at_leadingCoeff
 
-/- warning: is_integral_localization_at_leading_coeff -> is_integral_localization_at_leadingCoeff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral_localization_at_leading_coeff is_integral_localization_at_leadingCoeffₓ'. -/
 /-- Given a particular witness to an element being algebraic over an algebra `R → S`,
 We can localize to a submonoid containing the leading coefficient to make it integral.
 Explicitly, the map between the localizations will be an integral ring morphism -/
@@ -281,9 +236,6 @@ theorem is_integral_localization_at_leadingCoeff {x : S} (p : R[X]) (hp : aeval 
   (algebraMap R S).isIntegralElem_localization_at_leadingCoeff x p hp M hM
 #align is_integral_localization_at_leading_coeff is_integral_localization_at_leadingCoeff
 
-/- warning: is_integral_localization -> isIntegral_localization is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral_localization isIntegral_localizationₓ'. -/
 /-- If `R → S` is an integral extension, `M` is a submonoid of `R`,
 `Rₘ` is the localization of `R` at `M`,
 and `Sₘ` is the localization of `S` at the image of `M` under the extension map,
@@ -308,9 +260,6 @@ theorem isIntegral_localization (H : Algebra.IsIntegral R S) :
     exact hx.symm ▸ is_integral_localization_at_leadingCoeff p hp.2 (hp.1.symm ▸ M.one_mem)
 #align is_integral_localization isIntegral_localization
 
-/- warning: is_integral_localization' -> isIntegral_localization' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral_localization' isIntegral_localization'ₓ'. -/
 theorem isIntegral_localization' {R S : Type _} [CommRing R] [CommRing S] {f : R →+* S}
     (hf : f.IsIntegral) (M : Submonoid R) :
     (map (Localization (M.map (f : R →* S))) f
@@ -321,9 +270,6 @@ theorem isIntegral_localization' {R S : Type _} [CommRing R] [CommRing S] {f : R
 
 variable (M)
 
-/- warning: is_localization.scale_roots_common_denom_mem_lifts -> IsLocalization.scaleRoots_commonDenom_mem_lifts is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_localization.scale_roots_common_denom_mem_lifts IsLocalization.scaleRoots_commonDenom_mem_liftsₓ'. -/
 theorem IsLocalization.scaleRoots_commonDenom_mem_lifts (p : Rₘ[X])
     (hp : p.leadingCoeff ∈ (algebraMap R Rₘ).range) :
     p.scaleRoots (algebraMap R Rₘ <| IsLocalization.commonDenom M p.support p.coeff) ∈
@@ -348,9 +294,6 @@ theorem IsLocalization.scaleRoots_commonDenom_mem_lifts (p : Rₘ[X])
     exact zero_mem (algebraMap R Rₘ).range
 #align is_localization.scale_roots_common_denom_mem_lifts IsLocalization.scaleRoots_commonDenom_mem_lifts
 
-/- warning: is_integral.exists_multiple_integral_of_is_localization -> IsIntegral.exists_multiple_integral_of_isLocalization is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral.exists_multiple_integral_of_is_localization IsIntegral.exists_multiple_integral_of_isLocalizationₓ'. -/
 theorem IsIntegral.exists_multiple_integral_of_isLocalization [Algebra Rₘ S] [IsScalarTower R Rₘ S]
     (x : S) (hx : IsIntegral Rₘ x) : ∃ m : M, IsIntegral R (m • x) :=
   by
@@ -382,9 +325,6 @@ variable [Algebra A C] [IsScalarTower A C L]
 
 open Algebra
 
-/- warning: is_integral_closure.is_fraction_ring_of_algebraic -> IsIntegralClosure.isFractionRing_of_algebraic is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral_closure.is_fraction_ring_of_algebraic IsIntegralClosure.isFractionRing_of_algebraicₓ'. -/
 /-- If the field `L` is an algebraic extension of the integral domain `A`,
 the integral closure `C` of `A` in `L` has fraction field `L`. -/
 theorem isFractionRing_of_algebraic (alg : IsAlgebraic A L)
@@ -407,9 +347,6 @@ theorem isFractionRing_of_algebraic (alg : IsAlgebraic A L)
 
 variable (K L)
 
-/- warning: is_integral_closure.is_fraction_ring_of_finite_extension -> IsIntegralClosure.isFractionRing_of_finite_extension is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_integral_closure.is_fraction_ring_of_finite_extension IsIntegralClosure.isFractionRing_of_finite_extensionₓ'. -/
 /-- If the field `L` is a finite extension of the fraction field of the integral domain `A`,
 the integral closure `C` of `A` in `L` has fraction field `L`. -/
 theorem isFractionRing_of_finite_extension [Algebra K L] [IsScalarTower A K L]
@@ -428,9 +365,6 @@ variable {L : Type _} [Field K] [Field L] [Algebra A K] [IsFractionRing A K]
 
 open Algebra
 
-/- warning: integral_closure.is_fraction_ring_of_algebraic -> integralClosure.isFractionRing_of_algebraic is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align integral_closure.is_fraction_ring_of_algebraic integralClosure.isFractionRing_of_algebraicₓ'. -/
 /-- If the field `L` is an algebraic extension of the integral domain `A`,
 the integral closure of `A` in `L` has fraction field `L`. -/
 theorem isFractionRing_of_algebraic [Algebra A L] (alg : IsAlgebraic A L)
@@ -440,9 +374,6 @@ theorem isFractionRing_of_algebraic [Algebra A L] (alg : IsAlgebraic A L)
 
 variable (K L)
 
-/- warning: integral_closure.is_fraction_ring_of_finite_extension -> integralClosure.isFractionRing_of_finite_extension is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align integral_closure.is_fraction_ring_of_finite_extension integralClosure.isFractionRing_of_finite_extensionₓ'. -/
 /-- If the field `L` is a finite extension of the fraction field of the integral domain `A`,
 the integral closure of `A` in `L` has fraction field `L`. -/
 theorem isFractionRing_of_finite_extension [Algebra A L] [Algebra K L] [IsScalarTower A K L]
@@ -456,9 +387,6 @@ namespace IsFractionRing
 
 variable (R S K)
 
-/- warning: is_fraction_ring.is_algebraic_iff' -> IsFractionRing.isAlgebraic_iff' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_fraction_ring.is_algebraic_iff' IsFractionRing.isAlgebraic_iff'ₓ'. -/
 /-- `S` is algebraic over `R` iff a fraction ring of `S` is algebraic over `R` -/
 theorem isAlgebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Algebra S K]
     [NoZeroSMulDivisors R K] [IsFractionRing S K] [IsScalarTower R S K] :
@@ -508,9 +436,6 @@ open nonZeroDivisors
 
 variable (R) {S K}
 
-/- warning: is_fraction_ring.ideal_span_singleton_map_subset -> IsFractionRing.ideal_span_singleton_map_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_fraction_ring.ideal_span_singleton_map_subset IsFractionRing.ideal_span_singleton_map_subsetₓ'. -/
 /-- If the `S`-multiples of `a` are contained in some `R`-span, then `Frac(S)`-multiples of `a`
 are contained in the equivalent `Frac(R)`-span. -/
 theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [Field K] [Field L]

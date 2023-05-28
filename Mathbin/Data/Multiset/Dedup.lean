@@ -69,12 +69,6 @@ theorem dedup_cons_of_not_mem {a : α} {s : Multiset α} : a ∉ s → dedup (a 
 #align multiset.dedup_cons_of_not_mem Multiset.dedup_cons_of_not_mem
 -/
 
-/- warning: multiset.dedup_le -> Multiset.dedup_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s) s
-Case conversion may be inaccurate. Consider using '#align multiset.dedup_le Multiset.dedup_leₓ'. -/
 theorem dedup_le (s : Multiset α) : dedup s ≤ s :=
   Quot.inductionOn s fun l => (dedup_sublist _).Subperm
 #align multiset.dedup_le Multiset.dedup_le
@@ -154,23 +148,11 @@ theorem dedup_singleton {a : α} : dedup ({a} : Multiset α) = {a} :=
 #align multiset.dedup_singleton Multiset.dedup_singleton
 -/
 
-/- warning: multiset.le_dedup -> Multiset.le_dedup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t)) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (Multiset.Nodup.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t)) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) (Multiset.Nodup.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align multiset.le_dedup Multiset.le_dedupₓ'. -/
 theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodup s :=
   ⟨fun h => ⟨le_trans h (dedup_le _), nodup_of_le h (nodup_dedup _)⟩, fun ⟨l, d⟩ =>
     (le_iff_subset d).2 <| Subset.trans (subset_of_le l) (subset_dedup _)⟩
 #align multiset.le_dedup Multiset.le_dedup
 
-/- warning: multiset.le_dedup_self -> Multiset.le_dedup_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s)) (Multiset.Nodup.{u1} α s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s)) (Multiset.Nodup.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align multiset.le_dedup_self Multiset.le_dedup_selfₓ'. -/
 theorem le_dedup_self {s : Multiset α} : s ≤ dedup s ↔ Nodup s := by
   rw [le_dedup, and_iff_right le_rfl]
 #align multiset.le_dedup_self Multiset.le_dedup_self
@@ -186,12 +168,6 @@ theorem dedup_map_dedup_eq [DecidableEq β] (f : α → β) (s : Multiset α) :
 #align multiset.dedup_map_dedup_eq Multiset.dedup_map_dedup_eq
 -/
 
-/- warning: multiset.dedup_nsmul -> Multiset.dedup_nsmul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{succ u1} (Multiset.{u1} α) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (SMul.smul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) n s)) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u1} (Multiset.{u1} α) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (HSMul.hSMul.{0, u1, u1} Nat (Multiset.{u1} α) (Multiset.{u1} α) (instHSMul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) n s)) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-Case conversion may be inaccurate. Consider using '#align multiset.dedup_nsmul Multiset.dedup_nsmulₓ'. -/
 @[simp]
 theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup = s.dedup :=
   by
@@ -199,24 +175,12 @@ theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup
   by_cases h : a ∈ s <;> simp [h, h0]
 #align multiset.dedup_nsmul Multiset.dedup_nsmul
 
-/- warning: multiset.nodup.le_dedup_iff_le -> Multiset.Nodup.le_dedup_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t)) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t)) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.le_dedup_iff_le Multiset.Nodup.le_dedup_iff_leₓ'. -/
 theorem Nodup.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedup ↔ s ≤ t := by
   simp [le_dedup, hno]
 #align multiset.nodup.le_dedup_iff_le Multiset.Nodup.le_dedup_iff_le
 
 end Multiset
 
-/- warning: multiset.nodup.le_nsmul_iff_le -> Multiset.Nodup.le_nsmul_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α} {n : Nat}, (Multiset.Nodup.{u1} α s) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (SMul.smul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) n t)) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α} {n : Nat}, (Multiset.Nodup.{u1} α s) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (HSMul.hSMul.{0, u1, u1} Nat (Multiset.{u1} α) (Multiset.{u1} α) (instHSMul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) n t)) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.le_nsmul_iff_le Multiset.Nodup.le_nsmul_iff_leₓ'. -/
 theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup)
     (hn : n ≠ 0) : s ≤ n • t ↔ s ≤ t := by
   classical

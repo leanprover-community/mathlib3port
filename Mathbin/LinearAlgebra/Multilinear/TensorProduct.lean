@@ -35,12 +35,6 @@ variable {N₂ : Type _} [AddCommMonoid N₂] [Module R N₂]
 
 variable {N : Type _} [AddCommMonoid N] [Module R N]
 
-/- warning: multilinear_map.dom_coprod -> MultilinearMap.domCoprod is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {ι₁ : Type.{u2}} {ι₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] {N₁ : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} N₁] [_inst_3 : Module.{u1, u4} R N₁ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] {N₂ : Type.{u5}} [_inst_4 : AddCommMonoid.{u5} N₂] [_inst_5 : Module.{u1, u5} R N₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] {N : Type.{u6}} [_inst_6 : AddCommMonoid.{u6} N] [_inst_7 : Module.{u1, u6} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (MultilinearMap.{u1, u6, u4, u2} R ι₁ (fun (_x : ι₁) => N) N₁ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι₁) => _inst_6) _inst_2 (fun (i : ι₁) => _inst_7) _inst_3) -> (MultilinearMap.{u1, u6, u5, u3} R ι₂ (fun (_x : ι₂) => N) N₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι₂) => _inst_6) _inst_4 (fun (i : ι₂) => _inst_7) _inst_5) -> (MultilinearMap.{u1, u6, max u4 u5, max u2 u3} R (Sum.{u2, u3} ι₁ ι₂) (fun (_x : Sum.{u2, u3} ι₁ ι₂) => N) (TensorProduct.{u1, u4, u5} R _inst_1 N₁ N₂ _inst_2 _inst_4 _inst_3 _inst_5) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Sum.{u2, u3} ι₁ ι₂) => _inst_6) (TensorProduct.addCommMonoid.{u1, u4, u5} R _inst_1 N₁ N₂ _inst_2 _inst_4 _inst_3 _inst_5) (fun (i : Sum.{u2, u3} ι₁ ι₂) => _inst_7) (TensorProduct.module.{u1, u4, u5} R _inst_1 N₁ N₂ _inst_2 _inst_4 _inst_3 _inst_5))
-but is expected to have type
-  forall {R : Type.{u1}} {ι₁ : Type.{u2}} {ι₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] {N₁ : Type.{u4}} [_inst_2 : AddCommMonoid.{u4} N₁] [_inst_3 : Module.{u1, u4} R N₁ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] {N₂ : Type.{u5}} [_inst_4 : AddCommMonoid.{u5} N₂] [_inst_5 : Module.{u1, u5} R N₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] {N : Type.{u6}} [_inst_6 : AddCommMonoid.{u6} N] [_inst_7 : Module.{u1, u6} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (MultilinearMap.{u1, u6, u4, u2} R ι₁ (fun (_x : ι₁) => N) N₁ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι₁) => _inst_6) _inst_2 (fun (i : ι₁) => _inst_7) _inst_3) -> (MultilinearMap.{u1, u6, u5, u3} R ι₂ (fun (_x : ι₂) => N) N₂ (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : ι₂) => _inst_6) _inst_4 (fun (i : ι₂) => _inst_7) _inst_5) -> (MultilinearMap.{u1, u6, max u5 u4, max u2 u3} R (Sum.{u2, u3} ι₁ ι₂) (fun (_x : Sum.{u2, u3} ι₁ ι₂) => N) (TensorProduct.{u1, u4, u5} R _inst_1 N₁ N₂ _inst_2 _inst_4 _inst_3 _inst_5) (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : Sum.{u2, u3} ι₁ ι₂) => _inst_6) (TensorProduct.addCommMonoid.{u1, u4, u5} R _inst_1 N₁ N₂ _inst_2 _inst_4 _inst_3 _inst_5) (fun (i : Sum.{u2, u3} ι₁ ι₂) => _inst_7) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u4, u5} R _inst_1 N₁ N₂ _inst_2 _inst_4 _inst_3 _inst_5))
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_coprod MultilinearMap.domCoprodₓ'. -/
 /-- Given two multilinear maps `(ι₁ → N) → N₁` and `(ι₂ → N) → N₂`, this produces the map
 `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂` by taking the coproduct of the domain and the tensor product
 of the codomain.
@@ -87,18 +81,12 @@ def domCoprod' :
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 -/
 
-/- warning: multilinear_map.dom_coprod'_apply -> MultilinearMap.domCoprod'_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_coprod'_apply MultilinearMap.domCoprod'_applyₓ'. -/
 @[simp]
 theorem domCoprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) : domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
   rfl
 #align multilinear_map.dom_coprod'_apply MultilinearMap.domCoprod'_apply
 
-/- warning: multilinear_map.dom_coprod_dom_dom_congr_sum_congr -> MultilinearMap.domCoprod_domDomCongr_sumCongr is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.domCoprod_domDomCongr_sumCongrₓ'. -/
 /-- When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
 `multilinear_map.dom_coprod`. -/
 theorem domCoprod_domDomCongr_sumCongr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)

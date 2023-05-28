@@ -167,12 +167,6 @@ def sum [Add α] [Zero α] : ∀ {m} (v : Fin m → α), α
 
 open BigOperators
 
-/- warning: fin_vec.sum_eq -> FinVec.sum_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] {m : Nat} (a : (Fin m) -> α), Eq.{succ u1} α (FinVec.sum.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) m a) (Finset.sum.{u1, 0} α (Fin m) _inst_1 (Finset.univ.{0} (Fin m) (Fin.fintype m)) (fun (i : Fin m) => a i))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] {m : Nat} (a : (Fin m) -> α), Eq.{succ u1} α (FinVec.sum.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)) m a) (Finset.sum.{u1, 0} α (Fin m) _inst_1 (Finset.univ.{0} (Fin m) (Fin.fintype m)) (fun (i : Fin m) => a i))
-Case conversion may be inaccurate. Consider using '#align fin_vec.sum_eq FinVec.sum_eqₓ'. -/
 /-- This can be used to prove
 ```lean
 example [add_comm_monoid α] (a : fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :=

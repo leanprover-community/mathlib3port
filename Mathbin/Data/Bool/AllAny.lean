@@ -64,12 +64,6 @@ theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p 
   rfl
 #align list.any_cons List.any_consₓ
 
-/- warning: list.any_iff_exists -> List.any_iff_exists is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {p : α -> Bool}, Iff (coeSort.{1, 1} Bool Prop coeSortBool (List.any.{u1} α l p)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) (fun (H : Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) => coeSort.{1, 1} Bool Prop coeSortBool (p a))))
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} {p : α -> Bool}, Iff (Eq.{1} Bool (List.any.{u1} α l p) Bool.true) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l) (Eq.{1} Bool (p a) Bool.true)))
-Case conversion may be inaccurate. Consider using '#align list.any_iff_exists List.any_iff_existsₓ'. -/
 theorem any_iff_exists {p : α → Bool} : any l p ↔ ∃ a ∈ l, p a :=
   by
   induction' l with a l ih
@@ -77,12 +71,6 @@ theorem any_iff_exists {p : α → Bool} : any l p ↔ ∃ a ∈ l, p a :=
   simp only [any_cons, Bool.or_coe_iff, ih, exists_mem_cons_iff]
 #align list.any_iff_exists List.any_iff_exists
 
-/- warning: list.any_iff_exists_prop -> List.any_iff_exists_prop is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {l : List.{u1} α}, Iff (coeSort.{1, 1} Bool Prop coeSortBool (List.any.{u1} α l (fun (a : α) => Decidable.decide (p a) (_inst_1 a)))) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) (fun (H : Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) => p a)))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {l : List.{u1} α}, Iff (Eq.{1} Bool (List.any.{u1} α l (fun (a : α) => Decidable.decide (p a) (_inst_1 a))) Bool.true) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l) (p a)))
-Case conversion may be inaccurate. Consider using '#align list.any_iff_exists_prop List.any_iff_exists_propₓ'. -/
 theorem any_iff_exists_prop : (any l fun a => p a) ↔ ∃ a ∈ l, p a := by simp [any_iff_exists]
 #align list.any_iff_exists_prop List.any_iff_exists_prop
 

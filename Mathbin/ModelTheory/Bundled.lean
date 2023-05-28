@@ -102,11 +102,6 @@ instance : CoeSort T.ModelType (Type w) :=
   ⟨ModelType.Carrier⟩
 
 /- warning: first_order.language.Theory.Model.carrier_eq_coe clashes with [anonymous] -> [anonymous]
-warning: first_order.language.Theory.Model.carrier_eq_coe -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u, v}} (T : FirstOrder.Language.Theory.{u, v} L) (M : FirstOrder.Language.Theory.ModelType.{u, v, u_1} L T), Eq.{succ (succ u_1)} Type.{u_1} (FirstOrder.Language.Theory.ModelType.Carrier.{u, v, u_1} L T M) (coeSort.{max (succ u) (succ v) (succ (succ u_1)), succ (succ u_1)} (FirstOrder.Language.Theory.ModelType.{u, v, u_1} L T) Type.{u_1} (FirstOrder.Language.Theory.ModelType.instCoeSort.{u, v, u_1} L T) M)
-but is expected to have type
-  forall {L : Type.{u}} {T : Type.{v}}, (Nat -> L -> T) -> Nat -> (List.{u} L) -> (List.{v} T)
 Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.Model.carrier_eq_coe [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (M : T.ModelType) : M.carrier = M :=

@@ -34,33 +34,15 @@ def Nullhomotopic (f : C(X, Y)) : Prop :=
 #align continuous_map.nullhomotopic ContinuousMap.Nullhomotopic
 -/
 
-/- warning: continuous_map.nullhomotopic_of_constant -> ContinuousMap.nullhomotopic_of_constant is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] (y : Y), ContinuousMap.Nullhomotopic.{u1, u2} X Y _inst_1 _inst_2 (ContinuousMap.const.{u1, u2} X Y _inst_1 _inst_2 y)
-but is expected to have type
-  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] (y : Y), ContinuousMap.Nullhomotopic.{u2, u1} X Y _inst_1 _inst_2 (ContinuousMap.const.{u2, u1} X Y _inst_1 _inst_2 y)
-Case conversion may be inaccurate. Consider using '#align continuous_map.nullhomotopic_of_constant ContinuousMap.nullhomotopic_of_constantₓ'. -/
 theorem nullhomotopic_of_constant (y : Y) : Nullhomotopic (ContinuousMap.const X y) :=
   ⟨y, by rfl⟩
 #align continuous_map.nullhomotopic_of_constant ContinuousMap.nullhomotopic_of_constant
 
-/- warning: continuous_map.nullhomotopic.comp_right -> ContinuousMap.Nullhomotopic.comp_right is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : TopologicalSpace.{u3} Z] {f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2}, (ContinuousMap.Nullhomotopic.{u1, u2} X Y _inst_1 _inst_2 f) -> (forall (g : ContinuousMap.{u2, u3} Y Z _inst_2 _inst_3), ContinuousMap.Nullhomotopic.{u1, u3} X Z _inst_1 _inst_3 (ContinuousMap.comp.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 g f))
-but is expected to have type
-  forall {X : Type.{u3}} {Y : Type.{u2}} {Z : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : TopologicalSpace.{u1} Z] {f : ContinuousMap.{u3, u2} X Y _inst_1 _inst_2}, (ContinuousMap.Nullhomotopic.{u3, u2} X Y _inst_1 _inst_2 f) -> (forall (g : ContinuousMap.{u2, u1} Y Z _inst_2 _inst_3), ContinuousMap.Nullhomotopic.{u3, u1} X Z _inst_1 _inst_3 (ContinuousMap.comp.{u3, u2, u1} X Y Z _inst_1 _inst_2 _inst_3 g f))
-Case conversion may be inaccurate. Consider using '#align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_rightₓ'. -/
 theorem Nullhomotopic.comp_right {f : C(X, Y)} (hf : f.Nullhomotopic) (g : C(Y, Z)) :
     (g.comp f).Nullhomotopic := by cases' hf with y hy; use g y;
   exact homotopic.hcomp hy (homotopic.refl g)
 #align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_right
 
-/- warning: continuous_map.nullhomotopic.comp_left -> ContinuousMap.Nullhomotopic.comp_left is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : TopologicalSpace.{u3} Z] {f : ContinuousMap.{u2, u3} Y Z _inst_2 _inst_3}, (ContinuousMap.Nullhomotopic.{u2, u3} Y Z _inst_2 _inst_3 f) -> (forall (g : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), ContinuousMap.Nullhomotopic.{u1, u3} X Z _inst_1 _inst_3 (ContinuousMap.comp.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 f g))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u3}} {Z : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u3} Y] [_inst_3 : TopologicalSpace.{u2} Z] {f : ContinuousMap.{u3, u2} Y Z _inst_2 _inst_3}, (ContinuousMap.Nullhomotopic.{u3, u2} Y Z _inst_2 _inst_3 f) -> (forall (g : ContinuousMap.{u1, u3} X Y _inst_1 _inst_2), ContinuousMap.Nullhomotopic.{u1, u2} X Z _inst_1 _inst_3 (ContinuousMap.comp.{u1, u3, u2} X Y Z _inst_1 _inst_2 _inst_3 f g))
-Case conversion may be inaccurate. Consider using '#align continuous_map.nullhomotopic.comp_left ContinuousMap.Nullhomotopic.comp_leftₓ'. -/
 theorem Nullhomotopic.comp_left {f : C(Y, Z)} (hf : f.Nullhomotopic) (g : C(X, Y)) :
     (f.comp g).Nullhomotopic := by cases' hf with y hy; use y;
   exact homotopic.hcomp (homotopic.refl g) hy
@@ -115,12 +97,6 @@ protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace [ContractibleSpa
 #align continuous_map.homotopy_equiv.contractible_space ContinuousMap.HomotopyEquiv.contractibleSpace
 -/
 
-/- warning: continuous_map.homotopy_equiv.contractible_space_iff -> ContinuousMap.HomotopyEquiv.contractibleSpace_iff is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y], (ContinuousMap.HomotopyEquiv.{u1, u2} X Y _inst_1 _inst_2) -> (Iff (ContractibleSpace.{u1} X _inst_1) (ContractibleSpace.{u2} Y _inst_2))
-but is expected to have type
-  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y], (ContinuousMap.HomotopyEquiv.{u2, u1} X Y _inst_1 _inst_2) -> (Iff (ContractibleSpace.{u2} X _inst_1) (ContractibleSpace.{u1} Y _inst_2))
-Case conversion may be inaccurate. Consider using '#align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractibleSpace_iffₓ'. -/
 protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace_iff (e : X ≃ₕ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
   ⟨by intro h; exact e.symm.contractible_space, by intro h; exact e.contractible_space⟩
@@ -133,12 +109,6 @@ protected theorem Homeomorph.contractibleSpace [ContractibleSpace Y] (e : X ≃�
 #align homeomorph.contractible_space Homeomorph.contractibleSpace
 -/
 
-/- warning: homeomorph.contractible_space_iff -> Homeomorph.contractibleSpace_iff is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y], (Homeomorph.{u1, u2} X Y _inst_1 _inst_2) -> (Iff (ContractibleSpace.{u1} X _inst_1) (ContractibleSpace.{u2} Y _inst_2))
-but is expected to have type
-  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y], (Homeomorph.{u2, u1} X Y _inst_1 _inst_2) -> (Iff (ContractibleSpace.{u2} X _inst_1) (ContractibleSpace.{u1} Y _inst_2))
-Case conversion may be inaccurate. Consider using '#align homeomorph.contractible_space_iff Homeomorph.contractibleSpace_iffₓ'. -/
 protected theorem Homeomorph.contractibleSpace_iff (e : X ≃ₜ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
   e.toHomotopyEquiv.contractibleSpace_iff

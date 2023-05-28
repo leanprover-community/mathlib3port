@@ -75,28 +75,16 @@ variable [ContinuousAdd E] [ContinuousAdd F]
 
 variable [TopologicalSpace R] [ContinuousSMul R E] [ContinuousSMul R F]
 
-/- warning: linear_pmap.is_closable -> LinearPMap.IsClosable is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : AddCommGroup.{u3} F] [_inst_4 : Module.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_5 : Module.{u1, u3} R F (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : TopologicalSpace.{u3} F] [_inst_8 : ContinuousAdd.{u2} E _inst_6 (AddZeroClass.toHasAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))] [_inst_9 : ContinuousAdd.{u3} F _inst_7 (AddZeroClass.toHasAdd.{u3} F (AddMonoid.toAddZeroClass.{u3} F (SubNegMonoid.toAddMonoid.{u3} F (AddGroup.toSubNegMonoid.{u3} F (AddCommGroup.toAddGroup.{u3} F _inst_3)))))] [_inst_10 : TopologicalSpace.{u1} R] [_inst_11 : ContinuousSMul.{u1, u2} R E (SMulZeroClass.toHasSmul.{u1, u2} R E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} R E (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} R E (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)))) _inst_10 _inst_6] [_inst_12 : ContinuousSMul.{u1, u3} R F (SMulZeroClass.toHasSmul.{u1, u3} R F (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (SMulWithZero.toSmulZeroClass.{u1, u3} R F (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (MulActionWithZero.toSMulWithZero.{u1, u3} R F (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (Module.toMulActionWithZero.{u1, u3} R F (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3) _inst_5)))) _inst_10 _inst_7], (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5) -> Prop
-but is expected to have type
-  forall {R : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : AddCommGroup.{u3} F] [_inst_4 : Module.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_5 : Module.{u1, u3} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : TopologicalSpace.{u3} F] [_inst_8 : ContinuousAdd.{u2} E _inst_6 (AddZeroClass.toAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))] [_inst_9 : ContinuousAdd.{u3} F _inst_7 (AddZeroClass.toAdd.{u3} F (AddMonoid.toAddZeroClass.{u3} F (SubNegMonoid.toAddMonoid.{u3} F (AddGroup.toSubNegMonoid.{u3} F (AddCommGroup.toAddGroup.{u3} F _inst_3)))))] [_inst_10 : TopologicalSpace.{u1} R] [_inst_11 : ContinuousSMul.{u1, u2} R E (SMulZeroClass.toSMul.{u1, u2} R E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u1, u2} R E (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u1, u2} R E (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)))) _inst_10 _inst_6] [_inst_12 : ContinuousSMul.{u1, u3} R F (SMulZeroClass.toSMul.{u1, u3} R F (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (SMulWithZero.toSMulZeroClass.{u1, u3} R F (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (MulActionWithZero.toSMulWithZero.{u1, u3} R F (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (Module.toMulActionWithZero.{u1, u3} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3) _inst_5)))) _inst_10 _inst_7], (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5) -> Prop
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable LinearPMap.IsClosableₓ'. -/
 /-- An unbounded operator is closable iff the closure of its graph is a graph. -/
 def IsClosable (f : E →ₗ.[R] F) : Prop :=
   ∃ f' : LinearPMap R E F, f.graph.topologicalClosure = f'.graph
 #align linear_pmap.is_closable LinearPMap.IsClosable
 
-/- warning: linear_pmap.is_closed.is_closable -> LinearPMap.IsClosed.isClosable is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closed.is_closable LinearPMap.IsClosed.isClosableₓ'. -/
 /-- A closed operator is trivially closable. -/
 theorem IsClosed.isClosable {f : E →ₗ.[R] F} (hf : f.IsClosed) : f.IsClosable :=
   ⟨f, hf.submodule_topologicalClosure_eq⟩
 #align linear_pmap.is_closed.is_closable LinearPMap.IsClosed.isClosable
 
-/- warning: linear_pmap.is_closable.le_is_closable -> LinearPMap.IsClosable.leIsClosable is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable.le_is_closable LinearPMap.IsClosable.leIsClosableₓ'. -/
 /-- If `g` has a closable extension `f`, then `g` itself is closable. -/
 theorem IsClosable.leIsClosable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg : g ≤ f) :
     g.IsClosable := by
@@ -110,9 +98,6 @@ theorem IsClosable.leIsClosable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg 
   rw [Submodule.toLinearPMap_graph_eq]
 #align linear_pmap.is_closable.le_is_closable LinearPMap.IsClosable.leIsClosable
 
-/- warning: linear_pmap.is_closable.exists_unique -> LinearPMap.IsClosable.existsUnique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable.exists_unique LinearPMap.IsClosable.existsUniqueₓ'. -/
 /-- The closure is unique. -/
 theorem IsClosable.existsUnique {f : E →ₗ.[R] F} (hf : f.IsClosable) :
     ∃! f' : E →ₗ.[R] F, f.graph.topologicalClosure = f'.graph :=
@@ -123,34 +108,19 @@ theorem IsClosable.existsUnique {f : E →ₗ.[R] F} (hf : f.IsClosable) :
 
 open Classical
 
-/- warning: linear_pmap.closure -> LinearPMap.closure is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : AddCommGroup.{u3} F] [_inst_4 : Module.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_5 : Module.{u1, u3} R F (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : TopologicalSpace.{u3} F] [_inst_8 : ContinuousAdd.{u2} E _inst_6 (AddZeroClass.toHasAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))] [_inst_9 : ContinuousAdd.{u3} F _inst_7 (AddZeroClass.toHasAdd.{u3} F (AddMonoid.toAddZeroClass.{u3} F (SubNegMonoid.toAddMonoid.{u3} F (AddGroup.toSubNegMonoid.{u3} F (AddCommGroup.toAddGroup.{u3} F _inst_3)))))] [_inst_10 : TopologicalSpace.{u1} R] [_inst_11 : ContinuousSMul.{u1, u2} R E (SMulZeroClass.toHasSmul.{u1, u2} R E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} R E (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} R E (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)))) _inst_10 _inst_6] [_inst_12 : ContinuousSMul.{u1, u3} R F (SMulZeroClass.toHasSmul.{u1, u3} R F (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (SMulWithZero.toSmulZeroClass.{u1, u3} R F (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (MulActionWithZero.toSMulWithZero.{u1, u3} R F (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (Module.toMulActionWithZero.{u1, u3} R F (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3) _inst_5)))) _inst_10 _inst_7], (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5) -> (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5)
-but is expected to have type
-  forall {R : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : AddCommGroup.{u3} F] [_inst_4 : Module.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_5 : Module.{u1, u3} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : TopologicalSpace.{u3} F] [_inst_8 : ContinuousAdd.{u2} E _inst_6 (AddZeroClass.toAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))] [_inst_9 : ContinuousAdd.{u3} F _inst_7 (AddZeroClass.toAdd.{u3} F (AddMonoid.toAddZeroClass.{u3} F (SubNegMonoid.toAddMonoid.{u3} F (AddGroup.toSubNegMonoid.{u3} F (AddCommGroup.toAddGroup.{u3} F _inst_3)))))] [_inst_10 : TopologicalSpace.{u1} R] [_inst_11 : ContinuousSMul.{u1, u2} R E (SMulZeroClass.toSMul.{u1, u2} R E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u1, u2} R E (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u1, u2} R E (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)))) _inst_10 _inst_6] [_inst_12 : ContinuousSMul.{u1, u3} R F (SMulZeroClass.toSMul.{u1, u3} R F (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (SMulWithZero.toSMulZeroClass.{u1, u3} R F (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (MulActionWithZero.toSMulWithZero.{u1, u3} R F (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (Module.toMulActionWithZero.{u1, u3} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3) _inst_5)))) _inst_10 _inst_7], (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5) -> (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5)
-Case conversion may be inaccurate. Consider using '#align linear_pmap.closure LinearPMap.closureₓ'. -/
 /-- If `f` is closable, then `f.closure` is the closure. Otherwise it is defined
 as `f.closure = f`. -/
 noncomputable def closure (f : E →ₗ.[R] F) : E →ₗ.[R] F :=
   if hf : f.IsClosable then hf.some else f
 #align linear_pmap.closure LinearPMap.closure
 
-/- warning: linear_pmap.closure_def -> LinearPMap.closure_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.closure_def LinearPMap.closure_defₓ'. -/
 theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.some := by
   simp [closure, hf]
 #align linear_pmap.closure_def LinearPMap.closure_def
 
-/- warning: linear_pmap.closure_def' -> LinearPMap.closure_def' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.closure_def' LinearPMap.closure_def'ₓ'. -/
 theorem closure_def' {f : E →ₗ.[R] F} (hf : ¬f.IsClosable) : f.closure = f := by simp [closure, hf]
 #align linear_pmap.closure_def' LinearPMap.closure_def'
 
-/- warning: linear_pmap.is_closable.graph_closure_eq_closure_graph -> LinearPMap.IsClosable.graph_closure_eq_closure_graph is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable.graph_closure_eq_closure_graph LinearPMap.IsClosable.graph_closure_eq_closure_graphₓ'. -/
 /-- The closure (as a submodule) of the graph is equal to the graph of the closure
   (as a `linear_pmap`). -/
 theorem IsClosable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.IsClosable) :
@@ -160,9 +130,6 @@ theorem IsClosable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.I
   exact hf.some_spec
 #align linear_pmap.is_closable.graph_closure_eq_closure_graph LinearPMap.IsClosable.graph_closure_eq_closure_graph
 
-/- warning: linear_pmap.le_closure -> LinearPMap.le_closure is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.le_closure LinearPMap.le_closureₓ'. -/
 /-- A `linear_pmap` is contained in its closure. -/
 theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure :=
   by
@@ -173,9 +140,6 @@ theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure :=
   rw [closure_def' hf]
 #align linear_pmap.le_closure LinearPMap.le_closure
 
-/- warning: linear_pmap.is_closable.closure_mono -> LinearPMap.IsClosable.closure_mono is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable.closure_mono LinearPMap.IsClosable.closure_monoₓ'. -/
 theorem IsClosable.closure_mono {f g : E →ₗ.[R] F} (hg : g.IsClosable) (h : f ≤ g) :
     f.closure ≤ g.closure := by
   refine' le_of_le_graph _
@@ -184,9 +148,6 @@ theorem IsClosable.closure_mono {f g : E →ₗ.[R] F} (hg : g.IsClosable) (h : 
   exact Submodule.topologicalClosure_mono (le_graph_of_le h)
 #align linear_pmap.is_closable.closure_mono LinearPMap.IsClosable.closure_mono
 
-/- warning: linear_pmap.is_closable.closure_is_closed -> LinearPMap.IsClosable.closure_isClosed is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable.closure_is_closed LinearPMap.IsClosable.closure_isClosedₓ'. -/
 /-- If `f` is closable, then the closure is closed. -/
 theorem IsClosable.closure_isClosed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosed :=
   by
@@ -194,17 +155,11 @@ theorem IsClosable.closure_isClosed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f
   exact f.graph.is_closed_topological_closure
 #align linear_pmap.is_closable.closure_is_closed LinearPMap.IsClosable.closure_isClosed
 
-/- warning: linear_pmap.is_closable.closure_is_closable -> LinearPMap.IsClosable.closureIsClosable is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable.closure_is_closable LinearPMap.IsClosable.closureIsClosableₓ'. -/
 /-- If `f` is closable, then the closure is closable. -/
 theorem IsClosable.closureIsClosable {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosable :=
   hf.closure_isClosed.IsClosable
 #align linear_pmap.is_closable.closure_is_closable LinearPMap.IsClosable.closureIsClosable
 
-/- warning: linear_pmap.is_closable_iff_exists_closed_extension -> LinearPMap.isClosable_iff_exists_closed_extension is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closable_iff_exists_closed_extension LinearPMap.isClosable_iff_exists_closed_extensionₓ'. -/
 theorem isClosable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
     f.IsClosable ↔ ∃ (g : E →ₗ.[R] F)(hg : g.IsClosed), f ≤ g :=
   ⟨fun h => ⟨f.closure, h.closure_isClosed, f.le_closure⟩, fun ⟨_, hg, h⟩ =>
@@ -214,29 +169,17 @@ theorem isClosable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
 /-! ### The core of a linear operator -/
 
 
-/- warning: linear_pmap.has_core -> LinearPMap.HasCore is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : AddCommGroup.{u3} F] [_inst_4 : Module.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_5 : Module.{u1, u3} R F (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : TopologicalSpace.{u3} F] [_inst_8 : ContinuousAdd.{u2} E _inst_6 (AddZeroClass.toHasAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))] [_inst_9 : ContinuousAdd.{u3} F _inst_7 (AddZeroClass.toHasAdd.{u3} F (AddMonoid.toAddZeroClass.{u3} F (SubNegMonoid.toAddMonoid.{u3} F (AddGroup.toSubNegMonoid.{u3} F (AddCommGroup.toAddGroup.{u3} F _inst_3)))))] [_inst_10 : TopologicalSpace.{u1} R] [_inst_11 : ContinuousSMul.{u1, u2} R E (SMulZeroClass.toHasSmul.{u1, u2} R E (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (SMulWithZero.toSmulZeroClass.{u1, u2} R E (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (MulActionWithZero.toSMulWithZero.{u1, u2} R E (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u2} E (AddMonoid.toAddZeroClass.{u2} E (AddCommMonoid.toAddMonoid.{u2} E (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)))) (Module.toMulActionWithZero.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)))) _inst_10 _inst_6] [_inst_12 : ContinuousSMul.{u1, u3} R F (SMulZeroClass.toHasSmul.{u1, u3} R F (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (SMulWithZero.toSmulZeroClass.{u1, u3} R F (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (MulActionWithZero.toSMulWithZero.{u1, u3} R F (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u3} F (AddMonoid.toAddZeroClass.{u3} F (AddCommMonoid.toAddMonoid.{u3} F (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)))) (Module.toMulActionWithZero.{u1, u3} R F (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3) _inst_5)))) _inst_10 _inst_7], (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5) -> (Submodule.{u1, u2} R E (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4) -> Prop
-but is expected to have type
-  forall {R : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : AddCommGroup.{u3} F] [_inst_4 : Module.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] [_inst_5 : Module.{u1, u3} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3)] [_inst_6 : TopologicalSpace.{u2} E] [_inst_7 : TopologicalSpace.{u3} F] [_inst_8 : ContinuousAdd.{u2} E _inst_6 (AddZeroClass.toAdd.{u2} E (AddMonoid.toAddZeroClass.{u2} E (SubNegMonoid.toAddMonoid.{u2} E (AddGroup.toSubNegMonoid.{u2} E (AddCommGroup.toAddGroup.{u2} E _inst_2)))))] [_inst_9 : ContinuousAdd.{u3} F _inst_7 (AddZeroClass.toAdd.{u3} F (AddMonoid.toAddZeroClass.{u3} F (SubNegMonoid.toAddMonoid.{u3} F (AddGroup.toSubNegMonoid.{u3} F (AddCommGroup.toAddGroup.{u3} F _inst_3)))))] [_inst_10 : TopologicalSpace.{u1} R] [_inst_11 : ContinuousSMul.{u1, u2} R E (SMulZeroClass.toSMul.{u1, u2} R E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (SMulWithZero.toSMulZeroClass.{u1, u2} R E (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (MulActionWithZero.toSMulWithZero.{u1, u2} R E (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2))))) (Module.toMulActionWithZero.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)))) _inst_10 _inst_6] [_inst_12 : ContinuousSMul.{u1, u3} R F (SMulZeroClass.toSMul.{u1, u3} R F (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (SMulWithZero.toSMulZeroClass.{u1, u3} R F (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (MulActionWithZero.toSMulWithZero.{u1, u3} R F (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NegZeroClass.toZero.{u3} F (SubNegZeroMonoid.toNegZeroClass.{u3} F (SubtractionMonoid.toSubNegZeroMonoid.{u3} F (SubtractionCommMonoid.toSubtractionMonoid.{u3} F (AddCommGroup.toDivisionAddCommMonoid.{u3} F _inst_3))))) (Module.toMulActionWithZero.{u1, u3} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} F _inst_3) _inst_5)))) _inst_10 _inst_7], (LinearPMap.{u1, u2, u3} R (CommRing.toRing.{u1} R _inst_1) E _inst_2 _inst_4 F _inst_3 _inst_5) -> (Submodule.{u1, u2} R E (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4) -> Prop
-Case conversion may be inaccurate. Consider using '#align linear_pmap.has_core LinearPMap.HasCoreₓ'. -/
 /-- A submodule `S` is a core of `f` if the closure of the restriction of `f` to `S` is again `f`.-/
 structure HasCore (f : E →ₗ.[R] F) (S : Submodule R E) : Prop where
   le_domain : S ≤ f.domain
   closure_eq : (f.domRestrict S).closure = f
 #align linear_pmap.has_core LinearPMap.HasCore
 
-/- warning: linear_pmap.has_core_def -> LinearPMap.hasCore_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.has_core_def LinearPMap.hasCore_defₓ'. -/
 theorem hasCore_def {f : E →ₗ.[R] F} {S : Submodule R E} (h : f.HasCore S) :
     (f.domRestrict S).closure = f :=
   h.2
 #align linear_pmap.has_core_def LinearPMap.hasCore_def
 
-/- warning: linear_pmap.closure_has_core -> LinearPMap.closureHasCore is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_pmap.closure_has_core LinearPMap.closureHasCoreₓ'. -/
 /-- For every unbounded operator `f` the submodule `f.domain` is a core of its closure.
 
 Note that we don't require that `f` is closable, due to the definition of the closure. -/

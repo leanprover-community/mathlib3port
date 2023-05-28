@@ -165,23 +165,11 @@ def Comp (r : α → β → Prop) (p : β → γ → Prop) (a : α) (c : γ) : P
 -- mathport name: «expr ∘r »
 local infixr:80 " ∘r " => Relation.Comp
 
-/- warning: relation.comp_eq -> Relation.comp_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{max (succ u1) (succ u2)} (α -> β -> Prop) (Relation.Comp.{u1, u2, u2} α β β r (Eq.{succ u2} β)) r
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{max (succ u2) (succ u1)} (α -> β -> Prop) (Relation.Comp.{u2, u1, u1} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1351 : β) (x._@.Mathlib.Logic.Relation._hyg.1353 : β) => Eq.{succ u1} β x._@.Mathlib.Logic.Relation._hyg.1351 x._@.Mathlib.Logic.Relation._hyg.1353)) r
-Case conversion may be inaccurate. Consider using '#align relation.comp_eq Relation.comp_eqₓ'. -/
 theorem comp_eq : r ∘r (· = ·) = r :=
   funext fun a =>
     funext fun b => propext <| Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
 #align relation.comp_eq Relation.comp_eq
 
-/- warning: relation.eq_comp -> Relation.eq_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{max (succ u1) (succ u2)} (α -> β -> Prop) (Relation.Comp.{u1, u1, u2} α α β (Eq.{succ u1} α) r) r
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{max (succ u2) (succ u1)} (α -> β -> Prop) (Relation.Comp.{u2, u2, u1} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1451 : α) (x._@.Mathlib.Logic.Relation._hyg.1453 : α) => Eq.{succ u2} α x._@.Mathlib.Logic.Relation._hyg.1451 x._@.Mathlib.Logic.Relation._hyg.1453) r) r
-Case conversion may be inaccurate. Consider using '#align relation.eq_comp Relation.eq_compₓ'. -/
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext fun a =>
     funext fun b => propext <| Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
@@ -203,12 +191,6 @@ theorem comp_iff {r : α → Prop → Prop} : r ∘r (· ↔ ·) = r :=
 #align relation.comp_iff Relation.comp_iff
 -/
 
-/- warning: relation.comp_assoc -> Relation.comp_assoc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {r : α -> β -> Prop} {p : β -> γ -> Prop} {q : γ -> δ -> Prop}, Eq.{max (succ u1) (succ u4)} (α -> δ -> Prop) (Relation.Comp.{u1, u3, u4} α γ δ (Relation.Comp.{u1, u2, u3} α β γ r p) q) (Relation.Comp.{u1, u2, u4} α β δ r (Relation.Comp.{u2, u3, u4} β γ δ p q))
-but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u1}} {γ : Type.{u2}} {δ : Type.{u3}} {r : α -> β -> Prop} {p : β -> γ -> Prop} {q : γ -> δ -> Prop}, Eq.{max (succ u4) (succ u3)} (α -> δ -> Prop) (Relation.Comp.{u4, u2, u3} α γ δ (Relation.Comp.{u4, u1, u2} α β γ r p) q) (Relation.Comp.{u4, u1, u3} α β δ r (Relation.Comp.{u1, u2, u3} β γ δ p q))
-Case conversion may be inaccurate. Consider using '#align relation.comp_assoc Relation.comp_assocₓ'. -/
 theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q :=
   by
   funext a d; apply propext
@@ -217,12 +199,6 @@ theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q :=
   exact fun ⟨b, hab, c, hbc, hcd⟩ => ⟨c, ⟨b, hab, hbc⟩, hcd⟩
 #align relation.comp_assoc Relation.comp_assoc
 
-/- warning: relation.flip_comp -> Relation.flip_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> β -> Prop} {p : β -> γ -> Prop}, Eq.{max (succ u3) (succ u1)} (γ -> α -> Prop) (flip.{succ u1, succ u3, 1} α γ Prop (Relation.Comp.{u1, u2, u3} α β γ r p)) (Relation.Comp.{u3, u2, u1} γ β α (flip.{succ u2, succ u3, 1} β γ Prop p) (flip.{succ u1, succ u2, 1} α β Prop r))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {r : α -> β -> Prop} {p : β -> γ -> Prop}, Eq.{max (succ u3) (succ u2)} (γ -> α -> Prop) (flip.{succ u3, succ u2, 1} α γ Prop (Relation.Comp.{u3, u1, u2} α β γ r p)) (Relation.Comp.{u2, u1, u3} γ β α (flip.{succ u1, succ u2, 1} β γ Prop p) (flip.{succ u3, succ u1, 1} α β Prop r))
-Case conversion may be inaccurate. Consider using '#align relation.flip_comp Relation.flip_compₓ'. -/
 theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r :=
   by
   funext c a; apply propext
@@ -248,12 +224,6 @@ def Fibration :=
 
 variable {rα rβ}
 
-/- warning: acc.of_fibration -> Acc.of_fibration is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} (f : α -> β), (Relation.Fibration.{u1, u2} α β rα rβ f) -> (forall {a : α}, (Acc.{succ u1} α rα a) -> (Acc.{succ u2} β rβ (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} (f : α -> β), (Relation.Fibration.{u2, u1} α β rα rβ f) -> (forall {a : α}, (Acc.{succ u2} α rα a) -> (Acc.{succ u1} β rβ (f a)))
-Case conversion may be inaccurate. Consider using '#align acc.of_fibration Acc.of_fibrationₓ'. -/
 /-- If `f : α → β` is a fibration between relations `rα` and `rβ`, and `a : α` is
   accessible under `rα`, then `f a` is accessible under `rβ`. -/
 theorem Acc.of_fibration (fib : Fibration rα rβ f) {a} (ha : Acc rα a) : Acc rβ (f a) :=
@@ -264,12 +234,6 @@ theorem Acc.of_fibration (fib : Fibration rα rβ f) {a} (ha : Acc rα a) : Acc 
   exact ih a' hr'
 #align acc.of_fibration Acc.of_fibration
 
-/- warning: acc.of_downward_closed -> Acc.of_downward_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {rβ : β -> β -> Prop} (f : α -> β), (forall {a : α} {b : β}, (rβ b (f a)) -> (Exists.{succ u1} α (fun (c : α) => Eq.{succ u2} β (f c) b))) -> (forall (a : α), (Acc.{succ u1} α (InvImage.{succ u1, succ u2} α β rβ f) a) -> (Acc.{succ u2} β rβ (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {rβ : β -> β -> Prop} (f : α -> β), (forall {a : α} {b : β}, (rβ b (f a)) -> (Exists.{succ u2} α (fun (c : α) => Eq.{succ u1} β (f c) b))) -> (forall (a : α), (Acc.{succ u2} α (InvImage.{succ u2, succ u1} α β rβ f) a) -> (Acc.{succ u1} β rβ (f a)))
-Case conversion may be inaccurate. Consider using '#align acc.of_downward_closed Acc.of_downward_closedₓ'. -/
 theorem Acc.of_downward_closed (dc : ∀ {a b}, rβ b (f a) → ∃ c, f c = b) (a : α)
     (ha : Acc (InvImage rβ f) a) : Acc rβ (f a) :=
   ha.of_fibration f fun a b h =>
@@ -610,12 +574,6 @@ theorem transGen_idem : TransGen (TransGen r) = TransGen r :=
 #align relation.trans_gen_idem Relation.transGen_idem
 -/
 
-/- warning: relation.trans_gen.lift -> Relation.TransGen.lift is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {p : β -> β -> Prop} {a : α} {b : α} (f : α -> β), (forall (a : α) (b : α), (r a b) -> (p (f a) (f b))) -> (Relation.TransGen.{u1} α r a b) -> (Relation.TransGen.{u2} β p (f a) (f b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {p : β -> β -> Prop} {a : α} {b : α} (f : α -> β), (forall (a : α) (b : α), (r a b) -> (p (f a) (f b))) -> (Relation.TransGen.{u2} α r a b) -> (Relation.TransGen.{u1} β p (f a) (f b))
-Case conversion may be inaccurate. Consider using '#align relation.trans_gen.lift Relation.TransGen.liftₓ'. -/
 theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
     (hab : TransGen r a b) : TransGen p (f a) (f b) :=
   by
@@ -680,12 +638,6 @@ theorem reflTransGen_iff_eq_or_transGen : ReflTransGen r a b ↔ b = a ∨ Trans
 #align relation.refl_trans_gen_iff_eq_or_trans_gen Relation.reflTransGen_iff_eq_or_transGen
 -/
 
-/- warning: relation.refl_trans_gen.lift -> Relation.ReflTransGen.lift is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {p : β -> β -> Prop} {a : α} {b : α} (f : α -> β), (forall (a : α) (b : α), (r a b) -> (p (f a) (f b))) -> (Relation.ReflTransGen.{u1} α r a b) -> (Relation.ReflTransGen.{u2} β p (f a) (f b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {p : β -> β -> Prop} {a : α} {b : α} (f : α -> β), (forall (a : α) (b : α), (r a b) -> (p (f a) (f b))) -> (Relation.ReflTransGen.{u2} α r a b) -> (Relation.ReflTransGen.{u1} β p (f a) (f b))
-Case conversion may be inaccurate. Consider using '#align relation.refl_trans_gen.lift Relation.ReflTransGen.liftₓ'. -/
 theorem ReflTransGen.lift {p : β → β → Prop} {a b : α} (f : α → β)
     (h : ∀ a b, r a b → p (f a) (f b)) (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) :=
   ReflTransGen.trans_induction_on hab (fun a => refl) (fun a b => ReflTransGen.single ∘ h _ _)

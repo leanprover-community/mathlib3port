@@ -77,11 +77,6 @@ theorem cons_val (a : α) : ∀ v : Vector α n, (a ::ᵥ v).val = a :: v.val
 -/
 
 /- warning: vector.cons_head clashes with vector.head_cons -> Vector.head_cons
-warning: vector.cons_head -> Vector.head_cons is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} α (Vector.head.{u1} α n (Vector.cons.{u1} α n a v)) a
-but is expected to have type
-  forall {n : Type.{u1}} {α : Nat} (a : n) (v : Vector.{u1} n α), Eq.{succ u1} n (Vector.head.{u1} n α (Vector.cons.{u1} n α a v)) a
 Case conversion may be inaccurate. Consider using '#align vector.cons_head Vector.head_consₓ'. -/
 @[simp]
 theorem head_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).headI = a
@@ -89,11 +84,6 @@ theorem head_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).headI = a
 #align vector.cons_head Vector.head_cons
 
 /- warning: vector.cons_tail clashes with vector.tail_cons -> Vector.tail_cons
-warning: vector.cons_tail -> Vector.tail_cons is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Vector.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Nat.succ n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.tail.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v)) v
-but is expected to have type
-  forall {n : Type.{u1}} {α : Nat} (a : n) (v : Vector.{u1} n α), Eq.{succ u1} (Vector.{u1} n (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Nat.succ α) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.tail.{u1} n (Nat.succ α) (Vector.cons.{u1} n α a v)) v
 Case conversion may be inaccurate. Consider using '#align vector.cons_tail Vector.tail_consₓ'. -/
 @[simp]
 theorem tail_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).tail = v
@@ -136,11 +126,6 @@ theorem mk_toList : ∀ (v : Vector α n) (h), (⟨toList v, h⟩ : Vector α n)
 -/
 
 /- warning: vector.length_coe clashes with [anonymous] -> [anonymous]
-warning: vector.length_coe -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u_1}} (v : Vector.{u_1} α n), Eq.{1} Nat (List.length.{u_1} α ((fun (a : Sort.{max 1 (succ u_1)}) (b : Type.{u_1}) [self : HasLiftT.{max 1 (succ u_1), succ u_1} a b] => self.0) (Subtype.{succ u_1} (List.{u_1} α) (fun (l : List.{u_1} α) => Eq.{1} Nat (List.length.{u_1} α l) n)) (List.{u_1} α) (HasLiftT.mk.{max 1 (succ u_1), succ u_1} (Subtype.{succ u_1} (List.{u_1} α) (fun (l : List.{u_1} α) => Eq.{1} Nat (List.length.{u_1} α l) n)) (List.{u_1} α) (CoeTCₓ.coe.{max 1 (succ u_1), succ u_1} (Subtype.{succ u_1} (List.{u_1} α) (fun (l : List.{u_1} α) => Eq.{1} Nat (List.length.{u_1} α l) n)) (List.{u_1} α) (coeBase.{max 1 (succ u_1), succ u_1} (Subtype.{succ u_1} (List.{u_1} α) (fun (l : List.{u_1} α) => Eq.{1} Nat (List.length.{u_1} α l) n)) (List.{u_1} α) (coeSubtype.{succ u_1} (List.{u_1} α) (fun (l : List.{u_1} α) => Eq.{1} Nat (List.length.{u_1} α l) n))))) v)) n
-but is expected to have type
-  forall {n : Type.{u}} {α : Type.{v}}, (Nat -> n -> α) -> Nat -> (List.{u} n) -> (List.{v} α)
 Case conversion may be inaccurate. Consider using '#align vector.length_coe [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (v : Vector α n) :
@@ -347,34 +332,16 @@ theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v := by cases v;
 #align vector.reverse_reverse Vector.reverse_reverse
 -/
 
-/- warning: vector.nth_zero -> Vector.get_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} (v : Vector.{u1} α (Nat.succ n)), Eq.{succ u1} α (Vector.get.{u1} α (Nat.succ n) v (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (Vector.head.{u1} α n v)
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} (v : Vector.{u1} α (Nat.succ n)), Eq.{succ u1} α (Vector.get.{u1} α (Nat.succ n) v (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (Vector.head.{u1} α n v)
-Case conversion may be inaccurate. Consider using '#align vector.nth_zero Vector.get_zeroₓ'. -/
 @[simp]
 theorem get_zero : ∀ v : Vector α n.succ, get v 0 = head v
   | ⟨a :: l, e⟩ => rfl
 #align vector.nth_zero Vector.get_zero
 
-/- warning: vector.head_of_fn -> Vector.head_ofFn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (f : (Fin (Nat.succ n)) -> α), Eq.{succ u1} α (Vector.head.{u1} α n (Vector.ofFn.{u1} α (Nat.succ n) f)) (f (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n))))))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (f : (Fin (Nat.succ n)) -> α), Eq.{succ u1} α (Vector.head.{u1} α n (Vector.ofFn.{u1} α (Nat.succ n) f)) (f (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n))))
-Case conversion may be inaccurate. Consider using '#align vector.head_of_fn Vector.head_ofFnₓ'. -/
 @[simp]
 theorem head_ofFn {n : ℕ} (f : Fin n.succ → α) : head (ofFn f) = f 0 := by
   rw [← nth_zero, nth_of_fn]
 #align vector.head_of_fn Vector.head_ofFn
 
-/- warning: vector.nth_cons_zero -> Vector.get_cons_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} α (Vector.get.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) a
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} α (Vector.get.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) a
-Case conversion may be inaccurate. Consider using '#align vector.nth_cons_zero Vector.get_cons_zeroₓ'. -/
 @[simp]
 theorem get_cons_zero (a : α) (v : Vector α n) : get (a ::ᵥ v) 0 = a := by simp [nth_zero]
 #align vector.nth_cons_zero Vector.get_cons_zero
@@ -458,12 +425,6 @@ theorem scanl_cons (x : α) : scanl f b (x ::ᵥ v) = b ::ᵥ scanl f (f b x) v 
 #align vector.scanl_cons Vector.scanl_cons
 -/
 
-/- warning: vector.scanl_val -> Vector.scanl_val is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} {β : Type.{u2}} (f : β -> α -> β) (b : β) {v : Vector.{u1} α n}, Eq.{succ u2} (List.{u2} β) (Subtype.val.{succ u2} (List.{u2} β) (fun (l : List.{u2} β) => Eq.{1} Nat (List.length.{u2} β l) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.scanl.{u1, u2} n α β f b v)) (List.scanl.{u2, u1} β α f b (Subtype.val.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Nat (List.length.{u1} α l) n) v))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u2}} {β : Type.{u1}} (f : β -> α -> β) (b : β) {v : Vector.{u2} α n}, Eq.{succ u1} (List.{u1} β) (Subtype.val.{succ u1} (List.{u1} β) (fun (l : List.{u1} β) => Eq.{1} Nat (List.length.{u1} β l) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.scanl.{u2, u1} n α β f b v)) (List.scanl.{u1, u2} β α f b (Subtype.val.{succ u2} (List.{u2} α) (fun (l : List.{u2} α) => Eq.{1} Nat (List.length.{u2} α l) n) v))
-Case conversion may be inaccurate. Consider using '#align vector.scanl_val Vector.scanl_valₓ'. -/
 /-- The underlying `list` of a `vector` after a `scanl` is the `list.scanl`
 of the underlying `list` of the original `vector`.
 -/
@@ -482,12 +443,6 @@ theorem toList_scanl : (scanl f b v).toList = List.scanl f b v.toList :=
 #align vector.to_list_scanl Vector.toList_scanl
 -/
 
-/- warning: vector.scanl_singleton -> Vector.scanl_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : β -> α -> β) (b : β) (v : Vector.{u1} α (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))), Eq.{succ u2} (Vector.{u2} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.scanl.{u1, u2} (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) α β f b v) (Vector.cons.{u2} β (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) b (Vector.cons.{u2} β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (f b (Vector.head.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) v)) (Vector.nil.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : β -> α -> β) (b : β) (v : Vector.{u2} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))), Eq.{succ u1} (Vector.{u1} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.scanl.{u2, u1} (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) α β f b v) (Vector.cons.{u1} β (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) b (Vector.cons.{u1} β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (f b (Vector.head.{u2} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) v)) (Vector.nil.{u1} β)))
-Case conversion may be inaccurate. Consider using '#align vector.scanl_singleton Vector.scanl_singletonₓ'. -/
 /-- The recursive step of `scanl` splits a vector made up of a single element
 `x ::ᵥ nil : vector α 1` into a `vector` of the provided starting value `b : β`
 and the mapped `f b x : β` as the last value.
@@ -515,12 +470,6 @@ theorem scanl_head : (scanl f b v).headI = b :=
 #align vector.scanl_head Vector.scanl_head
 -/
 
-/- warning: vector.scanl_nth -> Vector.scanl_get is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} {β : Type.{u2}} (f : β -> α -> β) (b : β) (v : Vector.{u1} α n) (i : Fin n), Eq.{succ u2} β (Vector.get.{u2} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Vector.scanl.{u1, u2} n α β f b v) (Fin.succ n i)) (f (Vector.get.{u2} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Vector.scanl.{u1, u2} n α β f b v) (coeFn.{1, 1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe n) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (fun (_x : RelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) => (Fin n) -> (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (RelEmbedding.hasCoeToFun.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (Fin.castSucc n) i)) (Vector.get.{u1} α n v i))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} {β : Type.{u2}} (f : β -> α -> β) (b : β) (v : Vector.{u1} α n) (i : Fin n), Eq.{succ u2} β (Vector.get.{u2} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Vector.scanl.{u1, u2} n α β f b v) (Fin.succ n i)) (f (Vector.get.{u2} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Vector.scanl.{u1, u2} n α β f b v) (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (Fin.castSucc n) i)) (Vector.get.{u1} α n v i))
-Case conversion may be inaccurate. Consider using '#align vector.scanl_nth Vector.scanl_getₓ'. -/
 /-- For an index `i : fin n`, the `nth` element of `scanl` of a
 vector `v : vector α n` at `i.succ`, is equal to the application
 function `f : β → α → β` of the `i.cast_succ` element of
@@ -558,12 +507,6 @@ def mOfFn {m} [Monad m] {α : Type u} : ∀ {n}, (Fin n → m α) → m (Vector 
 #align vector.m_of_fn Vector.mOfFn
 -/
 
-/- warning: vector.m_of_fn_pure -> Vector.mOfFn_pure is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] [_inst_2 : LawfulMonad.{u1, u2} m _inst_1] {α : Type.{u1}} {n : Nat} (f : (Fin n) -> α), Eq.{succ u2} (m (Vector.{u1} α n)) (Vector.mOfFn.{u1, u2} m _inst_1 α n (fun (i : Fin n) => Pure.pure.{u1, u2} m (Applicative.toHasPure.{u1, u2} m (Monad.toApplicative.{u1, u2} m _inst_1)) α (f i))) (Pure.pure.{u1, u2} m (Applicative.toHasPure.{u1, u2} m (Monad.toApplicative.{u1, u2} m _inst_1)) (Vector.{u1} α n) (Vector.ofFn.{u1} α n f))
-but is expected to have type
-  forall {m : Type.{u2} -> Type.{u1}} [_inst_1 : Monad.{u2, u1} m] [_inst_2 : LawfulMonad.{u2, u1} m _inst_1] {α : Type.{u2}} {n : Nat} (f : (Fin n) -> α), Eq.{succ u1} (m (Vector.{u2} α n)) (Vector.mOfFn.{u2, u1} m _inst_1 α n (fun (i : Fin n) => Pure.pure.{u2, u1} m (Applicative.toPure.{u2, u1} m (Monad.toApplicative.{u2, u1} m _inst_1)) α (f i))) (Pure.pure.{u2, u1} m (Applicative.toPure.{u2, u1} m (Monad.toApplicative.{u2, u1} m _inst_1)) (Vector.{u2} α n) (Vector.ofFn.{u2} α n f))
-Case conversion may be inaccurate. Consider using '#align vector.m_of_fn_pure Vector.mOfFn_pureₓ'. -/
 theorem mOfFn_pure {m} [Monad m] [LawfulMonad m] {α} :
     ∀ {n} (f : Fin n → α), (@mOfFn m _ _ _ fun i => pure (f i)) = pure (ofFn f)
   | 0, f => rfl
@@ -582,23 +525,11 @@ def mmap {m} [Monad m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α
 #align vector.mmap Vector.mmap
 -/
 
-/- warning: vector.mmap_nil -> Vector.mmap_nil is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}} (f : α -> (m β)), Eq.{succ u2} (m (Vector.{u1} β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (Vector.mmap.{u1, u2, u3} m _inst_1 α β f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Vector.nil.{u3} α)) (Pure.pure.{u1, u2} m (Applicative.toHasPure.{u1, u2} m (Monad.toApplicative.{u1, u2} m _inst_1)) (Vector.{u1} β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Vector.nil.{u1} β))
-but is expected to have type
-  forall {m : Type.{u3} -> Type.{u2}} [_inst_1 : Monad.{u3, u2} m] {α : Type.{u1}} {β : Type.{u3}} (f : α -> (m β)), Eq.{succ u2} (m (Vector.{u3} β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (Vector.mmap.{u3, u2, u1} m _inst_1 α β f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Vector.nil.{u1} α)) (Pure.pure.{u3, u2} m (Applicative.toPure.{u3, u2} m (Monad.toApplicative.{u3, u2} m _inst_1)) (Vector.{u3} β (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Vector.nil.{u3} β))
-Case conversion may be inaccurate. Consider using '#align vector.mmap_nil Vector.mmap_nilₓ'. -/
 @[simp]
 theorem mmap_nil {m} [Monad m] {α β} (f : α → m β) : mmap f nil = pure nil :=
   rfl
 #align vector.mmap_nil Vector.mmap_nil
 
-/- warning: vector.mmap_cons -> Vector.mmap_cons is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}} (f : α -> (m β)) (a : α) {n : Nat} (v : Vector.{u3} α n), Eq.{succ u2} (m (Vector.{u1} β (Nat.succ n))) (Vector.mmap.{u1, u2, u3} m _inst_1 α β f (Nat.succ n) (Vector.cons.{u3} α n a v)) (Bind.bind.{u1, u2} m (Monad.toHasBind.{u1, u2} m _inst_1) β (Vector.{u1} β (Nat.succ n)) (f a) (fun (h' : β) => Bind.bind.{u1, u2} m (Monad.toHasBind.{u1, u2} m _inst_1) (Vector.{u1} β n) (Vector.{u1} β (Nat.succ n)) (Vector.mmap.{u1, u2, u3} m _inst_1 α β f n v) (fun (t' : Vector.{u1} β n) => Pure.pure.{u1, u2} m (Applicative.toHasPure.{u1, u2} m (Monad.toApplicative.{u1, u2} m _inst_1)) (Vector.{u1} β (Nat.succ n)) (Vector.cons.{u1} β n h' t'))))
-but is expected to have type
-  forall {m : Type.{u3} -> Type.{u2}} [_inst_1 : Monad.{u3, u2} m] {α : Type.{u1}} {β : Type.{u3}} (f : α -> (m β)) (a : α) {n : Nat} (v : Vector.{u1} α n), Eq.{succ u2} (m (Vector.{u3} β (Nat.succ n))) (Vector.mmap.{u3, u2, u1} m _inst_1 α β f (Nat.succ n) (Vector.cons.{u1} α n a v)) (Bind.bind.{u3, u2} m (Monad.toBind.{u3, u2} m _inst_1) β (Vector.{u3} β (Nat.succ n)) (f a) (fun (h' : β) => Bind.bind.{u3, u2} m (Monad.toBind.{u3, u2} m _inst_1) (Vector.{u3} β n) (Vector.{u3} β (Nat.succ n)) (Vector.mmap.{u3, u2, u1} m _inst_1 α β f n v) (fun (t' : Vector.{u3} β n) => Pure.pure.{u3, u2} m (Applicative.toPure.{u3, u2} m (Monad.toApplicative.{u3, u2} m _inst_1)) (Vector.{u3} β (Nat.succ n)) (Vector.cons.{u3} β n h' t'))))
-Case conversion may be inaccurate. Consider using '#align vector.mmap_cons Vector.mmap_consₓ'. -/
 @[simp]
 theorem mmap_cons {m} [Monad m] {α β} (f : α → m β) (a) :
     ∀ {n} (v : Vector α n),
@@ -678,12 +609,6 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
 #align vector.induction_on₃ Vector.inductionOn₃
 -/
 
-/- warning: vector.to_array -> Vector.toArray is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}}, (Vector.{u1} α n) -> (Array'.{u1} n α)
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}}, (Vector.{u1} α n) -> (Array.{u1} α)
-Case conversion may be inaccurate. Consider using '#align vector.to_array Vector.toArrayₓ'. -/
 /-- Cast a vector to an array. -/
 def toArray : Vector α n → Array' n α
   | ⟨xs, h⟩ => cast (by rw [h]) xs.to_array
@@ -725,9 +650,6 @@ theorem removeNth_insertNth {v : Vector α n} {i : Fin (n + 1)} :
 #align vector.remove_nth_insert_nth Vector.removeNth_insertNth
 -/
 
-/- warning: vector.remove_nth_insert_nth' -> Vector.removeNth_insertNth' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector.remove_nth_insert_nth' Vector.removeNth_insertNth'ₓ'. -/
 theorem removeNth_insertNth' {v : Vector α (n + 1)} :
     ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
       removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
@@ -747,9 +669,6 @@ theorem removeNth_insertNth' {v : Vector α (n + 1)} :
       · simpa using h
 #align vector.remove_nth_insert_nth' Vector.removeNth_insertNth'
 
-/- warning: vector.insert_nth_comm -> Vector.insertNth_comm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align vector.insert_nth_comm Vector.insertNth_commₓ'. -/
 theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     ∀ v : Vector α n,
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
@@ -794,23 +713,11 @@ theorem get_set_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) :
 #align vector.nth_update_nth_of_ne Vector.get_set_of_ne
 -/
 
-/- warning: vector.nth_update_nth_eq_if -> Vector.get_set_eq_if is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} {v : Vector.{u1} α n} {i : Fin n} {j : Fin n} (a : α), Eq.{succ u1} α (Vector.get.{u1} α n (Vector.set.{u1} n α v i a) j) (ite.{succ u1} α (Eq.{1} (Fin n) i j) (Fin.decidableEq n i j) a (Vector.get.{u1} α n v j))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} {v : Vector.{u1} α n} {i : Fin n} {j : Fin n} (a : α), Eq.{succ u1} α (Vector.get.{u1} α n (Vector.set.{u1} n α v i a) j) (ite.{succ u1} α (Eq.{1} (Fin n) i j) (instDecidableEqFin n i j) a (Vector.get.{u1} α n v j))
-Case conversion may be inaccurate. Consider using '#align vector.nth_update_nth_eq_if Vector.get_set_eq_ifₓ'. -/
 theorem get_set_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
     (v.set i a).get? j = if i = j then a else v.get? j := by
   split_ifs <;> try simp [*] <;> try rw [nth_update_nth_of_ne] <;> assumption
 #align vector.nth_update_nth_eq_if Vector.get_set_eq_if
 
-/- warning: vector.prod_update_nth -> Vector.prod_set is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (v : Vector.{u1} α n) (i : Fin n) (a : α), Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Vector.toList.{u1} α n (Vector.set.{u1} n α v i a))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Vector.toList.{u1} α (LinearOrder.min.{0} Nat Nat.linearOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) i) n) (Vector.take.{u1} α n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) i) v))) a) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Vector.toList.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) i) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.drop.{u1} α n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) i) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) v))))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (v : Vector.{u1} α n) (i : Fin n) (a : α), Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) (Vector.toList.{u1} α n (Vector.set.{u1} n α v i a))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) (Vector.toList.{u1} α (Min.min.{0} Nat instMinNat (Fin.val n i) n) (Vector.take.{u1} α n (Fin.val n i) v))) a) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) (Vector.toList.{u1} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Fin.val n i) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.drop.{u1} α n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Fin.val n i) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) v))))
-Case conversion may be inaccurate. Consider using '#align vector.prod_update_nth Vector.prod_setₓ'. -/
 @[to_additive]
 theorem prod_set [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.set i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod :=
@@ -821,12 +728,6 @@ theorem prod_set [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
 #align vector.prod_update_nth Vector.prod_set
 #align vector.sum_update_nth Vector.sum_set
 
-/- warning: vector.prod_update_nth' -> Vector.prod_set' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : CommGroup.{u1} α] (v : Vector.{u1} α n) (i : Fin n) (a : α), Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))))) (Vector.toList.{u1} α n (Vector.set.{u1} n α v i a))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1)))))) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))))) (Vector.toList.{u1} α n v)) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))) (Vector.get.{u1} α n v i))) a)
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : CommGroup.{u1} α] (v : Vector.{u1} α n) (i : Fin n) (a : α), Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))))) (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_1))))) (Vector.toList.{u1} α n (Vector.set.{u1} n α v i a))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1)))))) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_1))))) (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_1))))) (Vector.toList.{u1} α n v)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_1))))) (Vector.get.{u1} α n v i))) a)
-Case conversion may be inaccurate. Consider using '#align vector.prod_update_nth' Vector.prod_set'ₓ'. -/
 @[to_additive]
 theorem prod_set' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.set i a).toList.Prod = v.toList.Prod * (v.get? i)⁻¹ * a :=
@@ -869,24 +770,12 @@ section
 
 variable {α β : Type u}
 
-/- warning: vector.traverse_def -> Vector.traverse_def is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {F : Type.{u1} -> Type.{u1}} [_inst_1 : Applicative.{u1, u1} F] {α : Type.{u1}} {β : Type.{u1}} (f : α -> (F β)) (x : α) (xs : Vector.{u1} α n), Eq.{succ u1} (F (Vector.{u1} β (Nat.succ n))) (Vector.traverse.{u1} (Nat.succ n) F _inst_1 α β f (Vector.cons.{u1} α n x xs)) (Seq.seq.{u1, u1} F (Applicative.toHasSeq.{u1, u1} F _inst_1) (Vector.{u1} β n) (Vector.{u1} β (Nat.succ n)) (Functor.map.{u1, u1} F (Applicative.toFunctor.{u1, u1} F _inst_1) β ((Vector.{u1} β n) -> (Vector.{u1} β (Nat.succ n))) (Vector.cons.{u1} β n) (f x)) (Vector.traverse.{u1} n F _inst_1 α β f xs))
-but is expected to have type
-  forall {n : Nat} {F : Type.{u1} -> Type.{u1}} [_inst_1 : Applicative.{u1, u1} F] {α : Type.{u1}} {β : Type.{u1}} (f : α -> (F β)) (x : α) (xs : Vector.{u1} α n), Eq.{succ u1} (F (Vector.{u1} β (Nat.succ n))) (Vector.traverse.{u1} (Nat.succ n) F _inst_1 α β f (Vector.cons.{u1} α n x xs)) (Seq.seq.{u1, u1} F (Applicative.toSeq.{u1, u1} F _inst_1) (Vector.{u1} β n) (Vector.{u1} β (Nat.succ n)) (Functor.map.{u1, u1} F (Applicative.toFunctor.{u1, u1} F _inst_1) β ((Vector.{u1} β n) -> (Vector.{u1} β (Nat.succ n))) (Vector.cons.{u1} β n) (f x)) (fun (x._@.Mathlib.Data.Vector.Basic._hyg.6210 : Unit) => Vector.traverse.{u1} n F _inst_1 α β f xs))
-Case conversion may be inaccurate. Consider using '#align vector.traverse_def Vector.traverse_defₓ'. -/
 @[simp]
 protected theorem traverse_def (f : α → F β) (x : α) :
     ∀ xs : Vector α n, (x ::ᵥ xs).traverse f = cons <$> f x <*> xs.traverse f := by
   rintro ⟨xs, rfl⟩ <;> rfl
 #align vector.traverse_def Vector.traverse_def
 
-/- warning: vector.id_traverse -> Vector.id_traverse is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} (x : Vector.{u1} α n), Eq.{succ u1} (id.{succ (succ u1)} Type.{u1} (Vector.{u1} α n)) (Vector.traverse.{u1} n (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}) α α (id.mk.{succ u1} α) x) x
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} (x : Vector.{u1} α n), Eq.{succ u1} (Id.{u1} (Vector.{u1} α n)) (Vector.traverse.{u1} n Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) α α (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) α) x) x
-Case conversion may be inaccurate. Consider using '#align vector.id_traverse Vector.id_traverseₓ'. -/
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x :=
   by
   rintro ⟨x, rfl⟩; dsimp [Vector.traverse, cast]
@@ -902,12 +791,6 @@ variable [LawfulApplicative F] [LawfulApplicative G]
 
 variable {α β γ : Type u}
 
-/- warning: vector.comp_traverse -> Vector.comp_traverse is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {F : Type.{u1} -> Type.{u1}} {G : Type.{u1} -> Type.{u1}} [_inst_1 : Applicative.{u1, u1} F] [_inst_2 : Applicative.{u1, u1} G] [_inst_3 : LawfulApplicative.{u1, u1} F _inst_1] [_inst_4 : LawfulApplicative.{u1, u1} G _inst_2] {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (f : β -> (F γ)) (g : α -> (G β)) (x : Vector.{u1} α n), Eq.{succ u1} (Functor.Comp.{u1, u1, u1} (fun {β : Type.{u1}} => G β) F (Vector.{u1} γ n)) (Vector.traverse.{u1} n (Functor.Comp.{u1, u1, u1} (fun {β : Type.{u1}} => G β) F) (Functor.Comp.applicative.{u1, u1, u1} (fun {β : Type.{u1}} => G β) F _inst_2 _inst_1) α γ (Function.comp.{succ u1, succ u1, succ u1} α (G (F γ)) (Functor.Comp.{u1, u1, u1} (fun {β : Type.{u1}} => G β) F γ) (Functor.Comp.mk.{u1, u1, u1} (fun {β : Type.{u1}} => G β) F γ) (Function.comp.{succ u1, succ u1, succ u1} α (G β) (G (F γ)) (Functor.map.{u1, u1} (fun {β : Type.{u1}} => G β) (Applicative.toFunctor.{u1, u1} (fun {β : Type.{u1}} => G β) _inst_2) β (F γ) f) g)) x) (Functor.Comp.mk.{u1, u1, u1} (fun {β : Type.{u1}} => G β) F (Vector.{u1} γ n) (Functor.map.{u1, u1} G (Applicative.toFunctor.{u1, u1} G _inst_2) (Vector.{u1} β n) (F (Vector.{u1} γ n)) (Vector.traverse.{u1} n F _inst_1 β γ f) (Vector.traverse.{u1} n G _inst_2 α β g x)))
-but is expected to have type
-  forall {n : Nat} {F : Type.{u1} -> Type.{u1}} {G : Type.{u1} -> Type.{u1}} [_inst_1 : Applicative.{u1, u1} F] [_inst_2 : Applicative.{u1, u1} G] [_inst_3 : LawfulApplicative.{u1, u1} G _inst_2] {_inst_4 : Type.{u1}} {α : Type.{u1}} {β : Type.{u1}} (γ : α -> (F β)) (f : _inst_4 -> (G α)) (g : Vector.{u1} _inst_4 n), Eq.{succ u1} (Functor.Comp.{u1, u1, u1} G F (Vector.{u1} β n)) (Vector.traverse.{u1} n (Functor.Comp.{u1, u1, u1} G F) (Functor.Comp.instApplicativeComp.{u1, u1, u1} G F _inst_2 _inst_1) _inst_4 β (Function.comp.{succ u1, succ u1, succ u1} _inst_4 (G (F β)) (Functor.Comp.{u1, u1, u1} G F β) (Functor.Comp.mk.{u1, u1, u1} G F β) (Function.comp.{succ u1, succ u1, succ u1} _inst_4 (G α) (G (F β)) (Functor.map.{u1, u1} G (Applicative.toFunctor.{u1, u1} G _inst_2) α (F β) γ) f)) g) (Functor.Comp.mk.{u1, u1, u1} G F (Vector.{u1} β n) (Functor.map.{u1, u1} G (Applicative.toFunctor.{u1, u1} G _inst_2) (Vector.{u1} α n) (F (Vector.{u1} β n)) (Vector.traverse.{u1} n F _inst_1 α β γ) (Vector.traverse.{u1} n G _inst_2 _inst_4 α f g)))
-Case conversion may be inaccurate. Consider using '#align vector.comp_traverse Vector.comp_traverseₓ'. -/
 -- We need to turn off the linter here as
 -- the `is_lawful_traversable` instance below expects a particular signature.
 @[nolint unused_arguments]
@@ -921,12 +804,6 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
     [rfl;simp [(· ∘ ·)]]
 #align vector.comp_traverse Vector.comp_traverse
 
-/- warning: vector.traverse_eq_map_id -> Vector.traverse_eq_map_id is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (x : Vector.{u1} α n), Eq.{succ u1} (id.{succ (succ u1)} Type.{u1} (Vector.{u1} β n)) (Vector.traverse.{u1} n (id.{succ (succ u1)} Type.{u1}) (Monad.toApplicative.{u1, u1} (id.{succ (succ u1)} Type.{u1}) id.monad.{u1}) α β (Function.comp.{succ u1, succ u1, succ u1} α β (id.{succ (succ u1)} Type.{u1} β) (id.mk.{succ u1} β) f) x) (id.mk.{succ u1} (Vector.{u1} β n) (Vector.map.{u1, u1} α β n f x))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (x : Vector.{u1} α n), Eq.{succ u1} (Id.{u1} (Vector.{u1} β n)) (Vector.traverse.{u1} n Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) α β (Function.comp.{succ u1, succ u1, succ u1} α β (Id.{u1} β) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) β) f) x) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) (Vector.{u1} β n) (Vector.map.{u1, u1} α β n f x))
-Case conversion may be inaccurate. Consider using '#align vector.traverse_eq_map_id Vector.traverse_eq_map_idₓ'. -/
 protected theorem traverse_eq_map_id {α β} (f : α → β) :
     ∀ x : Vector α n, x.traverse (id.mk ∘ f) = id.mk (map f x) := by
   rintro ⟨x, rfl⟩ <;> simp! <;> induction x <;> simp! [*, functor_norm] <;> rfl

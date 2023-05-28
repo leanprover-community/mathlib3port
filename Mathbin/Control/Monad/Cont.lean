@@ -177,12 +177,6 @@ instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionT m)
     ext; rfl
   callCc_dummy := by intros ; simp [call_cc, OptionT.callCc, @call_cc_dummy m _]; ext; rfl
 
-/- warning: writer_t.mk_label -> WriterTₓ.mkLabel is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}} {ω : Type.{u1}} [_inst_2 : One.{u1} ω], (MonadCont.Label.{u1, u2, max u3 u1} (Prod.{u3, u1} α ω) m β) -> (MonadCont.Label.{u1, max u1 u2, u3} α (WriterTₓ.{u1, u2} ω m) β)
-but is expected to have type
-  forall {m : Type.{u2} -> Type.{u3}} [_inst_1 : Monad.{u2, u3} m] {α : Type.{u1}} {β : Type.{u2}} {ω : Type.{u2}} [_inst_2 : One.{u2} ω], (MonadCont.Label.{u2, u3, max u1 u2} (Prod.{u1, u2} α ω) m β) -> (MonadCont.Label.{u2, max u2 u3, u1} α (WriterTₓ.{u2, u3} ω m) β)
-Case conversion may be inaccurate. Consider using '#align writer_t.mk_label WriterTₓ.mkLabelₓ'. -/
 def WriterT.mkLabel {α β ω} [One ω] : Label (α × ω) m β → Label α (WriterT ω m) β
   | ⟨f⟩ => ⟨fun a => monadLift <| f (a, 1)⟩
 #align writer_t.mk_label WriterTₓ.mkLabel
@@ -199,12 +193,6 @@ def WriterT.callCc [MonadCont m] {α β ω : Type _} [One ω]
 instance (ω) [Monad m] [One ω] [MonadCont m] : MonadCont (WriterT ω m)
     where callCc α β := WriterT.callCc
 
-/- warning: state_t.mk_label -> StateTₓ.mkLabel is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u1}} {β : Type.{u1}} {σ : Type.{u1}}, (MonadCont.Label.{u1, u2, u1} (Prod.{u1, u1} α σ) m (Prod.{u1, u1} β σ)) -> (MonadCont.Label.{u1, max u1 u2, u1} α (StateTₓ.{u1, u2} σ m) β)
-but is expected to have type
-  forall {m : Type.{u1} -> Type.{u2}} {_inst_1 : Type.{u1}} {α : Type.{u1}} {β : Type.{u1}}, (MonadCont.Label.{u1, u2, u1} (Prod.{u1, u1} _inst_1 β) m (Prod.{u1, u1} α β)) -> (MonadCont.Label.{u1, max u1 u2, u1} _inst_1 (StateTₓ.{u1, u2} β m) α)
-Case conversion may be inaccurate. Consider using '#align state_t.mk_label StateTₓ.mkLabelₓ'. -/
 def StateT.mkLabel {α β σ : Type u} : Label (α × σ) m (β × σ) → Label α (StateT σ m) β
   | ⟨f⟩ => ⟨fun a => ⟨fun s => f (a, s)⟩⟩
 #align state_t.mk_label StateTₓ.mkLabel
@@ -235,12 +223,6 @@ instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateT σ
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind, @call_cc_dummy m _]
     ext; rfl
 
-/- warning: reader_t.mk_label -> ReaderTₓ.mkLabel is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}} (ρ : Type.{u1}), (MonadCont.Label.{u1, u2, u3} α m β) -> (MonadCont.Label.{u1, max u1 u2, u3} α (ReaderTₓ.{u1, u2} ρ m) β)
-but is expected to have type
-  forall {m : Type.{u2} -> Type.{u3}} [_inst_1 : Monad.{u2, u3} m] {α : Type.{u1}} {β : Type.{u2}} (ρ : Type.{u2}), (MonadCont.Label.{u2, u3, u1} α m β) -> (MonadCont.Label.{u2, max u2 u3, u1} α (ReaderTₓ.{u2, u3} ρ m) β)
-Case conversion may be inaccurate. Consider using '#align reader_t.mk_label ReaderTₓ.mkLabelₓ'. -/
 def ReaderT.mkLabel {α β} (ρ) : Label α m β → Label α (ReaderT ρ m) β
   | ⟨f⟩ => ⟨monadLift ∘ f⟩
 #align reader_t.mk_label ReaderTₓ.mkLabel

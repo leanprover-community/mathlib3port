@@ -50,12 +50,6 @@ theorem even_iff : Even n ↔ n % 2 = 0 :=
 #align int.even_iff Int.even_iff
 -/
 
-/- warning: int.odd_iff -> Int.odd_iff is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Odd.{0} Int Int.semiring n) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
-but is expected to have type
-  forall {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt n) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
-Case conversion may be inaccurate. Consider using '#align int.odd_iff Int.odd_iffₓ'. -/
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
   ⟨fun ⟨m, hm⟩ => by rw [hm, add_mod]; norm_num, fun h =>
     ⟨n / 2, (emod_add_ediv n 2).symm.trans (by rw [h]; abel)⟩⟩
@@ -66,50 +60,20 @@ theorem not_even_iff : ¬Even n ↔ n % 2 = 1 := by rw [even_iff, mod_two_ne_zer
 #align int.not_even_iff Int.not_even_iff
 -/
 
-/- warning: int.not_odd_iff -> Int.not_odd_iff is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Not (Odd.{0} Int Int.semiring n)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
-but is expected to have type
-  forall {n : Int}, Iff (Not (Odd.{0} Int Int.instSemiringInt n)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
-Case conversion may be inaccurate. Consider using '#align int.not_odd_iff Int.not_odd_iffₓ'. -/
 theorem not_odd_iff : ¬Odd n ↔ n % 2 = 0 := by rw [odd_iff, mod_two_ne_one]
 #align int.not_odd_iff Int.not_odd_iff
 
-/- warning: int.even_iff_not_odd -> Int.even_iff_not_odd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Even.{0} Int Int.hasAdd n) (Not (Odd.{0} Int Int.semiring n))
-but is expected to have type
-  forall {n : Int}, Iff (Even.{0} Int Int.instAddInt n) (Not (Odd.{0} Int Int.instSemiringInt n))
-Case conversion may be inaccurate. Consider using '#align int.even_iff_not_odd Int.even_iff_not_oddₓ'. -/
 theorem even_iff_not_odd : Even n ↔ ¬Odd n := by rw [not_odd_iff, even_iff]
 #align int.even_iff_not_odd Int.even_iff_not_odd
 
-/- warning: int.odd_iff_not_even -> Int.odd_iff_not_even is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Odd.{0} Int Int.semiring n) (Not (Even.{0} Int Int.hasAdd n))
-but is expected to have type
-  forall {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt n) (Not (Even.{0} Int Int.instAddInt n))
-Case conversion may be inaccurate. Consider using '#align int.odd_iff_not_even Int.odd_iff_not_evenₓ'. -/
 @[simp]
 theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align int.odd_iff_not_even Int.odd_iff_not_even
 
-/- warning: int.is_compl_even_odd -> Int.isCompl_even_odd is a dubious translation:
-lean 3 declaration is
-  IsCompl.{0} (Set.{0} Int) (SemilatticeInf.toPartialOrder.{0} (Set.{0} Int) (Lattice.toSemilatticeInf.{0} (Set.{0} Int) (GeneralizedCoheytingAlgebra.toLattice.{0} (Set.{0} Int) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} (Set.{0} Int) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} (Set.{0} Int) (Set.booleanAlgebra.{0} Int)))))) (BooleanAlgebra.toBoundedOrder.{0} (Set.{0} Int) (Set.booleanAlgebra.{0} Int)) (setOf.{0} Int (fun (n : Int) => Even.{0} Int Int.hasAdd n)) (setOf.{0} Int (fun (n : Int) => Odd.{0} Int Int.semiring n))
-but is expected to have type
-  IsCompl.{0} (Set.{0} Int) (SemilatticeInf.toPartialOrder.{0} (Set.{0} Int) (Lattice.toSemilatticeInf.{0} (Set.{0} Int) (GeneralizedCoheytingAlgebra.toLattice.{0} (Set.{0} Int) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} (Set.{0} Int) (BiheytingAlgebra.toCoheytingAlgebra.{0} (Set.{0} Int) (BooleanAlgebra.toBiheytingAlgebra.{0} (Set.{0} Int) (Set.instBooleanAlgebraSet.{0} Int))))))) (BooleanAlgebra.toBoundedOrder.{0} (Set.{0} Int) (Set.instBooleanAlgebraSet.{0} Int)) (setOf.{0} Int (fun (n : Int) => Even.{0} Int Int.instAddInt n)) (setOf.{0} Int (fun (n : Int) => Odd.{0} Int Int.instSemiringInt n))
-Case conversion may be inaccurate. Consider using '#align int.is_compl_even_odd Int.isCompl_even_oddₓ'. -/
 theorem isCompl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by
   simp [← Set.compl_setOf, isCompl_compl]
 #align int.is_compl_even_odd Int.isCompl_even_odd
 
-/- warning: int.even_or_odd -> Int.even_or_odd is a dubious translation:
-lean 3 declaration is
-  forall (n : Int), Or (Even.{0} Int Int.hasAdd n) (Odd.{0} Int Int.semiring n)
-but is expected to have type
-  forall (n : Int), Or (Even.{0} Int Int.instAddInt n) (Odd.{0} Int Int.instSemiringInt n)
-Case conversion may be inaccurate. Consider using '#align int.even_or_odd Int.even_or_oddₓ'. -/
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
   Or.imp_right odd_iff_not_even.2 <| em <| Even n
 #align int.even_or_odd Int.even_or_odd
@@ -120,12 +84,6 @@ theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
 #align int.even_or_odd' Int.even_or_odd'
 -/
 
-/- warning: int.even_xor_odd -> Int.even_xor'_odd is a dubious translation:
-lean 3 declaration is
-  forall (n : Int), Xor' (Even.{0} Int Int.hasAdd n) (Odd.{0} Int Int.semiring n)
-but is expected to have type
-  forall (n : Int), Xor' (Even.{0} Int Int.instAddInt n) (Odd.{0} Int Int.instSemiringInt n)
-Case conversion may be inaccurate. Consider using '#align int.even_xor_odd Int.even_xor'_oddₓ'. -/
 theorem even_xor'_odd (n : ℤ) : Xor' (Even n) (Odd n) :=
   by
   cases' even_or_odd n with h
@@ -146,12 +104,6 @@ theorem even_xor'_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
 #align int.even_xor_odd' Int.even_xor'_odd'
 -/
 
-/- warning: int.two_dvd_ne_zero -> Int.two_dvd_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Not (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))) n)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
-but is expected to have type
-  forall {n : Int}, Iff (Not (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) n)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
-Case conversion may be inaccurate. Consider using '#align int.two_dvd_ne_zero Int.two_dvd_ne_zeroₓ'. -/
 @[simp]
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
   even_iff_two_dvd.symm.Not.trans not_even_iff
@@ -176,12 +128,6 @@ theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
 #align int.even_add Int.even_add
 -/
 
-/- warning: int.even_add' -> Int.even_add' is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Even.{0} Int Int.hasAdd (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) m n)) (Iff (Odd.{0} Int Int.semiring m) (Odd.{0} Int Int.semiring n))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Even.{0} Int Int.instAddInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m n)) (Iff (Odd.{0} Int Int.instSemiringInt m) (Odd.{0} Int Int.instSemiringInt n))
-Case conversion may be inaccurate. Consider using '#align int.even_add' Int.even_add'ₓ'. -/
 theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by
   rw [even_add, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 #align int.even_add' Int.even_add'
@@ -192,12 +138,6 @@ theorem not_even_bit1 (n : ℤ) : ¬Even (bit1 n) := by simp [bit1, parity_simps
 #align int.not_even_bit1 Int.not_even_bit1
 -/
 
-/- warning: int.two_not_dvd_two_mul_add_one -> Int.two_not_dvd_two_mul_add_one is a dubious translation:
-lean 3 declaration is
-  forall (n : Int), Not (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))) n) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))
-but is expected to have type
-  forall (n : Int), Not (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) n) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
-Case conversion may be inaccurate. Consider using '#align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_oneₓ'. -/
 theorem two_not_dvd_two_mul_add_one (n : ℤ) : ¬2 ∣ 2 * n + 1 := by simp [add_mod]; rfl
 #align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_one
 
@@ -207,12 +147,6 @@ theorem even_sub : Even (m - n) ↔ (Even m ↔ Even n) := by simp [sub_eq_add_n
 #align int.even_sub Int.even_sub
 -/
 
-/- warning: int.even_sub' -> Int.even_sub' is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Even.{0} Int Int.hasAdd (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) m n)) (Iff (Odd.{0} Int Int.semiring m) (Odd.{0} Int Int.semiring n))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Even.{0} Int Int.instAddInt (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) m n)) (Iff (Odd.{0} Int Int.instSemiringInt m) (Odd.{0} Int Int.instSemiringInt n))
-Case conversion may be inaccurate. Consider using '#align int.even_sub' Int.even_sub'ₓ'. -/
 theorem even_sub' : Even (m - n) ↔ (Odd m ↔ Odd n) := by
   rw [even_sub, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 #align int.even_sub' Int.even_sub'
@@ -232,102 +166,42 @@ theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
 #align int.even_mul Int.even_mul
 -/
 
-/- warning: int.odd_mul -> Int.odd_mul is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.semiring (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) (And (Odd.{0} Int Int.semiring m) (Odd.{0} Int Int.semiring n))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) (And (Odd.{0} Int Int.instSemiringInt m) (Odd.{0} Int Int.instSemiringInt n))
-Case conversion may be inaccurate. Consider using '#align int.odd_mul Int.odd_mulₓ'. -/
 theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by simp [not_or, parity_simps]
 #align int.odd_mul Int.odd_mul
 
-/- warning: int.odd.of_mul_left -> Int.Odd.of_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, (Odd.{0} Int Int.semiring (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) -> (Odd.{0} Int Int.semiring m)
-but is expected to have type
-  forall {m : Int} {n : Int}, (Odd.{0} Int Int.instSemiringInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) -> (Odd.{0} Int Int.instSemiringInt m)
-Case conversion may be inaccurate. Consider using '#align int.odd.of_mul_left Int.Odd.of_mul_leftₓ'. -/
 theorem Odd.of_mul_left (h : Odd (m * n)) : Odd m :=
   (odd_mul.mp h).1
 #align int.odd.of_mul_left Int.Odd.of_mul_left
 
-/- warning: int.odd.of_mul_right -> Int.Odd.of_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, (Odd.{0} Int Int.semiring (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) -> (Odd.{0} Int Int.semiring n)
-but is expected to have type
-  forall {m : Int} {n : Int}, (Odd.{0} Int Int.instSemiringInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) -> (Odd.{0} Int Int.instSemiringInt n)
-Case conversion may be inaccurate. Consider using '#align int.odd.of_mul_right Int.Odd.of_mul_rightₓ'. -/
 theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
   (odd_mul.mp h).2
 #align int.odd.of_mul_right Int.Odd.of_mul_right
 
-/- warning: int.even_pow -> Int.even_pow is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Nat}, Iff (Even.{0} Int Int.hasAdd (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) m n)) (And (Even.{0} Int Int.hasAdd m) (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
-but is expected to have type
-  forall {m : Int} {n : Nat}, Iff (Even.{0} Int Int.instAddInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat m n)) (And (Even.{0} Int Int.instAddInt m) (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
-Case conversion may be inaccurate. Consider using '#align int.even_pow Int.even_powₓ'. -/
 @[parity_simps]
 theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
   induction' n with n ih <;> simp [*, even_mul, pow_succ]; tauto
 #align int.even_pow Int.even_pow
 
-/- warning: int.even_pow' -> Int.even_pow' is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Iff (Even.{0} Int Int.hasAdd (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) m n)) (Even.{0} Int Int.hasAdd m))
-but is expected to have type
-  forall {m : Int} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Iff (Even.{0} Int Int.instAddInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat m n)) (Even.{0} Int Int.instAddInt m))
-Case conversion may be inaccurate. Consider using '#align int.even_pow' Int.even_pow'ₓ'. -/
 theorem even_pow' {n : ℕ} (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
   even_pow.trans <| and_iff_left h
 #align int.even_pow' Int.even_pow'
 
-/- warning: int.odd_add -> Int.odd_add is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.semiring (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) m n)) (Iff (Odd.{0} Int Int.semiring m) (Even.{0} Int Int.hasAdd n))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m n)) (Iff (Odd.{0} Int Int.instSemiringInt m) (Even.{0} Int Int.instAddInt n))
-Case conversion may be inaccurate. Consider using '#align int.odd_add Int.odd_addₓ'. -/
 @[parity_simps]
 theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by
   rw [odd_iff_not_even, even_add, not_iff, odd_iff_not_even]
 #align int.odd_add Int.odd_add
 
-/- warning: int.odd_add' -> Int.odd_add' is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.semiring (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) m n)) (Iff (Odd.{0} Int Int.semiring n) (Even.{0} Int Int.hasAdd m))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m n)) (Iff (Odd.{0} Int Int.instSemiringInt n) (Even.{0} Int Int.instAddInt m))
-Case conversion may be inaccurate. Consider using '#align int.odd_add' Int.odd_add'ₓ'. -/
 theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by rw [add_comm, odd_add]
 #align int.odd_add' Int.odd_add'
 
-/- warning: int.ne_of_odd_add -> Int.ne_of_odd_add is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, (Odd.{0} Int Int.semiring (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) m n)) -> (Ne.{1} Int m n)
-but is expected to have type
-  forall {m : Int} {n : Int}, (Odd.{0} Int Int.instSemiringInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m n)) -> (Ne.{1} Int m n)
-Case conversion may be inaccurate. Consider using '#align int.ne_of_odd_add Int.ne_of_odd_addₓ'. -/
 theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by simpa [hnot, parity_simps] using h
 #align int.ne_of_odd_add Int.ne_of_odd_add
 
-/- warning: int.odd_sub -> Int.odd_sub is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.semiring (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) m n)) (Iff (Odd.{0} Int Int.semiring m) (Even.{0} Int Int.hasAdd n))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) m n)) (Iff (Odd.{0} Int Int.instSemiringInt m) (Even.{0} Int Int.instAddInt n))
-Case conversion may be inaccurate. Consider using '#align int.odd_sub Int.odd_subₓ'. -/
 @[parity_simps]
 theorem odd_sub : Odd (m - n) ↔ (Odd m ↔ Even n) := by
   rw [odd_iff_not_even, even_sub, not_iff, odd_iff_not_even]
 #align int.odd_sub Int.odd_sub
 
-/- warning: int.odd_sub' -> Int.odd_sub' is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.semiring (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) m n)) (Iff (Odd.{0} Int Int.semiring n) (Even.{0} Int Int.hasAdd m))
-but is expected to have type
-  forall {m : Int} {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) m n)) (Iff (Odd.{0} Int Int.instSemiringInt n) (Even.{0} Int Int.instAddInt m))
-Case conversion may be inaccurate. Consider using '#align int.odd_sub' Int.odd_sub'ₓ'. -/
 theorem odd_sub' : Odd (m - n) ↔ (Odd n ↔ Even m) := by
   rw [odd_iff_not_even, even_sub, not_iff, not_iff_comm, odd_iff_not_even]
 #align int.odd_sub' Int.odd_sub'
@@ -347,12 +221,6 @@ theorem even_coe_nat (n : ℕ) : Even (n : ℤ) ↔ Even n := by rw_mod_cast [ev
 #align int.even_coe_nat Int.even_coe_nat
 -/
 
-/- warning: int.odd_coe_nat -> Int.odd_coe_nat is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Iff (Odd.{0} Int Int.semiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Odd.{0} Nat Nat.semiring n)
-but is expected to have type
-  forall (n : Nat), Iff (Odd.{0} Int Int.instSemiringInt (Nat.cast.{0} Int instNatCastInt n)) (Odd.{0} Nat Nat.semiring n)
-Case conversion may be inaccurate. Consider using '#align int.odd_coe_nat Int.odd_coe_natₓ'. -/
 @[simp, norm_cast]
 theorem odd_coe_nat (n : ℕ) : Odd (n : ℤ) ↔ Odd n := by
   rw [odd_iff_not_even, Nat.odd_iff_not_even, even_coe_nat]
@@ -365,12 +233,6 @@ theorem natAbs_even : Even n.natAbs ↔ Even n := by
 #align int.nat_abs_even Int.natAbs_even
 -/
 
-/- warning: int.nat_abs_odd -> Int.natAbs_odd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Odd.{0} Nat Nat.semiring (Int.natAbs n)) (Odd.{0} Int Int.semiring n)
-but is expected to have type
-  forall {n : Int}, Iff (Odd.{0} Nat Nat.semiring (Int.natAbs n)) (Odd.{0} Int Int.instSemiringInt n)
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_odd Int.natAbs_oddₓ'. -/
 @[simp]
 theorem natAbs_odd : Odd n.natAbs ↔ Odd n := by
   rw [odd_iff_not_even, Nat.odd_iff_not_even, nat_abs_even]
@@ -379,23 +241,11 @@ theorem natAbs_odd : Odd n.natAbs ↔ Odd n := by
 alias nat_abs_even ↔ _ _root_.even.nat_abs
 #align even.nat_abs Even.natAbs
 
-/- warning: odd.nat_abs -> Odd.natAbs is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, (Odd.{0} Int Int.semiring n) -> (Odd.{0} Nat Nat.semiring (Int.natAbs n))
-but is expected to have type
-  forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Odd.{0} Nat Nat.semiring (Int.natAbs n))
-Case conversion may be inaccurate. Consider using '#align odd.nat_abs Odd.natAbsₓ'. -/
 alias nat_abs_odd ↔ _ _root_.odd.nat_abs
 #align odd.nat_abs Odd.natAbs
 
 attribute [protected] Even.natAbs Odd.natAbs
 
-/- warning: int.four_dvd_add_or_sub_of_odd -> Int.four_dvd_add_or_sub_of_odd is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, (Odd.{0} Int Int.semiring a) -> (Odd.{0} Int Int.semiring b) -> (Or (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (OfNat.ofNat.{0} Int 4 (OfNat.mk.{0} Int 4 (bit0.{0} Int Int.hasAdd (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) a b)) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (OfNat.ofNat.{0} Int 4 (OfNat.mk.{0} Int 4 (bit0.{0} Int Int.hasAdd (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) a b)))
-but is expected to have type
-  forall {a : Int} {b : Int}, (Odd.{0} Int Int.instSemiringInt a) -> (Odd.{0} Int Int.instSemiringInt b) -> (Or (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 4 (instOfNatInt 4)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) a b)) (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 4 (instOfNatInt 4)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) a b)))
-Case conversion may be inaccurate. Consider using '#align int.four_dvd_add_or_sub_of_odd Int.four_dvd_add_or_sub_of_oddₓ'. -/
 theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣ a + b ∨ 4 ∣ a - b :=
   by
   obtain ⟨m, rfl⟩ := ha
@@ -431,42 +281,18 @@ theorem ediv_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
 #align int.div_two_mul_two_of_even Int.ediv_two_mul_two_of_even
 -/
 
-/- warning: int.two_mul_div_two_add_one_of_odd -> Int.two_mul_ediv_two_add_one_of_odd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, (Odd.{0} Int Int.semiring n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) n)
-but is expected to have type
-  forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) n)
-Case conversion may be inaccurate. Consider using '#align int.two_mul_div_two_add_one_of_odd Int.two_mul_ediv_two_add_one_of_oddₓ'. -/
 theorem two_mul_ediv_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by rintro ⟨c, rfl⟩;
   rw [mul_comm]; convert Int.div_add_mod' _ _; simpa [Int.add_emod]
 #align int.two_mul_div_two_add_one_of_odd Int.two_mul_ediv_two_add_one_of_odd
 
-/- warning: int.div_two_mul_two_add_one_of_odd -> Int.ediv_two_mul_two_add_one_of_odd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, (Odd.{0} Int Int.semiring n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) n)
-but is expected to have type
-  forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) n)
-Case conversion may be inaccurate. Consider using '#align int.div_two_mul_two_add_one_of_odd Int.ediv_two_mul_two_add_one_of_oddₓ'. -/
 theorem ediv_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by rintro ⟨c, rfl⟩;
   convert Int.div_add_mod' _ _; simpa [Int.add_emod]
 #align int.div_two_mul_two_add_one_of_odd Int.ediv_two_mul_two_add_one_of_odd
 
-/- warning: int.add_one_div_two_mul_two_of_odd -> Int.add_one_ediv_two_mul_two_of_odd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, (Odd.{0} Int Int.semiring n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))))) n)
-but is expected to have type
-  forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)))) n)
-Case conversion may be inaccurate. Consider using '#align int.add_one_div_two_mul_two_of_odd Int.add_one_ediv_two_mul_two_of_oddₓ'. -/
 theorem add_one_ediv_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by rintro ⟨c, rfl⟩;
   rw [add_comm]; convert Int.div_add_mod' _ _; simpa [Int.add_emod]
 #align int.add_one_div_two_mul_two_of_odd Int.add_one_ediv_two_mul_two_of_odd
 
-/- warning: int.two_mul_div_two_of_odd -> Int.two_mul_ediv_two_of_odd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, (Odd.{0} Int Int.semiring n) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))
-but is expected to have type
-  forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
-Case conversion may be inaccurate. Consider using '#align int.two_mul_div_two_of_odd Int.two_mul_ediv_two_of_oddₓ'. -/
 theorem two_mul_ediv_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=
   eq_sub_of_add_eq (two_mul_ediv_two_add_one_of_odd h)
 #align int.two_mul_div_two_of_odd Int.two_mul_ediv_two_of_odd

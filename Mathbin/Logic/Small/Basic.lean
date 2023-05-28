@@ -67,12 +67,6 @@ instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
 #align small_self small_self
 -/
 
-/- warning: small_map -> small_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u2}} {β : Type.{u3}} [hβ : Small.{u1, u3} β], (Equiv.{succ u2, succ u3} α β) -> (Small.{u1, u2} α)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [hβ : Small.{u3, u1} β], (Equiv.{succ u2, succ u1} α β) -> (Small.{u3, u2} α)
-Case conversion may be inaccurate. Consider using '#align small_map small_mapₓ'. -/
 theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
   let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
   Small.mk' (e.trans f)
@@ -107,12 +101,6 @@ section
 
 open Classical
 
-/- warning: small_congr -> small_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u2}} {β : Type.{u3}}, (Equiv.{succ u2, succ u3} α β) -> (Iff (Small.{u1, u2} α) (Small.{u1, u3} β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}}, (Equiv.{succ u2, succ u1} α β) -> (Iff (Small.{u3, u2} α) (Small.{u3, u1} β))
-Case conversion may be inaccurate. Consider using '#align small_congr small_congrₓ'. -/
 theorem small_congr {α : Type _} {β : Type _} (e : α ≃ β) : Small.{w} α ↔ Small.{w} β :=
   ⟨fun h => @small_map _ _ h e.symm, fun h => @small_map _ _ h e⟩
 #align small_congr small_congr

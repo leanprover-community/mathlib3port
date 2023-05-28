@@ -34,9 +34,6 @@ variable {K V₁ V₂ ι₁ ι₂ : Type _} [Field K] [AddCommGroup V₁] [Modul
   [Module K V₂] [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂] {B₁ : Basis ι₁ K V₁}
   {B₂ : Basis ι₂ K V₂}
 
-/- warning: linear_map.to_matrix_transpose -> LinearMap.toMatrix_transpose is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix_transpose LinearMap.toMatrix_transposeₓ'. -/
 @[simp]
 theorem LinearMap.toMatrix_transpose (u : V₁ →ₗ[K] V₂) :
     LinearMap.toMatrix B₂.dualBasis B₁.dualBasis (Module.Dual.transpose u) =
@@ -47,9 +44,6 @@ theorem LinearMap.toMatrix_transpose (u : V₁ →ₗ[K] V₂) :
     B₂.dual_basis_apply, Matrix.transpose_apply, LinearMap.comp_apply]
 #align linear_map.to_matrix_transpose LinearMap.toMatrix_transpose
 
-/- warning: matrix.to_lin_transpose -> Matrix.toLin_transpose is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.to_lin_transpose Matrix.toLin_transposeₓ'. -/
 @[simp]
 theorem Matrix.toLin_transpose (M : Matrix ι₁ ι₂ K) :
     Matrix.toLin B₁.dualBasis B₂.dualBasis Mᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) :=

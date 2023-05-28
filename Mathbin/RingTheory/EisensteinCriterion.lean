@@ -34,9 +34,6 @@ open Polynomial
 
 namespace EisensteinCriterionAux
 
-/- warning: polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem -> Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_memₓ'. -/
 -- Section for auxiliary lemmas used in the proof of `irreducible_of_eisenstein_criterion`
 theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
     (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
@@ -55,9 +52,6 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
       · exact lt_of_le_of_lt (degree_map_le _ _) h
 #align polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_mem
 
-/- warning: polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow -> Polynomial.EisensteinCriterionAux.le_natDegree_of_map_eq_mul_X_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_natDegree_of_map_eq_mul_X_powₓ'. -/
 theorem le_natDegree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]}
     {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hc0 : c.degree = 0) :
     n ≤ q.natDegree :=
@@ -70,21 +64,12 @@ theorem le_natDegree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime
       )
 #align polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_natDegree_of_map_eq_mul_X_pow
 
-/- warning: polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow -> Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_powₓ'. -/
 theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : R[X]}
     {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P := by
   rw [← coeff_zero_eq_eval_zero, ← eq_zero_iff_mem, ← coeff_map, coeff_zero_eq_eval_zero, hq,
     eval_mul, eval_pow, eval_X, zero_pow hn0, MulZeroClass.mul_zero]
 #align polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_pow
 
-/- warning: polynomial.eisenstein_criterion_aux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit -> Polynomial.EisensteinCriterionAux.isUnit_of_natDegree_eq_zero_of_isPrimitive is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {p : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))} {q : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))}, (forall (x : R), (Dvd.Dvd.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (semigroupDvd.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (SemigroupWithZero.toSemigroup.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonUnitalSemiring.toSemigroupWithZero.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonUnitalRing.toNonUnitalSemiring.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonUnitalCommRing.toNonUnitalRing.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (CommRing.toNonUnitalCommRing.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.commRing.{u1} R _inst_1))))))) (coeFn.{succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (fun (_x : RingHom.{u1, u1} R (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) => R -> (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (RingHom.hasCoeToFun.{u1, u1} R (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Polynomial.C.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) x) (HMul.hMul.{u1, u1, u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHMul.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.mul'.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) p q)) -> (IsUnit.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)) x)) -> (Eq.{1} Nat (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) p) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (IsUnit.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ring.toMonoid.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.ring.{u1} R (CommRing.toRing.{u1} R _inst_1))) p)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))} {q : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))}, (Polynomial.IsPrimitive.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (HMul.hMul.{u1, u1, u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (instHMul.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.mul'.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) p q)) -> (Eq.{1} Nat (Polynomial.natDegree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) p) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (IsUnit.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) p)
-Case conversion may be inaccurate. Consider using '#align polynomial.eisenstein_criterion_aux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit Polynomial.EisensteinCriterionAux.isUnit_of_natDegree_eq_zero_of_isPrimitiveₓ'. -/
 theorem isUnit_of_natDegree_eq_zero_of_isPrimitive {p q : R[X]}
     (hu : ∀ x : R, C x ∣ p * q → IsUnit x) (hpm : p.natDegree = 0) : IsUnit p :=
   by
@@ -100,9 +85,6 @@ open EisensteinCriterionAux
 
 variable [IsDomain R]
 
-/- warning: polynomial.irreducible_of_eisenstein_criterion -> Polynomial.irreducible_of_eisenstein_criterion is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.irreducible_of_eisenstein_criterion Polynomial.irreducible_of_eisenstein_criterionₓ'. -/
 /-- If `f` is a non constant polynomial with coefficients in `R`, and `P` is a prime ideal in `R`,
 then if every coefficient in `R` except the leading coefficient is in `P`, and
 the trailing coefficient is not in `P^2` and no non units in `R` divide `f`, then `f` is

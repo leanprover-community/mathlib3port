@@ -158,22 +158,10 @@ end Fintype
 
 namespace Fintype
 
-/- warning: fintype.of_equiv_card -> Fintype.ofEquiv_card is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] (f : Equiv.{succ u1, succ u2} α β), Eq.{1} Nat (Fintype.card.{u2} β (Fintype.ofEquiv.{u2, u1} β α _inst_1 f)) (Fintype.card.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] (f : Equiv.{succ u2, succ u1} α β), Eq.{1} Nat (Fintype.card.{u1} β (Fintype.ofEquiv.{u1, u2} β α _inst_1 f)) (Fintype.card.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align fintype.of_equiv_card Fintype.ofEquiv_cardₓ'. -/
 theorem ofEquiv_card [Fintype α] (f : α ≃ β) : @card β (ofEquiv α f) = card α :=
   Multiset.card_map _ _
 #align fintype.of_equiv_card Fintype.ofEquiv_card
 
-/- warning: fintype.card_congr -> Fintype.card_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], (Equiv.{succ u1, succ u2} α β) -> (Eq.{1} Nat (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], (Equiv.{succ u2, succ u1} α β) -> (Eq.{1} Nat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align fintype.card_congr Fintype.card_congrₓ'. -/
 theorem card_congr {α β} [Fintype α] [Fintype β] (f : α ≃ β) : card α = card β := by
   rw [← of_equiv_card f] <;> congr
 #align fintype.card_congr Fintype.card_congr
@@ -240,12 +228,6 @@ noncomputable def equivOfCardEq (h : card α = card β) : α ≃ β :=
 
 end
 
-/- warning: fintype.card_eq -> Fintype.card_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [F : Fintype.{u1} α] [G : Fintype.{u2} β], Iff (Eq.{1} Nat (Fintype.card.{u1} α F) (Fintype.card.{u2} β G)) (Nonempty.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [F : Fintype.{u2} α] [G : Fintype.{u1} β], Iff (Eq.{1} Nat (Fintype.card.{u2} α F) (Fintype.card.{u1} β G)) (Nonempty.{max (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} α β))
-Case conversion may be inaccurate. Consider using '#align fintype.card_eq Fintype.card_eqₓ'. -/
 theorem card_eq {α β} [F : Fintype α] [G : Fintype β] : card α = card β ↔ Nonempty (α ≃ β) :=
   ⟨fun h =>
     haveI := Classical.propDecidable
@@ -357,12 +339,6 @@ theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) :
 #align finset.card_compl Finset.card_compl
 -/
 
-/- warning: fintype.card_compl_set -> Fintype.card_compl_set is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] (s : Set.{u1} α) [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))], Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) _inst_3) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} α _inst_1) (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] (s : Set.{u1} α) [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))], Eq.{1} Nat (Fintype.card.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) _inst_3) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} α _inst_1) (Fintype.card.{u1} (Set.Elem.{u1} α s) _inst_2))
-Case conversion may be inaccurate. Consider using '#align fintype.card_compl_set Fintype.card_compl_setₓ'. -/
 theorem Fintype.card_compl_set [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     Fintype.card ↥(sᶜ) = Fintype.card α - Fintype.card s := by
   classical rw [← Set.toFinset_card, ← Set.toFinset_card, ← Finset.card_compl, Set.toFinset_compl]
@@ -390,12 +366,6 @@ theorem fin_injective : Function.Injective Fin := fun m n h =>
 #align fin_injective fin_injective
 -/
 
-/- warning: fin.cast_eq_cast' -> Fin.cast_eq_cast' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} (h : Eq.{2} Type (Fin n) (Fin m)), Eq.{1} ((Fin n) -> (Fin m)) (cast.{1} (Fin n) (Fin m) h) (coeFn.{1, 1} (OrderIso.{0, 0} (Fin n) (Fin m) (Fin.hasLe n) (Fin.hasLe m)) (fun (_x : RelIso.{0, 0} (Fin n) (Fin m) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin m) (Fin.hasLe m))) => (Fin n) -> (Fin m)) (RelIso.hasCoeToFun.{0, 0} (Fin n) (Fin m) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin m) (Fin.hasLe m))) (Fin.cast n m (fin_injective n m h)))
-but is expected to have type
-  forall {n : Nat} {m : Nat} (h : Eq.{2} Type (Fin n) (Fin m)), Eq.{1} ((Fin n) -> (Fin m)) (cast.{1} (Fin n) (Fin m) h) (FunLike.coe.{1, 1, 1} (RelIso.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) (Fin n) (fun (_x : Fin n) => Fin m) (RelHomClass.toFunLike.{0, 0, 0} (RelIso.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (Fin.cast n m (fin_injective n m h)))
-Case conversion may be inaccurate. Consider using '#align fin.cast_eq_cast' Fin.cast_eq_cast'ₓ'. -/
 /-- A reversed version of `fin.cast_eq_cast` that is easier to rewrite with. -/
 theorem Fin.cast_eq_cast' {n m : ℕ} (h : Fin n = Fin m) : cast h = ⇑(Fin.cast <| fin_injective h) :=
   (Fin.cast_eq_cast _).symm
@@ -463,12 +433,6 @@ theorem Fintype.card_bool : Fintype.card Bool = 2 :=
 #align fintype.card_bool Fintype.card_bool
 -/
 
-/- warning: fintype.card_ulift -> Fintype.card_ulift is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{max u1 u2} (ULift.{u2, u1} α) (ULift.fintype.{u1, u2} α _inst_1)) (Fintype.card.{u1} α _inst_1)
-but is expected to have type
-  forall (α : Type.{u2}) [_inst_1 : Fintype.{u2} α], Eq.{1} Nat (Fintype.card.{max u2 u1} (ULift.{u1, u2} α) (ULift.fintype.{u2, u1} α _inst_1)) (Fintype.card.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align fintype.card_ulift Fintype.card_uliftₓ'. -/
 @[simp]
 theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (ULift α) = Fintype.card α :=
   Fintype.ofEquiv_card _
@@ -558,12 +522,6 @@ noncomputable def Fintype.ofFinite (α : Type _) [Finite α] : Fintype α :=
 #align fintype.of_finite Fintype.ofFinite
 -/
 
-/- warning: finite.of_injective -> Finite.of_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β] (f : α -> β), (Function.Injective.{u1, u2} α β f) -> (Finite.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Finite.{u1} β] (f : α -> β), (Function.Injective.{u2, u1} α β f) -> (Finite.{u2} α)
-Case conversion may be inaccurate. Consider using '#align finite.of_injective Finite.of_injectiveₓ'. -/
 theorem Finite.of_injective {α β : Sort _} [Finite β] (f : α → β) (H : Injective f) : Finite α :=
   by
   cases nonempty_fintype (PLift β)
@@ -572,12 +530,6 @@ theorem Finite.of_injective {α β : Sort _} [Finite β] (f : α → β) (H : In
   exact Finite.of_equiv _ Equiv.plift
 #align finite.of_injective Finite.of_injective
 
-/- warning: finite.of_surjective -> Finite.of_surjective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α] (f : α -> β), (Function.Surjective.{u1, u2} α β f) -> (Finite.{u2} β)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Finite.{u2} α] (f : α -> β), (Function.Surjective.{u2, u1} α β f) -> (Finite.{u1} β)
-Case conversion may be inaccurate. Consider using '#align finite.of_surjective Finite.of_surjectiveₓ'. -/
 theorem Finite.of_surjective {α β : Sort _} [Finite α] (f : α → β) (H : Surjective f) : Finite β :=
   Finite.of_injective _ <| injective_surjInv H
 #align finite.of_surjective Finite.of_surjective
@@ -601,32 +553,14 @@ namespace Fintype
 
 variable [Fintype α] [Fintype β]
 
-/- warning: fintype.card_le_of_injective -> Fintype.card_le_of_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), (Function.Injective.{succ u2, succ u1} α β f) -> (LE.le.{0} Nat instLENat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align fintype.card_le_of_injective Fintype.card_le_of_injectiveₓ'. -/
 theorem card_le_of_injective (f : α → β) (hf : Function.Injective f) : card α ≤ card β :=
   Finset.card_le_card_of_inj_on f (fun _ _ => Finset.mem_univ _) fun _ _ _ _ h => hf h
 #align fintype.card_le_of_injective Fintype.card_le_of_injective
 
-/- warning: fintype.card_le_of_embedding -> Fintype.card_le_of_embedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], (Function.Embedding.{succ u1, succ u2} α β) -> (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], (Function.Embedding.{succ u2, succ u1} α β) -> (LE.le.{0} Nat instLENat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align fintype.card_le_of_embedding Fintype.card_le_of_embeddingₓ'. -/
 theorem card_le_of_embedding (f : α ↪ β) : card α ≤ card β :=
   card_le_of_injective f f.2
 #align fintype.card_le_of_embedding Fintype.card_le_of_embedding
 
-/- warning: fintype.card_lt_of_injective_of_not_mem -> Fintype.card_lt_of_injective_of_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall {b : β}, (Not (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b (Set.range.{u2, succ u1} β α f))) -> (LT.lt.{0} Nat Nat.hasLt (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), (Function.Injective.{succ u2, succ u1} α β f) -> (forall {b : β}, (Not (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b (Set.range.{u1, succ u2} β α f))) -> (LT.lt.{0} Nat instLTNat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align fintype.card_lt_of_injective_of_not_mem Fintype.card_lt_of_injective_of_not_memₓ'. -/
 theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective f) {b : β}
     (w : b ∉ Set.range f) : card α < card β :=
   calc
@@ -636,45 +570,21 @@ theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective 
     
 #align fintype.card_lt_of_injective_of_not_mem Fintype.card_lt_of_injective_of_not_mem
 
-/- warning: fintype.card_lt_of_injective_not_surjective -> Fintype.card_lt_of_injective_not_surjective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (Not (Function.Surjective.{succ u1, succ u2} α β f)) -> (LT.lt.{0} Nat Nat.hasLt (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), (Function.Injective.{succ u2, succ u1} α β f) -> (Not (Function.Surjective.{succ u2, succ u1} α β f)) -> (LT.lt.{0} Nat instLTNat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align fintype.card_lt_of_injective_not_surjective Fintype.card_lt_of_injective_not_surjectiveₓ'. -/
 theorem card_lt_of_injective_not_surjective (f : α → β) (h : Function.Injective f)
     (h' : ¬Function.Surjective f) : card α < card β :=
   let ⟨y, hy⟩ := not_forall.1 h'
   card_lt_of_injective_of_not_mem f h hy
 #align fintype.card_lt_of_injective_not_surjective Fintype.card_lt_of_injective_not_surjective
 
-/- warning: fintype.card_le_of_surjective -> Fintype.card_le_of_surjective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u2} β _inst_2) (Fintype.card.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), (Function.Surjective.{succ u2, succ u1} α β f) -> (LE.le.{0} Nat instLENat (Fintype.card.{u1} β _inst_2) (Fintype.card.{u2} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align fintype.card_le_of_surjective Fintype.card_le_of_surjectiveₓ'. -/
 theorem card_le_of_surjective (f : α → β) (h : Function.Surjective f) : card β ≤ card α :=
   card_le_of_injective _ (Function.injective_surjInv h)
 #align fintype.card_le_of_surjective Fintype.card_le_of_surjective
 
-/- warning: fintype.card_range_le -> Fintype.card_range_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) [_inst_3 : Fintype.{u1} α] [_inst_4 : Fintype.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f))], LE.le.{0} Nat Nat.hasLe (Fintype.card.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f)) _inst_4) (Fintype.card.{u1} α _inst_3)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_3 : Fintype.{u2} α] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f))], LE.le.{0} Nat instLENat (Fintype.card.{u1} (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) _inst_4) (Fintype.card.{u2} α _inst_3)
-Case conversion may be inaccurate. Consider using '#align fintype.card_range_le Fintype.card_range_leₓ'. -/
 theorem card_range_le {α β : Type _} (f : α → β) [Fintype α] [Fintype (Set.range f)] :
     Fintype.card (Set.range f) ≤ Fintype.card α :=
   Fintype.card_le_of_surjective (fun a => ⟨f a, by simp⟩) fun ⟨_, a, ha⟩ => ⟨a, by simpa using ha⟩
 #align fintype.card_range_le Fintype.card_range_le
 
-/- warning: fintype.card_range -> Fintype.card_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {F : Type.{u3}} [_inst_3 : EmbeddingLike.{succ u3, succ u1, succ u2} F α β] (f : F) [_inst_4 : Fintype.{u1} α] [_inst_5 : Fintype.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{succ u3, succ u1, succ u2} F α β _inst_3)) f)))], Eq.{1} Nat (Fintype.card.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{succ u3, succ u1, succ u2} F α β _inst_3)) f))) _inst_5) (Fintype.card.{u1} α _inst_4)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {F : Type.{u1}} [_inst_3 : EmbeddingLike.{succ u1, succ u3, succ u2} F α β] (f : F) [_inst_4 : Fintype.{u3} α] [_inst_5 : Fintype.{u2} (Set.Elem.{u2} β (Set.range.{u2, succ u3} β α (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u3, succ u2} F α β _inst_3) f)))], Eq.{1} Nat (Fintype.card.{u2} (Set.Elem.{u2} β (Set.range.{u2, succ u3} β α (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u3, succ u2} F α β _inst_3) f))) _inst_5) (Fintype.card.{u3} α _inst_4)
-Case conversion may be inaccurate. Consider using '#align fintype.card_range Fintype.card_rangeₓ'. -/
 theorem card_range {α β F : Type _} [EmbeddingLike F α β] (f : F) [Fintype α]
     [Fintype (Set.range f)] : Fintype.card (Set.range f) = Fintype.card α :=
   Eq.symm <| Fintype.card_congr <| Equiv.ofInjective _ <| EmbeddingLike.injective f
@@ -818,12 +728,6 @@ theorem two_lt_card_iff : 2 < card α ↔ ∃ a b c : α, a ≠ b ∧ a ≠ c �
 #align fintype.two_lt_card_iff Fintype.two_lt_card_iff
 -/
 
-/- warning: fintype.card_of_bijective -> Fintype.card_of_bijective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] {f : α -> β}, (Function.Bijective.{succ u1, succ u2} α β f) -> (Eq.{1} Nat (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Eq.{1} Nat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align fintype.card_of_bijective Fintype.card_of_bijectiveₓ'. -/
 theorem card_of_bijective {f : α → β} (hf : Bijective f) : card α = card β :=
   card_congr (Equiv.ofBijective f hf)
 #align fintype.card_of_bijective Fintype.card_of_bijective
@@ -864,12 +768,6 @@ theorem surjective_iff_bijective {f : α → α} : Surjective f ↔ Bijective f 
 #align finite.surjective_iff_bijective Finite.surjective_iff_bijective
 -/
 
-/- warning: finite.injective_iff_surjective_of_equiv -> Finite.injective_iff_surjective_of_equiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Finite.{succ u1} α] {f : α -> β}, (Equiv.{succ u1, succ u2} α β) -> (Iff (Function.Injective.{succ u1, succ u2} α β f) (Function.Surjective.{succ u1, succ u2} α β f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] {f : α -> β}, (Equiv.{succ u2, succ u1} α β) -> (Iff (Function.Injective.{succ u2, succ u1} α β f) (Function.Surjective.{succ u2, succ u1} α β f))
-Case conversion may be inaccurate. Consider using '#align finite.injective_iff_surjective_of_equiv Finite.injective_iff_surjective_of_equivₓ'. -/
 theorem injective_iff_surjective_of_equiv {f : α → β} (e : α ≃ β) : Injective f ↔ Surjective f :=
   have : Injective (e.symm ∘ f) ↔ Surjective (e.symm ∘ f) := injective_iff_surjective
   ⟨fun hinj => by
@@ -884,18 +782,6 @@ alias injective_iff_bijective ↔ _root_.function.injective.bijective_of_finite 
 alias surjective_iff_bijective ↔ _root_.function.surjective.bijective_of_finite _
 #align function.surjective.bijective_of_finite Function.Surjective.bijective_of_finite
 
-/- warning: function.injective.surjective_of_fintype -> Function.Injective.surjective_of_fintype is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Finite.{succ u1} α] {f : α -> β}, (Equiv.{succ u1, succ u2} α β) -> (Function.Injective.{succ u1, succ u2} α β f) -> (Function.Surjective.{succ u1, succ u2} α β f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] {f : α -> β}, (Equiv.{succ u2, succ u1} α β) -> (Function.Injective.{succ u2, succ u1} α β f) -> (Function.Surjective.{succ u2, succ u1} α β f)
-Case conversion may be inaccurate. Consider using '#align function.injective.surjective_of_fintype Function.Injective.surjective_of_fintypeₓ'. -/
-/- warning: function.surjective.injective_of_fintype -> Function.Surjective.injective_of_fintype is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Finite.{succ u1} α] {f : α -> β}, (Equiv.{succ u1, succ u2} α β) -> (Function.Surjective.{succ u1, succ u2} α β f) -> (Function.Injective.{succ u1, succ u2} α β f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] {f : α -> β}, (Equiv.{succ u2, succ u1} α β) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (Function.Injective.{succ u2, succ u1} α β f)
-Case conversion may be inaccurate. Consider using '#align function.surjective.injective_of_fintype Function.Surjective.injective_of_fintypeₓ'. -/
 alias injective_iff_surjective_of_equiv ↔
   _root_.function.injective.surjective_of_fintype _root_.function.surjective.injective_of_fintype
 #align function.injective.surjective_of_fintype Function.Injective.surjective_of_fintype
@@ -907,24 +793,12 @@ namespace Fintype
 
 variable [Fintype α] [Fintype β]
 
-/- warning: fintype.bijective_iff_injective_and_card -> Fintype.bijective_iff_injective_and_card is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), Iff (Function.Bijective.{succ u1, succ u2} α β f) (And (Function.Injective.{succ u1, succ u2} α β f) (Eq.{1} Nat (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), Iff (Function.Bijective.{succ u2, succ u1} α β f) (And (Function.Injective.{succ u2, succ u1} α β f) (Eq.{1} Nat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align fintype.bijective_iff_injective_and_card Fintype.bijective_iff_injective_and_cardₓ'. -/
 theorem bijective_iff_injective_and_card (f : α → β) :
     Bijective f ↔ Injective f ∧ card α = card β :=
   ⟨fun h => ⟨h.1, card_of_bijective h⟩, fun h =>
     ⟨h.1, h.1.surjective_of_fintype <| equivOfCardEq h.2⟩⟩
 #align fintype.bijective_iff_injective_and_card Fintype.bijective_iff_injective_and_card
 
-/- warning: fintype.bijective_iff_surjective_and_card -> Fintype.bijective_iff_surjective_and_card is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), Iff (Function.Bijective.{succ u1, succ u2} α β f) (And (Function.Surjective.{succ u1, succ u2} α β f) (Eq.{1} Nat (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), Iff (Function.Bijective.{succ u2, succ u1} α β f) (And (Function.Surjective.{succ u2, succ u1} α β f) (Eq.{1} Nat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align fintype.bijective_iff_surjective_and_card Fintype.bijective_iff_surjective_and_cardₓ'. -/
 theorem bijective_iff_surjective_and_card (f : α → β) :
     Bijective f ↔ Surjective f ∧ card α = card β :=
   ⟨fun h => ⟨h.2, card_of_bijective h⟩, fun h =>
@@ -1050,12 +924,6 @@ theorem equiv_of_fintype_self_embedding_to_embedding [Finite α] (e : α ↪ α)
 #align function.embedding.equiv_of_fintype_self_embedding_to_embedding Function.Embedding.equiv_of_fintype_self_embedding_to_embedding
 -/
 
-/- warning: function.embedding.is_empty_of_card_lt -> Function.Embedding.is_empty_of_card_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], (LT.lt.{0} Nat Nat.hasLt (Fintype.card.{u2} β _inst_2) (Fintype.card.{u1} α _inst_1)) -> (IsEmpty.{max 1 (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], (LT.lt.{0} Nat instLTNat (Fintype.card.{u1} β _inst_2) (Fintype.card.{u2} α _inst_1)) -> (IsEmpty.{max (succ u1) (succ u2)} (Function.Embedding.{succ u2, succ u1} α β))
-Case conversion may be inaccurate. Consider using '#align function.embedding.is_empty_of_card_lt Function.Embedding.is_empty_of_card_ltₓ'. -/
 /-- If `‖β‖ < ‖α‖` there are no embeddings `α ↪ β`.
 This is a formulation of the pigeonhole principle.
 
@@ -1078,33 +946,15 @@ def truncOfCardLe [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
 #align function.embedding.trunc_of_card_le Function.Embedding.truncOfCardLe
 -/
 
-/- warning: function.embedding.nonempty_of_card_le -> Function.Embedding.nonempty_of_card_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2)) -> (Nonempty.{max 1 (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], (LE.le.{0} Nat instLENat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2)) -> (Nonempty.{max (succ u1) (succ u2)} (Function.Embedding.{succ u2, succ u1} α β))
-Case conversion may be inaccurate. Consider using '#align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_leₓ'. -/
 theorem nonempty_of_card_le [Fintype α] [Fintype β] (h : Fintype.card α ≤ Fintype.card β) :
     Nonempty (α ↪ β) := by classical exact (trunc_of_card_le h).Nonempty
 #align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_le
 
-/- warning: function.embedding.nonempty_iff_card_le -> Function.Embedding.nonempty_iff_card_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], Iff (Nonempty.{max 1 (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β)) (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u1} α _inst_1) (Fintype.card.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], Iff (Nonempty.{max (succ u1) (succ u2)} (Function.Embedding.{succ u2, succ u1} α β)) (LE.le.{0} Nat instLENat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align function.embedding.nonempty_iff_card_le Function.Embedding.nonempty_iff_card_leₓ'. -/
 theorem nonempty_iff_card_le [Fintype α] [Fintype β] :
     Nonempty (α ↪ β) ↔ Fintype.card α ≤ Fintype.card β :=
   ⟨fun ⟨e⟩ => Fintype.card_le_of_embedding e, nonempty_of_card_le⟩
 #align function.embedding.nonempty_iff_card_le Function.Embedding.nonempty_iff_card_le
 
-/- warning: function.embedding.exists_of_card_le_finset -> Function.Embedding.exists_of_card_le_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] {s : Finset.{u2} β}, (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u1} α _inst_1) (Finset.card.{u2} β s)) -> (Exists.{max 1 (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (f : Function.Embedding.{succ u1, succ u2} α β) => HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.range.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] {s : Finset.{u1} β}, (LE.le.{0} Nat instLENat (Fintype.card.{u2} α _inst_1) (Finset.card.{u1} β s)) -> (Exists.{max (succ u2) (succ u1)} (Function.Embedding.{succ u2, succ u1} α β) (fun (f : Function.Embedding.{succ u2, succ u1} α β) => HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f)) (Finset.toSet.{u1} β s)))
-Case conversion may be inaccurate. Consider using '#align function.embedding.exists_of_card_le_finset Function.Embedding.exists_of_card_le_finsetₓ'. -/
 theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card α ≤ s.card) :
     ∃ f : α ↪ β, Set.range f ⊆ s :=
   by
@@ -1124,12 +974,6 @@ theorem Finset.univ_map_embedding {α : Type _} [Fintype α] (e : α ↪ α) : u
 
 namespace Fintype
 
-/- warning: fintype.card_lt_of_surjective_not_injective -> Fintype.card_lt_of_surjective_not_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] (f : α -> β), (Function.Surjective.{succ u1, succ u2} α β f) -> (Not (Function.Injective.{succ u1, succ u2} α β f)) -> (LT.lt.{0} Nat Nat.hasLt (Fintype.card.{u2} β _inst_2) (Fintype.card.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] (f : α -> β), (Function.Surjective.{succ u2, succ u1} α β f) -> (Not (Function.Injective.{succ u2, succ u1} α β f)) -> (LT.lt.{0} Nat instLTNat (Fintype.card.{u1} β _inst_2) (Fintype.card.{u2} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align fintype.card_lt_of_surjective_not_injective Fintype.card_lt_of_surjective_not_injectiveₓ'. -/
 theorem card_lt_of_surjective_not_injective [Fintype α] [Fintype β] (f : α → β)
     (h : Function.Surjective f) (h' : ¬Function.Injective f) : card β < card α :=
   card_lt_of_injective_not_surjective _ (Function.injective_surjInv h) fun hg =>
@@ -1240,42 +1084,18 @@ theorem wellFounded_of_trans_of_irrefl (r : α → α → Prop) [IsTrans α r] [
 #align finite.well_founded_of_trans_of_irrefl Finite.wellFounded_of_trans_of_irrefl
 -/
 
-/- warning: finite.preorder.well_founded_lt -> Finite.Preorder.wellFounded_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6398 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6400 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) x._@.Mathlib.Data.Fintype.Card._hyg.6398 x._@.Mathlib.Data.Fintype.Card._hyg.6400)
-Case conversion may be inaccurate. Consider using '#align finite.preorder.well_founded_lt Finite.Preorder.wellFounded_ltₓ'. -/
 theorem Preorder.wellFounded_lt [Preorder α] : WellFounded ((· < ·) : α → α → Prop) :=
   wellFounded_of_trans_of_irrefl _
 #align finite.preorder.well_founded_lt Finite.Preorder.wellFounded_lt
 
-/- warning: finite.preorder.well_founded_gt -> Finite.Preorder.wellFounded_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6438 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6440 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_2) x._@.Mathlib.Data.Fintype.Card._hyg.6438 x._@.Mathlib.Data.Fintype.Card._hyg.6440)
-Case conversion may be inaccurate. Consider using '#align finite.preorder.well_founded_gt Finite.Preorder.wellFounded_gtₓ'. -/
 theorem Preorder.wellFounded_gt [Preorder α] : WellFounded ((· > ·) : α → α → Prop) :=
   wellFounded_of_trans_of_irrefl _
 #align finite.preorder.well_founded_gt Finite.Preorder.wellFounded_gt
 
-/- warning: finite.linear_order.is_well_order_lt -> Finite.LinearOrder.isWellOrder_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6472 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6474 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Data.Fintype.Card._hyg.6472 x._@.Mathlib.Data.Fintype.Card._hyg.6474)
-Case conversion may be inaccurate. Consider using '#align finite.linear_order.is_well_order_lt Finite.LinearOrder.isWellOrder_ltₓ'. -/
 instance (priority := 10) LinearOrder.isWellOrder_lt [LinearOrder α] : IsWellOrder α (· < ·)
     where wf := Preorder.wellFounded_lt
 #align finite.linear_order.is_well_order_lt Finite.LinearOrder.isWellOrder_lt
 
-/- warning: finite.linear_order.is_well_order_gt -> Finite.LinearOrder.isWellOrder_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6509 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6511 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Data.Fintype.Card._hyg.6509 x._@.Mathlib.Data.Fintype.Card._hyg.6511)
-Case conversion may be inaccurate. Consider using '#align finite.linear_order.is_well_order_gt Finite.LinearOrder.isWellOrder_gtₓ'. -/
 instance (priority := 10) LinearOrder.isWellOrder_gt [LinearOrder α] : IsWellOrder α (· > ·)
     where wf := Preorder.wellFounded_gt
 #align finite.linear_order.is_well_order_gt Finite.LinearOrder.isWellOrder_gt
@@ -1319,12 +1139,6 @@ noncomputable def fintypeOrInfinite (α : Type _) : PSum (Fintype α) (Infinite 
 
 end
 
-/- warning: finset.exists_minimal -> Finset.exists_minimal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) => forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x m)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) m s) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x m)))))
-Case conversion may be inaccurate. Consider using '#align finset.exists_minimal Finset.exists_minimalₓ'. -/
 theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) :
     ∃ m ∈ s, ∀ x ∈ s, ¬x < m := by
   obtain ⟨c, hcs : c ∈ s⟩ := h
@@ -1333,12 +1147,6 @@ theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s
   exact ⟨m, hms, fun x hx hxm => H ⟨x, hx⟩ trivial hxm⟩
 #align finset.exists_minimal Finset.exists_minimal
 
-/- warning: finset.exists_maximal -> Finset.exists_maximal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) => forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) m x)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) m s) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) m x)))))
-Case conversion may be inaccurate. Consider using '#align finset.exists_maximal Finset.exists_maximalₓ'. -/
 theorem Finset.exists_maximal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) :
     ∃ m ∈ s, ∀ x ∈ s, ¬m < x :=
   @Finset.exists_minimal αᵒᵈ _ s h
@@ -1394,22 +1202,10 @@ protected theorem nonempty (α : Type _) [Infinite α] : Nonempty α := by infer
 #align infinite.nonempty Infinite.nonempty
 -/
 
-/- warning: infinite.of_injective -> Infinite.of_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Infinite.{u2} β] (f : β -> α), (Function.Injective.{u2, u1} β α f) -> (Infinite.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u1} β] (f : β -> α), (Function.Injective.{u1, u2} β α f) -> (Infinite.{u2} α)
-Case conversion may be inaccurate. Consider using '#align infinite.of_injective Infinite.of_injectiveₓ'. -/
 theorem of_injective {α β} [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
   ⟨fun I => (Finite.of_injective f hf).False⟩
 #align infinite.of_injective Infinite.of_injective
 
-/- warning: infinite.of_surjective -> Infinite.of_surjective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Infinite.{u2} β] (f : α -> β), (Function.Surjective.{u1, u2} α β f) -> (Infinite.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u1} β] (f : α -> β), (Function.Surjective.{u2, u1} α β f) -> (Infinite.{u2} α)
-Case conversion may be inaccurate. Consider using '#align infinite.of_surjective Infinite.of_surjectiveₓ'. -/
 theorem of_surjective {α β} [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
   ⟨fun I => (Finite.of_surjective f hf).False⟩
 #align infinite.of_surjective Infinite.of_surjective
@@ -1542,22 +1338,10 @@ noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Fin
 #align fintype_of_finset_card_le fintypeOfFinsetCardLe
 -/
 
-/- warning: not_injective_infinite_finite -> not_injective_infinite_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Infinite.{u1} α] [_inst_2 : Finite.{u2} β] (f : α -> β), Not (Function.Injective.{u1, u2} α β f)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u2} α] [_inst_2 : Finite.{u1} β] (f : α -> β), Not (Function.Injective.{u2, u1} α β f)
-Case conversion may be inaccurate. Consider using '#align not_injective_infinite_finite not_injective_infinite_finiteₓ'. -/
 theorem not_injective_infinite_finite {α β} [Infinite α] [Finite β] (f : α → β) : ¬Injective f :=
   fun hf => (Finite.of_injective f hf).False
 #align not_injective_infinite_finite not_injective_infinite_finite
 
-/- warning: finite.exists_ne_map_eq_of_infinite -> Finite.exists_ne_map_eq_of_infinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Infinite.{u1} α] [_inst_2 : Finite.{u2} β] (f : α -> β), Exists.{u1} α (fun (x : α) => Exists.{u1} α (fun (y : α) => And (Ne.{u1} α x y) (Eq.{u2} β (f x) (f y))))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u2} α] [_inst_2 : Finite.{u1} β] (f : α -> β), Exists.{u2} α (fun (x : α) => Exists.{u2} α (fun (y : α) => And (Ne.{u2} α x y) (Eq.{u1} β (f x) (f y))))
-Case conversion may be inaccurate. Consider using '#align finite.exists_ne_map_eq_of_infinite Finite.exists_ne_map_eq_of_infiniteₓ'. -/
 /-- The pigeonhole principle for infinitely many pigeons in finitely many pigeonholes. If there are
 infinitely many pigeons in finitely many pigeonholes, then there are at least two pigeons in the
 same pigeonhole.
@@ -1569,22 +1353,10 @@ theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f
   simpa only [injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
 #align finite.exists_ne_map_eq_of_infinite Finite.exists_ne_map_eq_of_infinite
 
-/- warning: function.embedding.is_empty -> Function.Embedding.is_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Infinite.{u1} α] [_inst_2 : Finite.{u2} β], IsEmpty.{max 1 (imax u1 u2)} (Function.Embedding.{u1, u2} α β)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Infinite.{u1} α] [_inst_2 : Finite.{u2} β], IsEmpty.{max (max 1 u2) u1} (Function.Embedding.{u1, u2} α β)
-Case conversion may be inaccurate. Consider using '#align function.embedding.is_empty Function.Embedding.is_emptyₓ'. -/
 instance Function.Embedding.is_empty {α β} [Infinite α] [Finite β] : IsEmpty (α ↪ β) :=
   ⟨fun f => not_injective_infinite_finite f f.2⟩
 #align function.embedding.is_empty Function.Embedding.is_empty
 
-/- warning: finite.exists_infinite_fiber -> Finite.exists_infinite_fiber is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Infinite.{succ u1} α] [_inst_2 : Finite.{succ u2} β] (f : α -> β), Exists.{succ u2} β (fun (y : β) => Infinite.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Infinite.{succ u2} α] [_inst_2 : Finite.{succ u1} β] (f : α -> β), Exists.{succ u1} β (fun (y : β) => Infinite.{succ u2} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) y))))
-Case conversion may be inaccurate. Consider using '#align finite.exists_infinite_fiber Finite.exists_infinite_fiberₓ'. -/
 /-- The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in
 finitely many pigeonholes, then there is a pigeonhole with infinitely
@@ -1604,12 +1376,6 @@ theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
     exact key.false
 #align finite.exists_infinite_fiber Finite.exists_infinite_fiber
 
-/- warning: not_surjective_finite_infinite -> not_surjective_finite_infinite is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α] [_inst_2 : Infinite.{u2} β] (f : α -> β), Not (Function.Surjective.{u1, u2} α β f)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Finite.{u2} α] [_inst_2 : Infinite.{u1} β] (f : α -> β), Not (Function.Surjective.{u2, u1} α β f)
-Case conversion may be inaccurate. Consider using '#align not_surjective_finite_infinite not_surjective_finite_infiniteₓ'. -/
 theorem not_surjective_finite_infinite {α β} [Finite α] [Infinite β] (f : α → β) : ¬Surjective f :=
   fun hf => (Infinite.of_surjective f hf).not_finite ‹_›
 #align not_surjective_finite_infinite not_surjective_finite_infinite

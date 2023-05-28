@@ -136,12 +136,6 @@ protected theorem inductionOn {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y
 #align sym2.induction_on Sym2.inductionOn
 -/
 
-/- warning: sym2.induction_on₂ -> Sym2.inductionOn₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : (Sym2.{u1} α) -> (Sym2.{u2} β) -> Prop} (i : Sym2.{u1} α) (j : Sym2.{u2} β), (forall (a₁ : α) (a₂ : α) (b₁ : β) (b₂ : β), f (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (Prod.mk.{u1, u1} α α a₁ a₂)) (Quotient.mk'.{succ u2} (Prod.{u2, u2} β β) (Sym2.Rel.setoid.{u2} β) (Prod.mk.{u2, u2} β β b₁ b₂))) -> (f i j)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : (Sym2.{u2} α) -> (Sym2.{u1} β) -> Prop} (i : Sym2.{u2} α) (j : Sym2.{u1} β), (forall (a₁ : α) (a₂ : α) (b₁ : β) (b₂ : β), f (Quotient.mk.{succ u2} (Prod.{u2, u2} α α) (Sym2.Rel.setoid.{u2} α) (Prod.mk.{u2, u2} α α a₁ a₂)) (Quotient.mk.{succ u1} (Prod.{u1, u1} β β) (Sym2.Rel.setoid.{u1} β) (Prod.mk.{u1, u1} β β b₁ b₂))) -> (f i j)
-Case conversion may be inaccurate. Consider using '#align sym2.induction_on₂ Sym2.inductionOn₂ₓ'. -/
 @[elab_as_elim]
 protected theorem inductionOn₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 α) (j : Sym2 β)
     (hf : ∀ a₁ a₂ b₁ b₂, f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧) : f i j :=
@@ -209,24 +203,12 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
 #align sym2.lift Sym2.lift
 -/
 
-/- warning: sym2.lift_mk -> Sym2.lift_mk'' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (a₁ : α) (a₂ : α), Eq.{succ u2} β (coeFn.{max 1 (succ u1) (succ u2), max 1 (succ u1) (succ u2)} (Equiv.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u1} α) -> β)) (fun (_x : Equiv.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u1} α) -> β)) => (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) -> (Sym2.{u1} α) -> β) (Equiv.hasCoeToFun.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u1} α) -> β)) (Sym2.lift.{u1, u2} α β) f (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (Prod.mk.{u1, u1} α α a₁ a₂))) ((fun (a : Sort.{max 1 (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (HasLiftT.mk.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (CoeTCₓ.coe.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (coeBase.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (coeSubtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁)))))) f a₁ a₂)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) (a₁ : α) (a₂ : α), Eq.{succ u1} β (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max 1 (succ u2) (succ u1), max (succ u2) (succ u1)} (Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u2} α) -> β)) (Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) (fun (_x : Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) => (Sym2.{u2} α) -> β) _x) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u2} α) -> β)) (Sym2.lift.{u2, u1} α β) f (Quotient.mk.{succ u2} (Prod.{u2, u2} α α) (Sym2.Rel.setoid.{u2} α) (Prod.mk.{u2, u2} α α a₁ a₂))) (Subtype.val.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁)) f a₁ a₂)
-Case conversion may be inaccurate. Consider using '#align sym2.lift_mk Sym2.lift_mk''ₓ'. -/
 @[simp]
 theorem lift_mk'' (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
     lift f ⟦(a₁, a₂)⟧ = (f : α → α → β) a₁ a₂ :=
   rfl
 #align sym2.lift_mk Sym2.lift_mk''
 
-/- warning: sym2.coe_lift_symm_apply -> Sym2.coe_lift_symm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (F : (Sym2.{u1} α) -> β) (a₁ : α) (a₂ : α), Eq.{succ u2} β ((fun (a : Sort.{max 1 (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (HasLiftT.mk.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (CoeTCₓ.coe.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (coeBase.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) (α -> α -> β) (coeSubtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁)))))) (coeFn.{max 1 (succ u1) (succ u2), max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max 1 (succ u1) (succ u2)} ((Sym2.{u1} α) -> β) (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁)))) (fun (_x : Equiv.{max (succ u1) (succ u2), max 1 (succ u1) (succ u2)} ((Sym2.{u1} α) -> β) (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁)))) => ((Sym2.{u1} α) -> β) -> (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁)))) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max 1 (succ u1) (succ u2)} ((Sym2.{u1} α) -> β) (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁)))) (Equiv.symm.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u1) (succ u2)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u2} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u1} α) -> β) (Sym2.lift.{u1, u2} α β)) F) a₁ a₂) (F (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (Prod.mk.{u1, u1} α α a₁ a₂)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (F : (Sym2.{u2} α) -> β) (a₁ : α) (a₂ : α), Eq.{succ u1} β (Subtype.val.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁)) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} ((Sym2.{u2} α) -> β) (Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁)))) ((Sym2.{u2} α) -> β) (fun (_x : (Sym2.{u2} α) -> β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : (Sym2.{u2} α) -> β) => Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) _x) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} ((Sym2.{u2} α) -> β) (Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁)))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Subtype.{max (succ u2) (succ u1)} (α -> α -> β) (fun (f : α -> α -> β) => forall (a₁ : α) (a₂ : α), Eq.{succ u1} β (f a₁ a₂) (f a₂ a₁))) ((Sym2.{u2} α) -> β) (Sym2.lift.{u2, u1} α β)) F) a₁ a₂) (F (Quotient.mk.{succ u2} (Prod.{u2, u2} α α) (Sym2.Rel.setoid.{u2} α) (Prod.mk.{u2, u2} α α a₁ a₂)))
-Case conversion may be inaccurate. Consider using '#align sym2.coe_lift_symm_apply Sym2.coe_lift_symm_applyₓ'. -/
 @[simp]
 theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) :
     (lift.symm F : α → α → β) a₁ a₂ = F ⟦(a₁, a₂)⟧ :=
@@ -253,9 +235,6 @@ def lift₂ :
 #align sym2.lift₂ Sym2.lift₂
 -/
 
-/- warning: sym2.lift₂_mk -> Sym2.lift₂_mk'' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sym2.lift₂_mk Sym2.lift₂_mk''ₓ'. -/
 @[simp]
 theorem lift₂_mk''
     (f :
@@ -265,9 +244,6 @@ theorem lift₂_mk''
   rfl
 #align sym2.lift₂_mk Sym2.lift₂_mk''
 
-/- warning: sym2.coe_lift₂_symm_apply -> Sym2.coe_lift₂_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sym2.coe_lift₂_symm_apply Sym2.coe_lift₂_symm_applyₓ'. -/
 @[simp]
 theorem coe_lift₂_symm_apply (F : Sym2 α → Sym2 β → γ) (a₁ a₂ : α) (b₁ b₂ : β) :
     (lift₂.symm F : α → α → β → β → γ) a₁ a₂ b₁ b₂ = F ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ :=
@@ -288,22 +264,10 @@ theorem map_id : map (@id α) = id := by ext ⟨⟨x, y⟩⟩; rfl
 #align sym2.map_id Sym2.map_id
 -/
 
-/- warning: sym2.map_comp -> Sym2.map_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {g : β -> γ} {f : α -> β}, Eq.{max (succ u1) (succ u3)} ((Sym2.{u1} α) -> (Sym2.{u3} γ)) (Sym2.map.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f)) (Function.comp.{succ u1, succ u2, succ u3} (Sym2.{u1} α) (Sym2.{u2} β) (Sym2.{u3} γ) (Sym2.map.{u2, u3} β γ g) (Sym2.map.{u1, u2} α β f))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {g : β -> γ} {f : α -> β}, Eq.{max (succ u3) (succ u2)} ((Sym2.{u3} α) -> (Sym2.{u2} γ)) (Sym2.map.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f)) (Function.comp.{succ u3, succ u1, succ u2} (Sym2.{u3} α) (Sym2.{u1} β) (Sym2.{u2} γ) (Sym2.map.{u1, u2} β γ g) (Sym2.map.{u3, u1} α β f))
-Case conversion may be inaccurate. Consider using '#align sym2.map_comp Sym2.map_compₓ'. -/
 theorem map_comp {g : β → γ} {f : α → β} : Sym2.map (g ∘ f) = Sym2.map g ∘ Sym2.map f := by
   ext ⟨⟨x, y⟩⟩; rfl
 #align sym2.map_comp Sym2.map_comp
 
-/- warning: sym2.map_map -> Sym2.map_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {g : β -> γ} {f : α -> β} (x : Sym2.{u1} α), Eq.{succ u3} (Sym2.{u3} γ) (Sym2.map.{u2, u3} β γ g (Sym2.map.{u1, u2} α β f x)) (Sym2.map.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) x)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {g : β -> γ} {f : α -> β} (x : Sym2.{u3} α), Eq.{succ u2} (Sym2.{u2} γ) (Sym2.map.{u1, u2} β γ g (Sym2.map.{u3, u1} α β f x)) (Sym2.map.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f) x)
-Case conversion may be inaccurate. Consider using '#align sym2.map_map Sym2.map_mapₓ'. -/
 theorem map_map {g : β → γ} {f : α → β} (x : Sym2 α) : map g (map f x) = map (g ∘ f) x := by tidy
 #align sym2.map_map Sym2.map_map
 
@@ -314,12 +278,6 @@ theorem map_pair_eq (f : α → β) (x y : α) : map f ⟦(x, y)⟧ = ⟦(f x, f
 #align sym2.map_pair_eq Sym2.map_pair_eq
 -/
 
-/- warning: sym2.map.injective -> Sym2.map.injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (Function.Injective.{succ u1, succ u2} (Sym2.{u1} α) (Sym2.{u2} β) (Sym2.map.{u1, u2} α β f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Function.Injective.{succ u2, succ u1} (Sym2.{u2} α) (Sym2.{u1} β) (Sym2.map.{u2, u1} α β f))
-Case conversion may be inaccurate. Consider using '#align sym2.map.injective Sym2.map.injectiveₓ'. -/
 theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) :=
   by
   intro z z'
@@ -473,12 +431,6 @@ instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x �
 
 end Membership
 
-/- warning: sym2.mem_map -> Sym2.mem_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {b : β} {z : Sym2.{u1} α}, Iff (Membership.Mem.{u2, u2} β (Sym2.{u2} β) (SetLike.hasMem.{u2, u2} (Sym2.{u2} β) β (Sym2.setLike.{u2} β)) b (Sym2.map.{u1, u2} α β f z)) (Exists.{succ u1} α (fun (a : α) => And (Membership.Mem.{u1, u1} α (Sym2.{u1} α) (SetLike.hasMem.{u1, u1} (Sym2.{u1} α) α (Sym2.setLike.{u1} α)) a z) (Eq.{succ u2} β (f a) b)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {b : β} {z : Sym2.{u2} α}, Iff (Membership.mem.{u1, u1} β (Sym2.{u1} β) (SetLike.instMembership.{u1, u1} (Sym2.{u1} β) β (Sym2.instSetLikeSym2.{u1} β)) b (Sym2.map.{u2, u1} α β f z)) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Sym2.{u2} α) (SetLike.instMembership.{u2, u2} (Sym2.{u2} α) α (Sym2.instSetLikeSym2.{u2} α)) a z) (Eq.{succ u1} β (f a) b)))
-Case conversion may be inaccurate. Consider using '#align sym2.mem_map Sym2.mem_mapₓ'. -/
 @[simp]
 theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ ∃ a, a ∈ z ∧ f a = b :=
   by
@@ -491,12 +443,6 @@ theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ 
   · rintro ⟨w, rfl | rfl, rfl⟩ <;> simp
 #align sym2.mem_map Sym2.mem_map
 
-/- warning: sym2.map_congr -> Sym2.map_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {g : α -> β} {s : Sym2.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Sym2.{u1} α) (SetLike.hasMem.{u1, u1} (Sym2.{u1} α) α (Sym2.setLike.{u1} α)) x s) -> (Eq.{succ u2} β (f x) (g x))) -> (Eq.{succ u2} (Sym2.{u2} β) (Sym2.map.{u1, u2} α β f s) (Sym2.map.{u1, u2} α β g s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {g : α -> β} {s : Sym2.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Sym2.{u2} α) (SetLike.instMembership.{u2, u2} (Sym2.{u2} α) α (Sym2.instSetLikeSym2.{u2} α)) x s) -> (Eq.{succ u1} β (f x) (g x))) -> (Eq.{succ u1} (Sym2.{u1} β) (Sym2.map.{u2, u1} α β f s) (Sym2.map.{u2, u1} α β g s))
-Case conversion may be inaccurate. Consider using '#align sym2.map_congr Sym2.map_congrₓ'. -/
 @[congr]
 theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀ x ∈ s, f x = g x) : map f s = map g s :=
   by
@@ -622,12 +568,6 @@ theorem fromRel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ fromRel S
 #align sym2.from_rel_prop Sym2.fromRel_prop
 -/
 
-/- warning: sym2.from_rel_bot -> Sym2.fromRel_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} α)) (Sym2.fromRel.{u1} α (fun (x : α) (y : α) => Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasBot.{0} Prop Prop.completeLattice))) x y) (fun (x : α) (y : α) (z : Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasBot.{0} Prop Prop.completeLattice))) x y) => z)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} α)) (Set.hasEmptyc.{u1} (Sym2.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} α)) (Sym2.fromRel.{u1} α (fun (x : α) (y : α) => Bot.bot.{u1} (α -> α -> Prop) (Pi.instBotForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instBotForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toBot.{0} Prop Prop.completeLattice))) x y) (fun (x : α) (y : α) (z : Bot.bot.{u1} (α -> α -> Prop) (Pi.instBotForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instBotForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toBot.{0} Prop Prop.completeLattice))) x y) => z)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} α)) (Set.instEmptyCollectionSet.{u1} (Sym2.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align sym2.from_rel_bot Sym2.fromRel_botₓ'. -/
 theorem fromRel_bot : fromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ :=
   by
   apply Set.eq_empty_of_forall_not_mem fun e => _
@@ -635,12 +575,6 @@ theorem fromRel_bot : fromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ :=
   simp [-Set.bot_eq_empty, Prop.bot_eq_false]
 #align sym2.from_rel_bot Sym2.fromRel_bot
 
-/- warning: sym2.from_rel_top -> Sym2.fromRel_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} α)) (Sym2.fromRel.{u1} α (fun (x : α) (y : α) => Top.top.{u1} (α -> α -> Prop) (Pi.hasTop.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasTop.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasTop.{0} Prop Prop.completeLattice))) x y) (fun (x : α) (y : α) (z : Top.top.{u1} (α -> α -> Prop) (Pi.hasTop.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasTop.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasTop.{0} Prop Prop.completeLattice))) x y) => z)) (Set.univ.{u1} (Sym2.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} α)) (Sym2.fromRel.{u1} α (fun (x : α) (y : α) => Top.top.{u1} (α -> α -> Prop) (Pi.instTopForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instTopForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toTop.{0} Prop Prop.completeLattice))) x y) (fun (x : α) (y : α) (z : Top.top.{u1} (α -> α -> Prop) (Pi.instTopForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instTopForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toTop.{0} Prop Prop.completeLattice))) x y) => z)) (Set.univ.{u1} (Sym2.{u1} α))
-Case conversion may be inaccurate. Consider using '#align sym2.from_rel_top Sym2.fromRel_topₓ'. -/
 theorem fromRel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.univ :=
   by
   apply Set.eq_univ_of_forall fun e => _
@@ -757,12 +691,6 @@ def equivSym (α : Type _) : Sym2 α ≃ Sym α 2 :=
 #align sym2.equiv_sym Sym2.equivSym
 -/
 
-/- warning: sym2.equiv_multiset -> Sym2.equivMultiset is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (Sym2.{u1} α) (Subtype.{succ u1} (Multiset.{u1} α) (fun (s : Multiset.{u1} α) => Eq.{1} Nat (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u1} α) -> Nat) (AddMonoidHom.hasCoeToFun.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u1} α) s) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (Sym2.{u1} α) (Subtype.{succ u1} (Multiset.{u1} α) (fun (s : Multiset.{u1} α) => Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) s) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s) (OfNat.ofNat.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) s) 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align sym2.equiv_multiset Sym2.equivMultisetₓ'. -/
 /-- The symmetric square is equivalent to multisets of cardinality
 two. (This is currently a synonym for `equiv_sym`, but it's provided
 in case the definition for `sym` changes.)

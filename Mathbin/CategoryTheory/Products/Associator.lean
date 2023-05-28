@@ -49,12 +49,6 @@ def inverseAssociator : C × D × E ⥤ (C × D) × E
 #align category_theory.prod.inverse_associator CategoryTheory.prod.inverseAssociator
 -/
 
-/- warning: category_theory.prod.associativity -> CategoryTheory.prod.associativity is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u4}) [_inst_1 : CategoryTheory.Category.{u1, u4} C] (D : Type.{u5}) [_inst_2 : CategoryTheory.Category.{u2, u5} D] (E : Type.{u6}) [_inst_3 : CategoryTheory.Category.{u3, u6} E], CategoryTheory.Equivalence.{max (max u1 u2) u3, max u1 u2 u3, max (max u4 u5) u6, max u4 u5 u6} (Prod.{max u4 u5, u6} (Prod.{u4, u5} C D) E) (CategoryTheory.prod.{max u1 u2, u3, max u4 u5, u6} (Prod.{u4, u5} C D) (CategoryTheory.prod.{u1, u2, u4, u5} C _inst_1 D _inst_2) E _inst_3) (Prod.{u4, max u5 u6} C (Prod.{u5, u6} D E)) (CategoryTheory.prod.{u1, max u2 u3, u4, max u5 u6} C _inst_1 (Prod.{u5, u6} D E) (CategoryTheory.prod.{u2, u3, u5, u6} D _inst_2 E _inst_3))
-but is expected to have type
-  forall (C : Type.{u4}) [_inst_1 : CategoryTheory.Category.{u1, u4} C] (D : Type.{u5}) [_inst_2 : CategoryTheory.Category.{u2, u5} D] (E : Type.{u6}) [_inst_3 : CategoryTheory.Category.{u3, u6} E], CategoryTheory.Equivalence.{max (max u1 u2) u3, max (max u1 u2) u3, max u6 u5 u4, max (max u6 u5) u4} (Prod.{max u5 u4, u6} (Prod.{u4, u5} C D) E) (Prod.{u4, max u6 u5} C (Prod.{u5, u6} D E)) (CategoryTheory.prod.{max u1 u2, u3, max u4 u5, u6} (Prod.{u4, u5} C D) (CategoryTheory.prod.{u1, u2, u4, u5} C _inst_1 D _inst_2) E _inst_3) (CategoryTheory.prod.{u1, max u2 u3, u4, max u5 u6} C _inst_1 (Prod.{u5, u6} D E) (CategoryTheory.prod.{u2, u3, u5, u6} D _inst_2 E _inst_3))
-Case conversion may be inaccurate. Consider using '#align category_theory.prod.associativity CategoryTheory.prod.associativityₓ'. -/
 /-- The equivalence of categories expressing associativity of products of categories.
 -/
 def associativity : (C × D) × E ≌ C × D × E :=

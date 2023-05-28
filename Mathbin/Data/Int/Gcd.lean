@@ -233,12 +233,6 @@ theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcd x y : ℤ) = x * gcdA x y + y * gcdB
 #align int.gcd_eq_gcd_ab Int.gcd_eq_gcd_ab
 -/
 
-/- warning: int.nat_abs_div -> Int.natAbs_ediv is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) (b : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Nat (Int.natAbs (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) (Int.natAbs a) (Int.natAbs b)))
-but is expected to have type
-  forall (a : Int) (b : Int), (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Nat (Int.natAbs (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (Int.natAbs a) (Int.natAbs b)))
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_div Int.natAbs_edivₓ'. -/
 theorem natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b :=
   by
   cases Nat.eq_zero_or_pos (nat_abs b)
@@ -252,22 +246,10 @@ theorem natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
     
 #align int.nat_abs_div Int.natAbs_ediv
 
-/- warning: int.dvd_of_mul_dvd_mul_left -> Int.dvd_of_mul_dvd_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int} {k : Int}, (Ne.{1} Int k (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) k i) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) k j)) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i j)
-but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Ne.{1} Int k (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) k i) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) k j)) -> (Dvd.dvd.{0} Int Int.instDvdInt i j)
-Case conversion may be inaccurate. Consider using '#align int.dvd_of_mul_dvd_mul_left Int.dvd_of_mul_dvd_mul_leftₓ'. -/
 theorem dvd_of_mul_dvd_mul_left {i j k : ℤ} (k_non_zero : k ≠ 0) (H : k * i ∣ k * j) : i ∣ j :=
   Dvd.elim H fun l H1 => by rw [mul_assoc] at H1 <;> exact ⟨_, mul_left_cancel₀ k_non_zero H1⟩
 #align int.dvd_of_mul_dvd_mul_left Int.dvd_of_mul_dvd_mul_left
 
-/- warning: int.dvd_of_mul_dvd_mul_right -> Int.dvd_of_mul_dvd_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int} {k : Int}, (Ne.{1} Int k (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) i k) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) j k)) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i j)
-but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Ne.{1} Int k (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) i k) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) j k)) -> (Dvd.dvd.{0} Int Int.instDvdInt i j)
-Case conversion may be inaccurate. Consider using '#align int.dvd_of_mul_dvd_mul_right Int.dvd_of_mul_dvd_mul_rightₓ'. -/
 theorem dvd_of_mul_dvd_mul_right {i j k : ℤ} (k_non_zero : k ≠ 0) (H : i * k ∣ j * k) : i ∣ j := by
   rw [mul_comm i k, mul_comm j k] at H <;> exact dvd_of_mul_dvd_mul_left k_non_zero H
 #align int.dvd_of_mul_dvd_mul_right Int.dvd_of_mul_dvd_mul_right
@@ -291,32 +273,14 @@ protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm ↑m ↑n = Nat.lcm m n :=
 #align int.coe_nat_lcm Int.coe_nat_lcm
 -/
 
-/- warning: int.gcd_dvd_left -> Int.gcd_dvd_left is a dubious translation:
-lean 3 declaration is
-  forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd i j)) i
-but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Int.gcd i j)) i
-Case conversion may be inaccurate. Consider using '#align int.gcd_dvd_left Int.gcd_dvd_leftₓ'. -/
 theorem gcd_dvd_left (i j : ℤ) : (gcd i j : ℤ) ∣ i :=
   dvd_natAbs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_left _ _
 #align int.gcd_dvd_left Int.gcd_dvd_left
 
-/- warning: int.gcd_dvd_right -> Int.gcd_dvd_right is a dubious translation:
-lean 3 declaration is
-  forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd i j)) j
-but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Int.gcd i j)) j
-Case conversion may be inaccurate. Consider using '#align int.gcd_dvd_right Int.gcd_dvd_rightₓ'. -/
 theorem gcd_dvd_right (i j : ℤ) : (gcd i j : ℤ) ∣ j :=
   dvd_natAbs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_right _ _
 #align int.gcd_dvd_right Int.gcd_dvd_right
 
-/- warning: int.dvd_gcd -> Int.dvd_gcd is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k i) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k j) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd i j)))
-but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt k i) -> (Dvd.dvd.{0} Int Int.instDvdInt k j) -> (Dvd.dvd.{0} Int Int.instDvdInt k (Nat.cast.{0} Int instNatCastInt (Int.gcd i j)))
-Case conversion may be inaccurate. Consider using '#align int.dvd_gcd Int.dvd_gcdₓ'. -/
 theorem dvd_gcd {i j k : ℤ} (h1 : k ∣ i) (h2 : k ∣ j) : k ∣ gcd i j :=
   natAbs_dvd.1 <| coe_nat_dvd.2 <| Nat.dvd_gcd (natAbs_dvd_natAbs.2 h1) (natAbs_dvd_natAbs.2 h2)
 #align int.dvd_gcd Int.dvd_gcd
@@ -427,12 +391,6 @@ theorem gcd_pos_iff {i j : ℤ} : 0 < gcd i j ↔ i ≠ 0 ∨ j ≠ 0 :=
 #align int.gcd_pos_iff Int.gcd_pos_iff
 -/
 
-/- warning: int.gcd_div -> Int.gcd_div is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k i) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k j) -> (Eq.{1} Nat (Int.gcd (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) i k) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) j k)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) (Int.gcd i j) (Int.natAbs k)))
-but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt k i) -> (Dvd.dvd.{0} Int Int.instDvdInt k j) -> (Eq.{1} Nat (Int.gcd (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) i k) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) j k)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (Int.gcd i j) (Int.natAbs k)))
-Case conversion may be inaccurate. Consider using '#align int.gcd_div Int.gcd_divₓ'. -/
 theorem gcd_div {i j k : ℤ} (H1 : k ∣ i) (H2 : k ∣ j) : gcd (i / k) (j / k) = gcd i j / natAbs k :=
   by
   rw [gcd, nat_abs_div i k H1, nat_abs_div j k H2] <;>
@@ -447,22 +405,10 @@ theorem gcd_div_gcd_div_gcd {i j : ℤ} (H : 0 < gcd i j) : gcd (i / gcd i j) (j
 #align int.gcd_div_gcd_div_gcd Int.gcd_div_gcd_div_gcd
 -/
 
-/- warning: int.gcd_dvd_gcd_of_dvd_left -> Int.gcd_dvd_gcd_of_dvd_left is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {k : Int} (j : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i k) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (Int.gcd i j) (Int.gcd k j))
-but is expected to have type
-  forall {i : Int} {k : Int} (j : Int), (Dvd.dvd.{0} Int Int.instDvdInt i k) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.gcd i j) (Int.gcd k j))
-Case conversion may be inaccurate. Consider using '#align int.gcd_dvd_gcd_of_dvd_left Int.gcd_dvd_gcd_of_dvd_leftₓ'. -/
 theorem gcd_dvd_gcd_of_dvd_left {i k : ℤ} (j : ℤ) (H : i ∣ k) : gcd i j ∣ gcd k j :=
   Int.coe_nat_dvd.1 <| dvd_gcd ((gcd_dvd_left i j).trans H) (gcd_dvd_right i j)
 #align int.gcd_dvd_gcd_of_dvd_left Int.gcd_dvd_gcd_of_dvd_left
 
-/- warning: int.gcd_dvd_gcd_of_dvd_right -> Int.gcd_dvd_gcd_of_dvd_right is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {k : Int} (j : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i k) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (Int.gcd j i) (Int.gcd j k))
-but is expected to have type
-  forall {i : Int} {k : Int} (j : Int), (Dvd.dvd.{0} Int Int.instDvdInt i k) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.gcd j i) (Int.gcd j k))
-Case conversion may be inaccurate. Consider using '#align int.gcd_dvd_gcd_of_dvd_right Int.gcd_dvd_gcd_of_dvd_rightₓ'. -/
 theorem gcd_dvd_gcd_of_dvd_right {i k : ℤ} (j : ℤ) (H : i ∣ k) : gcd j i ∣ gcd j k :=
   Int.coe_nat_dvd.1 <| dvd_gcd (gcd_dvd_left j i) ((gcd_dvd_right j i).trans H)
 #align int.gcd_dvd_gcd_of_dvd_right Int.gcd_dvd_gcd_of_dvd_right
@@ -491,23 +437,11 @@ theorem gcd_dvd_gcd_mul_right_right (i j k : ℤ) : gcd i j ∣ gcd i (j * k) :=
 #align int.gcd_dvd_gcd_mul_right_right Int.gcd_dvd_gcd_mul_right_right
 -/
 
-/- warning: int.gcd_eq_left -> Int.gcd_eq_left is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i j) -> (Eq.{1} Nat (Int.gcd i j) (Int.natAbs i))
-but is expected to have type
-  forall {i : Int} {j : Int}, (Dvd.dvd.{0} Int Int.instDvdInt i j) -> (Eq.{1} Nat (Int.gcd i j) (Int.natAbs i))
-Case conversion may be inaccurate. Consider using '#align int.gcd_eq_left Int.gcd_eq_leftₓ'. -/
 theorem gcd_eq_left {i j : ℤ} (H : i ∣ j) : gcd i j = natAbs i :=
   Nat.dvd_antisymm (by unfold gcd <;> exact Nat.gcd_dvd_left _ _)
     (by unfold gcd <;> exact Nat.dvd_gcd dvd_rfl (nat_abs_dvd_iff_dvd.mpr H))
 #align int.gcd_eq_left Int.gcd_eq_left
 
-/- warning: int.gcd_eq_right -> Int.gcd_eq_right is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) j i) -> (Eq.{1} Nat (Int.gcd i j) (Int.natAbs j))
-but is expected to have type
-  forall {i : Int} {j : Int}, (Dvd.dvd.{0} Int Int.instDvdInt j i) -> (Eq.{1} Nat (Int.gcd i j) (Int.natAbs j))
-Case conversion may be inaccurate. Consider using '#align int.gcd_eq_right Int.gcd_eq_rightₓ'. -/
 theorem gcd_eq_right {i j : ℤ} (H : j ∣ i) : gcd i j = natAbs j := by rw [gcd_comm, gcd_eq_left H]
 #align int.gcd_eq_right Int.gcd_eq_right
 
@@ -535,12 +469,6 @@ theorem exists_gcd_one' {m n : ℤ} (H : 0 < gcd m n) :
 #align int.exists_gcd_one' Int.exists_gcd_one'
 -/
 
-/- warning: int.pow_dvd_pow_iff -> Int.pow_dvd_pow_iff is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int} {k : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) k) -> (Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) m k) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) n k)) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) m n))
-but is expected to have type
-  forall {m : Int} {n : Int} {k : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) k) -> (Iff (Dvd.dvd.{0} Int Int.instDvdInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat m k) (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat n k)) (Dvd.dvd.{0} Int Int.instDvdInt m n))
-Case conversion may be inaccurate. Consider using '#align int.pow_dvd_pow_iff Int.pow_dvd_pow_iffₓ'. -/
 theorem pow_dvd_pow_iff {m n : ℤ} {k : ℕ} (k0 : 0 < k) : m ^ k ∣ n ^ k ↔ m ∣ n :=
   by
   refine' ⟨fun h => _, fun h => pow_dvd_pow_of_dvd h _⟩
@@ -564,24 +492,12 @@ theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ x y : ℤ, ↑
 #align int.gcd_dvd_iff Int.gcd_dvd_iff
 -/
 
-/- warning: int.gcd_greatest -> Int.gcd_greatest is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int} {d : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) d) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) d a) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) d b) -> (forall (e : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) e a) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) e b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) e d)) -> (Eq.{1} Int d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd a b)))
-but is expected to have type
-  forall {a : Int} {b : Int} {d : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) -> (Dvd.dvd.{0} Int Int.instDvdInt d a) -> (Dvd.dvd.{0} Int Int.instDvdInt d b) -> (forall (e : Int), (Dvd.dvd.{0} Int Int.instDvdInt e a) -> (Dvd.dvd.{0} Int Int.instDvdInt e b) -> (Dvd.dvd.{0} Int Int.instDvdInt e d)) -> (Eq.{1} Int d (Nat.cast.{0} Int instNatCastInt (Int.gcd a b)))
-Case conversion may be inaccurate. Consider using '#align int.gcd_greatest Int.gcd_greatestₓ'. -/
 theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d ∣ b)
     (hd : ∀ e : ℤ, e ∣ a → e ∣ b → e ∣ d) : d = gcd a b :=
   dvd_antisymm hd_pos (ofNat_zero_le (gcd a b)) (dvd_gcd hda hdb)
     (hd _ (gcd_dvd_left a b) (gcd_dvd_right a b))
 #align int.gcd_greatest Int.gcd_greatest
 
-/- warning: int.dvd_of_dvd_mul_left_of_gcd_one -> Int.dvd_of_dvd_mul_left_of_gcd_one is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c)) -> (Eq.{1} Nat (Int.gcd a c) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
-but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)) -> (Eq.{1} Nat (Int.gcd a c) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (Dvd.dvd.{0} Int Int.instDvdInt a b)
-Case conversion may be inaccurate. Consider using '#align int.dvd_of_dvd_mul_left_of_gcd_one Int.dvd_of_dvd_mul_left_of_gcd_oneₓ'. -/
 /-- Euclid's lemma: if `a ∣ b * c` and `gcd a c = 1` then `a ∣ b`.
 Compare with `is_coprime.dvd_of_dvd_mul_left` and
 `unique_factorization_monoid.dvd_of_dvd_mul_left_of_no_prime_factors` -/
@@ -594,12 +510,6 @@ theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab :
   exact dvd_add (dvd_mul_of_dvd_left (dvd_mul_left a b) _) (dvd_mul_of_dvd_left habc _)
 #align int.dvd_of_dvd_mul_left_of_gcd_one Int.dvd_of_dvd_mul_left_of_gcd_one
 
-/- warning: int.dvd_of_dvd_mul_right_of_gcd_one -> Int.dvd_of_dvd_mul_right_of_gcd_one is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c)) -> (Eq.{1} Nat (Int.gcd a b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a c)
-but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)) -> (Eq.{1} Nat (Int.gcd a b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (Dvd.dvd.{0} Int Int.instDvdInt a c)
-Case conversion may be inaccurate. Consider using '#align int.dvd_of_dvd_mul_right_of_gcd_one Int.dvd_of_dvd_mul_right_of_gcd_oneₓ'. -/
 /-- Euclid's lemma: if `a ∣ b * c` and `gcd a b = 1` then `a ∣ c`.
 Compare with `is_coprime.dvd_of_dvd_mul_right` and
 `unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors` -/
@@ -665,32 +575,14 @@ theorem lcm_self (i : ℤ) : lcm i i = natAbs i := by rw [Int.lcm]; apply Nat.lc
 #align int.lcm_self Int.lcm_self
 -/
 
-/- warning: int.dvd_lcm_left -> Int.dvd_lcm_left is a dubious translation:
-lean 3 declaration is
-  forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.lcm i j))
-but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt i (Nat.cast.{0} Int instNatCastInt (Int.lcm i j))
-Case conversion may be inaccurate. Consider using '#align int.dvd_lcm_left Int.dvd_lcm_leftₓ'. -/
 theorem dvd_lcm_left (i j : ℤ) : i ∣ lcm i j := by rw [Int.lcm]; apply coe_nat_dvd_right.mpr;
   apply Nat.dvd_lcm_left
 #align int.dvd_lcm_left Int.dvd_lcm_left
 
-/- warning: int.dvd_lcm_right -> Int.dvd_lcm_right is a dubious translation:
-lean 3 declaration is
-  forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) j ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.lcm i j))
-but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt j (Nat.cast.{0} Int instNatCastInt (Int.lcm i j))
-Case conversion may be inaccurate. Consider using '#align int.dvd_lcm_right Int.dvd_lcm_rightₓ'. -/
 theorem dvd_lcm_right (i j : ℤ) : j ∣ lcm i j := by rw [Int.lcm]; apply coe_nat_dvd_right.mpr;
   apply Nat.dvd_lcm_right
 #align int.dvd_lcm_right Int.dvd_lcm_right
 
-/- warning: int.lcm_dvd -> Int.lcm_dvd is a dubious translation:
-lean 3 declaration is
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i k) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) j k) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.lcm i j)) k)
-but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt i k) -> (Dvd.dvd.{0} Int Int.instDvdInt j k) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Int.lcm i j)) k)
-Case conversion may be inaccurate. Consider using '#align int.lcm_dvd Int.lcm_dvdₓ'. -/
 theorem lcm_dvd {i j k : ℤ} : i ∣ k → j ∣ k → (lcm i j : ℤ) ∣ k :=
   by
   rw [Int.lcm]
@@ -700,12 +592,6 @@ theorem lcm_dvd {i j k : ℤ} : i ∣ k → j ∣ k → (lcm i j : ℤ) ∣ k :=
 
 end Int
 
-/- warning: pow_gcd_eq_one -> pow_gcd_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x m) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x (Nat.gcd m n)) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x m) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x (Nat.gcd m n)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1))))
-Case conversion may be inaccurate. Consider using '#align pow_gcd_eq_one pow_gcd_eq_oneₓ'. -/
 theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m = 1) (hn : x ^ n = 1) :
     x ^ m.gcd n = 1 := by
   cases m; · simp only [hn, Nat.gcd_zero_left]
@@ -715,12 +601,6 @@ theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m =
   simp only [Nat.gcd_eq_gcd_ab, zpow_add, zpow_mul, hm, hn, one_zpow, one_mul]
 #align pow_gcd_eq_one pow_gcd_eq_one
 
-/- warning: gcd_nsmul_eq_zero -> gcd_nsmul_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (SMul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) m x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (SMul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) n x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (SMul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) (Nat.gcd m n) x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1))))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1)) m x) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1)) n x) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1)) (Nat.gcd m n) x) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1))))
-Case conversion may be inaccurate. Consider using '#align gcd_nsmul_eq_zero gcd_nsmul_eq_zeroₓ'. -/
 theorem gcd_nsmul_eq_zero {M : Type _} [AddMonoid M] (x : M) {m n : ℕ} (hm : m • x = 0)
     (hn : n • x = 0) : m.gcd n • x = 0 :=
   by
@@ -740,12 +620,6 @@ namespace Tactic
 
 namespace NormNum
 
-/- warning: tactic.norm_num.int_gcd_helper' -> Tactic.NormNum.int_gcd_helper' is a dubious translation:
-lean 3 declaration is
-  forall {d : Nat} {x : Int} {y : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d) x) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d) y) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) x a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) y b)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) -> (Eq.{1} Nat (Int.gcd x y) d)
-but is expected to have type
-  forall {d : Nat} {x : Int} {y : Int} (a : Int) (b : Int), (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt d) x) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt d) y) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) x a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) y b)) (Nat.cast.{0} Int instNatCastInt d)) -> (Eq.{1} Nat (Int.gcd x y) d)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.int_gcd_helper' Tactic.NormNum.int_gcd_helper'ₓ'. -/
 theorem int_gcd_helper' {d : ℕ} {x y a b : ℤ} (h₁ : (d : ℤ) ∣ x) (h₂ : (d : ℤ) ∣ y)
     (h₃ : x * a + y * b = d) : Int.gcd x y = d :=
   by
@@ -756,32 +630,14 @@ theorem int_gcd_helper' {d : ℕ} {x y a b : ℤ} (h₁ : (d : ℤ) ∣ x) (h₂
   · exact (Int.gcd_dvd_right _ _).mul_right _
 #align tactic.norm_num.int_gcd_helper' Tactic.NormNum.int_gcd_helper'
 
-/- warning: tactic.norm_num.nat_gcd_helper_dvd_left -> Tactic.NormNum.nat_gcd_helper_dvd_left is a dubious translation:
-lean 3 declaration is
-  forall (x : Nat) (y : Nat) (a : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x a) y) -> (Eq.{1} Nat (Nat.gcd x y) x)
-but is expected to have type
-  forall (x : Nat) (y : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) y x) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Nat.gcd x y) x)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_dvd_left Tactic.NormNum.nat_gcd_helper_dvd_leftₓ'. -/
 theorem nat_gcd_helper_dvd_left (x y a : ℕ) (h : x * a = y) : Nat.gcd x y = x :=
   Nat.gcd_eq_left ⟨a, h.symm⟩
 #align tactic.norm_num.nat_gcd_helper_dvd_left Tactic.NormNum.nat_gcd_helper_dvd_left
 
-/- warning: tactic.norm_num.nat_gcd_helper_dvd_right -> Tactic.NormNum.nat_gcd_helper_dvd_right is a dubious translation:
-lean 3 declaration is
-  forall (x : Nat) (y : Nat) (a : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y a) x) -> (Eq.{1} Nat (Nat.gcd x y) y)
-but is expected to have type
-  forall (x : Nat) (y : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) x y) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Nat.gcd x y) y)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_dvd_right Tactic.NormNum.nat_gcd_helper_dvd_rightₓ'. -/
 theorem nat_gcd_helper_dvd_right (x y a : ℕ) (h : y * a = x) : Nat.gcd x y = y :=
   Nat.gcd_eq_right ⟨a, h.symm⟩
 #align tactic.norm_num.nat_gcd_helper_dvd_right Tactic.NormNum.nat_gcd_helper_dvd_right
 
-/- warning: tactic.norm_num.nat_gcd_helper_2 -> Tactic.NormNum.nat_gcd_helper_2 is a dubious translation:
-lean 3 declaration is
-  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat) (u : Nat) (v : Nat) (tx : Nat) (ty : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d u) x) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d v) y) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x a) tx) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y b) ty) -> (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) ty d) tx) -> (Eq.{1} Nat (Nat.gcd x y) d)
-but is expected to have type
-  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) x d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) y d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x a) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y b) d)) -> (Eq.{1} Nat (Nat.gcd x y) d)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_2 Tactic.NormNum.nat_gcd_helper_2ₓ'. -/
 theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y)
     (hx : x * a = tx) (hy : y * b = ty) (h : ty + d = tx) : Nat.gcd x y = d :=
   by
@@ -792,23 +648,11 @@ theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * 
   norm_cast; rw [hx, hy, h]
 #align tactic.norm_num.nat_gcd_helper_2 Tactic.NormNum.nat_gcd_helper_2
 
-/- warning: tactic.norm_num.nat_gcd_helper_1 -> Tactic.NormNum.nat_gcd_helper_1 is a dubious translation:
-lean 3 declaration is
-  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat) (u : Nat) (v : Nat) (tx : Nat) (ty : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d u) x) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d v) y) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x a) tx) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y b) ty) -> (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) tx d) ty) -> (Eq.{1} Nat (Nat.gcd x y) d)
-but is expected to have type
-  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) x d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) y d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y b) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x a) d)) -> (Eq.{1} Nat (Nat.gcd x y) d)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_1 Tactic.NormNum.nat_gcd_helper_1ₓ'. -/
 theorem nat_gcd_helper_1 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y)
     (hx : x * a = tx) (hy : y * b = ty) (h : tx + d = ty) : Nat.gcd x y = d :=
   (Nat.gcd_comm _ _).trans <| nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ hv hu hy hx h
 #align tactic.norm_num.nat_gcd_helper_1 Tactic.NormNum.nat_gcd_helper_1
 
-/- warning: tactic.norm_num.nat_lcm_helper -> Tactic.NormNum.nat_lcm_helper is a dubious translation:
-lean 3 declaration is
-  forall (x : Nat) (y : Nat) (d : Nat) (m : Nat) (n : Nat), (Eq.{1} Nat (Nat.gcd x y) d) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x y) n) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d m) n) -> (Eq.{1} Nat (Nat.lcm x y) m)
-but is expected to have type
-  forall (x : Nat) (y : Nat) (d : Nat) (m : Nat), (Eq.{1} Nat (Nat.gcd x y) d) -> (Eq.{1} Bool (Nat.beq d (OfNat.ofNat.{0} ([mdata borrowed:1 Nat]) 0 (instOfNatNat 0))) Bool.false) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x y) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) d m)) -> (Eq.{1} Nat (Nat.lcm x y) m)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_lcm_helper Tactic.NormNum.nat_lcm_helperₓ'. -/
 theorem nat_lcm_helper (x y d m n : ℕ) (hd : Nat.gcd x y = d) (d0 : 0 < d) (xy : x * y = n)
     (dm : d * m = n) : Nat.lcm x y = m :=
   mul_right_injective₀ d0.ne' <| by rw [dm, ← xy, ← hd, Nat.gcd_mul_lcm]
@@ -837,12 +681,6 @@ theorem nat_not_coprime_helper (d x y u v : ℕ) (hu : d * u = x) (hv : d * v = 
   Nat.not_coprime_of_dvd_of_dvd h ⟨_, hu.symm⟩ ⟨_, hv.symm⟩
 #align tactic.norm_num.nat_not_coprime_helper Tactic.NormNum.nat_not_coprime_helper
 
-/- warning: tactic.norm_num.int_gcd_helper -> Tactic.NormNum.int_gcd_helper is a dubious translation:
-lean 3 declaration is
-  forall (x : Int) (y : Int) (nx : Nat) (ny : Nat) (d : Nat), (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) nx) x) -> (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) ny) y) -> (Eq.{1} Nat (Nat.gcd nx ny) d) -> (Eq.{1} Nat (Int.gcd x y) d)
-but is expected to have type
-  forall {x : Int} {y : Int} {nx : Nat} {ny : Nat} {d : Nat}, (Eq.{1} Nat (Int.natAbs x) nx) -> (Eq.{1} Nat (Int.natAbs y) ny) -> (Eq.{1} Nat (Nat.gcd nx ny) d) -> (Eq.{1} Nat (Int.gcd x y) d)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helperₓ'. -/
 theorem int_gcd_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y)
     (h : Nat.gcd nx ny = d) : Int.gcd x y = d := by rwa [← hx, ← hy, Int.coe_nat_gcd]
 #align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helper
@@ -855,12 +693,6 @@ theorem int_gcd_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.gcd x y = d) : I
   rw [Int.gcd] at h⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_gcd_helper_neg_right Tactic.NormNum.int_gcd_helper_neg_right
 
-/- warning: tactic.norm_num.int_lcm_helper -> Tactic.NormNum.int_lcm_helper is a dubious translation:
-lean 3 declaration is
-  forall (x : Int) (y : Int) (nx : Nat) (ny : Nat) (d : Nat), (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) nx) x) -> (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) ny) y) -> (Eq.{1} Nat (Nat.lcm nx ny) d) -> (Eq.{1} Nat (Int.lcm x y) d)
-but is expected to have type
-  forall {x : Int} {y : Int} {nx : Nat} {ny : Nat} {d : Nat}, (Eq.{1} Nat (Int.natAbs x) nx) -> (Eq.{1} Nat (Int.natAbs y) ny) -> (Eq.{1} Nat (Nat.lcm nx ny) d) -> (Eq.{1} Nat (Int.lcm x y) d)
-Case conversion may be inaccurate. Consider using '#align tactic.norm_num.int_lcm_helper Tactic.NormNum.int_lcm_helperₓ'. -/
 theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y)
     (h : Nat.lcm nx ny = d) : Int.lcm x y = d := by rwa [← hx, ← hy, Int.coe_nat_lcm]
 #align tactic.norm_num.int_lcm_helper Tactic.NormNum.int_lcm_helper

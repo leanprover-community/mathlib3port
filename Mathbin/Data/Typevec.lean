@@ -87,35 +87,17 @@ def comp {α β γ : TypeVec n} (g : β ⟹ γ) (f : α ⟹ β) : α ⟹ γ := f
 -- mathport name: typevec.comp
 scoped[MvFunctor] infixr:80 " ⊚ " => TypeVec.comp
 
-/- warning: typevec.id_comp -> TypeVec.id_comp is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {β : TypeVec.{u2} n} (f : TypeVec.Arrow.{u1, u2} n α β), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n α β) (TypeVec.comp.{u1, u2, u2} n α β β (TypeVec.id.{u2} n β) f) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {β : TypeVec.{u1} n} (f : TypeVec.Arrow.{u2, u1} n α β), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n α β) (TypeVec.comp.{u2, u1, u1} n α β β (TypeVec.id.{u1} n β) f) f
-Case conversion may be inaccurate. Consider using '#align typevec.id_comp TypeVec.id_compₓ'. -/
 -- type as \oo
 @[simp]
 theorem id_comp {α β : TypeVec n} (f : α ⟹ β) : id ⊚ f = f :=
   rfl
 #align typevec.id_comp TypeVec.id_comp
 
-/- warning: typevec.comp_id -> TypeVec.comp_id is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {β : TypeVec.{u2} n} (f : TypeVec.Arrow.{u1, u2} n α β), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n α β) (TypeVec.comp.{u1, u1, u2} n α α β f (TypeVec.id.{u1} n α)) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {β : TypeVec.{u1} n} (f : TypeVec.Arrow.{u2, u1} n α β), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n α β) (TypeVec.comp.{u2, u2, u1} n α α β f (TypeVec.id.{u2} n α)) f
-Case conversion may be inaccurate. Consider using '#align typevec.comp_id TypeVec.comp_idₓ'. -/
 @[simp]
 theorem comp_id {α β : TypeVec n} (f : α ⟹ β) : f ⊚ id = f :=
   rfl
 #align typevec.comp_id TypeVec.comp_id
 
-/- warning: typevec.comp_assoc -> TypeVec.comp_assoc is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {β : TypeVec.{u2} n} {γ : TypeVec.{u3} n} {δ : TypeVec.{u4} n} (h : TypeVec.Arrow.{u3, u4} n γ δ) (g : TypeVec.Arrow.{u2, u3} n β γ) (f : TypeVec.Arrow.{u1, u2} n α β), Eq.{max 1 (succ u1) (succ u4)} (TypeVec.Arrow.{u1, u4} n α δ) (TypeVec.comp.{u1, u2, u4} n α β δ (TypeVec.comp.{u2, u3, u4} n β γ δ h g) f) (TypeVec.comp.{u1, u3, u4} n α γ δ h (TypeVec.comp.{u1, u2, u3} n α β γ g f))
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u4} n} {β : TypeVec.{u3} n} {γ : TypeVec.{u2} n} {δ : TypeVec.{u1} n} (h : TypeVec.Arrow.{u2, u1} n γ δ) (g : TypeVec.Arrow.{u3, u2} n β γ) (f : TypeVec.Arrow.{u4, u3} n α β), Eq.{max (succ u4) (succ u1)} (TypeVec.Arrow.{u4, u1} n α δ) (TypeVec.comp.{u4, u3, u1} n α β δ (TypeVec.comp.{u3, u2, u1} n β γ δ h g) f) (TypeVec.comp.{u4, u2, u1} n α γ δ h (TypeVec.comp.{u4, u3, u2} n α β γ g f))
-Case conversion may be inaccurate. Consider using '#align typevec.comp_assoc TypeVec.comp_assocₓ'. -/
 theorem comp_assoc {α β γ δ : TypeVec n} (h : γ ⟹ δ) (g : β ⟹ γ) (f : α ⟹ β) :
     (h ⊚ g) ⊚ f = h ⊚ g ⊚ f :=
   rfl
@@ -185,12 +167,6 @@ def append1Cases {C : TypeVec (n + 1) → Sort u} (H : ∀ α β, C (append1 α 
 #align typevec.append1_cases TypeVec.append1Cases
 -/
 
-/- warning: typevec.append1_cases_append1 -> TypeVec.append1_cases_append1 is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {C : (TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> Sort.{u1}} (H : forall (α : TypeVec.{u2} n) (β : Type.{u2}), C (TypeVec.append1.{u2} n α β)) (α : TypeVec.{u2} n) (β : Type.{u2}), Eq.{u1} (C (TypeVec.append1.{u2} n α β)) (TypeVec.append1Cases.{u1, u2} n C H (TypeVec.append1.{u2} n α β)) (H α β)
-but is expected to have type
-  forall {n : Nat} {C : (TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> Sort.{u2}} (H : forall (α : TypeVec.{u1} n) (β : Type.{u1}), C (TypeVec.append1.{u1} n α β)) (α : TypeVec.{u1} n) (β : Type.{u1}), Eq.{u2} (C (TypeVec.append1.{u1} n α β)) (TypeVec.append1Cases.{u2, u1} n C H (TypeVec.append1.{u1} n α β)) (H α β)
-Case conversion may be inaccurate. Consider using '#align typevec.append1_cases_append1 TypeVec.append1_cases_append1ₓ'. -/
 @[simp]
 theorem append1_cases_append1 {C : TypeVec (n + 1) → Sort u} (H : ∀ α β, C (append1 α β)) (α β) :
     @append1Cases _ C H (append1 α β) = H α β :=
@@ -237,23 +213,11 @@ def nilFun {α : TypeVec 0} {β : TypeVec 0} : α ⟹ β := fun i => Fin2.elim0 
 #align typevec.nil_fun TypeVec.nilFun
 -/
 
-/- warning: typevec.eq_of_drop_last_eq -> TypeVec.eq_of_drop_last_eq is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {β : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {f : TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α β} {g : TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α β}, (Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n β)) (TypeVec.dropFun.{u1, u2} n α β f) (TypeVec.dropFun.{u1, u2} n α β g)) -> (Eq.{max (succ u1) (succ u2)} ((TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n β)) (TypeVec.lastFun.{u1, u2} n α β f) (TypeVec.lastFun.{u1, u2} n α β g)) -> (Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α β) f g)
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {β : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {f : TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α β} {g : TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α β}, (Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n β)) (TypeVec.dropFun.{u2, u1} n α β f) (TypeVec.dropFun.{u2, u1} n α β g)) -> (Eq.{max (succ u2) (succ u1)} ((TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n β)) (TypeVec.lastFun.{u2, u1} n α β f) (TypeVec.lastFun.{u2, u1} n α β g)) -> (Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α β) f g)
-Case conversion may be inaccurate. Consider using '#align typevec.eq_of_drop_last_eq TypeVec.eq_of_drop_last_eqₓ'. -/
 theorem eq_of_drop_last_eq {α β : TypeVec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
     (h₁ : lastFun f = lastFun g) : f = g := by
   replace h₀ := congr_fun h₀ <;> ext1 ⟨⟩ <;> apply_assumption
 #align typevec.eq_of_drop_last_eq TypeVec.eq_of_drop_last_eq
 
-/- warning: typevec.drop_fun_split_fun -> TypeVec.dropFun_splitFun is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α' : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f : TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n α')) (g : (TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n α')), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n α')) (TypeVec.dropFun.{u1, u2} n α α' (TypeVec.splitFun.{u1, u2} n α α' f g)) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α' : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f : TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n α')) (g : (TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n α')), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n α')) (TypeVec.dropFun.{u2, u1} n α α' (TypeVec.splitFun.{u2, u1} n α α' f g)) f
-Case conversion may be inaccurate. Consider using '#align typevec.drop_fun_split_fun TypeVec.dropFun_splitFunₓ'. -/
 @[simp]
 theorem dropFun_splitFun {α α' : TypeVec (n + 1)} (f : drop α ⟹ drop α') (g : last α → last α') :
     dropFun (splitFun f g) = f :=
@@ -290,24 +254,12 @@ def fromAppend1DropLast {α : TypeVec (n + 1)} : (drop α ::: last α) ⟹ α :=
 #align typevec.from_append1_drop_last TypeVec.fromAppend1DropLast
 -/
 
-/- warning: typevec.last_fun_split_fun -> TypeVec.lastFun_splitFun is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α' : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f : TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n α')) (g : (TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n α')), Eq.{max (succ u1) (succ u2)} ((TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n α')) (TypeVec.lastFun.{u1, u2} n α α' (TypeVec.splitFun.{u1, u2} n α α' f g)) g
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α' : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f : TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n α')) (g : (TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n α')), Eq.{max (succ u2) (succ u1)} ((TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n α')) (TypeVec.lastFun.{u2, u1} n α α' (TypeVec.splitFun.{u2, u1} n α α' f g)) g
-Case conversion may be inaccurate. Consider using '#align typevec.last_fun_split_fun TypeVec.lastFun_splitFunₓ'. -/
 @[simp]
 theorem lastFun_splitFun {α α' : TypeVec (n + 1)} (f : drop α ⟹ drop α') (g : last α → last α') :
     lastFun (splitFun f g) = g :=
   rfl
 #align typevec.last_fun_split_fun TypeVec.lastFun_splitFun
 
-/- warning: typevec.drop_fun_append_fun -> TypeVec.dropFun_appendFun is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {α' : TypeVec.{u2} n} {β : Type.{u1}} {β' : Type.{u2}} (f : TypeVec.Arrow.{u1, u2} n α α') (g : β -> β'), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n (TypeVec.append1.{u1} n α β)) (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n α' β'))) (TypeVec.dropFun.{u1, u2} n (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n α' β') (TypeVec.appendFun.{u1, u2} n α α' β β' f g)) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {α' : TypeVec.{u1} n} {β : Type.{u2}} {β' : Type.{u1}} (f : TypeVec.Arrow.{u2, u1} n α α') (g : β -> β'), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n α β)) (TypeVec.drop.{u1} n (TypeVec.append1.{u1} n α' β'))) (TypeVec.dropFun.{u2, u1} n (TypeVec.append1.{u2} n α β) (TypeVec.append1.{u1} n α' β') (TypeVec.appendFun.{u2, u1} n α α' β β' f g)) f
-Case conversion may be inaccurate. Consider using '#align typevec.drop_fun_append_fun TypeVec.dropFun_appendFunₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem dropFun_appendFun {α α' : TypeVec n} {β β' : Type _} (f : α ⟹ α') (g : β → β') :
@@ -315,12 +267,6 @@ theorem dropFun_appendFun {α α' : TypeVec n} {β β' : Type _} (f : α ⟹ α'
   rfl
 #align typevec.drop_fun_append_fun TypeVec.dropFun_appendFun
 
-/- warning: typevec.last_fun_append_fun -> TypeVec.lastFun_appendFun is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {α' : TypeVec.{u2} n} {β : Type.{u1}} {β' : Type.{u2}} (f : TypeVec.Arrow.{u1, u2} n α α') (g : β -> β'), Eq.{max (succ u1) (succ u2)} ((TypeVec.last.{u1} n (TypeVec.append1.{u1} n α β)) -> (TypeVec.last.{u2} n (TypeVec.append1.{u2} n α' β'))) (TypeVec.lastFun.{u1, u2} n (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n α' β') (TypeVec.appendFun.{u1, u2} n α α' β β' f g)) g
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {α' : TypeVec.{u1} n} {β : Type.{u2}} {β' : Type.{u1}} (f : TypeVec.Arrow.{u2, u1} n α α') (g : β -> β'), Eq.{max (succ u2) (succ u1)} ((TypeVec.last.{u2} n (TypeVec.append1.{u2} n α β)) -> (TypeVec.last.{u1} n (TypeVec.append1.{u1} n α' β'))) (TypeVec.lastFun.{u2, u1} n (TypeVec.append1.{u2} n α β) (TypeVec.append1.{u1} n α' β') (TypeVec.appendFun.{u2, u1} n α α' β β' f g)) g
-Case conversion may be inaccurate. Consider using '#align typevec.last_fun_append_fun TypeVec.lastFun_appendFunₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem lastFun_appendFun {α α' : TypeVec n} {β β' : Type _} (f : α ⟹ α') (g : β → β') :
@@ -328,34 +274,16 @@ theorem lastFun_appendFun {α α' : TypeVec n} {β β' : Type _} (f : α ⟹ α'
   rfl
 #align typevec.last_fun_append_fun TypeVec.lastFun_appendFun
 
-/- warning: typevec.split_drop_fun_last_fun -> TypeVec.split_dropFun_lastFun is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α' : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f : TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α α'), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α α') (TypeVec.splitFun.{u1, u2} n α α' (TypeVec.dropFun.{u1, u2} n α α' f) (TypeVec.lastFun.{u1, u2} n α α' f)) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α' : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f : TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α α'), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α α') (TypeVec.splitFun.{u2, u1} n α α' (TypeVec.dropFun.{u2, u1} n α α' f) (TypeVec.lastFun.{u2, u1} n α α' f)) f
-Case conversion may be inaccurate. Consider using '#align typevec.split_drop_fun_last_fun TypeVec.split_dropFun_lastFunₓ'. -/
 theorem split_dropFun_lastFun {α α' : TypeVec (n + 1)} (f : α ⟹ α') :
     splitFun (dropFun f) (lastFun f) = f :=
   eq_of_drop_last_eq rfl rfl
 #align typevec.split_drop_fun_last_fun TypeVec.split_dropFun_lastFun
 
-/- warning: typevec.split_fun_inj -> TypeVec.splitFun_inj is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α' : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {f : TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n α')} {f' : TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n α')} {g : (TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n α')} {g' : (TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n α')}, (Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α α') (TypeVec.splitFun.{u1, u2} n α α' f g) (TypeVec.splitFun.{u1, u2} n α α' f' g')) -> (And (Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α) (TypeVec.drop.{u2} n α')) f f') (Eq.{max (succ u1) (succ u2)} ((TypeVec.last.{u1} n α) -> (TypeVec.last.{u2} n α')) g g'))
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α' : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {f : TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n α')} {f' : TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n α')} {g : (TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n α')} {g' : (TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n α')}, (Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α α') (TypeVec.splitFun.{u2, u1} n α α' f g) (TypeVec.splitFun.{u2, u1} n α α' f' g')) -> (And (Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α) (TypeVec.drop.{u1} n α')) f f') (Eq.{max (succ u2) (succ u1)} ((TypeVec.last.{u2} n α) -> (TypeVec.last.{u1} n α')) g g'))
-Case conversion may be inaccurate. Consider using '#align typevec.split_fun_inj TypeVec.splitFun_injₓ'. -/
 theorem splitFun_inj {α α' : TypeVec (n + 1)} {f f' : drop α ⟹ drop α'} {g g' : last α → last α'}
     (H : splitFun f g = splitFun f' g') : f = f' ∧ g = g' := by
   rw [← drop_fun_split_fun f g, H, ← last_fun_split_fun f g, H] <;> simp
 #align typevec.split_fun_inj TypeVec.splitFun_inj
 
-/- warning: typevec.append_fun_inj -> TypeVec.appendFun_inj is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {α' : TypeVec.{u2} n} {β : Type.{u1}} {β' : Type.{u2}} {f : TypeVec.Arrow.{u1, u2} n α α'} {f' : TypeVec.Arrow.{u1, u2} n α α'} {g : β -> β'} {g' : β -> β'}, (Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n α' β')) (TypeVec.appendFun.{u1, u2} n α α' β β' f g) (TypeVec.appendFun.{u1, u2} n α α' β β' f' g')) -> (And (Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} n α α') f f') (Eq.{max (succ u1) (succ u2)} (β -> β') g g'))
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {α' : TypeVec.{u1} n} {β : Type.{u2}} {β' : Type.{u1}} {f : TypeVec.Arrow.{u2, u1} n α α'} {f' : TypeVec.Arrow.{u2, u1} n α α'} {g : β -> β'} {g' : β -> β'}, (Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u2} n α β) (TypeVec.append1.{u1} n α' β')) (TypeVec.appendFun.{u2, u1} n α α' β β' f g) (TypeVec.appendFun.{u2, u1} n α α' β β' f' g')) -> (And (Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n α α') f f') (Eq.{max (succ u2) (succ u1)} (β -> β') g g'))
-Case conversion may be inaccurate. Consider using '#align typevec.append_fun_inj TypeVec.appendFun_injₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem appendFun_inj {α α' : TypeVec n} {β β' : Type _} {f f' : α ⟹ α'} {g g' : β → β'} :
@@ -363,36 +291,18 @@ theorem appendFun_inj {α α' : TypeVec n} {β β' : Type _} {f f' : α ⟹ α'}
   splitFun_inj
 #align typevec.append_fun_inj TypeVec.appendFun_inj
 
-/- warning: typevec.split_fun_comp -> TypeVec.splitFun_comp is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α₀ : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α₁ : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α₂ : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f₀ : TypeVec.Arrow.{u1, u2} n (TypeVec.drop.{u1} n α₀) (TypeVec.drop.{u2} n α₁)) (f₁ : TypeVec.Arrow.{u2, u3} n (TypeVec.drop.{u2} n α₁) (TypeVec.drop.{u3} n α₂)) (g₀ : (TypeVec.last.{u1} n α₀) -> (TypeVec.last.{u2} n α₁)) (g₁ : (TypeVec.last.{u2} n α₁) -> (TypeVec.last.{u3} n α₂)), Eq.{max 1 (succ u1) (succ u3)} (TypeVec.Arrow.{u1, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₀ α₂) (TypeVec.splitFun.{u1, u3} n α₀ α₂ (TypeVec.comp.{u1, u2, u3} n (TypeVec.drop.{u1} n α₀) (TypeVec.drop.{u2} n α₁) (TypeVec.drop.{u3} n α₂) f₁ f₀) (Function.comp.{succ u1, succ u2, succ u3} (TypeVec.last.{u1} n α₀) (TypeVec.last.{u2} n α₁) (TypeVec.last.{u3} n α₂) g₁ g₀)) (TypeVec.comp.{u1, u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₀ α₁ α₂ (TypeVec.splitFun.{u2, u3} n α₁ α₂ f₁ g₁) (TypeVec.splitFun.{u1, u2} n α₀ α₁ f₀ g₀))
-but is expected to have type
-  forall {n : Nat} {α₀ : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α₁ : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α₂ : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f₀ : TypeVec.Arrow.{u3, u2} n (TypeVec.drop.{u3} n α₀) (TypeVec.drop.{u2} n α₁)) (f₁ : TypeVec.Arrow.{u2, u1} n (TypeVec.drop.{u2} n α₁) (TypeVec.drop.{u1} n α₂)) (g₀ : (TypeVec.last.{u3} n α₀) -> (TypeVec.last.{u2} n α₁)) (g₁ : (TypeVec.last.{u2} n α₁) -> (TypeVec.last.{u1} n α₂)), Eq.{max (succ u3) (succ u1)} (TypeVec.Arrow.{u3, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₀ α₂) (TypeVec.splitFun.{u3, u1} n α₀ α₂ (TypeVec.comp.{u3, u2, u1} n (TypeVec.drop.{u3} n α₀) (TypeVec.drop.{u2} n α₁) (TypeVec.drop.{u1} n α₂) f₁ f₀) (Function.comp.{succ u3, succ u2, succ u1} (TypeVec.last.{u3} n α₀) (TypeVec.last.{u2} n α₁) (TypeVec.last.{u1} n α₂) g₁ g₀)) (TypeVec.comp.{u3, u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₀ α₁ α₂ (TypeVec.splitFun.{u2, u1} n α₁ α₂ f₁ g₁) (TypeVec.splitFun.{u3, u2} n α₀ α₁ f₀ g₀))
-Case conversion may be inaccurate. Consider using '#align typevec.split_fun_comp TypeVec.splitFun_compₓ'. -/
 theorem splitFun_comp {α₀ α₁ α₂ : TypeVec (n + 1)} (f₀ : drop α₀ ⟹ drop α₁) (f₁ : drop α₁ ⟹ drop α₂)
     (g₀ : last α₀ → last α₁) (g₁ : last α₁ → last α₂) :
     splitFun (f₁ ⊚ f₀) (g₁ ∘ g₀) = splitFun f₁ g₁ ⊚ splitFun f₀ g₀ :=
   eq_of_drop_last_eq rfl rfl
 #align typevec.split_fun_comp TypeVec.splitFun_comp
 
-/- warning: typevec.append_fun_comp_split_fun -> TypeVec.appendFun_comp_splitFun is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {γ : TypeVec.{u2} n} {β : Type.{u1}} {δ : Type.{u2}} {ε : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f₀ : TypeVec.Arrow.{u3, u1} n (TypeVec.drop.{u3} n ε) α) (f₁ : TypeVec.Arrow.{u1, u2} n α γ) (g₀ : (TypeVec.last.{u3} n ε) -> β) (g₁ : β -> δ), Eq.{max 1 (succ u3) (succ u2)} (TypeVec.Arrow.{u3, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) ε (TypeVec.append1.{u2} n γ δ)) (TypeVec.comp.{u3, u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) ε (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n γ δ) (TypeVec.appendFun.{u1, u2} n α γ β δ f₁ g₁) (TypeVec.splitFun.{u3, u1} n ε (TypeVec.append1.{u1} n α β) f₀ g₀)) (TypeVec.splitFun.{u3, u2} n ε (TypeVec.append1.{u2} n γ δ) (TypeVec.comp.{u3, u1, u2} n (TypeVec.drop.{u3} n ε) α (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n γ δ)) f₁ f₀) (Function.comp.{succ u3, succ u1, succ u2} (TypeVec.last.{u3} n ε) β (TypeVec.last.{u2} n (TypeVec.append1.{u2} n γ δ)) g₁ g₀))
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u3} n} {γ : TypeVec.{u2} n} {β : Type.{u3}} {δ : Type.{u2}} {ε : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f₀ : TypeVec.Arrow.{u1, u3} n (TypeVec.drop.{u1} n ε) α) (f₁ : TypeVec.Arrow.{u3, u2} n α γ) (g₀ : (TypeVec.last.{u1} n ε) -> β) (g₁ : β -> δ), Eq.{max (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) ε (TypeVec.append1.{u2} n γ δ)) (TypeVec.comp.{u1, u3, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) ε (TypeVec.append1.{u3} n α β) (TypeVec.append1.{u2} n γ δ) (TypeVec.appendFun.{u3, u2} n α γ β δ f₁ g₁) (TypeVec.splitFun.{u1, u3} n ε (TypeVec.append1.{u3} n α β) f₀ g₀)) (TypeVec.splitFun.{u1, u2} n ε (TypeVec.append1.{u2} n γ δ) (TypeVec.comp.{u1, u3, u2} n (TypeVec.drop.{u1} n ε) α (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n γ δ)) f₁ f₀) (Function.comp.{succ u1, succ u3, succ u2} (TypeVec.last.{u1} n ε) β (TypeVec.last.{u2} n (TypeVec.append1.{u2} n γ δ)) g₁ g₀))
-Case conversion may be inaccurate. Consider using '#align typevec.append_fun_comp_split_fun TypeVec.appendFun_comp_splitFunₓ'. -/
 theorem appendFun_comp_splitFun {α γ : TypeVec n} {β δ : Type _} {ε : TypeVec (n + 1)}
     (f₀ : drop ε ⟹ α) (f₁ : α ⟹ γ) (g₀ : last ε → β) (g₁ : β → δ) :
     appendFun f₁ g₁ ⊚ splitFun f₀ g₀ = splitFun (f₁ ⊚ f₀) (g₁ ∘ g₀) :=
   (splitFun_comp _ _ _ _).symm
 #align typevec.append_fun_comp_split_fun TypeVec.appendFun_comp_splitFun
 
-/- warning: typevec.append_fun_comp -> TypeVec.appendFun_comp is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α₀ : TypeVec.{u1} n} {α₁ : TypeVec.{u2} n} {α₂ : TypeVec.{u3} n} {β₀ : Type.{u1}} {β₁ : Type.{u2}} {β₂ : Type.{u3}} (f₀ : TypeVec.Arrow.{u1, u2} n α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u3} n α₁ α₂) (g₀ : β₀ -> β₁) (g₁ : β₁ -> β₂), Eq.{max 1 (succ u1) (succ u3)} (TypeVec.Arrow.{u1, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α₀ β₀) (TypeVec.append1.{u3} n α₂ β₂)) (TypeVec.appendFun.{u1, u3} n α₀ α₂ β₀ β₂ (TypeVec.comp.{u1, u2, u3} n α₀ α₁ α₂ f₁ f₀) (Function.comp.{succ u1, succ u2, succ u3} β₀ β₁ β₂ g₁ g₀)) (TypeVec.comp.{u1, u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α₀ β₀) (TypeVec.append1.{u2} n α₁ β₁) (TypeVec.append1.{u3} n α₂ β₂) (TypeVec.appendFun.{u2, u3} n α₁ α₂ β₁ β₂ f₁ g₁) (TypeVec.appendFun.{u1, u2} n α₀ α₁ β₀ β₁ f₀ g₀))
-but is expected to have type
-  forall {n : Nat} {α₀ : TypeVec.{u3} n} {α₁ : TypeVec.{u2} n} {α₂ : TypeVec.{u1} n} {β₀ : Type.{u3}} {β₁ : Type.{u2}} {β₂ : Type.{u1}} (f₀ : TypeVec.Arrow.{u3, u2} n α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u1} n α₁ α₂) (g₀ : β₀ -> β₁) (g₁ : β₁ -> β₂), Eq.{max (succ u3) (succ u1)} (TypeVec.Arrow.{u3, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u3} n α₀ β₀) (TypeVec.append1.{u1} n α₂ β₂)) (TypeVec.appendFun.{u3, u1} n α₀ α₂ β₀ β₂ (TypeVec.comp.{u3, u2, u1} n α₀ α₁ α₂ f₁ f₀) (Function.comp.{succ u3, succ u2, succ u1} β₀ β₁ β₂ g₁ g₀)) (TypeVec.comp.{u3, u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u3} n α₀ β₀) (TypeVec.append1.{u2} n α₁ β₁) (TypeVec.append1.{u1} n α₂ β₂) (TypeVec.appendFun.{u2, u1} n α₁ α₂ β₁ β₂ f₁ g₁) (TypeVec.appendFun.{u3, u2} n α₀ α₁ β₀ β₁ f₀ g₀))
-Case conversion may be inaccurate. Consider using '#align typevec.append_fun_comp TypeVec.appendFun_compₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -401,12 +311,6 @@ theorem appendFun_comp {α₀ α₁ α₂ : TypeVec n} {β₀ β₁ β₂ : Type
   eq_of_drop_last_eq rfl rfl
 #align typevec.append_fun_comp TypeVec.appendFun_comp
 
-/- warning: typevec.append_fun_comp' -> TypeVec.appendFun_comp' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α₀ : TypeVec.{u1} n} {α₁ : TypeVec.{u2} n} {α₂ : TypeVec.{u3} n} {β₀ : Type.{u1}} {β₁ : Type.{u2}} {β₂ : Type.{u3}} (f₀ : TypeVec.Arrow.{u1, u2} n α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u3} n α₁ α₂) (g₀ : β₀ -> β₁) (g₁ : β₁ -> β₂), Eq.{max 1 (succ u1) (succ u3)} (TypeVec.Arrow.{u1, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α₀ β₀) (TypeVec.append1.{u3} n α₂ β₂)) (TypeVec.comp.{u1, u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α₀ β₀) (TypeVec.append1.{u2} n α₁ β₁) (TypeVec.append1.{u3} n α₂ β₂) (TypeVec.appendFun.{u2, u3} n α₁ α₂ β₁ β₂ f₁ g₁) (TypeVec.appendFun.{u1, u2} n α₀ α₁ β₀ β₁ f₀ g₀)) (TypeVec.appendFun.{u1, u3} n α₀ α₂ β₀ β₂ (TypeVec.comp.{u1, u2, u3} n α₀ α₁ α₂ f₁ f₀) (Function.comp.{succ u1, succ u2, succ u3} β₀ β₁ β₂ g₁ g₀))
-but is expected to have type
-  forall {n : Nat} {α₀ : TypeVec.{u3} n} {α₁ : TypeVec.{u2} n} {α₂ : TypeVec.{u1} n} {β₀ : Type.{u3}} {β₁ : Type.{u2}} {β₂ : Type.{u1}} (f₀ : TypeVec.Arrow.{u3, u2} n α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u1} n α₁ α₂) (g₀ : β₀ -> β₁) (g₁ : β₁ -> β₂), Eq.{max (succ u3) (succ u1)} (TypeVec.Arrow.{u3, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u3} n α₀ β₀) (TypeVec.append1.{u1} n α₂ β₂)) (TypeVec.comp.{u3, u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u3} n α₀ β₀) (TypeVec.append1.{u2} n α₁ β₁) (TypeVec.append1.{u1} n α₂ β₂) (TypeVec.appendFun.{u2, u1} n α₁ α₂ β₁ β₂ f₁ g₁) (TypeVec.appendFun.{u3, u2} n α₀ α₁ β₀ β₁ f₀ g₀)) (TypeVec.appendFun.{u3, u1} n α₀ α₂ β₀ β₂ (TypeVec.comp.{u3, u2, u1} n α₀ α₁ α₂ f₁ f₀) (Function.comp.{succ u3, succ u2, succ u1} β₀ β₁ β₂ g₁ g₀))
-Case conversion may be inaccurate. Consider using '#align typevec.append_fun_comp' TypeVec.appendFun_comp'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -415,12 +319,6 @@ theorem appendFun_comp' {α₀ α₁ α₂ : TypeVec n} {β₀ β₁ β₂ : Typ
   eq_of_drop_last_eq rfl rfl
 #align typevec.append_fun_comp' TypeVec.appendFun_comp'
 
-/- warning: typevec.nil_fun_comp -> TypeVec.nilFun_comp is a dubious translation:
-lean 3 declaration is
-  forall {α₀ : TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))} (f₀ : TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) (TypeVec.comp.{u1, u2, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (TypeVec.nilFun.{u2, u2} (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) f₀) f₀
-but is expected to have type
-  forall {α₀ : TypeVec.{u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} (f₀ : TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α₀ (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1}))), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α₀ (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1}))) (TypeVec.comp.{u2, u1, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α₀ (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1})) (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1})) (TypeVec.nilFun.{u1, u1} (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1})) (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1}))) f₀) f₀
-Case conversion may be inaccurate. Consider using '#align typevec.nil_fun_comp TypeVec.nilFun_compₓ'. -/
 theorem nilFun_comp {α₀ : TypeVec 0} (f₀ : α₀ ⟹ Fin2.elim0) : nilFun ⊚ f₀ = f₀ :=
   funext fun x => Fin2.elim0 x
 #align typevec.nil_fun_comp TypeVec.nilFun_comp
@@ -435,36 +333,18 @@ theorem appendFun_comp_id {α : TypeVec n} {β₀ β₁ β₂ : Type _} (g₀ : 
 #align typevec.append_fun_comp_id TypeVec.appendFun_comp_id
 -/
 
-/- warning: typevec.drop_fun_comp -> TypeVec.dropFun_comp is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α₀ : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α₁ : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α₂ : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f₀ : TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₁ α₂), Eq.{max 1 (succ u1) (succ u3)} (TypeVec.Arrow.{u1, u3} n (TypeVec.drop.{u1} n α₀) (TypeVec.drop.{u3} n α₂)) (TypeVec.dropFun.{u1, u3} n α₀ α₂ (TypeVec.comp.{u1, u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₀ α₁ α₂ f₁ f₀)) (TypeVec.comp.{u1, u2, u3} n (TypeVec.drop.{u1} n α₀) (TypeVec.drop.{u2} n α₁) (TypeVec.drop.{u3} n α₂) (TypeVec.dropFun.{u2, u3} n α₁ α₂ f₁) (TypeVec.dropFun.{u1, u2} n α₀ α₁ f₀))
-but is expected to have type
-  forall {n : Nat} {α₀ : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α₁ : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α₂ : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f₀ : TypeVec.Arrow.{u3, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₁ α₂), Eq.{max (succ u3) (succ u1)} (TypeVec.Arrow.{u3, u1} n (TypeVec.drop.{u3} n α₀) (TypeVec.drop.{u1} n α₂)) (TypeVec.dropFun.{u3, u1} n α₀ α₂ (TypeVec.comp.{u3, u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₀ α₁ α₂ f₁ f₀)) (TypeVec.comp.{u3, u2, u1} n (TypeVec.drop.{u3} n α₀) (TypeVec.drop.{u2} n α₁) (TypeVec.drop.{u1} n α₂) (TypeVec.dropFun.{u2, u1} n α₁ α₂ f₁) (TypeVec.dropFun.{u3, u2} n α₀ α₁ f₀))
-Case conversion may be inaccurate. Consider using '#align typevec.drop_fun_comp TypeVec.dropFun_compₓ'. -/
 @[simp]
 theorem dropFun_comp {α₀ α₁ α₂ : TypeVec (n + 1)} (f₀ : α₀ ⟹ α₁) (f₁ : α₁ ⟹ α₂) :
     dropFun (f₁ ⊚ f₀) = dropFun f₁ ⊚ dropFun f₀ :=
   rfl
 #align typevec.drop_fun_comp TypeVec.dropFun_comp
 
-/- warning: typevec.last_fun_comp -> TypeVec.lastFun_comp is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α₀ : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α₁ : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} {α₂ : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))} (f₀ : TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₁ α₂), Eq.{max (succ u1) (succ u3)} ((TypeVec.last.{u1} n α₀) -> (TypeVec.last.{u3} n α₂)) (TypeVec.lastFun.{u1, u3} n α₀ α₂ (TypeVec.comp.{u1, u2, u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) α₀ α₁ α₂ f₁ f₀)) (Function.comp.{succ u1, succ u2, succ u3} (TypeVec.last.{u1} n α₀) (TypeVec.last.{u2} n α₁) (TypeVec.last.{u3} n α₂) (TypeVec.lastFun.{u2, u3} n α₁ α₂ f₁) (TypeVec.lastFun.{u1, u2} n α₀ α₁ f₀))
-but is expected to have type
-  forall {n : Nat} {α₀ : TypeVec.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α₁ : TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} {α₂ : TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))} (f₀ : TypeVec.Arrow.{u3, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₀ α₁) (f₁ : TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₁ α₂), Eq.{max (succ u3) (succ u1)} ((TypeVec.last.{u3} n α₀) -> (TypeVec.last.{u1} n α₂)) (TypeVec.lastFun.{u3, u1} n α₀ α₂ (TypeVec.comp.{u3, u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) α₀ α₁ α₂ f₁ f₀)) (Function.comp.{succ u3, succ u2, succ u1} (TypeVec.last.{u3} n α₀) (TypeVec.last.{u2} n α₁) (TypeVec.last.{u1} n α₂) (TypeVec.lastFun.{u2, u1} n α₁ α₂ f₁) (TypeVec.lastFun.{u3, u2} n α₀ α₁ f₀))
-Case conversion may be inaccurate. Consider using '#align typevec.last_fun_comp TypeVec.lastFun_compₓ'. -/
 @[simp]
 theorem lastFun_comp {α₀ α₁ α₂ : TypeVec (n + 1)} (f₀ : α₀ ⟹ α₁) (f₁ : α₁ ⟹ α₂) :
     lastFun (f₁ ⊚ f₀) = lastFun f₁ ∘ lastFun f₀ :=
   rfl
 #align typevec.last_fun_comp TypeVec.lastFun_comp
 
-/- warning: typevec.append_fun_aux -> TypeVec.appendFun_aux is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {α' : TypeVec.{u2} n} {β : Type.{u1}} {β' : Type.{u2}} (f : TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n α' β')), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n (TypeVec.drop.{u1} n (TypeVec.append1.{u1} n α β)) (TypeVec.last.{u1} n (TypeVec.append1.{u1} n α β))) (TypeVec.append1.{u2} n (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n α' β')) (TypeVec.last.{u2} n (TypeVec.append1.{u2} n α' β')))) (TypeVec.appendFun.{u1, u2} n (TypeVec.drop.{u1} n (TypeVec.append1.{u1} n α β)) (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n α' β')) (TypeVec.last.{u1} n (TypeVec.append1.{u1} n α β)) (TypeVec.last.{u2} n (TypeVec.append1.{u2} n α' β')) (TypeVec.dropFun.{u1, u2} n (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n α' β') f) (TypeVec.lastFun.{u1, u2} n (TypeVec.append1.{u1} n α β) (TypeVec.append1.{u2} n α' β') f)) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {α' : TypeVec.{u1} n} {β : Type.{u2}} {β' : Type.{u1}} (f : TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u2} n α β) (TypeVec.append1.{u1} n α' β')), Eq.{max (succ u1) (succ u2)} (TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u2} n (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n α β)) (TypeVec.last.{u2} n (TypeVec.append1.{u2} n α β))) (TypeVec.append1.{u1} n (TypeVec.drop.{u1} n (TypeVec.append1.{u1} n α' β')) (TypeVec.last.{u1} n (TypeVec.append1.{u1} n α' β')))) (TypeVec.appendFun.{u2, u1} n (TypeVec.drop.{u2} n (TypeVec.append1.{u2} n α β)) (TypeVec.drop.{u1} n (TypeVec.append1.{u1} n α' β')) (TypeVec.last.{u2} n (TypeVec.append1.{u2} n α β)) (TypeVec.last.{u1} n (TypeVec.append1.{u1} n α' β')) (TypeVec.dropFun.{u2, u1} n (TypeVec.append1.{u2} n α β) (TypeVec.append1.{u1} n α' β') f) (TypeVec.lastFun.{u2, u1} n (TypeVec.append1.{u2} n α β) (TypeVec.append1.{u1} n α' β') f)) f
-Case conversion may be inaccurate. Consider using '#align typevec.append_fun_aux TypeVec.appendFun_auxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -510,23 +390,11 @@ protected def casesCons (n : ℕ) {β : TypeVec (n + 1) → Sort _}
 #align typevec.cases_cons TypeVec.casesCons
 -/
 
-/- warning: typevec.cases_nil_append1 -> TypeVec.casesNil_append1 is a dubious translation:
-lean 3 declaration is
-  forall {β : (TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> Sort.{u2}} (f : β (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1}))), Eq.{u2} (β (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1}))) (TypeVec.casesNil.{u1, u2} β f (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1}))) f
-but is expected to have type
-  forall {β : (TypeVec.{u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> Sort.{u1}} (f : β (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2}))), Eq.{u1} (β (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2}))) (TypeVec.casesNil.{u2, u1} β f (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2}))) f
-Case conversion may be inaccurate. Consider using '#align typevec.cases_nil_append1 TypeVec.casesNil_append1ₓ'. -/
 protected theorem casesNil_append1 {β : TypeVec 0 → Sort _} (f : β Fin2.elim0) :
     TypeVec.casesNil f Fin2.elim0 = f :=
   rfl
 #align typevec.cases_nil_append1 TypeVec.casesNil_append1
 
-/- warning: typevec.cases_cons_append1 -> TypeVec.casesCons_append1 is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) {β : (TypeVec.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> Sort.{u2}} (f : forall (t : Type.{u1}) (v : TypeVec.{u1} n), β (TypeVec.append1.{u1} n v t)) (v : TypeVec.{u1} n) (α : Type.{u1}), Eq.{u2} (β (TypeVec.append1.{u1} n v α)) (TypeVec.casesCons.{u1, u2} n β f (TypeVec.append1.{u1} n v α)) (f α v)
-but is expected to have type
-  forall (n : Nat) {β : (TypeVec.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> Sort.{u1}} (f : forall (t : Type.{u2}) (v : TypeVec.{u2} n), β (TypeVec.append1.{u2} n v t)) (v : TypeVec.{u2} n) (α : Type.{u2}), Eq.{u1} (β (TypeVec.append1.{u2} n v α)) (TypeVec.casesCons.{u2, u1} n β f (TypeVec.append1.{u2} n v α)) (f α v)
-Case conversion may be inaccurate. Consider using '#align typevec.cases_cons_append1 TypeVec.casesCons_append1ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem casesCons_append1 (n : ℕ) {β : TypeVec (n + 1) → Sort _}
@@ -583,23 +451,11 @@ def typevecCasesCons₂ (n : ℕ) (t t' : Type _) (v v' : TypeVec n)
 #align typevec.typevec_cases_cons₂ TypeVec.typevecCasesCons₂
 -/
 
-/- warning: typevec.typevec_cases_nil₂_append_fun -> TypeVec.typevecCasesNil₂_appendFun is a dubious translation:
-lean 3 declaration is
-  forall {β : (TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) -> Sort.{u3}} (f : β (TypeVec.nilFun.{u1, u2} (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})))), Eq.{u3} (β (TypeVec.nilFun.{u1, u2} (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})))) (TypeVec.typevecCasesNil₂.{u1, u2, u3} β f (TypeVec.nilFun.{u1, u2} (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u1})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})))) f
-but is expected to have type
-  forall {β : (TypeVec.Arrow.{u3, u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Fin2.elim0.{succ (succ u3)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u3})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2}))) -> Sort.{u1}} (f : β (TypeVec.nilFun.{u3, u2} (Fin2.elim0.{succ (succ u3)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u3})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2})))), Eq.{u1} (β (TypeVec.nilFun.{u3, u2} (Fin2.elim0.{succ (succ u3)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u3})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2})))) (TypeVec.typevecCasesNil₂.{u3, u2, u1} β f (TypeVec.nilFun.{u3, u2} (Fin2.elim0.{succ (succ u3)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u3})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u2})))) f
-Case conversion may be inaccurate. Consider using '#align typevec.typevec_cases_nil₂_append_fun TypeVec.typevecCasesNil₂_appendFunₓ'. -/
 theorem typevecCasesNil₂_appendFun {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFun) :
     typevecCasesNil₂ f nilFun = f :=
   rfl
 #align typevec.typevec_cases_nil₂_append_fun TypeVec.typevecCasesNil₂_appendFun
 
-/- warning: typevec.typevec_cases_cons₂_append_fun -> TypeVec.typevecCasesCons₂_appendFun is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (t : Type.{u1}) (t' : Type.{u2}) (v : TypeVec.{u1} n) (v' : TypeVec.{u2} n) {β : (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n v t) (TypeVec.append1.{u2} n v' t')) -> Sort.{u3}} (F : forall (f : t -> t') (fs : TypeVec.Arrow.{u1, u2} n v v'), β (TypeVec.appendFun.{u1, u2} n v v' t t' fs f)) (f : t -> t') (fs : TypeVec.Arrow.{u1, u2} n v v'), Eq.{u3} (β (TypeVec.appendFun.{u1, u2} n v v' t t' fs f)) (TypeVec.typevecCasesCons₂.{u1, u2, u3} n t t' v v' β F (TypeVec.appendFun.{u1, u2} n v v' t t' fs f)) (F f fs)
-but is expected to have type
-  forall (n : Nat) (t : Type.{u3}) (t' : Type.{u2}) (v : TypeVec.{u3} n) (v' : TypeVec.{u2} n) {β : (TypeVec.Arrow.{u3, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u3} n v t) (TypeVec.append1.{u2} n v' t')) -> Sort.{u1}} (F : forall (f : t -> t') (fs : TypeVec.Arrow.{u3, u2} n v v'), β (TypeVec.appendFun.{u3, u2} n v v' t t' fs f)) (f : t -> t') (fs : TypeVec.Arrow.{u3, u2} n v v'), Eq.{u1} (β (TypeVec.appendFun.{u3, u2} n v v' t t' fs f)) (TypeVec.typevecCasesCons₂.{u3, u2, u1} n t t' v v' β F (TypeVec.appendFun.{u3, u2} n v v' t t' fs f)) (F f fs)
-Case conversion may be inaccurate. Consider using '#align typevec.typevec_cases_cons₂_append_fun TypeVec.typevecCasesCons₂_appendFunₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -673,24 +529,12 @@ def repeatEq : ∀ {n} (α : TypeVec n), α ⊗ α ⟹ repeat _ Prop
 #align typevec.repeat_eq TypeVec.repeatEq
 -/
 
-/- warning: typevec.const_append1 -> TypeVec.const_append1 is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {γ : Type.{u2}} (x : γ) {n : Nat} (α : TypeVec.{u1} n), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α β) (TypeVec.repeat.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) γ)) (TypeVec.const.{u2, u1} γ x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (TypeVec.append1.{u1} n α β)) (TypeVec.appendFun.{u1, u2} n α (TypeVec.repeat.{u2} (Nat.add n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) γ) β γ (TypeVec.const.{u2, u1} γ x n α) (fun (_x : β) => x))
-but is expected to have type
-  forall {β : Type.{u2}} {γ : Type.{u1}} (x : γ) {n : Nat} (α : TypeVec.{u2} n), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u2} n α β) (TypeVec.repeat.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) γ)) (TypeVec.const.{u1, u2} γ x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (TypeVec.append1.{u2} n α β)) (TypeVec.appendFun.{u2, u1} n α (TypeVec.repeat.{u1} n γ) β γ (TypeVec.const.{u1, u2} γ x n α) (fun (_x : β) => x))
-Case conversion may be inaccurate. Consider using '#align typevec.const_append1 TypeVec.const_append1ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem const_append1 {β γ} (x : γ) {n} (α : TypeVec n) :
     TypeVec.const x (α ::: β) = appendFun (TypeVec.const x α) fun _ => x := by
   ext i : 1 <;> cases i <;> rfl
 #align typevec.const_append1 TypeVec.const_append1
 
-/- warning: typevec.eq_nil_fun -> TypeVec.eq_nilFun is a dubious translation:
-lean 3 declaration is
-  forall {α : TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))} {β : TypeVec.{u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))} (f : TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α β), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α β) f (TypeVec.nilFun.{u1, u2} α β)
-but is expected to have type
-  forall {α : TypeVec.{u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} {β : TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} (f : TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α β), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α β) f (TypeVec.nilFun.{u2, u1} α β)
-Case conversion may be inaccurate. Consider using '#align typevec.eq_nil_fun TypeVec.eq_nilFunₓ'. -/
 theorem eq_nilFun {α β : TypeVec 0} (f : α ⟹ β) : f = nilFun := by ext x <;> cases x
 #align typevec.eq_nil_fun TypeVec.eq_nilFun
 
@@ -699,12 +543,6 @@ theorem id_eq_nilFun {α : TypeVec 0} : @id _ α = nilFun := by ext x <;> cases 
 #align typevec.id_eq_nil_fun TypeVec.id_eq_nilFun
 -/
 
-/- warning: typevec.const_nil -> TypeVec.const_nil is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} (x : β) (α : TypeVec.{u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))), Eq.{max 1 (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α (TypeVec.repeat.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) β)) (TypeVec.const.{u1, u2} β x (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α) (TypeVec.nilFun.{u2, u1} α (TypeVec.repeat.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) β))
-but is expected to have type
-  forall {β : Type.{u2}} (x : β) (α : TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))), Eq.{max (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α (TypeVec.repeat.{u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) β)) (TypeVec.const.{u2, u1} β x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α) (TypeVec.nilFun.{u1, u2} α (TypeVec.repeat.{u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) β))
-Case conversion may be inaccurate. Consider using '#align typevec.const_nil TypeVec.const_nilₓ'. -/
 theorem const_nil {β} (x : β) (α : TypeVec 0) : TypeVec.const x α = nilFun := by
   ext i : 1 <;> cases i <;> rfl
 #align typevec.const_nil TypeVec.const_nil
@@ -1112,12 +950,6 @@ theorem subtypeVal_toSubtype {α : TypeVec n} (p : α ⟹ repeat n Prop) :
 #align typevec.subtype_val_to_subtype TypeVec.subtypeVal_toSubtype
 -/
 
-/- warning: typevec.to_subtype_of_subtype_assoc -> TypeVec.toSubtype_of_subtype_assoc is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : TypeVec.{u1} n} {β : TypeVec.{u2} n} (p : TypeVec.Arrow.{u1, 0} n α (TypeVec.repeat.{0} n Prop)) (f : TypeVec.Arrow.{u2, u1} n β (TypeVec.Subtype_.{u1} n α p)), Eq.{max 1 (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} n β (TypeVec.Subtype_.{u1} n α p)) (TypeVec.comp.{u2, u1, u1} n β (fun (i : Fin2 n) => Subtype.{succ u1} (α i) (fun (x : α i) => TypeVec.ofRepeat.{0} Prop n i (p i x))) (TypeVec.Subtype_.{u1} n α p) (TypeVec.toSubtype.{u1} n α p) (TypeVec.comp.{u2, u1, u1} n β (TypeVec.Subtype_.{u1} n (fun (i : Fin2 n) => α i) (fun (i : Fin2 n) (x : α i) => p i x)) (fun (i : Fin2 n) => Subtype.{succ u1} (α i) (fun (x : α i) => TypeVec.ofRepeat.{0} Prop n i (p i x))) (TypeVec.ofSubtype.{u1} n (fun (i : Fin2 n) => α i) (fun (i : Fin2 n) (x : α i) => p i x)) f)) f
-but is expected to have type
-  forall {n : Nat} {α : TypeVec.{u2} n} {β : TypeVec.{u1} n} (p : TypeVec.Arrow.{u2, 0} n α (TypeVec.repeat.{0} n Prop)) (f : TypeVec.Arrow.{u1, u2} n β (TypeVec.Subtype_.{u2} n α p)), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u1, u2} n β (TypeVec.Subtype_.{u2} n α p)) (TypeVec.comp.{u1, u2, u2} n β (fun (i : Fin2 n) => Subtype.{succ u2} (α i) (fun (x : α i) => TypeVec.ofRepeat.{0} Prop n i (p i x))) (TypeVec.Subtype_.{u2} n α p) (TypeVec.toSubtype.{u2} n α p) (TypeVec.comp.{u1, u2, u2} n β (TypeVec.Subtype_.{u2} n (fun (i : Fin2 n) => α i) (fun (i : Fin2 n) (x : α i) => p i x)) (fun (i : Fin2 n) => Subtype.{succ u2} (α i) (fun (x : α i) => TypeVec.ofRepeat.{0} Prop n i (p i x))) (TypeVec.ofSubtype.{u2} n (fun (i : Fin2 n) => α i) (fun (i : Fin2 n) (x : α i) => p i x)) f)) f
-Case conversion may be inaccurate. Consider using '#align typevec.to_subtype_of_subtype_assoc TypeVec.toSubtype_of_subtype_assocₓ'. -/
 @[simp]
 theorem toSubtype_of_subtype_assoc {α β : TypeVec n} (p : α ⟹ repeat n Prop) (f : β ⟹ Subtype_ p) :
     @toSubtype n _ p ⊚ ofSubtype _ ⊚ f = f := by rw [← comp_assoc, to_subtype_of_subtype] <;> simp

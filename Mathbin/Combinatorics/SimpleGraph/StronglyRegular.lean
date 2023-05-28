@@ -46,12 +46,6 @@ variable [Fintype V] [DecidableEq V]
 
 variable (G : SimpleGraph V) [DecidableRel G.Adj]
 
-/- warning: simple_graph.is_SRG_with -> SimpleGraph.IsSRGWith is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] (G : SimpleGraph.{u1} V) [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)], Nat -> Nat -> Nat -> Nat -> Prop
-but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] (_inst_2 : SimpleGraph.{u1} V) [G : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V _inst_2)], Nat -> Nat -> Nat -> Nat -> Prop
-Case conversion may be inaccurate. Consider using '#align simple_graph.is_SRG_with SimpleGraph.IsSRGWithₓ'. -/
 /-- A graph is strongly regular with parameters `n k ℓ μ` if
  * its vertex set has cardinality `n`
  * it is regular with degree `k`
@@ -67,12 +61,6 @@ structure IsSRGWith (n k ℓ μ : ℕ) : Prop where
 
 variable {G} {n k ℓ μ : ℕ}
 
-/- warning: simple_graph.bot_strongly_regular -> SimpleGraph.bot_strongly_regular is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {ℓ : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) ℓ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
-but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] {_inst_2 : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) _inst_2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
-Case conversion may be inaccurate. Consider using '#align simple_graph.bot_strongly_regular SimpleGraph.bot_strongly_regularₓ'. -/
 /-- Empty graphs are strongly regular. Note that `ℓ` can take any value
   for empty graphs, since there are no pairs of adjacent vertices. -/
 theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 0 ℓ 0 :=

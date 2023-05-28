@@ -39,12 +39,6 @@ theorem range_eq {α : Type _} (f : Bool → α) : range f = {f false, f true} :
 #align bool.range_eq Bool.range_eq
 -/
 
-/- warning: bool.compl_singleton -> Bool.compl_singleton is a dubious translation:
-lean 3 declaration is
-  forall (b : Bool), Eq.{1} (Set.{0} Bool) (HasCompl.compl.{0} (Set.{0} Bool) (BooleanAlgebra.toHasCompl.{0} (Set.{0} Bool) (Set.booleanAlgebra.{0} Bool)) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.hasSingleton.{0} Bool) b)) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.hasSingleton.{0} Bool) (not b))
-but is expected to have type
-  forall (b : Bool), Eq.{1} (Set.{0} Bool) (HasCompl.compl.{0} (Set.{0} Bool) (BooleanAlgebra.toHasCompl.{0} (Set.{0} Bool) (Set.instBooleanAlgebraSet.{0} Bool)) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.instSingletonSet.{0} Bool) b)) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.instSingletonSet.{0} Bool) (not b))
-Case conversion may be inaccurate. Consider using '#align bool.compl_singleton Bool.compl_singletonₓ'. -/
 @[simp]
 theorem compl_singleton (b : Bool) : ({b}ᶜ : Set Bool) = {!b} :=
   ext fun _ => eq_not_iff.symm

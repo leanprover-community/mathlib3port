@@ -86,9 +86,6 @@ theorem dist_left_midpoint_eq_dist_right_midpoint (p1 p2 : P) :
 #align euclidean_geometry.dist_left_midpoint_eq_dist_right_midpoint EuclideanGeometry.dist_left_midpoint_eq_dist_right_midpoint
 -/
 
-/- warning: euclidean_geometry.inner_weighted_vsub -> EuclideanGeometry.inner_weightedVSub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inner_weighted_vsub EuclideanGeometry.inner_weightedVSubₓ'. -/
 /-- The inner product of two vectors given with `weighted_vsub`, in
 terms of the pairwise distances. -/
 theorem inner_weightedVSub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P)
@@ -104,9 +101,6 @@ theorem inner_weightedVSub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ 
   rcongr (i₁ i₂) <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
 #align euclidean_geometry.inner_weighted_vsub EuclideanGeometry.inner_weightedVSub
 
-/- warning: euclidean_geometry.dist_affine_combination -> EuclideanGeometry.dist_affineCombination is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_affine_combination EuclideanGeometry.dist_affineCombinationₓ'. -/
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that
 combination. -/
@@ -127,12 +121,6 @@ theorem dist_affineCombination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι →
   exact inner_weighted_vsub p h p h
 #align euclidean_geometry.dist_affine_combination EuclideanGeometry.dist_affineCombination
 
-/- warning: euclidean_geometry.inner_vsub_vsub_of_dist_eq_of_dist_eq -> EuclideanGeometry.inner_vsub_vsub_of_dist_eq_of_dist_eq is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {c₁ : P} {c₂ : P} {p₁ : P} {p₂ : P}, (Eq.{1} Real (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₁ c₁) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ c₁)) -> (Eq.{1} Real (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₁ c₂) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ c₂)) -> (Eq.{1} Real (Inner.inner.{0, u1} Real V (InnerProductSpace.toHasInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) c₂ c₁) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₂ p₁)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
-but is expected to have type
-  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {c₁ : P} {c₂ : P} {p₁ : P} {p₂ : P}, (Eq.{1} Real (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₁ c₁) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ c₁)) -> (Eq.{1} Real (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₁ c₂) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ c₂)) -> (Eq.{1} Real (Inner.inner.{0, u1} Real V (InnerProductSpace.toInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) c₂ c₁) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₂ p₁)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inner_vsub_vsub_of_dist_eq_of_dist_eq EuclideanGeometry.inner_vsub_vsub_of_dist_eq_of_dist_eqₓ'. -/
 /-- Suppose that `c₁` is equidistant from `p₁` and `p₂`, and the same
 applies to `c₂`.  Then the vector between `c₁` and `c₂` is orthogonal
 to that between `p₁` and `p₂`.  (In two dimensions, this says that the
@@ -161,9 +149,6 @@ theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ :
   simpa [inner_add_left, ← mul_two, (by norm_num : (2 : ℝ) ≠ 0)] using h
 #align euclidean_geometry.inner_vsub_vsub_of_dist_eq_of_dist_eq EuclideanGeometry.inner_vsub_vsub_of_dist_eq_of_dist_eq
 
-/- warning: euclidean_geometry.dist_smul_vadd_sq -> EuclideanGeometry.dist_smul_vadd_sq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_smul_vadd_sq EuclideanGeometry.dist_smul_vadd_sqₓ'. -/
 /-- The squared distance between points on a line (expressed as a
 multiple of a fixed vector added to a point) and another point,
 expressed as a quadratic. -/
@@ -176,9 +161,6 @@ theorem dist_smul_vadd_sq (r : ℝ) (v : V) (p₁ p₂ : P) :
   ring
 #align euclidean_geometry.dist_smul_vadd_sq EuclideanGeometry.dist_smul_vadd_sq
 
-/- warning: euclidean_geometry.dist_smul_vadd_eq_dist -> EuclideanGeometry.dist_smul_vadd_eq_dist is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_smul_vadd_eq_dist EuclideanGeometry.dist_smul_vadd_eq_distₓ'. -/
 /-- The condition for two points on a line to be equidistant from
 another point. -/
 theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) :
@@ -198,9 +180,6 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
-/- warning: euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two -> EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_twoₓ'. -/
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -261,9 +240,6 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   cases hpc₁ <;> simp [hpc₁]
 #align euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two
 
-/- warning: euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_finrank_eq_two -> EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_finrank_eq_two is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_finrank_eq_two EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_finrank_eq_twoₓ'. -/
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in two-dimensional space (two circles intersect in at
 most two points). -/
@@ -298,9 +274,6 @@ def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpac
 #align euclidean_geometry.orthogonal_projection_fn EuclideanGeometry.orthogonalProjectionFn
 -/
 
-/- warning: euclidean_geometry.inter_eq_singleton_orthogonal_projection_fn -> EuclideanGeometry.inter_eq_singleton_orthogonalProjectionFn is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inter_eq_singleton_orthogonal_projection_fn EuclideanGeometry.inter_eq_singleton_orthogonalProjectionFnₓ'. -/
 /-- The intersection of the subspace and the orthogonal subspace
 through the given point is the `orthogonal_projection_fn` of that
 point onto the subspace.  This lemma is only intended for use in
@@ -317,9 +290,6 @@ theorem inter_eq_singleton_orthogonalProjectionFn {s : AffineSubspace ℝ P} [No
         exact Submodule.isCompl_orthogonal_of_completeSpace)
 #align euclidean_geometry.inter_eq_singleton_orthogonal_projection_fn EuclideanGeometry.inter_eq_singleton_orthogonalProjectionFn
 
-/- warning: euclidean_geometry.orthogonal_projection_fn_mem -> EuclideanGeometry.orthogonalProjectionFn_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_fn_mem EuclideanGeometry.orthogonalProjectionFn_memₓ'. -/
 /-- The `orthogonal_projection_fn` lies in the given subspace.  This
 lemma is only intended for use in setting up the bundled version and
 should not be used once that is defined. -/
@@ -330,9 +300,6 @@ theorem orthogonalProjectionFn_mem {s : AffineSubspace ℝ P} [Nonempty s] [Comp
   exact Set.inter_subset_left _ _
 #align euclidean_geometry.orthogonal_projection_fn_mem EuclideanGeometry.orthogonalProjectionFn_mem
 
-/- warning: euclidean_geometry.orthogonal_projection_fn_mem_orthogonal -> EuclideanGeometry.orthogonalProjectionFn_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_fn_mem_orthogonal EuclideanGeometry.orthogonalProjectionFn_mem_orthogonalₓ'. -/
 /-- The `orthogonal_projection_fn` lies in the orthogonal
 subspace.  This lemma is only intended for use in setting up the
 bundled version and should not be used once that is defined. -/
@@ -343,9 +310,6 @@ theorem orthogonalProjectionFn_mem_orthogonal {s : AffineSubspace ℝ P} [Nonemp
   exact Set.inter_subset_right _ _
 #align euclidean_geometry.orthogonal_projection_fn_mem_orthogonal EuclideanGeometry.orthogonalProjectionFn_mem_orthogonal
 
-/- warning: euclidean_geometry.orthogonal_projection_fn_vsub_mem_direction_orthogonal -> EuclideanGeometry.orthogonalProjectionFn_vsub_mem_direction_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_fn_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonalProjectionFn_vsub_mem_direction_orthogonalₓ'. -/
 /-- Subtracting `p` from its `orthogonal_projection_fn` produces a
 result in the orthogonal direction.  This lemma is only intended for
 use in setting up the bundled version and should not be used once that
@@ -397,18 +361,12 @@ def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
 #align euclidean_geometry.orthogonal_projection EuclideanGeometry.orthogonalProjection
 -/
 
-/- warning: euclidean_geometry.orthogonal_projection_fn_eq -> EuclideanGeometry.orthogonalProjectionFn_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_fn_eq EuclideanGeometry.orthogonalProjectionFn_eqₓ'. -/
 @[simp]
 theorem orthogonalProjectionFn_eq {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : orthogonalProjectionFn s p = orthogonalProjection s p :=
   rfl
 #align euclidean_geometry.orthogonal_projection_fn_eq EuclideanGeometry.orthogonalProjectionFn_eq
 
-/- warning: euclidean_geometry.orthogonal_projection_linear -> EuclideanGeometry.orthogonalProjection_linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_linear EuclideanGeometry.orthogonalProjection_linearₓ'. -/
 /-- The linear map corresponding to `orthogonal_projection`. -/
 @[simp]
 theorem orthogonalProjection_linear {s : AffineSubspace ℝ P} [Nonempty s]
@@ -417,9 +375,6 @@ theorem orthogonalProjection_linear {s : AffineSubspace ℝ P} [Nonempty s]
   rfl
 #align euclidean_geometry.orthogonal_projection_linear EuclideanGeometry.orthogonalProjection_linear
 
-/- warning: euclidean_geometry.inter_eq_singleton_orthogonal_projection -> EuclideanGeometry.inter_eq_singleton_orthogonalProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inter_eq_singleton_orthogonal_projection EuclideanGeometry.inter_eq_singleton_orthogonalProjectionₓ'. -/
 /-- The intersection of the subspace and the orthogonal subspace
 through the given point is the `orthogonal_projection` of that point
 onto the subspace. -/
@@ -431,27 +386,18 @@ theorem inter_eq_singleton_orthogonalProjection {s : AffineSubspace ℝ P} [None
   exact inter_eq_singleton_orthogonal_projection_fn p
 #align euclidean_geometry.inter_eq_singleton_orthogonal_projection EuclideanGeometry.inter_eq_singleton_orthogonalProjection
 
-/- warning: euclidean_geometry.orthogonal_projection_mem -> EuclideanGeometry.orthogonalProjection_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_mem EuclideanGeometry.orthogonalProjection_memₓ'. -/
 /-- The `orthogonal_projection` lies in the given subspace. -/
 theorem orthogonalProjection_mem {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : ↑(orthogonalProjection s p) ∈ s :=
   (orthogonalProjection s p).2
 #align euclidean_geometry.orthogonal_projection_mem EuclideanGeometry.orthogonalProjection_mem
 
-/- warning: euclidean_geometry.orthogonal_projection_mem_orthogonal -> EuclideanGeometry.orthogonalProjection_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_mem_orthogonal EuclideanGeometry.orthogonalProjection_mem_orthogonalₓ'. -/
 /-- The `orthogonal_projection` lies in the orthogonal subspace. -/
 theorem orthogonalProjection_mem_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) : ↑(orthogonalProjection s p) ∈ mk' p s.directionᗮ :=
   orthogonalProjectionFn_mem_orthogonal p
 #align euclidean_geometry.orthogonal_projection_mem_orthogonal EuclideanGeometry.orthogonalProjection_mem_orthogonal
 
-/- warning: euclidean_geometry.orthogonal_projection_vsub_mem_direction -> EuclideanGeometry.orthogonalProjection_vsub_mem_direction is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_vsub_mem_direction EuclideanGeometry.orthogonalProjection_vsub_mem_directionₓ'. -/
 /-- Subtracting a point in the given subspace from the
 `orthogonal_projection` produces a result in the direction of the
 given subspace. -/
@@ -461,9 +407,6 @@ theorem orthogonalProjection_vsub_mem_direction {s : AffineSubspace ℝ P} [None
   (orthogonalProjection s p2 -ᵥ ⟨p1, hp1⟩ : s.direction).2
 #align euclidean_geometry.orthogonal_projection_vsub_mem_direction EuclideanGeometry.orthogonalProjection_vsub_mem_direction
 
-/- warning: euclidean_geometry.vsub_orthogonal_projection_mem_direction -> EuclideanGeometry.vsub_orthogonalProjection_mem_direction is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.vsub_orthogonal_projection_mem_direction EuclideanGeometry.vsub_orthogonalProjection_mem_directionₓ'. -/
 /-- Subtracting the `orthogonal_projection` from a point in the given
 subspace produces a result in the direction of the given subspace. -/
 theorem vsub_orthogonalProjection_mem_direction {s : AffineSubspace ℝ P} [Nonempty s]
@@ -472,9 +415,6 @@ theorem vsub_orthogonalProjection_mem_direction {s : AffineSubspace ℝ P} [None
   ((⟨p1, hp1⟩ : s) -ᵥ orthogonalProjection s p2 : s.direction).2
 #align euclidean_geometry.vsub_orthogonal_projection_mem_direction EuclideanGeometry.vsub_orthogonalProjection_mem_direction
 
-/- warning: euclidean_geometry.orthogonal_projection_eq_self_iff -> EuclideanGeometry.orthogonalProjection_eq_self_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_eq_self_iff EuclideanGeometry.orthogonalProjection_eq_self_iffₓ'. -/
 /-- A point equals its orthogonal projection if and only if it lies in
 the subspace. -/
 theorem orthogonalProjection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
@@ -489,9 +429,6 @@ theorem orthogonalProjection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
     exact hp
 #align euclidean_geometry.orthogonal_projection_eq_self_iff EuclideanGeometry.orthogonalProjection_eq_self_iff
 
-/- warning: euclidean_geometry.orthogonal_projection_mem_subspace_eq_self -> EuclideanGeometry.orthogonalProjection_mem_subspace_eq_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_mem_subspace_eq_self EuclideanGeometry.orthogonalProjection_mem_subspace_eq_selfₓ'. -/
 @[simp]
 theorem orthogonalProjection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : s) : orthogonalProjection s p = p :=
@@ -501,9 +438,6 @@ theorem orthogonalProjection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [No
   exact p.2
 #align euclidean_geometry.orthogonal_projection_mem_subspace_eq_self EuclideanGeometry.orthogonalProjection_mem_subspace_eq_self
 
-/- warning: euclidean_geometry.orthogonal_projection_orthogonal_projection -> EuclideanGeometry.orthogonalProjection_orthogonalProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_orthogonal_projection EuclideanGeometry.orthogonalProjection_orthogonalProjectionₓ'. -/
 /-- Orthogonal projection is idempotent. -/
 @[simp]
 theorem orthogonalProjection_orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s]
@@ -515,9 +449,6 @@ theorem orthogonalProjection_orthogonalProjection (s : AffineSubspace ℝ P) [No
   exact orthogonal_projection_mem p
 #align euclidean_geometry.orthogonal_projection_orthogonal_projection EuclideanGeometry.orthogonalProjection_orthogonalProjection
 
-/- warning: euclidean_geometry.eq_orthogonal_projection_of_eq_subspace -> EuclideanGeometry.eq_orthogonalProjection_of_eq_subspace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.eq_orthogonal_projection_of_eq_subspace EuclideanGeometry.eq_orthogonalProjection_of_eq_subspaceₓ'. -/
 theorem eq_orthogonalProjection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s]
     [Nonempty s'] [CompleteSpace s.direction] [CompleteSpace s'.direction] (h : s = s') (p : P) :
     (orthogonalProjection s p : P) = (orthogonalProjection s' p : P) :=
@@ -527,18 +458,12 @@ theorem eq_orthogonalProjection_of_eq_subspace {s s' : AffineSubspace ℝ P} [No
   exact h
 #align euclidean_geometry.eq_orthogonal_projection_of_eq_subspace EuclideanGeometry.eq_orthogonalProjection_of_eq_subspace
 
-/- warning: euclidean_geometry.dist_orthogonal_projection_eq_zero_iff -> EuclideanGeometry.dist_orthogonalProjection_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_orthogonal_projection_eq_zero_iff EuclideanGeometry.dist_orthogonalProjection_eq_zero_iffₓ'. -/
 /-- The distance to a point's orthogonal projection is 0 iff it lies in the subspace. -/
 theorem dist_orthogonalProjection_eq_zero_iff {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p : P} : dist p (orthogonalProjection s p) = 0 ↔ p ∈ s := by
   rw [dist_comm, dist_eq_zero, orthogonalProjection_eq_self_iff]
 #align euclidean_geometry.dist_orthogonal_projection_eq_zero_iff EuclideanGeometry.dist_orthogonalProjection_eq_zero_iff
 
-/- warning: euclidean_geometry.dist_orthogonal_projection_ne_zero_of_not_mem -> EuclideanGeometry.dist_orthogonalProjection_ne_zero_of_not_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_orthogonal_projection_ne_zero_of_not_mem EuclideanGeometry.dist_orthogonalProjection_ne_zero_of_not_memₓ'. -/
 /-- The distance between a point and its orthogonal projection is
 nonzero if it does not lie in the subspace. -/
 theorem dist_orthogonalProjection_ne_zero_of_not_mem {s : AffineSubspace ℝ P} [Nonempty s]
@@ -546,9 +471,6 @@ theorem dist_orthogonalProjection_ne_zero_of_not_mem {s : AffineSubspace ℝ P} 
   mt dist_orthogonalProjection_eq_zero_iff.mp hp
 #align euclidean_geometry.dist_orthogonal_projection_ne_zero_of_not_mem EuclideanGeometry.dist_orthogonalProjection_ne_zero_of_not_mem
 
-/- warning: euclidean_geometry.orthogonal_projection_vsub_mem_direction_orthogonal -> EuclideanGeometry.orthogonalProjection_vsub_mem_direction_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonalProjection_vsub_mem_direction_orthogonalₓ'. -/
 /-- Subtracting `p` from its `orthogonal_projection` produces a result
 in the orthogonal direction. -/
 theorem orthogonalProjection_vsub_mem_direction_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
@@ -556,9 +478,6 @@ theorem orthogonalProjection_vsub_mem_direction_orthogonal (s : AffineSubspace �
   orthogonalProjectionFn_vsub_mem_direction_orthogonal p
 #align euclidean_geometry.orthogonal_projection_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonalProjection_vsub_mem_direction_orthogonal
 
-/- warning: euclidean_geometry.vsub_orthogonal_projection_mem_direction_orthogonal -> EuclideanGeometry.vsub_orthogonalProjection_mem_direction_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.vsub_orthogonal_projection_mem_direction_orthogonal EuclideanGeometry.vsub_orthogonalProjection_mem_direction_orthogonalₓ'. -/
 /-- Subtracting the `orthogonal_projection` from `p` produces a result
 in the orthogonal direction. -/
 theorem vsub_orthogonalProjection_mem_direction_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
@@ -567,9 +486,6 @@ theorem vsub_orthogonalProjection_mem_direction_orthogonal (s : AffineSubspace �
     vsub_mem_direction (self_mem_mk' _ _) (orthogonalProjection_mem_orthogonal s p)
 #align euclidean_geometry.vsub_orthogonal_projection_mem_direction_orthogonal EuclideanGeometry.vsub_orthogonalProjection_mem_direction_orthogonal
 
-/- warning: euclidean_geometry.orthogonal_projection_vsub_orthogonal_projection -> EuclideanGeometry.orthogonalProjection_vsub_orthogonalProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_vsub_orthogonal_projection EuclideanGeometry.orthogonalProjection_vsub_orthogonalProjectionₓ'. -/
 /-- Subtracting the `orthogonal_projection` from `p` produces a result in the kernel of the linear
 part of the orthogonal projection. -/
 theorem orthogonalProjection_vsub_orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s]
@@ -582,9 +498,6 @@ theorem orthogonalProjection_vsub_orthogonalProjection (s : AffineSubspace ℝ P
     orthogonal_projection_vsub_mem_direction_orthogonal s p c hc, neg_zero]
 #align euclidean_geometry.orthogonal_projection_vsub_orthogonal_projection EuclideanGeometry.orthogonalProjection_vsub_orthogonalProjection
 
-/- warning: euclidean_geometry.orthogonal_projection_vadd_eq_self -> EuclideanGeometry.orthogonalProjection_vadd_eq_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_vadd_eq_self EuclideanGeometry.orthogonalProjection_vadd_eq_selfₓ'. -/
 /-- Adding a vector to a point in the given subspace, then taking the
 orthogonal projection, produces the original point if the vector was
 in the orthogonal direction. -/
@@ -600,9 +513,6 @@ theorem orthogonalProjection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty s
   exact (_ : s.direction).2
 #align euclidean_geometry.orthogonal_projection_vadd_eq_self EuclideanGeometry.orthogonalProjection_vadd_eq_self
 
-/- warning: euclidean_geometry.orthogonal_projection_vadd_smul_vsub_orthogonal_projection -> EuclideanGeometry.orthogonalProjection_vadd_smul_vsub_orthogonalProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.orthogonal_projection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.orthogonalProjection_vadd_smul_vsub_orthogonalProjectionₓ'. -/
 /-- Adding a vector to a point in the given subspace, then taking the
 orthogonal projection, produces the original point if the vector is a
 multiple of the result of subtracting a point's orthogonal projection
@@ -614,9 +524,6 @@ theorem orthogonalProjection_vadd_smul_vsub_orthogonalProjection {s : AffineSubs
     (Submodule.smul_mem _ _ (vsub_orthogonalProjection_mem_direction_orthogonal s _))
 #align euclidean_geometry.orthogonal_projection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.orthogonalProjection_vadd_smul_vsub_orthogonalProjection
 
-/- warning: euclidean_geometry.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq -> EuclideanGeometry.dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq EuclideanGeometry.dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sqₓ'. -/
 /-- The square of the distance from a point in `s` to `p2` equals the
 sum of the squares of the distances of the two points to the
 `orthogonal_projection`. -/
@@ -635,9 +542,6 @@ theorem dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq
       (orthogonal_projection_vsub_mem_direction_orthogonal s p2)
 #align euclidean_geometry.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq EuclideanGeometry.dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq
 
-/- warning: euclidean_geometry.dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd -> EuclideanGeometry.dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd EuclideanGeometry.dist_sq_smul_orthogonal_vadd_smul_orthogonal_vaddₓ'. -/
 /-- The square of the distance between two points constructed by
 adding multiples of the same orthogonal vector to points in the same
 subspace. -/
@@ -689,26 +593,17 @@ def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.directio
 #align euclidean_geometry.reflection EuclideanGeometry.reflection
 -/
 
-/- warning: euclidean_geometry.reflection_apply -> EuclideanGeometry.reflection_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_apply EuclideanGeometry.reflection_applyₓ'. -/
 /-- The result of reflecting. -/
 theorem reflection_apply (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) :
     reflection s p = ↑(orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p :=
   rfl
 #align euclidean_geometry.reflection_apply EuclideanGeometry.reflection_apply
 
-/- warning: euclidean_geometry.eq_reflection_of_eq_subspace -> EuclideanGeometry.eq_reflection_of_eq_subspace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.eq_reflection_of_eq_subspace EuclideanGeometry.eq_reflection_of_eq_subspaceₓ'. -/
 theorem eq_reflection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s] [Nonempty s']
     [CompleteSpace s.direction] [CompleteSpace s'.direction] (h : s = s') (p : P) :
     (reflection s p : P) = (reflection s' p : P) := by subst h
 #align euclidean_geometry.eq_reflection_of_eq_subspace EuclideanGeometry.eq_reflection_of_eq_subspace
 
-/- warning: euclidean_geometry.reflection_reflection -> EuclideanGeometry.reflection_reflection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_reflection EuclideanGeometry.reflection_reflectionₓ'. -/
 /-- Reflecting twice in the same subspace. -/
 @[simp]
 theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
@@ -727,27 +622,18 @@ theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
   exact this (orthogonalProjection s p) _ (orthogonal_projection_vsub_orthogonal_projection s p)
 #align euclidean_geometry.reflection_reflection EuclideanGeometry.reflection_reflection
 
-/- warning: euclidean_geometry.reflection_symm -> EuclideanGeometry.reflection_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_symm EuclideanGeometry.reflection_symmₓ'. -/
 /-- Reflection is its own inverse. -/
 @[simp]
 theorem reflection_symm (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
     (reflection s).symm = reflection s := by ext; rw [← (reflection s).Injective.eq_iff]; simp
 #align euclidean_geometry.reflection_symm EuclideanGeometry.reflection_symm
 
-/- warning: euclidean_geometry.reflection_involutive -> EuclideanGeometry.reflection_involutive is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_involutive EuclideanGeometry.reflection_involutiveₓ'. -/
 /-- Reflection is involutive. -/
 theorem reflection_involutive (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
     Function.Involutive (reflection s) :=
   reflection_reflection s
 #align euclidean_geometry.reflection_involutive EuclideanGeometry.reflection_involutive
 
-/- warning: euclidean_geometry.reflection_eq_self_iff -> EuclideanGeometry.reflection_eq_self_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_eq_self_iff EuclideanGeometry.reflection_eq_self_iffₓ'. -/
 /-- A point is its own reflection if and only if it is in the
 subspace. -/
 theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
@@ -764,9 +650,6 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
     simp [h]
 #align euclidean_geometry.reflection_eq_self_iff EuclideanGeometry.reflection_eq_self_iff
 
-/- warning: euclidean_geometry.reflection_eq_iff_orthogonal_projection_eq -> EuclideanGeometry.reflection_eq_iff_orthogonalProjection_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_eq_iff_orthogonal_projection_eq EuclideanGeometry.reflection_eq_iff_orthogonalProjection_eqₓ'. -/
 /-- Reflecting a point in two subspaces produces the same result if
 and only if the point has the same orthogonal projection in each of
 those subspaces. -/
@@ -787,9 +670,6 @@ theorem reflection_eq_iff_orthogonalProjection_eq (s₁ s₂ : AffineSubspace �
     rw [h]
 #align euclidean_geometry.reflection_eq_iff_orthogonal_projection_eq EuclideanGeometry.reflection_eq_iff_orthogonalProjection_eq
 
-/- warning: euclidean_geometry.dist_reflection -> EuclideanGeometry.dist_reflection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_reflection EuclideanGeometry.dist_reflectionₓ'. -/
 /-- The distance between `p₁` and the reflection of `p₂` equals that
 between the reflection of `p₁` and `p₂`. -/
 theorem dist_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
@@ -799,9 +679,6 @@ theorem dist_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s
   exact (reflection s).dist_map _ _
 #align euclidean_geometry.dist_reflection EuclideanGeometry.dist_reflection
 
-/- warning: euclidean_geometry.dist_reflection_eq_of_mem -> EuclideanGeometry.dist_reflection_eq_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dist_reflection_eq_of_mem EuclideanGeometry.dist_reflection_eq_of_memₓ'. -/
 /-- A point in the subspace is equidistant from another point and its
 reflection. -/
 theorem dist_reflection_eq_of_mem (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
@@ -812,9 +689,6 @@ theorem dist_reflection_eq_of_mem (s : AffineSubspace ℝ P) [Nonempty s] [Compl
   rw [hp₁]
 #align euclidean_geometry.dist_reflection_eq_of_mem EuclideanGeometry.dist_reflection_eq_of_mem
 
-/- warning: euclidean_geometry.reflection_mem_of_le_of_mem -> EuclideanGeometry.reflection_mem_of_le_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_mem_of_le_of_mem EuclideanGeometry.reflection_mem_of_le_of_memₓ'. -/
 /-- The reflection of a point in a subspace is contained in any larger
 subspace containing both the point and the subspace reflected in. -/
 theorem reflection_mem_of_le_of_mem {s₁ s₂ : AffineSubspace ℝ P} [Nonempty s₁]
@@ -825,9 +699,6 @@ theorem reflection_mem_of_le_of_mem {s₁ s₂ : AffineSubspace ℝ P} [Nonempty
   exact vadd_mem_of_mem_direction (vsub_mem_direction ho hp) ho
 #align euclidean_geometry.reflection_mem_of_le_of_mem EuclideanGeometry.reflection_mem_of_le_of_mem
 
-/- warning: euclidean_geometry.reflection_orthogonal_vadd -> EuclideanGeometry.reflection_orthogonal_vadd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_orthogonal_vadd EuclideanGeometry.reflection_orthogonal_vaddₓ'. -/
 /-- Reflecting an orthogonal vector plus a point in the subspace
 produces the negation of that vector plus the point. -/
 theorem reflection_orthogonal_vadd {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
@@ -837,9 +708,6 @@ theorem reflection_orthogonal_vadd {s : AffineSubspace ℝ P} [Nonempty s] [Comp
   simp
 #align euclidean_geometry.reflection_orthogonal_vadd EuclideanGeometry.reflection_orthogonal_vadd
 
-/- warning: euclidean_geometry.reflection_vadd_smul_vsub_orthogonal_projection -> EuclideanGeometry.reflection_vadd_smul_vsub_orthogonalProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align euclidean_geometry.reflection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.reflection_vadd_smul_vsub_orthogonalProjectionₓ'. -/
 /-- Reflecting a vector plus a point in the subspace produces the
 negation of that vector plus the point if the vector is a multiple of
 the result of subtracting a point's orthogonal projection from that

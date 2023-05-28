@@ -170,22 +170,10 @@ def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.IdxCat)
 #align pfunctor.obj.iget PFunctor.Obj.iget
 -/
 
-/- warning: pfunctor.fst_map -> PFunctor.fst_map is a dubious translation:
-lean 3 declaration is
-  forall {P : PFunctor.{u2}} {α : Type.{u1}} {β : Type.{u1}} (x : PFunctor.Obj.{u2, u1} P α) (f : α -> β), Eq.{succ u2} (PFunctor.A.{u2} P) (Sigma.fst.{u2, max u2 u1} (PFunctor.A.{u2} P) (fun (x : PFunctor.A.{u2} P) => (PFunctor.B.{u2} P x) -> β) (Functor.map.{u1, max u2 u1} (fun {α : Type.{u1}} => PFunctor.Obj.{u2, u1} P α) (PFunctor.Obj.functor.{u2, u1} P) α β f x)) (Sigma.fst.{u2, max u2 u1} (PFunctor.A.{u2} P) (fun (x : PFunctor.A.{u2} P) => (PFunctor.B.{u2} P x) -> α) x)
-but is expected to have type
-  forall {P : PFunctor.{u1}} {α : Type.{u2}} {β : Type.{u2}} (x : PFunctor.Obj.{u1, u2} P α) (f : α -> β), Eq.{succ u1} (PFunctor.A.{u1} P) (Sigma.fst.{u1, max u2 u1} (PFunctor.A.{u1} P) (fun (x : PFunctor.A.{u1} P) => (PFunctor.B.{u1} P x) -> β) (Functor.map.{u2, max u2 u1} (PFunctor.Obj.{u1, u2} P) (PFunctor.instFunctorObj.{u1, u2} P) α β f x)) (Sigma.fst.{u1, max u2 u1} (PFunctor.A.{u1} P) (fun (x : PFunctor.A.{u1} P) => (PFunctor.B.{u1} P x) -> α) x)
-Case conversion may be inaccurate. Consider using '#align pfunctor.fst_map PFunctor.fst_mapₓ'. -/
 @[simp]
 theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by cases x <;> rfl
 #align pfunctor.fst_map PFunctor.fst_map
 
-/- warning: pfunctor.iget_map -> PFunctor.iget_map is a dubious translation:
-lean 3 declaration is
-  forall {P : PFunctor.{u2}} [_inst_1 : DecidableEq.{succ u2} (PFunctor.A.{u2} P)] {α : Type.{u1}} {β : Type.{u1}} [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Inhabited.{succ u1} β] (x : PFunctor.Obj.{u2, u1} P α) (f : α -> β) (i : PFunctor.IdxCat.{u2} P), (Eq.{succ u2} (PFunctor.A.{u2} P) (Sigma.fst.{u2, u2} (PFunctor.A.{u2} P) (fun (x : PFunctor.A.{u2} P) => PFunctor.B.{u2} P x) i) (Sigma.fst.{u2, max u2 u1} (PFunctor.A.{u2} P) (fun (x : PFunctor.A.{u2} P) => (PFunctor.B.{u2} P x) -> α) x)) -> (Eq.{succ u1} β (PFunctor.Obj.iget.{u2, u1} P (fun (a : PFunctor.A.{u2} P) (b : PFunctor.A.{u2} P) => _inst_1 a b) β _inst_3 (Functor.map.{u1, max u2 u1} (fun {α : Type.{u1}} => PFunctor.Obj.{u2, u1} P α) (PFunctor.Obj.functor.{u2, u1} P) α β f x) i) (f (PFunctor.Obj.iget.{u2, u1} P (fun (a : PFunctor.A.{u2} P) (b : PFunctor.A.{u2} P) => _inst_1 a b) α _inst_2 x i)))
-but is expected to have type
-  forall {P : PFunctor.{u1}} [_inst_1 : DecidableEq.{succ u1} (PFunctor.A.{u1} P)] {α : Type.{u2}} {β : Type.{u2}} [_inst_2 : Inhabited.{succ u2} α] [_inst_3 : Inhabited.{succ u2} β] (x : PFunctor.Obj.{u1, u2} P α) (f : α -> β) (i : PFunctor.IdxCat.{u1} P), (Eq.{succ u1} (PFunctor.A.{u1} P) (Sigma.fst.{u1, u1} (PFunctor.A.{u1} P) (fun (x : PFunctor.A.{u1} P) => PFunctor.B.{u1} P x) i) (Sigma.fst.{u1, max u2 u1} (PFunctor.A.{u1} P) (fun (x : PFunctor.A.{u1} P) => (PFunctor.B.{u1} P x) -> α) x)) -> (Eq.{succ u2} β (PFunctor.Obj.iget.{u1, u2} P (fun (a : PFunctor.A.{u1} P) (b : PFunctor.A.{u1} P) => _inst_1 a b) β _inst_3 (Functor.map.{u2, max u2 u1} (PFunctor.Obj.{u1, u2} P) (PFunctor.instFunctorObj.{u1, u2} P) α β f x) i) (f (PFunctor.Obj.iget.{u1, u2} P (fun (a : PFunctor.A.{u1} P) (b : PFunctor.A.{u1} P) => _inst_1 a b) α _inst_2 x i)))
-Case conversion may be inaccurate. Consider using '#align pfunctor.iget_map PFunctor.iget_mapₓ'. -/
 @[simp]
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α)
     (f : α → β) (i : P.IdxCat) (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) :=

@@ -42,22 +42,10 @@ section Ext
 
 variable {M N : DMatrix m n α}
 
-/- warning: dmatrix.ext_iff -> DMatrix.ext_iff is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}} {M : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α} {N : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α}, Iff (forall (i : m) (j : n), Eq.{succ u1} (α i j) (M i j) (N i j)) (Eq.{succ (max u2 u3 u1)} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) M N)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} {M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α} {N : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α}, Iff (forall (i : m) (j : n), Eq.{succ u3} (α i j) (M i j) (N i j)) (Eq.{max (max (succ u3) (succ u2)) (succ u1)} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) M N)
-Case conversion may be inaccurate. Consider using '#align dmatrix.ext_iff DMatrix.ext_iffₓ'. -/
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 #align dmatrix.ext_iff DMatrix.ext_iff
 
-/- warning: dmatrix.ext -> DMatrix.ext is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}} {M : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α} {N : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α}, (forall (i : m) (j : n), Eq.{succ u1} (α i j) (M i j) (N i j)) -> (Eq.{succ (max u2 u3 u1)} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) M N)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} {M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α} {N : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α}, (forall (i : m) (j : n), Eq.{succ u3} (α i j) (M i j) (N i j)) -> (Eq.{max (max (succ u3) (succ u2)) (succ u1)} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) M N)
-Case conversion may be inaccurate. Consider using '#align dmatrix.ext DMatrix.extₓ'. -/
 @[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
   ext_iff.mp
@@ -72,24 +60,12 @@ def map (M : DMatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i 
 #align dmatrix.map DMatrix.map
 -/
 
-/- warning: dmatrix.map_apply -> DMatrix.map_apply is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u3}} {n : Type.{u4}} [_inst_2 : Fintype.{u3} m] [_inst_3 : Fintype.{u4} n] {α : m -> n -> Type.{u1}} {M : DMatrix.{u3, u4, u1} m n _inst_2 _inst_3 α} {β : m -> n -> Type.{u2}} {f : forall {{i : m}} {{j : n}}, (α i j) -> (β i j)} {i : m} {j : n}, Eq.{succ u2} (β i j) (DMatrix.map.{u1, u2, u3, u4} m n _inst_2 _inst_3 α M (fun (i : m) (j : n) => β i j) f i j) (f i j (M i j))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} {M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α} {β : m -> n -> Type.{u4}} {f : forall {{i : m}} {{j : n}}, (α i j) -> (β i j)} {i : m} {j : n}, Eq.{succ u4} (β i j) (DMatrix.map.{u3, u4, u2, u1} m n _inst_2 _inst_3 α M (fun (i : m) (j : n) => β i j) f i j) (f i j (M i j))
-Case conversion may be inaccurate. Consider using '#align dmatrix.map_apply DMatrix.map_applyₓ'. -/
 @[simp]
 theorem map_apply {M : DMatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j⦄, α i j → β i j} {i : m}
     {j : n} : M.map f i j = f (M i j) :=
   rfl
 #align dmatrix.map_apply DMatrix.map_apply
 
-/- warning: dmatrix.map_map -> DMatrix.map_map is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u4}} {n : Type.{u5}} [_inst_2 : Fintype.{u4} m] [_inst_3 : Fintype.{u5} n] {α : m -> n -> Type.{u1}} {M : DMatrix.{u4, u5, u1} m n _inst_2 _inst_3 α} {β : m -> n -> Type.{u2}} {γ : m -> n -> Type.{u3}} {f : forall {{i : m}} {{j : n}}, (α i j) -> (β i j)} {g : forall {{i : m}} {{j : n}}, (β i j) -> (γ i j)}, Eq.{succ (max u4 u5 u3)} (DMatrix.{u4, u5, u3} m n _inst_2 _inst_3 (fun (i : m) (j : n) => γ i j)) (DMatrix.map.{u2, u3, u4, u5} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j) (DMatrix.map.{u1, u2, u4, u5} m n _inst_2 _inst_3 α M (fun (i : m) (j : n) => β i j) f) (fun (i : m) (j : n) => γ i j) g) (DMatrix.map.{u1, u3, u4, u5} m n _inst_2 _inst_3 α M (fun (i : m) (j : n) => γ i j) (fun (i : m) (j : n) (x : α i j) => g i j (f i j x)))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} {M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α} {β : m -> n -> Type.{u4}} {γ : m -> n -> Type.{u5}} {f : forall {{i : m}} {{j : n}}, (α i j) -> (β i j)} {g : forall {{i : m}} {{j : n}}, (β i j) -> (γ i j)}, Eq.{max (max (succ u5) (succ u2)) (succ u1)} (DMatrix.{u2, u1, u5} m n _inst_2 _inst_3 (fun (i : m) (j : n) => γ i j)) (DMatrix.map.{u4, u5, u2, u1} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j) (DMatrix.map.{u3, u4, u2, u1} m n _inst_2 _inst_3 α M (fun (i : m) (j : n) => β i j) f) (fun (i : m) (j : n) => γ i j) g) (DMatrix.map.{u3, u5, u2, u1} m n _inst_2 _inst_3 α M (fun (i : m) (j : n) => γ i j) (fun (i : m) (j : n) (x : α i j) => g i j (f i j x)))
-Case conversion may be inaccurate. Consider using '#align dmatrix.map_map DMatrix.map_mapₓ'. -/
 @[simp]
 theorem map_map {M : DMatrix m n α} {β : m → n → Type w} {γ : m → n → Type z}
     {f : ∀ ⦃i j⦄, α i j → β i j} {g : ∀ ⦃i j⦄, β i j → γ i j} :
@@ -159,74 +135,38 @@ instance [∀ i j, Unique (α i j)] : Unique (DMatrix m n α) :=
 instance [∀ i j, Subsingleton (α i j)] : Subsingleton (DMatrix m n α) :=
   Pi.subsingleton
 
-/- warning: dmatrix.zero_apply -> DMatrix.zero_apply is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}} [_inst_5 : forall (i : m) (j : n), Zero.{u1} (α i j)] (i : m) (j : n), Eq.{succ u1} (α i j) (Zero.zero.{max u2 u3 u1} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.hasZero.{u1, u2, u3} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j)) i j) (OfNat.ofNat.{u1} (α i j) 0 (OfNat.mk.{u1} (α i j) 0 (Zero.zero.{u1} (α i j) (_inst_5 i j))))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} [_inst_5 : forall (i : m) (j : n), Zero.{u3} (α i j)] (i : m) (j : n), Eq.{succ u3} (α i j) (OfNat.ofNat.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) 0 (Zero.toOfNat0.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.instZeroDMatrix.{u3, u2, u1} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j))) i j) (OfNat.ofNat.{u3} (α i j) 0 (Zero.toOfNat0.{u3} (α i j) (_inst_5 i j)))
-Case conversion may be inaccurate. Consider using '#align dmatrix.zero_apply DMatrix.zero_applyₓ'. -/
 @[simp]
 theorem zero_apply [∀ i j, Zero (α i j)] (i j) : (0 : DMatrix m n α) i j = 0 :=
   rfl
 #align dmatrix.zero_apply DMatrix.zero_apply
 
-/- warning: dmatrix.neg_apply -> DMatrix.neg_apply is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}} [_inst_5 : forall (i : m) (j : n), Neg.{u1} (α i j)] (M : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (i : m) (j : n), Eq.{succ u1} (α i j) (Neg.neg.{max u2 u3 u1} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.hasNeg.{u1, u2, u3} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j)) M i j) (Neg.neg.{u1} (α i j) (_inst_5 i j) (M i j))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} [_inst_5 : forall (i : m) (j : n), Neg.{u3} (α i j)] (M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (i : m) (j : n), Eq.{succ u3} (α i j) (Neg.neg.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.instNegDMatrix.{u3, u2, u1} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j)) M i j) (Neg.neg.{u3} (α i j) (_inst_5 i j) (M i j))
-Case conversion may be inaccurate. Consider using '#align dmatrix.neg_apply DMatrix.neg_applyₓ'. -/
 @[simp]
 theorem neg_apply [∀ i j, Neg (α i j)] (M : DMatrix m n α) (i j) : (-M) i j = -M i j :=
   rfl
 #align dmatrix.neg_apply DMatrix.neg_apply
 
-/- warning: dmatrix.add_apply -> DMatrix.add_apply is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}} [_inst_5 : forall (i : m) (j : n), Add.{u1} (α i j)] (M : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (N : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (i : m) (j : n), Eq.{succ u1} (α i j) (HAdd.hAdd.{max u2 u3 u1, max u2 u3 u1, max u2 u3 u1} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (instHAdd.{max u2 u3 u1} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.hasAdd.{u1, u2, u3} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j))) M N i j) (HAdd.hAdd.{u1, u1, u1} (α i j) (α i j) (α i j) (instHAdd.{u1} (α i j) (_inst_5 i j)) (M i j) (N i j))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} [_inst_5 : forall (i : m) (j : n), Add.{u3} (α i j)] (M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (N : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (i : m) (j : n), Eq.{succ u3} (α i j) (HAdd.hAdd.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (instHAdd.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.instAddDMatrix.{u3, u2, u1} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j))) M N i j) (HAdd.hAdd.{u3, u3, u3} (α i j) (α i j) (α i j) (instHAdd.{u3} (α i j) (_inst_5 i j)) (M i j) (N i j))
-Case conversion may be inaccurate. Consider using '#align dmatrix.add_apply DMatrix.add_applyₓ'. -/
 @[simp]
 theorem add_apply [∀ i j, Add (α i j)] (M N : DMatrix m n α) (i j) : (M + N) i j = M i j + N i j :=
   rfl
 #align dmatrix.add_apply DMatrix.add_apply
 
-/- warning: dmatrix.sub_apply -> DMatrix.sub_apply is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u3} n] {α : m -> n -> Type.{u1}} [_inst_5 : forall (i : m) (j : n), Sub.{u1} (α i j)] (M : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (N : DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (i : m) (j : n), Eq.{succ u1} (α i j) (HSub.hSub.{max u2 u3 u1, max u2 u3 u1, max u2 u3 u1} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (instHSub.{max u2 u3 u1} (DMatrix.{u2, u3, u1} m n _inst_2 _inst_3 α) (DMatrix.hasSub.{u1, u2, u3} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j))) M N i j) (HSub.hSub.{u1, u1, u1} (α i j) (α i j) (α i j) (instHSub.{u1} (α i j) (_inst_5 i j)) (M i j) (N i j))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} [_inst_5 : forall (i : m) (j : n), Sub.{u3} (α i j)] (M : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (N : DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (i : m) (j : n), Eq.{succ u3} (α i j) (HSub.hSub.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (instHSub.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.instSubDMatrix.{u3, u2, u1} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j))) M N i j) (HSub.hSub.{u3, u3, u3} (α i j) (α i j) (α i j) (instHSub.{u3} (α i j) (_inst_5 i j)) (M i j) (N i j))
-Case conversion may be inaccurate. Consider using '#align dmatrix.sub_apply DMatrix.sub_applyₓ'. -/
 @[simp]
 theorem sub_apply [∀ i j, Sub (α i j)] (M N : DMatrix m n α) (i j) : (M - N) i j = M i j - N i j :=
   rfl
 #align dmatrix.sub_apply DMatrix.sub_apply
 
-/- warning: dmatrix.map_zero -> DMatrix.map_zero is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u3}} {n : Type.{u4}} [_inst_2 : Fintype.{u3} m] [_inst_3 : Fintype.{u4} n] {α : m -> n -> Type.{u1}} [_inst_5 : forall (i : m) (j : n), Zero.{u1} (α i j)] {β : m -> n -> Type.{u2}} [_inst_6 : forall (i : m) (j : n), Zero.{u2} (β i j)] {f : forall {{i : m}} {{j : n}}, (α i j) -> (β i j)}, (forall (i : m) (j : n), Eq.{succ u2} (β i j) (f i j (OfNat.ofNat.{u1} (α i j) 0 (OfNat.mk.{u1} (α i j) 0 (Zero.zero.{u1} (α i j) (_inst_5 i j))))) (OfNat.ofNat.{u2} (β i j) 0 (OfNat.mk.{u2} (β i j) 0 (Zero.zero.{u2} (β i j) (_inst_6 i j))))) -> (Eq.{succ (max u3 u4 u2)} (DMatrix.{u3, u4, u2} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) (DMatrix.map.{u1, u2, u3, u4} m n _inst_2 _inst_3 α (OfNat.ofNat.{max u3 u4 u1} (DMatrix.{u3, u4, u1} m n _inst_2 _inst_3 α) 0 (OfNat.mk.{max u3 u4 u1} (DMatrix.{u3, u4, u1} m n _inst_2 _inst_3 α) 0 (Zero.zero.{max u3 u4 u1} (DMatrix.{u3, u4, u1} m n _inst_2 _inst_3 α) (DMatrix.hasZero.{u1, u3, u4} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j))))) (fun (i : m) (j : n) => β i j) f) (OfNat.ofNat.{max u3 u4 u2} (DMatrix.{u3, u4, u2} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) 0 (OfNat.mk.{max u3 u4 u2} (DMatrix.{u3, u4, u2} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) 0 (Zero.zero.{max u3 u4 u2} (DMatrix.{u3, u4, u2} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) (DMatrix.hasZero.{u2, u3, u4} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j) (fun (i : m) (j : n) => _inst_6 i j))))))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} [_inst_2 : Fintype.{u2} m] [_inst_3 : Fintype.{u1} n] {α : m -> n -> Type.{u3}} [_inst_5 : forall (i : m) (j : n), Zero.{u3} (α i j)] {β : m -> n -> Type.{u4}} [_inst_6 : forall (i : m) (j : n), Zero.{u4} (β i j)] {f : forall {{i : m}} {{j : n}}, (α i j) -> (β i j)}, (forall (i : m) (j : n), Eq.{succ u4} (β i j) (f i j (OfNat.ofNat.{u3} (α i j) 0 (Zero.toOfNat0.{u3} (α i j) (_inst_5 i j)))) (OfNat.ofNat.{u4} (β i j) 0 (Zero.toOfNat0.{u4} (β i j) (_inst_6 i j)))) -> (Eq.{max (max (succ u4) (succ u2)) (succ u1)} (DMatrix.{u2, u1, u4} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) (DMatrix.map.{u3, u4, u2, u1} m n _inst_2 _inst_3 α (OfNat.ofNat.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) 0 (Zero.toOfNat0.{max (max u3 u2) u1} (DMatrix.{u2, u1, u3} m n _inst_2 _inst_3 α) (DMatrix.instZeroDMatrix.{u3, u2, u1} m n _inst_2 _inst_3 α (fun (i : m) (j : n) => _inst_5 i j)))) (fun (i : m) (j : n) => β i j) f) (OfNat.ofNat.{max (max u4 u2) u1} (DMatrix.{u2, u1, u4} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) 0 (Zero.toOfNat0.{max (max u4 u2) u1} (DMatrix.{u2, u1, u4} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j)) (DMatrix.instZeroDMatrix.{u4, u2, u1} m n _inst_2 _inst_3 (fun (i : m) (j : n) => β i j) (fun (i : m) (j : n) => _inst_6 i j)))))
-Case conversion may be inaccurate. Consider using '#align dmatrix.map_zero DMatrix.map_zeroₓ'. -/
 @[simp]
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)]
     {f : ∀ ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) : (0 : DMatrix m n α).map f = 0 :=
   by ext; simp [h]
 #align dmatrix.map_zero DMatrix.map_zero
 
-/- warning: dmatrix.map_add -> DMatrix.map_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dmatrix.map_add DMatrix.map_addₓ'. -/
 theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : DMatrix m n α) :
     ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by ext;
   simp
 #align dmatrix.map_add DMatrix.map_add
 
-/- warning: dmatrix.map_sub -> DMatrix.map_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dmatrix.map_sub DMatrix.map_subₓ'. -/
 theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : DMatrix m n α) :
     ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by ext;
@@ -259,9 +199,6 @@ def AddMonoidHom.mapDMatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type
 #align add_monoid_hom.map_dmatrix AddMonoidHom.mapDMatrix
 -/
 
-/- warning: add_monoid_hom.map_dmatrix_apply -> AddMonoidHom.mapDMatrix_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.map_dmatrix_apply AddMonoidHom.mapDMatrix_applyₓ'. -/
 @[simp]
 theorem AddMonoidHom.mapDMatrix_apply [∀ i j, AddMonoid (α i j)] {β : m → n → Type w}
     [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : DMatrix m n α) :

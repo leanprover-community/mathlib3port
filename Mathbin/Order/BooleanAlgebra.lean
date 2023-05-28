@@ -99,76 +99,34 @@ section GeneralizedBooleanAlgebra
 
 variable [GeneralizedBooleanAlgebra α]
 
-/- warning: sup_inf_sdiff -> sup_inf_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)) x
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y)) x
-Case conversion may be inaccurate. Consider using '#align sup_inf_sdiff sup_inf_sdiffₓ'. -/
 @[simp]
 theorem sup_inf_sdiff (x y : α) : x ⊓ y ⊔ x \ y = x :=
   GeneralizedBooleanAlgebra.sup_inf_sdiff _ _
 #align sup_inf_sdiff sup_inf_sdiff
 
-/- warning: inf_inf_sdiff -> inf_inf_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align inf_inf_sdiff inf_inf_sdiffₓ'. -/
 @[simp]
 theorem inf_inf_sdiff (x y : α) : x ⊓ y ⊓ x \ y = ⊥ :=
   GeneralizedBooleanAlgebra.inf_inf_sdiff _ _
 #align inf_inf_sdiff inf_inf_sdiff
 
-/- warning: sup_sdiff_inf -> sup_sdiff_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y)) x
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y)) x
-Case conversion may be inaccurate. Consider using '#align sup_sdiff_inf sup_sdiff_infₓ'. -/
 @[simp]
 theorem sup_sdiff_inf (x y : α) : x \ y ⊔ x ⊓ y = x := by rw [sup_comm, sup_inf_sdiff]
 #align sup_sdiff_inf sup_sdiff_inf
 
-/- warning: inf_sdiff_inf -> inf_sdiff_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (x : α) (y : α), Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_inf inf_sdiff_infₓ'. -/
 @[simp]
 theorem inf_sdiff_inf (x y : α) : x \ y ⊓ (x ⊓ y) = ⊥ := by rw [inf_comm, inf_inf_sdiff]
 #align inf_sdiff_inf inf_sdiff_inf
 
-/- warning: generalized_boolean_algebra.to_order_bot -> GeneralizedBooleanAlgebra.toOrderBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align generalized_boolean_algebra.to_order_bot GeneralizedBooleanAlgebra.toOrderBotₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 100) GeneralizedBooleanAlgebra.toOrderBot : OrderBot α :=
   { GeneralizedBooleanAlgebra.toHasBot α with
     bot_le := fun a => by rw [← inf_inf_sdiff a a, inf_assoc]; exact inf_le_left }
 #align generalized_boolean_algebra.to_order_bot GeneralizedBooleanAlgebra.toOrderBot
 
-/- warning: disjoint_inf_sdiff -> disjoint_inf_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align disjoint_inf_sdiff disjoint_inf_sdiffₓ'. -/
 theorem disjoint_inf_sdiff : Disjoint (x ⊓ y) (x \ y) :=
   disjoint_iff_inf_le.mpr (inf_inf_sdiff x y).le
 #align disjoint_inf_sdiff disjoint_inf_sdiff
 
-/- warning: sdiff_unique -> sdiff_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y) z) x) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x y) z) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) z)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y) z) x) -> (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x y) z) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) z)
-Case conversion may be inaccurate. Consider using '#align sdiff_unique sdiff_uniqueₓ'. -/
 -- TODO: in distributive lattices, relative complements are unique when they exist
 theorem sdiff_unique (s : x ⊓ y ⊔ z = x) (i : x ⊓ y ⊓ z = ⊥) : x \ y = z :=
   by
@@ -194,12 +152,6 @@ private theorem sdiff_sup_self' : y \ x ⊔ x = y ⊔ x :=
     _ = y ⊔ x := by rw [sup_inf_sdiff]
     
 
-/- warning: sdiff_inf_sdiff -> sdiff_inf_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align sdiff_inf_sdiff sdiff_inf_sdiffₓ'. -/
 @[simp]
 theorem sdiff_inf_sdiff : x \ y ⊓ y \ x = ⊥ :=
   Eq.symm <|
@@ -216,22 +168,10 @@ theorem sdiff_inf_sdiff : x \ y ⊓ y \ x = ⊥ :=
       
 #align sdiff_inf_sdiff sdiff_inf_sdiff
 
-/- warning: disjoint_sdiff_sdiff -> disjoint_sdiff_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)
-Case conversion may be inaccurate. Consider using '#align disjoint_sdiff_sdiff disjoint_sdiff_sdiffₓ'. -/
 theorem disjoint_sdiff_sdiff : Disjoint (x \ y) (y \ x) :=
   disjoint_iff_inf_le.mpr sdiff_inf_sdiff.le
 #align disjoint_sdiff_sdiff disjoint_sdiff_sdiff
 
-/- warning: inf_sdiff_self_right -> inf_sdiff_self_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_self_right inf_sdiff_self_rightₓ'. -/
 @[simp]
 theorem inf_sdiff_self_right : x ⊓ y \ x = ⊥ :=
   calc
@@ -241,12 +181,6 @@ theorem inf_sdiff_self_right : x ⊓ y \ x = ⊥ :=
     
 #align inf_sdiff_self_right inf_sdiff_self_right
 
-/- warning: inf_sdiff_self_left -> inf_sdiff_self_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x) x) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (GeneralizedBooleanAlgebra.toDistribLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x) x) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_self_left inf_sdiff_self_leftₓ'. -/
 @[simp]
 theorem inf_sdiff_self_left : y \ x ⊓ x = ⊥ := by rw [inf_comm, inf_sdiff_self_right]
 #align inf_sdiff_self_left inf_sdiff_self_left
@@ -288,54 +222,24 @@ instance (priority := 100) GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgeb
 #align generalized_boolean_algebra.to_generalized_coheyting_algebra GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra
 -/
 
-/- warning: disjoint_sdiff_self_left -> disjoint_sdiff_self_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x) x
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x) x
-Case conversion may be inaccurate. Consider using '#align disjoint_sdiff_self_left disjoint_sdiff_self_leftₓ'. -/
 theorem disjoint_sdiff_self_left : Disjoint (y \ x) x :=
   disjoint_iff_inf_le.mpr inf_sdiff_self_left.le
 #align disjoint_sdiff_self_left disjoint_sdiff_self_left
 
-/- warning: disjoint_sdiff_self_right -> disjoint_sdiff_self_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)
-Case conversion may be inaccurate. Consider using '#align disjoint_sdiff_self_right disjoint_sdiff_self_rightₓ'. -/
 theorem disjoint_sdiff_self_right : Disjoint x (y \ x) :=
   disjoint_iff_inf_le.mpr inf_sdiff_self_right.le
 #align disjoint_sdiff_self_right disjoint_sdiff_self_right
 
-/- warning: le_sdiff -> le_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z)) (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z)) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x z))
-Case conversion may be inaccurate. Consider using '#align le_sdiff le_sdiffₓ'. -/
 theorem le_sdiff : x ≤ y \ z ↔ x ≤ y ∧ Disjoint x z :=
   ⟨fun h => ⟨h.trans sdiff_le, disjoint_sdiff_self_left.mono_left h⟩, fun h => by
     rw [← h.2.sdiff_eq_left]; exact sdiff_le_sdiff_right h.1⟩
 #align le_sdiff le_sdiff
 
-/- warning: sdiff_eq_left -> sdiff_eq_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align sdiff_eq_left sdiff_eq_leftₓ'. -/
 @[simp]
 theorem sdiff_eq_left : x \ y = x ↔ Disjoint x y :=
   ⟨fun h => disjoint_sdiff_self_left.mono_left h.ge, Disjoint.sdiff_eq_left⟩
 #align sdiff_eq_left sdiff_eq_left
 
-/- warning: disjoint.sdiff_eq_of_sup_eq -> Disjoint.sdiff_eq_of_sup_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x z) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z) y) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x) z)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x z) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z) y) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x) z)
-Case conversion may be inaccurate. Consider using '#align disjoint.sdiff_eq_of_sup_eq Disjoint.sdiff_eq_of_sup_eqₓ'. -/
 /- TODO: we could make an alternative constructor for `generalized_boolean_algebra` using
 `disjoint x (y \ x)` and `x ⊔ (y \ x) = y` as axioms. -/
 theorem Disjoint.sdiff_eq_of_sup_eq (hi : Disjoint x z) (hs : x ⊔ z = y) : y \ x = z :=
@@ -343,12 +247,6 @@ theorem Disjoint.sdiff_eq_of_sup_eq (hi : Disjoint x z) (hs : x ⊔ z = y) : y \
   sdiff_unique (by rw [h, hs]) (by rw [h, hi.eq_bot])
 #align disjoint.sdiff_eq_of_sup_eq Disjoint.sdiff_eq_of_sup_eq
 
-/- warning: disjoint.sdiff_unique -> Disjoint.sdiff_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x z) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z)) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x) z)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z)) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x) z)
-Case conversion may be inaccurate. Consider using '#align disjoint.sdiff_unique Disjoint.sdiff_uniqueₓ'. -/
 protected theorem Disjoint.sdiff_unique (hd : Disjoint x z) (hz : z ≤ y) (hs : y ≤ x ⊔ z) :
     y \ x = z :=
   sdiff_unique
@@ -359,12 +257,6 @@ protected theorem Disjoint.sdiff_unique (hd : Disjoint x z) (hz : z ≤ y) (hs :
     (by rw [inf_assoc, hd.eq_bot, inf_bot_eq])
 #align disjoint.sdiff_unique Disjoint.sdiff_unique
 
-/- warning: disjoint_sdiff_iff_le -> disjoint_sdiff_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x))
-Case conversion may be inaccurate. Consider using '#align disjoint_sdiff_iff_le disjoint_sdiff_iff_leₓ'. -/
 -- cf. `is_compl.disjoint_left_iff` and `is_compl.disjoint_right_iff`
 theorem disjoint_sdiff_iff_le (hz : z ≤ y) (hx : x ≤ y) : Disjoint z (y \ x) ↔ z ≤ x :=
   ⟨fun H =>
@@ -376,34 +268,16 @@ theorem disjoint_sdiff_iff_le (hz : z ≤ y) (hx : x ≤ y) : Disjoint z (y \ x)
     fun H => disjoint_sdiff_self_right.mono_left H⟩
 #align disjoint_sdiff_iff_le disjoint_sdiff_iff_le
 
-/- warning: le_iff_disjoint_sdiff -> le_iff_disjoint_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)))
-Case conversion may be inaccurate. Consider using '#align le_iff_disjoint_sdiff le_iff_disjoint_sdiffₓ'. -/
 -- cf. `is_compl.le_left_iff` and `is_compl.le_right_iff`
 theorem le_iff_disjoint_sdiff (hz : z ≤ y) (hx : x ≤ y) : z ≤ x ↔ Disjoint z (y \ x) :=
   (disjoint_sdiff_iff_le hz hx).symm
 #align le_iff_disjoint_sdiff le_iff_disjoint_sdiff
 
-/- warning: inf_sdiff_eq_bot_iff -> inf_sdiff_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)) (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_eq_bot_iff inf_sdiff_eq_bot_iffₓ'. -/
 -- cf. `is_compl.inf_left_eq_bot_iff` and `is_compl.inf_right_eq_bot_iff`
 theorem inf_sdiff_eq_bot_iff (hz : z ≤ y) (hx : x ≤ y) : z ⊓ y \ x = ⊥ ↔ z ≤ x := by
   rw [← disjoint_iff]; exact disjoint_sdiff_iff_le hz hx
 #align inf_sdiff_eq_bot_iff inf_sdiff_eq_bot_iff
 
-/- warning: le_iff_eq_sup_sdiff -> le_iff_eq_sup_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x z) (Eq.{succ u1} α y (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x))))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z y) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x z) (Eq.{succ u1} α y (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) z (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x))))
-Case conversion may be inaccurate. Consider using '#align le_iff_eq_sup_sdiff le_iff_eq_sup_sdiffₓ'. -/
 -- cf. `is_compl.left_le_iff` and `is_compl.right_le_iff`
 theorem le_iff_eq_sup_sdiff (hz : z ≤ y) (hx : x ≤ y) : x ≤ z ↔ y = z ⊔ y \ x :=
   ⟨fun H => by
@@ -421,12 +295,6 @@ theorem le_iff_eq_sup_sdiff (hz : z ≤ y) (hx : x ≤ y) : x ≤ z ↔ y = z �
     exact bot_le⟩
 #align le_iff_eq_sup_sdiff le_iff_eq_sup_sdiff
 
-/- warning: sdiff_sup -> sdiff_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z)) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align sdiff_sup sdiff_supₓ'. -/
 -- cf. `is_compl.sup_inf`
 theorem sdiff_sup : y \ (x ⊔ z) = y \ x ⊓ y \ z :=
   sdiff_unique
@@ -448,12 +316,6 @@ theorem sdiff_sup : y \ (x ⊔ z) = y \ x ⊓ y \ z :=
       )
 #align sdiff_sup sdiff_sup
 
-/- warning: sdiff_eq_sdiff_iff_inf_eq_inf -> sdiff_eq_sdiff_iff_inf_eq_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z)) (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) y x) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z)) (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) y x) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) y z))
-Case conversion may be inaccurate. Consider using '#align sdiff_eq_sdiff_iff_inf_eq_inf sdiff_eq_sdiff_iff_inf_eq_infₓ'. -/
 theorem sdiff_eq_sdiff_iff_inf_eq_inf : y \ x = y \ z ↔ y ⊓ x = y ⊓ z :=
   ⟨fun h =>
     eq_of_inf_eq_sup_eq (by rw [inf_inf_sdiff, h, inf_inf_sdiff])
@@ -461,12 +323,6 @@ theorem sdiff_eq_sdiff_iff_inf_eq_inf : y \ x = y \ z ↔ y ⊓ x = y ⊓ z :=
     fun h => by rw [← sdiff_inf_self_right, ← sdiff_inf_self_right z y, inf_comm, h, inf_comm]⟩
 #align sdiff_eq_sdiff_iff_inf_eq_inf sdiff_eq_sdiff_iff_inf_eq_inf
 
-/- warning: sdiff_eq_self_iff_disjoint -> sdiff_eq_self_iff_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) y x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) y x)
-Case conversion may be inaccurate. Consider using '#align sdiff_eq_self_iff_disjoint sdiff_eq_self_iff_disjointₓ'. -/
 theorem sdiff_eq_self_iff_disjoint : x \ y = x ↔ Disjoint y x :=
   calc
     x \ y = x ↔ x \ y = x \ ⊥ := by rw [sdiff_bot]
@@ -475,22 +331,10 @@ theorem sdiff_eq_self_iff_disjoint : x \ y = x ↔ Disjoint y x :=
     
 #align sdiff_eq_self_iff_disjoint sdiff_eq_self_iff_disjoint
 
-/- warning: sdiff_eq_self_iff_disjoint' -> sdiff_eq_self_iff_disjoint' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) x) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align sdiff_eq_self_iff_disjoint' sdiff_eq_self_iff_disjoint'ₓ'. -/
 theorem sdiff_eq_self_iff_disjoint' : x \ y = x ↔ Disjoint x y := by
   rw [sdiff_eq_self_iff_disjoint, disjoint_comm]
 #align sdiff_eq_self_iff_disjoint' sdiff_eq_self_iff_disjoint'
 
-/- warning: sdiff_lt -> sdiff_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (Ne.{succ u1} α y (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (Ne.{succ u1} α y (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) x)
-Case conversion may be inaccurate. Consider using '#align sdiff_lt sdiff_ltₓ'. -/
 theorem sdiff_lt (hx : y ≤ x) (hy : y ≠ ⊥) : x \ y < x :=
   by
   refine' sdiff_le.lt_of_ne fun h => hy _
@@ -498,34 +342,16 @@ theorem sdiff_lt (hx : y ≤ x) (hy : y ≠ ⊥) : x \ y < x :=
   rw [← h, inf_eq_right.mpr hx]
 #align sdiff_lt sdiff_lt
 
-/- warning: le_sdiff_iff -> le_sdiff_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (Eq.{succ u1} α x (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toHasBot.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)) (Eq.{succ u1} α x (Bot.bot.{u1} α (GeneralizedBooleanAlgebra.toBot.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align le_sdiff_iff le_sdiff_iffₓ'. -/
 @[simp]
 theorem le_sdiff_iff : x ≤ y \ x ↔ x = ⊥ :=
   ⟨fun h => disjoint_self.1 (disjoint_sdiff_self_right.mono_right h), fun h => h.le.trans bot_le⟩
 #align le_sdiff_iff le_sdiff_iff
 
-/- warning: sdiff_lt_sdiff_right -> sdiff_lt_sdiff_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x y) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align sdiff_lt_sdiff_right sdiff_lt_sdiff_rightₓ'. -/
 theorem sdiff_lt_sdiff_right (h : x < y) (hz : z ≤ x) : x \ z < y \ z :=
   (sdiff_le_sdiff_right h.le).lt_of_not_le fun h' =>
     h.not_le <| le_sdiff_sup.trans <| sup_le_of_le_sdiff_right h' hz
 #align sdiff_lt_sdiff_right sdiff_lt_sdiff_right
 
-/- warning: sup_inf_inf_sdiff -> sup_inf_inf_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y) z) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align sup_inf_inf_sdiff sup_inf_inf_sdiffₓ'. -/
 theorem sup_inf_inf_sdiff : x ⊓ y ⊓ z ⊔ y \ z = x ⊓ y ⊔ y \ z :=
   calc
     x ⊓ y ⊓ z ⊔ y \ z = x ⊓ (y ⊓ z) ⊔ y \ z := by rw [inf_assoc]
@@ -534,12 +360,6 @@ theorem sup_inf_inf_sdiff : x ⊓ y ⊓ z ⊔ y \ z = x ⊓ y ⊔ y \ z :=
     
 #align sup_inf_inf_sdiff sup_inf_inf_sdiff
 
-/- warning: sdiff_sdiff_right -> sdiff_sdiff_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y) z))
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_right sdiff_sdiff_rightₓ'. -/
 theorem sdiff_sdiff_right : x \ (y \ z) = x \ y ⊔ x ⊓ y ⊓ z :=
   by
   rw [sup_comm, inf_comm, ← inf_assoc, sup_inf_inf_sdiff]
@@ -569,12 +389,6 @@ theorem sdiff_sdiff_right : x \ (y \ z) = x \ y ⊔ x ⊓ y ⊓ z :=
       
 #align sdiff_sdiff_right sdiff_sdiff_right
 
-/- warning: sdiff_sdiff_right' -> sdiff_sdiff_right' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x z))
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_right' sdiff_sdiff_right'ₓ'. -/
 theorem sdiff_sdiff_right' : x \ (y \ z) = x \ y ⊔ x ⊓ z :=
   calc
     x \ (y \ z) = x \ y ⊔ x ⊓ y ⊓ z := sdiff_sdiff_right
@@ -583,82 +397,34 @@ theorem sdiff_sdiff_right' : x \ (y \ z) = x \ y ⊔ x ⊓ z :=
     
 #align sdiff_sdiff_right' sdiff_sdiff_right'
 
-/- warning: sdiff_sdiff_eq_sdiff_sup -> sdiff_sdiff_eq_sdiff_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) z))
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_eq_sdiff_sup sdiff_sdiff_eq_sdiff_supₓ'. -/
 theorem sdiff_sdiff_eq_sdiff_sup (h : z ≤ x) : x \ (y \ z) = x \ y ⊔ z := by
   rw [sdiff_sdiff_right', inf_eq_right.2 h]
 #align sdiff_sdiff_eq_sdiff_sup sdiff_sdiff_eq_sdiff_sup
 
-/- warning: sdiff_sdiff_right_self -> sdiff_sdiff_right_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y)) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y)
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_right_self sdiff_sdiff_right_selfₓ'. -/
 @[simp]
 theorem sdiff_sdiff_right_self : x \ (x \ y) = x ⊓ y := by
   rw [sdiff_sdiff_right, inf_idem, sdiff_self, bot_sup_eq]
 #align sdiff_sdiff_right_self sdiff_sdiff_right_self
 
-/- warning: sdiff_sdiff_eq_self -> sdiff_sdiff_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)) y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y)) y)
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_eq_self sdiff_sdiff_eq_selfₓ'. -/
 theorem sdiff_sdiff_eq_self (h : y ≤ x) : x \ (x \ y) = y := by
   rw [sdiff_sdiff_right_self, inf_of_le_right h]
 #align sdiff_sdiff_eq_self sdiff_sdiff_eq_self
 
-/- warning: sdiff_eq_symm -> sdiff_eq_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) z) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z) y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) z) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z) y)
-Case conversion may be inaccurate. Consider using '#align sdiff_eq_symm sdiff_eq_symmₓ'. -/
 theorem sdiff_eq_symm (hy : y ≤ x) (h : x \ y = z) : x \ z = y := by
   rw [← h, sdiff_sdiff_eq_self hy]
 #align sdiff_eq_symm sdiff_eq_symm
 
-/- warning: sdiff_eq_comm -> sdiff_eq_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) -> (Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) z) (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z) y))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y x) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) z x) -> (Iff (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) z) (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z) y))
-Case conversion may be inaccurate. Consider using '#align sdiff_eq_comm sdiff_eq_commₓ'. -/
 theorem sdiff_eq_comm (hy : y ≤ x) (hz : z ≤ x) : x \ y = z ↔ x \ z = y :=
   ⟨sdiff_eq_symm hy, sdiff_eq_symm hz⟩
 #align sdiff_eq_comm sdiff_eq_comm
 
-/- warning: eq_of_sdiff_eq_sdiff -> eq_of_sdiff_eq_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x z) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y z) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z y)) -> (Eq.{succ u1} α x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y z) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z y)) -> (Eq.{succ u1} α x y)
-Case conversion may be inaccurate. Consider using '#align eq_of_sdiff_eq_sdiff eq_of_sdiff_eq_sdiffₓ'. -/
 theorem eq_of_sdiff_eq_sdiff (hxz : x ≤ z) (hyz : y ≤ z) (h : z \ x = z \ y) : x = y := by
   rw [← sdiff_sdiff_eq_self hxz, h, sdiff_sdiff_eq_self hyz]
 #align eq_of_sdiff_eq_sdiff eq_of_sdiff_eq_sdiff
 
-/- warning: sdiff_sdiff_left' -> sdiff_sdiff_left' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) z) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) z) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z))
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_left' sdiff_sdiff_left'ₓ'. -/
 theorem sdiff_sdiff_left' : (x \ y) \ z = x \ y ⊓ x \ z := by rw [sdiff_sdiff_left, sdiff_sup]
 #align sdiff_sdiff_left' sdiff_sdiff_left'
 
-/- warning: sdiff_sdiff_sup_sdiff -> sdiff_sdiff_sup_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) z (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z x) y)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z y) x))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) z (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z x) y)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z y) x))
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_sup_sdiff sdiff_sdiff_sup_sdiffₓ'. -/
 theorem sdiff_sdiff_sup_sdiff : z \ (x \ y ⊔ y \ x) = z ⊓ (z \ x ⊔ y) ⊓ (z \ y ⊔ x) :=
   calc
     z \ (x \ y ⊔ y \ x) = (z \ x ⊔ z ⊓ x ⊓ y) ⊓ (z \ y ⊔ z ⊓ y ⊓ x) := by
@@ -671,12 +437,6 @@ theorem sdiff_sdiff_sup_sdiff : z \ (x \ y ⊔ y \ x) = z ⊓ (z \ x ⊔ y) ⊓ 
     
 #align sdiff_sdiff_sup_sdiff sdiff_sdiff_sup_sdiff
 
-/- warning: sdiff_sdiff_sup_sdiff' -> sdiff_sdiff_sup_sdiff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) z x) y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z y)))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) z x) y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z x) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z y)))
-Case conversion may be inaccurate. Consider using '#align sdiff_sdiff_sup_sdiff' sdiff_sdiff_sup_sdiff'ₓ'. -/
 theorem sdiff_sdiff_sup_sdiff' : z \ (x \ y ⊔ y \ x) = z ⊓ x ⊓ y ⊔ z \ x ⊓ z \ y :=
   calc
     z \ (x \ y ⊔ y \ x) = z \ (x \ y) ⊓ z \ (y \ x) := sdiff_sup
@@ -687,12 +447,6 @@ theorem sdiff_sdiff_sup_sdiff' : z \ (x \ y ⊔ y \ x) = z ⊓ x ⊓ y ⊔ z \ x
     
 #align sdiff_sdiff_sup_sdiff' sdiff_sdiff_sup_sdiff'
 
-/- warning: inf_sdiff -> inf_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y) z) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff inf_sdiffₓ'. -/
 theorem inf_sdiff : (x ⊓ y) \ z = x \ z ⊓ y \ z :=
   sdiff_unique
     (calc
@@ -710,12 +464,6 @@ theorem inf_sdiff : (x ⊓ y) \ z = x \ z ⊓ y \ z :=
       )
 #align inf_sdiff inf_sdiff
 
-/- warning: inf_sdiff_assoc -> inf_sdiff_assoc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y) z) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_assoc inf_sdiff_assocₓ'. -/
 theorem inf_sdiff_assoc : (x ⊓ y) \ z = x ⊓ y \ z :=
   sdiff_unique
     (calc
@@ -729,52 +477,22 @@ theorem inf_sdiff_assoc : (x ⊓ y) \ z = x ⊓ y \ z :=
       )
 #align inf_sdiff_assoc inf_sdiff_assoc
 
-/- warning: inf_sdiff_right_comm -> inf_sdiff_right_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z) y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z) y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y) z)
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_right_comm inf_sdiff_right_commₓ'. -/
 theorem inf_sdiff_right_comm : x \ z ⊓ y = (x ⊓ y) \ z := by
   rw [@inf_comm _ _ x, inf_comm, inf_sdiff_assoc]
 #align inf_sdiff_right_comm inf_sdiff_right_comm
 
-/- warning: inf_sdiff_distrib_left -> inf_sdiff_distrib_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) a (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) b c)) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) a b) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) a c))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) b c)) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a b) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a c))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_distrib_left inf_sdiff_distrib_leftₓ'. -/
 theorem inf_sdiff_distrib_left (a b c : α) : a ⊓ b \ c = (a ⊓ b) \ (a ⊓ c) := by
   rw [sdiff_inf, sdiff_eq_bot_iff.2 inf_le_left, bot_sup_eq, inf_sdiff_assoc]
 #align inf_sdiff_distrib_left inf_sdiff_distrib_left
 
-/- warning: inf_sdiff_distrib_right -> inf_sdiff_distrib_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) a b) c) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) a c) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) b c))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) a b) c) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a c) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) b c))
-Case conversion may be inaccurate. Consider using '#align inf_sdiff_distrib_right inf_sdiff_distrib_rightₓ'. -/
 theorem inf_sdiff_distrib_right (a b c : α) : a \ b ⊓ c = (a ⊓ c) \ (b ⊓ c) := by
   simp_rw [@inf_comm _ _ _ c, inf_sdiff_distrib_left]
 #align inf_sdiff_distrib_right inf_sdiff_distrib_right
 
-/- warning: disjoint_sdiff_comm -> disjoint_sdiff_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x z) y) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x z) y) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y z))
-Case conversion may be inaccurate. Consider using '#align disjoint_sdiff_comm disjoint_sdiff_commₓ'. -/
 theorem disjoint_sdiff_comm : Disjoint (x \ z) y ↔ Disjoint x (y \ z) := by
   simp_rw [disjoint_iff, inf_sdiff_right_comm, inf_sdiff_assoc]
 #align disjoint_sdiff_comm disjoint_sdiff_comm
 
-/- warning: sup_eq_sdiff_sup_sdiff_sup_inf -> sup_eq_sdiff_sup_sdiff_sup_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) y x)) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) x y))
-Case conversion may be inaccurate. Consider using '#align sup_eq_sdiff_sup_sdiff_sup_inf sup_eq_sdiff_sup_sdiff_sup_infₓ'. -/
 theorem sup_eq_sdiff_sup_sdiff_sup_inf : x ⊔ y = x \ y ⊔ y \ x ⊔ x ⊓ y :=
   Eq.symm <|
     calc
@@ -785,12 +503,6 @@ theorem sup_eq_sdiff_sup_sdiff_sup_inf : x ⊔ y = x \ y ⊔ y \ x ⊔ x ⊓ y :
       
 #align sup_eq_sdiff_sup_sdiff_sup_inf sup_eq_sdiff_sup_sdiff_sup_inf
 
-/- warning: sup_lt_of_lt_sdiff_left -> sup_lt_of_lt_sdiff_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z x)) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x z) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z x)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x z) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z)
-Case conversion may be inaccurate. Consider using '#align sup_lt_of_lt_sdiff_left sup_lt_of_lt_sdiff_leftₓ'. -/
 theorem sup_lt_of_lt_sdiff_left (h : y < z \ x) (hxz : x ≤ z) : x ⊔ y < z :=
   by
   rw [← sup_sdiff_cancel_right hxz]
@@ -799,12 +511,6 @@ theorem sup_lt_of_lt_sdiff_left (h : y < z \ x) (hxz : x ≤ z) : x ⊔ y < z :=
   exact (sdiff_le_sdiff_of_sup_le_sup_left h').trans sdiff_le
 #align sup_lt_of_lt_sdiff_left sup_lt_of_lt_sdiff_left
 
-/- warning: sup_lt_of_lt_sdiff_right -> sup_lt_of_lt_sdiff_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) z y)) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y z) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) z y)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) y z) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) z)
-Case conversion may be inaccurate. Consider using '#align sup_lt_of_lt_sdiff_right sup_lt_of_lt_sdiff_rightₓ'. -/
 theorem sup_lt_of_lt_sdiff_right (h : x < z \ y) (hyz : y ≤ z) : x ⊔ y < z :=
   by
   rw [← sdiff_sup_cancel hyz]
@@ -851,23 +557,11 @@ class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, SDiff
 #align boolean_algebra BooleanAlgebra
 -/
 
-/- warning: boolean_algebra.to_bounded_order -> BooleanAlgebra.toBoundedOrder is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [h : BooleanAlgebra.{u1} α], BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α h))))))
-but is expected to have type
-  forall {α : Type.{u1}} [h : BooleanAlgebra.{u1} α], BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α h))))))
-Case conversion may be inaccurate. Consider using '#align boolean_algebra.to_bounded_order BooleanAlgebra.toBoundedOrderₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 100) BooleanAlgebra.toBoundedOrder [h : BooleanAlgebra α] : BoundedOrder α :=
   { h with }
 #align boolean_algebra.to_bounded_order BooleanAlgebra.toBoundedOrder
 
-/- warning: generalized_boolean_algebra.to_boolean_algebra -> GeneralizedBooleanAlgebra.toBooleanAlgebra is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))))], BooleanAlgebra.{u1} α
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))))], BooleanAlgebra.{u1} α
-Case conversion may be inaccurate. Consider using '#align generalized_boolean_algebra.to_boolean_algebra GeneralizedBooleanAlgebra.toBooleanAlgebraₓ'. -/
 -- See note [reducible non instances]
 /-- A bounded generalized boolean algebra is a boolean algebra. -/
 @[reducible]
@@ -885,34 +579,16 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra α]
 
-/- warning: inf_compl_eq_bot' -> inf_compl_eq_bot' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)) (Bot.bot.{u1} α (BooleanAlgebra.toHasBot.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)) (Bot.bot.{u1} α (BooleanAlgebra.toBot.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align inf_compl_eq_bot' inf_compl_eq_bot'ₓ'. -/
 @[simp]
 theorem inf_compl_eq_bot' : x ⊓ xᶜ = ⊥ :=
   bot_unique <| BooleanAlgebra.inf_compl_le_bot x
 #align inf_compl_eq_bot' inf_compl_eq_bot'
 
-/- warning: sup_compl_eq_top -> sup_compl_eq_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)) (Top.top.{u1} α (BooleanAlgebra.toHasTop.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)) (Top.top.{u1} α (BooleanAlgebra.toTop.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align sup_compl_eq_top sup_compl_eq_topₓ'. -/
 @[simp]
 theorem sup_compl_eq_top : x ⊔ xᶜ = ⊤ :=
   top_unique <| BooleanAlgebra.top_le_sup_compl x
 #align sup_compl_eq_top sup_compl_eq_top
 
-/- warning: compl_sup_eq_top -> compl_sup_eq_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) x) (Top.top.{u1} α (BooleanAlgebra.toHasTop.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) x) (Top.top.{u1} α (BooleanAlgebra.toTop.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align compl_sup_eq_top compl_sup_eq_topₓ'. -/
 @[simp]
 theorem compl_sup_eq_top : xᶜ ⊔ x = ⊤ :=
   sup_comm.trans sup_compl_eq_top
@@ -924,22 +600,10 @@ theorem isCompl_compl : IsCompl x (xᶜ) :=
 #align is_compl_compl isCompl_compl
 -/
 
-/- warning: sdiff_eq -> sdiff_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) x y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y))
-Case conversion may be inaccurate. Consider using '#align sdiff_eq sdiff_eqₓ'. -/
 theorem sdiff_eq : x \ y = x ⊓ yᶜ :=
   BooleanAlgebra.sdiff_eq x y
 #align sdiff_eq sdiff_eq
 
-/- warning: himp_eq -> himp_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) x y) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) y (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) x y) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (BooleanAlgebra.toDistribLattice.{u1} α _inst_1)))) y (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x))
-Case conversion may be inaccurate. Consider using '#align himp_eq himp_eqₓ'. -/
 theorem himp_eq : x ⇨ y = y ⊔ xᶜ :=
   BooleanAlgebra.himp_eq x y
 #align himp_eq himp_eq
@@ -977,23 +641,11 @@ instance (priority := 100) BooleanAlgebra.toBiheytingAlgebra : BiheytingAlgebra 
 #align boolean_algebra.to_biheyting_algebra BooleanAlgebra.toBiheytingAlgebra
 -/
 
-/- warning: hnot_eq_compl -> hnot_eq_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HNot.hnot.{u1} α (BiheytingAlgebra.toHasHnot.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HNot.hnot.{u1} α (BiheytingAlgebra.toHNot.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)
-Case conversion may be inaccurate. Consider using '#align hnot_eq_compl hnot_eq_complₓ'. -/
 @[simp]
 theorem hnot_eq_compl : ￢x = xᶜ :=
   rfl
 #align hnot_eq_compl hnot_eq_compl
 
-/- warning: top_sdiff -> top_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Top.top.{u1} α (BooleanAlgebra.toHasTop.{u1} α _inst_1)) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) (Top.top.{u1} α (BooleanAlgebra.toTop.{u1} α _inst_1)) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)
-Case conversion may be inaccurate. Consider using '#align top_sdiff top_sdiffₓ'. -/
 @[simp]
 theorem top_sdiff : ⊤ \ x = xᶜ :=
   top_sdiff' _
@@ -1074,76 +726,34 @@ theorem IsCompl.compl_eq_iff (h : IsCompl x y) : zᶜ = y ↔ z = x :=
 #align is_compl.compl_eq_iff IsCompl.compl_eq_iff
 -/
 
-/- warning: compl_eq_top -> compl_eq_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (Top.top.{u1} α (BooleanAlgebra.toHasTop.{u1} α _inst_1))) (Eq.{succ u1} α x (Bot.bot.{u1} α (BooleanAlgebra.toHasBot.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (Top.top.{u1} α (BooleanAlgebra.toTop.{u1} α _inst_1))) (Eq.{succ u1} α x (Bot.bot.{u1} α (BooleanAlgebra.toBot.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align compl_eq_top compl_eq_topₓ'. -/
 @[simp]
 theorem compl_eq_top : xᶜ = ⊤ ↔ x = ⊥ :=
   isCompl_bot_top.compl_eq_iff
 #align compl_eq_top compl_eq_top
 
-/- warning: compl_eq_bot -> compl_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (Bot.bot.{u1} α (BooleanAlgebra.toHasBot.{u1} α _inst_1))) (Eq.{succ u1} α x (Top.top.{u1} α (BooleanAlgebra.toHasTop.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (Bot.bot.{u1} α (BooleanAlgebra.toBot.{u1} α _inst_1))) (Eq.{succ u1} α x (Top.top.{u1} α (BooleanAlgebra.toTop.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align compl_eq_bot compl_eq_botₓ'. -/
 @[simp]
 theorem compl_eq_bot : xᶜ = ⊥ ↔ x = ⊤ :=
   isCompl_top_bot.compl_eq_iff
 #align compl_eq_bot compl_eq_bot
 
-/- warning: compl_inf -> compl_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) x y)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) x y)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y))
-Case conversion may be inaccurate. Consider using '#align compl_inf compl_infₓ'. -/
 @[simp]
 theorem compl_inf : (x ⊓ y)ᶜ = xᶜ ⊔ yᶜ :=
   hnot_inf_distrib _ _
 #align compl_inf compl_inf
 
-/- warning: compl_le_compl_iff_le -> compl_le_compl_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) x y)
-Case conversion may be inaccurate. Consider using '#align compl_le_compl_iff_le compl_le_compl_iff_leₓ'. -/
 @[simp]
 theorem compl_le_compl_iff_le : yᶜ ≤ xᶜ ↔ x ≤ y :=
   ⟨fun h => by have h := compl_le_compl h <;> simp at h <;> assumption, compl_le_compl⟩
 #align compl_le_compl_iff_le compl_le_compl_iff_le
 
-/- warning: compl_le_of_compl_le -> compl_le_of_compl_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y) x) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y) x) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) y)
-Case conversion may be inaccurate. Consider using '#align compl_le_of_compl_le compl_le_of_compl_leₓ'. -/
 theorem compl_le_of_compl_le (h : yᶜ ≤ x) : xᶜ ≤ y := by
   simpa only [compl_compl] using compl_le_compl h
 #align compl_le_of_compl_le compl_le_of_compl_le
 
-/- warning: compl_le_iff_compl_le -> compl_le_iff_compl_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) y) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y) x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) y) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y) x)
-Case conversion may be inaccurate. Consider using '#align compl_le_iff_compl_le compl_le_iff_compl_leₓ'. -/
 theorem compl_le_iff_compl_le : xᶜ ≤ y ↔ yᶜ ≤ x :=
   ⟨compl_le_of_compl_le, compl_le_of_compl_le⟩
 #align compl_le_iff_compl_le compl_le_iff_compl_le
 
-/- warning: sdiff_compl -> sdiff_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) x y)
-Case conversion may be inaccurate. Consider using '#align sdiff_compl sdiff_complₓ'. -/
 @[simp]
 theorem sdiff_compl : x \ yᶜ = x ⊓ y := by rw [sdiff_eq, compl_compl]
 #align sdiff_compl sdiff_compl
@@ -1159,105 +769,45 @@ instance : BooleanAlgebra αᵒᵈ :=
     sdiff_eq := fun _ _ => himp_eq
     himp_eq := fun _ _ => sdiff_eq }
 
-/- warning: sup_inf_inf_compl -> sup_inf_inf_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) x y) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y))) x
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) x y) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y))) x
-Case conversion may be inaccurate. Consider using '#align sup_inf_inf_compl sup_inf_inf_complₓ'. -/
 @[simp]
 theorem sup_inf_inf_compl : x ⊓ y ⊔ x ⊓ yᶜ = x := by rw [← sdiff_eq, sup_inf_sdiff _ _]
 #align sup_inf_inf_compl sup_inf_inf_compl
 
-/- warning: compl_sdiff -> compl_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)) (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) x y)) (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align compl_sdiff compl_sdiffₓ'. -/
 @[simp]
 theorem compl_sdiff : (x \ y)ᶜ = x ⇨ y := by
   rw [sdiff_eq, himp_eq, compl_inf, compl_compl, sup_comm]
 #align compl_sdiff compl_sdiff
 
-/- warning: compl_himp -> compl_himp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) x y)) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) x y)) (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align compl_himp compl_himpₓ'. -/
 @[simp]
 theorem compl_himp : (x ⇨ y)ᶜ = x \ y :=
   @compl_sdiff αᵒᵈ _ _ _
 #align compl_himp compl_himp
 
-/- warning: compl_sdiff_compl -> compl_sdiff_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (SDiff.sdiff.{u1} α (BooleanAlgebra.toSDiff.{u1} α _inst_1) y x)
-Case conversion may be inaccurate. Consider using '#align compl_sdiff_compl compl_sdiff_complₓ'. -/
 @[simp]
 theorem compl_sdiff_compl : xᶜ \ yᶜ = y \ x := by rw [sdiff_compl, sdiff_eq, inf_comm]
 #align compl_sdiff_compl compl_sdiff_compl
 
-/- warning: compl_himp_compl -> compl_himp_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) y x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Eq.{succ u1} α (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) y x)
-Case conversion may be inaccurate. Consider using '#align compl_himp_compl compl_himp_complₓ'. -/
 @[simp]
 theorem compl_himp_compl : xᶜ ⇨ yᶜ = y ⇨ x :=
   @compl_sdiff_compl αᵒᵈ _ _ _
 #align compl_himp_compl compl_himp_compl
 
-/- warning: disjoint_compl_left_iff -> disjoint_compl_left_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) y) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) y x)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1)) (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) x) y) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) y x)
-Case conversion may be inaccurate. Consider using '#align disjoint_compl_left_iff disjoint_compl_left_iffₓ'. -/
 theorem disjoint_compl_left_iff : Disjoint (xᶜ) y ↔ y ≤ x := by
   rw [← le_compl_iff_disjoint_left, compl_compl]
 #align disjoint_compl_left_iff disjoint_compl_left_iff
 
-/- warning: disjoint_compl_right_iff -> disjoint_compl_right_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1)) x (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1) y)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) x y)
-Case conversion may be inaccurate. Consider using '#align disjoint_compl_right_iff disjoint_compl_right_iffₓ'. -/
 theorem disjoint_compl_right_iff : Disjoint x (yᶜ) ↔ x ≤ y := by
   rw [← le_compl_iff_disjoint_right, compl_compl]
 #align disjoint_compl_right_iff disjoint_compl_right_iff
 
-/- warning: codisjoint_himp_self_left -> codisjoint_himp_self_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) x y) x
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1)) (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) x y) x
-Case conversion may be inaccurate. Consider using '#align codisjoint_himp_self_left codisjoint_himp_self_leftₓ'. -/
 theorem codisjoint_himp_self_left : Codisjoint (x ⇨ y) x :=
   @disjoint_sdiff_self_left αᵒᵈ _ _ _
 #align codisjoint_himp_self_left codisjoint_himp_self_left
 
-/- warning: codisjoint_himp_self_right -> codisjoint_himp_self_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) x (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : BooleanAlgebra.{u1} α], Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1)) x (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) x y)
-Case conversion may be inaccurate. Consider using '#align codisjoint_himp_self_right codisjoint_himp_self_rightₓ'. -/
 theorem codisjoint_himp_self_right : Codisjoint x (x ⇨ y) :=
   @disjoint_sdiff_self_right αᵒᵈ _ _ _
 #align codisjoint_himp_self_right codisjoint_himp_self_right
 
-/- warning: himp_le -> himp_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) (HImp.himp.{u1} α (BooleanAlgebra.toHasHimp.{u1} α _inst_1) x y) z) (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))))) y z) (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) x z))
-but is expected to have type
-  forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : BooleanAlgebra.{u1} α], Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (HImp.himp.{u1} α (BooleanAlgebra.toHImp.{u1} α _inst_1) x y) z) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) y z) (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1)) x z))
-Case conversion may be inaccurate. Consider using '#align himp_le himp_leₓ'. -/
 theorem himp_le : x ⇨ y ≤ z ↔ y ≤ z ∧ Codisjoint x z :=
   (@le_sdiff αᵒᵈ _ _ _ _).trans <| and_congr_right' Codisjoint_comm
 #align himp_le himp_le
@@ -1302,34 +852,16 @@ instance : BooleanAlgebra Bool :=
     inf_compl_le_bot := fun a => a.and_not_self.le
     top_le_sup_compl := fun a => a.or_not_self.ge }
 
-/- warning: bool.sup_eq_bor -> Bool.sup_eq_bor is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Bool -> Bool -> Bool) (Sup.sup.{0} Bool (SemilatticeSup.toHasSup.{0} Bool (Lattice.toSemilatticeSup.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))) or
-but is expected to have type
-  Eq.{1} (Bool -> Bool -> Bool) (fun (x._@.Mathlib.Order.BooleanAlgebra._hyg.11177 : Bool) (x._@.Mathlib.Order.BooleanAlgebra._hyg.11179 : Bool) => Sup.sup.{0} Bool (SemilatticeSup.toSup.{0} Bool (Lattice.toSemilatticeSup.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool)))))) x._@.Mathlib.Order.BooleanAlgebra._hyg.11177 x._@.Mathlib.Order.BooleanAlgebra._hyg.11179) or
-Case conversion may be inaccurate. Consider using '#align bool.sup_eq_bor Bool.sup_eq_borₓ'. -/
 @[simp]
 theorem Bool.sup_eq_bor : (· ⊔ ·) = or :=
   rfl
 #align bool.sup_eq_bor Bool.sup_eq_bor
 
-/- warning: bool.inf_eq_band -> Bool.inf_eq_band is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Bool -> Bool -> Bool) (Inf.inf.{0} Bool (SemilatticeInf.toHasInf.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))) and
-but is expected to have type
-  Eq.{1} (Bool -> Bool -> Bool) (fun (x._@.Mathlib.Order.BooleanAlgebra._hyg.11209 : Bool) (x._@.Mathlib.Order.BooleanAlgebra._hyg.11211 : Bool) => Inf.inf.{0} Bool (Lattice.toInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool))))) x._@.Mathlib.Order.BooleanAlgebra._hyg.11209 x._@.Mathlib.Order.BooleanAlgebra._hyg.11211) and
-Case conversion may be inaccurate. Consider using '#align bool.inf_eq_band Bool.inf_eq_bandₓ'. -/
 @[simp]
 theorem Bool.inf_eq_band : (· ⊓ ·) = and :=
   rfl
 #align bool.inf_eq_band Bool.inf_eq_band
 
-/- warning: bool.compl_eq_bnot -> Bool.compl_eq_bnot is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Bool -> Bool) (HasCompl.compl.{0} Bool (BooleanAlgebra.toHasCompl.{0} Bool Bool.booleanAlgebra)) not
-but is expected to have type
-  Eq.{1} (Bool -> Bool) (HasCompl.compl.{0} Bool (BooleanAlgebra.toHasCompl.{0} Bool instBooleanAlgebraBool)) not
-Case conversion may be inaccurate. Consider using '#align bool.compl_eq_bnot Bool.compl_eq_bnotₓ'. -/
 @[simp]
 theorem Bool.compl_eq_bnot : HasCompl.compl = not :=
   rfl
@@ -1337,12 +869,6 @@ theorem Bool.compl_eq_bnot : HasCompl.compl = not :=
 
 section lift
 
-/- warning: function.injective.generalized_boolean_algebra -> Function.Injective.generalizedBooleanAlgebra is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Sup.{u1} α] [_inst_2 : Inf.{u1} α] [_inst_3 : Bot.{u1} α] [_inst_4 : SDiff.{u1} α] [_inst_5 : GeneralizedBooleanAlgebra.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Sup.sup.{u1} α _inst_1 a b)) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β (Lattice.toSemilatticeSup.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β _inst_5)))) (f a) (f b))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Inf.inf.{u1} α _inst_2 a b)) (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β (Lattice.toSemilatticeInf.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β _inst_5)))) (f a) (f b))) -> (Eq.{succ u2} β (f (Bot.bot.{u1} α _inst_3)) (Bot.bot.{u2} β (GeneralizedBooleanAlgebra.toHasBot.{u2} β _inst_5))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (SDiff.sdiff.{u1} α _inst_4 a b)) (SDiff.sdiff.{u2} β (GeneralizedBooleanAlgebra.toHasSdiff.{u2} β _inst_5) (f a) (f b))) -> (GeneralizedBooleanAlgebra.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Sup.{u1} α] [_inst_2 : Inf.{u1} α] [_inst_3 : Bot.{u1} α] [_inst_4 : SDiff.{u1} α] [_inst_5 : GeneralizedBooleanAlgebra.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Sup.sup.{u1} α _inst_1 a b)) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β (Lattice.toSemilatticeSup.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β _inst_5)))) (f a) (f b))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Inf.inf.{u1} α _inst_2 a b)) (Inf.inf.{u2} β (Lattice.toInf.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β _inst_5))) (f a) (f b))) -> (Eq.{succ u2} β (f (Bot.bot.{u1} α _inst_3)) (Bot.bot.{u2} β (GeneralizedBooleanAlgebra.toBot.{u2} β _inst_5))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (SDiff.sdiff.{u1} α _inst_4 a b)) (SDiff.sdiff.{u2} β (GeneralizedBooleanAlgebra.toSDiff.{u2} β _inst_5) (f a) (f b))) -> (GeneralizedBooleanAlgebra.{u1} α)
-Case conversion may be inaccurate. Consider using '#align function.injective.generalized_boolean_algebra Function.Injective.generalizedBooleanAlgebraₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `generalized_boolean_algebra` along an injection. -/
 @[reducible]
@@ -1357,12 +883,6 @@ protected def Function.Injective.generalizedBooleanAlgebra [Sup α] [Inf α] [Bo
     inf_inf_sdiff := fun a b => hf <| by erw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot] }
 #align function.injective.generalized_boolean_algebra Function.Injective.generalizedBooleanAlgebra
 
-/- warning: function.injective.boolean_algebra -> Function.Injective.booleanAlgebra is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Sup.{u1} α] [_inst_2 : Inf.{u1} α] [_inst_3 : Top.{u1} α] [_inst_4 : Bot.{u1} α] [_inst_5 : HasCompl.{u1} α] [_inst_6 : SDiff.{u1} α] [_inst_7 : BooleanAlgebra.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Sup.sup.{u1} α _inst_1 a b)) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β (Lattice.toSemilatticeSup.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} β _inst_7))))) (f a) (f b))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Inf.inf.{u1} α _inst_2 a b)) (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β (Lattice.toSemilatticeInf.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} β _inst_7))))) (f a) (f b))) -> (Eq.{succ u2} β (f (Top.top.{u1} α _inst_3)) (Top.top.{u2} β (BooleanAlgebra.toHasTop.{u2} β _inst_7))) -> (Eq.{succ u2} β (f (Bot.bot.{u1} α _inst_4)) (Bot.bot.{u2} β (BooleanAlgebra.toHasBot.{u2} β _inst_7))) -> (forall (a : α), Eq.{succ u2} β (f (HasCompl.compl.{u1} α _inst_5 a)) (HasCompl.compl.{u2} β (BooleanAlgebra.toHasCompl.{u2} β _inst_7) (f a))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (SDiff.sdiff.{u1} α _inst_6 a b)) (SDiff.sdiff.{u2} β (BooleanAlgebra.toHasSdiff.{u2} β _inst_7) (f a) (f b))) -> (BooleanAlgebra.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Sup.{u1} α] [_inst_2 : Inf.{u1} α] [_inst_3 : Top.{u1} α] [_inst_4 : Bot.{u1} α] [_inst_5 : HasCompl.{u1} α] [_inst_6 : SDiff.{u1} α] [_inst_7 : BooleanAlgebra.{u2} β] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Sup.sup.{u1} α _inst_1 a b)) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β (Lattice.toSemilatticeSup.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BiheytingAlgebra.toCoheytingAlgebra.{u2} β (BooleanAlgebra.toBiheytingAlgebra.{u2} β _inst_7)))))) (f a) (f b))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (Inf.inf.{u1} α _inst_2 a b)) (Inf.inf.{u2} β (Lattice.toInf.{u2} β (GeneralizedCoheytingAlgebra.toLattice.{u2} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BiheytingAlgebra.toCoheytingAlgebra.{u2} β (BooleanAlgebra.toBiheytingAlgebra.{u2} β _inst_7))))) (f a) (f b))) -> (Eq.{succ u2} β (f (Top.top.{u1} α _inst_3)) (Top.top.{u2} β (BooleanAlgebra.toTop.{u2} β _inst_7))) -> (Eq.{succ u2} β (f (Bot.bot.{u1} α _inst_4)) (Bot.bot.{u2} β (BooleanAlgebra.toBot.{u2} β _inst_7))) -> (forall (a : α), Eq.{succ u2} β (f (HasCompl.compl.{u1} α _inst_5 a)) (HasCompl.compl.{u2} β (BooleanAlgebra.toHasCompl.{u2} β _inst_7) (f a))) -> (forall (a : α) (b : α), Eq.{succ u2} β (f (SDiff.sdiff.{u1} α _inst_6 a b)) (SDiff.sdiff.{u2} β (BooleanAlgebra.toSDiff.{u2} β _inst_7) (f a) (f b))) -> (BooleanAlgebra.{u1} α)
-Case conversion may be inaccurate. Consider using '#align function.injective.boolean_algebra Function.Injective.booleanAlgebraₓ'. -/
 -- See note [reducible non-instances]
 /-- Pullback a `boolean_algebra` along an injection. -/
 @[reducible]

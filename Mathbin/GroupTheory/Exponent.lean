@@ -111,12 +111,6 @@ theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G
 #align add_monoid.exponent_eq_zero_of_order_zero AddMonoid.exponent_eq_zero_addOrder_zero
 -/
 
-/- warning: monoid.pow_exponent_eq_one -> Monoid.pow_exponent_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g (Monoid.exponent.{u1} G _inst_1)) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g (Monoid.exponent.{u1} G _inst_1)) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))
-Case conversion may be inaccurate. Consider using '#align monoid.pow_exponent_eq_one Monoid.pow_exponent_eq_oneₓ'. -/
 @[to_additive exponent_nsmul_eq_zero]
 theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 :=
   by
@@ -138,12 +132,6 @@ theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
 #align add_monoid.nsmul_eq_mod_exponent AddMonoid.nsmul_eq_mod_exponent
 -/
 
-/- warning: monoid.exponent_pos_of_exists -> Monoid.exponent_pos_of_exists is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Monoid.exponent.{u1} G _inst_1))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Monoid.exponent.{u1} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align monoid.exponent_pos_of_exists Monoid.exponent_pos_of_existsₓ'. -/
 @[to_additive]
 theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : 0 < exponent G :=
   by
@@ -153,12 +141,6 @@ theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n =
 #align monoid.exponent_pos_of_exists Monoid.exponent_pos_of_exists
 #align add_monoid.exponent_pos_of_exists AddMonoid.exponent_pos_of_exists
 
-/- warning: monoid.exponent_min' -> Monoid.exponent_min' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))) -> (LE.le.{0} Nat Nat.hasLe (Monoid.exponent.{u1} G _inst_1) n)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))) -> (LE.le.{0} Nat instLENat (Monoid.exponent.{u1} G _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align monoid.exponent_min' Monoid.exponent_min'ₓ'. -/
 @[to_additive]
 theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exponent G ≤ n :=
   by
@@ -169,12 +151,6 @@ theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exp
 #align monoid.exponent_min' Monoid.exponent_min'
 #align add_monoid.exponent_min' AddMonoid.exponent_min'
 
-/- warning: monoid.exponent_min -> Monoid.exponent_min is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (m : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) m) -> (LT.lt.{0} Nat Nat.hasLt m (Monoid.exponent.{u1} G _inst_1)) -> (Exists.{succ u1} G (fun (g : G) => Ne.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g m) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (m : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) m) -> (LT.lt.{0} Nat instLTNat m (Monoid.exponent.{u1} G _inst_1)) -> (Exists.{succ u1} G (fun (g : G) => Ne.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g m) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align monoid.exponent_min Monoid.exponent_minₓ'. -/
 @[to_additive]
 theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G, g ^ m ≠ 1 :=
   by
@@ -208,12 +184,6 @@ theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
 
 variable (G)
 
-/- warning: monoid.exponent_dvd_of_forall_pow_eq_one -> Monoid.exponent_dvd_of_forall_pow_eq_one is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_2 : Monoid.{u1} G] (n : Nat), (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_2)) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_2)))))) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (Monoid.exponent.{u1} G _inst_2) n)
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_2 : Monoid.{u1} G] (n : Nat), (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_2)) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_2)))) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (Monoid.exponent.{u1} G _inst_2) n)
-Case conversion may be inaccurate. Consider using '#align monoid.exponent_dvd_of_forall_pow_eq_one Monoid.exponent_dvd_of_forall_pow_eq_oneₓ'. -/
 @[to_additive]
 theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g : G, g ^ n = 1) :
     exponent G ∣ n := by
@@ -232,12 +202,6 @@ theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g :
 #align monoid.exponent_dvd_of_forall_pow_eq_one Monoid.exponent_dvd_of_forall_pow_eq_one
 #align add_monoid.exponent_dvd_of_forall_nsmul_eq_zero AddMonoid.exponent_dvd_of_forall_nsmul_eq_zero
 
-/- warning: monoid.lcm_order_of_dvd_exponent -> Monoid.lcm_orderOf_dvd_exponent is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Dvd.Dvd.{0} Nat Nat.hasDvd (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero Nat.normalizedGcdMonoid (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Dvd.dvd.{0} Nat Nat.instDvdNat (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero instNormalizedGCDMonoidNatCancelCommMonoidWithZero (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
-Case conversion may be inaccurate. Consider using '#align monoid.lcm_order_of_dvd_exponent Monoid.lcm_orderOf_dvd_exponentₓ'. -/
 @[to_additive lcm_add_order_of_dvd_exponent]
 theorem lcm_orderOf_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf ∣ exponent G :=
   by
@@ -321,12 +285,6 @@ theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf 
 #align add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_addOrderOf_infinite
 -/
 
-/- warning: monoid.lcm_order_eq_exponent -> Monoid.lcm_order_eq_exponent is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Eq.{1} Nat (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero Nat.normalizedGcdMonoid (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Eq.{1} Nat (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero instNormalizedGCDMonoidNatCancelCommMonoidWithZero (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
-Case conversion may be inaccurate. Consider using '#align monoid.lcm_order_eq_exponent Monoid.lcm_order_eq_exponentₓ'. -/
 @[to_additive lcm_add_order_eq_exponent]
 theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G :=
   by
@@ -426,9 +384,6 @@ section CancelCommMonoid
 
 variable [CancelCommMonoid G]
 
-/- warning: monoid.exponent_eq_max'_order_of -> Monoid.exponent_eq_max'_orderOf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_orderOfₓ'. -/
 @[to_additive]
 theorem exponent_eq_max'_orderOf [Fintype G] :
     exponent G = ((@Finset.univ G _).image orderOf).max' ⟨1, by simp⟩ :=
@@ -470,12 +425,6 @@ theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoid.exponent G ^ Group.ra
 #align card_dvd_exponent_nsmul_rank card_dvd_exponent_nsmul_rank
 -/
 
-/- warning: card_dvd_exponent_pow_rank' -> card_dvd_exponent_pow_rank' is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : CommGroup.{u1} G] [_inst_2 : Group.FG.{u1} G (CommGroup.toGroup.{u1} G _inst_1)] {n : Nat}, (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))))))) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (Nat.card.{u1} G) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) n (Group.rank.{u1} G (CommGroup.toGroup.{u1} G _inst_1) _inst_2)))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : CommGroup.{u1} G] [_inst_2 : Group.FG.{u1} G (CommGroup.toGroup.{u1} G _inst_1)] {n : Nat}, (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1)))))))) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (Nat.card.{u1} G) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n (Group.rank.{u1} G (CommGroup.toGroup.{u1} G _inst_1) _inst_2)))
-Case conversion may be inaccurate. Consider using '#align card_dvd_exponent_pow_rank' card_dvd_exponent_pow_rank'ₓ'. -/
 @[to_additive]
 theorem card_dvd_exponent_pow_rank' {n : ℕ} (hG : ∀ g : G, g ^ n = 1) :
     Nat.card G ∣ n ^ Group.rank G :=

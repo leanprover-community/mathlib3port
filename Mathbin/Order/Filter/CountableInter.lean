@@ -56,12 +56,6 @@ theorem countable_sInter_mem {S : Set (Set α)} (hSc : S.Countable) : ⋂₀ S �
 #align countable_sInter_mem countable_sInter_mem
 -/
 
-/- warning: countable_Inter_mem -> countable_iInter_mem is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)}, Iff (Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) (Set.iInter.{u2, u1} α ι (fun (i : ι) => s i)) l) (forall (i : ι), Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) (s i) l)
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Set.iInter.{u1, u2} α ι (fun (i : ι) => s i)) l) (forall (i : ι), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (s i) l)
-Case conversion may be inaccurate. Consider using '#align countable_Inter_mem countable_iInter_memₓ'. -/
 theorem countable_iInter_mem [Countable ι] {s : ι → Set α} : (⋂ i, s i) ∈ l ↔ ∀ i, s i ∈ l :=
   sInter_range s ▸ (countable_sInter_mem (countable_range _)).trans forall_range_iff
 #align countable_Inter_mem countable_iInter_mem
@@ -76,12 +70,6 @@ theorem countable_bInter_mem {ι : Type _} {S : Set ι} (hS : S.Countable) {s : 
 #align countable_bInter_mem countable_bInter_mem
 -/
 
-/- warning: eventually_countable_forall -> eventually_countable_forall is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {p : α -> ι -> Prop}, Iff (Filter.Eventually.{u2} α (fun (x : α) => forall (i : ι), p x i) l) (forall (i : ι), Filter.Eventually.{u2} α (fun (x : α) => p x i) l)
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {p : α -> ι -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => forall (i : ι), p x i) l) (forall (i : ι), Filter.Eventually.{u1} α (fun (x : α) => p x i) l)
-Case conversion may be inaccurate. Consider using '#align eventually_countable_forall eventually_countable_forallₓ'. -/
 theorem eventually_countable_forall [Countable ι] {p : α → ι → Prop} :
     (∀ᶠ x in l, ∀ i, p x i) ↔ ∀ i, ∀ᶠ x in l, p x i := by
   simpa only [Filter.Eventually, set_of_forall] using
@@ -97,23 +85,11 @@ theorem eventually_countable_ball {ι : Type _} {S : Set ι} (hS : S.Countable)
 #align eventually_countable_ball eventually_countable_ball
 -/
 
-/- warning: eventually_le.countable_Union -> EventuallyLE.countable_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (Set.iUnion.{u2, u1} α ι (fun (i : ι) => s i)) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => t i)))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i)) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align eventually_le.countable_Union EventuallyLE.countable_iUnionₓ'. -/
 theorem EventuallyLE.countable_iUnion [Countable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋃ i, s i) ≤ᶠ[l] ⋃ i, t i :=
   (eventually_countable_forall.2 h).mono fun x hst hs => mem_iUnion.2 <| (mem_iUnion.1 hs).imp hst
 #align eventually_le.countable_Union EventuallyLE.countable_iUnion
 
-/- warning: eventually_eq.countable_Union -> EventuallyEq.countable_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyEq.{u2, 0} α Prop l (s i) (t i)) -> (Filter.EventuallyEq.{u2, 0} α Prop l (Set.iUnion.{u2, u1} α ι (fun (i : ι) => s i)) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => t i)))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyEq.{u1, 0} α Prop l (s i) (t i)) -> (Filter.EventuallyEq.{u1, 0} α Prop l (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i)) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align eventually_eq.countable_Union EventuallyEq.countable_iUnionₓ'. -/
 theorem EventuallyEq.countable_iUnion [Countable ι] {s t : ι → Set α} (h : ∀ i, s i =ᶠ[l] t i) :
     (⋃ i, s i) =ᶠ[l] ⋃ i, t i :=
   (EventuallyLE.countable_iUnion fun i => (h i).le).antisymm
@@ -140,24 +116,12 @@ theorem EventuallyEq.countable_bUnion {ι : Type _} {S : Set ι} (hS : S.Countab
 #align eventually_eq.countable_bUnion EventuallyEq.countable_bUnion
 -/
 
-/- warning: eventually_le.countable_Inter -> EventuallyLE.countable_iInter is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (Set.iInter.{u2, u1} α ι (fun (i : ι) => s i)) (Set.iInter.{u2, u1} α ι (fun (i : ι) => t i)))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Set.iInter.{u1, u2} α ι (fun (i : ι) => s i)) (Set.iInter.{u1, u2} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align eventually_le.countable_Inter EventuallyLE.countable_iInterₓ'. -/
 theorem EventuallyLE.countable_iInter [Countable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋂ i, s i) ≤ᶠ[l] ⋂ i, t i :=
   (eventually_countable_forall.2 h).mono fun x hst hs =>
     mem_iInter.2 fun i => hst _ (mem_iInter.1 hs i)
 #align eventually_le.countable_Inter EventuallyLE.countable_iInter
 
-/- warning: eventually_eq.countable_Inter -> EventuallyEq.countable_iInter is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyEq.{u2, 0} α Prop l (s i) (t i)) -> (Filter.EventuallyEq.{u2, 0} α Prop l (Set.iInter.{u2, u1} α ι (fun (i : ι) => s i)) (Set.iInter.{u2, u1} α ι (fun (i : ι) => t i)))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyEq.{u1, 0} α Prop l (s i) (t i)) -> (Filter.EventuallyEq.{u1, 0} α Prop l (Set.iInter.{u1, u2} α ι (fun (i : ι) => s i)) (Set.iInter.{u1, u2} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align eventually_eq.countable_Inter EventuallyEq.countable_iInterₓ'. -/
 theorem EventuallyEq.countable_iInter [Countable ι] {s t : ι → Set α} (h : ∀ i, s i =ᶠ[l] t i) :
     (⋂ i, s i) =ᶠ[l] ⋂ i, t i :=
   (EventuallyLE.countable_iInter fun i => (h i).le).antisymm
@@ -224,22 +188,10 @@ instance countableInterFilter_principal (s : Set α) : CountableInterFilter (�
 #align countable_Inter_filter_principal countableInterFilter_principal
 -/
 
-/- warning: countable_Inter_filter_bot -> countableInterFilter_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, CountableInterFilter.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, CountableInterFilter.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_bot countableInterFilter_botₓ'. -/
 instance countableInterFilter_bot : CountableInterFilter (⊥ : Filter α) := by
   rw [← principal_empty]; apply countableInterFilter_principal
 #align countable_Inter_filter_bot countableInterFilter_bot
 
-/- warning: countable_Inter_filter_top -> countableInterFilter_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, CountableInterFilter.{u1} α (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, CountableInterFilter.{u1} α (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_top countableInterFilter_topₓ'. -/
 instance countableInterFilter_top : CountableInterFilter (⊤ : Filter α) := by rw [← principal_univ];
   apply countableInterFilter_principal
 #align countable_Inter_filter_top countableInterFilter_top
@@ -258,12 +210,6 @@ instance (l : Filter α) [CountableInterFilter l] (f : α → β) : CountableInt
   simp only [mem_map, sInter_eq_bInter, preimage_Inter₂] at hS⊢
   exact (countable_bInter_mem hSc).2 hS
 
-/- warning: countable_Inter_filter_inf -> countableInterFilter_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_inf countableInterFilter_infₓ'. -/
 /-- Infimum of two `countable_Inter_filter`s is a `countable_Inter_filter`. This is useful, e.g.,
 to automatically get an instance for `residual α ⊓ 𝓟 s`. -/
 instance countableInterFilter_inf (l₁ l₂ : Filter α) [CountableInterFilter l₁]
@@ -278,12 +224,6 @@ instance countableInterFilter_inf (l₁ l₂ : Filter α) [CountableInterFilter 
   apply inter_subset_inter <;> exact Inter_subset_of_subset i (Inter_subset _ _)
 #align countable_Inter_filter_inf countableInterFilter_inf
 
-/- warning: countable_Inter_filter_sup -> countableInterFilter_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_sup countableInterFilter_supₓ'. -/
 /-- Supremum of two `countable_Inter_filter`s is a `countable_Inter_filter`. -/
 instance countableInterFilter_sup (l₁ l₂ : Filter α) [CountableInterFilter l₁]
     [CountableInterFilter l₂] : CountableInterFilter (l₁ ⊔ l₂) :=
@@ -344,12 +284,6 @@ theorem mem_countableGenerate_iff {s : Set α} :
 #align filter.mem_countable_generate_iff Filter.mem_countableGenerate_iff
 -/
 
-/- warning: filter.le_countable_generate_iff_of_countable_Inter_filter -> Filter.le_countableGenerate_iff_of_countableInterFilter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {g : Set.{u1} (Set.{u1} α)} {f : Filter.{u1} α} [_inst_2 : CountableInterFilter.{u1} α f], Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.countableGenerate.{u1} α g)) (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) g (Filter.sets.{u1} α f))
-but is expected to have type
-  forall {α : Type.{u1}} {g : Set.{u1} (Set.{u1} α)} {f : Filter.{u1} α} [_inst_2 : CountableInterFilter.{u1} α f], Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.countableGenerate.{u1} α g)) (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) g (Filter.sets.{u1} α f))
-Case conversion may be inaccurate. Consider using '#align filter.le_countable_generate_iff_of_countable_Inter_filter Filter.le_countableGenerate_iff_of_countableInterFilterₓ'. -/
 theorem le_countableGenerate_iff_of_countableInterFilter {f : Filter α} [CountableInterFilter f] :
     f ≤ countableGenerate g ↔ g ⊆ f.sets :=
   by
@@ -365,12 +299,6 @@ theorem le_countableGenerate_iff_of_countableInterFilter {f : Filter α} [Counta
 
 variable (g)
 
-/- warning: filter.countable_generate_is_greatest -> Filter.countableGenerate_isGreatest is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (g : Set.{u1} (Set.{u1} α)), IsGreatest.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (setOf.{u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => And (CountableInterFilter.{u1} α f) (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) g (Filter.sets.{u1} α f)))) (Filter.countableGenerate.{u1} α g)
-but is expected to have type
-  forall {α : Type.{u1}} (g : Set.{u1} (Set.{u1} α)), IsGreatest.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (setOf.{u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => And (CountableInterFilter.{u1} α f) (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) g (Filter.sets.{u1} α f)))) (Filter.countableGenerate.{u1} α g)
-Case conversion may be inaccurate. Consider using '#align filter.countable_generate_is_greatest Filter.countableGenerate_isGreatestₓ'. -/
 /-- `countable_generate g` is the greatest `countable_Inter_filter` containing `g`.-/
 theorem countableGenerate_isGreatest :
     IsGreatest { f : Filter α | CountableInterFilter f ∧ g ⊆ f.sets } (countableGenerate g) :=

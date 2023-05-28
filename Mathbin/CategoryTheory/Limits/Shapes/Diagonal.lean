@@ -409,9 +409,6 @@ theorem diagonalObjPullbackFstIso_inv_snd_snd {X Y Z : C} (f : X ⟶ Z) (g : Y �
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_inv_snd_snd CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_snd_snd
 -/
 
-/- warning: category_theory.limits.diagonal_pullback_fst -> CategoryTheory.Limits.diagonal_pullback_fst is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.diagonal_pullback_fst CategoryTheory.Limits.diagonal_pullback_fstₓ'. -/
 theorem diagonal_pullback_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     diagonal (pullback.fst : pullback f g ⟶ _) =
       (pullbackSymmetry _ _).Hom ≫

@@ -131,12 +131,6 @@ abbrev PreservesColimits (F : C ⥤ D) :=
 attribute [instance 100]
   preserves_limits_of_shape.preserves_limit preserves_limits_of_size.preserves_limits_of_shape preserves_colimits_of_shape.preserves_colimit preserves_colimits_of_size.preserves_colimits_of_shape
 
-/- warning: category_theory.limits.is_limit_of_preserves -> CategoryTheory.Limits.isLimitOfPreserves is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c) -> (forall [_inst_4 : CategoryTheory.Limits.PreservesLimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsLimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F c))
-but is expected to have type
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c) -> (forall [_inst_4 : CategoryTheory.Limits.PreservesLimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsLimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 F K c))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_limit_of_preserves CategoryTheory.Limits.isLimitOfPreservesₓ'. -/
 -- see Note [lower instance priority]
 /-- A convenience function for `preserves_limit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
@@ -146,12 +140,6 @@ def isLimitOfPreserves (F : C ⥤ D) {c : Cone K} (t : IsLimit c) [PreservesLimi
   PreservesLimit.preserves t
 #align category_theory.limits.is_limit_of_preserves CategoryTheory.Limits.isLimitOfPreserves
 
-/- warning: category_theory.limits.is_colimit_of_preserves -> CategoryTheory.Limits.isColimitOfPreserves is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsColimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c) -> (forall [_inst_4 : CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsColimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCocone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F c))
-but is expected to have type
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsColimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c) -> (forall [_inst_4 : CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsColimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCocone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 F K c))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_colimit_of_preserves CategoryTheory.Limits.isColimitOfPreservesₓ'. -/
 /--
 A convenience function for `preserves_colimit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
@@ -272,12 +260,6 @@ instance compPreservesColimits [PreservesColimitsOfSize.{w', w} F]
 
 end
 
-/- warning: category_theory.limits.preserves_limit_of_preserves_limit_cone -> CategoryTheory.Limits.preservesLimitOfPreservesLimitCone is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} {F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2} {t : CategoryTheory.Limits.Cone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K t) -> (CategoryTheory.Limits.IsLimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F t)) -> (CategoryTheory.Limits.PreservesLimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F)
-but is expected to have type
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} {F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2} {t : CategoryTheory.Limits.Cone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K t) -> (CategoryTheory.Limits.IsLimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 F K t)) -> (CategoryTheory.Limits.PreservesLimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_limit_of_preserves_limit_cone CategoryTheory.Limits.preservesLimitOfPreservesLimitConeₓ'. -/
 /-- If F preserves one limit cone for the diagram K,
   then it preserves any limit cone for K. -/
 def preservesLimitOfPreservesLimitCone {F : C ⥤ D} {t : Cone K} (h : IsLimit t)
@@ -320,12 +302,6 @@ def preservesLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [PreservesLimitsOfSize
 #align category_theory.limits.preserves_limits_of_nat_iso CategoryTheory.Limits.preservesLimitsOfNatIso
 -/
 
-/- warning: category_theory.limits.preserves_limits_of_shape_of_equiv -> CategoryTheory.Limits.preservesLimitsOfShapeOfEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J _inst_3 J' _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.PreservesLimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-but is expected to have type
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J J' _inst_3 _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.PreservesLimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_limits_of_shape_of_equiv CategoryTheory.Limits.preservesLimitsOfShapeOfEquivₓ'. -/
 /-- Transfer preservation of limits along a equivalence in the shape. -/
 def preservesLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [PreservesLimitsOfShape J F] : PreservesLimitsOfShape J' F
@@ -358,12 +334,6 @@ def preservesSmallestLimitsOfPreservesLimits (F : C ⥤ D) [PreservesLimitsOfSiz
 #align category_theory.limits.preserves_smallest_limits_of_preserves_limits CategoryTheory.Limits.preservesSmallestLimitsOfPreservesLimits
 -/
 
-/- warning: category_theory.limits.preserves_colimit_of_preserves_colimit_cocone -> CategoryTheory.Limits.preservesColimitOfPreservesColimitCocone is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} {F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2} {t : CategoryTheory.Limits.Cocone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsColimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K t) -> (CategoryTheory.Limits.IsColimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCocone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F t)) -> (CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F)
-but is expected to have type
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} {F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2} {t : CategoryTheory.Limits.Cocone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsColimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K t) -> (CategoryTheory.Limits.IsColimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCocone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 F K t)) -> (CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_colimit_of_preserves_colimit_cocone CategoryTheory.Limits.preservesColimitOfPreservesColimitCoconeₓ'. -/
 /-- If F preserves one colimit cocone for the diagram K,
   then it preserves any colimit cocone for K. -/
 def preservesColimitOfPreservesColimitCocone {F : C ⥤ D} {t : Cocone K} (h : IsColimit t)
@@ -407,12 +377,6 @@ def preservesColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [PreservesColimitsOf
 #align category_theory.limits.preserves_colimits_of_nat_iso CategoryTheory.Limits.preservesColimitsOfNatIso
 -/
 
-/- warning: category_theory.limits.preserves_colimits_of_shape_of_equiv -> CategoryTheory.Limits.preservesColimitsOfShapeOfEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J _inst_3 J' _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.PreservesColimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-but is expected to have type
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J J' _inst_3 _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.PreservesColimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_colimits_of_shape_of_equiv CategoryTheory.Limits.preservesColimitsOfShapeOfEquivₓ'. -/
 /-- Transfer preservation of colimits along a equivalence in the shape. -/
 def preservesColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [PreservesColimitsOfShape J F] : PreservesColimitsOfShape J' F
@@ -541,12 +505,6 @@ abbrev ReflectsColimits (F : C ⥤ D) :=
 #align category_theory.limits.reflects_colimits CategoryTheory.Limits.ReflectsColimits
 -/
 
-/- warning: category_theory.limits.is_limit_of_reflects -> CategoryTheory.Limits.isLimitOfReflects is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F c)) -> (forall [_inst_4 : CategoryTheory.Limits.ReflectsLimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsLimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c)
-but is expected to have type
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsLimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 F K c)) -> (forall [_inst_4 : CategoryTheory.Limits.ReflectsLimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsLimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_limit_of_reflects CategoryTheory.Limits.isLimitOfReflectsₓ'. -/
 /-- A convenience function for `reflects_limit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
 -/
@@ -555,12 +513,6 @@ def isLimitOfReflects (F : C ⥤ D) {c : Cone K} (t : IsLimit (F.mapCone c)) [Re
   ReflectsLimit.reflects t
 #align category_theory.limits.is_limit_of_reflects CategoryTheory.Limits.isLimitOfReflects
 
-/- warning: category_theory.limits.is_colimit_of_reflects -> CategoryTheory.Limits.isColimitOfReflects is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsColimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCocone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F c)) -> (forall [_inst_4 : CategoryTheory.Limits.ReflectsColimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsColimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c)
-but is expected to have type
-  forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {J : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} J] {K : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_3 C _inst_1} (F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) {c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u5} J _inst_3 C _inst_1 K}, (CategoryTheory.Limits.IsColimit.{u1, u4, u2, u6} J _inst_3 D _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 K F) (CategoryTheory.Functor.mapCocone.{u1, u3, u4, u2, u5, u6} J _inst_3 C _inst_1 D _inst_2 F K c)) -> (forall [_inst_4 : CategoryTheory.Limits.ReflectsColimit.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 J _inst_3 K F], CategoryTheory.Limits.IsColimit.{u1, u3, u2, u5} J _inst_3 C _inst_1 K c)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_colimit_of_reflects CategoryTheory.Limits.isColimitOfReflectsₓ'. -/
 /--
 A convenience function for `reflects_colimit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
@@ -772,12 +724,6 @@ def reflectsLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [ReflectsLimitsOfSize.{
 #align category_theory.limits.reflects_limits_of_nat_iso CategoryTheory.Limits.reflectsLimitsOfNatIso
 -/
 
-/- warning: category_theory.limits.reflects_limits_of_shape_of_equiv -> CategoryTheory.Limits.reflectsLimitsOfShapeOfEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J _inst_3 J' _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.ReflectsLimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.ReflectsLimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-but is expected to have type
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J J' _inst_3 _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.ReflectsLimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.ReflectsLimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.reflects_limits_of_shape_of_equiv CategoryTheory.Limits.reflectsLimitsOfShapeOfEquivₓ'. -/
 /-- Transfer reflection of limits along a equivalence in the shape. -/
 def reflectsLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [ReflectsLimitsOfShape J F] : ReflectsLimitsOfShape J' F
@@ -907,12 +853,6 @@ def reflectsColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [ReflectsColimitsOfSi
 #align category_theory.limits.reflects_colimits_of_nat_iso CategoryTheory.Limits.reflectsColimitsOfNatIso
 -/
 
-/- warning: category_theory.limits.reflects_colimits_of_shape_of_equiv -> CategoryTheory.Limits.reflectsColimitsOfShapeOfEquiv is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J _inst_3 J' _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.ReflectsColimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.ReflectsColimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-but is expected to have type
-  forall {C : Type.{u7}} [_inst_1 : CategoryTheory.Category.{u5, u7} C] {D : Type.{u8}} [_inst_2 : CategoryTheory.Category.{u6, u8} D] {J : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} J] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u2, u4} J'], (CategoryTheory.Equivalence.{u1, u2, u3, u4} J J' _inst_3 _inst_4) -> (forall (F : CategoryTheory.Functor.{u5, u6, u7, u8} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.ReflectsColimitsOfShape.{u1, u3, u5, u6, u7, u8} C _inst_1 D _inst_2 J _inst_3 F], CategoryTheory.Limits.ReflectsColimitsOfShape.{u2, u4, u5, u6, u7, u8} C _inst_1 D _inst_2 J' _inst_4 F)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.reflects_colimits_of_shape_of_equiv CategoryTheory.Limits.reflectsColimitsOfShapeOfEquivₓ'. -/
 /-- Transfer reflection of colimits along a equivalence in the shape. -/
 def reflectsColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [ReflectsColimitsOfShape J F] : ReflectsColimitsOfShape J' F

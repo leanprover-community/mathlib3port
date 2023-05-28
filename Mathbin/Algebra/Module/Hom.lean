@@ -44,17 +44,11 @@ instance : DistribMulAction R (A →+ B)
   smul_add r f g := ext fun x => by simp [smul_add]
   smul_zero r := ext fun x => by simp [smul_zero]
 
-/- warning: add_monoid_hom.coe_smul -> AddMonoidHom.coe_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.coe_smul AddMonoidHom.coe_smulₓ'. -/
 @[simp]
 theorem coe_smul (r : R) (f : A →+ B) : ⇑(r • f) = r • f :=
   rfl
 #align add_monoid_hom.coe_smul AddMonoidHom.coe_smul
 
-/- warning: add_monoid_hom.smul_apply -> AddMonoidHom.smul_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.smul_apply AddMonoidHom.smul_applyₓ'. -/
 theorem smul_apply (r : R) (f : A →+ B) (x : A) : (r • f) x = r • f x :=
   rfl
 #align add_monoid_hom.smul_apply AddMonoidHom.smul_apply

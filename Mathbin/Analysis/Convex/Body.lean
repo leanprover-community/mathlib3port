@@ -114,17 +114,11 @@ instance : AddMonoid (ConvexBody V)
   zero_add K := by ext; simp only [coe_mk, Set.image2_add, zero_add]
   add_zero K := by ext; simp only [coe_mk, Set.image2_add, add_zero]
 
-/- warning: convex_body.coe_add -> ConvexBody.coe_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_body.coe_add ConvexBody.coe_addₓ'. -/
 @[simp]
 theorem coe_add (K L : ConvexBody V) : (↑(K + L) : Set V) = (K : Set V) + L :=
   rfl
 #align convex_body.coe_add ConvexBody.coe_add
 
-/- warning: convex_body.coe_zero -> ConvexBody.coe_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_body.coe_zero ConvexBody.coe_zeroₓ'. -/
 @[simp]
 theorem coe_zero : (↑(0 : ConvexBody V) : Set V) = 0 :=
   rfl
@@ -160,9 +154,6 @@ instance : DistribMulAction ℝ (ConvexBody V)
   smul_add c K L := by ext; simp only [coe_smul, coe_add, smul_add]
   smul_zero c := by ext; simp only [coe_smul, coe_zero, smul_zero]
 
-/- warning: convex_body.coe_smul' -> ConvexBody.coe_smul' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_body.coe_smul' ConvexBody.coe_smul'ₓ'. -/
 @[simp]
 theorem coe_smul' (c : ℝ≥0) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=
   rfl

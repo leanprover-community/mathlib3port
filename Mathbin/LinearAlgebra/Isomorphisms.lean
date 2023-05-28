@@ -52,27 +52,18 @@ noncomputable def quotKerEquivRange : (M ⧸ f.ker) ≃ₗ[R] f.range :=
 #align linear_map.quot_ker_equiv_range LinearMap.quotKerEquivRange
 -/
 
-/- warning: linear_map.quot_ker_equiv_of_surjective -> LinearMap.quotKerEquivOfSurjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quot_ker_equiv_of_surjective LinearMap.quotKerEquivOfSurjectiveₓ'. -/
 /-- The first isomorphism theorem for surjective linear maps. -/
 noncomputable def quotKerEquivOfSurjective (f : M →ₗ[R] M₂) (hf : Function.Surjective f) :
     (M ⧸ f.ker) ≃ₗ[R] M₂ :=
   f.quotKerEquivRange.trans (LinearEquiv.ofTop f.range (LinearMap.range_eq_top.2 hf))
 #align linear_map.quot_ker_equiv_of_surjective LinearMap.quotKerEquivOfSurjective
 
-/- warning: linear_map.quot_ker_equiv_range_apply_mk -> LinearMap.quotKerEquivRange_apply_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quot_ker_equiv_range_apply_mk LinearMap.quotKerEquivRange_apply_mkₓ'. -/
 @[simp]
 theorem quotKerEquivRange_apply_mk (x : M) :
     (f.quotKerEquivRange (Submodule.Quotient.mk x) : M₂) = f x :=
   rfl
 #align linear_map.quot_ker_equiv_range_apply_mk LinearMap.quotKerEquivRange_apply_mk
 
-/- warning: linear_map.quot_ker_equiv_range_symm_apply_image -> LinearMap.quotKerEquivRange_symm_apply_image is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quot_ker_equiv_range_symm_apply_image LinearMap.quotKerEquivRange_symm_apply_imageₓ'. -/
 @[simp]
 theorem quotKerEquivRange_symm_apply_image (x : M) (h : f x ∈ f.range) :
     f.quotKerEquivRange.symm ⟨f x, h⟩ = f.ker.mkQ x :=
@@ -112,18 +103,12 @@ noncomputable def quotientInfEquivSupQuotient (p p' : Submodule R M) :
 #align linear_map.quotient_inf_equiv_sup_quotient LinearMap.quotientInfEquivSupQuotient
 -/
 
-/- warning: linear_map.coe_quotient_inf_to_sup_quotient -> LinearMap.coe_quotientInfToSupQuotient is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_quotient_inf_to_sup_quotient LinearMap.coe_quotientInfToSupQuotientₓ'. -/
 @[simp]
 theorem coe_quotientInfToSupQuotient (p p' : Submodule R M) :
     ⇑(quotientInfToSupQuotient p p') = quotientInfEquivSupQuotient p p' :=
   rfl
 #align linear_map.coe_quotient_inf_to_sup_quotient LinearMap.coe_quotientInfToSupQuotient
 
-/- warning: linear_map.quotient_inf_equiv_sup_quotient_apply_mk -> LinearMap.quotientInfEquivSupQuotient_apply_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quotient_inf_equiv_sup_quotient_apply_mk LinearMap.quotientInfEquivSupQuotient_apply_mkₓ'. -/
 @[simp]
 theorem quotientInfEquivSupQuotient_apply_mk (p p' : Submodule R M) (x : p) :
     quotientInfEquivSupQuotient p p' (Submodule.Quotient.mk x) =
@@ -131,9 +116,6 @@ theorem quotientInfEquivSupQuotient_apply_mk (p p' : Submodule R M) (x : p) :
   rfl
 #align linear_map.quotient_inf_equiv_sup_quotient_apply_mk LinearMap.quotientInfEquivSupQuotient_apply_mk
 
-/- warning: linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left -> LinearMap.quotientInfEquivSupQuotient_symm_apply_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left LinearMap.quotientInfEquivSupQuotient_symm_apply_leftₓ'. -/
 theorem quotientInfEquivSupQuotient_symm_apply_left (p p' : Submodule R M) (x : p ⊔ p')
     (hx : (x : M) ∈ p) :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) =
@@ -141,18 +123,12 @@ theorem quotientInfEquivSupQuotient_symm_apply_left (p p' : Submodule R M) (x : 
   (LinearEquiv.symm_apply_eq _).2 <| by simp [of_le_apply]
 #align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left LinearMap.quotientInfEquivSupQuotient_symm_apply_left
 
-/- warning: linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff -> LinearMap.quotientInfEquivSupQuotient_symm_apply_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff LinearMap.quotientInfEquivSupQuotient_symm_apply_eq_zero_iffₓ'. -/
 @[simp]
 theorem quotientInfEquivSupQuotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p ⊔ p'} :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
   (LinearEquiv.symm_apply_eq _).trans <| by simp [of_le_apply]
 #align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff LinearMap.quotientInfEquivSupQuotient_symm_apply_eq_zero_iff
 
-/- warning: linear_map.quotient_inf_equiv_sup_quotient_symm_apply_right -> LinearMap.quotientInfEquivSupQuotient_symm_apply_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_right LinearMap.quotientInfEquivSupQuotient_symm_apply_rightₓ'. -/
 theorem quotientInfEquivSupQuotient_symm_apply_right (p p' : Submodule R M) {x : p ⊔ p'}
     (hx : (x : M) ∈ p') : (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 :=
   quotientInfEquivSupQuotient_symm_apply_eq_zero_iff.2 hx
@@ -169,9 +145,6 @@ namespace Submodule
 
 variable (S T : Submodule R M) (h : S ≤ T)
 
-/- warning: submodule.quotient_quotient_equiv_quotient_aux -> Submodule.quotientQuotientEquivQuotientAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.quotient_quotient_equiv_quotient_aux Submodule.quotientQuotientEquivQuotientAuxₓ'. -/
 /-- The map from the third isomorphism theorem for modules: `(M / S) / (T / S) → M / T`. -/
 def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkQ →ₗ[R] M ⧸ T :=
   liftq _ (mapq S T LinearMap.id h)
@@ -180,27 +153,18 @@ def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkQ �
       exact (quotient.mk_eq_zero _).mpr hx)
 #align submodule.quotient_quotient_equiv_quotient_aux Submodule.quotientQuotientEquivQuotientAux
 
-/- warning: submodule.quotient_quotient_equiv_quotient_aux_mk -> Submodule.quotientQuotientEquivQuotientAux_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.quotient_quotient_equiv_quotient_aux_mk Submodule.quotientQuotientEquivQuotientAux_mkₓ'. -/
 @[simp]
 theorem quotientQuotientEquivQuotientAux_mk (x : M ⧸ S) :
     quotientQuotientEquivQuotientAux S T h (Quotient.mk x) = mapQ S T LinearMap.id h x :=
   liftQ_apply _ _ _
 #align submodule.quotient_quotient_equiv_quotient_aux_mk Submodule.quotientQuotientEquivQuotientAux_mk
 
-/- warning: submodule.quotient_quotient_equiv_quotient_aux_mk_mk -> Submodule.quotientQuotientEquivQuotientAux_mk_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.quotient_quotient_equiv_quotient_aux_mk_mk Submodule.quotientQuotientEquivQuotientAux_mk_mkₓ'. -/
 @[simp]
 theorem quotientQuotientEquivQuotientAux_mk_mk (x : M) :
     quotientQuotientEquivQuotientAux S T h (Quotient.mk (Quotient.mk x)) = Quotient.mk x := by
   rw [quotient_quotient_equiv_quotient_aux_mk, mapq_apply, LinearMap.id_apply]
 #align submodule.quotient_quotient_equiv_quotient_aux_mk_mk Submodule.quotientQuotientEquivQuotientAux_mk_mk
 
-/- warning: submodule.quotient_quotient_equiv_quotient -> Submodule.quotientQuotientEquivQuotient is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.quotient_quotient_equiv_quotient Submodule.quotientQuotientEquivQuotientₓ'. -/
 /-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
 def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkQ) ≃ₗ[R] M ⧸ T :=
   {
@@ -212,9 +176,6 @@ def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkQ) ≃ₗ[R] M ⧸ 
     right_inv := fun x => Quotient.inductionOn' x fun x => by simp }
 #align submodule.quotient_quotient_equiv_quotient Submodule.quotientQuotientEquivQuotient
 
-/- warning: submodule.card_quotient_mul_card_quotient -> Submodule.card_quotient_mul_card_quotient is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.card_quotient_mul_card_quotient Submodule.card_quotient_mul_card_quotientₓ'. -/
 /-- Corollary of the third isomorphism theorem: `[S : T] [M : S] = [M : T]` -/
 theorem card_quotient_mul_card_quotient (S T : Submodule R M) (hST : T ≤ S)
     [DecidablePred fun x => x ∈ S.map T.mkQ] [Fintype (M ⧸ S)] [Fintype (M ⧸ T)] :

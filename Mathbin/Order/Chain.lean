@@ -126,12 +126,6 @@ theorem isChain_univ_iff : IsChain r (univ : Set α) ↔ IsTrichotomous α r :=
 #align is_chain_univ_iff isChain_univ_iff
 -/
 
-/- warning: is_chain.image -> IsChain.image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : α -> α -> Prop) (s : β -> β -> Prop) (f : α -> β), (forall (x : α) (y : α), (r x y) -> (s (f x) (f y))) -> (forall {c : Set.{u1} α}, (IsChain.{u1} α r c) -> (IsChain.{u2} β s (Set.image.{u1, u2} α β f c)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> α -> Prop) (s : β -> β -> Prop) (f : α -> β), (forall (x : α) (y : α), (r x y) -> (s (f x) (f y))) -> (forall {c : Set.{u2} α}, (IsChain.{u2} α r c) -> (IsChain.{u1} β s (Set.image.{u2, u1} α β f c)))
-Case conversion may be inaccurate. Consider using '#align is_chain.image IsChain.imageₓ'. -/
 theorem IsChain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β)
     (h : ∀ x y, r x y → s (f x) (f y)) {c : Set α} (hrc : IsChain r c) : IsChain s (f '' c) :=
   fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
@@ -189,22 +183,10 @@ theorem IsMaxChain.not_superChain (h : IsMaxChain r s) : ¬SuperChain r s t := f
 #align is_max_chain.not_super_chain IsMaxChain.not_superChain
 -/
 
-/- warning: is_max_chain.bot_mem -> IsMaxChain.bot_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1], (IsMaxChain.{u1} α (LE.le.{u1} α _inst_1) s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α _inst_1 _inst_2)) s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1], (IsMaxChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.1657 : α) (x._@.Mathlib.Order.Chain._hyg.1659 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Chain._hyg.1657 x._@.Mathlib.Order.Chain._hyg.1659) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α _inst_1 _inst_2)) s)
-Case conversion may be inaccurate. Consider using '#align is_max_chain.bot_mem IsMaxChain.bot_memₓ'. -/
 theorem IsMaxChain.bot_mem [LE α] [OrderBot α] (h : IsMaxChain (· ≤ ·) s) : ⊥ ∈ s :=
   (h.2 (h.1.insert fun a _ _ => Or.inl bot_le) <| subset_insert _ _).symm ▸ mem_insert _ _
 #align is_max_chain.bot_mem IsMaxChain.bot_mem
 
-/- warning: is_max_chain.top_mem -> IsMaxChain.top_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1], (IsMaxChain.{u1} α (LE.le.{u1} α _inst_1) s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α _inst_1 _inst_2)) s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1], (IsMaxChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.1744 : α) (x._@.Mathlib.Order.Chain._hyg.1746 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Chain._hyg.1744 x._@.Mathlib.Order.Chain._hyg.1746) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α _inst_1 _inst_2)) s)
-Case conversion may be inaccurate. Consider using '#align is_max_chain.top_mem IsMaxChain.top_memₓ'. -/
 theorem IsMaxChain.top_mem [LE α] [OrderTop α] (h : IsMaxChain (· ≤ ·) s) : ⊤ ∈ s :=
   (h.2 (h.1.insert fun a _ _ => Or.inr le_top) <| subset_insert _ _).symm ▸ mem_insert _ _
 #align is_max_chain.top_mem IsMaxChain.top_mem
@@ -432,22 +414,10 @@ protected theorem maxChain (s : Flag α) : IsMaxChain (· ≤ ·) (s : Set α) :
 #align flag.max_chain Flag.maxChain
 -/
 
-/- warning: flag.top_mem -> Flag.top_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1] (s : Flag.{u1} α _inst_1), Membership.Mem.{u1, u1} α (Flag.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (Flag.{u1} α _inst_1) α (Flag.setLike.{u1} α _inst_1)) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α _inst_1 _inst_2)) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1] (s : Flag.{u1} α _inst_1), Membership.mem.{u1, u1} α (Flag.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Flag.{u1} α _inst_1) α (Flag.instSetLikeFlag.{u1} α _inst_1)) (Top.top.{u1} α (OrderTop.toTop.{u1} α _inst_1 _inst_2)) s
-Case conversion may be inaccurate. Consider using '#align flag.top_mem Flag.top_memₓ'. -/
 theorem top_mem [OrderTop α] (s : Flag α) : (⊤ : α) ∈ s :=
   s.maxChain.top_mem
 #align flag.top_mem Flag.top_mem
 
-/- warning: flag.bot_mem -> Flag.bot_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1] (s : Flag.{u1} α _inst_1), Membership.Mem.{u1, u1} α (Flag.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (Flag.{u1} α _inst_1) α (Flag.setLike.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α _inst_1 _inst_2)) s
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1] (s : Flag.{u1} α _inst_1), Membership.mem.{u1, u1} α (Flag.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Flag.{u1} α _inst_1) α (Flag.instSetLikeFlag.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α _inst_1 _inst_2)) s
-Case conversion may be inaccurate. Consider using '#align flag.bot_mem Flag.bot_memₓ'. -/
 theorem bot_mem [OrderBot α] (s : Flag α) : (⊥ : α) ∈ s :=
   s.maxChain.bot_mem
 #align flag.bot_mem Flag.bot_mem
@@ -458,12 +428,6 @@ section Preorder
 
 variable [Preorder α] {a b : α}
 
-/- warning: flag.le_or_le -> Flag.le_or_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} (s : Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)), (Membership.Mem.{u1, u1} α (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (SetLike.hasMem.{u1, u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) α (Flag.setLike.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) a s) -> (Membership.Mem.{u1, u1} α (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (SetLike.hasMem.{u1, u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) α (Flag.setLike.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) b s) -> (Or (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} (s : Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)), (Membership.mem.{u1, u1} α (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) (SetLike.instMembership.{u1, u1} (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (Flag.instSetLikeFlag.{u1} α (Preorder.toLE.{u1} α _inst_1))) a s) -> (Membership.mem.{u1, u1} α (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) (SetLike.instMembership.{u1, u1} (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (Flag.instSetLikeFlag.{u1} α (Preorder.toLE.{u1} α _inst_1))) b s) -> (Or (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))
-Case conversion may be inaccurate. Consider using '#align flag.le_or_le Flag.le_or_leₓ'. -/
 protected theorem le_or_le (s : Flag α) (ha : a ∈ s) (hb : b ∈ s) : a ≤ b ∨ b ≤ a :=
   s.chain_le.Total ha hb
 #align flag.le_or_le Flag.le_or_le
@@ -483,12 +447,6 @@ section PartialOrder
 
 variable [PartialOrder α]
 
-/- warning: flag.chain_lt -> Flag.chain_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), IsChain.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (Flag.setLike.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))))) s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Flag.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), IsChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.3784 : α) (x._@.Mathlib.Order.Chain._hyg.3786 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Chain._hyg.3784 x._@.Mathlib.Order.Chain._hyg.3786) (SetLike.coe.{u1, u1} (Flag.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (Flag.instSetLikeFlag.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s)
-Case conversion may be inaccurate. Consider using '#align flag.chain_lt Flag.chain_ltₓ'. -/
 theorem chain_lt (s : Flag α) : IsChain (· < ·) (s : Set α) := fun a ha b hb h =>
   (s.le_or_le ha hb).imp h.lt_of_le h.lt_of_le'
 #align flag.chain_lt Flag.chain_lt

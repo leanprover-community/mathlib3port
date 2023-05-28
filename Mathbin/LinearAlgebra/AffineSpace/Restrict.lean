@@ -37,9 +37,6 @@ variable {k V₁ P₁ V₂ P₂ : Type _} [Ring k] [AddCommGroup V₁] [AddCommG
 
 include V₁ V₂
 
-/- warning: affine_subspace.nonempty_map -> AffineSubspace.nonempty_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_subspace.nonempty_map AffineSubspace.nonempty_mapₓ'. -/
 -- not an instance because it loops with `nonempty`
 theorem AffineSubspace.nonempty_map {E : AffineSubspace k P₁} [Ene : Nonempty E] {φ : P₁ →ᵃ[k] P₂} :
     Nonempty (E.map φ) := by
@@ -51,9 +48,6 @@ attribute [local instance, local nolint fails_quickly] AffineSubspace.nonempty_m
 
 attribute [local instance, local nolint fails_quickly] AffineSubspace.toAddTorsor
 
-/- warning: affine_map.restrict -> AffineMap.restrict is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict AffineMap.restrictₓ'. -/
 /-- Restrict domain and codomain of an affine map to the given subspaces. -/
 def AffineMap.restrict (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁} {F : AffineSubspace k P₂}
     [Nonempty E] [Nonempty F] (hEF : E.map φ ≤ F) : E →ᵃ[k] F :=
@@ -68,18 +62,12 @@ def AffineMap.restrict (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁} {F
     apply AffineMap.map_vadd
 #align affine_map.restrict AffineMap.restrict
 
-/- warning: affine_map.restrict.coe_apply -> AffineMap.restrict.coe_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict.coe_apply AffineMap.restrict.coe_applyₓ'. -/
 theorem AffineMap.restrict.coe_apply (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁}
     {F : AffineSubspace k P₂} [Nonempty E] [Nonempty F] (hEF : E.map φ ≤ F) (x : E) :
     ↑(φ.restrict hEF x) = φ x :=
   rfl
 #align affine_map.restrict.coe_apply AffineMap.restrict.coe_apply
 
-/- warning: affine_map.restrict.linear_aux -> AffineMap.restrict.linear_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict.linear_aux AffineMap.restrict.linear_auxₓ'. -/
 theorem AffineMap.restrict.linear_aux {φ : P₁ →ᵃ[k] P₂} {E : AffineSubspace k P₁}
     {F : AffineSubspace k P₂} (hEF : E.map φ ≤ F) : E.direction ≤ F.direction.comap φ.linear :=
   by
@@ -87,18 +75,12 @@ theorem AffineMap.restrict.linear_aux {φ : P₁ →ᵃ[k] P₂} {E : AffineSubs
   exact AffineSubspace.direction_le hEF
 #align affine_map.restrict.linear_aux AffineMap.restrict.linear_aux
 
-/- warning: affine_map.restrict.linear -> AffineMap.restrict.linear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict.linear AffineMap.restrict.linearₓ'. -/
 theorem AffineMap.restrict.linear (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁}
     {F : AffineSubspace k P₂} [Nonempty E] [Nonempty F] (hEF : E.map φ ≤ F) :
     (φ.restrict hEF).linear = φ.linear.restrict (AffineMap.restrict.linear_aux hEF) :=
   rfl
 #align affine_map.restrict.linear AffineMap.restrict.linear
 
-/- warning: affine_map.restrict.injective -> AffineMap.restrict.injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict.injective AffineMap.restrict.injectiveₓ'. -/
 theorem AffineMap.restrict.injective {φ : P₁ →ᵃ[k] P₂} (hφ : Function.Injective φ)
     {E : AffineSubspace k P₁} {F : AffineSubspace k P₂} [Nonempty E] [Nonempty F]
     (hEF : E.map φ ≤ F) : Function.Injective (AffineMap.restrict φ hEF) :=
@@ -108,9 +90,6 @@ theorem AffineMap.restrict.injective {φ : P₁ →ᵃ[k] P₂} (hφ : Function.
   exact hφ h
 #align affine_map.restrict.injective AffineMap.restrict.injective
 
-/- warning: affine_map.restrict.surjective -> AffineMap.restrict.surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict.surjective AffineMap.restrict.surjectiveₓ'. -/
 theorem AffineMap.restrict.surjective (φ : P₁ →ᵃ[k] P₂) {E : AffineSubspace k P₁}
     {F : AffineSubspace k P₂} [Nonempty E] [Nonempty F] (h : E.map φ = F) :
     Function.Surjective (AffineMap.restrict φ (le_of_eq h)) :=
@@ -121,9 +100,6 @@ theorem AffineMap.restrict.surjective (φ : P₁ →ᵃ[k] P₂) {E : AffineSubs
   exact ⟨⟨y, hy⟩, rfl⟩
 #align affine_map.restrict.surjective AffineMap.restrict.surjective
 
-/- warning: affine_map.restrict.bijective -> AffineMap.restrict.bijective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_map.restrict.bijective AffineMap.restrict.bijectiveₓ'. -/
 theorem AffineMap.restrict.bijective {E : AffineSubspace k P₁} [Nonempty E] {φ : P₁ →ᵃ[k] P₂}
     (hφ : Function.Injective φ) : Function.Bijective (φ.restrict (le_refl (E.map φ))) :=
   ⟨AffineMap.restrict.injective hφ _, AffineMap.restrict.surjective _ rfl⟩

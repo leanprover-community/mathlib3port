@@ -30,12 +30,6 @@ namespace IsNoetherian
 
 variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [Module K V]
 
-/- warning: is_noetherian.iff_rank_lt_aleph_0 -> IsNoetherian.iff_rank_lt_aleph0 is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Iff (IsNoetherian.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (LT.lt.{succ u2} Cardinal.{u2} (Preorder.toHasLt.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2})
-but is expected to have type
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Iff (IsNoetherian.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (LT.lt.{succ u2} Cardinal.{u2} (Preorder.toLT.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2})
-Case conversion may be inaccurate. Consider using '#align is_noetherian.iff_rank_lt_aleph_0 IsNoetherian.iff_rank_lt_aleph0ₓ'. -/
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
 -/
@@ -56,12 +50,6 @@ theorem iff_rank_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
 
 variable (K V)
 
-/- warning: is_noetherian.rank_lt_aleph_0 -> IsNoetherian.rank_lt_aleph0 is a dubious translation:
-lean 3 declaration is
-  forall (K : Type.{u1}) (V : Type.{u2}) [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : IsNoetherian.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3], LT.lt.{succ u2} Cardinal.{u2} (Preorder.toHasLt.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2}
-but is expected to have type
-  forall (K : Type.{u1}) (V : Type.{u2}) [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : IsNoetherian.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3], LT.lt.{succ u2} Cardinal.{u2} (Preorder.toLT.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2}
-Case conversion may be inaccurate. Consider using '#align is_noetherian.rank_lt_aleph_0 IsNoetherian.rank_lt_aleph0ₓ'. -/
 /-- The dimension of a noetherian module over a division ring, as a cardinal,
 is strictly less than the first infinite cardinal `ℵ₀`. -/
 theorem rank_lt_aleph0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
@@ -82,12 +70,6 @@ noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis 
 noncomputable instance [IsNoetherian K V] : Fintype (Basis.ofVectorSpaceIndex K V) :=
   fintypeBasisIndex (Basis.ofVectorSpace K V)
 
-/- warning: is_noetherian.finite_basis_index -> IsNoetherian.finite_basis_index is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] {ι : Type.{u3}} {s : Set.{u3} ι} [_inst_4 : IsNoetherian.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3], (Basis.{u3, u1, u2} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} ι) Type.{u3} (Set.hasCoeToSort.{u3} ι) s) K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) -> (Set.Finite.{u3} ι s)
-but is expected to have type
-  forall {K : Type.{u2}} {V : Type.{u3}} [_inst_1 : DivisionRing.{u2} K] [_inst_2 : AddCommGroup.{u3} V] [_inst_3 : Module.{u2, u3} K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2)] {ι : Type.{u1}} {s : Set.{u1} ι} [_inst_4 : IsNoetherian.{u2, u3} K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) _inst_3], (Basis.{u1, u2, u3} (Set.Elem.{u1} ι s) K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V _inst_2) _inst_3) -> (Set.Finite.{u1} ι s)
-Case conversion may be inaccurate. Consider using '#align is_noetherian.finite_basis_index IsNoetherian.finite_basis_indexₓ'. -/
 /-- In a noetherian module over a division ring,
 if a basis is indexed by a set, that set is finite. -/
 theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) :

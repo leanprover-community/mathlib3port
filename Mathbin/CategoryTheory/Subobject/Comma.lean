@@ -72,18 +72,12 @@ theorem projectSubobject_mk [HasLimits C] [PreservesLimits T] {A P : StructuredA
 #align category_theory.structured_arrow.project_subobject_mk CategoryTheory.StructuredArrow.projectSubobject_mk
 -/
 
-/- warning: category_theory.structured_arrow.project_subobject_factors -> CategoryTheory.StructuredArrow.projectSubobject_factors is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow.project_subobject_factors CategoryTheory.StructuredArrow.projectSubobject_factorsₓ'. -/
 theorem projectSubobject_factors [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} :
     ∀ P : Subobject A, ∃ q, q ≫ T.map (projectSubobject P).arrow = A.Hom :=
   Subobject.ind _ fun P f hf =>
     ⟨P.Hom ≫ T.map (Subobject.underlyingIso _).inv, by dsimp; simp [← T.map_comp]⟩
 #align category_theory.structured_arrow.project_subobject_factors CategoryTheory.StructuredArrow.projectSubobject_factors
 
-/- warning: category_theory.structured_arrow.lift_subobject -> CategoryTheory.StructuredArrow.liftSubobject is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow.lift_subobject CategoryTheory.StructuredArrow.liftSubobjectₓ'. -/
 /-- A subobject of the underlying object of a structured arrow can be lifted to a subobject of
     the structured arrow, provided that there is a morphism making the subobject into a structured
     arrow. -/
@@ -93,9 +87,6 @@ def liftSubobject {A : StructuredArrow S T} (P : Subobject A.right) {q}
   Subobject.mk (homMk P.arrow hq : mk q ⟶ A)
 #align category_theory.structured_arrow.lift_subobject CategoryTheory.StructuredArrow.liftSubobject
 
-/- warning: category_theory.structured_arrow.lift_project_subobject -> CategoryTheory.StructuredArrow.lift_projectSubobject is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow.lift_project_subobject CategoryTheory.StructuredArrow.lift_projectSubobjectₓ'. -/
 /-- Projecting and then lifting a subobject recovers the original subobject, because there is at
     most one morphism making the projected subobject into a structured arrow. -/
 theorem lift_projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} :
@@ -111,9 +102,6 @@ theorem lift_projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredA
       · exact ext _ _ (by dsimp; simp))
 #align category_theory.structured_arrow.lift_project_subobject CategoryTheory.StructuredArrow.lift_projectSubobject
 
-/- warning: category_theory.structured_arrow.subobject_equiv -> CategoryTheory.StructuredArrow.subobjectEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow.subobject_equiv CategoryTheory.StructuredArrow.subobjectEquivₓ'. -/
 /-- If `A : S → T.obj B` is a structured arrow for `S : D` and `T : C ⥤ D`, then we can explicitly
     describe the subobjects of `A` as the subobjects `P` of `B` in `C` for which `A.hom` factors
     through the image of `P` under `T`. -/
@@ -177,9 +165,6 @@ theorem projectQuotient_mk [HasColimits C] [PreservesColimits S] {A : Costructur
 #align category_theory.costructured_arrow.project_quotient_mk CategoryTheory.CostructuredArrow.projectQuotient_mk
 -/
 
-/- warning: category_theory.costructured_arrow.project_quotient_factors -> CategoryTheory.CostructuredArrow.projectQuotient_factors is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.project_quotient_factors CategoryTheory.CostructuredArrow.projectQuotient_factorsₓ'. -/
 theorem projectQuotient_factors [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T} :
     ∀ P : Subobject (op A), ∃ q, S.map (projectQuotient P).arrow.unop ≫ q = A.Hom :=
   Subobject.ind _ fun P f hf =>
@@ -187,9 +172,6 @@ theorem projectQuotient_factors [HasColimits C] [PreservesColimits S] {A : Costr
       rw [← category.assoc, ← S.map_comp, ← unop_comp]; simp⟩
 #align category_theory.costructured_arrow.project_quotient_factors CategoryTheory.CostructuredArrow.projectQuotient_factors
 
-/- warning: category_theory.costructured_arrow.lift_quotient -> CategoryTheory.CostructuredArrow.liftQuotient is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.lift_quotient CategoryTheory.CostructuredArrow.liftQuotientₓ'. -/
 /-- A quotient of the underlying object of a costructured arrow can be lifted to a quotient of
     the costructured arrow, provided that there is a morphism making the quotient into a
     costructured arrow. -/
@@ -199,9 +181,6 @@ def liftQuotient {A : CostructuredArrow S T} (P : Subobject (op A.left)) {q}
   Subobject.mk (homMk P.arrow.unop hq : A ⟶ mk q).op
 #align category_theory.costructured_arrow.lift_quotient CategoryTheory.CostructuredArrow.liftQuotient
 
-/- warning: category_theory.costructured_arrow.unop_left_comp_underlying_iso_hom_unop -> CategoryTheory.CostructuredArrow.unop_left_comp_underlyingIso_hom_unop is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.unop_left_comp_underlying_iso_hom_unop CategoryTheory.CostructuredArrow.unop_left_comp_underlyingIso_hom_unopₓ'. -/
 /-- Technical lemma for `lift_project_quotient`. -/
 @[simp]
 theorem unop_left_comp_underlyingIso_hom_unop {A : CostructuredArrow S T}
@@ -215,9 +194,6 @@ theorem unop_left_comp_underlyingIso_hom_unop {A : CostructuredArrow S T}
   rw [← unop_comp, subobject.underlying_iso_hom_comp_eq_mk]
 #align category_theory.costructured_arrow.unop_left_comp_underlying_iso_hom_unop CategoryTheory.CostructuredArrow.unop_left_comp_underlyingIso_hom_unop
 
-/- warning: category_theory.costructured_arrow.lift_project_quotient -> CategoryTheory.CostructuredArrow.lift_projectQuotient is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_projectQuotientₓ'. -/
 /-- Projecting and then lifting a quotient recovers the original quotient, because there is at most
     one morphism making the projected quotient into a costructured arrow. -/
 theorem lift_projectQuotient [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T} :
@@ -234,9 +210,6 @@ theorem lift_projectQuotient [HasColimits C] [PreservesColimits S] {A : Costruct
       · exact Quiver.Hom.unop_inj (ext _ _ (by dsimp; simp)))
 #align category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_projectQuotient
 
-/- warning: category_theory.costructured_arrow.unop_left_comp_of_mk_le_mk_unop -> CategoryTheory.CostructuredArrow.unop_left_comp_ofMkLEMk_unop is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.unop_left_comp_of_mk_le_mk_unop CategoryTheory.CostructuredArrow.unop_left_comp_ofMkLEMk_unopₓ'. -/
 /-- Technical lemma for `quotient_equiv`. -/
 theorem unop_left_comp_ofMkLEMk_unop {A : CostructuredArrow S T} {P Q : (CostructuredArrow S T)ᵒᵖ}
     {f : P ⟶ op A} {g : Q ⟶ op A} [Mono f.unop.left.op] [Mono g.unop.left.op]
@@ -250,9 +223,6 @@ theorem unop_left_comp_ofMkLEMk_unop {A : CostructuredArrow S T} {P Q : (Costruc
   simp only [subobject.of_mk_le_mk_comp, Quiver.Hom.unop_op]
 #align category_theory.costructured_arrow.unop_left_comp_of_mk_le_mk_unop CategoryTheory.CostructuredArrow.unop_left_comp_ofMkLEMk_unop
 
-/- warning: category_theory.costructured_arrow.quotient_equiv -> CategoryTheory.CostructuredArrow.quotientEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.quotient_equiv CategoryTheory.CostructuredArrow.quotientEquivₓ'. -/
 /-- If `A : S.obj B ⟶ T` is a costructured arrow for `S : C ⥤ D` and `T : D`, then we can
     explicitly describe the quotients of `A` as the quotients `P` of `B` in `C` for which `A.hom`
     factors through the image of `P` under `S`. -/

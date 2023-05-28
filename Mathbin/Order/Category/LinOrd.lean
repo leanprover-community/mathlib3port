@@ -61,24 +61,12 @@ instance : Inhabited LinOrdCat :=
 instance (α : LinOrdCat) : LinearOrder α :=
   α.str
 
-/- warning: LinOrd.has_forget_to_Lat -> LinOrdCat.hasForgetToLatCat is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} LinOrdCat.{u1} LatCat.{u1} LinOrdCat.largeCategory.{u1} LinOrdCat.concreteCategory.{u1} LatCat.CategoryTheory.largeCategory.{u1} LatCat.CategoryTheory.concreteCategory.{u1}
-but is expected to have type
-  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} LinOrdCat.{u1} LatCat.{u1} instLinOrdCatLargeCategory.{u1} LinOrdCat.instConcreteCategoryLinOrdCatInstLinOrdCatLargeCategory.{u1} LatCat.instLargeCategoryLatCat.{u1} LatCat.instConcreteCategoryLatCatInstLargeCategoryLatCat.{u1}
-Case conversion may be inaccurate. Consider using '#align LinOrd.has_forget_to_Lat LinOrdCat.hasForgetToLatCatₓ'. -/
 instance hasForgetToLatCat : HasForget₂ LinOrdCat LatCat
     where forget₂ :=
     { obj := fun X => LatCat.of X
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinOrd.has_forget_to_Lat LinOrdCat.hasForgetToLatCat
 
-/- warning: LinOrd.iso.mk -> LinOrdCat.Iso.mk is a dubious translation:
-lean 3 declaration is
-  forall {α : LinOrdCat.{u1}} {β : LinOrdCat.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (Lattice.toSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (LinearOrder.toLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (LinOrdCat.linearOrder.{u1} α)))))) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (Lattice.toSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (LinearOrder.toLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (LinOrdCat.linearOrder.{u1} β))))))) -> (CategoryTheory.Iso.{u1, succ u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} α β)
-but is expected to have type
-  forall {α : LinOrdCat.{u1}} {β : LinOrdCat.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (Lattice.toSemilatticeInf.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (DistribLattice.toLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (instDistribLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (LinOrdCat.instLinearOrderα.{u1} α))))))) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (Lattice.toSemilatticeInf.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (DistribLattice.toLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (instDistribLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (LinOrdCat.instLinearOrderα.{u1} β)))))))) -> (CategoryTheory.Iso.{u1, succ u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} α β)
-Case conversion may be inaccurate. Consider using '#align LinOrd.iso.mk LinOrdCat.Iso.mkₓ'. -/
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : LinOrdCat.{u}} (e : α ≃o β) : α ≅ β
@@ -98,12 +86,6 @@ def dual : LinOrdCat ⥤ LinOrdCat where
 #align LinOrd.dual LinOrdCat.dual
 -/
 
-/- warning: LinOrd.dual_equiv -> LinOrdCat.dualEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} LinOrdCat.{u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} instLinOrdCatLargeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align LinOrd.dual_equiv LinOrdCat.dualEquivₓ'. -/
 /-- The equivalence between `LinOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LinOrdCat ≌ LinOrdCat :=
@@ -114,12 +96,6 @@ def dualEquiv : LinOrdCat ≌ LinOrdCat :=
 
 end LinOrdCat
 
-/- warning: LinOrd_dual_comp_forget_to_Lat -> linOrdCat_dual_comp_forget_to_latCat is a dubious translation:
-lean 3 declaration is
-  Eq.{succ (succ u1)} (CategoryTheory.Functor.{u1, u1, succ u1, succ u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} LatCat.{u1} LatCat.CategoryTheory.largeCategory.{u1}) (CategoryTheory.Functor.comp.{u1, u1, u1, succ u1, succ u1, succ u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} LatCat.{u1} LatCat.CategoryTheory.largeCategory.{u1} LinOrdCat.dual.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} LinOrdCat.{u1} LatCat.{u1} LinOrdCat.largeCategory.{u1} LinOrdCat.concreteCategory.{u1} LatCat.CategoryTheory.largeCategory.{u1} LatCat.CategoryTheory.concreteCategory.{u1} LinOrdCat.hasForgetToLatCat.{u1})) (CategoryTheory.Functor.comp.{u1, u1, u1, succ u1, succ u1, succ u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} LatCat.{u1} LatCat.CategoryTheory.largeCategory.{u1} LatCat.{u1} LatCat.CategoryTheory.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} LinOrdCat.{u1} LatCat.{u1} LinOrdCat.largeCategory.{u1} LinOrdCat.concreteCategory.{u1} LatCat.CategoryTheory.largeCategory.{u1} LatCat.CategoryTheory.concreteCategory.{u1} LinOrdCat.hasForgetToLatCat.{u1}) LatCat.dual.{u1})
-but is expected to have type
-  Eq.{succ (succ u1)} (CategoryTheory.Functor.{u1, u1, succ u1, succ u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} LatCat.{u1} LatCat.instLargeCategoryLatCat.{u1}) (CategoryTheory.Functor.comp.{u1, u1, u1, succ u1, succ u1, succ u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} LatCat.{u1} LatCat.instLargeCategoryLatCat.{u1} LinOrdCat.dual.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} LinOrdCat.{u1} LatCat.{u1} instLinOrdCatLargeCategory.{u1} LinOrdCat.instConcreteCategoryLinOrdCatInstLinOrdCatLargeCategory.{u1} LatCat.instLargeCategoryLatCat.{u1} LatCat.instConcreteCategoryLatCatInstLargeCategoryLatCat.{u1} LinOrdCat.hasForgetToLatCat.{u1})) (CategoryTheory.Functor.comp.{u1, u1, u1, succ u1, succ u1, succ u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} LatCat.{u1} LatCat.instLargeCategoryLatCat.{u1} LatCat.{u1} LatCat.instLargeCategoryLatCat.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} LinOrdCat.{u1} LatCat.{u1} instLinOrdCatLargeCategory.{u1} LinOrdCat.instConcreteCategoryLinOrdCatInstLinOrdCatLargeCategory.{u1} LatCat.instLargeCategoryLatCat.{u1} LatCat.instConcreteCategoryLatCatInstLargeCategoryLatCat.{u1} LinOrdCat.hasForgetToLatCat.{u1}) LatCat.dual.{u1})
-Case conversion may be inaccurate. Consider using '#align LinOrd_dual_comp_forget_to_Lat linOrdCat_dual_comp_forget_to_latCatₓ'. -/
 theorem linOrdCat_dual_comp_forget_to_latCat :
     LinOrdCat.dual ⋙ forget₂ LinOrdCat LatCat = forget₂ LinOrdCat LatCat ⋙ LatCat.dual :=
   rfl

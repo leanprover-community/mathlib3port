@@ -217,9 +217,6 @@ section CokernelOfKernel
 
 variable {X Y : C} {f : X ⟶ Y}
 
-/- warning: category_theory.non_preadditive_abelian.epi_is_cokernel_of_kernel -> CategoryTheory.NonPreadditiveAbelian.epiIsCokernelOfKernel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.non_preadditive_abelian.epi_is_cokernel_of_kernel CategoryTheory.NonPreadditiveAbelian.epiIsCokernelOfKernelₓ'. -/
 /-- In a `non_preadditive_abelian` category, an epi is the cokernel of its kernel. More precisely:
     If `f` is an epimorphism and `s` is some limit kernel cone on `f`, then `f` is a cokernel
     of `fork.ι s`. -/
@@ -231,9 +228,6 @@ def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
     (asIso <| Abelian.factorThruCoimage f) (Abelian.coimage.fac f)
 #align category_theory.non_preadditive_abelian.epi_is_cokernel_of_kernel CategoryTheory.NonPreadditiveAbelian.epiIsCokernelOfKernel
 
-/- warning: category_theory.non_preadditive_abelian.mono_is_kernel_of_cokernel -> CategoryTheory.NonPreadditiveAbelian.monoIsKernelOfCokernel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.non_preadditive_abelian.mono_is_kernel_of_cokernel CategoryTheory.NonPreadditiveAbelian.monoIsKernelOfCokernelₓ'. -/
 /-- In a `non_preadditive_abelian` category, a mono is the kernel of its cokernel. More precisely:
     If `f` is a monomorphism and `s` is some colimit cokernel cocone on `f`, then `f` is a kernel
     of `cofork.π s`. -/

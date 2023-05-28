@@ -117,12 +117,6 @@ def toPNat' (n : ℕ) : ℕ+ :=
 #align nat.to_pnat' Nat.toPNat'
 -/
 
-/- warning: nat.to_pnat'_coe -> Nat.toPNat'_coe is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (Nat.toPNat' n)) (ite.{1} Nat (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (Nat.decidableLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (PNat.val (Nat.toPNat' n)) (ite.{1} Nat (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align nat.to_pnat'_coe Nat.toPNat'_coeₓ'. -/
 @[simp]
 theorem toPNat'_coe : ∀ n : ℕ, (toPNat' n : ℕ) = ite (0 < n) n 1
   | 0 => rfl
@@ -154,23 +148,11 @@ theorem mk_lt_mk (n k : ℕ) (hn : 0 < n) (hk : 0 < k) : (⟨n, hn⟩ : ℕ+) < 
 #align pnat.mk_lt_mk PNat.mk_lt_mk
 -/
 
-/- warning: pnat.coe_le_coe -> PNat.coe_le_coe is a dubious translation:
-lean 3 declaration is
-  forall (n : PNat) (k : PNat), Iff (LE.le.{0} Nat Nat.hasLe ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) n k)
-but is expected to have type
-  forall (n : PNat) (k : PNat), Iff (LE.le.{0} Nat instLENat (PNat.val n) (PNat.val k)) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) n k)
-Case conversion may be inaccurate. Consider using '#align pnat.coe_le_coe PNat.coe_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_le_coe (n k : ℕ+) : (n : ℕ) ≤ k ↔ n ≤ k :=
   Iff.rfl
 #align pnat.coe_le_coe PNat.coe_le_coe
 
-/- warning: pnat.coe_lt_coe -> PNat.coe_lt_coe is a dubious translation:
-lean 3 declaration is
-  forall (n : PNat) (k : PNat), Iff (LT.lt.{0} Nat Nat.hasLt ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) n k)
-but is expected to have type
-  forall (n : PNat) (k : PNat), Iff (LT.lt.{0} Nat instLTNat (PNat.val n) (PNat.val k)) (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) n k)
-Case conversion may be inaccurate. Consider using '#align pnat.coe_lt_coe PNat.coe_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_lt_coe (n k : ℕ+) : (n : ℕ) < k ↔ n < k :=
   Iff.rfl
@@ -221,23 +203,11 @@ theorem coe_toPNat' (n : ℕ+) : (n : ℕ).toPNat' = n :=
 #align pnat.coe_to_pnat' PNat.coe_toPNat'
 -/
 
-/- warning: pnat.one_le -> PNat.one_le is a dubious translation:
-lean 3 declaration is
-  forall (n : PNat), LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))) n
-but is expected to have type
-  forall (n : PNat), LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) n
-Case conversion may be inaccurate. Consider using '#align pnat.one_le PNat.one_leₓ'. -/
 @[simp]
 theorem one_le (n : ℕ+) : (1 : ℕ+) ≤ n :=
   n.2
 #align pnat.one_le PNat.one_le
 
-/- warning: pnat.not_lt_one -> PNat.not_lt_one is a dubious translation:
-lean 3 declaration is
-  forall (n : PNat), Not (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))
-but is expected to have type
-  forall (n : PNat), Not (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) n (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
-Case conversion may be inaccurate. Consider using '#align pnat.not_lt_one PNat.not_lt_oneₓ'. -/
 @[simp]
 theorem not_lt_one (n : ℕ+) : ¬n < 1 :=
   not_lt_of_le n.one_le
@@ -271,12 +241,6 @@ theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 :=
 instance : WellFoundedRelation ℕ+ :=
   ⟨(· < ·), measure_wf coe⟩
 
-/- warning: pnat.strong_induction_on -> PNat.strongInductionOn is a dubious translation:
-lean 3 declaration is
-  forall {p : PNat -> Sort.{u1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
-but is expected to have type
-  forall {p : PNat -> Sort.{u1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
-Case conversion may be inaccurate. Consider using '#align pnat.strong_induction_on PNat.strongInductionOnₓ'. -/
 /-- Strong induction on `ℕ+`. -/
 def strongInductionOn {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m, m < k → p m) → p k), p n
   | n => fun IH => IH _ fun a h => strong_induction_on a IH
@@ -329,12 +293,6 @@ def div (m k : ℕ+) : ℕ :=
 #align pnat.div PNat.div
 -/
 
-/- warning: pnat.mod_coe -> PNat.mod_coe is a dubious translation:
-lean 3 declaration is
-  forall (m : PNat) (k : PNat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (PNat.mod m k)) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)))
-but is expected to have type
-  forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.val (PNat.mod m k)) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (PNat.val k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)))
-Case conversion may be inaccurate. Consider using '#align pnat.mod_coe PNat.mod_coeₓ'. -/
 theorem mod_coe (m k : ℕ+) :
     (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) :=
   by
@@ -344,12 +302,6 @@ theorem mod_coe (m k : ℕ+) :
   · rw [if_neg n.succ_ne_zero]; rfl
 #align pnat.mod_coe PNat.mod_coe
 
-/- warning: pnat.div_coe -> PNat.div_coe is a dubious translation:
-lean 3 declaration is
-  forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.div m k) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.pred (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)))
-but is expected to have type
-  forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.div m k) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.pred (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (PNat.val m) (PNat.val k))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (PNat.val m) (PNat.val k)))
-Case conversion may be inaccurate. Consider using '#align pnat.div_coe PNat.div_coeₓ'. -/
 theorem div_coe (m k : ℕ+) :
     (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by

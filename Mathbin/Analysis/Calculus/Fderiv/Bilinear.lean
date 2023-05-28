@@ -63,12 +63,6 @@ variable {b : E × F → G} {u : Set (E × F)}
 
 open NormedField
 
-/- warning: is_bounded_bilinear_map.has_strict_fderiv_at -> IsBoundedBilinearMap.hasStrictFDerivAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {G : Type.{u4}} [_inst_6 : NormedAddCommGroup.{u4} G] [_inst_7 : NormedSpace.{u1, u4} 𝕜 G (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u4} G _inst_6)] {b : (Prod.{u2, u3} E F) -> G} (h : IsBoundedBilinearMap.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) (p : Prod.{u2, u3} E F), HasStrictFDerivAt.{u1, max u2 u3, u4} 𝕜 _inst_1 (Prod.{u2, u3} E F) (Prod.normedAddCommGroup.{u2, u3} E F _inst_2 _inst_4) (Prod.normedSpace.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5) G _inst_6 _inst_7 b (IsBoundedBilinearMap.deriv.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b h p) p
-but is expected to have type
-  forall {𝕜 : Type.{u4}} [_inst_1 : NontriviallyNormedField.{u4} 𝕜] {E : Type.{u3}} [_inst_2 : NormedAddCommGroup.{u3} E] [_inst_3 : NormedSpace.{u4, u3} 𝕜 E (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2)] {F : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} 𝕜 F (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] {G : Type.{u1}} [_inst_6 : NormedAddCommGroup.{u1} G] [_inst_7 : NormedSpace.{u4, u1} 𝕜 G (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} G _inst_6)] {b : (Prod.{u3, u2} E F) -> G} (h : IsBoundedBilinearMap.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) (p : Prod.{u3, u2} E F), HasStrictFDerivAt.{u4, max u3 u2, u1} 𝕜 _inst_1 (Prod.{u3, u2} E F) (Prod.normedAddCommGroup.{u3, u2} E F _inst_2 _inst_4) (Prod.normedSpace.{u4, u3, u2} 𝕜 (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4) _inst_5) G _inst_6 _inst_7 b (IsBoundedBilinearMap.deriv.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b h p) p
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.has_strict_fderiv_at IsBoundedBilinearMap.hasStrictFDerivAtₓ'. -/
 theorem IsBoundedBilinearMap.hasStrictFDerivAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     HasStrictFDerivAt b (h.deriv p) p :=
   by
@@ -99,55 +93,31 @@ theorem IsBoundedBilinearMap.hasStrictFDerivAt (h : IsBoundedBilinearMap 𝕜 b)
         this).norm_left
 #align is_bounded_bilinear_map.has_strict_fderiv_at IsBoundedBilinearMap.hasStrictFDerivAt
 
-/- warning: is_bounded_bilinear_map.has_fderiv_at -> IsBoundedBilinearMap.hasFDerivAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {G : Type.{u4}} [_inst_6 : NormedAddCommGroup.{u4} G] [_inst_7 : NormedSpace.{u1, u4} 𝕜 G (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u4} G _inst_6)] {b : (Prod.{u2, u3} E F) -> G} (h : IsBoundedBilinearMap.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) (p : Prod.{u2, u3} E F), HasFDerivAt.{u1, max u2 u3, u4} 𝕜 _inst_1 (Prod.{u2, u3} E F) (Prod.normedAddCommGroup.{u2, u3} E F _inst_2 _inst_4) (Prod.normedSpace.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5) G _inst_6 _inst_7 b (IsBoundedBilinearMap.deriv.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b h p) p
-but is expected to have type
-  forall {𝕜 : Type.{u4}} [_inst_1 : NontriviallyNormedField.{u4} 𝕜] {E : Type.{u3}} [_inst_2 : NormedAddCommGroup.{u3} E] [_inst_3 : NormedSpace.{u4, u3} 𝕜 E (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2)] {F : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} 𝕜 F (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] {G : Type.{u1}} [_inst_6 : NormedAddCommGroup.{u1} G] [_inst_7 : NormedSpace.{u4, u1} 𝕜 G (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} G _inst_6)] {b : (Prod.{u3, u2} E F) -> G} (h : IsBoundedBilinearMap.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) (p : Prod.{u3, u2} E F), HasFDerivAt.{u4, max u3 u2, u1} 𝕜 _inst_1 (Prod.{u3, u2} E F) (Prod.normedAddCommGroup.{u3, u2} E F _inst_2 _inst_4) (Prod.normedSpace.{u4, u3, u2} 𝕜 (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4) _inst_5) G _inst_6 _inst_7 b (IsBoundedBilinearMap.deriv.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b h p) p
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.has_fderiv_at IsBoundedBilinearMap.hasFDerivAtₓ'. -/
 theorem IsBoundedBilinearMap.hasFDerivAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     HasFDerivAt b (h.deriv p) p :=
   (h.HasStrictFDerivAt p).HasFDerivAt
 #align is_bounded_bilinear_map.has_fderiv_at IsBoundedBilinearMap.hasFDerivAt
 
-/- warning: is_bounded_bilinear_map.has_fderiv_within_at -> IsBoundedBilinearMap.hasFDerivWithinAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.has_fderiv_within_at IsBoundedBilinearMap.hasFDerivWithinAtₓ'. -/
 theorem IsBoundedBilinearMap.hasFDerivWithinAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     HasFDerivWithinAt b (h.deriv p) u p :=
   (h.HasFDerivAt p).HasFDerivWithinAt
 #align is_bounded_bilinear_map.has_fderiv_within_at IsBoundedBilinearMap.hasFDerivWithinAt
 
-/- warning: is_bounded_bilinear_map.differentiable_at -> IsBoundedBilinearMap.differentiableAt is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {G : Type.{u4}} [_inst_6 : NormedAddCommGroup.{u4} G] [_inst_7 : NormedSpace.{u1, u4} 𝕜 G (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u4} G _inst_6)] {b : (Prod.{u2, u3} E F) -> G}, (IsBoundedBilinearMap.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) -> (forall (p : Prod.{u2, u3} E F), DifferentiableAt.{u1, max u2 u3, u4} 𝕜 _inst_1 (Prod.{u2, u3} E F) (Prod.normedAddCommGroup.{u2, u3} E F _inst_2 _inst_4) (Prod.normedSpace.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5) G _inst_6 _inst_7 b p)
-but is expected to have type
-  forall {𝕜 : Type.{u4}} [_inst_1 : NontriviallyNormedField.{u4} 𝕜] {E : Type.{u3}} [_inst_2 : NormedAddCommGroup.{u3} E] [_inst_3 : NormedSpace.{u4, u3} 𝕜 E (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2)] {F : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} 𝕜 F (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] {G : Type.{u1}} [_inst_6 : NormedAddCommGroup.{u1} G] [_inst_7 : NormedSpace.{u4, u1} 𝕜 G (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} G _inst_6)] {b : (Prod.{u3, u2} E F) -> G}, (IsBoundedBilinearMap.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) -> (forall (p : Prod.{u3, u2} E F), DifferentiableAt.{u4, max u3 u2, u1} 𝕜 _inst_1 (Prod.{u3, u2} E F) (Prod.normedAddCommGroup.{u3, u2} E F _inst_2 _inst_4) (Prod.normedSpace.{u4, u3, u2} 𝕜 (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4) _inst_5) G _inst_6 _inst_7 b p)
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.differentiable_at IsBoundedBilinearMap.differentiableAtₓ'. -/
 theorem IsBoundedBilinearMap.differentiableAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     DifferentiableAt 𝕜 b p :=
   (h.HasFDerivAt p).DifferentiableAt
 #align is_bounded_bilinear_map.differentiable_at IsBoundedBilinearMap.differentiableAt
 
-/- warning: is_bounded_bilinear_map.differentiable_within_at -> IsBoundedBilinearMap.differentiableWithinAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.differentiable_within_at IsBoundedBilinearMap.differentiableWithinAtₓ'. -/
 theorem IsBoundedBilinearMap.differentiableWithinAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     DifferentiableWithinAt 𝕜 b u p :=
   (h.DifferentiableAt p).DifferentiableWithinAt
 #align is_bounded_bilinear_map.differentiable_within_at IsBoundedBilinearMap.differentiableWithinAt
 
-/- warning: is_bounded_bilinear_map.fderiv -> IsBoundedBilinearMap.fderiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.fderiv IsBoundedBilinearMap.fderivₓ'. -/
 theorem IsBoundedBilinearMap.fderiv (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     fderiv 𝕜 b p = h.deriv p :=
   HasFDerivAt.fderiv (h.HasFDerivAt p)
 #align is_bounded_bilinear_map.fderiv IsBoundedBilinearMap.fderiv
 
-/- warning: is_bounded_bilinear_map.fderiv_within -> IsBoundedBilinearMap.fderivWithin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.fderiv_within IsBoundedBilinearMap.fderivWithinₓ'. -/
 theorem IsBoundedBilinearMap.fderivWithin (h : IsBoundedBilinearMap 𝕜 b) (p : E × F)
     (hxs : UniqueDiffWithinAt 𝕜 u p) : fderivWithin 𝕜 b u p = h.deriv p :=
   by
@@ -155,22 +125,10 @@ theorem IsBoundedBilinearMap.fderivWithin (h : IsBoundedBilinearMap 𝕜 b) (p :
   exact h.fderiv p
 #align is_bounded_bilinear_map.fderiv_within IsBoundedBilinearMap.fderivWithin
 
-/- warning: is_bounded_bilinear_map.differentiable -> IsBoundedBilinearMap.differentiable is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {G : Type.{u4}} [_inst_6 : NormedAddCommGroup.{u4} G] [_inst_7 : NormedSpace.{u1, u4} 𝕜 G (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u4} G _inst_6)] {b : (Prod.{u2, u3} E F) -> G}, (IsBoundedBilinearMap.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) -> (Differentiable.{u1, max u2 u3, u4} 𝕜 _inst_1 (Prod.{u2, u3} E F) (Prod.normedAddCommGroup.{u2, u3} E F _inst_2 _inst_4) (Prod.normedSpace.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5) G _inst_6 _inst_7 b)
-but is expected to have type
-  forall {𝕜 : Type.{u4}} [_inst_1 : NontriviallyNormedField.{u4} 𝕜] {E : Type.{u3}} [_inst_2 : NormedAddCommGroup.{u3} E] [_inst_3 : NormedSpace.{u4, u3} 𝕜 E (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2)] {F : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} 𝕜 F (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] {G : Type.{u1}} [_inst_6 : NormedAddCommGroup.{u1} G] [_inst_7 : NormedSpace.{u4, u1} 𝕜 G (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} G _inst_6)] {b : (Prod.{u3, u2} E F) -> G}, (IsBoundedBilinearMap.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) -> (Differentiable.{u4, max u3 u2, u1} 𝕜 _inst_1 (Prod.{u3, u2} E F) (Prod.normedAddCommGroup.{u3, u2} E F _inst_2 _inst_4) (Prod.normedSpace.{u4, u3, u2} 𝕜 (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4) _inst_5) G _inst_6 _inst_7 b)
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.differentiable IsBoundedBilinearMap.differentiableₓ'. -/
 theorem IsBoundedBilinearMap.differentiable (h : IsBoundedBilinearMap 𝕜 b) : Differentiable 𝕜 b :=
   fun x => h.DifferentiableAt x
 #align is_bounded_bilinear_map.differentiable IsBoundedBilinearMap.differentiable
 
-/- warning: is_bounded_bilinear_map.differentiable_on -> IsBoundedBilinearMap.differentiableOn is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NontriviallyNormedField.{u1} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u3}} [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u1, u3} 𝕜 F (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] {G : Type.{u4}} [_inst_6 : NormedAddCommGroup.{u4} G] [_inst_7 : NormedSpace.{u1, u4} 𝕜 G (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u4} G _inst_6)] {b : (Prod.{u2, u3} E F) -> G} {u : Set.{max u2 u3} (Prod.{u2, u3} E F)}, (IsBoundedBilinearMap.{u1, u2, u3, u4} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) -> (DifferentiableOn.{u1, max u2 u3, u4} 𝕜 _inst_1 (Prod.{u2, u3} E F) (Prod.normedAddCommGroup.{u2, u3} E F _inst_2 _inst_4) (Prod.normedSpace.{u1, u2, u3} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4) _inst_5) G _inst_6 _inst_7 b u)
-but is expected to have type
-  forall {𝕜 : Type.{u4}} [_inst_1 : NontriviallyNormedField.{u4} 𝕜] {E : Type.{u3}} [_inst_2 : NormedAddCommGroup.{u3} E] [_inst_3 : NormedSpace.{u4, u3} 𝕜 E (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2)] {F : Type.{u2}} [_inst_4 : NormedAddCommGroup.{u2} F] [_inst_5 : NormedSpace.{u4, u2} 𝕜 F (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4)] {G : Type.{u1}} [_inst_6 : NormedAddCommGroup.{u1} G] [_inst_7 : NormedSpace.{u4, u1} 𝕜 G (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} G _inst_6)] {b : (Prod.{u3, u2} E F) -> G} {u : Set.{max u2 u3} (Prod.{u3, u2} E F)}, (IsBoundedBilinearMap.{u4, u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 G _inst_6 _inst_7 b) -> (DifferentiableOn.{u4, max u3 u2, u1} 𝕜 _inst_1 (Prod.{u3, u2} E F) (Prod.normedAddCommGroup.{u3, u2} E F _inst_2 _inst_4) (Prod.normedSpace.{u4, u3, u2} 𝕜 (NontriviallyNormedField.toNormedField.{u4} 𝕜 _inst_1) E (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} E _inst_2) _inst_3 F (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} F _inst_4) _inst_5) G _inst_6 _inst_7 b u)
-Case conversion may be inaccurate. Consider using '#align is_bounded_bilinear_map.differentiable_on IsBoundedBilinearMap.differentiableOnₓ'. -/
 theorem IsBoundedBilinearMap.differentiableOn (h : IsBoundedBilinearMap 𝕜 b) :
     DifferentiableOn 𝕜 b u :=
   h.Differentiable.DifferentiableOn
@@ -178,9 +136,6 @@ theorem IsBoundedBilinearMap.differentiableOn (h : IsBoundedBilinearMap 𝕜 b) 
 
 variable (B : E →L[𝕜] F →L[𝕜] G)
 
-/- warning: continuous_linear_map.has_fderiv_within_at_of_bilinear -> ContinuousLinearMap.hasFDerivWithinAt_of_bilinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_fderiv_within_at_of_bilinear ContinuousLinearMap.hasFDerivWithinAt_of_bilinearₓ'. -/
 theorem ContinuousLinearMap.hasFDerivWithinAt_of_bilinear {f : G' → E} {g : G' → F}
     {f' : G' →L[𝕜] E} {g' : G' →L[𝕜] F} {x : G'} {s : Set G'} (hf : HasFDerivWithinAt f f' s x)
     (hg : HasFDerivWithinAt g g' s x) :
@@ -189,18 +144,12 @@ theorem ContinuousLinearMap.hasFDerivWithinAt_of_bilinear {f : G' → E} {g : G'
   (B.IsBoundedBilinearMap.HasFDerivAt (f x, g x)).comp_hasFDerivWithinAt x (hf.Prod hg)
 #align continuous_linear_map.has_fderiv_within_at_of_bilinear ContinuousLinearMap.hasFDerivWithinAt_of_bilinear
 
-/- warning: continuous_linear_map.has_fderiv_at_of_bilinear -> ContinuousLinearMap.hasFDerivAt_of_bilinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_fderiv_at_of_bilinear ContinuousLinearMap.hasFDerivAt_of_bilinearₓ'. -/
 theorem ContinuousLinearMap.hasFDerivAt_of_bilinear {f : G' → E} {g : G' → F} {f' : G' →L[𝕜] E}
     {g' : G' →L[𝕜] F} {x : G'} (hf : HasFDerivAt f f' x) (hg : HasFDerivAt g g' x) :
     HasFDerivAt (fun y => B (f y) (g y)) (B.precompR G' (f x) g' + B.precompL G' f' (g x)) x :=
   (B.IsBoundedBilinearMap.HasFDerivAt (f x, g x)).comp x (hf.Prod hg)
 #align continuous_linear_map.has_fderiv_at_of_bilinear ContinuousLinearMap.hasFDerivAt_of_bilinear
 
-/- warning: continuous_linear_map.fderiv_within_of_bilinear -> ContinuousLinearMap.fderivWithin_of_bilinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.fderiv_within_of_bilinear ContinuousLinearMap.fderivWithin_of_bilinearₓ'. -/
 theorem ContinuousLinearMap.fderivWithin_of_bilinear {f : G' → E} {g : G' → F} {x : G'} {s : Set G'}
     (hf : DifferentiableWithinAt 𝕜 f s x) (hg : DifferentiableWithinAt 𝕜 g s x)
     (hs : UniqueDiffWithinAt 𝕜 s x) :
@@ -209,9 +158,6 @@ theorem ContinuousLinearMap.fderivWithin_of_bilinear {f : G' → E} {g : G' → 
   (B.hasFDerivWithinAt_of_bilinear hf.HasFDerivWithinAt hg.HasFDerivWithinAt).fderivWithin hs
 #align continuous_linear_map.fderiv_within_of_bilinear ContinuousLinearMap.fderivWithin_of_bilinear
 
-/- warning: continuous_linear_map.fderiv_of_bilinear -> ContinuousLinearMap.fderiv_of_bilinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.fderiv_of_bilinear ContinuousLinearMap.fderiv_of_bilinearₓ'. -/
 theorem ContinuousLinearMap.fderiv_of_bilinear {f : G' → E} {g : G' → F} {x : G'}
     (hf : DifferentiableAt 𝕜 f x) (hg : DifferentiableAt 𝕜 g x) :
     fderiv 𝕜 (fun y => B (f y) (g y)) x =

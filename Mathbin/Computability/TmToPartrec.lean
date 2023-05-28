@@ -146,12 +146,6 @@ def nil : Code :=
 #align turing.to_partrec.code.nil Turing.ToPartrec.Code.nil
 -/
 
-/- warning: turing.to_partrec.code.nil_eval -> Turing.ToPartrec.Code.nil_eval is a dubious translation:
-lean 3 declaration is
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.nil v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.nil.{0} Nat))
-but is expected to have type
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.nil v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.nil.{0} Nat))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.nil_eval Turing.ToPartrec.Code.nil_evalₓ'. -/
 @[simp]
 theorem nil_eval (v) : nil.eval v = pure [] := by simp [nil]
 #align turing.to_partrec.code.nil_eval Turing.ToPartrec.Code.nil_eval
@@ -163,12 +157,6 @@ def id : Code :=
 #align turing.to_partrec.code.id Turing.ToPartrec.Code.id
 -/
 
-/- warning: turing.to_partrec.code.id_eval -> Turing.ToPartrec.Code.id_eval is a dubious translation:
-lean 3 declaration is
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.id v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) v)
-but is expected to have type
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.id v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) v)
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.id_eval Turing.ToPartrec.Code.id_evalₓ'. -/
 @[simp]
 theorem id_eval (v) : id.eval v = pure v := by simp [id]
 #align turing.to_partrec.code.id_eval Turing.ToPartrec.Code.id_eval
@@ -180,12 +168,6 @@ def head : Code :=
 #align turing.to_partrec.code.head Turing.ToPartrec.Code.head
 -/
 
-/- warning: turing.to_partrec.code.head_eval -> Turing.ToPartrec.Code.head_eval is a dubious translation:
-lean 3 declaration is
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.head v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.cons.{0} Nat (List.headI.{0} Nat Nat.inhabited v) (List.nil.{0} Nat)))
-but is expected to have type
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.head v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.cons.{0} Nat (List.headI.{0} Nat instInhabitedNat v) (List.nil.{0} Nat)))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.head_eval Turing.ToPartrec.Code.head_evalₓ'. -/
 @[simp]
 theorem head_eval (v) : head.eval v = pure [v.headI] := by simp [head]
 #align turing.to_partrec.code.head_eval Turing.ToPartrec.Code.head_eval
@@ -197,12 +179,6 @@ def zero : Code :=
 #align turing.to_partrec.code.zero Turing.ToPartrec.Code.zero
 -/
 
-/- warning: turing.to_partrec.code.zero_eval -> Turing.ToPartrec.Code.zero_eval is a dubious translation:
-lean 3 declaration is
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.zero v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.cons.{0} Nat (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.nil.{0} Nat)))
-but is expected to have type
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.zero v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.cons.{0} Nat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (List.nil.{0} Nat)))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.zero_eval Turing.ToPartrec.Code.zero_evalₓ'. -/
 @[simp]
 theorem zero_eval (v) : zero.eval v = pure [0] := by simp [zero]
 #align turing.to_partrec.code.zero_eval Turing.ToPartrec.Code.zero_eval
@@ -215,12 +191,6 @@ def pred : Code :=
 #align turing.to_partrec.code.pred Turing.ToPartrec.Code.pred
 -/
 
-/- warning: turing.to_partrec.code.pred_eval -> Turing.ToPartrec.Code.pred_eval is a dubious translation:
-lean 3 declaration is
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.pred v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.cons.{0} Nat (Nat.pred (List.headI.{0} Nat Nat.inhabited v)) (List.nil.{0} Nat)))
-but is expected to have type
-  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.pred v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.cons.{0} Nat (Nat.pred (List.headI.{0} Nat instInhabitedNat v)) (List.nil.{0} Nat)))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.pred_eval Turing.ToPartrec.Code.pred_evalₓ'. -/
 @[simp]
 theorem pred_eval (v) : pred.eval v = pure [v.headI.pred] := by
   simp [pred] <;> cases v.head <;> simp
@@ -279,12 +249,6 @@ def prec (f g : Code) : Code :=
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
-/- warning: turing.to_partrec.code.exists_code.comp -> Turing.ToPartrec.Code.exists_code.comp is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat} {g : (Fin n) -> (PFun.{0, 0} (Vector.{0} Nat m) Nat)}, (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (f v)))) -> (forall (i : Fin n), Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (g i v)))) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) (Vector.{0} Nat n) Nat (Vector.mOfFn.{0, 0} Part.{0} Part.monad.{0} Nat n (fun (i : Fin n) => g i v)) f))))
-but is expected to have type
-  forall {m : Nat} {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat} {g : (Fin n) -> (PFun.{0, 0} (Vector.{0} Nat m) Nat)}, (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (f v)))) -> (forall (i : Fin n), Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (g i v)))) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) (Vector.{0} Nat n) Nat (Vector.mOfFn.{0, 0} Part.{0} Part.instMonadPart.{0} Nat n (fun (i : Fin n) => g i v)) f))))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.exists_code.compₓ'. -/
 theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
@@ -307,12 +271,6 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector
         rfl⟩
 #align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.exists_code.comp
 
-/- warning: turing.to_partrec.code.exists_code -> Turing.ToPartrec.Code.exists_code is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat}, (Nat.Partrec' n f) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (f v))))
-but is expected to have type
-  forall {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat}, (Nat.Partrec' n f) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (f v))))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.exists_code Turing.ToPartrec.Code.exists_codeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -611,12 +569,6 @@ def Cont.then : Cont → Cont → Cont
 #align turing.to_partrec.cont.then Turing.ToPartrec.Cont.then
 -/
 
-/- warning: turing.to_partrec.cont.then_eval -> Turing.ToPartrec.Cont.then_eval is a dubious translation:
-lean 3 declaration is
-  forall {k : Turing.ToPartrec.Cont} {k' : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Cont.eval (Turing.ToPartrec.Cont.then k k') v) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) (List.{0} Nat) (List.{0} Nat) (Turing.ToPartrec.Cont.eval k v) (Turing.ToPartrec.Cont.eval k'))
-but is expected to have type
-  forall {k : Turing.ToPartrec.Cont} {k' : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Cont.eval (Turing.ToPartrec.Cont.then k k') v) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) (List.{0} Nat) (List.{0} Nat) (Turing.ToPartrec.Cont.eval k v) (Turing.ToPartrec.Cont.eval k'))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.cont.then_eval Turing.ToPartrec.Cont.then_evalₓ'. -/
 theorem Cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.eval :=
   by
   induction k generalizing v <;> simp only [cont.eval, cont.then, bind_assoc, pure_bind, *]
@@ -676,12 +628,6 @@ def Code.Ok (c : Code) :=
 #align turing.to_partrec.code.ok Turing.ToPartrec.Code.Ok
 -/
 
-/- warning: turing.to_partrec.code.ok.zero -> Turing.ToPartrec.Code.Ok.zero is a dubious translation:
-lean 3 declaration is
-  forall {c : Turing.ToPartrec.Code}, (Turing.ToPartrec.Code.Ok c) -> (forall {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v)))
-but is expected to have type
-  forall {c : Turing.ToPartrec.Code}, (Turing.ToPartrec.Code.Ok c) -> (forall {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v)))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.ok.zero Turing.ToPartrec.Code.Ok.zeroₓ'. -/
 theorem Code.Ok.zero {c} (h : Code.Ok c) {v} :
     eval step (stepNormal c Cont.halt v) = Cfg.halt <$> Code.eval c v :=
   by
@@ -702,12 +648,6 @@ theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' 
 #align turing.to_partrec.step_normal.is_ret Turing.ToPartrec.stepNormal.is_ret
 -/
 
-/- warning: turing.to_partrec.cont_eval_fix -> Turing.ToPartrec.cont_eval_fix is a dubious translation:
-lean 3 declaration is
-  forall {f : Turing.ToPartrec.Code} {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, (Turing.ToPartrec.Code.Ok f) -> (Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal f (Turing.ToPartrec.Cont.fix f k) v)) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) (List.{0} Nat) Turing.ToPartrec.Cfg (Turing.ToPartrec.Code.eval (Turing.ToPartrec.Code.fix f) v) (fun (v : List.{0} Nat) => Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.Cfg.ret k v))))
-but is expected to have type
-  forall {f : Turing.ToPartrec.Code} {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, (Turing.ToPartrec.Code.Ok f) -> (Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal f (Turing.ToPartrec.Cont.fix f k) v)) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) (List.{0} Nat) Turing.ToPartrec.Cfg (Turing.ToPartrec.Code.eval (Turing.ToPartrec.Code.fix f) v) (fun (v : List.{0} Nat) => Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.Cfg.ret k v))))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.cont_eval_fix Turing.ToPartrec.cont_eval_fixₓ'. -/
 theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     eval step (stepNormal f (Cont.fix f k) v) = f.fix.eval v >>= fun v => eval step (Cfg.ret k v) :=
   by
@@ -794,22 +734,10 @@ theorem code_is_ok (c) : Code.Ok c :=
 #align turing.to_partrec.code_is_ok Turing.ToPartrec.code_is_ok
 -/
 
-/- warning: turing.to_partrec.step_normal_eval -> Turing.ToPartrec.stepNormal_eval is a dubious translation:
-lean 3 declaration is
-  forall (c : Turing.ToPartrec.Code) (v : List.{0} Nat), Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v))
-but is expected to have type
-  forall (c : Turing.ToPartrec.Code) (v : List.{0} Nat), Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.step_normal_eval Turing.ToPartrec.stepNormal_evalₓ'. -/
 theorem stepNormal_eval (c v) : eval step (stepNormal c Cont.halt v) = Cfg.halt <$> c.eval v :=
   (code_is_ok c).zero
 #align turing.to_partrec.step_normal_eval Turing.ToPartrec.stepNormal_eval
 
-/- warning: turing.to_partrec.step_ret_eval -> Turing.ToPartrec.stepRet_eval is a dubious translation:
-lean 3 declaration is
-  forall {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepRet k v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Cont.eval k v))
-but is expected to have type
-  forall {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepRet k v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Cont.eval k v))
-Case conversion may be inaccurate. Consider using '#align turing.to_partrec.step_ret_eval Turing.ToPartrec.stepRet_evalₓ'. -/
 theorem stepRet_eval {k v} : eval step (stepRet k v) = Cfg.halt <$> k.eval v :=
   by
   induction k generalizing v
@@ -1313,45 +1241,21 @@ def K'.elim (a b c d : List Γ') : K' → List Γ'
 #align turing.partrec_to_TM2.K'.elim Turing.PartrecToTM2.K'.elim
 -/
 
-/- warning: turing.partrec_to_TM2.K'.elim_update_main -> Turing.PartrecToTM2.K'.elim_update_main is a dubious translation:
-lean 3 declaration is
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {a' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.main a') (Turing.PartrecToTM2.K'.elim a' b c d)
-but is expected to have type
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {a' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.main a') (Turing.PartrecToTM2.K'.elim a' b c d)
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'.elim_update_mainₓ'. -/
 @[simp]
 theorem K'.elim_update_main {a b c d a'} : update (K'.elim a b c d) main a' = K'.elim a' b c d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'.elim_update_main
 
-/- warning: turing.partrec_to_TM2.K'.elim_update_rev -> Turing.PartrecToTM2.K'.elim_update_rev is a dubious translation:
-lean 3 declaration is
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {b' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.rev b') (Turing.PartrecToTM2.K'.elim a b' c d)
-but is expected to have type
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {b' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.rev b') (Turing.PartrecToTM2.K'.elim a b' c d)
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'.elim_update_revₓ'. -/
 @[simp]
 theorem K'.elim_update_rev {a b c d b'} : update (K'.elim a b c d) rev b' = K'.elim a b' c d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'.elim_update_rev
 
-/- warning: turing.partrec_to_TM2.K'.elim_update_aux -> Turing.PartrecToTM2.K'.elim_update_aux is a dubious translation:
-lean 3 declaration is
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {c' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.aux c') (Turing.PartrecToTM2.K'.elim a b c' d)
-but is expected to have type
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {c' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.aux c') (Turing.PartrecToTM2.K'.elim a b c' d)
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'.elim_update_auxₓ'. -/
 @[simp]
 theorem K'.elim_update_aux {a b c d c'} : update (K'.elim a b c d) aux c' = K'.elim a b c' d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'.elim_update_aux
 
-/- warning: turing.partrec_to_TM2.K'.elim_update_stack -> Turing.PartrecToTM2.K'.elim_update_stack is a dubious translation:
-lean 3 declaration is
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {d' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.stack d') (Turing.PartrecToTM2.K'.elim a b c d')
-but is expected to have type
-  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {d' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.stack d') (Turing.PartrecToTM2.K'.elim a b c d')
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_stack Turing.PartrecToTM2.K'.elim_update_stackₓ'. -/
 @[simp]
 theorem K'.elim_update_stack {a b c d d'} : update (K'.elim a b c d) stack d' = K'.elim a b c d' :=
   by funext x <;> cases x <;> rfl
@@ -1967,12 +1871,6 @@ theorem codeSupp_fix (f k) :
 #align turing.partrec_to_TM2.code_supp_fix Turing.PartrecToTM2.codeSupp_fix
 -/
 
-/- warning: turing.partrec_to_TM2.cont_supp_cons₁ -> Turing.PartrecToTM2.contSupp_cons₁ is a dubious translation:
-lean 3 declaration is
-  forall (fs : Turing.ToPartrec.Code) (k : Turing.PartrecToTM2.Cont'), Eq.{1} (Finset.{0} Turing.PartrecToTM2.Λ') (Turing.PartrecToTM2.contSupp (Turing.PartrecToTM2.Cont'.cons₁ fs k)) (Union.union.{0} (Finset.{0} Turing.PartrecToTM2.Λ') (Finset.hasUnion.{0} Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b)) (Turing.PartrecToTM2.trStmts₁ (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.main Turing.PartrecToTM2.K'.aux (Turing.PartrecToTM2.move₂ (fun (s : Turing.PartrecToTM2.Γ') => Decidable.decide (Eq.{1} Turing.PartrecToTM2.Γ' s Turing.PartrecToTM2.Γ'.consₗ) (Turing.PartrecToTM2.Γ'.decidableEq s Turing.PartrecToTM2.Γ'.consₗ)) Turing.PartrecToTM2.K'.stack Turing.PartrecToTM2.K'.main (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.aux Turing.PartrecToTM2.K'.stack (Turing.PartrecToTM2.trNormal fs (Turing.PartrecToTM2.Cont'.cons₂ k)))))) (Turing.PartrecToTM2.codeSupp fs (Turing.PartrecToTM2.Cont'.cons₂ k)))
-but is expected to have type
-  forall (fs : Turing.ToPartrec.Code) (k : Turing.PartrecToTM2.Cont'), Eq.{1} (Finset.{0} Turing.PartrecToTM2.Λ') (Turing.PartrecToTM2.contSupp (Turing.PartrecToTM2.Cont'.cons₁ fs k)) (Union.union.{0} (Finset.{0} Turing.PartrecToTM2.Λ') (Finset.instUnionFinset.{0} Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b)) (Turing.PartrecToTM2.trStmts₁ (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.main Turing.PartrecToTM2.K'.aux (Turing.PartrecToTM2.move₂ (fun (s : Turing.PartrecToTM2.Γ') => Decidable.decide (Eq.{1} Turing.PartrecToTM2.Γ' s Turing.PartrecToTM2.Γ'.consₗ) (Turing.PartrecToTM2.instDecidableEqΓ' s Turing.PartrecToTM2.Γ'.consₗ)) Turing.PartrecToTM2.K'.stack Turing.PartrecToTM2.K'.main (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.aux Turing.PartrecToTM2.K'.stack (Turing.PartrecToTM2.trNormal fs (Turing.PartrecToTM2.Cont'.cons₂ k)))))) (Turing.PartrecToTM2.codeSupp fs (Turing.PartrecToTM2.Cont'.cons₂ k)))
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.cont_supp_cons₁ Turing.PartrecToTM2.contSupp_cons₁ₓ'. -/
 @[simp]
 theorem contSupp_cons₁ (fs k) :
     contSupp (Cont'.cons₁ fs k) =
@@ -2058,12 +1956,6 @@ theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K
 #align turing.partrec_to_TM2.supports_union Turing.PartrecToTM2.supports_union
 -/
 
-/- warning: turing.partrec_to_TM2.supports_bUnion -> Turing.PartrecToTM2.supports_biUnion is a dubious translation:
-lean 3 declaration is
-  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.biUnion.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (Option.fintype.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.Γ'.fintype)) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
-but is expected to have type
-  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.biUnion.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (instFintypeOption.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.instFintypeΓ')) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_biUnionₓ'. -/
 theorem supports_biUnion {K : Option Γ' → Finset Λ'} {S} :
     Supports (Finset.univ.biUnion K) S ↔ ∀ a, Supports (K a) S := by
   simp [supports] <;> apply forall_swap

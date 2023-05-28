@@ -44,12 +44,6 @@ class EssentiallySmall (C : Type u) [Category.{v} C] : Prop where
 #align category_theory.essentially_small CategoryTheory.EssentiallySmall
 -/
 
-/- warning: category_theory.essentially_small.mk' -> CategoryTheory.EssentiallySmall.mk' is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u2, u3} C] {S : Type.{u1}} [_inst_3 : CategoryTheory.SmallCategory.{u1} S], (CategoryTheory.Equivalence.{u2, u1, u3, u1} C _inst_2 S _inst_3) -> (CategoryTheory.EssentiallySmall.{u1, u2, u3} C _inst_2)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u2, u3} C] {S : Type.{u1}} [_inst_3 : CategoryTheory.SmallCategory.{u1} S], (CategoryTheory.Equivalence.{u2, u1, u3, u1} C S _inst_2 _inst_3) -> (CategoryTheory.EssentiallySmall.{u1, u2, u3} C _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.essentially_small.mk' CategoryTheory.EssentiallySmall.mk'ₓ'. -/
 /-- Constructor for `essentially_small C` from an explicit small category witness. -/
 theorem EssentiallySmall.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCategory S]
     (e : C ≌ S) : EssentiallySmall.{w} C :=
@@ -72,12 +66,6 @@ noncomputable instance smallCategorySmallModel (C : Type u) [Category.{v} C]
 #align category_theory.small_category_small_model CategoryTheory.smallCategorySmallModel
 -/
 
-/- warning: category_theory.equiv_small_model -> CategoryTheory.equivSmallModel is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_2 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.EssentiallySmall.{u1, u2, u3} C _inst_2], CategoryTheory.Equivalence.{u2, u1, u3, u1} C _inst_2 (CategoryTheory.SmallModel.{u1, u2, u3} C _inst_2 _inst_3) (CategoryTheory.smallCategorySmallModel.{u1, u2, u3} C _inst_2 _inst_3)
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_2 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.EssentiallySmall.{u1, u2, u3} C _inst_2], CategoryTheory.Equivalence.{u2, u1, u3, u1} C (CategoryTheory.SmallModel.{u1, u2, u3} C _inst_2 _inst_3) _inst_2 (CategoryTheory.smallCategorySmallModel.{u1, u2, u3} C _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.equiv_small_model CategoryTheory.equivSmallModelₓ'. -/
 /-- The (noncomputable) categorical equivalence between
 an essentially small category and its small model.
 -/
@@ -87,12 +75,6 @@ noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmal
     (Classical.choose_spec (Classical.choose_spec (@EssentiallySmall.equiv_smallCategory C _ _)))
 #align category_theory.equiv_small_model CategoryTheory.equivSmallModel
 
-/- warning: category_theory.essentially_small_congr -> CategoryTheory.essentiallySmall_congr is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u3, u5} D], (CategoryTheory.Equivalence.{u2, u3, u4, u5} C _inst_2 D _inst_3) -> (Iff (CategoryTheory.EssentiallySmall.{u1, u2, u4} C _inst_2) (CategoryTheory.EssentiallySmall.{u1, u3, u5} D _inst_3))
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u3, u5} D], (CategoryTheory.Equivalence.{u2, u3, u4, u5} C D _inst_2 _inst_3) -> (Iff (CategoryTheory.EssentiallySmall.{u1, u2, u4} C _inst_2) (CategoryTheory.EssentiallySmall.{u1, u3, u5} D _inst_3))
-Case conversion may be inaccurate. Consider using '#align category_theory.essentially_small_congr CategoryTheory.essentiallySmall_congrₓ'. -/
 theorem essentiallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D :=
   by
@@ -131,12 +113,6 @@ class LocallySmall (C : Type u) [Category.{v} C] : Prop where
 instance (C : Type u) [Category.{v} C] [LocallySmall.{w} C] (X Y : C) : Small (X ⟶ Y) :=
   LocallySmall.hom_small X Y
 
-/- warning: category_theory.locally_small_congr -> CategoryTheory.locallySmall_congr is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u3, u5} D], (CategoryTheory.Equivalence.{u2, u3, u4, u5} C _inst_2 D _inst_3) -> (Iff (CategoryTheory.LocallySmall.{u1, u2, u4} C _inst_2) (CategoryTheory.LocallySmall.{u1, u3, u5} D _inst_3))
-but is expected to have type
-  forall {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u3, u5} D], (CategoryTheory.Equivalence.{u2, u3, u4, u5} C D _inst_2 _inst_3) -> (Iff (CategoryTheory.LocallySmall.{u1, u2, u4} C _inst_2) (CategoryTheory.LocallySmall.{u1, u3, u5} D _inst_3))
-Case conversion may be inaccurate. Consider using '#align category_theory.locally_small_congr CategoryTheory.locallySmall_congrₓ'. -/
 theorem locallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : LocallySmall.{w} C ↔ LocallySmall.{w} D :=
   by
@@ -224,12 +200,6 @@ noncomputable instance : Category.{w} (ShrinkHoms C)
   id X := equivShrink _ (𝟙 (fromShrinkHoms X))
   comp X Y Z f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
-/- warning: category_theory.shrink_homs.functor -> CategoryTheory.ShrinkHoms.functor is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.LocallySmall.{u1, u2, u3} C _inst_1], CategoryTheory.Functor.{u2, u1, u3, u3} C _inst_1 (CategoryTheory.ShrinkHoms.{u3} C) (CategoryTheory.ShrinkHoms.CategoryTheory.category.{u1, u2, u3} C _inst_1 _inst_2)
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.LocallySmall.{u1, u2, u3} C _inst_1], CategoryTheory.Functor.{u2, u1, u3, u3} C _inst_1 (CategoryTheory.ShrinkHoms.{u3} C) (CategoryTheory.ShrinkHoms.instCategoryShrinkHoms.{u1, u2, u3} C _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.shrink_homs.functor CategoryTheory.ShrinkHoms.functorₓ'. -/
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
 noncomputable def functor : C ⥤ ShrinkHoms C
@@ -238,12 +208,6 @@ noncomputable def functor : C ⥤ ShrinkHoms C
   map X Y f := equivShrink (X ⟶ Y) f
 #align category_theory.shrink_homs.functor CategoryTheory.ShrinkHoms.functor
 
-/- warning: category_theory.shrink_homs.inverse -> CategoryTheory.ShrinkHoms.inverse is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.LocallySmall.{u1, u2, u3} C _inst_1], CategoryTheory.Functor.{u1, u2, u3, u3} (CategoryTheory.ShrinkHoms.{u3} C) (CategoryTheory.ShrinkHoms.CategoryTheory.category.{u1, u2, u3} C _inst_1 _inst_2) C _inst_1
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.LocallySmall.{u1, u2, u3} C _inst_1], CategoryTheory.Functor.{u1, u2, u3, u3} (CategoryTheory.ShrinkHoms.{u3} C) (CategoryTheory.ShrinkHoms.instCategoryShrinkHoms.{u1, u2, u3} C _inst_1 _inst_2) C _inst_1
-Case conversion may be inaccurate. Consider using '#align category_theory.shrink_homs.inverse CategoryTheory.ShrinkHoms.inverseₓ'. -/
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
 noncomputable def inverse : ShrinkHoms C ⥤ C
@@ -252,12 +216,6 @@ noncomputable def inverse : ShrinkHoms C ⥤ C
   map X Y f := (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
 #align category_theory.shrink_homs.inverse CategoryTheory.ShrinkHoms.inverse
 
-/- warning: category_theory.shrink_homs.equivalence -> CategoryTheory.ShrinkHoms.equivalence is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.LocallySmall.{u1, u2, u3} C _inst_1], CategoryTheory.Equivalence.{u2, u1, u3, u3} C _inst_1 (CategoryTheory.ShrinkHoms.{u3} C) (CategoryTheory.ShrinkHoms.CategoryTheory.category.{u1, u2, u3} C _inst_1 _inst_2)
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.LocallySmall.{u1, u2, u3} C _inst_1], CategoryTheory.Equivalence.{u2, u1, u3, u3} C (CategoryTheory.ShrinkHoms.{u3} C) _inst_1 (CategoryTheory.ShrinkHoms.instCategoryShrinkHoms.{u1, u2, u3} C _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.shrink_homs.equivalence CategoryTheory.ShrinkHoms.equivalenceₓ'. -/
 /-- The categorical equivalence between `C` and `shrink_homs C`, when `C` is locally small.
 -/
 @[simps]

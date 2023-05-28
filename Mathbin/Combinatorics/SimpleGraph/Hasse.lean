@@ -49,12 +49,6 @@ def hasse : SimpleGraph α where
 
 variable {α β} {a b : α}
 
-/- warning: simple_graph.hasse_adj -> SimpleGraph.hasse_adj is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1) a b) (Or (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1) a b) (Or (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))
-Case conversion may be inaccurate. Consider using '#align simple_graph.hasse_adj SimpleGraph.hasse_adjₓ'. -/
 @[simp]
 theorem hasse_adj : (hasse α).Adj a b ↔ a ⋖ b ∨ b ⋖ a :=
   Iff.rfl
@@ -67,23 +61,11 @@ def hasseDualIso : hasse αᵒᵈ ≃g hasse α :=
 #align simple_graph.hasse_dual_iso SimpleGraph.hasseDualIso
 -/
 
-/- warning: simple_graph.hasse_dual_iso_apply -> SimpleGraph.hasseDualIso_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : OrderDual.{u1} α), Eq.{succ u1} α (coeFn.{succ u1, succ u1} (SimpleGraph.Iso.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)) (SimpleGraph.hasse.{u1} α _inst_1)) (fun (_x : RelIso.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1))) => (OrderDual.{u1} α) -> α) (RelIso.hasCoeToFun.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1))) (SimpleGraph.hasseDualIso.{u1} α _inst_1) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) => (OrderDual.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α) a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : OrderDual.{u1} α), Eq.{succ u1} α (FunLike.coe.{succ u1, succ u1, succ u1} (RelIso.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1))) (OrderDual.{u1} α) (fun (_x : OrderDual.{u1} α) => α) (RelHomClass.toFunLike.{u1, u1, u1} (RelIso.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1))) (OrderDual.{u1} α) α (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (RelIso.instRelHomClassRelIso.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)))) (SimpleGraph.hasseDualIso.{u1} α _inst_1) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) (fun (_x : OrderDual.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : OrderDual.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α) a)
-Case conversion may be inaccurate. Consider using '#align simple_graph.hasse_dual_iso_apply SimpleGraph.hasseDualIso_applyₓ'. -/
 @[simp]
 theorem hasseDualIso_apply (a : αᵒᵈ) : hasseDualIso a = ofDual a :=
   rfl
 #align simple_graph.hasse_dual_iso_apply SimpleGraph.hasseDualIso_apply
 
-/- warning: simple_graph.hasse_dual_iso_symm_apply -> SimpleGraph.hasseDualIso_symm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Eq.{succ u1} (OrderDual.{u1} α) (coeFn.{succ u1, succ u1} (SimpleGraph.Iso.{u1, u1} α (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} α _inst_1) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (fun (_x : RelIso.{u1, u1} α (OrderDual.{u1} α) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)))) => α -> (OrderDual.{u1} α)) (RelIso.hasCoeToFun.{u1, u1} α (OrderDual.{u1} α) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)))) (SimpleGraph.Iso.symm.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)) (SimpleGraph.hasse.{u1} α _inst_1) (SimpleGraph.hasseDualIso.{u1} α _inst_1)) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Eq.{succ u1} (OrderDual.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (RelIso.{u1, u1} α (OrderDual.{u1} α) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)))) α (fun (_x : α) => OrderDual.{u1} α) (RelHomClass.toFunLike.{u1, u1, u1} (RelIso.{u1, u1} α (OrderDual.{u1} α) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)))) α (OrderDual.{u1} α) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))) (RelIso.instRelHomClassRelIso.{u1, u1} α (OrderDual.{u1} α) (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1)) (SimpleGraph.Adj.{u1} (OrderDual.{u1} α) (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1))))) (SimpleGraph.Iso.symm.{u1, u1} (OrderDual.{u1} α) α (SimpleGraph.hasse.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1)) (SimpleGraph.hasse.{u1} α _inst_1) (SimpleGraph.hasseDualIso.{u1} α _inst_1)) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => OrderDual.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a)
-Case conversion may be inaccurate. Consider using '#align simple_graph.hasse_dual_iso_symm_apply SimpleGraph.hasseDualIso_symm_applyₓ'. -/
 @[simp]
 theorem hasseDualIso_symm_apply (a : α) : hasseDualIso.symm a = toDual a :=
   rfl
@@ -95,12 +77,6 @@ section PartialOrder
 
 variable [PartialOrder α] [PartialOrder β]
 
-/- warning: simple_graph.hasse_prod -> SimpleGraph.hasse_prod is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β], Eq.{succ (max u1 u2)} (SimpleGraph.{max u1 u2} (Prod.{u1, u2} α β)) (SimpleGraph.hasse.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (SimpleGraph.boxProd.{u1, u2} α β (SimpleGraph.hasse.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (SimpleGraph.hasse.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))
-but is expected to have type
-  forall (α : Type.{u2}) (β : Type.{u1}) [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β], Eq.{max (succ u2) (succ u1)} (SimpleGraph.{max u1 u2} (Prod.{u2, u1} α β)) (SimpleGraph.hasse.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) (SimpleGraph.boxProd.{u2, u1} α β (SimpleGraph.hasse.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (SimpleGraph.hasse.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)))
-Case conversion may be inaccurate. Consider using '#align simple_graph.hasse_prod SimpleGraph.hasse_prodₓ'. -/
 @[simp]
 theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by ext (x y);
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,

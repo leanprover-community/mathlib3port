@@ -118,24 +118,12 @@ instance [HasLines P L] : HasPoints (Dual L) (Dual P) :=
     mkPoint := @mkLine P L _ _
     mkPoint_ax := fun _ _ => mkLine_ax }
 
-/- warning: configuration.has_points.exists_unique_point -> Configuration.HasPoints.existsUnique_point is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasPoints.{u1, u2} P L _inst_1] (l₁ : L) (l₂ : L), (Ne.{succ u2} L l₁ l₂) -> (ExistsUnique.{succ u1} P (fun (p : P) => And (Membership.Mem.{u1, u2} P L _inst_1 p l₁) (Membership.Mem.{u1, u2} P L _inst_1 p l₂)))
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasPoints.{u2, u1} P L _inst_1] (l₁ : L) (l₂ : L), (Ne.{succ u1} L l₁ l₂) -> (ExistsUnique.{succ u2} P (fun (p : P) => And (Membership.mem.{u2, u1} P L _inst_1 p l₁) (Membership.mem.{u2, u1} P L _inst_1 p l₂)))
-Case conversion may be inaccurate. Consider using '#align configuration.has_points.exists_unique_point Configuration.HasPoints.existsUnique_pointₓ'. -/
 theorem HasPoints.existsUnique_point [HasPoints P L] (l₁ l₂ : L) (hl : l₁ ≠ l₂) :
     ∃! p, p ∈ l₁ ∧ p ∈ l₂ :=
   ⟨mkPoint hl, mkPoint_ax hl, fun p hp =>
     (eq_or_eq hp.1 (mkPoint_ax hl).1 hp.2 (mkPoint_ax hl).2).resolve_right hl⟩
 #align configuration.has_points.exists_unique_point Configuration.HasPoints.existsUnique_point
 
-/- warning: configuration.has_lines.exists_unique_line -> Configuration.HasLines.existsUnique_line is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasLines.{u1, u2} P L _inst_1] (p₁ : P) (p₂ : P), (Ne.{succ u1} P p₁ p₂) -> (ExistsUnique.{succ u2} L (fun (l : L) => And (Membership.Mem.{u1, u2} P L _inst_1 p₁ l) (Membership.Mem.{u1, u2} P L _inst_1 p₂ l)))
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasLines.{u2, u1} P L _inst_1] (p₁ : P) (p₂ : P), (Ne.{succ u2} P p₁ p₂) -> (ExistsUnique.{succ u1} L (fun (l : L) => And (Membership.mem.{u2, u1} P L _inst_1 p₁ l) (Membership.mem.{u2, u1} P L _inst_1 p₂ l)))
-Case conversion may be inaccurate. Consider using '#align configuration.has_lines.exists_unique_line Configuration.HasLines.existsUnique_lineₓ'. -/
 theorem HasLines.existsUnique_line [HasLines P L] (p₁ p₂ : P) (hp : p₁ ≠ p₂) :
     ∃! l : L, p₁ ∈ l ∧ p₂ ∈ l :=
   HasPoints.existsUnique_point (Dual L) (Dual P) p₁ p₂ hp
@@ -143,12 +131,6 @@ theorem HasLines.existsUnique_line [HasLines P L] (p₁ p₂ : P) (hp : p₁ ≠
 
 variable {P L}
 
-/- warning: configuration.nondegenerate.exists_injective_of_card_le -> Configuration.Nondegenerate.exists_injective_of_card_le is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.Nondegenerate.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], (LE.le.{0} Nat Nat.hasLe (Fintype.card.{u2} L _inst_4) (Fintype.card.{u1} P _inst_3)) -> (Exists.{max (succ u2) (succ u1)} (L -> P) (fun (f : L -> P) => And (Function.Injective.{succ u2, succ u1} L P f) (forall (l : L), Not (Membership.Mem.{u1, u2} P L _inst_1 (f l) l))))
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.Nondegenerate.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], (LE.le.{0} Nat instLENat (Fintype.card.{u1} L _inst_4) (Fintype.card.{u2} P _inst_3)) -> (Exists.{max (succ u2) (succ u1)} (L -> P) (fun (f : L -> P) => And (Function.Injective.{succ u1, succ u2} L P f) (forall (l : L), Not (Membership.mem.{u2, u1} P L _inst_1 (f l) l))))
-Case conversion may be inaccurate. Consider using '#align configuration.nondegenerate.exists_injective_of_card_le Configuration.Nondegenerate.exists_injective_of_card_leₓ'. -/
 /-- If a nondegenerate configuration has at least as many points as lines, then there exists
   an injective function `f` from lines to points, such that `f l` does not lie on `l`. -/
 theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P] [Fintype L]
@@ -219,12 +201,6 @@ noncomputable def pointCount (l : L) : ℕ :=
 
 variable (P L)
 
-/- warning: configuration.sum_line_count_eq_sum_point_count -> Configuration.sum_lineCount_eq_sum_pointCount is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Fintype.{u1} P] [_inst_3 : Fintype.{u2} L], Eq.{1} Nat (Finset.sum.{0, u1} Nat P Nat.addCommMonoid (Finset.univ.{u1} P _inst_2) (fun (p : P) => Configuration.lineCount.{u1, u2} P L _inst_1 p)) (Finset.sum.{0, u2} Nat L Nat.addCommMonoid (Finset.univ.{u2} L _inst_3) (fun (l : L) => Configuration.pointCount.{u1, u2} P L _inst_1 l))
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Fintype.{u2} P] [_inst_3 : Fintype.{u1} L], Eq.{1} Nat (Finset.sum.{0, u2} Nat P Nat.addCommMonoid (Finset.univ.{u2} P _inst_2) (fun (p : P) => Configuration.lineCount.{u2, u1} P L _inst_1 p)) (Finset.sum.{0, u1} Nat L Nat.addCommMonoid (Finset.univ.{u1} L _inst_3) (fun (l : L) => Configuration.pointCount.{u2, u1} P L _inst_1 l))
-Case conversion may be inaccurate. Consider using '#align configuration.sum_line_count_eq_sum_point_count Configuration.sum_lineCount_eq_sum_pointCountₓ'. -/
 theorem sum_lineCount_eq_sum_pointCount [Fintype P] [Fintype L] :
     (∑ p : P, lineCount L p) = ∑ l : L, pointCount P l := by
   classical
@@ -240,12 +216,6 @@ theorem sum_lineCount_eq_sum_pointCount [Fintype P] [Fintype L] :
 
 variable {P L}
 
-/- warning: configuration.has_lines.point_count_le_line_count -> Configuration.HasLines.pointCount_le_lineCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasLines.{u1, u2} P L _inst_1] {p : P} {l : L}, (Not (Membership.Mem.{u1, u2} P L _inst_1 p l)) -> (forall [_inst_3 : Finite.{succ u2} (Subtype.{succ u2} L (fun (l : L) => Membership.Mem.{u1, u2} P L _inst_1 p l))], LE.le.{0} Nat Nat.hasLe (Configuration.pointCount.{u1, u2} P L _inst_1 l) (Configuration.lineCount.{u1, u2} P L _inst_1 p))
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasLines.{u2, u1} P L _inst_1] {p : P} {l : L}, (Not (Membership.mem.{u2, u1} P L _inst_1 p l)) -> (forall [_inst_3 : Finite.{succ u1} (Subtype.{succ u1} L (fun (l : L) => Membership.mem.{u2, u1} P L _inst_1 p l))], LE.le.{0} Nat instLENat (Configuration.pointCount.{u2, u1} P L _inst_1 l) (Configuration.lineCount.{u2, u1} P L _inst_1 p))
-Case conversion may be inaccurate. Consider using '#align configuration.has_lines.point_count_le_line_count Configuration.HasLines.pointCount_le_lineCountₓ'. -/
 theorem HasLines.pointCount_le_lineCount [HasLines P L] {p : P} {l : L} (h : p ∉ l)
     [Finite { l : L // p ∈ l }] : pointCount P l ≤ lineCount L p :=
   by
@@ -264,12 +234,6 @@ theorem HasLines.pointCount_le_lineCount [HasLines P L] {p : P} {l : L} (h : p �
           fun h' => (congr_arg _ h').mp h (mk_line_ax (this p₁)).1)
 #align configuration.has_lines.point_count_le_line_count Configuration.HasLines.pointCount_le_lineCount
 
-/- warning: configuration.has_points.line_count_le_point_count -> Configuration.HasPoints.lineCount_le_pointCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasPoints.{u1, u2} P L _inst_1] {p : P} {l : L}, (Not (Membership.Mem.{u1, u2} P L _inst_1 p l)) -> (forall [hf : Finite.{succ u1} (Subtype.{succ u1} P (fun (p : P) => Membership.Mem.{u1, u2} P L _inst_1 p l))], LE.le.{0} Nat Nat.hasLe (Configuration.lineCount.{u1, u2} P L _inst_1 p) (Configuration.pointCount.{u1, u2} P L _inst_1 l))
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasPoints.{u2, u1} P L _inst_1] {p : P} {l : L}, (Not (Membership.mem.{u2, u1} P L _inst_1 p l)) -> (forall [hf : Finite.{succ u2} (Subtype.{succ u2} P (fun (p : P) => Membership.mem.{u2, u1} P L _inst_1 p l))], LE.le.{0} Nat instLENat (Configuration.lineCount.{u2, u1} P L _inst_1 p) (Configuration.pointCount.{u2, u1} P L _inst_1 l))
-Case conversion may be inaccurate. Consider using '#align configuration.has_points.line_count_le_point_count Configuration.HasPoints.lineCount_le_pointCountₓ'. -/
 theorem HasPoints.lineCount_le_pointCount [HasPoints P L] {p : P} {l : L} (h : p ∉ l)
     [hf : Finite { p : P // p ∈ l }] : lineCount L p ≤ pointCount P l :=
   @HasLines.pointCount_le_lineCount (Dual L) (Dual P) _ _ l p h hf
@@ -277,12 +241,6 @@ theorem HasPoints.lineCount_le_pointCount [HasPoints P L] {p : P} {l : L} (h : p
 
 variable (P L)
 
-/- warning: configuration.has_lines.card_le -> Configuration.HasLines.card_le is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasLines.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], LE.le.{0} Nat Nat.hasLe (Fintype.card.{u1} P _inst_3) (Fintype.card.{u2} L _inst_4)
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasLines.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], LE.le.{0} Nat instLENat (Fintype.card.{u2} P _inst_3) (Fintype.card.{u1} L _inst_4)
-Case conversion may be inaccurate. Consider using '#align configuration.has_lines.card_le Configuration.HasLines.card_leₓ'. -/
 /-- If a nondegenerate configuration has a unique line through any two points, then `|P| ≤ |L|`. -/
 theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] : Fintype.card P ≤ Fintype.card L :=
   by
@@ -313,12 +271,6 @@ theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] : Fintype.card P
           ⟨⟨mk_line this, (mk_line_ax this).2⟩⟩
 #align configuration.has_lines.card_le Configuration.HasLines.card_le
 
-/- warning: configuration.has_points.card_le -> Configuration.HasPoints.card_le is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasPoints.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], LE.le.{0} Nat Nat.hasLe (Fintype.card.{u2} L _inst_4) (Fintype.card.{u1} P _inst_3)
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasPoints.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], LE.le.{0} Nat instLENat (Fintype.card.{u1} L _inst_4) (Fintype.card.{u2} P _inst_3)
-Case conversion may be inaccurate. Consider using '#align configuration.has_points.card_le Configuration.HasPoints.card_leₓ'. -/
 /-- If a nondegenerate configuration has a unique point on any two lines, then `|L| ≤ |P|`. -/
 theorem HasPoints.card_le [HasPoints P L] [Fintype P] [Fintype L] :
     Fintype.card L ≤ Fintype.card P :=
@@ -327,12 +279,6 @@ theorem HasPoints.card_le [HasPoints P L] [Fintype P] [Fintype L] :
 
 variable {P L}
 
-/- warning: configuration.has_lines.exists_bijective_of_card_eq -> Configuration.HasLines.exists_bijective_of_card_eq is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasLines.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], (Eq.{1} Nat (Fintype.card.{u1} P _inst_3) (Fintype.card.{u2} L _inst_4)) -> (Exists.{max (succ u2) (succ u1)} (L -> P) (fun (f : L -> P) => And (Function.Bijective.{succ u2, succ u1} L P f) (forall (l : L), Eq.{1} Nat (Configuration.pointCount.{u1, u2} P L _inst_1 l) (Configuration.lineCount.{u1, u2} P L _inst_1 (f l)))))
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasLines.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], (Eq.{1} Nat (Fintype.card.{u2} P _inst_3) (Fintype.card.{u1} L _inst_4)) -> (Exists.{max (succ u2) (succ u1)} (L -> P) (fun (f : L -> P) => And (Function.Bijective.{succ u1, succ u2} L P f) (forall (l : L), Eq.{1} Nat (Configuration.pointCount.{u2, u1} P L _inst_1 l) (Configuration.lineCount.{u2, u1} P L _inst_1 (f l)))))
-Case conversion may be inaccurate. Consider using '#align configuration.has_lines.exists_bijective_of_card_eq Configuration.HasLines.exists_bijective_of_card_eqₓ'. -/
 theorem HasLines.exists_bijective_of_card_eq [HasLines P L] [Fintype P] [Fintype L]
     (h : Fintype.card P = Fintype.card L) :
     ∃ f : L → P, Function.Bijective f ∧ ∀ l, pointCount P l = lineCount L (f l) := by
@@ -351,12 +297,6 @@ theorem HasLines.exists_bijective_of_card_eq [HasLines P L] [Fintype P] [Fintype
     exact ⟨l, Finset.mem_univ l, rfl⟩
 #align configuration.has_lines.exists_bijective_of_card_eq Configuration.HasLines.exists_bijective_of_card_eq
 
-/- warning: configuration.has_lines.line_count_eq_point_count -> Configuration.HasLines.lineCount_eq_pointCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasLines.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], (Eq.{1} Nat (Fintype.card.{u1} P _inst_3) (Fintype.card.{u2} L _inst_4)) -> (forall {p : P} {l : L}, (Not (Membership.Mem.{u1, u2} P L _inst_1 p l)) -> (Eq.{1} Nat (Configuration.lineCount.{u1, u2} P L _inst_1 p) (Configuration.pointCount.{u1, u2} P L _inst_1 l)))
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasLines.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], (Eq.{1} Nat (Fintype.card.{u2} P _inst_3) (Fintype.card.{u1} L _inst_4)) -> (forall {p : P} {l : L}, (Not (Membership.mem.{u2, u1} P L _inst_1 p l)) -> (Eq.{1} Nat (Configuration.lineCount.{u2, u1} P L _inst_1 p) (Configuration.pointCount.{u2, u1} P L _inst_1 l)))
-Case conversion may be inaccurate. Consider using '#align configuration.has_lines.line_count_eq_point_count Configuration.HasLines.lineCount_eq_pointCountₓ'. -/
 theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
     (hPL : Fintype.card P = Fintype.card L) {p : P} {l : L} (hpl : p ∉ l) :
     lineCount L p = pointCount P l := by
@@ -389,12 +329,6 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
           step3.symm (p, l) (set.mem_to_finset.mpr hpl)).symm
 #align configuration.has_lines.line_count_eq_point_count Configuration.HasLines.lineCount_eq_pointCount
 
-/- warning: configuration.has_points.line_count_eq_point_count -> Configuration.HasPoints.lineCount_eq_pointCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.HasPoints.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], (Eq.{1} Nat (Fintype.card.{u1} P _inst_3) (Fintype.card.{u2} L _inst_4)) -> (forall {p : P} {l : L}, (Not (Membership.Mem.{u1, u2} P L _inst_1 p l)) -> (Eq.{1} Nat (Configuration.lineCount.{u1, u2} P L _inst_1 p) (Configuration.pointCount.{u1, u2} P L _inst_1 l)))
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.HasPoints.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], (Eq.{1} Nat (Fintype.card.{u2} P _inst_3) (Fintype.card.{u1} L _inst_4)) -> (forall {p : P} {l : L}, (Not (Membership.mem.{u2, u1} P L _inst_1 p l)) -> (Eq.{1} Nat (Configuration.lineCount.{u2, u1} P L _inst_1 p) (Configuration.pointCount.{u2, u1} P L _inst_1 l)))
-Case conversion may be inaccurate. Consider using '#align configuration.has_points.line_count_eq_point_count Configuration.HasPoints.lineCount_eq_pointCountₓ'. -/
 theorem HasPoints.lineCount_eq_pointCount [HasPoints P L] [Fintype P] [Fintype L]
     (hPL : Fintype.card P = Fintype.card L) {p : P} {l : L} (hpl : p ∉ l) :
     lineCount L p = pointCount P l :=
@@ -482,24 +416,12 @@ noncomputable def order : ℕ :=
 #align configuration.projective_plane.order Configuration.ProjectivePlane.order
 -/
 
-/- warning: configuration.projective_plane.card_points_eq_card_lines -> Configuration.ProjectivePlane.card_points_eq_card_lines is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Fintype.{u2} L], Eq.{1} Nat (Fintype.card.{u1} P _inst_3) (Fintype.card.{u2} L _inst_4)
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Fintype.{u1} L], Eq.{1} Nat (Fintype.card.{u2} P _inst_3) (Fintype.card.{u1} L _inst_4)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.card_points_eq_card_lines Configuration.ProjectivePlane.card_points_eq_card_linesₓ'. -/
 theorem card_points_eq_card_lines [Fintype P] [Fintype L] : Fintype.card P = Fintype.card L :=
   le_antisymm (HasLines.card_le P L) (HasPoints.card_le P L)
 #align configuration.projective_plane.card_points_eq_card_lines Configuration.ProjectivePlane.card_points_eq_card_lines
 
 variable {P} (L)
 
-/- warning: configuration.projective_plane.line_count_eq_line_count -> Configuration.ProjectivePlane.lineCount_eq_lineCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (p : P) (q : P), Eq.{1} Nat (Configuration.lineCount.{u1, u2} P L _inst_1 p) (Configuration.lineCount.{u1, u2} P L _inst_1 q)
-but is expected to have type
-  forall {P : Type.{u2}} (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (p : P) (q : P), Eq.{1} Nat (Configuration.lineCount.{u2, u1} P L _inst_1 p) (Configuration.lineCount.{u2, u1} P L _inst_1 q)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.line_count_eq_line_count Configuration.ProjectivePlane.lineCount_eq_lineCountₓ'. -/
 theorem lineCount_eq_lineCount [Finite P] [Finite L] (p q : P) : lineCount L p = lineCount L q :=
   by
   cases nonempty_fintype P
@@ -523,12 +445,6 @@ theorem lineCount_eq_lineCount [Finite P] [Finite L] (p q : P) : lineCount L p =
 
 variable (P) {L}
 
-/- warning: configuration.projective_plane.point_count_eq_point_count -> Configuration.ProjectivePlane.pointCount_eq_pointCount is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (l : L) (m : L), Eq.{1} Nat (Configuration.pointCount.{u1, u2} P L _inst_1 l) (Configuration.pointCount.{u1, u2} P L _inst_1 m)
-but is expected to have type
-  forall (P : Type.{u2}) {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (l : L) (m : L), Eq.{1} Nat (Configuration.pointCount.{u2, u1} P L _inst_1 l) (Configuration.pointCount.{u2, u1} P L _inst_1 m)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.point_count_eq_point_count Configuration.ProjectivePlane.pointCount_eq_pointCountₓ'. -/
 theorem pointCount_eq_pointCount [Finite P] [Finite L] (l m : L) :
     pointCount P l = pointCount P m :=
   lineCount_eq_lineCount (Dual P) l m
@@ -536,12 +452,6 @@ theorem pointCount_eq_pointCount [Finite P] [Finite L] (l m : L) :
 
 variable {P L}
 
-/- warning: configuration.projective_plane.line_count_eq_point_count -> Configuration.ProjectivePlane.lineCount_eq_pointCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (p : P) (l : L), Eq.{1} Nat (Configuration.lineCount.{u1, u2} P L _inst_1 p) (Configuration.pointCount.{u1, u2} P L _inst_1 l)
-but is expected to have type
-  forall {P : Type.{u2}} {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (p : P) (l : L), Eq.{1} Nat (Configuration.lineCount.{u2, u1} P L _inst_1 p) (Configuration.pointCount.{u2, u1} P L _inst_1 l)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.line_count_eq_point_count Configuration.ProjectivePlane.lineCount_eq_pointCountₓ'. -/
 theorem lineCount_eq_pointCount [Finite P] [Finite L] (p : P) (l : L) :
     lineCount L p = pointCount P l :=
   Exists.elim (exists_point l) fun q hq =>
@@ -553,24 +463,12 @@ theorem lineCount_eq_pointCount [Finite P] [Finite L] (p : P) (l : L) :
 
 variable (P L)
 
-/- warning: configuration.projective_plane.dual.order -> Configuration.ProjectivePlane.Dual.order is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L], Eq.{1} Nat (Configuration.ProjectivePlane.order.{u2, u1} (Configuration.Dual.{u2} L) (Configuration.Dual.{u1} P) (Configuration.Dual.hasMem.{u1, u2} P L _inst_1) (Configuration.ProjectivePlane.Configuration.Dual.projectivePlane.{u1, u2} P L _inst_1 _inst_2)) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2)
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L], Eq.{1} Nat (Configuration.ProjectivePlane.order.{u1, u2} (Configuration.Dual.{u1} L) (Configuration.Dual.{u2} P) (Configuration.instMembershipDualDual.{u2, u1} P L _inst_1) (Configuration.ProjectivePlane.instProjectivePlaneDualDualInstMembershipDualDual.{u2, u1} P L _inst_1 _inst_2)) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.dual.order Configuration.ProjectivePlane.Dual.orderₓ'. -/
 theorem Dual.order [Finite P] [Finite L] : order (Dual L) (Dual P) = order P L :=
   congr_arg (fun n => n - 1) (lineCount_eq_pointCount _ _)
 #align configuration.projective_plane.dual.order Configuration.ProjectivePlane.Dual.order
 
 variable {P} (L)
 
-/- warning: configuration.projective_plane.line_count_eq -> Configuration.ProjectivePlane.lineCount_eq is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (p : P), Eq.{1} Nat (Configuration.lineCount.{u1, u2} P L _inst_1 p) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall {P : Type.{u2}} (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (p : P), Eq.{1} Nat (Configuration.lineCount.{u2, u1} P L _inst_1 p) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.line_count_eq Configuration.ProjectivePlane.lineCount_eqₓ'. -/
 theorem lineCount_eq [Finite P] [Finite L] (p : P) : lineCount L p = order P L + 1 := by
   classical
     obtain ⟨q, -, -, l, -, -, -, -, h, -⟩ := Classical.choose_spec (@exists_config P L _ _)
@@ -582,24 +480,12 @@ theorem lineCount_eq [Finite P] [Finite L] (p : P) : lineCount L p = order P L +
 
 variable (P) {L}
 
-/- warning: configuration.projective_plane.point_count_eq -> Configuration.ProjectivePlane.pointCount_eq is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (l : L), Eq.{1} Nat (Configuration.pointCount.{u1, u2} P L _inst_1 l) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall (P : Type.{u2}) {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (l : L), Eq.{1} Nat (Configuration.pointCount.{u2, u1} P L _inst_1 l) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.point_count_eq Configuration.ProjectivePlane.pointCount_eqₓ'. -/
 theorem pointCount_eq [Finite P] [Finite L] (l : L) : pointCount P l = order P L + 1 :=
   (lineCount_eq (Dual P) l).trans (congr_arg (fun n => n + 1) (Dual.order P L))
 #align configuration.projective_plane.point_count_eq Configuration.ProjectivePlane.pointCount_eq
 
 variable (P L)
 
-/- warning: configuration.projective_plane.one_lt_order -> Configuration.ProjectivePlane.one_lt_order is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L], LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2)
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L], LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.one_lt_order Configuration.ProjectivePlane.one_lt_orderₓ'. -/
 theorem one_lt_order [Finite P] [Finite L] : 1 < order P L :=
   by
   obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, -, -, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ := @exists_config P L _ _
@@ -615,36 +501,18 @@ theorem one_lt_order [Finite P] [Finite L] : 1 < order P L :=
 
 variable {P} (L)
 
-/- warning: configuration.projective_plane.two_lt_line_count -> Configuration.ProjectivePlane.two_lt_lineCount is a dubious translation:
-lean 3 declaration is
-  forall {P : Type.{u1}} (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (p : P), LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Configuration.lineCount.{u1, u2} P L _inst_1 p)
-but is expected to have type
-  forall {P : Type.{u2}} (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (p : P), LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Configuration.lineCount.{u2, u1} P L _inst_1 p)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.two_lt_line_count Configuration.ProjectivePlane.two_lt_lineCountₓ'. -/
 theorem two_lt_lineCount [Finite P] [Finite L] (p : P) : 2 < lineCount L p := by
   simpa only [line_count_eq L p, Nat.succ_lt_succ_iff] using one_lt_order P L
 #align configuration.projective_plane.two_lt_line_count Configuration.ProjectivePlane.two_lt_lineCount
 
 variable (P) {L}
 
-/- warning: configuration.projective_plane.two_lt_point_count -> Configuration.ProjectivePlane.two_lt_pointCount is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) {L : Type.{u2}} [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Finite.{succ u2} L] (l : L), LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Configuration.pointCount.{u1, u2} P L _inst_1 l)
-but is expected to have type
-  forall (P : Type.{u2}) {L : Type.{u1}} [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Finite.{succ u1} L] (l : L), LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Configuration.pointCount.{u2, u1} P L _inst_1 l)
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.two_lt_point_count Configuration.ProjectivePlane.two_lt_pointCountₓ'. -/
 theorem two_lt_pointCount [Finite P] [Finite L] (l : L) : 2 < pointCount P l := by
   simpa only [point_count_eq P l, Nat.succ_lt_succ_iff] using one_lt_order P L
 #align configuration.projective_plane.two_lt_point_count Configuration.ProjectivePlane.two_lt_pointCount
 
 variable (P) (L)
 
-/- warning: configuration.projective_plane.card_points -> Configuration.ProjectivePlane.card_points is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Fintype.{u1} P] [_inst_4 : Finite.{succ u2} L], Eq.{1} Nat (Fintype.card.{u1} P _inst_3) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Fintype.{u2} P] [_inst_4 : Finite.{succ u1} L], Eq.{1} Nat (Fintype.card.{u2} P _inst_3) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.card_points Configuration.ProjectivePlane.card_pointsₓ'. -/
 theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + order P L + 1 :=
   by
   cases nonempty_fintype L
@@ -677,12 +545,6 @@ theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + or
     rw [← Nat.card_eq_fintype_card, ← line_count, line_count_eq, smul_eq_mul, Nat.succ_mul, sq]
 #align configuration.projective_plane.card_points Configuration.ProjectivePlane.card_points
 
-/- warning: configuration.projective_plane.card_lines -> Configuration.ProjectivePlane.card_lines is a dubious translation:
-lean 3 declaration is
-  forall (P : Type.{u1}) (L : Type.{u2}) [_inst_1 : Membership.{u1, u2} P L] [_inst_2 : Configuration.ProjectivePlane.{u1, u2} P L _inst_1] [_inst_3 : Finite.{succ u1} P] [_inst_4 : Fintype.{u2} L], Eq.{1} Nat (Fintype.card.{u2} L _inst_4) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Configuration.ProjectivePlane.order.{u1, u2} P L _inst_1 _inst_2)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
-but is expected to have type
-  forall (P : Type.{u2}) (L : Type.{u1}) [_inst_1 : Membership.{u2, u1} P L] [_inst_2 : Configuration.ProjectivePlane.{u2, u1} P L _inst_1] [_inst_3 : Finite.{succ u2} P] [_inst_4 : Fintype.{u1} L], Eq.{1} Nat (Fintype.card.{u1} L _inst_4) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Configuration.ProjectivePlane.order.{u2, u1} P L _inst_1 _inst_2)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align configuration.projective_plane.card_lines Configuration.ProjectivePlane.card_linesₓ'. -/
 theorem card_lines [Finite P] [Fintype L] : Fintype.card L = order P L ^ 2 + order P L + 1 :=
   (card_points (Dual L) (Dual P)).trans (congr_arg (fun n => n ^ 2 + n + 1) (Dual.order P L))
 #align configuration.projective_plane.card_lines Configuration.ProjectivePlane.card_lines

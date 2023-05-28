@@ -219,12 +219,6 @@ theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
 #align nat.succ_le_succ_iff Nat.succ_le_succ_iff
 -/
 
-/- warning: nat.max_succ_succ -> Nat.max_succ_succ is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Eq.{1} Nat (LinearOrder.max.{0} Nat Nat.linearOrder (Nat.succ m) (Nat.succ n)) (Nat.succ (LinearOrder.max.{0} Nat Nat.linearOrder m n))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Eq.{1} Nat (Max.max.{0} Nat Nat.instMaxNat (Nat.succ m) (Nat.succ n)) (Nat.succ (Max.max.{0} Nat Nat.instMaxNat m n))
-Case conversion may be inaccurate. Consider using '#align nat.max_succ_succ Nat.max_succ_succₓ'. -/
 theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
   by
   by_cases h1 : m ≤ n
@@ -318,12 +312,6 @@ theorem forall_lt_succ {P : ℕ → Prop} {n : ℕ} : (∀ m < n + 1, P m) ↔ (
 #align nat.forall_lt_succ Nat.forall_lt_succ
 -/
 
-/- warning: nat.exists_lt_succ -> Nat.exists_lt_succ is a dubious translation:
-lean 3 declaration is
-  forall {P : Nat -> Prop} {n : Nat}, Iff (Exists.{1} Nat (fun (m : Nat) => Exists.{0} (LT.lt.{0} Nat Nat.hasLt m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => P m))) (Or (Exists.{1} Nat (fun (m : Nat) => Exists.{0} (LT.lt.{0} Nat Nat.hasLt m n) (fun (H : LT.lt.{0} Nat Nat.hasLt m n) => P m))) (P n))
-but is expected to have type
-  forall {P : Nat -> Prop} {n : Nat}, Iff (Exists.{1} Nat (fun (m : Nat) => And (LT.lt.{0} Nat instLTNat m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (P m))) (Or (Exists.{1} Nat (fun (m : Nat) => And (LT.lt.{0} Nat instLTNat m n) (P m))) (P n))
-Case conversion may be inaccurate. Consider using '#align nat.exists_lt_succ Nat.exists_lt_succₓ'. -/
 theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n + 1, P m) ↔ (∃ m < n, P m) ∨ P n := by
   rw [← not_iff_not]; push_neg; exact forall_lt_succ
 #align nat.exists_lt_succ Nat.exists_lt_succ
@@ -405,12 +393,6 @@ theorem pred_sub (n m : ℕ) : pred n - m = pred (n - m) := by
 #align nat.pred_sub Nat.pred_sub
 -/
 
-/- warning: nat.le_pred_of_lt -> Nat.le_pred_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt m n) -> (LE.le.{0} Nat Nat.hasLe m (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat instLTNat n m) -> (LE.le.{0} Nat instLENat n (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align nat.le_pred_of_lt Nat.le_pred_of_ltₓ'. -/
 theorem le_pred_of_lt {n m : ℕ} (h : m < n) : m ≤ n - 1 :=
   Nat.sub_le_sub_right h 1
 #align nat.le_pred_of_lt Nat.le_pred_of_lt
@@ -589,12 +571,6 @@ theorem strongRecOn'_beta {P : ℕ → Sort _} {h} {n : ℕ} :
 #align nat.strong_rec_on_beta' Nat.strongRecOn'_beta
 -/
 
-/- warning: nat.le_induction -> Nat.le_induction is a dubious translation:
-lean 3 declaration is
-  forall {P : Nat -> Prop} {m : Nat}, (P m) -> (forall (n : Nat), (LE.le.{0} Nat Nat.hasLe m n) -> (P n) -> (P (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall (n : Nat), (LE.le.{0} Nat Nat.hasLe m n) -> (P n))
-but is expected to have type
-  forall {P : Nat} {m : forall (n : Nat), (LE.le.{0} Nat instLENat P n) -> Prop}, (m P (le_rfl.{0} Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) P)) -> (forall (n : Nat) (ᾰ : LE.le.{0} Nat instLENat P n), (m n ᾰ) -> (m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LE.le.trans.{0} Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) P n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) ᾰ (Nat.le_succ n)))) -> (forall (n : Nat) (ᾰ : LE.le.{0} Nat instLENat P n), m n ᾰ)
-Case conversion may be inaccurate. Consider using '#align nat.le_induction Nat.le_inductionₓ'. -/
 /-- Induction principle starting at a non-zero number. For maps to a `Sort*` see `le_rec_on`. -/
 @[elab_as_elim]
 theorem le_induction {P : Nat → Prop} {m} (h0 : P m) (h1 : ∀ n, m ≤ n → P n → P (n + 1)) :
@@ -821,24 +797,12 @@ protected theorem mul_div_cancel_left' {a b : ℕ} (Hd : a ∣ b) : a * (b / a) 
 #align nat.mul_div_cancel_left' Nat.mul_div_cancel_left'
 -/
 
-/- warning: nat.mul_div_mul_left -> Nat.mul_div_mul_left is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (b : Nat) {c : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) c) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c a) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c b)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) a b))
-but is expected to have type
-  forall {a : Nat} (b : Nat) (c : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a c)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) b c))
-Case conversion may be inaccurate. Consider using '#align nat.mul_div_mul_left Nat.mul_div_mul_leftₓ'. -/
 --TODO: Update `nat.mul_div_mul` in the core?
 /-- Alias of `nat.mul_div_mul` -/
 protected theorem mul_div_mul_left (a b : ℕ) {c : ℕ} (hc : 0 < c) : c * a / (c * b) = a / b :=
   Nat.mul_div_mul a b hc
 #align nat.mul_div_mul_left Nat.mul_div_mul_left
 
-/- warning: nat.mul_div_mul_right -> Nat.mul_div_mul_right is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (b : Nat) {c : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) c) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a c) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) b c)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) a b))
-but is expected to have type
-  forall {a : Nat} (b : Nat) (c : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) b a) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) c a)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) b c))
-Case conversion may be inaccurate. Consider using '#align nat.mul_div_mul_right Nat.mul_div_mul_rightₓ'. -/
 protected theorem mul_div_mul_right (a b : ℕ) {c : ℕ} (hc : 0 < c) : a * c / (b * c) = a / b := by
   rw [mul_comm, mul_comm b, a.mul_div_mul_left b hc]
 #align nat.mul_div_mul_right Nat.mul_div_mul_right
@@ -1072,24 +1036,12 @@ theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < 
 #align nat.find_eq_iff Nat.find_eq_iff
 -/
 
-/- warning: nat.find_lt_iff -> Nat.find_lt_iff is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat -> Prop} [_inst_1 : DecidablePred.{1} Nat p] (h : Exists.{1} Nat (fun (n : Nat) => p n)) (n : Nat), Iff (LT.lt.{0} Nat Nat.hasLt (Nat.find (fun (n : Nat) => p n) (fun (a : Nat) => _inst_1 a) h) n) (Exists.{1} Nat (fun (m : Nat) => Exists.{0} (LT.lt.{0} Nat Nat.hasLt m n) (fun (H : LT.lt.{0} Nat Nat.hasLt m n) => p m)))
-but is expected to have type
-  forall {p : Nat -> Prop} [_inst_1 : DecidablePred.{1} Nat p] (h : Exists.{1} Nat (fun (n : Nat) => p n)) (n : Nat), Iff (LT.lt.{0} Nat instLTNat (Nat.find (fun (n : Nat) => p n) (fun (a : Nat) => _inst_1 a) h) n) (Exists.{1} Nat (fun (m : Nat) => And (LT.lt.{0} Nat instLTNat m n) (p m)))
-Case conversion may be inaccurate. Consider using '#align nat.find_lt_iff Nat.find_lt_iffₓ'. -/
 @[simp]
 theorem find_lt_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.find h < n ↔ ∃ m < n, p m :=
   ⟨fun h2 => ⟨Nat.find h, h2, Nat.find_spec h⟩, fun ⟨m, hmn, hm⟩ =>
     (Nat.find_min' h hm).trans_lt hmn⟩
 #align nat.find_lt_iff Nat.find_lt_iff
 
-/- warning: nat.find_le_iff -> Nat.find_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat -> Prop} [_inst_1 : DecidablePred.{1} Nat p] (h : Exists.{1} Nat (fun (n : Nat) => p n)) (n : Nat), Iff (LE.le.{0} Nat Nat.hasLe (Nat.find (fun (n : Nat) => p n) (fun (a : Nat) => _inst_1 a) h) n) (Exists.{1} Nat (fun (m : Nat) => Exists.{0} (LE.le.{0} Nat Nat.hasLe m n) (fun (H : LE.le.{0} Nat Nat.hasLe m n) => p m)))
-but is expected to have type
-  forall {p : Nat -> Prop} [_inst_1 : DecidablePred.{1} Nat p] (h : Exists.{1} Nat (fun (n : Nat) => p n)) (n : Nat), Iff (LE.le.{0} Nat instLENat (Nat.find (fun (n : Nat) => p n) (fun (a : Nat) => _inst_1 a) h) n) (Exists.{1} Nat (fun (m : Nat) => And (LE.le.{0} Nat instLENat m n) (p m)))
-Case conversion may be inaccurate. Consider using '#align nat.find_le_iff Nat.find_le_iffₓ'. -/
 @[simp]
 theorem find_le_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.find h ≤ n ↔ ∃ m ≤ n, p m := by
   simp only [exists_prop, ← lt_succ_iff, find_lt_iff]

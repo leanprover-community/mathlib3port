@@ -42,9 +42,6 @@ namespace LinearMap
 
 section Basic
 
-/- warning: linear_map.charpoly_to_matrix -> LinearMap.charpoly_toMatrix is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.charpoly_to_matrix LinearMap.charpoly_toMatrixₓ'. -/
 /-- `charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. -/
 @[simp]
 theorem charpoly_toMatrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :

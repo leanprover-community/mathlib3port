@@ -59,9 +59,6 @@ variable (K : Type) [Field K] [Algebra R[X] K] [IsFractionRing R[X] K]
 
 section TwoDenominators
 
-/- warning: div_eq_quo_add_rem_div_add_rem_div -> div_eq_quo_add_rem_div_add_rem_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align div_eq_quo_add_rem_div_add_rem_div div_eq_quo_add_rem_div_add_rem_divₓ'. -/
 /-- Let R be an integral domain and f, g₁, g₂ ∈ R[X]. Let g₁ and g₂ be monic and coprime.
 Then, ∃ q, r₁, r₂ ∈ R[X] such that f / g₁g₂ = q + r₁/g₁ + r₂/g₂ and deg(r₁) < deg(g₁) and
 deg(r₂) < deg(g₂).
@@ -91,9 +88,6 @@ section NDenominators
 
 open BigOperators Classical
 
-/- warning: div_eq_quo_add_sum_rem_div -> div_eq_quo_add_sum_rem_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align div_eq_quo_add_sum_rem_div div_eq_quo_add_sum_rem_divₓ'. -/
 /-- Let R be an integral domain and f ∈ R[X]. Let s be a finite index set.
 Then, a fraction of the form f / ∏ (g i) can be rewritten as q + ∑ (r i) / (g i), where
 deg(r i) < deg(g i), provided that the g i are monic and pairwise coprime.

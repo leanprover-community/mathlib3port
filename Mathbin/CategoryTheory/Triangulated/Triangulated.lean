@@ -43,9 +43,6 @@ namespace Triangulated
 
 include comm h₁₂ h₂₃ h₁₃
 
-/- warning: category_theory.triangulated.octahedron -> CategoryTheory.Triangulated.Octahedron is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.triangulated.octahedron CategoryTheory.Triangulated.Octahedronₓ'. -/
 /-- An octahedron is a type of datum whose existence is asserted by
 the octahedron axiom (TR 4), see https://stacks.math.columbia.edu/tag/05QK -/
 structure Octahedron where
@@ -74,18 +71,12 @@ attribute [reassoc] comm₁ comm₂ comm₃ comm₄
 
 variable {comm h₁₂ h₂₃ h₁₃} (h : Octahedron comm h₁₂ h₂₃ h₁₃)
 
-/- warning: category_theory.triangulated.octahedron.triangle -> CategoryTheory.Triangulated.Octahedron.triangle is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.triangulated.octahedron.triangle CategoryTheory.Triangulated.Octahedron.triangleₓ'. -/
 /-- The triangle `Z₁₂ ⟶ Z₁₃ ⟶ Z₂₃ ⟶ Z₁₂⟦1⟧` given by an octahedron. -/
 @[simps]
 def triangle : Triangle C :=
   Triangle.mk h.m₁ h.m₃ (w₂₃ ≫ v₁₂⟦1⟧')
 #align category_theory.triangulated.octahedron.triangle CategoryTheory.Triangulated.Octahedron.triangle
 
-/- warning: category_theory.triangulated.octahedron.triangle_morphism₁ -> CategoryTheory.Triangulated.Octahedron.triangleMorphism₁ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.triangulated.octahedron.triangle_morphism₁ CategoryTheory.Triangulated.Octahedron.triangleMorphism₁ₓ'. -/
 /-- The first morphism of triangles given by an octahedron. -/
 @[simps]
 def triangleMorphism₁ : Triangle.mk u₁₂ v₁₂ w₁₂ ⟶ Triangle.mk u₁₃ v₁₃ w₁₃
@@ -98,9 +89,6 @@ def triangleMorphism₁ : Triangle.mk u₁₂ v₁₂ w₁₂ ⟶ Triangle.mk u�
   comm₃' := by dsimp; simpa only [Functor.map_id, comp_id] using h.comm₂.symm
 #align category_theory.triangulated.octahedron.triangle_morphism₁ CategoryTheory.Triangulated.Octahedron.triangleMorphism₁
 
-/- warning: category_theory.triangulated.octahedron.triangle_morphism₂ -> CategoryTheory.Triangulated.Octahedron.triangleMorphism₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.triangulated.octahedron.triangle_morphism₂ CategoryTheory.Triangulated.Octahedron.triangleMorphism₂ₓ'. -/
 /-- The second morphism of triangles given an octahedron. -/
 @[simps]
 def triangleMorphism₂ : Triangle.mk u₁₃ v₁₃ w₁₃ ⟶ Triangle.mk u₂₃ v₂₃ w₂₃
@@ -124,12 +112,6 @@ open Triangulated
 
 variable (C)
 
-/- warning: category_theory.is_triangulated -> CategoryTheory.IsTriangulated is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.HasShift.{u2, u1, 0} C Int _inst_1 Int.addMonoid] [_inst_5 : forall (n : Int), CategoryTheory.Functor.Additive.{u1, u1, u2, u2} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.shiftFunctor.{u2, u1, 0} C Int _inst_1 Int.addMonoid _inst_4 n)] [_inst_6 : CategoryTheory.Pretriangulated.{u2, u1} C _inst_1 _inst_3 _inst_4 _inst_2 (fun (n : Int) => _inst_5 n)], Type
-but is expected to have type
-  forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.HasShift.{u2, u1, 0} C Int _inst_1 Int.instAddMonoidInt] [_inst_5 : CategoryTheory.Pretriangulated.{u2, u1} C _inst_1 _inst_3 _inst_4 _inst_2], Type
-Case conversion may be inaccurate. Consider using '#align category_theory.is_triangulated CategoryTheory.IsTriangulatedₓ'. -/
 /-- A triangulated category is a pretriangulated category which satisfies
 the octahedron axiom (TR 4), see https://stacks.math.columbia.edu/tag/05QK -/
 class IsTriangulated where
@@ -145,9 +127,6 @@ namespace Triangulated
 
 variable {C}
 
-/- warning: category_theory.triangulated.some_octahedron -> CategoryTheory.Triangulated.someOctahedron is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.triangulated.some_octahedron CategoryTheory.Triangulated.someOctahedronₓ'. -/
 /-- A choice of octahedron given by the octahedron axiom. -/
 def someOctahedron [IsTriangulated C] : Octahedron comm h₁₂ h₂₃ h₁₃ :=
   (IsTriangulated.octahedron_axiom comm h₁₂ h₂₃ h₁₃).some

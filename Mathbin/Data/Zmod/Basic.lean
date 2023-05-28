@@ -73,55 +73,25 @@ theorem val_le {n : ℕ} [NeZero n] (a : ZMod n) : a.val ≤ n :=
 #align zmod.val_le ZMod.val_le
 -/
 
-/- warning: zmod.val_zero -> ZMod.val_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
-but is expected to have type
-  forall {n : Nat}, Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
-Case conversion may be inaccurate. Consider using '#align zmod.val_zero ZMod.val_zeroₓ'. -/
 @[simp]
 theorem val_zero : ∀ {n}, (0 : ZMod n).val = 0
   | 0 => rfl
   | n + 1 => rfl
 #align zmod.val_zero ZMod.val_zero
 
-/- warning: zmod.val_one' -> ZMod.val_one' is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Nat (ZMod.val (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (OfNat.ofNat.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) 1 (OfNat.mk.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) 1 (One.one.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) (AddMonoidWithOne.toOne.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) (Ring.toAddCommGroupWithOne.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) (CommRing.toRing.{0} (ZMod (Zero.zero.{0} Nat Nat.hasZero)) (ZMod.commRing (Zero.zero.{0} Nat Nat.hasZero))))))))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
-but is expected to have type
-  Eq.{1} Nat (ZMod.val (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) 1 (One.toOfNat1.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Semiring.toOne.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (CommSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (CommRing.toCommSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (ZMod.commRing (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
-Case conversion may be inaccurate. Consider using '#align zmod.val_one' ZMod.val_one'ₓ'. -/
 @[simp]
 theorem val_one' : (1 : ZMod 0).val = 1 :=
   rfl
 #align zmod.val_one' ZMod.val_one'
 
-/- warning: zmod.val_neg' -> ZMod.val_neg' is a dubious translation:
-lean 3 declaration is
-  forall {n : ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))}, Eq.{1} Nat (ZMod.val (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Neg.neg.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (SubNegMonoid.toHasNeg.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (AddGroup.toSubNegMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (AddGroupWithOne.toAddGroup.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Ring.toAddCommGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (ZMod.commRing (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))))))) n)) (ZMod.val (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n)
-but is expected to have type
-  forall {n : ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))}, Eq.{1} Nat (ZMod.val (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Neg.neg.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Ring.toNeg.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (ZMod.commRing (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) n)) (ZMod.val (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n)
-Case conversion may be inaccurate. Consider using '#align zmod.val_neg' ZMod.val_neg'ₓ'. -/
 @[simp]
 theorem val_neg' {n : ZMod 0} : (-n).val = n.val := by simp [val]
 #align zmod.val_neg' ZMod.val_neg'
 
-/- warning: zmod.val_mul' -> ZMod.val_mul' is a dubious translation:
-lean 3 declaration is
-  forall {m : ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))} {n : ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))}, Eq.{1} Nat (ZMod.val (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (HMul.hMul.{0, 0, 0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (instHMul.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Distrib.toHasMul.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Ring.toDistrib.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (ZMod.commRing (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))))) m n)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (ZMod.val (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) m) (ZMod.val (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n))
-but is expected to have type
-  forall {m : ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} {n : ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))}, Eq.{1} Nat (ZMod.val (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (HMul.hMul.{0, 0, 0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instHMul.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (NonUnitalNonAssocRing.toMul.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Ring.toNonAssocRing.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (ZMod.commRing (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))) m n)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (ZMod.val (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) m) (ZMod.val (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n))
-Case conversion may be inaccurate. Consider using '#align zmod.val_mul' ZMod.val_mul'ₓ'. -/
 @[simp]
 theorem val_mul' {m n : ZMod 0} : (m * n).val = m.val * n.val := by simp [val, Int.natAbs_mul]
 #align zmod.val_mul' ZMod.val_mul'
 
-/- warning: zmod.val_nat_cast -> ZMod.val_nat_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : Nat), Eq.{1} Nat (ZMod.val n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) a n)
-but is expected to have type
-  forall {n : Nat} (a : Nat), Eq.{1} Nat (ZMod.val n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) a n)
-Case conversion may be inaccurate. Consider using '#align zmod.val_nat_cast ZMod.val_nat_castₓ'. -/
 theorem val_nat_cast {n : ℕ} (a : ℕ) : (a : ZMod n).val = a % n :=
   by
   cases n
@@ -140,23 +110,11 @@ instance (n : ℕ) : CharP (ZMod n) n
     show (k : ZMod (n + 1)).val = (0 : ZMod (n + 1)).val ↔ _
     rw [val_nat_cast, val_zero, Nat.dvd_iff_mod_eq_zero]
 
-/- warning: zmod.add_order_of_one -> ZMod.addOrderOf_one is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (addOrderOf.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))) n
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (addOrderOf.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) n
-Case conversion may be inaccurate. Consider using '#align zmod.add_order_of_one ZMod.addOrderOf_oneₓ'. -/
 @[simp]
 theorem addOrderOf_one (n : ℕ) : addOrderOf (1 : ZMod n) = n :=
   CharP.eq _ (CharP.addOrderOf_one _) (ZMod.charP n)
 #align zmod.add_order_of_one ZMod.addOrderOf_one
 
-/- warning: zmod.add_order_of_coe -> ZMod.addOrderOf_coe is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} Nat (addOrderOf.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (Nat.gcd n a)))
-but is expected to have type
-  forall (a : Nat) {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (addOrderOf.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (Nat.gcd n a)))
-Case conversion may be inaccurate. Consider using '#align zmod.add_order_of_coe ZMod.addOrderOf_coeₓ'. -/
 /-- This lemma works in the case in which `zmod n` is not infinite, i.e. `n ≠ 0`.  The version
 where `a ≠ 0` is `add_order_of_coe'`. -/
 @[simp]
@@ -167,12 +125,6 @@ theorem addOrderOf_coe (a : ℕ) {n : ℕ} (n0 : n ≠ 0) : addOrderOf (a : ZMod
   rw [← Nat.smul_one_eq_coe, addOrderOf_nsmul' _ a.succ_ne_zero, ZMod.addOrderOf_one]
 #align zmod.add_order_of_coe ZMod.addOrderOf_coe
 
-/- warning: zmod.add_order_of_coe' -> ZMod.addOrderOf_coe' is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} (n : Nat), (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} Nat (addOrderOf.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (Nat.gcd n a)))
-but is expected to have type
-  forall {a : Nat} (n : Nat), (Ne.{1} Nat a (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (addOrderOf.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (Nat.gcd n a)))
-Case conversion may be inaccurate. Consider using '#align zmod.add_order_of_coe' ZMod.addOrderOf_coe'ₓ'. -/
 /-- This lemma works in the case in which `a ≠ 0`.  The version where
  `zmod n` is not infinite, i.e. `n ≠ 0`, is `add_order_of_coe`. -/
 @[simp]
@@ -187,23 +139,11 @@ theorem ringChar_zmod_n (n : ℕ) : ringChar (ZMod n) = n := by rw [ringChar.eq_
 #align zmod.ring_char_zmod_n ZMod.ringChar_zmod_n
 -/
 
-/- warning: zmod.nat_cast_self -> ZMod.nat_cast_self is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) n) (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (ZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) n) (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_self ZMod.nat_cast_selfₓ'. -/
 @[simp]
 theorem nat_cast_self (n : ℕ) : (n : ZMod n) = 0 :=
   CharP.cast_eq_zero (ZMod n) n
 #align zmod.nat_cast_self ZMod.nat_cast_self
 
-/- warning: zmod.nat_cast_self' -> ZMod.nat_cast_self' is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (HAdd.hAdd.{0, 0, 0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (instHAdd.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Distrib.toHasAdd.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Ring.toDistrib.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (CommRing.toRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (HasLiftT.mk.{1, 1} Nat (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (CoeTCₓ.coe.{1, 1} Nat (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Nat.castCoe.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (AddMonoidWithOne.toNatCast.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Ring.toAddCommGroupWithOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (CommRing.toRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))))))) n) (OfNat.ofNat.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 1 (OfNat.mk.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 1 (One.one.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (AddMonoidWithOne.toOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Ring.toAddCommGroupWithOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (CommRing.toRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)))))))))))) (OfNat.ofNat.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (MulZeroClass.toHasZero.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Ring.toNonAssocRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (CommRing.toRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))))))))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instHAdd.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Distrib.toAdd.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Ring.toNonAssocRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommRing.toRing.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))))))) (Nat.cast.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Semiring.toNatCast.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommSemiring.toSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommRing.toCommSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))) n) (OfNat.ofNat.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 1 (One.toOfNat1.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Semiring.toOne.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommSemiring.toSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommRing.toCommSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))))) (OfNat.ofNat.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Zero.toOfNat0.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommMonoidWithZero.toZero.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommSemiring.toCommMonoidWithZero.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (CommRing.toCommSemiring.{0} (ZMod (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (ZMod.commRing (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_self' ZMod.nat_cast_self'ₓ'. -/
 @[simp]
 theorem nat_cast_self' (n : ℕ) : (n + 1 : ZMod (n + 1)) = 0 := by
   rw [← Nat.cast_add_one, nat_cast_self (n + 1)]
@@ -231,12 +171,6 @@ def cast : ∀ {n : ℕ}, ZMod n → R
 instance (priority := 900) (n : ℕ) : CoeTC (ZMod n) R :=
   ⟨cast⟩
 
-/- warning: zmod.cast_zero -> ZMod.cast_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R], Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R _inst_1 n))) (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (AddZeroClass.toHasZero.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1)))))))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R], Eq.{succ u1} R (ZMod.cast.{u1} R _inst_1 n (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_zero ZMod.cast_zeroₓ'. -/
 @[simp]
 theorem cast_zero : ((0 : ZMod n) : R) = 0 := by cases n <;> simp
 #align zmod.cast_zero ZMod.cast_zero
@@ -252,34 +186,16 @@ theorem cast_eq_val [NeZero n] (a : ZMod n) : (a : R) = a.val :=
 
 variable {S : Type _} [AddGroupWithOne S]
 
-/- warning: prod.fst_zmod_cast -> Prod.fst_zmod_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R] {S : Type.{u2}} [_inst_2 : AddGroupWithOne.{u2} S] (a : ZMod n), Eq.{succ u1} R (Prod.fst.{u1, u2} R S ((fun (a : Type) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{1, max (succ u1) (succ u2)} a b] => self.0) (ZMod n) (Prod.{u1, u2} R S) (HasLiftT.mk.{1, max (succ u1) (succ u2)} (ZMod n) (Prod.{u1, u2} R S) (CoeTCₓ.coe.{1, max (succ u1) (succ u2)} (ZMod n) (Prod.{u1, u2} R S) (ZMod.hasCoeT.{max u1 u2} (Prod.{u1, u2} R S) (Prod.addGroupWithOne.{u1, u2} R S _inst_1 _inst_2) n))) a)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R _inst_1 n))) a)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u2}} [_inst_1 : AddGroupWithOne.{u2} R] {S : Type.{u1}} [_inst_2 : AddGroupWithOne.{u1} S] (a : ZMod n), Eq.{succ u2} R (Prod.fst.{u2, u1} R S (ZMod.cast.{max u2 u1} (Prod.{u2, u1} R S) (Prod.instAddGroupWithOneProd.{u2, u1} R S _inst_1 _inst_2) n a)) (ZMod.cast.{u2} R _inst_1 n a)
-Case conversion may be inaccurate. Consider using '#align prod.fst_zmod_cast Prod.fst_zmod_castₓ'. -/
 @[simp]
 theorem Prod.fst_zmod_cast (a : ZMod n) : (a : R × S).fst = a := by cases n <;> simp
 #align prod.fst_zmod_cast Prod.fst_zmod_cast
 
-/- warning: prod.snd_zmod_cast -> Prod.snd_zmod_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R] {S : Type.{u2}} [_inst_2 : AddGroupWithOne.{u2} S] (a : ZMod n), Eq.{succ u2} S (Prod.snd.{u1, u2} R S ((fun (a : Type) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{1, max (succ u1) (succ u2)} a b] => self.0) (ZMod n) (Prod.{u1, u2} R S) (HasLiftT.mk.{1, max (succ u1) (succ u2)} (ZMod n) (Prod.{u1, u2} R S) (CoeTCₓ.coe.{1, max (succ u1) (succ u2)} (ZMod n) (Prod.{u1, u2} R S) (ZMod.hasCoeT.{max u1 u2} (Prod.{u1, u2} R S) (Prod.addGroupWithOne.{u1, u2} R S _inst_1 _inst_2) n))) a)) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) (ZMod n) S (HasLiftT.mk.{1, succ u2} (ZMod n) S (CoeTCₓ.coe.{1, succ u2} (ZMod n) S (ZMod.hasCoeT.{u2} S _inst_2 n))) a)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R] {S : Type.{u2}} [_inst_2 : AddGroupWithOne.{u2} S] (a : ZMod n), Eq.{succ u2} S (Prod.snd.{u1, u2} R S (ZMod.cast.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instAddGroupWithOneProd.{u1, u2} R S _inst_1 _inst_2) n a)) (ZMod.cast.{u2} S _inst_2 n a)
-Case conversion may be inaccurate. Consider using '#align prod.snd_zmod_cast Prod.snd_zmod_castₓ'. -/
 @[simp]
 theorem Prod.snd_zmod_cast (a : ZMod n) : (a : R × S).snd = a := by cases n <;> simp
 #align prod.snd_zmod_cast Prod.snd_zmod_cast
 
 end
 
-/- warning: zmod.nat_cast_zmod_val -> ZMod.nat_cast_zmod_val is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) (ZMod.val n a)) a
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} (ZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (ZMod.val n a)) a
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_zmod_val ZMod.nat_cast_zmod_valₓ'. -/
 /-- So-named because the coercion is `nat.cast` into `zmod`. For `nat.cast` into an arbitrary ring,
 see `zmod.nat_cast_val`. -/
 theorem nat_cast_zmod_val {n : ℕ} [NeZero n] (a : ZMod n) : (a.val : ZMod n) = a :=
@@ -289,32 +205,14 @@ theorem nat_cast_zmod_val {n : ℕ} [NeZero n] (a : ZMod n) : (a.val : ZMod n) =
   · apply Fin.cast_val_eq_self
 #align zmod.nat_cast_zmod_val ZMod.nat_cast_zmod_val
 
-/- warning: zmod.nat_cast_right_inverse -> ZMod.nat_cast_rightInverse is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n], Function.RightInverse.{1, 1} Nat (ZMod n) (ZMod.val n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Function.RightInverse.{1, 1} Nat (ZMod n) (ZMod.val n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_right_inverse ZMod.nat_cast_rightInverseₓ'. -/
 theorem nat_cast_rightInverse [NeZero n] : Function.RightInverse val (coe : ℕ → ZMod n) :=
   nat_cast_zmod_val
 #align zmod.nat_cast_right_inverse ZMod.nat_cast_rightInverse
 
-/- warning: zmod.nat_cast_zmod_surjective -> ZMod.nat_cast_zmod_surjective is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n], Function.Surjective.{1, 1} Nat (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Function.Surjective.{1, 1} Nat (ZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_zmod_surjective ZMod.nat_cast_zmod_surjectiveₓ'. -/
 theorem nat_cast_zmod_surjective [NeZero n] : Function.Surjective (coe : ℕ → ZMod n) :=
   nat_cast_rightInverse.Surjective
 #align zmod.nat_cast_zmod_surjective ZMod.nat_cast_zmod_surjective
 
-/- warning: zmod.int_cast_zmod_cast -> ZMod.int_cast_zmod_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) a)) a
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), Eq.{1} (ZMod n) (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n a)) a
-Case conversion may be inaccurate. Consider using '#align zmod.int_cast_zmod_cast ZMod.int_cast_zmod_castₓ'. -/
 /-- So-named because the outer coercion is `int.cast` into `zmod`. For `int.cast` into an arbitrary
 ring, see `zmod.int_cast_cast`. -/
 @[norm_cast]
@@ -325,44 +223,20 @@ theorem int_cast_zmod_cast (a : ZMod n) : ((a : ℤ) : ZMod n) = a :=
   · rw [coe_coe, Int.cast_ofNat, Fin.cast_val_eq_self]
 #align zmod.int_cast_zmod_cast ZMod.int_cast_zmod_cast
 
-/- warning: zmod.int_cast_right_inverse -> ZMod.int_cast_rightInverse is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Function.RightInverse.{1, 1} Int (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))
-but is expected to have type
-  forall {n : Nat}, Function.RightInverse.{1, 1} Int (ZMod n) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n) (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))
-Case conversion may be inaccurate. Consider using '#align zmod.int_cast_right_inverse ZMod.int_cast_rightInverseₓ'. -/
 theorem int_cast_rightInverse : Function.RightInverse (coe : ZMod n → ℤ) (coe : ℤ → ZMod n) :=
   int_cast_zmod_cast
 #align zmod.int_cast_right_inverse ZMod.int_cast_rightInverse
 
-/- warning: zmod.int_cast_surjective -> ZMod.int_cast_surjective is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Function.Surjective.{1, 1} Int (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))
-but is expected to have type
-  forall {n : Nat}, Function.Surjective.{1, 1} Int (ZMod n) (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))
-Case conversion may be inaccurate. Consider using '#align zmod.int_cast_surjective ZMod.int_cast_surjectiveₓ'. -/
 theorem int_cast_surjective : Function.Surjective (coe : ℤ → ZMod n) :=
   int_cast_rightInverse.Surjective
 #align zmod.int_cast_surjective ZMod.int_cast_surjective
 
-/- warning: zmod.cast_id -> ZMod.cast_id is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (i : ZMod n), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) (ZMod n) (HasLiftT.mk.{1, 1} (ZMod n) (ZMod n) (CoeTCₓ.coe.{1, 1} (ZMod n) (ZMod n) (ZMod.hasCoeT.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) n))) i) i
-but is expected to have type
-  forall (n : Nat) (i : ZMod n), Eq.{1} (ZMod n) (ZMod.cast.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) n i) i
-Case conversion may be inaccurate. Consider using '#align zmod.cast_id ZMod.cast_idₓ'. -/
 @[norm_cast]
 theorem cast_id : ∀ (n) (i : ZMod n), ↑i = i
   | 0, i => Int.cast_id i
   | n + 1, i => nat_cast_zmod_val i
 #align zmod.cast_id ZMod.cast_id
 
-/- warning: zmod.cast_id' -> ZMod.cast_id' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} ((ZMod n) -> (ZMod n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) (ZMod n) (HasLiftT.mk.{1, 1} (ZMod n) (ZMod n) (CoeTCₓ.coe.{1, 1} (ZMod n) (ZMod n) (ZMod.hasCoeT.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) n)))) (id.{1} (ZMod n))
-but is expected to have type
-  forall {n : Nat}, Eq.{1} ((ZMod n) -> (ZMod n)) (ZMod.cast.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) n) (id.{1} (ZMod n))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_id' ZMod.cast_id'ₓ'. -/
 @[simp]
 theorem cast_id' : (coe : ZMod n → ZMod n) = id :=
   funext (cast_id n)
@@ -370,12 +244,6 @@ theorem cast_id' : (coe : ZMod n → ZMod n) = id :=
 
 variable (R) [Ring R]
 
-/- warning: zmod.nat_cast_comp_val -> ZMod.nat_cast_comp_val is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : NeZero.{0} Nat Nat.hasZero n], Eq.{succ u1} ((ZMod n) -> R) (Function.comp.{1, 1, succ u1} (ZMod n) Nat R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))))) (ZMod.val n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))))
-but is expected to have type
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Eq.{succ u1} ((ZMod n) -> R) (Function.comp.{1, 1, succ u1} (ZMod n) Nat R (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod.val n)) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_comp_val ZMod.nat_cast_comp_valₓ'. -/
 /-- The coercions are respectively `nat.cast` and `zmod.cast`. -/
 @[simp]
 theorem nat_cast_comp_val [NeZero n] : (coe : ℕ → R) ∘ (val : ZMod n → ℕ) = coe :=
@@ -385,12 +253,6 @@ theorem nat_cast_comp_val [NeZero n] : (coe : ℕ → R) ∘ (val : ZMod n → �
   rfl
 #align zmod.nat_cast_comp_val ZMod.nat_cast_comp_val
 
-/- warning: zmod.int_cast_comp_cast -> ZMod.int_cast_comp_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R], Eq.{succ u1} ((ZMod n) -> R) (Function.comp.{1, 1, succ u1} (ZMod n) Int R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))))
-but is expected to have type
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R], Eq.{succ u1} ((ZMod n) -> R) (Function.comp.{1, 1, succ u1} (ZMod n) Int R (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1)) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n)) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align zmod.int_cast_comp_cast ZMod.int_cast_comp_castₓ'. -/
 /-- The coercions are respectively `int.cast`, `zmod.cast`, and `zmod.cast`. -/
 @[simp]
 theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : ZMod n → ℤ) = coe :=
@@ -402,34 +264,16 @@ theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : ZMod n → ℤ) = coe 
 
 variable {R}
 
-/- warning: zmod.nat_cast_val -> ZMod.nat_cast_val is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : NeZero.{0} Nat Nat.hasZero n] (i : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))) (ZMod.val n i)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) i)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (i : ZMod n), Eq.{succ u1} R (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (ZMod.val n i)) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n i)
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_val ZMod.nat_cast_valₓ'. -/
 @[simp]
 theorem nat_cast_val [NeZero n] (i : ZMod n) : (i.val : R) = i :=
   congr_fun (nat_cast_comp_val R) i
 #align zmod.nat_cast_val ZMod.nat_cast_val
 
-/- warning: zmod.int_cast_cast -> ZMod.int_cast_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (i : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) i)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) i)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (i : ZMod n), Eq.{succ u1} R (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n i)) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n i)
-Case conversion may be inaccurate. Consider using '#align zmod.int_cast_cast ZMod.int_cast_castₓ'. -/
 @[simp]
 theorem int_cast_cast (i : ZMod n) : ((i : ℤ) : R) = i :=
   congr_fun (int_cast_comp_cast R) i
 #align zmod.int_cast_cast ZMod.int_cast_cast
 
-/- warning: zmod.coe_add_eq_ite -> ZMod.coe_add_eq_ite is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n) (b : ZMod n), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (ite.{1} Int (LE.le.{0} Int Int.hasLe ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) b))) (Int.decLe ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) b)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) b)))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n) (b : ZMod n), Eq.{1} Int (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n (ite.{1} (ZMod n) (LE.le.{0} Int Int.instLEInt (Nat.cast.{0} Int instNatCastInt n) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n a) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n b))) (Int.decLe (Nat.cast.{0} Int instNatCastInt n) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n a) (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n b))) (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (Ring.toSub.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) n)) (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)))
-Case conversion may be inaccurate. Consider using '#align zmod.coe_add_eq_ite ZMod.coe_add_eq_iteₓ'. -/
 theorem coe_add_eq_ite {n : ℕ} (a b : ZMod n) :
     (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b :=
   by
@@ -448,12 +292,6 @@ section CharDvd
 
 variable {n} {m : ℕ} [CharP R m]
 
-/- warning: zmod.cast_one -> ZMod.cast_one is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_one ZMod.cast_oneₓ'. -/
 @[simp]
 theorem cast_one (h : m ∣ n) : ((1 : ZMod n) : R) = 1 :=
   by
@@ -466,12 +304,6 @@ theorem cast_one (h : m ∣ n) : ((1 : ZMod n) : R) = 1 :=
   exact Nat.lt_of_sub_eq_succ rfl
 #align zmod.cast_one ZMod.cast_one
 
-/- warning: zmod.cast_add -> ZMod.cast_add is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (a : ZMod n) (b : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) b)))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (a : ZMod n) (b : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))))) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n b)))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_add ZMod.cast_addₓ'. -/
 theorem cast_add (h : m ∣ n) (a b : ZMod n) : ((a + b : ZMod n) : R) = a + b :=
   by
   cases n
@@ -483,12 +315,6 @@ theorem cast_add (h : m ∣ n) (a b : ZMod n) : ((a + b : ZMod n) : R) = a + b :
   exact h.trans (Nat.dvd_sub_mod _)
 #align zmod.cast_add ZMod.cast_add
 
-/- warning: zmod.cast_mul -> ZMod.cast_mul is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (a : ZMod n) (b : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) b)))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (a : ZMod n) (b : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) a b)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n b)))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_mul ZMod.cast_mulₓ'. -/
 theorem cast_mul (h : m ∣ n) (a b : ZMod n) : ((a * b : ZMod n) : R) = a * b :=
   by
   cases n
@@ -500,12 +326,6 @@ theorem cast_mul (h : m ∣ n) (a b : ZMod n) : ((a * b : ZMod n) : R) = a * b :
   exact h.trans (Nat.dvd_sub_mod _)
 #align zmod.cast_mul ZMod.cast_mul
 
-/- warning: zmod.cast_hom -> ZMod.castHom is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_3))) m], RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3)))
-but is expected to have type
-  forall {n : Nat} {m : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_3)) m], RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_3)))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_hom ZMod.castHomₓ'. -/
 /-- The canonical ring homomorphism from `zmod n` to a ring of characteristic `n`.
 
 See also `zmod.lift` (in `data.zmod.quotient`) for a generalized version working in `add_group`s.
@@ -519,67 +339,31 @@ def castHom (h : m ∣ n) (R : Type _) [Ring R] [CharP R m] : ZMod n →+* R
   map_mul' := cast_mul h
 #align zmod.cast_hom ZMod.castHom
 
-/- warning: zmod.cast_hom_apply -> ZMod.castHom_apply is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m] {h : Dvd.Dvd.{0} Nat Nat.hasDvd m n} (i : ZMod n), Eq.{succ u1} R (coeFn.{succ u1, succ u1} (RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (fun (_x : RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) => (ZMod n) -> R) (RingHom.hasCoeToFun.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (ZMod.castHom.{u1} n m h R _inst_1 _inst_2) i) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) i)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m] {h : Dvd.dvd.{0} Nat Nat.instDvdNat m n} (i : ZMod n), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : ZMod n) => R) i) (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) (fun (_x : ZMod n) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : ZMod n) => R) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (NonUnitalNonAssocSemiring.toMul.{0} (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))) (ZMod.castHom.{u1} n m h R _inst_1 _inst_2) i) (ZMod.cast.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : ZMod n) => R) i) (Ring.toAddGroupWithOne.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : ZMod n) => R) i) _inst_1) n i)
-Case conversion may be inaccurate. Consider using '#align zmod.cast_hom_apply ZMod.castHom_applyₓ'. -/
 @[simp]
 theorem castHom_apply {h : m ∣ n} (i : ZMod n) : castHom h R i = i :=
   rfl
 #align zmod.cast_hom_apply ZMod.castHom_apply
 
-/- warning: zmod.cast_sub -> ZMod.cast_sub is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (a : ZMod n) (b : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (SubNegMonoid.toHasSub.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) b)))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (a : ZMod n) (b : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (Ring.toSub.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) a b)) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R _inst_1)) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n b)))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_sub ZMod.cast_subₓ'. -/
 @[simp, norm_cast]
 theorem cast_sub (h : m ∣ n) (a b : ZMod n) : ((a - b : ZMod n) : R) = a - b :=
   (castHom h R).map_sub a b
 #align zmod.cast_sub ZMod.cast_sub
 
-/- warning: zmod.cast_neg -> ZMod.cast_neg is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (a : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a)) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a)))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (a : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a)) (Neg.neg.{u1} R (Ring.toNeg.{u1} R _inst_1) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a)))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_neg ZMod.cast_negₓ'. -/
 @[simp, norm_cast]
 theorem cast_neg (h : m ∣ n) (a : ZMod n) : ((-a : ZMod n) : R) = -a :=
   (castHom h R).map_neg a
 #align zmod.cast_neg ZMod.cast_neg
 
-/- warning: zmod.cast_pow -> ZMod.cast_pow is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (a : ZMod n) (k : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HPow.hPow.{0, 0, 0} (ZMod n) Nat (ZMod n) (instHPow.{0, 0} (ZMod n) Nat (Monoid.Pow.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a k)) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) k))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (a : ZMod n) (k : Nat), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HPow.hPow.{0, 0, 0} (ZMod n) Nat (ZMod n) (instHPow.{0, 0} (ZMod n) Nat (Monoid.Pow.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) a k)) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))))) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) k))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_pow ZMod.cast_powₓ'. -/
 @[simp, norm_cast]
 theorem cast_pow (h : m ∣ n) (a : ZMod n) (k : ℕ) : ((a ^ k : ZMod n) : R) = a ^ k :=
   (castHom h R).map_pow a k
 #align zmod.cast_pow ZMod.cast_pow
 
-/- warning: zmod.cast_nat_cast -> ZMod.cast_nat_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (k : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) k)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))) k))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (k : Nat), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) k)) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (Ring.toSemiring.{u1} R _inst_1)) k))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_nat_cast ZMod.cast_nat_castₓ'. -/
 @[simp, norm_cast]
 theorem cast_nat_cast (h : m ∣ n) (k : ℕ) : ((k : ZMod n) : R) = k :=
   map_natCast (castHom h R) k
 #align zmod.cast_nat_cast ZMod.cast_nat_cast
 
-/- warning: zmod.cast_int_cast -> ZMod.cast_int_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (forall (k : Int), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) k)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) k))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {m : Nat} [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (forall (k : Int), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) k)) (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) k))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_int_cast ZMod.cast_int_castₓ'. -/
 @[simp, norm_cast]
 theorem cast_int_cast (h : m ∣ n) (k : ℤ) : ((k : ZMod n) : R) = k :=
   map_intCast (castHom h R) k
@@ -594,78 +378,36 @@ section CharEq
 
 variable [CharP R n]
 
-/- warning: zmod.cast_one' -> ZMod.cast_one' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n], Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n], Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (Ring.toSemiring.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_one' ZMod.cast_one'ₓ'. -/
 @[simp]
 theorem cast_one' : ((1 : ZMod n) : R) = 1 :=
   cast_one dvd_rfl
 #align zmod.cast_one' ZMod.cast_one'
 
-/- warning: zmod.cast_add' -> ZMod.cast_add' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] (a : ZMod n) (b : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) b))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] (a : ZMod n) (b : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))))) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n b))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_add' ZMod.cast_add'ₓ'. -/
 @[simp]
 theorem cast_add' (a b : ZMod n) : ((a + b : ZMod n) : R) = a + b :=
   cast_add dvd_rfl a b
 #align zmod.cast_add' ZMod.cast_add'
 
-/- warning: zmod.cast_mul' -> ZMod.cast_mul' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] (a : ZMod n) (b : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) b))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] (a : ZMod n) (b : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) a b)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n b))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_mul' ZMod.cast_mul'ₓ'. -/
 @[simp]
 theorem cast_mul' (a b : ZMod n) : ((a * b : ZMod n) : R) = a * b :=
   cast_mul dvd_rfl a b
 #align zmod.cast_mul' ZMod.cast_mul'
 
-/- warning: zmod.cast_sub' -> ZMod.cast_sub' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] (a : ZMod n) (b : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (SubNegMonoid.toHasSub.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) b))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] (a : ZMod n) (b : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (Ring.toSub.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) a b)) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R _inst_1)) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n b))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_sub' ZMod.cast_sub'ₓ'. -/
 @[simp]
 theorem cast_sub' (a b : ZMod n) : ((a - b : ZMod n) : R) = a - b :=
   cast_sub dvd_rfl a b
 #align zmod.cast_sub' ZMod.cast_sub'
 
-/- warning: zmod.cast_pow' -> ZMod.cast_pow' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] (a : ZMod n) (k : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HPow.hPow.{0, 0, 0} (ZMod n) Nat (ZMod n) (instHPow.{0, 0} (ZMod n) Nat (Monoid.Pow.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a k)) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) a) k)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] (a : ZMod n) (k : Nat), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HPow.hPow.{0, 0, 0} (ZMod n) Nat (ZMod n) (instHPow.{0, 0} (ZMod n) Nat (Monoid.Pow.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) a k)) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))))) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n a) k)
-Case conversion may be inaccurate. Consider using '#align zmod.cast_pow' ZMod.cast_pow'ₓ'. -/
 @[simp]
 theorem cast_pow' (a : ZMod n) (k : ℕ) : ((a ^ k : ZMod n) : R) = a ^ k :=
   cast_pow dvd_rfl a k
 #align zmod.cast_pow' ZMod.cast_pow'
 
-/- warning: zmod.cast_nat_cast' -> ZMod.cast_nat_cast' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] (k : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) k)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))) k)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] (k : Nat), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) k)) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (Ring.toSemiring.{u1} R _inst_1)) k)
-Case conversion may be inaccurate. Consider using '#align zmod.cast_nat_cast' ZMod.cast_nat_cast'ₓ'. -/
 @[simp, norm_cast]
 theorem cast_nat_cast' (k : ℕ) : ((k : ZMod n) : R) = k :=
   cast_nat_cast dvd_rfl k
 #align zmod.cast_nat_cast' ZMod.cast_nat_cast'
 
-/- warning: zmod.cast_int_cast' -> ZMod.cast_int_cast' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] (k : Int), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) k)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) k)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] (k : Int), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) k)) (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) k)
-Case conversion may be inaccurate. Consider using '#align zmod.cast_int_cast' ZMod.cast_int_cast'ₓ'. -/
 @[simp, norm_cast]
 theorem cast_int_cast' (k : ℤ) : ((k : ZMod n) : R) = k :=
   cast_int_cast dvd_rfl k
@@ -673,12 +415,6 @@ theorem cast_int_cast' (k : ℤ) : ((k : ZMod n) : R) = k :=
 
 variable (R)
 
-/- warning: zmod.cast_hom_injective -> ZMod.castHom_injective is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n], Function.Injective.{1, succ u1} (ZMod n) R (coeFn.{succ u1, succ u1} (RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (fun (_x : RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) => (ZMod n) -> R) (RingHom.hasCoeToFun.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (ZMod.castHom.{u1} n n (dvd_refl.{0} Nat Nat.monoid n) R _inst_1 _inst_2))
-but is expected to have type
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n], Function.Injective.{1, succ u1} (ZMod n) R (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) (fun (_x : ZMod n) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : ZMod n) => R) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (NonUnitalNonAssocSemiring.toMul.{0} (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))) (ZMod.castHom.{u1} n n (dvd_refl.{0} Nat Nat.monoid n) R _inst_1 _inst_2))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_hom_injective ZMod.castHom_injectiveₓ'. -/
 theorem castHom_injective : Function.Injective (ZMod.castHom (dvd_refl n) R) :=
   by
   rw [injective_iff_map_eq_zero]
@@ -688,12 +424,6 @@ theorem castHom_injective : Function.Injective (ZMod.castHom (dvd_refl n) R) :=
   exact id
 #align zmod.cast_hom_injective ZMod.castHom_injective
 
-/- warning: zmod.cast_hom_bijective -> ZMod.castHom_bijective is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] [_inst_3 : Fintype.{u1} R], (Eq.{1} Nat (Fintype.card.{u1} R _inst_3) n) -> (Function.Bijective.{1, succ u1} (ZMod n) R (coeFn.{succ u1, succ u1} (RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (fun (_x : RingHom.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) => (ZMod n) -> R) (RingHom.hasCoeToFun.{0, u1} (ZMod n) R (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (ZMod.castHom.{u1} n n (dvd_refl.{0} Nat Nat.monoid n) R _inst_1 _inst_2)))
-but is expected to have type
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] [_inst_3 : Fintype.{u1} R], (Eq.{1} Nat (Fintype.card.{u1} R _inst_3) n) -> (Function.Bijective.{1, succ u1} (ZMod n) R (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) (fun (_x : ZMod n) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : ZMod n) => R) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (NonUnitalNonAssocSemiring.toMul.{0} (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{0, u1} (ZMod n) R (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))) (ZMod.castHom.{u1} n n (dvd_refl.{0} Nat Nat.monoid n) R _inst_1 _inst_2)))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_hom_bijective ZMod.castHom_bijectiveₓ'. -/
 theorem castHom_bijective [Fintype R] (h : Fintype.card R = n) :
     Function.Bijective (ZMod.castHom (dvd_refl n) R) :=
   by
@@ -706,24 +436,12 @@ theorem castHom_bijective [Fintype R] (h : Fintype.card R = n) :
   apply ZMod.castHom_injective
 #align zmod.cast_hom_bijective ZMod.castHom_bijective
 
-/- warning: zmod.ring_equiv -> ZMod.ringEquiv is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) n] [_inst_3 : Fintype.{u1} R], (Eq.{1} Nat (Fintype.card.{u1} R _inst_3) n) -> (RingEquiv.{0, u1} (ZMod n) R (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1)) (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R _inst_1)))
-but is expected to have type
-  forall {n : Nat} (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) n] [_inst_3 : Fintype.{u1} R], (Eq.{1} Nat (Fintype.card.{u1} R _inst_3) n) -> (RingEquiv.{0, u1} (ZMod n) R (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align zmod.ring_equiv ZMod.ringEquivₓ'. -/
 /-- The unique ring isomorphism between `zmod n` and a ring `R`
 of characteristic `n` and cardinality `n`. -/
 noncomputable def ringEquiv [Fintype R] (h : Fintype.card R = n) : ZMod n ≃+* R :=
   RingEquiv.ofBijective _ (ZMod.castHom_bijective R h)
 #align zmod.ring_equiv ZMod.ringEquiv
 
-/- warning: zmod.ring_equiv_congr -> ZMod.ringEquivCongr is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, (Eq.{1} Nat m n) -> (RingEquiv.{0, 0} (ZMod m) (ZMod n) (Distrib.toHasMul.{0} (ZMod m) (Ring.toDistrib.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m)))) (Distrib.toHasAdd.{0} (ZMod m) (Ring.toDistrib.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m)))) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, (Eq.{1} Nat m n) -> (RingEquiv.{0, 0} (ZMod m) (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod m) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod m) (Ring.toNonAssocRing.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m))))) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Distrib.toAdd.{0} (ZMod m) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod m) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod m) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod m) (Ring.toNonAssocRing.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m))))))) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))
-Case conversion may be inaccurate. Consider using '#align zmod.ring_equiv_congr ZMod.ringEquivCongrₓ'. -/
 /-- The identity between `zmod m` and `zmod n` when `m = n`, as a ring isomorphism. -/
 def ringEquivCongr {m n : ℕ} (h : m = n) : ZMod m ≃+* ZMod n :=
   by
@@ -748,82 +466,34 @@ end CharEq
 
 end UniversalProperty
 
-/- warning: zmod.int_coe_eq_int_coe_iff -> ZMod.int_cast_eq_int_cast_iff is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod c) (HasLiftT.mk.{1, 1} Int (ZMod c) (CoeTCₓ.coe.{1, 1} Int (ZMod c) (Int.castCoe.{0} (ZMod c) (AddGroupWithOne.toHasIntCast.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c)))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod c) (HasLiftT.mk.{1, 1} Int (ZMod c) (CoeTCₓ.coe.{1, 1} Int (ZMod c) (Int.castCoe.{0} (ZMod c) (AddGroupWithOne.toHasIntCast.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c)))))))) b)) (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) c) a b)
-but is expected to have type
-  forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) a) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) b)) (Int.ModEq (Nat.cast.{0} Int instNatCastInt c) a b)
-Case conversion may be inaccurate. Consider using '#align zmod.int_coe_eq_int_coe_iff ZMod.int_cast_eq_int_cast_iffₓ'. -/
 theorem int_cast_eq_int_cast_iff (a b : ℤ) (c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a ≡ b [ZMOD c] :=
   CharP.intCast_eq_intCast (ZMod c) c
 #align zmod.int_coe_eq_int_coe_iff ZMod.int_cast_eq_int_cast_iff
 
-/- warning: zmod.int_coe_eq_int_coe_iff' -> ZMod.int_cast_eq_int_cast_iff' is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod c) (HasLiftT.mk.{1, 1} Int (ZMod c) (CoeTCₓ.coe.{1, 1} Int (ZMod c) (Int.castCoe.{0} (ZMod c) (AddGroupWithOne.toHasIntCast.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c)))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod c) (HasLiftT.mk.{1, 1} Int (ZMod c) (CoeTCₓ.coe.{1, 1} Int (ZMod c) (Int.castCoe.{0} (ZMod c) (AddGroupWithOne.toHasIntCast.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c)))))))) b)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) c)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) c)))
-but is expected to have type
-  forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) a) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) b)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a (Nat.cast.{0} Int instNatCastInt c)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) b (Nat.cast.{0} Int instNatCastInt c)))
-Case conversion may be inaccurate. Consider using '#align zmod.int_coe_eq_int_coe_iff' ZMod.int_cast_eq_int_cast_iff'ₓ'. -/
 theorem int_cast_eq_int_cast_iff' (a b : ℤ) (c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a % c = b % c :=
   ZMod.int_cast_eq_int_cast_iff a b c
 #align zmod.int_coe_eq_int_coe_iff' ZMod.int_cast_eq_int_cast_iff'
 
-/- warning: zmod.nat_coe_eq_nat_coe_iff -> ZMod.nat_cast_eq_nat_cast_iff is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (b : Nat) (c : Nat), Iff (Eq.{1} (ZMod c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod c) (HasLiftT.mk.{1, 1} Nat (ZMod c) (CoeTCₓ.coe.{1, 1} Nat (ZMod c) (Nat.castCoe.{0} (ZMod c) (AddMonoidWithOne.toNatCast.{0} (ZMod c) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod c) (HasLiftT.mk.{1, 1} Nat (ZMod c) (CoeTCₓ.coe.{1, 1} Nat (ZMod c) (Nat.castCoe.{0} (ZMod c) (AddMonoidWithOne.toNatCast.{0} (ZMod c) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))))))))) b)) (Nat.ModEq c a b)
-but is expected to have type
-  forall (a : Nat) (b : Nat) (c : Nat), Iff (Eq.{1} (ZMod c) (Nat.cast.{0} (ZMod c) (Semiring.toNatCast.{0} (ZMod c) (CommSemiring.toSemiring.{0} (ZMod c) (CommRing.toCommSemiring.{0} (ZMod c) (ZMod.commRing c)))) a) (Nat.cast.{0} (ZMod c) (Semiring.toNatCast.{0} (ZMod c) (CommSemiring.toSemiring.{0} (ZMod c) (CommRing.toCommSemiring.{0} (ZMod c) (ZMod.commRing c)))) b)) (Nat.ModEq c a b)
-Case conversion may be inaccurate. Consider using '#align zmod.nat_coe_eq_nat_coe_iff ZMod.nat_cast_eq_nat_cast_iffₓ'. -/
 theorem nat_cast_eq_nat_cast_iff (a b c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a ≡ b [MOD c] := by
   simpa [Int.coe_nat_modEq_iff] using ZMod.int_cast_eq_int_cast_iff a b c
 #align zmod.nat_coe_eq_nat_coe_iff ZMod.nat_cast_eq_nat_cast_iff
 
-/- warning: zmod.nat_coe_eq_nat_coe_iff' -> ZMod.nat_cast_eq_nat_cast_iff' is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (b : Nat) (c : Nat), Iff (Eq.{1} (ZMod c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod c) (HasLiftT.mk.{1, 1} Nat (ZMod c) (CoeTCₓ.coe.{1, 1} Nat (ZMod c) (Nat.castCoe.{0} (ZMod c) (AddMonoidWithOne.toNatCast.{0} (ZMod c) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod c) (HasLiftT.mk.{1, 1} Nat (ZMod c) (CoeTCₓ.coe.{1, 1} Nat (ZMod c) (Nat.castCoe.{0} (ZMod c) (AddMonoidWithOne.toNatCast.{0} (ZMod c) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))))))))) b)) (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) a c) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) b c))
-but is expected to have type
-  forall (a : Nat) (b : Nat) (c : Nat), Iff (Eq.{1} (ZMod c) (Nat.cast.{0} (ZMod c) (Semiring.toNatCast.{0} (ZMod c) (CommSemiring.toSemiring.{0} (ZMod c) (CommRing.toCommSemiring.{0} (ZMod c) (ZMod.commRing c)))) a) (Nat.cast.{0} (ZMod c) (Semiring.toNatCast.{0} (ZMod c) (CommSemiring.toSemiring.{0} (ZMod c) (CommRing.toCommSemiring.{0} (ZMod c) (ZMod.commRing c)))) b)) (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) a c) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) b c))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_coe_eq_nat_coe_iff' ZMod.nat_cast_eq_nat_cast_iff'ₓ'. -/
 theorem nat_cast_eq_nat_cast_iff' (a b c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a % c = b % c :=
   ZMod.nat_cast_eq_nat_cast_iff a b c
 #align zmod.nat_coe_eq_nat_coe_iff' ZMod.nat_cast_eq_nat_cast_iff'
 
-/- warning: zmod.int_coe_zmod_eq_zero_iff_dvd -> ZMod.int_cast_zmod_eq_zero_iff_dvd is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) (b : Nat), Iff (Eq.{1} (ZMod b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod b) (HasLiftT.mk.{1, 1} Int (ZMod b) (CoeTCₓ.coe.{1, 1} Int (ZMod b) (Int.castCoe.{0} (ZMod b) (AddGroupWithOne.toHasIntCast.{0} (ZMod b) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod b) (Ring.toAddCommGroupWithOne.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b)))))))) a) (OfNat.ofNat.{0} (ZMod b) 0 (OfNat.mk.{0} (ZMod b) 0 (Zero.zero.{0} (ZMod b) (MulZeroClass.toHasZero.{0} (ZMod b) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod b) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod b) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod b) (Ring.toNonAssocRing.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b))))))))))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) a)
-but is expected to have type
-  forall (a : Int) (b : Nat), Iff (Eq.{1} (ZMod b) (Int.cast.{0} (ZMod b) (Ring.toIntCast.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b))) a) (OfNat.ofNat.{0} (ZMod b) 0 (Zero.toOfNat0.{0} (ZMod b) (CommMonoidWithZero.toZero.{0} (ZMod b) (CommSemiring.toCommMonoidWithZero.{0} (ZMod b) (CommRing.toCommSemiring.{0} (ZMod b) (ZMod.commRing b))))))) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt b) a)
-Case conversion may be inaccurate. Consider using '#align zmod.int_coe_zmod_eq_zero_iff_dvd ZMod.int_cast_zmod_eq_zero_iff_dvdₓ'. -/
 theorem int_cast_zmod_eq_zero_iff_dvd (a : ℤ) (b : ℕ) : (a : ZMod b) = 0 ↔ (b : ℤ) ∣ a := by
   rw [← Int.cast_zero, ZMod.int_cast_eq_int_cast_iff, Int.modEq_zero_iff_dvd]
 #align zmod.int_coe_zmod_eq_zero_iff_dvd ZMod.int_cast_zmod_eq_zero_iff_dvd
 
-/- warning: zmod.int_coe_eq_int_coe_iff_dvd_sub -> ZMod.int_cast_eq_int_cast_iff_dvd_sub is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod c) (HasLiftT.mk.{1, 1} Int (ZMod c) (CoeTCₓ.coe.{1, 1} Int (ZMod c) (Int.castCoe.{0} (ZMod c) (AddGroupWithOne.toHasIntCast.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c)))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod c) (HasLiftT.mk.{1, 1} Int (ZMod c) (CoeTCₓ.coe.{1, 1} Int (ZMod c) (Int.castCoe.{0} (ZMod c) (AddGroupWithOne.toHasIntCast.{0} (ZMod c) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod c) (Ring.toAddCommGroupWithOne.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c)))))))) b)) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) c) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a))
-but is expected to have type
-  forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) a) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) b)) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt c) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
-Case conversion may be inaccurate. Consider using '#align zmod.int_coe_eq_int_coe_iff_dvd_sub ZMod.int_cast_eq_int_cast_iff_dvd_subₓ'. -/
 theorem int_cast_eq_int_cast_iff_dvd_sub (a b : ℤ) (c : ℕ) : (a : ZMod c) = ↑b ↔ ↑c ∣ b - a := by
   rw [ZMod.int_cast_eq_int_cast_iff, Int.modEq_iff_dvd]
 #align zmod.int_coe_eq_int_coe_iff_dvd_sub ZMod.int_cast_eq_int_cast_iff_dvd_sub
 
-/- warning: zmod.nat_coe_zmod_eq_zero_iff_dvd -> ZMod.nat_cast_zmod_eq_zero_iff_dvd is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (b : Nat), Iff (Eq.{1} (ZMod b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod b) (HasLiftT.mk.{1, 1} Nat (ZMod b) (CoeTCₓ.coe.{1, 1} Nat (ZMod b) (Nat.castCoe.{0} (ZMod b) (AddMonoidWithOne.toNatCast.{0} (ZMod b) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod b) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod b) (Ring.toAddCommGroupWithOne.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b))))))))) a) (OfNat.ofNat.{0} (ZMod b) 0 (OfNat.mk.{0} (ZMod b) 0 (Zero.zero.{0} (ZMod b) (MulZeroClass.toHasZero.{0} (ZMod b) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod b) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod b) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod b) (Ring.toNonAssocRing.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b))))))))))) (Dvd.Dvd.{0} Nat Nat.hasDvd b a)
-but is expected to have type
-  forall (a : Nat) (b : Nat), Iff (Eq.{1} (ZMod b) (Nat.cast.{0} (ZMod b) (Semiring.toNatCast.{0} (ZMod b) (CommSemiring.toSemiring.{0} (ZMod b) (CommRing.toCommSemiring.{0} (ZMod b) (ZMod.commRing b)))) a) (OfNat.ofNat.{0} (ZMod b) 0 (Zero.toOfNat0.{0} (ZMod b) (CommMonoidWithZero.toZero.{0} (ZMod b) (CommSemiring.toCommMonoidWithZero.{0} (ZMod b) (CommRing.toCommSemiring.{0} (ZMod b) (ZMod.commRing b))))))) (Dvd.dvd.{0} Nat Nat.instDvdNat b a)
-Case conversion may be inaccurate. Consider using '#align zmod.nat_coe_zmod_eq_zero_iff_dvd ZMod.nat_cast_zmod_eq_zero_iff_dvdₓ'. -/
 theorem nat_cast_zmod_eq_zero_iff_dvd (a b : ℕ) : (a : ZMod b) = 0 ↔ b ∣ a := by
   rw [← Nat.cast_zero, ZMod.nat_cast_eq_nat_cast_iff, Nat.modEq_zero_iff_dvd]
 #align zmod.nat_coe_zmod_eq_zero_iff_dvd ZMod.nat_cast_zmod_eq_zero_iff_dvd
 
-/- warning: zmod.val_int_cast -> ZMod.val_int_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : Int) [_inst_1 : NeZero.{0} Nat Nat.hasZero n], Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (ZMod.val n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))
-but is expected to have type
-  forall {n : Nat} (a : Int) [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (ZMod.val n (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a (Nat.cast.{0} Int instNatCastInt n))
-Case conversion may be inaccurate. Consider using '#align zmod.val_int_cast ZMod.val_int_castₓ'. -/
 theorem val_int_cast {n : ℕ} (a : ℤ) [NeZero n] : ↑(a : ZMod n).val = a % n :=
   by
   have hle : (0 : ℤ) ≤ ↑(a : ZMod n).val := Int.coe_nat_nonneg _
@@ -832,12 +502,6 @@ theorem val_int_cast {n : ℕ} (a : ℤ) [NeZero n] : ↑(a : ZMod n).val = a % 
   rw [← ZMod.int_cast_eq_int_cast_iff', Int.cast_ofNat, ZMod.nat_cast_val, ZMod.cast_id]
 #align zmod.val_int_cast ZMod.val_int_cast
 
-/- warning: zmod.coe_int_cast -> ZMod.coe_int_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (ZMod n) Int (HasLiftT.mk.{1, 1} (ZMod n) Int (CoeTCₓ.coe.{1, 1} (ZMod n) Int (ZMod.hasCoeT.{0} Int (AddCommGroupWithOne.toAddGroupWithOne.{0} Int (Ring.toAddCommGroupWithOne.{0} Int Int.ring)) n))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))
-but is expected to have type
-  forall {n : Nat} (a : Int), Eq.{1} Int (ZMod.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int Int.instRingInt) n (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a (Nat.cast.{0} Int instNatCastInt n))
-Case conversion may be inaccurate. Consider using '#align zmod.coe_int_cast ZMod.coe_int_castₓ'. -/
 theorem coe_int_cast {n : ℕ} (a : ℤ) : ↑(a : ZMod n) = a % n :=
   by
   cases n
@@ -845,12 +509,6 @@ theorem coe_int_cast {n : ℕ} (a : ℤ) : ↑(a : ZMod n) = a % n :=
   · rw [← val_int_cast, val, coe_coe]
 #align zmod.coe_int_cast ZMod.coe_int_cast
 
-/- warning: zmod.val_neg_one -> ZMod.val_neg_one is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (ZMod.val (Nat.succ n) (Neg.neg.{0} (ZMod (Nat.succ n)) (SubNegMonoid.toHasNeg.{0} (ZMod (Nat.succ n)) (AddGroup.toSubNegMonoid.{0} (ZMod (Nat.succ n)) (AddGroupWithOne.toAddGroup.{0} (ZMod (Nat.succ n)) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (Nat.succ n)) (Ring.toAddCommGroupWithOne.{0} (ZMod (Nat.succ n)) (CommRing.toRing.{0} (ZMod (Nat.succ n)) (ZMod.commRing (Nat.succ n)))))))) (OfNat.ofNat.{0} (ZMod (Nat.succ n)) 1 (OfNat.mk.{0} (ZMod (Nat.succ n)) 1 (One.one.{0} (ZMod (Nat.succ n)) (AddMonoidWithOne.toOne.{0} (ZMod (Nat.succ n)) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod (Nat.succ n)) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (Nat.succ n)) (Ring.toAddCommGroupWithOne.{0} (ZMod (Nat.succ n)) (CommRing.toRing.{0} (ZMod (Nat.succ n)) (ZMod.commRing (Nat.succ n)))))))))))) n
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (ZMod.val (Nat.succ n) (Neg.neg.{0} (ZMod (Nat.succ n)) (Ring.toNeg.{0} (ZMod (Nat.succ n)) (CommRing.toRing.{0} (ZMod (Nat.succ n)) (ZMod.commRing (Nat.succ n)))) (OfNat.ofNat.{0} (ZMod (Nat.succ n)) 1 (One.toOfNat1.{0} (ZMod (Nat.succ n)) (Semiring.toOne.{0} (ZMod (Nat.succ n)) (CommSemiring.toSemiring.{0} (ZMod (Nat.succ n)) (CommRing.toCommSemiring.{0} (ZMod (Nat.succ n)) (ZMod.commRing (Nat.succ n))))))))) n
-Case conversion may be inaccurate. Consider using '#align zmod.val_neg_one ZMod.val_neg_oneₓ'. -/
 @[simp]
 theorem val_neg_one (n : ℕ) : (-1 : ZMod n.succ).val = n :=
   by
@@ -860,12 +518,6 @@ theorem val_neg_one (n : ℕ) : (-1 : ZMod n.succ).val = n :=
   · rw [Fin.val_one, Nat.succ_add_sub_one, Nat.mod_eq_of_lt (Nat.lt.base _)]
 #align zmod.val_neg_one ZMod.val_neg_one
 
-/- warning: zmod.cast_neg_one -> ZMod.cast_neg_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (n : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))) n) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (n : Nat), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R _inst_1)) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (Ring.toSemiring.{u1} R _inst_1)) n) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_neg_one ZMod.cast_neg_oneₓ'. -/
 /-- `-1 : zmod n` lifts to `n - 1 : R`. This avoids the characteristic assumption in `cast_neg`. -/
 theorem cast_neg_one {R : Type _} [Ring R] (n : ℕ) : ↑(-1 : ZMod n) = (n - 1 : R) :=
   by
@@ -874,12 +526,6 @@ theorem cast_neg_one {R : Type _} [Ring R] (n : ℕ) : ↑(-1 : ZMod n) = (n - 1
   · rw [← nat_cast_val, val_neg_one, Nat.cast_succ, add_sub_cancel]
 #align zmod.cast_neg_one ZMod.cast_neg_one
 
-/- warning: zmod.cast_sub_one -> ZMod.cast_sub_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {n : Nat} (k : ZMod n), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (SubNegMonoid.toHasSub.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) k (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (SubNegMonoid.toHasSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) (ite.{succ u1} R (Eq.{1} (ZMod n) k (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (ZMod.decidableEq n k (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))) n) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) k)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {n : Nat} (k : ZMod n), Eq.{succ u1} R (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n (HSub.hSub.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHSub.{0} (ZMod n) (Ring.toSub.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) k (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R _inst_1)) (ite.{succ u1} R (Eq.{1} (ZMod n) k (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (ZMod.decidableEq n k (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (Ring.toSemiring.{u1} R _inst_1)) n) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n k)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align zmod.cast_sub_one ZMod.cast_sub_oneₓ'. -/
 theorem cast_sub_one {R : Type _} [Ring R] {n : ℕ} (k : ZMod n) :
     ((k - 1 : ZMod n) : R) = (if k = 0 then n else k) - 1 :=
   by
@@ -893,12 +539,6 @@ theorem cast_sub_one {R : Type _} [Ring R] {n : ℕ} (k : ZMod n) :
       · exact hk
 #align zmod.cast_sub_one ZMod.cast_sub_one
 
-/- warning: zmod.nat_coe_zmod_eq_iff -> ZMod.nat_coe_zmod_eq_iff is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) (n : Nat) (z : ZMod p) [_inst_1 : NeZero.{0} Nat Nat.hasZero p], Iff (Eq.{1} (ZMod p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod p) (HasLiftT.mk.{1, 1} Nat (ZMod p) (CoeTCₓ.coe.{1, 1} Nat (ZMod p) (Nat.castCoe.{0} (ZMod p) (AddMonoidWithOne.toNatCast.{0} (ZMod p) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod p) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod p) (Ring.toAddCommGroupWithOne.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))))))) n) z) (Exists.{1} Nat (fun (k : Nat) => Eq.{1} Nat n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (ZMod.val p z) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) p k))))
-but is expected to have type
-  forall (p : Nat) (n : Nat) (z : ZMod p) [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) p], Iff (Eq.{1} (ZMod p) (Nat.cast.{0} (ZMod p) (Semiring.toNatCast.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p)))) n) z) (Exists.{1} Nat (fun (k : Nat) => Eq.{1} Nat n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (ZMod.val p z) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) p k))))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_coe_zmod_eq_iff ZMod.nat_coe_zmod_eq_iffₓ'. -/
 theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : ZMod p) [NeZero p] :
     ↑n = z ↔ ∃ k, n = z.val + p * k := by
   constructor
@@ -910,12 +550,6 @@ theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : ZMod p) [NeZero p] :
       add_zero]
 #align zmod.nat_coe_zmod_eq_iff ZMod.nat_coe_zmod_eq_iff
 
-/- warning: zmod.int_coe_zmod_eq_iff -> ZMod.int_coe_zmod_eq_iff is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) (n : Int) (z : ZMod p) [_inst_1 : NeZero.{0} Nat Nat.hasZero p], Iff (Eq.{1} (ZMod p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod p) (HasLiftT.mk.{1, 1} Int (ZMod p) (CoeTCₓ.coe.{1, 1} Int (ZMod p) (Int.castCoe.{0} (ZMod p) (AddGroupWithOne.toHasIntCast.{0} (ZMod p) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod p) (Ring.toAddCommGroupWithOne.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))))))) n) z) (Exists.{1} Int (fun (k : Int) => Eq.{1} Int n (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (ZMod.val p z)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) k))))
-but is expected to have type
-  forall (p : Nat) (n : Int) (z : ZMod p) [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) p], Iff (Eq.{1} (ZMod p) (Int.cast.{0} (ZMod p) (Ring.toIntCast.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))) n) z) (Exists.{1} Int (fun (k : Int) => Eq.{1} Int n (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (Nat.cast.{0} Int instNatCastInt (ZMod.val p z)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Nat.cast.{0} Int instNatCastInt p) k))))
-Case conversion may be inaccurate. Consider using '#align zmod.int_coe_zmod_eq_iff ZMod.int_coe_zmod_eq_iffₓ'. -/
 theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : ZMod p) [NeZero p] :
     ↑n = z ↔ ∃ k, n = z.val + p * k := by
   constructor
@@ -927,12 +561,6 @@ theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : ZMod p) [NeZero p] :
       ZMod.nat_cast_self, MulZeroClass.zero_mul, add_zero, cast_id]
 #align zmod.int_coe_zmod_eq_iff ZMod.int_coe_zmod_eq_iff
 
-/- warning: zmod.int_cast_mod -> ZMod.int_cast_mod is a dubious translation:
-lean 3 declaration is
-  forall (a : Int) (b : Nat), Eq.{1} (ZMod b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod b) (HasLiftT.mk.{1, 1} Int (ZMod b) (CoeTCₓ.coe.{1, 1} Int (ZMod b) (Int.castCoe.{0} (ZMod b) (AddGroupWithOne.toHasIntCast.{0} (ZMod b) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod b) (Ring.toAddCommGroupWithOne.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b)))))))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod b) (HasLiftT.mk.{1, 1} Int (ZMod b) (CoeTCₓ.coe.{1, 1} Int (ZMod b) (Int.castCoe.{0} (ZMod b) (AddGroupWithOne.toHasIntCast.{0} (ZMod b) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod b) (Ring.toAddCommGroupWithOne.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b)))))))) a)
-but is expected to have type
-  forall (a : Int) (b : Nat), Eq.{1} (ZMod b) (Int.cast.{0} (ZMod b) (Ring.toIntCast.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a (Nat.cast.{0} Int instNatCastInt b))) (Int.cast.{0} (ZMod b) (Ring.toIntCast.{0} (ZMod b) (CommRing.toRing.{0} (ZMod b) (ZMod.commRing b))) a)
-Case conversion may be inaccurate. Consider using '#align zmod.int_cast_mod ZMod.int_cast_modₓ'. -/
 @[push_cast, simp]
 theorem int_cast_mod (a : ℤ) (b : ℕ) : ((a % b : ℤ) : ZMod b) = (a : ZMod b) :=
   by
@@ -940,24 +568,12 @@ theorem int_cast_mod (a : ℤ) (b : ℕ) : ((a % b : ℤ) : ZMod b) = (a : ZMod 
   apply Int.mod_modEq
 #align zmod.int_cast_mod ZMod.int_cast_mod
 
-/- warning: zmod.ker_int_cast_add_hom -> ZMod.ker_int_castAddHom is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (AddSubgroup.{0} Int Int.addGroup) (AddMonoidHom.ker.{0, 0} Int Int.addGroup (ZMod n) (AddMonoid.toAddZeroClass.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (Int.castAddHom.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (AddSubgroup.zmultiples.{0} Int Int.addGroup ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (AddSubgroup.{0} Int Int.instAddGroupInt) (AddMonoidHom.ker.{0, 0} Int Int.instAddGroupInt (ZMod n) (AddMonoid.toAddZeroClass.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (Int.castAddHom.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (AddSubgroup.zmultiples.{0} Int Int.instAddGroupInt (Nat.cast.{0} Int instNatCastInt n))
-Case conversion may be inaccurate. Consider using '#align zmod.ker_int_cast_add_hom ZMod.ker_int_castAddHomₓ'. -/
 theorem ker_int_castAddHom (n : ℕ) : (Int.castAddHom (ZMod n)).ker = AddSubgroup.zmultiples n := by
   ext;
   rw [Int.mem_zmultiples_iff, AddMonoidHom.mem_ker, Int.coe_castAddHom,
     int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_add_hom ZMod.ker_int_castAddHom
 
-/- warning: zmod.ker_int_cast_ring_hom -> ZMod.ker_int_castRingHom is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Ideal.{0} Int Int.semiring) (RingHom.ker.{0, 0, 0} Int (ZMod n) (RingHom.{0, 0} Int (ZMod n) (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) Int.semiring (Ring.toSemiring.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (RingHom.ringHomClass.{0, 0} Int (ZMod n) (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Int.castRingHom.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Ideal.span.{0} Int Int.semiring (Singleton.singleton.{0, 0} Int (Set.{0} Int) (Set.hasSingleton.{0} Int) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Ideal.{0} Int Int.instSemiringInt) (RingHom.ker.{0, 0, 0} Int (ZMod n) (RingHom.{0, 0} Int (ZMod n) (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) Int.instSemiringInt (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))) (RingHom.instRingHomClassRingHom.{0, 0} Int (ZMod n) (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Int.castRingHom.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Ideal.span.{0} Int Int.instSemiringInt (Singleton.singleton.{0, 0} Int (Set.{0} Int) (Set.instSingletonSet.{0} Int) (Nat.cast.{0} Int instNatCastInt n)))
-Case conversion may be inaccurate. Consider using '#align zmod.ker_int_cast_ring_hom ZMod.ker_int_castRingHomₓ'. -/
 theorem ker_int_castRingHom (n : ℕ) : (Int.castRingHom (ZMod n)).ker = Ideal.span ({n} : Set ℤ) :=
   by ext;
   rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_castRingHom, int_coe_zmod_eq_zero_iff_dvd]
@@ -965,12 +581,6 @@ theorem ker_int_castRingHom (n : ℕ) : (Int.castRingHom (ZMod n)).ker = Ideal.s
 
 attribute [local semireducible] Int.NonNeg
 
-/- warning: zmod.nat_cast_to_nat -> ZMod.nat_cast_toNat is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) {z : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) z) -> (Eq.{1} (ZMod p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod p) (HasLiftT.mk.{1, 1} Nat (ZMod p) (CoeTCₓ.coe.{1, 1} Nat (ZMod p) (Nat.castCoe.{0} (ZMod p) (AddMonoidWithOne.toNatCast.{0} (ZMod p) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod p) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod p) (Ring.toAddCommGroupWithOne.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))))))) (Int.toNat z)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod p) (HasLiftT.mk.{1, 1} Int (ZMod p) (CoeTCₓ.coe.{1, 1} Int (ZMod p) (Int.castCoe.{0} (ZMod p) (AddGroupWithOne.toHasIntCast.{0} (ZMod p) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod p) (Ring.toAddCommGroupWithOne.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))))))) z))
-but is expected to have type
-  forall (p : Nat) {z : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) z) -> (Eq.{1} (ZMod p) (Nat.cast.{0} (ZMod p) (Semiring.toNatCast.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p)))) (Int.toNat z)) (Int.cast.{0} (ZMod p) (Ring.toIntCast.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))) z))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_to_nat ZMod.nat_cast_toNatₓ'. -/
 @[simp]
 theorem nat_cast_toNat (p : ℕ) : ∀ {z : ℤ} (h : 0 ≤ z), (z.toNat : ZMod p) = z
   | (n : ℕ), h => by simp only [Int.cast_ofNat, Int.toNat_coe_nat]
@@ -988,32 +598,14 @@ theorem val_injective (n : ℕ) [NeZero n] : Function.Injective (ZMod.val : ZMod
 #align zmod.val_injective ZMod.val_injective
 -/
 
-/- warning: zmod.val_one_eq_one_mod -> ZMod.val_one_eq_one_mod is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) n)
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n)
-Case conversion may be inaccurate. Consider using '#align zmod.val_one_eq_one_mod ZMod.val_one_eq_one_modₓ'. -/
 theorem val_one_eq_one_mod (n : ℕ) : (1 : ZMod n).val = 1 % n := by
   rw [← Nat.cast_one, val_nat_cast]
 #align zmod.val_one_eq_one_mod ZMod.val_one_eq_one_mod
 
-/- warning: zmod.val_one -> ZMod.val_one is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) [_inst_1 : Fact (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) n)], Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
-but is expected to have type
-  forall (n : Nat) [_inst_1 : Fact (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n)], Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
-Case conversion may be inaccurate. Consider using '#align zmod.val_one ZMod.val_oneₓ'. -/
 theorem val_one (n : ℕ) [Fact (1 < n)] : (1 : ZMod n).val = 1 := by rw [val_one_eq_one_mod];
   exact Nat.mod_eq_of_lt (Fact.out _)
 #align zmod.val_one ZMod.val_one
 
-/- warning: zmod.val_add -> ZMod.val_add is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n) (b : ZMod n), Eq.{1} Nat (ZMod.val n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (ZMod.val n a) (ZMod.val n b)) n)
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n) (b : ZMod n), Eq.{1} Nat (ZMod.val n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (ZMod.val n a) (ZMod.val n b)) n)
-Case conversion may be inaccurate. Consider using '#align zmod.val_add ZMod.val_addₓ'. -/
 theorem val_add {n : ℕ} [NeZero n] (a b : ZMod n) : (a + b).val = (a.val + b.val) % n :=
   by
   cases n
@@ -1021,12 +613,6 @@ theorem val_add {n : ℕ} [NeZero n] (a b : ZMod n) : (a + b).val = (a.val + b.v
   · apply Fin.val_add
 #align zmod.val_add ZMod.val_add
 
-/- warning: zmod.val_mul -> ZMod.val_mul is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n) (b : ZMod n), Eq.{1} Nat (ZMod.val n (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (ZMod.val n a) (ZMod.val n b)) n)
-but is expected to have type
-  forall {n : Nat} (a : ZMod n) (b : ZMod n), Eq.{1} Nat (ZMod.val n (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) a b)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (ZMod.val n a) (ZMod.val n b)) n)
-Case conversion may be inaccurate. Consider using '#align zmod.val_mul ZMod.val_mulₓ'. -/
 theorem val_mul {n : ℕ} (a b : ZMod n) : (a * b).val = a.val * b.val % n :=
   by
   cases n
@@ -1065,12 +651,6 @@ def inv : ∀ n : ℕ, ZMod n → ZMod n
 instance (n : ℕ) : Inv (ZMod n) :=
   ⟨inv n⟩
 
-/- warning: zmod.inv_zero -> ZMod.inv_zero is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (ZMod n) (Inv.inv.{0} (ZMod n) (ZMod.hasInv n) (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (ZMod n) (Inv.inv.{0} (ZMod n) (ZMod.instInvZMod n) (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))
-Case conversion may be inaccurate. Consider using '#align zmod.inv_zero ZMod.inv_zeroₓ'. -/
 theorem inv_zero : ∀ n : ℕ, (0 : ZMod n)⁻¹ = 0
   | 0 => Int.sign_zero
   | n + 1 =>
@@ -1078,12 +658,6 @@ theorem inv_zero : ∀ n : ℕ, (0 : ZMod n)⁻¹ = 0
       unfold Nat.gcdA Nat.xgcd Nat.xgcdAux; rfl
 #align zmod.inv_zero ZMod.inv_zero
 
-/- warning: zmod.mul_inv_eq_gcd -> ZMod.mul_inv_eq_gcd is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a (Inv.inv.{0} (ZMod n) (ZMod.hasInv n) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) (Nat.gcd (ZMod.val n a) n))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) a (Inv.inv.{0} (ZMod n) (ZMod.instInvZMod n) a)) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Nat.gcd (ZMod.val n a) n))
-Case conversion may be inaccurate. Consider using '#align zmod.mul_inv_eq_gcd ZMod.mul_inv_eq_gcdₓ'. -/
 theorem mul_inv_eq_gcd {n : ℕ} (a : ZMod n) : a * a⁻¹ = Nat.gcd a.val n :=
   by
   cases n
@@ -1103,12 +677,6 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : ZMod n) : a * a⁻¹ = Nat.gcd a.val n :=
       
 #align zmod.mul_inv_eq_gcd ZMod.mul_inv_eq_gcd
 
-/- warning: zmod.nat_cast_mod -> ZMod.nat_cast_mod is a dubious translation:
-lean 3 declaration is
-  forall (a : Nat) (n : Nat), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) a n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)
-but is expected to have type
-  forall (a : Nat) (n : Nat), Eq.{1} (ZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) a n)) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_mod ZMod.nat_cast_modₓ'. -/
 @[simp]
 theorem nat_cast_mod (a : ℕ) (n : ℕ) : ((a % n : ℕ) : ZMod n) = a := by
   conv =>
@@ -1117,12 +685,6 @@ theorem nat_cast_mod (a : ℕ) (n : ℕ) : ((a % n : ℕ) : ZMod n) = a := by
     simp
 #align zmod.nat_cast_mod ZMod.nat_cast_mod
 
-/- warning: zmod.eq_iff_modeq_nat -> ZMod.eq_iff_modEq_nat is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) {a : Nat} {b : Nat}, Iff (Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) b)) (Nat.ModEq n a b)
-but is expected to have type
-  forall (n : Nat) {a : Nat} {b : Nat}, Iff (Eq.{1} (ZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) b)) (Nat.ModEq n a b)
-Case conversion may be inaccurate. Consider using '#align zmod.eq_iff_modeq_nat ZMod.eq_iff_modEq_natₓ'. -/
 theorem eq_iff_modEq_nat (n : ℕ) {a b : ℕ} : (a : ZMod n) = b ↔ a ≡ b [MOD n] :=
   by
   cases n
@@ -1130,48 +692,24 @@ theorem eq_iff_modEq_nat (n : ℕ) {a b : ℕ} : (a : ZMod n) = b ↔ a ≡ b [M
   · rw [Fin.ext_iff, Nat.ModEq, ← val_nat_cast, ← val_nat_cast]; exact Iff.rfl
 #align zmod.eq_iff_modeq_nat ZMod.eq_iff_modEq_nat
 
-/- warning: zmod.coe_mul_inv_eq_one -> ZMod.coe_mul_inv_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (x : Nat), (Nat.coprime x n) -> (Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) x) (Inv.inv.{0} (ZMod n) (ZMod.hasInv n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) x))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall {n : Nat} (x : Nat), (Nat.coprime x n) -> (Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) x) (Inv.inv.{0} (ZMod n) (ZMod.instInvZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) x))) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.coe_mul_inv_eq_one ZMod.coe_mul_inv_eq_oneₓ'. -/
 theorem coe_mul_inv_eq_one {n : ℕ} (x : ℕ) (h : Nat.coprime x n) : (x * x⁻¹ : ZMod n) = 1 :=
   by
   rw [Nat.coprime, Nat.gcd_comm, Nat.gcd_rec] at h
   rw [mul_inv_eq_gcd, val_nat_cast, h, Nat.cast_one]
 #align zmod.coe_mul_inv_eq_one ZMod.coe_mul_inv_eq_one
 
-/- warning: zmod.unit_of_coprime -> ZMod.unitOfCoprime is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (x : Nat), (Nat.coprime x n) -> (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))
-but is expected to have type
-  forall {n : Nat} (x : Nat), (Nat.coprime x n) -> (Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))
-Case conversion may be inaccurate. Consider using '#align zmod.unit_of_coprime ZMod.unitOfCoprimeₓ'. -/
 /-- `unit_of_coprime` makes an element of `(zmod n)ˣ` given
   a natural number `x` and a proof that `x` is coprime to `n`  -/
 def unitOfCoprime {n : ℕ} (x : ℕ) (h : Nat.coprime x n) : (ZMod n)ˣ :=
   ⟨x, x⁻¹, coe_mul_inv_eq_one x h, by rw [mul_comm, coe_mul_inv_eq_one x h]⟩
 #align zmod.unit_of_coprime ZMod.unitOfCoprime
 
-/- warning: zmod.coe_unit_of_coprime -> ZMod.coe_unitOfCoprime is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (x : Nat) (h : Nat.coprime x n), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (HasLiftT.mk.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (CoeTCₓ.coe.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (coeBase.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (Units.hasCoe.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (ZMod.unitOfCoprime n x h)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) x)
-but is expected to have type
-  forall {n : Nat} (x : Nat) (h : Nat.coprime x n), Eq.{1} (ZMod n) (Units.val.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (ZMod.unitOfCoprime n x h)) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) x)
-Case conversion may be inaccurate. Consider using '#align zmod.coe_unit_of_coprime ZMod.coe_unitOfCoprimeₓ'. -/
 @[simp]
 theorem coe_unitOfCoprime {n : ℕ} (x : ℕ) (h : Nat.coprime x n) :
     (unitOfCoprime x h : ZMod n) = x :=
   rfl
 #align zmod.coe_unit_of_coprime ZMod.coe_unitOfCoprime
 
-/- warning: zmod.val_coe_unit_coprime -> ZMod.val_coe_unit_coprime is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (u : Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))), Nat.coprime (ZMod.val n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (HasLiftT.mk.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (CoeTCₓ.coe.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (coeBase.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (Units.hasCoe.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) u)) n
-but is expected to have type
-  forall {n : Nat} (u : Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))), Nat.coprime (ZMod.val n (Units.val.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) u)) n
-Case conversion may be inaccurate. Consider using '#align zmod.val_coe_unit_coprime ZMod.val_coe_unit_coprimeₓ'. -/
 theorem val_coe_unit_coprime {n : ℕ} (u : (ZMod n)ˣ) : Nat.coprime (u : ZMod n).val n :=
   by
   cases n
@@ -1184,12 +722,6 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (ZMod n)ˣ) : Nat.coprime (u : ZMod 
   rw [Units.val_mul, val_mul, nat_cast_mod]
 #align zmod.val_coe_unit_coprime ZMod.val_coe_unit_coprime
 
-/- warning: zmod.inv_coe_unit -> ZMod.inv_coe_unit is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (u : Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))), Eq.{1} (ZMod n) (Inv.inv.{0} (ZMod n) (ZMod.hasInv n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (HasLiftT.mk.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (CoeTCₓ.coe.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (coeBase.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (Units.hasCoe.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) u)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (HasLiftT.mk.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (CoeTCₓ.coe.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (coeBase.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (ZMod n) (Units.hasCoe.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (Inv.inv.{0} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Units.hasInv.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) u))
-but is expected to have type
-  forall {n : Nat} (u : Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))), Eq.{1} (ZMod n) (Inv.inv.{0} (ZMod n) (ZMod.instInvZMod n) (Units.val.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) u)) (Units.val.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (Inv.inv.{0} (Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (Units.instInv.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) u))
-Case conversion may be inaccurate. Consider using '#align zmod.inv_coe_unit ZMod.inv_coe_unitₓ'. -/
 @[simp]
 theorem inv_coe_unit {n : ℕ} (u : (ZMod n)ˣ) : (u : ZMod n)⁻¹ = (u⁻¹ : (ZMod n)ˣ) :=
   by
@@ -1201,34 +733,16 @@ theorem inv_coe_unit {n : ℕ} (u : (ZMod n)ˣ) : (u : ZMod n)⁻¹ = (u⁻¹ : 
   rfl
 #align zmod.inv_coe_unit ZMod.inv_coe_unit
 
-/- warning: zmod.mul_inv_of_unit -> ZMod.mul_inv_of_unit is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), (IsUnit.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a) -> (Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a (Inv.inv.{0} (ZMod n) (ZMod.hasInv n) a)) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), (IsUnit.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) a) -> (Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) a (Inv.inv.{0} (ZMod n) (ZMod.instInvZMod n) a)) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.mul_inv_of_unit ZMod.mul_inv_of_unitₓ'. -/
 theorem mul_inv_of_unit {n : ℕ} (a : ZMod n) (h : IsUnit a) : a * a⁻¹ = 1 :=
   by
   rcases h with ⟨u, rfl⟩
   rw [inv_coe_unit, u.mul_inv]
 #align zmod.mul_inv_of_unit ZMod.mul_inv_of_unit
 
-/- warning: zmod.inv_mul_of_unit -> ZMod.inv_mul_of_unit is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), (IsUnit.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a) -> (Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Inv.inv.{0} (ZMod n) (ZMod.hasInv n) a) a) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), (IsUnit.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) a) -> (Eq.{1} (ZMod n) (HMul.hMul.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHMul.{0} (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (Inv.inv.{0} (ZMod n) (ZMod.instInvZMod n) a) a) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.inv_mul_of_unit ZMod.inv_mul_of_unitₓ'. -/
 theorem inv_mul_of_unit {n : ℕ} (a : ZMod n) (h : IsUnit a) : a⁻¹ * a = 1 := by
   rw [mul_comm, mul_inv_of_unit a h]
 #align zmod.inv_mul_of_unit ZMod.inv_mul_of_unit
 
-/- warning: zmod.units_equiv_coprime -> ZMod.unitsEquivCoprime is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n], Equiv.{1, 1} (Units.{0} (ZMod n) (Ring.toMonoid.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Subtype.{1} (ZMod n) (fun (x : ZMod n) => Nat.coprime (ZMod.val n x) n))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Equiv.{1, 1} (Units.{0} (ZMod n) (MonoidWithZero.toMonoid.{0} (ZMod n) (Semiring.toMonoidWithZero.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (Subtype.{1} (ZMod n) (fun (x : ZMod n) => Nat.coprime (ZMod.val n x) n))
-Case conversion may be inaccurate. Consider using '#align zmod.units_equiv_coprime ZMod.unitsEquivCoprimeₓ'. -/
 -- TODO: this equivalence is true for `zmod 0 = ℤ`, but needs to use different functions.
 /-- Equivalence between the units of `zmod n` and
 the subtype of terms `x : zmod n` for which `x.val` is comprime to `n` -/
@@ -1240,12 +754,6 @@ def unitsEquivCoprime {n : ℕ} [NeZero n] : (ZMod n)ˣ ≃ { x : ZMod n // Nat.
   right_inv := fun ⟨_, _⟩ => by simp
 #align zmod.units_equiv_coprime ZMod.unitsEquivCoprime
 
-/- warning: zmod.chinese_remainder -> ZMod.chineseRemainder is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (RingEquiv.{0, 0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (Prod.{0, 0} (ZMod m) (ZMod n)) (Distrib.toHasMul.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (Ring.toDistrib.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (CommRing.toRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (ZMod.commRing (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n))))) (Distrib.toHasAdd.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (Ring.toDistrib.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (CommRing.toRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (ZMod.commRing (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n))))) (Prod.hasMul.{0, 0} (ZMod m) (ZMod n) (Distrib.toHasMul.{0} (ZMod m) (Ring.toDistrib.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m)))) (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Prod.hasAdd.{0, 0} (ZMod m) (ZMod n) (Distrib.toHasAdd.{0} (ZMod m) (Ring.toDistrib.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m)))) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (RingEquiv.{0, 0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (Prod.{0, 0} (ZMod m) (ZMod n)) (NonUnitalNonAssocRing.toMul.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (Ring.toNonAssocRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (CommRing.toRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (ZMod.commRing (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)))))) (Prod.instMulProd.{0, 0} (ZMod m) (ZMod n) (NonUnitalNonAssocRing.toMul.{0} (ZMod m) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod m) (Ring.toNonAssocRing.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m))))) (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (Distrib.toAdd.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (Ring.toNonAssocRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (CommRing.toRing.{0} (ZMod (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) (ZMod.commRing (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)))))))) (Prod.instAddSum.{0, 0} (ZMod m) (ZMod n) (Distrib.toAdd.{0} (ZMod m) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod m) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod m) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod m) (Ring.toNonAssocRing.{0} (ZMod m) (CommRing.toRing.{0} (ZMod m) (ZMod.commRing m))))))) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))
-Case conversion may be inaccurate. Consider using '#align zmod.chinese_remainder ZMod.chineseRemainderₓ'. -/
 /-- The **Chinese remainder theorem**. For a pair of coprime natural numbers, `m` and `n`,
   the rings `zmod (m * n)` and `zmod m × zmod n` are isomorphic.
 
@@ -1288,23 +796,11 @@ def chineseRemainder {m n : ℕ} (h : m.coprime n) : ZMod (m * n) ≃+* ZMod m �
     right_inv := inv.2 }
 #align zmod.chinese_remainder ZMod.chineseRemainder
 
-/- warning: zmod.subsingleton_units -> ZMod.subsingleton_units is a dubious translation:
-lean 3 declaration is
-  Subsingleton.{1} (Units.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Ring.toMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))
-but is expected to have type
-  Subsingleton.{1} (Units.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (MonoidWithZero.toMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semiring.toMonoidWithZero.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommRing.toCommSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))))
-Case conversion may be inaccurate. Consider using '#align zmod.subsingleton_units ZMod.subsingleton_unitsₓ'. -/
 -- todo: this can be made a `unique` instance.
 instance subsingleton_units : Subsingleton (ZMod 2)ˣ :=
   ⟨by decide⟩
 #align zmod.subsingleton_units ZMod.subsingleton_units
 
-/- warning: zmod.le_div_two_iff_lt_neg -> ZMod.le_div_two_iff_lt_neg is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) [hn : Fact (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))] {x : ZMod n}, (Ne.{1} (ZMod n) x (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) -> (Iff (LE.le.{0} Nat Nat.hasLe (ZMod.val n x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (LT.lt.{0} Nat Nat.hasLt (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (ZMod.val n (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) x))))
-but is expected to have type
-  forall (n : Nat) [hn : Fact (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))] {x : ZMod n}, (Ne.{1} (ZMod n) x (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) -> (Iff (LE.le.{0} Nat instLENat (ZMod.val n x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (LT.lt.{0} Nat instLTNat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.val n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) x))))
-Case conversion may be inaccurate. Consider using '#align zmod.le_div_two_iff_lt_neg ZMod.le_div_two_iff_lt_negₓ'. -/
 theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : ZMod n} (hx0 : x ≠ 0) :
     x.val ≤ (n / 2 : ℕ) ↔ (n / 2 : ℕ) < (-x).val :=
   by
@@ -1334,44 +830,20 @@ theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : ZMo
         Nat.mod_eq_of_lt hxn, tsub_le_tsub_iff_left x.val_le]
 #align zmod.le_div_two_iff_lt_neg ZMod.le_div_two_iff_lt_neg
 
-/- warning: zmod.ne_neg_self -> ZMod.ne_neg_self is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) [hn : Fact (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))] {a : ZMod n}, (Ne.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) -> (Ne.{1} (ZMod n) a (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a))
-but is expected to have type
-  forall (n : Nat) [hn : Fact (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))] {a : ZMod n}, (Ne.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) -> (Ne.{1} (ZMod n) a (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a))
-Case conversion may be inaccurate. Consider using '#align zmod.ne_neg_self ZMod.ne_neg_selfₓ'. -/
 theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : ZMod n} (ha : a ≠ 0) : a ≠ -a :=
   fun h => by
   have : a.val ≤ n / 2 ↔ (n : ℕ) / 2 < (-a).val := le_div_two_iff_lt_neg n ha
   rwa [← h, ← not_lt, not_iff_self] at this
 #align zmod.ne_neg_self ZMod.ne_neg_self
 
-/- warning: zmod.neg_one_ne_one -> ZMod.neg_one_ne_one is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : Fact (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)], Ne.{1} (ZMod n) (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))) (OfNat.ofNat.{0} (ZMod n) 1 (OfNat.mk.{0} (ZMod n) 1 (One.one.{0} (ZMod n) (AddMonoidWithOne.toOne.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : Fact (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)], Ne.{1} (ZMod n) (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))
-Case conversion may be inaccurate. Consider using '#align zmod.neg_one_ne_one ZMod.neg_one_ne_oneₓ'. -/
 theorem neg_one_ne_one {n : ℕ} [Fact (2 < n)] : (-1 : ZMod n) ≠ 1 :=
   CharP.neg_one_ne_one (ZMod n) n
 #align zmod.neg_one_ne_one ZMod.neg_one_ne_one
 
-/- warning: zmod.neg_eq_self_mod_two -> ZMod.neg_eq_self_mod_two is a dubious translation:
-lean 3 declaration is
-  forall (a : ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))), Eq.{1} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Neg.neg.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (SubNegMonoid.toHasNeg.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddGroup.toSubNegMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddGroupWithOne.toAddGroup.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Ring.toAddCommGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) a) a
-but is expected to have type
-  forall (a : ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))), Eq.{1} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Neg.neg.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Ring.toNeg.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) a) a
-Case conversion may be inaccurate. Consider using '#align zmod.neg_eq_self_mod_two ZMod.neg_eq_self_mod_twoₓ'. -/
 theorem neg_eq_self_mod_two (a : ZMod 2) : -a = a := by
   fin_cases a <;> ext <;> simp [Fin.coe_neg, Int.natMod] <;> norm_num
 #align zmod.neg_eq_self_mod_two ZMod.neg_eq_self_mod_two
 
-/- warning: zmod.nat_abs_mod_two -> ZMod.natAbs_mod_two is a dubious translation:
-lean 3 declaration is
-  forall (a : Int), Eq.{1} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HasLiftT.mk.{1, 1} Nat (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (CoeTCₓ.coe.{1, 1} Nat (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Nat.castCoe.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddMonoidWithOne.toNatCast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Ring.toAddCommGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))))) (Int.natAbs a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HasLiftT.mk.{1, 1} Int (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (CoeTCₓ.coe.{1, 1} Int (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Int.castCoe.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddGroupWithOne.toHasIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Ring.toAddCommGroupWithOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))))))))) a)
-but is expected to have type
-  forall (a : Int), Eq.{1} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Nat.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semiring.toNatCast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommRing.toCommSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))) (Int.natAbs a)) (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.commRing (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) a)
-Case conversion may be inaccurate. Consider using '#align zmod.nat_abs_mod_two ZMod.natAbs_mod_twoₓ'. -/
 @[simp]
 theorem natAbs_mod_two (a : ℤ) : (a.natAbs : ZMod 2) = a :=
   by
@@ -1380,24 +852,12 @@ theorem natAbs_mod_two (a : ℤ) : (a.natAbs : ZMod 2) = a :=
   · simp only [neg_eq_self_mod_two, Nat.cast_succ, Int.natAbs, Int.cast_negSucc]
 #align zmod.nat_abs_mod_two ZMod.natAbs_mod_two
 
-/- warning: zmod.val_eq_zero -> ZMod.val_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), Iff (Eq.{1} Nat (ZMod.val n a) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), Iff (Eq.{1} Nat (ZMod.val n a) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.val_eq_zero ZMod.val_eq_zeroₓ'. -/
 @[simp]
 theorem val_eq_zero : ∀ {n : ℕ} (a : ZMod n), a.val = 0 ↔ a = 0
   | 0, a => Int.natAbs_eq_zero
   | n + 1, a => by rw [Fin.ext_iff]; exact Iff.rfl
 #align zmod.val_eq_zero ZMod.val_eq_zero
 
-/- warning: zmod.neg_eq_self_iff -> ZMod.neg_eq_self_iff is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), Iff (Eq.{1} (ZMod n) (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a) a) (Or (Eq.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (ZMod.val n a)) n))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), Iff (Eq.{1} (ZMod n) (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a) a) (Or (Eq.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (ZMod.val n a)) n))
-Case conversion may be inaccurate. Consider using '#align zmod.neg_eq_self_iff ZMod.neg_eq_self_iffₓ'. -/
 theorem neg_eq_self_iff {n : ℕ} (a : ZMod n) : -a = a ↔ a = 0 ∨ 2 * a.val = n :=
   by
   rw [neg_eq_iff_add_eq_zero, ← two_mul]
@@ -1419,22 +879,10 @@ theorem neg_eq_self_iff {n : ℕ} (a : ZMod n) : -a = a ↔ a = 0 ∨ 2 * a.val 
   · rintro (rfl | h); · rw [val_zero, MulZeroClass.mul_zero]; apply dvd_zero; · rw [h]
 #align zmod.neg_eq_self_iff ZMod.neg_eq_self_iff
 
-/- warning: zmod.val_cast_of_lt -> ZMod.val_cast_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat}, (LT.lt.{0} Nat Nat.hasLt a n) -> (Eq.{1} Nat (ZMod.val n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) a)
-but is expected to have type
-  forall {n : Nat} {a : Nat}, (LT.lt.{0} Nat instLTNat a n) -> (Eq.{1} Nat (ZMod.val n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) a)
-Case conversion may be inaccurate. Consider using '#align zmod.val_cast_of_lt ZMod.val_cast_of_ltₓ'. -/
 theorem val_cast_of_lt {n : ℕ} {a : ℕ} (h : a < n) : (a : ZMod n).val = a := by
   rw [val_nat_cast, Nat.mod_eq_of_lt h]
 #align zmod.val_cast_of_lt ZMod.val_cast_of_lt
 
-/- warning: zmod.neg_val' -> ZMod.neg_val' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n), Eq.{1} Nat (ZMod.val n (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (ZMod.val n a)) n)
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} Nat (ZMod.val n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (ZMod.val n a)) n)
-Case conversion may be inaccurate. Consider using '#align zmod.neg_val' ZMod.neg_val'ₓ'. -/
 theorem neg_val' {n : ℕ} [NeZero n] (a : ZMod n) : (-a).val = (n - a.val) % n :=
   calc
     (-a).val = val (-a) % n := by rw [Nat.mod_eq_of_lt (-a).val_lt]
@@ -1446,12 +894,6 @@ theorem neg_val' {n : ℕ} [NeZero n] (a : ZMod n) : (-a).val = (n - a.val) % n 
     
 #align zmod.neg_val' ZMod.neg_val'
 
-/- warning: zmod.neg_val -> ZMod.neg_val is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n), Eq.{1} Nat (ZMod.val n (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a)) (ite.{1} Nat (Eq.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (ZMod.decidableEq n a (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (ZMod.val n a)))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} Nat (ZMod.val n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a)) (ite.{1} Nat (Eq.{1} (ZMod n) a (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (ZMod.decidableEq n a (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (ZMod.val n a)))
-Case conversion may be inaccurate. Consider using '#align zmod.neg_val ZMod.neg_valₓ'. -/
 theorem neg_val {n : ℕ} [NeZero n] (a : ZMod n) : (-a).val = if a = 0 then 0 else n - a.val :=
   by
   rw [neg_val']
@@ -1479,12 +921,6 @@ theorem valMinAbs_def_zero (x : ZMod 0) : valMinAbs x = x :=
 #align zmod.val_min_abs_def_zero ZMod.valMinAbs_def_zero
 -/
 
-/- warning: zmod.val_min_abs_def_pos -> ZMod.valMinAbs_def_pos is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (x : ZMod n), Eq.{1} Int (ZMod.valMinAbs n x) (ite.{1} Int (LE.le.{0} Nat Nat.hasLe (ZMod.val n x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Nat.decidableLe (ZMod.val n x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (ZMod.val n x)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (ZMod.val n x)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (x : ZMod n), Eq.{1} Int (ZMod.valMinAbs n x) (ite.{1} Int (LE.le.{0} Nat instLENat (ZMod.val n x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Nat.decLe (ZMod.val n x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Nat.cast.{0} Int instNatCastInt (ZMod.val n x)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int instNatCastInt (ZMod.val n x)) (Nat.cast.{0} Int instNatCastInt n)))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_def_pos ZMod.valMinAbs_def_posₓ'. -/
 theorem valMinAbs_def_pos {n : ℕ} [NeZero n] (x : ZMod n) :
     valMinAbs x = if x.val ≤ n / 2 then x.val else x.val - n :=
   by
@@ -1493,12 +929,6 @@ theorem valMinAbs_def_pos {n : ℕ} [NeZero n] (x : ZMod n) :
   · rfl
 #align zmod.val_min_abs_def_pos ZMod.valMinAbs_def_pos
 
-/- warning: zmod.coe_val_min_abs -> ZMod.coe_valMinAbs is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (x : ZMod n), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) (ZMod.valMinAbs n x)) x
-but is expected to have type
-  forall {n : Nat} (x : ZMod n), Eq.{1} (ZMod n) (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (ZMod.valMinAbs n x)) x
-Case conversion may be inaccurate. Consider using '#align zmod.coe_val_min_abs ZMod.coe_valMinAbsₓ'. -/
 @[simp, norm_cast]
 theorem coe_valMinAbs : ∀ {n : ℕ} (x : ZMod n), (x.valMinAbs : ZMod n) = x
   | 0, x => Int.cast_id x
@@ -1555,12 +985,6 @@ theorem valMinAbs_mem_Ioc {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs * 2 �
 #align zmod.val_min_abs_mem_Ioc ZMod.valMinAbs_mem_Ioc
 -/
 
-/- warning: zmod.val_min_abs_spec -> ZMod.valMinAbs_spec is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (x : ZMod n) (y : Int), Iff (Eq.{1} Int (ZMod.valMinAbs n x) y) (And (Eq.{1} (ZMod n) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) y)) (Membership.Mem.{0, 0} Int (Set.{0} Int) (Set.hasMem.{0} Int) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) y (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))) (Set.Ioc.{0} Int (PartialOrder.toPreorder.{0} Int (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) (Neg.neg.{0} Int Int.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (x : ZMod n) (y : Int), Iff (Eq.{1} Int (ZMod.valMinAbs n x) y) (And (Eq.{1} (ZMod n) x (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) y)) (Membership.mem.{0, 0} Int (Set.{0} Int) (Set.instMembershipSet.{0} Int) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) y (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (Set.Ioc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Neg.neg.{0} Int Int.instNegInt (Nat.cast.{0} Int instNatCastInt n)) (Nat.cast.{0} Int instNatCastInt n))))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_spec ZMod.valMinAbs_specₓ'. -/
 theorem valMinAbs_spec {n : ℕ} [NeZero n] (x : ZMod n) (y : ℤ) :
     x.valMinAbs = y ↔ x = y ∧ y * 2 ∈ Set.Ioc (-n : ℤ) n :=
   ⟨by rintro rfl; exact ⟨x.coe_val_min_abs.symm, x.val_min_abs_mem_Ioc⟩, fun h =>
@@ -1584,24 +1008,12 @@ theorem natAbs_valMinAbs_le {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs.natA
 #align zmod.nat_abs_val_min_abs_le ZMod.natAbs_valMinAbs_le
 -/
 
-/- warning: zmod.val_min_abs_zero -> ZMod.valMinAbs_zero is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Int (ZMod.valMinAbs n (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))))) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Int (ZMod.valMinAbs n (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_zero ZMod.valMinAbs_zeroₓ'. -/
 @[simp]
 theorem valMinAbs_zero : ∀ n, (0 : ZMod n).valMinAbs = 0
   | 0 => by simp only [val_min_abs_def_zero]
   | n + 1 => by simp only [val_min_abs_def_pos, if_true, Int.ofNat_zero, zero_le, val_zero]
 #align zmod.val_min_abs_zero ZMod.valMinAbs_zero
 
-/- warning: zmod.val_min_abs_eq_zero -> ZMod.valMinAbs_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (x : ZMod n), Iff (Eq.{1} Int (ZMod.valMinAbs n x) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Eq.{1} (ZMod n) x (OfNat.ofNat.{0} (ZMod n) 0 (OfNat.mk.{0} (ZMod n) 0 (Zero.zero.{0} (ZMod n) (MulZeroClass.toHasZero.{0} (ZMod n) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))))))
-but is expected to have type
-  forall {n : Nat} (x : ZMod n), Iff (Eq.{1} Int (ZMod.valMinAbs n x) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Eq.{1} (ZMod n) x (OfNat.ofNat.{0} (ZMod n) 0 (Zero.toOfNat0.{0} (ZMod n) (CommMonoidWithZero.toZero.{0} (ZMod n) (CommSemiring.toCommMonoidWithZero.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_eq_zero ZMod.valMinAbs_eq_zeroₓ'. -/
 @[simp]
 theorem valMinAbs_eq_zero {n : ℕ} (x : ZMod n) : x.valMinAbs = 0 ↔ x = 0 :=
   by
@@ -1610,12 +1022,6 @@ theorem valMinAbs_eq_zero {n : ℕ} (x : ZMod n) : x.valMinAbs = 0 ↔ x = 0 :=
   apply injective_val_min_abs.eq_iff
 #align zmod.val_min_abs_eq_zero ZMod.valMinAbs_eq_zero
 
-/- warning: zmod.nat_cast_nat_abs_val_min_abs -> ZMod.nat_cast_natAbs_valMinAbs is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n), Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) (Int.natAbs (ZMod.valMinAbs n a))) (ite.{1} (ZMod n) (LE.le.{0} Nat Nat.hasLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Nat.decidableLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) a (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} (ZMod n) (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (Int.natAbs (ZMod.valMinAbs n a))) (ite.{1} (ZMod n) (LE.le.{0} Nat instLENat (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Nat.decLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) a (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_nat_abs_val_min_abs ZMod.nat_cast_natAbs_valMinAbsₓ'. -/
 theorem nat_cast_natAbs_valMinAbs {n : ℕ} [NeZero n] (a : ZMod n) :
     (a.valMinAbs.natAbs : ZMod n) = if a.val ≤ (n : ℕ) / 2 then a else -a :=
   by
@@ -1628,12 +1034,6 @@ theorem nat_cast_natAbs_valMinAbs {n : ℕ} [NeZero n] (a : ZMod n) :
       Int.cast_ofNat, Int.cast_ofNat, nat_cast_self, sub_zero, nat_cast_zmod_val]
 #align zmod.nat_cast_nat_abs_val_min_abs ZMod.nat_cast_natAbs_valMinAbs
 
-/- warning: zmod.val_min_abs_neg_of_ne_half -> ZMod.valMinAbs_neg_of_ne_half is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : ZMod n}, (Ne.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (ZMod.val n a)) n) -> (Eq.{1} Int (ZMod.valMinAbs n (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a)) (Neg.neg.{0} Int Int.hasNeg (ZMod.valMinAbs n a)))
-but is expected to have type
-  forall {n : Nat} {a : ZMod n}, (Ne.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (ZMod.val n a)) n) -> (Eq.{1} Int (ZMod.valMinAbs n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a)) (Neg.neg.{0} Int Int.instNegInt (ZMod.valMinAbs n a)))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_neg_of_ne_half ZMod.valMinAbs_neg_of_ne_halfₓ'. -/
 theorem valMinAbs_neg_of_ne_half {n : ℕ} {a : ZMod n} (ha : 2 * a.val ≠ n) :
     (-a).valMinAbs = -a.valMinAbs :=
   by
@@ -1645,12 +1045,6 @@ theorem valMinAbs_neg_of_ne_half {n : ℕ} {a : ZMod n} (ha : 2 * a.val ≠ n) :
   · linarith only [a.val_min_abs_mem_Ioc.1]
 #align zmod.val_min_abs_neg_of_ne_half ZMod.valMinAbs_neg_of_ne_half
 
-/- warning: zmod.nat_abs_val_min_abs_neg -> ZMod.natAbs_valMinAbs_neg is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n), Eq.{1} Nat (Int.natAbs (ZMod.valMinAbs n (Neg.neg.{0} (ZMod n) (SubNegMonoid.toHasNeg.{0} (ZMod n) (AddGroup.toSubNegMonoid.{0} (ZMod n) (AddGroupWithOne.toAddGroup.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) a))) (Int.natAbs (ZMod.valMinAbs n a))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n), Eq.{1} Nat (Int.natAbs (ZMod.valMinAbs n (Neg.neg.{0} (ZMod n) (Ring.toNeg.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) a))) (Int.natAbs (ZMod.valMinAbs n a))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_abs_val_min_abs_neg ZMod.natAbs_valMinAbs_negₓ'. -/
 @[simp]
 theorem natAbs_valMinAbs_neg {n : ℕ} (a : ZMod n) : (-a).valMinAbs.natAbs = a.valMinAbs.natAbs :=
   by
@@ -1659,23 +1053,11 @@ theorem natAbs_valMinAbs_neg {n : ℕ} (a : ZMod n) : (-a).valMinAbs.natAbs = a.
   · rw [val_min_abs_neg_of_ne_half h2a, Int.natAbs_neg]
 #align zmod.nat_abs_val_min_abs_neg ZMod.natAbs_valMinAbs_neg
 
-/- warning: zmod.val_eq_ite_val_min_abs -> ZMod.val_eq_ite_valMinAbs is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (ZMod.val n a)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (ZMod.valMinAbs n a) (ite.{1} Int (LE.le.{0} Nat Nat.hasLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (Nat.decidableLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))
-but is expected to have type
-  forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (ZMod.val n a)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (ZMod.valMinAbs n a) (Nat.cast.{0} Int instNatCastInt (ite.{1} Nat (LE.le.{0} Nat instLENat (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Nat.decLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n)))
-Case conversion may be inaccurate. Consider using '#align zmod.val_eq_ite_val_min_abs ZMod.val_eq_ite_valMinAbsₓ'. -/
 theorem val_eq_ite_valMinAbs {n : ℕ} [NeZero n] (a : ZMod n) :
     (a.val : ℤ) = a.valMinAbs + if a.val ≤ n / 2 then 0 else n := by rw [val_min_abs_def_pos];
   split_ifs <;> simp only [add_zero, sub_add_cancel]
 #align zmod.val_eq_ite_val_min_abs ZMod.val_eq_ite_valMinAbs
 
-/- warning: zmod.prime_ne_zero -> ZMod.prime_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (p : Nat) (q : Nat) [hp : Fact (Nat.Prime p)] [hq : Fact (Nat.Prime q)], (Ne.{1} Nat p q) -> (Ne.{1} (ZMod p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod p) (HasLiftT.mk.{1, 1} Nat (ZMod p) (CoeTCₓ.coe.{1, 1} Nat (ZMod p) (Nat.castCoe.{0} (ZMod p) (AddMonoidWithOne.toNatCast.{0} (ZMod p) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod p) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod p) (Ring.toAddCommGroupWithOne.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))))))) q) (OfNat.ofNat.{0} (ZMod p) 0 (OfNat.mk.{0} (ZMod p) 0 (Zero.zero.{0} (ZMod p) (MulZeroClass.toHasZero.{0} (ZMod p) (NonUnitalNonAssocSemiring.toMulZeroClass.{0} (ZMod p) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod p) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod p) (Ring.toNonAssocRing.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))))))))))
-but is expected to have type
-  forall (p : Nat) (q : Nat) [hp : Fact (Nat.Prime p)] [hq : Fact (Nat.Prime q)], (Ne.{1} Nat p q) -> (Ne.{1} (ZMod p) (Nat.cast.{0} (ZMod p) (Semiring.toNatCast.{0} (ZMod p) (CommSemiring.toSemiring.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p)))) q) (OfNat.ofNat.{0} (ZMod p) 0 (Zero.toOfNat0.{0} (ZMod p) (CommMonoidWithZero.toZero.{0} (ZMod p) (CommSemiring.toCommMonoidWithZero.{0} (ZMod p) (CommRing.toCommSemiring.{0} (ZMod p) (ZMod.commRing p)))))))
-Case conversion may be inaccurate. Consider using '#align zmod.prime_ne_zero ZMod.prime_ne_zeroₓ'. -/
 theorem prime_ne_zero (p q : ℕ) [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq : p ≠ q) :
     (q : ZMod p) ≠ 0 := by
   rwa [← Nat.cast_zero, Ne.def, eq_iff_modeq_nat, Nat.modEq_zero_iff_dvd, ←
@@ -1684,12 +1066,6 @@ theorem prime_ne_zero (p q : ℕ) [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq :
 
 variable {n a : ℕ}
 
-/- warning: zmod.val_min_abs_nat_abs_eq_min -> ZMod.valMinAbs_natAbs_eq_min is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} [hpos : NeZero.{0} Nat Nat.hasZero n] (a : ZMod n), Eq.{1} Nat (Int.natAbs (ZMod.valMinAbs n a)) (LinearOrder.min.{0} Nat Nat.linearOrder (ZMod.val n a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (ZMod.val n a)))
-but is expected to have type
-  forall {n : Nat} [hpos : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} Nat (Int.natAbs (ZMod.valMinAbs n a)) (Min.min.{0} Nat instMinNat (ZMod.val n a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (ZMod.val n a)))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_nat_abs_eq_min ZMod.valMinAbs_natAbs_eq_minₓ'. -/
 theorem valMinAbs_natAbs_eq_min {n : ℕ} [hpos : NeZero n] (a : ZMod n) :
     a.valMinAbs.natAbs = min a.val (n - a.val) :=
   by
@@ -1708,12 +1084,6 @@ theorem valMinAbs_natAbs_eq_min {n : ℕ} [hpos : NeZero n] (a : ZMod n) :
     apply Nat.lt_succ_self
 #align zmod.val_min_abs_nat_abs_eq_min ZMod.valMinAbs_natAbs_eq_min
 
-/- warning: zmod.val_min_abs_nat_cast_of_le_half -> ZMod.valMinAbs_natCast_of_le_half is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat}, (LE.le.{0} Nat Nat.hasLe a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) -> (Eq.{1} Int (ZMod.valMinAbs n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))
-but is expected to have type
-  forall {n : Nat} {a : Nat}, (LE.le.{0} Nat instLENat a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) -> (Eq.{1} Int (ZMod.valMinAbs n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) (Nat.cast.{0} Int instNatCastInt a))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_nat_cast_of_le_half ZMod.valMinAbs_natCast_of_le_halfₓ'. -/
 theorem valMinAbs_natCast_of_le_half (ha : a ≤ n / 2) : (a : ZMod n).valMinAbs = a :=
   by
   cases n
@@ -1723,12 +1093,6 @@ theorem valMinAbs_natCast_of_le_half (ha : a ≤ n / 2) : (a : ZMod n).valMinAbs
       ha]
 #align zmod.val_min_abs_nat_cast_of_le_half ZMod.valMinAbs_natCast_of_le_half
 
-/- warning: zmod.val_min_abs_nat_cast_of_half_lt -> ZMod.valMinAbs_natCast_of_half_lt is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat}, (LT.lt.{0} Nat Nat.hasLt (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) a) -> (LT.lt.{0} Nat Nat.hasLt a n) -> (Eq.{1} Int (ZMod.valMinAbs n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))
-but is expected to have type
-  forall {n : Nat} {a : Nat}, (LT.lt.{0} Nat instLTNat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) a) -> (LT.lt.{0} Nat instLTNat a n) -> (Eq.{1} Int (ZMod.valMinAbs n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int instNatCastInt a) (Nat.cast.{0} Int instNatCastInt n)))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_nat_cast_of_half_lt ZMod.valMinAbs_natCast_of_half_ltₓ'. -/
 theorem valMinAbs_natCast_of_half_lt (ha : n / 2 < a) (ha' : a < n) :
     (a : ZMod n).valMinAbs = a - n := by
   cases n
@@ -1736,12 +1100,6 @@ theorem valMinAbs_natCast_of_half_lt (ha : n / 2 < a) (ha' : a < n) :
   · simp [val_min_abs_def_pos, val_nat_cast, Nat.mod_eq_of_lt ha', ha.not_le]
 #align zmod.val_min_abs_nat_cast_of_half_lt ZMod.valMinAbs_natCast_of_half_lt
 
-/- warning: zmod.val_min_nat_abs_nat_cast_eq_self -> ZMod.valMinAbs_natCast_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n], Iff (Eq.{1} Int (ZMod.valMinAbs n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a)) (LE.le.{0} Nat Nat.hasLe a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {n : Nat} {a : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Iff (Eq.{1} Int (ZMod.valMinAbs n (Nat.cast.{0} (ZMod n) (Semiring.toNatCast.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) a)) (Nat.cast.{0} Int instNatCastInt a)) (LE.le.{0} Nat instLENat a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align zmod.val_min_nat_abs_nat_cast_eq_self ZMod.valMinAbs_natCast_eq_selfₓ'. -/
 @[simp]
 theorem valMinAbs_natCast_eq_self [NeZero n] : (a : ZMod n).valMinAbs = a ↔ a ≤ n / 2 :=
   by
@@ -1750,12 +1108,6 @@ theorem valMinAbs_natCast_eq_self [NeZero n] : (a : ZMod n).valMinAbs = a ↔ a 
   exact nat_abs_val_min_abs_le a
 #align zmod.val_min_nat_abs_nat_cast_eq_self ZMod.valMinAbs_natCast_eq_self
 
-/- warning: zmod.nat_abs_min_of_le_div_two -> ZMod.natAbs_min_of_le_div_two is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (x : Int) (y : Int), (Eq.{1} (ZMod n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (ZMod n) (HasLiftT.mk.{1, 1} Int (ZMod n) (CoeTCₓ.coe.{1, 1} Int (ZMod n) (Int.castCoe.{0} (ZMod n) (AddGroupWithOne.toHasIntCast.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) y)) -> (LE.le.{0} Nat Nat.hasLe (Int.natAbs x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) -> (LE.le.{0} Nat Nat.hasLe (Int.natAbs x) (Int.natAbs y))
-but is expected to have type
-  forall (n : Nat) (x : Int) (y : Int), (Eq.{1} (ZMod n) (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) x) (Int.cast.{0} (ZMod n) (Ring.toIntCast.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) y)) -> (LE.le.{0} Nat instLENat (Int.natAbs x) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) -> (LE.le.{0} Nat instLENat (Int.natAbs x) (Int.natAbs y))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_abs_min_of_le_div_two ZMod.natAbs_min_of_le_div_twoₓ'. -/
 theorem natAbs_min_of_le_div_two (n : ℕ) (x y : ℤ) (he : (x : ZMod n) = y) (hl : x.natAbs ≤ n / 2) :
     x.natAbs ≤ y.natAbs := by
   rw [int_coe_eq_int_coe_iff_dvd_sub] at he
@@ -1772,12 +1124,6 @@ theorem natAbs_min_of_le_div_two (n : ℕ) (x y : ℤ) (he : (x : ZMod n) = y) (
   rw [← mul_two]; apply Nat.div_mul_le_self
 #align zmod.nat_abs_min_of_le_div_two ZMod.natAbs_min_of_le_div_two
 
-/- warning: zmod.nat_abs_val_min_abs_add_le -> ZMod.natAbs_valMinAbs_add_le is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (a : ZMod n) (b : ZMod n), LE.le.{0} Nat Nat.hasLe (Int.natAbs (ZMod.valMinAbs n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) a b))) (Int.natAbs (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (ZMod.valMinAbs n a) (ZMod.valMinAbs n b)))
-but is expected to have type
-  forall {n : Nat} (a : ZMod n) (b : ZMod n), LE.le.{0} Nat instLENat (Int.natAbs (ZMod.valMinAbs n (HAdd.hAdd.{0, 0, 0} (ZMod n) (ZMod n) (ZMod n) (instHAdd.{0} (ZMod n) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))))) a b))) (Int.natAbs (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (ZMod.valMinAbs n a) (ZMod.valMinAbs n b)))
-Case conversion may be inaccurate. Consider using '#align zmod.nat_abs_val_min_abs_add_le ZMod.natAbs_valMinAbs_add_leₓ'. -/
 theorem natAbs_valMinAbs_add_le {n : ℕ} (a b : ZMod n) :
     (a + b).valMinAbs.natAbs ≤ (a.valMinAbs + b.valMinAbs).natAbs :=
   by
@@ -1835,53 +1181,23 @@ instance subsingleton_ringHom [Semiring R] : Subsingleton (ZMod n →+* R) :=
 #align zmod.subsingleton_ring_hom ZMod.subsingleton_ringHom
 -/
 
-/- warning: zmod.subsingleton_ring_equiv -> ZMod.subsingleton_ringEquiv is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Subsingleton.{succ u1} (RingEquiv.{0, u1} (ZMod n) R (Distrib.toHasMul.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Distrib.toHasAdd.{0} (ZMod n) (Ring.toDistrib.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Distrib.toHasAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))))
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Subsingleton.{succ u1} (RingEquiv.{0, u1} (ZMod n) R (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align zmod.subsingleton_ring_equiv ZMod.subsingleton_ringEquivₓ'. -/
 instance subsingleton_ringEquiv [Semiring R] : Subsingleton (ZMod n ≃+* R) :=
   ⟨fun f g => by rw [RingEquiv.coe_ringHom_inj_iff]; apply RingHom.ext_zmod _ _⟩
 #align zmod.subsingleton_ring_equiv ZMod.subsingleton_ringEquiv
 
-/- warning: zmod.ring_hom_map_cast -> ZMod.ringHom_map_cast is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (k : ZMod n), Eq.{1} (ZMod n) (coeFn.{succ u1, succ u1} (RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (fun (_x : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) => R -> (ZMod n)) (RingHom.hasCoeToFun.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) f ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n))) k)) k
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (k : ZMod n), Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => ZMod n) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n k)) (FunLike.coe.{succ u1, succ u1, 1} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => ZMod n) _x) (MulHomClass.toFunLike.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{0} (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (RingHom.instRingHomClassRingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))) f (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n k)) k
-Case conversion may be inaccurate. Consider using '#align zmod.ring_hom_map_cast ZMod.ringHom_map_castₓ'. -/
 @[simp]
 theorem ringHom_map_cast [Ring R] (f : R →+* ZMod n) (k : ZMod n) : f k = k := by cases n <;> simp
 #align zmod.ring_hom_map_cast ZMod.ringHom_map_cast
 
-/- warning: zmod.ring_hom_right_inverse -> ZMod.ringHom_rightInverse is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))), Function.RightInverse.{succ u1, 1} R (ZMod n) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) (ZMod n) R (HasLiftT.mk.{1, succ u1} (ZMod n) R (CoeTCₓ.coe.{1, succ u1} (ZMod n) R (ZMod.hasCoeT.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)) n)))) (coeFn.{succ u1, succ u1} (RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (fun (_x : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) => R -> (ZMod n)) (RingHom.hasCoeToFun.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) f)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))), Function.RightInverse.{succ u1, 1} R (ZMod n) (ZMod.cast.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1) n) (FunLike.coe.{succ u1, succ u1, 1} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => ZMod n) _x) (MulHomClass.toFunLike.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{0} (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (RingHom.instRingHomClassRingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))) f)
-Case conversion may be inaccurate. Consider using '#align zmod.ring_hom_right_inverse ZMod.ringHom_rightInverseₓ'. -/
 theorem ringHom_rightInverse [Ring R] (f : R →+* ZMod n) :
     Function.RightInverse (coe : ZMod n → R) f :=
   ringHom_map_cast f
 #align zmod.ring_hom_right_inverse ZMod.ringHom_rightInverse
 
-/- warning: zmod.ring_hom_surjective -> ZMod.ringHom_surjective is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))), Function.Surjective.{succ u1, 1} R (ZMod n) (coeFn.{succ u1, succ u1} (RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (fun (_x : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) => R -> (ZMod n)) (RingHom.hasCoeToFun.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) f)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))), Function.Surjective.{succ u1, 1} R (ZMod n) (FunLike.coe.{succ u1, succ u1, 1} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => ZMod n) _x) (MulHomClass.toFunLike.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{0} (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} (ZMod n) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, 0} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))) (RingHom.instRingHomClassRingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)))))))) f)
-Case conversion may be inaccurate. Consider using '#align zmod.ring_hom_surjective ZMod.ringHom_surjectiveₓ'. -/
 theorem ringHom_surjective [Ring R] (f : R →+* ZMod n) : Function.Surjective f :=
   (ringHom_rightInverse f).Surjective
 #align zmod.ring_hom_surjective ZMod.ringHom_surjective
 
-/- warning: zmod.ring_hom_eq_of_ker_eq -> ZMod.ringHom_eq_of_ker_eq is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (g : RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))), (Eq.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (RingHom.ker.{u1, 0, u1} R (ZMod n) (RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (RingHom.ringHomClass.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) f) (RingHom.ker.{u1, 0, u1} R (ZMod n) (RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))) (RingHom.ringHomClass.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) g)) -> (Eq.{succ u1} (RingHom.{u1, 0} R (ZMod n) (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) f g)
-but is expected to have type
-  forall {n : Nat} {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (f : RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (g : RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))), (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (RingHom.ker.{u1, 0, u1} R (ZMod n) (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))) (RingHom.instRingHomClassRingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) f) (RingHom.ker.{u1, 0, u1} R (ZMod n) (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))) (RingHom.instRingHomClassRingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) g)) -> (Eq.{succ u1} (RingHom.{u1, 0} R (ZMod n) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))) f g)
-Case conversion may be inaccurate. Consider using '#align zmod.ring_hom_eq_of_ker_eq ZMod.ringHom_eq_of_ker_eqₓ'. -/
 theorem ringHom_eq_of_ker_eq [CommRing R] (f g : R →+* ZMod n) (h : f.ker = g.ker) : f = g :=
   by
   have := f.lift_of_right_inverse_comp _ (ZMod.ringHom_rightInverse f) ⟨g, le_of_eq h⟩
@@ -1893,12 +1209,6 @@ section lift
 
 variable (n) {A : Type _} [AddGroup A]
 
-/- warning: zmod.lift -> ZMod.lift is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) {A : Type.{u1}} [_inst_1 : AddGroup.{u1} A], Equiv.{succ u1, succ u1} (Subtype.{succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) (fun (f : AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) => Eq.{succ u1} A (coeFn.{succ u1, succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) (fun (_x : AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) => Int -> A) (AddMonoidHom.hasCoeToFun.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) f ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (OfNat.ofNat.{u1} A 0 (OfNat.mk.{u1} A 0 (Zero.zero.{u1} A (AddZeroClass.toHasZero.{u1} A (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1))))))))) (AddMonoidHom.{0, u1} (ZMod n) A (AddMonoid.toAddZeroClass.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1))))
-but is expected to have type
-  forall (n : Nat) {A : Type.{u1}} [_inst_1 : AddGroup.{u1} A], Equiv.{succ u1, succ u1} (Subtype.{succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) (fun (f : AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) => Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) (FunLike.coe.{succ u1, 1, succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) _x) (AddHomClass.toFunLike.{u1, 0, u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) Int A (AddZeroClass.toAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt)) (AddZeroClass.toAdd.{u1} A (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, 0, u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))) Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1))) (AddMonoidHom.addMonoidHomClass.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1)))))) f (Nat.cast.{0} Int instNatCastInt n)) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) (NegZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) (SubNegZeroMonoid.toNegZeroClass.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) (SubtractionMonoid.toSubNegZeroMonoid.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) (AddGroup.toSubtractionMonoid.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Int) => A) (Nat.cast.{0} Int instNatCastInt n)) _inst_1)))))))) (AddMonoidHom.{0, u1} (ZMod n) A (AddMonoid.toAddZeroClass.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (AddMonoid.toAddZeroClass.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_1))))
-Case conversion may be inaccurate. Consider using '#align zmod.lift ZMod.liftₓ'. -/
 /-- The map from `zmod n` induced by `f : ℤ →+ A` that maps `n` to `0`. -/
 @[simps]
 def lift : { f : ℤ →+ A // f n = 0 } ≃ (ZMod n →+ A) :=
@@ -1915,32 +1225,20 @@ def lift : { f : ℤ →+ A // f n = 0 } ≃ (ZMod n →+ A) :=
 
 variable (f : { f : ℤ →+ A // f n = 0 })
 
-/- warning: zmod.lift_coe -> ZMod.lift_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align zmod.lift_coe ZMod.lift_coeₓ'. -/
 @[simp]
 theorem lift_coe (x : ℤ) : lift n f (x : ZMod n) = f x :=
   AddMonoidHom.liftOfRightInverse_comp_apply _ _ _ _ _
 #align zmod.lift_coe ZMod.lift_coe
 
-/- warning: zmod.lift_cast_add_hom -> ZMod.lift_castAddHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align zmod.lift_cast_add_hom ZMod.lift_castAddHomₓ'. -/
 theorem lift_castAddHom (x : ℤ) : lift n f (Int.castAddHom (ZMod n) x) = f x :=
   AddMonoidHom.liftOfRightInverse_comp_apply _ _ _ _ _
 #align zmod.lift_cast_add_hom ZMod.lift_castAddHom
 
-/- warning: zmod.lift_comp_coe -> ZMod.lift_comp_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align zmod.lift_comp_coe ZMod.lift_comp_coeₓ'. -/
 @[simp]
 theorem lift_comp_coe : ZMod.lift n f ∘ coe = f :=
   funext <| lift_coe _ _
 #align zmod.lift_comp_coe ZMod.lift_comp_coe
 
-/- warning: zmod.lift_comp_cast_add_hom -> ZMod.lift_comp_castAddHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align zmod.lift_comp_cast_add_hom ZMod.lift_comp_castAddHomₓ'. -/
 @[simp]
 theorem lift_comp_castAddHom : (ZMod.lift n f).comp (Int.castAddHom (ZMod n)) = f :=
   AddMonoidHom.ext <| lift_castAddHom _ _

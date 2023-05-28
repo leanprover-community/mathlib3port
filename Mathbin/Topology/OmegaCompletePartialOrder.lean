@@ -64,12 +64,6 @@ theorem isOpen_univ : IsOpen α univ :=
 #align Scott.is_open_univ Scott.isOpen_univ
 -/
 
-/- warning: Scott.is_open.inter -> Scott.IsOpen.inter is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : OmegaCompletePartialOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), (Scott.IsOpen.{u1} α _inst_1 s) -> (Scott.IsOpen.{u1} α _inst_1 t) -> (Scott.IsOpen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : OmegaCompletePartialOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), (Scott.IsOpen.{u1} α _inst_1 s) -> (Scott.IsOpen.{u1} α _inst_1 t) -> (Scott.IsOpen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align Scott.is_open.inter Scott.IsOpen.interₓ'. -/
 theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α (s ∩ t) :=
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter Scott.IsOpen.inter
@@ -151,12 +145,6 @@ theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωS
 #align is_ωSup_ωSup isωSup_ωSup
 -/
 
-/- warning: Scott_continuous_of_continuous -> scottContinuous_of_continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OmegaCompletePartialOrder.{u1} α] [_inst_2 : OmegaCompletePartialOrder.{u2} β] (f : (Scott.{u1} α) -> (Scott.{u2} β)), (Continuous.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) (Scott.topologicalSpace.{u1} α _inst_1) (Scott.topologicalSpace.{u2} β _inst_2) f) -> (OmegaCompletePartialOrder.Continuous'.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) _inst_1 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OmegaCompletePartialOrder.{u2} α] [_inst_2 : OmegaCompletePartialOrder.{u1} β] (f : (Scott.{u2} α) -> (Scott.{u1} β)), (Continuous.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) (Scott.topologicalSpace.{u2} α _inst_1) (Scott.topologicalSpace.{u1} β _inst_2) f) -> (OmegaCompletePartialOrder.Continuous'.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align Scott_continuous_of_continuous scottContinuous_of_continuousₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:565:11: unsupported: specialize non-hyp -/
 theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :
@@ -181,12 +169,6 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
   tauto
 #align Scott_continuous_of_continuous scottContinuous_of_continuous
 
-/- warning: continuous_of_Scott_continuous -> continuous_of_scottContinuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OmegaCompletePartialOrder.{u1} α] [_inst_2 : OmegaCompletePartialOrder.{u2} β] (f : (Scott.{u1} α) -> (Scott.{u2} β)), (OmegaCompletePartialOrder.Continuous'.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) _inst_1 _inst_2 f) -> (Continuous.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) (Scott.topologicalSpace.{u1} α _inst_1) (Scott.topologicalSpace.{u2} β _inst_2) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OmegaCompletePartialOrder.{u2} α] [_inst_2 : OmegaCompletePartialOrder.{u1} β] (f : (Scott.{u2} α) -> (Scott.{u1} β)), (OmegaCompletePartialOrder.Continuous'.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) _inst_1 _inst_2 f) -> (Continuous.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) (Scott.topologicalSpace.{u2} α _inst_1) (Scott.topologicalSpace.{u1} β _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align continuous_of_Scott_continuous continuous_of_scottContinuousₓ'. -/
 theorem continuous_of_scottContinuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β)
     (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f :=

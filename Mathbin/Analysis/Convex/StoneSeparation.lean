@@ -31,9 +31,6 @@ open BigOperators
 
 variable {𝕜 E ι : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 
-/- warning: not_disjoint_segment_convex_hull_triple -> not_disjoint_segment_convexHull_triple is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align not_disjoint_segment_convex_hull_triple not_disjoint_segment_convexHull_tripleₓ'. -/
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
 `z ∈ [x, y]`. -/
@@ -96,9 +93,6 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
     rfl
 #align not_disjoint_segment_convex_hull_triple not_disjoint_segment_convexHull_triple
 
-/- warning: exists_convex_convex_compl_subset -> exists_convex_convex_compl_subset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_convex_convex_compl_subset exists_convex_convex_compl_subsetₓ'. -/
 /-- **Stone's Separation Theorem** -/
 theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hst : Disjoint s t) :
     ∃ C : Set E, Convex 𝕜 C ∧ Convex 𝕜 (Cᶜ) ∧ s ⊆ C ∧ t ⊆ Cᶜ :=

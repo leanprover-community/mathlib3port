@@ -93,9 +93,6 @@ theorem realize_relabel {t : L.term α} {g : α → β} {v : β → M} :
 #align first_order.language.term.realize_relabel FirstOrder.Language.Term.realize_relabel
 -/
 
-/- warning: first_order.language.term.realize_lift_at -> FirstOrder.Language.Term.realize_liftAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize_lift_at FirstOrder.Language.Term.realize_liftAtₓ'. -/
 @[simp]
 theorem realize_liftAt {n n' m : ℕ} {t : L.term (Sum α (Fin n))} {v : Sum α (Fin (n + n')) → M} :
     (t.liftAt n' m).realize v =
@@ -103,12 +100,6 @@ theorem realize_liftAt {n n' m : ℕ} {t : L.term (Sum α (Fin n))} {v : Sum α 
   realize_relabel
 #align first_order.language.term.realize_lift_at FirstOrder.Language.Term.realize_liftAt
 
-/- warning: first_order.language.term.realize_constants -> FirstOrder.Language.Term.realize_constants is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {c : FirstOrder.Language.Constants.{u1, u2} L} {v : α -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{u1, u2, u3, u4} L M _inst_1 α v (FirstOrder.Language.Constants.term.{u1, u2, u4} L α c)) ((fun (a : Type.{u1}) (b : Type.{u3}) [self : HasLiftT.{succ u1, succ u3} a b] => self.0) (FirstOrder.Language.Constants.{u1, u2} L) M (HasLiftT.mk.{succ u1, succ u3} (FirstOrder.Language.Constants.{u1, u2} L) M (CoeTCₓ.coe.{succ u1, succ u3} (FirstOrder.Language.Constants.{u1, u2} L) M (FirstOrder.Language.hasCoeT.{u1, u2, u3} L M _inst_1))) c)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {c : FirstOrder.Language.Constants.{u1, u2} L} {v : α -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{u1, u2, u3, u4} L M _inst_1 α v (FirstOrder.Language.Constants.term.{u1, u2, u4} L α c)) (FirstOrder.Language.constantMap.{u1, u2, u3} L M _inst_1 c)
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize_constants FirstOrder.Language.Term.realize_constantsₓ'. -/
 @[simp]
 theorem realize_constants {c : L.Constants} {v : α → M} : c.term.realize v = c :=
   funMap_eq_coe_constants
@@ -166,12 +157,6 @@ theorem realize_restrictVar [DecidableEq α] {t : L.term α} {s : Set α} (h : �
 #align first_order.language.term.realize_restrict_var FirstOrder.Language.Term.realize_restrictVar
 -/
 
-/- warning: first_order.language.term.realize_restrict_var_left -> FirstOrder.Language.Term.realize_restrictVarLeft is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} [_inst_4 : DecidableEq.{succ u4} α] {γ : Type.{u5}} {t : FirstOrder.Language.Term.{u1, u2, max u4 u5} L (Sum.{u4, u5} α γ)} {s : Set.{u4} α} (h : HasSubset.Subset.{u4} (Set.{u4} α) (Set.hasSubset.{u4} α) ((fun (a : Type.{u4}) (b : Type.{u4}) [self : HasLiftT.{succ u4, succ u4} a b] => self.0) (Finset.{u4} α) (Set.{u4} α) (HasLiftT.mk.{succ u4, succ u4} (Finset.{u4} α) (Set.{u4} α) (CoeTCₓ.coe.{succ u4, succ u4} (Finset.{u4} α) (Set.{u4} α) (Finset.Set.hasCoeT.{u4} α))) (FirstOrder.Language.Term.varFinsetLeft.{u1, u2, u4, u5} L α γ (fun (a : α) (b : α) => _inst_4 a b) t)) s) {v : α -> M} {xs : γ -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{u1, u2, u3, max u4 u5} L M _inst_1 (Sum.{u4, u5} (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) γ) (Sum.elim.{u4, u5, succ u3} (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) γ M (Function.comp.{succ u4, succ u4, succ u3} (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) α M v ((fun (a : Type.{u4}) (b : Type.{u4}) [self : HasLiftT.{succ u4, succ u4} a b] => self.0) (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) α (HasLiftT.mk.{succ u4, succ u4} (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) α (CoeTCₓ.coe.{succ u4, succ u4} (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) α (coeBase.{succ u4, succ u4} (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) α (coeSubtype.{succ u4} α (fun (x : α) => Membership.Mem.{u4, u4} α (Set.{u4} α) (Set.hasMem.{u4} α) x s))))))) xs) (FirstOrder.Language.Term.restrictVarLeft.{u1, u2, u4, u4, u5} L α (coeSort.{succ u4, succ (succ u4)} (Set.{u4} α) Type.{u4} (Set.hasCoeToSort.{u4} α) s) (fun (a : α) (b : α) => _inst_4 a b) γ t (Set.inclusion.{u4} α (fun (x : α) => Membership.Mem.{u4, u4} α (Multiset.{u4} α) (Multiset.hasMem.{u4} α) x (Finset.val.{u4} α (FirstOrder.Language.Term.varFinsetLeft.{u1, u2, u4, u5} L α γ (fun (a : α) (b : α) => _inst_4 a b) t))) s h))) (FirstOrder.Language.Term.realize.{u1, u2, u3, max u4 u5} L M _inst_1 (Sum.{u4, u5} α γ) (Sum.elim.{u4, u5, succ u3} α γ M v xs) t)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] {α : Type.{u5}} [_inst_4 : DecidableEq.{succ u5} α] {γ : Type.{u1}} {t : FirstOrder.Language.Term.{u2, u3, max u1 u5} L (Sum.{u5, u1} α γ)} {s : Set.{u5} α} (h : HasSubset.Subset.{u5} (Set.{u5} α) (Set.instHasSubsetSet.{u5} α) (Finset.toSet.{u5} α (FirstOrder.Language.Term.varFinsetLeft.{u2, u3, u5, u1} L α γ (fun (a : α) (b : α) => _inst_4 a b) t)) s) {v : α -> M} {xs : γ -> M}, Eq.{succ u4} M (FirstOrder.Language.Term.realize.{u2, u3, u4, max u1 u5} L M _inst_1 (Sum.{u5, u1} (Set.Elem.{u5} α s) γ) (Sum.elim.{u5, u1, succ u4} (Set.Elem.{u5} α s) γ M (Function.comp.{succ u5, succ u5, succ u4} (Set.Elem.{u5} α s) α M v (Subtype.val.{succ u5} α (fun (x : α) => Membership.mem.{u5, u5} α (Set.{u5} α) (Set.instMembershipSet.{u5} α) x s))) xs) (FirstOrder.Language.Term.restrictVarLeft.{u2, u3, u5, u5, u1} L α (Set.Elem.{u5} α s) (fun (a : α) (b : α) => _inst_4 a b) γ t (Set.inclusion.{u5} α (fun (x : α) => Membership.mem.{u5, u5} α (Multiset.{u5} α) (Multiset.instMembershipMultiset.{u5} α) x (Finset.val.{u5} α (FirstOrder.Language.Term.varFinsetLeft.{u2, u3, u5, u1} L α γ (fun (a : α) (b : α) => _inst_4 a b) t))) s h))) (FirstOrder.Language.Term.realize.{u2, u3, u4, max u1 u5} L M _inst_1 (Sum.{u5, u1} α γ) (Sum.elim.{u5, u1, succ u4} α γ M v xs) t)
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrictVarLeftₓ'. -/
 @[simp]
 theorem realize_restrictVarLeft [DecidableEq α] {γ : Type _} {t : L.term (Sum α γ)} {s : Set α}
     (h : ↑t.varFinsetLeft ⊆ s) {v : α → M} {xs : γ → M} :
@@ -184,12 +169,6 @@ theorem realize_restrictVarLeft [DecidableEq α] {γ : Type _} {t : L.term (Sum 
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 #align first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrictVarLeft
 
-/- warning: first_order.language.term.realize_constants_to_vars -> FirstOrder.Language.Term.realize_constantsToVars is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {β : Type.{u5}} [_inst_4 : FirstOrder.Language.Structure.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M] [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, max u1 u4, u2, u3} L (FirstOrder.Language.withConstants.{u1, u2, u4} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u4} L α) M _inst_1 _inst_4] {t : FirstOrder.Language.Term.{max u1 u4, u2, u5} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) β} {v : β -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{u1, u2, u3, max u4 u5} L M _inst_1 (Sum.{u4, u5} α β) (Sum.elim.{u4, u5, succ u3} α β M (fun (a : α) => (fun (a : Type.{max u1 u4}) (b : Type.{u3}) [self : HasLiftT.{succ (max u1 u4), succ u3} a b] => self.0) (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (HasLiftT.mk.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (CoeTCₓ.coe.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (FirstOrder.Language.hasCoeT.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4))) (FirstOrder.Language.con.{u1, u2, u4} L α a)) v) (FirstOrder.Language.Term.constantsToVars.{u1, u2, u5, u4} L β α t)) (FirstOrder.Language.Term.realize.{max u1 u4, u2, u3, u5} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 β v t)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {β : Type.{u5}} [_inst_4 : FirstOrder.Language.Structure.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M] [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, max u1 u4, u2, u3} L (FirstOrder.Language.withConstants.{u1, u2, u4} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u4} L α) M _inst_1 _inst_4] {t : FirstOrder.Language.Term.{max u1 u4, u2, u5} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) β} {v : β -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{u1, u2, u3, max u5 u4} L M _inst_1 (Sum.{u4, u5} α β) (Sum.elim.{u4, u5, succ u3} α β M (fun (a : α) => FirstOrder.Language.constantMap.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 (FirstOrder.Language.con.{u1, u2, u4} L α a)) v) (FirstOrder.Language.Term.constantsToVars.{u1, u2, u5, u4} L β α t)) (FirstOrder.Language.Term.realize.{max u1 u4, u2, u3, u5} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 β v t)
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize_constants_to_vars FirstOrder.Language.Term.realize_constantsToVarsₓ'. -/
 @[simp]
 theorem realize_constantsToVars [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {t : L[[α]].term β} {v : β → M} :
@@ -207,12 +186,6 @@ theorem realize_constantsToVars [L[[α]].Structure M] [(lhomWithConstants L α).
       · exact isEmptyElim f
 #align first_order.language.term.realize_constants_to_vars FirstOrder.Language.Term.realize_constantsToVars
 
-/- warning: first_order.language.term.realize_vars_to_constants -> FirstOrder.Language.Term.realize_varsToConstants is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {β : Type.{u5}} [_inst_4 : FirstOrder.Language.Structure.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M] [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, max u1 u4, u2, u3} L (FirstOrder.Language.withConstants.{u1, u2, u4} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u4} L α) M _inst_1 _inst_4] {t : FirstOrder.Language.Term.{u1, u2, max u4 u5} L (Sum.{u4, u5} α β)} {v : β -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{max u1 u4, u2, u3, u5} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 β v (FirstOrder.Language.Term.varsToConstants.{u1, u2, u5, u4} L β α t)) (FirstOrder.Language.Term.realize.{u1, u2, u3, max u4 u5} L M _inst_1 (Sum.{u4, u5} α β) (Sum.elim.{u4, u5, succ u3} α β M (fun (a : α) => (fun (a : Type.{max u1 u4}) (b : Type.{u3}) [self : HasLiftT.{succ (max u1 u4), succ u3} a b] => self.0) (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (HasLiftT.mk.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (CoeTCₓ.coe.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (FirstOrder.Language.hasCoeT.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4))) (FirstOrder.Language.con.{u1, u2, u4} L α a)) v) t)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {β : Type.{u5}} [_inst_4 : FirstOrder.Language.Structure.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M] [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, max u1 u4, u2, u3} L (FirstOrder.Language.withConstants.{u1, u2, u4} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u4} L α) M _inst_1 _inst_4] {t : FirstOrder.Language.Term.{u1, u2, max u5 u4} L (Sum.{u4, u5} α β)} {v : β -> M}, Eq.{succ u3} M (FirstOrder.Language.Term.realize.{max u1 u4, u2, u3, u5} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 β v (FirstOrder.Language.Term.varsToConstants.{u1, u2, u5, u4} L β α t)) (FirstOrder.Language.Term.realize.{u1, u2, u3, max u5 u4} L M _inst_1 (Sum.{u4, u5} α β) (Sum.elim.{u4, u5, succ u3} α β M (fun (a : α) => FirstOrder.Language.constantMap.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 (FirstOrder.Language.con.{u1, u2, u4} L α a)) v) t)
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize_vars_to_constants FirstOrder.Language.Term.realize_varsToConstantsₓ'. -/
 @[simp]
 theorem realize_varsToConstants [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {t : L.term (Sum α β)} {v : β → M} :
@@ -242,12 +215,6 @@ end Term
 
 namespace Lhom
 
-/- warning: first_order.language.Lhom.realize_on_term -> FirstOrder.Language.LHom.realize_onTerm is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u5, u6}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} [_inst_4 : FirstOrder.Language.Structure.{u5, u6, u3} L' M] (φ : FirstOrder.Language.LHom.{u1, u2, u5, u6} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u5, u6, u3} L L' φ M _inst_1 _inst_4] (t : FirstOrder.Language.Term.{u1, u2, u4} L α) (v : α -> M), Eq.{succ u3} M (FirstOrder.Language.Term.realize.{u5, u6, u3, u4} L' M _inst_4 α v (FirstOrder.Language.LHom.onTerm.{u1, u2, u4, u5, u6} L L' α φ t)) (FirstOrder.Language.Term.realize.{u1, u2, u3, u4} L M _inst_1 α v t)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u2, u1}} {M : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] {α : Type.{u6}} [_inst_4 : FirstOrder.Language.Structure.{u2, u1, u5} L' M] (φ : FirstOrder.Language.LHom.{u3, u4, u2, u1} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u3, u4, u2, u1, u5} L L' φ M _inst_1 _inst_4] (t : FirstOrder.Language.Term.{u3, u4, u6} L α) (v : α -> M), Eq.{succ u5} M (FirstOrder.Language.Term.realize.{u2, u1, u5, u6} L' M _inst_4 α v (FirstOrder.Language.LHom.onTerm.{u3, u4, u6, u2, u1} L L' α φ t)) (FirstOrder.Language.Term.realize.{u3, u4, u5, u6} L M _inst_1 α v t)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.realize_on_term FirstOrder.Language.LHom.realize_onTermₓ'. -/
 @[simp]
 theorem realize_onTerm [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (t : L.term α)
     (v : α → M) : (φ.onTerm t).realize v = t.realize v :=
@@ -259,12 +226,6 @@ theorem realize_onTerm [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] 
 
 end Lhom
 
-/- warning: first_order.language.hom.realize_term -> FirstOrder.Language.Hom.realize_term is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L N] {α : Type.{u4}} (g : FirstOrder.Language.Hom.{u1, u2, u3, u5} L M N _inst_1 _inst_2) {t : FirstOrder.Language.Term.{u1, u2, u4} L α} {v : α -> M}, Eq.{succ u5} N (FirstOrder.Language.Term.realize.{u1, u2, u5, u4} L N _inst_2 α (Function.comp.{succ u4, succ u3, succ u5} α M N (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Hom.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Hom.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Hom.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g) v) t) (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Hom.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Hom.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Hom.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g (FirstOrder.Language.Term.realize.{u1, u2, u3, u4} L M _inst_1 α v t))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {α : Type.{u5}} (g : FirstOrder.Language.Hom.{u2, u3, u4, u1} L M N _inst_1 _inst_2) {t : FirstOrder.Language.Term.{u2, u3, u5} L α} {v : α -> M}, Eq.{succ u1} N (FirstOrder.Language.Term.realize.{u2, u3, u1, u5} L N _inst_2 α (Function.comp.{succ u5, succ u4, succ u1} α M N (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Hom.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.5742 : M) => N) _x) (FirstOrder.Language.Hom.funLike.{u2, u3, u4, u1} L M N _inst_1 _inst_2) g) v) t) (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Hom.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.5742 : M) => N) _x) (FirstOrder.Language.Hom.funLike.{u2, u3, u4, u1} L M N _inst_1 _inst_2) g (FirstOrder.Language.Term.realize.{u2, u3, u4, u5} L M _inst_1 α v t))
-Case conversion may be inaccurate. Consider using '#align first_order.language.hom.realize_term FirstOrder.Language.Hom.realize_termₓ'. -/
 @[simp]
 theorem Hom.realize_term (g : M →[L] N) {t : L.term α} {v : α → M} :
     t.realize (g ∘ v) = g (t.realize v) := by
@@ -276,24 +237,12 @@ theorem Hom.realize_term (g : M →[L] N) {t : L.term α} {v : α → M} :
     simp [t_ih x]
 #align first_order.language.hom.realize_term FirstOrder.Language.Hom.realize_term
 
-/- warning: first_order.language.embedding.realize_term -> FirstOrder.Language.Embedding.realize_term is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L N] {α : Type.{u4}} {v : α -> M} (t : FirstOrder.Language.Term.{u1, u2, u4} L α) (g : FirstOrder.Language.Embedding.{u1, u2, u3, u5} L M N _inst_1 _inst_2), Eq.{succ u5} N (FirstOrder.Language.Term.realize.{u1, u2, u5, u4} L N _inst_2 α (Function.comp.{succ u4, succ u3, succ u5} α M N (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Embedding.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Embedding.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Embedding.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g) v) t) (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Embedding.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Embedding.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Embedding.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g (FirstOrder.Language.Term.realize.{u1, u2, u3, u4} L M _inst_1 α v t))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {α : Type.{u5}} {v : α -> M} (t : FirstOrder.Language.Term.{u2, u3, u5} L α) (g : FirstOrder.Language.Embedding.{u2, u3, u4, u1} L M N _inst_1 _inst_2), Eq.{succ u1} N (FirstOrder.Language.Term.realize.{u2, u3, u1, u5} L N _inst_2 α (Function.comp.{succ u5, succ u4, succ u1} α M N (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Embedding.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.6670 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Embedding.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Embedding.embeddingLike.{u2, u3, u4, u1} L M N _inst_1 _inst_2)) g) v) t) (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Embedding.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.6670 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Embedding.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Embedding.embeddingLike.{u2, u3, u4, u1} L M N _inst_1 _inst_2)) g (FirstOrder.Language.Term.realize.{u2, u3, u4, u5} L M _inst_1 α v t))
-Case conversion may be inaccurate. Consider using '#align first_order.language.embedding.realize_term FirstOrder.Language.Embedding.realize_termₓ'. -/
 @[simp]
 theorem Embedding.realize_term {v : α → M} (t : L.term α) (g : M ↪[L] N) :
     t.realize (g ∘ v) = g (t.realize v) :=
   g.toHom.realize_term
 #align first_order.language.embedding.realize_term FirstOrder.Language.Embedding.realize_term
 
-/- warning: first_order.language.equiv.realize_term -> FirstOrder.Language.Equiv.realize_term is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L N] {α : Type.{u4}} {v : α -> M} (t : FirstOrder.Language.Term.{u1, u2, u4} L α) (g : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2), Eq.{succ u5} N (FirstOrder.Language.Term.realize.{u1, u2, u5, u4} L N _inst_2 α (Function.comp.{succ u4, succ u3, succ u5} α M N (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Equiv.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g) v) t) (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Equiv.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g (FirstOrder.Language.Term.realize.{u1, u2, u3, u4} L M _inst_1 α v t))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {α : Type.{u5}} {v : α -> M} (t : FirstOrder.Language.Term.{u2, u3, u5} L α) (g : FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2), Eq.{succ u1} N (FirstOrder.Language.Term.realize.{u2, u3, u1, u5} L N _inst_2 α (Function.comp.{succ u5, succ u4, succ u1} α M N (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.8209 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (EquivLike.toEmbeddingLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Equiv.instEquivLikeEquiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2))) g) v) t) (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.8209 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (EquivLike.toEmbeddingLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Equiv.instEquivLikeEquiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2))) g (FirstOrder.Language.Term.realize.{u2, u3, u4, u5} L M _inst_1 α v t))
-Case conversion may be inaccurate. Consider using '#align first_order.language.equiv.realize_term FirstOrder.Language.Equiv.realize_termₓ'. -/
 @[simp]
 theorem Equiv.realize_term {v : α → M} (t : L.term α) (g : M ≃[L] N) :
     t.realize (g ∘ v) = g (t.realize v) :=
@@ -415,12 +364,6 @@ theorem realize_sup : (φ ⊔ ψ).realize v xs ↔ φ.realize v xs ∨ ψ.realiz
 #align first_order.language.bounded_formula.realize_sup FirstOrder.Language.BoundedFormula.realize_sup
 -/
 
-/- warning: first_order.language.bounded_formula.realize_foldr_sup -> FirstOrder.Language.BoundedFormula.realize_foldr_sup is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {n : Nat} (l : List.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) (v : α -> M) (xs : (Fin n) -> M), Iff (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u3, u4} L M _inst_1 α n (List.foldr.{max u1 u2 u4, max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (Sup.sup.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (FirstOrder.Language.BoundedFormula.hasSup.{u1, u2, u4} L α n)) (Bot.bot.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (FirstOrder.Language.BoundedFormula.hasBot.{u1, u2, u4} L α n)) l) v xs) (Exists.{succ (max u1 u2 u4)} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (fun (φ : FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) => Exists.{0} (Membership.Mem.{max u1 u2 u4, max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (List.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) (List.hasMem.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) φ l) (fun (H : Membership.Mem.{max u1 u2 u4, max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (List.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) (List.hasMem.{max u1 u2 u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) φ l) => FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u3, u4} L M _inst_1 α n φ v xs)))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {n : Nat} (l : List.{max (max u1 u2) u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) (v : α -> M) (xs : (Fin n) -> M), Iff (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u3, u4} L M _inst_1 α n (List.foldr.{max (max u1 u4) u2, max (max u1 u4) u2} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (fun (x._@.Mathlib.ModelTheory.Semantics._hyg.4548 : FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (x._@.Mathlib.ModelTheory.Semantics._hyg.4550 : FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) => Sup.sup.{max (max u1 u4) u2} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (FirstOrder.Language.BoundedFormula.instSupBoundedFormula.{u1, u2, u4} L α n) x._@.Mathlib.ModelTheory.Semantics._hyg.4548 x._@.Mathlib.ModelTheory.Semantics._hyg.4550) (Bot.bot.{max (max u1 u4) u2} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (FirstOrder.Language.BoundedFormula.instBotBoundedFormula.{u1, u2, u4} L α n)) l) v xs) (Exists.{succ (max (max u1 u4) u2)} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (fun (φ : FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) => And (Membership.mem.{max (max u1 u4) u2, max (max u1 u4) u2} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) (List.{max (max u1 u2) u4} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) (List.instMembershipList.{max (max u1 u4) u2} (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n)) φ l) (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u3, u4} L M _inst_1 α n φ v xs)))
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_foldr_sup FirstOrder.Language.BoundedFormula.realize_foldr_supₓ'. -/
 @[simp]
 theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Fin n → M) :
     (l.foldr (· ⊔ ·) ⊥).realize v xs ↔ ∃ φ ∈ l, BoundedFormula.Realize φ v xs :=
@@ -455,9 +398,6 @@ theorem realize_iff : (φ.Iff ψ).realize v xs ↔ (φ.realize v xs ↔ ψ.reali
 #align first_order.language.bounded_formula.realize_iff FirstOrder.Language.BoundedFormula.realize_iff
 -/
 
-/- warning: first_order.language.bounded_formula.realize_cast_le_of_eq -> FirstOrder.Language.BoundedFormula.realize_castLe_of_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_castLe_of_eqₓ'. -/
 theorem realize_castLe_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.BoundedFormula α m}
     {v : α → M} {xs : Fin n → M} : (φ.castLE h').realize v xs ↔ φ.realize v (xs ∘ Fin.cast h) :=
   by
@@ -465,9 +405,6 @@ theorem realize_castLe_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.Boun
   simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]
 #align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_castLe_of_eq
 
-/- warning: first_order.language.bounded_formula.realize_map_term_rel_id -> FirstOrder.Language.BoundedFormula.realize_mapTermRel_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_mapTermRel_idₓ'. -/
 theorem realize_mapTermRel_id [L'.Structure M]
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n))}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n} {v : α → M}
@@ -486,9 +423,6 @@ theorem realize_mapTermRel_id [L'.Structure M]
   · simp only [map_term_rel, realize, ih, id.def]
 #align first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_mapTermRel_id
 
-/- warning: first_order.language.bounded_formula.realize_map_term_rel_add_cast_le -> FirstOrder.Language.BoundedFormula.realize_mapTermRel_add_castLe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_mapTermRel_add_castLeₓ'. -/
 theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (k + n)))}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n}
@@ -509,9 +443,6 @@ theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
   · simp [map_term_rel, realize, ih, hv]
 #align first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_mapTermRel_add_castLe
 
-/- warning: first_order.language.bounded_formula.realize_relabel -> FirstOrder.Language.BoundedFormula.realize_relabel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_relabel FirstOrder.Language.BoundedFormula.realize_relabelₓ'. -/
 theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum β (Fin m)} {v : β → M}
     {xs : Fin (m + n) → M} :
     (φ.relabel g).realize v xs ↔
@@ -519,9 +450,6 @@ theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum
   by rw [relabel, realize_map_term_rel_add_cast_le] <;> intros <;> simp
 #align first_order.language.bounded_formula.realize_relabel FirstOrder.Language.BoundedFormula.realize_relabel
 
-/- warning: first_order.language.bounded_formula.realize_lift_at -> FirstOrder.Language.BoundedFormula.realize_liftAt is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_lift_at FirstOrder.Language.BoundedFormula.realize_liftAtₓ'. -/
 theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + n') → M}
     (hmn : m + n' ≤ n + 1) :
     (φ.liftAt n' m).realize v xs ↔
@@ -553,9 +481,6 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
       split_ifs <;> simp
 #align first_order.language.bounded_formula.realize_lift_at FirstOrder.Language.BoundedFormula.realize_liftAt
 
-/- warning: first_order.language.bounded_formula.realize_lift_at_one -> FirstOrder.Language.BoundedFormula.realize_liftAt_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_lift_at_one FirstOrder.Language.BoundedFormula.realize_liftAt_oneₓ'. -/
 theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + 1) → M}
     (hmn : m ≤ n) :
     (φ.liftAt 1 m).realize v xs ↔
@@ -563,9 +488,6 @@ theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → 
   by simp_rw [realize_lift_at (add_le_add_right hmn 1), cast_succ, add_nat_one]
 #align first_order.language.bounded_formula.realize_lift_at_one FirstOrder.Language.BoundedFormula.realize_liftAt_one
 
-/- warning: first_order.language.bounded_formula.realize_lift_at_one_self -> FirstOrder.Language.BoundedFormula.realize_liftAt_one_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize_lift_at_one_self FirstOrder.Language.BoundedFormula.realize_liftAt_one_selfₓ'. -/
 @[simp]
 theorem realize_liftAt_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M}
     {xs : Fin (n + 1) → M} : (φ.liftAt 1 n).realize v xs ↔ φ.realize v (xs ∘ castSucc) :=
@@ -723,12 +645,6 @@ namespace Lhom
 
 open BoundedFormula
 
-/- warning: first_order.language.Lhom.realize_on_bounded_formula -> FirstOrder.Language.LHom.realize_onBoundedFormula is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u5, u6}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} [_inst_4 : FirstOrder.Language.Structure.{u5, u6, u3} L' M] (φ : FirstOrder.Language.LHom.{u1, u2, u5, u6} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u5, u6, u3} L L' φ M _inst_1 _inst_4] {n : Nat} (ψ : FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) {v : α -> M} {xs : (Fin n) -> M}, Iff (FirstOrder.Language.BoundedFormula.Realize.{u5, u6, u3, u4} L' M _inst_4 α n (FirstOrder.Language.LHom.onBoundedFormula.{u1, u2, u4, u5, u6} L L' α φ n ψ) v xs) (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u3, u4} L M _inst_1 α n ψ v xs)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u2, u1}} {M : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] {α : Type.{u6}} [_inst_4 : FirstOrder.Language.Structure.{u2, u1, u5} L' M] (φ : FirstOrder.Language.LHom.{u3, u4, u2, u1} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u3, u4, u2, u1, u5} L L' φ M _inst_1 _inst_4] {n : Nat} (ψ : FirstOrder.Language.BoundedFormula.{u3, u4, u6} L α n) {v : α -> M} {xs : (Fin n) -> M}, Iff (FirstOrder.Language.BoundedFormula.Realize.{u2, u1, u5, u6} L' M _inst_4 α n (FirstOrder.Language.LHom.onBoundedFormula.{u3, u4, u6, u2, u1} L L' α φ n ψ) v xs) (FirstOrder.Language.BoundedFormula.Realize.{u3, u4, u5, u6} L M _inst_1 α n ψ v xs)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.LHom.realize_onBoundedFormulaₓ'. -/
 @[simp]
 theorem realize_onBoundedFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] {n : ℕ}
     (ψ : L.BoundedFormula α n) {v : α → M} {xs : Fin n → M} :
@@ -879,24 +795,12 @@ theorem realize_graph {f : L.Functions n} {x : Fin n → M} {y : M} :
 
 end Formula
 
-/- warning: first_order.language.Lhom.realize_on_formula -> FirstOrder.Language.LHom.realize_onFormula is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u5, u6}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} [_inst_4 : FirstOrder.Language.Structure.{u5, u6, u3} L' M] (φ : FirstOrder.Language.LHom.{u1, u2, u5, u6} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u5, u6, u3} L L' φ M _inst_1 _inst_4] (ψ : FirstOrder.Language.Formula.{u1, u2, u4} L α) {v : α -> M}, Iff (FirstOrder.Language.Formula.Realize.{u5, u6, u3, u4} L' M _inst_4 α (FirstOrder.Language.LHom.onFormula.{u1, u2, u4, u5, u6} L L' α φ ψ) v) (FirstOrder.Language.Formula.Realize.{u1, u2, u3, u4} L M _inst_1 α ψ v)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u2, u1}} {M : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] {α : Type.{u6}} [_inst_4 : FirstOrder.Language.Structure.{u2, u1, u5} L' M] (φ : FirstOrder.Language.LHom.{u3, u4, u2, u1} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u3, u4, u2, u1, u5} L L' φ M _inst_1 _inst_4] (ψ : FirstOrder.Language.Formula.{u3, u4, u6} L α) {v : α -> M}, Iff (FirstOrder.Language.Formula.Realize.{u2, u1, u5, u6} L' M _inst_4 α (FirstOrder.Language.LHom.onFormula.{u3, u4, u6, u2, u1} L L' α φ ψ) v) (FirstOrder.Language.Formula.Realize.{u3, u4, u5, u6} L M _inst_1 α ψ v)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.realize_on_formula FirstOrder.Language.LHom.realize_onFormulaₓ'. -/
 @[simp]
 theorem LHom.realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Formula α)
     {v : α → M} : (φ.onFormula ψ).realize v ↔ ψ.realize v :=
   φ.realize_onBoundedFormula ψ
 #align first_order.language.Lhom.realize_on_formula FirstOrder.Language.LHom.realize_onFormula
 
-/- warning: first_order.language.Lhom.set_of_realize_on_formula -> FirstOrder.Language.LHom.setOf_realize_onFormula is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u5, u6}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} [_inst_4 : FirstOrder.Language.Structure.{u5, u6, u3} L' M] (φ : FirstOrder.Language.LHom.{u1, u2, u5, u6} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u5, u6, u3} L L' φ M _inst_1 _inst_4] (ψ : FirstOrder.Language.Formula.{u1, u2, u4} L α), Eq.{succ (max u4 u3)} (Set.{max u4 u3} (α -> M)) (setOf.{max u4 u3} (α -> M) (FirstOrder.Language.Formula.Realize.{u5, u6, u3, u4} L' M _inst_4 α (FirstOrder.Language.LHom.onFormula.{u1, u2, u4, u5, u6} L L' α φ ψ))) (setOf.{max u4 u3} (α -> M) (FirstOrder.Language.Formula.Realize.{u1, u2, u3, u4} L M _inst_1 α ψ))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u2, u1}} {M : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] {α : Type.{u6}} [_inst_4 : FirstOrder.Language.Structure.{u2, u1, u5} L' M] (φ : FirstOrder.Language.LHom.{u3, u4, u2, u1} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u3, u4, u2, u1, u5} L L' φ M _inst_1 _inst_4] (ψ : FirstOrder.Language.Formula.{u3, u4, u6} L α), Eq.{max (succ u6) (succ u5)} (Set.{max u6 u5} (α -> M)) (setOf.{max u6 u5} (α -> M) (FirstOrder.Language.Formula.Realize.{u2, u1, u5, u6} L' M _inst_4 α (FirstOrder.Language.LHom.onFormula.{u3, u4, u6, u2, u1} L L' α φ ψ))) (setOf.{max u6 u5} (α -> M) (FirstOrder.Language.Formula.Realize.{u3, u4, u5, u6} L M _inst_1 α ψ))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LHom.setOf_realize_onFormulaₓ'. -/
 @[simp]
 theorem LHom.setOf_realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Formula α) : (setOf (φ.onFormula ψ).realize : Set (α → M)) = setOf ψ.realize := by ext;
@@ -961,12 +865,6 @@ theorem realize_equivSentence_symm (φ : L[[α]].Sentence) (v : α → M) :
 
 end Formula
 
-/- warning: first_order.language.Lhom.realize_on_sentence -> FirstOrder.Language.LHom.realize_onSentence is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} (M : Type.{u3}) [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_4 : FirstOrder.Language.Structure.{u4, u5, u3} L' M] (φ : FirstOrder.Language.LHom.{u1, u2, u4, u5} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u4, u5, u3} L L' φ M _inst_1 _inst_4] (ψ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Sentence.Realize.{u4, u5, u3} L' M _inst_4 (FirstOrder.Language.LHom.onSentence.{u1, u2, u4, u5} L L' φ ψ)) (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 ψ)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u2, u1}} (M : Type.{u5}) [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] [_inst_4 : FirstOrder.Language.Structure.{u2, u1, u5} L' M] (φ : FirstOrder.Language.LHom.{u3, u4, u2, u1} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u3, u4, u2, u1, u5} L L' φ M _inst_1 _inst_4] (ψ : FirstOrder.Language.Sentence.{u3, u4} L), Iff (FirstOrder.Language.Sentence.Realize.{u2, u1, u5} L' M _inst_4 (FirstOrder.Language.LHom.onSentence.{u3, u4, u2, u1} L L' φ ψ)) (FirstOrder.Language.Sentence.Realize.{u3, u4, u5} L M _inst_1 ψ)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.realize_on_sentence FirstOrder.Language.LHom.realize_onSentenceₓ'. -/
 @[simp]
 theorem LHom.realize_onSentence [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Sentence) : M ⊨ φ.onSentence ψ ↔ M ⊨ ψ :=
@@ -1004,12 +902,6 @@ theorem mem_completeTheory {φ : Sentence L} : φ ∈ L.completeTheory M ↔ M �
 #align first_order.language.mem_complete_theory FirstOrder.Language.mem_completeTheory
 -/
 
-/- warning: first_order.language.elementarily_equivalent_iff -> FirstOrder.Language.elementarilyEquivalent_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], Iff (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) (forall (φ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 φ) (FirstOrder.Language.Sentence.Realize.{u1, u2, u4} L N _inst_2 φ))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], Iff (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) (forall (φ : FirstOrder.Language.Sentence.{u2, u3} L), Iff (FirstOrder.Language.Sentence.Realize.{u2, u3, u4} L M _inst_1 φ) (FirstOrder.Language.Sentence.Realize.{u2, u3, u1} L N _inst_2 φ))
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent_iff FirstOrder.Language.elementarilyEquivalent_iffₓ'. -/
 theorem elementarilyEquivalent_iff : M ≅[L] N ↔ ∀ φ : L.Sentence, M ⊨ φ ↔ N ⊨ φ := by
   simp only [elementarily_equivalent, Set.ext_iff, complete_theory, Set.mem_setOf_eq]
 #align first_order.language.elementarily_equivalent_iff FirstOrder.Language.elementarilyEquivalent_iff
@@ -1047,12 +939,6 @@ theorem Theory.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ ∈ T
 #align first_order.language.Theory.realize_sentence_of_mem FirstOrder.Language.Theory.realize_sentence_of_mem
 -/
 
-/- warning: first_order.language.Lhom.on_Theory_model -> FirstOrder.Language.LHom.onTheory_model is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_4 : FirstOrder.Language.Structure.{u4, u5, u3} L' M] (φ : FirstOrder.Language.LHom.{u1, u2, u4, u5} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u4, u5, u3} L L' φ M _inst_1 _inst_4] (T : FirstOrder.Language.Theory.{u1, u2} L), Iff (FirstOrder.Language.Theory.Model.{u4, u5, u3} L' M _inst_4 (FirstOrder.Language.LHom.onTheory.{u1, u2, u4, u5} L L' φ T)) (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u2, u1}} {M : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] [_inst_4 : FirstOrder.Language.Structure.{u2, u1, u5} L' M] (φ : FirstOrder.Language.LHom.{u3, u4, u2, u1} L L') [_inst_5 : FirstOrder.Language.LHom.IsExpansionOn.{u3, u4, u2, u1, u5} L L' φ M _inst_1 _inst_4] (T : FirstOrder.Language.Theory.{u3, u4} L), Iff (FirstOrder.Language.Theory.Model.{u2, u1, u5} L' M _inst_4 (FirstOrder.Language.LHom.onTheory.{u3, u4, u2, u1} L L' φ T)) (FirstOrder.Language.Theory.Model.{u3, u4, u5} L M _inst_1 T)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_Theory_model FirstOrder.Language.LHom.onTheory_modelₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -1079,12 +965,6 @@ theorem Model.mono {T' : L.Theory} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨ T :=
 #align first_order.language.Theory.model.mono FirstOrder.Language.Theory.Model.mono
 -/
 
-/- warning: first_order.language.Theory.model.union -> FirstOrder.Language.Theory.Model.union is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {T : FirstOrder.Language.Theory.{u1, u2} L} {T' : FirstOrder.Language.Theory.{u1, u2} L}, (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T) -> (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T') -> (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 (Union.union.{max u1 u2} (FirstOrder.Language.Theory.{u1, u2} L) (Set.hasUnion.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) T T'))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {T : FirstOrder.Language.Theory.{u1, u2} L} {T' : FirstOrder.Language.Theory.{u1, u2} L}, (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T) -> (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T') -> (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 (Union.union.{max u2 u1} (FirstOrder.Language.Theory.{u1, u2} L) (Set.instUnionSet.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) T T'))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.model.union FirstOrder.Language.Theory.Model.unionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1094,12 +974,6 @@ theorem Model.union {T' : L.Theory} (h : M ⊨ T) (h' : M ⊨ T') : M ⊨ T ∪ 
   exact fun φ hφ => hφ.elim (h _) (h' _)
 #align first_order.language.Theory.model.union FirstOrder.Language.Theory.Model.union
 
-/- warning: first_order.language.Theory.model_union_iff -> FirstOrder.Language.Theory.model_union_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {T : FirstOrder.Language.Theory.{u1, u2} L} {T' : FirstOrder.Language.Theory.{u1, u2} L}, Iff (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 (Union.union.{max u1 u2} (FirstOrder.Language.Theory.{u1, u2} L) (Set.hasUnion.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) T T')) (And (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T) (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T'))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {T : FirstOrder.Language.Theory.{u1, u2} L} {T' : FirstOrder.Language.Theory.{u1, u2} L}, Iff (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 (Union.union.{max u2 u1} (FirstOrder.Language.Theory.{u1, u2} L) (Set.instUnionSet.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) T T')) (And (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T) (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T'))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.model_union_iff FirstOrder.Language.Theory.model_union_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1141,12 +1015,6 @@ instance model_completeTheory : M ⊨ L.completeTheory M :=
 
 variable (M N)
 
-/- warning: first_order.language.realize_iff_of_model_complete_theory -> FirstOrder.Language.realize_iff_of_model_completeTheory is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} (M : Type.{u3}) (N : Type.{u4}) [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] [_inst_4 : FirstOrder.Language.Theory.Model.{u1, u2, u4} L N _inst_2 (FirstOrder.Language.completeTheory.{u1, u2, u3} L M _inst_1)] (φ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u4} L N _inst_2 φ) (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 φ)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} (M : Type.{u4}) (N : Type.{u1}) [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] [_inst_4 : FirstOrder.Language.Theory.Model.{u2, u3, u1} L N _inst_2 (FirstOrder.Language.completeTheory.{u2, u3, u4} L M _inst_1)] (φ : FirstOrder.Language.Sentence.{u2, u3} L), Iff (FirstOrder.Language.Sentence.Realize.{u2, u3, u1} L N _inst_2 φ) (FirstOrder.Language.Sentence.Realize.{u2, u3, u4} L M _inst_1 φ)
-Case conversion may be inaccurate. Consider using '#align first_order.language.realize_iff_of_model_complete_theory FirstOrder.Language.realize_iff_of_model_completeTheoryₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1227,12 +1095,6 @@ end BoundedFormula
 
 namespace Equiv
 
-/- warning: first_order.language.equiv.realize_bounded_formula -> FirstOrder.Language.Equiv.realize_boundedFormula is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L N] {α : Type.{u4}} {n : Nat} (g : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (φ : FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α n) {v : α -> M} {xs : (Fin n) -> M}, Iff (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u5, u4} L N _inst_2 α n φ (Function.comp.{succ u4, succ u3, succ u5} α M N (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Equiv.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g) v) (Function.comp.{1, succ u3, succ u5} (Fin n) M N (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Equiv.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g) xs)) (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u3, u4} L M _inst_1 α n φ v xs)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {α : Type.{u5}} {n : Nat} (g : FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) (φ : FirstOrder.Language.BoundedFormula.{u2, u3, u5} L α n) {v : α -> M} {xs : (Fin n) -> M}, Iff (FirstOrder.Language.BoundedFormula.Realize.{u2, u3, u1, u5} L N _inst_2 α n φ (Function.comp.{succ u5, succ u4, succ u1} α M N (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.8209 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (EquivLike.toEmbeddingLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Equiv.instEquivLikeEquiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2))) g) v) (Function.comp.{1, succ u4, succ u1} (Fin n) M N (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.8209 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (EquivLike.toEmbeddingLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Equiv.instEquivLikeEquiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2))) g) xs)) (FirstOrder.Language.BoundedFormula.Realize.{u2, u3, u4, u5} L M _inst_1 α n φ v xs)
-Case conversion may be inaccurate. Consider using '#align first_order.language.equiv.realize_bounded_formula FirstOrder.Language.Equiv.realize_boundedFormulaₓ'. -/
 @[simp]
 theorem realize_boundedFormula (g : M ≃[L] N) (φ : L.BoundedFormula α n) {v : α → M}
     {xs : Fin n → M} : φ.realize (g ∘ v) (g ∘ xs) ↔ φ.realize v xs :=
@@ -1254,12 +1116,6 @@ theorem realize_boundedFormula (g : M ≃[L] N) (φ : L.BoundedFormula α n) {v 
       exact h'
 #align first_order.language.equiv.realize_bounded_formula FirstOrder.Language.Equiv.realize_boundedFormula
 
-/- warning: first_order.language.equiv.realize_formula -> FirstOrder.Language.Equiv.realize_formula is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L N] {α : Type.{u4}} (g : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (φ : FirstOrder.Language.Formula.{u1, u2, u4} L α) {v : α -> M}, Iff (FirstOrder.Language.Formula.Realize.{u1, u2, u5, u4} L N _inst_2 α φ (Function.comp.{succ u4, succ u3, succ u5} α M N (coeFn.{max (succ u3) (succ u5), max (succ u3) (succ u5)} (FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) (fun (_x : FirstOrder.Language.Equiv.{u1, u2, u3, u5} L M N _inst_1 _inst_2) => M -> N) (FirstOrder.Language.Equiv.hasCoeToFun.{u1, u2, u3, u5} L M N _inst_1 _inst_2) g) v)) (FirstOrder.Language.Formula.Realize.{u1, u2, u3, u4} L M _inst_1 α φ v)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {α : Type.{u5}} (g : FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) (φ : FirstOrder.Language.Formula.{u2, u3, u5} L α) {v : α -> M}, Iff (FirstOrder.Language.Formula.Realize.{u2, u3, u1, u5} L N _inst_2 α φ (Function.comp.{succ u5, succ u4, succ u1} α M N (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M (fun (_x : M) => (fun (a._@.Mathlib.ModelTheory.Basic._hyg.8209 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (EquivLike.toEmbeddingLike.{max (succ u4) (succ u1), succ u4, succ u1} (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) M N (FirstOrder.Language.Equiv.instEquivLikeEquiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2))) g) v)) (FirstOrder.Language.Formula.Realize.{u2, u3, u4, u5} L M _inst_1 α φ v)
-Case conversion may be inaccurate. Consider using '#align first_order.language.equiv.realize_formula FirstOrder.Language.Equiv.realize_formulaₓ'. -/
 @[simp]
 theorem realize_formula (g : M ≃[L] N) (φ : L.Formula α) {v : α → M} :
     φ.realize (g ∘ v) ↔ φ.realize v := by
@@ -1267,36 +1123,18 @@ theorem realize_formula (g : M ≃[L] N) (φ : L.Formula α) {v : α → M} :
     Unique.eq_default (g ∘ default)]
 #align first_order.language.equiv.realize_formula FirstOrder.Language.Equiv.realize_formula
 
-/- warning: first_order.language.equiv.realize_sentence -> FirstOrder.Language.Equiv.realize_sentence is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.Equiv.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (forall (φ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 φ) (FirstOrder.Language.Sentence.Realize.{u1, u2, u4} L N _inst_2 φ))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (forall (φ : FirstOrder.Language.Sentence.{u2, u3} L), Iff (FirstOrder.Language.Sentence.Realize.{u2, u3, u4} L M _inst_1 φ) (FirstOrder.Language.Sentence.Realize.{u2, u3, u1} L N _inst_2 φ))
-Case conversion may be inaccurate. Consider using '#align first_order.language.equiv.realize_sentence FirstOrder.Language.Equiv.realize_sentenceₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem realize_sentence (g : M ≃[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ φ := by
   rw [sentence.realize, sentence.realize, ← g.realize_formula, Unique.eq_default (g ∘ default)]
 #align first_order.language.equiv.realize_sentence FirstOrder.Language.Equiv.realize_sentence
 
-/- warning: first_order.language.equiv.Theory_model -> FirstOrder.Language.Equiv.theory_model is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] {T : FirstOrder.Language.Theory.{u1, u2} L}, (FirstOrder.Language.Equiv.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (forall [_inst_4 : FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T], FirstOrder.Language.Theory.Model.{u1, u2, u4} L N _inst_2 T)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {T : FirstOrder.Language.Theory.{u2, u3} L}, (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (forall [_inst_4 : FirstOrder.Language.Theory.Model.{u2, u3, u4} L M _inst_1 T], FirstOrder.Language.Theory.Model.{u2, u3, u1} L N _inst_2 T)
-Case conversion may be inaccurate. Consider using '#align first_order.language.equiv.Theory_model FirstOrder.Language.Equiv.theory_modelₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem theory_model (g : M ≃[L] N) [M ⊨ T] : N ⊨ T :=
   ⟨fun φ hφ => (g.realize_sentence φ).1 (Theory.realize_sentence_of_mem T hφ)⟩
 #align first_order.language.equiv.Theory_model FirstOrder.Language.Equiv.theory_model
 
-/- warning: first_order.language.equiv.elementarily_equivalent -> FirstOrder.Language.Equiv.elementarilyEquivalent is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.Equiv.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.Equiv.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align first_order.language.equiv.elementarily_equivalent FirstOrder.Language.Equiv.elementarilyEquivalentₓ'. -/
 theorem elementarilyEquivalent (g : M ≃[L] N) : M ≅[L] N :=
   elementarilyEquivalent_iff.2 g.realize_sentence
 #align first_order.language.equiv.elementarily_equivalent FirstOrder.Language.Equiv.elementarilyEquivalent
@@ -1368,12 +1206,6 @@ section Cardinality
 
 variable (L)
 
-/- warning: first_order.language.sentence.realize_card_ge -> FirstOrder.Language.Sentence.realize_cardGe is a dubious translation:
-lean 3 declaration is
-  forall (L : FirstOrder.Language.{u1, u2}) {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] (n : Nat), Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 (FirstOrder.Language.Sentence.cardGe.{u1, u2} L n)) (LE.le.{succ u3} Cardinal.{u3} Cardinal.hasLe.{u3} ((fun (a : Type) (b : Type.{succ u3}) [self : HasLiftT.{1, succ (succ u3)} a b] => self.0) Nat Cardinal.{u3} (HasLiftT.mk.{1, succ (succ u3)} Nat Cardinal.{u3} (CoeTCₓ.coe.{1, succ (succ u3)} Nat Cardinal.{u3} (Nat.castCoe.{succ u3} Cardinal.{u3} Cardinal.hasNatCast.{u3}))) n) (Cardinal.mk.{u3} M))
-but is expected to have type
-  forall (L : FirstOrder.Language.{u1, u2}) {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] (n : Nat), Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 (FirstOrder.Language.Sentence.cardGe.{u1, u2} L n)) (LE.le.{succ u3} Cardinal.{u3} Cardinal.instLECardinal.{u3} (Nat.cast.{succ u3} Cardinal.{u3} Cardinal.instNatCastCardinal.{u3} n) (Cardinal.mk.{u3} M))
-Case conversion may be inaccurate. Consider using '#align first_order.language.sentence.realize_card_ge FirstOrder.Language.Sentence.realize_cardGeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem Sentence.realize_cardGe (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#M) :=
@@ -1426,12 +1258,6 @@ instance model_nonempty [h : Nonempty M] : M ⊨ L.nonemptyTheory :=
 #align first_order.language.model_nonempty FirstOrder.Language.model_nonempty
 -/
 
-/- warning: first_order.language.model_distinct_constants_theory -> FirstOrder.Language.model_distinctConstantsTheory is a dubious translation:
-lean 3 declaration is
-  forall (L : FirstOrder.Language.{u1, u2}) {α : Type.{u4}} {M : Type.{u3}} [_inst_4 : FirstOrder.Language.Structure.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M] (s : Set.{u4} α), Iff (FirstOrder.Language.Theory.Model.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 (FirstOrder.Language.distinctConstantsTheory.{u1, u2, u4} L α s)) (Set.InjOn.{u4, u3} α M (fun (i : α) => (fun (a : Type.{max u1 u4}) (b : Type.{u3}) [self : HasLiftT.{succ (max u1 u4), succ u3} a b] => self.0) (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (HasLiftT.mk.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (CoeTCₓ.coe.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (FirstOrder.Language.hasCoeT.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4))) (FirstOrder.Language.con.{u1, u2, u4} L α i)) s)
-but is expected to have type
-  forall (L : FirstOrder.Language.{u1, u2}) {α : Type.{u4}} {M : Type.{u3}} [_inst_4 : FirstOrder.Language.Structure.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M] (s : Set.{u4} α), Iff (FirstOrder.Language.Theory.Model.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 (FirstOrder.Language.distinctConstantsTheory.{u1, u2, u4} L α s)) (Set.InjOn.{u4, u3} α M (fun (i : α) => FirstOrder.Language.constantMap.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M _inst_4 (FirstOrder.Language.con.{u1, u2, u4} L α i)) s)
-Case conversion may be inaccurate. Consider using '#align first_order.language.model_distinct_constants_theory FirstOrder.Language.model_distinctConstantsTheoryₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem model_distinctConstantsTheory {M : Type w} [L[[α]].Structure M] (s : Set α) :
     M ⊨ L.distinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s :=
@@ -1461,56 +1287,26 @@ end Cardinality
 
 namespace ElementarilyEquivalent
 
-/- warning: first_order.language.elementarily_equivalent.symm -> FirstOrder.Language.ElementarilyEquivalent.symm is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u4, u3} L N M _inst_2 _inst_1)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u1, u4} L N M _inst_2 _inst_1)
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.symm FirstOrder.Language.ElementarilyEquivalent.symmₓ'. -/
 @[symm]
 theorem symm (h : M ≅[L] N) : N ≅[L] M :=
   h.symm
 #align first_order.language.elementarily_equivalent.symm FirstOrder.Language.ElementarilyEquivalent.symm
 
-/- warning: first_order.language.elementarily_equivalent.trans -> FirstOrder.Language.ElementarilyEquivalent.trans is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} {P : Type.{u5}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] [_inst_3 : FirstOrder.Language.Structure.{u1, u2, u5} L P], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u4, u5} L N P _inst_2 _inst_3) -> (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u5} L M P _inst_1 _inst_3)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {M : Type.{u5}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u3, u4, u5} L M] [_inst_2 : FirstOrder.Language.Structure.{u3, u4, u2} L N] [_inst_3 : FirstOrder.Language.Structure.{u3, u4, u1} L P], (FirstOrder.Language.ElementarilyEquivalent.{u3, u4, u5, u2} L M N _inst_1 _inst_2) -> (FirstOrder.Language.ElementarilyEquivalent.{u3, u4, u2, u1} L N P _inst_2 _inst_3) -> (FirstOrder.Language.ElementarilyEquivalent.{u3, u4, u5, u1} L M P _inst_1 _inst_3)
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.trans FirstOrder.Language.ElementarilyEquivalent.transₓ'. -/
 @[trans]
 theorem trans (MN : M ≅[L] N) (NP : N ≅[L] P) : M ≅[L] P :=
   MN.trans NP
 #align first_order.language.elementarily_equivalent.trans FirstOrder.Language.ElementarilyEquivalent.trans
 
-/- warning: first_order.language.elementarily_equivalent.complete_theory_eq -> FirstOrder.Language.ElementarilyEquivalent.completeTheory_eq is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (Eq.{succ (max u1 u2)} (FirstOrder.Language.Theory.{u1, u2} L) (FirstOrder.Language.completeTheory.{u1, u2, u3} L M _inst_1) (FirstOrder.Language.completeTheory.{u1, u2, u4} L N _inst_2))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (Eq.{max (succ u2) (succ u3)} (FirstOrder.Language.Theory.{u2, u3} L) (FirstOrder.Language.completeTheory.{u2, u3, u4} L M _inst_1) (FirstOrder.Language.completeTheory.{u2, u3, u1} L N _inst_2))
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.complete_theory_eq FirstOrder.Language.ElementarilyEquivalent.completeTheory_eqₓ'. -/
 theorem completeTheory_eq (h : M ≅[L] N) : L.completeTheory M = L.completeTheory N :=
   h
 #align first_order.language.elementarily_equivalent.complete_theory_eq FirstOrder.Language.ElementarilyEquivalent.completeTheory_eq
 
-/- warning: first_order.language.elementarily_equivalent.realize_sentence -> FirstOrder.Language.ElementarilyEquivalent.realize_sentence is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (forall (φ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 φ) (FirstOrder.Language.Sentence.Realize.{u1, u2, u4} L N _inst_2 φ))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (forall (φ : FirstOrder.Language.Sentence.{u2, u3} L), Iff (FirstOrder.Language.Sentence.Realize.{u2, u3, u4} L M _inst_1 φ) (FirstOrder.Language.Sentence.Realize.{u2, u3, u1} L N _inst_2 φ))
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.realize_sentence FirstOrder.Language.ElementarilyEquivalent.realize_sentenceₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem realize_sentence (h : M ≅[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ φ :=
   (elementarilyEquivalent_iff.1 h) φ
 #align first_order.language.elementarily_equivalent.realize_sentence FirstOrder.Language.ElementarilyEquivalent.realize_sentence
 
-/- warning: first_order.language.elementarily_equivalent.Theory_model_iff -> FirstOrder.Language.ElementarilyEquivalent.theory_model_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] {T : FirstOrder.Language.Theory.{u1, u2} L}, (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (Iff (FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T) (FirstOrder.Language.Theory.Model.{u1, u2, u4} L N _inst_2 T))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {T : FirstOrder.Language.Theory.{u2, u3} L}, (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (Iff (FirstOrder.Language.Theory.Model.{u2, u3, u4} L M _inst_1 T) (FirstOrder.Language.Theory.Model.{u2, u3, u1} L N _inst_2 T))
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.Theory_model_iff FirstOrder.Language.ElementarilyEquivalent.theory_model_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem theory_model_iff (h : M ≅[L] N) : M ⊨ T ↔ N ⊨ T := by
@@ -1518,54 +1314,24 @@ theorem theory_model_iff (h : M ≅[L] N) : M ⊨ T ↔ N ⊨ T := by
     h.complete_theory_eq]
 #align first_order.language.elementarily_equivalent.Theory_model_iff FirstOrder.Language.ElementarilyEquivalent.theory_model_iff
 
-/- warning: first_order.language.elementarily_equivalent.Theory_model -> FirstOrder.Language.ElementarilyEquivalent.theory_model is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] {T : FirstOrder.Language.Theory.{u1, u2} L} [MT : FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (FirstOrder.Language.Theory.Model.{u1, u2, u4} L N _inst_2 T)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] {T : FirstOrder.Language.Theory.{u2, u3} L} [MT : FirstOrder.Language.Theory.Model.{u2, u3, u4} L M _inst_1 T], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (FirstOrder.Language.Theory.Model.{u2, u3, u1} L N _inst_2 T)
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.theory_modelₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem theory_model [MT : M ⊨ T] (h : M ≅[L] N) : N ⊨ T :=
   h.theory_model_iff.1 MT
 #align first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.theory_model
 
-/- warning: first_order.language.elementarily_equivalent.nonempty_iff -> FirstOrder.Language.ElementarilyEquivalent.nonempty_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (Iff (Nonempty.{succ u3} M) (Nonempty.{succ u4} N))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (Iff (Nonempty.{succ u4} M) (Nonempty.{succ u1} N))
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.nonempty_iff FirstOrder.Language.ElementarilyEquivalent.nonempty_iffₓ'. -/
 theorem nonempty_iff (h : M ≅[L] N) : Nonempty M ↔ Nonempty N :=
   (model_nonemptyTheory_iff L).symm.trans (h.theory_model_iff.trans (model_nonemptyTheory_iff L))
 #align first_order.language.elementarily_equivalent.nonempty_iff FirstOrder.Language.ElementarilyEquivalent.nonempty_iff
 
-/- warning: first_order.language.elementarily_equivalent.nonempty -> FirstOrder.Language.ElementarilyEquivalent.nonempty is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] [Mn : Nonempty.{succ u3} M], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (Nonempty.{succ u4} N)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] [Mn : Nonempty.{succ u4} M], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (Nonempty.{succ u1} N)
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.nonempty FirstOrder.Language.ElementarilyEquivalent.nonemptyₓ'. -/
 theorem nonempty [Mn : Nonempty M] (h : M ≅[L] N) : Nonempty N :=
   h.nonempty_iff.1 Mn
 #align first_order.language.elementarily_equivalent.nonempty FirstOrder.Language.ElementarilyEquivalent.nonempty
 
-/- warning: first_order.language.elementarily_equivalent.infinite_iff -> FirstOrder.Language.ElementarilyEquivalent.infinite_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (Iff (Infinite.{succ u3} M) (Infinite.{succ u4} N))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (Iff (Infinite.{succ u4} M) (Infinite.{succ u1} N))
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.infinite_iff FirstOrder.Language.ElementarilyEquivalent.infinite_iffₓ'. -/
 theorem infinite_iff (h : M ≅[L] N) : Infinite M ↔ Infinite N :=
   (model_infiniteTheory_iff L).symm.trans (h.theory_model_iff.trans (model_infiniteTheory_iff L))
 #align first_order.language.elementarily_equivalent.infinite_iff FirstOrder.Language.ElementarilyEquivalent.infinite_iff
 
-/- warning: first_order.language.elementarily_equivalent.infinite -> FirstOrder.Language.ElementarilyEquivalent.infinite is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} {N : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L N] [Mi : Infinite.{succ u3} M], (FirstOrder.Language.ElementarilyEquivalent.{u1, u2, u3, u4} L M N _inst_1 _inst_2) -> (Infinite.{succ u4} N)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] [Mi : Infinite.{succ u4} M], (FirstOrder.Language.ElementarilyEquivalent.{u2, u3, u4, u1} L M N _inst_1 _inst_2) -> (Infinite.{succ u1} N)
-Case conversion may be inaccurate. Consider using '#align first_order.language.elementarily_equivalent.infinite FirstOrder.Language.ElementarilyEquivalent.infiniteₓ'. -/
 theorem infinite [Mi : Infinite M] (h : M ≅[L] N) : Infinite N :=
   h.infinite_iff.1 Mi
 #align first_order.language.elementarily_equivalent.infinite FirstOrder.Language.ElementarilyEquivalent.infinite

@@ -81,9 +81,6 @@ instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainCom
         simplicial_object.σ_naturality, h₁, h₂, h₃]
       tauto⟩
 
-/- warning: algebraic_topology.dold_kan.compatibility_N₂_N₁_karoubi -> AlgebraicTopology.DoldKan.compatibility_N₂_N₁_karoubi is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.compatibility_N₂_N₁_karoubi AlgebraicTopology.DoldKan.compatibility_N₂_N₁_karoubiₓ'. -/
 theorem compatibility_N₂_N₁_karoubi :
     N₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
       karoubiFunctorCategoryEmbedding SimplexCategoryᵒᵖ C ⋙

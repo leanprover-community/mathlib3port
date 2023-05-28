@@ -61,12 +61,6 @@ open CategoryTheory.Subobject
 
 variable (X : SimplicialObject C)
 
-/- warning: algebraic_topology.normalized_Moore_complex.obj_X -> AlgebraicTopology.NormalizedMooreComplex.objX is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Abelian.{u2, u1} C _inst_1] (X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (n : Nat), CategoryTheory.Subobject.{u2, u1} C _inst_1 (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n)))
-but is expected to have type
-  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Abelian.{u2, u1} C _inst_1] (X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1) (n : Nat), CategoryTheory.Subobject.{u2, u1} C _inst_1 (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n)))
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.normalized_Moore_complex.obj_X AlgebraicTopology.NormalizedMooreComplex.objXₓ'. -/
 /-- The normalized Moore complex in degree `n`, as a subobject of `X n`.
 -/
 @[simp]
@@ -75,9 +69,6 @@ def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | n + 1 => Finset.univ.inf fun k : Fin (n + 1) => kernelSubobject (X.δ k.succ)
 #align algebraic_topology.normalized_Moore_complex.obj_X AlgebraicTopology.NormalizedMooreComplex.objX
 
-/- warning: algebraic_topology.normalized_Moore_complex.obj_d -> AlgebraicTopology.NormalizedMooreComplex.objD is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objDₓ'. -/
 /-- The differentials in the normalized Moore complex.
 -/
 @[simp]
@@ -107,9 +98,6 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     exact kernel_subobject_arrow_comp _
 #align algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
 
-/- warning: algebraic_topology.normalized_Moore_complex.d_squared -> AlgebraicTopology.NormalizedMooreComplex.d_squared is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squaredₓ'. -/
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   by
   -- It's a pity we need to do a case split here;
@@ -194,9 +182,6 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ
 
 variable {C}
 
-/- warning: algebraic_topology.normalized_Moore_complex_obj_d -> AlgebraicTopology.normalizedMooreComplex_objD is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalizedMooreComplex_objDₓ'. -/
 @[simp]
 theorem normalizedMooreComplex_objD (X : SimplicialObject C) (n : ℕ) :
     ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by

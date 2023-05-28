@@ -186,12 +186,6 @@ theorem pair_lt_pair_right (a) {b₁ b₂} (h : b₁ < b₂) : pair a b₁ < pai
 #align nat.mkpair_lt_mkpair_right Nat.pair_lt_pair_right
 -/
 
-/- warning: nat.mkpair_lt_max_add_one_sq -> Nat.pair_lt_max_add_one_sq is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n : Nat), LT.lt.{0} Nat Nat.hasLt (Nat.pair m n) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  forall (m : Nat) (n : Nat), LT.lt.{0} Nat instLTNat (Nat.pair m n) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
-Case conversion may be inaccurate. Consider using '#align nat.mkpair_lt_max_add_one_sq Nat.pair_lt_max_add_one_sqₓ'. -/
 theorem pair_lt_max_add_one_sq (m n : ℕ) : pair m n < (max m n + 1) ^ 2 :=
   by
   rw [mkpair, add_sq, mul_one, two_mul, sq, add_assoc, add_assoc]
@@ -202,12 +196,6 @@ theorem pair_lt_max_add_one_sq (m n : ℕ) : pair m n < (max m n + 1) ^ 2 :=
     exact lt_succ_of_le h
 #align nat.mkpair_lt_max_add_one_sq Nat.pair_lt_max_add_one_sq
 
-/- warning: nat.max_sq_add_min_le_mkpair -> Nat.max_sq_add_min_le_pair is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n : Nat), LE.le.{0} Nat Nat.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (LinearOrder.min.{0} Nat Nat.linearOrder m n)) (Nat.pair m n)
-but is expected to have type
-  forall (m : Nat) (n : Nat), LE.le.{0} Nat instLENat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Min.min.{0} Nat instMinNat m n)) (Nat.pair m n)
-Case conversion may be inaccurate. Consider using '#align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_pairₓ'. -/
 theorem max_sq_add_min_le_pair (m n : ℕ) : max m n ^ 2 + min m n ≤ pair m n :=
   by
   rw [mkpair]
@@ -236,24 +224,12 @@ open Nat
 
 section CompleteLattice
 
-/- warning: supr_unpair -> iSup_unpair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (i : Nat) => iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (j : Nat) => f i j)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (i : Nat) => iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (j : Nat) => f i j)))
-Case conversion may be inaccurate. Consider using '#align supr_unpair iSup_unpairₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem iSup_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
   rw [← (iSup_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
 #align supr_unpair iSup_unpair
 
-/- warning: infi_unpair -> iInf_unpair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iInf.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iInf.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (i : Nat) => iInf.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (j : Nat) => f i j)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (i : Nat) => iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (j : Nat) => f i j)))
-Case conversion may be inaccurate. Consider using '#align infi_unpair iInf_unpairₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem iInf_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
@@ -264,12 +240,6 @@ end CompleteLattice
 
 namespace Set
 
-/- warning: set.Union_unpair_prod -> Set.iUnion_unpair_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Nat -> (Set.{u1} α)} {t : Nat -> (Set.{u2} β)}, Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.iUnion.{max u1 u2, 1} (Prod.{u1, u2} α β) Nat (fun (n : Nat) => Set.prod.{u1, u2} α β (s (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (t (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))) (Set.prod.{u1, u2} α β (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => s n)) (Set.iUnion.{u2, 1} β Nat (fun (n : Nat) => t n)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Nat -> (Set.{u2} α)} {t : Nat -> (Set.{u1} β)}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.iUnion.{max u1 u2, 1} (Prod.{u2, u1} α β) Nat (fun (n : Nat) => Set.prod.{u2, u1} α β (s (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (t (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))) (Set.prod.{u2, u1} α β (Set.iUnion.{u2, 1} α Nat (fun (n : Nat) => s n)) (Set.iUnion.{u1, 1} β Nat (fun (n : Nat) => t n)))
-Case conversion may be inaccurate. Consider using '#align set.Union_unpair_prod Set.iUnion_unpair_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem iUnion_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :

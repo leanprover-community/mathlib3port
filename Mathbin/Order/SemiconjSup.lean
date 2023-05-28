@@ -53,22 +53,10 @@ def IsOrderRightAdjoint [Preorder α] [Preorder β] (f : α → β) (g : β → 
 #align is_order_right_adjoint IsOrderRightAdjoint
 -/
 
-/- warning: is_order_right_adjoint_Sup -> isOrderRightAdjoint_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β), IsOrderRightAdjoint.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 f (fun (y : β) => SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f x) y)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β), IsOrderRightAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) _inst_2 f (fun (y : β) => SupSet.sSup.{u2} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (setOf.{u2} α (fun (x : α) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f x) y)))
-Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint_Sup isOrderRightAdjoint_sSupₓ'. -/
 theorem isOrderRightAdjoint_sSup [CompleteLattice α] [Preorder β] (f : α → β) :
     IsOrderRightAdjoint f fun y => sSup { x | f x ≤ y } := fun y => isLUB_sSup _
 #align is_order_right_adjoint_Sup isOrderRightAdjoint_sSup
 
-/- warning: is_order_right_adjoint_cSup -> isOrderRightAdjoint_csSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β), (forall (y : β), Exists.{succ u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f x) y)) -> (forall (y : β), BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f x) y))) -> (IsOrderRightAdjoint.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) _inst_2 f (fun (y : β) => SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α _inst_1) (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f x) y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β), (forall (y : β), Exists.{succ u2} α (fun (x : α) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f x) y)) -> (forall (y : β), BddAbove.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1)))) (setOf.{u2} α (fun (x : α) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f x) y))) -> (IsOrderRightAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1)))) _inst_2 f (fun (y : β) => SupSet.sSup.{u2} α (ConditionallyCompleteLattice.toSupSet.{u2} α _inst_1) (setOf.{u2} α (fun (x : α) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f x) y))))
-Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint_cSup isOrderRightAdjoint_csSupₓ'. -/
 theorem isOrderRightAdjoint_csSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β)
     (hne : ∀ y, ∃ x, f x ≤ y) (hbdd : ∀ y, BddAbove { x | f x ≤ y }) :
     IsOrderRightAdjoint f fun y => sSup { x | f x ≤ y } := fun y => isLUB_csSup (hne y) (hbdd y)
@@ -76,41 +64,20 @@ theorem isOrderRightAdjoint_csSup [ConditionallyCompleteLattice α] [Preorder β
 
 namespace IsOrderRightAdjoint
 
-/- warning: is_order_right_adjoint.unique -> IsOrderRightAdjoint.unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g₁ : β -> α} {g₂ : β -> α}, (IsOrderRightAdjoint.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 f g₁) -> (IsOrderRightAdjoint.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 f g₂) -> (Eq.{max (succ u2) (succ u1)} (β -> α) g₁ g₂)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {g₁ : β -> α} {g₂ : β -> α}, (IsOrderRightAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 f g₁) -> (IsOrderRightAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 f g₂) -> (Eq.{max (succ u2) (succ u1)} (β -> α) g₁ g₂)
-Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint.unique IsOrderRightAdjoint.uniqueₓ'. -/
 protected theorem unique [PartialOrder α] [Preorder β] {f : α → β} {g₁ g₂ : β → α}
     (h₁ : IsOrderRightAdjoint f g₁) (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
   funext fun y => (h₁ y).unique (h₂ y)
 #align is_order_right_adjoint.unique IsOrderRightAdjoint.unique
 
-/- warning: is_order_right_adjoint.right_mono -> IsOrderRightAdjoint.right_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : β -> α}, (IsOrderRightAdjoint.{u1, u2} α β _inst_1 _inst_2 f g) -> (Monotone.{u2, u1} β α _inst_2 _inst_1 g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {g : β -> α}, (IsOrderRightAdjoint.{u2, u1} α β _inst_1 _inst_2 f g) -> (Monotone.{u1, u2} β α _inst_2 _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_monoₓ'. -/
 theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) :
     Monotone g := fun y₁ y₂ hy => (h y₁).mono (h y₂) fun x hx => le_trans hx hy
 #align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_mono
 
-/- warning: is_order_right_adjoint.order_iso_comp -> IsOrderRightAdjoint.orderIso_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint.order_iso_comp IsOrderRightAdjoint.orderIso_compₓ'. -/
 theorem orderIso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
     (h : IsOrderRightAdjoint f g) (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) :=
   fun y => by simpa [e.le_symm_apply] using h (e.symm y)
 #align is_order_right_adjoint.order_iso_comp IsOrderRightAdjoint.orderIso_comp
 
-/- warning: is_order_right_adjoint.comp_order_iso -> IsOrderRightAdjoint.comp_orderIso is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {g : β -> α}, (IsOrderRightAdjoint.{u1, u2} α β _inst_1 _inst_2 f g) -> (forall (e : OrderIso.{u3, u1} γ α (Preorder.toHasLe.{u3} γ _inst_3) (Preorder.toHasLe.{u1} α _inst_1)), IsOrderRightAdjoint.{u3, u2} γ β _inst_3 _inst_2 (Function.comp.{succ u3, succ u1, succ u2} γ α β f (coeFn.{max (succ u3) (succ u1), max (succ u3) (succ u1)} (OrderIso.{u3, u1} γ α (Preorder.toHasLe.{u3} γ _inst_3) (Preorder.toHasLe.{u1} α _inst_1)) (fun (_x : RelIso.{u3, u1} γ α (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) => γ -> α) (RelIso.hasCoeToFun.{u3, u1} γ α (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) e)) (Function.comp.{succ u2, succ u1, succ u3} β α γ (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (OrderIso.{u1, u3} α γ (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u3} γ _inst_3)) (fun (_x : RelIso.{u1, u3} α γ (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3))) => α -> γ) (RelIso.hasCoeToFun.{u1, u3} α γ (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3))) (OrderIso.symm.{u3, u1} γ α (Preorder.toHasLe.{u3} γ _inst_3) (Preorder.toHasLe.{u1} α _inst_1) e)) g))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : Preorder.{u3} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u1} γ] {f : α -> β} {g : β -> α}, (IsOrderRightAdjoint.{u3, u2} α β _inst_1 _inst_2 f g) -> (forall (e : OrderIso.{u1, u3} γ α (Preorder.toLE.{u1} γ _inst_3) (Preorder.toLE.{u3} α _inst_1)), IsOrderRightAdjoint.{u1, u2} γ β _inst_3 _inst_2 (Function.comp.{succ u1, succ u3, succ u2} γ α β f (FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (RelIso.{u1, u3} γ α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) γ (fun (_x : γ) => α) (RelHomClass.toFunLike.{max u1 u3, u1, u3} (RelIso.{u1, u3} γ α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) γ α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u3} γ α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) e)) (Function.comp.{succ u2, succ u3, succ u1} β α γ (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (RelIso.{u3, u1} α γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => γ) (RelHomClass.toFunLike.{max u3 u1, u3, u1} (RelIso.{u3, u1} α γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u3, u1} α γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : γ) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_3) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (OrderIso.symm.{u1, u3} γ α (Preorder.toLE.{u1} γ _inst_3) (Preorder.toLE.{u3} α _inst_1) e)) g))
-Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint.comp_order_iso IsOrderRightAdjoint.comp_orderIsoₓ'. -/
 theorem comp_orderIso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
     (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) :=
   by
@@ -124,9 +91,6 @@ end IsOrderRightAdjoint
 
 namespace Function
 
-/- warning: function.semiconj.symm_adjoint -> Function.Semiconj.symm_adjoint is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.semiconj.symm_adjoint Function.Semiconj.symm_adjointₓ'. -/
 /-- If an order automorphism `fa` is semiconjugate to an order embedding `fb` by a function `g`
 and `g'` is an order right adjoint of `g` (i.e. `g' y = Sup {x | f x ≤ y}`), then `fb` is
 semiconjugate to `fa` by `g'`.
@@ -144,9 +108,6 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
 
 variable {G : Type _}
 
-/- warning: function.semiconj_of_is_lub -> Function.semiconj_of_isLUB is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.semiconj_of_is_lub Function.semiconj_of_isLUBₓ'. -/
 theorem semiconj_of_isLUB [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
     (H : ∀ x, IsLUB (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) :
     Function.Semiconj h (f₂ g) (f₁ g) :=
@@ -157,9 +118,6 @@ theorem semiconj_of_isLUB [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃
   simpa [(· ∘ ·)] using this
 #align function.semiconj_of_is_lub Function.semiconj_of_isLUB
 
-/- warning: function.Sup_div_semiconj -> Function.sSup_div_semiconj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.Sup_div_semiconj Function.sSup_div_semiconjₓ'. -/
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.
 
@@ -170,9 +128,6 @@ theorem sSup_div_semiconj [CompleteLattice α] [Group G] (f₁ f₂ : G →* α 
   semiconj_of_isLUB f₁ f₂ (fun x => isLUB_iSup) _
 #align function.Sup_div_semiconj Function.sSup_div_semiconj
 
-/- warning: function.cSup_div_semiconj -> Function.csSup_div_semiconj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.cSup_div_semiconj Function.csSup_div_semiconjₓ'. -/
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a conditionally complete lattice by order
 isomorphisms. Suppose that each set $s(x)=\{f_1(g)^{-1} (f_2(g)(x)) | g \in G\}$ is bounded above.
 Then the map `x ↦ Sup s(x)` semiconjugates each `f₁ g'` to `f₂ g'`.

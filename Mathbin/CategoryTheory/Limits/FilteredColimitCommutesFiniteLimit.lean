@@ -63,9 +63,6 @@ only that there are finitely many objects.
 
 variable [Finite J]
 
-/- warning: category_theory.limits.colimit_limit_to_limit_colimit_injective -> CategoryTheory.Limits.colimitLimitToLimitColimit_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit_limit_to_limit_colimit_injective CategoryTheory.Limits.colimitLimitToLimitColimit_injectiveₓ'. -/
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
@@ -143,9 +140,6 @@ end
 
 variable [FinCategory J]
 
-/- warning: category_theory.limits.colimit_limit_to_limit_colimit_surjective -> CategoryTheory.Limits.colimitLimitToLimitColimit_surjective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimitLimitToLimitColimit_surjectiveₓ'. -/
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
@@ -313,17 +307,11 @@ theorem colimitLimitToLimitColimit_surjective :
       simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
 #align category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimitLimitToLimitColimit_surjective
 
-/- warning: category_theory.limits.colimit_limit_to_limit_colimit_is_iso -> CategoryTheory.Limits.colimitLimitToLimitColimit_isIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimitLimitToLimitColimit_isIsoₓ'. -/
 instance colimitLimitToLimitColimit_isIso : IsIso (colimitLimitToLimitColimit F) :=
   (isIso_iff_bijective _).mpr
     ⟨colimitLimitToLimitColimit_injective F, colimitLimitToLimitColimit_surjective F⟩
 #align category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimitLimitToLimitColimit_isIso
 
-/- warning: category_theory.limits.colimit_limit_to_limit_colimit_cone_iso -> CategoryTheory.Limits.colimitLimitToLimitColimitCone_iso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimitLimitToLimitColimitCone_isoₓ'. -/
 instance colimitLimitToLimitColimitCone_iso (F : J ⥤ K ⥤ Type v) :
     IsIso (colimitLimitToLimitColimitCone F) :=
   by
@@ -393,9 +381,6 @@ noncomputable def colimitLimitIso (F : J ⥤ K ⥤ C) : colimit (limit F) ≅ li
 #align category_theory.limits.colimit_limit_iso CategoryTheory.Limits.colimitLimitIso
 -/
 
-/- warning: category_theory.limits.ι_colimit_limit_iso_limit_π -> CategoryTheory.Limits.ι_colimitLimitIso_limit_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.ι_colimit_limit_iso_limit_π CategoryTheory.Limits.ι_colimitLimitIso_limit_πₓ'. -/
 @[simp, reassoc]
 theorem ι_colimitLimitIso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =

@@ -221,9 +221,6 @@ section StrongRankCondition
 -- `comm_ring_strong_rank_condition`, is in a much later file.
 variable {α : Type _} [CommRing α] [StrongRankCondition α] (E : LinearRecurrence α)
 
-/- warning: linear_recurrence.sol_space_rank -> LinearRecurrence.solSpace_rank is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_recurrence.sol_space_rank LinearRecurrence.solSpace_rankₓ'. -/
 /-- The dimension of `E.sol_space` is `E.order`. -/
 theorem solSpace_rank : Module.rank α E.solSpace = E.order :=
   letI := nontrivial_of_invariantBasisNumber α
@@ -244,12 +241,6 @@ def charPoly : α[X] :=
 #align linear_recurrence.char_poly LinearRecurrence.charPoly
 -/
 
-/- warning: linear_recurrence.geom_sol_iff_root_char_poly -> LinearRecurrence.geom_sol_iff_root_charPoly is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] (E : LinearRecurrence.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (q : α), Iff (LinearRecurrence.IsSolution.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E (fun (n : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (Ring.toMonoid.{u1} α (CommRing.toRing.{u1} α _inst_1)))) q n)) (Polynomial.IsRoot.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) (LinearRecurrence.charPoly.{u1} α _inst_1 E) q)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] (E : LinearRecurrence.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (q : α), Iff (LinearRecurrence.IsSolution.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E (fun (n : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (Semiring.toMonoidWithZero.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) q n)) (Polynomial.IsRoot.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (LinearRecurrence.charPoly.{u1} α _inst_1 E) q)
-Case conversion may be inaccurate. Consider using '#align linear_recurrence.geom_sol_iff_root_char_poly LinearRecurrence.geom_sol_iff_root_charPolyₓ'. -/
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=

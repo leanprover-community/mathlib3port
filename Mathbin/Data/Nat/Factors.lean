@@ -334,12 +334,6 @@ theorem coprime_factors_disjoint {a b : ℕ} (hab : a.coprime b) :
 #align nat.coprime_factors_disjoint Nat.coprime_factors_disjoint
 -/
 
-/- warning: nat.mem_factors_mul_of_coprime -> Nat.mem_factors_mul_of_coprime is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (forall (p : Nat), Iff (Membership.Mem.{0, 0} Nat (List.{0} Nat) (List.hasMem.{0} Nat) p (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Membership.Mem.{0, 0} Nat (List.{0} Nat) (List.hasMem.{0} Nat) p (Union.union.{0} (List.{0} Nat) (List.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Nat.factors a) (Nat.factors b))))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (forall (p : Nat), Iff (Membership.mem.{0, 0} Nat (List.{0} Nat) (List.instMembershipList.{0} Nat) p (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Membership.mem.{0, 0} Nat (List.{0} Nat) (List.instMembershipList.{0} Nat) p (Union.union.{0} (List.{0} Nat) (List.instUnionList.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Nat.factors a) (Nat.factors b))))
-Case conversion may be inaccurate. Consider using '#align nat.mem_factors_mul_of_coprime Nat.mem_factors_mul_of_coprimeₓ'. -/
 theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∪ b.factors :=
   by

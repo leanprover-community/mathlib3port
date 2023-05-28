@@ -60,12 +60,6 @@ section Nonempty
 
 variable (α) [Nonempty α]
 
-/- warning: fintype.to_order_bot -> Fintype.toOrderBot is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : SemilatticeInf.{u1} α], OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_4)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : SemilatticeInf.{u1} α], OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_4)))
-Case conversion may be inaccurate. Consider using '#align fintype.to_order_bot Fintype.toOrderBotₓ'. -/
 -- See note [reducible non-instances]
 /-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
 @[reducible]
@@ -75,12 +69,6 @@ def toOrderBot [SemilatticeInf α] : OrderBot α
   bot_le a := inf'_le _ <| mem_univ a
 #align fintype.to_order_bot Fintype.toOrderBot
 
-/- warning: fintype.to_order_top -> Fintype.toOrderTop is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : SemilatticeSup.{u1} α], OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_4)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : SemilatticeSup.{u1} α], OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_4)))
-Case conversion may be inaccurate. Consider using '#align fintype.to_order_top Fintype.toOrderTopₓ'. -/
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 @[reducible]
@@ -90,12 +78,6 @@ def toOrderTop [SemilatticeSup α] : OrderTop α
   le_top a := le_sup' _ <| mem_univ a
 #align fintype.to_order_top Fintype.toOrderTop
 
-/- warning: fintype.to_bounded_order -> Fintype.toBoundedOrder is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : Lattice.{u1} α], BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_4))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : Lattice.{u1} α], BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_4))))
-Case conversion may be inaccurate. Consider using '#align fintype.to_bounded_order Fintype.toBoundedOrderₓ'. -/
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
 @[reducible]
@@ -111,12 +93,6 @@ variable (α)
 
 open Classical
 
-/- warning: fintype.to_complete_lattice -> Fintype.toCompleteLattice is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Lattice.{u1} α] [_inst_4 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_3))))], CompleteLattice.{u1} α
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : Lattice.{u1} α] [_inst_4 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_3))))], CompleteLattice.{u1} α
-Case conversion may be inaccurate. Consider using '#align fintype.to_complete_lattice Fintype.toCompleteLatticeₓ'. -/
 -- See note [reducible non-instances]
 /-- A finite bounded lattice is complete. -/
 @[reducible]
@@ -131,12 +107,6 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
     le_inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_toFinset.mp hb }
 #align fintype.to_complete_lattice Fintype.toCompleteLattice
 
-/- warning: fintype.to_complete_distrib_lattice -> Fintype.toCompleteDistribLattice is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : DistribLattice.{u1} α] [_inst_4 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_3)))))], CompleteDistribLattice.{u1} α
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : DistribLattice.{u1} α] [_inst_4 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_3)))))], CompleteDistribLattice.{u1} α
-Case conversion may be inaccurate. Consider using '#align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLatticeₓ'. -/
 -- See note [reducible non-instances]
 /-- A finite bounded distributive lattice is completely distributive. -/
 @[reducible]
@@ -159,12 +129,6 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
       rfl }
 #align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLattice
 
-/- warning: fintype.to_complete_linear_order -> Fintype.toCompleteLinearOrder is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : LinearOrder.{u1} α] [_inst_4 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_3)))))], CompleteLinearOrder.{u1} α
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_2 : Fintype.{u1} α] [_inst_3 : LinearOrder.{u1} α] [_inst_4 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_3))))))], CompleteLinearOrder.{u1} α
-Case conversion may be inaccurate. Consider using '#align fintype.to_complete_linear_order Fintype.toCompleteLinearOrderₓ'. -/
 -- See note [reducible non-instances]
 /-- A finite bounded linear order is complete. -/
 @[reducible]
@@ -229,12 +193,6 @@ noncomputable instance : CompleteBooleanAlgebra Bool :=
 
 variable {α : Type _}
 
-/- warning: directed.fintype_le -> Directed.fintype_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsTrans.{u1} α r] {β : Type.{u2}} {γ : Type.{u3}} [_inst_2 : Nonempty.{succ u3} γ] {f : γ -> α} [_inst_3 : Fintype.{u2} β], (Directed.{u1, succ u3} α γ r f) -> (forall (g : β -> γ), Exists.{succ u3} γ (fun (z : γ) => forall (i : β), r (f (g i)) (f z)))
-but is expected to have type
-  forall {α : Type.{u3}} {r : α -> α -> Prop} [_inst_1 : IsTrans.{u3} α r] {β : Type.{u2}} {γ : Type.{u1}} [_inst_2 : Nonempty.{succ u1} γ] {f : γ -> α} [_inst_3 : Fintype.{u2} β], (Directed.{u3, succ u1} α γ r f) -> (forall (g : β -> γ), Exists.{succ u1} γ (fun (z : γ) => forall (i : β), r (f (g i)) (f z)))
-Case conversion may be inaccurate. Consider using '#align directed.fintype_le Directed.fintype_leₓ'. -/
 theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
     [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
   classical
@@ -242,23 +200,11 @@ theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Typ
     exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 #align directed.fintype_le Directed.fintype_le
 
-/- warning: fintype.exists_le -> Fintype.exists_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] {β : Type.{u2}} [_inst_4 : Fintype.{u2} β] (f : β -> α), Exists.{succ u1} α (fun (M : α) => forall (i : β), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (f i) M)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : IsDirected.{u2} α (fun (x._@.Mathlib.Data.Fintype.Order._hyg.1044 : α) (x._@.Mathlib.Data.Fintype.Order._hyg.1046 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Data.Fintype.Order._hyg.1044 x._@.Mathlib.Data.Fintype.Order._hyg.1046)] {β : Type.{u1}} [_inst_4 : Fintype.{u1} β] (f : β -> α), Exists.{succ u2} α (fun (M : α) => forall (i : β), LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) (f i) M)
-Case conversion may be inaccurate. Consider using '#align fintype.exists_le Fintype.exists_leₓ'. -/
 theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β]
     (f : β → α) : ∃ M, ∀ i, f i ≤ M :=
   directed_id.fintype_le _
 #align fintype.exists_le Fintype.exists_le
 
-/- warning: fintype.bdd_above_range -> Fintype.bddAbove_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] {β : Type.{u2}} [_inst_4 : Fintype.{u2} β] (f : β -> α), BddAbove.{u1} α _inst_2 (Set.range.{u1, succ u2} α β f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : IsDirected.{u2} α (fun (x._@.Mathlib.Data.Fintype.Order._hyg.1099 : α) (x._@.Mathlib.Data.Fintype.Order._hyg.1101 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Data.Fintype.Order._hyg.1099 x._@.Mathlib.Data.Fintype.Order._hyg.1101)] {β : Type.{u1}} [_inst_4 : Fintype.{u1} β] (f : β -> α), BddAbove.{u2} α _inst_2 (Set.range.{u2, succ u1} α β f)
-Case conversion may be inaccurate. Consider using '#align fintype.bdd_above_range Fintype.bddAbove_rangeₓ'. -/
 theorem Fintype.bddAbove_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _}
     [Fintype β] (f : β → α) : BddAbove (Set.range f) :=
   by

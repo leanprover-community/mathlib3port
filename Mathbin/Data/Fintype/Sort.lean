@@ -26,12 +26,6 @@ This file provides two equivalences for linearly ordered fintypes:
 
 open Finset
 
-/- warning: mono_equiv_of_fin -> monoEquivOfFin is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α] [_inst_2 : LinearOrder.{u1} α] {k : Nat}, (Eq.{1} Nat (Fintype.card.{u1} α _inst_1) k) -> (OrderIso.{0, u1} (Fin k) α (Fin.hasLe k) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α] [_inst_2 : LinearOrder.{u1} α] {k : Nat}, (Eq.{1} Nat (Fintype.card.{u1} α _inst_1) k) -> (OrderIso.{0, u1} (Fin k) α (instLEFin k) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align mono_equiv_of_fin monoEquivOfFinₓ'. -/
 /-- Given a linearly ordered fintype `α` of cardinal `k`, the order isomorphism
 `mono_equiv_of_fin α h` is the increasing bijection between `fin k` and `α`. Here, `h` is a proof
 that the cardinality of `α` is `k`. We use this instead of an isomorphism `fin (card α) ≃o α` to

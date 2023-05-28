@@ -54,32 +54,14 @@ theorem succ_coe_nat_pos (n : ℕ) : 0 < (n : ℤ) + 1 :=
 
 variable {a b : ℤ} {n : ℕ}
 
-/- warning: int.nat_abs_eq_iff_sq_eq -> Int.natAbs_eq_iff_sq_eq is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (Eq.{1} Nat (Int.natAbs a) (Int.natAbs b)) (Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {a : Int} {b : Int}, Iff (Eq.{1} Nat (Int.natAbs a) (Int.natAbs b)) (Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) b (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_eq_iff_sq_eq Int.natAbs_eq_iff_sq_eqₓ'. -/
 theorem natAbs_eq_iff_sq_eq {a b : ℤ} : a.natAbs = b.natAbs ↔ a ^ 2 = b ^ 2 := by rw [sq, sq];
   exact nat_abs_eq_iff_mul_self_eq
 #align int.nat_abs_eq_iff_sq_eq Int.natAbs_eq_iff_sq_eq
 
-/- warning: int.nat_abs_lt_iff_sq_lt -> Int.natAbs_lt_iff_sq_lt is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (LT.lt.{0} Nat Nat.hasLt (Int.natAbs a) (Int.natAbs b)) (LT.lt.{0} Int Int.hasLt (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {a : Int} {b : Int}, Iff (LT.lt.{0} Nat instLTNat (Int.natAbs a) (Int.natAbs b)) (LT.lt.{0} Int Int.instLTInt (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) b (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_lt_iff_sq_lt Int.natAbs_lt_iff_sq_ltₓ'. -/
 theorem natAbs_lt_iff_sq_lt {a b : ℤ} : a.natAbs < b.natAbs ↔ a ^ 2 < b ^ 2 := by rw [sq, sq];
   exact nat_abs_lt_iff_mul_self_lt
 #align int.nat_abs_lt_iff_sq_lt Int.natAbs_lt_iff_sq_lt
 
-/- warning: int.nat_abs_le_iff_sq_le -> Int.natAbs_le_iff_sq_le is a dubious translation:
-lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (LE.le.{0} Nat Nat.hasLe (Int.natAbs a) (Int.natAbs b)) (LE.le.{0} Int Int.hasLe (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {a : Int} {b : Int}, Iff (LE.le.{0} Nat instLENat (Int.natAbs a) (Int.natAbs b)) (LE.le.{0} Int Int.instLEInt (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) b (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_le_iff_sq_le Int.natAbs_le_iff_sq_leₓ'. -/
 theorem natAbs_le_iff_sq_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a ^ 2 ≤ b ^ 2 := by rw [sq, sq];
   exact nat_abs_le_iff_mul_self_le
 #align int.nat_abs_le_iff_sq_le Int.natAbs_le_iff_sq_le

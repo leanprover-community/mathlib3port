@@ -26,12 +26,6 @@ instance commutatorElement {G : Type _} [Group G] : Bracket G G :=
 #align commutator_element commutatorElement
 -/
 
-/- warning: commutator_element_def -> commutatorElement_def is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g₁ : G) (g₂ : G), Eq.{succ u1} G (Bracket.bracket.{u1, u1} G G (commutatorElement.{u1} G _inst_1) g₁ g₂) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) g₁ g₂) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) g₁)) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) g₂))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g₁ : G) (g₂ : G), Eq.{succ u1} G (Bracket.bracket.{u1, u1} G G (commutatorElement.{u1} G _inst_1) g₁ g₂) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) g₁ g₂) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) g₁)) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) g₂))
-Case conversion may be inaccurate. Consider using '#align commutator_element_def commutatorElement_defₓ'. -/
 theorem commutatorElement_def {G : Type _} [Group G] (g₁ g₂ : G) :
     ⁅g₁, g₂⁆ = g₁ * g₂ * g₁⁻¹ * g₂⁻¹ :=
   rfl

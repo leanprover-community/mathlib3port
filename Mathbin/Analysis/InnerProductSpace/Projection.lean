@@ -71,12 +71,6 @@ local notation "absR" => Abs.abs
 /-! ### Orthogonal projection in inner product spaces -/
 
 
-/- warning: exists_norm_eq_infi_of_complete_convex -> exists_norm_eq_iInf_of_complete_convex is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_3 : NormedAddCommGroup.{u1} F] [_inst_5 : InnerProductSpace.{0, u1} Real F Real.isROrC _inst_3] {K : Set.{u1} F}, (Set.Nonempty.{u1} F K) -> (IsComplete.{u1} F (PseudoMetricSpace.toUniformSpace.{u1} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3))) K) -> (Convex.{0, u1} Real F Real.orderedSemiring (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)) (SMulZeroClass.toHasSmul.{0, u1} Real F (AddZeroClass.toHasZero.{u1} F (AddMonoid.toAddZeroClass.{u1} F (AddCommMonoid.toAddMonoid.{u1} F (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3)))))) (SMulWithZero.toSmulZeroClass.{0, u1} Real F (MulZeroClass.toHasZero.{0} Real (MulZeroOneClass.toMulZeroClass.{0} Real (MonoidWithZero.toMulZeroOneClass.{0} Real (Semiring.toMonoidWithZero.{0} Real (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC)))))))))) (AddZeroClass.toHasZero.{u1} F (AddMonoid.toAddZeroClass.{u1} F (AddCommMonoid.toAddMonoid.{u1} F (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3)))))) (MulActionWithZero.toSMulWithZero.{0, u1} Real F (Semiring.toMonoidWithZero.{0} Real (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC))))))) (AddZeroClass.toHasZero.{u1} F (AddMonoid.toAddZeroClass.{u1} F (AddCommMonoid.toAddMonoid.{u1} F (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3)))))) (Module.toMulActionWithZero.{0, u1} Real F (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC)))))) (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3))) (NormedSpace.toModule.{0, u1} Real F (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3) (InnerProductSpace.toNormedSpace.{0, u1} Real F Real.isROrC _inst_3 _inst_5)))))) K) -> (forall (u : F), Exists.{succ u1} F (fun (v : F) => Exists.{0} (Membership.Mem.{u1, u1} F (Set.{u1} F) (Set.hasMem.{u1} F) v K) (fun (H : Membership.Mem.{u1, u1} F (Set.{u1} F) (Set.hasMem.{u1} F) v K) => Eq.{1} Real (Norm.norm.{u1} F (NormedAddCommGroup.toHasNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toHasSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u v)) (iInf.{0, succ u1} Real Real.hasInf (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) (fun (w : coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) => Norm.norm.{u1} F (NormedAddCommGroup.toHasNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toHasSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (coeSubtype.{succ u1} F (fun (x : F) => Membership.Mem.{u1, u1} F (Set.{u1} F) (Set.hasMem.{u1} F) x K))))) w)))))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_3 : NormedAddCommGroup.{u1} F] [_inst_5 : InnerProductSpace.{0, u1} Real F Real.isROrC _inst_3] {K : Set.{u1} F}, (Set.Nonempty.{u1} F K) -> (IsComplete.{u1} F (PseudoMetricSpace.toUniformSpace.{u1} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3))) K) -> (Convex.{0, u1} Real F Real.orderedSemiring (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)) (SMulZeroClass.toSMul.{0, u1} Real F (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)))))) (SMulWithZero.toSMulZeroClass.{0, u1} Real F Real.instZeroReal (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)))))) (MulActionWithZero.toSMulWithZero.{0, u1} Real F Real.instMonoidWithZeroReal (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)))))) (Module.toMulActionWithZero.{0, u1} Real F Real.semiring (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)) (NormedSpace.toModule.{0, u1} Real F Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3) (InnerProductSpace.toNormedSpace.{0, u1} Real F Real.isROrC _inst_3 _inst_5)))))) K) -> (forall (u : F), Exists.{succ u1} F (fun (v : F) => And (Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) v K) (Eq.{1} Real (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u v)) (iInf.{0, succ u1} Real Real.instInfSetReal (Set.Elem.{u1} F K) (fun (w : Set.Elem.{u1} F K) => Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u (Subtype.val.{succ u1} F (fun (x : F) => Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) x K) w)))))))
-Case conversion may be inaccurate. Consider using '#align exists_norm_eq_infi_of_complete_convex exists_norm_eq_iInf_of_complete_convexₓ'. -/
 -- FIXME this monolithic proof causes a deterministic timeout with `-T50000`
 -- It should be broken in a sequence of more manageable pieces,
 -- perhaps with individual statements for the three steps below.
@@ -211,12 +205,6 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
   exact Subtype.mem _
 #align exists_norm_eq_infi_of_complete_convex exists_norm_eq_iInf_of_complete_convex
 
-/- warning: norm_eq_infi_iff_real_inner_le_zero -> norm_eq_iInf_iff_real_inner_le_zero is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_3 : NormedAddCommGroup.{u1} F] [_inst_5 : InnerProductSpace.{0, u1} Real F Real.isROrC _inst_3] {K : Set.{u1} F}, (Convex.{0, u1} Real F Real.orderedSemiring (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)) (SMulZeroClass.toHasSmul.{0, u1} Real F (AddZeroClass.toHasZero.{u1} F (AddMonoid.toAddZeroClass.{u1} F (AddCommMonoid.toAddMonoid.{u1} F (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3)))))) (SMulWithZero.toSmulZeroClass.{0, u1} Real F (MulZeroClass.toHasZero.{0} Real (MulZeroOneClass.toMulZeroClass.{0} Real (MonoidWithZero.toMulZeroOneClass.{0} Real (Semiring.toMonoidWithZero.{0} Real (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC)))))))))) (AddZeroClass.toHasZero.{u1} F (AddMonoid.toAddZeroClass.{u1} F (AddCommMonoid.toAddMonoid.{u1} F (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3)))))) (MulActionWithZero.toSMulWithZero.{0, u1} Real F (Semiring.toMonoidWithZero.{0} Real (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC))))))) (AddZeroClass.toHasZero.{u1} F (AddMonoid.toAddZeroClass.{u1} F (AddCommMonoid.toAddMonoid.{u1} F (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3)))))) (Module.toMulActionWithZero.{0, u1} Real F (Ring.toSemiring.{0} Real (NormedRing.toRing.{0} Real (NormedCommRing.toNormedRing.{0} Real (NormedField.toNormedCommRing.{0} Real (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC)))))) (AddCommGroup.toAddCommMonoid.{u1} F (SeminormedAddCommGroup.toAddCommGroup.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3))) (NormedSpace.toModule.{0, u1} Real F (DenselyNormedField.toNormedField.{0} Real (IsROrC.toDenselyNormedField.{0} Real Real.isROrC)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3) (InnerProductSpace.toNormedSpace.{0, u1} Real F Real.isROrC _inst_3 _inst_5)))))) K) -> (forall {u : F} {v : F}, (Membership.Mem.{u1, u1} F (Set.{u1} F) (Set.hasMem.{u1} F) v K) -> (Iff (Eq.{1} Real (Norm.norm.{u1} F (NormedAddCommGroup.toHasNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toHasSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u v)) (iInf.{0, succ u1} Real Real.hasInf (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) (fun (w : coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) => Norm.norm.{u1} F (NormedAddCommGroup.toHasNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toHasSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} F) Type.{u1} (Set.hasCoeToSort.{u1} F) K) F (coeSubtype.{succ u1} F (fun (x : F) => Membership.Mem.{u1, u1} F (Set.{u1} F) (Set.hasMem.{u1} F) x K))))) w))))) (forall (w : F), (Membership.Mem.{u1, u1} F (Set.{u1} F) (Set.hasMem.{u1} F) w K) -> (LE.le.{0} Real Real.hasLe (Inner.inner.{0, u1} Real F (InnerProductSpace.toHasInner.{0, u1} Real F Real.isROrC _inst_3 _inst_5) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toHasSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u v) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toHasSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) w v)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_3 : NormedAddCommGroup.{u1} F] [_inst_5 : InnerProductSpace.{0, u1} Real F Real.isROrC _inst_3] {K : Set.{u1} F}, (Convex.{0, u1} Real F Real.orderedSemiring (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)) (SMulZeroClass.toSMul.{0, u1} Real F (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)))))) (SMulWithZero.toSMulZeroClass.{0, u1} Real F Real.instZeroReal (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)))))) (MulActionWithZero.toSMulWithZero.{0, u1} Real F Real.instMonoidWithZeroReal (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)))))) (Module.toMulActionWithZero.{0, u1} Real F Real.semiring (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_3)) (NormedSpace.toModule.{0, u1} Real F Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_3) (InnerProductSpace.toNormedSpace.{0, u1} Real F Real.isROrC _inst_3 _inst_5)))))) K) -> (forall {u : F} {v : F}, (Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) v K) -> (Iff (Eq.{1} Real (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u v)) (iInf.{0, succ u1} Real Real.instInfSetReal (Set.Elem.{u1} F K) (fun (w : Set.Elem.{u1} F K) => Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_3) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u (Subtype.val.{succ u1} F (fun (x : F) => Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) x K) w))))) (forall (w : F), (Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) w K) -> (LE.le.{0} Real Real.instLEReal (Inner.inner.{0, u1} Real F (InnerProductSpace.toInner.{0, u1} Real F Real.isROrC _inst_3 _inst_5) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) u v) (HSub.hSub.{u1, u1, u1} F F F (instHSub.{u1} F (SubNegMonoid.toSub.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_3))))) w v)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))))
-Case conversion may be inaccurate. Consider using '#align norm_eq_infi_iff_real_inner_le_zero norm_eq_iInf_iff_real_inner_le_zeroₓ'. -/
 /-- Characterization of minimizers for the projection on a convex set in a real inner product
 space. -/
 theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : F} {v : F}
@@ -312,9 +300,6 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
 
 variable (K : Submodule 𝕜 E)
 
-/- warning: exists_norm_eq_infi_of_complete_subspace -> exists_norm_eq_iInf_of_complete_subspace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_norm_eq_infi_of_complete_subspace exists_norm_eq_iInf_of_complete_subspaceₓ'. -/
 /-- Existence of projections on complete subspaces.
 Let `u` be a point in an inner product space, and let `K` be a nonempty complete subspace.
 Then there exists a (unique) `v` in `K` that minimizes the distance `‖u - v‖` to `u`.
@@ -329,9 +314,6 @@ theorem exists_norm_eq_iInf_of_complete_subspace (h : IsComplete (↑K : Set E))
   exact exists_norm_eq_iInf_of_complete_convex ⟨0, K'.zero_mem⟩ h K'.convex
 #align exists_norm_eq_infi_of_complete_subspace exists_norm_eq_iInf_of_complete_subspace
 
-/- warning: norm_eq_infi_iff_real_inner_eq_zero -> norm_eq_iInf_iff_real_inner_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align norm_eq_infi_iff_real_inner_eq_zero norm_eq_iInf_iff_real_inner_eq_zeroₓ'. -/
 /-- Characterization of minimizers in the projection on a subspace, in the real case.
 Let `u` be a point in a real inner product space, and let `K` be a nonempty subspace.
 Then point `v` minimizes the distance `‖u - v‖` over points in `K` if and only if
@@ -373,9 +355,6 @@ theorem norm_eq_iInf_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F
       exacts[Submodule.convex _, hv])
 #align norm_eq_infi_iff_real_inner_eq_zero norm_eq_iInf_iff_real_inner_eq_zero
 
-/- warning: norm_eq_infi_iff_inner_eq_zero -> norm_eq_iInf_iff_inner_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align norm_eq_infi_iff_inner_eq_zero norm_eq_iInf_iff_inner_eq_zeroₓ'. -/
 /-- Characterization of minimizers in the projection on a subspace.
 Let `u` be a point in an inner product space, and let `K` be a nonempty subspace.
 Then point `v` minimizes the distance `‖u - v‖` over points in `K` if and only if
@@ -434,9 +413,6 @@ theorem orthogonalProjectionFn_mem (v : E) : orthogonalProjectionFn K v ∈ K :=
 #align orthogonal_projection_fn_mem orthogonalProjectionFn_mem
 -/
 
-/- warning: orthogonal_projection_fn_inner_eq_zero -> orthogonalProjectionFn_inner_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_fn_inner_eq_zero orthogonalProjectionFn_inner_eq_zeroₓ'. -/
 /-- The characterization of the unbundled orthogonal projection.  This
 lemma is only intended for use in setting up the bundled version
 and should not be used once that is defined. -/
@@ -449,9 +425,6 @@ theorem orthogonalProjectionFn_inner_eq_zero (v : E) :
           v).choose_spec.choose_spec
 #align orthogonal_projection_fn_inner_eq_zero orthogonalProjectionFn_inner_eq_zero
 
-/- warning: eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero -> eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero eq_orthogonalProjectionFn_of_mem_of_inner_eq_zeroₓ'. -/
 /-- The unbundled orthogonal projection is the unique point in `K`
 with the orthogonality property.  This lemma is only intended for use
 in setting up the bundled version and should not be used once that is
@@ -472,9 +445,6 @@ theorem eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈
 
 variable (K)
 
-/- warning: orthogonal_projection_fn_norm_sq -> orthogonalProjectionFn_norm_sq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_fn_norm_sq orthogonalProjectionFn_norm_sqₓ'. -/
 theorem orthogonalProjectionFn_norm_sq (v : E) :
     ‖v‖ * ‖v‖ =
       ‖v - orthogonalProjectionFn K v‖ * ‖v - orthogonalProjectionFn K v‖ +
@@ -524,18 +494,12 @@ def orthogonalProjection : E →L[𝕜] K :=
 
 variable {K}
 
-/- warning: orthogonal_projection_fn_eq -> orthogonalProjectionFn_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_fn_eq orthogonalProjectionFn_eqₓ'. -/
 @[simp]
 theorem orthogonalProjectionFn_eq (v : E) :
     orthogonalProjectionFn K v = (orthogonalProjection K v : E) :=
   rfl
 #align orthogonal_projection_fn_eq orthogonalProjectionFn_eq
 
-/- warning: orthogonal_projection_inner_eq_zero -> orthogonalProjection_inner_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_inner_eq_zero orthogonalProjection_inner_eq_zeroₓ'. -/
 /-- The characterization of the orthogonal projection.  -/
 @[simp]
 theorem orthogonalProjection_inner_eq_zero (v : E) :
@@ -543,9 +507,6 @@ theorem orthogonalProjection_inner_eq_zero (v : E) :
   orthogonalProjectionFn_inner_eq_zero v
 #align orthogonal_projection_inner_eq_zero orthogonalProjection_inner_eq_zero
 
-/- warning: sub_orthogonal_projection_mem_orthogonal -> sub_orthogonalProjection_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align sub_orthogonal_projection_mem_orthogonal sub_orthogonalProjection_mem_orthogonalₓ'. -/
 /-- The difference of `v` from its orthogonal projection onto `K` is in `Kᗮ`.  -/
 @[simp]
 theorem sub_orthogonalProjection_mem_orthogonal (v : E) : v - orthogonalProjection K v ∈ Kᗮ :=
@@ -555,9 +516,6 @@ theorem sub_orthogonalProjection_mem_orthogonal (v : E) : v - orthogonalProjecti
   exact orthogonalProjection_inner_eq_zero _ _ hw
 #align sub_orthogonal_projection_mem_orthogonal sub_orthogonalProjection_mem_orthogonal
 
-/- warning: eq_orthogonal_projection_of_mem_of_inner_eq_zero -> eq_orthogonalProjection_of_mem_of_inner_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_orthogonal_projection_of_mem_of_inner_eq_zero eq_orthogonalProjection_of_mem_of_inner_eq_zeroₓ'. -/
 /-- The orthogonal projection is the unique point in `K` with the
 orthogonality property. -/
 theorem eq_orthogonalProjection_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈ K)
@@ -565,9 +523,6 @@ theorem eq_orthogonalProjection_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈ K
   eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero hvm hvo
 #align eq_orthogonal_projection_of_mem_of_inner_eq_zero eq_orthogonalProjection_of_mem_of_inner_eq_zero
 
-/- warning: orthogonal_projection_minimal -> orthogonalProjection_minimal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_minimal orthogonalProjection_minimalₓ'. -/
 /-- The orthogonal projection of `y` on `U` minimizes the distance `‖y - x‖` for `x ∈ U`. -/
 theorem orthogonalProjection_minimal {U : Submodule 𝕜 E} [CompleteSpace U] (y : E) :
     ‖y - orthogonalProjection U y‖ = ⨅ x : U, ‖y - x‖ :=
@@ -576,9 +531,6 @@ theorem orthogonalProjection_minimal {U : Submodule 𝕜 E} [CompleteSpace U] (y
   exact orthogonalProjection_inner_eq_zero _
 #align orthogonal_projection_minimal orthogonalProjection_minimal
 
-/- warning: eq_orthogonal_projection_of_eq_submodule -> eq_orthogonalProjection_of_eq_submodule is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_orthogonal_projection_of_eq_submodule eq_orthogonalProjection_of_eq_submoduleₓ'. -/
 /-- The orthogonal projections onto equal subspaces are coerced back to the same point in `E`. -/
 theorem eq_orthogonalProjection_of_eq_submodule {K' : Submodule 𝕜 E} [CompleteSpace K'] (h : K = K')
     (u : E) : (orthogonalProjection K u : E) = (orthogonalProjection K' u : E) :=
@@ -588,18 +540,12 @@ theorem eq_orthogonalProjection_of_eq_submodule {K' : Submodule 𝕜 E} [Complet
   exact h
 #align eq_orthogonal_projection_of_eq_submodule eq_orthogonalProjection_of_eq_submodule
 
-/- warning: orthogonal_projection_mem_subspace_eq_self -> orthogonalProjection_mem_subspace_eq_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_mem_subspace_eq_self orthogonalProjection_mem_subspace_eq_selfₓ'. -/
 /-- The orthogonal projection sends elements of `K` to themselves. -/
 @[simp]
 theorem orthogonalProjection_mem_subspace_eq_self (v : K) : orthogonalProjection K v = v := by ext;
   apply eq_orthogonalProjection_of_mem_of_inner_eq_zero <;> simp
 #align orthogonal_projection_mem_subspace_eq_self orthogonalProjection_mem_subspace_eq_self
 
-/- warning: orthogonal_projection_eq_self_iff -> orthogonalProjection_eq_self_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_eq_self_iff orthogonalProjection_eq_self_iffₓ'. -/
 /-- A point equals its orthogonal projection if and only if it lies in the subspace. -/
 theorem orthogonalProjection_eq_self_iff {v : E} : (orthogonalProjection K v : E) = v ↔ v ∈ K :=
   by
@@ -609,9 +555,6 @@ theorem orthogonalProjection_eq_self_iff {v : E} : (orthogonalProjection K v : E
   · simp
 #align orthogonal_projection_eq_self_iff orthogonalProjection_eq_self_iff
 
-/- warning: linear_isometry.map_orthogonal_projection -> LinearIsometry.map_orthogonalProjection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry.map_orthogonal_projection LinearIsometry.map_orthogonalProjectionₓ'. -/
 theorem LinearIsometry.map_orthogonalProjection {E E' : Type _} [NormedAddCommGroup E]
     [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E')
     (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
@@ -623,9 +566,6 @@ theorem LinearIsometry.map_orthogonalProjection {E E' : Type _} [NormedAddCommGr
   rw [← f.map_sub, f.inner_map_map, orthogonalProjection_inner_eq_zero x x' hx']
 #align linear_isometry.map_orthogonal_projection LinearIsometry.map_orthogonalProjection
 
-/- warning: linear_isometry.map_orthogonal_projection' -> LinearIsometry.map_orthogonalProjection' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry.map_orthogonal_projection' LinearIsometry.map_orthogonalProjection'ₓ'. -/
 theorem LinearIsometry.map_orthogonalProjection' {E E' : Type _} [NormedAddCommGroup E]
     [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E')
     (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
@@ -637,9 +577,6 @@ theorem LinearIsometry.map_orthogonalProjection' {E E' : Type _} [NormedAddCommG
   rw [← f.map_sub, f.inner_map_map, orthogonalProjection_inner_eq_zero x x' hx']
 #align linear_isometry.map_orthogonal_projection' LinearIsometry.map_orthogonalProjection'
 
-/- warning: orthogonal_projection_map_apply -> orthogonalProjection_map_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_map_apply orthogonalProjection_map_applyₓ'. -/
 /-- Orthogonal projection onto the `submodule.map` of a subspace. -/
 theorem orthogonalProjection_map_apply {E E' : Type _} [NormedAddCommGroup E]
     [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
@@ -651,9 +588,6 @@ theorem orthogonalProjection_map_apply {E E' : Type _} [NormedAddCommGroup E]
     (f.to_linear_isometry.map_orthogonal_projection p (f.symm x)).symm
 #align orthogonal_projection_map_apply orthogonalProjection_map_apply
 
-/- warning: orthogonal_projection_bot -> orthogonalProjection_bot is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_bot orthogonalProjection_botₓ'. -/
 /-- The orthogonal projection onto the trivial submodule is the zero map. -/
 @[simp]
 theorem orthogonalProjection_bot : orthogonalProjection (⊥ : Submodule 𝕜 E) = 0 := by ext
@@ -661,9 +595,6 @@ theorem orthogonalProjection_bot : orthogonalProjection (⊥ : Submodule 𝕜 E)
 
 variable (K)
 
-/- warning: orthogonal_projection_norm_le -> orthogonalProjection_norm_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_norm_le orthogonalProjection_norm_leₓ'. -/
 /-- The orthogonal projection has norm `≤ 1`. -/
 theorem orthogonalProjection_norm_le : ‖orthogonalProjection K‖ ≤ 1 :=
   LinearMap.mkContinuous_norm_le _ (by norm_num) _
@@ -671,9 +602,6 @@ theorem orthogonalProjection_norm_le : ‖orthogonalProjection K‖ ≤ 1 :=
 
 variable (𝕜)
 
-/- warning: smul_orthogonal_projection_singleton -> smul_orthogonalProjection_singleton is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align smul_orthogonal_projection_singleton smul_orthogonalProjection_singletonₓ'. -/
 theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
     (‖v‖ ^ 2 : 𝕜) • (orthogonalProjection (𝕜 ∙ v) w : E) = ⟪v, w⟫ • v :=
   by
@@ -688,9 +616,6 @@ theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
       InnerProductSpace.conj_symm, hv]
 #align smul_orthogonal_projection_singleton smul_orthogonalProjection_singleton
 
-/- warning: orthogonal_projection_singleton -> orthogonalProjection_singleton is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_singleton orthogonalProjection_singletonₓ'. -/
 /-- Formula for orthogonal projection onto a single vector. -/
 theorem orthogonalProjection_singleton {v : E} (w : E) :
     (orthogonalProjection (𝕜 ∙ v) w : E) = (⟪v, w⟫ / ‖v‖ ^ 2) • v :=
@@ -707,9 +632,6 @@ theorem orthogonalProjection_singleton {v : E} (w : E) :
   convert key <;> field_simp [hv']
 #align orthogonal_projection_singleton orthogonalProjection_singleton
 
-/- warning: orthogonal_projection_unit_singleton -> orthogonalProjection_unit_singleton is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_unit_singleton orthogonalProjection_unit_singletonₓ'. -/
 /-- Formula for orthogonal projection onto a single unit vector. -/
 theorem orthogonalProjection_unit_singleton {v : E} (hv : ‖v‖ = 1) (w : E) :
     (orthogonalProjection (𝕜 ∙ v) w : E) = ⟪v, w⟫ • v := by
@@ -768,9 +690,6 @@ theorem reflection_symm : (reflection K).symm = reflection K :=
 #align reflection_symm reflection_symm
 -/
 
-/- warning: reflection_inv -> reflection_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_inv reflection_invₓ'. -/
 /-- Reflection is its own inverse. -/
 @[simp]
 theorem reflection_inv : (reflection K)⁻¹ = reflection K :=
@@ -779,18 +698,12 @@ theorem reflection_inv : (reflection K)⁻¹ = reflection K :=
 
 variable (K)
 
-/- warning: reflection_reflection -> reflection_reflection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_reflection reflection_reflectionₓ'. -/
 /-- Reflecting twice in the same subspace. -/
 @[simp]
 theorem reflection_reflection (p : E) : reflection K (reflection K p) = p :=
   (reflection K).left_inv p
 #align reflection_reflection reflection_reflection
 
-/- warning: reflection_involutive -> reflection_involutive is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_involutive reflection_involutiveₓ'. -/
 /-- Reflection is involutive. -/
 theorem reflection_involutive : Function.Involutive (reflection K) :=
   reflection_reflection K
@@ -805,9 +718,6 @@ theorem reflection_trans_reflection :
 #align reflection_trans_reflection reflection_trans_reflection
 -/
 
-/- warning: reflection_mul_reflection -> reflection_mul_reflection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_mul_reflection reflection_mul_reflectionₓ'. -/
 /-- Reflection is involutive. -/
 @[simp]
 theorem reflection_mul_reflection : reflection K * reflection K = 1 :=
@@ -816,9 +726,6 @@ theorem reflection_mul_reflection : reflection K * reflection K = 1 :=
 
 variable {K}
 
-/- warning: reflection_eq_self_iff -> reflection_eq_self_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_eq_self_iff reflection_eq_self_iffₓ'. -/
 /-- A point is its own reflection if and only if it is in the subspace. -/
 theorem reflection_eq_self_iff (x : E) : reflection K x = x ↔ x ∈ K :=
   by
@@ -828,16 +735,10 @@ theorem reflection_eq_self_iff (x : E) : reflection K x = x ↔ x ∈ K :=
   exact two_ne_zero
 #align reflection_eq_self_iff reflection_eq_self_iff
 
-/- warning: reflection_mem_subspace_eq_self -> reflection_mem_subspace_eq_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_mem_subspace_eq_self reflection_mem_subspace_eq_selfₓ'. -/
 theorem reflection_mem_subspace_eq_self {x : E} (hx : x ∈ K) : reflection K x = x :=
   (reflection_eq_self_iff x).mpr hx
 #align reflection_mem_subspace_eq_self reflection_mem_subspace_eq_self
 
-/- warning: reflection_map_apply -> reflection_map_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_map_apply reflection_map_applyₓ'. -/
 /-- Reflection in the `submodule.map` of a subspace. -/
 theorem reflection_map_apply {E E' : Type _} [NormedAddCommGroup E] [NormedAddCommGroup E']
     [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E') (K : Submodule 𝕜 E)
@@ -846,9 +747,6 @@ theorem reflection_map_apply {E E' : Type _} [NormedAddCommGroup E] [NormedAddCo
   simp [bit0, reflection_apply, orthogonalProjection_map_apply f K x]
 #align reflection_map_apply reflection_map_apply
 
-/- warning: reflection_map -> reflection_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_map reflection_mapₓ'. -/
 /-- Reflection in the `submodule.map` of a subspace. -/
 theorem reflection_map {E E' : Type _} [NormedAddCommGroup E] [NormedAddCommGroup E']
     [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E') (K : Submodule 𝕜 E)
@@ -857,9 +755,6 @@ theorem reflection_map {E E' : Type _} [NormedAddCommGroup E] [NormedAddCommGrou
   LinearIsometryEquiv.ext <| reflection_map_apply f K
 #align reflection_map reflection_map
 
-/- warning: reflection_bot -> reflection_bot is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_bot reflection_botₓ'. -/
 /-- Reflection through the trivial subspace {0} is just negation. -/
 @[simp]
 theorem reflection_bot : reflection (⊥ : Submodule 𝕜 E) = LinearIsometryEquiv.neg 𝕜 := by
@@ -870,9 +765,6 @@ end reflection
 
 section Orthogonal
 
-/- warning: submodule.sup_orthogonal_inf_of_complete_space -> Submodule.sup_orthogonal_inf_of_completeSpace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.sup_orthogonal_inf_of_complete_space Submodule.sup_orthogonal_inf_of_completeSpaceₓ'. -/
 /-- If `K₁` is complete and contained in `K₂`, `K₁` and `K₁ᗮ ⊓ K₂` span `K₂`. -/
 theorem Submodule.sup_orthogonal_inf_of_completeSpace {K₁ K₂ : Submodule 𝕜 E} (h : K₁ ≤ K₂)
     [CompleteSpace K₁] : K₁ ⊔ K₁ᗮ ⊓ K₂ = K₂ := by
@@ -888,9 +780,6 @@ theorem Submodule.sup_orthogonal_inf_of_completeSpace {K₁ K₂ : Submodule �
 
 variable {K}
 
-/- warning: submodule.sup_orthogonal_of_complete_space -> Submodule.sup_orthogonal_of_completeSpace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.sup_orthogonal_of_complete_space Submodule.sup_orthogonal_of_completeSpaceₓ'. -/
 /-- If `K` is complete, `K` and `Kᗮ` span the whole space. -/
 theorem Submodule.sup_orthogonal_of_completeSpace [CompleteSpace K] : K ⊔ Kᗮ = ⊤ :=
   by
@@ -900,9 +789,6 @@ theorem Submodule.sup_orthogonal_of_completeSpace [CompleteSpace K] : K ⊔ Kᗮ
 
 variable (K)
 
-/- warning: submodule.exists_sum_mem_mem_orthogonal -> Submodule.exists_sum_mem_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.exists_sum_mem_mem_orthogonal Submodule.exists_sum_mem_mem_orthogonalₓ'. -/
 /-- If `K` is complete, any `v` in `E` can be expressed as a sum of elements of `K` and `Kᗮ`. -/
 theorem Submodule.exists_sum_mem_mem_orthogonal [CompleteSpace K] (v : E) :
     ∃ y ∈ K, ∃ z ∈ Kᗮ, v = y + z :=
@@ -953,9 +839,6 @@ theorem Submodule.isCompl_orthogonal_of_completeSpace [CompleteSpace K] : IsComp
 #align submodule.is_compl_orthogonal_of_complete_space Submodule.isCompl_orthogonal_of_completeSpace
 -/
 
-/- warning: submodule.orthogonal_eq_bot_iff -> Submodule.orthogonal_eq_bot_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.orthogonal_eq_bot_iff Submodule.orthogonal_eq_bot_iffₓ'. -/
 @[simp]
 theorem Submodule.orthogonal_eq_bot_iff [CompleteSpace (K : Set E)] : Kᗮ = ⊥ ↔ K = ⊤ :=
   by
@@ -965,9 +848,6 @@ theorem Submodule.orthogonal_eq_bot_iff [CompleteSpace (K : Set E)] : Kᗮ = ⊥
   rwa [h, sup_comm, bot_sup_eq] at this
 #align submodule.orthogonal_eq_bot_iff Submodule.orthogonal_eq_bot_iff
 
-/- warning: eq_orthogonal_projection_of_mem_orthogonal -> eq_orthogonalProjection_of_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_orthogonal_projection_of_mem_orthogonal eq_orthogonalProjection_of_mem_orthogonalₓ'. -/
 /-- A point in `K` with the orthogonality property (here characterized in terms of `Kᗮ`) must be the
 orthogonal projection. -/
 theorem eq_orthogonalProjection_of_mem_orthogonal [CompleteSpace K] {u v : E} (hv : v ∈ K)
@@ -975,9 +855,6 @@ theorem eq_orthogonalProjection_of_mem_orthogonal [CompleteSpace K] {u v : E} (h
   eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero hv fun w => inner_eq_zero_symm.mp ∘ hvo w
 #align eq_orthogonal_projection_of_mem_orthogonal eq_orthogonalProjection_of_mem_orthogonal
 
-/- warning: eq_orthogonal_projection_of_mem_orthogonal' -> eq_orthogonalProjection_of_mem_orthogonal' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_orthogonal_projection_of_mem_orthogonal' eq_orthogonalProjection_of_mem_orthogonal'ₓ'. -/
 /-- A point in `K` with the orthogonality property (here characterized in terms of `Kᗮ`) must be the
 orthogonal projection. -/
 theorem eq_orthogonalProjection_of_mem_orthogonal' [CompleteSpace K] {u v z : E} (hv : v ∈ K)
@@ -985,18 +862,12 @@ theorem eq_orthogonalProjection_of_mem_orthogonal' [CompleteSpace K] {u v z : E}
   eq_orthogonalProjection_of_mem_orthogonal hv (by simpa [hu] )
 #align eq_orthogonal_projection_of_mem_orthogonal' eq_orthogonalProjection_of_mem_orthogonal'
 
-/- warning: orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero -> orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero orthogonalProjection_mem_subspace_orthogonalComplement_eq_zeroₓ'. -/
 /-- The orthogonal projection onto `K` of an element of `Kᗮ` is zero. -/
 theorem orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero [CompleteSpace K] {v : E}
     (hv : v ∈ Kᗮ) : orthogonalProjection K v = 0 := by ext;
   convert eq_orthogonalProjection_of_mem_orthogonal _ _ <;> simp [hv]
 #align orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero
 
-/- warning: submodule.is_ortho.orthogonal_projection_comp_subtypeL -> Submodule.IsOrtho.orthogonalProjection_comp_subtypeL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.is_ortho.orthogonal_projection_comp_subtypeL Submodule.IsOrtho.orthogonalProjection_comp_subtypeLₓ'. -/
 /-- The projection into `U` from an orthogonal submodule `V` is the zero map. -/
 theorem Submodule.IsOrtho.orthogonalProjection_comp_subtypeL {U V : Submodule 𝕜 E} [CompleteSpace U]
     (h : U ⟂ V) : orthogonalProjection U ∘L V.subtypeL = 0 :=
@@ -1004,9 +875,6 @@ theorem Submodule.IsOrtho.orthogonalProjection_comp_subtypeL {U V : Submodule �
     orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero <| h.symm v.Prop
 #align submodule.is_ortho.orthogonal_projection_comp_subtypeL Submodule.IsOrtho.orthogonalProjection_comp_subtypeL
 
-/- warning: orthogonal_projection_comp_subtypeL_eq_zero_iff -> orthogonalProjection_comp_subtypeL_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_comp_subtypeL_eq_zero_iff orthogonalProjection_comp_subtypeL_eq_zero_iffₓ'. -/
 /-- The projection into `U` from `V` is the zero map if and only if `U` and `V` are orthogonal. -/
 theorem orthogonalProjection_comp_subtypeL_eq_zero_iff {U V : Submodule 𝕜 E} [CompleteSpace U] :
     orthogonalProjection U ∘L V.subtypeL = 0 ↔ U ⟂ V :=
@@ -1016,9 +884,6 @@ theorem orthogonalProjection_comp_subtypeL_eq_zero_iff {U V : Submodule 𝕜 E} 
     rw [this, Submodule.coe_zero, sub_zero], Submodule.IsOrtho.orthogonalProjection_comp_subtypeL⟩
 #align orthogonal_projection_comp_subtypeL_eq_zero_iff orthogonalProjection_comp_subtypeL_eq_zero_iff
 
-/- warning: orthogonal_projection_eq_linear_proj -> orthogonalProjection_eq_linear_proj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_eq_linear_proj orthogonalProjection_eq_linear_projₓ'. -/
 theorem orthogonalProjection_eq_linear_proj [CompleteSpace K] (x : E) :
     orthogonalProjection K x =
       K.linearProjOfIsCompl _ Submodule.isCompl_orthogonal_of_completeSpace x :=
@@ -1037,27 +902,18 @@ theorem orthogonalProjection_coe_linearMap_eq_linearProj [CompleteSpace K] :
 #align orthogonal_projection_coe_linear_map_eq_linear_proj orthogonalProjection_coe_linearMap_eq_linearProj
 -/
 
-/- warning: reflection_mem_subspace_orthogonal_complement_eq_neg -> reflection_mem_subspace_orthogonalComplement_eq_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_mem_subspace_orthogonal_complement_eq_neg reflection_mem_subspace_orthogonalComplement_eq_negₓ'. -/
 /-- The reflection in `K` of an element of `Kᗮ` is its negation. -/
 theorem reflection_mem_subspace_orthogonalComplement_eq_neg [CompleteSpace K] {v : E}
     (hv : v ∈ Kᗮ) : reflection K v = -v := by
   simp [reflection_apply, orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero hv]
 #align reflection_mem_subspace_orthogonal_complement_eq_neg reflection_mem_subspace_orthogonalComplement_eq_neg
 
-/- warning: orthogonal_projection_mem_subspace_orthogonal_precomplement_eq_zero -> orthogonalProjection_mem_subspace_orthogonal_precomplement_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_mem_subspace_orthogonal_precomplement_eq_zero orthogonalProjection_mem_subspace_orthogonal_precomplement_eq_zeroₓ'. -/
 /-- The orthogonal projection onto `Kᗮ` of an element of `K` is zero. -/
 theorem orthogonalProjection_mem_subspace_orthogonal_precomplement_eq_zero [CompleteSpace E] {v : E}
     (hv : v ∈ K) : orthogonalProjection Kᗮ v = 0 :=
   orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero (K.le_orthogonal_orthogonal hv)
 #align orthogonal_projection_mem_subspace_orthogonal_precomplement_eq_zero orthogonalProjection_mem_subspace_orthogonal_precomplement_eq_zero
 
-/- warning: orthogonal_projection_orthogonal_projection_of_le -> orthogonalProjection_orthogonalProjection_of_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_orthogonal_projection_of_le orthogonalProjection_orthogonalProjection_of_leₓ'. -/
 /-- If `U ≤ V`, then projecting on `V` and then on `U` is the same as projecting on `U`. -/
 theorem orthogonalProjection_orthogonalProjection_of_le {U V : Submodule 𝕜 E} [CompleteSpace U]
     [CompleteSpace V] (h : U ≤ V) (x : E) :
@@ -1068,9 +924,6 @@ theorem orthogonalProjection_orthogonalProjection_of_le {U V : Submodule 𝕜 E}
         (Submodule.orthogonal_le h (sub_orthogonalProjection_mem_orthogonal x))
 #align orthogonal_projection_orthogonal_projection_of_le orthogonalProjection_orthogonalProjection_of_le
 
-/- warning: orthogonal_projection_tendsto_closure_supr -> orthogonalProjection_tendsto_closure_iSup is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_tendsto_closure_supr orthogonalProjection_tendsto_closure_iSupₓ'. -/
 /-- Given a monotone family `U` of complete submodules of `E` and a fixed `x : E`,
 the orthogonal projection of `x` on `U i` tends to the orthogonal projection of `x` on
 `(⨆ i, U i).topological_closure` along `at_top`. -/
@@ -1103,9 +956,6 @@ theorem orthogonalProjection_tendsto_closure_iSup [CompleteSpace E] {ι : Type _
   exact ciInf_le ⟨0, set.forall_range_iff.mpr fun _ => norm_nonneg _⟩ _
 #align orthogonal_projection_tendsto_closure_supr orthogonalProjection_tendsto_closure_iSup
 
-/- warning: orthogonal_projection_tendsto_self -> orthogonalProjection_tendsto_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_tendsto_self orthogonalProjection_tendsto_selfₓ'. -/
 /-- Given a monotone family `U` of complete submodules of `E` with dense span supremum,
 and a fixed `x : E`, the orthogonal projection of `x` on `U i` tends to `x` along `at_top`. -/
 theorem orthogonalProjection_tendsto_self [CompleteSpace E] {ι : Type _} [SemilatticeSup ι]
@@ -1147,9 +997,6 @@ open Submodule
 
 variable {x y : E} [CompleteSpace E]
 
-/- warning: dense.eq_of_sub_mem_orthogonal -> Dense.eq_of_sub_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.eq_of_sub_mem_orthogonal Dense.eq_of_sub_mem_orthogonalₓ'. -/
 /-- If `S` is dense and `x - y ∈ Kᗮ`, then `x = y`. -/
 theorem eq_of_sub_mem_orthogonal (hK : Dense (K : Set E)) (h : x - y ∈ Kᗮ) : x = y :=
   by
@@ -1157,9 +1004,6 @@ theorem eq_of_sub_mem_orthogonal (hK : Dense (K : Set E)) (h : x - y ∈ Kᗮ) :
   rwa [hK, Submodule.mem_bot, sub_eq_zero] at h
 #align dense.eq_of_sub_mem_orthogonal Dense.eq_of_sub_mem_orthogonal
 
-/- warning: dense.eq_zero_of_mem_orthogonal -> Dense.eq_zero_of_mem_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.eq_zero_of_mem_orthogonal Dense.eq_zero_of_mem_orthogonalₓ'. -/
 theorem eq_zero_of_mem_orthogonal (hK : Dense (K : Set E)) (h : x ∈ Kᗮ) : x = 0 :=
   hK.eq_of_sub_mem_orthogonal (by rwa [sub_zero])
 #align dense.eq_zero_of_mem_orthogonal Dense.eq_zero_of_mem_orthogonal
@@ -1170,9 +1014,6 @@ theorem eq_of_inner_left (hK : Dense (K : Set E)) (h : ∀ v : K, ⟪x, v⟫ = �
 #align dense.eq_of_inner_left Dense.eq_of_inner_left
 -/
 
-/- warning: dense.eq_zero_of_inner_left -> Dense.eq_zero_of_inner_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.eq_zero_of_inner_left Dense.eq_zero_of_inner_leftₓ'. -/
 theorem eq_zero_of_inner_left (hK : Dense (K : Set E)) (h : ∀ v : K, ⟪x, v⟫ = 0) : x = 0 :=
   hK.eq_of_inner_left fun v => by rw [inner_zero_left, h v]
 #align dense.eq_zero_of_inner_left Dense.eq_zero_of_inner_left
@@ -1184,27 +1025,18 @@ theorem eq_of_inner_right (hK : Dense (K : Set E)) (h : ∀ v : K, ⟪(v : E), x
 #align dense.eq_of_inner_right Dense.eq_of_inner_right
 -/
 
-/- warning: dense.eq_zero_of_inner_right -> Dense.eq_zero_of_inner_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.eq_zero_of_inner_right Dense.eq_zero_of_inner_rightₓ'. -/
 theorem eq_zero_of_inner_right (hK : Dense (K : Set E)) (h : ∀ v : K, ⟪(v : E), x⟫ = 0) : x = 0 :=
   hK.eq_of_inner_right fun v => by rw [inner_zero_right, h v]
 #align dense.eq_zero_of_inner_right Dense.eq_zero_of_inner_right
 
 end Dense
 
-/- warning: reflection_mem_subspace_orthogonal_precomplement_eq_neg -> reflection_mem_subspace_orthogonal_precomplement_eq_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_mem_subspace_orthogonal_precomplement_eq_neg reflection_mem_subspace_orthogonal_precomplement_eq_negₓ'. -/
 /-- The reflection in `Kᗮ` of an element of `K` is its negation. -/
 theorem reflection_mem_subspace_orthogonal_precomplement_eq_neg [CompleteSpace E] {v : E}
     (hv : v ∈ K) : reflection Kᗮ v = -v :=
   reflection_mem_subspace_orthogonalComplement_eq_neg (K.le_orthogonal_orthogonal hv)
 #align reflection_mem_subspace_orthogonal_precomplement_eq_neg reflection_mem_subspace_orthogonal_precomplement_eq_neg
 
-/- warning: orthogonal_projection_orthogonal_complement_singleton_eq_zero -> orthogonalProjection_orthogonalComplement_singleton_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_projection_orthogonal_complement_singleton_eq_zero orthogonalProjection_orthogonalComplement_singleton_eq_zeroₓ'. -/
 /-- The orthogonal projection onto `(𝕜 ∙ v)ᗮ` of `v` is zero. -/
 theorem orthogonalProjection_orthogonalComplement_singleton_eq_zero [CompleteSpace E] (v : E) :
     orthogonalProjection (𝕜 ∙ v)ᗮ v = 0 :=
@@ -1212,18 +1044,12 @@ theorem orthogonalProjection_orthogonalComplement_singleton_eq_zero [CompleteSpa
     (Submodule.mem_span_singleton_self v)
 #align orthogonal_projection_orthogonal_complement_singleton_eq_zero orthogonalProjection_orthogonalComplement_singleton_eq_zero
 
-/- warning: reflection_orthogonal_complement_singleton_eq_neg -> reflection_orthogonalComplement_singleton_eq_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_orthogonal_complement_singleton_eq_neg reflection_orthogonalComplement_singleton_eq_negₓ'. -/
 /-- The reflection in `(𝕜 ∙ v)ᗮ` of `v` is `-v`. -/
 theorem reflection_orthogonalComplement_singleton_eq_neg [CompleteSpace E] (v : E) :
     reflection (𝕜 ∙ v)ᗮ v = -v :=
   reflection_mem_subspace_orthogonal_precomplement_eq_neg (Submodule.mem_span_singleton_self v)
 #align reflection_orthogonal_complement_singleton_eq_neg reflection_orthogonalComplement_singleton_eq_neg
 
-/- warning: reflection_sub -> reflection_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align reflection_sub reflection_subₓ'. -/
 theorem reflection_sub [CompleteSpace F] {v w : F} (h : ‖v‖ = ‖w‖) :
     reflection (ℝ ∙ v - w)ᗮ v = w :=
   by
@@ -1246,9 +1072,6 @@ theorem reflection_sub [CompleteSpace F] {v w : F} (h : ‖v‖ = ‖w‖) :
 
 variable (K)
 
-/- warning: eq_sum_orthogonal_projection_self_orthogonal_complement -> eq_sum_orthogonalProjection_self_orthogonalComplement is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align eq_sum_orthogonal_projection_self_orthogonal_complement eq_sum_orthogonalProjection_self_orthogonalComplementₓ'. -/
 /-- In a complete space `E`, a vector splits as the sum of its orthogonal projections onto a
 complete submodule `K` and onto the orthogonal complement of `K`.-/
 theorem eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace E] [CompleteSpace K]
@@ -1262,9 +1085,6 @@ theorem eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace E] 
     simp [hy]
 #align eq_sum_orthogonal_projection_self_orthogonal_complement eq_sum_orthogonalProjection_self_orthogonalComplement
 
-/- warning: norm_sq_eq_add_norm_sq_projection -> norm_sq_eq_add_norm_sq_projection is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align norm_sq_eq_add_norm_sq_projection norm_sq_eq_add_norm_sq_projectionₓ'. -/
 /-- The Pythagorean theorem, for an orthogonal projection.-/
 theorem norm_sq_eq_add_norm_sq_projection (x : E) (S : Submodule 𝕜 E) [CompleteSpace E]
     [CompleteSpace S] :
@@ -1292,9 +1112,6 @@ theorem id_eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace 
 #align id_eq_sum_orthogonal_projection_self_orthogonal_complement id_eq_sum_orthogonalProjection_self_orthogonalComplement
 -/
 
-/- warning: inner_orthogonal_projection_eq_of_mem_right -> inner_orthogonalProjection_eq_of_mem_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_orthogonal_projection_eq_of_mem_right inner_orthogonalProjection_eq_of_mem_rightₓ'. -/
 @[simp]
 theorem inner_orthogonalProjection_eq_of_mem_right [CompleteSpace K] (u : K) (v : E) :
     ⟪orthogonalProjection K v, u⟫ = ⟪v, u⟫ :=
@@ -1306,18 +1123,12 @@ theorem inner_orthogonalProjection_eq_of_mem_right [CompleteSpace K] (u : K) (v 
     
 #align inner_orthogonal_projection_eq_of_mem_right inner_orthogonalProjection_eq_of_mem_right
 
-/- warning: inner_orthogonal_projection_eq_of_mem_left -> inner_orthogonalProjection_eq_of_mem_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_orthogonal_projection_eq_of_mem_left inner_orthogonalProjection_eq_of_mem_leftₓ'. -/
 @[simp]
 theorem inner_orthogonalProjection_eq_of_mem_left [CompleteSpace K] (u : K) (v : E) :
     ⟪u, orthogonalProjection K v⟫ = ⟪(u : E), v⟫ := by
   rw [← inner_conj_symm, ← inner_conj_symm (u : E), inner_orthogonalProjection_eq_of_mem_right]
 #align inner_orthogonal_projection_eq_of_mem_left inner_orthogonalProjection_eq_of_mem_left
 
-/- warning: inner_orthogonal_projection_left_eq_right -> inner_orthogonalProjection_left_eq_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inner_orthogonal_projection_left_eq_right inner_orthogonalProjection_left_eq_rightₓ'. -/
 /-- The orthogonal projection is self-adjoint. -/
 theorem inner_orthogonalProjection_left_eq_right [CompleteSpace K] (u v : E) :
     ⟪↑(orthogonalProjection K u), v⟫ = ⟪u, orthogonalProjection K v⟫ := by
@@ -1334,9 +1145,6 @@ theorem orthogonalProjection_isSymmetric [CompleteSpace K] :
 
 open FiniteDimensional
 
-/- warning: submodule.finrank_add_inf_finrank_orthogonal -> Submodule.finrank_add_inf_finrank_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.finrank_add_inf_finrank_orthogonal Submodule.finrank_add_inf_finrank_orthogonalₓ'. -/
 /-- Given a finite-dimensional subspace `K₂`, and a subspace `K₁`
 containined in it, the dimensions of `K₁` and the intersection of its
 orthogonal subspace with `K₂` add to that of `K₂`. -/
@@ -1353,9 +1161,6 @@ theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜
   exact hd.symm
 #align submodule.finrank_add_inf_finrank_orthogonal Submodule.finrank_add_inf_finrank_orthogonal
 
-/- warning: submodule.finrank_add_inf_finrank_orthogonal' -> Submodule.finrank_add_inf_finrank_orthogonal' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.finrank_add_inf_finrank_orthogonal' Submodule.finrank_add_inf_finrank_orthogonal'ₓ'. -/
 /-- Given a finite-dimensional subspace `K₂`, and a subspace `K₁`
 containined in it, the dimensions of `K₁` and the intersection of its
 orthogonal subspace with `K₂` add to that of `K₂`. -/
@@ -1367,9 +1172,6 @@ theorem Submodule.finrank_add_inf_finrank_orthogonal' {K₁ K₂ : Submodule �
   simp [Submodule.finrank_add_inf_finrank_orthogonal h, h_dim]
 #align submodule.finrank_add_inf_finrank_orthogonal' Submodule.finrank_add_inf_finrank_orthogonal'
 
-/- warning: submodule.finrank_add_finrank_orthogonal -> Submodule.finrank_add_finrank_orthogonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.finrank_add_finrank_orthogonal Submodule.finrank_add_finrank_orthogonalₓ'. -/
 /-- Given a finite-dimensional space `E` and subspace `K`, the dimensions of `K` and `Kᗮ` add to
 that of `E`. -/
 theorem Submodule.finrank_add_finrank_orthogonal [FiniteDimensional 𝕜 E] (K : Submodule 𝕜 E) :
@@ -1380,9 +1182,6 @@ theorem Submodule.finrank_add_finrank_orthogonal [FiniteDimensional 𝕜 E] (K :
   · simp
 #align submodule.finrank_add_finrank_orthogonal Submodule.finrank_add_finrank_orthogonal
 
-/- warning: submodule.finrank_add_finrank_orthogonal' -> Submodule.finrank_add_finrank_orthogonal' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align submodule.finrank_add_finrank_orthogonal' Submodule.finrank_add_finrank_orthogonal'ₓ'. -/
 /-- Given a finite-dimensional space `E` and subspace `K`, the dimensions of `K` and `Kᗮ` add to
 that of `E`. -/
 theorem Submodule.finrank_add_finrank_orthogonal' [FiniteDimensional 𝕜 E] {K : Submodule 𝕜 E}
@@ -1392,9 +1191,6 @@ theorem Submodule.finrank_add_finrank_orthogonal' [FiniteDimensional 𝕜 E] {K 
 
 attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 
-/- warning: finrank_orthogonal_span_singleton -> finrank_orthogonal_span_singleton is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finrank_orthogonal_span_singleton finrank_orthogonal_span_singletonₓ'. -/
 /-- In a finite-dimensional inner product space, the dimension of the orthogonal complement of the
 span of a nonzero vector is one less than the dimension of the space. -/
 theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E = n + 1)] {v : E}
@@ -1403,9 +1199,6 @@ theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E =
     simp [finrank_span_singleton hv, _i.elim, add_comm]
 #align finrank_orthogonal_span_singleton finrank_orthogonal_span_singleton
 
-/- warning: linear_isometry_equiv.reflections_generate_dim_aux -> LinearIsometryEquiv.reflections_generate_dim_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.reflections_generate_dim_aux LinearIsometryEquiv.reflections_generate_dim_auxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An element `φ` of the orthogonal group of `F` can be factored as a product of reflections, and
 specifically at most as many reflections as the dimension of the complement of the fixed subspace
@@ -1485,9 +1278,6 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     rwa [← mul_assoc, reflection_mul_reflection, one_mul] at this
 #align linear_isometry_equiv.reflections_generate_dim_aux LinearIsometryEquiv.reflections_generate_dim_aux
 
-/- warning: linear_isometry_equiv.reflections_generate_dim -> LinearIsometryEquiv.reflections_generate_dim is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.reflections_generate_dim LinearIsometryEquiv.reflections_generate_dimₓ'. -/
 /-- The orthogonal group of `F` is generated by reflections; specifically each element `φ` of the
 orthogonal group is a product of at most as many reflections as the dimension of `F`.
 
@@ -1498,9 +1288,6 @@ theorem LinearIsometryEquiv.reflections_generate_dim [FiniteDimensional ℝ F] (
   ⟨l, hl₁.trans (Submodule.finrank_le _), hl₂⟩
 #align linear_isometry_equiv.reflections_generate_dim LinearIsometryEquiv.reflections_generate_dim
 
-/- warning: linear_isometry_equiv.reflections_generate -> LinearIsometryEquiv.reflections_generate is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.reflections_generate LinearIsometryEquiv.reflections_generateₓ'. -/
 /-- The orthogonal group of `F` is generated by reflections. -/
 theorem LinearIsometryEquiv.reflections_generate [FiniteDimensional ℝ F] :
     Subgroup.closure (Set.range fun v : F => reflection (ℝ ∙ v)ᗮ) = ⊤ :=
@@ -1520,9 +1307,6 @@ section OrthogonalFamily
 
 variable {ι : Type _}
 
-/- warning: orthogonal_family.is_internal_iff_of_is_complete -> OrthogonalFamily.isInternal_iff_of_isComplete is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_family.is_internal_iff_of_is_complete OrthogonalFamily.isInternal_iff_of_isCompleteₓ'. -/
 /-- An orthogonal family of subspaces of `E` satisfies `direct_sum.is_internal` (that is,
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
 orthogonal complement. -/
@@ -1535,9 +1319,6 @@ theorem OrthogonalFamily.isInternal_iff_of_isComplete [DecidableEq ι] {V : ι �
     true_and_iff, Submodule.orthogonal_eq_bot_iff]
 #align orthogonal_family.is_internal_iff_of_is_complete OrthogonalFamily.isInternal_iff_of_isComplete
 
-/- warning: orthogonal_family.is_internal_iff -> OrthogonalFamily.isInternal_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align orthogonal_family.is_internal_iff OrthogonalFamily.isInternal_iffₓ'. -/
 /-- An orthogonal family of subspaces of `E` satisfies `direct_sum.is_internal` (that is,
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
 orthogonal complement. -/
@@ -1618,12 +1399,6 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
-/- warning: maximal_orthonormal_iff_orthogonal_complement_eq_bot -> maximal_orthonormal_iff_orthogonalComplement_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : IsROrC.{u1} 𝕜] [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_4 : InnerProductSpace.{u1, u2} 𝕜 E _inst_1 _inst_2] {v : Set.{u2} E}, (Orthonormal.{u1, u2, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) v) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) v) E (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) v) E (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) v) E (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) v) E (coeSubtype.{succ u2} E (fun (x : E) => Membership.Mem.{u2, u2} E (Set.{u2} E) (Set.hasMem.{u2} E) x v))))))) -> (Iff (forall (u : Set.{u2} E), (Superset.{u2} (Set.{u2} E) (Set.hasSubset.{u2} E) u v) -> (Orthonormal.{u1, u2, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) u) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) u) E (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) u) E (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) u) E (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} E) Type.{u2} (Set.hasCoeToSort.{u2} E) u) E (coeSubtype.{succ u2} E (fun (x : E) => Membership.Mem.{u2, u2} E (Set.{u2} E) (Set.hasMem.{u2} E) x u))))))) -> (Eq.{succ u2} (Set.{u2} E) u v)) (Eq.{succ u2} (Submodule.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) (NormedSpace.toModule.{u1, u2} 𝕜 E (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) (InnerProductSpace.toNormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4))) (Submodule.orthogonal.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (Submodule.span.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) (NormedSpace.toModule.{u1, u2} 𝕜 E (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) (InnerProductSpace.toNormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4)) v)) (Bot.bot.{u2} (Submodule.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) (NormedSpace.toModule.{u1, u2} 𝕜 E (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) (InnerProductSpace.toNormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4))) (Submodule.hasBot.{u1, u2} 𝕜 E (Ring.toSemiring.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) (NormedSpace.toModule.{u1, u2} 𝕜 E (DenselyNormedField.toNormedField.{u1} 𝕜 (IsROrC.toDenselyNormedField.{u1} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) (InnerProductSpace.toNormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4))))))
-but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_4 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] {v : Set.{u1} E}, (Orthonormal.{u2, u1, u1} 𝕜 E _inst_1 _inst_2 _inst_4 (Subtype.{succ u1} E (fun (x : E) => Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) x v)) (Subtype.val.{succ u1} E (fun (x : E) => Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) x v))) -> (Iff (forall (u : Set.{u1} E), (Superset.{u1} (Set.{u1} E) (Set.instHasSubsetSet.{u1} E) u v) -> (Orthonormal.{u2, u1, u1} 𝕜 E _inst_1 _inst_2 _inst_4 (Subtype.{succ u1} E (fun (x : E) => Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) x u)) (Subtype.val.{succ u1} E (fun (x : E) => Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) x u))) -> (Eq.{succ u1} (Set.{u1} E) u v)) (Eq.{succ u1} (Submodule.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) (InnerProductSpace.toNormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_4))) (Submodule.orthogonal.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_4 (Submodule.span.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) (InnerProductSpace.toNormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_4)) v)) (Bot.bot.{u1} (Submodule.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) (InnerProductSpace.toNormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_4))) (Submodule.instBotSubmodule.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) (InnerProductSpace.toNormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_4))))))
-Case conversion may be inaccurate. Consider using '#align maximal_orthonormal_iff_orthogonal_complement_eq_bot maximal_orthonormal_iff_orthogonalComplement_eq_botₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
@@ -1693,9 +1468,6 @@ theorem maximal_orthonormal_iff_orthogonalComplement_eq_bot (hv : Orthonormal �
 
 variable [FiniteDimensional 𝕜 E]
 
-/- warning: maximal_orthonormal_iff_basis_of_finite_dimensional -> maximal_orthonormal_iff_basis_of_finiteDimensional is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align maximal_orthonormal_iff_basis_of_finite_dimensional maximal_orthonormal_iff_basis_of_finiteDimensionalₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/

@@ -83,12 +83,6 @@ export FaithfulSMul (eq_of_smul_eq_smul)
 
 export FaithfulVAdd (eq_of_vadd_eq_vadd)
 
-/- warning: smul_left_injective' -> smul_left_injective' is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : FaithfulSMul.{u1, u2} M α _inst_1], Function.Injective.{succ u1, succ u2} M (α -> α) (SMul.smul.{u1, u2} M α _inst_1)
-but is expected to have type
-  forall {M : Type.{u2}} {α : Type.{u1}} [_inst_1 : SMul.{u2, u1} M α] [_inst_2 : FaithfulSMul.{u2, u1} M α _inst_1], Function.Injective.{succ u2, succ u1} M (α -> α) (fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.165 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.167 : α) => HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α _inst_1) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.165 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.167)
-Case conversion may be inaccurate. Consider using '#align smul_left_injective' smul_left_injective'ₓ'. -/
 @[to_additive]
 theorem smul_left_injective' [SMul M α] [FaithfulSMul M α] :
     Function.Injective ((· • ·) : M → α → α) := fun m₁ m₂ h =>
@@ -168,36 +162,18 @@ namespace MulAction
 
 variable (M) {α} [SMul M α] [IsPretransitive M α]
 
-/- warning: mul_action.exists_smul_eq -> MulAction.exists_smul_eq is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : MulAction.IsPretransitive.{u1, u2} M α _inst_1] (x : α) (y : α), Exists.{succ u1} M (fun (m : M) => Eq.{succ u2} α (SMul.smul.{u1, u2} M α _inst_1 m x) y)
-but is expected to have type
-  forall (M : Type.{u2}) {α : Type.{u1}} [_inst_1 : SMul.{u2, u1} M α] [_inst_2 : MulAction.IsPretransitive.{u2, u1} M α _inst_1] (x : α) (y : α), Exists.{succ u2} M (fun (m : M) => Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α _inst_1) m x) y)
-Case conversion may be inaccurate. Consider using '#align mul_action.exists_smul_eq MulAction.exists_smul_eqₓ'. -/
 @[to_additive]
 theorem exists_smul_eq (x y : α) : ∃ m : M, m • x = y :=
   IsPretransitive.exists_smul_eq x y
 #align mul_action.exists_smul_eq MulAction.exists_smul_eq
 #align add_action.exists_vadd_eq AddAction.exists_vadd_eq
 
-/- warning: mul_action.surjective_smul -> MulAction.surjective_smul is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : MulAction.IsPretransitive.{u1, u2} M α _inst_1] (x : α), Function.Surjective.{succ u1, succ u2} M α (fun (c : M) => SMul.smul.{u1, u2} M α _inst_1 c x)
-but is expected to have type
-  forall (M : Type.{u2}) {α : Type.{u1}} [_inst_1 : SMul.{u2, u1} M α] [_inst_2 : MulAction.IsPretransitive.{u2, u1} M α _inst_1] (x : α), Function.Surjective.{succ u2, succ u1} M α (fun (c : M) => HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α _inst_1) c x)
-Case conversion may be inaccurate. Consider using '#align mul_action.surjective_smul MulAction.surjective_smulₓ'. -/
 @[to_additive]
 theorem surjective_smul (x : α) : Surjective fun c : M => c • x :=
   exists_smul_eq M x
 #align mul_action.surjective_smul MulAction.surjective_smul
 #align add_action.surjective_vadd AddAction.surjective_vadd
 
-/- warning: mul_action.regular.is_pretransitive -> MulAction.Regular.isPretransitive is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_3 : Group.{u1} G], MulAction.IsPretransitive.{u1, u1} G G (Mul.toSMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_3 : Group.{u1} G], MulAction.IsPretransitive.{u1, u1} G G (Mul.toSMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3)))))
-Case conversion may be inaccurate. Consider using '#align mul_action.regular.is_pretransitive MulAction.Regular.isPretransitiveₓ'. -/
 /-- The regular action of a group on itself is transitive. -/
 @[to_additive "The regular action of a group on itself is transitive."]
 instance Regular.isPretransitive [Group G] : IsPretransitive G G :=
@@ -254,12 +230,6 @@ An example of where this is used is `linear_map.prod_equiv`.
 -/
 
 
-/- warning: smul_comm_class.symm -> SMulCommClass.symm is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (N : Type.{u2}) (α : Type.{u3}) [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u2, u3} N α] [_inst_3 : SMulCommClass.{u1, u2, u3} M N α _inst_1 _inst_2], SMulCommClass.{u2, u1, u3} N M α _inst_2 _inst_1
-but is expected to have type
-  forall (M : Type.{u3}) (N : Type.{u2}) (α : Type.{u1}) [_inst_1 : SMul.{u3, u1} M α] [_inst_2 : SMul.{u2, u1} N α] [_inst_3 : SMulCommClass.{u3, u2, u1} M N α _inst_1 _inst_2], SMulCommClass.{u2, u3, u1} N M α _inst_2 _inst_1
-Case conversion may be inaccurate. Consider using '#align smul_comm_class.symm SMulCommClass.symmₓ'. -/
 /-- Commutativity of actions is a symmetric relation. This lemma can't be an instance because this
 would cause a loop in the instance search graph. -/
 @[to_additive]
@@ -300,12 +270,6 @@ class IsScalarTower (M N α : Type _) [SMul M N] [SMul N α] [SMul M α] : Prop 
 #align vadd_assoc_class VAddAssocClass
 -/
 
-/- warning: smul_assoc -> smul_assoc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} {N : Type.{u3}} [_inst_1 : SMul.{u2, u3} M N] [_inst_2 : SMul.{u3, u1} N α] [_inst_3 : SMul.{u2, u1} M α] [_inst_4 : IsScalarTower.{u2, u3, u1} M N α _inst_1 _inst_2 _inst_3] (x : M) (y : N) (z : α), Eq.{succ u1} α (SMul.smul.{u3, u1} N α _inst_2 (SMul.smul.{u2, u3} M N _inst_1 x y) z) (SMul.smul.{u2, u1} M α _inst_3 x (SMul.smul.{u3, u1} N α _inst_2 y z))
-but is expected to have type
-  forall {α : Type.{u1}} {M : Type.{u3}} {N : Type.{u2}} [_inst_1 : SMul.{u3, u2} M N] [_inst_2 : SMul.{u2, u1} N α] [_inst_3 : SMul.{u3, u1} M α] [_inst_4 : IsScalarTower.{u3, u2, u1} M N α _inst_1 _inst_2 _inst_3] (x : M) (y : N) (z : α), Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} N α α (instHSMul.{u2, u1} N α _inst_2) (HSMul.hSMul.{u3, u2, u2} M N N (instHSMul.{u3, u2} M N _inst_1) x y) z) (HSMul.hSMul.{u3, u1, u1} M α α (instHSMul.{u3, u1} M α _inst_3) x (HSMul.hSMul.{u2, u1, u1} N α α (instHSMul.{u2, u1} N α _inst_2) y z))
-Case conversion may be inaccurate. Consider using '#align smul_assoc smul_assocₓ'. -/
 @[simp, to_additive]
 theorem smul_assoc {M N} [SMul M N] [SMul N α] [SMul M α] [IsScalarTower M N α] (x : M) (y : N)
     (z : α) : (x • y) • z = x • y • z :=
@@ -313,12 +277,6 @@ theorem smul_assoc {M N} [SMul M N] [SMul N α] [SMul M α] [IsScalarTower M N �
 #align smul_assoc smul_assoc
 #align vadd_assoc vadd_assoc
 
-/- warning: semigroup.is_scalar_tower -> Semigroup.isScalarTower is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α], IsScalarTower.{u1, u1, u1} α α α (Mul.toSMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) (Mul.toSMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) (Mul.toSMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α], IsScalarTower.{u1, u1, u1} α α α (Mul.toSMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) (Mul.toSMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) (Mul.toSMul.{u1} α (Semigroup.toMul.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align semigroup.is_scalar_tower Semigroup.isScalarTowerₓ'. -/
 @[to_additive]
 instance Semigroup.isScalarTower [Semigroup α] : IsScalarTower α α α :=
   ⟨mul_assoc⟩
@@ -345,12 +303,6 @@ class IsCentralScalar (M α : Type _) [SMul M α] [SMul Mᵐᵒᵖ α] : Prop wh
 #align is_central_vadd IsCentralVAdd
 -/
 
-/- warning: is_central_scalar.unop_smul_eq_smul -> IsCentralScalar.unop_smul_eq_smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : SMul.{u1, u2} M α] [_inst_2 : SMul.{u1, u2} (MulOpposite.{u1} M) α] [_inst_3 : IsCentralScalar.{u1, u2} M α _inst_1 _inst_2] (m : MulOpposite.{u1} M) (a : α), Eq.{succ u2} α (SMul.smul.{u1, u2} M α _inst_1 (MulOpposite.unop.{u1} M m) a) (SMul.smul.{u1, u2} (MulOpposite.{u1} M) α _inst_2 m a)
-but is expected to have type
-  forall {M : Type.{u2}} {α : Type.{u1}} [_inst_1 : SMul.{u2, u1} M α] [_inst_2 : SMul.{u2, u1} (MulOpposite.{u2} M) α] [_inst_3 : IsCentralScalar.{u2, u1} M α _inst_1 _inst_2] (m : MulOpposite.{u2} M) (a : α), Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α _inst_1) (MulOpposite.unop.{u2} M m) a) (HSMul.hSMul.{u2, u1, u1} (MulOpposite.{u2} M) α α (instHSMul.{u2, u1} (MulOpposite.{u2} M) α _inst_2) m a)
-Case conversion may be inaccurate. Consider using '#align is_central_scalar.unop_smul_eq_smul IsCentralScalar.unop_smul_eq_smulₓ'. -/
 @[to_additive]
 theorem IsCentralScalar.unop_smul_eq_smul {M α : Type _} [SMul M α] [SMul Mᵐᵒᵖ α]
     [IsCentralScalar M α] (m : Mᵐᵒᵖ) (a : α) : MulOpposite.unop m • a = m • a :=
@@ -432,12 +384,6 @@ def comp (g : N → M) : SMul N α where smul := SMul.comp.smul g
 
 variable {α}
 
-/- warning: has_smul.comp.is_scalar_tower -> SMul.comp.isScalarTower is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u4} M β] [_inst_3 : SMul.{u3, u4} α β] [_inst_4 : IsScalarTower.{u1, u3, u4} M α β _inst_1 _inst_3 _inst_2] (g : N -> M), IsScalarTower.{u2, u3, u4} N α β (SMul.comp.{u1, u2, u3} M N α _inst_1 g) _inst_3 (SMul.comp.{u1, u2, u4} M N β _inst_2 g)
-but is expected to have type
-  forall {M : Type.{u4}} {N : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : SMul.{u4, u2} M α] [_inst_2 : SMul.{u4, u3} M β] [_inst_3 : SMul.{u2, u3} α β] [_inst_4 : IsScalarTower.{u4, u2, u3} M α β _inst_1 _inst_3 _inst_2] (g : N -> M), IsScalarTower.{u1, u2, u3} N α β (SMul.comp.{u4, u1, u2} M N α _inst_1 g) _inst_3 (SMul.comp.{u4, u1, u3} M N β _inst_2 g)
-Case conversion may be inaccurate. Consider using '#align has_smul.comp.is_scalar_tower SMul.comp.isScalarTowerₓ'. -/
 /-- Given a tower of scalar actions `M → α → β`, if we use `has_smul.comp`
 to pull back both of `M`'s actions by a map `g : N → M`, then we obtain a new
 tower of scalar actions `N → α → β`.
@@ -453,12 +399,6 @@ theorem comp.isScalarTower [SMul M β] [SMul α β] [IsScalarTower M α β] (g :
 #align has_smul.comp.is_scalar_tower SMul.comp.isScalarTower
 #align has_vadd.comp.vadd_assoc_class VAdd.comp.isScalarTower
 
-/- warning: has_smul.comp.smul_comm_class -> SMul.comp.smulCommClass is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u4, u3} β α] [_inst_3 : SMulCommClass.{u1, u4, u3} M β α _inst_1 _inst_2] (g : N -> M), SMulCommClass.{u2, u4, u3} N β α (SMul.comp.{u1, u2, u3} M N α _inst_1 g) _inst_2
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : SMul.{u2, u3} M α] [_inst_2 : SMul.{u4, u3} β α] [_inst_3 : SMulCommClass.{u2, u4, u3} M β α _inst_1 _inst_2] (g : N -> M), SMulCommClass.{u1, u4, u3} N β α (SMul.comp.{u2, u1, u3} M N α _inst_1 g) _inst_2
-Case conversion may be inaccurate. Consider using '#align has_smul.comp.smul_comm_class SMul.comp.smulCommClassₓ'. -/
 /-- This cannot be an instance because it can cause infinite loops whenever the `has_smul` arguments
 are still metavariables.
 -/
@@ -471,12 +411,6 @@ theorem comp.smulCommClass [SMul β α] [SMulCommClass M β α] (g : N → M) :
 #align has_smul.comp.smul_comm_class SMul.comp.smulCommClass
 #align has_vadd.comp.vadd_comm_class VAdd.comp.vaddCommClass
 
-/- warning: has_smul.comp.smul_comm_class' -> SMul.comp.smulCommClass' is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u4, u3} β α] [_inst_3 : SMulCommClass.{u4, u1, u3} β M α _inst_2 _inst_1] (g : N -> M), SMulCommClass.{u4, u2, u3} β N α _inst_2 (SMul.comp.{u1, u2, u3} M N α _inst_1 g)
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : SMul.{u2, u3} M α] [_inst_2 : SMul.{u4, u3} β α] [_inst_3 : SMulCommClass.{u4, u2, u3} β M α _inst_2 _inst_1] (g : N -> M), SMulCommClass.{u4, u1, u3} β N α _inst_2 (SMul.comp.{u2, u1, u3} M N α _inst_1 g)
-Case conversion may be inaccurate. Consider using '#align has_smul.comp.smul_comm_class' SMul.comp.smulCommClass'ₓ'. -/
 /-- This cannot be an instance because it can cause infinite loops whenever the `has_smul` arguments
 are still metavariables.
 -/
@@ -515,12 +449,6 @@ theorem smul_mul_assoc [Mul β] [SMul α β] [IsScalarTower α β β] (r : α) (
 #align vadd_add_assoc vadd_add_assoc
 -/
 
-/- warning: smul_smul_smul_comm -> smul_smul_smul_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : SMul.{u1, u2} α β] [_inst_2 : SMul.{u1, u3} α γ] [_inst_3 : SMul.{u2, u4} β δ] [_inst_4 : SMul.{u1, u4} α δ] [_inst_5 : SMul.{u3, u4} γ δ] [_inst_6 : IsScalarTower.{u1, u2, u4} α β δ _inst_1 _inst_3 _inst_4] [_inst_7 : IsScalarTower.{u1, u3, u4} α γ δ _inst_2 _inst_5 _inst_4] [_inst_8 : SMulCommClass.{u2, u3, u4} β γ δ _inst_3 _inst_5] (a : α) (b : β) (c : γ) (d : δ), Eq.{succ u4} δ (SMul.smul.{u2, u4} β δ _inst_3 (SMul.smul.{u1, u2} α β _inst_1 a b) (SMul.smul.{u3, u4} γ δ _inst_5 c d)) (SMul.smul.{u3, u4} γ δ _inst_5 (SMul.smul.{u1, u3} α γ _inst_2 a c) (SMul.smul.{u2, u4} β δ _inst_3 b d))
-but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u2}} {δ : Type.{u1}} [_inst_1 : SMul.{u4, u3} α β] [_inst_2 : SMul.{u4, u2} α γ] [_inst_3 : SMul.{u3, u1} β δ] [_inst_4 : SMul.{u4, u1} α δ] [_inst_5 : SMul.{u2, u1} γ δ] [_inst_6 : IsScalarTower.{u4, u3, u1} α β δ _inst_1 _inst_3 _inst_4] [_inst_7 : IsScalarTower.{u4, u2, u1} α γ δ _inst_2 _inst_5 _inst_4] [_inst_8 : SMulCommClass.{u3, u2, u1} β γ δ _inst_3 _inst_5] (a : α) (b : β) (c : γ) (d : δ), Eq.{succ u1} δ (HSMul.hSMul.{u3, u1, u1} β δ δ (instHSMul.{u3, u1} β δ _inst_3) (HSMul.hSMul.{u4, u3, u3} α β β (instHSMul.{u4, u3} α β _inst_1) a b) (HSMul.hSMul.{u2, u1, u1} γ δ δ (instHSMul.{u2, u1} γ δ _inst_5) c d)) (HSMul.hSMul.{u2, u1, u1} γ δ δ (instHSMul.{u2, u1} γ δ _inst_5) (HSMul.hSMul.{u4, u2, u2} α γ γ (instHSMul.{u4, u2} α γ _inst_2) a c) (HSMul.hSMul.{u3, u1, u1} β δ δ (instHSMul.{u3, u1} β δ _inst_3) b d))
-Case conversion may be inaccurate. Consider using '#align smul_smul_smul_comm smul_smul_smul_commₓ'. -/
 @[to_additive]
 theorem smul_smul_smul_comm [SMul α β] [SMul α γ] [SMul β δ] [SMul α δ] [SMul γ δ]
     [IsScalarTower α β δ] [IsScalarTower α γ δ] [SMulCommClass β γ δ] (a : α) (b : β) (c : γ)
@@ -577,12 +505,6 @@ section
 
 variable [Monoid M] [MulAction M α]
 
-/- warning: smul_smul -> smul_smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M) (b : α), Eq.{succ u2} α (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) a₁ (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) a₂ b)) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂) b)
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M) (b : α), Eq.{succ u2} α (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) a₁ (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) a₂ b)) (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂) b)
-Case conversion may be inaccurate. Consider using '#align smul_smul smul_smulₓ'. -/
 @[to_additive]
 theorem smul_smul (a₁ a₂ : M) (b : α) : a₁ • a₂ • b = (a₁ * a₂) • b :=
   (mul_smul _ _ _).symm
@@ -591,24 +513,12 @@ theorem smul_smul (a₁ a₂ : M) (b : α) : a₁ • a₂ • b = (a₁ * a₂)
 
 variable (M)
 
-/- warning: one_smul -> one_smul is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (b : α), Eq.{succ u2} α (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))))) b) b
-but is expected to have type
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (b : α), Eq.{succ u2} α (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1))) b) b
-Case conversion may be inaccurate. Consider using '#align one_smul one_smulₓ'. -/
 @[simp, to_additive]
 theorem one_smul (b : α) : (1 : M) • b = b :=
   MulAction.one_smul _
 #align one_smul one_smul
 #align zero_vadd zero_vadd
 
-/- warning: one_smul_eq_id -> one_smul_eq_id is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], Eq.{succ u2} (α -> α) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) (id.{succ u2} α)
-but is expected to have type
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], Eq.{succ u2} (α -> α) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2721 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2723 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2721 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2723) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) (id.{succ u2} α)
-Case conversion may be inaccurate. Consider using '#align one_smul_eq_id one_smul_eq_idₓ'. -/
 /-- `has_smul` version of `one_mul_eq_id` -/
 @[to_additive "`has_vadd` version of `zero_add_eq_id`"]
 theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
@@ -616,12 +526,6 @@ theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
 #align one_smul_eq_id one_smul_eq_id
 #align zero_vadd_eq_id zero_vadd_eq_id
 
-/- warning: comp_smul_left -> comp_smul_left is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M), Eq.{succ u2} (α -> α) (Function.comp.{succ u2, succ u2, succ u2} α α α (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) a₁) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) a₂)) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂))
-but is expected to have type
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M), Eq.{succ u2} (α -> α) (Function.comp.{succ u2, succ u2, succ u2} α α α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2773 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2775 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2773 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2775) a₁) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2790 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2792 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2790 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2792) a₂)) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2813 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2815 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2813 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2815) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂))
-Case conversion may be inaccurate. Consider using '#align comp_smul_left comp_smul_leftₓ'. -/
 /-- `has_smul` version of `comp_mul_left` -/
 @[to_additive "`has_vadd` version of `comp_add_left`"]
 theorem comp_smul_left (a₁ a₂ : M) : (· • ·) a₁ ∘ (· • ·) a₂ = ((· • ·) (a₁ * a₂) : α → α) :=
@@ -659,12 +563,6 @@ protected def Function.Surjective.mulAction [SMul M β] (f : α → β) (hf : Su
 #align function.surjective.add_action Function.Surjective.addAction
 -/
 
-/- warning: function.surjective.mul_action_left -> Function.Surjective.mulActionLeft is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} [_inst_3 : Monoid.{u1} R] [_inst_4 : MulAction.{u1, u3} R M _inst_3] [_inst_5 : Monoid.{u2} S] [_inst_6 : SMul.{u2, u3} S M] (f : MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)), (Function.Surjective.{succ u1, succ u2} R S (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) (fun (_x : MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) => R -> S) (MonoidHom.hasCoeToFun.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) f)) -> (forall (c : R) (x : M), Eq.{succ u3} M (SMul.smul.{u2, u3} S M _inst_6 (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) (fun (_x : MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) => R -> S) (MonoidHom.hasCoeToFun.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) f c) x) (SMul.smul.{u1, u3} R M (MulAction.toHasSmul.{u1, u3} R M _inst_3 _inst_4) c x)) -> (MulAction.{u2, u3} S M _inst_5)
-but is expected to have type
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} [_inst_3 : Monoid.{u1} R] [_inst_4 : MulAction.{u1, u3} R M _inst_3] [_inst_5 : Monoid.{u2} S] [_inst_6 : SMul.{u2, u3} S M] (f : MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)), (Function.Surjective.{succ u1, succ u2} R S (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) R S (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_3)) (MulOneClass.toMul.{u2} S (Monoid.toMulOneClass.{u2} S _inst_5)) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5) (MonoidHom.monoidHomClass.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)))) f)) -> (forall (c : R) (x : M), Eq.{succ u3} M (HSMul.hSMul.{u2, u3, u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) c) M M (instHSMul.{u2, u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) c) M _inst_6) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) R S (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_3)) (MulOneClass.toMul.{u2} S (Monoid.toMulOneClass.{u2} S _inst_5)) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)) R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5) (MonoidHom.monoidHomClass.{u1, u2} R S (Monoid.toMulOneClass.{u1} R _inst_3) (Monoid.toMulOneClass.{u2} S _inst_5)))) f c) x) (HSMul.hSMul.{u1, u3, u3} R M M (instHSMul.{u1, u3} R M (MulAction.toSMul.{u1, u3} R M _inst_3 _inst_4)) c x)) -> (MulAction.{u2, u3} S M _inst_5)
-Case conversion may be inaccurate. Consider using '#align function.surjective.mul_action_left Function.Surjective.mulActionLeftₓ'. -/
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
 
 See also `function.surjective.distrib_mul_action_left` and `function.surjective.module_left`.
@@ -705,12 +603,6 @@ instance (priority := 910) Monoid.toMulAction : MulAction M M
 This is promoted to an `add_torsor` by `add_group_is_add_torsor`. -/
 add_decl_doc AddMonoid.toAddAction
 
-/- warning: is_scalar_tower.left -> IsScalarTower.left is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], IsScalarTower.{u1, u1, u2} M M α (Mul.toSMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2)
-but is expected to have type
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], IsScalarTower.{u1, u1, u2} M M α (MulAction.toSMul.{u1, u1} M M _inst_1 (Monoid.toMulAction.{u1} M _inst_1)) (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2) (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align is_scalar_tower.left IsScalarTower.leftₓ'. -/
 @[to_additive]
 instance IsScalarTower.left : IsScalarTower M M α :=
   ⟨fun x y z => mul_smul x y z⟩
@@ -719,12 +611,6 @@ instance IsScalarTower.left : IsScalarTower M M α :=
 
 variable {M}
 
-/- warning: smul_mul_smul -> smul_mul_smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] [_inst_3 : Mul.{u2} α] (r : M) (s : M) (x : α) (y : α) [_inst_4 : IsScalarTower.{u1, u2, u2} M α α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (Mul.toSMul.{u2} α _inst_3) (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2)] [_inst_5 : SMulCommClass.{u1, u2, u2} M α α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (Mul.toSMul.{u2} α _inst_3)], Eq.{succ u2} α (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_3) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) r x) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) s y)) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) r s) (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_3) x y))
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] [_inst_3 : Mul.{u2} α] (r : M) (s : M) (x : α) (y : α) [_inst_4 : IsScalarTower.{u1, u2, u2} M α α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2) (Mul.toSMul.{u2} α _inst_3) (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)] [_inst_5 : SMulCommClass.{u1, u2, u2} M α α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2) (Mul.toSMul.{u2} α _inst_3)], Eq.{succ u2} α (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_3) (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) r x) (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) s y)) (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) r s) (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_3) x y))
-Case conversion may be inaccurate. Consider using '#align smul_mul_smul smul_mul_smulₓ'. -/
 /-- Note that the `is_scalar_tower M α α` and `smul_comm_class M α α` typeclass arguments are
 usually satisfied by `algebra M α`. -/
 @[to_additive, nolint to_additive_doc]
@@ -791,48 +677,24 @@ end
 
 section CompatibleScalar
 
-/- warning: smul_one_smul -> smul_one_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} (N : Type.{u3}) [_inst_1 : Monoid.{u3} N] [_inst_2 : SMul.{u2, u3} M N] [_inst_3 : MulAction.{u3, u1} N α _inst_1] [_inst_4 : SMul.{u2, u1} M α] [_inst_5 : IsScalarTower.{u2, u3, u1} M N α _inst_2 (MulAction.toHasSmul.{u3, u1} N α _inst_1 _inst_3) _inst_4] (x : M) (y : α), Eq.{succ u1} α (SMul.smul.{u3, u1} N α (MulAction.toHasSmul.{u3, u1} N α _inst_1 _inst_3) (SMul.smul.{u2, u3} M N _inst_2 x (OfNat.ofNat.{u3} N 1 (OfNat.mk.{u3} N 1 (One.one.{u3} N (MulOneClass.toHasOne.{u3} N (Monoid.toMulOneClass.{u3} N _inst_1)))))) y) (SMul.smul.{u2, u1} M α _inst_4 x y)
-but is expected to have type
-  forall {α : Type.{u1}} {M : Type.{u3}} (N : Type.{u2}) [_inst_1 : Monoid.{u2} N] [_inst_2 : SMul.{u3, u2} M N] [_inst_3 : MulAction.{u2, u1} N α _inst_1] [_inst_4 : SMul.{u3, u1} M α] [_inst_5 : IsScalarTower.{u3, u2, u1} M N α _inst_2 (MulAction.toSMul.{u2, u1} N α _inst_1 _inst_3) _inst_4] (x : M) (y : α), Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} N α α (instHSMul.{u2, u1} N α (MulAction.toSMul.{u2, u1} N α _inst_1 _inst_3)) (HSMul.hSMul.{u3, u2, u2} M N N (instHSMul.{u3, u2} M N _inst_2) x (OfNat.ofNat.{u2} N 1 (One.toOfNat1.{u2} N (Monoid.toOne.{u2} N _inst_1)))) y) (HSMul.hSMul.{u3, u1, u1} M α α (instHSMul.{u3, u1} M α _inst_4) x y)
-Case conversion may be inaccurate. Consider using '#align smul_one_smul smul_one_smulₓ'. -/
 @[simp, to_additive]
 theorem smul_one_smul {M} (N) [Monoid N] [SMul M N] [MulAction N α] [SMul M α] [IsScalarTower M N α]
     (x : M) (y : α) : (x • (1 : N)) • y = x • y := by rw [smul_assoc, one_smul]
 #align smul_one_smul smul_one_smul
 #align vadd_zero_vadd vadd_zero_vadd
 
-/- warning: smul_one_mul -> smul_one_mul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u2} N] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : IsScalarTower.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N (MulOneClass.toHasMul.{u2} N _inst_1)) _inst_2] (x : M) (y : N), Eq.{succ u2} N (HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N (MulOneClass.toHasMul.{u2} N _inst_1)) (SMul.smul.{u1, u2} M N _inst_2 x (OfNat.ofNat.{u2} N 1 (OfNat.mk.{u2} N 1 (One.one.{u2} N (MulOneClass.toHasOne.{u2} N _inst_1))))) y) (SMul.smul.{u1, u2} M N _inst_2 x y)
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u1} N] [_inst_2 : SMul.{u2, u1} M N] [_inst_3 : IsScalarTower.{u2, u1, u1} M N N _inst_2 (Mul.toSMul.{u1} N (MulOneClass.toMul.{u1} N _inst_1)) _inst_2] (x : M) (y : N), Eq.{succ u1} N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N _inst_1)) (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x (OfNat.ofNat.{u1} N 1 (One.toOfNat1.{u1} N (MulOneClass.toOne.{u1} N _inst_1)))) y) (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x y)
-Case conversion may be inaccurate. Consider using '#align smul_one_mul smul_one_mulₓ'. -/
 @[simp, to_additive]
 theorem smul_one_mul {M N} [MulOneClass N] [SMul M N] [IsScalarTower M N N] (x : M) (y : N) :
     x • 1 * y = x • y := by rw [smul_mul_assoc, one_mul]
 #align smul_one_mul smul_one_mul
 #align vadd_zero_add vadd_zero_add
 
-/- warning: mul_smul_one -> mul_smul_one is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u2} N] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N (MulOneClass.toHasMul.{u2} N _inst_1))] (x : M) (y : N), Eq.{succ u2} N (HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N (MulOneClass.toHasMul.{u2} N _inst_1)) y (SMul.smul.{u1, u2} M N _inst_2 x (OfNat.ofNat.{u2} N 1 (OfNat.mk.{u2} N 1 (One.one.{u2} N (MulOneClass.toHasOne.{u2} N _inst_1)))))) (SMul.smul.{u1, u2} M N _inst_2 x y)
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u1} N] [_inst_2 : SMul.{u2, u1} M N] [_inst_3 : SMulCommClass.{u2, u1, u1} M N N _inst_2 (Mul.toSMul.{u1} N (MulOneClass.toMul.{u1} N _inst_1))] (x : M) (y : N), Eq.{succ u1} N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N _inst_1)) y (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x (OfNat.ofNat.{u1} N 1 (One.toOfNat1.{u1} N (MulOneClass.toOne.{u1} N _inst_1))))) (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x y)
-Case conversion may be inaccurate. Consider using '#align mul_smul_one mul_smul_oneₓ'. -/
 @[simp, to_additive]
 theorem mul_smul_one {M N} [MulOneClass N] [SMul M N] [SMulCommClass M N N] (x : M) (y : N) :
     y * x • 1 = x • y := by rw [← smul_eq_mul, ← smul_comm, smul_eq_mul, mul_one]
 #align mul_smul_one mul_smul_one
 #align add_vadd_zero add_vadd_zero
 
-/- warning: is_scalar_tower.of_smul_one_mul -> IsScalarTower.of_smul_one_mul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u2} N] [_inst_2 : SMul.{u1, u2} M N], (forall (x : M) (y : N), Eq.{succ u2} N (HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_1))) (SMul.smul.{u1, u2} M N _inst_2 x (OfNat.ofNat.{u2} N 1 (OfNat.mk.{u2} N 1 (One.one.{u2} N (MulOneClass.toHasOne.{u2} N (Monoid.toMulOneClass.{u2} N _inst_1)))))) y) (SMul.smul.{u1, u2} M N _inst_2 x y)) -> (IsScalarTower.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_1))) _inst_2)
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Monoid.{u1} N] [_inst_2 : SMul.{u2, u1} M N], (forall (x : M) (y : N), Eq.{succ u1} N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_1))) (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x (OfNat.ofNat.{u1} N 1 (One.toOfNat1.{u1} N (Monoid.toOne.{u1} N _inst_1)))) y) (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x y)) -> (IsScalarTower.{u2, u1, u1} M N N _inst_2 (MulAction.toSMul.{u1, u1} N N _inst_1 (Monoid.toMulAction.{u1} N _inst_1)) _inst_2)
-Case conversion may be inaccurate. Consider using '#align is_scalar_tower.of_smul_one_mul IsScalarTower.of_smul_one_mulₓ'. -/
 @[to_additive]
 theorem IsScalarTower.of_smul_one_mul {M N} [Monoid N] [SMul M N]
     (h : ∀ (x : M) (y : N), x • (1 : N) * y = x • y) : IsScalarTower M N N :=
@@ -840,12 +702,6 @@ theorem IsScalarTower.of_smul_one_mul {M N} [Monoid N] [SMul M N]
 #align is_scalar_tower.of_smul_one_mul IsScalarTower.of_smul_one_mul
 #align vadd_assoc_class.of_vadd_zero_add VAddAssocClass.of_vadd_zero_add
 
-/- warning: smul_comm_class.of_mul_smul_one -> SMulCommClass.of_mul_smul_one is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u2} N] [_inst_2 : SMul.{u1, u2} M N], (forall (x : M) (y : N), Eq.{succ u2} N (HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_1))) y (SMul.smul.{u1, u2} M N _inst_2 x (OfNat.ofNat.{u2} N 1 (OfNat.mk.{u2} N 1 (One.one.{u2} N (MulOneClass.toHasOne.{u2} N (Monoid.toMulOneClass.{u2} N _inst_1))))))) (SMul.smul.{u1, u2} M N _inst_2 x y)) -> (SMulCommClass.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_1))))
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Monoid.{u1} N] [_inst_2 : SMul.{u2, u1} M N], (forall (x : M) (y : N), Eq.{succ u1} N (HMul.hMul.{u1, u1, u1} N N N (instHMul.{u1} N (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_1))) y (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x (OfNat.ofNat.{u1} N 1 (One.toOfNat1.{u1} N (Monoid.toOne.{u1} N _inst_1))))) (HSMul.hSMul.{u2, u1, u1} M N N (instHSMul.{u2, u1} M N _inst_2) x y)) -> (SMulCommClass.{u2, u1, u1} M N N _inst_2 (MulAction.toSMul.{u1, u1} N N _inst_1 (Monoid.toMulAction.{u1} N _inst_1)))
-Case conversion may be inaccurate. Consider using '#align smul_comm_class.of_mul_smul_one SMulCommClass.of_mul_smul_oneₓ'. -/
 @[to_additive]
 theorem SMulCommClass.of_mul_smul_one {M N} [Monoid N] [SMul M N]
     (H : ∀ (x : M) (y : N), y * x • (1 : N) = x • y) : SMulCommClass M N N :=
@@ -853,12 +709,6 @@ theorem SMulCommClass.of_mul_smul_one {M N} [Monoid N] [SMul M N]
 #align smul_comm_class.of_mul_smul_one SMulCommClass.of_mul_smul_one
 #align vadd_comm_class.of_add_vadd_zero VAddCommClass.of_add_vadd_zero
 
-/- warning: smul_one_hom -> smulOneHom is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} N] [_inst_3 : MulAction.{u1, u2} M N _inst_1] [_inst_4 : IsScalarTower.{u1, u2, u2} M N N (MulAction.toHasSmul.{u1, u2} M N _inst_1 _inst_3) (Mul.toSMul.{u2} N (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) (MulAction.toHasSmul.{u1, u2} M N _inst_1 _inst_3)], MonoidHom.{u1, u2} M N (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} N _inst_2)
-but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} N] [_inst_3 : MulAction.{u1, u2} M N _inst_1] [_inst_4 : IsScalarTower.{u1, u2, u2} M N N (MulAction.toSMul.{u1, u2} M N _inst_1 _inst_3) (MulAction.toSMul.{u2, u2} N N _inst_2 (Monoid.toMulAction.{u2} N _inst_2)) (MulAction.toSMul.{u1, u2} M N _inst_1 _inst_3)], MonoidHom.{u1, u2} M N (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} N _inst_2)
-Case conversion may be inaccurate. Consider using '#align smul_one_hom smulOneHomₓ'. -/
 /-- If the multiplicative action of `M` on `N` is compatible with multiplication on `N`, then
 `λ x, x • 1` is a monoid homomorphism from `M` to `N`. -/
 @[to_additive
@@ -970,22 +820,10 @@ section DistribSMul
 
 variable [AddZeroClass A] [DistribSMul M A]
 
-/- warning: smul_add -> smul_add is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : AddZeroClass.{u2} A] [_inst_2 : DistribSMul.{u1, u2} M A _inst_1] (a : M) (b₁ : A) (b₂ : A), Eq.{succ u2} A (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A _inst_1) (DistribSMul.toSmulZeroClass.{u1, u2} M A _inst_1 _inst_2)) a (HAdd.hAdd.{u2, u2, u2} A A A (instHAdd.{u2} A (AddZeroClass.toHasAdd.{u2} A _inst_1)) b₁ b₂)) (HAdd.hAdd.{u2, u2, u2} A A A (instHAdd.{u2} A (AddZeroClass.toHasAdd.{u2} A _inst_1)) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A _inst_1) (DistribSMul.toSmulZeroClass.{u1, u2} M A _inst_1 _inst_2)) a b₁) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A _inst_1) (DistribSMul.toSmulZeroClass.{u1, u2} M A _inst_1 _inst_2)) a b₂))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : AddZeroClass.{u2} A] [_inst_2 : DistribSMul.{u1, u2} M A _inst_1] (a : M) (b₁ : A) (b₂ : A), Eq.{succ u2} A (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddZeroClass.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A _inst_1 _inst_2))) a (HAdd.hAdd.{u2, u2, u2} A A A (instHAdd.{u2} A (AddZeroClass.toAdd.{u2} A _inst_1)) b₁ b₂)) (HAdd.hAdd.{u2, u2, u2} A A A (instHAdd.{u2} A (AddZeroClass.toAdd.{u2} A _inst_1)) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddZeroClass.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A _inst_1 _inst_2))) a b₁) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddZeroClass.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A _inst_1 _inst_2))) a b₂))
-Case conversion may be inaccurate. Consider using '#align smul_add smul_addₓ'. -/
 theorem smul_add (a : M) (b₁ b₂ : A) : a • (b₁ + b₂) = a • b₁ + a • b₂ :=
   DistribSMul.smul_add _ _ _
 #align smul_add smul_add
 
-/- warning: function.injective.distrib_smul -> Function.Injective.distribSMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : AddZeroClass.{u2} A] [_inst_2 : DistribSMul.{u1, u2} M A _inst_1] [_inst_3 : AddZeroClass.{u3} B] [_inst_4 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u3, u2} B A _inst_3 _inst_1), (Function.Injective.{succ u3, succ u2} B A (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) (fun (_x : AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) => B -> A) (AddMonoidHom.hasCoeToFun.{u3, u2} B A _inst_3 _inst_1) f)) -> (forall (c : M) (x : B), Eq.{succ u2} A (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) (fun (_x : AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) => B -> A) (AddMonoidHom.hasCoeToFun.{u3, u2} B A _inst_3 _inst_1) f (SMul.smul.{u1, u3} M B _inst_4 c x)) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A _inst_1) (DistribSMul.toSmulZeroClass.{u1, u2} M A _inst_1 _inst_2)) c (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) (fun (_x : AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) => B -> A) (AddMonoidHom.hasCoeToFun.{u3, u2} B A _inst_3 _inst_1) f x))) -> (DistribSMul.{u1, u3} M B _inst_3)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : AddZeroClass.{u2} A] [_inst_2 : DistribSMul.{u1, u2} M A _inst_1] [_inst_3 : AddZeroClass.{u3} B] [_inst_4 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u3, u2} B A _inst_3 _inst_1), (Function.Injective.{succ u3, succ u2} B A (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) _x) (AddHomClass.toFunLike.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B A (AddZeroClass.toAdd.{u3} B _inst_3) (AddZeroClass.toAdd.{u2} A _inst_1) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B A _inst_3 _inst_1 (AddMonoidHom.addMonoidHomClass.{u3, u2} B A _inst_3 _inst_1))) f)) -> (forall (c : M) (x : B), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) (HSMul.hSMul.{u1, u3, u3} M B B (instHSMul.{u1, u3} M B _inst_4) c x)) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) _x) (AddHomClass.toFunLike.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B A (AddZeroClass.toAdd.{u3} B _inst_3) (AddZeroClass.toAdd.{u2} A _inst_1) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B A _inst_3 _inst_1 (AddMonoidHom.addMonoidHomClass.{u3, u2} B A _inst_3 _inst_1))) f (HSMul.hSMul.{u1, u3, u3} M B B (instHSMul.{u1, u3} M B _inst_4) c x)) (HSMul.hSMul.{u1, u2, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (instHSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (SMulZeroClass.toSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (AddZeroClass.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) _inst_1 _inst_2))) c (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) _x) (AddHomClass.toFunLike.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B A (AddZeroClass.toAdd.{u3} B _inst_3) (AddZeroClass.toAdd.{u2} A _inst_1) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A _inst_3 _inst_1) B A _inst_3 _inst_1 (AddMonoidHom.addMonoidHomClass.{u3, u2} B A _inst_3 _inst_1))) f x))) -> (DistribSMul.{u1, u3} M B _inst_3)
-Case conversion may be inaccurate. Consider using '#align function.injective.distrib_smul Function.Injective.distribSMulₓ'. -/
 /-- Pullback a distributive scalar multiplication along an injective additive monoid
 homomorphism.
 See note [reducible non-instances]. -/
@@ -997,12 +835,6 @@ protected def Function.Injective.distribSMul [AddZeroClass B] [SMul M B] (f : B 
     smul_add := fun c x y => hf <| by simp only [smul, map_add, smul_add] }
 #align function.injective.distrib_smul Function.Injective.distribSMul
 
-/- warning: function.surjective.distrib_smul -> Function.Surjective.distribSMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : AddZeroClass.{u2} A] [_inst_2 : DistribSMul.{u1, u2} M A _inst_1] [_inst_3 : AddZeroClass.{u3} B] [_inst_4 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u2, u3} A B _inst_1 _inst_3), (Function.Surjective.{succ u2, succ u3} A B (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) (fun (_x : AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) => A -> B) (AddMonoidHom.hasCoeToFun.{u2, u3} A B _inst_1 _inst_3) f)) -> (forall (c : M) (x : A), Eq.{succ u3} B (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) (fun (_x : AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) => A -> B) (AddMonoidHom.hasCoeToFun.{u2, u3} A B _inst_1 _inst_3) f (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A _inst_1) (DistribSMul.toSmulZeroClass.{u1, u2} M A _inst_1 _inst_2)) c x)) (SMul.smul.{u1, u3} M B _inst_4 c (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) (fun (_x : AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) => A -> B) (AddMonoidHom.hasCoeToFun.{u2, u3} A B _inst_1 _inst_3) f x))) -> (DistribSMul.{u1, u3} M B _inst_3)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : AddZeroClass.{u2} A] [_inst_2 : DistribSMul.{u1, u2} M A _inst_1] [_inst_3 : AddZeroClass.{u3} B] [_inst_4 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u2, u3} A B _inst_1 _inst_3), (Function.Surjective.{succ u2, succ u3} A B (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) _x) (AddHomClass.toFunLike.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A B (AddZeroClass.toAdd.{u2} A _inst_1) (AddZeroClass.toAdd.{u3} B _inst_3) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A B _inst_1 _inst_3 (AddMonoidHom.addMonoidHomClass.{u2, u3} A B _inst_1 _inst_3))) f)) -> (forall (c : M) (x : A), Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddZeroClass.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A _inst_1 _inst_2))) c x)) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) _x) (AddHomClass.toFunLike.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A B (AddZeroClass.toAdd.{u2} A _inst_1) (AddZeroClass.toAdd.{u3} B _inst_3) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A B _inst_1 _inst_3 (AddMonoidHom.addMonoidHomClass.{u2, u3} A B _inst_1 _inst_3))) f (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddZeroClass.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A _inst_1 _inst_2))) c x)) (HSMul.hSMul.{u1, u3, u3} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) x) (instHSMul.{u1, u3} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) x) _inst_4) c (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) _x) (AddHomClass.toFunLike.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A B (AddZeroClass.toAdd.{u2} A _inst_1) (AddZeroClass.toAdd.{u3} B _inst_3) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B _inst_1 _inst_3) A B _inst_1 _inst_3 (AddMonoidHom.addMonoidHomClass.{u2, u3} A B _inst_1 _inst_3))) f x))) -> (DistribSMul.{u1, u3} M B _inst_3)
-Case conversion may be inaccurate. Consider using '#align function.surjective.distrib_smul Function.Surjective.distribSMulₓ'. -/
 /-- Pushforward a distributive scalar multiplication along a surjective additive monoid
 homomorphism.
 See note [reducible non-instances]. -/
@@ -1016,12 +848,6 @@ protected def Function.Surjective.distribSMul [AddZeroClass B] [SMul M B] (f : A
       simp only [smul_add, ← smul, ← map_add] }
 #align function.surjective.distrib_smul Function.Surjective.distribSMul
 
-/- warning: function.surjective.distrib_smul_left -> Function.Surjective.distribSMulLeft is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} [_inst_3 : AddZeroClass.{u3} M] [_inst_4 : DistribSMul.{u1, u3} R M _inst_3] [_inst_5 : SMul.{u2, u3} S M] (f : R -> S), (Function.Surjective.{succ u1, succ u2} R S f) -> (forall (c : R) (x : M), Eq.{succ u3} M (SMul.smul.{u2, u3} S M _inst_5 (f c) x) (SMul.smul.{u1, u3} R M (SMulZeroClass.toHasSmul.{u1, u3} R M (AddZeroClass.toHasZero.{u3} M _inst_3) (DistribSMul.toSmulZeroClass.{u1, u3} R M _inst_3 _inst_4)) c x)) -> (DistribSMul.{u2, u3} S M _inst_3)
-but is expected to have type
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} [_inst_3 : AddZeroClass.{u3} M] [_inst_4 : DistribSMul.{u1, u3} R M _inst_3] [_inst_5 : SMul.{u2, u3} S M] (f : R -> S), (Function.Surjective.{succ u1, succ u2} R S f) -> (forall (c : R) (x : M), Eq.{succ u3} M (HSMul.hSMul.{u2, u3, u3} S M M (instHSMul.{u2, u3} S M _inst_5) (f c) x) (HSMul.hSMul.{u1, u3, u3} R M M (instHSMul.{u1, u3} R M (SMulZeroClass.toSMul.{u1, u3} R M (AddZeroClass.toZero.{u3} M _inst_3) (DistribSMul.toSMulZeroClass.{u1, u3} R M _inst_3 _inst_4))) c x)) -> (DistribSMul.{u2, u3} S M _inst_3)
-Case conversion may be inaccurate. Consider using '#align function.surjective.distrib_smul_left Function.Surjective.distribSMulLeftₓ'. -/
 /-- Push forward the multiplication of `R` on `M` along a compatible surjective map `f : R → S`.
 
 See also `function.surjective.distrib_mul_action_left`.
@@ -1089,12 +915,6 @@ example :
     (DistribMulAction.toMulAction.toSMul : SMul M A) = DistribMulAction.toDistribSMul.toSMul :=
   rfl
 
-/- warning: function.injective.distrib_mul_action -> Function.Injective.distribMulAction is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : AddMonoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)), (Function.Injective.{succ u3, succ u2} B A (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (fun (_x : AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) => B -> A) (AddMonoidHom.hasCoeToFun.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) f)) -> (forall (c : M) (x : B), Eq.{succ u2} A (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (fun (_x : AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) => B -> A) (AddMonoidHom.hasCoeToFun.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) f (SMul.smul.{u1, u3} M B _inst_5 c x)) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3))) c (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (fun (_x : AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) => B -> A) (AddMonoidHom.hasCoeToFun.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) f x))) -> (DistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : AddMonoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)), (Function.Injective.{succ u3, succ u2} B A (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) _x) (AddHomClass.toFunLike.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B A (AddZeroClass.toAdd.{u3} B (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoidHom.addMonoidHomClass.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)))) f)) -> (forall (c : M) (x : B), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) (HSMul.hSMul.{u1, u3, u3} M B B (instHSMul.{u1, u3} M B _inst_5) c x)) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) _x) (AddHomClass.toFunLike.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B A (AddZeroClass.toAdd.{u3} B (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoidHom.addMonoidHomClass.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)))) f (HSMul.hSMul.{u1, u3, u3} M B B (instHSMul.{u1, u3} M B _inst_5) c x)) (HSMul.hSMul.{u1, u2, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (instHSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (SMulZeroClass.toSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (AddMonoid.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) _inst_2) (DistribSMul.toSMulZeroClass.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) (AddMonoid.toAddZeroClass.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) x) _inst_1 _inst_2 _inst_3)))) c (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : B) => A) _x) (AddHomClass.toFunLike.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B A (AddZeroClass.toAdd.{u3} B (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u3, u2} (AddMonoidHom.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)) B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoidHom.addMonoidHomClass.{u3, u2} B A (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoid.toAddZeroClass.{u2} A _inst_2)))) f x))) -> (DistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-Case conversion may be inaccurate. Consider using '#align function.injective.distrib_mul_action Function.Injective.distribMulActionₓ'. -/
 /-- Pullback a distributive multiplicative action along an injective additive monoid
 homomorphism.
 See note [reducible non-instances]. -/
@@ -1104,12 +924,6 @@ protected def Function.Injective.distribMulAction [AddMonoid B] [SMul M B] (f : 
   { hf.DistribSMul f smul, hf.MulAction f smul with smul := (· • ·) }
 #align function.injective.distrib_mul_action Function.Injective.distribMulAction
 
-/- warning: function.surjective.distrib_mul_action -> Function.Surjective.distribMulAction is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : AddMonoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)), (Function.Surjective.{succ u2, succ u3} A B (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (fun (_x : AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) => A -> B) (AddMonoidHom.hasCoeToFun.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) f)) -> (forall (c : M) (x : A), Eq.{succ u3} B (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (fun (_x : AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) => A -> B) (AddMonoidHom.hasCoeToFun.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) f (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3))) c x)) (SMul.smul.{u1, u3} M B _inst_5 c (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (fun (_x : AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) => A -> B) (AddMonoidHom.hasCoeToFun.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) f x))) -> (DistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : AddMonoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)), (Function.Surjective.{succ u2, succ u3} A B (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) _x) (AddHomClass.toFunLike.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A B (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (AddZeroClass.toAdd.{u3} B (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoidHom.addMonoidHomClass.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)))) f)) -> (forall (c : M) (x : A), Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddMonoid.toZero.{u2} A _inst_2) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3)))) c x)) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) _x) (AddHomClass.toFunLike.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A B (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (AddZeroClass.toAdd.{u3} B (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoidHom.addMonoidHomClass.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)))) f (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddMonoid.toZero.{u2} A _inst_2) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3)))) c x)) (HSMul.hSMul.{u1, u3, u3} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) x) (instHSMul.{u1, u3} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) x) _inst_5) c (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : A) => B) _x) (AddHomClass.toFunLike.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A B (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (AddZeroClass.toAdd.{u3} B (AddMonoid.toAddZeroClass.{u3} B _inst_4)) (AddMonoidHomClass.toAddHomClass.{max u2 u3, u2, u3} (AddMonoidHom.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)) A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4) (AddMonoidHom.addMonoidHomClass.{u2, u3} A B (AddMonoid.toAddZeroClass.{u2} A _inst_2) (AddMonoid.toAddZeroClass.{u3} B _inst_4)))) f x))) -> (DistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-Case conversion may be inaccurate. Consider using '#align function.surjective.distrib_mul_action Function.Surjective.distribMulActionₓ'. -/
 /-- Pushforward a distributive multiplicative action along a surjective additive monoid
 homomorphism.
 See note [reducible non-instances]. -/
@@ -1119,9 +933,6 @@ protected def Function.Surjective.distribMulAction [AddMonoid B] [SMul M B] (f :
   { hf.DistribSMul f smul, hf.MulAction f smul with smul := (· • ·) }
 #align function.surjective.distrib_mul_action Function.Surjective.distribMulAction
 
-/- warning: function.surjective.distrib_mul_action_left -> Function.Surjective.distribMulActionLeft is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align function.surjective.distrib_mul_action_left Function.Surjective.distribMulActionLeftₓ'. -/
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
 
 See also `function.surjective.mul_action_left` and `function.surjective.module_left`.
@@ -1165,22 +976,10 @@ def DistribMulAction.toAddMonoidEnd : M →* AddMonoid.End A
 #align distrib_mul_action.to_add_monoid_End DistribMulAction.toAddMonoidEnd
 -/
 
-/- warning: add_monoid.nat_smul_comm_class -> AddMonoid.nat_smulCommClass is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (A : Type.{u2}) [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2], SMulCommClass.{0, u1, u2} Nat M A (AddMonoid.SMul.{u2} A _inst_2) (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3)))
-but is expected to have type
-  forall (M : Type.{u1}) (A : Type.{u2}) [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2], SMulCommClass.{0, u1, u2} Nat M A (AddMonoid.SMul.{u2} A _inst_2) (SMulZeroClass.toSMul.{u1, u2} M A (AddMonoid.toZero.{u2} A _inst_2) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3)))
-Case conversion may be inaccurate. Consider using '#align add_monoid.nat_smul_comm_class AddMonoid.nat_smulCommClassₓ'. -/
 instance AddMonoid.nat_smulCommClass : SMulCommClass ℕ M A
     where smul_comm n x y := ((DistribMulAction.toAddMonoidHom A x).map_nsmul y n).symm
 #align add_monoid.nat_smul_comm_class AddMonoid.nat_smulCommClass
 
-/- warning: add_monoid.nat_smul_comm_class' -> AddMonoid.nat_smulCommClass' is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (A : Type.{u2}) [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2], SMulCommClass.{u1, 0, u2} M Nat A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3))) (AddMonoid.SMul.{u2} A _inst_2)
-but is expected to have type
-  forall (M : Type.{u1}) (A : Type.{u2}) [_inst_1 : Monoid.{u1} M] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 _inst_2], SMulCommClass.{u1, 0, u2} M Nat A (SMulZeroClass.toSMul.{u1, u2} M A (AddMonoid.toZero.{u2} A _inst_2) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 _inst_2 _inst_3))) (AddMonoid.SMul.{u2} A _inst_2)
-Case conversion may be inaccurate. Consider using '#align add_monoid.nat_smul_comm_class' AddMonoid.nat_smulCommClass'ₓ'. -/
 -- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
 instance AddMonoid.nat_smulCommClass' : SMulCommClass M ℕ A :=
   SMulCommClass.symm _ _ _
@@ -1192,44 +991,20 @@ section
 
 variable [Monoid M] [AddGroup A] [DistribMulAction M A]
 
-/- warning: add_group.int_smul_comm_class -> AddGroup.int_smulCommClass is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))], SMulCommClass.{0, u1, u2} Int M A (SubNegMonoid.SMulInt.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))], SMulCommClass.{0, u1, u2} Int M A (SubNegMonoid.SMulInt.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))
-Case conversion may be inaccurate. Consider using '#align add_group.int_smul_comm_class AddGroup.int_smulCommClassₓ'. -/
 instance AddGroup.int_smulCommClass : SMulCommClass ℤ M A
     where smul_comm n x y := ((DistribMulAction.toAddMonoidHom A x).map_zsmul y n).symm
 #align add_group.int_smul_comm_class AddGroup.int_smulCommClass
 
-/- warning: add_group.int_smul_comm_class' -> AddGroup.int_smulCommClass' is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))], SMulCommClass.{u1, 0, u2} M Int A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) (SubNegMonoid.SMulInt.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))], SMulCommClass.{u1, 0, u2} M Int A (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) (SubNegMonoid.SMulInt.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))
-Case conversion may be inaccurate. Consider using '#align add_group.int_smul_comm_class' AddGroup.int_smulCommClass'ₓ'. -/
 -- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
 instance AddGroup.int_smulCommClass' : SMulCommClass M ℤ A :=
   SMulCommClass.symm _ _ _
 #align add_group.int_smul_comm_class' AddGroup.int_smulCommClass'
 
-/- warning: smul_neg -> smul_neg is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))] (r : M) (x : A), Eq.{succ u2} A (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) r (Neg.neg.{u2} A (SubNegMonoid.toHasNeg.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) x)) (Neg.neg.{u2} A (SubNegMonoid.toHasNeg.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) r x))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))] (r : M) (x : A), Eq.{succ u2} A (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))) r (Neg.neg.{u2} A (NegZeroClass.toNeg.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) x)) (Neg.neg.{u2} A (NegZeroClass.toNeg.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))) r x))
-Case conversion may be inaccurate. Consider using '#align smul_neg smul_negₓ'. -/
 @[simp]
 theorem smul_neg (r : M) (x : A) : r • -x = -(r • x) :=
   eq_neg_of_add_eq_zero_left <| by rw [← smul_add, neg_add_self, smul_zero]
 #align smul_neg smul_neg
 
-/- warning: smul_sub -> smul_sub is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))] (r : M) (x : A) (y : A), Eq.{succ u2} A (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) r (HSub.hSub.{u2, u2, u2} A A A (instHSub.{u2} A (SubNegMonoid.toHasSub.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) x y)) (HSub.hSub.{u2, u2, u2} A A A (instHSub.{u2} A (SubNegMonoid.toHasSub.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) r x) (SMul.smul.{u1, u2} M A (SMulZeroClass.toHasSmul.{u1, u2} M A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)))) (DistribSMul.toSmulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3))) r y))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : AddGroup.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))] (r : M) (x : A) (y : A), Eq.{succ u2} A (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))) r (HSub.hSub.{u2, u2, u2} A A A (instHSub.{u2} A (SubNegMonoid.toSub.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) x y)) (HSub.hSub.{u2, u2, u2} A A A (instHSub.{u2} A (SubNegMonoid.toSub.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))) r x) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (NegZeroClass.toZero.{u2} A (SubNegZeroMonoid.toNegZeroClass.{u2} A (SubtractionMonoid.toSubNegZeroMonoid.{u2} A (AddGroup.toSubtractionMonoid.{u2} A _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_1 (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_2)) _inst_3)))) r y))
-Case conversion may be inaccurate. Consider using '#align smul_sub smul_subₓ'. -/
 theorem smul_sub (r : M) (x y : A) : r • (x - y) = r • x - r • y := by
   rw [sub_eq_add_neg, sub_eq_add_neg, smul_add, smul_neg]
 #align smul_sub smul_sub
@@ -1253,22 +1028,10 @@ section
 
 variable [Monoid M] [Monoid A] [MulDistribMulAction M A]
 
-/- warning: smul_mul' -> smul_mul' is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] (a : M) (b₁ : A) (b₂ : A), Eq.{succ u2} A (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3)) a (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (MulOneClass.toHasMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2))) b₁ b₂)) (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (MulOneClass.toHasMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2))) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3)) a b₁) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3)) a b₂))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] (a : M) (b₁ : A) (b₂ : A), Eq.{succ u2} A (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3))) a (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2))) b₁ b₂)) (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2))) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3))) a b₁) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3))) a b₂))
-Case conversion may be inaccurate. Consider using '#align smul_mul' smul_mul'ₓ'. -/
 theorem smul_mul' (a : M) (b₁ b₂ : A) : a • (b₁ * b₂) = a • b₁ * a • b₂ :=
   MulDistribMulAction.smul_mul _ _ _
 #align smul_mul' smul_mul'
 
-/- warning: function.injective.mul_distrib_mul_action -> Function.Injective.mulDistribMulAction is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : Monoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)), (Function.Injective.{succ u3, succ u2} B A (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) (fun (_x : MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) => B -> A) (MonoidHom.hasCoeToFun.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) f)) -> (forall (c : M) (x : B), Eq.{succ u2} A (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) (fun (_x : MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) => B -> A) (MonoidHom.hasCoeToFun.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) f (SMul.smul.{u1, u3} M B _inst_5 c x)) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3)) c (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) (fun (_x : MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) => B -> A) (MonoidHom.hasCoeToFun.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) f x))) -> (MulDistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : Monoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)), (Function.Injective.{succ u3, succ u2} B A (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) _x) (MulHomClass.toFunLike.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B A (MulOneClass.toMul.{u3} B (Monoid.toMulOneClass.{u3} B _inst_4)) (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MonoidHomClass.toMulHomClass.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2) (MonoidHom.monoidHomClass.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)))) f)) -> (forall (c : M) (x : B), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) (HSMul.hSMul.{u1, u3, u3} M B B (instHSMul.{u1, u3} M B _inst_5) c x)) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) _x) (MulHomClass.toFunLike.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B A (MulOneClass.toMul.{u3} B (Monoid.toMulOneClass.{u3} B _inst_4)) (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MonoidHomClass.toMulHomClass.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2) (MonoidHom.monoidHomClass.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)))) f (HSMul.hSMul.{u1, u3, u3} M B B (instHSMul.{u1, u3} M B _inst_5) c x)) (HSMul.hSMul.{u1, u2, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) x) (instHSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) x) (MulAction.toSMul.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) x) _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) x) _inst_1 _inst_2 _inst_3))) c (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B (fun (_x : B) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : B) => A) _x) (MulHomClass.toFunLike.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B A (MulOneClass.toMul.{u3} B (Monoid.toMulOneClass.{u3} B _inst_4)) (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MonoidHomClass.toMulHomClass.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)) B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2) (MonoidHom.monoidHomClass.{u3, u2} B A (Monoid.toMulOneClass.{u3} B _inst_4) (Monoid.toMulOneClass.{u2} A _inst_2)))) f x))) -> (MulDistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-Case conversion may be inaccurate. Consider using '#align function.injective.mul_distrib_mul_action Function.Injective.mulDistribMulActionₓ'. -/
 /-- Pullback a multiplicative distributive multiplicative action along an injective monoid
 homomorphism.
 See note [reducible non-instances]. -/
@@ -1281,12 +1044,6 @@ protected def Function.Injective.mulDistribMulAction [Monoid B] [SMul M B] (f : 
     smul_one := fun c => hf <| by simp only [smul, f.map_one, smul_one] }
 #align function.injective.mul_distrib_mul_action Function.Injective.mulDistribMulAction
 
-/- warning: function.surjective.mul_distrib_mul_action -> Function.Surjective.mulDistribMulAction is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : Monoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)), (Function.Surjective.{succ u2, succ u3} A B (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) (fun (_x : MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) => A -> B) (MonoidHom.hasCoeToFun.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) f)) -> (forall (c : M) (x : A), Eq.{succ u3} B (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) (fun (_x : MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) => A -> B) (MonoidHom.hasCoeToFun.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) f (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3)) c x)) (SMul.smul.{u1, u3} M B _inst_5 c (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) (fun (_x : MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) => A -> B) (MonoidHom.hasCoeToFun.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) f x))) -> (MulDistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] [_inst_4 : Monoid.{u3} B] [_inst_5 : SMul.{u1, u3} M B] (f : MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)), (Function.Surjective.{succ u2, succ u3} A B (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A B (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MulOneClass.toMul.{u3} B (Monoid.toMulOneClass.{u3} B _inst_4)) (MonoidHomClass.toMulHomClass.{max u2 u3, u2, u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4) (MonoidHom.monoidHomClass.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)))) f)) -> (forall (c : M) (x : A), Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3))) c x)) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A B (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MulOneClass.toMul.{u3} B (Monoid.toMulOneClass.{u3} B _inst_4)) (MonoidHomClass.toMulHomClass.{max u2 u3, u2, u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4) (MonoidHom.monoidHomClass.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)))) f (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3))) c x)) (HSMul.hSMul.{u1, u3, u3} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) x) (instHSMul.{u1, u3} M ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) x) _inst_5) c (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A B (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MulOneClass.toMul.{u3} B (Monoid.toMulOneClass.{u3} B _inst_4)) (MonoidHomClass.toMulHomClass.{max u2 u3, u2, u3} (MonoidHom.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)) A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4) (MonoidHom.monoidHomClass.{u2, u3} A B (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u3} B _inst_4)))) f x))) -> (MulDistribMulAction.{u1, u3} M B _inst_1 _inst_4)
-Case conversion may be inaccurate. Consider using '#align function.surjective.mul_distrib_mul_action Function.Surjective.mulDistribMulActionₓ'. -/
 /-- Pushforward a multiplicative distributive multiplicative action along a surjective monoid
 homomorphism.
 See note [reducible non-instances]. -/
@@ -1327,12 +1084,6 @@ def MulDistribMulAction.toMonoidHom (r : M) : A →* A
 
 variable {A}
 
-/- warning: mul_distrib_mul_action.to_monoid_hom_apply -> MulDistribMulAction.toMonoidHom_apply is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] (r : M) (x : A), Eq.{succ u2} A (coeFn.{succ u2, succ u2} (MonoidHom.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)) (fun (_x : MonoidHom.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)) => A -> A) (MonoidHom.hasCoeToFun.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)) (MulDistribMulAction.toMonoidHom.{u1, u2} M A _inst_1 _inst_2 _inst_3 r) x) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3)) r x)
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2] (r : M) (x : A), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => A) x) (FunLike.coe.{succ u2, succ u2, succ u2} (MonoidHom.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => A) _x) (MulHomClass.toFunLike.{u2, u2, u2} (MonoidHom.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)) A A (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MulOneClass.toMul.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (MonoidHomClass.toMulHomClass.{u2, u2, u2} (MonoidHom.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)) A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2) (MonoidHom.monoidHomClass.{u2, u2} A A (Monoid.toMulOneClass.{u2} A _inst_2) (Monoid.toMulOneClass.{u2} A _inst_2)))) (MulDistribMulAction.toMonoidHom.{u1, u2} M A _inst_1 _inst_2 _inst_3 r) x) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 _inst_2 _inst_3))) r x)
-Case conversion may be inaccurate. Consider using '#align mul_distrib_mul_action.to_monoid_hom_apply MulDistribMulAction.toMonoidHom_applyₓ'. -/
 @[simp]
 theorem MulDistribMulAction.toMonoidHom_apply (r : M) (x : A) :
     MulDistribMulAction.toMonoidHom A r x = r • x :=
@@ -1341,12 +1092,6 @@ theorem MulDistribMulAction.toMonoidHom_apply (r : M) (x : A) :
 
 variable (M A)
 
-/- warning: mul_distrib_mul_action.to_monoid_End -> MulDistribMulAction.toMonoidEnd is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) (A : Type.{u2}) [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2], MonoidHom.{u1, u2} M (Monoid.End.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} (Monoid.End.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (Monoid.End.monoid.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)))
-but is expected to have type
-  forall (M : Type.{u1}) (A : Type.{u2}) [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 _inst_2], MonoidHom.{u1, u2} M (Monoid.End.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} (Monoid.End.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)) (Monoid.End.instMonoidEnd.{u2} A (Monoid.toMulOneClass.{u2} A _inst_2)))
-Case conversion may be inaccurate. Consider using '#align mul_distrib_mul_action.to_monoid_End MulDistribMulAction.toMonoidEndₓ'. -/
 /-- Each element of the monoid defines a monoid homomorphism. -/
 @[simps]
 def MulDistribMulAction.toMonoidEnd : M →* Monoid.End A
@@ -1362,23 +1107,11 @@ section
 
 variable [Monoid M] [Group A] [MulDistribMulAction M A]
 
-/- warning: smul_inv' -> smul_inv' is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Group.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))] (r : M) (x : A), Eq.{succ u2} A (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3)) r (Inv.inv.{u2} A (DivInvMonoid.toHasInv.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) x)) (Inv.inv.{u2} A (DivInvMonoid.toHasInv.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3)) r x))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Group.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))] (r : M) (x : A), Eq.{succ u2} A (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3))) r (Inv.inv.{u2} A (InvOneClass.toInv.{u2} A (DivInvOneMonoid.toInvOneClass.{u2} A (DivisionMonoid.toDivInvOneMonoid.{u2} A (Group.toDivisionMonoid.{u2} A _inst_2)))) x)) (Inv.inv.{u2} A (InvOneClass.toInv.{u2} A (DivInvOneMonoid.toInvOneClass.{u2} A (DivisionMonoid.toDivInvOneMonoid.{u2} A (Group.toDivisionMonoid.{u2} A _inst_2)))) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3))) r x))
-Case conversion may be inaccurate. Consider using '#align smul_inv' smul_inv'ₓ'. -/
 @[simp]
 theorem smul_inv' (r : M) (x : A) : r • x⁻¹ = (r • x)⁻¹ :=
   (MulDistribMulAction.toMonoidHom A r).map_inv x
 #align smul_inv' smul_inv'
 
-/- warning: smul_div' -> smul_div' is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Group.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))] (r : M) (x : A) (y : A), Eq.{succ u2} A (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3)) r (HDiv.hDiv.{u2, u2, u2} A A A (instHDiv.{u2} A (DivInvMonoid.toHasDiv.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))) x y)) (HDiv.hDiv.{u2, u2, u2} A A A (instHDiv.{u2} A (DivInvMonoid.toHasDiv.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3)) r x) (SMul.smul.{u1, u2} M A (MulAction.toHasSmul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3)) r y))
-but is expected to have type
-  forall {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Group.{u2} A] [_inst_3 : MulDistribMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))] (r : M) (x : A) (y : A), Eq.{succ u2} A (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3))) r (HDiv.hDiv.{u2, u2, u2} A A A (instHDiv.{u2} A (DivInvMonoid.toDiv.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))) x y)) (HDiv.hDiv.{u2, u2, u2} A A A (instHDiv.{u2} A (DivInvMonoid.toDiv.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2))) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3))) r x) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (MulAction.toSMul.{u1, u2} M A _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} M A _inst_1 (DivInvMonoid.toMonoid.{u2} A (Group.toDivInvMonoid.{u2} A _inst_2)) _inst_3))) r y))
-Case conversion may be inaccurate. Consider using '#align smul_div' smul_div'ₓ'. -/
 theorem smul_div' (r : M) (x y : A) : r • (x / y) = r • x / r • y :=
   map_div (MulDistribMulAction.toMonoidHom A r) x y
 #align smul_div' smul_div'
@@ -1408,12 +1141,6 @@ instance : Inhabited (Function.End α) :=
 
 variable {α}
 
-/- warning: function.End.apply_mul_action -> Function.End.applyMulAction is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, MulAction.{u1, u1} (Function.End.{u1} α) α (Function.End.monoid.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, MulAction.{u1, u1} (Function.End.{u1} α) α (instMonoidEnd.{u1} α)
-Case conversion may be inaccurate. Consider using '#align function.End.apply_mul_action Function.End.applyMulActionₓ'. -/
 /-- The tautological action by `function.End α` on `α`.
 
 This is generalized to bundled endomorphisms by:
@@ -1462,34 +1189,16 @@ instance AddMonoid.End.applyDistribMulAction [AddMonoid α] : DistribMulAction (
 #align add_monoid.End.apply_distrib_mul_action AddMonoid.End.applyDistribMulAction
 -/
 
-/- warning: add_monoid.End.smul_def -> AddMonoid.End.smul_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (f : AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (a : α), Eq.{succ u1} α (SMul.smul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (SMulZeroClass.toHasSmul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (DistribSMul.toSmulZeroClass.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.toAddZeroClass.{u1} α _inst_1) (DistribMulAction.toDistribSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.End.monoid.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) _inst_1 (AddMonoid.End.applyDistribMulAction.{u1} α _inst_1)))) f a) (coeFn.{succ u1, succ u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (fun (_x : AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) => α -> α) (FunLike.hasCoeToFun.{succ u1, succ u1, succ u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (fun (_x : α) => α) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α α (AddMonoid.toAddZeroClass.{u1} α _inst_1) (AddMonoid.toAddZeroClass.{u1} α _inst_1) (AddMonoid.End.addMonoidHomClass.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1))))) f a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (f : AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (a : α), Eq.{succ u1} α (HSMul.hSMul.{u1, u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α α (instHSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (SMulZeroClass.toSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.toZero.{u1} α _inst_1) (DistribSMul.toSMulZeroClass.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.toAddZeroClass.{u1} α _inst_1) (DistribMulAction.toDistribSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.End.monoid.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) _inst_1 (AddMonoid.End.applyDistribMulAction.{u1} α _inst_1))))) f a) (FunLike.coe.{succ u1, succ u1, succ u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α α (AddMonoid.toAddZeroClass.{u1} α _inst_1) (AddMonoid.toAddZeroClass.{u1} α _inst_1) (AddMonoid.End.instAddMonoidHomClassEnd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)))) f a)
-Case conversion may be inaccurate. Consider using '#align add_monoid.End.smul_def AddMonoid.End.smul_defₓ'. -/
 @[simp]
 theorem AddMonoid.End.smul_def [AddMonoid α] (f : AddMonoid.End α) (a : α) : f • a = f a :=
   rfl
 #align add_monoid.End.smul_def AddMonoid.End.smul_def
 
-/- warning: add_monoid.End.apply_has_faithful_smul -> AddMonoid.End.applyFaithfulSMul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α], FaithfulSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (SMulZeroClass.toHasSmul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (DistribSMul.toSmulZeroClass.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.toAddZeroClass.{u1} α _inst_1) (DistribMulAction.toDistribSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.End.monoid.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) _inst_1 (AddMonoid.End.applyDistribMulAction.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α], FaithfulSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (SMulZeroClass.toSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.toZero.{u1} α _inst_1) (DistribSMul.toSMulZeroClass.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.toAddZeroClass.{u1} α _inst_1) (DistribMulAction.toDistribSMul.{u1, u1} (AddMonoid.End.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) α (AddMonoid.End.monoid.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) _inst_1 (AddMonoid.End.applyDistribMulAction.{u1} α _inst_1))))
-Case conversion may be inaccurate. Consider using '#align add_monoid.End.apply_has_faithful_smul AddMonoid.End.applyFaithfulSMulₓ'. -/
 /-- `add_monoid.End.apply_distrib_mul_action` is faithful. -/
 instance AddMonoid.End.applyFaithfulSMul [AddMonoid α] : FaithfulSMul (AddMonoid.End α) α :=
   ⟨AddMonoidHom.ext⟩
 #align add_monoid.End.apply_has_faithful_smul AddMonoid.End.applyFaithfulSMul
 
-/- warning: mul_action.to_End_hom -> MulAction.toEndHom is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], MonoidHom.{u1, u2} M (Function.End.{u2} α) (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (Function.End.monoid.{u2} α))
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], MonoidHom.{u1, u2} M (Function.End.{u2} α) (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (instMonoidEnd.{u2} α))
-Case conversion may be inaccurate. Consider using '#align mul_action.to_End_hom MulAction.toEndHomₓ'. -/
 /-- The monoid hom representing a monoid action.
 
 When `M` is a group, see `mul_action.to_perm_hom`. -/
@@ -1500,12 +1209,6 @@ def MulAction.toEndHom [Monoid M] [MulAction M α] : M →* Function.End α
   map_mul' x y := funext (mul_smul x y)
 #align mul_action.to_End_hom MulAction.toEndHom
 
-/- warning: mul_action.of_End_hom -> MulAction.ofEndHom is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M], (MonoidHom.{u1, u2} M (Function.End.{u2} α) (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (Function.End.monoid.{u2} α))) -> (MulAction.{u1, u2} M α _inst_1)
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M], (MonoidHom.{u1, u2} M (Function.End.{u2} α) (Monoid.toMulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (instMonoidEnd.{u2} α))) -> (MulAction.{u1, u2} M α _inst_1)
-Case conversion may be inaccurate. Consider using '#align mul_action.of_End_hom MulAction.ofEndHomₓ'. -/
 /-- The monoid action induced by a monoid hom to `function.End α`
 
 See note [reducible non-instances]. -/
@@ -1514,12 +1217,6 @@ def MulAction.ofEndHom [Monoid M] (f : M →* Function.End α) : MulAction M α 
   MulAction.compHom α f
 #align mul_action.of_End_hom MulAction.ofEndHom
 
-/- warning: add_action.function_End -> AddAction.functionEnd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, AddAction.{u1, u1} (Additive.{u1} (Function.End.{u1} α)) α (Additive.addMonoid.{u1} (Function.End.{u1} α) (Function.End.monoid.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, AddAction.{u1, u1} (Additive.{u1} (Function.End.{u1} α)) α (Additive.addMonoid.{u1} (Function.End.{u1} α) (instMonoidEnd.{u1} α))
-Case conversion may be inaccurate. Consider using '#align add_action.function_End AddAction.functionEndₓ'. -/
 /-- The tautological additive action by `additive (function.End α)` on `α`. -/
 instance AddAction.functionEnd : AddAction (Additive (Function.End α)) α
     where
@@ -1528,12 +1225,6 @@ instance AddAction.functionEnd : AddAction (Additive (Function.End α)) α
   add_vadd _ _ _ := rfl
 #align add_action.function_End AddAction.functionEnd
 
-/- warning: add_action.to_End_hom -> AddAction.toEndHom is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddMonoid.{u1} M] [_inst_2 : AddAction.{u1, u2} M α _inst_1], AddMonoidHom.{u1, u2} M (Additive.{u2} (Function.End.{u2} α)) (AddMonoid.toAddZeroClass.{u1} M _inst_1) (Additive.addZeroClass.{u2} (Function.End.{u2} α) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (Function.End.monoid.{u2} α)))
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddMonoid.{u1} M] [_inst_2 : AddAction.{u1, u2} M α _inst_1], AddMonoidHom.{u1, u2} M (Additive.{u2} (Function.End.{u2} α)) (AddMonoid.toAddZeroClass.{u1} M _inst_1) (Additive.addZeroClass.{u2} (Function.End.{u2} α) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (instMonoidEnd.{u2} α)))
-Case conversion may be inaccurate. Consider using '#align add_action.to_End_hom AddAction.toEndHomₓ'. -/
 /-- The additive monoid hom representing an additive monoid action.
 
 When `M` is a group, see `add_action.to_perm_hom`. -/
@@ -1544,12 +1235,6 @@ def AddAction.toEndHom [AddMonoid M] [AddAction M α] : M →+ Additive (Functio
   map_add' x y := funext (add_vadd x y)
 #align add_action.to_End_hom AddAction.toEndHom
 
-/- warning: add_action.of_End_hom -> AddAction.ofEndHom is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddMonoid.{u1} M], (AddMonoidHom.{u1, u2} M (Additive.{u2} (Function.End.{u2} α)) (AddMonoid.toAddZeroClass.{u1} M _inst_1) (Additive.addZeroClass.{u2} (Function.End.{u2} α) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (Function.End.monoid.{u2} α)))) -> (AddAction.{u1, u2} M α _inst_1)
-but is expected to have type
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddMonoid.{u1} M], (AddMonoidHom.{u1, u2} M (Additive.{u2} (Function.End.{u2} α)) (AddMonoid.toAddZeroClass.{u1} M _inst_1) (Additive.addZeroClass.{u2} (Function.End.{u2} α) (Monoid.toMulOneClass.{u2} (Function.End.{u2} α) (instMonoidEnd.{u2} α)))) -> (AddAction.{u1, u2} M α _inst_1)
-Case conversion may be inaccurate. Consider using '#align add_action.of_End_hom AddAction.ofEndHomₓ'. -/
 /-- The additive action induced by a hom to `additive (function.End α)`
 
 See note [reducible non-instances]. -/
@@ -1577,45 +1262,21 @@ instance Multiplicative.smul [VAdd α β] : SMul (Multiplicative α) β :=
 #align multiplicative.has_smul Multiplicative.smul
 -/
 
-/- warning: to_mul_smul -> toMul_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : Additive.{u1} α) (b : β), Eq.{succ u2} β (SMul.smul.{u1, u2} α β _inst_1 (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Additive.{u1} α) α) => (Additive.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) a) b) (VAdd.vadd.{u1, u2} (Additive.{u1} α) β (Additive.vadd.{u1, u2} α β _inst_1) a b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : Additive.{u2} α) (b : β), Eq.{succ u1} β (HSMul.hSMul.{u2, u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Additive.{u2} α) => α) a) β β (instHSMul.{u2, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Additive.{u2} α) => α) a) β _inst_1) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Additive.{u2} α) α) (Additive.{u2} α) (fun (_x : Additive.{u2} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Additive.{u2} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} (Additive.{u2} α) α) (Additive.toMul.{u2} α) a) b) (HVAdd.hVAdd.{u2, u1, u1} (Additive.{u2} α) β β (instHVAdd.{u2, u1} (Additive.{u2} α) β (Additive.vadd.{u2, u1} α β _inst_1)) a b)
-Case conversion may be inaccurate. Consider using '#align to_mul_smul toMul_smulₓ'. -/
 @[simp]
 theorem toMul_smul [SMul α β] (a) (b : β) : (toMul a : α) • b = a +ᵥ b :=
   rfl
 #align to_mul_smul toMul_smul
 
-/- warning: of_mul_vadd -> ofMul_vadd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : β), Eq.{succ u2} β (VAdd.vadd.{u1, u2} (Additive.{u1} α) β (Additive.vadd.{u1, u2} α β _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Additive.{u1} α)) => α -> (Additive.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) a) b) (SMul.smul.{u1, u2} α β _inst_1 a b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : β), Eq.{succ u1} β (HVAdd.hVAdd.{u2, u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Additive.{u2} α) a) β β (instHVAdd.{u2, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Additive.{u2} α) a) β (Additive.vadd.{u2, u1} α β _inst_1)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Additive.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Additive.{u2} α) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} α (Additive.{u2} α)) (Additive.ofMul.{u2} α) a) b) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a b)
-Case conversion may be inaccurate. Consider using '#align of_mul_vadd ofMul_vaddₓ'. -/
 @[simp]
 theorem ofMul_vadd [SMul α β] (a : α) (b : β) : ofMul a +ᵥ b = a • b :=
   rfl
 #align of_mul_vadd ofMul_vadd
 
-/- warning: to_add_vadd -> toAdd_vadd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VAdd.{u1, u2} α β] (a : Multiplicative.{u1} α) (b : β), Eq.{succ u2} β (VAdd.vadd.{u1, u2} α β _inst_1 (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) => (Multiplicative.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) a) b) (SMul.smul.{u1, u2} (Multiplicative.{u1} α) β (Multiplicative.smul.{u1, u2} α β _inst_1) a b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VAdd.{u2, u1} α β] (a : Multiplicative.{u2} α) (b : β), Eq.{succ u1} β (HVAdd.hVAdd.{u2, u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Multiplicative.{u2} α) => α) a) β β (instHVAdd.{u2, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Multiplicative.{u2} α) => α) a) β _inst_1) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Multiplicative.{u2} α) α) (Multiplicative.{u2} α) (fun (_x : Multiplicative.{u2} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Multiplicative.{u2} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} (Multiplicative.{u2} α) α) (Multiplicative.toAdd.{u2} α) a) b) (HSMul.hSMul.{u2, u1, u1} (Multiplicative.{u2} α) β β (instHSMul.{u2, u1} (Multiplicative.{u2} α) β (Multiplicative.smul.{u2, u1} α β _inst_1)) a b)
-Case conversion may be inaccurate. Consider using '#align to_add_vadd toAdd_vaddₓ'. -/
 @[simp]
 theorem toAdd_vadd [VAdd α β] (a) (b : β) : (toAdd a : α) +ᵥ b = a • b :=
   rfl
 #align to_add_vadd toAdd_vadd
 
-/- warning: of_add_smul -> ofAdd_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VAdd.{u1, u2} α β] (a : α) (b : β), Eq.{succ u2} β (SMul.smul.{u1, u2} (Multiplicative.{u1} α) β (Multiplicative.smul.{u1, u2} α β _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) => α -> (Multiplicative.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) a) b) (VAdd.vadd.{u1, u2} α β _inst_1 a b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VAdd.{u2, u1} α β] (a : α) (b : β), Eq.{succ u1} β (HSMul.hSMul.{u2, u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Multiplicative.{u2} α) a) β β (instHSMul.{u2, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Multiplicative.{u2} α) a) β (Multiplicative.smul.{u2, u1} α β _inst_1)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Multiplicative.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Multiplicative.{u2} α) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} α (Multiplicative.{u2} α)) (Multiplicative.ofAdd.{u2} α) a) b) (HVAdd.hVAdd.{u2, u1, u1} α β β (instHVAdd.{u2, u1} α β _inst_1) a b)
-Case conversion may be inaccurate. Consider using '#align of_add_smul ofAdd_smulₓ'. -/
 @[simp]
 theorem ofAdd_smul [VAdd α β] (a : α) (b : β) : ofAdd a • b = a +ᵥ b :=
   rfl

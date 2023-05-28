@@ -47,21 +47,12 @@ noncomputable def toMatrix {ι' : Type _} (q : ι' → P) : Matrix ι' ι k := f
 #align affine_basis.to_matrix AffineBasis.toMatrix
 -/
 
-/- warning: affine_basis.to_matrix_apply -> AffineBasis.toMatrix_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.to_matrix_apply AffineBasis.toMatrix_applyₓ'. -/
 @[simp]
 theorem toMatrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) :
     b.toMatrix q i j = b.Coord j (q i) :=
   rfl
 #align affine_basis.to_matrix_apply AffineBasis.toMatrix_apply
 
-/- warning: affine_basis.to_matrix_self -> AffineBasis.toMatrix_self is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_5 : DecidableEq.{succ u1} ι], Eq.{succ (max u1 u2)} (Matrix.{u1, u1, u2} ι ι k) (AffineBasis.toMatrix.{u1, u2, u3, u4, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι (coeFn.{max (succ u1) (succ u4), max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b)) (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) 1 (OfNat.mk.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) 1 (One.one.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Matrix.hasOne.{u2, u1} ι k (fun (a : ι) (b : ι) => _inst_5 a b) (MulZeroClass.toHasZero.{u2} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))))) (AddMonoidWithOne.toOne.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))))))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_5 : DecidableEq.{succ u1} ι], Eq.{max (succ u1) (succ u2)} (Matrix.{u1, u1, u2} ι ι k) (AffineBasis.toMatrix.{u1, u2, u3, u4, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι (FunLike.coe.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b)) (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) 1 (One.toOfNat1.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Matrix.one.{u2, u1} ι k (fun (a : ι) (b : ι) => _inst_5 a b) (MonoidWithZero.toZero.{u2} k (Semiring.toMonoidWithZero.{u2} k (Ring.toSemiring.{u2} k _inst_3))) (Semiring.toOne.{u2} k (Ring.toSemiring.{u2} k _inst_3)))))
-Case conversion may be inaccurate. Consider using '#align affine_basis.to_matrix_self AffineBasis.toMatrix_selfₓ'. -/
 @[simp]
 theorem toMatrix_self [DecidableEq ι] : b.toMatrix b = (1 : Matrix ι ι k) :=
   by
@@ -71,19 +62,10 @@ theorem toMatrix_self [DecidableEq ι] : b.toMatrix b = (1 : Matrix ι ι k) :=
 
 variable {ι' : Type _} [Fintype ι'] [Fintype ι] (b₂ : AffineBasis ι k P)
 
-/- warning: affine_basis.to_matrix_row_sum_one -> AffineBasis.toMatrix_row_sum_one is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_6 : Fintype.{u1} ι] {ι' : Type.{u5}} (q : ι' -> P) (i : ι'), Eq.{succ u2} k (Finset.sum.{u2, u1} k ι (AddCommGroup.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3)))) (Finset.univ.{u1} ι _inst_6) (fun (j : ι) => AffineBasis.toMatrix.{u1, u2, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι' q i j)) (OfNat.ofNat.{u2} k 1 (OfNat.mk.{u2} k 1 (One.one.{u2} k (AddMonoidWithOne.toOne.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3)))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {k : Type.{u3}} {V : Type.{u4}} {P : Type.{u5}} [_inst_1 : AddCommGroup.{u4} V] [_inst_2 : AddTorsor.{u4, u5} V P (AddCommGroup.toAddGroup.{u4} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u4} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u4} V _inst_1)] (b : AffineBasis.{u2, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_6 : Fintype.{u2} ι] {ι' : Type.{u1}} (q : ι' -> P) (i : ι'), Eq.{succ u3} k (Finset.sum.{u3, u2} k ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} k (NonAssocRing.toNonUnitalNonAssocRing.{u3} k (Ring.toNonAssocRing.{u3} k _inst_3)))) (Finset.univ.{u2} ι _inst_6) (fun (j : ι) => AffineBasis.toMatrix.{u2, u3, u4, u5, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι' q i j)) (OfNat.ofNat.{u3} k 1 (One.toOfNat1.{u3} k (Semiring.toOne.{u3} k (Ring.toSemiring.{u3} k _inst_3))))
-Case conversion may be inaccurate. Consider using '#align affine_basis.to_matrix_row_sum_one AffineBasis.toMatrix_row_sum_oneₓ'. -/
 theorem toMatrix_row_sum_one {ι' : Type _} (q : ι' → P) (i : ι') : (∑ j, b.toMatrix q i j) = 1 := by
   simp
 #align affine_basis.to_matrix_row_sum_one AffineBasis.toMatrix_row_sum_one
 
-/- warning: affine_basis.affine_independent_of_to_matrix_right_inv -> AffineBasis.affineIndependent_of_toMatrix_right_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.affine_independent_of_to_matrix_right_inv AffineBasis.affineIndependent_of_toMatrix_right_invₓ'. -/
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a right inverse, then `p` is affine independent. -/
 theorem affineIndependent_of_toMatrix_right_inv [DecidableEq ι'] (p : ι' → P) {A : Matrix ι ι' k}
@@ -103,9 +85,6 @@ theorem affineIndependent_of_toMatrix_right_inv [DecidableEq ι'] (p : ι' → P
   simpa only [Matrix.vecMul_vecMul, ← Matrix.mul_eq_mul, hA, Matrix.vecMul_one] using hweq'
 #align affine_basis.affine_independent_of_to_matrix_right_inv AffineBasis.affineIndependent_of_toMatrix_right_inv
 
-/- warning: affine_basis.affine_span_eq_top_of_to_matrix_left_inv -> AffineBasis.affineSpan_eq_top_of_toMatrix_left_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.affine_span_eq_top_of_to_matrix_left_inv AffineBasis.affineSpan_eq_top_of_toMatrix_left_invₓ'. -/
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a left inverse, then `p` spans the entire space. -/
 theorem affineSpan_eq_top_of_toMatrix_left_inv [DecidableEq ι] [Nontrivial k] (p : ι' → P)
@@ -154,9 +133,6 @@ theorem toMatrix_vecMul_coords (x : P) : (b.toMatrix b₂).vecMul (b₂.coords x
 
 variable [DecidableEq ι]
 
-/- warning: affine_basis.to_matrix_mul_to_matrix -> AffineBasis.toMatrix_mul_toMatrix is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.to_matrix_mul_to_matrix AffineBasis.toMatrix_mul_toMatrixₓ'. -/
 theorem toMatrix_mul_toMatrix : b.toMatrix b₂ ⬝ b₂.toMatrix b = 1 :=
   by
   ext (l m)
@@ -164,12 +140,6 @@ theorem toMatrix_mul_toMatrix : b.toMatrix b₂ ⬝ b₂.toMatrix b = 1 :=
   rw [to_matrix_vec_mul_coords, coords_apply, ← to_matrix_apply, to_matrix_self]
 #align affine_basis.to_matrix_mul_to_matrix AffineBasis.toMatrix_mul_toMatrix
 
-/- warning: affine_basis.is_unit_to_matrix -> AffineBasis.isUnit_toMatrix is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_6 : Fintype.{u1} ι] (b₂ : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_7 : DecidableEq.{succ u1} ι], IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Matrix.ring.{u2, u1} ι k _inst_6 (fun (a : ι) (b : ι) => _inst_7 a b) _inst_3)) (AffineBasis.toMatrix.{u1, u2, u3, u4, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι (coeFn.{max (succ u1) (succ u4), max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b₂))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_6 : Fintype.{u1} ι] (b₂ : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_7 : DecidableEq.{succ u1} ι], IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Matrix.semiring.{u2, u1} ι k (Ring.toSemiring.{u2} k _inst_3) _inst_6 (fun (a : ι) (b : ι) => _inst_7 a b)))) (AffineBasis.toMatrix.{u1, u2, u3, u4, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι (FunLike.coe.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b₂))
-Case conversion may be inaccurate. Consider using '#align affine_basis.is_unit_to_matrix AffineBasis.isUnit_toMatrixₓ'. -/
 theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂) :=
   ⟨{  val := b.toMatrix b₂
       inv := b₂.toMatrix b
@@ -177,12 +147,6 @@ theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂) :=
       inv_val := b₂.toMatrix_mul_toMatrix b }, rfl⟩
 #align affine_basis.is_unit_to_matrix AffineBasis.isUnit_toMatrix
 
-/- warning: affine_basis.is_unit_to_matrix_iff -> AffineBasis.isUnit_toMatrix_iff is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_6 : Fintype.{u1} ι] [_inst_7 : DecidableEq.{succ u1} ι] [_inst_8 : Nontrivial.{u2} k] (p : ι -> P), Iff (IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Matrix.ring.{u2, u1} ι k _inst_6 (fun (a : ι) (b : ι) => _inst_7 a b) _inst_3)) (AffineBasis.toMatrix.{u1, u2, u3, u4, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι p)) (And (AffineIndependent.{u2, u3, u4, u1} k V P _inst_3 _inst_1 _inst_4 _inst_2 ι p) (Eq.{succ u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (affineSpan.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2 (Set.range.{u4, succ u1} P ι p)) (Top.top.{u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (CompleteLattice.toHasTop.{u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (AffineSubspace.completeLattice.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2)))))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_6 : Fintype.{u1} ι] [_inst_7 : DecidableEq.{succ u1} ι] [_inst_8 : Nontrivial.{u2} k] (p : ι -> P), Iff (IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} ι ι k) (Matrix.semiring.{u2, u1} ι k (Ring.toSemiring.{u2} k _inst_3) _inst_6 (fun (a : ι) (b : ι) => _inst_7 a b)))) (AffineBasis.toMatrix.{u1, u2, u3, u4, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b ι p)) (And (AffineIndependent.{u2, u3, u4, u1} k V P _inst_3 _inst_1 _inst_4 _inst_2 ι p) (Eq.{succ u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (affineSpan.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2 (Set.range.{u4, succ u1} P ι p)) (Top.top.{u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (CompleteLattice.toTop.{u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (AffineSubspace.instCompleteLatticeAffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2)))))
-Case conversion may be inaccurate. Consider using '#align affine_basis.is_unit_to_matrix_iff AffineBasis.isUnit_toMatrix_iffₓ'. -/
 theorem isUnit_toMatrix_iff [Nontrivial k] (p : ι → P) :
     IsUnit (b.toMatrix p) ↔ AffineIndependent k p ∧ affineSpan k (range p) = ⊤ :=
   by
@@ -206,9 +170,6 @@ variable [CommRing k] [Module k V] [DecidableEq ι] [Fintype ι]
 
 variable (b b₂ : AffineBasis ι k P)
 
-/- warning: affine_basis.to_matrix_inv_vec_mul_to_matrix -> AffineBasis.toMatrix_inv_vecMul_toMatrix is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.to_matrix_inv_vec_mul_to_matrix AffineBasis.toMatrix_inv_vecMul_toMatrixₓ'. -/
 /-- A change of basis formula for barycentric coordinates.
 
 See also `affine_basis.to_matrix_vec_mul_coords`. -/
@@ -222,9 +183,6 @@ theorem toMatrix_inv_vecMul_toMatrix (x : P) :
     Matrix.vecMul_one]
 #align affine_basis.to_matrix_inv_vec_mul_to_matrix AffineBasis.toMatrix_inv_vecMul_toMatrix
 
-/- warning: affine_basis.det_smul_coords_eq_cramer_coords -> AffineBasis.det_smul_coords_eq_cramer_coords is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.det_smul_coords_eq_cramer_coords AffineBasis.det_smul_coords_eq_cramer_coordsₓ'. -/
 /-- If we fix a background affine basis `b`, then for any other basis `b₂`, we can characterise
 the barycentric coordinates provided by `b₂` in terms of determinants relative to `b`. -/
 theorem det_smul_coords_eq_cramer_coords (x : P) :

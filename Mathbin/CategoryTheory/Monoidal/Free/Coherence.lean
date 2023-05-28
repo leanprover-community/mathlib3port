@@ -105,23 +105,11 @@ def normalizeObj : F C → NormalMonoidalObject C → N C
 #align category_theory.free_monoidal_category.normalize_obj CategoryTheory.FreeMonoidalCategory.normalizeObj
 -/
 
-/- warning: category_theory.free_monoidal_category.normalize_obj_unitor -> CategoryTheory.FreeMonoidalCategory.normalizeObj_unitor is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} (n : CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C), Eq.{succ u1} (Function.comp.{succ (succ u1), succ (succ u1), succ (succ u1)} Type.{u1} Type.{u1} Type.{u1} CategoryTheory.Discrete.{u1} CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C (CategoryTheory.MonoidalCategory.tensorUnit.{u1, u1} (CategoryTheory.FreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.CategoryTheory.monoidalCategory.{u1} C)) n) (CategoryTheory.Discrete.mk.{u1} (CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) n)
-but is expected to have type
-  forall {C : Type.{u1}} (n : CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C), Eq.{succ u1} (Function.comp.{succ (succ u1), succ (succ u1), succ (succ u1)} Type.{u1} Type.{u1} Type.{u1} CategoryTheory.Discrete.{u1} CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C (CategoryTheory.MonoidalCategory.tensorUnit.{u1, u1} (CategoryTheory.FreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.instMonoidalCategoryFreeMonoidalCategoryCategoryFreeMonoidalCategory.{u1} C)) n) (CategoryTheory.Discrete.mk.{u1} (CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) n)
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.normalize_obj_unitor CategoryTheory.FreeMonoidalCategory.normalizeObj_unitorₓ'. -/
 @[simp]
 theorem normalizeObj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
   rfl
 #align category_theory.free_monoidal_category.normalize_obj_unitor CategoryTheory.FreeMonoidalCategory.normalizeObj_unitor
 
-/- warning: category_theory.free_monoidal_category.normalize_obj_tensor -> CategoryTheory.FreeMonoidalCategory.normalizeObj_tensor is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u1}} (X : CategoryTheory.FreeMonoidalCategory.{u1} C) (Y : CategoryTheory.FreeMonoidalCategory.{u1} C) (n : CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C), Eq.{succ u1} (Function.comp.{succ (succ u1), succ (succ u1), succ (succ u1)} Type.{u1} Type.{u1} Type.{u1} CategoryTheory.Discrete.{u1} CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C (CategoryTheory.MonoidalCategory.tensorObj.{u1, u1} (CategoryTheory.FreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.CategoryTheory.monoidalCategory.{u1} C) X Y) n) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C Y (CategoryTheory.Discrete.as.{u1} (CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C X n)))
-but is expected to have type
-  forall {C : Type.{u1}} (X : CategoryTheory.FreeMonoidalCategory.{u1} C) (Y : CategoryTheory.FreeMonoidalCategory.{u1} C) (n : CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C), Eq.{succ u1} (Function.comp.{succ (succ u1), succ (succ u1), succ (succ u1)} Type.{u1} Type.{u1} Type.{u1} CategoryTheory.Discrete.{u1} CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C (CategoryTheory.MonoidalCategory.tensorObj.{u1, u1} (CategoryTheory.FreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory.{u1} C) (CategoryTheory.FreeMonoidalCategory.instMonoidalCategoryFreeMonoidalCategoryCategoryFreeMonoidalCategory.{u1} C) X Y) n) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C Y (CategoryTheory.Discrete.as.{u1} (CategoryTheory.FreeMonoidalCategory.NormalMonoidalObject.{u1} C) (CategoryTheory.FreeMonoidalCategory.normalizeObj.{u1} C X n)))
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.normalize_obj_tensor CategoryTheory.FreeMonoidalCategory.normalizeObj_tensorₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem normalizeObj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
@@ -208,25 +196,16 @@ def tensorFunc : F C ⥤ N C ⥤ F C
 #align category_theory.free_monoidal_category.tensor_func CategoryTheory.FreeMonoidalCategory.tensorFunc
 -/
 
-/- warning: category_theory.free_monoidal_category.tensor_func_map_app -> CategoryTheory.FreeMonoidalCategory.tensorFunc_map_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.tensor_func_map_app CategoryTheory.FreeMonoidalCategory.tensorFunc_map_appₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensorFunc_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
   rfl
 #align category_theory.free_monoidal_category.tensor_func_map_app CategoryTheory.FreeMonoidalCategory.tensorFunc_map_app
 
-/- warning: category_theory.free_monoidal_category.tensor_func_obj_map -> CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_mapₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensorFunc_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
     ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by cases n; cases n'; tidy
 #align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_map
 
-/- warning: category_theory.free_monoidal_category.normalize_iso_app -> CategoryTheory.FreeMonoidalCategory.normalizeIsoApp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.normalize_iso_app CategoryTheory.FreeMonoidalCategory.normalizeIsoAppₓ'. -/
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
     `n ⊗ X` and `normalize X n`. -/
 @[simp]
@@ -238,9 +217,6 @@ def normalizeIsoApp :
     (α_ _ _ _).symm ≪≫ tensorIso (normalize_iso_app X n) (Iso.refl _) ≪≫ normalize_iso_app _ _
 #align category_theory.free_monoidal_category.normalize_iso_app CategoryTheory.FreeMonoidalCategory.normalizeIsoApp
 
-/- warning: category_theory.free_monoidal_category.normalize_iso_app_tensor -> CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_tensor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.normalize_iso_app_tensor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_tensorₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem normalizeIsoApp_tensor (X Y : F C) (n : N C) :
@@ -249,17 +225,11 @@ theorem normalizeIsoApp_tensor (X Y : F C) (n : N C) :
   rfl
 #align category_theory.free_monoidal_category.normalize_iso_app_tensor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_tensor
 
-/- warning: category_theory.free_monoidal_category.normalize_iso_app_unitor -> CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_unitor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.normalize_iso_app_unitor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_unitorₓ'. -/
 @[simp]
 theorem normalizeIsoApp_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n = ρ_ _ :=
   rfl
 #align category_theory.free_monoidal_category.normalize_iso_app_unitor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_unitor
 
-/- warning: category_theory.free_monoidal_category.normalize_iso_aux -> CategoryTheory.FreeMonoidalCategory.normalizeIsoAux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.normalize_iso_aux CategoryTheory.FreeMonoidalCategory.normalizeIsoAuxₓ'. -/
 /-- Auxiliary definition for `normalize_iso`. -/
 @[simp]
 def normalizeIsoAux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
@@ -270,24 +240,12 @@ section
 
 variable {D : Type u} [Category.{u} D] {I : Type u} (f : I → D) (X : Discrete I)
 
-/- warning: category_theory.free_monoidal_category.discrete_functor_obj_eq_as -> CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_as is a dubious translation:
-lean 3 declaration is
-  forall {D : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u1, u1} D] {I : Type.{u1}} (f : I -> D) (X : CategoryTheory.Discrete.{u1} I), Eq.{succ u1} D (CategoryTheory.Functor.obj.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f) X) (f (CategoryTheory.Discrete.as.{u1} I X))
-but is expected to have type
-  forall {D : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u1, u1} D] {I : Type.{u1}} (f : I -> D) (X : CategoryTheory.Discrete.{u1} I), Eq.{succ u1} D (Prefunctor.obj.{succ u1, succ u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f)) X) (f (CategoryTheory.Discrete.as.{u1} I X))
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.discrete_functor_obj_eq_as CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_asₓ'. -/
 -- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
 @[simp]
 theorem discrete_functor_obj_eq_as : (Discrete.functor f).obj X = f X.as :=
   rfl
 #align category_theory.free_monoidal_category.discrete_functor_obj_eq_as CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_as
 
-/- warning: category_theory.free_monoidal_category.discrete_functor_map_eq_id -> CategoryTheory.FreeMonoidalCategory.discrete_functor_map_eq_id is a dubious translation:
-lean 3 declaration is
-  forall {D : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u1, u1} D] {I : Type.{u1}} (f : I -> D) (X : CategoryTheory.Discrete.{u1} I) (g : Quiver.Hom.{succ u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) X X), Eq.{succ u1} (Quiver.Hom.{succ u1, u1} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (CategoryTheory.Functor.obj.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f) X) (CategoryTheory.Functor.obj.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f) X)) (CategoryTheory.Functor.map.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f) X X g) (CategoryTheory.CategoryStruct.id.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1) (CategoryTheory.Functor.obj.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f) X))
-but is expected to have type
-  forall {D : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u1, u1} D] {I : Type.{u1}} (f : I -> D) (X : CategoryTheory.Discrete.{u1} I) (g : Quiver.Hom.{succ u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) X X), Eq.{succ u1} (Quiver.Hom.{succ u1, u1} D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (Prefunctor.obj.{succ u1, succ u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f)) X) (Prefunctor.obj.{succ u1, succ u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f)) X)) (Prefunctor.map.{succ u1, succ u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f)) X X g) (CategoryTheory.CategoryStruct.id.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1) (Prefunctor.obj.{succ u1, succ u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I))) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} D (CategoryTheory.Category.toCategoryStruct.{u1, u1} D _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, u1} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) D _inst_1 (CategoryTheory.Discrete.functor.{u1, u1, u1} D _inst_1 I f)) X))
-Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.discrete_functor_map_eq_id CategoryTheory.FreeMonoidalCategory.discrete_functor_map_eq_idₓ'. -/
 -- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
 @[simp]
 theorem discrete_functor_map_eq_id (g : X ⟶ X) : (Discrete.functor f).map g = 𝟙 _ := by tidy

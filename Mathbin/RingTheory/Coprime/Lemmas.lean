@@ -37,12 +37,6 @@ section
 
 open Classical
 
-/- warning: nat.is_coprime_iff_coprime -> Nat.isCoprime_iff_coprime is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Nat.coprime m n)
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n)) (Nat.coprime m n)
-Case conversion may be inaccurate. Consider using '#align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprimeₓ'. -/
 theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
@@ -57,18 +51,6 @@ theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.co
         Int.ofNat_one]⟩⟩
 #align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprime
 
-/- warning: is_coprime.nat_coprime -> IsCoprime.nat_coprime is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) -> (Nat.coprime m n)
-but is expected to have type
-  forall {m : Nat} {n : Nat}, (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n)) -> (Nat.coprime m n)
-Case conversion may be inaccurate. Consider using '#align is_coprime.nat_coprime IsCoprime.nat_coprimeₓ'. -/
-/- warning: nat.coprime.is_coprime -> Nat.coprime.isCoprime is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n))
-Case conversion may be inaccurate. Consider using '#align nat.coprime.is_coprime Nat.coprime.isCoprimeₓ'. -/
 alias Nat.isCoprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
 #align is_coprime.nat_coprime IsCoprime.nat_coprime
 #align nat.coprime.is_coprime Nat.coprime.isCoprime
@@ -140,12 +122,6 @@ end
 
 open Finset
 
-/- warning: exists_sum_eq_one_iff_pairwise_coprime -> exists_sum_eq_one_iff_pairwise_coprime is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {I : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {s : I -> R} {t : Finset.{u2} I} [_inst_2 : DecidableEq.{succ u2} I], (Finset.Nonempty.{u2} I t) -> (Iff (Exists.{max (succ u2) (succ u1)} (I -> R) (fun (μ : I -> R) => Eq.{succ u1} R (Finset.sum.{u1, u2} R I (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) t (fun (i : I) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (μ i) (Finset.prod.{u1, u2} R I (CommSemiring.toCommMonoid.{u1} R _inst_1) (SDiff.sdiff.{u2} (Finset.{u2} I) (Finset.hasSdiff.{u2} I (fun (a : I) (b : I) => _inst_2 a b)) t (Singleton.singleton.{u2, u2} I (Finset.{u2} I) (Finset.hasSingleton.{u2} I) i)) (fun (j : I) => s j)))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))))))) (Pairwise.{u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) (Function.onFun.{succ u2, succ u1, 1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) R Prop (IsCoprime.{u1} R _inst_1) (fun (i : coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) => s ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) I (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) I (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) I (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} I) Type.{u2} (Finset.hasCoeToSort.{u2} I) t) I (coeSubtype.{succ u2} I (fun (x : I) => Membership.Mem.{u2, u2} I (Finset.{u2} I) (Finset.hasMem.{u2} I) x t))))) i)))))
-but is expected to have type
-  forall {R : Type.{u1}} {I : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {s : I -> R} {t : Finset.{u2} I} [_inst_2 : DecidableEq.{succ u2} I], (Finset.Nonempty.{u2} I t) -> (Iff (Exists.{max (succ u1) (succ u2)} (I -> R) (fun (μ : I -> R) => Eq.{succ u1} R (Finset.sum.{u1, u2} R I (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) t (fun (i : I) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (μ i) (Finset.prod.{u1, u2} R I (CommSemiring.toCommMonoid.{u1} R _inst_1) (SDiff.sdiff.{u2} (Finset.{u2} I) (Finset.instSDiffFinset.{u2} I (fun (a : I) (b : I) => _inst_2 a b)) t (Singleton.singleton.{u2, u2} I (Finset.{u2} I) (Finset.instSingletonFinset.{u2} I) i)) (fun (j : I) => s j)))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (Pairwise.{u2} (Subtype.{succ u2} I (fun (x : I) => Membership.mem.{u2, u2} I (Finset.{u2} I) (Finset.instMembershipFinset.{u2} I) x t)) (Function.onFun.{succ u2, succ u1, 1} (Subtype.{succ u2} I (fun (x : I) => Membership.mem.{u2, u2} I (Finset.{u2} I) (Finset.instMembershipFinset.{u2} I) x t)) R Prop (IsCoprime.{u1} R _inst_1) (fun (i : Subtype.{succ u2} I (fun (x : I) => Membership.mem.{u2, u2} I (Finset.{u2} I) (Finset.instMembershipFinset.{u2} I) x t)) => s (Subtype.val.{succ u2} I (fun (x : I) => Membership.mem.{u2, u2} I (Finset.{u2} I) (Finset.instMembershipFinset.{u2} I) x t) i)))))
-Case conversion may be inaccurate. Consider using '#align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprimeₓ'. -/
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔
       Pairwise (IsCoprime on fun i : t => s i) :=
@@ -193,12 +169,6 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
     convert sdiff_sdiff_comm; rw [sdiff_singleton_eq_erase, erase_insert hat]
 #align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprime
 
-/- warning: exists_sum_eq_one_iff_pairwise_coprime' -> exists_sum_eq_one_iff_pairwise_coprime' is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {I : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {s : I -> R} [_inst_2 : Fintype.{u2} I] [_inst_3 : Nonempty.{succ u2} I] [_inst_4 : DecidableEq.{succ u2} I], Iff (Exists.{max (succ u2) (succ u1)} (I -> R) (fun (μ : I -> R) => Eq.{succ u1} R (Finset.sum.{u1, u2} R I (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Finset.univ.{u2} I _inst_2) (fun (i : I) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (μ i) (Finset.prod.{u1, u2} R I (CommSemiring.toCommMonoid.{u1} R _inst_1) (HasCompl.compl.{u2} (Finset.{u2} I) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} I) (Finset.booleanAlgebra.{u2} I _inst_2 (fun (a : I) (b : I) => _inst_4 a b))) (Singleton.singleton.{u2, u2} I (Finset.{u2} I) (Finset.hasSingleton.{u2} I) i)) (fun (j : I) => s j)))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))))))) (Pairwise.{u2} I (Function.onFun.{succ u2, succ u1, 1} I R Prop (IsCoprime.{u1} R _inst_1) s))
-but is expected to have type
-  forall {R : Type.{u1}} {I : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {s : I -> R} [_inst_2 : Fintype.{u2} I] [_inst_3 : Nonempty.{succ u2} I] [_inst_4 : DecidableEq.{succ u2} I], Iff (Exists.{max (succ u1) (succ u2)} (I -> R) (fun (μ : I -> R) => Eq.{succ u1} R (Finset.sum.{u1, u2} R I (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Finset.univ.{u2} I _inst_2) (fun (i : I) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (μ i) (Finset.prod.{u1, u2} R I (CommSemiring.toCommMonoid.{u1} R _inst_1) (HasCompl.compl.{u2} (Finset.{u2} I) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} I) (Finset.booleanAlgebra.{u2} I _inst_2 (fun (a : I) (b : I) => _inst_4 a b))) (Singleton.singleton.{u2, u2} I (Finset.{u2} I) (Finset.instSingletonFinset.{u2} I) i)) (fun (j : I) => s j)))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (Pairwise.{u2} I (Function.onFun.{succ u2, succ u1, 1} I R Prop (IsCoprime.{u1} R _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align exists_sum_eq_one_iff_pairwise_coprime' exists_sum_eq_one_iff_pairwise_coprime'ₓ'. -/
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
     (∃ μ : I → R, (∑ i : I, μ i * ∏ j in {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) :=
   by

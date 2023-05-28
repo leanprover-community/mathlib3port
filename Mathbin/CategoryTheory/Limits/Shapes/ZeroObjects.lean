@@ -181,12 +181,6 @@ theorem Iso.isZero_iff {X Y : C} (e : X ≅ Y) : IsZero X ↔ IsZero Y :=
 #align category_theory.iso.is_zero_iff CategoryTheory.Iso.isZero_iff
 -/
 
-/- warning: category_theory.functor.is_zero -> CategoryTheory.Functor.isZero is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] (F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2), (forall (X : C), CategoryTheory.Limits.IsZero.{u3, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u3, u2, u4} C _inst_1 D _inst_2 F X)) -> (CategoryTheory.Limits.IsZero.{max u2 u3, max u1 u3 u2 u4} (CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u3, u2, u4} C _inst_1 D _inst_2) F)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] (F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2), (forall (X : C), CategoryTheory.Limits.IsZero.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) X)) -> (CategoryTheory.Limits.IsZero.{max u2 u3, max (max (max u2 u4) u1) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u3, u2, u4} C _inst_1 D _inst_2) F)
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.is_zero CategoryTheory.Functor.isZeroₓ'. -/
 theorem Functor.isZero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F :=
   by
   constructor <;> intro G <;> refine' ⟨⟨⟨_⟩, _⟩⟩
@@ -269,12 +263,6 @@ def IsZero.isoZero [HasZeroObject C] {X : C} (hX : IsZero X) : X ≅ 0 :=
 #align category_theory.limits.is_zero.iso_zero CategoryTheory.Limits.IsZero.isoZero
 -/
 
-/- warning: category_theory.limits.is_zero.obj -> CategoryTheory.Limits.IsZero.obj is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u3, u4} D _inst_2] {F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2}, (CategoryTheory.Limits.IsZero.{max u2 u3, max u1 u3 u2 u4} (CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u3, u2, u4} C _inst_1 D _inst_2) F) -> (forall (X : C), CategoryTheory.Limits.IsZero.{u3, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u3, u2, u4} C _inst_1 D _inst_2 F X))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u3, u4} D _inst_2] {F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2}, (CategoryTheory.Limits.IsZero.{max u2 u3, max (max (max u2 u4) u1) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u3, u2, u4} C _inst_1 D _inst_2) F) -> (forall (X : C), CategoryTheory.Limits.IsZero.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) X))
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_zero.obj CategoryTheory.Limits.IsZero.objₓ'. -/
 theorem IsZero.obj [HasZeroObject D] {F : C ⥤ D} (hF : IsZero F) (X : C) : IsZero (F.obj X) :=
   by
   let G : C ⥤ D := (CategoryTheory.Functor.const C).obj 0
@@ -401,12 +389,6 @@ open CategoryTheory.Limits
 
 open ZeroObject
 
-/- warning: category_theory.functor.is_zero_iff -> CategoryTheory.Functor.isZero_iff is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u3, u4} D _inst_2] (F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2), Iff (CategoryTheory.Limits.IsZero.{max u2 u3, max u1 u3 u2 u4} (CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u3, u2, u4} C _inst_1 D _inst_2) F) (forall (X : C), CategoryTheory.Limits.IsZero.{u3, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u3, u2, u4} C _inst_1 D _inst_2 F X))
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u3, u4} D _inst_2] (F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2), Iff (CategoryTheory.Limits.IsZero.{max u2 u3, max (max (max u2 u4) u1) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u3, u2, u4} C _inst_1 D _inst_2) F) (forall (X : C), CategoryTheory.Limits.IsZero.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) X))
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.is_zero_iff CategoryTheory.Functor.isZero_iffₓ'. -/
 theorem Functor.isZero_iff [HasZeroObject D] (F : C ⥤ D) : IsZero F ↔ ∀ X, IsZero (F.obj X) :=
   ⟨fun hF X => hF.obj X, Functor.isZero _⟩
 #align category_theory.functor.is_zero_iff CategoryTheory.Functor.isZero_iff

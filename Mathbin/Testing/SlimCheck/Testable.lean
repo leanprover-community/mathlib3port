@@ -432,12 +432,6 @@ instance (priority := 2000) allTypesTestable [Testable (f ℤ)] :
     return <| add_var_to_counter_example var (use_has_to_string.mk "ℤ") (· <| ℤ) r⟩
 #align slim_check.all_types_testable SlimCheck.allTypesTestable
 
-/- warning: slim_check.trace_if_giveup -> SlimCheck.traceIfGiveup is a dubious translation:
-lean 3 declaration is
-  forall {p : Prop} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Repr.{u1} α], Bool -> String -> α -> (SlimCheck.TestResult p) -> (Thunkₓ.{u2} β) -> β
-but is expected to have type
-  forall {p : Prop} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Repr.{u2} α], Bool -> String -> α -> (SlimCheck.TestResult p) -> (Thunkₓ.{u1} β) -> β
-Case conversion may be inaccurate. Consider using '#align slim_check.trace_if_giveup SlimCheck.traceIfGiveupₓ'. -/
 /-- Trace the value of sampled variables if the sample is discarded. -/
 def traceIfGiveup {p α β} [Repr α] (tracing_enabled : Bool) (var : String) (val : α) :
     TestResult p → Thunk β → β
@@ -761,12 +755,6 @@ variable (p)
 
 variable [Testable p]
 
-/- warning: slim_check.testable.run_suite_aux -> SlimCheck.Testable.runSuiteAux is a dubious translation:
-lean 3 declaration is
-  forall (p : Prop) [_inst_1 : SlimCheck.Testable p], SlimCheck.SlimCheckCfg -> (SlimCheck.TestResult p) -> Nat -> (Rand.{0} (SlimCheck.TestResult p))
-but is expected to have type
-  forall (p : Prop) [_inst_1 : SlimCheck.Testable p], SlimCheck.Configuration -> (SlimCheck.TestResult p) -> Nat -> (Rand.{0} (SlimCheck.TestResult p))
-Case conversion may be inaccurate. Consider using '#align slim_check.testable.run_suite_aux SlimCheck.Testable.runSuiteAuxₓ'. -/
 /-- Try `n` times to find a counter-example for `p`. -/
 def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (TestResult p)
   | r, 0 => return r
@@ -781,12 +769,6 @@ def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (T
       | gave_up g => testable.run_suite_aux (give_up g r) n
 #align slim_check.testable.run_suite_aux SlimCheck.Testable.runSuiteAux
 
-/- warning: slim_check.testable.run_suite -> SlimCheck.Testable.runSuite is a dubious translation:
-lean 3 declaration is
-  forall (p : Prop) [_inst_1 : SlimCheck.Testable p], (optParam.{1} SlimCheck.SlimCheckCfg (SlimCheck.SlimCheckCfg.mk (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))) (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))) Bool.false Bool.false Bool.false Bool.false (Option.none.{0} Nat) Bool.false)) -> (Rand.{0} (SlimCheck.TestResult p))
-but is expected to have type
-  forall (p : Prop) [_inst_1 : SlimCheck.Testable p], (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (Rand.{0} (SlimCheck.TestResult p))
-Case conversion may be inaccurate. Consider using '#align slim_check.testable.run_suite SlimCheck.Testable.runSuiteₓ'. -/
 /-- Try to find a counter-example of `p`. -/
 def Testable.runSuite (cfg : SlimCheckCfg := { }) : Rand (TestResult p) :=
   Testable.runSuiteAux p cfg (success <| PSum.inl ()) cfg.numInst
@@ -869,9 +851,6 @@ unsafe def mk_decorations : tactic Unit := do
 
 end Tactic
 
-/- warning: slim_check.testable.check -> SlimCheck.Testable.check is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align slim_check.testable.check SlimCheck.Testable.checkₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_decorations -/
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testable.check (p : Prop) (cfg : SlimCheckCfg := { })

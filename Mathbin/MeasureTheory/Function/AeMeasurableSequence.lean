@@ -56,12 +56,6 @@ namespace aeSeq
 
 section MemAeSeqSet
 
-/- warning: ae_seq.mk_eq_fun_of_mem_ae_seq_set -> aeSeq.mk_eq_fun_of_mem_aeSeqSet is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) x (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (forall (i : ι), Eq.{succ u3} β (AEMeasurable.mk.{u2, u3} α β _inst_1 _inst_2 μ (f i) (hf i) x) (f i x))
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x (aeSeqSet.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (forall (i : ι), Eq.{succ u2} β (AEMeasurable.mk.{u3, u2} α β _inst_1 _inst_2 μ (f i) (hf i) x) (f i x))
-Case conversion may be inaccurate. Consider using '#align ae_seq.mk_eq_fun_of_mem_ae_seq_set aeSeq.mk_eq_fun_of_mem_aeSeqSetₓ'. -/
 theorem mk_eq_fun_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (hx : x ∈ aeSeqSet hf p)
     (i : ι) : (hf i).mk (f i) x = f i x :=
   haveI h_ss : aeSeqSet hf p ⊆ { x | ∀ i, f i x = (hf i).mk (f i) x } :=
@@ -72,34 +66,16 @@ theorem mk_eq_fun_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (
   (h_ss hx i).symm
 #align ae_seq.mk_eq_fun_of_mem_ae_seq_set aeSeq.mk_eq_fun_of_mem_aeSeqSet
 
-/- warning: ae_seq.ae_seq_eq_mk_of_mem_ae_seq_set -> aeSeq.aeSeq_eq_mk_of_mem_aeSeqSet is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) x (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (forall (i : ι), Eq.{succ u3} β (aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i x) (AEMeasurable.mk.{u2, u3} α β _inst_1 _inst_2 μ (f i) (hf i) x))
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x (aeSeqSet.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (forall (i : ι), Eq.{succ u2} β (aeSeq.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i x) (AEMeasurable.mk.{u3, u2} α β _inst_1 _inst_2 μ (f i) (hf i) x))
-Case conversion may be inaccurate. Consider using '#align ae_seq.ae_seq_eq_mk_of_mem_ae_seq_set aeSeq.aeSeq_eq_mk_of_mem_aeSeqSetₓ'. -/
 theorem aeSeq_eq_mk_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α}
     (hx : x ∈ aeSeqSet hf p) (i : ι) : aeSeq hf p i x = (hf i).mk (f i) x := by
   simp only [aeSeq, hx, if_true]
 #align ae_seq.ae_seq_eq_mk_of_mem_ae_seq_set aeSeq.aeSeq_eq_mk_of_mem_aeSeqSet
 
-/- warning: ae_seq.ae_seq_eq_fun_of_mem_ae_seq_set -> aeSeq.aeSeq_eq_fun_of_mem_aeSeqSet is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) x (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (forall (i : ι), Eq.{succ u3} β (aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i x) (f i x))
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x (aeSeqSet.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (forall (i : ι), Eq.{succ u2} β (aeSeq.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i x) (f i x))
-Case conversion may be inaccurate. Consider using '#align ae_seq.ae_seq_eq_fun_of_mem_ae_seq_set aeSeq.aeSeq_eq_fun_of_mem_aeSeqSetₓ'. -/
 theorem aeSeq_eq_fun_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α}
     (hx : x ∈ aeSeqSet hf p) (i : ι) : aeSeq hf p i x = f i x := by
   simp only [ae_seq_eq_mk_of_mem_ae_seq_set hf hx i, mk_eq_fun_of_mem_ae_seq_set hf hx i]
 #align ae_seq.ae_seq_eq_fun_of_mem_ae_seq_set aeSeq.aeSeq_eq_fun_of_mem_aeSeqSet
 
-/- warning: ae_seq.prop_of_mem_ae_seq_set -> aeSeq.prop_of_mem_aeSeqSet is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) x (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (p x (fun (n : ι) => aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n x))
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x (aeSeqSet.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (p x (fun (n : ι) => aeSeq.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n x))
-Case conversion may be inaccurate. Consider using '#align ae_seq.prop_of_mem_ae_seq_set aeSeq.prop_of_mem_aeSeqSetₓ'. -/
 theorem prop_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (hx : x ∈ aeSeqSet hf p) :
     p x fun n => aeSeq hf p n x :=
   by
@@ -114,12 +90,6 @@ theorem prop_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (hx : 
   exact hx'
 #align ae_seq.prop_of_mem_ae_seq_set aeSeq.prop_of_mem_aeSeqSet
 
-/- warning: ae_seq.fun_prop_of_mem_ae_seq_set -> aeSeq.fun_prop_of_mem_aeSeqSet is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) x (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (p x (fun (n : ι) => f n x))
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} {p : α -> (ι -> β) -> Prop} (hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ) {x : α}, (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x (aeSeqSet.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)) -> (p x (fun (n : ι) => f n x))
-Case conversion may be inaccurate. Consider using '#align ae_seq.fun_prop_of_mem_ae_seq_set aeSeq.fun_prop_of_mem_aeSeqSetₓ'. -/
 theorem fun_prop_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (hx : x ∈ aeSeqSet hf p) :
     p x fun n => f n x :=
   by
@@ -131,33 +101,15 @@ theorem fun_prop_of_mem_aeSeqSet (hf : ∀ i, AEMeasurable (f i) μ) {x : α} (h
 
 end MemAeSeqSet
 
-/- warning: ae_seq.ae_seq_set_measurable_set -> aeSeq.aeSeqSet_measurableSet is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} {hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ}, MeasurableSet.{u2} α _inst_1 (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} {p : α -> (ι -> β) -> Prop} {hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ}, MeasurableSet.{u3} α _inst_1 (aeSeqSet.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p)
-Case conversion may be inaccurate. Consider using '#align ae_seq.ae_seq_set_measurable_set aeSeq.aeSeqSet_measurableSetₓ'. -/
 theorem aeSeqSet_measurableSet {hf : ∀ i, AEMeasurable (f i) μ} : MeasurableSet (aeSeqSet hf p) :=
   (measurableSet_toMeasurable _ _).compl
 #align ae_seq.ae_seq_set_measurable_set aeSeq.aeSeqSet_measurableSet
 
-/- warning: ae_seq.measurable -> aeSeq.measurable is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ) (p : α -> (ι -> β) -> Prop) (i : ι), Measurable.{u2, u3} α β _inst_1 _inst_2 (aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i)
-but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : MeasurableSpace.{u2} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u3} α _inst_1} (hf : forall (i : ι), AEMeasurable.{u3, u2} α β _inst_2 _inst_1 (f i) μ) (p : α -> (ι -> β) -> Prop) (i : ι), Measurable.{u3, u2} α β _inst_1 _inst_2 (aeSeq.{u1, u3, u2} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i)
-Case conversion may be inaccurate. Consider using '#align ae_seq.measurable aeSeq.measurableₓ'. -/
 theorem measurable (hf : ∀ i, AEMeasurable (f i) μ) (p : α → (ι → β) → Prop) (i : ι) :
     Measurable (aeSeq hf p i) :=
   Measurable.ite aeSeqSet_measurableSet (hf i).measurable_mk <| measurable_const' fun x y => rfl
 #align ae_seq.measurable aeSeq.measurable
 
-/- warning: ae_seq.measure_compl_ae_seq_set_eq_zero -> aeSeq.measure_compl_aeSeqSet_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Eq.{1} ENNReal (coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} α _inst_1) (fun (_x : MeasureTheory.Measure.{u2} α _inst_1) => (Set.{u2} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} α _inst_1) μ (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.booleanAlgebra.{u2} α)) (aeSeqSet.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))
-but is expected to have type
-  forall {ι : Sort.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u3} ι] (hf : forall (i : ι), AEMeasurable.{u2, u1} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α _inst_1 μ) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) (aeSeqSet.{u3, u2, u1} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))
-Case conversion may be inaccurate. Consider using '#align ae_seq.measure_compl_ae_seq_set_eq_zero aeSeq.measure_compl_aeSeqSet_eq_zeroₓ'. -/
 theorem measure_compl_aeSeqSet_eq_zero [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : μ (aeSeqSet hf pᶜ) = 0 :=
   by
@@ -167,12 +119,6 @@ theorem measure_compl_aeSeqSet_eq_zero [Countable ι] (hf : ∀ i, AEMeasurable 
   exact Filter.Eventually.and hf_eq hp
 #align ae_seq.measure_compl_ae_seq_set_eq_zero aeSeq.measure_compl_aeSeqSet_eq_zero
 
-/- warning: ae_seq.ae_seq_eq_mk_ae -> aeSeq.aeSeq_eq_mk_ae is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.Eventually.{u2} α (fun (a : α) => forall (i : ι), Eq.{succ u3} β (aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i a) (AEMeasurable.mk.{u2, u3} α β _inst_1 _inst_2 μ (f i) (hf i) a)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ))
-but is expected to have type
-  forall {ι : Sort.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u3} ι] (hf : forall (i : ι), AEMeasurable.{u2, u1} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.Eventually.{u2} α (fun (a : α) => forall (i : ι), Eq.{succ u1} β (aeSeq.{u3, u2, u1} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i a) (AEMeasurable.mk.{u2, u1} α β _inst_1 _inst_2 μ (f i) (hf i) a)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ))
-Case conversion may be inaccurate. Consider using '#align ae_seq.ae_seq_eq_mk_ae aeSeq.aeSeq_eq_mk_aeₓ'. -/
 theorem aeSeq_eq_mk_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : ∀ᵐ a : α ∂μ, ∀ i : ι, aeSeq hf p i a = (hf i).mk (f i) a :=
   haveI h_ss : aeSeqSet hf p ⊆ { a : α | ∀ i, aeSeq hf p i a = (hf i).mk (f i) a } := fun x hx i =>
@@ -183,12 +129,6 @@ theorem aeSeq_eq_mk_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (zero_le _)
 #align ae_seq.ae_seq_eq_mk_ae aeSeq.aeSeq_eq_mk_ae
 
-/- warning: ae_seq.ae_seq_eq_fun_ae -> aeSeq.aeSeq_eq_fun_ae is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.Eventually.{u2} α (fun (a : α) => forall (i : ι), Eq.{succ u3} β (aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i a) (f i a)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ))
-but is expected to have type
-  forall {ι : Sort.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u3} ι] (hf : forall (i : ι), AEMeasurable.{u2, u1} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.Eventually.{u2} α (fun (a : α) => forall (i : ι), Eq.{succ u1} β (aeSeq.{u3, u2, u1} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p i a) (f i a)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ))
-Case conversion may be inaccurate. Consider using '#align ae_seq.ae_seq_eq_fun_ae aeSeq.aeSeq_eq_fun_aeₓ'. -/
 theorem aeSeq_eq_fun_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : ∀ᵐ a : α ∂μ, ∀ i : ι, aeSeq hf p i a = f i a :=
   haveI h_ss : { a : α | ¬∀ i : ι, aeSeq hf p i a = f i a } ⊆ aeSeqSet hf pᶜ := fun x =>
@@ -196,23 +136,11 @@ theorem aeSeq_eq_fun_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
   measure_mono_null h_ss (measure_compl_ae_seq_set_eq_zero hf hp)
 #align ae_seq.ae_seq_eq_fun_ae aeSeq.aeSeq_eq_fun_ae
 
-/- warning: ae_seq.ae_seq_n_eq_fun_n_ae -> aeSeq.aeSeq_n_eq_fun_n_ae is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (forall (n : ι), Filter.EventuallyEq.{u2, u3} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) (aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n) (f n))
-but is expected to have type
-  forall {ι : Sort.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : Countable.{u3} ι] (hf : forall (i : ι), AEMeasurable.{u2, u1} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (forall (n : ι), Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) (aeSeq.{u3, u2, u1} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n) (f n))
-Case conversion may be inaccurate. Consider using '#align ae_seq.ae_seq_n_eq_fun_n_ae aeSeq.aeSeq_n_eq_fun_n_aeₓ'. -/
 theorem aeSeq_n_eq_fun_n_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) (n : ι) : aeSeq hf p n =ᵐ[μ] f n :=
   ae_all_iff.mp (aeSeq_eq_fun_ae hf hp) n
 #align ae_seq.ae_seq_n_eq_fun_n_ae aeSeq.aeSeq_n_eq_fun_n_ae
 
-/- warning: ae_seq.supr -> aeSeq.iSup is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : CompleteLattice.{u3} β] [_inst_4 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.EventuallyEq.{u2, u3} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) (iSup.{max u2 u3, u1} (α -> β) (Pi.supSet.{u2, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toHasSup.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n)) (iSup.{max u2 u3, u1} (α -> β) (Pi.supSet.{u2, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toHasSup.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => f n)))
-but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : CompleteLattice.{u3} β] [_inst_4 : Countable.{u2} ι] (hf : forall (i : ι), AEMeasurable.{u1, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u1} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u1} α _inst_1 μ)) -> (Filter.EventuallyEq.{u1, u3} α β (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (iSup.{max u1 u3, u2} (α -> β) (Pi.supSet.{u1, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toSupSet.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => aeSeq.{u2, u1, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n)) (iSup.{max u1 u3, u2} (α -> β) (Pi.supSet.{u1, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toSupSet.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => f n)))
-Case conversion may be inaccurate. Consider using '#align ae_seq.supr aeSeq.iSupₓ'. -/
 theorem iSup [CompleteLattice β] [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : (⨆ n, aeSeq hf p n) =ᵐ[μ] ⨆ n, f n :=
   by

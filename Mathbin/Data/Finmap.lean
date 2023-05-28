@@ -148,12 +148,6 @@ def liftOn {γ} (s : Finmap β) (f : AList β → γ)
 #align finmap.lift_on Finmap.liftOn
 -/
 
-/- warning: finmap.lift_on_to_finmap -> Finmap.liftOn_toFinmap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {γ : Type.{u3}} (s : AList.{u1, u2} α β) (f : (AList.{u1, u2} α β) -> γ) (H : forall (a : AList.{u1, u2} α β) (b : AList.{u1, u2} α β), (List.Perm.{max u1 u2} (Sigma.{u1, u2} α β) (AList.entries.{u1, u2} α β a) (AList.entries.{u1, u2} α β b)) -> (Eq.{succ u3} γ (f a) (f b))), Eq.{succ u3} γ (Finmap.liftOn.{u1, u2, u3} α β γ (AList.toFinmap.{u1, u2} α β s) f H) (f s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u3}} {γ : Type.{u1}} (s : AList.{u2, u3} α β) (f : (AList.{u2, u3} α β) -> γ) (H : forall (a : AList.{u2, u3} α β) (b : AList.{u2, u3} α β), (List.Perm.{max u2 u3} (Sigma.{u2, u3} α β) (AList.entries.{u2, u3} α β a) (AList.entries.{u2, u3} α β b)) -> (Eq.{succ u1} γ (f a) (f b))), Eq.{succ u1} γ (Finmap.liftOn.{u2, u3, u1} α β γ (AList.toFinmap.{u2, u3} α β s) f H) (f s)
-Case conversion may be inaccurate. Consider using '#align finmap.lift_on_to_finmap Finmap.liftOn_toFinmapₓ'. -/
 @[simp]
 theorem liftOn_toFinmap {γ} (s : AList β) (f : AList β → γ) (H) : liftOn ⟦s⟧ f H = f s := by
   cases s <;> rfl
@@ -174,12 +168,6 @@ def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : AList β → AList β → γ)
 #align finmap.lift_on₂ Finmap.liftOn₂
 -/
 
-/- warning: finmap.lift_on₂_to_finmap -> Finmap.liftOn₂_toFinmap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} {γ : Type.{u3}} (s₁ : AList.{u1, u2} α β) (s₂ : AList.{u1, u2} α β) (f : (AList.{u1, u2} α β) -> (AList.{u1, u2} α β) -> γ) (H : forall (a₁ : AList.{u1, u2} α β) (b₁ : AList.{u1, u2} α β) (a₂ : AList.{u1, u2} α β) (b₂ : AList.{u1, u2} α β), (List.Perm.{max u1 u2} (Sigma.{u1, u2} α β) (AList.entries.{u1, u2} α β a₁) (AList.entries.{u1, u2} α β a₂)) -> (List.Perm.{max u1 u2} (Sigma.{u1, u2} α β) (AList.entries.{u1, u2} α β b₁) (AList.entries.{u1, u2} α β b₂)) -> (Eq.{succ u3} γ (f a₁ b₁) (f a₂ b₂))), Eq.{succ u3} γ (Finmap.liftOn₂.{u1, u2, u3} α β γ (AList.toFinmap.{u1, u2} α β s₁) (AList.toFinmap.{u1, u2} α β s₂) f H) (f s₁ s₂)
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u3}} {γ : Type.{u1}} (s₁ : AList.{u2, u3} α β) (s₂ : AList.{u2, u3} α β) (f : (AList.{u2, u3} α β) -> (AList.{u2, u3} α β) -> γ) (H : forall (a₁ : AList.{u2, u3} α β) (b₁ : AList.{u2, u3} α β) (a₂ : AList.{u2, u3} α β) (b₂ : AList.{u2, u3} α β), (List.Perm.{max u2 u3} (Sigma.{u2, u3} α β) (AList.entries.{u2, u3} α β a₁) (AList.entries.{u2, u3} α β a₂)) -> (List.Perm.{max u2 u3} (Sigma.{u2, u3} α β) (AList.entries.{u2, u3} α β b₁) (AList.entries.{u2, u3} α β b₂)) -> (Eq.{succ u1} γ (f a₁ b₁) (f a₂ b₂))), Eq.{succ u1} γ (Finmap.liftOn₂.{u2, u3, u1} α β γ (AList.toFinmap.{u2, u3} α β s₁) (AList.toFinmap.{u2, u3} α β s₂) f H) (f s₁ s₂)
-Case conversion may be inaccurate. Consider using '#align finmap.lift_on₂_to_finmap Finmap.liftOn₂_toFinmapₓ'. -/
 @[simp]
 theorem liftOn₂_toFinmap {γ} (s₁ s₂ : AList β) (f : AList β → AList β → γ) (H) :
     liftOn₂ ⟦s₁⟧ ⟦s₂⟧ f H = f s₁ s₂ := by cases s₁ <;> cases s₂ <;> rfl

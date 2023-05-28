@@ -102,12 +102,6 @@ def IsCyclic.commGroup [hg : Group α] [IsCyclic α] : CommGroup α :=
 
 variable [Group α]
 
-/- warning: monoid_hom.map_cyclic -> MonoidHom.map_cyclic is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_2 : Group.{u1} G] [h : IsCyclic.{u1} G _inst_2] (σ : MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))), Exists.{1} Int (fun (m : Int) => forall (g : G), Eq.{succ u1} G (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (fun (_x : MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) => G -> G) (MonoidHom.hasCoeToFun.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) σ g) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) g m))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_2 : Group.{u1} G] [h : IsCyclic.{u1} G _inst_2] (σ : MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))), Exists.{1} Int (fun (m : Int) => forall (g : G), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => G) g) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => G) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) G G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (MonoidHom.monoidHomClass.{u1, u1} G G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) σ g) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) g m))
-Case conversion may be inaccurate. Consider using '#align monoid_hom.map_cyclic MonoidHom.map_cyclicₓ'. -/
 @[to_additive MonoidAddHom.map_add_cyclic]
 theorem MonoidHom.map_cyclic {G : Type _} [Group G] [h : IsCyclic G] (σ : G →* G) :
     ∃ m : ℤ, ∀ g : G, σ g = g ^ m :=
@@ -164,12 +158,6 @@ theorem isCyclic_of_prime_card {α : Type u} [Group α] [Fintype α] {p : ℕ} [
 #align is_add_cyclic_of_prime_card isAddCyclic_of_prime_card
 -/
 
-/- warning: order_of_eq_card_of_forall_mem_zpowers -> orderOf_eq_card_of_forall_mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : Fintype.{u1} α] {g : α}, (forall (x : α), Membership.Mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.setLike.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 g)) -> (Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) g) (Fintype.card.{u1} α _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : Fintype.{u1} α] {g : α}, (forall (x : α), Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 g)) -> (Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) g) (Fintype.card.{u1} α _inst_2))
-Case conversion may be inaccurate. Consider using '#align order_of_eq_card_of_forall_mem_zpowers orderOf_eq_card_of_forall_mem_zpowersₓ'. -/
 @[to_additive addOrderOf_eq_card_of_forall_mem_zmultiples]
 theorem orderOf_eq_card_of_forall_mem_zpowers [Fintype α] {g : α} (hx : ∀ x, x ∈ zpowers g) :
     orderOf g = Fintype.card α := by
@@ -180,12 +168,6 @@ theorem orderOf_eq_card_of_forall_mem_zpowers [Fintype α] {g : α} (hx : ∀ x,
 #align order_of_eq_card_of_forall_mem_zpowers orderOf_eq_card_of_forall_mem_zpowers
 #align add_order_of_eq_card_of_forall_mem_zmultiples addOrderOf_eq_card_of_forall_mem_zmultiples
 
-/- warning: infinite.order_of_eq_zero_of_forall_mem_zpowers -> Infinite.orderOf_eq_zero_of_forall_mem_zpowers is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : Infinite.{succ u1} α] {g : α}, (forall (x : α), Membership.Mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.setLike.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 g)) -> (Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) g) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : Infinite.{succ u1} α] {g : α}, (forall (x : α), Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 g)) -> (Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) g) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
-Case conversion may be inaccurate. Consider using '#align infinite.order_of_eq_zero_of_forall_mem_zpowers Infinite.orderOf_eq_zero_of_forall_mem_zpowersₓ'. -/
 @[to_additive Infinite.addOrderOf_eq_zero_of_forall_mem_zmultiples]
 theorem Infinite.orderOf_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
     (h : ∀ x, x ∈ zpowers g) : orderOf g = 0 := by
@@ -208,24 +190,12 @@ theorem Infinite.orderOf_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
 #align infinite.order_of_eq_zero_of_forall_mem_zpowers Infinite.orderOf_eq_zero_of_forall_mem_zpowers
 #align infinite.add_order_of_eq_zero_of_forall_mem_zmultiples Infinite.addOrderOf_eq_zero_of_forall_mem_zmultiples
 
-/- warning: bot.is_cyclic -> Bot.isCyclic is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : Group.{u1} α], IsCyclic.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} α _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.setLike.{u1} α _inst_2)) (Bot.bot.{u1} (Subgroup.{u1} α _inst_2) (Subgroup.hasBot.{u1} α _inst_2))) (Subgroup.toGroup.{u1} α _inst_2 (Bot.bot.{u1} (Subgroup.{u1} α _inst_2) (Subgroup.hasBot.{u1} α _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : Group.{u1} α], IsCyclic.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_2)) x (Bot.bot.{u1} (Subgroup.{u1} α _inst_2) (Subgroup.instBotSubgroup.{u1} α _inst_2)))) (Subgroup.toGroup.{u1} α _inst_2 (Bot.bot.{u1} (Subgroup.{u1} α _inst_2) (Subgroup.instBotSubgroup.{u1} α _inst_2)))
-Case conversion may be inaccurate. Consider using '#align bot.is_cyclic Bot.isCyclicₓ'. -/
 @[to_additive Bot.isAddCyclic]
 instance Bot.isCyclic {α : Type u} [Group α] : IsCyclic (⊥ : Subgroup α) :=
   ⟨⟨1, fun x => ⟨0, Subtype.eq <| (zpow_zero (1 : α)).trans <| Eq.symm (Subgroup.mem_bot.1 x.2)⟩⟩⟩
 #align bot.is_cyclic Bot.isCyclic
 #align bot.is_add_cyclic Bot.isAddCyclic
 
-/- warning: subgroup.is_cyclic -> Subgroup.isCyclic is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : Group.{u1} α] [_inst_3 : IsCyclic.{u1} α _inst_2] (H : Subgroup.{u1} α _inst_2), IsCyclic.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} α _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.setLike.{u1} α _inst_2)) H) (Subgroup.toGroup.{u1} α _inst_2 H)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : Group.{u1} α] [_inst_3 : IsCyclic.{u1} α _inst_2] (H : Subgroup.{u1} α _inst_2), IsCyclic.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_2)) x H)) (Subgroup.toGroup.{u1} α _inst_2 H)
-Case conversion may be inaccurate. Consider using '#align subgroup.is_cyclic Subgroup.isCyclicₓ'. -/
 @[to_additive AddSubgroup.isAddCyclic]
 instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup α) : IsCyclic H :=
   haveI := Classical.propDecidable
@@ -280,12 +250,6 @@ section Classical
 
 open Classical
 
-/- warning: is_cyclic.card_pow_eq_one_le -> IsCyclic.card_pow_eq_one_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α] [_inst_4 : IsCyclic.{u1} α _inst_1] {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (fun (a : α) => _inst_2 (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (Finset.univ.{u1} α _inst_3))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α] [_inst_4 : IsCyclic.{u1} α _inst_1] {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (fun (a : α) => _inst_2 (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (Finset.univ.{u1} α _inst_3))) n)
-Case conversion may be inaccurate. Consider using '#align is_cyclic.card_pow_eq_one_le IsCyclic.card_pow_eq_one_leₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
@@ -324,12 +288,6 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
 
 end Classical
 
-/- warning: is_cyclic.exists_monoid_generator -> IsCyclic.exists_monoid_generator is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : Finite.{succ u1} α] [_inst_3 : IsCyclic.{u1} α _inst_1], Exists.{succ u1} α (fun (x : α) => forall (y : α), Membership.Mem.{u1, u1} α (Submonoid.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) α (Submonoid.setLike.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) y (Submonoid.powers.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : Finite.{succ u1} α] [_inst_3 : IsCyclic.{u1} α _inst_1], Exists.{succ u1} α (fun (x : α) => forall (y : α), Membership.mem.{u1, u1} α (Submonoid.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) α (Submonoid.instSetLikeSubmonoid.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) y (Submonoid.powers.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) x))
-Case conversion may be inaccurate. Consider using '#align is_cyclic.exists_monoid_generator IsCyclic.exists_monoid_generatorₓ'. -/
 @[to_additive]
 theorem IsCyclic.exists_monoid_generator [Finite α] [IsCyclic α] :
     ∃ x : α, ∀ y : α, y ∈ Submonoid.powers x := by simp_rw [mem_powers_iff_mem_zpowers];
@@ -341,12 +299,6 @@ section
 
 variable [DecidableEq α] [Fintype α]
 
-/- warning: is_cyclic.image_range_order_of -> IsCyclic.image_range_orderOf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (x : α), Membership.Mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.setLike.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 a)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.image.{0, u1} Nat α (fun (a : α) (b : α) => _inst_2 a b) (fun (i : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a i) (Finset.range (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a))) (Finset.univ.{u1} α _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (x : α), Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 a)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.image.{0, u1} Nat α (fun (a : α) (b : α) => _inst_2 a b) (fun (i : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a i) (Finset.range (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a))) (Finset.univ.{u1} α _inst_3))
-Case conversion may be inaccurate. Consider using '#align is_cyclic.image_range_order_of IsCyclic.image_range_orderOfₓ'. -/
 @[to_additive]
 theorem IsCyclic.image_range_orderOf (ha : ∀ x : α, x ∈ zpowers a) :
     Finset.image (fun i => a ^ i) (range (orderOf a)) = univ :=
@@ -356,12 +308,6 @@ theorem IsCyclic.image_range_orderOf (ha : ∀ x : α, x ∈ zpowers a) :
 #align is_cyclic.image_range_order_of IsCyclic.image_range_orderOf
 #align is_add_cyclic.image_range_order_of IsAddCyclic.image_range_addOrderOf
 
-/- warning: is_cyclic.image_range_card -> IsCyclic.image_range_card is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (x : α), Membership.Mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.setLike.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 a)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.image.{0, u1} Nat α (fun (a : α) (b : α) => _inst_2 a b) (fun (i : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a i) (Finset.range (Fintype.card.{u1} α _inst_3))) (Finset.univ.{u1} α _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (x : α), Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_1)) x (Subgroup.zpowers.{u1} α _inst_1 a)) -> (Eq.{succ u1} (Finset.{u1} α) (Finset.image.{0, u1} Nat α (fun (a : α) (b : α) => _inst_2 a b) (fun (i : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a i) (Finset.range (Fintype.card.{u1} α _inst_3))) (Finset.univ.{u1} α _inst_3))
-Case conversion may be inaccurate. Consider using '#align is_cyclic.image_range_card IsCyclic.image_range_cardₓ'. -/
 @[to_additive]
 theorem IsCyclic.image_range_card (ha : ∀ x : α, x ∈ zpowers a) :
     Finset.image (fun i => a ^ i) (range (Fintype.card α)) = univ := by
@@ -430,12 +376,6 @@ private theorem card_order_of_eq_totient_aux₁ :
       filter_dvd_eq_divisors hd0, sum_totient, ← ha, card_pow_eq_one_eq_order_of_aux hn a]
   simpa [← cons_self_proper_divisors hd0, ← h1] using h2
 
-/- warning: card_order_of_eq_totient_aux₂ -> card_orderOf_eq_totient_aux₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (fun (a : α) => _inst_2 (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (Finset.univ.{u1} α _inst_3))) n)) -> (forall {d : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd d (Fintype.card.{u1} α _inst_3)) -> (Eq.{1} Nat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (fun (a : α) => Nat.decidableEq (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (Finset.univ.{u1} α _inst_3))) (Nat.totient d)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (fun (a : α) => _inst_2 (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (Finset.univ.{u1} α _inst_3))) n)) -> (forall {d : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat d (Fintype.card.{u1} α _inst_3)) -> (Eq.{1} Nat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (fun (a : α) => instDecidableEqNat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (Finset.univ.{u1} α _inst_3))) (Nat.totient d)))
-Case conversion may be inaccurate. Consider using '#align card_order_of_eq_totient_aux₂ card_orderOf_eq_totient_aux₂ₓ'. -/
 theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
     (univ.filterₓ fun a : α => orderOf a = d).card = φ d :=
   by
@@ -469,12 +409,6 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
     
 #align card_order_of_eq_totient_aux₂ card_orderOf_eq_totient_aux₂
 
-/- warning: is_cyclic_of_card_pow_eq_one_le -> isCyclic_of_card_pow_eq_one_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (fun (a : α) => _inst_2 (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (Finset.univ.{u1} α _inst_3))) n)) -> (IsCyclic.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], (forall (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (fun (a : α) => _inst_2 (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) a n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (Finset.univ.{u1} α _inst_3))) n)) -> (IsCyclic.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align is_cyclic_of_card_pow_eq_one_le isCyclic_of_card_pow_eq_one_leₓ'. -/
 theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
   have : (univ.filterₓ fun a : α => orderOf a = Fintype.card α).Nonempty :=
     card_pos.1 <| by
@@ -484,12 +418,6 @@ theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
   isCyclic_of_orderOf_eq_card x (Finset.mem_filter.1 hx).2
 #align is_cyclic_of_card_pow_eq_one_le isCyclic_of_card_pow_eq_one_le
 
-/- warning: is_add_cyclic_of_card_pow_eq_one_le -> isAddCyclic_of_card_pow_eq_one_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_4 : AddGroup.{u1} α] [_inst_5 : DecidableEq.{succ u1} α] [_inst_6 : Fintype.{u1} α], (forall (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_4))) n a) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_4)))))))) (fun (a : α) => _inst_5 (SMul.smul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_4))) n a) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_4)))))))) (Finset.univ.{u1} α _inst_6))) n)) -> (IsAddCyclic.{u1} α _inst_4)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_4 : AddGroup.{u1} α] [_inst_5 : DecidableEq.{succ u1} α] [_inst_6 : Fintype.{u1} α], (forall (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{succ u1} α (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_4)))) n a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_4))))))) (fun (a : α) => _inst_5 (HSMul.hSMul.{0, u1, u1} Nat α α (instHSMul.{0, u1} Nat α (AddMonoid.SMul.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_4)))) n a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_4))))))) (Finset.univ.{u1} α _inst_6))) n)) -> (IsAddCyclic.{u1} α _inst_4)
-Case conversion may be inaccurate. Consider using '#align is_add_cyclic_of_card_pow_eq_one_le isAddCyclic_of_card_pow_eq_one_leₓ'. -/
 theorem isAddCyclic_of_card_pow_eq_one_le {α} [AddGroup α] [DecidableEq α] [Fintype α]
     (hn : ∀ n : ℕ, 0 < n → (univ.filterₓ fun a : α => n • a = 0).card ≤ n) : IsAddCyclic α :=
   by
@@ -501,23 +429,11 @@ attribute [to_additive isCyclic_of_card_pow_eq_one_le] isAddCyclic_of_card_pow_e
 
 end Totient
 
-/- warning: is_cyclic.card_order_of_eq_totient -> IsCyclic.card_orderOf_eq_totient is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : IsCyclic.{u1} α _inst_1] [_inst_3 : Fintype.{u1} α] {d : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd d (Fintype.card.{u1} α _inst_3)) -> (Eq.{1} Nat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (fun (a : α) => Nat.decidableEq (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (Finset.univ.{u1} α _inst_3))) (Nat.totient d))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : IsCyclic.{u1} α _inst_1] [_inst_3 : Fintype.{u1} α] {d : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat d (Fintype.card.{u1} α _inst_3)) -> (Eq.{1} Nat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{1} Nat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (fun (a : α) => instDecidableEqNat (orderOf.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) d) (Finset.univ.{u1} α _inst_3))) (Nat.totient d))
-Case conversion may be inaccurate. Consider using '#align is_cyclic.card_order_of_eq_totient IsCyclic.card_orderOf_eq_totientₓ'. -/
 theorem IsCyclic.card_orderOf_eq_totient [IsCyclic α] [Fintype α] {d : ℕ}
     (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => orderOf a = d).card = totient d := by
   classical apply card_orderOf_eq_totient_aux₂ (fun n => IsCyclic.card_pow_eq_one_le) hd
 #align is_cyclic.card_order_of_eq_totient IsCyclic.card_orderOf_eq_totient
 
-/- warning: is_add_cyclic.card_order_of_eq_totient -> IsAddCyclic.card_orderOf_eq_totient is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : AddGroup.{u1} α] [_inst_3 : IsAddCyclic.{u1} α _inst_2] [_inst_4 : Fintype.{u1} α] {d : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd d (Fintype.card.{u1} α _inst_4)) -> (Eq.{1} Nat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{1} Nat (addOrderOf.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_2)) a) d) (fun (a : α) => Nat.decidableEq (addOrderOf.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_2)) a) d) (Finset.univ.{u1} α _inst_4))) (Nat.totient d))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : AddGroup.{u1} α] [_inst_3 : IsAddCyclic.{u1} α _inst_2] [_inst_4 : Fintype.{u1} α] {d : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat d (Fintype.card.{u1} α _inst_4)) -> (Eq.{1} Nat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Eq.{1} Nat (addOrderOf.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_2)) a) d) (fun (a : α) => instDecidableEqNat (addOrderOf.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_2)) a) d) (Finset.univ.{u1} α _inst_4))) (Nat.totient d))
-Case conversion may be inaccurate. Consider using '#align is_add_cyclic.card_order_of_eq_totient IsAddCyclic.card_orderOf_eq_totientₓ'. -/
 theorem IsAddCyclic.card_orderOf_eq_totient {α} [AddGroup α] [IsAddCyclic α] [Fintype α] {d : ℕ}
     (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => addOrderOf a = d).card = totient d :=
   by
@@ -556,12 +472,6 @@ open Subgroup
 
 variable {G : Type _} {H : Type _} [Group G] [Group H]
 
-/- warning: commutative_of_cyclic_center_quotient -> commutative_of_cyclic_center_quotient is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] [_inst_3 : IsCyclic.{u2} H _inst_2] (f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))), (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f) (Subgroup.center.{u1} G _inst_1)) -> (forall (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a))
-but is expected to have type
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] [_inst_3 : IsCyclic.{u2} H _inst_2] (f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))), (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f) (Subgroup.center.{u1} G _inst_1)) -> (forall (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a))
-Case conversion may be inaccurate. Consider using '#align commutative_of_cyclic_center_quotient commutative_of_cyclic_center_quotientₓ'. -/
 /-- A group is commutative if the quotient by the center is cyclic.
   Also see `comm_group_of_cycle_center_quotient` for the `comm_group` instance. -/
 @[to_additive commutative_of_add_cyclic_center_quotient
@@ -587,12 +497,6 @@ theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : 
 #align commutative_of_cyclic_center_quotient commutative_of_cyclic_center_quotient
 #align commutative_of_add_cyclic_center_quotient commutative_of_add_cyclic_center_quotient
 
-/- warning: comm_group_of_cycle_center_quotient -> commGroupOfCycleCenterQuotient is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] [_inst_3 : IsCyclic.{u2} H _inst_2] (f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))), (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f) (Subgroup.center.{u1} G _inst_1)) -> (CommGroup.{u1} G)
-but is expected to have type
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} H] [_inst_3 : IsCyclic.{u2} H _inst_2] (f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))), (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f) (Subgroup.center.{u1} G _inst_1)) -> (CommGroup.{u1} G)
-Case conversion may be inaccurate. Consider using '#align comm_group_of_cycle_center_quotient commGroupOfCycleCenterQuotientₓ'. -/
 /-- A group is commutative if the quotient by the center is cyclic. -/
 @[to_additive commutativeOfAddCycleCenterQuotient
       "A group is commutative if the quotient by\n  the center is cyclic."]

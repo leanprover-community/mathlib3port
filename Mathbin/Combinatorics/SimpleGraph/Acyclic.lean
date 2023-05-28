@@ -88,12 +88,6 @@ theorem isAcyclic_iff_forall_adj_isBridge :
 #align simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.isAcyclic_iff_forall_adj_isBridge
 -/
 
-/- warning: simple_graph.is_acyclic_iff_forall_edge_is_bridge -> SimpleGraph.isAcyclic_iff_forall_edge_isBridge is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Iff (SimpleGraph.IsAcyclic.{u1} V G) (forall {{e : Sym2.{u1} V}}, (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)) -> (SimpleGraph.IsBridge.{u1} V G e))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Iff (SimpleGraph.IsAcyclic.{u1} V G) (forall {{e : Sym2.{u1} V}}, (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V G)) -> (SimpleGraph.IsBridge.{u1} V G e))
-Case conversion may be inaccurate. Consider using '#align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.isAcyclic_iff_forall_edge_isBridgeₓ'. -/
 theorem isAcyclic_iff_forall_edge_isBridge :
     G.IsAcyclic ↔ ∀ ⦃e⦄, e ∈ G.edgeSetEmbedding → G.IsBridge e := by
   simp [is_acyclic_iff_forall_adj_is_bridge, Sym2.forall]

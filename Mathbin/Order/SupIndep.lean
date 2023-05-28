@@ -57,12 +57,6 @@ section Lattice
 
 variable [Lattice α] [OrderBot α]
 
-/- warning: finset.sup_indep -> Finset.SupIndep is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], (Finset.{u2} ι) -> (ι -> α) -> Prop
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))], (Finset.{u2} ι) -> (ι -> α) -> Prop
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep Finset.SupIndepₓ'. -/
 /-- Supremum independence of finite sets. We avoid the "obvious" definition using `s.erase i`
 because `erase` would require decidable equality on `ι`. -/
 def SupIndep (s : Finset ι) (f : ι → α) : Prop :=
@@ -78,54 +72,24 @@ instance [DecidableEq ι] [DecidableEq α] : Decidable (SupIndep s f) :=
   apply @Finset.decidableDforallFinset _ _ _ _
   exact fun i hi => @Implies.decidable _ _ _ (decidable_of_iff' (_ = ⊥) disjoint_iff)
 
-/- warning: finset.sup_indep.subset -> Finset.SupIndep.subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Finset.{u2} ι} {t : Finset.{u2} ι} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 t f) -> (HasSubset.Subset.{u2} (Finset.{u2} ι) (Finset.hasSubset.{u2} ι) s t) -> (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 s f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] {s : Finset.{u1} ι} {t : Finset.{u1} ι} {f : ι -> α}, (Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 t f) -> (HasSubset.Subset.{u1} (Finset.{u1} ι) (Finset.instHasSubsetFinset.{u1} ι) s t) -> (Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 s f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.subset Finset.SupIndep.subsetₓ'. -/
 theorem SupIndep.subset (ht : t.SupIndep f) (h : s ⊆ t) : s.SupIndep f := fun u hu i hi =>
   ht (hu.trans h) (h hi)
 #align finset.sup_indep.subset Finset.SupIndep.subset
 
-/- warning: finset.sup_indep_empty -> Finset.supIndep_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (f : ι -> α), Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u2} (Finset.{u2} ι) (Finset.hasEmptyc.{u2} ι)) f
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] (f : ι -> α), Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u1} (Finset.{u1} ι) (Finset.instEmptyCollectionFinset.{u1} ι)) f
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_empty Finset.supIndep_emptyₓ'. -/
 theorem supIndep_empty (f : ι → α) : (∅ : Finset ι).SupIndep f := fun _ _ a ha => ha.elim
 #align finset.sup_indep_empty Finset.supIndep_empty
 
-/- warning: finset.sup_indep_singleton -> Finset.supIndep_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (i : ι) (f : ι -> α), Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 (Singleton.singleton.{u2, u2} ι (Finset.{u2} ι) (Finset.hasSingleton.{u2} ι) i) f
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] (i : ι) (f : ι -> α), Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 (Singleton.singleton.{u1, u1} ι (Finset.{u1} ι) (Finset.instSingletonFinset.{u1} ι) i) f
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_singleton Finset.supIndep_singletonₓ'. -/
 theorem supIndep_singleton (i : ι) (f : ι → α) : ({i} : Finset ι).SupIndep f := fun s hs j hji hj =>
   by
   rw [eq_empty_of_ssubset_singleton ⟨hs, fun h => hj (h hji)⟩, sup_empty]
   exact disjoint_bot_right
 #align finset.sup_indep_singleton Finset.supIndep_singleton
 
-/- warning: finset.sup_indep.pairwise_disjoint -> Finset.SupIndep.pairwiseDisjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Finset.{u2} ι} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] {s : Finset.{u1} ι} {f : ι -> α}, (Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)) _inst_2 (Finset.toSet.{u1} ι s) f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjointₓ'. -/
 theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDisjoint f :=
   fun a ha b hb hab =>
   sup_singleton.subst <| hs (singleton_subset_iff.2 hb) ha <| not_mem_singleton.2 hab
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 
-/- warning: finset.sup_indep_iff_disjoint_erase -> Finset.supIndep_iff_disjoint_erase is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Finset.{u2} ι} {f : ι -> α} [_inst_3 : DecidableEq.{succ u2} ι], Iff (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 s f) (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f i) (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 (Finset.erase.{u2} ι (fun (a : ι) (b : ι) => _inst_3 a b) s i) f)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Finset.{u2} ι} {f : ι -> α} [_inst_3 : DecidableEq.{succ u2} ι], Iff (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 s f) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f i) (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α _inst_1) _inst_2 (Finset.erase.{u2} ι (fun (a : ι) (b : ι) => _inst_3 a b) s i) f)))
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_iff_disjoint_erase Finset.supIndep_iff_disjoint_eraseₓ'. -/
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
     s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.eraseₓ i).sup f) :=
@@ -133,12 +97,6 @@ theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
     (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
 #align finset.sup_indep_iff_disjoint_erase Finset.supIndep_iff_disjoint_erase
 
-/- warning: finset.sup_indep_pair -> Finset.supIndep_pair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {f : ι -> α} [_inst_3 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Iff (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Finset.{u2} ι) (Finset.hasInsert.{u2} ι (fun (a : ι) (b : ι) => _inst_3 a b)) i (Singleton.singleton.{u2, u2} ι (Finset.{u2} ι) (Finset.hasSingleton.{u2} ι) j)) f) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f i) (f j)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {f : ι -> α} [_inst_3 : DecidableEq.{succ u2} ι] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Iff (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Finset.{u2} ι) (Finset.instInsertFinset.{u2} ι (fun (a : ι) (b : ι) => _inst_3 a b)) i (Singleton.singleton.{u2, u2} ι (Finset.{u2} ι) (Finset.instSingletonFinset.{u2} ι) j)) f) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f i) (f j)))
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_pair Finset.supIndep_pairₓ'. -/
 @[simp]
 theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     ({i, j} : Finset ι).SupIndep f ↔ Disjoint (f i) (f j) :=
@@ -161,24 +119,12 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
       rw [this, Finset.sup_singleton]⟩
 #align finset.sup_indep_pair Finset.supIndep_pair
 
-/- warning: finset.sup_indep_univ_bool -> Finset.supIndep_univ_bool is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (f : Bool -> α), Iff (Finset.SupIndep.{u1, 0} α Bool _inst_1 _inst_2 (Finset.univ.{0} Bool Bool.fintype) f) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f Bool.false) (f Bool.true))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (f : Bool -> α), Iff (Finset.SupIndep.{u1, 0} α Bool _inst_1 _inst_2 (Finset.univ.{0} Bool Bool.fintype) f) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f Bool.false) (f Bool.true))
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_univ_bool Finset.supIndep_univ_boolₓ'. -/
 theorem supIndep_univ_bool (f : Bool → α) :
     (Finset.univ : Finset Bool).SupIndep f ↔ Disjoint (f false) (f true) :=
   haveI : tt ≠ ff := by simp only [Ne.def, not_false_iff]
   (sup_indep_pair this).trans disjoint_comm
 #align finset.sup_indep_univ_bool Finset.supIndep_univ_bool
 
-/- warning: finset.sup_indep_univ_fin_two -> Finset.supIndep_univ_fin_two is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (f : (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) -> α), Iff (Finset.SupIndep.{u1, 0} α (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) _inst_1 _inst_2 (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) f) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (ZeroLEOneClass.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)) (OrderedSemiring.zeroLEOneClass.{0} Nat Nat.orderedSemiring) (NeZero.one.{0} Nat (NonAssocSemiring.toMulZeroOneClass.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring)) Nat.nontrivial) (OrderedAddCommMonoid.to_covariantClass_left.{0} Nat (OrderedSemiring.toOrderedAddCommMonoid.{0} Nat Nat.orderedSemiring)))))))) (f (OfNat.ofNat.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 1 (OfNat.mk.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) 1 (One.one.{0} (Fin (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (Fin.hasOneOfNeZero (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)) (ZeroLEOneClass.NeZero.two.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)) (OrderedSemiring.zeroLEOneClass.{0} Nat Nat.orderedSemiring) (NeZero.one.{0} Nat (NonAssocSemiring.toMulZeroOneClass.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring)) Nat.nontrivial) (OrderedAddCommMonoid.to_covariantClass_left.{0} Nat (OrderedSemiring.toOrderedAddCommMonoid.{0} Nat Nat.orderedSemiring)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] (f : (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α), Iff (Finset.SupIndep.{u1, 0} α (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) _inst_1 _inst_2 (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) f) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_univ_fin_two Finset.supIndep_univ_fin_twoₓ'. -/
 @[simp]
 theorem supIndep_univ_fin_two (f : Fin 2 → α) :
     (Finset.univ : Finset (Fin 2)).SupIndep f ↔ Disjoint (f 0) (f 1) :=
@@ -186,12 +132,6 @@ theorem supIndep_univ_fin_two (f : Fin 2 → α) :
   sup_indep_pair this
 #align finset.sup_indep_univ_fin_two Finset.supIndep_univ_fin_two
 
-/- warning: finset.sup_indep.attach -> Finset.SupIndep.attach is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Finset.{u2} ι} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Finset.SupIndep.{u1, u2} α (Subtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s)) _inst_1 _inst_2 (Finset.attach.{u2} ι s) (Function.comp.{succ u2, succ u2, succ u1} (Subtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s)) ι α f (Subtype.val.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] {s : Finset.{u1} ι} {f : ι -> α}, (Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 s f) -> (Finset.SupIndep.{u2, u1} α (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) _inst_1 _inst_2 (Finset.attach.{u1} ι s) (Function.comp.{succ u1, succ u1, succ u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) ι α f (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s))))
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.attach Finset.SupIndep.attachₓ'. -/
 theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep (f ∘ Subtype.val) :=
   by
   intro t ht i _ hi
@@ -209,40 +149,16 @@ section DistribLattice
 
 variable [DistribLattice α] [OrderBot α] {s : Finset ι} {f : ι → α}
 
-/- warning: finset.sup_indep_iff_pairwise_disjoint -> Finset.supIndep_iff_pairwiseDisjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {s : Finset.{u2} ι} {f : ι -> α}, Iff (Finset.SupIndep.{u1, u2} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 s f) (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} ι} {f : ι -> α}, Iff (Finset.SupIndep.{u2, u1} α ι (DistribLattice.toLattice.{u2} α _inst_1) _inst_2 s f) (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (Finset.toSet.{u1} ι s) f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep_iff_pairwise_disjoint Finset.supIndep_iff_pairwiseDisjointₓ'. -/
 theorem supIndep_iff_pairwiseDisjoint : s.SupIndep f ↔ (s : Set ι).PairwiseDisjoint f :=
   ⟨SupIndep.pairwiseDisjoint, fun hs t ht i hi hit =>
     Finset.disjoint_sup_right.2 fun j hj => hs hi (ht hj) (ne_of_mem_of_not_mem hj hit).symm⟩
 #align finset.sup_indep_iff_pairwise_disjoint Finset.supIndep_iff_pairwiseDisjoint
 
-/- warning: finset.sup_indep.pairwise_disjoint -> Finset.SupIndep.pairwiseDisjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {s : Finset.{u2} ι} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] {s : Finset.{u1} ι} {f : ι -> α}, (Finset.SupIndep.{u2, u1} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)) _inst_2 (Finset.toSet.{u1} ι s) f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjointₓ'. -/
-/- warning: set.pairwise_disjoint.sup_indep -> Set.PairwiseDisjoint.supIndep is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {s : Finset.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) s) f) -> (Finset.SupIndep.{u1, u2} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 s f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (Finset.toSet.{u1} ι s) f) -> (Finset.SupIndep.{u2, u1} α ι (DistribLattice.toLattice.{u2} α _inst_1) _inst_2 s f)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.sup_indep Set.PairwiseDisjoint.supIndepₓ'. -/
 alias sup_indep_iff_pairwise_disjoint ↔
   sup_indep.pairwise_disjoint _root_.set.pairwise_disjoint.sup_indep
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 #align set.pairwise_disjoint.sup_indep Set.PairwiseDisjoint.supIndep
 
-/- warning: finset.sup_indep.sup -> Finset.SupIndep.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u2} ι] {s : Finset.{u3} ι'} {g : ι' -> (Finset.{u2} ι)} {f : ι -> α}, (Finset.SupIndep.{u1, u3} α ι' (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 s (fun (i : ι') => Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 (g i) f)) -> (forall (i' : ι'), (Membership.Mem.{u3, u3} ι' (Finset.{u3} ι') (Finset.hasMem.{u3} ι') i' s) -> (Finset.SupIndep.{u1, u2} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (g i') f)) -> (Finset.SupIndep.{u1, u2} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (Finset.sup.{u2, u3} (Finset.{u2} ι) ι' (Lattice.toSemilatticeSup.{u2} (Finset.{u2} ι) (Finset.lattice.{u2} ι (fun (a : ι) (b : ι) => _inst_3 a b))) (Finset.orderBot.{u2} ι) s g) f)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u3}} {ι' : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u3} ι] {s : Finset.{u2} ι'} {g : ι' -> (Finset.{u3} ι)} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι' (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 s (fun (i : ι') => Finset.sup.{u1, u3} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 (g i) f)) -> (forall (i' : ι'), (Membership.mem.{u2, u2} ι' (Finset.{u2} ι') (Finset.instMembershipFinset.{u2} ι') i' s) -> (Finset.SupIndep.{u1, u3} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (g i') f)) -> (Finset.SupIndep.{u1, u3} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (Finset.sup.{u3, u2} (Finset.{u3} ι) ι' (Lattice.toSemilatticeSup.{u3} (Finset.{u3} ι) (Finset.instLatticeFinset.{u3} ι (fun (a : ι) (b : ι) => _inst_3 a b))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u3} ι) s g) f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.sup Finset.SupIndep.supₓ'. -/
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
@@ -253,12 +169,6 @@ theorem SupIndep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {
   exact hs.bUnion_finset hg
 #align finset.sup_indep.sup Finset.SupIndep.sup
 
-/- warning: finset.sup_indep.bUnion -> Finset.SupIndep.biUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u2} ι] {s : Finset.{u3} ι'} {g : ι' -> (Finset.{u2} ι)} {f : ι -> α}, (Finset.SupIndep.{u1, u3} α ι' (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 s (fun (i : ι') => Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 (g i) f)) -> (forall (i' : ι'), (Membership.Mem.{u3, u3} ι' (Finset.{u3} ι') (Finset.hasMem.{u3} ι') i' s) -> (Finset.SupIndep.{u1, u2} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (g i') f)) -> (Finset.SupIndep.{u1, u2} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (Finset.biUnion.{u3, u2} ι' ι (fun (a : ι) (b : ι) => _inst_3 a b) s g) f)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u3}} {ι' : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] [_inst_3 : DecidableEq.{succ u3} ι] {s : Finset.{u2} ι'} {g : ι' -> (Finset.{u3} ι)} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι' (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 s (fun (i : ι') => Finset.sup.{u1, u3} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 (g i) f)) -> (forall (i' : ι'), (Membership.mem.{u2, u2} ι' (Finset.{u2} ι') (Finset.instMembershipFinset.{u2} ι') i' s) -> (Finset.SupIndep.{u1, u3} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (g i') f)) -> (Finset.SupIndep.{u1, u3} α ι (DistribLattice.toLattice.{u1} α _inst_1) _inst_2 (Finset.biUnion.{u2, u3} ι' ι (fun (a : ι) (b : ι) => _inst_3 a b) s g) f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.bUnion Finset.SupIndep.biUnionₓ'. -/
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.biUnion [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
@@ -325,12 +235,6 @@ theorem setIndependent_pair {a b : α} (hab : a ≠ b) :
 
 include hs
 
-/- warning: complete_lattice.set_independent.disjoint_Sup -> CompleteLattice.SetIndependent.disjoint_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u1} α}, (CompleteLattice.SetIndependent.{u1} α _inst_1 s) -> (forall {x : α} {y : Set.{u1} α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) y s) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x y)) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) x (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) y)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u1} α}, (CompleteLattice.SetIndependent.{u1} α _inst_1 s) -> (forall {x : α} {y : Set.{u1} α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) y s) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x y)) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) x (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) y)))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.set_independent.disjoint_Sup CompleteLattice.SetIndependent.disjoint_sSupₓ'. -/
 /-- If the elements of a set are independent, then any element is disjoint from the `Sup` of some
 subset of the rest. -/
 theorem SetIndependent.disjoint_sSup {x : α} {y : Set α} (hx : x ∈ s) (hy : y ⊆ s) (hxy : x ∉ y) :
@@ -373,33 +277,15 @@ theorem setIndependent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 
 variable {t : ι → α} (ht : Independent t)
 
-/- warning: complete_lattice.independent_def -> CompleteLattice.independent_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (iSup.{u1, succ u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (j : ι) => iSup.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => t j))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (iSup.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (j : ι) => iSup.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => t j))))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def CompleteLattice.independent_defₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 #align complete_lattice.independent_def CompleteLattice.independent_def
 
-/- warning: complete_lattice.independent_def' -> CompleteLattice.independent_def' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (Set.image.{u2, u1} ι α t (setOf.{u2} ι (fun (j : ι) => Ne.{succ u2} ι j i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Set.image.{u2, u1} ι α t (setOf.{u2} ι (fun (j : ι) => Ne.{succ u2} ι j i)))))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def' CompleteLattice.independent_def'ₓ'. -/
 theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' { j | j ≠ i })) := by
   simp_rw [sSup_image]; rfl
 #align complete_lattice.independent_def' CompleteLattice.independent_def'
 
-/- warning: complete_lattice.independent_def'' -> CompleteLattice.independent_def'' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => Exists.{succ u2} ι (fun (j : ι) => Exists.{0} (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => Eq.{succ u1} α (t j) a))))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => Exists.{succ u2} ι (fun (j : ι) => Exists.{0} (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => Eq.{succ u1} α (t j) a))))))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def'' CompleteLattice.independent_def''ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def'' :
     Independent t ↔ ∀ i, Disjoint (t i) (sSup { a | ∃ (j : _)(_ : j ≠ i), t j = a }) := by
@@ -427,22 +313,10 @@ theorem Independent.pairwiseDisjoint : Pairwise (Disjoint on t) := fun x y h =>
 #align complete_lattice.independent.pairwise_disjoint CompleteLattice.Independent.pairwiseDisjoint
 -/
 
-/- warning: complete_lattice.independent.mono -> CompleteLattice.Independent.mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : ι -> α} {t : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 s) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) t s) -> (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : ι -> α} {t : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 s) -> (LE.le.{max u1 u2} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) t s) -> (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.mono CompleteLattice.Independent.monoₓ'. -/
 theorem Independent.mono {s t : ι → α} (hs : Independent s) (hst : t ≤ s) : Independent t :=
   fun i => (hs i).mono (hst i) <| iSup₂_mono fun j _ => hst j
 #align complete_lattice.independent.mono CompleteLattice.Independent.mono
 
-/- warning: complete_lattice.independent.comp -> CompleteLattice.Independent.comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {ι : Sort.{u2}} {ι' : Sort.{u3}} {t : ι -> α} {f : ι' -> ι}, (CompleteLattice.Independent.{u2, u1} ι α _inst_1 t) -> (Function.Injective.{u3, u2} ι' ι f) -> (CompleteLattice.Independent.{u3, u1} ι' α _inst_1 (Function.comp.{u3, u2, succ u1} ι' ι α t f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {ι : Sort.{u3}} {ι' : Sort.{u2}} {t : ι -> α} {f : ι' -> ι}, (CompleteLattice.Independent.{u3, u1} ι α _inst_1 t) -> (Function.Injective.{u2, u3} ι' ι f) -> (CompleteLattice.Independent.{u2, u1} ι' α _inst_1 (Function.comp.{u2, u3, succ u1} ι' ι α t f))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.comp CompleteLattice.Independent.compₓ'. -/
 /-- Composing an independent indexed family with an injective function on the index results in
 another indepedendent indexed family. -/
 theorem Independent.comp {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : Independent t)
@@ -453,12 +327,6 @@ theorem Independent.comp {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht 
     exact iSup_const_mono hf.ne
 #align complete_lattice.independent.comp CompleteLattice.Independent.comp
 
-/- warning: complete_lattice.independent.comp' -> CompleteLattice.Independent.comp' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {ι : Sort.{u2}} {ι' : Sort.{u3}} {t : ι -> α} {f : ι' -> ι}, (CompleteLattice.Independent.{u3, u1} ι' α _inst_1 (Function.comp.{u3, u2, succ u1} ι' ι α t f)) -> (Function.Surjective.{u3, u2} ι' ι f) -> (CompleteLattice.Independent.{u2, u1} ι α _inst_1 t)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {ι : Sort.{u3}} {ι' : Sort.{u2}} {t : ι -> α} {f : ι' -> ι}, (CompleteLattice.Independent.{u2, u1} ι' α _inst_1 (Function.comp.{u2, u3, succ u1} ι' ι α t f)) -> (Function.Surjective.{u2, u3} ι' ι f) -> (CompleteLattice.Independent.{u3, u1} ι α _inst_1 t)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.comp' CompleteLattice.Independent.comp'ₓ'. -/
 theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : Independent <| t ∘ f)
     (hf : Surjective f) : Independent t := by
   intro i
@@ -476,12 +344,6 @@ theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <
 #align complete_lattice.independent.set_independent_range CompleteLattice.Independent.setIndependent_range
 -/
 
-/- warning: complete_lattice.independent.injective -> CompleteLattice.Independent.injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) -> (forall (i : ι), Ne.{succ u1} α (t i) (Bot.bot.{u1} α (CompleteLattice.toHasBot.{u1} α _inst_1))) -> (Function.Injective.{succ u2, succ u1} ι α t)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) -> (forall (i : ι), Ne.{succ u1} α (t i) (Bot.bot.{u1} α (CompleteLattice.toBot.{u1} α _inst_1))) -> (Function.Injective.{succ u2, succ u1} ι α t)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.injective CompleteLattice.Independent.injectiveₓ'. -/
 theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ ⊥) : Injective t :=
   by
   intro i j h
@@ -509,9 +371,6 @@ theorem independent_pair {i j : ι} (hij : i ≠ j) (huniv : ∀ k, k = i ∨ k 
 #align complete_lattice.independent_pair CompleteLattice.independent_pair
 -/
 
-/- warning: complete_lattice.independent.map_order_iso -> CompleteLattice.Independent.map_orderIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.map_order_iso CompleteLattice.Independent.map_orderIsoₓ'. -/
 /-- Composing an indepedent indexed family with an order isomorphism on the elements results in
 another indepedendent indexed family. -/
 theorem Independent.map_orderIso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β]
@@ -519,9 +378,6 @@ theorem Independent.map_orderIso {ι : Sort _} {α β : Type _} [CompleteLattice
   ((ha i).map_orderIso f).mono_right (f.Monotone.le_map_iSup₂ _)
 #align complete_lattice.independent.map_order_iso CompleteLattice.Independent.map_orderIso
 
-/- warning: complete_lattice.independent_map_order_iso_iff -> CompleteLattice.independent_map_orderIso_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_map_order_iso_iff CompleteLattice.independent_map_orderIso_iffₓ'. -/
 @[simp]
 theorem independent_map_orderIso_iff {ι : Sort _} {α β : Type _} [CompleteLattice α]
     [CompleteLattice β] (f : α ≃o β) {a : ι → α} : Independent (f ∘ a) ↔ Independent a :=
@@ -531,12 +387,6 @@ theorem independent_map_orderIso_iff {ι : Sort _} {α β : Type _} [CompleteLat
     fun h => h.map_orderIso f⟩
 #align complete_lattice.independent_map_order_iso_iff CompleteLattice.independent_map_orderIso_iff
 
-/- warning: complete_lattice.independent.disjoint_bsupr -> CompleteLattice.Independent.disjoint_biSup is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_2 : CompleteLattice.{u2} α] {t : ι -> α}, (CompleteLattice.Independent.{succ u1, u2} ι α _inst_2 t) -> (forall {x : ι} {y : Set.{u1} ι}, (Not (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) x y)) -> (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_2)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_2)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_2)) (t x) (iSup.{u2, succ u1} α (CompleteSemilatticeSup.toHasSup.{u2} α (CompleteLattice.toCompleteSemilatticeSup.{u2} α _inst_2)) ι (fun (i : ι) => iSup.{u2, 0} α (CompleteSemilatticeSup.toHasSup.{u2} α (CompleteLattice.toCompleteSemilatticeSup.{u2} α _inst_2)) (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i y) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i y) => t i)))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] {t : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} ι α _inst_2 t) -> (forall {x : ι} {y : Set.{u2} ι}, (Not (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) x y)) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_2)) (t x) (iSup.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α _inst_2) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_2) (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i y) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i y) => t i)))))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.disjoint_bsupr CompleteLattice.Independent.disjoint_biSupₓ'. -/
 /-- If the elements of a set are independent, then any element is disjoint from the `supr` of some
 subset of the rest. -/
 theorem Independent.disjoint_biSup {ι : Type _} {α : Type _} [CompleteLattice α] {t : ι → α}
@@ -546,12 +396,6 @@ theorem Independent.disjoint_biSup {ι : Type _} {α : Type _} [CompleteLattice 
 
 end CompleteLattice
 
-/- warning: complete_lattice.independent_iff_sup_indep -> CompleteLattice.independent_iff_supIndep is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Finset.{u2} ι} {f : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) α _inst_1 (Function.comp.{succ u2, succ u2, succ u1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι α f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s)))))))) (Finset.SupIndep.{u1, u2} α ι (CompleteLattice.toLattice.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) s f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] {s : Finset.{u1} ι} {f : ι -> α}, Iff (CompleteLattice.Independent.{succ u1, u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) α _inst_1 (Function.comp.{succ u1, succ u1, succ u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) ι α f (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)))) (Finset.SupIndep.{u2, u1} α ι (CompleteLattice.toLattice.{u2} α _inst_1) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) s f)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndepₓ'. -/
 theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
     CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by
   classical
@@ -564,29 +408,11 @@ theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finse
     simp [iSup_and, @iSup_comm _ (x ∈ s)]
 #align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndep
 
-/- warning: complete_lattice.independent.sup_indep -> CompleteLattice.Independent.supIndep is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Finset.{u2} ι} {f : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) α _inst_1 (Function.comp.{succ u2, succ u2, succ u1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι α f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s)))))))) -> (Finset.SupIndep.{u1, u2} α ι (CompleteLattice.toLattice.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) s f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] {s : Finset.{u1} ι} {f : ι -> α}, (CompleteLattice.Independent.{succ u1, u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) α _inst_1 (Function.comp.{succ u1, succ u1, succ u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) ι α f (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)))) -> (Finset.SupIndep.{u2, u1} α ι (CompleteLattice.toLattice.{u2} α _inst_1) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) s f)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.sup_indep CompleteLattice.Independent.supIndepₓ'. -/
-/- warning: finset.sup_indep.independent -> Finset.SupIndep.independent is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Finset.{u2} ι} {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι (CompleteLattice.toLattice.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) s f) -> (CompleteLattice.Independent.{succ u2, u1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) α _inst_1 (Function.comp.{succ u2, succ u2, succ u1} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι α f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Finset.{u2} ι) Type.{u2} (Finset.hasCoeToSort.{u2} ι) s) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) x s))))))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] {s : Finset.{u1} ι} {f : ι -> α}, (Finset.SupIndep.{u2, u1} α ι (CompleteLattice.toLattice.{u2} α _inst_1) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) s f) -> (CompleteLattice.Independent.{succ u1, u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) α _inst_1 (Function.comp.{succ u1, succ u1, succ u2} (Subtype.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s)) ι α f (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) x s))))
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.independent Finset.SupIndep.independentₓ'. -/
 alias CompleteLattice.independent_iff_supIndep ↔
   CompleteLattice.Independent.supIndep Finset.SupIndep.independent
 #align complete_lattice.independent.sup_indep CompleteLattice.Independent.supIndep
 #align finset.sup_indep.independent Finset.SupIndep.independent
 
-/- warning: complete_lattice.independent_iff_sup_indep_univ -> CompleteLattice.independent_iff_supIndep_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : Fintype.{u2} ι] {f : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 f) (Finset.SupIndep.{u1, u2} α ι (CompleteLattice.toLattice.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (Finset.univ.{u2} ι _inst_2) f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : Fintype.{u1} ι] {f : ι -> α}, Iff (CompleteLattice.Independent.{succ u1, u2} ι α _inst_1 f) (Finset.SupIndep.{u2, u1} α ι (CompleteLattice.toLattice.{u2} α _inst_1) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (Finset.univ.{u1} ι _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_iff_sup_indep_univ CompleteLattice.independent_iff_supIndep_univₓ'. -/
 /-- A variant of `complete_lattice.independent_iff_sup_indep` for `fintype`s. -/
 theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
     CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by
@@ -594,18 +420,6 @@ theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fint
       Finset.sup_eq_iSup]
 #align complete_lattice.independent_iff_sup_indep_univ CompleteLattice.independent_iff_supIndep_univ
 
-/- warning: complete_lattice.independent.sup_indep_univ -> CompleteLattice.Independent.sup_indep_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : Fintype.{u2} ι] {f : ι -> α}, (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 f) -> (Finset.SupIndep.{u1, u2} α ι (CompleteLattice.toLattice.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (Finset.univ.{u2} ι _inst_2) f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : Fintype.{u1} ι] {f : ι -> α}, (CompleteLattice.Independent.{succ u1, u2} ι α _inst_1 f) -> (Finset.SupIndep.{u2, u1} α ι (CompleteLattice.toLattice.{u2} α _inst_1) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (Finset.univ.{u1} ι _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.sup_indep_univ CompleteLattice.Independent.sup_indep_univₓ'. -/
-/- warning: finset.sup_indep.independent_of_univ -> Finset.SupIndep.independent_of_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : Fintype.{u2} ι] {f : ι -> α}, (Finset.SupIndep.{u1, u2} α ι (CompleteLattice.toLattice.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (Finset.univ.{u2} ι _inst_2) f) -> (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 f)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : Fintype.{u1} ι] {f : ι -> α}, (Finset.SupIndep.{u2, u1} α ι (CompleteLattice.toLattice.{u2} α _inst_1) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (Finset.univ.{u1} ι _inst_2) f) -> (CompleteLattice.Independent.{succ u1, u2} ι α _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_indep.independent_of_univ Finset.SupIndep.independent_of_univₓ'. -/
 alias CompleteLattice.independent_iff_supIndep_univ ↔
   CompleteLattice.Independent.sup_indep_univ Finset.SupIndep.independent_of_univ
 #align complete_lattice.independent.sup_indep_univ CompleteLattice.Independent.sup_indep_univ

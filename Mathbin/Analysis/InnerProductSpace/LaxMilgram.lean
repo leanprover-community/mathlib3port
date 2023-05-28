@@ -58,9 +58,6 @@ variable {B : V →L[ℝ] V →L[ℝ] ℝ}
 -- mathport name: «expr ♯»
 local postfix:1024 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _ _
 
-/- warning: is_coercive.bounded_below -> IsCoercive.bounded_below is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_coercive.bounded_below IsCoercive.bounded_belowₓ'. -/
 theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ‖v‖ ≤ ‖B♯ v‖ :=
   by
   rcases coercive with ⟨C, C_ge_0, coercivity⟩
@@ -77,9 +74,6 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
     simp [this]
 #align is_coercive.bounded_below IsCoercive.bounded_below
 
-/- warning: is_coercive.antilipschitz -> IsCoercive.antilipschitz is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_coercive.antilipschitz IsCoercive.antilipschitzₓ'. -/
 theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ AntilipschitzWith C B♯ :=
   by
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
@@ -90,9 +84,6 @@ theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ Ant
   simpa using below_bound
 #align is_coercive.antilipschitz IsCoercive.antilipschitz
 
-/- warning: is_coercive.ker_eq_bot -> IsCoercive.ker_eq_bot is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_coercive.ker_eq_bot IsCoercive.ker_eq_botₓ'. -/
 theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ :=
   by
   rw [LinearMapClass.ker_eq_bot]
@@ -108,9 +99,6 @@ theorem closed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) :
 #align is_coercive.closed_range IsCoercive.closed_range
 -/
 
-/- warning: is_coercive.range_eq_top -> IsCoercive.range_eq_top is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_coercive.range_eq_top IsCoercive.range_eq_topₓ'. -/
 theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ :=
   by
   haveI := coercive.closed_range.complete_space_coe
@@ -144,18 +132,12 @@ def continuousLinearEquivOfBilin (coercive : IsCoercive B) : V ≃L[ℝ] V :=
 #align is_coercive.continuous_linear_equiv_of_bilin IsCoercive.continuousLinearEquivOfBilin
 -/
 
-/- warning: is_coercive.continuous_linear_equiv_of_bilin_apply -> IsCoercive.continuousLinearEquivOfBilin_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_coercive.continuous_linear_equiv_of_bilin_apply IsCoercive.continuousLinearEquivOfBilin_applyₓ'. -/
 @[simp]
 theorem continuousLinearEquivOfBilin_apply (coercive : IsCoercive B) (v w : V) :
     ⟪coercive.continuousLinearEquivOfBilin v, w⟫_ℝ = B v w :=
   continuousLinearMapOfBilin_apply ℝ B v w
 #align is_coercive.continuous_linear_equiv_of_bilin_apply IsCoercive.continuousLinearEquivOfBilin_apply
 
-/- warning: is_coercive.unique_continuous_linear_equiv_of_bilin -> IsCoercive.unique_continuousLinearEquivOfBilin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_coercive.unique_continuous_linear_equiv_of_bilin IsCoercive.unique_continuousLinearEquivOfBilinₓ'. -/
 theorem unique_continuousLinearEquivOfBilin (coercive : IsCoercive B) {v f : V}
     (is_lax_milgram : ∀ w, ⟪f, w⟫_ℝ = B v w) : f = coercive.continuousLinearEquivOfBilin v :=
   unique_continuousLinearMapOfBilin ℝ B is_lax_milgram

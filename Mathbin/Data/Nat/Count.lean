@@ -148,12 +148,6 @@ alias count_succ_eq_succ_count_iff ↔ _ count_succ_eq_succ_count
 alias count_succ_eq_count_iff ↔ _ count_succ_eq_count
 #align nat.count_succ_eq_count Nat.count_succ_eq_count
 
-/- warning: nat.count_le_cardinal -> Nat.count_le_cardinal is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat -> Prop} [_inst_1 : DecidablePred.{1} Nat p] (n : Nat), LE.le.{1} Cardinal.{0} Cardinal.hasLe.{0} ((fun (a : Type) (b : Type.{1}) [self : HasLiftT.{1, 2} a b] => self.0) Nat Cardinal.{0} (HasLiftT.mk.{1, 2} Nat Cardinal.{0} (CoeTCₓ.coe.{1, 2} Nat Cardinal.{0} (Nat.castCoe.{1} Cardinal.{0} Cardinal.hasNatCast.{0}))) (Nat.count p (fun (a : Nat) => _inst_1 a) n)) (Cardinal.mk.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (setOf.{0} Nat (fun (k : Nat) => p k))))
-but is expected to have type
-  forall {p : Nat -> Prop} [_inst_1 : DecidablePred.{1} Nat p] (n : Nat), LE.le.{1} Cardinal.{0} Cardinal.instLECardinal.{0} (Nat.cast.{1} Cardinal.{0} Cardinal.instNatCastCardinal.{0} (Nat.count p (fun (a : Nat) => _inst_1 a) n)) (Cardinal.mk.{0} (Set.Elem.{0} Nat (setOf.{0} Nat (fun (k : Nat) => p k))))
-Case conversion may be inaccurate. Consider using '#align nat.count_le_cardinal Nat.count_le_cardinalₓ'. -/
 theorem count_le_cardinal (n : ℕ) : (count p n : Cardinal) ≤ Cardinal.mk { k | p k } :=
   by
   rw [count_eq_card_fintype, ← Cardinal.mk_fintype]

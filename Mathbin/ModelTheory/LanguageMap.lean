@@ -182,12 +182,6 @@ theorem comp_id (F : L →ᴸ L') : F ∘ LHom.id L = F := by cases F; rfl
 #align first_order.language.Lhom.comp_id FirstOrder.Language.LHom.comp_id
 -/
 
-/- warning: first_order.language.Lhom.comp_assoc -> FirstOrder.Language.LHom.comp_assoc is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} {L'' : FirstOrder.Language.{u5, u6}} {L3 : FirstOrder.Language.{u7, u8}} (F : FirstOrder.Language.LHom.{u5, u6, u7, u8} L'' L3) (G : FirstOrder.Language.LHom.{u3, u4, u5, u6} L' L'') (H : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L'), Eq.{max (succ u1) (succ u7) (succ u2) (succ u8)} (FirstOrder.Language.LHom.{u1, u2, u7, u8} L L3) (FirstOrder.Language.LHom.comp.{u1, u2, u3, u4, u7, u8} L L' L3 (FirstOrder.Language.LHom.comp.{u3, u4, u5, u6, u7, u8} L' L'' L3 F G) H) (FirstOrder.Language.LHom.comp.{u1, u2, u5, u6, u7, u8} L L'' L3 F (FirstOrder.Language.LHom.comp.{u1, u2, u3, u4, u5, u6} L L' L'' G H))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u5, u6}} {L' : FirstOrder.Language.{u7, u8}} {L'' : FirstOrder.Language.{u2, u1}} {L3 : FirstOrder.Language.{u4, u3}} (F : FirstOrder.Language.LHom.{u2, u1, u4, u3} L'' L3) (G : FirstOrder.Language.LHom.{u7, u8, u2, u1} L' L'') (H : FirstOrder.Language.LHom.{u5, u6, u7, u8} L L'), Eq.{max (max (max (succ u5) (succ u6)) (succ u3)) (succ u4)} (FirstOrder.Language.LHom.{u5, u6, u4, u3} L L3) (FirstOrder.Language.LHom.comp.{u5, u6, u7, u8, u4, u3} L L' L3 (FirstOrder.Language.LHom.comp.{u7, u8, u2, u1, u4, u3} L' L'' L3 F G) H) (FirstOrder.Language.LHom.comp.{u5, u6, u2, u1, u4, u3} L L'' L3 F (FirstOrder.Language.LHom.comp.{u5, u6, u7, u8, u2, u1} L L' L'' G H))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.comp_assoc FirstOrder.Language.LHom.comp_assocₓ'. -/
 theorem comp_assoc {L3 : Language} (F : L'' →ᴸ L3) (G : L' →ᴸ L'') (H : L →ᴸ L') :
     F ∘ G ∘ H = F ∘ (G ∘ H) :=
   rfl
@@ -207,22 +201,10 @@ protected def sumElim : L.Sum L'' →ᴸ L'
 #align first_order.language.Lhom.sum_elim FirstOrder.Language.LHom.sumElim
 -/
 
-/- warning: first_order.language.Lhom.sum_elim_comp_inl -> FirstOrder.Language.LHom.sumElim_comp_inl is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {L'' : FirstOrder.Language.{u5, u6}} (ψ : FirstOrder.Language.LHom.{u5, u6, u3, u4} L'' L'), Eq.{max (succ u1) (succ u3) (succ u2) (succ u4)} (FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') (FirstOrder.Language.LHom.comp.{u1, u2, max u1 u5, max u2 u6, u3, u4} L (FirstOrder.Language.sum.{u1, u2, u5, u6} L L'') L' (FirstOrder.Language.LHom.sumElim.{u1, u2, u3, u4, u5, u6} L L' ϕ L'' ψ) (FirstOrder.Language.LHom.sumInl.{u1, u2, u5, u6} L L'')) ϕ
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u5, u6}} (ϕ : FirstOrder.Language.LHom.{u3, u4, u5, u6} L L') {L'' : FirstOrder.Language.{u2, u1}} (ψ : FirstOrder.Language.LHom.{u2, u1, u5, u6} L'' L'), Eq.{max (max (max (succ u3) (succ u5)) (succ u4)) (succ u6)} (FirstOrder.Language.LHom.{u3, u4, u5, u6} L L') (FirstOrder.Language.LHom.comp.{u3, u4, max u3 u2, max u4 u1, u5, u6} L (FirstOrder.Language.sum.{u3, u4, u2, u1} L L'') L' (FirstOrder.Language.LHom.sumElim.{u3, u4, u5, u6, u2, u1} L L' ϕ L'' ψ) (FirstOrder.Language.LHom.sumInl.{u3, u4, u2, u1} L L'')) ϕ
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.sum_elim_comp_inl FirstOrder.Language.LHom.sumElim_comp_inlₓ'. -/
 theorem sumElim_comp_inl (ψ : L'' →ᴸ L') : ϕ.sum_elim ψ ∘ LHom.sumInl = ϕ :=
   LHom.funext (funext fun _ => rfl) (funext fun _ => rfl)
 #align first_order.language.Lhom.sum_elim_comp_inl FirstOrder.Language.LHom.sumElim_comp_inl
 
-/- warning: first_order.language.Lhom.sum_elim_comp_inr -> FirstOrder.Language.LHom.sumElim_comp_inr is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {L'' : FirstOrder.Language.{u5, u6}} (ψ : FirstOrder.Language.LHom.{u5, u6, u3, u4} L'' L'), Eq.{max (succ u5) (succ u3) (succ u6) (succ u4)} (FirstOrder.Language.LHom.{u5, u6, u3, u4} L'' L') (FirstOrder.Language.LHom.comp.{u5, u6, max u1 u5, max u2 u6, u3, u4} L'' (FirstOrder.Language.sum.{u1, u2, u5, u6} L L'') L' (FirstOrder.Language.LHom.sumElim.{u1, u2, u3, u4, u5, u6} L L' ϕ L'' ψ) (FirstOrder.Language.LHom.sumInr.{u1, u2, u5, u6} L L'')) ψ
-but is expected to have type
-  forall {L : FirstOrder.Language.{u3, u4}} {L' : FirstOrder.Language.{u5, u6}} (ϕ : FirstOrder.Language.LHom.{u3, u4, u5, u6} L L') {L'' : FirstOrder.Language.{u2, u1}} (ψ : FirstOrder.Language.LHom.{u2, u1, u5, u6} L'' L'), Eq.{max (max (max (succ u5) (succ u6)) (succ u1)) (succ u2)} (FirstOrder.Language.LHom.{u2, u1, u5, u6} L'' L') (FirstOrder.Language.LHom.comp.{u2, u1, max u3 u2, max u4 u1, u5, u6} L'' (FirstOrder.Language.sum.{u3, u4, u2, u1} L L'') L' (FirstOrder.Language.LHom.sumElim.{u3, u4, u5, u6, u2, u1} L L' ϕ L'' ψ) (FirstOrder.Language.LHom.sumInr.{u3, u4, u2, u1} L L'')) ψ
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.sum_elim_comp_inr FirstOrder.Language.LHom.sumElim_comp_inrₓ'. -/
 theorem sumElim_comp_inr (ψ : L'' →ᴸ L') : ϕ.sum_elim ψ ∘ LHom.sumInr = ψ :=
   LHom.funext (funext fun _ => rfl) (funext fun _ => rfl)
 #align first_order.language.Lhom.sum_elim_comp_inr FirstOrder.Language.LHom.sumElim_comp_inr
@@ -233,12 +215,6 @@ theorem sumElim_inl_inr : LHom.sumInl.sum_elim LHom.sumInr = LHom.id (L.Sum L') 
 #align first_order.language.Lhom.sum_elim_inl_inr FirstOrder.Language.LHom.sumElim_inl_inr
 -/
 
-/- warning: first_order.language.Lhom.comp_sum_elim -> FirstOrder.Language.LHom.comp_sumElim is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {L'' : FirstOrder.Language.{u5, u6}} (ψ : FirstOrder.Language.LHom.{u5, u6, u3, u4} L'' L') {L3 : FirstOrder.Language.{u7, u8}} (θ : FirstOrder.Language.LHom.{u3, u4, u7, u8} L' L3), Eq.{max (succ (max u1 u5)) (succ u7) (succ (max u2 u6)) (succ u8)} (FirstOrder.Language.LHom.{max u1 u5, max u2 u6, u7, u8} (FirstOrder.Language.sum.{u1, u2, u5, u6} L L'') L3) (FirstOrder.Language.LHom.comp.{max u1 u5, max u2 u6, u3, u4, u7, u8} (FirstOrder.Language.sum.{u1, u2, u5, u6} L L'') L' L3 θ (FirstOrder.Language.LHom.sumElim.{u1, u2, u3, u4, u5, u6} L L' ϕ L'' ψ)) (FirstOrder.Language.LHom.sumElim.{u1, u2, u7, u8, u5, u6} L L3 (FirstOrder.Language.LHom.comp.{u1, u2, u3, u4, u7, u8} L L' L3 θ ϕ) L'' (FirstOrder.Language.LHom.comp.{u5, u6, u3, u4, u7, u8} L'' L' L3 θ ψ))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u5, u6}} {L' : FirstOrder.Language.{u7, u8}} (ϕ : FirstOrder.Language.LHom.{u5, u6, u7, u8} L L') {L'' : FirstOrder.Language.{u1, u2}} (ψ : FirstOrder.Language.LHom.{u1, u2, u7, u8} L'' L') {L3 : FirstOrder.Language.{u4, u3}} (θ : FirstOrder.Language.LHom.{u7, u8, u4, u3} L' L3), Eq.{max (max (max (max (max (succ u5) (succ u6)) (succ u2)) (succ u1)) (succ u3)) (succ u4)} (FirstOrder.Language.LHom.{max u5 u1, max u6 u2, u4, u3} (FirstOrder.Language.sum.{u5, u6, u1, u2} L L'') L3) (FirstOrder.Language.LHom.comp.{max u5 u1, max u6 u2, u7, u8, u4, u3} (FirstOrder.Language.sum.{u5, u6, u1, u2} L L'') L' L3 θ (FirstOrder.Language.LHom.sumElim.{u5, u6, u7, u8, u1, u2} L L' ϕ L'' ψ)) (FirstOrder.Language.LHom.sumElim.{u5, u6, u4, u3, u1, u2} L L3 (FirstOrder.Language.LHom.comp.{u5, u6, u7, u8, u4, u3} L L' L3 θ ϕ) L'' (FirstOrder.Language.LHom.comp.{u1, u2, u7, u8, u4, u3} L'' L' L3 θ ψ))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.comp_sum_elim FirstOrder.Language.LHom.comp_sumElimₓ'. -/
 theorem comp_sumElim {L3 : Language} (θ : L' →ᴸ L3) : θ ∘ ϕ.sum_elim ψ = (θ ∘ ϕ).sum_elim (θ ∘ ψ) :=
   LHom.funext (funext fun n => Sum.comp_elim _ _ _) (funext fun n => Sum.comp_elim _ _ _)
 #align first_order.language.Lhom.comp_sum_elim FirstOrder.Language.LHom.comp_sumElim
@@ -259,23 +235,11 @@ def sumMap : L.Sum L₁ →ᴸ L'.Sum L₂
 #align first_order.language.Lhom.sum_map FirstOrder.Language.LHom.sumMap
 -/
 
-/- warning: first_order.language.Lhom.sum_map_comp_inl -> FirstOrder.Language.LHom.sumMap_comp_inl is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {L₁ : FirstOrder.Language.{u5, u6}} {L₂ : FirstOrder.Language.{u7, u8}} (ψ : FirstOrder.Language.LHom.{u5, u6, u7, u8} L₁ L₂), Eq.{max (succ u1) (succ (max u3 u7)) (succ u2) (succ (max u4 u8))} (FirstOrder.Language.LHom.{u1, u2, max u3 u7, max u4 u8} L (FirstOrder.Language.sum.{u3, u4, u7, u8} L' L₂)) (FirstOrder.Language.LHom.comp.{u1, u2, max u1 u5, max u2 u6, max u3 u7, max u4 u8} L (FirstOrder.Language.sum.{u1, u2, u5, u6} L L₁) (FirstOrder.Language.sum.{u3, u4, u7, u8} L' L₂) (FirstOrder.Language.LHom.sumMap.{u1, u2, u3, u4, u5, u6, u7, u8} L L' ϕ L₁ L₂ ψ) (FirstOrder.Language.LHom.sumInl.{u1, u2, u5, u6} L L₁)) (FirstOrder.Language.LHom.comp.{u1, u2, u3, u4, max u3 u7, max u4 u8} L L' (FirstOrder.Language.sum.{u3, u4, u7, u8} L' L₂) (FirstOrder.Language.LHom.sumInl.{u3, u4, u7, u8} L' L₂) ϕ)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u5, u6}} {L' : FirstOrder.Language.{u7, u8}} (ϕ : FirstOrder.Language.LHom.{u5, u6, u7, u8} L L') {L₁ : FirstOrder.Language.{u2, u1}} {L₂ : FirstOrder.Language.{u3, u4}} (ψ : FirstOrder.Language.LHom.{u2, u1, u3, u4} L₁ L₂), Eq.{max (max (max (max (max (succ u5) (succ u7)) (succ u6)) (succ u8)) (succ u4)) (succ u3)} (FirstOrder.Language.LHom.{u5, u6, max u7 u3, max u8 u4} L (FirstOrder.Language.sum.{u7, u8, u3, u4} L' L₂)) (FirstOrder.Language.LHom.comp.{u5, u6, max u5 u2, max u6 u1, max u7 u3, max u8 u4} L (FirstOrder.Language.sum.{u5, u6, u2, u1} L L₁) (FirstOrder.Language.sum.{u7, u8, u3, u4} L' L₂) (FirstOrder.Language.LHom.sumMap.{u5, u6, u7, u8, u2, u1, u3, u4} L L' ϕ L₁ L₂ ψ) (FirstOrder.Language.LHom.sumInl.{u5, u6, u2, u1} L L₁)) (FirstOrder.Language.LHom.comp.{u5, u6, u7, u8, max u3 u7, max u4 u8} L L' (FirstOrder.Language.sum.{u7, u8, u3, u4} L' L₂) (FirstOrder.Language.LHom.sumInl.{u7, u8, u3, u4} L' L₂) ϕ)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.sum_map_comp_inl FirstOrder.Language.LHom.sumMap_comp_inlₓ'. -/
 @[simp]
 theorem sumMap_comp_inl : ϕ.sum_map ψ ∘ LHom.sumInl = LHom.sumInl ∘ ϕ :=
   LHom.funext (funext fun _ => rfl) (funext fun _ => rfl)
 #align first_order.language.Lhom.sum_map_comp_inl FirstOrder.Language.LHom.sumMap_comp_inl
 
-/- warning: first_order.language.Lhom.sum_map_comp_inr -> FirstOrder.Language.LHom.sumMap_comp_inr is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {L₁ : FirstOrder.Language.{u5, u6}} {L₂ : FirstOrder.Language.{u7, u8}} (ψ : FirstOrder.Language.LHom.{u5, u6, u7, u8} L₁ L₂), Eq.{max (succ u5) (succ (max u3 u7)) (succ u6) (succ (max u4 u8))} (FirstOrder.Language.LHom.{u5, u6, max u3 u7, max u4 u8} L₁ (FirstOrder.Language.sum.{u3, u4, u7, u8} L' L₂)) (FirstOrder.Language.LHom.comp.{u5, u6, max u1 u5, max u2 u6, max u3 u7, max u4 u8} L₁ (FirstOrder.Language.sum.{u1, u2, u5, u6} L L₁) (FirstOrder.Language.sum.{u3, u4, u7, u8} L' L₂) (FirstOrder.Language.LHom.sumMap.{u1, u2, u3, u4, u5, u6, u7, u8} L L' ϕ L₁ L₂ ψ) (FirstOrder.Language.LHom.sumInr.{u1, u2, u5, u6} L L₁)) (FirstOrder.Language.LHom.comp.{u5, u6, u7, u8, max u3 u7, max u4 u8} L₁ L₂ (FirstOrder.Language.sum.{u3, u4, u7, u8} L' L₂) (FirstOrder.Language.LHom.sumInr.{u3, u4, u7, u8} L' L₂) ψ)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u5, u6}} {L' : FirstOrder.Language.{u7, u8}} (ϕ : FirstOrder.Language.LHom.{u5, u6, u7, u8} L L') {L₁ : FirstOrder.Language.{u3, u4}} {L₂ : FirstOrder.Language.{u1, u2}} (ψ : FirstOrder.Language.LHom.{u3, u4, u1, u2} L₁ L₂), Eq.{max (max (max (max (max (succ u7) (succ u8)) (succ u4)) (succ u3)) (succ u2)) (succ u1)} (FirstOrder.Language.LHom.{u3, u4, max u7 u1, max u8 u2} L₁ (FirstOrder.Language.sum.{u7, u8, u1, u2} L' L₂)) (FirstOrder.Language.LHom.comp.{u3, u4, max u5 u3, max u6 u4, max u7 u1, max u8 u2} L₁ (FirstOrder.Language.sum.{u5, u6, u3, u4} L L₁) (FirstOrder.Language.sum.{u7, u8, u1, u2} L' L₂) (FirstOrder.Language.LHom.sumMap.{u5, u6, u7, u8, u3, u4, u1, u2} L L' ϕ L₁ L₂ ψ) (FirstOrder.Language.LHom.sumInr.{u5, u6, u3, u4} L L₁)) (FirstOrder.Language.LHom.comp.{u3, u4, u1, u2, max u1 u7, max u2 u8} L₁ L₂ (FirstOrder.Language.sum.{u7, u8, u1, u2} L' L₂) (FirstOrder.Language.LHom.sumInr.{u7, u8, u1, u2} L' L₂) ψ)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.sum_map_comp_inr FirstOrder.Language.LHom.sumMap_comp_inrₓ'. -/
 @[simp]
 theorem sumMap_comp_inr : ϕ.sum_map ψ ∘ LHom.sumInr = LHom.sumInr ∘ ψ :=
   LHom.funext (funext fun _ => rfl) (funext fun _ => rfl)
@@ -317,24 +281,12 @@ class IsExpansionOn (M : Type _) [L.Structure M] [L'.Structure M] : Prop where
 #align first_order.language.Lhom.is_expansion_on FirstOrder.Language.LHom.IsExpansionOn
 -/
 
-/- warning: first_order.language.Lhom.map_on_function -> FirstOrder.Language.LHom.map_onFunction is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {M : Type.{u5}} [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L M] [_inst_3 : FirstOrder.Language.Structure.{u3, u4, u5} L' M] [_inst_4 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u3, u4, u5} L L' ϕ M _inst_2 _inst_3] {n : Nat} (f : FirstOrder.Language.Functions.{u1, u2} L n) (x : (Fin n) -> M), Eq.{succ u5} M (FirstOrder.Language.Structure.funMap.{u3, u4, u5} L' M _inst_3 n (FirstOrder.Language.LHom.onFunction.{u1, u2, u3, u4} L L' ϕ n f) x) (FirstOrder.Language.Structure.funMap.{u1, u2, u5} L M _inst_2 n f x)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {L' : FirstOrder.Language.{u4, u5}} (ϕ : FirstOrder.Language.LHom.{u2, u3, u4, u5} L L') {M : Type.{u1}} [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L M] [_inst_3 : FirstOrder.Language.Structure.{u4, u5, u1} L' M] [_inst_4 : FirstOrder.Language.LHom.IsExpansionOn.{u2, u3, u4, u5, u1} L L' ϕ M _inst_2 _inst_3] {n : Nat} (f : FirstOrder.Language.Functions.{u2, u3} L n) (x : (Fin n) -> M), Eq.{succ u1} M (FirstOrder.Language.Structure.funMap.{u4, u5, u1} L' M _inst_3 n (FirstOrder.Language.LHom.onFunction.{u2, u3, u4, u5} L L' ϕ n f) x) (FirstOrder.Language.Structure.funMap.{u2, u3, u1} L M _inst_2 n f x)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.map_on_function FirstOrder.Language.LHom.map_onFunctionₓ'. -/
 @[simp]
 theorem map_onFunction {M : Type _} [L.Structure M] [L'.Structure M] [ϕ.IsExpansionOn M] {n}
     (f : L.Functions n) (x : Fin n → M) : funMap (ϕ.onFunction f) x = funMap f x :=
   IsExpansionOn.map_onFunction f x
 #align first_order.language.Lhom.map_on_function FirstOrder.Language.LHom.map_onFunction
 
-/- warning: first_order.language.Lhom.map_on_relation -> FirstOrder.Language.LHom.map_onRelation is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} (ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L') {M : Type.{u5}} [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u5} L M] [_inst_3 : FirstOrder.Language.Structure.{u3, u4, u5} L' M] [_inst_4 : FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u3, u4, u5} L L' ϕ M _inst_2 _inst_3] {n : Nat} (R : FirstOrder.Language.Relations.{u1, u2} L n) (x : (Fin n) -> M), Eq.{1} Prop (FirstOrder.Language.Structure.RelMap.{u3, u4, u5} L' M _inst_3 n (FirstOrder.Language.LHom.onRelation.{u1, u2, u3, u4} L L' ϕ n R) x) (FirstOrder.Language.Structure.RelMap.{u1, u2, u5} L M _inst_2 n R x)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {L' : FirstOrder.Language.{u4, u5}} (ϕ : FirstOrder.Language.LHom.{u2, u3, u4, u5} L L') {M : Type.{u1}} [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L M] [_inst_3 : FirstOrder.Language.Structure.{u4, u5, u1} L' M] [_inst_4 : FirstOrder.Language.LHom.IsExpansionOn.{u2, u3, u4, u5, u1} L L' ϕ M _inst_2 _inst_3] {n : Nat} (R : FirstOrder.Language.Relations.{u2, u3} L n) (x : (Fin n) -> M), Eq.{1} Prop (FirstOrder.Language.Structure.RelMap.{u4, u5, u1} L' M _inst_3 n (FirstOrder.Language.LHom.onRelation.{u2, u3, u4, u5} L L' ϕ n R) x) (FirstOrder.Language.Structure.RelMap.{u2, u3, u1} L M _inst_2 n R x)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.map_on_relation FirstOrder.Language.LHom.map_onRelationₓ'. -/
 @[simp]
 theorem map_onRelation {M : Type _} [L.Structure M] [L'.Structure M] [ϕ.IsExpansionOn M] {n}
     (R : L.Relations n) (x : Fin n → M) : RelMap (ϕ.onRelation R) x = RelMap R x :=
@@ -420,12 +372,6 @@ instance (priority := 100) isExpansionOn_reduct (ϕ : L →ᴸ L') (M : Type _) 
 #align first_order.language.Lhom.is_expansion_on_reduct FirstOrder.Language.LHom.isExpansionOn_reduct
 -/
 
-/- warning: first_order.language.Lhom.injective.is_expansion_on_default -> FirstOrder.Language.LHom.Injective.isExpansionOn_default is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u3, u4}} {ϕ : FirstOrder.Language.LHom.{u1, u2, u3, u4} L L'} [_inst_2 : forall (n : Nat) (f : FirstOrder.Language.Functions.{u3, u4} L' n), Decidable (Membership.Mem.{u3, u3} (FirstOrder.Language.Functions.{u3, u4} L' n) (Set.{u3} (FirstOrder.Language.Functions.{u3, u4} L' n)) (Set.hasMem.{u3} (FirstOrder.Language.Functions.{u3, u4} L' n)) f (Set.range.{u3, succ u1} (FirstOrder.Language.Functions.{u3, u4} L' n) (FirstOrder.Language.Functions.{u1, u2} L n) (fun (f : FirstOrder.Language.Functions.{u1, u2} L n) => FirstOrder.Language.LHom.onFunction.{u1, u2, u3, u4} L L' ϕ n f)))] [_inst_3 : forall (n : Nat) (r : FirstOrder.Language.Relations.{u3, u4} L' n), Decidable (Membership.Mem.{u4, u4} (FirstOrder.Language.Relations.{u3, u4} L' n) (Set.{u4} (FirstOrder.Language.Relations.{u3, u4} L' n)) (Set.hasMem.{u4} (FirstOrder.Language.Relations.{u3, u4} L' n)) r (Set.range.{u4, succ u2} (FirstOrder.Language.Relations.{u3, u4} L' n) (FirstOrder.Language.Relations.{u1, u2} L n) (fun (r : FirstOrder.Language.Relations.{u1, u2} L n) => FirstOrder.Language.LHom.onRelation.{u1, u2, u3, u4} L L' ϕ n r)))], (FirstOrder.Language.LHom.Injective.{u1, u2, u3, u4} L L' ϕ) -> (forall (M : Type.{u5}) [_inst_4 : Inhabited.{succ u5} M] [_inst_5 : FirstOrder.Language.Structure.{u1, u2, u5} L M], FirstOrder.Language.LHom.IsExpansionOn.{u1, u2, u3, u4, u5} L L' ϕ M _inst_5 (FirstOrder.Language.LHom.defaultExpansion.{u1, u2, u3, u4, u5} L L' ϕ (fun (n : Nat) (f : FirstOrder.Language.Functions.{u3, u4} L' n) => _inst_2 n f) (fun (n : Nat) (r : FirstOrder.Language.Relations.{u3, u4} L' n) => _inst_3 n r) M _inst_4 _inst_5))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {L' : FirstOrder.Language.{u4, u5}} {ϕ : FirstOrder.Language.LHom.{u2, u3, u4, u5} L L'} [_inst_2 : forall (n : Nat) (f : FirstOrder.Language.Functions.{u4, u5} L' n), Decidable (Membership.mem.{u4, u4} (FirstOrder.Language.Functions.{u4, u5} L' n) (Set.{u4} (FirstOrder.Language.Functions.{u4, u5} L' n)) (Set.instMembershipSet.{u4} (FirstOrder.Language.Functions.{u4, u5} L' n)) f (Set.range.{u4, succ u2} (FirstOrder.Language.Functions.{u4, u5} L' n) (FirstOrder.Language.Functions.{u2, u3} L n) (fun (f : FirstOrder.Language.Functions.{u2, u3} L n) => FirstOrder.Language.LHom.onFunction.{u2, u3, u4, u5} L L' ϕ n f)))] [_inst_3 : forall (n : Nat) (r : FirstOrder.Language.Relations.{u4, u5} L' n), Decidable (Membership.mem.{u5, u5} (FirstOrder.Language.Relations.{u4, u5} L' n) (Set.{u5} (FirstOrder.Language.Relations.{u4, u5} L' n)) (Set.instMembershipSet.{u5} (FirstOrder.Language.Relations.{u4, u5} L' n)) r (Set.range.{u5, succ u3} (FirstOrder.Language.Relations.{u4, u5} L' n) (FirstOrder.Language.Relations.{u2, u3} L n) (fun (r : FirstOrder.Language.Relations.{u2, u3} L n) => FirstOrder.Language.LHom.onRelation.{u2, u3, u4, u5} L L' ϕ n r)))], (FirstOrder.Language.LHom.Injective.{u2, u3, u4, u5} L L' ϕ) -> (forall (M : Type.{u1}) [_inst_4 : Inhabited.{succ u1} M] [_inst_5 : FirstOrder.Language.Structure.{u2, u3, u1} L M], FirstOrder.Language.LHom.IsExpansionOn.{u2, u3, u4, u5, u1} L L' ϕ M _inst_5 (FirstOrder.Language.LHom.defaultExpansion.{u2, u3, u4, u5, u1} L L' ϕ (fun (n : Nat) (f : FirstOrder.Language.Functions.{u4, u5} L' n) => _inst_2 n f) (fun (n : Nat) (r : FirstOrder.Language.Relations.{u4, u5} L' n) => _inst_3 n r) M _inst_4 _inst_5))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.injective.is_expansion_on_default FirstOrder.Language.LHom.Injective.isExpansionOn_defaultₓ'. -/
 theorem Injective.isExpansionOn_default {ϕ : L →ᴸ L'}
     [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => onFunction ϕ f)]
     [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => onRelation ϕ r)]
@@ -581,12 +527,6 @@ def withConstants : Language.{max u w', v} :=
 -- mathport name: language.with_constants
 scoped[FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
 
-/- warning: first_order.language.card_with_constants -> FirstOrder.Language.card_withConstants is a dubious translation:
-lean 3 declaration is
-  forall (L : FirstOrder.Language.{u1, u2}) (α : Type.{u3}), Eq.{succ (succ (max (max u1 u3) u2))} Cardinal.{max (max u1 u3) u2} (FirstOrder.Language.card.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (HAdd.hAdd.{succ (max (max u1 u3) u2), succ (max (max u1 u3) u2), succ (max (max u1 u3) u2)} Cardinal.{max (max u1 u3) u2} Cardinal.{max (max u1 u3) u2} Cardinal.{max (max u1 u3) u2} (instHAdd.{succ (max (max u1 u3) u2)} Cardinal.{max (max u1 u3) u2} Cardinal.hasAdd.{max (max u1 u3) u2}) (Cardinal.lift.{u3, max u1 u2} (FirstOrder.Language.card.{u1, u2} L)) (Cardinal.lift.{max u1 u2, u3} (Cardinal.mk.{u3} α)))
-but is expected to have type
-  forall (L : FirstOrder.Language.{u1, u2}) (α : Type.{u3}), Eq.{max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))} Cardinal.{max (max u1 u3) u2} (FirstOrder.Language.card.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (HAdd.hAdd.{max (max (succ u1) (succ u2)) (succ u3), max (max (succ u1) (succ u2)) (succ u3), max (max (succ u1) (succ u2)) (succ u3)} Cardinal.{max (max u1 u2) u3} Cardinal.{max u3 u1 u2} Cardinal.{max (max u1 u2) u3} (instHAdd.{max (max (succ u1) (succ u2)) (succ u3)} Cardinal.{max (max u1 u2) u3} Cardinal.instAddCardinal.{max (max u1 u2) u3}) (Cardinal.lift.{u3, max u1 u2} (FirstOrder.Language.card.{u1, u2} L)) (Cardinal.lift.{max u1 u2, u3} (Cardinal.mk.{u3} α)))
-Case conversion may be inaccurate. Consider using '#align first_order.language.card_with_constants FirstOrder.Language.card_withConstantsₓ'. -/
 @[simp]
 theorem card_withConstants :
     L[[α]].card = Cardinal.lift.{w'} L.card + Cardinal.lift.{max u v} (#α) := by
@@ -670,12 +610,6 @@ def lhomWithConstantsMap (f : α → β) : L[[α]] →ᴸ L[[β]] :=
 #align first_order.language.Lhom_with_constants_map FirstOrder.Language.lhomWithConstantsMap
 -/
 
-/- warning: first_order.language.Lhom.map_constants_comp_sum_inl -> FirstOrder.Language.LHom.map_constants_comp_sumInl is a dubious translation:
-lean 3 declaration is
-  forall (L : FirstOrder.Language.{u1, u2}) {α : Type.{u3}} {β : Type.{u4}} {f : α -> β}, Eq.{max (succ u1) (succ (max u1 u4)) (succ u2)} (FirstOrder.Language.LHom.{u1, u2, max u1 u4, u2} L (FirstOrder.Language.withConstants.{u1, u2, u4} L β)) (FirstOrder.Language.LHom.comp.{u1, u2, max u1 u3, u2, max u1 u4, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.withConstants.{u1, u2, u4} L β) (FirstOrder.Language.lhomWithConstantsMap.{u1, u2, u3, u4} L α β f) (FirstOrder.Language.LHom.sumInl.{u1, u2, u3, 0} L (FirstOrder.Language.constantsOn.{u3} α))) (FirstOrder.Language.lhomWithConstants.{u1, u2, u4} L β)
-but is expected to have type
-  forall (L : FirstOrder.Language.{u2, u3}) {α : Type.{u4}} {β : Type.{u1}} {f : α -> β}, Eq.{max (max (succ u2) (succ u3)) (succ u1)} (FirstOrder.Language.LHom.{u2, u3, max u2 u1, u3} L (FirstOrder.Language.withConstants.{u2, u3, u1} L β)) (FirstOrder.Language.LHom.comp.{u2, u3, max u2 u4, u3, max u2 u1, u3} L (FirstOrder.Language.withConstants.{u2, u3, u4} L α) (FirstOrder.Language.withConstants.{u2, u3, u1} L β) (FirstOrder.Language.lhomWithConstantsMap.{u2, u3, u4, u1} L α β f) (FirstOrder.Language.LHom.sumInl.{u2, u3, u4, 0} L (FirstOrder.Language.constantsOn.{u4} α))) (FirstOrder.Language.lhomWithConstants.{u2, u3, u1} L β)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.map_constants_comp_sum_inl FirstOrder.Language.LHom.map_constants_comp_sumInlₓ'. -/
 @[simp]
 theorem LHom.map_constants_comp_sumInl {f : α → β} :
     (L.lhomWithConstantsMap f).comp LHom.sumInl = L.lhomWithConstants β := by ext (n f R) <;> rfl
@@ -738,12 +672,6 @@ instance addConstants_expansion {L' : Language} [L'.Structure M] (φ : L →ᴸ 
 #align first_order.language.add_constants_expansion FirstOrder.Language.addConstants_expansion
 -/
 
-/- warning: first_order.language.with_constants_fun_map_sum_inr -> FirstOrder.Language.withConstants_funMap_sum_inr is a dubious translation:
-lean 3 declaration is
-  forall (L : FirstOrder.Language.{u1, u2}) {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] (α : Type.{u4}) [_inst_2 : FirstOrder.Language.Structure.{u4, 0, u3} (FirstOrder.Language.constantsOn.{u4} α) M] {a : α} {x : (Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M}, Eq.{succ u3} M (FirstOrder.Language.Structure.funMap.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M (FirstOrder.Language.withConstantsStructure.{u1, u2, u3, u4} L M _inst_1 α _inst_2) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Sum.inr.{u1, u4} (FirstOrder.Language.Functions.{u1, u2} L (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (FirstOrder.Language.Functions.{u4, 0} (FirstOrder.Language.constantsOn.{u4} α) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a) x) ((fun (a : Type.{max u1 u4}) (b : Type.{u3}) [self : HasLiftT.{succ (max u1 u4), succ u3} a b] => self.0) (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (HasLiftT.mk.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (CoeTCₓ.coe.{succ (max u1 u4), succ u3} (FirstOrder.Language.Constants.{max u1 u4, u2} (FirstOrder.Language.withConstants.{u1, u2, u4} L α)) M (FirstOrder.Language.hasCoeT.{max u1 u4, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u4} L α) M (FirstOrder.Language.withConstantsStructure.{u1, u2, u3, u4} L M _inst_1 α _inst_2)))) (FirstOrder.Language.con.{u1, u2, u4} L α a))
-but is expected to have type
-  forall (L : FirstOrder.Language.{u2, u3}) {M : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] (α : Type.{u1}) [_inst_2 : FirstOrder.Language.Structure.{u1, 0, u4} (FirstOrder.Language.constantsOn.{u1} α) M] {a : α} {x : (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> M}, Eq.{succ u4} M (FirstOrder.Language.Structure.funMap.{max u1 u2, u3, u4} (FirstOrder.Language.withConstants.{u2, u3, u1} L α) M (FirstOrder.Language.withConstantsStructure.{u2, u3, u4, u1} L M _inst_1 α _inst_2) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Sum.inr.{u2, u1} (FirstOrder.Language.Functions.{u2, u3} L (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (FirstOrder.Language.Functions.{u1, 0} (FirstOrder.Language.constantsOn.{u1} α) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a) x) (FirstOrder.Language.constantMap.{max u2 u1, u3, u4} (FirstOrder.Language.withConstants.{u2, u3, u1} L α) M (FirstOrder.Language.withConstantsStructure.{u2, u3, u4, u1} L M _inst_1 α _inst_2) (FirstOrder.Language.con.{u2, u3, u1} L α a))
-Case conversion may be inaccurate. Consider using '#align first_order.language.with_constants_fun_map_sum_inr FirstOrder.Language.withConstants_funMap_sum_inrₓ'. -/
 @[simp]
 theorem withConstants_funMap_sum_inr {a : α} {x : Fin 0 → M} :
     @funMap (L[[α]]) M _ 0 (Sum.inr a : L[[α]].Functions 0) x = L.con a :=
@@ -754,12 +682,6 @@ theorem withConstants_funMap_sum_inr {a : α} {x : Fin 0 → M} :
 
 variable {α} (A : Set M)
 
-/- warning: first_order.language.coe_con -> FirstOrder.Language.coe_con is a dubious translation:
-lean 3 declaration is
-  forall (L : FirstOrder.Language.{u1, u2}) {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] (A : Set.{u3} M) {a : coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A}, Eq.{succ u3} M ((fun (a : Type.{max u1 u3}) (b : Type.{u3}) [self : HasLiftT.{succ (max u1 u3), succ u3} a b] => self.0) (FirstOrder.Language.Constants.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A))) M (HasLiftT.mk.{succ (max u1 u3), succ u3} (FirstOrder.Language.Constants.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A))) M (CoeTCₓ.coe.{succ (max u1 u3), succ u3} (FirstOrder.Language.Constants.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A))) M (FirstOrder.Language.hasCoeT.{max u1 u3, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u3} L (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A)) M (FirstOrder.Language.withConstantsStructure.{u1, u2, u3, u3} L M _inst_1 (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A) (FirstOrder.Language.paramsStructure.{u3} M A))))) (FirstOrder.Language.con.{u1, u2, u3} L (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A) a)) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A) M (HasLiftT.mk.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A) M (CoeTCₓ.coe.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A) M (coeBase.{succ u3, succ u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} M) Type.{u3} (Set.hasCoeToSort.{u3} M) A) M (coeSubtype.{succ u3} M (fun (x : M) => Membership.Mem.{u3, u3} M (Set.{u3} M) (Set.hasMem.{u3} M) x A))))) a)
-but is expected to have type
-  forall (L : FirstOrder.Language.{u1, u2}) {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] (A : Set.{u3} M) {a : Set.Elem.{u3} M A}, Eq.{succ u3} M (FirstOrder.Language.constantMap.{max u1 u3, u2, u3} (FirstOrder.Language.withConstants.{u1, u2, u3} L (Set.Elem.{u3} M A)) M (FirstOrder.Language.withConstantsStructure.{u1, u2, u3, u3} L M _inst_1 (Set.Elem.{u3} M A) (FirstOrder.Language.paramsStructure.{u3} M A)) (FirstOrder.Language.con.{u1, u2, u3} L (Set.Elem.{u3} M A) a)) (Subtype.val.{succ u3} M (fun (x : M) => Membership.mem.{u3, u3} M (Set.{u3} M) (Set.instMembershipSet.{u3} M) x A) a)
-Case conversion may be inaccurate. Consider using '#align first_order.language.coe_con FirstOrder.Language.coe_conₓ'. -/
 @[simp]
 theorem coe_con {a : A} : (L.con a : M) = a :=
   rfl

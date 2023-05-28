@@ -162,9 +162,6 @@ namespace MonoidalNatIso
 
 variable {F G : LaxMonoidalFunctor C D}
 
-/- warning: category_theory.monoidal_nat_iso.of_components -> CategoryTheory.MonoidalNatIso.ofComponents is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monoidal_nat_iso.of_components CategoryTheory.MonoidalNatIso.ofComponentsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Construct a monoidal natural isomorphism from object level isomorphisms,
@@ -188,29 +185,17 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
           tensor_id, id_comp] }
 #align category_theory.monoidal_nat_iso.of_components CategoryTheory.MonoidalNatIso.ofComponents
 
-/- warning: category_theory.monoidal_nat_iso.of_components.hom_app -> CategoryTheory.MonoidalNatIso.ofComponents.hom_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monoidal_nat_iso.of_components.hom_app CategoryTheory.MonoidalNatIso.ofComponents.hom_appₓ'. -/
 @[simp]
 theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (unit) (tensor) (X) :
     (ofComponents app naturality Unit tensor).Hom.app X = (app X).Hom :=
   rfl
 #align category_theory.monoidal_nat_iso.of_components.hom_app CategoryTheory.MonoidalNatIso.ofComponents.hom_app
 
-/- warning: category_theory.monoidal_nat_iso.of_components.inv_app -> CategoryTheory.MonoidalNatIso.ofComponents.inv_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.monoidal_nat_iso.of_components.inv_app CategoryTheory.MonoidalNatIso.ofComponents.inv_appₓ'. -/
 @[simp]
 theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (unit) (tensor) (X) :
     (ofComponents app naturality Unit tensor).inv.app X = (app X).inv := by simp [of_components]
 #align category_theory.monoidal_nat_iso.of_components.inv_app CategoryTheory.MonoidalNatIso.ofComponents.inv_app
 
-/- warning: category_theory.monoidal_nat_iso.is_iso_of_is_iso_app -> CategoryTheory.MonoidalNatIso.isIso_of_isIso_app is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.MonoidalCategory.{u1, u3} C _inst_1] {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] [_inst_4 : CategoryTheory.MonoidalCategory.{u2, u4} D _inst_3] {F : CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4} {G : CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4} (α : Quiver.Hom.{succ (max u3 u2), max u3 u4 u1 u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max u3 u4 u1 u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max u3 u4 u1 u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.MonoidalNatTrans.categoryLaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4))) F G) [_inst_5 : forall (X : C), CategoryTheory.IsIso.{u2, u4} D _inst_3 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 F) X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_3 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 G) X) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_3 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 F) (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 G) (CategoryTheory.MonoidalNatTrans.toNatTrans.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 F G α) X)], CategoryTheory.IsIso.{max u3 u2, max u3 u4 u1 u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.MonoidalNatTrans.categoryLaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) F G α
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.MonoidalCategory.{u1, u3} C _inst_1] {D : Type.{u4}} [_inst_3 : CategoryTheory.Category.{u2, u4} D] [_inst_4 : CategoryTheory.MonoidalCategory.{u2, u4} D _inst_3] {F : CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4} {G : CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4} (α : Quiver.Hom.{max (succ u3) (succ u2), max (max (max u3 u4) u1) u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.MonoidalNatTrans.categoryLaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4))) F G) [_inst_5 : forall (X : C), CategoryTheory.IsIso.{u2, u4} D _inst_3 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 F)) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_3 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 G)) X) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_3 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 F) (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 G) (CategoryTheory.MonoidalNatTrans.toNatTrans.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4 F G α) X)], CategoryTheory.IsIso.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.LaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) (CategoryTheory.MonoidalNatTrans.categoryLaxMonoidalFunctor.{u1, u2, u3, u4} C _inst_1 _inst_2 D _inst_3 _inst_4) F G α
-Case conversion may be inaccurate. Consider using '#align category_theory.monoidal_nat_iso.is_iso_of_is_iso_app CategoryTheory.MonoidalNatIso.isIso_of_isIso_appₓ'. -/
 instance isIso_of_isIso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
   ⟨(IsIso.of_iso
         (ofComponents (fun X => asIso (α.app X)) (fun X Y f => α.toNatTrans.naturality f) α.Unit

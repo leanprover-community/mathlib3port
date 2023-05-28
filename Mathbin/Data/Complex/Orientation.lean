@@ -24,12 +24,6 @@ but keeping it separate results in a significant import reduction.
 
 namespace Complex
 
-/- warning: complex.orientation -> Complex.orientation is a dubious translation:
-lean 3 declaration is
-  Orientation.{0, 0, 0} Real Real.strictOrderedCommSemiring Complex (AddCommGroup.toAddCommMonoid.{0} Complex Complex.addCommGroup) (Complex.module.{0} Real (StrictOrderedSemiring.toSemiring.{0} Real (StrictOrderedCommSemiring.toStrictOrderedSemiring.{0} Real Real.strictOrderedCommSemiring)) (Semiring.toModule.{0} Real (StrictOrderedSemiring.toSemiring.{0} Real (StrictOrderedCommSemiring.toStrictOrderedSemiring.{0} Real Real.strictOrderedCommSemiring)))) (Fin (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
-but is expected to have type
-  Orientation.{0, 0, 0} Real Real.strictOrderedCommSemiring Complex (NonUnitalNonAssocSemiring.toAddCommMonoid.{0} Complex (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} Complex (NonAssocRing.toNonUnitalNonAssocRing.{0} Complex (Ring.toNonAssocRing.{0} Complex Complex.instRingComplex)))) (Complex.instModuleComplexToAddCommMonoidToNonUnitalNonAssocSemiringToNonUnitalNonAssocRingToNonAssocRingInstRingComplex.{0} Real (StrictOrderedSemiring.toSemiring.{0} Real (StrictOrderedCommSemiring.toStrictOrderedSemiring.{0} Real Real.strictOrderedCommSemiring)) (Semiring.toModule.{0} Real (StrictOrderedSemiring.toSemiring.{0} Real (StrictOrderedCommSemiring.toStrictOrderedSemiring.{0} Real Real.strictOrderedCommSemiring)))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
-Case conversion may be inaccurate. Consider using '#align complex.orientation Complex.orientationₓ'. -/
 /-- The standard orientation on `ℂ`. -/
 protected noncomputable def orientation : Orientation ℝ ℂ (Fin 2) :=
   Complex.basisOneI.Orientation

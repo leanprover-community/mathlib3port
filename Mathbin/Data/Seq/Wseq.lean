@@ -1735,12 +1735,6 @@ theorem exists_of_mem_join {a : α} : ∀ {S : WSeq (WSeq α)}, a ∈ join S →
 #align stream.wseq.exists_of_mem_join Stream'.WSeq.exists_of_mem_join
 -/
 
-/- warning: stream.wseq.exists_of_mem_bind -> Stream'.WSeq.exists_of_mem_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Stream'.WSeq.{u1} α} {f : α -> (Stream'.WSeq.{u2} β)} {b : β}, (Membership.Mem.{u2, u2} β (Stream'.WSeq.{u2} β) (Stream'.WSeq.membership.{u2} β) b (Stream'.WSeq.bind.{u1, u2} α β s f)) -> (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Stream'.WSeq.{u1} α) (Stream'.WSeq.membership.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Stream'.WSeq.{u1} α) (Stream'.WSeq.membership.{u1} α) a s) => Membership.Mem.{u2, u2} β (Stream'.WSeq.{u2} β) (Stream'.WSeq.membership.{u2} β) b (f a))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Stream'.WSeq.{u1} α} {f : α -> (Stream'.WSeq.{u2} β)} {b : β}, (Membership.mem.{u2, u2} β (Stream'.WSeq.{u2} β) (Stream'.WSeq.membership.{u2} β) b (Stream'.WSeq.bind.{u1, u2} α β s f)) -> (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Stream'.WSeq.{u1} α) (Stream'.WSeq.membership.{u1} α) a s) (Membership.mem.{u2, u2} β (Stream'.WSeq.{u2} β) (Stream'.WSeq.membership.{u2} β) b (f a))))
-Case conversion may be inaccurate. Consider using '#align stream.wseq.exists_of_mem_bind Stream'.WSeq.exists_of_mem_bindₓ'. -/
 theorem exists_of_mem_bind {s : WSeq α} {f : α → WSeq β} {b} (h : b ∈ bind s f) :
     ∃ a ∈ s, b ∈ f a :=
   let ⟨t, tm, bt⟩ := exists_of_mem_join h
@@ -1764,12 +1758,6 @@ theorem destruct_map (f : α → β) (s : WSeq α) :
 #align stream.wseq.destruct_map Stream'.WSeq.destruct_map
 -/
 
-/- warning: stream.wseq.lift_rel_map -> Stream'.WSeq.liftRel_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Stream'.WSeq.{u1} α} {s2 : Stream'.WSeq.{u2} β} {f1 : α -> γ} {f2 : β -> δ}, (Stream'.WSeq.LiftRel.{u1, u2} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (S (f1 a) (f2 b))) -> (Stream'.WSeq.LiftRel.{u3, u4} γ δ S (Stream'.WSeq.map.{u1, u3} α γ f1 s1) (Stream'.WSeq.map.{u2, u4} β δ f2 s2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Stream'.WSeq.{u2} α} {s2 : Stream'.WSeq.{u3} β} {f1 : α -> γ} {f2 : β -> δ}, (Stream'.WSeq.LiftRel.{u2, u3} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (S (f1 a) (f2 b))) -> (Stream'.WSeq.LiftRel.{u4, u1} γ δ S (Stream'.WSeq.map.{u2, u4} α γ f1 s1) (Stream'.WSeq.map.{u3, u1} β δ f2 s2))
-Case conversion may be inaccurate. Consider using '#align stream.wseq.lift_rel_map Stream'.WSeq.liftRel_mapₓ'. -/
 theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : WSeq α} {s2 : WSeq β}
     {f1 : α → γ} {f2 : β → δ} (h1 : LiftRel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) :
     LiftRel S (map f1 s1) (map f2 s2) :=
@@ -1958,12 +1946,6 @@ theorem join_congr {S T : WSeq (WSeq α)} (h : LiftRel Equiv S T) : join S ~ joi
 #align stream.wseq.join_congr Stream'.WSeq.join_congr
 -/
 
-/- warning: stream.wseq.lift_rel_bind -> Stream'.WSeq.liftRel_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Stream'.WSeq.{u1} α} {s2 : Stream'.WSeq.{u2} β} {f1 : α -> (Stream'.WSeq.{u3} γ)} {f2 : β -> (Stream'.WSeq.{u4} δ)}, (Stream'.WSeq.LiftRel.{u1, u2} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (Stream'.WSeq.LiftRel.{u3, u4} γ δ S (f1 a) (f2 b))) -> (Stream'.WSeq.LiftRel.{u3, u4} γ δ S (Stream'.WSeq.bind.{u1, u3} α γ s1 f1) (Stream'.WSeq.bind.{u2, u4} β δ s2 f2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Stream'.WSeq.{u2} α} {s2 : Stream'.WSeq.{u3} β} {f1 : α -> (Stream'.WSeq.{u4} γ)} {f2 : β -> (Stream'.WSeq.{u1} δ)}, (Stream'.WSeq.LiftRel.{u2, u3} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (Stream'.WSeq.LiftRel.{u4, u1} γ δ S (f1 a) (f2 b))) -> (Stream'.WSeq.LiftRel.{u4, u1} γ δ S (Stream'.WSeq.bind.{u2, u4} α γ s1 f1) (Stream'.WSeq.bind.{u3, u1} β δ s2 f2))
-Case conversion may be inaccurate. Consider using '#align stream.wseq.lift_rel_bind Stream'.WSeq.liftRel_bindₓ'. -/
 theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : WSeq α} {s2 : WSeq β}
     {f1 : α → WSeq γ} {f2 : β → WSeq δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → LiftRel S (f1 a) (f2 b)) : LiftRel S (bind s1 f1) (bind s2 f2) :=

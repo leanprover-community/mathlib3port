@@ -150,12 +150,6 @@ theorem isSatisfiable_iff_isFinitelySatisfiable {T : L.Theory} :
 #align first_order.language.Theory.is_satisfiable_iff_is_finitely_satisfiable FirstOrder.Language.Theory.isSatisfiable_iff_isFinitelySatisfiable
 -/
 
-/- warning: first_order.language.Theory.is_satisfiable_directed_union_iff -> FirstOrder.Language.Theory.isSatisfiable_directed_union_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {ι : Type.{u3}} [_inst_1 : Nonempty.{succ u3} ι] {T : ι -> (FirstOrder.Language.Theory.{u1, u2} L)}, (Directed.{max u1 u2, succ u3} (FirstOrder.Language.Theory.{u1, u2} L) ι (HasSubset.Subset.{max u1 u2} (FirstOrder.Language.Theory.{u1, u2} L) (Set.hasSubset.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L))) T) -> (Iff (FirstOrder.Language.Theory.IsSatisfiable.{u1, u2} L (Set.iUnion.{max u1 u2, succ u3} (FirstOrder.Language.Sentence.{u1, u2} L) ι (fun (i : ι) => T i))) (forall (i : ι), FirstOrder.Language.Theory.IsSatisfiable.{u1, u2} L (T i)))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {ι : Type.{u1}} [_inst_1 : Nonempty.{succ u1} ι] {T : ι -> (FirstOrder.Language.Theory.{u2, u3} L)}, (Directed.{max u2 u3, succ u1} (FirstOrder.Language.Theory.{u2, u3} L) ι (fun (x._@.Mathlib.ModelTheory.Satisfiability._hyg.858 : FirstOrder.Language.Theory.{u2, u3} L) (x._@.Mathlib.ModelTheory.Satisfiability._hyg.860 : FirstOrder.Language.Theory.{u2, u3} L) => HasSubset.Subset.{max u2 u3} (FirstOrder.Language.Theory.{u2, u3} L) (Set.instHasSubsetSet.{max u2 u3} (FirstOrder.Language.Sentence.{u2, u3} L)) x._@.Mathlib.ModelTheory.Satisfiability._hyg.858 x._@.Mathlib.ModelTheory.Satisfiability._hyg.860) T) -> (Iff (FirstOrder.Language.Theory.IsSatisfiable.{u2, u3} L (Set.iUnion.{max u3 u2, succ u1} (FirstOrder.Language.Sentence.{u2, u3} L) ι (fun (i : ι) => T i))) (forall (i : ι), FirstOrder.Language.Theory.IsSatisfiable.{u2, u3} L (T i)))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.is_satisfiable_directed_union_iff FirstOrder.Language.Theory.isSatisfiable_directed_union_iffₓ'. -/
 theorem isSatisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι → L.Theory}
     (h : Directed (· ⊆ ·) T) : Theory.IsSatisfiable (⋃ i, T i) ↔ ∀ i, (T i).IsSatisfiable :=
   by
@@ -166,12 +160,6 @@ theorem isSatisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι →
   exact (h' i).mono hi
 #align first_order.language.Theory.is_satisfiable_directed_union_iff FirstOrder.Language.Theory.isSatisfiable_directed_union_iff
 
-/- warning: first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_card_le -> FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_card_le is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} (T : FirstOrder.Language.Theory.{u1, u2} L) (s : Set.{u3} α) (M : Type.{u4}) [_inst_1 : Nonempty.{succ u4} M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L M] [_inst_3 : FirstOrder.Language.Theory.Model.{u1, u2, u4} L M _inst_2 T], (LE.le.{succ (max u3 u4)} Cardinal.{max u3 u4} Cardinal.hasLe.{max u3 u4} (Cardinal.lift.{u4, u3} (Cardinal.mk.{u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} α) Type.{u3} (Set.hasCoeToSort.{u3} α) s))) (Cardinal.lift.{u3, u4} (Cardinal.mk.{u4} M))) -> (FirstOrder.Language.Theory.IsSatisfiable.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (Union.union.{max (max u1 u3) u2} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.hasUnion.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (FirstOrder.Language.LHom.onTheory.{u1, u2, max u1 u3, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u3} L α) T) (FirstOrder.Language.distinctConstantsTheory.{u1, u2, u3} L α s)))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} (T : FirstOrder.Language.Theory.{u1, u2} L) (s : Set.{u3} α) (M : Type.{u4}) [_inst_1 : Nonempty.{succ u4} M] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L M] [_inst_3 : FirstOrder.Language.Theory.Model.{u1, u2, u4} L M _inst_2 T], (LE.le.{max (succ u3) (succ u4)} Cardinal.{max u3 u4} Cardinal.instLECardinal.{max u3 u4} (Cardinal.lift.{u4, u3} (Cardinal.mk.{u3} (Set.Elem.{u3} α s))) (Cardinal.lift.{u3, u4} (Cardinal.mk.{u4} M))) -> (FirstOrder.Language.Theory.IsSatisfiable.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (Union.union.{max (max u1 u2) u3} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.instUnionSet.{max (max u1 u2) u3} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (FirstOrder.Language.LHom.onTheory.{u1, u2, max u1 u3, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u3} L α) T) (FirstOrder.Language.distinctConstantsTheory.{u1, u2, u3} L α s)))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_card_le FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_card_leₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s : Set α)
@@ -195,12 +183,6 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s
   exact model.is_satisfiable M
 #align first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_card_le FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_card_le
 
-/- warning: first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_infinite -> FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_infinite is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} (T : FirstOrder.Language.Theory.{u1, u2} L) (s : Set.{u3} α) (M : Type.{u4}) [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u4} L M] [_inst_2 : FirstOrder.Language.Theory.Model.{u1, u2, u4} L M _inst_1 T] [_inst_3 : Infinite.{succ u4} M], FirstOrder.Language.Theory.IsSatisfiable.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (Union.union.{max (max u1 u3) u2} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.hasUnion.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (FirstOrder.Language.LHom.onTheory.{u1, u2, max u1 u3, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u3} L α) T) (FirstOrder.Language.distinctConstantsTheory.{u1, u2, u3} L α s))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} (T : FirstOrder.Language.Theory.{u1, u2} L) (s : Set.{u3} α) (M : Type.{u4}) [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u4} L M] [_inst_2 : FirstOrder.Language.Theory.Model.{u1, u2, u4} L M _inst_1 T] [_inst_3 : Infinite.{succ u4} M], FirstOrder.Language.Theory.IsSatisfiable.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (Union.union.{max (max u1 u2) u3} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.instUnionSet.{max (max u1 u2) u3} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (FirstOrder.Language.LHom.onTheory.{u1, u2, max u1 u3, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u3} L α) T) (FirstOrder.Language.distinctConstantsTheory.{u1, u2, u3} L α s))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_infinite FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_infiniteₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (s : Set α)
     (M : Type w') [L.Structure M] [M ⊨ T] [Infinite M] :
@@ -237,12 +219,6 @@ theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) 
 #align first_order.language.Theory.exists_large_model_of_infinite_model FirstOrder.Language.Theory.exists_large_model_of_infinite_model
 -/
 
-/- warning: first_order.language.Theory.is_satisfiable_Union_iff_is_satisfiable_Union_finset -> FirstOrder.Language.Theory.isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {ι : Type.{u3}} (T : ι -> (FirstOrder.Language.Theory.{u1, u2} L)), Iff (FirstOrder.Language.Theory.IsSatisfiable.{u1, u2} L (Set.iUnion.{max u1 u2, succ u3} (FirstOrder.Language.Sentence.{u1, u2} L) ι (fun (i : ι) => T i))) (forall (s : Finset.{u3} ι), FirstOrder.Language.Theory.IsSatisfiable.{u1, u2} L (Set.iUnion.{max u1 u2, succ u3} (FirstOrder.Language.Sentence.{u1, u2} L) ι (fun (i : ι) => Set.iUnion.{max u1 u2, 0} (FirstOrder.Language.Sentence.{u1, u2} L) (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) (fun (H : Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) => T i))))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {ι : Type.{u1}} (T : ι -> (FirstOrder.Language.Theory.{u2, u3} L)), Iff (FirstOrder.Language.Theory.IsSatisfiable.{u2, u3} L (Set.iUnion.{max u3 u2, succ u1} (FirstOrder.Language.Sentence.{u2, u3} L) ι (fun (i : ι) => T i))) (forall (s : Finset.{u1} ι), FirstOrder.Language.Theory.IsSatisfiable.{u2, u3} L (Set.iUnion.{max u3 u2, succ u1} (FirstOrder.Language.Sentence.{u2, u3} L) ι (fun (i : ι) => Set.iUnion.{max u3 u2, 0} (FirstOrder.Language.Sentence.{u2, u3} L) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => T i))))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.is_satisfiable_Union_iff_is_satisfiable_Union_finset FirstOrder.Language.Theory.isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finsetₓ'. -/
 theorem isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset {ι : Type _} (T : ι → L.Theory) :
     IsSatisfiable (⋃ i, T i) ↔ ∀ s : Finset ι, IsSatisfiable (⋃ i ∈ s, T i) := by
   classical
@@ -401,12 +377,6 @@ theorem models_sentence_of_mem {φ : L.Sentence} (h : φ ∈ T) : T ⊨ φ :=
 #align first_order.language.Theory.models_sentence_of_mem FirstOrder.Language.Theory.models_sentence_of_mem
 -/
 
-/- warning: first_order.language.Theory.models_iff_not_satisfiable -> FirstOrder.Language.Theory.models_iff_not_satisfiable is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} (φ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Theory.ModelsBoundedFormula.{u1, u2, 0} L T Empty (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) φ) (Not (FirstOrder.Language.Theory.IsSatisfiable.{u1, u2} L (Union.union.{max u1 u2} (FirstOrder.Language.Theory.{u1, u2} L) (Set.hasUnion.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) T (Singleton.singleton.{max u1 u2, max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L) (FirstOrder.Language.Theory.{u1, u2} L) (Set.hasSingleton.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) (FirstOrder.Language.Formula.not.{u1, u2, 0} L Empty φ)))))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} (φ : FirstOrder.Language.Sentence.{u1, u2} L), Iff (FirstOrder.Language.Theory.ModelsBoundedFormula.{u1, u2, 0} L T Empty (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) φ) (Not (FirstOrder.Language.Theory.IsSatisfiable.{u1, u2} L (Union.union.{max u2 u1} (FirstOrder.Language.Theory.{u1, u2} L) (Set.instUnionSet.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) T (Singleton.singleton.{max u1 u2, max u1 u2} (FirstOrder.Language.Formula.{u1, u2, 0} L Empty) (FirstOrder.Language.Theory.{u1, u2} L) (Set.instSingletonSet.{max u1 u2} (FirstOrder.Language.Sentence.{u1, u2} L)) (FirstOrder.Language.Formula.not.{u1, u2, 0} L Empty φ)))))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.models_iff_not_satisfiable FirstOrder.Language.Theory.models_iff_not_satisfiableₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfiable (T ∪ {φ.Not}) :=
   by
@@ -427,12 +397,6 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
   exact h
 #align first_order.language.Theory.models_iff_not_satisfiable FirstOrder.Language.Theory.models_iff_not_satisfiable
 
-/- warning: first_order.language.Theory.models_bounded_formula.realize_sentence -> FirstOrder.Language.Theory.ModelsBoundedFormula.realize_sentence is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} {φ : FirstOrder.Language.Sentence.{u1, u2} L}, (FirstOrder.Language.Theory.ModelsBoundedFormula.{u1, u2, 0} L T Empty (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) φ) -> (forall (M : Type.{u3}) [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T] [_inst_3 : Nonempty.{succ u3} M], FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 φ)
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {T : FirstOrder.Language.Theory.{u2, u3} L} {φ : FirstOrder.Language.Sentence.{u2, u3} L}, (FirstOrder.Language.Theory.ModelsBoundedFormula.{u2, u3, 0} L T Empty (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) φ) -> (forall (M : Type.{u1}) [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u1} L M] [_inst_2 : FirstOrder.Language.Theory.Model.{u2, u3, u1} L M _inst_1 T] [_inst_3 : Nonempty.{succ u1} M], FirstOrder.Language.Sentence.Realize.{u2, u3, u1} L M _inst_1 φ)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.models_bounded_formula.realize_sentence FirstOrder.Language.Theory.ModelsBoundedFormula.realize_sentenceₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -480,12 +444,6 @@ theorem models_not_iff (h : T.IsComplete) (φ : L.Sentence) : T ⊨ φ.Not ↔ �
 #align first_order.language.Theory.is_complete.models_not_iff FirstOrder.Language.Theory.IsComplete.models_not_iff
 -/
 
-/- warning: first_order.language.Theory.is_complete.realize_sentence_iff -> FirstOrder.Language.Theory.IsComplete.realize_sentence_iff is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L}, (FirstOrder.Language.Theory.IsComplete.{u1, u2} L T) -> (forall (φ : FirstOrder.Language.Sentence.{u1, u2} L) (M : Type.{u3}) [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] [_inst_2 : FirstOrder.Language.Theory.Model.{u1, u2, u3} L M _inst_1 T] [_inst_3 : Nonempty.{succ u3} M], Iff (FirstOrder.Language.Sentence.Realize.{u1, u2, u3} L M _inst_1 φ) (FirstOrder.Language.Theory.ModelsBoundedFormula.{u1, u2, 0} L T Empty (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) φ))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u2, u3}} {T : FirstOrder.Language.Theory.{u2, u3} L}, (FirstOrder.Language.Theory.IsComplete.{u2, u3} L T) -> (forall (φ : FirstOrder.Language.Sentence.{u2, u3} L) (M : Type.{u1}) [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u1} L M] [_inst_2 : FirstOrder.Language.Theory.Model.{u2, u3, u1} L M _inst_1 T] [_inst_3 : Nonempty.{succ u1} M], Iff (FirstOrder.Language.Sentence.Realize.{u2, u3, u1} L M _inst_1 φ) (FirstOrder.Language.Theory.ModelsBoundedFormula.{u2, u3, 0} L T Empty (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) φ))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.is_complete.realize_sentence_iff FirstOrder.Language.Theory.IsComplete.realize_sentence_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

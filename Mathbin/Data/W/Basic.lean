@@ -67,23 +67,11 @@ def ofSigma : (Σa : α, β a → WType β) → WType β
 #align W_type.of_sigma WType.ofSigma
 -/
 
-/- warning: W_type.of_sigma_to_sigma -> WType.ofSigma_toSigma is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} (w : WType.{u1, u2} α β), Eq.{max (succ u1) (succ u2)} (WType.{u1, u2} α (fun (a : α) => β a)) (WType.ofSigma.{u1, u2} α (fun (a : α) => β a) (WType.toSigma.{u1, u2} α β w)) w
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} (w : WType.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (WType.{u2, u1} α (fun (a : α) => β a)) (WType.ofSigma.{u2, u1} α (fun (a : α) => β a) (WType.toSigma.{u2, u1} α β w)) w
-Case conversion may be inaccurate. Consider using '#align W_type.of_sigma_to_sigma WType.ofSigma_toSigmaₓ'. -/
 @[simp]
 theorem ofSigma_toSigma : ∀ w : WType β, ofSigma (toSigma w) = w
   | ⟨a, f⟩ => rfl
 #align W_type.of_sigma_to_sigma WType.ofSigma_toSigma
 
-/- warning: W_type.to_sigma_of_sigma -> WType.toSigma_ofSigma is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} (s : Sigma.{u1, max u1 u2} α (fun (a : α) => (β a) -> (WType.{u1, u2} α β))), Eq.{max (succ u1) (succ (max u1 u2))} (Sigma.{u1, max u1 u2} α (fun (a : α) => (β a) -> (WType.{u1, u2} α (fun (a : α) => β a)))) (WType.toSigma.{u1, u2} α (fun (a : α) => β a) (WType.ofSigma.{u1, u2} α (fun (a : α) => β a) s)) s
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} (s : Sigma.{u2, max u2 u1} α (fun (a : α) => (β a) -> (WType.{u2, u1} α β))), Eq.{max (succ u2) (succ u1)} (Sigma.{u2, max u2 u1} α (fun (a : α) => (β a) -> (WType.{u2, u1} α (fun (a : α) => β a)))) (WType.toSigma.{u2, u1} α (fun (a : α) => β a) (WType.ofSigma.{u2, u1} α (fun (a : α) => β a) s)) s
-Case conversion may be inaccurate. Consider using '#align W_type.to_sigma_of_sigma WType.toSigma_ofSigmaₓ'. -/
 @[simp]
 theorem toSigma_ofSigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigma s) = s
   | ⟨a, f⟩ => rfl
@@ -113,12 +101,6 @@ def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ
 #align W_type.elim WType.elim
 -/
 
-/- warning: W_type.elim_injective -> WType.elim_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} (γ : Type.{u3}) (fγ : (Sigma.{u1, max u2 u3} α (fun (a : α) => (β a) -> γ)) -> γ), (Function.Injective.{max (succ u1) (succ (max u2 u3)), succ u3} (Sigma.{u1, max u2 u3} α (fun (a : α) => (β a) -> γ)) γ fγ) -> (Function.Injective.{max (succ u1) (succ u2), succ u3} (WType.{u1, u2} α (fun (a : α) => β a)) γ (WType.elim.{u1, u2, u3} α (fun (a : α) => β a) γ fγ))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} (γ : Type.{u3}) (fγ : (Sigma.{u2, max u1 u3} α (fun (a : α) => (β a) -> γ)) -> γ), (Function.Injective.{max (max (succ u2) (succ u1)) (succ u3), succ u3} (Sigma.{u2, max u1 u3} α (fun (a : α) => (β a) -> γ)) γ fγ) -> (Function.Injective.{max (succ u1) (succ u2), succ u3} (WType.{u2, u1} α (fun (a : α) => β a)) γ (WType.elim.{u2, u1, u3} α (fun (a : α) => β a) γ fγ))
-Case conversion may be inaccurate. Consider using '#align W_type.elim_injective WType.elim_injectiveₓ'. -/
 theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ)
     (fγ_injective : Function.Injective fγ) : Function.Injective (elim γ fγ)
   | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h =>
@@ -161,21 +143,9 @@ def depth : WType β → ℕ
 #align W_type.depth WType.depth
 -/
 
-/- warning: W_type.depth_pos -> WType.depth_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : forall (a : α), Fintype.{u2} (β a)] (t : WType.{u1, u2} α β), LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (WType.depth.{u1, u2} α β (fun (a : α) => _inst_1 a) t)
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Fintype.{u1} (β a)] (t : WType.{u2, u1} α β), LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) t)
-Case conversion may be inaccurate. Consider using '#align W_type.depth_pos WType.depth_posₓ'. -/
 theorem depth_pos (t : WType β) : 0 < t.depth := by cases t; apply Nat.succ_pos
 #align W_type.depth_pos WType.depth_pos
 
-/- warning: W_type.depth_lt_depth_mk -> WType.depth_lt_depth_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : forall (a : α), Fintype.{u2} (β a)] (a : α) (f : (β a) -> (WType.{u1, u2} α β)) (i : β a), LT.lt.{0} Nat Nat.hasLt (WType.depth.{u1, u2} α β (fun (a : α) => _inst_1 a) (f i)) (WType.depth.{u1, u2} α (fun (a : α) => β a) (fun (a : α) => _inst_1 a) (WType.mk.{u1, u2} α (fun (a : α) => β a) a f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Fintype.{u1} (β a)] (a : α) (f : (β a) -> (WType.{u2, u1} α β)) (i : β a), LT.lt.{0} Nat instLTNat (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) (f i)) (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) (WType.mk.{u2, u1} α β a f))
-Case conversion may be inaccurate. Consider using '#align W_type.depth_lt_depth_mk WType.depth_lt_depth_mkₓ'. -/
 theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f i) < depth ⟨a, f⟩ :=
   Nat.lt_succ_of_le (Finset.le_sup (Finset.mem_univ i))
 #align W_type.depth_lt_depth_mk WType.depth_lt_depth_mk

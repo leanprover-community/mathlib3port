@@ -47,12 +47,6 @@ theorem isPrimePow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p
 #align is_prime_pow_iff_pow_succ isPrimePow_iff_pow_succ
 -/
 
-/- warning: not_is_prime_pow_zero -> not_isPrimePow_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (MulZeroClass.toHasMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))], Not (IsPrimePow.{u1} R _inst_1 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (MulZeroClass.toMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (CommMonoidWithZero.toZero.{u1} R _inst_1)], Not (IsPrimePow.{u1} R _inst_1 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align not_is_prime_pow_zero not_isPrimePow_zeroₓ'. -/
 theorem not_isPrimePow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) :=
   by
   simp only [isPrimePow_def, not_exists, not_and', and_imp]
@@ -73,12 +67,6 @@ theorem IsUnit.not_isPrimePow {n : R} (h : IsUnit n) : ¬IsPrimePow n := fun h' 
 #align is_unit.not_is_prime_pow IsUnit.not_isPrimePow
 -/
 
-/- warning: not_is_prime_pow_one -> not_isPrimePow_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R], Not (IsPrimePow.{u1} R _inst_1 (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R], Not (IsPrimePow.{u1} R _inst_1 (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align not_is_prime_pow_one not_isPrimePow_oneₓ'. -/
 theorem not_isPrimePow_one : ¬IsPrimePow (1 : R) :=
   isUnit_one.not_isPrimePow
 #align not_is_prime_pow_one not_isPrimePow_one
@@ -96,22 +84,10 @@ theorem IsPrimePow.pow {n : R} (hn : IsPrimePow n) {k : ℕ} (hk : k ≠ 0) : Is
 #align is_prime_pow.pow IsPrimePow.pow
 -/
 
-/- warning: is_prime_pow.ne_zero -> IsPrimePow.ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (MulZeroClass.toHasMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))] {n : R}, (IsPrimePow.{u1} R _inst_1 n) -> (Ne.{succ u1} R n (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (MulZeroClass.toMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (CommMonoidWithZero.toZero.{u1} R _inst_1)] {n : R}, (IsPrimePow.{u1} R _inst_1 n) -> (Ne.{succ u1} R n (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align is_prime_pow.ne_zero IsPrimePow.ne_zeroₓ'. -/
 theorem IsPrimePow.ne_zero [NoZeroDivisors R] {n : R} (h : IsPrimePow n) : n ≠ 0 := fun t =>
   Eq.ndrec not_isPrimePow_zero t.symm h
 #align is_prime_pow.ne_zero IsPrimePow.ne_zero
 
-/- warning: is_prime_pow.ne_one -> IsPrimePow.ne_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] {n : R}, (IsPrimePow.{u1} R _inst_1 n) -> (Ne.{succ u1} R n (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] {n : R}, (IsPrimePow.{u1} R _inst_1 n) -> (Ne.{succ u1} R n (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align is_prime_pow.ne_one IsPrimePow.ne_oneₓ'. -/
 theorem IsPrimePow.ne_one {n : R} (h : IsPrimePow n) : n ≠ 1 := fun t =>
   Eq.ndrec not_isPrimePow_one t.symm h
 #align is_prime_pow.ne_one IsPrimePow.ne_one
@@ -158,12 +134,6 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
 #align is_prime_pow.dvd IsPrimePow.dvd
 -/
 
-/- warning: nat.disjoint_divisors_filter_prime_pow -> Nat.disjoint_divisors_filter_isPrimePow is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Disjoint.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat) (Finset.orderBot.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => IsPrimePow.decidable a) (Nat.divisors a)) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => IsPrimePow.decidable a) (Nat.divisors b)))
-but is expected to have type
-  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Disjoint.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors a)) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors b)))
-Case conversion may be inaccurate. Consider using '#align nat.disjoint_divisors_filter_prime_pow Nat.disjoint_divisors_filter_isPrimePowₓ'. -/
 theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.coprime b) :
     Disjoint (a.divisors.filterₓ IsPrimePow) (b.divisors.filterₓ IsPrimePow) :=
   by

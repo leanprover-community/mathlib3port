@@ -34,12 +34,6 @@ class IsInvariantSubring : Prop where
 #align is_invariant_subring IsInvariantSubring
 -/
 
-/- warning: is_invariant_subring.to_mul_semiring_action -> IsInvariantSubring.toMulSemiringAction is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) {R : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Ring.{u2} R] [_inst_3 : MulSemiringAction.{u1, u2} M R _inst_1 (Ring.toSemiring.{u2} R _inst_2)] (S : Subring.{u2} R _inst_2) [_inst_4 : IsInvariantSubring.{u1, u2} M R _inst_1 _inst_2 _inst_3 S], MulSemiringAction.{u1, u2} M (coeSort.{succ u2, succ (succ u2)} (Subring.{u2} R _inst_2) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subring.{u2} R _inst_2) R (Subring.setLike.{u2} R _inst_2)) S) _inst_1 (Ring.toSemiring.{u2} (coeSort.{succ u2, succ (succ u2)} (Subring.{u2} R _inst_2) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subring.{u2} R _inst_2) R (Subring.setLike.{u2} R _inst_2)) S) (Subring.toRing.{u2} R _inst_2 S))
-but is expected to have type
-  forall (M : Type.{u1}) {R : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Ring.{u2} R] [_inst_3 : MulSemiringAction.{u1, u2} M R _inst_1 (Ring.toSemiring.{u2} R _inst_2)] (S : Subring.{u2} R _inst_2) [_inst_4 : IsInvariantSubring.{u1, u2} M R _inst_1 _inst_2 _inst_3 S], MulSemiringAction.{u1, u2} M (Subtype.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Subring.{u2} R _inst_2) (SetLike.instMembership.{u2, u2} (Subring.{u2} R _inst_2) R (Subring.instSetLikeSubring.{u2} R _inst_2)) x S)) _inst_1 (Subsemiring.toSemiring.{u2} R (Ring.toSemiring.{u2} R _inst_2) (Subring.toSubsemiring.{u2} R _inst_2 S))
-Case conversion may be inaccurate. Consider using '#align is_invariant_subring.to_mul_semiring_action IsInvariantSubring.toMulSemiringActionₓ'. -/
 instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSemiringAction M S
     where
   smul m x := ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
@@ -61,28 +55,16 @@ variable {R' : Type _} [Ring R'] [MulSemiringAction M R']
 
 variable (U : Subring R') [IsInvariantSubring M U]
 
-/- warning: is_invariant_subring.subtype_hom -> IsInvariantSubring.subtypeHom is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) [_inst_1 : Monoid.{u1} M] {R' : Type.{u2}} [_inst_2 : Ring.{u2} R'] [_inst_3 : MulSemiringAction.{u1, u2} M R' _inst_1 (Ring.toSemiring.{u2} R' _inst_2)] (U : Subring.{u2} R' _inst_2) [_inst_4 : IsInvariantSubring.{u1, u2} M R' _inst_1 _inst_2 _inst_3 U], MulSemiringActionHom.{u1, u2, u2} M _inst_1 (coeSort.{succ u2, succ (succ u2)} (Subring.{u2} R' _inst_2) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subring.{u2} R' _inst_2) R' (Subring.setLike.{u2} R' _inst_2)) U) (Ring.toSemiring.{u2} (coeSort.{succ u2, succ (succ u2)} (Subring.{u2} R' _inst_2) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subring.{u2} R' _inst_2) R' (Subring.setLike.{u2} R' _inst_2)) U) (Subring.toRing.{u2} R' _inst_2 U)) (IsInvariantSubring.toMulSemiringAction.{u1, u2} M R' _inst_1 _inst_2 _inst_3 U _inst_4) R' (Ring.toSemiring.{u2} R' _inst_2) _inst_3
-but is expected to have type
-  forall (M : Type.{u1}) [_inst_1 : Monoid.{u1} M] {R' : Type.{u2}} [_inst_2 : Ring.{u2} R'] [_inst_3 : MulSemiringAction.{u1, u2} M R' _inst_1 (Ring.toSemiring.{u2} R' _inst_2)] (U : Subring.{u2} R' _inst_2) [_inst_4 : IsInvariantSubring.{u1, u2} M R' _inst_1 _inst_2 _inst_3 U], MulSemiringActionHom.{u1, u2, u2} M _inst_1 (Subtype.{succ u2} R' (fun (x : R') => Membership.mem.{u2, u2} R' (Subring.{u2} R' _inst_2) (SetLike.instMembership.{u2, u2} (Subring.{u2} R' _inst_2) R' (Subring.instSetLikeSubring.{u2} R' _inst_2)) x U)) (Subsemiring.toSemiring.{u2} R' (Ring.toSemiring.{u2} R' _inst_2) (Subring.toSubsemiring.{u2} R' _inst_2 U)) (IsInvariantSubring.toMulSemiringAction.{u1, u2} M R' _inst_1 _inst_2 _inst_3 U _inst_4) R' (Ring.toSemiring.{u2} R' _inst_2) _inst_3
-Case conversion may be inaccurate. Consider using '#align is_invariant_subring.subtype_hom IsInvariantSubring.subtypeHomₓ'. -/
 /-- The canonical inclusion from an invariant subring. -/
 def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
   { U.Subtype with map_smul' := fun m s => rfl }
 #align is_invariant_subring.subtype_hom IsInvariantSubring.subtypeHom
 
-/- warning: is_invariant_subring.coe_subtype_hom -> IsInvariantSubring.coe_subtypeHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_invariant_subring.coe_subtype_hom IsInvariantSubring.coe_subtypeHomₓ'. -/
 @[simp]
 theorem IsInvariantSubring.coe_subtypeHom : (IsInvariantSubring.subtypeHom M U : U → R') = coe :=
   rfl
 #align is_invariant_subring.coe_subtype_hom IsInvariantSubring.coe_subtypeHom
 
-/- warning: is_invariant_subring.coe_subtype_hom' -> IsInvariantSubring.coe_subtypeHom' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align is_invariant_subring.coe_subtype_hom' IsInvariantSubring.coe_subtypeHom'ₓ'. -/
 @[simp]
 theorem IsInvariantSubring.coe_subtypeHom' :
     (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=

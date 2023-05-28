@@ -78,12 +78,6 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align nat.odd_iff_not_even Nat.odd_iff_not_even
 -/
 
-/- warning: nat.is_compl_even_odd -> Nat.isCompl_even_odd is a dubious translation:
-lean 3 declaration is
-  IsCompl.{0} (Set.{0} Nat) (SemilatticeInf.toPartialOrder.{0} (Set.{0} Nat) (Lattice.toSemilatticeInf.{0} (Set.{0} Nat) (GeneralizedCoheytingAlgebra.toLattice.{0} (Set.{0} Nat) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} (Set.{0} Nat) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} (Set.{0} Nat) (Set.booleanAlgebra.{0} Nat)))))) (BooleanAlgebra.toBoundedOrder.{0} (Set.{0} Nat) (Set.booleanAlgebra.{0} Nat)) (setOf.{0} Nat (fun (n : Nat) => Even.{0} Nat Nat.hasAdd n)) (setOf.{0} Nat (fun (n : Nat) => Odd.{0} Nat Nat.semiring n))
-but is expected to have type
-  IsCompl.{0} (Set.{0} Nat) (SemilatticeInf.toPartialOrder.{0} (Set.{0} Nat) (Lattice.toSemilatticeInf.{0} (Set.{0} Nat) (GeneralizedCoheytingAlgebra.toLattice.{0} (Set.{0} Nat) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} (Set.{0} Nat) (BiheytingAlgebra.toCoheytingAlgebra.{0} (Set.{0} Nat) (BooleanAlgebra.toBiheytingAlgebra.{0} (Set.{0} Nat) (Set.instBooleanAlgebraSet.{0} Nat))))))) (BooleanAlgebra.toBoundedOrder.{0} (Set.{0} Nat) (Set.instBooleanAlgebraSet.{0} Nat)) (setOf.{0} Nat (fun (n : Nat) => Even.{0} Nat instAddNat n)) (setOf.{0} Nat (fun (n : Nat) => Odd.{0} Nat Nat.semiring n))
-Case conversion may be inaccurate. Consider using '#align nat.is_compl_even_odd Nat.isCompl_even_oddₓ'. -/
 theorem isCompl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
   simp only [← Set.compl_setOf, isCompl_compl, odd_iff_not_even]
 #align nat.is_compl_even_odd Nat.isCompl_even_odd
@@ -474,12 +468,6 @@ end Function
 
 variable {R : Type _} [Monoid R] [HasDistribNeg R] {n : ℕ}
 
-/- warning: neg_one_pow_eq_one_iff_even -> neg_one_pow_eq_one_iff_even is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))] {n : Nat}, (Ne.{succ u1} R (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)))))) -> (Iff (Eq.{succ u1} R (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R _inst_1)) (Neg.neg.{u1} R (InvolutiveNeg.toHasNeg.{u1} R (HasDistribNeg.toHasInvolutiveNeg.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)))))) n) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)))))) (Even.{0} Nat Nat.hasAdd n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] [_inst_2 : HasDistribNeg.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))] {n : Nat}, (Ne.{succ u1} R (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R _inst_1)))) -> (Iff (Eq.{succ u1} R (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R _inst_1)) (Neg.neg.{u1} R (InvolutiveNeg.toNeg.{u1} R (HasDistribNeg.toInvolutiveNeg.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) _inst_2)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R _inst_1)))) n) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R _inst_1)))) (Even.{0} Nat instAddNat n))
-Case conversion may be inaccurate. Consider using '#align neg_one_pow_eq_one_iff_even neg_one_pow_eq_one_iff_evenₓ'. -/
 theorem neg_one_pow_eq_one_iff_even (h : (-1 : R) ≠ 1) : (-1 : R) ^ n = 1 ↔ Even n :=
   ⟨fun h' => of_not_not fun hn => h <| (Odd.neg_one_pow <| odd_iff_not_even.mpr hn).symm.trans h',
     Even.neg_one_pow⟩

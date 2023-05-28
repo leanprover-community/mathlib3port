@@ -67,16 +67,10 @@ variable {p₀ p₁ : Path x₀ x₁}
 instance : CoeFun (Homotopy p₀ p₁) fun _ => I × I → X :=
   ⟨fun F => F.toFun⟩
 
-/- warning: path.homotopy.coe_fn_injective -> Path.Homotopy.coeFn_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align path.homotopy.coe_fn_injective Path.Homotopy.coeFn_injectiveₓ'. -/
 theorem coeFn_injective : @Function.Injective (Homotopy p₀ p₁) (I × I → X) coeFn :=
   ContinuousMap.HomotopyWith.coeFn_injective
 #align path.homotopy.coe_fn_injective Path.Homotopy.coeFn_injective
 
-/- warning: path.homotopy.source -> Path.Homotopy.source is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align path.homotopy.source Path.Homotopy.sourceₓ'. -/
 @[simp]
 theorem source (F : Homotopy p₀ p₁) (t : I) : F (t, 0) = x₀ :=
   by
@@ -85,9 +79,6 @@ theorem source (F : Homotopy p₀ p₁) (t : I) : F (t, 0) = x₀ :=
   simp
 #align path.homotopy.source Path.Homotopy.source
 
-/- warning: path.homotopy.target -> Path.Homotopy.target is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align path.homotopy.target Path.Homotopy.targetₓ'. -/
 @[simp]
 theorem target (F : Homotopy p₀ p₁) (t : I) : F (t, 1) = x₁ :=
   by
@@ -166,9 +157,6 @@ def trans (F : Homotopy p₀ p₁) (G : Homotopy p₁ p₂) : Homotopy p₀ p₂
 #align path.homotopy.trans Path.Homotopy.trans
 -/
 
-/- warning: path.homotopy.trans_apply -> Path.Homotopy.trans_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align path.homotopy.trans_apply Path.Homotopy.trans_applyₓ'. -/
 theorem trans_apply (F : Homotopy p₀ p₁) (G : Homotopy p₁ p₂) (x : I × I) :
     (F.trans G) x =
       if h : (x.1 : ℝ) ≤ 1 / 2 then
@@ -231,9 +219,6 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
 #align path.homotopy.hcomp Path.Homotopy.hcomp
 -/
 
-/- warning: path.homotopy.hcomp_apply -> Path.Homotopy.hcomp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align path.homotopy.hcomp_apply Path.Homotopy.hcomp_applyₓ'. -/
 theorem hcomp_apply (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (x : I × I) :
     F.hcomp G x =
       if h : (x.2 : ℝ) ≤ 1 / 2 then
@@ -244,9 +229,6 @@ theorem hcomp_apply (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (x : I × 
   show ite _ _ _ = _ by split_ifs <;> exact Path.extend_extends _ _
 #align path.homotopy.hcomp_apply Path.Homotopy.hcomp_apply
 
-/- warning: path.homotopy.hcomp_half -> Path.Homotopy.hcomp_half is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align path.homotopy.hcomp_half Path.Homotopy.hcomp_halfₓ'. -/
 theorem hcomp_half (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (t : I) :
     F.hcomp G (t, ⟨1 / 2, by norm_num, by norm_num⟩) = x₁ :=
   show ite _ _ _ = _ by norm_num
@@ -296,12 +278,6 @@ def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm
 #align path.homotopy.symm₂ Path.Homotopy.symm₂
 -/
 
-/- warning: path.homotopy.map -> Path.Homotopy.map is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X} {p : Path.{u1} X _inst_1 x₀ x₁} {q : Path.{u1} X _inst_1 x₀ x₁}, (Path.Homotopy.{u1} X _inst_1 x₀ x₁ p q) -> (forall (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Path.Homotopy.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁) (Path.map.{u1, u2} X _inst_1 x₀ x₁ p Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f) (ContinuousMap.continuous.{u1, u2} X Y _inst_1 _inst_2 f)) (Path.map.{u1, u2} X _inst_1 x₀ x₁ q Y _inst_2 (fun {x₀ : X} => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (ContinuousMap.continuous.{u1, u2} X Y _inst_1 _inst_2 f)))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X} {p : Path.{u1} X _inst_1 x₀ x₁} {q : Path.{u1} X _inst_1 x₀ x₁}, (Path.Homotopy.{u1} X _inst_1 x₀ x₁ p q) -> (forall (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Path.Homotopy.{u2} Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁) (Path.map.{u1, u2} X _inst_1 x₀ x₁ p Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f) (ContinuousMap.continuous.{u2, u1} X Y _inst_1 _inst_2 f)) (Path.map.{u1, u2} X _inst_1 x₀ x₁ q Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (a : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) a) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f) (ContinuousMap.continuous.{u2, u1} X Y _inst_1 _inst_2 f)))
-Case conversion may be inaccurate. Consider using '#align path.homotopy.map Path.Homotopy.mapₓ'. -/
 /--
 Given `F : homotopy p q`, and `f : C(X, Y)`, we can define a homotopy from `p.map f.continuous` to
 `q.map f.continuous`.
@@ -360,12 +336,6 @@ theorem equivalence : Equivalence (@Homotopic X _ x₀ x₁) :=
 #align path.homotopic.equivalence Path.Homotopic.equivalence
 -/
 
-/- warning: path.homotopic.map -> Path.Homotopic.map is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X} {p : Path.{u1} X _inst_1 x₀ x₁} {q : Path.{u1} X _inst_1 x₀ x₁}, (Path.Homotopic.{u1} X _inst_1 x₀ x₁ p q) -> (forall (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Path.Homotopic.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁) (Path.map.{u1, u2} X _inst_1 x₀ x₁ p Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f) (ContinuousMap.continuous.{u1, u2} X Y _inst_1 _inst_2 f)) (Path.map.{u1, u2} X _inst_1 x₀ x₁ q Y _inst_2 (fun {x₀ : X} => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (ContinuousMap.continuous.{u1, u2} X Y _inst_1 _inst_2 f)))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X} {p : Path.{u1} X _inst_1 x₀ x₁} {q : Path.{u1} X _inst_1 x₀ x₁}, (Path.Homotopic.{u1} X _inst_1 x₀ x₁ p q) -> (forall (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Path.Homotopic.{u2} Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁) (Path.map.{u1, u2} X _inst_1 x₀ x₁ p Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f) (ContinuousMap.continuous.{u2, u1} X Y _inst_1 _inst_2 f)) (Path.map.{u1, u2} X _inst_1 x₀ x₁ q Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (a : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) a) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f) (ContinuousMap.continuous.{u2, u1} X Y _inst_1 _inst_2 f)))
-Case conversion may be inaccurate. Consider using '#align path.homotopic.map Path.Homotopic.mapₓ'. -/
 theorem map {p q : Path x₀ x₁} (h : p.Homotopic q) (f : C(X, Y)) :
     Homotopic (p.map f.Continuous) (q.map f.Continuous) :=
   h.map fun F => F.map f
@@ -416,12 +386,6 @@ theorem comp_lift (P₀ : Path x₀ x₁) (P₁ : Path x₁ x₂) : ⟦P₀.tran
 #align path.homotopic.comp_lift Path.Homotopic.comp_lift
 -/
 
-/- warning: path.homotopic.quotient.map_fn -> Path.Homotopic.Quotient.mapFn is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X}, (Path.Homotopic.Quotient.{u1} X _inst_1 x₀ x₁) -> (forall (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Path.Homotopic.Quotient.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X}, (Path.Homotopic.Quotient.{u1} X _inst_1 x₀ x₁) -> (forall (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Path.Homotopic.Quotient.{u2} ((fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) x₀) _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁))
-Case conversion may be inaccurate. Consider using '#align path.homotopic.quotient.map_fn Path.Homotopic.Quotient.mapFnₓ'. -/
 /-- The image of a path homotopy class `P₀` under a map `f`.
     This is `path.map` descended to the quotient -/
 def Quotient.mapFn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) :
@@ -429,12 +393,6 @@ def Quotient.mapFn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) :
   Quotient.map (fun q : Path x₀ x₁ => q.map f.Continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
 #align path.homotopic.quotient.map_fn Path.Homotopic.Quotient.mapFn
 
-/- warning: path.homotopic.map_lift -> Path.Homotopic.map_lift is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X} (P₀ : Path.{u1} X _inst_1 x₀ x₁) (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Eq.{succ u2} (Quotient.{succ u2} (Path.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁)) (Path.Homotopic.setoid.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁))) (Quotient.mk'.{succ u2} (Path.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁)) (Path.Homotopic.setoid.{u2} Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₀) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f x₁)) (Path.map.{u1, u2} X _inst_1 x₀ x₁ P₀ Y _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_1 _inst_2) f) (ContinuousMap.continuous.{u1, u2} X Y _inst_1 _inst_2 f))) (Path.Homotopic.Quotient.mapFn.{u1, u2} X Y _inst_1 _inst_2 x₀ x₁ (Quotient.mk'.{succ u1} (Path.{u1} X _inst_1 x₀ x₁) (Path.Homotopic.setoid.{u1} X _inst_1 x₀ x₁) P₀) f)
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {x₀ : X} {x₁ : X} (P₀ : Path.{u1} X _inst_1 x₀ x₁) (f : ContinuousMap.{u1, u2} X Y _inst_1 _inst_2), Eq.{succ u2} (Quotient.{succ u2} (Path.{u2} Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁)) (Path.Homotopic.setoid.{u2} ((fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) x₀) _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁))) (Quotient.mk.{succ u2} (Path.{u2} Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁)) (Path.Homotopic.setoid.{u2} ((fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) x₀) _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₀) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f x₁)) (Path.map.{u1, u2} X _inst_1 x₀ x₁ P₀ Y _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_1 _inst_2) X Y _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_1 _inst_2)) f) (ContinuousMap.continuous.{u2, u1} X Y _inst_1 _inst_2 f))) (Path.Homotopic.Quotient.mapFn.{u1, u2} X Y _inst_1 _inst_2 x₀ x₁ (Quotient.mk.{succ u1} (Path.{u1} X _inst_1 x₀ x₁) (Path.Homotopic.setoid.{u1} X _inst_1 x₀ x₁) P₀) f)
-Case conversion may be inaccurate. Consider using '#align path.homotopic.map_lift Path.Homotopic.map_liftₓ'. -/
 theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuous⟧ = Quotient.mapFn ⟦P₀⟧ f :=
   rfl
 #align path.homotopic.map_lift Path.Homotopic.map_lift
@@ -454,12 +412,6 @@ end Path
 
 namespace ContinuousMap.Homotopy
 
-/- warning: continuous_map.homotopy.eval_at -> ContinuousMap.Homotopy.evalAt is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_3 : TopologicalSpace.{u1} X] [_inst_4 : TopologicalSpace.{u2} Y] {f : ContinuousMap.{u1, u2} X Y _inst_3 _inst_4} {g : ContinuousMap.{u1, u2} X Y _inst_3 _inst_4}, (ContinuousMap.Homotopy.{u1, u2} X Y _inst_3 _inst_4 f g) -> (forall (x : X), Path.{u2} Y _inst_4 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_3 _inst_4) f x) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) (fun (_x : ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) => X -> Y) (ContinuousMap.hasCoeToFun.{u1, u2} X Y _inst_3 _inst_4) g x))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_3 : TopologicalSpace.{u1} X] [_inst_4 : TopologicalSpace.{u2} Y] {f : ContinuousMap.{u1, u2} X Y _inst_3 _inst_4} {g : ContinuousMap.{u1, u2} X Y _inst_3 _inst_4}, (ContinuousMap.Homotopy.{u1, u2} X Y _inst_3 _inst_4 f g) -> (forall (x : X), Path.{u2} ((fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) x) _inst_4 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) X Y _inst_3 _inst_4 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_3 _inst_4)) f x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => Y) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} X Y _inst_3 _inst_4) X Y _inst_3 _inst_4 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} X Y _inst_3 _inst_4)) g x))
-Case conversion may be inaccurate. Consider using '#align continuous_map.homotopy.eval_at ContinuousMap.Homotopy.evalAtₓ'. -/
 /-- Given a homotopy H: f ∼ g, get the path traced by the point `x` as it moves from
 `f x` to `g x`
 -/

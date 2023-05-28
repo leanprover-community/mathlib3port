@@ -77,12 +77,6 @@ def chooseAny [Random α] : Gen α :=
 
 variable {α} [Preorder α]
 
-/- warning: slim_check.gen.choose -> SlimCheck.Gen.choose is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedRandom.{u1} α _inst_1] (x : α) (y : α), (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x y) -> (SlimCheck.Gen.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Icc.{u1} α _inst_1 x y)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedRandom.{u1} α _inst_1] (x : α) (y : α), (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x y) -> (SlimCheck.Gen.{u1} (Subtype.{succ u1} α (fun (a : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x a) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a y))))
-Case conversion may be inaccurate. Consider using '#align slim_check.gen.choose SlimCheck.Gen.chooseₓ'. -/
 /-- Lift `random.random_r` to the `gen` monad. -/
 def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
   ⟨fun _ => Rand.randomR x y p⟩
@@ -137,12 +131,6 @@ def vectorOf : ∀ (n : ℕ) (cmd : Gen α), Gen (Vector α n)
   | succ n, cmd => Vector.cons <$> cmd <*> vector_of n cmd
 #align slim_check.gen.vector_of SlimCheck.Gen.vectorOf
 
-/- warning: slim_check.gen.list_of -> SlimCheck.Gen.listOf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}}, (SlimCheck.Gen.{u} α) -> (SlimCheck.Gen.{u} (List.{u} α))
-but is expected to have type
-  forall {α : Type}, (SlimCheck.Gen.{0} α) -> (SlimCheck.Gen.{0} (List.{0} α))
-Case conversion may be inaccurate. Consider using '#align slim_check.gen.list_of SlimCheck.Gen.listOfₓ'. -/
 /-- Create a list of examples using `cmd`. The size is controlled
 by the size parameter of `gen`. -/
 def listOf (cmd : Gen α) : Gen (List α) :=
@@ -155,24 +143,12 @@ def listOf (cmd : Gen α) : Gen (List α) :=
 
 open ULift
 
-/- warning: slim_check.gen.one_of -> SlimCheck.Gen.oneOf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (xs : List.{u} (SlimCheck.Gen.{u} α)), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.length.{u} (SlimCheck.Gen.{u} α) xs)) -> (SlimCheck.Gen.{u} α)
-but is expected to have type
-  forall {α : Type} (xs : Array.{0} (SlimCheck.Gen.{0} α)), (autoParam.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Array.size.{0} (SlimCheck.Gen.{0} α) xs)) _auto._@.Mathlib.Testing.SlimCheck.Gen._hyg.572) -> (SlimCheck.Gen.{0} α)
-Case conversion may be inaccurate. Consider using '#align slim_check.gen.one_of SlimCheck.Gen.oneOfₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
   let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
   List.nthLe xs n h'
 #align slim_check.gen.one_of SlimCheck.Gen.oneOf
 
-/- warning: slim_check.gen.elements -> SlimCheck.Gen.elements is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (xs : List.{u} α), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.length.{u} α xs)) -> (SlimCheck.Gen.{u} α)
-but is expected to have type
-  forall {α : Type} (xs : List.{0} α), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (List.length.{0} α xs)) -> (SlimCheck.Gen.{0} α)
-Case conversion may be inaccurate. Consider using '#align slim_check.gen.elements SlimCheck.Gen.elementsₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : Gen α := do
   let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
@@ -214,12 +190,6 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
     freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 #align slim_check.gen.freq SlimCheck.Gen.freq
 
-/- warning: slim_check.gen.permutation_of -> SlimCheck.Gen.permutationOf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} (xs : List.{u} α), SlimCheck.Gen.{u} (Subtype.{succ u} (List.{u} α) (List.Perm.{u} α xs))
-but is expected to have type
-  forall {α : Type} (xs : List.{0} α), SlimCheck.Gen.{0} (Subtype.{1} (List.{0} α) (fun (ys : List.{0} α) => List.Perm.{0} α ys xs))
-Case conversion may be inaccurate. Consider using '#align slim_check.gen.permutation_of SlimCheck.Gen.permutationOfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Generate a random permutation of a given list. -/
 def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs)

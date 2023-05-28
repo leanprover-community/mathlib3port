@@ -71,12 +71,6 @@ theorem principal_zero {op : Ordinal → Ordinal → Ordinal} : Principal op 0 :
 #align ordinal.principal_zero Ordinal.principal_zero
 -/
 
-/- warning: ordinal.principal_one_iff -> Ordinal.principal_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} op (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) (Eq.{succ (succ u1)} Ordinal.{u1} (op (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))))
-but is expected to have type
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} op (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))) (Eq.{succ (succ u1)} Ordinal.{u1} (op (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_one_iff Ordinal.principal_one_iffₓ'. -/
 @[simp]
 theorem principal_one_iff {op : Ordinal → Ordinal → Ordinal} : Principal op 1 ↔ op 0 0 = 0 :=
   by
@@ -86,12 +80,6 @@ theorem principal_one_iff {op : Ordinal → Ordinal → Ordinal} : Principal op 
   · rwa [lt_one_iff_zero, ha, hb] at *
 #align ordinal.principal_one_iff Ordinal.principal_one_iff
 
-/- warning: ordinal.principal.iterate_lt -> Ordinal.Principal.iterate_lt is a dubious translation:
-lean 3 declaration is
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Ordinal.Principal.{u1} op o) -> (forall (n : Nat), LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} (op a) n a) o)
-but is expected to have type
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Ordinal.Principal.{u1} op o) -> (forall (n : Nat), LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} (op a) n a) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal.iterate_lt Ordinal.Principal.iterate_ltₓ'. -/
 theorem Principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal} (hao : a < o)
     (ho : Principal op o) (n : ℕ) : (op a^[n]) a < o :=
   by
@@ -100,12 +88,6 @@ theorem Principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordin
   · rw [Function.iterate_succ']; exact ho hao hn
 #align ordinal.principal.iterate_lt Ordinal.Principal.iterate_lt
 
-/- warning: ordinal.op_eq_self_of_principal -> Ordinal.op_eq_self_of_principal is a dubious translation:
-lean 3 declaration is
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Ordinal.IsNormal.{u1, u1} (op a)) -> (Ordinal.Principal.{u1} op o) -> (Ordinal.IsLimit.{u1} o) -> (Eq.{succ (succ u1)} Ordinal.{u1} (op a o) o)
-but is expected to have type
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Ordinal.IsNormal.{u1, u1} (op a)) -> (Ordinal.Principal.{u1} op o) -> (Ordinal.IsLimit.{u1} o) -> (Eq.{succ (succ u1)} Ordinal.{u1} (op a o) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.op_eq_self_of_principal Ordinal.op_eq_self_of_principalₓ'. -/
 theorem op_eq_self_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal.{u}} (hao : a < o)
     (H : IsNormal (op a)) (ho : Principal op o) (ho' : IsLimit o) : op a o = o :=
   by
@@ -114,12 +96,6 @@ theorem op_eq_self_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Or
   exact fun b hbo => (ho hao hbo).le
 #align ordinal.op_eq_self_of_principal Ordinal.op_eq_self_of_principal
 
-/- warning: ordinal.nfp_le_of_principal -> Ordinal.nfp_le_of_principal is a dubious translation:
-lean 3 declaration is
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Ordinal.Principal.{u1} op o) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} (op a) a) o)
-but is expected to have type
-  forall {op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Ordinal.Principal.{u1} op o) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} (op a) a) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.nfp_le_of_principal Ordinal.nfp_le_of_principalₓ'. -/
 theorem nfp_le_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal} (hao : a < o)
     (ho : Principal op o) : nfp (op a) a ≤ o :=
   nfp_le fun n => (ho.iterate_lt hao n).le
@@ -136,12 +112,6 @@ def blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Ordinal :=
 #align ordinal.blsub₂ Ordinal.blsub₂
 -/
 
-/- warning: ordinal.lt_blsub₂ -> Ordinal.lt_blsub₂ is a dubious translation:
-lean 3 declaration is
-  forall (op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{max u1 u2}) {o : Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (op a b) (Ordinal.blsub₂.{u1, u2} op o))
-but is expected to have type
-  forall (op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{max u1 u2}) {o : Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (op a b) (Ordinal.blsub₂.{u1, u2} op o))
-Case conversion may be inaccurate. Consider using '#align ordinal.lt_blsub₂ Ordinal.lt_blsub₂ₓ'. -/
 theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : Ordinal} (ha : a < o)
     (hb : b < o) : op a b < blsub₂ op o :=
   by
@@ -167,12 +137,6 @@ theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordin
 #align ordinal.principal_nfp_blsub₂ Ordinal.principal_nfp_blsub₂
 -/
 
-/- warning: ordinal.unbounded_principal -> Ordinal.unbounded_principal is a dubious translation:
-lean 3 declaration is
-  forall (op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}), Set.Unbounded.{succ u1} Ordinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (o : Ordinal.{u1}) => Ordinal.Principal.{u1} op o))
-but is expected to have type
-  forall (op : Ordinal.{u1} -> Ordinal.{u1} -> Ordinal.{u1}), Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1049 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1051 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1049 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1051) (setOf.{succ u1} Ordinal.{u1} (fun (o : Ordinal.{u1}) => Ordinal.Principal.{u1} op o))
-Case conversion may be inaccurate. Consider using '#align ordinal.unbounded_principal Ordinal.unbounded_principalₓ'. -/
 theorem unbounded_principal (op : Ordinal → Ordinal → Ordinal) :
     Set.Unbounded (· < ·) { o | Principal op o } := fun o =>
   ⟨_, principal_nfp_blsub₂ op o, (le_nfp _ o).not_lt⟩
@@ -181,22 +145,10 @@ theorem unbounded_principal (op : Ordinal → Ordinal → Ordinal) :
 /-! #### Additive principal ordinals -/
 
 
-/- warning: ordinal.principal_add_one -> Ordinal.principal_add_one is a dubious translation:
-lean 3 declaration is
-  Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))
-but is expected to have type
-  Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1094 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1096 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1094 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1096) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_one Ordinal.principal_add_oneₓ'. -/
 theorem principal_add_one : Principal (· + ·) 1 :=
   principal_one_iff.2 <| zero_add 0
 #align ordinal.principal_add_one Ordinal.principal_add_one
 
-/- warning: ordinal.principal_add_of_le_one -> Ordinal.principal_add_of_le_one is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) -> (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) o)
-but is expected to have type
-  forall {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1124 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1126 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1124 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1126) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_of_le_one Ordinal.principal_add_of_le_oneₓ'. -/
 theorem principal_add_of_le_one {o : Ordinal} (ho : o ≤ 1) : Principal (· + ·) o :=
   by
   rcases le_one_iff.1 ho with (rfl | rfl)
@@ -204,12 +156,6 @@ theorem principal_add_of_le_one {o : Ordinal} (ho : o ≤ 1) : Principal (· + �
   · exact principal_add_one
 #align ordinal.principal_add_of_le_one Ordinal.principal_add_of_le_one
 
-/- warning: ordinal.principal_add_is_limit -> Ordinal.principal_add_isLimit is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))) o) -> (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) o) -> (Ordinal.IsLimit.{u1} o)
-but is expected to have type
-  forall {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1})) o) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1166 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1168 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1166 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1168) o) -> (Ordinal.IsLimit.{u1} o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_is_limit Ordinal.principal_add_isLimitₓ'. -/
 theorem principal_add_isLimit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· + ·) o) : o.IsLimit :=
   by
   refine' ⟨fun ho₀ => _, fun a hao => _⟩
@@ -222,12 +168,6 @@ theorem principal_add_isLimit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· 
       rwa [← add_one_eq_succ, add_le_add_iff_left, one_le_iff_ne_zero]
 #align ordinal.principal_add_is_limit Ordinal.principal_add_isLimit
 
-/- warning: ordinal.principal_add_iff_add_left_eq_self -> Ordinal.principal_add_iff_add_left_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) o) (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a o) o))
-but is expected to have type
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1330 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1332 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1330 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1332) o) (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a o) o))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_iff_add_left_eq_self Ordinal.principal_add_iff_add_left_eq_selfₓ'. -/
 theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
     Principal (· + ·) o ↔ ∀ a < o, a + o = o :=
   by
@@ -242,12 +182,6 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
     exact (add_is_normal a).StrictMono hbo
 #align ordinal.principal_add_iff_add_left_eq_self Ordinal.principal_add_iff_add_left_eq_self
 
-/- warning: ordinal.exists_lt_add_of_not_principal_add -> Ordinal.exists_lt_add_of_not_principal_add is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (Not (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) a)) -> (Exists.{succ (succ u1)} Ordinal.{u1} (fun (b : Ordinal.{u1}) => Exists.{succ (succ u1)} Ordinal.{u1} (fun (c : Ordinal.{u1}) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b a) (fun (hb : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b a) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c a) (fun (hc : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c a) => Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) b c) a)))))
-but is expected to have type
-  forall {a : Ordinal.{u1}}, (Not (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1535 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1537 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1535 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1537) a)) -> (Exists.{succ (succ u1)} Ordinal.{u1} (fun (b : Ordinal.{u1}) => Exists.{succ (succ u1)} Ordinal.{u1} (fun (c : Ordinal.{u1}) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b a) (fun (hb : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b a) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c a) (fun (hc : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c a) => Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) b c) a)))))
-Case conversion may be inaccurate. Consider using '#align ordinal.exists_lt_add_of_not_principal_add Ordinal.exists_lt_add_of_not_principal_addₓ'. -/
 theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
     ∃ (b c : _)(hb : b < a)(hc : c < a), b + c = a :=
   by
@@ -260,12 +194,6 @@ theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
   exact H.not_lt hc
 #align ordinal.exists_lt_add_of_not_principal_add Ordinal.exists_lt_add_of_not_principal_add
 
-/- warning: ordinal.principal_add_iff_add_lt_ne_self -> Ordinal.principal_add_iff_add_lt_ne_self is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) a) (forall {{b : Ordinal.{u1}}} {{c : Ordinal.{u1}}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c a) -> (Ne.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) b c) a))
-but is expected to have type
-  forall {a : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1668 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1670 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1668 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.1670) a) (forall {{b : Ordinal.{u1}}} {{c : Ordinal.{u1}}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c a) -> (Ne.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) b c) a))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_iff_add_lt_ne_self Ordinal.principal_add_iff_add_lt_ne_selfₓ'. -/
 theorem principal_add_iff_add_lt_ne_self {a} :
     Principal (· + ·) a ↔ ∀ ⦃b c⦄, b < a → c < a → b + c ≠ a :=
   ⟨fun ha b c hb hc => (ha hb hc).Ne, fun H =>
@@ -275,12 +203,6 @@ theorem principal_add_iff_add_lt_ne_self {a} :
     exact (H hb hc).irrefl⟩
 #align ordinal.principal_add_iff_add_lt_ne_self Ordinal.principal_add_iff_add_lt_ne_self
 
-/- warning: ordinal.add_omega -> Ordinal.add_omega is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a Ordinal.omega.{u1}) Ordinal.omega.{u1})
-but is expected to have type
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a Ordinal.omega.{u1}) Ordinal.omega.{u1})
-Case conversion may be inaccurate. Consider using '#align ordinal.add_omega Ordinal.add_omegaₓ'. -/
 theorem add_omega {a : Ordinal} (h : a < omega) : a + omega = omega :=
   by
   rcases lt_omega.1 h with ⟨n, rfl⟩
@@ -295,12 +217,6 @@ theorem principal_add_omega : Principal (· + ·) omega :=
 #align ordinal.principal_add_omega Ordinal.principal_add_omega
 -/
 
-/- warning: ordinal.add_omega_opow -> Ordinal.add_omega_opow is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b)) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b)) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b))
-but is expected to have type
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b)) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b)) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b))
-Case conversion may be inaccurate. Consider using '#align ordinal.add_omega_opow Ordinal.add_omega_opowₓ'. -/
 theorem add_omega_opow {a b : Ordinal} (h : a < (omega^b)) : a + (omega^b) = (omega^b) :=
   by
   refine' le_antisymm _ (le_add_left _ _)
@@ -320,22 +236,10 @@ theorem add_omega_opow {a b : Ordinal} (h : a < (omega^b)) : a + (omega^b) = (om
             (opow_le_opow_right omega_pos <| le_of_lt <| max_lt xb yb))
 #align ordinal.add_omega_opow Ordinal.add_omega_opow
 
-/- warning: ordinal.principal_add_omega_opow -> Ordinal.principal_add_omega_opow is a dubious translation:
-lean 3 declaration is
-  forall (o : Ordinal.{u1}), Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} o)
-but is expected to have type
-  forall (o : Ordinal.{u1}), Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2159 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2161 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2159 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2161) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_omega_opow Ordinal.principal_add_omega_opowₓ'. -/
 theorem principal_add_omega_opow (o : Ordinal) : Principal (· + ·) (omega^o) :=
   principal_add_iff_add_left_eq_self.2 fun a => add_omega_opow
 #align ordinal.principal_add_omega_opow Ordinal.principal_add_omega_opow
 
-/- warning: ordinal.principal_add_iff_zero_or_omega_opow -> Ordinal.principal_add_iff_zero_or_omega_opow is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) o) (Or (Eq.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} o (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} a))))
-but is expected to have type
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2194 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2196 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2194 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2196) o) (Or (Eq.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} o (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} a))))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_iff_zero_or_omega_opow Ordinal.principal_add_iff_zero_or_omega_opowₓ'. -/
 /-- The main characterization theorem for additive principal ordinals. -/
 theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} :
     Principal (· + ·) o ↔ o = 0 ∨ ∃ a, o = (omega^a) :=
@@ -359,12 +263,6 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} :
     simp only [Nat.cast_succ, mul_add_one, add_assoc, this, IH]
 #align ordinal.principal_add_iff_zero_or_omega_opow Ordinal.principal_add_iff_zero_or_omega_opow
 
-/- warning: ordinal.opow_principal_add_of_principal_add -> Ordinal.opow_principal_add_of_principal_add is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) a) -> (forall (b : Ordinal.{u1}), Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a b))
-but is expected to have type
-  forall {a : Ordinal.{u1}}, (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2473 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2475 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2473 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2475) a) -> (forall (b : Ordinal.{u1}), Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2491 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2493 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2491 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2493) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a b))
-Case conversion may be inaccurate. Consider using '#align ordinal.opow_principal_add_of_principal_add Ordinal.opow_principal_add_of_principal_addₓ'. -/
 theorem opow_principal_add_of_principal_add {a} (ha : Principal (· + ·) a) (b : Ordinal) :
     Principal (· + ·) (a^b) :=
   by
@@ -375,22 +273,10 @@ theorem opow_principal_add_of_principal_add {a} (ha : Principal (· + ·) a) (b 
   · rw [← opow_mul]; exact principal_add_omega_opow _
 #align ordinal.opow_principal_add_of_principal_add Ordinal.opow_principal_add_of_principal_add
 
-/- warning: ordinal.add_absorp -> Ordinal.add_absorp is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b)) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b) c) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a c) c)
-but is expected to have type
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b)) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b) c) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a c) c)
-Case conversion may be inaccurate. Consider using '#align ordinal.add_absorp Ordinal.add_absorpₓ'. -/
 theorem add_absorp {a b c : Ordinal} (h₁ : a < (omega^b)) (h₂ : (omega^b) ≤ c) : a + c = c := by
   rw [← Ordinal.add_sub_cancel_of_le h₂, ← add_assoc, add_omega_opow h₁]
 #align ordinal.add_absorp Ordinal.add_absorp
 
-/- warning: ordinal.mul_principal_add_is_principal_add -> Ordinal.mul_principal_add_is_principal_add is a dubious translation:
-lean 3 declaration is
-  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) -> (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) b) -> (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b))
-but is expected to have type
-  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2704 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2706 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2704 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2706) b) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2721 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2723 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2721 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.2723) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b))
-Case conversion may be inaccurate. Consider using '#align ordinal.mul_principal_add_is_principal_add Ordinal.mul_principal_add_is_principal_addₓ'. -/
 theorem mul_principal_add_is_principal_add (a : Ordinal.{u}) {b : Ordinal.{u}} (hb₁ : b ≠ 1)
     (hb : Principal (· + ·) b) : Principal (· + ·) (a * b) :=
   by
@@ -414,22 +300,10 @@ theorem mul_principal_add_is_principal_add (a : Ordinal.{u}) {b : Ordinal.{u}} (
 /-! #### Multiplicative principal ordinals -/
 
 
-/- warning: ordinal.principal_mul_one -> Ordinal.principal_mul_one is a dubious translation:
-lean 3 declaration is
-  Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))
-but is expected to have type
-  Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3104 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3106 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3104 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3106) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_one Ordinal.principal_mul_oneₓ'. -/
 theorem principal_mul_one : Principal (· * ·) 1 := by rw [principal_one_iff];
   exact MulZeroClass.zero_mul _
 #align ordinal.principal_mul_one Ordinal.principal_mul_one
 
-/- warning: ordinal.principal_mul_two -> Ordinal.principal_mul_two is a dubious translation:
-lean 3 declaration is
-  Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (OfNat.mk.{succ u1} Ordinal.{u1} 2 (bit0.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1} (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))))
-but is expected to have type
-  Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3158 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3160 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3158 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3160) (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (instOfNat.{succ u1} Ordinal.{u1} 2 (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_two Ordinal.principal_mul_twoₓ'. -/
 theorem principal_mul_two : Principal (· * ·) 2 := fun a b ha hb =>
   by
   have h₂ : succ (1 : Ordinal) = 2 := rfl
@@ -438,12 +312,6 @@ theorem principal_mul_two : Principal (· * ·) 2 := fun a b ha hb =>
   exact (mul_one 1).symm
 #align ordinal.principal_mul_two Ordinal.principal_mul_two
 
-/- warning: ordinal.principal_mul_of_le_two -> Ordinal.principal_mul_of_le_two is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (OfNat.mk.{succ u1} Ordinal.{u1} 2 (bit0.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1} (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))))) -> (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) o)
-but is expected to have type
-  forall {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (instOfNat.{succ u1} Ordinal.{u1} 2 (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3320 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3322 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3320 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3322) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_of_le_two Ordinal.principal_mul_of_le_twoₓ'. -/
 theorem principal_mul_of_le_two {o : Ordinal} (ho : o ≤ 2) : Principal (· * ·) o :=
   by
   rcases lt_or_eq_of_le ho with (ho | rfl)
@@ -456,12 +324,6 @@ theorem principal_mul_of_le_two {o : Ordinal} (ho : o ≤ 2) : Principal (· * �
   · exact principal_mul_two
 #align ordinal.principal_mul_of_le_two Ordinal.principal_mul_of_le_two
 
-/- warning: ordinal.principal_add_of_principal_mul -> Ordinal.principal_add_of_principal_mul is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) o) -> (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (OfNat.mk.{succ u1} Ordinal.{u1} 2 (bit0.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1} (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))))) -> (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) o)
-but is expected to have type
-  forall {o : Ordinal.{u1}}, (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3455 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3457 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3455 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3457) o) -> (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (instOfNat.{succ u1} Ordinal.{u1} 2 (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3477 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3479 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3477 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3479) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_of_principal_mul Ordinal.principal_add_of_principal_mulₓ'. -/
 theorem principal_add_of_principal_mul {o : Ordinal} (ho : Principal (· * ·) o) (ho₂ : o ≠ 2) :
     Principal (· + ·) o := by
   cases' lt_or_gt_of_ne ho₂ with ho₁ ho₂
@@ -473,23 +335,11 @@ theorem principal_add_of_principal_mul {o : Ordinal} (ho : Principal (· * ·) o
     exact add_le_add (le_max_left a b) (le_max_right a b)
 #align ordinal.principal_add_of_principal_mul Ordinal.principal_add_of_principal_mul
 
-/- warning: ordinal.principal_mul_is_limit -> Ordinal.principal_mul_isLimit is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (OfNat.mk.{succ u1} Ordinal.{u1} 2 (bit0.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1} (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) o) -> (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) o) -> (Ordinal.IsLimit.{u1} o)
-but is expected to have type
-  forall {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (instOfNat.{succ u1} Ordinal.{u1} 2 (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) o) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3639 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3641 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3639 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3641) o) -> (Ordinal.IsLimit.{u1} o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_is_limit Ordinal.principal_mul_isLimitₓ'. -/
 theorem principal_mul_isLimit {o : Ordinal.{u}} (ho₂ : 2 < o) (ho : Principal (· * ·) o) :
     o.IsLimit :=
   principal_add_isLimit ((lt_succ 1).trans ho₂) (principal_add_of_principal_mul ho (ne_of_gt ho₂))
 #align ordinal.principal_mul_is_limit Ordinal.principal_mul_isLimit
 
-/- warning: ordinal.principal_mul_iff_mul_left_eq -> Ordinal.principal_mul_iff_mul_left_eq is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) o) (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a o) o))
-but is expected to have type
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3688 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3690 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3688 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3690) o) (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a o) o))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_iff_mul_left_eq Ordinal.principal_mul_iff_mul_left_eqₓ'. -/
 theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
     Principal (· * ·) o ↔ ∀ a, 0 < a → a < o → a * o = o :=
   by
@@ -507,33 +357,15 @@ theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
     exact (mul_is_normal ha).StrictMono hbo
 #align ordinal.principal_mul_iff_mul_left_eq Ordinal.principal_mul_iff_mul_left_eq
 
-/- warning: ordinal.principal_mul_omega -> Ordinal.principal_mul_omega is a dubious translation:
-lean 3 declaration is
-  Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) Ordinal.omega.{u1}
-but is expected to have type
-  Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4047 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4049 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4047 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4049) Ordinal.omega.{u1}
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_omega Ordinal.principal_mul_omegaₓ'. -/
 theorem principal_mul_omega : Principal (· * ·) omega := fun a b ha hb =>
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by rw [← nat_cast_mul]; apply nat_lt_omega
 #align ordinal.principal_mul_omega Ordinal.principal_mul_omega
 
-/- warning: ordinal.mul_omega -> Ordinal.mul_omega is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) Ordinal.omega.{u1})
-but is expected to have type
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) Ordinal.omega.{u1})
-Case conversion may be inaccurate. Consider using '#align ordinal.mul_omega Ordinal.mul_omegaₓ'. -/
 theorem mul_omega {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : a * omega = omega :=
   principal_mul_iff_mul_left_eq.1 principal_mul_omega a a0 ha
 #align ordinal.mul_omega Ordinal.mul_omega
 
-/- warning: ordinal.mul_lt_omega_opow -> Ordinal.mul_lt_omega_opow is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) c) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} c)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b Ordinal.omega.{u1}) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} c))
-but is expected to have type
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) c) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} c)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b Ordinal.omega.{u1}) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} c))
-Case conversion may be inaccurate. Consider using '#align ordinal.mul_lt_omega_opow Ordinal.mul_lt_omega_opowₓ'. -/
 theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (hb : b < omega) :
     a * b < (omega^c) :=
   by
@@ -550,12 +382,6 @@ theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (h
     exact l.2 _ hx
 #align ordinal.mul_lt_omega_opow Ordinal.mul_lt_omega_opow
 
-/- warning: ordinal.mul_omega_opow_opow -> Ordinal.mul_omega_opow_opow is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b))) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} b)))
-but is expected to have type
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b))) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} b)))
-Case conversion may be inaccurate. Consider using '#align ordinal.mul_omega_opow_opow Ordinal.mul_omega_opow_opowₓ'. -/
 theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b)) :
     a * (omega^omega^b) = (omega^omega^b) :=
   by
@@ -568,22 +394,10 @@ theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b
   rw [← opow_add, add_omega_opow xb]
 #align ordinal.mul_omega_opow_opow Ordinal.mul_omega_opow_opow
 
-/- warning: ordinal.principal_mul_omega_opow_opow -> Ordinal.principal_mul_omega_opow_opow is a dubious translation:
-lean 3 declaration is
-  forall (o : Ordinal.{u1}), Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} o))
-but is expected to have type
-  forall (o : Ordinal.{u1}), Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4597 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4599 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4597 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4599) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} o))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_omega_opow_opow Ordinal.principal_mul_omega_opow_opowₓ'. -/
 theorem principal_mul_omega_opow_opow (o : Ordinal) : Principal (· * ·) (omega^omega^o) :=
   principal_mul_iff_mul_left_eq.2 fun a => mul_omega_opow_opow
 #align ordinal.principal_mul_omega_opow_opow Ordinal.principal_mul_omega_opow_opow
 
-/- warning: ordinal.principal_add_of_principal_mul_opow -> Ordinal.principal_add_of_principal_mul_opow is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))) b) -> (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) b o)) -> (Ordinal.Principal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1})) o)
-but is expected to have type
-  forall {o : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1})) b) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4637 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4639 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4637 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4639) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) b o)) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4660 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4662 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4660 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4662) o)
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_add_of_principal_mul_opow Ordinal.principal_add_of_principal_mul_opowₓ'. -/
 theorem principal_add_of_principal_mul_opow {o b : Ordinal} (hb : 1 < b)
     (ho : Principal (· * ·) (b^o)) : Principal (· + ·) o := fun x y hx hy =>
   by
@@ -591,12 +405,6 @@ theorem principal_add_of_principal_mul_opow {o b : Ordinal} (hb : 1 < b)
   rwa [← opow_add, opow_lt_opow_iff_right hb] at this
 #align ordinal.principal_add_of_principal_mul_opow Ordinal.principal_add_of_principal_mul_opow
 
-/- warning: ordinal.principal_mul_iff_le_two_or_omega_opow_opow -> Ordinal.principal_mul_iff_le_two_or_omega_opow_opow is a dubious translation:
-lean 3 declaration is
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) o) (Or (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (OfNat.mk.{succ u1} Ordinal.{u1} 2 (bit0.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1} (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))))) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} o (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) Ordinal.omega.{u1} a)))))
-but is expected to have type
-  forall {o : Ordinal.{u1}}, Iff (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4770 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4772 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4770 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.4772) o) (Or (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (instOfNat.{succ u1} Ordinal.{u1} 2 (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} o (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) Ordinal.omega.{u1} a)))))
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_iff_le_two_or_omega_opow_opow Ordinal.principal_mul_iff_le_two_or_omega_opow_opowₓ'. -/
 /-- The main characterization theorem for multiplicative principal ordinals. -/
 theorem principal_mul_iff_le_two_or_omega_opow_opow {o : Ordinal} :
     Principal (· * ·) o ↔ o ≤ 2 ∨ ∃ a, o = (omega^omega^a) :=
@@ -618,22 +426,10 @@ theorem principal_mul_iff_le_two_or_omega_opow_opow {o : Ordinal} :
     · exact principal_mul_omega_opow_opow a
 #align ordinal.principal_mul_iff_le_two_or_omega_opow_opow Ordinal.principal_mul_iff_le_two_or_omega_opow_opow
 
-/- warning: ordinal.mul_omega_dvd -> Ordinal.mul_omega_dvd is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (forall {b : Ordinal.{u1}}, (Dvd.Dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) Ordinal.omega.{u1} b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b))
-but is expected to have type
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (forall {b : Ordinal.{u1}}, (Dvd.dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) Ordinal.omega.{u1} b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b))
-Case conversion may be inaccurate. Consider using '#align ordinal.mul_omega_dvd Ordinal.mul_omega_dvdₓ'. -/
 theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, omega ∣ b → a * b = b
   | _, ⟨b, rfl⟩ => by rw [← mul_assoc, mul_omega a0 ha]
 #align ordinal.mul_omega_dvd Ordinal.mul_omega_dvd
 
-/- warning: ordinal.mul_eq_opow_log_succ -> Ordinal.mul_eq_opow_log_succ is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} a (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (Ordinal.Principal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))))) b) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (OfNat.mk.{succ u1} Ordinal.{u1} 2 (bit0.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1} (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} (Ordinal.log.{u1} b a))))
-but is expected to have type
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} a (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.5010 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.5012 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.5010 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.5012) b) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 2 (instOfNat.{succ u1} Ordinal.{u1} 2 (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} (Ordinal.log.{u1} b a))))
-Case conversion may be inaccurate. Consider using '#align ordinal.mul_eq_opow_log_succ Ordinal.mul_eq_opow_log_succₓ'. -/
 theorem mul_eq_opow_log_succ {a b : Ordinal.{u}} (ha : a ≠ 0) (hb : Principal (· * ·) b)
     (hb₂ : 2 < b) : a * b = (b^succ (log b a)) :=
   by
@@ -655,23 +451,11 @@ theorem mul_eq_opow_log_succ {a b : Ordinal.{u}} (ha : a ≠ 0) (hb : Principal 
 /-! #### Exponential principal ordinals -/
 
 
-/- warning: ordinal.principal_opow_omega -> Ordinal.principal_opow_omega is a dubious translation:
-lean 3 declaration is
-  Ordinal.Principal.{u1} (fun (_x : Ordinal.{u1}) (_y : Ordinal.{u1}) => HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) _x _y) Ordinal.omega.{u1}
-but is expected to have type
-  Ordinal.Principal.{u1} (fun (_x : Ordinal.{u1}) (_y : Ordinal.{u1}) => HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) _x _y) Ordinal.omega.{u1}
-Case conversion may be inaccurate. Consider using '#align ordinal.principal_opow_omega Ordinal.principal_opow_omegaₓ'. -/
 theorem principal_opow_omega : Principal (·^·) omega := fun a b ha hb =>
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by simp_rw [← nat_cast_opow]; apply nat_lt_omega
 #align ordinal.principal_opow_omega Ordinal.principal_opow_omega
 
-/- warning: ordinal.opow_omega -> Ordinal.opow_omega is a dubious translation:
-lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) Ordinal.omega.{u1})
-but is expected to have type
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a Ordinal.omega.{u1}) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) Ordinal.omega.{u1})
-Case conversion may be inaccurate. Consider using '#align ordinal.opow_omega Ordinal.opow_omegaₓ'. -/
 theorem opow_omega {a : Ordinal} (a1 : 1 < a) (h : a < omega) : (a^omega) = omega :=
   le_antisymm
     ((opow_le_of_limit (one_le_iff_ne_zero.1 <| le_of_lt a1) omega_isLimit).2 fun b hb =>

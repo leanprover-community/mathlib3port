@@ -68,12 +68,6 @@ instance hasForgetToPreordCat : HasForget₂ PartOrdCat PreordCat :=
 #align PartOrd.has_forget_to_Preord PartOrdCat.hasForgetToPreordCat
 -/
 
-/- warning: PartOrd.iso.mk -> PartOrdCat.Iso.mk is a dubious translation:
-lean 3 declaration is
-  forall {α : PartOrdCat.{u1}} {β : PartOrdCat.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} PartOrdCat.{u1} Type.{u1} PartOrdCat.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} PartOrdCat.{u1} Type.{u1} PartOrdCat.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} PartOrdCat.{u1} Type.{u1} PartOrdCat.hasCoeToSort.{u1} α) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} PartOrdCat.{u1} Type.{u1} PartOrdCat.hasCoeToSort.{u1} α) (PartOrdCat.partialOrder.{u1} α))) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} PartOrdCat.{u1} Type.{u1} PartOrdCat.hasCoeToSort.{u1} β) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} PartOrdCat.{u1} Type.{u1} PartOrdCat.hasCoeToSort.{u1} β) (PartOrdCat.partialOrder.{u1} β)))) -> (CategoryTheory.Iso.{u1, succ u1} PartOrdCat.{u1} PartOrdCat.largeCategory.{u1} α β)
-but is expected to have type
-  forall {α : PartOrdCat.{u1}} {β : PartOrdCat.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} α) (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} β) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} α) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} α) (PartOrdCat.instPartialOrderα.{u1} α))) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} β) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} PartialOrder.{u1} β) (PartOrdCat.instPartialOrderα.{u1} β)))) -> (CategoryTheory.Iso.{u1, succ u1} PartOrdCat.{u1} instPartOrdCatLargeCategory.{u1} α β)
-Case conversion may be inaccurate. Consider using '#align PartOrd.iso.mk PartOrdCat.Iso.mkₓ'. -/
 /-- Constructs an equivalence between partial orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : PartOrdCat.{u}} (e : α ≃o β) : α ≅ β
@@ -93,12 +87,6 @@ def dual : PartOrdCat ⥤ PartOrdCat where
 #align PartOrd.dual PartOrdCat.dual
 -/
 
-/- warning: PartOrd.dual_equiv -> PartOrdCat.dualEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} PartOrdCat.{u1} PartOrdCat.largeCategory.{u1} PartOrdCat.{u1} PartOrdCat.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} PartOrdCat.{u1} PartOrdCat.{u1} instPartOrdCatLargeCategory.{u1} instPartOrdCatLargeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align PartOrd.dual_equiv PartOrdCat.dualEquivₓ'. -/
 /-- The equivalence between `PartOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PartOrdCat ≌ PartOrdCat :=

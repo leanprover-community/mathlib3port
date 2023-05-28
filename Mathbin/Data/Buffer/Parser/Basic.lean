@@ -514,12 +514,6 @@ instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mon
       exact fun _ ha => h _ (List.mem_cons_of_mem _ ha)
 #align parser.mono.mmap Parser.Mono.mapM
 
-/- warning: parser.mono.mmap' -> Parser.Mono.mapM' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type} {β : Type} {l : List.{0} α} {f : α -> (Parser β)} [_inst_1 : forall (a : α), (Membership.Mem.{0, 0} α (List.{0} α) (List.hasMem.{0} α) a l) -> (Parser.Mono β (f a))], Parser.Mono Unit (List.mapM'.{0, 0} Parser Parser.monad α β f l)
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align parser.mono.mmap' Parser.Mono.mapM'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mapM' f).mono
   | [], _, _ => Mono.pure
@@ -1147,12 +1141,6 @@ instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], 
       · exact fun _ => static.pure
 #align parser.static.mmap Parser.Static.mapM
 
-/- warning: parser.static.mmap' -> Parser.Static.mapM' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type} {β : Type} {l : List.{0} α} {f : α -> (Parser β)} [_inst_1 : forall (a : α), Parser.Static β (f a)], Parser.Static Unit (List.mapM'.{0, 0} Parser Parser.monad α β f l)
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align parser.static.mmap' Parser.Static.mapM'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mapM' f).Static
   | [], _, _ => Static.pure
@@ -1861,12 +1849,6 @@ instance mapM_of_unfailing :
       · exact fun _ => unfailing.pure
 #align parser.err_static.mmap_of_unfailing Parser.ErrStatic.mapM_of_unfailing
 
-/- warning: parser.err_static.mmap' -> Parser.ErrStatic.mapM' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type} {β : Type} {l : List.{0} α} {f : α -> (Parser β)} [_inst_1 : forall (a : α), Parser.Static β (f a)] [_inst_2 : forall (a : α), Parser.ErrStatic β (f a)], Parser.ErrStatic Unit (List.mapM'.{0, 0} Parser Parser.monad α β f l)
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align parser.err_static.mmap' Parser.ErrStatic.mapM'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic],
@@ -1881,12 +1863,6 @@ instance mapM' :
       · exact h'
 #align parser.err_static.mmap' Parser.ErrStatic.mapM'
 
-/- warning: parser.err_static.mmap'_of_unfailing -> Parser.ErrStatic.mapM'_of_unfailing is a dubious translation:
-lean 3 declaration is
-  forall {α : Type} {β : Type} {l : List.{0} α} {f : α -> (Parser β)} [_inst_1 : forall (a : α), Parser.Unfailing β (f a)] [_inst_2 : forall (a : α), Parser.ErrStatic β (f a)], Parser.ErrStatic Unit (List.mapM'.{0, 0} Parser Parser.monad α β f l)
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align parser.err_static.mmap'_of_unfailing Parser.ErrStatic.mapM'_of_unfailingₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM'_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic],

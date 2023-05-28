@@ -34,35 +34,17 @@ namespace TopCat
 
 variable {J : Type v} [SmallCategory J]
 
-/- warning: Top.pi_π -> TopCat.piπ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}) (i : ι), Quiver.Hom.{succ (max u2 u1), succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1})) (TopCat.of.{max u2 u1} (forall (i : ι), coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (Pi.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a)))) (α i)
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}) (i : ι), Quiver.Hom.{max (succ u2) (succ u1), succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} TopCat.{max u2 u1} instTopCatLargeCategory.{max u2 u1})) (TopCat.of.{max u2 u1} (forall (i : ι), CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (Pi.topologicalSpace.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a)))) (α i)
-Case conversion may be inaccurate. Consider using '#align Top.pi_π TopCat.piπₓ'. -/
 /-- The projection from the product as a bundled continous map. -/
 abbrev piπ {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : TopCat.of (∀ i, α i) ⟶ α i :=
   ⟨fun f => f i, continuous_apply i⟩
 #align Top.pi_π TopCat.piπ
 
-/- warning: Top.pi_fan -> TopCat.piFan is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}), CategoryTheory.Limits.Fan.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}), CategoryTheory.Limits.Fan.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α
-Case conversion may be inaccurate. Consider using '#align Top.pi_fan TopCat.piFanₓ'. -/
 /-- The explicit fan of a family of topological spaces given by the pi type. -/
 @[simps pt π_app]
 def piFan {ι : Type v} (α : ι → TopCat.{max v u}) : Fan α :=
   Fan.mk (TopCat.of (∀ i, α i)) (piπ α)
 #align Top.pi_fan TopCat.piFan
 
-/- warning: Top.pi_fan_is_limit -> TopCat.piFanIsLimit is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}), CategoryTheory.Limits.IsLimit.{u2, max u2 u1, u2, succ (max u2 u1)} (CategoryTheory.Discrete.{u2} ι) (CategoryTheory.discreteCategory.{u2} ι) TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} (CategoryTheory.Discrete.functor.{max u2 u1, u2, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} ι α) (TopCat.piFan.{u1, u2} ι α)
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}), CategoryTheory.Limits.IsLimit.{u1, max u2 u1, u1, max (succ u2) (succ u1)} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α) (TopCat.piFan.{u1, u2} ι α)
-Case conversion may be inaccurate. Consider using '#align Top.pi_fan_is_limit TopCat.piFanIsLimitₓ'. -/
 /-- The constructed fan is indeed a limit -/
 def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan α)
     where
@@ -71,12 +53,6 @@ def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan �
   fac s j := by cases j; tidy
 #align Top.pi_fan_is_limit TopCat.piFanIsLimit
 
-/- warning: Top.pi_iso_pi -> TopCat.piIsoPi is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}), CategoryTheory.Iso.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} (CategoryTheory.Limits.piObj.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.piIsoPi._proof_1.{u1, u2} ι α)) (TopCat.of.{max u2 u1} (forall (i : ι), coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (Pi.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a))))
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}), CategoryTheory.Iso.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Limits.piObj.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasLimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α))) (TopCat.of.{max u2 u1} (forall (i : ι), CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (Pi.topologicalSpace.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a))))
-Case conversion may be inaccurate. Consider using '#align Top.pi_iso_pi TopCat.piIsoPiₓ'. -/
 /-- The product is homeomorphic to the product of the underlying spaces,
 equipped with the product topology.
 -/
@@ -84,29 +60,17 @@ def piIsoPi {ι : Type v} (α : ι → TopCat.{max v u}) : ∏ α ≅ TopCat.of 
   (limit.isLimit _).conePointUniqueUpToIso (piFanIsLimit α)
 #align Top.pi_iso_pi TopCat.piIsoPi
 
-/- warning: Top.pi_iso_pi_inv_π -> TopCat.piIsoPi_inv_π is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}) (i : ι), Eq.{succ (max u2 u1)} (Quiver.Hom.{succ (max u2 u1), succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1})) (TopCat.of.{max u2 u1} (forall (i : ι), coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (Pi.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a)))) (α i)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1}) (TopCat.of.{max u2 u1} (forall (i : ι), coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (Pi.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a)))) (CategoryTheory.Limits.piObj.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.piIsoPi._proof_1.{u1, u2} ι α)) (α i) (CategoryTheory.Iso.inv.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} (CategoryTheory.Limits.piObj.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.piIsoPi._proof_1.{u1, u2} ι α)) (TopCat.of.{max u2 u1} (forall (i : ι), coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (Pi.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a)))) (TopCat.piIsoPi.{u1, u2} ι α)) (CategoryTheory.Limits.Pi.π.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.piIsoPi._proof_1.{u1, u2} ι α) i)) (TopCat.piπ.{u1, u2} ι α i)
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}) (i : ι), Eq.{max (succ u2) (succ u1)} (Quiver.Hom.{succ (max u2 u1), max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1})) (TopCat.of.{max u2 u1} (forall (i : ι), CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (Pi.topologicalSpace.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a)))) (α i)) (CategoryTheory.CategoryStruct.comp.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1}) (TopCat.of.{max u2 u1} (forall (i : ι), CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (Pi.topologicalSpace.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a)))) (CategoryTheory.Limits.piObj.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasLimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α))) (α i) (CategoryTheory.Iso.inv.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Limits.piObj.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasLimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α))) (TopCat.of.{max u2 u1} (forall (i : ι), CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (Pi.topologicalSpace.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a)))) (TopCat.piIsoPi.{u1, u2} ι α)) (CategoryTheory.Limits.Pi.π.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasLimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α)) i)) (TopCat.piπ.{u1, u2} ι α i)
-Case conversion may be inaccurate. Consider using '#align Top.pi_iso_pi_inv_π TopCat.piIsoPi_inv_πₓ'. -/
 @[simp, reassoc]
 theorem piIsoPi_inv_π {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
     (piIsoPi α).inv ≫ Pi.π α i = piπ α i := by simp [pi_iso_pi]
 #align Top.pi_iso_pi_inv_π TopCat.piIsoPi_inv_π
 
-/- warning: Top.pi_iso_pi_inv_π_apply -> TopCat.piIsoPi_inv_π_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pi_iso_pi_inv_π_apply TopCat.piIsoPi_inv_π_applyₓ'. -/
 @[simp]
 theorem piIsoPi_inv_π_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : ∀ i, α i) :
     (Pi.π α i : _) ((piIsoPi α).inv x) = x i :=
   ConcreteCategory.congr_hom (piIsoPi_inv_π α i) x
 #align Top.pi_iso_pi_inv_π_apply TopCat.piIsoPi_inv_π_apply
 
-/- warning: Top.pi_iso_pi_hom_apply -> TopCat.piIsoPi_hom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.pi_iso_pi_hom_apply TopCat.piIsoPi_hom_applyₓ'. -/
 @[simp]
 theorem piIsoPi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : ∏ α) :
     (piIsoPi α).Hom x i = (Pi.π α i : _) x :=
@@ -116,35 +80,17 @@ theorem piIsoPi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) 
   exact concrete_category.congr_hom this x
 #align Top.pi_iso_pi_hom_apply TopCat.piIsoPi_hom_apply
 
-/- warning: Top.sigma_ι -> TopCat.sigmaι is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}) (i : ι), Quiver.Hom.{succ (max u2 u1), succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1})) (α i) (TopCat.of.{max u2 u1} (Sigma.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i))) (Sigma.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a))))
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}) (i : ι), Quiver.Hom.{max (succ u2) (succ u1), max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1})) (α i) (TopCat.of.{max u2 u1} (Sigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i))) (instTopologicalSpaceSigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a))))
-Case conversion may be inaccurate. Consider using '#align Top.sigma_ι TopCat.sigmaιₓ'. -/
 /-- The inclusion to the coproduct as a bundled continous map. -/
 abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ TopCat.of (Σi, α i) :=
   ⟨Sigma.mk i⟩
 #align Top.sigma_ι TopCat.sigmaι
 
-/- warning: Top.sigma_cofan -> TopCat.sigmaCofan is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}), CategoryTheory.Limits.Cofan.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}), CategoryTheory.Limits.Cofan.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α
-Case conversion may be inaccurate. Consider using '#align Top.sigma_cofan TopCat.sigmaCofanₓ'. -/
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
 @[simps pt ι_app]
 def sigmaCofan {ι : Type v} (α : ι → TopCat.{max v u}) : Cofan α :=
   Cofan.mk (TopCat.of (Σi, α i)) (sigmaι α)
 #align Top.sigma_cofan TopCat.sigmaCofan
 
-/- warning: Top.sigma_cofan_is_colimit -> TopCat.sigmaCofanIsColimit is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}), CategoryTheory.Limits.IsColimit.{u2, max u2 u1, u2, succ (max u2 u1)} (CategoryTheory.Discrete.{u2} ι) (CategoryTheory.discreteCategory.{u2} ι) TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} (CategoryTheory.Discrete.functor.{max u2 u1, u2, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} ι α) (TopCat.sigmaCofan.{u1, u2} ι α)
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}), CategoryTheory.Limits.IsColimit.{u1, max u2 u1, u1, max (succ u2) (succ u1)} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α) (TopCat.sigmaCofan.{u1, u2} ι α)
-Case conversion may be inaccurate. Consider using '#align Top.sigma_cofan_is_colimit TopCat.sigmaCofanIsColimitₓ'. -/
 /-- The constructed cofan is indeed a colimit -/
 def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit (sigmaCofan α)
     where
@@ -155,50 +101,29 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit
   fac s j := by cases j; tidy
 #align Top.sigma_cofan_is_colimit TopCat.sigmaCofanIsColimit
 
-/- warning: Top.sigma_iso_sigma -> TopCat.sigmaIsoSigma is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}), CategoryTheory.Iso.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} (CategoryTheory.Limits.sigmaObj.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.sigmaIsoSigma._proof_1.{u1, u2} ι α)) (TopCat.of.{max u2 u1} (Sigma.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i))) (Sigma.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a))))
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}), CategoryTheory.Iso.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Limits.sigmaObj.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasColimitsOfShapeOfHasColimitsOfSize.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasColimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α))) (TopCat.of.{max u2 u1} (Sigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i))) (instTopologicalSpaceSigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a))))
-Case conversion may be inaccurate. Consider using '#align Top.sigma_iso_sigma TopCat.sigmaIsoSigmaₓ'. -/
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
 def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopCat.of (Σi, α i) :=
   (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 #align Top.sigma_iso_sigma TopCat.sigmaIsoSigma
 
-/- warning: Top.sigma_iso_sigma_hom_ι -> TopCat.sigmaIsoSigma_hom_ι is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u2}} (α : ι -> TopCat.{max u2 u1}) (i : ι), Eq.{succ (max u2 u1)} (Quiver.Hom.{succ (max u2 u1), succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1})) (α i) (TopCat.of.{max u2 u1} (Sigma.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i))) (Sigma.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a))))) (CategoryTheory.CategoryStruct.comp.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1}) (α i) (CategoryTheory.Limits.sigmaObj.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.sigmaIsoSigma._proof_1.{u1, u2} ι α)) (TopCat.of.{max u2 u1} (Sigma.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i))) (Sigma.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a)))) (CategoryTheory.Limits.Sigma.ι.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.sigmaIsoSigma._proof_1.{u1, u2} ι α) i) (CategoryTheory.Iso.hom.{max u2 u1, succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} (CategoryTheory.Limits.sigmaObj.{u2, max u2 u1, succ (max u2 u1)} ι TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} α (TopCat.sigmaIsoSigma._proof_1.{u1, u2} ι α)) (TopCat.of.{max u2 u1} (Sigma.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i))) (Sigma.topologicalSpace.{u2, max u2 u1} ι (fun (i : ι) => coeSort.{succ (succ (max u2 u1)), succ (succ (max u2 u1))} TopCat.{max u2 u1} Type.{max u2 u1} TopCat.hasCoeToSort.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace.{max u2 u1} (α a)))) (TopCat.sigmaIsoSigma.{u1, u2} ι α))) (TopCat.sigmaι.{u1, u2} ι α i)
-but is expected to have type
-  forall {ι : Type.{u1}} (α : ι -> TopCatMax.{u1, u2}) (i : ι), Eq.{max (succ u2) (succ u1)} (Quiver.Hom.{succ (max u2 u1), max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1})) (α i) (TopCat.of.{max u2 u1} (Sigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i))) (instTopologicalSpaceSigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a))))) (CategoryTheory.CategoryStruct.comp.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1}) (α i) (CategoryTheory.Limits.sigmaObj.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasColimitsOfShapeOfHasColimitsOfSize.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasColimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α))) (TopCat.of.{max u2 u1} (Sigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i))) (instTopologicalSpaceSigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a)))) (CategoryTheory.Limits.Sigma.ι.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasColimitsOfShapeOfHasColimitsOfSize.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasColimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α)) i) (CategoryTheory.Iso.hom.{max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Limits.sigmaObj.{u1, max u2 u1, max (succ u2) (succ u1)} ι TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} α (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) (CategoryTheory.Limits.hasColimitsOfShapeOfHasColimitsOfSize.{u1, u1, max u2 u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} (CategoryTheory.Discrete.{u1} ι) (CategoryTheory.discreteCategory.{u1} ι) TopCat.topCat_hasColimitsOfSize.{u1, u2}) (CategoryTheory.Discrete.functor.{max u2 u1, u1, max (succ u2) (succ u1)} TopCatMax.{u1, u2} instTopCatLargeCategory.{max u2 u1} ι α))) (TopCat.of.{max u2 u1} (Sigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i))) (instTopologicalSpaceSigma.{u1, max u2 u1} ι (fun (i : ι) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} TopologicalSpace.{max u2 u1} (α i)) (fun (a : ι) => TopCat.topologicalSpace_coe.{max u2 u1} (α a)))) (TopCat.sigmaIsoSigma.{u1, u2} ι α))) (TopCat.sigmaι.{u1, u2} ι α i)
-Case conversion may be inaccurate. Consider using '#align Top.sigma_iso_sigma_hom_ι TopCat.sigmaIsoSigma_hom_ιₓ'. -/
 @[simp, reassoc]
 theorem sigmaIsoSigma_hom_ι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
     Sigma.ι α i ≫ (sigmaIsoSigma α).Hom = sigmaι α i := by simp [sigma_iso_sigma]
 #align Top.sigma_iso_sigma_hom_ι TopCat.sigmaIsoSigma_hom_ι
 
-/- warning: Top.sigma_iso_sigma_hom_ι_apply -> TopCat.sigmaIsoSigma_hom_ι_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.sigma_iso_sigma_hom_ι_apply TopCat.sigmaIsoSigma_hom_ι_applyₓ'. -/
 @[simp]
 theorem sigmaIsoSigma_hom_ι_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
     (sigmaIsoSigma α).Hom ((Sigma.ι α i : _) x) = Sigma.mk i x :=
   ConcreteCategory.congr_hom (sigmaIsoSigma_hom_ι α i) x
 #align Top.sigma_iso_sigma_hom_ι_apply TopCat.sigmaIsoSigma_hom_ι_apply
 
-/- warning: Top.sigma_iso_sigma_inv_apply -> TopCat.sigmaIsoSigma_inv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.sigma_iso_sigma_inv_apply TopCat.sigmaIsoSigma_inv_applyₓ'. -/
 @[simp]
 theorem sigmaIsoSigma_inv_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
     (sigmaIsoSigma α).inv ⟨i, x⟩ = (Sigma.ι α i : _) x := by
   rw [← sigma_iso_sigma_hom_ι_apply, ← comp_app]; simp
 #align Top.sigma_iso_sigma_inv_apply TopCat.sigmaIsoSigma_inv_apply
 
-/- warning: Top.induced_of_is_limit -> TopCat.induced_of_isLimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.induced_of_is_limit TopCat.induced_of_isLimitₓ'. -/
 theorem induced_of_isLimit {F : J ⥤ TopCat.{max v u}} (C : Cone F) (hC : IsLimit C) :
     C.pt.TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) :=
   by
@@ -208,9 +133,6 @@ theorem induced_of_isLimit {F : J ⥤ TopCat.{max v u}} (C : Cone F) (hC : IsLim
   simpa [induced_iInf, induced_compose]
 #align Top.induced_of_is_limit TopCat.induced_of_isLimit
 
-/- warning: Top.limit_topology -> TopCat.limit_topology is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.limit_topology TopCat.limit_topologyₓ'. -/
 theorem limit_topology (F : J ⥤ TopCat.{max v u}) :
     (limit F).TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (limit.π F j) :=
   induced_of_isLimit _ (limit.isLimit F)
@@ -218,23 +140,11 @@ theorem limit_topology (F : J ⥤ TopCat.{max v u}) :
 
 section Prod
 
-/- warning: Top.prod_fst -> TopCat.prodFst is a dubious translation:
-lean 3 declaration is
-  forall {X : TopCat.{u1}} {Y : TopCat.{u1}}, Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) X
-but is expected to have type
-  forall {X : TopCat.{u1}} {Y : TopCat.{u1}}, Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) X
-Case conversion may be inaccurate. Consider using '#align Top.prod_fst TopCat.prodFstₓ'. -/
 /-- The first projection from the product. -/
 abbrev prodFst {X Y : TopCat.{u}} : TopCat.of (X × Y) ⟶ X :=
   ⟨Prod.fst⟩
 #align Top.prod_fst TopCat.prodFst
 
-/- warning: Top.prod_snd -> TopCat.prodSnd is a dubious translation:
-lean 3 declaration is
-  forall {X : TopCat.{u1}} {Y : TopCat.{u1}}, Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) Y
-but is expected to have type
-  forall {X : TopCat.{u1}} {Y : TopCat.{u1}}, Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) Y
-Case conversion may be inaccurate. Consider using '#align Top.prod_snd TopCat.prodSndₓ'. -/
 /-- The second projection from the product. -/
 abbrev prodSnd {X Y : TopCat.{u}} : TopCat.of (X × Y) ⟶ Y :=
   ⟨Prod.snd⟩
@@ -267,12 +177,6 @@ def prodBinaryFanIsLimit (X Y : TopCat.{u}) : IsLimit (prodBinaryFan X Y)
 #align Top.prod_binary_fan_is_limit TopCat.prodBinaryFanIsLimit
 -/
 
-/- warning: Top.prod_iso_prod -> TopCat.prodIsoProd is a dubious translation:
-lean 3 declaration is
-  forall (X : TopCat.{u1}) (Y : TopCat.{u1}), CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y)) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y)))
-but is expected to have type
-  forall (X : TopCat.{u1}) (Y : TopCat.{u1}), CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y))) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y)))
-Case conversion may be inaccurate. Consider using '#align Top.prod_iso_prod TopCat.prodIsoProdₓ'. -/
 /-- The homeomorphism between `X ⨯ Y` and the set-theoretic product of `X` and `Y`,
 equipped with the product topology.
 -/
@@ -294,9 +198,6 @@ theorem prodIsoProd_hom_snd (X Y : TopCat.{u}) :
 #align Top.prod_iso_prod_hom_snd TopCat.prodIsoProd_hom_snd
 -/
 
-/- warning: Top.prod_iso_prod_hom_apply -> TopCat.prodIsoProd_hom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.prod_iso_prod_hom_apply TopCat.prodIsoProd_hom_applyₓ'. -/
 @[simp]
 theorem prodIsoProd_hom_apply {X Y : TopCat.{u}} (x : X ⨯ Y) :
     (prodIsoProd X Y).Hom x = ((Limits.prod.fst : X ⨯ Y ⟶ _) x, (Limits.prod.snd : X ⨯ Y ⟶ _) x) :=
@@ -306,31 +207,16 @@ theorem prodIsoProd_hom_apply {X Y : TopCat.{u}} (x : X ⨯ Y) :
   · exact concrete_category.congr_hom (prod_iso_prod_hom_snd X Y) x
 #align Top.prod_iso_prod_hom_apply TopCat.prodIsoProd_hom_apply
 
-/- warning: Top.prod_iso_prod_inv_fst -> TopCat.prodIsoProd_inv_fst is a dubious translation:
-lean 3 declaration is
-  forall (X : TopCat.{u1}) (Y : TopCat.{u1}), Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) X) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1}) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y)) X (CategoryTheory.Iso.inv.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y)) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) (TopCat.prodIsoProd.{u1} X Y)) (CategoryTheory.Limits.prod.fst.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y))) (TopCat.prodFst.{u1} X Y)
-but is expected to have type
-  forall (X : TopCat.{u1}) (Y : TopCat.{u1}), Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) X) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1}) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y))) X (CategoryTheory.Iso.inv.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y))) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) (TopCat.prodIsoProd.{u1} X Y)) (CategoryTheory.Limits.prod.fst.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y)))) (TopCat.prodFst.{u1} X Y)
-Case conversion may be inaccurate. Consider using '#align Top.prod_iso_prod_inv_fst TopCat.prodIsoProd_inv_fstₓ'. -/
 @[simp, reassoc, elementwise]
 theorem prodIsoProd_inv_fst (X Y : TopCat.{u}) :
     (prodIsoProd X Y).inv ≫ Limits.prod.fst = prodFst := by simp [iso.inv_comp_eq]
 #align Top.prod_iso_prod_inv_fst TopCat.prodIsoProd_inv_fst
 
-/- warning: Top.prod_iso_prod_inv_snd -> TopCat.prodIsoProd_inv_snd is a dubious translation:
-lean 3 declaration is
-  forall (X : TopCat.{u1}) (Y : TopCat.{u1}), Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) Y) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1}) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y)) Y (CategoryTheory.Iso.inv.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y)) (TopCat.of.{u1} (Prod.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y)) (Prod.topologicalSpace.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} Y) (TopCat.topologicalSpace.{u1} X) (TopCat.topologicalSpace.{u1} Y))) (TopCat.prodIsoProd.{u1} X Y)) (CategoryTheory.Limits.prod.snd.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} X Y (TopCat.prodIsoProd._proof_1.{u1} X Y))) (TopCat.prodSnd.{u1} X Y)
-but is expected to have type
-  forall (X : TopCat.{u1}) (Y : TopCat.{u1}), Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) Y) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1}) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y))) Y (CategoryTheory.Iso.inv.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.prod.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y))) (TopCat.of.{u1} (Prod.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y)) (instTopologicalSpaceProd.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} X) (TopCat.topologicalSpace_coe.{u1} Y))) (TopCat.prodIsoProd.{u1} X Y)) (CategoryTheory.Limits.prod.snd.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y (CategoryTheory.Limits.hasLimitOfHasLimitsOfShape.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) TopCat.topCat_hasLimitsOfSize.{0, u1}) (CategoryTheory.Limits.pair.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} X Y)))) (TopCat.prodSnd.{u1} X Y)
-Case conversion may be inaccurate. Consider using '#align Top.prod_iso_prod_inv_snd TopCat.prodIsoProd_inv_sndₓ'. -/
 @[simp, reassoc, elementwise]
 theorem prodIsoProd_inv_snd (X Y : TopCat.{u}) :
     (prodIsoProd X Y).inv ≫ Limits.prod.snd = prodSnd := by simp [iso.inv_comp_eq]
 #align Top.prod_iso_prod_inv_snd TopCat.prodIsoProd_inv_snd
 
-/- warning: Top.prod_topology -> TopCat.prod_topology is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.prod_topology TopCat.prod_topologyₓ'. -/
 theorem prod_topology {X Y : TopCat} :
     (X ⨯ Y).TopologicalSpace =
       induced (Limits.prod.fst : X ⨯ Y ⟶ _) X.TopologicalSpace ⊓
@@ -342,9 +228,6 @@ theorem prod_topology {X Y : TopCat} :
   simpa [induced_compose]
 #align Top.prod_topology TopCat.prod_topology
 
-/- warning: Top.range_prod_map -> TopCat.range_prod_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.range_prod_map TopCat.range_prod_mapₓ'. -/
 theorem range_prod_map {W X Y Z : TopCat.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
     Set.range (Limits.prod.map f g) =
       (Limits.prod.fst : Y ⨯ Z ⟶ _) ⁻¹' Set.range f ∩
@@ -364,9 +247,6 @@ theorem range_prod_map {W X Y Z : TopCat.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
     · simp only [← comp_apply, category.assoc]; erw [limits.prod.map_snd]; simp [hx₂]
 #align Top.range_prod_map TopCat.range_prod_map
 
-/- warning: Top.inducing_prod_map -> TopCat.inducing_prod_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.inducing_prod_map TopCat.inducing_prod_mapₓ'. -/
 theorem inducing_prod_map {W X Y Z : TopCat} {f : W ⟶ X} {g : Y ⟶ Z} (hf : Inducing f)
     (hg : Inducing g) : Inducing (Limits.prod.map f g) :=
   by
@@ -377,9 +257,6 @@ theorem inducing_prod_map {W X Y Z : TopCat} {f : W ⟶ X} {g : Y ⟶ Z} (hf : I
   rw [← @induced_compose _ _ _ _ _ f, ← @induced_compose _ _ _ _ _ g, ← hf.induced, ← hg.induced]
 #align Top.inducing_prod_map TopCat.inducing_prod_map
 
-/- warning: Top.embedding_prod_map -> TopCat.embedding_prod_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.embedding_prod_map TopCat.embedding_prod_mapₓ'. -/
 theorem embedding_prod_map {W X Y Z : TopCat} {f : W ⟶ X} {g : Y ⟶ Z} (hf : Embedding f)
     (hg : Embedding g) : Embedding (Limits.prod.map f g) :=
   ⟨inducing_prod_map hf.to_inducing hg.to_inducing,
@@ -410,9 +287,6 @@ def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y)
 #align Top.binary_cofan_is_colimit TopCat.binaryCofanIsColimit
 -/
 
-/- warning: Top.binary_cofan_is_colimit_iff -> TopCat.binaryCofan_isColimit_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.binary_cofan_is_colimit_iff TopCat.binaryCofan_isColimit_iffₓ'. -/
 theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       OpenEmbedding c.inl ∧ OpenEmbedding c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) :=

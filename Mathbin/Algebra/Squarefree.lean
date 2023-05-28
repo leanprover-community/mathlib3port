@@ -52,23 +52,11 @@ theorem IsUnit.squarefree [CommMonoid R] {x : R} (h : IsUnit x) : Squarefree x :
 #align is_unit.squarefree IsUnit.squarefree
 -/
 
-/- warning: squarefree_one -> squarefree_one is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoid.{u1} R], Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoid.{u1} R], Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align squarefree_one squarefree_oneₓ'. -/
 @[simp]
 theorem squarefree_one [CommMonoid R] : Squarefree (1 : R) :=
   isUnit_one.Squarefree
 #align squarefree_one squarefree_one
 
-/- warning: not_squarefree_zero -> not_squarefree_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_2 : Nontrivial.{u1} R], Not (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R _inst_1) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_2 : Nontrivial.{u1} R], Not (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R _inst_1) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align not_squarefree_zero not_squarefree_zeroₓ'. -/
 @[simp]
 theorem not_squarefree_zero [MonoidWithZero R] [Nontrivial R] : ¬Squarefree (0 : R) :=
   by
@@ -76,12 +64,6 @@ theorem not_squarefree_zero [MonoidWithZero R] [Nontrivial R] : ¬Squarefree (0 
   exact ⟨0, by simp⟩
 #align not_squarefree_zero not_squarefree_zero
 
-/- warning: squarefree.ne_zero -> Squarefree.ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_2 : Nontrivial.{u1} R] {m : R}, (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R _inst_1) m) -> (Ne.{succ u1} R m (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_2 : Nontrivial.{u1} R] {m : R}, (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R _inst_1) m) -> (Ne.{succ u1} R m (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R _inst_1))))
-Case conversion may be inaccurate. Consider using '#align squarefree.ne_zero Squarefree.ne_zeroₓ'. -/
 theorem Squarefree.ne_zero [MonoidWithZero R] [Nontrivial R] {m : R} (hm : Squarefree (m : R)) :
     m ≠ 0 := by
   rintro rfl
@@ -107,22 +89,10 @@ theorem Prime.squarefree [CancelCommMonoidWithZero R] {x : R} (h : Prime x) : Sq
 #align prime.squarefree Prime.squarefree
 -/
 
-/- warning: squarefree.of_mul_left -> Squarefree.of_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoid.{u1} R] {m : R} {n : R}, (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1)))) m n)) -> (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) m)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoid.{u1} R] {m : R} {n : R}, (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1)))) m n)) -> (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) m)
-Case conversion may be inaccurate. Consider using '#align squarefree.of_mul_left Squarefree.of_mul_leftₓ'. -/
 theorem Squarefree.of_mul_left [CommMonoid R] {m n : R} (hmn : Squarefree (m * n)) : Squarefree m :=
   fun p hp => hmn p (dvd_mul_of_dvd_left hp n)
 #align squarefree.of_mul_left Squarefree.of_mul_left
 
-/- warning: squarefree.of_mul_right -> Squarefree.of_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoid.{u1} R] {m : R} {n : R}, (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1)))) m n)) -> (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) n)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoid.{u1} R] {m : R} {n : R}, (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1)))) m n)) -> (Squarefree.{u1} R (CommMonoid.toMonoid.{u1} R _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align squarefree.of_mul_right Squarefree.of_mul_rightₓ'. -/
 theorem Squarefree.of_mul_right [CommMonoid R] {m n : R} (hmn : Squarefree (m * n)) :
     Squarefree n := fun p hp => hmn p (dvd_mul_of_dvd_right hp m)
 #align squarefree.of_mul_right Squarefree.of_mul_right
@@ -173,12 +143,6 @@ section CancelCommMonoidWithZero
 
 variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 
-/- warning: multiplicity.finite_prime_left -> multiplicity.finite_prime_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)] {a : R} {b : R}, (Prime.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1) a) -> (Ne.{succ u1} R b (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))))))) -> (multiplicity.Finite.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) a b)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)] {a : R} {b : R}, (Prime.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1) a) -> (Ne.{succ u1} R b (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) -> (multiplicity.Finite.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) a b)
-Case conversion may be inaccurate. Consider using '#align multiplicity.finite_prime_left multiplicity.finite_prime_leftₓ'. -/
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
   classical
     revert hb
@@ -206,12 +170,6 @@ section Irreducible
 
 variable [CommMonoidWithZero R] [WfDvdMonoid R]
 
-/- warning: irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree -> irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R _inst_1] (r : R), Iff (forall (x : R), (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x) -> (Not (Dvd.Dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulZeroClass.toHasMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))) x x) r))) (Or (And (Eq.{succ u1} R r (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))))))) (forall (x : R), Not (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x))) (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) r))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R _inst_1] (r : R), Iff (forall (x : R), (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x) -> (Not (Dvd.dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulZeroClass.toMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))) x x) r))) (Or (And (Eq.{succ u1} R r (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R _inst_1)))) (forall (x : R), Not (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x))) (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) r))
-Case conversion may be inaccurate. Consider using '#align irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefreeₓ'. -/
 theorem irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree (r : R) :
     (∀ x : R, Irreducible x → ¬x * x ∣ r) ↔ (r = 0 ∧ ∀ x : R, ¬Irreducible x) ∨ Squarefree r :=
   by
@@ -235,23 +193,11 @@ theorem irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree (r 
   exact h _ hj₁ ((mul_dvd_mul hj₂ hj₂).trans hx)
 #align irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree
 
-/- warning: squarefree_iff_irreducible_sq_not_dvd_of_ne_zero -> squarefree_iff_irreducible_sq_not_dvd_of_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R _inst_1] {r : R}, (Ne.{succ u1} R r (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))))))) -> (Iff (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) r) (forall (x : R), (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x) -> (Not (Dvd.Dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulZeroClass.toHasMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))) x x) r))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R _inst_1] {r : R}, (Ne.{succ u1} R r (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R _inst_1)))) -> (Iff (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) r) (forall (x : R), (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x) -> (Not (Dvd.dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulZeroClass.toMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))) x x) r))))
-Case conversion may be inaccurate. Consider using '#align squarefree_iff_irreducible_sq_not_dvd_of_ne_zero squarefree_iff_irreducible_sq_not_dvd_of_ne_zeroₓ'. -/
 theorem squarefree_iff_irreducible_sq_not_dvd_of_ne_zero {r : R} (hr : r ≠ 0) :
     Squarefree r ↔ ∀ x : R, Irreducible x → ¬x * x ∣ r := by
   simpa [hr] using (irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree r).symm
 #align squarefree_iff_irreducible_sq_not_dvd_of_ne_zero squarefree_iff_irreducible_sq_not_dvd_of_ne_zero
 
-/- warning: squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible -> squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R _inst_1] {r : R}, (Exists.{succ u1} R (fun (x : R) => Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x)) -> (Iff (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) r) (forall (x : R), (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x) -> (Not (Dvd.Dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulZeroClass.toHasMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))) x x) r))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R] [_inst_2 : WfDvdMonoid.{u1} R _inst_1] {r : R}, (Exists.{succ u1} R (fun (x : R) => Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x)) -> (Iff (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) r) (forall (x : R), (Irreducible.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)) x) -> (Not (Dvd.dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulZeroClass.toMul.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))) x x) r))))
-Case conversion may be inaccurate. Consider using '#align squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducibleₓ'. -/
 theorem squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible {r : R}
     (hr : ∃ x : R, Irreducible x) : Squarefree r ↔ ∀ x : R, Irreducible x → ¬x * x ∣ r :=
   by
@@ -265,12 +211,6 @@ section IsRadical
 
 variable [CancelCommMonoidWithZero R]
 
-/- warning: is_radical.squarefree -> IsRadical.squarefree is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] {x : R}, (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))))))) -> (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)))) x) -> (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] {x : R}, (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) -> (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)))) x) -> (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x)
-Case conversion may be inaccurate. Consider using '#align is_radical.squarefree IsRadical.squarefreeₓ'. -/
 theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefree x :=
   by
   rintro z ⟨w, rfl⟩
@@ -297,23 +237,11 @@ theorem Squarefree.isRadical {x : R} (hx : Squarefree x) : IsRadical x :=
 #align squarefree.is_radical Squarefree.isRadical
 -/
 
-/- warning: is_radical_iff_squarefree_or_zero -> isRadical_iff_squarefree_or_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : GCDMonoid.{u1} R _inst_1] {x : R}, Iff (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)))) x) (Or (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x) (Eq.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : GCDMonoid.{u1} R _inst_1] {x : R}, Iff (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)))) x) (Or (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x) (Eq.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align is_radical_iff_squarefree_or_zero isRadical_iff_squarefree_or_zeroₓ'. -/
 theorem isRadical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
   ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
     Or.ndrec Squarefree.isRadical <| by rintro rfl; rw [zero_isRadical_iff]; infer_instance⟩
 #align is_radical_iff_squarefree_or_zero isRadical_iff_squarefree_or_zero
 
-/- warning: is_radical_iff_squarefree_of_ne_zero -> isRadical_iff_squarefree_of_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : GCDMonoid.{u1} R _inst_1] {x : R}, (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))))))) -> (Iff (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)))) x) (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : GCDMonoid.{u1} R _inst_1] {x : R}, (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) -> (Iff (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1)))) x) (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x))
-Case conversion may be inaccurate. Consider using '#align is_radical_iff_squarefree_of_ne_zero isRadical_iff_squarefree_of_ne_zeroₓ'. -/
 theorem isRadical_iff_squarefree_of_ne_zero {x : R} (h : x ≠ 0) : IsRadical x ↔ Squarefree x :=
   ⟨IsRadical.squarefree h, Squarefree.isRadical⟩
 #align is_radical_iff_squarefree_of_ne_zero isRadical_iff_squarefree_of_ne_zero
@@ -324,12 +252,6 @@ namespace UniqueFactorizationMonoid
 
 variable [CancelCommMonoidWithZero R] [UniqueFactorizationMonoid R]
 
-/- warning: unique_factorization_monoid.squarefree_iff_nodup_normalized_factors -> UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : UniqueFactorizationMonoid.{u1} R _inst_1] [_inst_3 : NormalizationMonoid.{u1} R _inst_1] [_inst_4 : DecidableEq.{succ u1} R] {x : R}, (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))))))) -> (Iff (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x) (Multiset.Nodup.{u1} R (UniqueFactorizationMonoid.normalizedFactors.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_4 a b) _inst_3 _inst_2 x)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} R] [_inst_2 : UniqueFactorizationMonoid.{u1} R _inst_1] [_inst_3 : NormalizationMonoid.{u1} R _inst_1] [_inst_4 : DecidableEq.{succ u1} R] {x : R}, (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))))) -> (Iff (Squarefree.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R _inst_1))) x) (Multiset.Nodup.{u1} R (UniqueFactorizationMonoid.normalizedFactors.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_4 a b) _inst_3 _inst_2 x)))
-Case conversion may be inaccurate. Consider using '#align unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactorsₓ'. -/
 theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [DecidableEq R] {x : R}
     (x0 : x ≠ 0) : Squarefree x ↔ Multiset.Nodup (normalizedFactors x) :=
   by
@@ -369,24 +291,12 @@ end UniqueFactorizationMonoid
 
 namespace Int
 
-/- warning: int.squarefree_nat_abs -> Int.squarefree_natAbs is a dubious translation:
-lean 3 declaration is
-  forall {n : Int}, Iff (Squarefree.{0} Nat Nat.monoid (Int.natAbs n)) (Squarefree.{0} Int Int.monoid n)
-but is expected to have type
-  forall {n : Int}, Iff (Squarefree.{0} Nat Nat.monoid (Int.natAbs n)) (Squarefree.{0} Int Int.instMonoidInt n)
-Case conversion may be inaccurate. Consider using '#align int.squarefree_nat_abs Int.squarefree_natAbsₓ'. -/
 @[simp]
 theorem squarefree_natAbs {n : ℤ} : Squarefree n.natAbs ↔ Squarefree n := by
   simp_rw [Squarefree, nat_abs_surjective.forall, ← nat_abs_mul, nat_abs_dvd_iff_dvd,
     is_unit_iff_nat_abs_eq, Nat.isUnit_iff]
 #align int.squarefree_nat_abs Int.squarefree_natAbs
 
-/- warning: int.squarefree_coe_nat -> Int.squarefree_coe_nat is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Iff (Squarefree.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Squarefree.{0} Nat Nat.monoid n)
-but is expected to have type
-  forall {n : Nat}, Iff (Squarefree.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt n)) (Squarefree.{0} Nat Nat.monoid n)
-Case conversion may be inaccurate. Consider using '#align int.squarefree_coe_nat Int.squarefree_coe_natₓ'. -/
 @[simp]
 theorem squarefree_coe_nat {n : ℕ} : Squarefree (n : ℤ) ↔ Squarefree n := by
   rw [← squarefree_nat_abs, nat_abs_of_nat]

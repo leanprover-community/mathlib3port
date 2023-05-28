@@ -396,12 +396,6 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, r y x → C y) → C x) 
 #align is_well_founded.fix IsWellFounded.fix
 -/
 
-/- warning: is_well_founded.fix_eq -> IsWellFounded.fix_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsWellFounded.{u1} α r] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (r y x) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (IsWellFounded.fix.{u1, u2} α r _inst_1 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : r y x) => IsWellFounded.fix.{u1, u2} α r _inst_1 C F y))
-but is expected to have type
-  forall {α : Type.{u2}} (r : α -> α -> Prop) [_inst_1 : IsWellFounded.{u2} α r] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (r y x) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (IsWellFounded.fix.{u2, u1} α r _inst_1 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : r y x) => IsWellFounded.fix.{u2, u1} α r _inst_1 (fun (y : α) => C y) F y))
-Case conversion may be inaccurate. Consider using '#align is_well_founded.fix_eq IsWellFounded.fix_eqₓ'. -/
 /-- The value from `is_well_founded.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, r y x → C y) → C x) :
     ∀ x, fix r F x = F x fun y h => fix r F y :=
@@ -531,12 +525,6 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, y < x → C y) → C x) 
 #align well_founded_lt.fix WellFoundedLT.fix
 -/
 
-/- warning: well_founded_lt.fix_eq -> WellFoundedLT.fix_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedLT.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedLT.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 y x) => WellFoundedLT.fix.{u1, u2} α _inst_1 _inst_2 C F y))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedLT.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedLT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 y x) => WellFoundedLT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
-Case conversion may be inaccurate. Consider using '#align well_founded_lt.fix_eq WellFoundedLT.fix_eqₓ'. -/
 /-- The value from `well_founded_lt.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, y < x → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
@@ -576,12 +564,6 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, x < y → C y) → C x) 
 #align well_founded_gt.fix WellFoundedGT.fix
 -/
 
-/- warning: well_founded_gt.fix_eq -> WellFoundedGT.fix_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedGT.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedGT.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 x y) => WellFoundedGT.fix.{u1, u2} α _inst_1 _inst_2 C F y))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedGT.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedGT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 x y) => WellFoundedGT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
-Case conversion may be inaccurate. Consider using '#align well_founded_gt.fix_eq WellFoundedGT.fix_eqₓ'. -/
 /-- The value from `well_founded_gt.fix` is built from the successive ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, x < y → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
@@ -1175,42 +1157,18 @@ instance [LinearOrder α] : IsIncompTrans α (· < ·) := by infer_instance
 
 instance [LinearOrder α] : IsStrictWeakOrder α (· < ·) := by infer_instance
 
-/- warning: transitive_le -> transitive_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align transitive_le transitive_leₓ'. -/
 theorem transitive_le [Preorder α] : Transitive (@LE.le α _) :=
   transitive_of_trans _
 #align transitive_le transitive_le
 
-/- warning: transitive_lt -> transitive_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align transitive_lt transitive_ltₓ'. -/
 theorem transitive_lt [Preorder α] : Transitive (@LT.lt α _) :=
   transitive_of_trans _
 #align transitive_lt transitive_lt
 
-/- warning: transitive_ge -> transitive_ge is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align transitive_ge transitive_geₓ'. -/
 theorem transitive_ge [Preorder α] : Transitive (@GE.ge α _) :=
   transitive_of_trans _
 #align transitive_ge transitive_ge
 
-/- warning: transitive_gt -> transitive_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align transitive_gt transitive_gtₓ'. -/
 theorem transitive_gt [Preorder α] : Transitive (@GT.gt α _) :=
   transitive_of_trans _
 #align transitive_gt transitive_gt

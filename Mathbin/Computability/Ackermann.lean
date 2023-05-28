@@ -204,12 +204,6 @@ theorem ack_inj_right {m n₁ n₂ : ℕ} : ack m n₁ = ack m n₂ ↔ n₁ = n
 #align ack_inj_right ack_inj_right
 -/
 
-/- warning: max_ack_right -> max_ack_right is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n₁ : Nat) (n₂ : Nat), Eq.{1} Nat (ack m (LinearOrder.max.{0} Nat Nat.linearOrder n₁ n₂)) (LinearOrder.max.{0} Nat Nat.linearOrder (ack m n₁) (ack m n₂))
-but is expected to have type
-  forall (m : Nat) (n₁ : Nat) (n₂ : Nat), Eq.{1} Nat (ack m (Max.max.{0} Nat Nat.instMaxNat n₁ n₂)) (Max.max.{0} Nat Nat.instMaxNat (ack m n₁) (ack m n₂))
-Case conversion may be inaccurate. Consider using '#align max_ack_right max_ack_rightₓ'. -/
 theorem max_ack_right (m n₁ n₂ : ℕ) : ack m (max n₁ n₂) = max (ack m n₁) (ack m n₂) :=
   (ack_mono_right m).map_max
 #align max_ack_right max_ack_right
@@ -303,12 +297,6 @@ theorem ack_inj_left {m₁ m₂ n : ℕ} : ack m₁ n = ack m₂ n ↔ m₁ = m�
 #align ack_inj_left ack_inj_left
 -/
 
-/- warning: max_ack_left -> max_ack_left is a dubious translation:
-lean 3 declaration is
-  forall (m₁ : Nat) (m₂ : Nat) (n : Nat), Eq.{1} Nat (ack (LinearOrder.max.{0} Nat Nat.linearOrder m₁ m₂) n) (LinearOrder.max.{0} Nat Nat.linearOrder (ack m₁ n) (ack m₂ n))
-but is expected to have type
-  forall (m₁ : Nat) (m₂ : Nat) (n : Nat), Eq.{1} Nat (ack (Max.max.{0} Nat Nat.instMaxNat m₁ m₂) n) (Max.max.{0} Nat Nat.instMaxNat (ack m₁ n) (ack m₂ n))
-Case conversion may be inaccurate. Consider using '#align max_ack_left max_ack_leftₓ'. -/
 theorem max_ack_left (m₁ m₂ n : ℕ) : ack (max m₁ m₂) n = max (ack m₁ n) (ack m₂ n) :=
   (ack_mono_left n).map_max
 #align max_ack_left max_ack_left
@@ -358,12 +346,6 @@ theorem ack_add_one_sq_lt_ack_add_three : ∀ m n, (ack m n + 1) ^ 2 ≤ ack (m 
 #align ack_add_one_sq_lt_ack_add_three ack_add_one_sq_lt_ack_add_three
 -/
 
-/- warning: ack_ack_lt_ack_max_add_two -> ack_ack_lt_ack_max_add_two is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat Nat.hasLt (ack m (ack n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) k)
-but is expected to have type
-  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat instLTNat (ack m (ack n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) k)
-Case conversion may be inaccurate. Consider using '#align ack_ack_lt_ack_max_add_two ack_ack_lt_ack_max_add_twoₓ'. -/
 theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m n + 2) k :=
   calc
     ack m (ack n k) ≤ ack (max m n) (ack n k) := ack_mono_left _ (le_max_left _ _)
@@ -387,12 +369,6 @@ theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (
 #align ack_add_one_sq_lt_ack_add_four ack_add_one_sq_lt_ack_add_four
 -/
 
-/- warning: ack_mkpair_lt -> ack_pair_lt is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat Nat.hasLt (ack m (Nat.pair n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (LinearOrder.max.{0} Nat Nat.linearOrder n k))
-but is expected to have type
-  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat instLTNat (ack m (Nat.pair n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Max.max.{0} Nat Nat.instMaxNat n k))
-Case conversion may be inaccurate. Consider using '#align ack_mkpair_lt ack_pair_ltₓ'. -/
 theorem ack_pair_lt (m n k : ℕ) : ack m (pair n k) < ack (m + 4) (max n k) :=
   (ack_strictMono_right m <| pair_lt_max_add_one_sq n k).trans <| ack_add_one_sq_lt_ack_add_four _ _
 #align ack_mkpair_lt ack_pair_lt

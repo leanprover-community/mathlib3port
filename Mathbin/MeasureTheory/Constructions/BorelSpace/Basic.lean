@@ -69,22 +69,10 @@ def borel (α : Type u) [TopologicalSpace α] : MeasurableSpace α :=
 #align borel borel
 -/
 
-/- warning: borel_eq_top_of_discrete -> borel_eq_top_of_discrete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : DiscreteTopology.{u1} α _inst_1], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_1) (Top.top.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toHasTop.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : DiscreteTopology.{u1} α _inst_1], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_1) (Top.top.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toTop.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align borel_eq_top_of_discrete borel_eq_top_of_discreteₓ'. -/
 theorem borel_eq_top_of_discrete [TopologicalSpace α] [DiscreteTopology α] : borel α = ⊤ :=
   top_le_iff.1 fun s hs => GenerateMeasurable.basic s (isOpen_discrete s)
 #align borel_eq_top_of_discrete borel_eq_top_of_discrete
 
-/- warning: borel_eq_top_of_countable -> borel_eq_top_of_countable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : Countable.{succ u1} α], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_1) (Top.top.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toHasTop.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] [_inst_3 : Countable.{succ u1} α], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_1) (Top.top.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toTop.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align borel_eq_top_of_countable borel_eq_top_of_countableₓ'. -/
 theorem borel_eq_top_of_countable [TopologicalSpace α] [T1Space α] [Countable α] : borel α = ⊤ :=
   by
   refine' top_le_iff.1 fun s hs => bUnion_of_singleton s ▸ _
@@ -217,12 +205,6 @@ theorem borel_comap {f : α → β} {t : TopologicalSpace β} :
 #align borel_comap borel_comap
 -/
 
-/- warning: continuous.borel_measurable -> Continuous.borel_measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (Continuous.{u1, u2} α β _inst_1 _inst_2 f) -> (Measurable.{u1, u2} α β (borel.{u1} α _inst_1) (borel.{u2} β _inst_2) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (Measurable.{u2, u1} α β (borel.{u2} α _inst_1) (borel.{u1} β _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align continuous.borel_measurable Continuous.borel_measurableₓ'. -/
 theorem Continuous.borel_measurable [TopologicalSpace α] [TopologicalSpace β] {f : α → β}
     (hf : Continuous f) : @Measurable α β (borel α) (borel β) f :=
   Measurable.of_le_map <|
@@ -356,12 +338,6 @@ instance (priority := 100) BorelSpace.countablyGenerated {α : Type _} [Topologi
 #align borel_space.countably_generated BorelSpace.countablyGenerated
 -/
 
-/- warning: measurable_set.induction_on_open -> MeasurableSet.induction_on_open is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] {C : (Set.{u1} α) -> Prop}, (forall (U : Set.{u1} α), (IsOpen.{u1} α _inst_1 U) -> (C U)) -> (forall (t : Set.{u1} α), (MeasurableSet.{u1} α _inst_2 t) -> (C t) -> (C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (Pairwise.{0} Nat (Function.onFun.{1, succ u1, 1} Nat (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))) f)) -> (forall (i : Nat), MeasurableSet.{u1} α _inst_2 (f i)) -> (forall (i : Nat), C (f i)) -> (C (Set.iUnion.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {{t : Set.{u1} α}}, (MeasurableSet.{u1} α _inst_2 t) -> (C t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] {C : (Set.{u1} α) -> Prop}, (forall (U : Set.{u1} α), (IsOpen.{u1} α _inst_1 U) -> (C U)) -> (forall (t : Set.{u1} α), (MeasurableSet.{u1} α _inst_2 t) -> (C t) -> (C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (Pairwise.{0} Nat (Function.onFun.{1, succ u1, 1} Nat (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) f)) -> (forall (i : Nat), MeasurableSet.{u1} α _inst_2 (f i)) -> (forall (i : Nat), C (f i)) -> (C (Set.iUnion.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {{t : Set.{u1} α}}, (MeasurableSet.{u1} α _inst_2 t) -> (C t))
-Case conversion may be inaccurate. Consider using '#align measurable_set.induction_on_open MeasurableSet.induction_on_openₓ'. -/
 theorem MeasurableSet.induction_on_open [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
     {C : Set α → Prop} (h_open : ∀ U, IsOpen U → C U)
     (h_compl : ∀ t, MeasurableSet t → C t → C (tᶜ))
@@ -426,34 +402,16 @@ theorem measurableSet_closure : MeasurableSet (closure s) :=
 #align measurable_set_closure measurableSet_closure
 -/
 
-/- warning: measurable_of_is_open -> measurable_of_isOpen is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} {δ : Type.{u2}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u2} δ] {f : δ -> γ}, (forall (s : Set.{u1} γ), (IsOpen.{u1} γ _inst_7 s) -> (MeasurableSet.{u2} δ _inst_13 (Set.preimage.{u2, u1} δ γ f s))) -> (Measurable.{u2, u1} δ γ _inst_13 _inst_8 f)
-but is expected to have type
-  forall {γ : Type.{u2}} {δ : Type.{u1}} [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u1} δ] {f : δ -> γ}, (forall (s : Set.{u2} γ), (IsOpen.{u2} γ _inst_7 s) -> (MeasurableSet.{u1} δ _inst_13 (Set.preimage.{u1, u2} δ γ f s))) -> (Measurable.{u1, u2} δ γ _inst_13 _inst_8 f)
-Case conversion may be inaccurate. Consider using '#align measurable_of_is_open measurable_of_isOpenₓ'. -/
 theorem measurable_of_isOpen {f : δ → γ} (hf : ∀ s, IsOpen s → MeasurableSet (f ⁻¹' s)) :
     Measurable f := by rw [‹BorelSpace γ›.measurable_eq]; exact measurable_generateFrom hf
 #align measurable_of_is_open measurable_of_isOpen
 
-/- warning: measurable_of_is_closed -> measurable_of_isClosed is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} {δ : Type.{u2}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u2} δ] {f : δ -> γ}, (forall (s : Set.{u1} γ), (IsClosed.{u1} γ _inst_7 s) -> (MeasurableSet.{u2} δ _inst_13 (Set.preimage.{u2, u1} δ γ f s))) -> (Measurable.{u2, u1} δ γ _inst_13 _inst_8 f)
-but is expected to have type
-  forall {γ : Type.{u2}} {δ : Type.{u1}} [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u1} δ] {f : δ -> γ}, (forall (s : Set.{u2} γ), (IsClosed.{u2} γ _inst_7 s) -> (MeasurableSet.{u1} δ _inst_13 (Set.preimage.{u1, u2} δ γ f s))) -> (Measurable.{u1, u2} δ γ _inst_13 _inst_8 f)
-Case conversion may be inaccurate. Consider using '#align measurable_of_is_closed measurable_of_isClosedₓ'. -/
 theorem measurable_of_isClosed {f : δ → γ} (hf : ∀ s, IsClosed s → MeasurableSet (f ⁻¹' s)) :
     Measurable f := by
   apply measurable_of_isOpen; intro s hs
   rw [← MeasurableSet.compl_iff, ← preimage_compl]; apply hf; rw [isClosed_compl_iff]; exact hs
 #align measurable_of_is_closed measurable_of_isClosed
 
-/- warning: measurable_of_is_closed' -> measurable_of_is_closed' is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} {δ : Type.{u2}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u2} δ] {f : δ -> γ}, (forall (s : Set.{u1} γ), (IsClosed.{u1} γ _inst_7 s) -> (Set.Nonempty.{u1} γ s) -> (Ne.{succ u1} (Set.{u1} γ) s (Set.univ.{u1} γ)) -> (MeasurableSet.{u2} δ _inst_13 (Set.preimage.{u2, u1} δ γ f s))) -> (Measurable.{u2, u1} δ γ _inst_13 _inst_8 f)
-but is expected to have type
-  forall {γ : Type.{u2}} {δ : Type.{u1}} [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u1} δ] {f : δ -> γ}, (forall (s : Set.{u2} γ), (IsClosed.{u2} γ _inst_7 s) -> (Set.Nonempty.{u2} γ s) -> (Ne.{succ u2} (Set.{u2} γ) s (Set.univ.{u2} γ)) -> (MeasurableSet.{u1} δ _inst_13 (Set.preimage.{u1, u2} δ γ f s))) -> (Measurable.{u1, u2} δ γ _inst_13 _inst_8 f)
-Case conversion may be inaccurate. Consider using '#align measurable_of_is_closed' measurable_of_is_closed'ₓ'. -/
 theorem measurable_of_is_closed' {f : δ → γ}
     (hf : ∀ s, IsClosed s → s.Nonempty → s ≠ univ → MeasurableSet (f ⁻¹' s)) : Measurable f :=
   by
@@ -513,12 +471,6 @@ instance Pi.opensMeasurableSpace {ι : Type _} {π : ι → Type _} [Countable �
 #align pi.opens_measurable_space Pi.opensMeasurableSpace
 -/
 
-/- warning: prod.opens_measurable_space -> Prod.opensMeasurableSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : OpensMeasurableSpace.{u2} β _inst_4 _inst_5] [_inst_14 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] [_inst_15 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_4], OpensMeasurableSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_4) (Prod.instMeasurableSpace.{u1, u2} α β _inst_2 _inst_5)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : OpensMeasurableSpace.{u2} β _inst_4 _inst_5] [_inst_14 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] [_inst_15 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_4], OpensMeasurableSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_4) (Prod.instMeasurableSpace.{u1, u2} α β _inst_2 _inst_5)
-Case conversion may be inaccurate. Consider using '#align prod.opens_measurable_space Prod.opensMeasurableSpaceₓ'. -/
 instance Prod.opensMeasurableSpace [SecondCountableTopology α] [SecondCountableTopology β] :
     OpensMeasurableSpace (α × β) := by
   constructor
@@ -532,56 +484,26 @@ instance Prod.opensMeasurableSpace [SecondCountableTopology α] [SecondCountable
 
 variable {α' : Type _} [TopologicalSpace α'] [MeasurableSpace α']
 
-/- warning: interior_ae_eq_of_null_frontier -> interior_ae_eq_of_null_frontier is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (Filter.EventuallyEq.{u1, 0} α' Prop (MeasureTheory.Measure.ae.{u1} α' _inst_15 μ) (interior.{u1} α' _inst_14 s) s)
-but is expected to have type
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (Filter.EventuallyEq.{u1, 0} α' Prop (MeasureTheory.Measure.ae.{u1} α' _inst_15 μ) (interior.{u1} α' _inst_14 s) s)
-Case conversion may be inaccurate. Consider using '#align interior_ae_eq_of_null_frontier interior_ae_eq_of_null_frontierₓ'. -/
 theorem interior_ae_eq_of_null_frontier {μ : Measure α'} {s : Set α'} (h : μ (frontier s) = 0) :
     interior s =ᵐ[μ] s :=
   interior_subset.EventuallyLE.antisymm <| subset_closure.EventuallyLE.trans (ae_le_set.2 h)
 #align interior_ae_eq_of_null_frontier interior_ae_eq_of_null_frontier
 
-/- warning: measure_interior_of_null_frontier -> measure_interior_of_null_frontier is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ (interior.{u1} α' _inst_14 s)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ s))
-but is expected to have type
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) (interior.{u1} α' _inst_14 s)) (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) s))
-Case conversion may be inaccurate. Consider using '#align measure_interior_of_null_frontier measure_interior_of_null_frontierₓ'. -/
 theorem measure_interior_of_null_frontier {μ : Measure α'} {s : Set α'} (h : μ (frontier s) = 0) :
     μ (interior s) = μ s :=
   measure_congr (interior_ae_eq_of_null_frontier h)
 #align measure_interior_of_null_frontier measure_interior_of_null_frontier
 
-/- warning: null_measurable_set_of_null_frontier -> nullMeasurableSet_of_null_frontier is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {μ : MeasureTheory.Measure.{u1} α _inst_2}, (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (frontier.{u1} α _inst_1 s)) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (MeasureTheory.NullMeasurableSet.{u1} α _inst_2 s μ)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {μ : MeasureTheory.Measure.{u1} α _inst_2}, (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (frontier.{u1} α _inst_1 s)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (MeasureTheory.NullMeasurableSet.{u1} α _inst_2 s μ)
-Case conversion may be inaccurate. Consider using '#align null_measurable_set_of_null_frontier nullMeasurableSet_of_null_frontierₓ'. -/
 theorem nullMeasurableSet_of_null_frontier {s : Set α} {μ : Measure α} (h : μ (frontier s) = 0) :
     NullMeasurableSet s μ :=
   ⟨interior s, isOpen_interior.MeasurableSet, (interior_ae_eq_of_null_frontier h).symm⟩
 #align null_measurable_set_of_null_frontier nullMeasurableSet_of_null_frontier
 
-/- warning: closure_ae_eq_of_null_frontier -> closure_ae_eq_of_null_frontier is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (Filter.EventuallyEq.{u1, 0} α' Prop (MeasureTheory.Measure.ae.{u1} α' _inst_15 μ) (closure.{u1} α' _inst_14 s) s)
-but is expected to have type
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (Filter.EventuallyEq.{u1, 0} α' Prop (MeasureTheory.Measure.ae.{u1} α' _inst_15 μ) (closure.{u1} α' _inst_14 s) s)
-Case conversion may be inaccurate. Consider using '#align closure_ae_eq_of_null_frontier closure_ae_eq_of_null_frontierₓ'. -/
 theorem closure_ae_eq_of_null_frontier {μ : Measure α'} {s : Set α'} (h : μ (frontier s) = 0) :
     closure s =ᵐ[μ] s :=
   ((ae_le_set.2 h).trans interior_subset.EventuallyLE).antisymm <| subset_closure.EventuallyLE
 #align closure_ae_eq_of_null_frontier closure_ae_eq_of_null_frontier
 
-/- warning: measure_closure_of_null_frontier -> measure_closure_of_null_frontier is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ (closure.{u1} α' _inst_14 s)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α' _inst_15) (fun (_x : MeasureTheory.Measure.{u1} α' _inst_15) => (Set.{u1} α') -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α' _inst_15) μ s))
-but is expected to have type
-  forall {α' : Type.{u1}} [_inst_14 : TopologicalSpace.{u1} α'] [_inst_15 : MeasurableSpace.{u1} α'] {μ : MeasureTheory.Measure.{u1} α' _inst_15} {s : Set.{u1} α'}, (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) (frontier.{u1} α' _inst_14 s)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) (closure.{u1} α' _inst_14 s)) (MeasureTheory.OuterMeasure.measureOf.{u1} α' (MeasureTheory.Measure.toOuterMeasure.{u1} α' _inst_15 μ) s))
-Case conversion may be inaccurate. Consider using '#align measure_closure_of_null_frontier measure_closure_of_null_frontierₓ'. -/
 theorem measure_closure_of_null_frontier {μ : Measure α'} {s : Set α'} (h : μ (frontier s) = 0) :
     μ (closure s) = μ s :=
   measure_congr (closure_ae_eq_of_null_frontier h)
@@ -650,23 +572,11 @@ section PartialOrder
 
 variable [PartialOrder α] [OrderClosedTopology α] [SecondCountableTopology α] {a b : α}
 
-/- warning: measurable_set_le' -> measurableSet_le' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_16 : PartialOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α _inst_16)] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1], MeasurableSet.{u1} (Prod.{u1, u1} α α) (Prod.instMeasurableSpace.{u1, u1} α α _inst_2 _inst_2) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_16)) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_16 : PartialOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α _inst_16)] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1], MeasurableSet.{u1} (Prod.{u1, u1} α α) (Prod.instMeasurableSpace.{u1, u1} α α _inst_2 _inst_2) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_16)) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-Case conversion may be inaccurate. Consider using '#align measurable_set_le' measurableSet_le'ₓ'. -/
 @[measurability]
 theorem measurableSet_le' : MeasurableSet { p : α × α | p.1 ≤ p.2 } :=
   OrderClosedTopology.isClosed_le'.MeasurableSet
 #align measurable_set_le' measurableSet_le'
 
-/- warning: measurable_set_le -> measurableSet_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : PartialOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α _inst_16)] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (MeasurableSet.{u2} δ _inst_13 (setOf.{u2} δ (fun (a : δ) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_16)) (f a) (g a))))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : PartialOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α _inst_16)] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (MeasurableSet.{u2} δ _inst_13 (setOf.{u2} δ (fun (a : δ) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_16)) (f a) (g a))))
-Case conversion may be inaccurate. Consider using '#align measurable_set_le measurableSet_leₓ'. -/
 @[measurability]
 theorem measurableSet_le {f g : δ → α} (hf : Measurable f) (hg : Measurable g) :
     MeasurableSet { a | f a ≤ g a } :=
@@ -735,35 +645,17 @@ instance nhdsWithin_uIcc_isMeasurablyGenerated : IsMeasurablyGenerated (𝓝[[a,
 #align nhds_within_uIcc_is_measurably_generated nhdsWithin_uIcc_isMeasurablyGenerated
 -/
 
-/- warning: measurable_set_lt' -> measurableSet_lt' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1], MeasurableSet.{u1} (Prod.{u1, u1} α α) (Prod.instMeasurableSpace.{u1, u1} α α _inst_2 _inst_2) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1], MeasurableSet.{u1} (Prod.{u1, u1} α α) (Prod.instMeasurableSpace.{u1, u1} α α _inst_2 _inst_2) (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_16)))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)))
-Case conversion may be inaccurate. Consider using '#align measurable_set_lt' measurableSet_lt'ₓ'. -/
 @[measurability]
 theorem measurableSet_lt' [SecondCountableTopology α] : MeasurableSet { p : α × α | p.1 < p.2 } :=
   (isOpen_lt continuous_fst continuous_snd).MeasurableSet
 #align measurable_set_lt' measurableSet_lt'
 
-/- warning: measurable_set_lt -> measurableSet_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (MeasurableSet.{u2} δ _inst_13 (setOf.{u2} δ (fun (a : δ) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))) (f a) (g a))))
-but is expected to have type
-  forall {α : Type.{u2}} {δ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u1} δ] [_inst_16 : LinearOrder.{u2} α] [_inst_17 : OrderClosedTopology.{u2} α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u2} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u1, u2} δ α _inst_13 _inst_2 f) -> (Measurable.{u1, u2} δ α _inst_13 _inst_2 g) -> (MeasurableSet.{u1} δ _inst_13 (setOf.{u1} δ (fun (a : δ) => LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_16)))))) (f a) (g a))))
-Case conversion may be inaccurate. Consider using '#align measurable_set_lt measurableSet_ltₓ'. -/
 @[measurability]
 theorem measurableSet_lt [SecondCountableTopology α] {f g : δ → α} (hf : Measurable f)
     (hg : Measurable g) : MeasurableSet { a | f a < g a } :=
   hf.prod_mk hg measurableSet_lt'
 #align measurable_set_lt measurableSet_lt
 
-/- warning: null_measurable_set_lt -> nullMeasurableSet_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {μ : MeasureTheory.Measure.{u2} δ _inst_13} {f : δ -> α} {g : δ -> α}, (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 g μ) -> (MeasureTheory.NullMeasurableSet.{u2} δ _inst_13 (setOf.{u2} δ (fun (a : δ) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))) (f a) (g a))) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {δ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u1} δ] [_inst_16 : LinearOrder.{u2} α] [_inst_17 : OrderClosedTopology.{u2} α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u2} α _inst_1] {μ : MeasureTheory.Measure.{u1} δ _inst_13} {f : δ -> α} {g : δ -> α}, (AEMeasurable.{u1, u2} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u1, u2} δ α _inst_2 _inst_13 g μ) -> (MeasureTheory.NullMeasurableSet.{u1} δ _inst_13 (setOf.{u1} δ (fun (a : δ) => LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_16)))))) (f a) (g a))) μ)
-Case conversion may be inaccurate. Consider using '#align null_measurable_set_lt nullMeasurableSet_ltₓ'. -/
 theorem nullMeasurableSet_lt [SecondCountableTopology α] {μ : Measure δ} {f g : δ → α}
     (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) : NullMeasurableSet { a | f a < g a } μ :=
   (hf.prod_mk hg).NullMeasurable measurableSet_lt'
@@ -789,9 +681,6 @@ theorem IsPreconnected.measurableSet (h : IsPreconnected s) : MeasurableSet s :=
 #align is_preconnected.measurable_set IsPreconnected.measurableSet
 -/
 
-/- warning: generate_from_Ico_mem_le_borel -> generateFrom_Ico_mem_le_borel is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align generate_from_Ico_mem_le_borel generateFrom_Ico_mem_le_borelₓ'. -/
 theorem generateFrom_Ico_mem_le_borel {α : Type _} [TopologicalSpace α] [LinearOrder α]
     [OrderClosedTopology α] (s t : Set α) :
     MeasurableSpace.generateFrom { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } ≤ borel α :=
@@ -802,9 +691,6 @@ theorem generateFrom_Ico_mem_le_borel {α : Type _} [TopologicalSpace α] [Linea
   exact measurableSet_Ico
 #align generate_from_Ico_mem_le_borel generateFrom_Ico_mem_le_borel
 
-/- warning: dense.borel_eq_generate_from_Ico_mem_aux -> Dense.borel_eq_generateFrom_Ico_mem_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.borel_eq_generate_from_Ico_mem_aux Dense.borel_eq_generateFrom_Ico_mem_auxₓ'. -/
 theorem Dense.borel_eq_generateFrom_Ico_mem_aux {α : Type _} [TopologicalSpace α] [LinearOrder α]
     [OrderTopology α] [SecondCountableTopology α] {s : Set α} (hd : Dense s)
     (hbot : ∀ x, IsBot x → x ∈ s) (hIoo : ∀ x y : α, x < y → Ioo x y = ∅ → y ∈ s) :
@@ -840,9 +726,6 @@ theorem Dense.borel_eq_generateFrom_Ico_mem_aux {α : Type _} [TopologicalSpace 
       exact generate_measurable.basic _ ⟨x, hts hx, a, ha, hlt, mem_singleton _⟩
 #align dense.borel_eq_generate_from_Ico_mem_aux Dense.borel_eq_generateFrom_Ico_mem_aux
 
-/- warning: dense.borel_eq_generate_from_Ico_mem -> Dense.borel_eq_generateFrom_Ico_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.borel_eq_generate_from_Ico_mem Dense.borel_eq_generateFrom_Ico_memₓ'. -/
 theorem Dense.borel_eq_generateFrom_Ico_mem {α : Type _} [TopologicalSpace α] [LinearOrder α]
     [OrderTopology α] [SecondCountableTopology α] [DenselyOrdered α] [NoMinOrder α] {s : Set α}
     (hd : Dense s) :
@@ -851,12 +734,6 @@ theorem Dense.borel_eq_generateFrom_Ico_mem {α : Type _} [TopologicalSpace α] 
     ((nonempty_Ioo.2 hxy).ne_empty H).elim
 #align dense.borel_eq_generate_from_Ico_mem Dense.borel_eq_generateFrom_Ico_mem
 
-/- warning: borel_eq_generate_from_Ico -> borel_eq_generateFrom_Ico is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_18 : TopologicalSpace.{u1} α] [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_18) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) l u) (fun (h : LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) l u) => Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) l u) S))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_18 : TopologicalSpace.{u1} α] [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_18) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{succ u1} α (fun (u : α) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) l u) (Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) l u) S))))))
-Case conversion may be inaccurate. Consider using '#align borel_eq_generate_from_Ico borel_eq_generateFrom_Icoₓ'. -/
 theorem borel_eq_generateFrom_Ico (α : Type _) [TopologicalSpace α] [SecondCountableTopology α]
     [LinearOrder α] [OrderTopology α] :
     borel α = generateFrom { S : Set α | ∃ (l u : _)(h : l < u), Ico l u = S } := by
@@ -865,9 +742,6 @@ theorem borel_eq_generateFrom_Ico (α : Type _) [TopologicalSpace α] [SecondCou
       mem_univ _
 #align borel_eq_generate_from_Ico borel_eq_generateFrom_Ico
 
-/- warning: dense.borel_eq_generate_from_Ioc_mem_aux -> Dense.borel_eq_generateFrom_Ioc_mem_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.borel_eq_generate_from_Ioc_mem_aux Dense.borel_eq_generateFrom_Ioc_mem_auxₓ'. -/
 theorem Dense.borel_eq_generateFrom_Ioc_mem_aux {α : Type _} [TopologicalSpace α] [LinearOrder α]
     [OrderTopology α] [SecondCountableTopology α] {s : Set α} (hd : Dense s)
     (hbot : ∀ x, IsTop x → x ∈ s) (hIoo : ∀ x y : α, x < y → Ioo x y = ∅ → x ∈ s) :
@@ -881,9 +755,6 @@ theorem Dense.borel_eq_generateFrom_Ioc_mem_aux {α : Type _} [TopologicalSpace 
     exact he
 #align dense.borel_eq_generate_from_Ioc_mem_aux Dense.borel_eq_generateFrom_Ioc_mem_aux
 
-/- warning: dense.borel_eq_generate_from_Ioc_mem -> Dense.borel_eq_generateFrom_Ioc_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense.borel_eq_generate_from_Ioc_mem Dense.borel_eq_generateFrom_Ioc_memₓ'. -/
 theorem Dense.borel_eq_generateFrom_Ioc_mem {α : Type _} [TopologicalSpace α] [LinearOrder α]
     [OrderTopology α] [SecondCountableTopology α] [DenselyOrdered α] [NoMaxOrder α] {s : Set α}
     (hd : Dense s) :
@@ -892,12 +763,6 @@ theorem Dense.borel_eq_generateFrom_Ioc_mem {α : Type _} [TopologicalSpace α] 
     ((nonempty_Ioo.2 hxy).ne_empty H).elim
 #align dense.borel_eq_generate_from_Ioc_mem Dense.borel_eq_generateFrom_Ioc_mem
 
-/- warning: borel_eq_generate_from_Ioc -> borel_eq_generateFrom_Ioc is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_18 : TopologicalSpace.{u1} α] [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_18) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) l u) (fun (h : LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) l u) => Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) l u) S))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_18 : TopologicalSpace.{u1} α] [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))], Eq.{succ u1} (MeasurableSpace.{u1} α) (borel.{u1} α _inst_18) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{succ u1} α (fun (u : α) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) l u) (Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) l u) S))))))
-Case conversion may be inaccurate. Consider using '#align borel_eq_generate_from_Ioc borel_eq_generateFrom_Iocₓ'. -/
 theorem borel_eq_generateFrom_Ioc (α : Type _) [TopologicalSpace α] [SecondCountableTopology α]
     [LinearOrder α] [OrderTopology α] :
     borel α = generateFrom { S : Set α | ∃ (l u : _)(h : l < u), Ioc l u = S } := by
@@ -908,12 +773,6 @@ theorem borel_eq_generateFrom_Ioc (α : Type _) [TopologicalSpace α] [SecondCou
 
 namespace MeasureTheory.Measure
 
-/- warning: measure_theory.measure.ext_of_Ico_finite -> MeasureTheory.Measure.ext_of_Ico_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_23 : MeasureTheory.FiniteMeasure.{u1} α m μ], (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.univ.{u1} α)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.univ.{u1} α))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) a b) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_23 : MeasureTheory.FiniteMeasure.{u1} α m μ], (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.univ.{u1} α)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.univ.{u1} α))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ext_of_Ico_finite MeasureTheory.Measure.ext_of_Ico_finiteₓ'. -/
 /-- Two finite measures on a Borel space are equal if they agree on all closed-open intervals.  If
 `α` is a conditionally complete linear order with no top element,
 `measure_theory.measure..ext_of_Ico` is an extensionality lemma with weaker assumptions on `μ` and
@@ -930,12 +789,6 @@ theorem ext_of_Ico_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpa
     exact h hlt
 #align measure_theory.measure.ext_of_Ico_finite MeasureTheory.Measure.ext_of_Ico_finite
 
-/- warning: measure_theory.measure.ext_of_Ioc_finite -> MeasureTheory.Measure.ext_of_Ioc_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_23 : MeasureTheory.FiniteMeasure.{u1} α m μ], (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.univ.{u1} α)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.univ.{u1} α))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) a b) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_23 : MeasureTheory.FiniteMeasure.{u1} α m μ], (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.univ.{u1} α)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.univ.{u1} α))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ext_of_Ioc_finite MeasureTheory.Measure.ext_of_Ioc_finiteₓ'. -/
 /-- Two finite measures on a Borel space are equal if they agree on all open-closed intervals.  If
 `α` is a conditionally complete linear order with no top element,
 `measure_theory.measure..ext_of_Ioc` is an extensionality lemma with weaker assumptions on `μ` and
@@ -949,12 +802,6 @@ theorem ext_of_Ioc_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpa
   exact h hab
 #align measure_theory.measure.ext_of_Ioc_finite MeasureTheory.Measure.ext_of_Ioc_finite
 
-/- warning: measure_theory.measure.ext_of_Ico' -> MeasureTheory.Measure.ext_of_Ico' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m), (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) a b) -> (Ne.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) a b) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m), (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) a b) -> (Ne.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ext_of_Ico' MeasureTheory.Measure.ext_of_Ico'ₓ'. -/
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 closed-open intervals. -/
 theorem ext_of_Ico' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
@@ -979,12 +826,6 @@ theorem ext_of_Ico' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
   · rintro _ ⟨l, u, hlt, rfl⟩; exact h hlt
 #align measure_theory.measure.ext_of_Ico' MeasureTheory.Measure.ext_of_Ico'
 
-/- warning: measure_theory.measure.ext_of_Ioc' -> MeasureTheory.Measure.ext_of_Ioc' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m), (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) a b) -> (Ne.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20))))) a b) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_20)))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : LinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m), (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) a b) -> (Ne.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) -> (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ext_of_Ioc' MeasureTheory.Measure.ext_of_Ioc'ₓ'. -/
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 open-closed intervals. -/
 theorem ext_of_Ioc' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
@@ -996,12 +837,6 @@ theorem ext_of_Ioc' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
   exacts[hμ hab, h hab]
 #align measure_theory.measure.ext_of_Ioc' MeasureTheory.Measure.ext_of_Ioc'
 
-/- warning: measure_theory.measure.ext_of_Ico -> MeasureTheory.Measure.ext_of_Ico is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_24 : MeasureTheory.LocallyFiniteMeasure.{u1} α m _inst_18 μ], (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_24 : MeasureTheory.LocallyFiniteMeasure.{u1} α m _inst_18 μ], (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ext_of_Ico MeasureTheory.Measure.ext_of_Icoₓ'. -/
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 closed-open intervals. -/
 theorem ext_of_Ico {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
@@ -1011,12 +846,6 @@ theorem ext_of_Ico {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
   μ.ext_of_Ico' ν (fun a b hab => measure_Ico_lt_top.Ne) h
 #align measure_theory.measure.ext_of_Ico MeasureTheory.Measure.ext_of_Ico
 
-/- warning: measure_theory.measure.ext_of_Ioc -> MeasureTheory.Measure.ext_of_Ioc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_24 : MeasureTheory.LocallyFiniteMeasure.{u1} α m _inst_18 μ], (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_18 : TopologicalSpace.{u1} α] {m : MeasurableSpace.{u1} α} [_inst_19 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_18] [_inst_20 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_21 : OrderTopology.{u1} α _inst_18 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))] [_inst_22 : BorelSpace.{u1} α _inst_18 m] [_inst_23 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))))] (μ : MeasureTheory.Measure.{u1} α m) (ν : MeasureTheory.Measure.{u1} α m) [_inst_24 : MeasureTheory.LocallyFiniteMeasure.{u1} α m _inst_18 μ], (forall {{a : α}} {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20)))))) a b) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_20))))) a b)))) -> (Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) μ ν)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ext_of_Ioc MeasureTheory.Measure.ext_of_Iocₓ'. -/
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 open-closed intervals. -/
 theorem ext_of_Ioc {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
@@ -1078,24 +907,12 @@ theorem measurableSet_uIoc : MeasurableSet (uIoc a b) :=
 
 variable [SecondCountableTopology α]
 
-/- warning: measurable.max -> Measurable.max is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 (fun (a : δ) => LinearOrder.max.{u1} α _inst_16 (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 (fun (a : δ) => Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_16) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align measurable.max Measurable.maxₓ'. -/
 @[measurability]
 theorem Measurable.max {f g : δ → α} (hf : Measurable f) (hg : Measurable g) :
     Measurable fun a => max (f a) (g a) := by
   simpa only [max_def'] using hf.piecewise (measurableSet_le hg hf) hg
 #align measurable.max Measurable.max
 
-/- warning: ae_measurable.max -> AEMeasurable.max is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α} {μ : MeasureTheory.Measure.{u2} δ _inst_13}, (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 g μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 (fun (a : δ) => LinearOrder.max.{u1} α _inst_16 (f a) (g a)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α} {μ : MeasureTheory.Measure.{u2} δ _inst_13}, (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 g μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 (fun (a : δ) => Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_16) (f a) (g a)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable.max AEMeasurable.maxₓ'. -/
 @[measurability]
 theorem AEMeasurable.max {f g : δ → α} {μ : Measure δ} (hf : AEMeasurable f μ)
     (hg : AEMeasurable g μ) : AEMeasurable (fun a => max (f a) (g a)) μ :=
@@ -1103,24 +920,12 @@ theorem AEMeasurable.max {f g : δ → α} {μ : Measure δ} (hf : AEMeasurable 
     EventuallyEq.comp₂ hf.ae_eq_mk _ hg.ae_eq_mk⟩
 #align ae_measurable.max AEMeasurable.max
 
-/- warning: measurable.min -> Measurable.min is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 (fun (a : δ) => LinearOrder.min.{u1} α _inst_16 (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α}, (Measurable.{u2, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 g) -> (Measurable.{u2, u1} δ α _inst_13 _inst_2 (fun (a : δ) => Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_16) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align measurable.min Measurable.minₓ'. -/
 @[measurability]
 theorem Measurable.min {f g : δ → α} (hf : Measurable f) (hg : Measurable g) :
     Measurable fun a => min (f a) (g a) := by
   simpa only [min_def] using hf.piecewise (measurableSet_le hf hg) hg
 #align measurable.min Measurable.min
 
-/- warning: ae_measurable.min -> AEMeasurable.min is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_16))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α} {μ : MeasureTheory.Measure.{u2} δ _inst_13}, (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 g μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 (fun (a : δ) => LinearOrder.min.{u1} α _inst_16 (f a) (g a)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : LinearOrder.{u1} α] [_inst_17 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_16)))))] [_inst_18 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {f : δ -> α} {g : δ -> α} {μ : MeasureTheory.Measure.{u2} δ _inst_13}, (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 g μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_13 (fun (a : δ) => Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_16) (f a) (g a)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable.min AEMeasurable.minₓ'. -/
 @[measurability]
 theorem AEMeasurable.min {f g : δ → α} {μ : Measure δ} (hf : AEMeasurable f μ)
     (hg : AEMeasurable g μ) : AEMeasurable (fun a => min (f a) (g a)) μ :=
@@ -1130,46 +935,22 @@ theorem AEMeasurable.min {f g : δ → α} {μ : Measure δ} (hf : AEMeasurable 
 
 end LinearOrder
 
-/- warning: continuous.measurable -> Continuous.measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] {f : α -> γ}, (Continuous.{u1, u2} α γ _inst_1 _inst_7 f) -> (Measurable.{u1, u2} α γ _inst_2 _inst_8 f)
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] {f : α -> γ}, (Continuous.{u2, u1} α γ _inst_1 _inst_7 f) -> (Measurable.{u2, u1} α γ _inst_2 _inst_8 f)
-Case conversion may be inaccurate. Consider using '#align continuous.measurable Continuous.measurableₓ'. -/
 /-- A continuous function from an `opens_measurable_space` to a `borel_space`
 is measurable. -/
 theorem Continuous.measurable {f : α → γ} (hf : Continuous f) : Measurable f :=
   hf.borel_measurable.mono OpensMeasurableSpace.borel_le (le_of_eq <| BorelSpace.measurable_eq)
 #align continuous.measurable Continuous.measurable
 
-/- warning: continuous.ae_measurable -> Continuous.aemeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] {f : α -> γ}, (Continuous.{u1, u2} α γ _inst_1 _inst_7 f) -> (forall {μ : MeasureTheory.Measure.{u1} α _inst_2}, AEMeasurable.{u1, u2} α γ _inst_8 _inst_2 f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] {f : α -> γ}, (Continuous.{u2, u1} α γ _inst_1 _inst_7 f) -> (forall {μ : MeasureTheory.Measure.{u2} α _inst_2}, AEMeasurable.{u2, u1} α γ _inst_8 _inst_2 f μ)
-Case conversion may be inaccurate. Consider using '#align continuous.ae_measurable Continuous.aemeasurableₓ'. -/
 /-- A continuous function from an `opens_measurable_space` to a `borel_space`
 is ae-measurable. -/
 theorem Continuous.aemeasurable {f : α → γ} (h : Continuous f) {μ : Measure α} : AEMeasurable f μ :=
   h.Measurable.AEMeasurable
 #align continuous.ae_measurable Continuous.aemeasurable
 
-/- warning: closed_embedding.measurable -> ClosedEmbedding.measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] {f : α -> γ}, (ClosedEmbedding.{u1, u2} α γ _inst_1 _inst_7 f) -> (Measurable.{u1, u2} α γ _inst_2 _inst_8 f)
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] {f : α -> γ}, (ClosedEmbedding.{u2, u1} α γ _inst_1 _inst_7 f) -> (Measurable.{u2, u1} α γ _inst_2 _inst_8 f)
-Case conversion may be inaccurate. Consider using '#align closed_embedding.measurable ClosedEmbedding.measurableₓ'. -/
 theorem ClosedEmbedding.measurable {f : α → γ} (hf : ClosedEmbedding f) : Measurable f :=
   hf.Continuous.Measurable
 #align closed_embedding.measurable ClosedEmbedding.measurable
 
-/- warning: continuous.is_open_pos_measure_map -> Continuous.openPosMeasure_map is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {γ : Type.{u2}} [_inst_4 : TopologicalSpace.{u1} β] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : OpensMeasurableSpace.{u1} β _inst_4 _inst_5] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] {f : β -> γ}, (Continuous.{u1, u2} β γ _inst_4 _inst_7 f) -> (Function.Surjective.{succ u1, succ u2} β γ f) -> (forall {μ : MeasureTheory.Measure.{u1} β _inst_5} [_inst_16 : MeasureTheory.Measure.OpenPosMeasure.{u1} β _inst_4 _inst_5 μ], MeasureTheory.Measure.OpenPosMeasure.{u2} γ _inst_7 _inst_8 (MeasureTheory.Measure.map.{u1, u2} β γ _inst_8 _inst_5 f μ))
-but is expected to have type
-  forall {β : Type.{u2}} {γ : Type.{u1}} [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : OpensMeasurableSpace.{u2} β _inst_4 _inst_5] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] {f : β -> γ}, (Continuous.{u2, u1} β γ _inst_4 _inst_7 f) -> (Function.Surjective.{succ u2, succ u1} β γ f) -> (forall {μ : MeasureTheory.Measure.{u2} β _inst_5} [_inst_16 : MeasureTheory.Measure.OpenPosMeasure.{u2} β _inst_4 _inst_5 μ], MeasureTheory.Measure.OpenPosMeasure.{u1} γ _inst_7 _inst_8 (MeasureTheory.Measure.map.{u2, u1} β γ _inst_8 _inst_5 f μ))
-Case conversion may be inaccurate. Consider using '#align continuous.is_open_pos_measure_map Continuous.openPosMeasure_mapₓ'. -/
 theorem Continuous.openPosMeasure_map {f : β → γ} (hf : Continuous f)
     (hf_surj : Function.Surjective f) {μ : Measure β} [μ.OpenPosMeasure] :
     (Measure.map f μ).OpenPosMeasure :=
@@ -1179,12 +960,6 @@ theorem Continuous.openPosMeasure_map {f : β → γ} (hf : Continuous f)
   exact (hUo.preimage hf).measure_ne_zero μ (hf_surj.nonempty_preimage.mpr hUne)
 #align continuous.is_open_pos_measure_map Continuous.openPosMeasure_map
 
-/- warning: continuous_on.measurable_piecewise -> ContinuousOn.measurable_piecewise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] {f : α -> γ} {g : α -> γ} {s : Set.{u1} α} [_inst_16 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)], (ContinuousOn.{u1, u2} α γ _inst_1 _inst_7 f s) -> (ContinuousOn.{u1, u2} α γ _inst_1 _inst_7 g (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) -> (MeasurableSet.{u1} α _inst_2 s) -> (Measurable.{u1, u2} α γ _inst_2 _inst_8 (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => γ) s f g (fun (j : α) => _inst_16 j)))
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] {f : α -> γ} {g : α -> γ} {s : Set.{u2} α} [_inst_16 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)], (ContinuousOn.{u2, u1} α γ _inst_1 _inst_7 f s) -> (ContinuousOn.{u2, u1} α γ _inst_1 _inst_7 g (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) -> (MeasurableSet.{u2} α _inst_2 s) -> (Measurable.{u2, u1} α γ _inst_2 _inst_8 (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => γ) s f g (fun (j : α) => _inst_16 j)))
-Case conversion may be inaccurate. Consider using '#align continuous_on.measurable_piecewise ContinuousOn.measurable_piecewiseₓ'. -/
 /-- If a function is defined piecewise in terms of functions which are continuous on their
 respective pieces, then it is measurable. -/
 theorem ContinuousOn.measurable_piecewise {f g : α → γ} {s : Set α} [∀ j : α, Decidable (j ∈ s)]
@@ -1220,12 +995,6 @@ instance (priority := 100) ContinuousSub.measurableSub [Sub γ] [ContinuousSub �
 #align has_continuous_sub.has_measurable_sub ContinuousSub.measurableSub
 -/
 
-/- warning: topological_group.has_measurable_inv -> TopologicalGroup.measurableInv is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_16 : Group.{u1} γ] [_inst_17 : TopologicalGroup.{u1} γ _inst_7 _inst_16], MeasurableInv.{u1} γ (DivInvMonoid.toHasInv.{u1} γ (Group.toDivInvMonoid.{u1} γ _inst_16)) _inst_8
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_16 : Group.{u1} γ] [_inst_17 : TopologicalGroup.{u1} γ _inst_7 _inst_16], MeasurableInv.{u1} γ (InvOneClass.toInv.{u1} γ (DivInvOneMonoid.toInvOneClass.{u1} γ (DivisionMonoid.toDivInvOneMonoid.{u1} γ (Group.toDivisionMonoid.{u1} γ _inst_16)))) _inst_8
-Case conversion may be inaccurate. Consider using '#align topological_group.has_measurable_inv TopologicalGroup.measurableInvₓ'. -/
 @[to_additive]
 instance (priority := 100) TopologicalGroup.measurableInv [Group γ] [TopologicalGroup γ] :
     MeasurableInv γ :=
@@ -1278,12 +1047,6 @@ end Lattice
 
 section Homeomorph
 
-/- warning: homeomorph.measurable -> Homeomorph.measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] (h : Homeomorph.{u1, u2} α γ _inst_1 _inst_7), Measurable.{u1, u2} α γ _inst_2 _inst_8 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} α γ _inst_1 _inst_7) (fun (_x : Homeomorph.{u1, u2} α γ _inst_1 _inst_7) => α -> γ) (Homeomorph.hasCoeToFun.{u1, u2} α γ _inst_1 _inst_7) h)
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] (h : Homeomorph.{u2, u1} α γ _inst_1 _inst_7), Measurable.{u2, u1} α γ _inst_2 _inst_8 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α γ _inst_1 _inst_7) α (fun (_x : α) => γ) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α γ _inst_1 _inst_7) α γ (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α γ _inst_1 _inst_7) α γ (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α γ _inst_1 _inst_7))) h)
-Case conversion may be inaccurate. Consider using '#align homeomorph.measurable Homeomorph.measurableₓ'. -/
 @[measurability]
 protected theorem Homeomorph.measurable (h : α ≃ₜ γ) : Measurable h :=
   h.Continuous.Measurable
@@ -1299,23 +1062,11 @@ def Homeomorph.toMeasurableEquiv (h : γ ≃ₜ γ₂) : γ ≃ᵐ γ₂
 #align homeomorph.to_measurable_equiv Homeomorph.toMeasurableEquiv
 -/
 
-/- warning: homeomorph.to_measurable_equiv_coe -> Homeomorph.toMeasurableEquiv_coe is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} {γ₂ : Type.{u2}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_10 : TopologicalSpace.{u2} γ₂] [_inst_11 : MeasurableSpace.{u2} γ₂] [_inst_12 : BorelSpace.{u2} γ₂ _inst_10 _inst_11] (h : Homeomorph.{u1, u2} γ γ₂ _inst_7 _inst_10), Eq.{max (succ u1) (succ u2)} ((fun (_x : MeasurableEquiv.{u1, u2} γ γ₂ _inst_8 _inst_11) => γ -> γ₂) (Homeomorph.toMeasurableEquiv.{u1, u2} γ γ₂ _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12 h)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MeasurableEquiv.{u1, u2} γ γ₂ _inst_8 _inst_11) (fun (_x : MeasurableEquiv.{u1, u2} γ γ₂ _inst_8 _inst_11) => γ -> γ₂) (MeasurableEquiv.hasCoeToFun.{u1, u2} γ γ₂ _inst_8 _inst_11) (Homeomorph.toMeasurableEquiv.{u1, u2} γ γ₂ _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12 h)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} γ γ₂ _inst_7 _inst_10) (fun (_x : Homeomorph.{u1, u2} γ γ₂ _inst_7 _inst_10) => γ -> γ₂) (Homeomorph.hasCoeToFun.{u1, u2} γ γ₂ _inst_7 _inst_10) h)
-but is expected to have type
-  forall {γ : Type.{u2}} {γ₂ : Type.{u1}} [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_10 : TopologicalSpace.{u1} γ₂] [_inst_11 : MeasurableSpace.{u1} γ₂] [_inst_12 : BorelSpace.{u1} γ₂ _inst_10 _inst_11] (h : Homeomorph.{u2, u1} γ γ₂ _inst_7 _inst_10), Eq.{max (succ u2) (succ u1)} (forall (a : γ), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : γ) => γ₂) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} γ γ₂ _inst_8 _inst_11) γ (fun (_x : γ) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : γ) => γ₂) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} γ γ₂ _inst_8 _inst_11) γ γ₂ (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} γ γ₂ _inst_8 _inst_11) γ γ₂ (MeasurableEquiv.instEquivLike.{u2, u1} γ γ₂ _inst_8 _inst_11))) (Homeomorph.toMeasurableEquiv.{u2, u1} γ γ₂ _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12 h)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} γ γ₂ _inst_7 _inst_10) γ (fun (_x : γ) => γ₂) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} γ γ₂ _inst_7 _inst_10) γ γ₂ (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} γ γ₂ _inst_7 _inst_10) γ γ₂ (Homeomorph.instEquivLikeHomeomorph.{u2, u1} γ γ₂ _inst_7 _inst_10))) h)
-Case conversion may be inaccurate. Consider using '#align homeomorph.to_measurable_equiv_coe Homeomorph.toMeasurableEquiv_coeₓ'. -/
 @[simp]
 theorem Homeomorph.toMeasurableEquiv_coe (h : γ ≃ₜ γ₂) : (h.toMeasurableEquiv : γ → γ₂) = h :=
   rfl
 #align homeomorph.to_measurable_equiv_coe Homeomorph.toMeasurableEquiv_coe
 
-/- warning: homeomorph.to_measurable_equiv_symm_coe -> Homeomorph.toMeasurableEquiv_symm_coe is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} {γ₂ : Type.{u2}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_10 : TopologicalSpace.{u2} γ₂] [_inst_11 : MeasurableSpace.{u2} γ₂] [_inst_12 : BorelSpace.{u2} γ₂ _inst_10 _inst_11] (h : Homeomorph.{u1, u2} γ γ₂ _inst_7 _inst_10), Eq.{max (succ u2) (succ u1)} ((fun (_x : MeasurableEquiv.{u2, u1} γ₂ γ _inst_11 _inst_8) => γ₂ -> γ) (MeasurableEquiv.symm.{u1, u2} γ γ₂ _inst_8 _inst_11 (Homeomorph.toMeasurableEquiv.{u1, u2} γ γ₂ _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12 h))) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MeasurableEquiv.{u2, u1} γ₂ γ _inst_11 _inst_8) (fun (_x : MeasurableEquiv.{u2, u1} γ₂ γ _inst_11 _inst_8) => γ₂ -> γ) (MeasurableEquiv.hasCoeToFun.{u2, u1} γ₂ γ _inst_11 _inst_8) (MeasurableEquiv.symm.{u1, u2} γ γ₂ _inst_8 _inst_11 (Homeomorph.toMeasurableEquiv.{u1, u2} γ γ₂ _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12 h))) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Homeomorph.{u2, u1} γ₂ γ _inst_10 _inst_7) (fun (_x : Homeomorph.{u2, u1} γ₂ γ _inst_10 _inst_7) => γ₂ -> γ) (Homeomorph.hasCoeToFun.{u2, u1} γ₂ γ _inst_10 _inst_7) (Homeomorph.symm.{u1, u2} γ γ₂ _inst_7 _inst_10 h))
-but is expected to have type
-  forall {γ : Type.{u2}} {γ₂ : Type.{u1}} [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_10 : TopologicalSpace.{u1} γ₂] [_inst_11 : MeasurableSpace.{u1} γ₂] [_inst_12 : BorelSpace.{u1} γ₂ _inst_10 _inst_11] (h : Homeomorph.{u2, u1} γ γ₂ _inst_7 _inst_10), Eq.{max (succ u2) (succ u1)} (forall (a : γ₂), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : γ₂) => γ) a) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (MeasurableEquiv.{u1, u2} γ₂ γ _inst_11 _inst_8) γ₂ (fun (_x : γ₂) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : γ₂) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u1, succ u2} (MeasurableEquiv.{u1, u2} γ₂ γ _inst_11 _inst_8) γ₂ γ (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u1, succ u2} (MeasurableEquiv.{u1, u2} γ₂ γ _inst_11 _inst_8) γ₂ γ (MeasurableEquiv.instEquivLike.{u1, u2} γ₂ γ _inst_11 _inst_8))) (MeasurableEquiv.symm.{u2, u1} γ γ₂ _inst_8 _inst_11 (Homeomorph.toMeasurableEquiv.{u2, u1} γ γ₂ _inst_7 _inst_8 _inst_9 _inst_10 _inst_11 _inst_12 h))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} γ₂ γ _inst_10 _inst_7) γ₂ (fun (_x : γ₂) => γ) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} γ₂ γ _inst_10 _inst_7) γ₂ γ (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} γ₂ γ _inst_10 _inst_7) γ₂ γ (Homeomorph.instEquivLikeHomeomorph.{u1, u2} γ₂ γ _inst_10 _inst_7))) (Homeomorph.symm.{u2, u1} γ γ₂ _inst_7 _inst_10 h))
-Case conversion may be inaccurate. Consider using '#align homeomorph.to_measurable_equiv_symm_coe Homeomorph.toMeasurableEquiv_symm_coeₓ'. -/
 @[simp]
 theorem Homeomorph.toMeasurableEquiv_symm_coe (h : γ ≃ₜ γ₂) :
     (h.toMeasurableEquiv.symm : γ₂ → γ) = h.symm :=
@@ -1324,59 +1075,29 @@ theorem Homeomorph.toMeasurableEquiv_symm_coe (h : γ ≃ₜ γ₂) :
 
 end Homeomorph
 
-/- warning: continuous_map.measurable -> ContinuousMap.measurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] (f : ContinuousMap.{u1, u2} α γ _inst_1 _inst_7), Measurable.{u1, u2} α γ _inst_2 _inst_8 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} α γ _inst_1 _inst_7) (fun (_x : ContinuousMap.{u1, u2} α γ _inst_1 _inst_7) => α -> γ) (ContinuousMap.hasCoeToFun.{u1, u2} α γ _inst_1 _inst_7) f)
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] (f : ContinuousMap.{u2, u1} α γ _inst_1 _inst_7), Measurable.{u2, u1} α γ _inst_2 _inst_8 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (ContinuousMap.{u2, u1} α γ _inst_1 _inst_7) α (fun (_x : α) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : α) => γ) _x) (ContinuousMapClass.toFunLike.{max u2 u1, u2, u1} (ContinuousMap.{u2, u1} α γ _inst_1 _inst_7) α γ _inst_1 _inst_7 (ContinuousMap.instContinuousMapClassContinuousMap.{u2, u1} α γ _inst_1 _inst_7)) f)
-Case conversion may be inaccurate. Consider using '#align continuous_map.measurable ContinuousMap.measurableₓ'. -/
 @[measurability]
 theorem ContinuousMap.measurable (f : C(α, γ)) : Measurable f :=
   f.Continuous.Measurable
 #align continuous_map.measurable ContinuousMap.measurable
 
-/- warning: measurable_of_continuous_on_compl_singleton -> measurable_of_continuousOn_compl_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_16 : T1Space.{u1} α _inst_1] {f : α -> γ} (a : α), (ContinuousOn.{u1, u2} α γ _inst_1 _inst_7 f (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))) -> (Measurable.{u1, u2} α γ _inst_2 _inst_8 f)
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : OpensMeasurableSpace.{u2} α _inst_1 _inst_2] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_16 : T1Space.{u2} α _inst_1] {f : α -> γ} (a : α), (ContinuousOn.{u2, u1} α γ _inst_1 _inst_7 f (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a))) -> (Measurable.{u2, u1} α γ _inst_2 _inst_8 f)
-Case conversion may be inaccurate. Consider using '#align measurable_of_continuous_on_compl_singleton measurable_of_continuousOn_compl_singletonₓ'. -/
 theorem measurable_of_continuousOn_compl_singleton [T1Space α] {f : α → γ} (a : α)
     (hf : ContinuousOn f ({a}ᶜ)) : Measurable f :=
   measurable_of_measurable_on_compl_singleton a
     (continuousOn_iff_continuous_restrict.1 hf).Measurable
 #align measurable_of_continuous_on_compl_singleton measurable_of_continuousOn_compl_singleton
 
-/- warning: continuous.measurable2 -> Continuous.measurable2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : OpensMeasurableSpace.{u2} β _inst_4 _inst_5] [_inst_7 : TopologicalSpace.{u3} γ] [_inst_8 : MeasurableSpace.{u3} γ] [_inst_9 : BorelSpace.{u3} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u4} δ] [_inst_16 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] [_inst_17 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_4] {f : δ -> α} {g : δ -> β} {c : α -> β -> γ}, (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_4) _inst_7 (fun (p : Prod.{u1, u2} α β) => c (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (Measurable.{u4, u1} δ α _inst_13 _inst_2 f) -> (Measurable.{u4, u2} δ β _inst_13 _inst_5 g) -> (Measurable.{u4, u3} δ γ _inst_13 _inst_8 (fun (a : δ) => c (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u2}} {δ : Type.{u1}} [_inst_1 : TopologicalSpace.{u4} α] [_inst_2 : MeasurableSpace.{u4} α] [_inst_3 : OpensMeasurableSpace.{u4} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u3} β] [_inst_5 : MeasurableSpace.{u3} β] [_inst_6 : OpensMeasurableSpace.{u3} β _inst_4 _inst_5] [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u1} δ] [_inst_16 : TopologicalSpace.SecondCountableTopology.{u4} α _inst_1] [_inst_17 : TopologicalSpace.SecondCountableTopology.{u3} β _inst_4] {f : δ -> α} {g : δ -> β} {c : α -> β -> γ}, (Continuous.{max u4 u3, u2} (Prod.{u4, u3} α β) γ (instTopologicalSpaceProd.{u4, u3} α β _inst_1 _inst_4) _inst_7 (fun (p : Prod.{u4, u3} α β) => c (Prod.fst.{u4, u3} α β p) (Prod.snd.{u4, u3} α β p))) -> (Measurable.{u1, u4} δ α _inst_13 _inst_2 f) -> (Measurable.{u1, u3} δ β _inst_13 _inst_5 g) -> (Measurable.{u1, u2} δ γ _inst_13 _inst_8 (fun (a : δ) => c (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align continuous.measurable2 Continuous.measurable2ₓ'. -/
 theorem Continuous.measurable2 [SecondCountableTopology α] [SecondCountableTopology β] {f : δ → α}
     {g : δ → β} {c : α → β → γ} (h : Continuous fun p : α × β => c p.1 p.2) (hf : Measurable f)
     (hg : Measurable g) : Measurable fun a => c (f a) (g a) :=
   h.Measurable.comp (hf.prod_mk hg)
 #align continuous.measurable2 Continuous.measurable2
 
-/- warning: continuous.ae_measurable2 -> Continuous.aemeasurable2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : OpensMeasurableSpace.{u2} β _inst_4 _inst_5] [_inst_7 : TopologicalSpace.{u3} γ] [_inst_8 : MeasurableSpace.{u3} γ] [_inst_9 : BorelSpace.{u3} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u4} δ] [_inst_16 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] [_inst_17 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_4] {f : δ -> α} {g : δ -> β} {c : α -> β -> γ} {μ : MeasureTheory.Measure.{u4} δ _inst_13}, (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_4) _inst_7 (fun (p : Prod.{u1, u2} α β) => c (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (AEMeasurable.{u4, u1} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u4, u2} δ β _inst_5 _inst_13 g μ) -> (AEMeasurable.{u4, u3} δ γ _inst_8 _inst_13 (fun (a : δ) => c (f a) (g a)) μ)
-but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u4} α] [_inst_2 : MeasurableSpace.{u4} α] [_inst_3 : OpensMeasurableSpace.{u4} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u3} β] [_inst_5 : MeasurableSpace.{u3} β] [_inst_6 : OpensMeasurableSpace.{u3} β _inst_4 _inst_5] [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u2} δ] [_inst_16 : TopologicalSpace.SecondCountableTopology.{u4} α _inst_1] [_inst_17 : TopologicalSpace.SecondCountableTopology.{u3} β _inst_4] {f : δ -> α} {g : δ -> β} {c : α -> β -> γ} {μ : MeasureTheory.Measure.{u2} δ _inst_13}, (Continuous.{max u4 u3, u1} (Prod.{u4, u3} α β) γ (instTopologicalSpaceProd.{u4, u3} α β _inst_1 _inst_4) _inst_7 (fun (p : Prod.{u4, u3} α β) => c (Prod.fst.{u4, u3} α β p) (Prod.snd.{u4, u3} α β p))) -> (AEMeasurable.{u2, u4} δ α _inst_2 _inst_13 f μ) -> (AEMeasurable.{u2, u3} δ β _inst_5 _inst_13 g μ) -> (AEMeasurable.{u2, u1} δ γ _inst_8 _inst_13 (fun (a : δ) => c (f a) (g a)) μ)
-Case conversion may be inaccurate. Consider using '#align continuous.ae_measurable2 Continuous.aemeasurable2ₓ'. -/
 theorem Continuous.aemeasurable2 [SecondCountableTopology α] [SecondCountableTopology β] {f : δ → α}
     {g : δ → β} {c : α → β → γ} {μ : Measure δ} (h : Continuous fun p : α × β => c p.1 p.2)
     (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) : AEMeasurable (fun a => c (f a) (g a)) μ :=
   h.Measurable.comp_aemeasurable (hf.prod_mk hg)
 #align continuous.ae_measurable2 Continuous.aemeasurable2
 
-/- warning: has_continuous_inv₀.has_measurable_inv -> HasContinuousInv₀.measurableInv is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_16 : GroupWithZero.{u1} γ] [_inst_17 : T1Space.{u1} γ _inst_7] [_inst_18 : HasContinuousInv₀.{u1} γ (MulZeroClass.toHasZero.{u1} γ (MulZeroOneClass.toMulZeroClass.{u1} γ (MonoidWithZero.toMulZeroOneClass.{u1} γ (GroupWithZero.toMonoidWithZero.{u1} γ _inst_16)))) (DivInvMonoid.toHasInv.{u1} γ (GroupWithZero.toDivInvMonoid.{u1} γ _inst_16)) _inst_7], MeasurableInv.{u1} γ (DivInvMonoid.toHasInv.{u1} γ (GroupWithZero.toDivInvMonoid.{u1} γ _inst_16)) _inst_8
-but is expected to have type
-  forall {γ : Type.{u1}} [_inst_7 : TopologicalSpace.{u1} γ] [_inst_8 : MeasurableSpace.{u1} γ] [_inst_9 : BorelSpace.{u1} γ _inst_7 _inst_8] [_inst_16 : GroupWithZero.{u1} γ] [_inst_17 : T1Space.{u1} γ _inst_7] [_inst_18 : HasContinuousInv₀.{u1} γ (MonoidWithZero.toZero.{u1} γ (GroupWithZero.toMonoidWithZero.{u1} γ _inst_16)) (GroupWithZero.toInv.{u1} γ _inst_16) _inst_7], MeasurableInv.{u1} γ (GroupWithZero.toInv.{u1} γ _inst_16) _inst_8
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv₀.has_measurable_inv HasContinuousInv₀.measurableInvₓ'. -/
 instance (priority := 100) HasContinuousInv₀.measurableInv [GroupWithZero γ] [T1Space γ]
     [HasContinuousInv₀ γ] : MeasurableInv γ :=
   ⟨measurable_of_continuousOn_compl_singleton 0 continuousOn_inv₀⟩
@@ -1415,12 +1136,6 @@ variable [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α] [Topological
   [MeasurableSpace β] [BorelSpace β] [TopologicalSpace γ] [MeasurableSpace γ] [BorelSpace γ]
   [MeasurableSpace δ]
 
-/- warning: pi_le_borel_pi -> pi_le_borel_pi is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_11 : forall (i : ι), TopologicalSpace.{u2} (π i)] [_inst_12 : forall (i : ι), MeasurableSpace.{u2} (π i)] [_inst_13 : forall (i : ι), BorelSpace.{u2} (π i) (_inst_11 i) (_inst_12 i)], LE.le.{max u1 u2} (MeasurableSpace.{max u1 u2} (forall (a : ι), π a)) (MeasurableSpace.hasLe.{max u1 u2} (forall (a : ι), π a)) (MeasurableSpace.pi.{u1, u2} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_12 a)) (borel.{max u1 u2} (forall (i : ι), π i) (Pi.topologicalSpace.{u1, u2} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_11 a)))
-but is expected to have type
-  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_11 : forall (i : ι), TopologicalSpace.{u1} (π i)] [_inst_12 : forall (i : ι), MeasurableSpace.{u1} (π i)] [_inst_13 : forall (i : ι), BorelSpace.{u1} (π i) (_inst_11 i) (_inst_12 i)], LE.le.{max u2 u1} (MeasurableSpace.{max u2 u1} (forall (a : ι), π a)) (MeasurableSpace.instLEMeasurableSpace.{max u2 u1} (forall (a : ι), π a)) (MeasurableSpace.pi.{u2, u1} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_12 a)) (borel.{max u2 u1} (forall (i : ι), π i) (Pi.topologicalSpace.{u2, u1} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_11 a)))
-Case conversion may be inaccurate. Consider using '#align pi_le_borel_pi pi_le_borel_piₓ'. -/
 theorem pi_le_borel_pi {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)]
     [∀ i, MeasurableSpace (π i)] [∀ i, BorelSpace (π i)] : MeasurableSpace.pi ≤ borel (∀ i, π i) :=
   by
@@ -1430,12 +1145,6 @@ theorem pi_le_borel_pi {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpa
   exact iSup_le fun i => comap_le_iff_le_map.2 <| (continuous_apply i).borel_measurable
 #align pi_le_borel_pi pi_le_borel_pi
 
-/- warning: prod_le_borel_prod -> prod_le_borel_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β _inst_4 _inst_5], LE.le.{max u1 u2} (MeasurableSpace.{max u1 u2} (Prod.{u1, u2} α β)) (MeasurableSpace.hasLe.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.instMeasurableSpace.{u1, u2} α β _inst_2 _inst_5) (borel.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_4))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : BorelSpace.{u2} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} β] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β _inst_4 _inst_5], LE.le.{max u2 u1} (MeasurableSpace.{max u1 u2} (Prod.{u2, u1} α β)) (MeasurableSpace.instLEMeasurableSpace.{max u2 u1} (Prod.{u2, u1} α β)) (Prod.instMeasurableSpace.{u2, u1} α β _inst_2 _inst_5) (borel.{max u1 u2} (Prod.{u2, u1} α β) (instTopologicalSpaceProd.{u2, u1} α β _inst_1 _inst_4))
-Case conversion may be inaccurate. Consider using '#align prod_le_borel_prod prod_le_borel_prodₓ'. -/
 theorem prod_le_borel_prod : Prod.instMeasurableSpace ≤ borel (α × β) :=
   by
   rw [‹BorelSpace α›.measurable_eq, ‹BorelSpace β›.measurable_eq]
@@ -1452,46 +1161,22 @@ instance Pi.borelSpace {ι : Type _} {π : ι → Type _} [Countable ι] [∀ i,
 #align pi.borel_space Pi.borelSpace
 -/
 
-/- warning: prod.borel_space -> Prod.borelSpace is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β _inst_4 _inst_5] [_inst_11 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] [_inst_12 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_4], BorelSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_4) (Prod.instMeasurableSpace.{u1, u2} α β _inst_2 _inst_5)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β _inst_4 _inst_5] [_inst_11 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] [_inst_12 : TopologicalSpace.SecondCountableTopology.{u2} β _inst_4], BorelSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_4) (Prod.instMeasurableSpace.{u1, u2} α β _inst_2 _inst_5)
-Case conversion may be inaccurate. Consider using '#align prod.borel_space Prod.borelSpaceₓ'. -/
 instance Prod.borelSpace [SecondCountableTopology α] [SecondCountableTopology β] :
     BorelSpace (α × β) :=
   ⟨le_antisymm prod_le_borel_prod OpensMeasurableSpace.borel_le⟩
 #align prod.borel_space Prod.borelSpace
 
-/- warning: embedding.measurable_embedding -> Embedding.measurableEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β _inst_4 _inst_5] {f : α -> β}, (Embedding.{u1, u2} α β _inst_1 _inst_4 f) -> (MeasurableSet.{u2} β _inst_5 (Set.range.{u2, succ u1} β α f)) -> (MeasurableEmbedding.{u1, u2} α β _inst_2 _inst_5 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : BorelSpace.{u2} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} β] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β _inst_4 _inst_5] {f : α -> β}, (Embedding.{u2, u1} α β _inst_1 _inst_4 f) -> (MeasurableSet.{u1} β _inst_5 (Set.range.{u1, succ u2} β α f)) -> (MeasurableEmbedding.{u2, u1} α β _inst_2 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align embedding.measurable_embedding Embedding.measurableEmbeddingₓ'. -/
 protected theorem Embedding.measurableEmbedding {f : α → β} (h₁ : Embedding f)
     (h₂ : MeasurableSet (range f)) : MeasurableEmbedding f :=
   show MeasurableEmbedding (coe ∘ (Homeomorph.ofEmbedding f h₁).toMeasurableEquiv) from
     (MeasurableEmbedding.subtype_coe h₂).comp (MeasurableEquiv.measurableEmbedding _)
 #align embedding.measurable_embedding Embedding.measurableEmbedding
 
-/- warning: closed_embedding.measurable_embedding -> ClosedEmbedding.measurableEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β _inst_4 _inst_5] {f : α -> β}, (ClosedEmbedding.{u1, u2} α β _inst_1 _inst_4 f) -> (MeasurableEmbedding.{u1, u2} α β _inst_2 _inst_5 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : BorelSpace.{u2} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} β] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β _inst_4 _inst_5] {f : α -> β}, (ClosedEmbedding.{u2, u1} α β _inst_1 _inst_4 f) -> (MeasurableEmbedding.{u2, u1} α β _inst_2 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align closed_embedding.measurable_embedding ClosedEmbedding.measurableEmbeddingₓ'. -/
 protected theorem ClosedEmbedding.measurableEmbedding {f : α → β} (h : ClosedEmbedding f) :
     MeasurableEmbedding f :=
   h.toEmbedding.MeasurableEmbedding h.closed_range.MeasurableSet
 #align closed_embedding.measurable_embedding ClosedEmbedding.measurableEmbedding
 
-/- warning: open_embedding.measurable_embedding -> OpenEmbedding.measurableEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u2} β] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β _inst_4 _inst_5] {f : α -> β}, (OpenEmbedding.{u1, u2} α β _inst_1 _inst_4 f) -> (MeasurableEmbedding.{u1, u2} α β _inst_2 _inst_5 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : MeasurableSpace.{u2} α] [_inst_3 : BorelSpace.{u2} α _inst_1 _inst_2] [_inst_4 : TopologicalSpace.{u1} β] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β _inst_4 _inst_5] {f : α -> β}, (OpenEmbedding.{u2, u1} α β _inst_1 _inst_4 f) -> (MeasurableEmbedding.{u2, u1} α β _inst_2 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align open_embedding.measurable_embedding OpenEmbedding.measurableEmbeddingₓ'. -/
 protected theorem OpenEmbedding.measurableEmbedding {f : α → β} (h : OpenEmbedding f) :
     MeasurableEmbedding f :=
   h.toEmbedding.MeasurableEmbedding h.open_range.MeasurableSet
@@ -1688,12 +1373,6 @@ theorem aemeasurable_restrict_of_antitoneOn [LinearOrder β] [OrderClosedTopolog
 #align ae_measurable_restrict_of_antitone_on aemeasurable_restrict_of_antitoneOn
 -/
 
-/- warning: measurable_set_of_mem_nhds_within_Ioi_aux -> measurableSet_of_mem_nhdsWithin_Ioi_aux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_11 : LinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {s : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhdsWithin.{u1} α _inst_1 x (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_11)))) x)))) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} α (fun (y : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_11))))) x y))) -> (MeasurableSet.{u1} α _inst_2 s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_11 : LinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {s : Set.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhdsWithin.{u1} α _inst_1 x (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_11))))) x)))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (y : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_11)))))) x y))) -> (MeasurableSet.{u1} α _inst_2 s)
-Case conversion may be inaccurate. Consider using '#align measurable_set_of_mem_nhds_within_Ioi_aux measurableSet_of_mem_nhdsWithin_Ioi_auxₓ'. -/
 theorem measurableSet_of_mem_nhdsWithin_Ioi_aux {s : Set α} (h : ∀ x ∈ s, s ∈ 𝓝[>] x)
     (h' : ∀ x ∈ s, ∃ y, x < y) : MeasurableSet s :=
   by
@@ -1744,12 +1423,6 @@ theorem measurableSet_of_mem_nhdsWithin_Ioi {s : Set α} (h : ∀ x ∈ s, s ∈
 
 end LinearOrder
 
-/- warning: measurable.supr_Prop -> Measurable.iSup_Prop is a dubious translation:
-lean 3 declaration is
-  forall {δ : Type.{u1}} [_inst_10 : MeasurableSpace.{u1} δ] {α : Type.{u2}} [_inst_11 : MeasurableSpace.{u2} α] [_inst_12 : CompleteLattice.{u2} α] (p : Prop) {f : δ -> α}, (Measurable.{u1, u2} δ α _inst_10 _inst_11 f) -> (Measurable.{u1, u2} δ α _inst_10 _inst_11 (fun (b : δ) => iSup.{u2, 0} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_12)) p (fun (h : p) => f b)))
-but is expected to have type
-  forall {δ : Type.{u1}} [_inst_10 : MeasurableSpace.{u1} δ] {α : Type.{u2}} [_inst_11 : MeasurableSpace.{u2} α] [_inst_12 : CompleteLattice.{u2} α] (p : Prop) {f : δ -> α}, (Measurable.{u1, u2} δ α _inst_10 _inst_11 f) -> (Measurable.{u1, u2} δ α _inst_10 _inst_11 (fun (b : δ) => iSup.{u2, 0} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_12)) p (fun (h : p) => f b)))
-Case conversion may be inaccurate. Consider using '#align measurable.supr_Prop Measurable.iSup_Propₓ'. -/
 @[measurability]
 theorem Measurable.iSup_Prop {α} [MeasurableSpace α] [CompleteLattice α] (p : Prop) {f : δ → α}
     (hf : Measurable f) : Measurable fun b => ⨆ h : p, f b :=
@@ -1757,12 +1430,6 @@ theorem Measurable.iSup_Prop {α} [MeasurableSpace α] [CompleteLattice α] (p :
     convert measurable_const; funext; exact iSup_neg h
 #align measurable.supr_Prop Measurable.iSup_Prop
 
-/- warning: measurable.infi_Prop -> Measurable.iInf_Prop is a dubious translation:
-lean 3 declaration is
-  forall {δ : Type.{u1}} [_inst_10 : MeasurableSpace.{u1} δ] {α : Type.{u2}} [_inst_11 : MeasurableSpace.{u2} α] [_inst_12 : CompleteLattice.{u2} α] (p : Prop) {f : δ -> α}, (Measurable.{u1, u2} δ α _inst_10 _inst_11 f) -> (Measurable.{u1, u2} δ α _inst_10 _inst_11 (fun (b : δ) => iInf.{u2, 0} α (ConditionallyCompleteLattice.toHasInf.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_12)) p (fun (h : p) => f b)))
-but is expected to have type
-  forall {δ : Type.{u1}} [_inst_10 : MeasurableSpace.{u1} δ] {α : Type.{u2}} [_inst_11 : MeasurableSpace.{u2} α] [_inst_12 : CompleteLattice.{u2} α] (p : Prop) {f : δ -> α}, (Measurable.{u1, u2} δ α _inst_10 _inst_11 f) -> (Measurable.{u1, u2} δ α _inst_10 _inst_11 (fun (b : δ) => iInf.{u2, 0} α (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_12)) p (fun (h : p) => f b)))
-Case conversion may be inaccurate. Consider using '#align measurable.infi_Prop Measurable.iInf_Propₓ'. -/
 @[measurability]
 theorem Measurable.iInf_Prop {α} [MeasurableSpace α] [CompleteLattice α] (p : Prop) {f : δ → α}
     (hf : Measurable f) : Measurable fun b => ⨅ h : p, f b :=
@@ -1774,60 +1441,30 @@ section CompleteLinearOrder
 
 variable [CompleteLinearOrder α] [OrderTopology α] [SecondCountableTopology α]
 
-/- warning: measurable_supr -> measurable_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iSup.{u1, u3} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => f i b)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iSup.{u1, u3} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => f i b)))
-Case conversion may be inaccurate. Consider using '#align measurable_supr measurable_iSupₓ'. -/
 @[measurability]
 theorem measurable_iSup {ι} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i)) :
     Measurable fun b => ⨆ i, f i b :=
   Measurable.isLUB hf fun b => isLUB_iSup
 #align measurable_supr measurable_iSup
 
-/- warning: ae_measurable_supr -> aemeasurable_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iSup.{u1, u3} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => f i b)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iSup.{u1, u3} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => f i b)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable_supr aemeasurable_iSupₓ'. -/
 @[measurability]
 theorem aemeasurable_iSup {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α}
     (hf : ∀ i, AEMeasurable (f i) μ) : AEMeasurable (fun b => ⨆ i, f i b) μ :=
   AEMeasurable.isLUB hf <| ae_of_all μ fun b => isLUB_iSup
 #align ae_measurable_supr aemeasurable_iSup
 
-/- warning: measurable_infi -> measurable_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iInf.{u1, u3} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => f i b)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iInf.{u1, u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => f i b)))
-Case conversion may be inaccurate. Consider using '#align measurable_infi measurable_iInfₓ'. -/
 @[measurability]
 theorem measurable_iInf {ι} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i)) :
     Measurable fun b => ⨅ i, f i b :=
   Measurable.isGLB hf fun b => isGLB_iInf
 #align measurable_infi measurable_iInf
 
-/- warning: ae_measurable_infi -> aemeasurable_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iInf.{u1, u3} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => f i b)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Sort.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} [_inst_14 : Countable.{u3} ι] {f : ι -> δ -> α}, (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iInf.{u1, u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => f i b)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable_infi aemeasurable_iInfₓ'. -/
 @[measurability]
 theorem aemeasurable_iInf {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α}
     (hf : ∀ i, AEMeasurable (f i) μ) : AEMeasurable (fun b => ⨅ i, f i b) μ :=
   AEMeasurable.isGLB hf <| ae_of_all μ fun b => isGLB_iInf
 #align ae_measurable_infi aemeasurable_iInf
 
-/- warning: measurable_bsupr -> measurable_biSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iSup.{u1, succ u3} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) (Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) (fun (H : Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) => f i b))))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iSup.{u1, succ u3} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => f i b))))
-Case conversion may be inaccurate. Consider using '#align measurable_bsupr measurable_biSupₓ'. -/
 theorem measurable_biSup {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) : Measurable fun b => ⨆ i ∈ s, f i b :=
   by
@@ -1835,12 +1472,6 @@ theorem measurable_biSup {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Counta
   exact measurable_iSup fun i => hf i
 #align measurable_bsupr measurable_biSup
 
-/- warning: ae_measurable_bsupr -> aemeasurable_biSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iSup.{u1, succ u3} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) (Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) (fun (H : Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) => f i b))) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iSup.{u1, succ u3} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => f i b))) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable_bsupr aemeasurable_biSupₓ'. -/
 theorem aemeasurable_biSup {ι} {μ : Measure δ} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i, AEMeasurable (f i) μ) : AEMeasurable (fun b => ⨆ i ∈ s, f i b) μ :=
   by
@@ -1849,12 +1480,6 @@ theorem aemeasurable_biSup {ι} {μ : Measure δ} (s : Set ι) {f : ι → δ �
   exact aemeasurable_iSup fun i => hf i
 #align ae_measurable_bsupr aemeasurable_biSup
 
-/- warning: measurable_binfi -> measurable_biInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iInf.{u1, succ u3} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => iInf.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) (Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) (fun (H : Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) => f i b))))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (b : δ) => iInf.{u1, succ u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => iInf.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => f i b))))
-Case conversion may be inaccurate. Consider using '#align measurable_binfi measurable_biInfₓ'. -/
 theorem measurable_biInf {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) : Measurable fun b => ⨅ i ∈ s, f i b :=
   by
@@ -1862,12 +1487,6 @@ theorem measurable_biInf {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Counta
   exact measurable_iInf fun i => hf i
 #align measurable_binfi measurable_biInf
 
-/- warning: ae_measurable_binfi -> aemeasurable_biInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iInf.{u1, succ u3} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) ι (fun (i : ι) => iInf.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))) (Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) (fun (H : Membership.Mem.{u3, u3} ι (Set.{u3} ι) (Set.hasMem.{u3} ι) i s) => f i b))) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {μ : MeasureTheory.Measure.{u2} δ _inst_10} (s : Set.{u3} ι) {f : ι -> δ -> α}, (Set.Countable.{u3} ι s) -> (forall (i : ι), AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (f i) μ) -> (AEMeasurable.{u2, u1} δ α _inst_2 _inst_10 (fun (b : δ) => iInf.{u1, succ u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) ι (fun (i : ι) => iInf.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11)))) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => f i b))) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable_binfi aemeasurable_biInfₓ'. -/
 theorem aemeasurable_biInf {ι} {μ : Measure δ} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i, AEMeasurable (f i) μ) : AEMeasurable (fun b => ⨅ i ∈ s, f i b) μ :=
   by
@@ -1876,12 +1495,6 @@ theorem aemeasurable_biInf {ι} {μ : Measure δ} (s : Set ι) {f : ι → δ �
   exact aemeasurable_iInf fun i => hf i
 #align ae_measurable_binfi aemeasurable_biInf
 
-/- warning: measurable_liminf' -> measurable_liminf' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {ι' : Type.{u4}} {f : ι -> δ -> α} {u : Filter.{u3} ι}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall {p : ι' -> Prop} {s : ι' -> (Set.{u3} ι)}, (Filter.HasCountableBasis.{u3, u4} ι ι' u p s) -> (forall (i : ι'), Set.Countable.{u3} ι (s i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => Filter.liminf.{u1, u3} α ι (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11)) (fun (i : ι) => f i x) u)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u4}} {ι' : Type.{u3}} {f : ι -> δ -> α} {u : Filter.{u4} ι}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall {p : ι' -> Prop} {s : ι' -> (Set.{u4} ι)}, (Filter.HasCountableBasis.{u4, u3} ι ι' u p s) -> (forall (i : ι'), Set.Countable.{u4} ι (s i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => Filter.liminf.{u1, u4} α ι (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11))) (fun (i : ι) => f i x) u)))
-Case conversion may be inaccurate. Consider using '#align measurable_liminf' measurable_liminf'ₓ'. -/
 /-- `liminf` over a general filter is measurable. See `measurable_liminf` for the version over `ℕ`.
 -/
 theorem measurable_liminf' {ι ι'} {f : ι → δ → α} {u : Filter ι} (hf : ∀ i, Measurable (f i))
@@ -1893,12 +1506,6 @@ theorem measurable_liminf' {ι ι'} {f : ι → δ → α} {u : Filter ι} (hf :
   exact fun i => measurable_biInf _ (hs i) hf
 #align measurable_liminf' measurable_liminf'
 
-/- warning: measurable_limsup' -> measurable_limsup' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {ι' : Type.{u4}} {f : ι -> δ -> α} {u : Filter.{u3} ι}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall {p : ι' -> Prop} {s : ι' -> (Set.{u3} ι)}, (Filter.HasCountableBasis.{u3, u4} ι ι' u p s) -> (forall (i : ι'), Set.Countable.{u3} ι (s i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => Filter.limsup.{u1, u3} α ι (CompleteLattice.toConditionallyCompleteLattice.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11)) (fun (i : ι) => f i x) u)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : CompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α (CompleteLattice.instOmegaCompletePartialOrder.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_11))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u4}} {ι' : Type.{u3}} {f : ι -> δ -> α} {u : Filter.{u4} ι}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall {p : ι' -> Prop} {s : ι' -> (Set.{u4} ι)}, (Filter.HasCountableBasis.{u4, u3} ι ι' u p s) -> (forall (i : ι'), Set.Countable.{u4} ι (s i)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => Filter.limsup.{u1, u4} α ι (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} α _inst_11))) (fun (i : ι) => f i x) u)))
-Case conversion may be inaccurate. Consider using '#align measurable_limsup' measurable_limsup'ₓ'. -/
 /-- `limsup` over a general filter is measurable. See `measurable_limsup` for the version over `ℕ`.
 -/
 theorem measurable_limsup' {ι ι'} {f : ι → δ → α} {u : Filter ι} (hf : ∀ i, Measurable (f i))
@@ -1936,12 +1543,6 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α] [OrderTopology α] [SecondCountableTopology α]
 
-/- warning: measurable_cSup -> measurable_cSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {f : ι -> δ -> α} {s : Set.{u3} ι}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {f : ι -> δ -> α} {s : Set.{u3} ι}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)))
-Case conversion may be inaccurate. Consider using '#align measurable_cSup measurable_cSupₓ'. -/
 theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) (bdd : ∀ x, BddAbove ((fun i => f i x) '' s)) :
     Measurable fun x => sSup ((fun i => f i x) '' s) :=
@@ -1953,24 +1554,12 @@ theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countab
     exact MeasurableSet.biInter hs fun i hi => measurableSet_le (hf i) measurable_const
 #align measurable_cSup measurable_cSup
 
-/- warning: measurable_cInf -> measurable_cInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {f : ι -> δ -> α} {s : Set.{u3} ι}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toHasInf.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} {f : ι -> δ -> α} {s : Set.{u3} ι}, (Set.Countable.{u3} ι s) -> (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) (Set.image.{u3, u1} ι α (fun (i : ι) => f i x) s)))
-Case conversion may be inaccurate. Consider using '#align measurable_cInf measurable_cInfₓ'. -/
 theorem measurable_cInf {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) (bdd : ∀ x, BddBelow ((fun i => f i x) '' s)) :
     Measurable fun x => sInf ((fun i => f i x) '' s) :=
   @measurable_cSup αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hs hf bdd
 #align measurable_cInf measurable_cInf
 
-/- warning: measurable_csupr -> measurable_ciSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} [_inst_14 : Countable.{succ u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.range.{u1, succ u3} α ι (fun (i : ι) => f i x))) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => iSup.{u1, succ u3} α (ConditionallyCompleteLattice.toHasSup.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) ι (fun (i : ι) => f i x)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} [_inst_14 : Countable.{succ u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.range.{u1, succ u3} α ι (fun (i : ι) => f i x))) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => iSup.{u1, succ u3} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) ι (fun (i : ι) => f i x)))
-Case conversion may be inaccurate. Consider using '#align measurable_csupr measurable_ciSupₓ'. -/
 theorem measurable_ciSup {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
     (bdd : ∀ x, BddAbove (range fun i => f i x)) : Measurable fun x => ⨆ i, f i x :=
   by
@@ -1979,12 +1568,6 @@ theorem measurable_ciSup {ι : Type _} [Countable ι] {f : ι → δ → α} (hf
   refine' measurable_cSup countable_univ hf bdd
 #align measurable_csupr measurable_ciSup
 
-/- warning: measurable_cinfi -> measurable_ciInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} [_inst_14 : Countable.{succ u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.range.{u1, succ u3} α ι (fun (i : ι) => f i x))) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => iInf.{u1, succ u3} α (ConditionallyCompleteLattice.toHasInf.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) ι (fun (i : ι) => f i x)))
-but is expected to have type
-  forall {α : Type.{u1}} {δ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_10 : MeasurableSpace.{u2} δ] [_inst_11 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_12 : OrderTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)))))] [_inst_13 : TopologicalSpace.SecondCountableTopology.{u1} α _inst_1] {ι : Type.{u3}} [_inst_14 : Countable.{succ u3} ι] {f : ι -> δ -> α}, (forall (i : ι), Measurable.{u2, u1} δ α _inst_10 _inst_2 (f i)) -> (forall (x : δ), BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11))))) (Set.range.{u1, succ u3} α ι (fun (i : ι) => f i x))) -> (Measurable.{u2, u1} δ α _inst_10 _inst_2 (fun (x : δ) => iInf.{u1, succ u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_11)) ι (fun (i : ι) => f i x)))
-Case conversion may be inaccurate. Consider using '#align measurable_cinfi measurable_ciInfₓ'. -/
 theorem measurable_ciInf {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
     (bdd : ∀ x, BddBelow (range fun i => f i x)) : Measurable fun x => ⨅ i, f i x :=
   @measurable_ciSup αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hf bdd
@@ -2002,12 +1585,6 @@ def Homemorph.toMeasurableEquiv (h : α ≃ₜ β) : α ≃ᵐ β
 #align homemorph.to_measurable_equiv Homemorph.toMeasurableEquiv
 -/
 
-/- warning: is_finite_measure_on_compacts.map -> IsFiniteMeasureOnCompacts.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} [_inst_11 : TopologicalSpace.{u1} α] [_inst_12 : OpensMeasurableSpace.{u1} α _inst_11 m0] {β : Type.{u2}} [_inst_13 : MeasurableSpace.{u2} β] [_inst_14 : TopologicalSpace.{u2} β] [_inst_15 : BorelSpace.{u2} β _inst_14 _inst_13] [_inst_16 : T2Space.{u2} β _inst_14] (μ : MeasureTheory.Measure.{u1} α m0) [_inst_17 : MeasureTheory.FiniteMeasureOnCompacts.{u1} α m0 _inst_11 μ] (f : Homeomorph.{u1, u2} α β _inst_11 _inst_14), MeasureTheory.FiniteMeasureOnCompacts.{u2} β _inst_13 _inst_14 (MeasureTheory.Measure.map.{u1, u2} α β _inst_13 m0 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} α β _inst_11 _inst_14) (fun (_x : Homeomorph.{u1, u2} α β _inst_11 _inst_14) => α -> β) (Homeomorph.hasCoeToFun.{u1, u2} α β _inst_11 _inst_14) f) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {m0 : MeasurableSpace.{u2} α} [_inst_11 : TopologicalSpace.{u2} α] [_inst_12 : OpensMeasurableSpace.{u2} α _inst_11 m0] {β : Type.{u1}} [_inst_13 : MeasurableSpace.{u1} β] [_inst_14 : TopologicalSpace.{u1} β] [_inst_15 : BorelSpace.{u1} β _inst_14 _inst_13] [_inst_16 : T2Space.{u1} β _inst_14] (μ : MeasureTheory.Measure.{u2} α m0) [_inst_17 : MeasureTheory.FiniteMeasureOnCompacts.{u2} α m0 _inst_11 μ] (f : Homeomorph.{u2, u1} α β _inst_11 _inst_14), MeasureTheory.FiniteMeasureOnCompacts.{u1} β _inst_13 _inst_14 (MeasureTheory.Measure.map.{u2, u1} α β _inst_13 m0 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_11 _inst_14) α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_11 _inst_14) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_11 _inst_14) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_11 _inst_14))) f) μ)
-Case conversion may be inaccurate. Consider using '#align is_finite_measure_on_compacts.map IsFiniteMeasureOnCompacts.mapₓ'. -/
 protected theorem IsFiniteMeasureOnCompacts.map {α : Type _} {m0 : MeasurableSpace α}
     [TopologicalSpace α] [OpensMeasurableSpace α] {β : Type _} [MeasurableSpace β]
     [TopologicalSpace β] [BorelSpace β] [T2Space β] (μ : Measure α) [FiniteMeasureOnCompacts μ]
@@ -2021,52 +1598,22 @@ protected theorem IsFiniteMeasureOnCompacts.map {α : Type _} {m0 : MeasurableSp
 
 end BorelSpace
 
-/- warning: empty.borel_space -> Empty.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} Empty Empty.topologicalSpace Empty.instMeasurableSpace
-but is expected to have type
-  BorelSpace.{0} Empty instTopologicalSpaceEmpty Empty.instMeasurableSpace
-Case conversion may be inaccurate. Consider using '#align empty.borel_space Empty.borelSpaceₓ'. -/
 instance Empty.borelSpace : BorelSpace Empty :=
   ⟨borel_eq_top_of_discrete.symm⟩
 #align empty.borel_space Empty.borelSpace
 
-/- warning: unit.borel_space -> Unit.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} Unit PUnit.topologicalSpace.{0} PUnit.instMeasurableSpace.{0}
-but is expected to have type
-  BorelSpace.{0} Unit instTopologicalSpacePUnit.{0} PUnit.instMeasurableSpace.{0}
-Case conversion may be inaccurate. Consider using '#align unit.borel_space Unit.borelSpaceₓ'. -/
 instance Unit.borelSpace : BorelSpace Unit :=
   ⟨borel_eq_top_of_discrete.symm⟩
 #align unit.borel_space Unit.borelSpace
 
-/- warning: bool.borel_space -> Bool.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} Bool Bool.topologicalSpace Bool.instMeasurableSpace
-but is expected to have type
-  BorelSpace.{0} Bool instTopologicalSpaceBool Bool.instMeasurableSpace
-Case conversion may be inaccurate. Consider using '#align bool.borel_space Bool.borelSpaceₓ'. -/
 instance Bool.borelSpace : BorelSpace Bool :=
   ⟨borel_eq_top_of_discrete.symm⟩
 #align bool.borel_space Bool.borelSpace
 
-/- warning: nat.borel_space -> Nat.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} Nat Nat.topologicalSpace Nat.instMeasurableSpace
-but is expected to have type
-  BorelSpace.{0} Nat instTopologicalSpaceNat Nat.instMeasurableSpace
-Case conversion may be inaccurate. Consider using '#align nat.borel_space Nat.borelSpaceₓ'. -/
 instance Nat.borelSpace : BorelSpace ℕ :=
   ⟨borel_eq_top_of_discrete.symm⟩
 #align nat.borel_space Nat.borelSpace
 
-/- warning: int.borel_space -> Int.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} Int Int.topologicalSpace Int.instMeasurableSpace
-but is expected to have type
-  BorelSpace.{0} Int instTopologicalSpaceInt Int.instMeasurableSpace
-Case conversion may be inaccurate. Consider using '#align int.borel_space Int.borelSpaceₓ'. -/
 instance Int.borelSpace : BorelSpace ℤ :=
   ⟨borel_eq_top_of_discrete.symm⟩
 #align int.borel_space Int.borelSpace
@@ -2097,12 +1644,6 @@ instance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=
 #align nnreal.measurable_space NNReal.measurableSpace
 -/
 
-/- warning: nnreal.borel_space -> NNReal.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} NNReal NNReal.topologicalSpace NNReal.measurableSpace
-but is expected to have type
-  BorelSpace.{0} NNReal NNReal.instTopologicalSpaceNNReal NNReal.measurableSpace
-Case conversion may be inaccurate. Consider using '#align nnreal.borel_space NNReal.borelSpaceₓ'. -/
 instance NNReal.borelSpace : BorelSpace ℝ≥0 :=
   Subtype.borelSpace _
 #align nnreal.borel_space NNReal.borelSpace
@@ -2113,12 +1654,6 @@ instance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=
 #align ennreal.measurable_space ENNReal.measurableSpace
 -/
 
-/- warning: ennreal.borel_space -> ENNReal.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} ENNReal ENNReal.topologicalSpace ENNReal.measurableSpace
-but is expected to have type
-  BorelSpace.{0} ENNReal ENNReal.instTopologicalSpaceENNReal ENNReal.measurableSpace
-Case conversion may be inaccurate. Consider using '#align ennreal.borel_space ENNReal.borelSpaceₓ'. -/
 instance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=
   ⟨rfl⟩
 #align ennreal.borel_space ENNReal.borelSpace
@@ -2129,22 +1664,10 @@ instance EReal.measurableSpace : MeasurableSpace EReal :=
 #align ereal.measurable_space EReal.measurableSpace
 -/
 
-/- warning: ereal.borel_space -> EReal.borelSpace is a dubious translation:
-lean 3 declaration is
-  BorelSpace.{0} EReal EReal.topologicalSpace EReal.measurableSpace
-but is expected to have type
-  BorelSpace.{0} EReal EReal.instTopologicalSpaceEReal EReal.measurableSpace
-Case conversion may be inaccurate. Consider using '#align ereal.borel_space EReal.borelSpaceₓ'. -/
 instance EReal.borelSpace : BorelSpace EReal :=
   ⟨rfl⟩
 #align ereal.borel_space EReal.borelSpace
 
-/- warning: measure_eq_measure_preimage_add_measure_tsum_Ico_zpow -> measure_eq_measure_preimage_add_measure_tsum_Ico_zpow is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] (μ : MeasureTheory.Measure.{u1} α _inst_1) {f : α -> ENNReal}, (Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace f) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α _inst_1 s) -> (forall {t : NNReal}, (LT.lt.{0} NNReal (Preorder.toHasLt.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) t) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_1) (fun (_x : MeasureTheory.Measure.{u1} α _inst_1) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_1) μ s) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_1) (fun (_x : MeasureTheory.Measure.{u1} α _inst_1) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_1) μ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.preimage.{u1, 0} α ENNReal f (Singleton.singleton.{0, 0} ENNReal (Set.{0} ENNReal) (Set.hasSingleton.{0} ENNReal) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_1) (fun (_x : MeasureTheory.Measure.{u1} α _inst_1) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_1) μ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.preimage.{u1, 0} α ENNReal f (Singleton.singleton.{0, 0} ENNReal (Set.{0} ENNReal) (Set.hasSingleton.{0} ENNReal) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))))))) (tsum.{0, 0} ENNReal (OrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))) ENNReal.topologicalSpace Int (fun (n : Int) => coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_1) (fun (_x : MeasureTheory.Measure.{u1} α _inst_1) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_1) μ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.preimage.{u1, 0} α ENNReal f (Set.Ico.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) (HPow.hPow.{0, 0, 0} ENNReal Int ENNReal (instHPow.{0, 0} ENNReal Int (DivInvMonoid.Pow.{0} ENNReal ENNReal.divInvMonoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) t) n) (HPow.hPow.{0, 0, 0} ENNReal Int ENNReal (instHPow.{0, 0} ENNReal Int (DivInvMonoid.Pow.{0} ENNReal ENNReal.divInvMonoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) t) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] (μ : MeasureTheory.Measure.{u1} α _inst_1) {f : α -> ENNReal}, (Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace f) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α _inst_1 s) -> (forall {t : NNReal}, (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)) t) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) s) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.preimage.{u1, 0} α ENNReal f (Singleton.singleton.{0, 0} ENNReal (Set.{0} ENNReal) (Set.instSingletonSet.{0} ENNReal) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.preimage.{u1, 0} α ENNReal f (Singleton.singleton.{0, 0} ENNReal (Set.{0} ENNReal) (Set.instSingletonSet.{0} ENNReal) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))))) (tsum.{0, 0} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal Int (fun (n : Int) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.preimage.{u1, 0} α ENNReal f (Set.Ico.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (HPow.hPow.{0, 0, 0} ENNReal Int ENNReal (instHPow.{0, 0} ENNReal Int (DivInvMonoid.Pow.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) (ENNReal.some t) n) (HPow.hPow.{0, 0, 0} ENNReal Int ENNReal (instHPow.{0, 0} ENNReal Int (DivInvMonoid.Pow.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) (ENNReal.some t) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))))))))))
-Case conversion may be inaccurate. Consider using '#align measure_eq_measure_preimage_add_measure_tsum_Ico_zpow measure_eq_measure_preimage_add_measure_tsum_Ico_zpowₓ'. -/
 /-- One can cut out `ℝ≥0∞` into the sets `{0}`, `Ico (t^n) (t^(n+1))` for `n : ℤ` and `{∞}`. This
 gives a way to compute the measure of a set in terms of sets on which a given function `f` does not
 fluctuate by more than `t`. -/
@@ -2292,12 +1815,6 @@ theorem Measurable.nndist {f g : β → α} (hf : Measurable f) (hg : Measurable
 
 end
 
-/- warning: tendsto_measure_cthickening -> tendsto_measure_cthickening is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) _inst_2] {μ : MeasureTheory.Measure.{u1} α _inst_2} {s : Set.{u1} α}, (Exists.{1} Real (fun (R : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt R (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt R (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => Ne.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) R s)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))))) -> (Filter.Tendsto.{0, 0} Real ENNReal (fun (r : Real) => coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) r s)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (nhds.{0} ENNReal ENNReal.topologicalSpace (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) _inst_2] {μ : MeasureTheory.Measure.{u1} α _inst_2} {s : Set.{u1} α}, (Exists.{1} Real (fun (R : Real) => And (GT.gt.{0} Real Real.instLTReal R (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Ne.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) R s)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))) -> (Filter.Tendsto.{0, 0} Real ENNReal (fun (r : Real) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) r s)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s))))
-Case conversion may be inaccurate. Consider using '#align tendsto_measure_cthickening tendsto_measure_cthickeningₓ'. -/
 /-- If a set has a closed thickening with finite measure, then the measure of its `r`-closed
 thickenings converges to the measure of its closure as `r` tends to `0`. -/
 theorem tendsto_measure_cthickening {μ : Measure α} {s : Set α}
@@ -2319,12 +1836,6 @@ theorem tendsto_measure_cthickening {μ : Measure α} {s : Set α}
   exact (nhds_left_sup_nhds_right' 0).symm
 #align tendsto_measure_cthickening tendsto_measure_cthickening
 
-/- warning: tendsto_measure_cthickening_of_is_closed -> tendsto_measure_cthickening_of_isClosed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) _inst_2] {μ : MeasureTheory.Measure.{u1} α _inst_2} {s : Set.{u1} α}, (Exists.{1} Real (fun (R : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt R (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt R (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => Ne.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) R s)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))))) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (Filter.Tendsto.{0, 0} Real ENNReal (fun (r : Real) => coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) r s)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (nhds.{0} ENNReal ENNReal.topologicalSpace (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) _inst_2] {μ : MeasureTheory.Measure.{u1} α _inst_2} {s : Set.{u1} α}, (Exists.{1} Real (fun (R : Real) => And (GT.gt.{0} Real Real.instLTReal R (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Ne.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) R s)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) s) -> (Filter.Tendsto.{0, 0} Real ENNReal (fun (r : Real) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) r s)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) s)))
-Case conversion may be inaccurate. Consider using '#align tendsto_measure_cthickening_of_is_closed tendsto_measure_cthickening_of_isClosedₓ'. -/
 /-- If a closed set has a closed thickening with finite measure, then the measure of its `r`-closed
 thickenings converges to its measure as `r` tends to `0`. -/
 theorem tendsto_measure_cthickening_of_isClosed {μ : Measure α} {s : Set α}
@@ -2337,12 +1848,6 @@ theorem tendsto_measure_cthickening_of_isClosed {μ : Measure α} {s : Set α}
 
 end PseudoMetricSpace
 
-/- warning: tendsto_measure_cthickening_of_is_compact -> tendsto_measure_cthickening_of_isCompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) _inst_2] [_inst_4 : ProperSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)] {μ : MeasureTheory.Measure.{u1} α _inst_2} [_inst_5 : MeasureTheory.FiniteMeasureOnCompacts.{u1} α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) μ] {s : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) s) -> (Filter.Tendsto.{0, 0} Real ENNReal (fun (r : Real) => coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) r s)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (nhds.{0} ENNReal ENNReal.topologicalSpace (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α _inst_2) (fun (_x : MeasureTheory.Measure.{u1} α _inst_2) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α _inst_2) μ s)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : OpensMeasurableSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) _inst_2] [_inst_4 : ProperSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)] {μ : MeasureTheory.Measure.{u1} α _inst_2} [_inst_5 : MeasureTheory.FiniteMeasureOnCompacts.{u1} α _inst_2 (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) μ] {s : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) s) -> (Filter.Tendsto.{0, 0} Real ENNReal (fun (r : Real) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) (Metric.cthickening.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1)) r s)) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_2 μ) s)))
-Case conversion may be inaccurate. Consider using '#align tendsto_measure_cthickening_of_is_compact tendsto_measure_cthickening_of_isCompactₓ'. -/
 /-- Given a compact set in a proper space, the measure of its `r`-closed thickenings converges to
 its measure as `r` tends to `0`. -/
 theorem tendsto_measure_cthickening_of_isCompact [MetricSpace α] [MeasurableSpace α]
@@ -2427,24 +1932,12 @@ namespace Real
 
 open MeasurableSpace MeasureTheory
 
-/- warning: real.borel_eq_generate_from_Ioo_rat -> Real.borel_eq_generateFrom_Ioo_rat is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (MeasurableSpace.{0} Real) (borel.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (MeasurableSpace.generateFrom.{0} Real (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.hasLt a b) (fun (h : LT.lt.{0} Rat Rat.hasLt a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b)))))))
-but is expected to have type
-  Eq.{1} (MeasurableSpace.{0} Real) (borel.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (MeasurableSpace.generateFrom.{0} Real (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.instLTRat_1 a b) (fun (h : LT.lt.{0} Rat Rat.instLTRat_1 a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b)))))))
-Case conversion may be inaccurate. Consider using '#align real.borel_eq_generate_from_Ioo_rat Real.borel_eq_generateFrom_Ioo_ratₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem borel_eq_generateFrom_Ioo_rat :
     borel ℝ = generateFrom (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   isTopologicalBasis_Ioo_rat.borel_eq_generateFrom
 #align real.borel_eq_generate_from_Ioo_rat Real.borel_eq_generateFrom_Ioo_rat
 
-/- warning: real.is_pi_system_Ioo_rat -> Real.isPiSystem_Ioo_rat is a dubious translation:
-lean 3 declaration is
-  IsPiSystem.{0} Real (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.hasLt a b) (fun (h : LT.lt.{0} Rat Rat.hasLt a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b))))))
-but is expected to have type
-  IsPiSystem.{0} Real (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.instLTRat_1 a b) (fun (h : LT.lt.{0} Rat Rat.instLTRat_1 a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b))))))
-Case conversion may be inaccurate. Consider using '#align real.is_pi_system_Ioo_rat Real.isPiSystem_Ioo_ratₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem isPiSystem_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   by
@@ -2453,12 +1946,6 @@ theorem isPiSystem_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b
   simp [eq_comm]
 #align real.is_pi_system_Ioo_rat Real.isPiSystem_Ioo_rat
 
-/- warning: real.finite_spanning_sets_in_Ioo_rat -> Real.finiteSpanningSetsInIooRat is a dubious translation:
-lean 3 declaration is
-  forall (μ : MeasureTheory.Measure.{0} Real Real.measurableSpace) [_inst_1 : MeasureTheory.LocallyFiniteMeasure.{0} Real Real.measurableSpace (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) μ], MeasureTheory.Measure.FiniteSpanningSetsIn.{0} Real Real.measurableSpace μ (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.hasLt a b) (fun (h : LT.lt.{0} Rat Rat.hasLt a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b))))))
-but is expected to have type
-  forall (μ : MeasureTheory.Measure.{0} Real Real.measurableSpace) [_inst_1 : MeasureTheory.LocallyFiniteMeasure.{0} Real Real.measurableSpace (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) μ], MeasureTheory.Measure.FiniteSpanningSetsIn.{0} Real Real.measurableSpace μ (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.instLTRat_1 a b) (fun (h : LT.lt.{0} Rat Rat.instLTRat_1 a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b))))))
-Case conversion may be inaccurate. Consider using '#align real.finite_spanning_sets_in_Ioo_rat Real.finiteSpanningSetsInIooRatₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- The intervals `(-(n + 1), (n + 1))` form a finite spanning sets in the set of open intervals
 with rational endpoints for a locally finite measure `μ` on `ℝ`. -/
@@ -2478,24 +1965,12 @@ def finiteSpanningSetsInIooRat (μ : Measure ℝ) [LocallyFiniteMeasure μ] :
         (le_abs_self x).trans_lt (Nat.lt_floor_add_one _)⟩
 #align real.finite_spanning_sets_in_Ioo_rat Real.finiteSpanningSetsInIooRat
 
-/- warning: real.measure_ext_Ioo_rat -> Real.measure_ext_Ioo_rat is a dubious translation:
-lean 3 declaration is
-  forall {μ : MeasureTheory.Measure.{0} Real Real.measurableSpace} {ν : MeasureTheory.Measure.{0} Real Real.measurableSpace} [_inst_1 : MeasureTheory.LocallyFiniteMeasure.{0} Real Real.measurableSpace (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) μ], (forall (a : Rat) (b : Rat), Eq.{1} ENNReal (coeFn.{1, 1} (MeasureTheory.Measure.{0} Real Real.measurableSpace) (fun (_x : MeasureTheory.Measure.{0} Real Real.measurableSpace) => (Set.{0} Real) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{0} Real Real.measurableSpace) μ (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b))) (coeFn.{1, 1} (MeasureTheory.Measure.{0} Real Real.measurableSpace) (fun (_x : MeasureTheory.Measure.{0} Real Real.measurableSpace) => (Set.{0} Real) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{0} Real Real.measurableSpace) ν (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b)))) -> (Eq.{1} (MeasureTheory.Measure.{0} Real Real.measurableSpace) μ ν)
-but is expected to have type
-  forall {μ : MeasureTheory.Measure.{0} Real Real.measurableSpace} {ν : MeasureTheory.Measure.{0} Real Real.measurableSpace} [_inst_1 : MeasureTheory.LocallyFiniteMeasure.{0} Real Real.measurableSpace (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) μ], (forall (a : Rat) (b : Rat), Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{0} Real (MeasureTheory.Measure.toOuterMeasure.{0} Real Real.measurableSpace μ) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b))) (MeasureTheory.OuterMeasure.measureOf.{0} Real (MeasureTheory.Measure.toOuterMeasure.{0} Real Real.measurableSpace ν) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b)))) -> (Eq.{1} (MeasureTheory.Measure.{0} Real Real.measurableSpace) μ ν)
-Case conversion may be inaccurate. Consider using '#align real.measure_ext_Ioo_rat Real.measure_ext_Ioo_ratₓ'. -/
 theorem measure_ext_Ioo_rat {μ ν : Measure ℝ} [LocallyFiniteMeasure μ]
     (h : ∀ a b : ℚ, μ (Ioo a b) = ν (Ioo a b)) : μ = ν :=
   (finiteSpanningSetsInIooRat μ).ext borel_eq_generateFrom_Ioo_rat isPiSystem_Ioo_rat <| by
     simp only [mem_Union, mem_singleton_iff]; rintro _ ⟨a, b, -, rfl⟩; apply h
 #align real.measure_ext_Ioo_rat Real.measure_ext_Ioo_rat
 
-/- warning: real.borel_eq_generate_from_Iio_rat -> Real.borel_eq_generateFrom_Iio_rat is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (MeasurableSpace.{0} Real) (borel.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (MeasurableSpace.generateFrom.{0} Real (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Iio.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a)))))
-but is expected to have type
-  Eq.{1} (MeasurableSpace.{0} Real) (borel.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) (MeasurableSpace.generateFrom.{0} Real (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Iio.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a)))))
-Case conversion may be inaccurate. Consider using '#align real.borel_eq_generate_from_Iio_rat Real.borel_eq_generateFrom_Iio_ratₓ'. -/
 theorem borel_eq_generateFrom_Iio_rat : borel ℝ = generateFrom (⋃ a : ℚ, {Iio a}) :=
   by
   let g : MeasurableSpace ℝ := generate_from (⋃ a : ℚ, {Iio a})
@@ -2544,35 +2019,17 @@ theorem AEMeasurable.real_toNNReal {f : α → ℝ} {μ : Measure α} (hf : AEMe
 #align ae_measurable.real_to_nnreal AEMeasurable.real_toNNReal
 -/
 
-/- warning: measurable_coe_nnreal_real -> measurable_coe_nnreal_real is a dubious translation:
-lean 3 declaration is
-  Measurable.{0, 0} NNReal Real NNReal.measurableSpace Real.measurableSpace ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))))
-but is expected to have type
-  Measurable.{0, 0} NNReal Real NNReal.measurableSpace Real.measurableSpace NNReal.toReal
-Case conversion may be inaccurate. Consider using '#align measurable_coe_nnreal_real measurable_coe_nnreal_realₓ'. -/
 @[measurability]
 theorem measurable_coe_nnreal_real : Measurable (coe : ℝ≥0 → ℝ) :=
   NNReal.continuous_coe.Measurable
 #align measurable_coe_nnreal_real measurable_coe_nnreal_real
 
-/- warning: measurable.coe_nnreal_real -> Measurable.coe_nnreal_real is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal}, (Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace f) -> (Measurable.{u1, 0} α Real _inst_1 Real.measurableSpace (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (f x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal}, (Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace f) -> (Measurable.{u1, 0} α Real _inst_1 Real.measurableSpace (fun (x : α) => NNReal.toReal (f x)))
-Case conversion may be inaccurate. Consider using '#align measurable.coe_nnreal_real Measurable.coe_nnreal_realₓ'. -/
 @[measurability]
 theorem Measurable.coe_nnreal_real {f : α → ℝ≥0} (hf : Measurable f) :
     Measurable fun x => (f x : ℝ) :=
   measurable_coe_nnreal_real.comp hf
 #align measurable.coe_nnreal_real Measurable.coe_nnreal_real
 
-/- warning: ae_measurable.coe_nnreal_real -> AEMeasurable.coe_nnreal_real is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal} {μ : MeasureTheory.Measure.{u1} α _inst_1}, (AEMeasurable.{u1, 0} α NNReal NNReal.measurableSpace _inst_1 f μ) -> (AEMeasurable.{u1, 0} α Real Real.measurableSpace _inst_1 (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (f x)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal} {μ : MeasureTheory.Measure.{u1} α _inst_1}, (AEMeasurable.{u1, 0} α NNReal NNReal.measurableSpace _inst_1 f μ) -> (AEMeasurable.{u1, 0} α Real Real.measurableSpace _inst_1 (fun (x : α) => NNReal.toReal (f x)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable.coe_nnreal_real AEMeasurable.coe_nnreal_realₓ'. -/
 @[measurability]
 theorem AEMeasurable.coe_nnreal_real {f : α → ℝ≥0} {μ : Measure α} (hf : AEMeasurable f μ) :
     AEMeasurable (fun x => (f x : ℝ)) μ :=
@@ -2610,36 +2067,18 @@ theorem Measurable.ennreal_ofReal {f : α → ℝ} (hf : Measurable f) :
 #align measurable.ennreal_of_real Measurable.ennreal_ofReal
 -/
 
-/- warning: measurable_coe_nnreal_real_iff -> measurable_coe_nnreal_real_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal}, Iff (Measurable.{u1, 0} α Real _inst_1 Real.measurableSpace (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (f x))) (Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace f)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal}, Iff (Measurable.{u1, 0} α Real _inst_1 Real.measurableSpace (fun (x : α) => NNReal.toReal (f x))) (Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace f)
-Case conversion may be inaccurate. Consider using '#align measurable_coe_nnreal_real_iff measurable_coe_nnreal_real_iffₓ'. -/
 @[simp, norm_cast]
 theorem measurable_coe_nnreal_real_iff {f : α → ℝ≥0} :
     Measurable (fun x => f x : α → ℝ) ↔ Measurable f :=
   ⟨fun h => by simpa only [Real.toNNReal_coe] using h.real_to_nnreal, Measurable.coe_nnreal_real⟩
 #align measurable_coe_nnreal_real_iff measurable_coe_nnreal_real_iff
 
-/- warning: ae_measurable_coe_nnreal_real_iff -> aEMeasurable_coe_nnreal_real_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal} {μ : MeasureTheory.Measure.{u1} α _inst_1}, Iff (AEMeasurable.{u1, 0} α Real Real.measurableSpace _inst_1 (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (f x)) μ) (AEMeasurable.{u1, 0} α NNReal NNReal.measurableSpace _inst_1 f μ)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> NNReal} {μ : MeasureTheory.Measure.{u1} α _inst_1}, Iff (AEMeasurable.{u1, 0} α Real Real.measurableSpace _inst_1 (fun (x : α) => NNReal.toReal (f x)) μ) (AEMeasurable.{u1, 0} α NNReal NNReal.measurableSpace _inst_1 f μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable_coe_nnreal_real_iff aEMeasurable_coe_nnreal_real_iffₓ'. -/
 @[simp, norm_cast]
 theorem aEMeasurable_coe_nnreal_real_iff {f : α → ℝ≥0} {μ : Measure α} :
     AEMeasurable (fun x => f x : α → ℝ) μ ↔ AEMeasurable f μ :=
   ⟨fun h => by simpa only [Real.toNNReal_coe] using h.real_to_nnreal, AEMeasurable.coe_nnreal_real⟩
 #align ae_measurable_coe_nnreal_real_iff aEMeasurable_coe_nnreal_real_iff
 
-/- warning: measurable_equiv.ennreal_equiv_nnreal -> MeasurableEquiv.ennrealEquivNNReal is a dubious translation:
-lean 3 declaration is
-  MeasurableEquiv.{0, 0} (coeSort.{1, 2} (Set.{0} ENNReal) Type (Set.hasCoeToSort.{0} ENNReal) (setOf.{0} ENNReal (fun (r : ENNReal) => Ne.{1} ENNReal r (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))))) NNReal (Subtype.instMeasurableSpace.{0} ENNReal (fun (x : ENNReal) => Membership.Mem.{0, 0} ENNReal (Set.{0} ENNReal) (Set.hasMem.{0} ENNReal) x (setOf.{0} ENNReal (fun (r : ENNReal) => Ne.{1} ENNReal r (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))))) ENNReal.measurableSpace) NNReal.measurableSpace
-but is expected to have type
-  MeasurableEquiv.{0, 0} (Set.Elem.{0} ENNReal (setOf.{0} ENNReal (fun (r : ENNReal) => Ne.{1} ENNReal r (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))) NNReal (Subtype.instMeasurableSpace.{0} ENNReal (fun (x : ENNReal) => Membership.mem.{0, 0} ENNReal (Set.{0} ENNReal) (Set.instMembershipSet.{0} ENNReal) x (setOf.{0} ENNReal (fun (r : ENNReal) => Ne.{1} ENNReal r (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))) ENNReal.measurableSpace) NNReal.measurableSpace
-Case conversion may be inaccurate. Consider using '#align measurable_equiv.ennreal_equiv_nnreal MeasurableEquiv.ennrealEquivNNRealₓ'. -/
 /-- The set of finite `ℝ≥0∞` numbers is `measurable_equiv` to `ℝ≥0`. -/
 def MeasurableEquiv.ennrealEquivNNReal : { r : ℝ≥0∞ | r ≠ ∞ } ≃ᵐ ℝ≥0 :=
   ENNReal.neTopHomeomorphNNReal.toMeasurableEquiv
@@ -2669,12 +2108,6 @@ def ennrealEquivSum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0 Unit :=
 
 open Function (uncurry)
 
-/- warning: ennreal.measurable_of_measurable_nnreal_prod -> ENNReal.measurable_of_measurable_nnreal_prod is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {γ : Type.{u2}} [_inst_2 : MeasurableSpace.{u1} β] [_inst_3 : MeasurableSpace.{u2} γ] {f : (Prod.{0, u1} ENNReal β) -> γ}, (Measurable.{u1, u2} (Prod.{0, u1} NNReal β) γ (Prod.instMeasurableSpace.{0, u1} NNReal β NNReal.measurableSpace _inst_2) _inst_3 (fun (p : Prod.{0, u1} NNReal β) => f (Prod.mk.{0, u1} ENNReal β ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (Prod.fst.{0, u1} NNReal β p)) (Prod.snd.{0, u1} NNReal β p)))) -> (Measurable.{u1, u2} β γ _inst_2 _inst_3 (fun (x : β) => f (Prod.mk.{0, u1} ENNReal β (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) x))) -> (Measurable.{u1, u2} (Prod.{0, u1} ENNReal β) γ (Prod.instMeasurableSpace.{0, u1} ENNReal β ENNReal.measurableSpace _inst_2) _inst_3 f)
-but is expected to have type
-  forall {β : Type.{u2}} {γ : Type.{u1}} [_inst_2 : MeasurableSpace.{u2} β] [_inst_3 : MeasurableSpace.{u1} γ] {f : (Prod.{0, u2} ENNReal β) -> γ}, (Measurable.{u2, u1} (Prod.{0, u2} NNReal β) γ (Prod.instMeasurableSpace.{0, u2} NNReal β NNReal.measurableSpace _inst_2) _inst_3 (fun (p : Prod.{0, u2} NNReal β) => f (Prod.mk.{0, u2} ENNReal β (ENNReal.some (Prod.fst.{0, u2} NNReal β p)) (Prod.snd.{0, u2} NNReal β p)))) -> (Measurable.{u2, u1} β γ _inst_2 _inst_3 (fun (x : β) => f (Prod.mk.{0, u2} ENNReal β (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) x))) -> (Measurable.{u2, u1} (Prod.{0, u2} ENNReal β) γ (Prod.instMeasurableSpace.{0, u2} ENNReal β ENNReal.measurableSpace _inst_2) _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align ennreal.measurable_of_measurable_nnreal_prod ENNReal.measurable_of_measurable_nnreal_prodₓ'. -/
 theorem measurable_of_measurable_nnreal_prod [MeasurableSpace β] [MeasurableSpace γ]
     {f : ℝ≥0∞ × β → γ} (H₁ : Measurable fun p : ℝ≥0 × β => f (p.1, p.2))
     (H₂ : Measurable fun x => f (∞, x)) : Measurable f :=
@@ -2684,12 +2117,6 @@ theorem measurable_of_measurable_nnreal_prod [MeasurableSpace β] [MeasurableSpa
   e.symm.measurable_comp_iff.1 <| measurable_sum H₁ (H₂.comp measurable_id.snd)
 #align ennreal.measurable_of_measurable_nnreal_prod ENNReal.measurable_of_measurable_nnreal_prod
 
-/- warning: ennreal.measurable_of_measurable_nnreal_nnreal -> ENNReal.measurable_of_measurable_nnreal_nnreal is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : MeasurableSpace.{u1} β] {f : (Prod.{0, 0} ENNReal ENNReal) -> β}, (Measurable.{0, u1} (Prod.{0, 0} NNReal NNReal) β (Prod.instMeasurableSpace.{0, 0} NNReal NNReal NNReal.measurableSpace NNReal.measurableSpace) _inst_2 (fun (p : Prod.{0, 0} NNReal NNReal) => f (Prod.mk.{0, 0} ENNReal ENNReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (Prod.fst.{0, 0} NNReal NNReal p)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (Prod.snd.{0, 0} NNReal NNReal p))))) -> (Measurable.{0, u1} NNReal β NNReal.measurableSpace _inst_2 (fun (r : NNReal) => f (Prod.mk.{0, 0} ENNReal ENNReal (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) r)))) -> (Measurable.{0, u1} NNReal β NNReal.measurableSpace _inst_2 (fun (r : NNReal) => f (Prod.mk.{0, 0} ENNReal ENNReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) r) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))))) -> (Measurable.{0, u1} (Prod.{0, 0} ENNReal ENNReal) β (Prod.instMeasurableSpace.{0, 0} ENNReal ENNReal ENNReal.measurableSpace ENNReal.measurableSpace) _inst_2 f)
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : MeasurableSpace.{u1} β] {f : (Prod.{0, 0} ENNReal ENNReal) -> β}, (Measurable.{0, u1} (Prod.{0, 0} NNReal NNReal) β (Prod.instMeasurableSpace.{0, 0} NNReal NNReal NNReal.measurableSpace NNReal.measurableSpace) _inst_2 (fun (p : Prod.{0, 0} NNReal NNReal) => f (Prod.mk.{0, 0} ENNReal ENNReal (ENNReal.some (Prod.fst.{0, 0} NNReal NNReal p)) (ENNReal.some (Prod.snd.{0, 0} NNReal NNReal p))))) -> (Measurable.{0, u1} NNReal β NNReal.measurableSpace _inst_2 (fun (r : NNReal) => f (Prod.mk.{0, 0} ENNReal ENNReal (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) (ENNReal.some r)))) -> (Measurable.{0, u1} NNReal β NNReal.measurableSpace _inst_2 (fun (r : NNReal) => f (Prod.mk.{0, 0} ENNReal ENNReal (ENNReal.some r) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))) -> (Measurable.{0, u1} (Prod.{0, 0} ENNReal ENNReal) β (Prod.instMeasurableSpace.{0, 0} ENNReal ENNReal ENNReal.measurableSpace ENNReal.measurableSpace) _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align ennreal.measurable_of_measurable_nnreal_nnreal ENNReal.measurable_of_measurable_nnreal_nnrealₓ'. -/
 theorem measurable_of_measurable_nnreal_nnreal [MeasurableSpace β] {f : ℝ≥0∞ × ℝ≥0∞ → β}
     (h₁ : Measurable fun p : ℝ≥0 × ℝ≥0 => f (p.1, p.2)) (h₂ : Measurable fun r : ℝ≥0 => f (∞, r))
     (h₃ : Measurable fun r : ℝ≥0 => f (r, ∞)) : Measurable f :=
@@ -2786,12 +2213,6 @@ theorem AEMeasurable.ennreal_toReal {f : α → ℝ≥0∞} {μ : Measure α} (h
 #align ae_measurable.ennreal_to_real AEMeasurable.ennreal_toReal
 -/
 
-/- warning: measurable.ennreal_tsum -> Measurable.ennreal_tsum is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> ENNReal}, (forall (i : ι), Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (f i)) -> (Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (fun (x : α) => tsum.{0, u2} ENNReal (OrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))) ENNReal.topologicalSpace ι (fun (i : ι) => f i x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> ENNReal}, (forall (i : ι), Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (f i)) -> (Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (fun (x : α) => tsum.{0, u2} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal ι (fun (i : ι) => f i x)))
-Case conversion may be inaccurate. Consider using '#align measurable.ennreal_tsum Measurable.ennreal_tsumₓ'. -/
 /-- note: `ℝ≥0∞` can probably be generalized in a future version of this lemma. -/
 @[measurability]
 theorem Measurable.ennreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0∞} (h : ∀ i, Measurable (f i)) :
@@ -2801,12 +2222,6 @@ theorem Measurable.ennreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0�
   exact fun s => s.measurable_sum fun i _ => h i
 #align measurable.ennreal_tsum Measurable.ennreal_tsum
 
-/- warning: measurable.ennreal_tsum' -> Measurable.ennreal_tsum' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> ENNReal}, (forall (i : ι), Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (f i)) -> (Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (tsum.{u1, u2} (α -> ENNReal) (Pi.addCommMonoid.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => OrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))) (Pi.topologicalSpace.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (a : α) => ENNReal.topologicalSpace)) ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> ENNReal}, (forall (i : ι), Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (f i)) -> (Measurable.{u1, 0} α ENNReal _inst_1 ENNReal.measurableSpace (tsum.{u1, u2} (α -> ENNReal) (Pi.addCommMonoid.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (i : α) => LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) (Pi.topologicalSpace.{u1, 0} α (fun (ᾰ : α) => ENNReal) (fun (a : α) => ENNReal.instTopologicalSpaceENNReal)) ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align measurable.ennreal_tsum' Measurable.ennreal_tsum'ₓ'. -/
 @[measurability]
 theorem Measurable.ennreal_tsum' {ι} [Countable ι] {f : ι → α → ℝ≥0∞} (h : ∀ i, Measurable (f i)) :
     Measurable (∑' i, f i) := by
@@ -2815,12 +2230,6 @@ theorem Measurable.ennreal_tsum' {ι} [Countable ι] {f : ι → α → ℝ≥0�
   exact tsum_apply (Pi.summable.2 fun _ => ENNReal.summable)
 #align measurable.ennreal_tsum' Measurable.ennreal_tsum'
 
-/- warning: measurable.nnreal_tsum -> Measurable.nnreal_tsum is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> NNReal}, (forall (i : ι), Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace (f i)) -> (Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace (fun (x : α) => tsum.{0, u2} NNReal (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)) NNReal.topologicalSpace ι (fun (i : ι) => f i x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> NNReal}, (forall (i : ι), Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace (f i)) -> (Measurable.{u1, 0} α NNReal _inst_1 NNReal.measurableSpace (fun (x : α) => tsum.{0, u2} NNReal (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal instNNRealStrictOrderedSemiring)) NNReal.instTopologicalSpaceNNReal ι (fun (i : ι) => f i x)))
-Case conversion may be inaccurate. Consider using '#align measurable.nnreal_tsum Measurable.nnreal_tsumₓ'. -/
 @[measurability]
 theorem Measurable.nnreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0} (h : ∀ i, Measurable (f i)) :
     Measurable fun x => ∑' i, f i x :=
@@ -2829,12 +2238,6 @@ theorem Measurable.nnreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0} (
   exact (Measurable.ennreal_tsum fun i => (h i).coe_nnreal_ennreal).ennreal_toNNReal
 #align measurable.nnreal_tsum Measurable.nnreal_tsum
 
-/- warning: ae_measurable.ennreal_tsum -> AEMeasurable.ennreal_tsum is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> ENNReal} {μ : MeasureTheory.Measure.{u1} α _inst_1}, (forall (i : ι), AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace _inst_1 (f i) μ) -> (AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace _inst_1 (fun (x : α) => tsum.{0, u2} ENNReal (OrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))) ENNReal.topologicalSpace ι (fun (i : ι) => f i x)) μ)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {f : ι -> α -> ENNReal} {μ : MeasureTheory.Measure.{u1} α _inst_1}, (forall (i : ι), AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace _inst_1 (f i) μ) -> (AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace _inst_1 (fun (x : α) => tsum.{0, u2} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal ι (fun (i : ι) => f i x)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable.ennreal_tsum AEMeasurable.ennreal_tsumₓ'. -/
 @[measurability]
 theorem AEMeasurable.ennreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0∞} {μ : Measure α}
     (h : ∀ i, AEMeasurable (f i) μ) : AEMeasurable (fun x => ∑' i, f i x) μ :=
@@ -2843,12 +2246,6 @@ theorem AEMeasurable.ennreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0
   exact fun s => Finset.aemeasurable_sum s fun i _ => h i
 #align ae_measurable.ennreal_tsum AEMeasurable.ennreal_tsum
 
-/- warning: ae_measurable.nnreal_tsum -> AEMeasurable.nnreal_tsum is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : MeasurableSpace.{u1} α] {ι : Type.{u2}} [_inst_3 : Countable.{succ u2} ι] {f : ι -> α -> NNReal} {μ : MeasureTheory.Measure.{u1} α _inst_2}, (forall (i : ι), AEMeasurable.{u1, 0} α NNReal NNReal.measurableSpace _inst_2 (f i) μ) -> (AEMeasurable.{u1, 0} α NNReal NNReal.measurableSpace _inst_2 (fun (x : α) => tsum.{0, u2} NNReal (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)) NNReal.topologicalSpace ι (fun (i : ι) => f i x)) μ)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_2 : MeasurableSpace.{u2} α] {ι : Type.{u1}} [_inst_3 : Countable.{succ u1} ι] {f : ι -> α -> NNReal} {μ : MeasureTheory.Measure.{u2} α _inst_2}, (forall (i : ι), AEMeasurable.{u2, 0} α NNReal NNReal.measurableSpace _inst_2 (f i) μ) -> (AEMeasurable.{u2, 0} α NNReal NNReal.measurableSpace _inst_2 (fun (x : α) => tsum.{0, u1} NNReal (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal instNNRealStrictOrderedSemiring)) NNReal.instTopologicalSpaceNNReal ι (fun (i : ι) => f i x)) μ)
-Case conversion may be inaccurate. Consider using '#align ae_measurable.nnreal_tsum AEMeasurable.nnreal_tsumₓ'. -/
 @[measurability]
 theorem AEMeasurable.nnreal_tsum {α : Type _} [MeasurableSpace α] {ι : Type _} [Countable ι]
     {f : ι → α → NNReal} {μ : MeasureTheory.Measure α} (h : ∀ i : ι, AEMeasurable (f i) μ) :
@@ -2881,12 +2278,6 @@ theorem AEMeasurable.coe_real_ereal {f : α → ℝ} {μ : Measure α} (hf : AEM
 #align ae_measurable.coe_real_ereal AEMeasurable.coe_real_ereal
 -/
 
-/- warning: measurable_equiv.ereal_equiv_real -> MeasurableEquiv.erealEquivReal is a dubious translation:
-lean 3 declaration is
-  MeasurableEquiv.{0, 0} (coeSort.{1, 2} (Set.{0} EReal) Type (Set.hasCoeToSort.{0} EReal) (HasCompl.compl.{0} (Set.{0} EReal) (BooleanAlgebra.toHasCompl.{0} (Set.{0} EReal) (Set.booleanAlgebra.{0} EReal)) (Insert.insert.{0, 0} EReal (Set.{0} EReal) (Set.hasInsert.{0} EReal) (Bot.bot.{0} EReal EReal.hasBot) (Singleton.singleton.{0, 0} EReal (Set.{0} EReal) (Set.hasSingleton.{0} EReal) (Top.top.{0} EReal EReal.hasTop))))) Real (Subtype.instMeasurableSpace.{0} EReal (fun (x : EReal) => Membership.Mem.{0, 0} EReal (Set.{0} EReal) (Set.hasMem.{0} EReal) x (HasCompl.compl.{0} (Set.{0} EReal) (BooleanAlgebra.toHasCompl.{0} (Set.{0} EReal) (Set.booleanAlgebra.{0} EReal)) (Insert.insert.{0, 0} EReal (Set.{0} EReal) (Set.hasInsert.{0} EReal) (Bot.bot.{0} EReal EReal.hasBot) (Singleton.singleton.{0, 0} EReal (Set.{0} EReal) (Set.hasSingleton.{0} EReal) (Top.top.{0} EReal EReal.hasTop))))) EReal.measurableSpace) Real.measurableSpace
-but is expected to have type
-  MeasurableEquiv.{0, 0} (Set.Elem.{0} EReal (HasCompl.compl.{0} (Set.{0} EReal) (BooleanAlgebra.toHasCompl.{0} (Set.{0} EReal) (Set.instBooleanAlgebraSet.{0} EReal)) (Insert.insert.{0, 0} EReal (Set.{0} EReal) (Set.instInsertSet.{0} EReal) (Bot.bot.{0} EReal instERealBot) (Singleton.singleton.{0, 0} EReal (Set.{0} EReal) (Set.instSingletonSet.{0} EReal) (Top.top.{0} EReal EReal.instTopEReal))))) Real (Subtype.instMeasurableSpace.{0} EReal (fun (x : EReal) => Membership.mem.{0, 0} EReal (Set.{0} EReal) (Set.instMembershipSet.{0} EReal) x (HasCompl.compl.{0} (Set.{0} EReal) (BooleanAlgebra.toHasCompl.{0} (Set.{0} EReal) (Set.instBooleanAlgebraSet.{0} EReal)) (Insert.insert.{0, 0} EReal (Set.{0} EReal) (Set.instInsertSet.{0} EReal) (Bot.bot.{0} EReal instERealBot) (Singleton.singleton.{0, 0} EReal (Set.{0} EReal) (Set.instSingletonSet.{0} EReal) (Top.top.{0} EReal EReal.instTopEReal))))) EReal.measurableSpace) Real.measurableSpace
-Case conversion may be inaccurate. Consider using '#align measurable_equiv.ereal_equiv_real MeasurableEquiv.erealEquivRealₓ'. -/
 /-- The set of finite `ereal` numbers is `measurable_equiv` to `ℝ`. -/
 def MeasurableEquiv.erealEquivReal : ({⊥, ⊤}ᶜ : Set EReal) ≃ᵐ ℝ :=
   EReal.neBotTopHomeomorphReal.toMeasurableEquiv

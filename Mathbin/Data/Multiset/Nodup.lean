@@ -81,12 +81,6 @@ theorem Nodup.not_mem (h : Nodup (a ::ₘ s)) : a ∉ s :=
 #align multiset.nodup.not_mem Multiset.Nodup.not_mem
 -/
 
-/- warning: multiset.nodup_of_le -> Multiset.nodup_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) -> (Multiset.Nodup.{u1} α t) -> (Multiset.Nodup.{u1} α s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) -> (Multiset.Nodup.{u1} α t) -> (Multiset.Nodup.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align multiset.nodup_of_le Multiset.nodup_of_leₓ'. -/
 theorem nodup_of_le {s t : Multiset α} (h : s ≤ t) : Nodup t → Nodup s :=
   leInductionOn h fun l₁ l₂ => Nodup.sublist
 #align multiset.nodup_of_le Multiset.nodup_of_le
@@ -97,12 +91,6 @@ theorem not_nodup_pair : ∀ a : α, ¬Nodup (a ::ₘ a ::ₘ 0) :=
 #align multiset.not_nodup_pair Multiset.not_nodup_pair
 -/
 
-/- warning: multiset.nodup_iff_le -> Multiset.nodup_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α}, Iff (Multiset.Nodup.{u1} α s) (forall (a : α), Not (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α)))))) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Multiset.{u1} α}, Iff (Multiset.Nodup.{u1} α s) (forall (a : α), Not (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α))))) s))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup_iff_le Multiset.nodup_iff_leₓ'. -/
 theorem nodup_iff_le {s : Multiset α} : Nodup s ↔ ∀ a : α, ¬a ::ₘ a ::ₘ 0 ≤ s :=
   Quot.inductionOn s fun l =>
     nodup_iff_sublist.trans <| forall_congr' fun a => (@replicate_le_coe _ a 2 _).symm.Not
@@ -185,44 +173,20 @@ theorem Nodup.of_map (f : α → β) : Nodup (map f s) → Nodup s :=
 #align multiset.nodup.of_map Multiset.Nodup.of_map
 -/
 
-/- warning: multiset.nodup.map_on -> Multiset.Nodup.map_on is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Multiset.{u1} α} {f : α -> β}, (forall (x : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) y s) -> (Eq.{succ u2} β (f x) (f y)) -> (Eq.{succ u1} α x y))) -> (Multiset.Nodup.{u1} α s) -> (Multiset.Nodup.{u2} β (Multiset.map.{u1, u2} α β f s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Multiset.{u2} α} {f : α -> β}, (forall (x : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) y s) -> (Eq.{succ u1} β (f x) (f y)) -> (Eq.{succ u2} α x y))) -> (Multiset.Nodup.{u2} α s) -> (Multiset.Nodup.{u1} β (Multiset.map.{u2, u1} α β f s))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.map_on Multiset.Nodup.map_onₓ'. -/
 theorem Nodup.map_on {f : α → β} :
     (∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y) → Nodup s → Nodup (map f s) :=
   Quot.inductionOn s fun l => Nodup.map_on
 #align multiset.nodup.map_on Multiset.Nodup.map_on
 
-/- warning: multiset.nodup.map -> Multiset.Nodup.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Multiset.{u1} α}, (Function.Injective.{succ u1, succ u2} α β f) -> (Multiset.Nodup.{u1} α s) -> (Multiset.Nodup.{u2} β (Multiset.map.{u1, u2} α β f s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Multiset.{u2} α}, (Function.Injective.{succ u2, succ u1} α β f) -> (Multiset.Nodup.{u2} α s) -> (Multiset.Nodup.{u1} β (Multiset.map.{u2, u1} α β f s))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.map Multiset.Nodup.mapₓ'. -/
 theorem Nodup.map {f : α → β} {s : Multiset α} (hf : Injective f) : Nodup s → Nodup (map f s) :=
   Nodup.map_on fun x _ y _ h => hf h
 #align multiset.nodup.map Multiset.Nodup.map
 
-/- warning: multiset.inj_on_of_nodup_map -> Multiset.inj_on_of_nodup_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Multiset.{u1} α}, (Multiset.Nodup.{u2} β (Multiset.map.{u1, u2} α β f s)) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) y s) -> (Eq.{succ u2} β (f x) (f y)) -> (Eq.{succ u1} α x y)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Multiset.{u2} α}, (Multiset.Nodup.{u1} β (Multiset.map.{u2, u1} α β f s)) -> (forall (x : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) y s) -> (Eq.{succ u1} β (f x) (f y)) -> (Eq.{succ u2} α x y)))
-Case conversion may be inaccurate. Consider using '#align multiset.inj_on_of_nodup_map Multiset.inj_on_of_nodup_mapₓ'. -/
 theorem inj_on_of_nodup_map {f : α → β} {s : Multiset α} :
     Nodup (map f s) → ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   Quot.inductionOn s fun l => inj_on_of_nodup_map
 #align multiset.inj_on_of_nodup_map Multiset.inj_on_of_nodup_map
 
-/- warning: multiset.nodup_map_iff_inj_on -> Multiset.nodup_map_iff_inj_on is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (Multiset.Nodup.{u2} β (Multiset.map.{u1, u2} α β f s)) (forall (x : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) y s) -> (Eq.{succ u2} β (f x) (f y)) -> (Eq.{succ u1} α x y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Multiset.{u2} α}, (Multiset.Nodup.{u2} α s) -> (Iff (Multiset.Nodup.{u1} β (Multiset.map.{u2, u1} α β f s)) (forall (x : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) y s) -> (Eq.{succ u1} β (f x) (f y)) -> (Eq.{succ u2} α x y))))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup_map_iff_inj_on Multiset.nodup_map_iff_inj_onₓ'. -/
 theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : Nodup s) :
     Nodup (map f s) ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => d.map_onₓ h⟩
@@ -241,12 +205,6 @@ theorem nodup_attach {s : Multiset α} : Nodup (attach s) ↔ Nodup s :=
 #align multiset.nodup_attach Multiset.nodup_attach
 -/
 
-/- warning: multiset.nodup.pmap -> Multiset.Nodup.pmap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {s : Multiset.{u1} α} {H : forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u2} β (f a ha) (f b hb)) -> (Eq.{succ u1} α a b)) -> (Multiset.Nodup.{u1} α s) -> (Multiset.Nodup.{u2} β (Multiset.pmap.{u1, u2} α β (fun (a : α) => p a) f s H))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {s : Multiset.{u2} α} {H : forall (a : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a s) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u1} β (f a ha) (f b hb)) -> (Eq.{succ u2} α a b)) -> (Multiset.Nodup.{u2} α s) -> (Multiset.Nodup.{u1} β (Multiset.pmap.{u2, u1} α β (fun (a : α) => p a) f s H))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.pmap Multiset.Nodup.pmapₓ'. -/
 theorem Nodup.pmap {p : α → Prop} {f : ∀ a, p a → β} {s : Multiset α} {H}
     (hf : ∀ a ha b hb, f a ha = f b hb → a = b) : Nodup s → Nodup (pmap f s H) :=
   Quot.inductionOn s (fun l H => Nodup.pmap hf) H
@@ -335,12 +293,6 @@ theorem nodup_union [DecidableEq α] {s t : Multiset α} : Nodup (s ∪ t) ↔ N
 #align multiset.nodup_union Multiset.nodup_union
 -/
 
-/- warning: multiset.nodup_bind -> Multiset.nodup_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Multiset.{u1} α} {t : α -> (Multiset.{u2} β)}, Iff (Multiset.Nodup.{u2} β (Multiset.bind.{u1, u2} α β s t)) (And (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (Multiset.Nodup.{u2} β (t a))) (Multiset.Pairwise.{u1} α (fun (a : α) (b : α) => Multiset.Disjoint.{u2} β (t a) (t b)) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Multiset.{u2} α} {t : α -> (Multiset.{u1} β)}, Iff (Multiset.Nodup.{u1} β (Multiset.bind.{u2, u1} α β s t)) (And (forall (a : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a s) -> (Multiset.Nodup.{u1} β (t a))) (Multiset.Pairwise.{u2} α (fun (a : α) (b : α) => Multiset.Disjoint.{u1} β (t a) (t b)) s))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup_bind Multiset.nodup_bindₓ'. -/
 @[simp]
 theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :
     Nodup (bind s t) ↔ (∀ a ∈ s, Nodup (t a)) ∧ s.Pairwise fun a b => Disjoint (t a) (t b) :=
@@ -357,22 +309,10 @@ theorem Nodup.ext {s t : Multiset α} : Nodup s → Nodup t → (s = t ↔ ∀ a
 #align multiset.nodup.ext Multiset.Nodup.ext
 -/
 
-/- warning: multiset.le_iff_subset -> Multiset.le_iff_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align multiset.le_iff_subset Multiset.le_iff_subsetₓ'. -/
 theorem le_iff_subset {s t : Multiset α} : Nodup s → (s ≤ t ↔ s ⊆ t) :=
   Quotient.induction_on₂ s t fun l₁ l₂ d => ⟨subset_of_le, d.Subperm⟩
 #align multiset.le_iff_subset Multiset.le_iff_subset
 
-/- warning: multiset.range_le -> Multiset.range_le is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (LE.le.{0} (Multiset.{0} Nat) (Preorder.toHasLe.{0} (Multiset.{0} Nat) (PartialOrder.toPreorder.{0} (Multiset.{0} Nat) (Multiset.partialOrder.{0} Nat))) (Multiset.range m) (Multiset.range n)) (LE.le.{0} Nat Nat.hasLe m n)
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (LE.le.{0} (Multiset.{0} Nat) (Preorder.toLE.{0} (Multiset.{0} Nat) (PartialOrder.toPreorder.{0} (Multiset.{0} Nat) (Multiset.instPartialOrderMultiset.{0} Nat))) (Multiset.range m) (Multiset.range n)) (LE.le.{0} Nat instLENat m n)
-Case conversion may be inaccurate. Consider using '#align multiset.range_le Multiset.range_leₓ'. -/
 theorem range_le {m n : ℕ} : range m ≤ range n ↔ m ≤ n :=
   (le_iff_subset (nodup_range _)).trans range_subset
 #align multiset.range_le Multiset.range_le
@@ -388,12 +328,6 @@ theorem mem_sub_of_nodup [DecidableEq α] {a : α} {s t : Multiset α} (d : Nodu
 #align multiset.mem_sub_of_nodup Multiset.mem_sub_of_nodup
 -/
 
-/- warning: multiset.map_eq_map_of_bij_of_nodup -> Multiset.map_eq_map_of_bij_of_nodup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> γ) (g : β -> γ) {s : Multiset.{u1} α} {t : Multiset.{u2} β}, (Multiset.Nodup.{u1} α s) -> (Multiset.Nodup.{u2} β t) -> (forall (i : forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> β), (forall (a : α) (ha : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s), Membership.Mem.{u2, u2} β (Multiset.{u2} β) (Multiset.hasMem.{u2} β) (i a ha) t) -> (forall (a : α) (ha : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s), Eq.{succ u3} γ (f a) (g (i a ha))) -> (forall (a₁ : α) (a₂ : α) (ha₁ : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a₁ s) (ha₂ : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a₂ s), (Eq.{succ u2} β (i a₁ ha₁) (i a₂ ha₂)) -> (Eq.{succ u1} α a₁ a₂)) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Multiset.{u2} β) (Multiset.hasMem.{u2} β) b t) -> (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) (fun (ha : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) => Eq.{succ u2} β b (i a ha))))) -> (Eq.{succ u3} (Multiset.{u3} γ) (Multiset.map.{u1, u3} α γ f s) (Multiset.map.{u2, u3} β γ g t)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> γ) (g : β -> γ) {s : Multiset.{u3} α} {t : Multiset.{u2} β}, (Multiset.Nodup.{u3} α s) -> (Multiset.Nodup.{u2} β t) -> (forall (i : forall (a : α), (Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a s) -> β), (forall (a : α) (ha : Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a s), Membership.mem.{u2, u2} β (Multiset.{u2} β) (Multiset.instMembershipMultiset.{u2} β) (i a ha) t) -> (forall (a : α) (ha : Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a s), Eq.{succ u1} γ (f a) (g (i a ha))) -> (forall (a₁ : α) (a₂ : α) (ha₁ : Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a₁ s) (ha₂ : Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a₂ s), (Eq.{succ u2} β (i a₁ ha₁) (i a₂ ha₂)) -> (Eq.{succ u3} α a₁ a₂)) -> (forall (b : β), (Membership.mem.{u2, u2} β (Multiset.{u2} β) (Multiset.instMembershipMultiset.{u2} β) b t) -> (Exists.{succ u3} α (fun (a : α) => Exists.{0} (Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a s) (fun (ha : Membership.mem.{u3, u3} α (Multiset.{u3} α) (Multiset.instMembershipMultiset.{u3} α) a s) => Eq.{succ u2} β b (i a ha))))) -> (Eq.{succ u1} (Multiset.{u1} γ) (Multiset.map.{u3, u1} α γ f s) (Multiset.map.{u2, u1} β γ g t)))
-Case conversion may be inaccurate. Consider using '#align multiset.map_eq_map_of_bij_of_nodup Multiset.map_eq_map_of_bij_of_nodupₓ'. -/
 theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset α} {t : Multiset β}
     (hs : s.Nodup) (ht : t.Nodup) (i : ∀ a ∈ s, β) (hi : ∀ a ha, i a ha ∈ t)
     (h : ∀ a ha, f a = g (i a ha)) (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂)

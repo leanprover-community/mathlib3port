@@ -109,12 +109,6 @@ def swap : TwoP ⥤ TwoP where
 #align Twop.swap TwoP.swap
 -/
 
-/- warning: Twop.swap_equiv -> TwoP.swapEquiv is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.{u1} TwoP.largeCategory.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} TwoP.{u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.largeCategory.{u1}
-Case conversion may be inaccurate. Consider using '#align Twop.swap_equiv TwoP.swapEquivₓ'. -/
 /-- The equivalence between `Twop` and itself induced by `prod.swap` both ways. -/
 @[simps]
 def swapEquiv : TwoP ≌ TwoP :=
@@ -131,12 +125,6 @@ def swapEquiv : TwoP ≌ TwoP :=
       fun X Y f => rfl)
 #align Twop.swap_equiv TwoP.swapEquiv
 
-/- warning: Twop.swap_equiv_symm -> TwoP.swapEquiv_symm is a dubious translation:
-lean 3 declaration is
-  Eq.{succ (succ u1)} (CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.{u1} TwoP.largeCategory.{u1}) (CategoryTheory.Equivalence.symm.{u1, u1, succ u1, succ u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.swapEquiv.{u1}) TwoP.swapEquiv.{u1}
-but is expected to have type
-  Eq.{succ (succ u1)} (CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} TwoP.{u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.largeCategory.{u1}) (CategoryTheory.Equivalence.symm.{u1, u1, succ u1, succ u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.{u1} TwoP.largeCategory.{u1} TwoP.swapEquiv.{u1}) TwoP.swapEquiv.{u1}
-Case conversion may be inaccurate. Consider using '#align Twop.swap_equiv_symm TwoP.swapEquiv_symmₓ'. -/
 @[simp]
 theorem swapEquiv_symm : swapEquiv.symm = swapEquiv :=
   rfl

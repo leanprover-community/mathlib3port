@@ -68,12 +68,6 @@ instance : CoeTC V (WeaklyConnectedComponent V) :=
 instance [Inhabited V] : Inhabited (WeaklyConnectedComponent V) :=
   ⟨show V from default⟩
 
-/- warning: quiver.weakly_connected_component.eq -> Quiver.WeaklyConnectedComponent.eq is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u2}} [_inst_1 : Quiver.{succ u1, u2} V] (a : V) (b : V), Iff (Eq.{succ u2} (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) V (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) (HasLiftT.mk.{succ u2, succ u2} V (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) (CoeTCₓ.coe.{succ u2, succ u2} V (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) (Quiver.WeaklyConnectedComponent.hasCoeT.{u1, u2} V _inst_1))) a) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) V (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) (HasLiftT.mk.{succ u2, succ u2} V (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) (CoeTCₓ.coe.{succ u2, succ u2} V (Quiver.WeaklyConnectedComponent.{u1, u2} V _inst_1) (Quiver.WeaklyConnectedComponent.hasCoeT.{u1, u2} V _inst_1))) b)) (Nonempty.{max (succ u2) (succ u1)} (Quiver.Path.{succ u1, u2} (Quiver.Symmetrify.{u2} V) (Quiver.symmetrifyQuiver.{u2, u1} V _inst_1) a b))
-but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} V] (a : V) (b : V), Iff (Eq.{succ u1} (Quiver.WeaklyConnectedComponent.{u2, u1} V _inst_1) (Quiver.WeaklyConnectedComponent.mk.{u2, u1} V _inst_1 a) (Quiver.WeaklyConnectedComponent.mk.{u2, u1} V _inst_1 b)) (Nonempty.{max (succ u1) (succ u2)} (Quiver.Path.{succ u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align quiver.weakly_connected_component.eq Quiver.WeaklyConnectedComponent.eqₓ'. -/
 protected theorem eq (a b : V) :
     (a : WeaklyConnectedComponent V) = b ↔ Nonempty (@Path (Symmetrify V) _ a b) :=
   Quotient.eq''

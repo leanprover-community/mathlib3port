@@ -94,12 +94,6 @@ section Defs
 
 variable (A : ι → Type _)
 
-/- warning: direct_sum.gnon_unital_non_assoc_semiring -> DirectSum.GNonUnitalNonAssocSemiring is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} ι] (A : ι -> Type.{u2}) [_inst_2 : Add.{u1} ι] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (A i)], Sort.{max (succ u1) (succ u2)}
-but is expected to have type
-  forall {ι : Type.{u1}} (_inst_1 : ι -> Type.{u2}) [A : Add.{u1} ι] [_inst_2 : forall (i : ι), AddCommMonoid.{u2} (_inst_1 i)], Sort.{max (succ u1) (succ u2)}
-Case conversion may be inaccurate. Consider using '#align direct_sum.gnon_unital_non_assoc_semiring DirectSum.GNonUnitalNonAssocSemiringₓ'. -/
 /-- A graded version of `non_unital_non_assoc_semiring`. -/
 class GNonUnitalNonAssocSemiring [Add ι] [∀ i, AddCommMonoid (A i)] extends
   GradedMonoid.GMul A where
@@ -115,12 +109,6 @@ section Defs
 
 variable (A : ι → Type _)
 
-/- warning: direct_sum.gsemiring -> DirectSum.GSemiring is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} ι] (A : ι -> Type.{u2}) [_inst_2 : AddMonoid.{u1} ι] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (A i)], Sort.{max (succ u1) (succ u2)}
-but is expected to have type
-  forall {ι : Type.{u1}} (_inst_1 : ι -> Type.{u2}) [A : AddMonoid.{u1} ι] [_inst_2 : forall (i : ι), AddCommMonoid.{u2} (_inst_1 i)], Sort.{max (succ u1) (succ u2)}
-Case conversion may be inaccurate. Consider using '#align direct_sum.gsemiring DirectSum.GSemiringₓ'. -/
 /-- A graded version of `semiring`. -/
 class GSemiring [AddMonoid ι] [∀ i, AddCommMonoid (A i)] extends GNonUnitalNonAssocSemiring A,
   GradedMonoid.GMonoid A where
@@ -129,23 +117,11 @@ class GSemiring [AddMonoid ι] [∀ i, AddCommMonoid (A i)] extends GNonUnitalNo
   natCast_succ : ∀ n : ℕ, nat_cast (n + 1) = nat_cast n + GradedMonoid.GOne.one
 #align direct_sum.gsemiring DirectSum.GSemiring
 
-/- warning: direct_sum.gcomm_semiring -> DirectSum.GCommSemiring is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} ι] (A : ι -> Type.{u2}) [_inst_2 : AddCommMonoid.{u1} ι] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (A i)], Sort.{max (succ u1) (succ u2)}
-but is expected to have type
-  forall {ι : Type.{u1}} (_inst_1 : ι -> Type.{u2}) [A : AddCommMonoid.{u1} ι] [_inst_2 : forall (i : ι), AddCommMonoid.{u2} (_inst_1 i)], Sort.{max (succ u1) (succ u2)}
-Case conversion may be inaccurate. Consider using '#align direct_sum.gcomm_semiring DirectSum.GCommSemiringₓ'. -/
 /-- A graded version of `comm_semiring`. -/
 class GCommSemiring [AddCommMonoid ι] [∀ i, AddCommMonoid (A i)] extends GSemiring A,
   GradedMonoid.GCommMonoid A
 #align direct_sum.gcomm_semiring DirectSum.GCommSemiring
 
-/- warning: direct_sum.gring -> DirectSum.GRing is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} ι] (A : ι -> Type.{u2}) [_inst_2 : AddMonoid.{u1} ι] [_inst_3 : forall (i : ι), AddCommGroup.{u2} (A i)], Sort.{max (succ u1) (succ u2)}
-but is expected to have type
-  forall {ι : Type.{u1}} (_inst_1 : ι -> Type.{u2}) [A : AddMonoid.{u1} ι] [_inst_2 : forall (i : ι), AddCommGroup.{u2} (_inst_1 i)], Sort.{max (succ u1) (succ u2)}
-Case conversion may be inaccurate. Consider using '#align direct_sum.gring DirectSum.GRingₓ'. -/
 /-- A graded version of `ring`. -/
 class GRing [AddMonoid ι] [∀ i, AddCommGroup (A i)] extends GSemiring A where
   intCast : ℤ → A 0
@@ -153,21 +129,12 @@ class GRing [AddMonoid ι] [∀ i, AddCommGroup (A i)] extends GSemiring A where
   intCast_negSucc : ∀ n : ℕ, int_cast (-(n + 1 : ℕ)) = -nat_cast (n + 1 : ℕ)
 #align direct_sum.gring DirectSum.GRing
 
-/- warning: direct_sum.gcomm_ring -> DirectSum.GCommRing is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} ι] (A : ι -> Type.{u2}) [_inst_2 : AddCommMonoid.{u1} ι] [_inst_3 : forall (i : ι), AddCommGroup.{u2} (A i)], Sort.{max (succ u1) (succ u2)}
-but is expected to have type
-  forall {ι : Type.{u1}} (_inst_1 : ι -> Type.{u2}) [A : AddCommMonoid.{u1} ι] [_inst_2 : forall (i : ι), AddCommGroup.{u2} (_inst_1 i)], Sort.{max (succ u1) (succ u2)}
-Case conversion may be inaccurate. Consider using '#align direct_sum.gcomm_ring DirectSum.GCommRingₓ'. -/
 /-- A graded version of `comm_ring`. -/
 class GCommRing [AddCommMonoid ι] [∀ i, AddCommGroup (A i)] extends GRing A, GCommSemiring A
 #align direct_sum.gcomm_ring DirectSum.GCommRing
 
 end Defs
 
-/- warning: direct_sum.of_eq_of_graded_monoid_eq -> DirectSum.of_eq_of_gradedMonoid_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_eq_of_graded_monoid_eq DirectSum.of_eq_of_gradedMonoid_eqₓ'. -/
 theorem of_eq_of_gradedMonoid_eq {A : ι → Type _} [∀ i : ι, AddCommMonoid (A i)] {i j : ι} {a : A i}
     {b : A j} (h : GradedMonoid.mk i a = GradedMonoid.mk j b) :
     DirectSum.of A i a = DirectSum.of A j b :=
@@ -193,12 +160,6 @@ variable [Add ι] [∀ i, AddCommMonoid (A i)] [GNonUnitalNonAssocSemiring A]
 
 open AddMonoidHom (flip_apply coe_comp compHom_apply_apply)
 
-/- warning: direct_sum.gmul_hom -> DirectSum.gMulHom is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} ι] (A : ι -> Type.{u2}) [_inst_2 : Add.{u1} ι] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (A i)] [_inst_4 : DirectSum.GNonUnitalNonAssocSemiring.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) A _inst_2 (fun (i : ι) => _inst_3 i)] {i : ι} {j : ι}, AddMonoidHom.{u2, u2} (A i) (AddMonoidHom.{u2, u2} (A j) (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddMonoid.toAddZeroClass.{u2} (A j) (AddCommMonoid.toAddMonoid.{u2} (A j) (_inst_3 j))) (AddMonoid.toAddZeroClass.{u2} (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddCommMonoid.toAddMonoid.{u2} (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (_inst_3 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j))))) (AddMonoid.toAddZeroClass.{u2} (A i) (AddCommMonoid.toAddMonoid.{u2} (A i) (_inst_3 i))) (AddMonoid.toAddZeroClass.{u2} (AddMonoidHom.{u2, u2} (A j) (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddMonoid.toAddZeroClass.{u2} (A j) (AddCommMonoid.toAddMonoid.{u2} (A j) (_inst_3 j))) (AddMonoid.toAddZeroClass.{u2} (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddCommMonoid.toAddMonoid.{u2} (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (_inst_3 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j))))) (AddCommMonoid.toAddMonoid.{u2} (AddMonoidHom.{u2, u2} (A j) (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddMonoid.toAddZeroClass.{u2} (A j) (AddCommMonoid.toAddMonoid.{u2} (A j) (_inst_3 j))) (AddMonoid.toAddZeroClass.{u2} (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddCommMonoid.toAddMonoid.{u2} (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (_inst_3 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j))))) (AddMonoidHom.addCommMonoid.{u2, u2} (A j) (A (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)) (AddMonoid.toAddZeroClass.{u2} (A j) (AddCommMonoid.toAddMonoid.{u2} (A j) (_inst_3 j))) (_inst_3 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι _inst_2) i j)))))
-but is expected to have type
-  forall {ι : Type.{u1}} (_inst_1 : ι -> Type.{u2}) [A : Add.{u1} ι] [_inst_2 : forall (i : ι), AddCommMonoid.{u2} (_inst_1 i)] [_inst_3 : DirectSum.GNonUnitalNonAssocSemiring.{u1, u2} ι _inst_1 A (fun (i : ι) => _inst_2 i)] {_inst_4 : ι} {i : ι}, AddMonoidHom.{u2, u2} (_inst_1 _inst_4) (AddMonoidHom.{u2, u2} (_inst_1 i) (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddMonoid.toAddZeroClass.{u2} (_inst_1 i) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 i) (_inst_2 i))) (AddMonoid.toAddZeroClass.{u2} (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (_inst_2 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i))))) (AddMonoid.toAddZeroClass.{u2} (_inst_1 _inst_4) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 _inst_4) (_inst_2 _inst_4))) (AddMonoid.toAddZeroClass.{u2} (AddMonoidHom.{u2, u2} (_inst_1 i) (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddMonoid.toAddZeroClass.{u2} (_inst_1 i) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 i) (_inst_2 i))) (AddMonoid.toAddZeroClass.{u2} (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (_inst_2 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i))))) (AddCommMonoid.toAddMonoid.{u2} (AddMonoidHom.{u2, u2} (_inst_1 i) (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddMonoid.toAddZeroClass.{u2} (_inst_1 i) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 i) (_inst_2 i))) (AddMonoid.toAddZeroClass.{u2} (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (_inst_2 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i))))) (AddMonoidHom.addCommMonoid.{u2, u2} (_inst_1 i) (_inst_1 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)) (AddMonoid.toAddZeroClass.{u2} (_inst_1 i) (AddCommMonoid.toAddMonoid.{u2} (_inst_1 i) (_inst_2 i))) (_inst_2 (HAdd.hAdd.{u1, u1, u1} ι ι ι (instHAdd.{u1} ι A) _inst_4 i)))))
-Case conversion may be inaccurate. Consider using '#align direct_sum.gmul_hom DirectSum.gMulHomₓ'. -/
 /-- The piecewise multiplication from the `has_mul` instance, as a bundled homomorphism. -/
 @[simps]
 def gMulHom {i j} : A i →+ A j →+ A (i + j)
@@ -233,9 +194,6 @@ instance : NonUnitalNonAssocSemiring (⨁ i, A i) :=
 
 variable {A}
 
-/- warning: direct_sum.mul_hom_of_of -> DirectSum.mulHom_of_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.mul_hom_of_of DirectSum.mulHom_of_ofₓ'. -/
 theorem mulHom_of_of {i j} (a : A i) (b : A j) :
     mulHom A (of _ i a) (of _ j b) = of _ (i + j) (GradedMonoid.GMul.mul a b) :=
   by
@@ -244,9 +202,6 @@ theorem mulHom_of_of {i j} (a : A i) (b : A j) :
     comp_hom_apply_apply, coe_comp, Function.comp_apply, gmul_hom_apply_apply]
 #align direct_sum.mul_hom_of_of DirectSum.mulHom_of_of
 
-/- warning: direct_sum.of_mul_of -> DirectSum.of_mul_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_mul_of DirectSum.of_mul_ofₓ'. -/
 theorem of_mul_of {i j} (a : A i) (b : A j) :
     of _ i a * of _ j b = of _ (i + j) (GradedMonoid.GMul.mul a b) :=
   mulHom_of_of a b
@@ -323,9 +278,6 @@ instance semiring : Semiring (⨁ i, A i) :=
 #align direct_sum.semiring DirectSum.semiring
 -/
 
-/- warning: direct_sum.of_pow -> DirectSum.ofPow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_pow DirectSum.ofPowₓ'. -/
 theorem ofPow {i} (a : A i) (n : ℕ) :
     of _ i a ^ n = of _ (n • i) (GradedMonoid.GMonoid.gnpow _ a) :=
   by
@@ -335,9 +287,6 @@ theorem ofPow {i} (a : A i) (n : ℕ) :
     exact of_eq_of_graded_monoid_eq (pow_succ (GradedMonoid.mk _ a) n).symm
 #align direct_sum.of_pow DirectSum.ofPow
 
-/- warning: direct_sum.of_list_dprod -> DirectSum.ofList_dProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_list_dprod DirectSum.ofList_dProdₓ'. -/
 theorem ofList_dProd {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
     of A _ (l.dProd fι fA) = (l.map fun a => of A (fι a) (fA a)).Prod :=
   by
@@ -348,9 +297,6 @@ theorem ofList_dProd {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)
     rfl
 #align direct_sum.of_list_dprod DirectSum.ofList_dProd
 
-/- warning: direct_sum.list_prod_of_fn_of_eq_dprod -> DirectSum.list_prod_ofFn_of_eq_dProd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.list_prod_of_fn_of_eq_dprod DirectSum.list_prod_ofFn_of_eq_dProdₓ'. -/
 theorem list_prod_ofFn_of_eq_dProd (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A (fι a)) :
     (List.ofFn fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dProd fι fA) := by
   rw [List.ofFn_eq_map, of_list_dprod]
@@ -483,9 +429,6 @@ section One
 
 variable [Zero ι] [GradedMonoid.GOne A] [∀ i, AddCommMonoid (A i)]
 
-/- warning: direct_sum.of_zero_one -> DirectSum.of_zero_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_zero_one DirectSum.of_zero_oneₓ'. -/
 @[simp]
 theorem of_zero_one : of _ 0 (1 : A 0) = 1 :=
   rfl
@@ -497,17 +440,11 @@ section Mul
 
 variable [AddZeroClass ι] [∀ i, AddCommMonoid (A i)] [GNonUnitalNonAssocSemiring A]
 
-/- warning: direct_sum.of_zero_smul -> DirectSum.of_zero_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_zero_smul DirectSum.of_zero_smulₓ'. -/
 @[simp]
 theorem of_zero_smul {i} (a : A 0) (b : A i) : of _ _ (a • b) = of _ _ a * of _ _ b :=
   (of_eq_of_gradedMonoid_eq (GradedMonoid.mk_zero_smul a b)).trans (of_mul_of _ _).symm
 #align direct_sum.of_zero_smul DirectSum.of_zero_smul
 
-/- warning: direct_sum.of_zero_mul -> DirectSum.of_zero_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_zero_mul DirectSum.of_zero_mulₓ'. -/
 @[simp]
 theorem of_zero_mul (a b : A 0) : of _ 0 (a * b) = of _ 0 a * of _ 0 b :=
   of_zero_smul A a b
@@ -534,9 +471,6 @@ section Semiring
 
 variable [∀ i, AddCommMonoid (A i)] [AddMonoid ι] [GSemiring A]
 
-/- warning: direct_sum.of_zero_pow -> DirectSum.of_zero_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_zero_pow DirectSum.of_zero_powₓ'. -/
 @[simp]
 theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of _ 0 (a ^ n) = of _ 0 a ^ n
   | 0 => by rw [pow_zero, pow_zero, DirectSum.of_zero_one]
@@ -546,9 +480,6 @@ theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of _ 0 (a ^ n) = of _ 0 a ^ n
 instance : NatCast (A 0) :=
   ⟨GSemiring.natCast⟩
 
-/- warning: direct_sum.of_nat_cast -> DirectSum.ofNatCast is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_nat_cast DirectSum.ofNatCastₓ'. -/
 @[simp]
 theorem ofNatCast (n : ℕ) : of A 0 n = n :=
   rfl
@@ -625,9 +556,6 @@ variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [GRing A]
 instance : IntCast (A 0) :=
   ⟨GRing.intCast⟩
 
-/- warning: direct_sum.of_int_cast -> DirectSum.ofIntCast is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.of_int_cast DirectSum.ofIntCastₓ'. -/
 @[simp]
 theorem ofIntCast (n : ℤ) : of A 0 n = n :=
   rfl
@@ -679,9 +607,6 @@ variable {R : Type _} [∀ i, AddCommMonoid (A i)] [AddMonoid ι] [GSemiring A] 
 
 variable {A}
 
-/- warning: direct_sum.ring_hom_ext' -> DirectSum.ringHom_ext' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.ring_hom_ext' DirectSum.ringHom_ext'ₓ'. -/
 /-- If two ring homomorphisms from `⨁ i, A i` are equal on each `of A i y`,
 then they are equal.
 
@@ -692,9 +617,6 @@ theorem ringHom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
   RingHom.coe_addMonoidHom_injective <| DirectSum.addHom_ext' h
 #align direct_sum.ring_hom_ext' DirectSum.ringHom_ext'
 
-/- warning: direct_sum.ring_hom_ext -> DirectSum.ringHom_ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.ring_hom_ext DirectSum.ringHom_extₓ'. -/
 /-- Two `ring_hom`s out of a direct sum are equal if they agree on the generators. -/
 theorem ringHom_ext ⦃f g : (⨁ i, A i) →+* R⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
   ringHom_ext' fun i => AddMonoidHom.ext <| h i
@@ -729,18 +651,12 @@ def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GOne.one = 1)
 #align direct_sum.to_semiring DirectSum.toSemiring
 -/
 
-/- warning: direct_sum.to_semiring_of -> DirectSum.toSemiring_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.to_semiring_of DirectSum.toSemiring_ofₓ'. -/
 @[simp]
 theorem toSemiring_of (f : ∀ i, A i →+ R) (hone hmul) (i : ι) (x : A i) :
     toSemiring f hone hmul (of _ i x) = f _ x :=
   toAddMonoid_of f i x
 #align direct_sum.to_semiring_of DirectSum.toSemiring_of
 
-/- warning: direct_sum.to_semiring_coe_add_monoid_hom -> DirectSum.toSemiring_coe_addMonoidHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align direct_sum.to_semiring_coe_add_monoid_hom DirectSum.toSemiring_coe_addMonoidHomₓ'. -/
 @[simp]
 theorem toSemiring_coe_addMonoidHom (f : ∀ i, A i →+ R) (hone hmul) :
     (toSemiring f hone hmul : (⨁ i, A i) →+ R) = toAddMonoid f :=
@@ -790,12 +706,6 @@ section Uniform
 
 variable (ι)
 
-/- warning: non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring -> NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiring is a dubious translation:
-lean 3 declaration is
-  forall (ι : Type.{u1}) [_inst_1 : DecidableEq.{succ u1} ι] {R : Type.{u2}} [_inst_2 : AddMonoid.{u1} ι] [_inst_3 : NonUnitalNonAssocSemiring.{u2} R], DirectSum.GNonUnitalNonAssocSemiring.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => R) (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_2)) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R _inst_3)
-but is expected to have type
-  forall (ι : Type.{u1}) {_inst_1 : Type.{u2}} [R : AddMonoid.{u1} ι] [_inst_2 : NonUnitalNonAssocSemiring.{u2} _inst_1], DirectSum.GNonUnitalNonAssocSemiring.{u1, u2} ι (fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6396 : ι) => _inst_1) (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι R)) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6396 : ι) => _inst_1) i) _inst_2)
-Case conversion may be inaccurate. Consider using '#align non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiringₓ'. -/
 /-- A direct sum of copies of a `semiring` inherits the multiplication structure. -/
 instance NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiring {R : Type _} [AddMonoid ι]
     [NonUnitalNonAssocSemiring R] : DirectSum.GNonUnitalNonAssocSemiring fun i : ι => R :=
@@ -806,12 +716,6 @@ instance NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiring {R : Type
     add_mul := fun i j => add_mul }
 #align non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring NonUnitalNonAssocSemiring.directSumGNonUnitalNonAssocSemiring
 
-/- warning: semiring.direct_sum_gsemiring -> Semiring.directSumGSemiring is a dubious translation:
-lean 3 declaration is
-  forall (ι : Type.{u1}) [_inst_1 : DecidableEq.{succ u1} ι] {R : Type.{u2}} [_inst_2 : AddMonoid.{u1} ι] [_inst_3 : Semiring.{u2} R], DirectSum.GSemiring.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => R) _inst_2 (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_3)))
-but is expected to have type
-  forall (ι : Type.{u1}) {_inst_1 : Type.{u2}} [R : AddMonoid.{u1} ι] [_inst_2 : Semiring.{u2} _inst_1], DirectSum.GSemiring.{u1, u2} ι (fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6437 : ι) => _inst_1) R (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6437 : ι) => _inst_1) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6437 : ι) => _inst_1) i) (Semiring.toNonAssocSemiring.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6437 : ι) => _inst_1) i) _inst_2)))
-Case conversion may be inaccurate. Consider using '#align semiring.direct_sum_gsemiring Semiring.directSumGSemiringₓ'. -/
 /-- A direct sum of copies of a `semiring` inherits the multiplication structure. -/
 instance Semiring.directSumGSemiring {R : Type _} [AddMonoid ι] [Semiring R] :
     DirectSum.GSemiring fun i : ι => R :=
@@ -829,12 +733,6 @@ example {R : Type _} [AddMonoid ι] [Semiring R] (i j : ι) (a b : R) :
     (DirectSum.of _ i a * DirectSum.of _ j b : ⨁ i, R) = DirectSum.of _ (i + j) (a * b) := by
   rw [DirectSum.of_mul_of, Mul.gMul_mul]
 
-/- warning: comm_semiring.direct_sum_gcomm_semiring -> CommSemiring.directSumGCommSemiring is a dubious translation:
-lean 3 declaration is
-  forall (ι : Type.{u1}) [_inst_1 : DecidableEq.{succ u1} ι] {R : Type.{u2}} [_inst_2 : AddCommMonoid.{u1} ι] [_inst_3 : CommSemiring.{u2} R], DirectSum.GCommSemiring.{u1, u2} ι (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => R) _inst_2 (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_3))))
-but is expected to have type
-  forall (ι : Type.{u1}) {_inst_1 : Type.{u2}} [R : AddCommMonoid.{u1} ι] [_inst_2 : CommSemiring.{u2} _inst_1], DirectSum.GCommSemiring.{u1, u2} ι (fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6607 : ι) => _inst_1) R (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6607 : ι) => _inst_1) i) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6607 : ι) => _inst_1) i) (Semiring.toNonAssocSemiring.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6607 : ι) => _inst_1) i) (CommSemiring.toSemiring.{u2} ((fun (x._@.Mathlib.Algebra.DirectSum.Ring._hyg.6607 : ι) => _inst_1) i) _inst_2))))
-Case conversion may be inaccurate. Consider using '#align comm_semiring.direct_sum_gcomm_semiring CommSemiring.directSumGCommSemiringₓ'. -/
 /-- A direct sum of copies of a `comm_semiring` inherits the commutative multiplication structure.
 -/
 instance CommSemiring.directSumGCommSemiring {R : Type _} [AddCommMonoid ι] [CommSemiring R] :

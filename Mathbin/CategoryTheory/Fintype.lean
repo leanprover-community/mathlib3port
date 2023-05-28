@@ -202,23 +202,11 @@ instance : EssSurj incl :=
 noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
-/- warning: Fintype.skeleton.equivalence -> FintypeCat.Skeleton.equivalence is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Equivalence.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.CategoryTheory.smallCategory.{u1} FintypeCat.{u1} FintypeCat.CategoryTheory.category.{u1}
-but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1} FintypeCat.instCategoryFintypeCat.{u1}
-Case conversion may be inaccurate. Consider using '#align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalenceₓ'. -/
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
 noncomputable def equivalence : Skeleton ≌ FintypeCat :=
   incl.asEquivalence
 #align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalence
 
-/- warning: Fintype.skeleton.incl_mk_nat_card -> FintypeCat.Skeleton.incl_mk_nat_card is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FintypeCat.{u1} Type.{u1} FintypeCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.CategoryTheory.smallCategory.{u1} FintypeCat.{u1} FintypeCat.CategoryTheory.category.{u1} FintypeCat.Skeleton.incl.{u1} (FintypeCat.Skeleton.mk.{u1} n))) (FintypeCat.fintype.{u1} (CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.CategoryTheory.smallCategory.{u1} FintypeCat.{u1} FintypeCat.CategoryTheory.category.{u1} FintypeCat.Skeleton.incl.{u1} (FintypeCat.Skeleton.mk.{u1} n)))) n
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Fintype.card.{u1} (CategoryTheory.Bundled.α.{u1, u1} Fintype.{u1} (Prefunctor.obj.{succ u1, succ u1, u1, succ u1} FintypeCat.Skeleton.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} FintypeCat.Skeleton.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1})) FintypeCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} FintypeCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1} FintypeCat.Skeleton.incl.{u1}) (FintypeCat.Skeleton.mk.{u1} n))) (FintypeCat.instFintypeα.{u1} (Prefunctor.obj.{succ u1, succ u1, u1, succ u1} FintypeCat.Skeleton.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} FintypeCat.Skeleton.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1})) FintypeCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} FintypeCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1} FintypeCat.Skeleton.incl.{u1}) (FintypeCat.Skeleton.mk.{u1} n)))) n
-Case conversion may be inaccurate. Consider using '#align Fintype.skeleton.incl_mk_nat_card FintypeCat.Skeleton.incl_mk_nat_cardₓ'. -/
 @[simp]
 theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
   by

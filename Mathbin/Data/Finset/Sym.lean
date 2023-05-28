@@ -157,12 +157,6 @@ protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
 #align finset.sym Finset.sym
 -/
 
-/- warning: finset.sym_zero -> Finset.sym_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Singleton.singleton.{u1, u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (Finset.hasSingleton.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (EmptyCollection.emptyCollection.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.hasEmptyc.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Singleton.singleton.{u1, u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (Finset.instSingletonFinset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (EmptyCollection.emptyCollection.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.instEmptyCollectionSymOfNatNatInstOfNatNat.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align finset.sym_zero Finset.sym_zeroₓ'. -/
 @[simp]
 theorem sym_zero : s.Sym 0 = {∅} :=
   rfl
@@ -175,12 +169,6 @@ theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).image <| Sym.cons a 
 #align finset.sym_succ Finset.sym_succ
 -/
 
-/- warning: finset.mem_sym_iff -> Finset.mem_sym_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Membership.Mem.{u1, u1} (Sym.{u1} α n) (Finset.{u1} (Sym.{u1} α n)) (Finset.hasMem.{u1} (Sym.{u1} α n)) m (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (forall (a : α), (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a m) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Membership.mem.{u1, u1} (Sym.{u1} α n) (Finset.{u1} (Sym.{u1} α n)) (Finset.instMembershipFinset.{u1} (Sym.{u1} α n)) m (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (forall (a : α), (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a m) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s))
-Case conversion may be inaccurate. Consider using '#align finset.mem_sym_iff Finset.mem_sym_iffₓ'. -/
 @[simp]
 theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s :=
   by
@@ -239,12 +227,6 @@ theorem eq_empty_of_sym_eq_empty (h : s.Sym n = ∅) : s = ∅ :=
 #align finset.eq_empty_of_sym_eq_empty Finset.eq_empty_of_sym_eq_empty
 -/
 
-/- warning: finset.sym_eq_empty -> Finset.sym_eq_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat}, Iff (Eq.{succ u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.hasEmptyc.{u1} (Sym.{u1} α n)))) (And (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{succ u1} (Finset.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Eq.{succ u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.instEmptyCollectionFinset.{u1} (Sym.{u1} α n)))) (And (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{succ u1} (Finset.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align finset.sym_eq_empty Finset.sym_eq_emptyₓ'. -/
 @[simp]
 theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
   by
@@ -255,12 +237,6 @@ theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
     exact sym_empty _
 #align finset.sym_eq_empty Finset.sym_eq_empty
 
-/- warning: finset.sym_nonempty -> Finset.sym_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat}, Iff (Finset.Nonempty.{u1} (Sym.{u1} α n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (Or (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Finset.Nonempty.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Finset.Nonempty.{u1} (Sym.{u1} α n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (Or (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Finset.Nonempty.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.sym_nonempty Finset.sym_nonemptyₓ'. -/
 @[simp]
 theorem sym_nonempty : (s.Sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by
   simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_or, not_ne_iff]
@@ -280,17 +256,11 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
 #align finset.sym_mono Finset.sym_mono
 -/
 
-/- warning: finset.sym_inter -> Finset.sym_inter is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sym_inter Finset.sym_interₓ'. -/
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by ext m;
   simp only [mem_inter, mem_sym_iff, imp_and, forall_and]
 #align finset.sym_inter Finset.sym_inter
 
-/- warning: finset.sym_union -> Finset.sym_union is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align finset.sym_union Finset.sym_unionₓ'. -/
 @[simp]
 theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=
   union_subset (sym_mono (subset_union_left s t) n) (sym_mono (subset_union_right s t) n)

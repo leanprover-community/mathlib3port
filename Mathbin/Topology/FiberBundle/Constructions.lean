@@ -86,23 +86,11 @@ def trivialization : Trivialization F (π (Bundle.Trivial B F))
 #align bundle.trivial.trivialization Bundle.Trivial.trivialization
 -/
 
-/- warning: bundle.trivial.trivialization_source -> Bundle.Trivial.trivialization_source is a dubious translation:
-lean 3 declaration is
-  forall (B : Type.{u1}) (F : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} B] [_inst_2 : TopologicalSpace.{u2} F], Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F))) (LocalEquiv.source.{max u1 u2, max u1 u2} (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) (Prod.{u1, u2} B F) (LocalHomeomorph.toLocalEquiv.{max u1 u2, max u1 u2} (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) (Prod.{u1, u2} B F) (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Prod.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Trivialization.toLocalHomeomorph.{u1, u2, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) (Bundle.Trivial.trivialization.{u1, u2} B F _inst_1 _inst_2)))) (Set.univ.{max u1 u2} (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)))
-but is expected to have type
-  forall (B : Type.{u2}) (F : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} B] [_inst_2 : TopologicalSpace.{u1} F], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F))) (LocalEquiv.source.{max u2 u1, max u2 u1} (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) (Prod.{u2, u1} B F) (LocalHomeomorph.toLocalEquiv.{max u2 u1, max u2 u1} (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) (Prod.{u2, u1} B F) (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (instTopologicalSpaceProd.{u2, u1} B F _inst_1 _inst_2) (Trivialization.toLocalHomeomorph.{u2, u1, max u2 u1} B F (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) (Bundle.Trivial.trivialization.{u2, u1} B F _inst_1 _inst_2)))) (Set.univ.{max u2 u1} (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)))
-Case conversion may be inaccurate. Consider using '#align bundle.trivial.trivialization_source Bundle.Trivial.trivialization_sourceₓ'. -/
 @[simp]
 theorem trivialization_source : (trivialization B F).source = univ :=
   rfl
 #align bundle.trivial.trivialization_source Bundle.Trivial.trivialization_source
 
-/- warning: bundle.trivial.trivialization_target -> Bundle.Trivial.trivialization_target is a dubious translation:
-lean 3 declaration is
-  forall (B : Type.{u1}) (F : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} B] [_inst_2 : TopologicalSpace.{u2} F], Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} B F)) (LocalEquiv.target.{max u1 u2, max u1 u2} (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) (Prod.{u1, u2} B F) (LocalHomeomorph.toLocalEquiv.{max u1 u2, max u1 u2} (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) (Prod.{u1, u2} B F) (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Prod.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Trivialization.toLocalHomeomorph.{u1, u2, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) (Bundle.Trivial.trivialization.{u1, u2} B F _inst_1 _inst_2)))) (Set.univ.{max u1 u2} (Prod.{u1, u2} B F))
-but is expected to have type
-  forall (B : Type.{u2}) (F : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} B] [_inst_2 : TopologicalSpace.{u1} F], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Prod.{u2, u1} B F)) (LocalEquiv.target.{max u2 u1, max u2 u1} (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) (Prod.{u2, u1} B F) (LocalHomeomorph.toLocalEquiv.{max u2 u1, max u2 u1} (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) (Prod.{u2, u1} B F) (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (instTopologicalSpaceProd.{u2, u1} B F _inst_1 _inst_2) (Trivialization.toLocalHomeomorph.{u2, u1, max u2 u1} B F (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) (Bundle.Trivial.trivialization.{u2, u1} B F _inst_1 _inst_2)))) (Set.univ.{max u2 u1} (Prod.{u2, u1} B F))
-Case conversion may be inaccurate. Consider using '#align bundle.trivial.trivialization_target Bundle.Trivial.trivialization_targetₓ'. -/
 @[simp]
 theorem trivialization_target : (trivialization B F).target = univ :=
   rfl
@@ -125,12 +113,6 @@ instance fiberBundle : FiberBundle F (Bundle.Trivial B F)
 #align bundle.trivial.fiber_bundle Bundle.Trivial.fiberBundle
 -/
 
-/- warning: bundle.trivial.eq_trivialization -> Bundle.Trivial.eq_trivialization is a dubious translation:
-lean 3 declaration is
-  forall (B : Type.{u1}) (F : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} B] [_inst_2 : TopologicalSpace.{u2} F] (e : Trivialization.{u1, u2, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u1, u2} B (Bundle.Trivial.{u1, u2} B F))) [i : MemTrivializationAtlas.{u1, u2, u2} B F _inst_1 _inst_2 (Bundle.Trivial.{u1, u2} B F) (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (fun (b : B) => Bundle.Trivial.topologicalSpace.{u1, u2} B F _inst_2 b) (Bundle.Trivial.fiberBundle.{u1, u2} B F _inst_1 _inst_2) e], Eq.{max (succ u1) (succ u2) (succ (max u1 u2))} (Trivialization.{u1, u2, max u1 u2} B F (Bundle.TotalSpace.{u1, u2} B (Bundle.Trivial.{u1, u2} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u1, u2} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u1, u2} B (Bundle.Trivial.{u1, u2} B F))) e (Bundle.Trivial.trivialization.{u1, u2} B F _inst_1 _inst_2)
-but is expected to have type
-  forall (B : Type.{u2}) (F : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} B] [_inst_2 : TopologicalSpace.{u1} F] (e : Trivialization.{u2, u1, max u2 u1} B F (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u2, u1} B (Bundle.Trivial.{u2, u1} B F))) [i : MemTrivializationAtlas.{u2, u1, u1} B F _inst_1 _inst_2 (Bundle.Trivial.{u2, u1} B F) (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (fun (b : B) => Bundle.Trivial.topologicalSpace.{u2, u1} B F _inst_2 b) (Bundle.Trivial.fiberBundle.{u2, u1} B F _inst_1 _inst_2) e], Eq.{max (succ u2) (succ u1)} (Trivialization.{u2, u1, max u2 u1} B F (Bundle.TotalSpace.{u2, u1} B (Bundle.Trivial.{u2, u1} B F)) _inst_1 _inst_2 (Bundle.Trivial.Bundle.TotalSpace.topologicalSpace.{u2, u1} B F _inst_1 _inst_2) (Bundle.TotalSpace.proj.{u2, u1} B (Bundle.Trivial.{u2, u1} B F))) e (Bundle.Trivial.trivialization.{u2, u1} B F _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align bundle.trivial.eq_trivialization Bundle.Trivial.eq_trivializationₓ'. -/
 theorem eq_trivialization (e : Trivialization F (π (Bundle.Trivial B F)))
     [i : MemTrivializationAtlas e] : e = trivialization B F :=
   i.out
@@ -163,12 +145,6 @@ instance FiberBundle.Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ 
 #align fiber_bundle.prod.topological_space FiberBundle.Prod.topologicalSpace
 -/
 
-/- warning: fiber_bundle.prod.inducing_diag -> FiberBundle.Prod.inducing_diag is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} (E₁ : B -> Type.{u2}) (E₂ : B -> Type.{u3}) [_inst_1 : TopologicalSpace.{max u1 u2} (Bundle.TotalSpace.{u1, u2} B E₁)] [_inst_2 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u1, u3} B E₂)], Inducing.{max u1 u2 u3, max (max u1 u2) u1 u3} (Bundle.TotalSpace.{u1, max u2 u3} B (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x))) (Prod.{max u1 u2, max u1 u3} (Bundle.TotalSpace.{u1, u2} B E₁) (Bundle.TotalSpace.{u1, u3} B E₂)) (FiberBundle.Prod.topologicalSpace.{u1, u2, u3} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_1 _inst_2) (Prod.topologicalSpace.{max u1 u2, max u1 u3} (Bundle.TotalSpace.{u1, u2} B E₁) (Bundle.TotalSpace.{u1, u3} B E₂) _inst_1 _inst_2) (fun (p : Bundle.TotalSpace.{u1, max u2 u3} B (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x))) => Prod.mk.{max u1 u2, max u1 u3} (Bundle.TotalSpace.{u1, u2} B E₁) (Bundle.TotalSpace.{u1, u3} B E₂) (Sigma.mk.{u1, u2} B (fun (x : B) => E₁ x) (Sigma.fst.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p) (Prod.fst.{u2, u3} (E₁ (Sigma.fst.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p)) (E₂ (Sigma.fst.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p)) (Sigma.snd.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p))) (Sigma.mk.{u1, u3} B (fun (x : B) => E₂ x) (Sigma.fst.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p) (Prod.snd.{u2, u3} (E₁ (Sigma.fst.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p)) (E₂ (Sigma.fst.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p)) (Sigma.snd.{u1, max u2 u3} B (fun (x : B) => (fun (x : B) => Prod.{u2, u3} (E₁ x) (E₂ x)) x) p))))
-but is expected to have type
-  forall {B : Type.{u3}} (E₁ : B -> Type.{u2}) (E₂ : B -> Type.{u1}) [_inst_1 : TopologicalSpace.{max u2 u3} (Bundle.TotalSpace.{u3, u2} B E₁)] [_inst_2 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u3, u1} B E₂)], Inducing.{max (max u3 u2) u1, max (max u3 u2) u1} (Bundle.TotalSpace.{u3, max u1 u2} B (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x))) (Prod.{max u3 u2, max u3 u1} (Bundle.TotalSpace.{u3, u2} B E₁) (Bundle.TotalSpace.{u3, u1} B E₂)) (FiberBundle.Prod.topologicalSpace.{u3, u2, u1} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_1 _inst_2) (instTopologicalSpaceProd.{max u3 u2, max u3 u1} (Bundle.TotalSpace.{u3, u2} B E₁) (Bundle.TotalSpace.{u3, u1} B E₂) _inst_1 _inst_2) (fun (p : Bundle.TotalSpace.{u3, max u1 u2} B (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x))) => Prod.mk.{max u3 u2, max u3 u1} (Bundle.TotalSpace.{u3, u2} B E₁) (Bundle.TotalSpace.{u3, u1} B E₂) (Sigma.mk.{u3, u2} B (fun (x : B) => E₁ x) (Sigma.fst.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p) (Prod.fst.{u2, u1} (E₁ (Sigma.fst.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p)) (E₂ (Sigma.fst.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p)) (Sigma.snd.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p))) (Sigma.mk.{u3, u1} B (fun (x : B) => E₂ x) (Sigma.fst.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p) (Prod.snd.{u2, u1} (E₁ (Sigma.fst.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p)) (E₂ (Sigma.fst.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p)) (Sigma.snd.{u3, max u2 u1} B (fun (x : B) => (fun (x : B) => Prod.{u2, u1} (E₁ x) (E₂ x)) x) p))))
-Case conversion may be inaccurate. Consider using '#align fiber_bundle.prod.inducing_diag FiberBundle.Prod.inducing_diagₓ'. -/
 /-- The diagonal map from the total space of the fiberwise product of two fiber bundles
 `E₁`, `E₂` into `total_space E₁ × total_space E₂` is `inducing`. -/
 theorem FiberBundle.Prod.inducing_diag :
@@ -201,12 +177,6 @@ def Prod.toFun' : TotalSpace (E₁ ×ᵇ E₂) → B × F₁ × F₂ := fun p =>
 
 variable {e₁ e₂}
 
-/- warning: trivialization.prod.continuous_to_fun -> Trivialization.Prod.continuous_to_fun is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} B] {F₁ : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} F₁] {E₁ : B -> Type.{u3}} [_inst_3 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u1, u3} B E₁)] {F₂ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} F₂] {E₂ : B -> Type.{u5}} [_inst_5 : TopologicalSpace.{max u1 u5} (Bundle.TotalSpace.{u1, u5} B E₂)] {e₁ : Trivialization.{u1, u2, max u1 u3} B F₁ (Bundle.TotalSpace.{u1, u3} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u1, u3} B E₁)} {e₂ : Trivialization.{u1, u4, max u1 u5} B F₂ (Bundle.TotalSpace.{u1, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u1, u5} B E₂)}, ContinuousOn.{max u1 u3 u5, max u1 u2 u4} (Bundle.TotalSpace.{u1, max u3 u5} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))) (Prod.{u1, max u2 u4} B (Prod.{u2, u4} F₁ F₂)) (FiberBundle.Prod.topologicalSpace.{u1, u3, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (Prod.topologicalSpace.{u1, max u2 u4} B (Prod.{u2, u4} F₁ F₂) _inst_1 (Prod.topologicalSpace.{u2, u4} F₁ F₂ _inst_2 _inst_4)) (Trivialization.Prod.toFun'.{u1, u2, u3, u4, u5} B _inst_1 F₁ _inst_2 E₁ _inst_3 F₂ _inst_4 E₂ _inst_5 e₁ e₂) (Set.preimage.{max u1 u3 u5, u1} (Bundle.TotalSpace.{u1, max u3 u5} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))) B (Bundle.TotalSpace.proj.{u1, max u3 u5} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))) (Inter.inter.{u1} (Set.{u1} B) (Set.hasInter.{u1} B) (Trivialization.baseSet.{u1, u2, max u1 u3} B F₁ (Bundle.TotalSpace.{u1, u3} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u1, u3} B E₁) e₁) (Trivialization.baseSet.{u1, u4, max u1 u5} B F₂ (Bundle.TotalSpace.{u1, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u1, u5} B E₂) e₂)))
-but is expected to have type
-  forall {B : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} B] {F₁ : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} F₁] {E₁ : B -> Type.{u4}} [_inst_3 : TopologicalSpace.{max u4 u3} (Bundle.TotalSpace.{u3, u4} B E₁)] {F₂ : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} F₂] {E₂ : B -> Type.{u5}} [_inst_5 : TopologicalSpace.{max u5 u3} (Bundle.TotalSpace.{u3, u5} B E₂)] {e₁ : Trivialization.{u3, u1, max u3 u4} B F₁ (Bundle.TotalSpace.{u3, u4} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u3, u4} B E₁)} {e₂ : Trivialization.{u3, u2, max u3 u5} B F₂ (Bundle.TotalSpace.{u3, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u3, u5} B E₂)}, ContinuousOn.{max (max u5 u4) u3, max (max u2 u1) u3} (Bundle.TotalSpace.{u3, max u5 u4} B (fun (x : B) => Prod.{u4, u5} (E₁ x) (E₂ x))) (Prod.{u3, max u2 u1} B (Prod.{u1, u2} F₁ F₂)) (FiberBundle.Prod.topologicalSpace.{u3, u4, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (instTopologicalSpaceProd.{u3, max u1 u2} B (Prod.{u1, u2} F₁ F₂) _inst_1 (instTopologicalSpaceProd.{u1, u2} F₁ F₂ _inst_2 _inst_4)) (Trivialization.Prod.toFun'.{u3, u1, u4, u2, u5} B _inst_1 F₁ _inst_2 E₁ _inst_3 F₂ _inst_4 E₂ _inst_5 e₁ e₂) (Set.preimage.{max (max u3 u4) u5, u3} (Bundle.TotalSpace.{u3, max u5 u4} B (fun (x : B) => Prod.{u4, u5} (E₁ x) (E₂ x))) B (Bundle.TotalSpace.proj.{u3, max u5 u4} B (fun (x : B) => Prod.{u4, u5} (E₁ x) (E₂ x))) (Inter.inter.{u3} (Set.{u3} B) (Set.instInterSet.{u3} B) (Trivialization.baseSet.{u3, u1, max u3 u4} B F₁ (Bundle.TotalSpace.{u3, u4} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u3, u4} B E₁) e₁) (Trivialization.baseSet.{u3, u2, max u3 u5} B F₂ (Bundle.TotalSpace.{u3, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u3, u5} B E₂) e₂)))
-Case conversion may be inaccurate. Consider using '#align trivialization.prod.continuous_to_fun Trivialization.Prod.continuous_to_funₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Prod.continuous_to_fun :
     ContinuousOn (Prod.toFun' e₁ e₂)
@@ -244,9 +214,6 @@ noncomputable def Prod.invFun' (p : B × F₁ × F₂) : TotalSpace (E₁ ×ᵇ 
 
 variable {e₁ e₂}
 
-/- warning: trivialization.prod.left_inv -> Trivialization.Prod.left_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.prod.left_inv Trivialization.Prod.left_invₓ'. -/
 theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
     (h : x ∈ @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)) :
     Prod.invFun' e₁ e₂ (Prod.toFun' e₁ e₂ x) = x :=
@@ -256,9 +223,6 @@ theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
   simp only [prod.to_fun', prod.inv_fun', symm_apply_apply_mk, h₁, h₂]
 #align trivialization.prod.left_inv Trivialization.Prod.left_inv
 
-/- warning: trivialization.prod.right_inv -> Trivialization.Prod.right_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.prod.right_inv Trivialization.Prod.right_invₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Prod.right_inv {x : B × F₁ × F₂}
     (h : x ∈ (e₁.baseSet ∩ e₂.baseSet) ×ˢ (univ : Set (F₁ × F₂))) :
@@ -269,12 +233,6 @@ theorem Prod.right_inv {x : B × F₁ × F₂}
   simp only [prod.to_fun', prod.inv_fun', apply_mk_symm, h₁, h₂]
 #align trivialization.prod.right_inv Trivialization.Prod.right_inv
 
-/- warning: trivialization.prod.continuous_inv_fun -> Trivialization.Prod.continuous_inv_fun is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} B] {F₁ : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} F₁] {E₁ : B -> Type.{u3}} [_inst_3 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u1, u3} B E₁)] {F₂ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} F₂] {E₂ : B -> Type.{u5}} [_inst_5 : TopologicalSpace.{max u1 u5} (Bundle.TotalSpace.{u1, u5} B E₂)] {e₁ : Trivialization.{u1, u2, max u1 u3} B F₁ (Bundle.TotalSpace.{u1, u3} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u1, u3} B E₁)} {e₂ : Trivialization.{u1, u4, max u1 u5} B F₂ (Bundle.TotalSpace.{u1, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u1, u5} B E₂)} [_inst_6 : forall (x : B), Zero.{u3} (E₁ x)] [_inst_7 : forall (x : B), Zero.{u5} (E₂ x)], ContinuousOn.{max u1 u2 u4, max u1 u3 u5} (Prod.{u1, max u2 u4} B (Prod.{u2, u4} F₁ F₂)) (Bundle.TotalSpace.{u1, max u3 u5} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))) (Prod.topologicalSpace.{u1, max u2 u4} B (Prod.{u2, u4} F₁ F₂) _inst_1 (Prod.topologicalSpace.{u2, u4} F₁ F₂ _inst_2 _inst_4)) (FiberBundle.Prod.topologicalSpace.{u1, u3, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (Trivialization.Prod.invFun'.{u1, u2, u3, u4, u5} B _inst_1 F₁ _inst_2 E₁ _inst_3 F₂ _inst_4 E₂ _inst_5 e₁ e₂ (fun (x : B) => _inst_6 x) (fun (x : B) => _inst_7 x)) (Set.prod.{u1, max u2 u4} B (Prod.{u2, u4} F₁ F₂) (Inter.inter.{u1} (Set.{u1} B) (Set.hasInter.{u1} B) (Trivialization.baseSet.{u1, u2, max u1 u3} B F₁ (Bundle.TotalSpace.{u1, u3} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u1, u3} B E₁) e₁) (Trivialization.baseSet.{u1, u4, max u1 u5} B F₂ (Bundle.TotalSpace.{u1, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u1, u5} B E₂) e₂)) (Set.univ.{max u2 u4} (Prod.{u2, u4} F₁ F₂)))
-but is expected to have type
-  forall {B : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} B] {F₁ : Type.{u4}} [_inst_2 : TopologicalSpace.{u4} F₁] {E₁ : B -> Type.{u1}} [_inst_3 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u3, u1} B E₁)] {F₂ : Type.{u5}} [_inst_4 : TopologicalSpace.{u5} F₂] {E₂ : B -> Type.{u2}} [_inst_5 : TopologicalSpace.{max u2 u3} (Bundle.TotalSpace.{u3, u2} B E₂)] {e₁ : Trivialization.{u3, u4, max u3 u1} B F₁ (Bundle.TotalSpace.{u3, u1} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u3, u1} B E₁)} {e₂ : Trivialization.{u3, u5, max u3 u2} B F₂ (Bundle.TotalSpace.{u3, u2} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u3, u2} B E₂)} [_inst_6 : forall (x : B), Zero.{u1} (E₁ x)] [_inst_7 : forall (x : B), Zero.{u2} (E₂ x)], ContinuousOn.{max (max u5 u4) u3, max (max u2 u1) u3} (Prod.{u3, max u5 u4} B (Prod.{u4, u5} F₁ F₂)) (Bundle.TotalSpace.{u3, max u2 u1} B (fun (x : B) => Prod.{u1, u2} (E₁ x) (E₂ x))) (instTopologicalSpaceProd.{u3, max u4 u5} B (Prod.{u4, u5} F₁ F₂) _inst_1 (instTopologicalSpaceProd.{u4, u5} F₁ F₂ _inst_2 _inst_4)) (FiberBundle.Prod.topologicalSpace.{u3, u1, u2} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (Trivialization.Prod.invFun'.{u3, u4, u1, u5, u2} B _inst_1 F₁ _inst_2 E₁ _inst_3 F₂ _inst_4 E₂ _inst_5 e₁ e₂ (fun (x : B) => _inst_6 x) (fun (x : B) => _inst_7 x)) (Set.prod.{u3, max u4 u5} B (Prod.{u4, u5} F₁ F₂) (Inter.inter.{u3} (Set.{u3} B) (Set.instInterSet.{u3} B) (Trivialization.baseSet.{u3, u4, max u3 u1} B F₁ (Bundle.TotalSpace.{u3, u1} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u3, u1} B E₁) e₁) (Trivialization.baseSet.{u3, u5, max u3 u2} B F₂ (Bundle.TotalSpace.{u3, u2} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u3, u2} B E₂) e₂)) (Set.univ.{max u4 u5} (Prod.{u4, u5} F₁ F₂)))
-Case conversion may be inaccurate. Consider using '#align trivialization.prod.continuous_inv_fun Trivialization.Prod.continuous_inv_funₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Prod.continuous_inv_fun :
     ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.baseSet ∩ e₂.baseSet) ×ˢ univ) :=
@@ -288,12 +246,6 @@ theorem Prod.continuous_inv_fun :
 
 variable (e₁ e₂ e₁ e₂)
 
-/- warning: trivialization.prod -> Trivialization.prod is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} B] {F₁ : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} F₁] {E₁ : B -> Type.{u3}} [_inst_3 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u1, u3} B E₁)] {F₂ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} F₂] {E₂ : B -> Type.{u5}} [_inst_5 : TopologicalSpace.{max u1 u5} (Bundle.TotalSpace.{u1, u5} B E₂)], (Trivialization.{u1, u2, max u1 u3} B F₁ (Bundle.TotalSpace.{u1, u3} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u1, u3} B E₁)) -> (Trivialization.{u1, u4, max u1 u5} B F₂ (Bundle.TotalSpace.{u1, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u1, u5} B E₂)) -> (forall [_inst_6 : forall (x : B), Zero.{u3} (E₁ x)] [_inst_7 : forall (x : B), Zero.{u5} (E₂ x)], Trivialization.{u1, max u2 u4, max u1 u3 u5} B (Prod.{u2, u4} F₁ F₂) (Bundle.TotalSpace.{u1, max u3 u5} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))) _inst_1 (Prod.topologicalSpace.{u2, u4} F₁ F₂ _inst_2 _inst_4) (FiberBundle.Prod.topologicalSpace.{u1, u3, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (Bundle.TotalSpace.proj.{u1, max u3 u5} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))))
-but is expected to have type
-  forall {B : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} B] {F₁ : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} F₁] {E₁ : B -> Type.{u3}} [_inst_3 : TopologicalSpace.{max u3 u1} (Bundle.TotalSpace.{u1, u3} B E₁)] {F₂ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} F₂] {E₂ : B -> Type.{u5}} [_inst_5 : TopologicalSpace.{max u5 u1} (Bundle.TotalSpace.{u1, u5} B E₂)], (Trivialization.{u1, u2, max u1 u3} B F₁ (Bundle.TotalSpace.{u1, u3} B E₁) _inst_1 _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u1, u3} B E₁)) -> (Trivialization.{u1, u4, max u1 u5} B F₂ (Bundle.TotalSpace.{u1, u5} B E₂) _inst_1 _inst_4 _inst_5 (Bundle.TotalSpace.proj.{u1, u5} B E₂)) -> (forall [_inst_6 : forall (x : B), Zero.{u3} (E₁ x)] [_inst_7 : forall (x : B), Zero.{u5} (E₂ x)], Trivialization.{u1, max u4 u2, max (max u1 u3) u5} B (Prod.{u2, u4} F₁ F₂) (Bundle.TotalSpace.{u1, max u5 u3} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))) _inst_1 (instTopologicalSpaceProd.{u2, u4} F₁ F₂ _inst_2 _inst_4) (FiberBundle.Prod.topologicalSpace.{u1, u3, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (Bundle.TotalSpace.proj.{u1, max u5 u3} B (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x))))
-Case conversion may be inaccurate. Consider using '#align trivialization.prod Trivialization.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given trivializations `e₁`, `e₂` for bundle types `E₁`, `E₂` over a base `B`, the induced
 trivialization for the fiberwise product of `E₁` and `E₂`, whose base set is
@@ -324,17 +276,11 @@ noncomputable def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂))
   proj_toFun x h := rfl
 #align trivialization.prod Trivialization.prod
 
-/- warning: trivialization.base_set_prod -> Trivialization.baseSet_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.base_set_prod Trivialization.baseSet_prodₓ'. -/
 @[simp]
 theorem baseSet_prod : (prod e₁ e₂).baseSet = e₁.baseSet ∩ e₂.baseSet :=
   rfl
 #align trivialization.base_set_prod Trivialization.baseSet_prod
 
-/- warning: trivialization.prod_symm_apply -> Trivialization.prod_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align trivialization.prod_symm_apply Trivialization.prod_symm_applyₓ'. -/
 theorem prod_symm_apply (x : B) (w₁ : F₁) (w₂ : F₂) :
     (prod e₁ e₂).toLocalEquiv.symm (x, w₁, w₂) = ⟨x, e₁.symm x w₁, e₂.symm x w₂⟩ :=
   rfl
@@ -347,12 +293,6 @@ open Trivialization
 variable [∀ x, Zero (E₁ x)] [∀ x, Zero (E₂ x)] [∀ x : B, TopologicalSpace (E₁ x)]
   [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₁ E₁] [FiberBundle F₂ E₂]
 
-/- warning: fiber_bundle.prod -> FiberBundle.prod is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} B] (F₁ : Type.{u2}) [_inst_2 : TopologicalSpace.{u2} F₁] (E₁ : B -> Type.{u3}) [_inst_3 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u1, u3} B E₁)] (F₂ : Type.{u4}) [_inst_4 : TopologicalSpace.{u4} F₂] (E₂ : B -> Type.{u5}) [_inst_5 : TopologicalSpace.{max u1 u5} (Bundle.TotalSpace.{u1, u5} B E₂)] [_inst_6 : forall (x : B), Zero.{u3} (E₁ x)] [_inst_7 : forall (x : B), Zero.{u5} (E₂ x)] [_inst_8 : forall (x : B), TopologicalSpace.{u3} (E₁ x)] [_inst_9 : forall (x : B), TopologicalSpace.{u5} (E₂ x)] [_inst_10 : FiberBundle.{u1, u2, u3} B F₁ _inst_1 _inst_2 E₁ _inst_3 (fun (b : B) => _inst_8 b)] [_inst_11 : FiberBundle.{u1, u4, u5} B F₂ _inst_1 _inst_4 E₂ _inst_5 (fun (b : B) => _inst_9 b)], FiberBundle.{u1, max u2 u4, max u3 u5} B (Prod.{u2, u4} F₁ F₂) _inst_1 (Prod.topologicalSpace.{u2, u4} F₁ F₂ _inst_2 _inst_4) (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x)) (FiberBundle.Prod.topologicalSpace.{u1, u3, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (fun (b : B) => Prod.topologicalSpace.{u3, u5} (E₁ b) (E₂ b) (_inst_8 b) (_inst_9 b))
-but is expected to have type
-  forall {B : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} B] (F₁ : Type.{u2}) [_inst_2 : TopologicalSpace.{u2} F₁] (E₁ : B -> Type.{u3}) [_inst_3 : TopologicalSpace.{max u3 u1} (Bundle.TotalSpace.{u1, u3} B E₁)] (F₂ : Type.{u4}) [_inst_4 : TopologicalSpace.{u4} F₂] (E₂ : B -> Type.{u5}) [_inst_5 : TopologicalSpace.{max u5 u1} (Bundle.TotalSpace.{u1, u5} B E₂)] [_inst_6 : forall (x : B), Zero.{u3} (E₁ x)] [_inst_7 : forall (x : B), Zero.{u5} (E₂ x)] [_inst_8 : forall (x : B), TopologicalSpace.{u3} (E₁ x)] [_inst_9 : forall (x : B), TopologicalSpace.{u5} (E₂ x)] [_inst_10 : FiberBundle.{u1, u2, u3} B F₁ _inst_1 _inst_2 E₁ _inst_3 (fun (b : B) => _inst_8 b)] [_inst_11 : FiberBundle.{u1, u4, u5} B F₂ _inst_1 _inst_4 E₂ _inst_5 (fun (b : B) => _inst_9 b)], FiberBundle.{u1, max u4 u2, max u5 u3} B (Prod.{u2, u4} F₁ F₂) _inst_1 (instTopologicalSpaceProd.{u2, u4} F₁ F₂ _inst_2 _inst_4) (fun (x : B) => Prod.{u3, u5} (E₁ x) (E₂ x)) (FiberBundle.Prod.topologicalSpace.{u1, u3, u5} B (fun (x : B) => E₁ x) (fun (x : B) => E₂ x) _inst_3 _inst_5) (fun (b : B) => instTopologicalSpaceProd.{u3, u5} (E₁ b) (E₂ b) (_inst_8 b) (_inst_9 b))
-Case conversion may be inaccurate. Consider using '#align fiber_bundle.prod FiberBundle.prodₓ'. -/
 /-- The product of two fiber bundles is a fiber bundle. -/
 noncomputable instance FiberBundle.prod : FiberBundle (F₁ × F₂) (E₁ ×ᵇ E₂)
     where
@@ -422,12 +362,6 @@ theorem Pullback.continuous_lift (f : B' → B) : Continuous (@Pullback.lift B E
 #align pullback.continuous_lift Pullback.continuous_lift
 -/
 
-/- warning: inducing_pullback_total_space_embedding -> inducing_pullbackTotalSpaceEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u1}} (E : B -> Type.{u2}) {B' : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} B'] [_inst_2 : TopologicalSpace.{max u1 u2} (Bundle.TotalSpace.{u1, u2} B E)] (f : B' -> B), Inducing.{max u3 u2, max u3 u1 u2} (Bundle.TotalSpace.{u3, u2} B' (Bundle.Pullback.{u1, u3, u2} B B' f E)) (Prod.{u3, max u1 u2} B' (Bundle.TotalSpace.{u1, u2} B E)) (Pullback.TotalSpace.topologicalSpace.{u1, u2, u3} B E B' f _inst_1 _inst_2) (Prod.topologicalSpace.{u3, max u1 u2} B' (Bundle.TotalSpace.{u1, u2} B E) _inst_1 _inst_2) (Bundle.pullbackTotalSpaceEmbedding.{u1, u2, u3} B E B' f)
-but is expected to have type
-  forall {B : Type.{u1}} (E : B -> Type.{u2}) {B' : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} B'] [_inst_2 : TopologicalSpace.{max u2 u1} (Bundle.TotalSpace.{u1, u2} B E)] (f : B' -> B), Inducing.{max u2 u3, max (max u1 u2) u3} (Bundle.TotalSpace.{u3, u2} B' (Bundle.Pullback.{u1, u3, u2} B B' f E)) (Prod.{u3, max u2 u1} B' (Bundle.TotalSpace.{u1, u2} B E)) (Pullback.TotalSpace.topologicalSpace.{u1, u2, u3} B E B' f _inst_1 _inst_2) (instTopologicalSpaceProd.{u3, max u1 u2} B' (Bundle.TotalSpace.{u1, u2} B E) _inst_1 _inst_2) (Bundle.pullbackTotalSpaceEmbedding.{u1, u2, u3} B E B' f)
-Case conversion may be inaccurate. Consider using '#align inducing_pullback_total_space_embedding inducing_pullbackTotalSpaceEmbeddingₓ'. -/
 theorem inducing_pullbackTotalSpaceEmbedding (f : B' → B) :
     Inducing (@pullbackTotalSpaceEmbedding B E B' f) :=
   by

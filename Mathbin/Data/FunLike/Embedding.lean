@@ -138,12 +138,6 @@ instead of linearly increasing the work per `my_embedding`-related declaration.
 -/
 
 
-/- warning: embedding_like -> EmbeddingLike is a dubious translation:
-lean 3 declaration is
-  Sort.{u1} -> (outParam.{succ u2} Sort.{u2}) -> (outParam.{succ u3} Sort.{u3}) -> Sort.{max 1 (imax u1 u2 u3)}
-but is expected to have type
-  Sort.{u1} -> (outParam.{succ u2} Sort.{u2}) -> (outParam.{succ u3} Sort.{u3}) -> Sort.{max (max (max 1 u1) u2) u3}
-Case conversion may be inaccurate. Consider using '#align embedding_like EmbeddingLikeₓ'. -/
 /-- The class `embedding_like F α β` expresses that terms of type `F` have an
 injective coercion to injective functions `α ↪ β`.
 -/
@@ -157,22 +151,10 @@ variable {F α β γ : Sort _} [i : EmbeddingLike F α β]
 
 include i
 
-/- warning: embedding_like.injective -> EmbeddingLike.injective is a dubious translation:
-lean 3 declaration is
-  forall {F : Sort.{u1}} {α : Sort.{u2}} {β : Sort.{u3}} [i : EmbeddingLike.{u1, u2, u3} F α β] (f : F), Function.Injective.{u2, u3} α β (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u1, u2, u3} F α β i)) f)
-but is expected to have type
-  forall {F : Sort.{u1}} {α : Sort.{u3}} {β : Sort.{u2}} [i : EmbeddingLike.{u1, u3, u2} F α β] (f : F), Function.Injective.{u3, u2} α β (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{u1, u3, u2} F α β i) f)
-Case conversion may be inaccurate. Consider using '#align embedding_like.injective EmbeddingLike.injectiveₓ'. -/
 protected theorem injective (f : F) : Function.Injective f :=
   injective' f
 #align embedding_like.injective EmbeddingLike.injective
 
-/- warning: embedding_like.apply_eq_iff_eq -> EmbeddingLike.apply_eq_iff_eq is a dubious translation:
-lean 3 declaration is
-  forall {F : Sort.{u1}} {α : Sort.{u2}} {β : Sort.{u3}} [i : EmbeddingLike.{u1, u2, u3} F α β] (f : F) {x : α} {y : α}, Iff (Eq.{u3} β (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u1, u2, u3} F α β i)) f x) (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u1, u2, u3} F α β i)) f y)) (Eq.{u2} α x y)
-but is expected to have type
-  forall {F : Sort.{u2}} {α : Sort.{u1}} {β : Sort.{u3}} [i : EmbeddingLike.{u2, u1, u3} F α β] (f : F) {x : α} {y : α}, Iff (Eq.{u3} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (FunLike.coe.{u2, u1, u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{u2, u1, u3} F α β i) f x) (FunLike.coe.{u2, u1, u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{u2, u1, u3} F α β i) f y)) (Eq.{u1} α x y)
-Case conversion may be inaccurate. Consider using '#align embedding_like.apply_eq_iff_eq EmbeddingLike.apply_eq_iff_eqₓ'. -/
 @[simp]
 theorem apply_eq_iff_eq (f : F) {x y : α} : f x = f y ↔ x = y :=
   (EmbeddingLike.injective f).eq_iff
@@ -180,12 +162,6 @@ theorem apply_eq_iff_eq (f : F) {x y : α} : f x = f y ↔ x = y :=
 
 omit i
 
-/- warning: embedding_like.comp_injective -> EmbeddingLike.comp_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {F : Sort.{u4}} [_inst_1 : EmbeddingLike.{u4, u2, u3} F β γ] (f : α -> β) (e : F), Iff (Function.Injective.{u1, u3} α γ (Function.comp.{u1, u2, u3} α β γ (coeFn.{u4, imax u2 u3} F (fun (_x : F) => β -> γ) (FunLike.hasCoeToFun.{u4, u2, u3} F β (fun (_x : β) => γ) (EmbeddingLike.toFunLike.{u4, u2, u3} F β γ _inst_1)) e) f)) (Function.Injective.{u1, u2} α β f)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u3}} {γ : Sort.{u2}} {F : Sort.{u4}} [_inst_1 : EmbeddingLike.{u4, u3, u2} F β γ] (f : α -> β) (e : F), Iff (Function.Injective.{u1, u2} α γ (Function.comp.{u1, u3, u2} α β γ (FunLike.coe.{u4, u3, u2} F β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{u4, u3, u2} F β γ _inst_1) e) f)) (Function.Injective.{u1, u3} α β f)
-Case conversion may be inaccurate. Consider using '#align embedding_like.comp_injective EmbeddingLike.comp_injectiveₓ'. -/
 @[simp]
 theorem comp_injective {F : Sort _} [EmbeddingLike F β γ] (f : α → β) (e : F) :
     Function.Injective (e ∘ f) ↔ Function.Injective f :=

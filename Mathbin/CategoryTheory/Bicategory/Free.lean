@@ -271,11 +271,6 @@ theorem mk_whisker_right {f g : a ⟶ b} (η : Hom₂ f g) (h : b ⟶ c) :
 variable (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d)
 
 /- warning: category_theory.free_bicategory.id_def clashes with [anonymous] -> [anonymous]
-warning: category_theory.free_bicategory.id_def -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {B : Type.{u2}} [_inst_1 : Quiver.{succ u1, u2} B] {a : CategoryTheory.FreeBicategory.{u2} B}, Eq.{succ (max u2 u1)} (CategoryTheory.FreeBicategory.Hom.{u1, u2} (CategoryTheory.FreeBicategory.{u2} B) _inst_1 a a) (CategoryTheory.FreeBicategory.Hom.id.{u1, u2} (CategoryTheory.FreeBicategory.{u2} B) _inst_1 a) (CategoryTheory.CategoryStruct.id.{max u2 u1, u2} (CategoryTheory.FreeBicategory.{u2} B) (CategoryTheory.Bicategory.toCategoryStruct.{max u2 u1, max u2 u1, u2} (CategoryTheory.FreeBicategory.{u2} B) (CategoryTheory.FreeBicategory.bicategory.{u1, u2} B _inst_1)) a)
-but is expected to have type
-  forall {B : Type.{u1}} {_inst_1 : Type.{u2}}, (Nat -> B -> _inst_1) -> Nat -> (List.{u1} B) -> (List.{u2} _inst_1)
 Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.id_def [anonymous]ₓ'. -/
 theorem [anonymous] : Hom.id a = 𝟙 a :=
   rfl

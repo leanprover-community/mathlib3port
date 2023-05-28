@@ -28,12 +28,6 @@ universe u
 
 namespace Thunk
 
-/- warning: thunk.mk -> Thunk.pure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, α -> (Thunkₓ.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, α -> (Thunk.{u1} α)
-Case conversion may be inaccurate. Consider using '#align thunk.mk Thunk.pureₓ'. -/
 /-- Creates a thunk with a (non-lazy) constant value. -/
 def pure {α} (x : α) : Thunk α := fun _ => x
 #align thunk.mk Thunk.pure
@@ -169,12 +163,6 @@ instance : Monad LazyList where
   pure := @LazyList.singleton
   bind := @LazyList.bind
 
-/- warning: lazy_list.append_nil -> LazyList.append_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (xs : LazyList.{u1} α), Eq.{succ u1} (LazyList.{u1} α) (LazyList.append.{u1} α xs (fun (_ : Unit) => LazyList.nil.{u1} α)) xs
-but is expected to have type
-  forall {α : Type.{u1}} (xs : LazyList.{u1} α), Eq.{succ u1} (LazyList.{u1} α) (LazyList.append.{u1} α xs (Thunk.pure.{u1} (LazyList.{u1} α) (LazyList.nil.{u1} α))) xs
-Case conversion may be inaccurate. Consider using '#align lazy_list.append_nil LazyList.append_nilₓ'. -/
 theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs :=
   by
   induction xs; rfl
@@ -182,22 +170,10 @@ theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs :=
   ext; congr
 #align lazy_list.append_nil LazyList.append_nil
 
-/- warning: lazy_list.append_assoc -> LazyList.append_assoc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (xs : LazyList.{u1} α) (ys : LazyList.{u1} α) (zs : LazyList.{u1} α), Eq.{succ u1} (LazyList.{u1} α) (LazyList.append.{u1} α (LazyList.append.{u1} α xs (fun (_ : Unit) => ys)) (fun (_ : Unit) => zs)) (LazyList.append.{u1} α xs (fun (_ : Unit) => LazyList.append.{u1} α ys (fun (_ : Unit) => zs)))
-but is expected to have type
-  forall {α : Type.{u1}} (xs : LazyList.{u1} α) (ys : LazyList.{u1} α) (zs : LazyList.{u1} α), Eq.{succ u1} (LazyList.{u1} α) (LazyList.append.{u1} α (LazyList.append.{u1} α xs (Thunk.mk.{u1} (LazyList.{u1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => ys))) (Thunk.mk.{u1} (LazyList.{u1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => zs))) (LazyList.append.{u1} α xs (Thunk.mk.{u1} (LazyList.{u1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => LazyList.append.{u1} α ys (Thunk.mk.{u1} (LazyList.{u1} α) (fun (x._@.Init.Core._hyg.266 : Unit) => zs)))))
-Case conversion may be inaccurate. Consider using '#align lazy_list.append_assoc LazyList.append_assocₓ'. -/
 theorem append_assoc {α} (xs ys zs : LazyList α) :
     (xs.append ys).append zs = xs.append (ys.append zs) := by induction xs <;> simp [append, *]
 #align lazy_list.append_assoc LazyList.append_assoc
 
-/- warning: lazy_list.append_bind -> LazyList.append_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (xs : LazyList.{u1} α) (ys : Thunkₓ.{u1} (LazyList.{u1} α)) (f : α -> (LazyList.{u2} β)), Eq.{succ u2} (LazyList.{u2} β) (LazyList.bind.{u1, u2} α β (LazyList.append.{u1} α xs ys) f) (LazyList.append.{u2} β (LazyList.bind.{u1, u2} α β xs f) (fun (_ : Unit) => LazyList.bind.{u1, u2} α β (ys Unit.unit) f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (xs : LazyList.{u2} α) (ys : Thunk.{u2} (LazyList.{u2} α)) (f : α -> (LazyList.{u1} β)), Eq.{succ u1} (LazyList.{u1} β) (LazyList.bind.{u2, u1} α β (LazyList.append.{u2} α xs ys) f) (LazyList.append.{u1} β (LazyList.bind.{u2, u1} α β xs f) (Thunk.mk.{u1} (LazyList.{u1} β) (fun (x._@.Init.Core._hyg.266 : Unit) => LazyList.bind.{u2, u1} α β (Thunk.get.{u2} (LazyList.{u2} α) ys) f)))
-Case conversion may be inaccurate. Consider using '#align lazy_list.append_bind LazyList.append_bindₓ'. -/
 theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : α → LazyList β) :
     (@LazyList.append _ xs ys).bind f = (xs.bind f).append ((ys ()).bind f) := by
   induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
@@ -213,12 +189,6 @@ instance : LawfulMonad LazyList
     induction x <;> simp [LazyList.bind, *, singleton, append]
     ext ⟨⟩; rfl
 
-/- warning: lazy_list.mfirst -> LazyList.mfirstₓ is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Alternative.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}}, (α -> (m β)) -> (LazyList.{u3} α) -> (m β)
-but is expected to have type
-  forall {m : Type.{u3} -> Type.{u2}} [_inst_1 : Alternative.{u3, u2} m] {α : Type.{u1}} {β : Type.{u3}}, (α -> (m β)) -> (LazyList.{u1} α) -> (m β)
-Case conversion may be inaccurate. Consider using '#align lazy_list.mfirst LazyList.mfirstₓₓ'. -/
 /-- Try applying function `f` to every element of a `lazy_list` and
 return the result of the first attempt that succeeds. -/
 def mfirst {m} [Alternative m] {α β} (f : α → m β) : LazyList α → m β
@@ -253,24 +223,12 @@ theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
 #align lazy_list.mem_nil LazyList.mem_nil
 -/
 
-/- warning: lazy_list.mem_cons -> LazyList.mem_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (x : α) (y : α) (ys : Thunkₓ.{u1} (LazyList.{u1} α)), Iff (Membership.Mem.{u1, u1} α (LazyList.{u1} α) (LazyList.hasMem.{u1} α) x (LazyList.cons.{u1} α y ys)) (Or (Eq.{succ u1} α x y) (Membership.Mem.{u1, u1} α (LazyList.{u1} α) (LazyList.hasMem.{u1} α) x (ys Unit.unit)))
-but is expected to have type
-  forall {α : Type.{u1}} (x : α) (y : α) (ys : Thunk.{u1} (LazyList.{u1} α)), Iff (Membership.mem.{u1, u1} α (LazyList.{u1} α) (LazyList.instMembershipLazyList.{u1} α) x (LazyList.cons.{u1} α y ys)) (Or (Eq.{succ u1} α x y) (Membership.mem.{u1, u1} α (LazyList.{u1} α) (LazyList.instMembershipLazyList.{u1} α) x (Thunk.get.{u1} (LazyList.{u1} α) ys)))
-Case conversion may be inaccurate. Consider using '#align lazy_list.mem_cons LazyList.mem_consₓ'. -/
 @[simp]
 theorem mem_cons {α} (x y : α) (ys : Thunk (LazyList α)) :
     x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
   Iff.rfl
 #align lazy_list.mem_cons LazyList.mem_cons
 
-/- warning: lazy_list.forall_mem_cons -> LazyList.forall_mem_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {a : α} {l : Thunkₓ.{u1} (LazyList.{u1} α)}, Iff (forall (x : α), (Membership.Mem.{u1, u1} α (LazyList.{u1} α) (LazyList.hasMem.{u1} α) x (LazyList.cons.{u1} α a l)) -> (p x)) (And (p a) (forall (x : α), (Membership.Mem.{u1, u1} α (LazyList.{u1} α) (LazyList.hasMem.{u1} α) x (l Unit.unit)) -> (p x)))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {a : α} {l : Thunk.{u1} (LazyList.{u1} α)}, Iff (forall (x : α), (Membership.mem.{u1, u1} α (LazyList.{u1} α) (LazyList.instMembershipLazyList.{u1} α) x (LazyList.cons.{u1} α a l)) -> (p x)) (And (p a) (forall (x : α), (Membership.mem.{u1, u1} α (LazyList.{u1} α) (LazyList.instMembershipLazyList.{u1} α) x (Thunk.get.{u1} (LazyList.{u1} α) l)) -> (p x)))
-Case conversion may be inaccurate. Consider using '#align lazy_list.forall_mem_cons LazyList.forall_mem_consₓ'. -/
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk (LazyList α)} :
     (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
   simp only [Membership.Mem, LazyList.Mem, or_imp, forall_and, forall_eq]

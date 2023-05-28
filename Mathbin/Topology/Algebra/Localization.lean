@@ -32,12 +32,6 @@ to the equivalence class of `(x, 1)` in the localization of `R` at a `M`.
 
 variable {R : Type _} [CommRing R] [TopologicalSpace R] {M : Submonoid R}
 
-/- warning: localization.ring_topology -> Localization.ringTopology is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] {M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))}, RingTopology.{u1} (Localization.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M) (CommRing.toRing.{u1} (Localization.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M) (Localization.commRing.{u1} R _inst_1 M))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] {M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))}, RingTopology.{u1} (Localization.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M) (CommRing.toRing.{u1} (Localization.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M) (Localization.instCommRingLocalizationToCommMonoid.{u1} R _inst_1 M))
-Case conversion may be inaccurate. Consider using '#align localization.ring_topology Localization.ringTopologyₓ'. -/
 /-- The ring topology on `localization M` coinduced from the natural homomorphism sending `x : R`
 to the equivalence class of `(x, 1)`. -/
 def Localization.ringTopology : RingTopology (Localization M) :=

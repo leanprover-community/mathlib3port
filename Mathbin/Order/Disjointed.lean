@@ -66,22 +66,10 @@ theorem disjointed_zero (f : ℕ → α) : disjointed f 0 = f 0 :=
 #align disjointed_zero disjointed_zero
 -/
 
-/- warning: disjointed_succ -> disjointed_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (f : Nat -> α) (n : Nat), Eq.{succ u1} α (disjointed.{u1} α _inst_1 f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (coeFn.{succ u1, succ u1} (OrderHom.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (fun (_x : OrderHom.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) => Nat -> α) (OrderHom.hasCoeToFun.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (partialSups.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) f) n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (f : Nat -> α) (n : Nat), Eq.{succ u1} α (disjointed.{u1} α _inst_1 f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (OrderHom.toFun.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))) (partialSups.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) f) n))
-Case conversion may be inaccurate. Consider using '#align disjointed_succ disjointed_succₓ'. -/
 theorem disjointed_succ (f : ℕ → α) (n : ℕ) : disjointed f (n + 1) = f (n + 1) \ partialSups f n :=
   rfl
 #align disjointed_succ disjointed_succ
 
-/- warning: disjointed_le_id -> disjointed_le_id is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], LE.le.{u1} ((Nat -> α) -> Nat -> α) (Pi.hasLe.{u1, u1} (Nat -> α) (fun (f : Nat -> α) => Nat -> α) (fun (i : Nat -> α) => Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))))) (disjointed.{u1} α _inst_1) (id.{succ u1} (Nat -> α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], LE.le.{u1} ((Nat -> α) -> Nat -> α) (Pi.hasLe.{u1, u1} (Nat -> α) (fun (f : Nat -> α) => Nat -> α) (fun (i : Nat -> α) => Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))))) (disjointed.{u1} α _inst_1) (id.{succ u1} (Nat -> α))
-Case conversion may be inaccurate. Consider using '#align disjointed_le_id disjointed_le_idₓ'. -/
 theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
   by
   rintro f n
@@ -90,12 +78,6 @@ theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
   · exact sdiff_le
 #align disjointed_le_id disjointed_le_id
 
-/- warning: disjointed_le -> disjointed_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (f : Nat -> α), LE.le.{u1} (Nat -> α) (Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))))) (disjointed.{u1} α _inst_1 f) f
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (f : Nat -> α), LE.le.{u1} (Nat -> α) (Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))))) (disjointed.{u1} α _inst_1 f) f
-Case conversion may be inaccurate. Consider using '#align disjointed_le disjointed_leₓ'. -/
 theorem disjointed_le (f : ℕ → α) : disjointed f ≤ f :=
   disjointed_le_id f
 #align disjointed_le disjointed_le
@@ -112,12 +94,6 @@ theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed 
 #align disjoint_disjointed disjoint_disjointed
 -/
 
-/- warning: disjointed_rec -> disjointedRec is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α} {p : α -> Sort.{u2}}, (forall {{t : α}} {{i : Nat}}, (p t) -> (p (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) t (f i)))) -> (forall {{n : Nat}}, (p (f n)) -> (p (disjointed.{u1} α _inst_1 f n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α} {p : α -> Sort.{u2}}, (forall {{t : α}} {{i : Nat}}, (p t) -> (p (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) t (f i)))) -> (forall {{n : Nat}}, (p (f n)) -> (p (disjointed.{u1} α _inst_1 f n)))
-Case conversion may be inaccurate. Consider using '#align disjointed_rec disjointedRecₓ'. -/
 /-- An induction principle for `disjointed`. To define/prove something on `disjointed f n`, it's
 enough to define/prove it for `f n` and being able to extend through diffs. -/
 def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i)) :
@@ -133,24 +109,12 @@ def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p
     exact hdiff ih
 #align disjointed_rec disjointedRec
 
-/- warning: disjointed_rec_zero -> disjointedRec_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α} {p : α -> Sort.{u2}} (hdiff : forall {{t : α}} {{i : Nat}}, (p t) -> (p (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) t (f i)))) (h₀ : p (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))), Eq.{u2} (p (disjointed.{u1} α _inst_1 (fun (i : Nat) => f i) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (disjointedRec.{u1, u2} α _inst_1 (fun (i : Nat) => f i) (fun (t : α) => p t) hdiff (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) h₀) h₀
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α} {p : α -> Sort.{u2}} (hdiff : forall {{t : α}} {{i : Nat}}, (p t) -> (p (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) t (f i)))) (h₀ : p (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))), Eq.{u2} (p (disjointed.{u1} α _inst_1 (fun (i : Nat) => f i) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (disjointedRec.{u1, u2} α _inst_1 (fun (i : Nat) => f i) (fun (t : α) => p t) hdiff (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) h₀) h₀
-Case conversion may be inaccurate. Consider using '#align disjointed_rec_zero disjointedRec_zeroₓ'. -/
 @[simp]
 theorem disjointedRec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i))
     (h₀ : p (f 0)) : disjointedRec hdiff h₀ = h₀ :=
   rfl
 #align disjointed_rec_zero disjointedRec_zero
 
-/- warning: monotone.disjointed_eq -> Monotone.disjointed_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α}, (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))) f) -> (forall (n : Nat), Eq.{succ u1} α (disjointed.{u1} α _inst_1 f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {f : Nat -> α}, (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))) f) -> (forall (n : Nat), Eq.{succ u1} α (disjointed.{u1} α _inst_1 f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n)))
-Case conversion may be inaccurate. Consider using '#align monotone.disjointed_eq Monotone.disjointed_eqₓ'. -/
 -- TODO: Find a useful statement of `disjointed_rec_succ`.
 theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
     disjointed f (n + 1) = f (n + 1) \ f n := by rw [disjointed_succ, hf.partial_sups_eq]
@@ -195,22 +159,10 @@ section CompleteBooleanAlgebra
 
 variable [CompleteBooleanAlgebra α]
 
-/- warning: supr_disjointed -> iSup_disjointed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteBooleanAlgebra.{u1} α] (f : Nat -> α), Eq.{succ u1} α (iSup.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) Nat (fun (n : Nat) => disjointed.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u1} α _inst_1)) f n)) (iSup.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) Nat (fun (n : Nat) => f n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteBooleanAlgebra.{u1} α] (f : Nat -> α), Eq.{succ u1} α (iSup.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) Nat (fun (n : Nat) => disjointed.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u1} α _inst_1)) f n)) (iSup.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) Nat (fun (n : Nat) => f n))
-Case conversion may be inaccurate. Consider using '#align supr_disjointed iSup_disjointedₓ'. -/
 theorem iSup_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n :=
   iSup_eq_iSup_of_partialSups_eq_partialSups (partialSups_disjointed f)
 #align supr_disjointed iSup_disjointed
 
-/- warning: disjointed_eq_inf_compl -> disjointed_eq_inf_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteBooleanAlgebra.{u1} α] (f : Nat -> α) (n : Nat), Eq.{succ u1} α (disjointed.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u1} α _inst_1)) f n) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))))) (f n) (iInf.{u1, 1} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) Nat (fun (i : Nat) => iInf.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) (LT.lt.{0} Nat Nat.hasLt i n) (fun (H : LT.lt.{0} Nat Nat.hasLt i n) => HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u1} α _inst_1)) (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteBooleanAlgebra.{u1} α] (f : Nat -> α) (n : Nat), Eq.{succ u1} α (disjointed.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u1} α _inst_1)) f n) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1)))))) (f n) (iInf.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) Nat (fun (i : Nat) => iInf.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α (Order.Coframe.toCompleteLattice.{u1} α (CompleteDistribLattice.toCoframe.{u1} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} α _inst_1))))) (LT.lt.{0} Nat instLTNat i n) (fun (H : LT.lt.{0} Nat instLTNat i n) => HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u1} α _inst_1)) (f i)))))
-Case conversion may be inaccurate. Consider using '#align disjointed_eq_inf_compl disjointed_eq_inf_complₓ'. -/
 theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ :=
   by
   cases n
@@ -228,42 +180,18 @@ end CompleteBooleanAlgebra
 /-! ### Set notation variants of lemmas -/
 
 
-/- warning: disjointed_subset -> disjointed_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (f : Nat -> (Set.{u1} α)) (n : Nat), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) f n) (f n)
-but is expected to have type
-  forall {α : Type.{u1}} (f : Nat -> (Set.{u1} α)) (n : Nat), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) f n) (f n)
-Case conversion may be inaccurate. Consider using '#align disjointed_subset disjointed_subsetₓ'. -/
 theorem disjointed_subset (f : ℕ → Set α) (n : ℕ) : disjointed f n ⊆ f n :=
   disjointed_le f n
 #align disjointed_subset disjointed_subset
 
-/- warning: Union_disjointed -> iUnion_disjointed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Nat -> (Set.{u1} α)}, Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) f n)) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => f n))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Nat -> (Set.{u1} α)}, Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) f n)) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => f n))
-Case conversion may be inaccurate. Consider using '#align Union_disjointed iUnion_disjointedₓ'. -/
 theorem iUnion_disjointed {f : ℕ → Set α} : (⋃ n, disjointed f n) = ⋃ n, f n :=
   iSup_disjointed f
 #align Union_disjointed iUnion_disjointed
 
-/- warning: disjointed_eq_inter_compl -> disjointed_eq_inter_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (f : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) f n) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (f n) (Set.iInter.{u1, 1} α Nat (fun (i : Nat) => Set.iInter.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt i n) (fun (H : LT.lt.{0} Nat Nat.hasLt i n) => HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} (f : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) f n) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (f n) (Set.iInter.{u1, 1} α Nat (fun (i : Nat) => Set.iInter.{u1, 0} α (LT.lt.{0} Nat instLTNat i n) (fun (H : LT.lt.{0} Nat instLTNat i n) => HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (f i)))))
-Case conversion may be inaccurate. Consider using '#align disjointed_eq_inter_compl disjointed_eq_inter_complₓ'. -/
 theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f n = f n ∩ ⋂ i < n, f iᶜ :=
   disjointed_eq_inf_compl f n
 #align disjointed_eq_inter_compl disjointed_eq_inter_compl
 
-/- warning: preimage_find_eq_disjointed -> preimage_find_eq_disjointed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Nat -> (Set.{u1} α)) (H : forall (x : α), Exists.{1} Nat (fun (n : Nat) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s n))) [_inst_1 : forall (x : α) (n : Nat), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s n))] (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Nat (fun (x : α) => Nat.find (fun (n : Nat) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s n)) (fun (a : Nat) => _inst_1 x a) (H x)) (Singleton.singleton.{0, 0} Nat (Set.{0} Nat) (Set.hasSingleton.{0} Nat) n)) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s n)
-but is expected to have type
-  forall {α : Type.{u1}} (s : Nat -> (Set.{u1} α)) (H : forall (x : α), Exists.{1} Nat (fun (n : Nat) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n))) [_inst_1 : forall (x : α) (n : Nat), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n))] (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Nat (fun (x : α) => Nat.find (fun (n : Nat) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n)) (fun (a : Nat) => _inst_1 x a) (H x)) (Singleton.singleton.{0, 0} Nat (Set.{0} Nat) (Set.instSingletonSet.{0} Nat) n)) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s n)
-Case conversion may be inaccurate. Consider using '#align preimage_find_eq_disjointed preimage_find_eq_disjointedₓ'. -/
 theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n)
     [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n := by
   ext x; simp [Nat.find_eq_iff, disjointed_eq_inter_compl]

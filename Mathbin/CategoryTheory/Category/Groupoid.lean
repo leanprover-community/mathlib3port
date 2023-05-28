@@ -67,12 +67,6 @@ def of (C : Type u) [Groupoid.{v} C] : Grpd.{v, u} :=
 #align category_theory.Groupoid.of CategoryTheory.Grpd.of
 -/
 
-/- warning: category_theory.Groupoid.coe_of -> CategoryTheory.Grpd.coe_of is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Groupoid.{u2, u1} C], Eq.{succ (succ u1)} Type.{u1} (coeSort.{succ (max (succ u1) u1 (succ u2)), succ (succ u1)} CategoryTheory.Grpd.{u2, u1} Type.{u1} CategoryTheory.Grpd.hasCoeToSort.{u1, u2} (CategoryTheory.Grpd.of.{u2, u1} C _inst_1)) C
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Groupoid.{u1, u2} C], Eq.{succ (succ u2)} Type.{u2} (CategoryTheory.Bundled.α.{u2, max u2 (succ u1)} CategoryTheory.Groupoid.{u1, u2} (CategoryTheory.Grpd.of.{u1, u2} C _inst_1)) C
-Case conversion may be inaccurate. Consider using '#align category_theory.Groupoid.coe_of CategoryTheory.Grpd.coe_ofₓ'. -/
 @[simp]
 theorem coe_of (C : Type u) [Groupoid C] : (of C : Type u) = C :=
   rfl
@@ -109,21 +103,9 @@ def forgetToCat : Grpd.{v, u} ⥤ Cat.{v, u}
 #align category_theory.Groupoid.forget_to_Cat CategoryTheory.Grpd.forgetToCat
 -/
 
-/- warning: category_theory.Groupoid.forget_to_Cat_full -> CategoryTheory.Grpd.forgetToCatFull is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Full.{max u1 u2, max u1 u2, max (succ u2) u2 (succ u1), max (succ u2) u2 (succ u1)} CategoryTheory.Grpd.{u1, u2} CategoryTheory.Grpd.category.{u1, u2} CategoryTheory.Cat.{u1, u2} CategoryTheory.Cat.category.{u1, u2} CategoryTheory.Grpd.forgetToCat.{u1, u2}
-but is expected to have type
-  CategoryTheory.Full.{max u1 u2, max u1 u2, max (succ u1) (succ u2), max (succ u1) (succ u2)} CategoryTheory.Grpd.{u2, u1} CategoryTheory.Grpd.category.{u2, u1} CategoryTheory.Cat.{u2, u1} CategoryTheory.Cat.category.{u2, u1} CategoryTheory.Grpd.forgetToCat.{u2, u1}
-Case conversion may be inaccurate. Consider using '#align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCatFullₓ'. -/
 instance forgetToCatFull : Full forgetToCat where preimage C D := id
 #align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCatFull
 
-/- warning: category_theory.Groupoid.forget_to_Cat_faithful -> CategoryTheory.Grpd.forgetToCat_faithful is a dubious translation:
-lean 3 declaration is
-  CategoryTheory.Faithful.{max u1 u2, max u1 u2, max (succ u2) u2 (succ u1), max (succ u2) u2 (succ u1)} CategoryTheory.Grpd.{u1, u2} CategoryTheory.Grpd.category.{u1, u2} CategoryTheory.Cat.{u1, u2} CategoryTheory.Cat.category.{u1, u2} CategoryTheory.Grpd.forgetToCat.{u1, u2}
-but is expected to have type
-  CategoryTheory.Faithful.{max u1 u2, max u1 u2, max (succ u1) (succ u2), max (succ u1) (succ u2)} CategoryTheory.Grpd.{u2, u1} CategoryTheory.Grpd.category.{u2, u1} CategoryTheory.Cat.{u2, u1} CategoryTheory.Cat.category.{u2, u1} CategoryTheory.Grpd.forgetToCat.{u2, u1}
-Case conversion may be inaccurate. Consider using '#align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.Grpd.forgetToCat_faithfulₓ'. -/
 instance forgetToCat_faithful : Faithful forgetToCat where
 #align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.Grpd.forgetToCat_faithful
 

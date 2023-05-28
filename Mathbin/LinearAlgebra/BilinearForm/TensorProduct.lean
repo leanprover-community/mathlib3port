@@ -55,9 +55,6 @@ def tensorDistrib : BilinForm R M₁ ⊗[R] BilinForm R M₂ →ₗ[R] BilinForm
 #align bilin_form.tensor_distrib BilinForm.tensorDistrib
 -/
 
-/- warning: bilin_form.tensor_distrib_tmul -> BilinForm.tensorDistrib_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align bilin_form.tensor_distrib_tmul BilinForm.tensorDistrib_tmulₓ'. -/
 @[simp]
 theorem tensorDistrib_tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) (m₁ : M₁) (m₂ : M₂)
     (m₁' : M₁) (m₂' : M₂) :
@@ -65,12 +62,6 @@ theorem tensorDistrib_tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) (
   rfl
 #align bilin_form.tensor_distrib_tmul BilinForm.tensorDistrib_tmul
 
-/- warning: bilin_form.tmul -> BilinForm.tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M₁ : Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M₁] [_inst_3 : AddCommMonoid.{u3} M₂] [_inst_4 : Module.{u1, u2} R M₁ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] [_inst_5 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3], (BilinForm.{u1, u2} R M₁ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_4) -> (BilinForm.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3 _inst_5) -> (BilinForm.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M₁ M₂ _inst_2 _inst_3 _inst_4 _inst_5) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M₁ M₂ _inst_2 _inst_3 _inst_4 _inst_5) (TensorProduct.module.{u1, u2, u3} R _inst_1 M₁ M₂ _inst_2 _inst_3 _inst_4 _inst_5))
-but is expected to have type
-  forall {R : Type.{u1}} {M₁ : Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M₁] [_inst_3 : AddCommMonoid.{u3} M₂] [_inst_4 : Module.{u1, u2} R M₁ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2] [_inst_5 : Module.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3], (BilinForm.{u1, u2} R M₁ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_2 _inst_4) -> (BilinForm.{u1, u3} R M₂ (CommSemiring.toSemiring.{u1} R _inst_1) _inst_3 _inst_5) -> (BilinForm.{u1, max u3 u2} R (TensorProduct.{u1, u2, u3} R _inst_1 M₁ M₂ _inst_2 _inst_3 _inst_4 _inst_5) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M₁ M₂ _inst_2 _inst_3 _inst_4 _inst_5) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M₁ M₂ _inst_2 _inst_3 _inst_4 _inst_5))
-Case conversion may be inaccurate. Consider using '#align bilin_form.tmul BilinForm.tmulₓ'. -/
 /-- The tensor product of two bilinear forms, a shorthand for dot notation. -/
 @[reducible]
 protected def tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) : BilinForm R (M₁ ⊗[R] M₂) :=
@@ -109,9 +100,6 @@ noncomputable def tensorDistribEquiv :
 #align bilin_form.tensor_distrib_equiv BilinForm.tensorDistribEquiv
 -/
 
-/- warning: bilin_form.tensor_distrib_equiv_apply -> BilinForm.tensorDistribEquiv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align bilin_form.tensor_distrib_equiv_apply BilinForm.tensorDistribEquiv_applyₓ'. -/
 @[simp]
 theorem tensorDistribEquiv_apply (B : BilinForm R M₁ ⊗ BilinForm R M₂) :
     tensorDistribEquiv B = tensorDistrib B :=

@@ -43,9 +43,6 @@ variable {R S : Type _} [CommRing R] [Nontrivial R] [LinearOrderedCommRing S]
 
 variable {n : Type _} [Fintype n] [DecidableEq n]
 
-/- warning: matrix.det_le -> Matrix.det_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.det_le Matrix.det_leₓ'. -/
 theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i j, abv (A i j) ≤ x) :
     abv A.det ≤ Nat.factorial (Fintype.card n) • x ^ Fintype.card n :=
   calc
@@ -62,9 +59,6 @@ theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i 
     
 #align matrix.det_le Matrix.det_le
 
-/- warning: matrix.det_sum_le -> Matrix.det_sum_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.det_sum_le Matrix.det_sum_leₓ'. -/
 theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv : AbsoluteValue R S}
     {x : S} (hx : ∀ k i j, abv (A k i j) ≤ x) :
     abv (det (∑ k in s, A k)) ≤
@@ -78,9 +72,6 @@ theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv 
       
 #align matrix.det_sum_le Matrix.det_sum_le
 
-/- warning: matrix.det_sum_smul_le -> Matrix.det_sum_smul_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.det_sum_smul_le Matrix.det_sum_smul_leₓ'. -/
 theorem det_sum_smul_le {ι : Type _} (s : Finset ι) {c : ι → R} {A : ι → Matrix n n R}
     {abv : AbsoluteValue R S} {x : S} (hx : ∀ k i j, abv (A k i j) ≤ x) {y : S}
     (hy : ∀ k, abv (c k) ≤ y) :

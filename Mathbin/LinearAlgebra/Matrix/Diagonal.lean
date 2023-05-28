@@ -42,25 +42,16 @@ section CommRing
 
 variable {n : Type _} [Fintype n] [DecidableEq n] {R : Type v} [CommRing R]
 
-/- warning: matrix.proj_diagonal -> Matrix.proj_diagonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.proj_diagonal Matrix.proj_diagonalₓ'. -/
 theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (toLin' (diagonal w)) = w i • proj i :=
   LinearMap.ext fun j => mulVec_diagonal _ _ _
 #align matrix.proj_diagonal Matrix.proj_diagonal
 
-/- warning: matrix.diagonal_comp_std_basis -> Matrix.diagonal_comp_stdBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.diagonal_comp_std_basis Matrix.diagonal_comp_stdBasisₓ'. -/
 theorem diagonal_comp_stdBasis (w : n → R) (i : n) :
     (diagonal w).toLin'.comp (LinearMap.stdBasis R (fun _ : n => R) i) =
       w i • LinearMap.stdBasis R (fun _ : n => R) i :=
   LinearMap.ext fun x => (diagonal_mulVec_single w _ _).trans (Pi.single_smul' i (w i) x)
 #align matrix.diagonal_comp_std_basis Matrix.diagonal_comp_stdBasis
 
-/- warning: matrix.diagonal_to_lin' -> Matrix.diagonal_toLin' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.diagonal_to_lin' Matrix.diagonal_toLin'ₓ'. -/
 theorem diagonal_toLin' (w : n → R) :
     (diagonal w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
   LinearMap.ext fun v => funext fun i => mulVec_diagonal _ _ _
@@ -74,9 +65,6 @@ variable {m n : Type _} [Fintype m] [Fintype n]
 
 variable {K : Type u} [Field K]
 
-/- warning: matrix.ker_diagonal_to_lin' -> Matrix.ker_diagonal_toLin' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_toLin'ₓ'. -/
 -- maybe try to relax the universe constraint
 theorem ker_diagonal_toLin' [DecidableEq m] (w : m → K) :
     ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) :=
@@ -90,9 +78,6 @@ theorem ker_diagonal_toLin' [DecidableEq m] (w : m → K) :
         (Set.toFinite _)).symm
 #align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_toLin'
 
-/- warning: matrix.range_diagonal -> Matrix.range_diagonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.range_diagonal Matrix.range_diagonalₓ'. -/
 theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonal w).toLin'.range =
       ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range :=
@@ -103,9 +88,6 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
   rw [← LinearMap.range_comp, diagonal_comp_std_basis, ← range_smul']
 #align matrix.range_diagonal Matrix.range_diagonal
 
-/- warning: matrix.rank_diagonal -> Matrix.rank_diagonal is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.rank_diagonal Matrix.rank_diagonalₓ'. -/
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
     rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } :=
   by

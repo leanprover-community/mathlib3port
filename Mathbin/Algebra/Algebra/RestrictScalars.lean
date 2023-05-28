@@ -149,12 +149,6 @@ instance RestrictScalars.isCentralScalar [Module S M] [Module Sᵐᵒᵖ M] [IsC
 #align restrict_scalars.is_central_scalar RestrictScalars.isCentralScalar
 -/
 
-/- warning: restrict_scalars.lsmul -> RestrictScalars.lsmul is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (S : Type.{u2}) (M : Type.{u3}) [_inst_1 : Semiring.{u2} S] [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : CommSemiring.{u1} R] [_inst_4 : Algebra.{u1, u2} R S _inst_3 _inst_1] [_inst_5 : Module.{u2, u3} S M _inst_1 _inst_2], AlgHom.{u1, u2, u3} R S (Module.End.{u1, u3} R (RestrictScalars.{u1, u2, u3} R S M) (CommSemiring.toSemiring.{u1} R _inst_3) (RestrictScalars.addCommMonoid.{u1, u2, u3} R S M _inst_2) (RestrictScalars.module.{u1, u2, u3} R S M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) _inst_3 _inst_1 (Module.End.semiring.{u1, u3} R (RestrictScalars.{u1, u2, u3} R S M) (CommSemiring.toSemiring.{u1} R _inst_3) (RestrictScalars.addCommMonoid.{u1, u2, u3} R S M _inst_2) (RestrictScalars.module.{u1, u2, u3} R S M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) _inst_4 (Module.End.algebra.{u1, u3} R (RestrictScalars.{u1, u2, u3} R S M) _inst_3 (RestrictScalars.addCommMonoid.{u1, u2, u3} R S M _inst_2) (RestrictScalars.module.{u1, u2, u3} R S M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5))
-but is expected to have type
-  forall (R : Type.{u1}) (S : Type.{u2}) (M : Type.{u3}) [_inst_1 : Semiring.{u2} S] [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : CommSemiring.{u1} R] [_inst_4 : Algebra.{u1, u2} R S _inst_3 _inst_1] [_inst_5 : Module.{u2, u3} S M _inst_1 _inst_2], AlgHom.{u1, u2, u3} R S (Module.End.{u1, u3} R (RestrictScalars.{u1, u2, u3} R S M) (CommSemiring.toSemiring.{u1} R _inst_3) (instAddCommMonoidRestrictScalars.{u1, u2, u3} R S M _inst_2) (RestrictScalars.module.{u1, u2, u3} R S M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) _inst_3 _inst_1 (Module.End.semiring.{u1, u3} R (RestrictScalars.{u1, u2, u3} R S M) (CommSemiring.toSemiring.{u1} R _inst_3) (instAddCommMonoidRestrictScalars.{u1, u2, u3} R S M _inst_2) (RestrictScalars.module.{u1, u2, u3} R S M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) _inst_4 (Module.instAlgebraEndToSemiringSemiring.{u1, u3} R (RestrictScalars.{u1, u2, u3} R S M) _inst_3 (instAddCommMonoidRestrictScalars.{u1, u2, u3} R S M _inst_2) (RestrictScalars.module.{u1, u2, u3} R S M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5))
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.lsmul RestrictScalars.lsmulₓ'. -/
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
 of `restrict_scalars R S M`.
 -/
@@ -169,12 +163,6 @@ end
 
 variable [AddCommMonoid M]
 
-/- warning: restrict_scalars.add_equiv -> RestrictScalars.addEquiv is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (S : Type.{u2}) (M : Type.{u3}) [_inst_1 : AddCommMonoid.{u3} M], AddEquiv.{u3, u3} (RestrictScalars.{u1, u2, u3} R S M) M (AddZeroClass.toHasAdd.{u3} (RestrictScalars.{u1, u2, u3} R S M) (AddMonoid.toAddZeroClass.{u3} (RestrictScalars.{u1, u2, u3} R S M) (AddCommMonoid.toAddMonoid.{u3} (RestrictScalars.{u1, u2, u3} R S M) (RestrictScalars.addCommMonoid.{u1, u2, u3} R S M _inst_1)))) (AddZeroClass.toHasAdd.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_1)))
-but is expected to have type
-  forall (R : Type.{u1}) (S : Type.{u2}) (M : Type.{u3}) [_inst_1 : AddCommMonoid.{u3} M], AddEquiv.{u3, u3} (RestrictScalars.{u1, u2, u3} R S M) M (AddZeroClass.toAdd.{u3} (RestrictScalars.{u1, u2, u3} R S M) (AddMonoid.toAddZeroClass.{u3} (RestrictScalars.{u1, u2, u3} R S M) (AddCommMonoid.toAddMonoid.{u3} (RestrictScalars.{u1, u2, u3} R S M) (instAddCommMonoidRestrictScalars.{u1, u2, u3} R S M _inst_1)))) (AddZeroClass.toAdd.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_1)))
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.add_equiv RestrictScalars.addEquivₓ'. -/
 /-- `restrict_scalars.add_equiv` is the additive equivalence with the original module. -/
 def RestrictScalars.addEquiv : RestrictScalars R S M ≃+ M :=
   AddEquiv.refl M
@@ -182,45 +170,30 @@ def RestrictScalars.addEquiv : RestrictScalars R S M ≃+ M :=
 
 variable [CommSemiring R] [Semiring S] [Algebra R S] [Module S M]
 
-/- warning: restrict_scalars.add_equiv_map_smul -> RestrictScalars.addEquiv_map_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.add_equiv_map_smul RestrictScalars.addEquiv_map_smulₓ'. -/
 @[simp]
 theorem RestrictScalars.addEquiv_map_smul (c : R) (x : RestrictScalars R S M) :
     RestrictScalars.addEquiv R S M (c • x) = algebraMap R S c • RestrictScalars.addEquiv R S M x :=
   rfl
 #align restrict_scalars.add_equiv_map_smul RestrictScalars.addEquiv_map_smul
 
-/- warning: restrict_scalars.smul_def -> RestrictScalars.smul_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.smul_def RestrictScalars.smul_defₓ'. -/
 theorem RestrictScalars.smul_def (c : R) (x : RestrictScalars R S M) :
     c • x =
       (RestrictScalars.addEquiv R S M).symm (algebraMap R S c • RestrictScalars.addEquiv R S M x) :=
   rfl
 #align restrict_scalars.smul_def RestrictScalars.smul_def
 
-/- warning: restrict_scalars.add_equiv_symm_map_algebra_map_smul -> RestrictScalars.addEquiv_symm_map_algebraMap_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.add_equiv_symm_map_algebra_map_smul RestrictScalars.addEquiv_symm_map_algebraMap_smulₓ'. -/
 theorem RestrictScalars.addEquiv_symm_map_algebraMap_smul (r : R) (x : M) :
     (RestrictScalars.addEquiv R S M).symm (algebraMap R S r • x) =
       r • (RestrictScalars.addEquiv R S M).symm x :=
   rfl
 #align restrict_scalars.add_equiv_symm_map_algebra_map_smul RestrictScalars.addEquiv_symm_map_algebraMap_smul
 
-/- warning: restrict_scalars.add_equiv_symm_map_smul_smul -> RestrictScalars.addEquiv_symm_map_smul_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.add_equiv_symm_map_smul_smul RestrictScalars.addEquiv_symm_map_smul_smulₓ'. -/
 theorem RestrictScalars.addEquiv_symm_map_smul_smul (r : R) (s : S) (x : M) :
     (RestrictScalars.addEquiv R S M).symm ((r • s) • x) =
       r • (RestrictScalars.addEquiv R S M).symm (s • x) :=
   by rw [Algebra.smul_def, mul_smul]; rfl
 #align restrict_scalars.add_equiv_symm_map_smul_smul RestrictScalars.addEquiv_symm_map_smul_smul
 
-/- warning: restrict_scalars.lsmul_apply_apply -> RestrictScalars.lsmul_apply_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.lsmul_apply_apply RestrictScalars.lsmul_apply_applyₓ'. -/
 theorem RestrictScalars.lsmul_apply_apply (s : S) (x : RestrictScalars R S M) :
     RestrictScalars.lsmul R S M s x =
       (RestrictScalars.addEquiv R S M).symm (s • RestrictScalars.addEquiv R S M x) :=
@@ -245,12 +218,6 @@ instance [I : CommRing A] : CommRing (RestrictScalars R S A) :=
 
 variable [Semiring A]
 
-/- warning: restrict_scalars.ring_equiv -> RestrictScalars.ringEquiv is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) (S : Type.{u2}) (A : Type.{u3}) [_inst_1 : Semiring.{u3} A], RingEquiv.{u3, u3} (RestrictScalars.{u1, u2, u3} R S A) A (Distrib.toHasMul.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonUnitalNonAssocSemiring.toDistrib.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (Semiring.toNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (RestrictScalars.semiring.{u1, u2, u3} R S A _inst_1))))) (Distrib.toHasAdd.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonUnitalNonAssocSemiring.toDistrib.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (Semiring.toNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (RestrictScalars.semiring.{u1, u2, u3} R S A _inst_1))))) (Distrib.toHasMul.{u3} A (NonUnitalNonAssocSemiring.toDistrib.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1)))) (Distrib.toHasAdd.{u3} A (NonUnitalNonAssocSemiring.toDistrib.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))))
-but is expected to have type
-  forall (R : Type.{u1}) (S : Type.{u2}) (A : Type.{u3}) [_inst_1 : Semiring.{u3} A], RingEquiv.{u3, u3} (RestrictScalars.{u1, u2, u3} R S A) A (NonUnitalNonAssocSemiring.toMul.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (Semiring.toNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (instSemiringRestrictScalars.{u1, u2, u3} R S A _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))) (Distrib.toAdd.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonUnitalNonAssocSemiring.toDistrib.{u3} (RestrictScalars.{u1, u2, u3} R S A) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (Semiring.toNonAssocSemiring.{u3} (RestrictScalars.{u1, u2, u3} R S A) (instSemiringRestrictScalars.{u1, u2, u3} R S A _inst_1))))) (Distrib.toAdd.{u3} A (NonUnitalNonAssocSemiring.toDistrib.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))))
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.ring_equiv RestrictScalars.ringEquivₓ'. -/
 /-- Tautological ring isomorphism `restrict_scalars R S A ≃+* A`. -/
 def RestrictScalars.ringEquiv : RestrictScalars R S A ≃+* A :=
   RingEquiv.refl _
@@ -258,9 +225,6 @@ def RestrictScalars.ringEquiv : RestrictScalars R S A ≃+* A :=
 
 variable [CommSemiring S] [Algebra S A] [CommSemiring R] [Algebra R S]
 
-/- warning: restrict_scalars.ring_equiv_map_smul -> RestrictScalars.ringEquiv_map_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.ring_equiv_map_smul RestrictScalars.ringEquiv_map_smulₓ'. -/
 @[simp]
 theorem RestrictScalars.ringEquiv_map_smul (r : R) (x : RestrictScalars R S A) :
     RestrictScalars.ringEquiv R S A (r • x) =
@@ -277,9 +241,6 @@ instance : Algebra R (RestrictScalars R S A) :=
     commutes' := fun r x => Algebra.commutes _ _
     smul_def' := fun _ _ => Algebra.smul_def _ _ }
 
-/- warning: restrict_scalars.ring_equiv_algebra_map -> RestrictScalars.ringEquiv_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align restrict_scalars.ring_equiv_algebra_map RestrictScalars.ringEquiv_algebraMapₓ'. -/
 @[simp]
 theorem RestrictScalars.ringEquiv_algebraMap (r : R) :
     RestrictScalars.ringEquiv R S A (algebraMap R (RestrictScalars R S A) r) =

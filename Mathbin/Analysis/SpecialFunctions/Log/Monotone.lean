@@ -35,12 +35,6 @@ namespace Real
 
 variable {x y : ℝ}
 
-/- warning: real.log_mul_self_monotone_on -> Real.log_mul_self_monotoneOn is a dubious translation:
-lean 3 declaration is
-  MonotoneOn.{0, 0} Real Real Real.preorder Real.preorder (fun (x : Real) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Real.log x) x) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) x))
-but is expected to have type
-  MonotoneOn.{0, 0} Real Real Real.instPreorderReal Real.instPreorderReal (fun (x : Real) => HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Real.log x) x) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x))
-Case conversion may be inaccurate. Consider using '#align real.log_mul_self_monotone_on Real.log_mul_self_monotoneOnₓ'. -/
 theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) { x | 1 ≤ x } :=
   by
   -- TODO: can be strengthened to exp (-1) ≤ x
@@ -52,12 +46,6 @@ theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) { x | 1 
   rwa [le_log_iff_exp_le y_pos, Real.exp_zero]
 #align real.log_mul_self_monotone_on Real.log_mul_self_monotoneOn
 
-/- warning: real.log_div_self_antitone_on -> Real.log_div_self_antitoneOn is a dubious translation:
-lean 3 declaration is
-  AntitoneOn.{0, 0} Real Real Real.preorder Real.preorder (fun (x : Real) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (Real.log x) x) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.hasLe (Real.exp (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) x))
-but is expected to have type
-  AntitoneOn.{0, 0} Real Real Real.instPreorderReal Real.instPreorderReal (fun (x : Real) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Real.log x) x) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.instLEReal (Real.exp (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) x))
-Case conversion may be inaccurate. Consider using '#align real.log_div_self_antitone_on Real.log_div_self_antitoneOnₓ'. -/
 theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) { x | exp 1 ≤ x } :=
   by
   simp only [AntitoneOn, mem_set_of_eq]
@@ -75,12 +63,6 @@ theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) { x | ex
     
 #align real.log_div_self_antitone_on Real.log_div_self_antitoneOn
 
-/- warning: real.log_div_self_rpow_antitone_on -> Real.log_div_self_rpow_antitoneOn is a dubious translation:
-lean 3 declaration is
-  forall {a : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) a) -> (AntitoneOn.{0, 0} Real Real Real.preorder Real.preorder (fun (x : Real) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (Real.log x) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.hasPow) x a)) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.hasLe (Real.exp (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) a)) x)))
-but is expected to have type
-  forall {a : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) a) -> (AntitoneOn.{0, 0} Real Real Real.instPreorderReal Real.instPreorderReal (fun (x : Real) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Real.log x) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x a)) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.instLEReal (Real.exp (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) a)) x)))
-Case conversion may be inaccurate. Consider using '#align real.log_div_self_rpow_antitone_on Real.log_div_self_rpow_antitoneOnₓ'. -/
 theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
     AntitoneOn (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } :=
   by
@@ -111,12 +93,6 @@ theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
     exact rpow_le_rpow x_nonneg hxy (le_of_lt ha)
 #align real.log_div_self_rpow_antitone_on Real.log_div_self_rpow_antitoneOn
 
-/- warning: real.log_div_sqrt_antitone_on -> Real.log_div_sqrt_antitoneOn is a dubious translation:
-lean 3 declaration is
-  AntitoneOn.{0, 0} Real Real Real.preorder Real.preorder (fun (x : Real) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (Real.log x) (Real.sqrt x)) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.hasLe (Real.exp (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) x))
-but is expected to have type
-  AntitoneOn.{0, 0} Real Real Real.instPreorderReal Real.instPreorderReal (fun (x : Real) => HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Real.log x) (Real.sqrt x)) (setOf.{0} Real (fun (x : Real) => LE.le.{0} Real Real.instLEReal (Real.exp (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) x))
-Case conversion may be inaccurate. Consider using '#align real.log_div_sqrt_antitone_on Real.log_div_sqrt_antitoneOnₓ'. -/
 theorem log_div_sqrt_antitoneOn : AntitoneOn (fun x : ℝ => log x / sqrt x) { x | exp 2 ≤ x } :=
   by
   simp_rw [sqrt_eq_rpow]

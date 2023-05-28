@@ -70,12 +70,6 @@ def LipschitzMul.C [_i : LipschitzMul β] : ℝ≥0 :=
 
 variable {β}
 
-/- warning: lipschitz_with_lipschitz_const_mul_edist -> lipschitzWith_lipschitz_const_mul_edist is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_i : LipschitzMul.{u1} β _inst_2 _inst_3], LipschitzWith.{u1, u1} (Prod.{u1, u1} β β) β (Prod.pseudoEMetricSpaceMax.{u1, u1} β β (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2)) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2) (LipschitzMul.C.{u1} β _inst_2 _inst_3 _i) (fun (p : Prod.{u1, u1} β β) => HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) (Prod.fst.{u1, u1} β β p) (Prod.snd.{u1, u1} β β p))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_i : LipschitzMul.{u1} β _inst_2 _inst_3], LipschitzWith.{u1, u1} (Prod.{u1, u1} β β) β (Prod.pseudoEMetricSpaceMax.{u1, u1} β β (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2)) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2) (LipschitzMul.C.{u1} β _inst_2 _inst_3 _i) (fun (p : Prod.{u1, u1} β β) => HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) (Prod.fst.{u1, u1} β β p) (Prod.snd.{u1, u1} β β p))
-Case conversion may be inaccurate. Consider using '#align lipschitz_with_lipschitz_const_mul_edist lipschitzWith_lipschitz_const_mul_edistₓ'. -/
 @[to_additive]
 theorem lipschitzWith_lipschitz_const_mul_edist [_i : LipschitzMul β] :
     LipschitzWith (LipschitzMul.C β) fun p : β × β => p.1 * p.2 :=
@@ -85,12 +79,6 @@ theorem lipschitzWith_lipschitz_const_mul_edist [_i : LipschitzMul β] :
 
 variable [LipschitzMul β]
 
-/- warning: lipschitz_with_lipschitz_const_mul -> lipschitz_with_lipschitz_const_mul is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3] (p : Prod.{u1, u1} β β) (q : Prod.{u1, u1} β β), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} β (PseudoMetricSpace.toHasDist.{u1} β _inst_2) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) (Prod.fst.{u1, u1} β β p) (Prod.snd.{u1, u1} β β p)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) (Prod.fst.{u1, u1} β β q) (Prod.snd.{u1, u1} β β q))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) (LipschitzMul.C.{u1} β _inst_2 _inst_3 _inst_4)) (Dist.dist.{u1} (Prod.{u1, u1} β β) (PseudoMetricSpace.toHasDist.{u1} (Prod.{u1, u1} β β) (Prod.pseudoMetricSpaceMax.{u1, u1} β β _inst_2 _inst_2)) p q))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3] (p : Prod.{u1, u1} β β) (q : Prod.{u1, u1} β β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} β (PseudoMetricSpace.toDist.{u1} β _inst_2) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) (Prod.fst.{u1, u1} β β p) (Prod.snd.{u1, u1} β β p)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) (Prod.fst.{u1, u1} β β q) (Prod.snd.{u1, u1} β β q))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (NNReal.toReal (LipschitzMul.C.{u1} β _inst_2 _inst_3 _inst_4)) (Dist.dist.{u1} (Prod.{u1, u1} β β) (PseudoMetricSpace.toDist.{u1} (Prod.{u1, u1} β β) (Prod.pseudoMetricSpaceMax.{u1, u1} β β _inst_2 _inst_2)) p q))
-Case conversion may be inaccurate. Consider using '#align lipschitz_with_lipschitz_const_mul lipschitz_with_lipschitz_const_mulₓ'. -/
 @[to_additive]
 theorem lipschitz_with_lipschitz_const_mul :
     ∀ p q : β × β, dist (p.1 * p.2) (q.1 * q.2) ≤ LipschitzMul.C β * dist p q :=
@@ -100,12 +88,6 @@ theorem lipschitz_with_lipschitz_const_mul :
 #align lipschitz_with_lipschitz_const_mul lipschitz_with_lipschitz_const_mul
 #align lipschitz_with_lipschitz_const_add lipschitz_with_lipschitz_const_add
 
-/- warning: has_lipschitz_mul.has_continuous_mul -> LipschitzMul.continuousMul is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3], ContinuousMul.{u1} β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β _inst_2)) (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3], ContinuousMul.{u1} β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β _inst_2)) (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))
-Case conversion may be inaccurate. Consider using '#align has_lipschitz_mul.has_continuous_mul LipschitzMul.continuousMulₓ'. -/
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LipschitzMul.continuousMul : ContinuousMul β :=
@@ -113,12 +95,6 @@ instance (priority := 100) LipschitzMul.continuousMul : ContinuousMul β :=
 #align has_lipschitz_mul.has_continuous_mul LipschitzMul.continuousMul
 #align has_lipschitz_add.has_continuous_add LipschitzAdd.continuousAdd
 
-/- warning: submonoid.has_lipschitz_mul -> Submonoid.lipschitzMul is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3] (s : Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)), LipschitzMul.{u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) β (Submonoid.setLike.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) s) (Subtype.pseudoMetricSpace.{u1} β _inst_2 (fun (x : β) => Membership.Mem.{u1, u1} β (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) β (Submonoid.setLike.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) x s)) (Submonoid.toMonoid.{u1} β _inst_3 s)
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3] (s : Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)), LipschitzMul.{u1} (Subtype.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) β (Submonoid.instSetLikeSubmonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) x s)) (Subtype.pseudoMetricSpace.{u1} β _inst_2 (fun (x : β) => Membership.mem.{u1, u1} β (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3)) β (Submonoid.instSetLikeSubmonoid.{u1} β (Monoid.toMulOneClass.{u1} β _inst_3))) x s)) (Submonoid.toMonoid.{u1} β _inst_3 s)
-Case conversion may be inaccurate. Consider using '#align submonoid.has_lipschitz_mul Submonoid.lipschitzMulₓ'. -/
 @[to_additive]
 instance Submonoid.lipschitzMul (s : Submonoid β) : LipschitzMul s
     where lipschitz_mul :=
@@ -139,12 +115,6 @@ instance MulOpposite.lipschitzMul : LipschitzMul βᵐᵒᵖ
 #align add_opposite.has_lipschitz_add AddOpposite.lipschitzAdd
 -/
 
-/- warning: real.has_lipschitz_add -> Real.hasLipschitzAdd is a dubious translation:
-lean 3 declaration is
-  LipschitzAdd.{0} Real Real.pseudoMetricSpace Real.addMonoid
-but is expected to have type
-  LipschitzAdd.{0} Real Real.pseudoMetricSpace Real.instAddMonoidReal
-Case conversion may be inaccurate. Consider using '#align real.has_lipschitz_add Real.hasLipschitzAddₓ'. -/
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy
 instance Real.hasLipschitzAdd : LipschitzAdd ℝ
@@ -161,12 +131,6 @@ instance Real.hasLipschitzAdd : LipschitzAdd ℝ
       linarith⟩
 #align real.has_lipschitz_add Real.hasLipschitzAdd
 
-/- warning: nnreal.has_lipschitz_add -> NNReal.hasLipschitzAdd is a dubious translation:
-lean 3 declaration is
-  LipschitzAdd.{0} NNReal NNReal.pseudoMetricSpace (AddMonoidWithOne.toAddMonoid.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))
-but is expected to have type
-  LipschitzAdd.{0} NNReal instPseudoMetricSpaceNNReal (AddMonoidWithOne.toAddMonoid.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))))
-Case conversion may be inaccurate. Consider using '#align nnreal.has_lipschitz_add NNReal.hasLipschitzAddₓ'. -/
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
 instance NNReal.hasLipschitzAdd : LipschitzAdd ℝ≥0
@@ -195,22 +159,10 @@ class BoundedSMul : Prop where
 
 variable {α β} [BoundedSMul α β]
 
-/- warning: dist_smul_pair -> dist_smul_pair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x : α) (y₁ : β) (y₂ : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (SMul.smul.{u1, u2} α β _inst_5 x y₁) (SMul.smul.{u1, u2} α β _inst_5 x y₂)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_3)))) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) y₁ y₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x : α) (y₁ : β) (y₂ : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x y₁) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x y₂)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_3))) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) y₁ y₂))
-Case conversion may be inaccurate. Consider using '#align dist_smul_pair dist_smul_pairₓ'. -/
 theorem dist_smul_pair (x : α) (y₁ y₂ : β) : dist (x • y₁) (x • y₂) ≤ dist x 0 * dist y₁ y₂ :=
   BoundedSMul.dist_smul_pair' x y₁ y₂
 #align dist_smul_pair dist_smul_pair
 
-/- warning: dist_pair_smul -> dist_pair_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x₁ : α) (x₂ : α) (y : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (SMul.smul.{u1, u2} α β _inst_5 x₁ y) (SMul.smul.{u1, u2} α β _inst_5 x₂ y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_4)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x₁ : α) (x₂ : α) (y : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x₁ y) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x₂ y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_4))))
-Case conversion may be inaccurate. Consider using '#align dist_pair_smul dist_pair_smulₓ'. -/
 theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0 :=
   BoundedSMul.dist_pair_smul' x₁ x₂ y
 #align dist_pair_smul dist_pair_smul
@@ -255,12 +207,6 @@ instance (priority := 100) BoundedSMul.continuousSMul : ContinuousSMul α β
 #align has_bounded_smul.has_continuous_smul BoundedSMul.continuousSMul
 -/
 
-/- warning: real.has_bounded_smul -> Real.boundedSMul is a dubious translation:
-lean 3 declaration is
-  BoundedSMul.{0, 0} Real Real Real.pseudoMetricSpace Real.pseudoMetricSpace Real.hasZero Real.hasZero (Mul.toSMul.{0} Real Real.hasMul)
-but is expected to have type
-  BoundedSMul.{0, 0} Real Real Real.pseudoMetricSpace Real.pseudoMetricSpace Real.instZeroReal Real.instZeroReal (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (Algebra.id.{0} Real Real.instCommSemiringReal))
-Case conversion may be inaccurate. Consider using '#align real.has_bounded_smul Real.boundedSMulₓ'. -/
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
 instance Real.boundedSMul : BoundedSMul ℝ ℝ
@@ -269,12 +215,6 @@ instance Real.boundedSMul : BoundedSMul ℝ ℝ
   dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 #align real.has_bounded_smul Real.boundedSMul
 
-/- warning: nnreal.has_bounded_smul -> NNReal.boundedSMul is a dubious translation:
-lean 3 declaration is
-  BoundedSMul.{0, 0} NNReal NNReal NNReal.pseudoMetricSpace NNReal.pseudoMetricSpace (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (Mul.toSMul.{0} NNReal (Distrib.toHasMul.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))
-but is expected to have type
-  BoundedSMul.{0, 0} NNReal NNReal instPseudoMetricSpaceNNReal instPseudoMetricSpaceNNReal instNNRealZero instNNRealZero (Algebra.toSMul.{0, 0} NNReal NNReal instNNRealCommSemiring instNNRealSemiring (Algebra.id.{0} NNReal instNNRealCommSemiring))
-Case conversion may be inaccurate. Consider using '#align nnreal.has_bounded_smul NNReal.boundedSMulₓ'. -/
 instance NNReal.boundedSMul : BoundedSMul ℝ≥0 ℝ≥0
     where
   dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1

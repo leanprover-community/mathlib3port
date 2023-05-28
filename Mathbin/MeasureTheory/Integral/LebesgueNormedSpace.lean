@@ -23,9 +23,6 @@ open NNReal ENNReal
 
 variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ : MeasureTheory.Measure α}
 
-/- warning: ae_measurable_with_density_iff -> aemeasurable_withDensity_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ae_measurable_with_density_iff aemeasurable_withDensity_iffₓ'. -/
 theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [TopologicalSpace.SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] {f : α → ℝ≥0}
     (hf : Measurable f) {g : α → E} :

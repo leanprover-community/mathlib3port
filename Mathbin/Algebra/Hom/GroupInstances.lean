@@ -100,12 +100,6 @@ instance [AddCommGroup M] : Ring (AddMonoid.End M) :=
     intCast_ofNat := ofNat_zsmul _
     intCast_negSucc := negSucc_zsmul _ }
 
-/- warning: add_monoid.End.int_cast_apply -> AddMonoid.End.int_cast_apply is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : AddCommGroup.{u1} M] (z : Int) (m : M), Eq.{succ u1} M (coeFn.{succ u1, succ u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (fun (_x : AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) => M -> M) (FunLike.hasCoeToFun.{succ u1, succ u1, succ u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) M (fun (_x : M) => M) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) M M (AddZeroClass.toHasAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddZeroClass.toHasAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) M M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1)))) (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1)))) (AddMonoid.End.addMonoidHomClass.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1)))))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (HasLiftT.mk.{1, succ u1} Int (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (CoeTCₓ.coe.{1, succ u1} Int (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (Int.castCoe.{u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddGroupWithOne.toHasIntCast.{u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (Ring.toAddCommGroupWithOne.{u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddMonoid.End.ring.{u1} M _inst_1))))))) z) m) (SMul.smul.{0, u1} Int M (SubNegMonoid.SMulInt.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))) z m)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : AddCommGroup.{u1} M] (z : Int) (m : M), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : M) => M) m) (FunLike.coe.{succ u1, succ u1, succ u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : M) => M) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) M M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) M M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1)))) (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1)))) (AddMonoid.End.instAddMonoidHomClassEnd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))))) (Int.cast.{u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (Ring.toIntCast.{u1} (AddMonoid.End.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1))))) (instRingEndToAddZeroClassToAddMonoidToSubNegMonoidToAddGroup.{u1} M _inst_1)) z) m) (HSMul.hSMul.{0, u1, u1} Int M M (instHSMul.{0, u1} Int M (SubNegMonoid.SMulInt.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_1)))) z m)
-Case conversion may be inaccurate. Consider using '#align add_monoid.End.int_cast_apply AddMonoid.End.int_cast_applyₓ'. -/
 /-- See also `add_monoid.End.int_cast_def`. -/
 @[simp]
 theorem AddMonoid.End.int_cast_apply [AddCommGroup M] (z : ℤ) (m : M) :
@@ -123,9 +117,6 @@ is commutative.
 
 namespace MonoidHom
 
-/- warning: monoid_hom.ext_iff₂ -> MonoidHom.ext_iff₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.ext_iff₂ MonoidHom.ext_iff₂ₓ'. -/
 @[to_additive]
 theorem ext_iff₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} {f g : M →* N →* P} :
     f = g ↔ ∀ x y, f x y = g x y :=
@@ -147,9 +138,6 @@ def flip {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M �
 #align add_monoid_hom.flip AddMonoidHom.flip
 -/
 
-/- warning: monoid_hom.flip_apply -> MonoidHom.flip_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.flip_apply MonoidHom.flip_applyₓ'. -/
 @[simp, to_additive]
 theorem flip_apply {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M →* N →* P)
     (x : M) (y : N) : f.flip y x = f x y :=
@@ -157,12 +145,6 @@ theorem flip_apply {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
 #align monoid_hom.flip_apply MonoidHom.flip_apply
 #align add_monoid_hom.flip_apply AddMonoidHom.flip_apply
 
-/- warning: monoid_hom.map_one₂ -> MonoidHom.map_one₂ is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} {P : Type.{u3}} {mM : MulOneClass.{u1} M} {mN : MulOneClass.{u2} N} {mP : CommMonoid.{u3} P} (f : MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) (n : N), Eq.{succ u3} P (coeFn.{max (succ u3) (succ u2), max (succ u2) (succ u3)} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (fun (_x : MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) => N -> P) (MonoidHom.hasCoeToFun.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (coeFn.{max (succ (max u3 u2)) (succ u1), max (succ u1) (succ (max u3 u2))} (MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) (fun (_x : MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) => M -> (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP)))) (MonoidHom.hasCoeToFun.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u3 u2} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) f (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M mM))))) n) (OfNat.ofNat.{u3} P 1 (OfNat.mk.{u3} P 1 (One.one.{u3} P (MulOneClass.toHasOne.{u3} P (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))))))
-but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} {P : Type.{u3}} {mM : MulOneClass.{u1} M} {mN : MulOneClass.{u2} N} {mP : CommMonoid.{u3} P} (f : MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) (n : N), Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N) => P) n) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M mM)))) N (fun (_x : N) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N) => P) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M mM)))) N P (MulOneClass.toMul.{u2} N mN) (MulOneClass.toMul.{u3} P (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHomClass.toMulHomClass.{max u2 u3, u2, u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M mM)))) N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP)) (MonoidHom.monoidHomClass.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))))) (FunLike.coe.{max (max (succ u1) (succ u2)) (succ u3), succ u1, max (succ u2) (succ u3)} (MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) _x) (MulHomClass.toFunLike.{max (max u1 u2) u3, u1, max u2 u3} (MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MulOneClass.toMul.{u1} M mM) (MulOneClass.toMul.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) (MonoidHomClass.toMulHomClass.{max (max u1 u2) u3, u1, max u2 u3} (MonoidHom.{u1, max u3 u2} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))) M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP))) (MonoidHom.monoidHomClass.{u1, max u2 u3} M (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) mM (Monoid.toMulOneClass.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (CommMonoid.toMonoid.{max u2 u3} (MonoidHom.{u2, u3} N P mN (Monoid.toMulOneClass.{u3} P (CommMonoid.toMonoid.{u3} P mP))) (MonoidHom.commMonoid.{u2, u3} N P mN mP)))))) f (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M mM)))) n) (OfNat.ofNat.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N) => P) n) 1 (One.toOfNat1.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N) => P) n) (Monoid.toOne.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N) => P) n) (CommMonoid.toMonoid.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : N) => P) n) mP))))
-Case conversion may be inaccurate. Consider using '#align monoid_hom.map_one₂ MonoidHom.map_one₂ₓ'. -/
 @[to_additive]
 theorem map_one₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M →* N →* P)
     (n : N) : f 1 n = 1 :=
@@ -170,9 +152,6 @@ theorem map_one₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
 #align monoid_hom.map_one₂ MonoidHom.map_one₂
 #align add_monoid_hom.map_one₂ AddMonoidHom.map_one₂
 
-/- warning: monoid_hom.map_mul₂ -> MonoidHom.map_mul₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.map_mul₂ MonoidHom.map_mul₂ₓ'. -/
 @[to_additive]
 theorem map_mul₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M →* N →* P)
     (m₁ m₂ : M) (n : N) : f (m₁ * m₂) n = f m₁ n * f m₂ n :=
@@ -180,9 +159,6 @@ theorem map_mul₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
 #align monoid_hom.map_mul₂ MonoidHom.map_mul₂
 #align add_monoid_hom.map_mul₂ AddMonoidHom.map_mul₂
 
-/- warning: monoid_hom.map_inv₂ -> MonoidHom.map_inv₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.map_inv₂ MonoidHom.map_inv₂ₓ'. -/
 @[to_additive]
 theorem map_inv₂ {mM : Group M} {mN : MulOneClass N} {mP : CommGroup P} (f : M →* N →* P) (m : M)
     (n : N) : f m⁻¹ n = (f m n)⁻¹ :=
@@ -190,9 +166,6 @@ theorem map_inv₂ {mM : Group M} {mN : MulOneClass N} {mP : CommGroup P} (f : M
 #align monoid_hom.map_inv₂ MonoidHom.map_inv₂
 #align add_monoid_hom.map_inv₂ AddMonoidHom.map_inv₂
 
-/- warning: monoid_hom.map_div₂ -> MonoidHom.map_div₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.map_div₂ MonoidHom.map_div₂ₓ'. -/
 @[to_additive]
 theorem map_div₂ {mM : Group M} {mN : MulOneClass N} {mP : CommGroup P} (f : M →* N →* P)
     (m₁ m₂ : M) (n : N) : f (m₁ / m₂) n = f m₁ n / f m₂ n :=
@@ -270,9 +243,6 @@ def compl₂ [MulOneClass M] [MulOneClass N] [CommMonoid P] [MulOneClass Q] (f :
 #align add_monoid_hom.compl₂ AddMonoidHom.compl₂
 -/
 
-/- warning: monoid_hom.compl₂_apply -> MonoidHom.compl₂_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.compl₂_apply MonoidHom.compl₂_applyₓ'. -/
 @[simp, to_additive]
 theorem compl₂_apply [MulOneClass M] [MulOneClass N] [CommMonoid P] [MulOneClass Q]
     (f : M →* N →* P) (g : Q →* N) (m : M) (q : Q) : (compl₂ f g) m q = f m (g q) :=
@@ -291,9 +261,6 @@ def compr₂ [MulOneClass M] [MulOneClass N] [CommMonoid P] [CommMonoid Q] (f : 
 #align add_monoid_hom.compr₂ AddMonoidHom.compr₂
 -/
 
-/- warning: monoid_hom.compr₂_apply -> MonoidHom.compr₂_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align monoid_hom.compr₂_apply MonoidHom.compr₂_applyₓ'. -/
 @[simp, to_additive]
 theorem compr₂_apply [MulOneClass M] [MulOneClass N] [CommMonoid P] [CommMonoid Q] (f : M →* N →* P)
     (g : P →* Q) (m : M) (n : N) : (compr₂ f g) m n = g (f m n) :=
@@ -332,33 +299,21 @@ def AddMonoidHom.mul : R →+ R →+ R
 #align add_monoid_hom.mul AddMonoidHom.mul
 -/
 
-/- warning: add_monoid_hom.mul_apply -> AddMonoidHom.mul_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.mul_apply AddMonoidHom.mul_applyₓ'. -/
 theorem AddMonoidHom.mul_apply (x y : R) : AddMonoidHom.mul x y = x * y :=
   rfl
 #align add_monoid_hom.mul_apply AddMonoidHom.mul_apply
 
-/- warning: add_monoid_hom.coe_mul -> AddMonoidHom.coe_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.coe_mul AddMonoidHom.coe_mulₓ'. -/
 @[simp]
 theorem AddMonoidHom.coe_mul : ⇑(AddMonoidHom.mul : R →+ R →+ R) = AddMonoidHom.mulLeft :=
   rfl
 #align add_monoid_hom.coe_mul AddMonoidHom.coe_mul
 
-/- warning: add_monoid_hom.coe_flip_mul -> AddMonoidHom.coe_flip_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.coe_flip_mul AddMonoidHom.coe_flip_mulₓ'. -/
 @[simp]
 theorem AddMonoidHom.coe_flip_mul :
     ⇑(AddMonoidHom.mul : R →+ R →+ R).flip = AddMonoidHom.mulRight :=
   rfl
 #align add_monoid_hom.coe_flip_mul AddMonoidHom.coe_flip_mul
 
-/- warning: add_monoid_hom.map_mul_iff -> AddMonoidHom.map_mul_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.map_mul_iff AddMonoidHom.map_mul_iffₓ'. -/
 /-- An `add_monoid_hom` preserves multiplication if pre- and post- composition with
 `add_monoid_hom.mul` are equivalent. By converting the statement into an equality of
 `add_monoid_hom`s, this lemma allows various specialized `ext` lemmas about `→+` to then be applied.

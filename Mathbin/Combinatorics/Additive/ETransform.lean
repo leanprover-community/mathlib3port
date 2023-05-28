@@ -63,12 +63,6 @@ def mulDysonEtransform : Finset α × Finset α :=
 #align finset.add_dyson_e_transform Finset.addDysonEtransform
 -/
 
-/- warning: finset.mul_dyson_e_transform.subset -> Finset.mulDysonEtransform.subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x)) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x)) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x))
-Case conversion may be inaccurate. Consider using '#align finset.mul_dyson_e_transform.subset Finset.mulDysonEtransform.subsetₓ'. -/
 @[to_additive]
 theorem mulDysonEtransform.subset :
     (mulDysonEtransform e x).1 * (mulDysonEtransform e x).2 ⊆ x.1 * x.2 :=
@@ -107,12 +101,6 @@ theorem mulDysonEtransform_idem :
 
 variable {e x}
 
-/- warning: finset.mul_dyson_e_transform.smul_finset_snd_subset_fst -> Finset.mulDysonEtransform.smul_finset_snd_subset_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] {e : α} {x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (SMul.smul.{u1, u1} α (Finset.{u1} α) (Finset.smulFinset.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) e (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] {e : α} {x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (HSMul.hSMul.{u1, u1, u1} α (Finset.{u1} α) (Finset.{u1} α) (instHSMul.{u1, u1} α (Finset.{u1} α) (Finset.smulFinset.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) e (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulDysonEtransform.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))
-Case conversion may be inaccurate. Consider using '#align finset.mul_dyson_e_transform.smul_finset_snd_subset_fst Finset.mulDysonEtransform.smul_finset_snd_subset_fstₓ'. -/
 @[to_additive]
 theorem mulDysonEtransform.smul_finset_snd_subset_fst :
     e • (mulDysonEtransform e x).2 ⊆ (mulDysonEtransform e x).1 := by dsimp;
@@ -161,34 +149,16 @@ def mulEtransformRight : Finset α × Finset α :=
 #align finset.add_e_transform_right Finset.addEtransformRight
 -/
 
-/- warning: finset.mul_e_transform_left_one -> Finset.mulEtransformLeft_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))) x) x
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))) x) x
-Case conversion may be inaccurate. Consider using '#align finset.mul_e_transform_left_one Finset.mulEtransformLeft_oneₓ'. -/
 @[simp, to_additive]
 theorem mulEtransformLeft_one : mulEtransformLeft 1 x = x := by simp [mul_e_transform_left]
 #align finset.mul_e_transform_left_one Finset.mulEtransformLeft_one
 #align finset.add_e_transform_left_zero Finset.addEtransformLeft_zero
 
-/- warning: finset.mul_e_transform_right_one -> Finset.mulEtransformRight_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))) x) x
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))) x) x
-Case conversion may be inaccurate. Consider using '#align finset.mul_e_transform_right_one Finset.mulEtransformRight_oneₓ'. -/
 @[simp, to_additive]
 theorem mulEtransformRight_one : mulEtransformRight 1 x = x := by simp [mul_e_transform_right]
 #align finset.mul_e_transform_right_one Finset.mulEtransformRight_one
 #align finset.add_e_transform_right_zero Finset.addEtransformRight_zero
 
-/- warning: finset.mul_e_transform_left.fst_mul_snd_subset -> Finset.mulEtransformLeft.fst_mul_snd_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x)) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x)) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x))
-Case conversion may be inaccurate. Consider using '#align finset.mul_e_transform_left.fst_mul_snd_subset Finset.mulEtransformLeft.fst_mul_snd_subsetₓ'. -/
 @[to_additive]
 theorem mulEtransformLeft.fst_mul_snd_subset :
     (mulEtransformLeft e x).1 * (mulEtransformLeft e x).2 ⊆ x.1 * x.2 :=
@@ -199,12 +169,6 @@ theorem mulEtransformLeft.fst_mul_snd_subset :
 #align finset.mul_e_transform_left.fst_mul_snd_subset Finset.mulEtransformLeft.fst_mul_snd_subset
 #align finset.add_e_transform_left.fst_add_snd_subset Finset.addEtransformLeft.fst_add_snd_subset
 
-/- warning: finset.mul_e_transform_right.fst_mul_snd_subset -> Finset.mulEtransformRight.fst_mul_snd_subset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x)) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Group.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x)) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 e x))) (HMul.hMul.{u1, u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.{u1} α) (instHMul.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Prod.fst.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x) (Prod.snd.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x))
-Case conversion may be inaccurate. Consider using '#align finset.mul_e_transform_right.fst_mul_snd_subset Finset.mulEtransformRight.fst_mul_snd_subsetₓ'. -/
 @[to_additive]
 theorem mulEtransformRight.fst_mul_snd_subset :
     (mulEtransformRight e x).1 * (mulEtransformRight e x).2 ⊆ x.1 * x.2 :=
@@ -253,24 +217,12 @@ section CommGroup
 
 variable [CommGroup α] (e : α) (x : Finset α × Finset α)
 
-/- warning: finset.mul_e_transform_left_inv -> Finset.mulEtransformLeft_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))) e) x) (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) e (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))) e) x) (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) e (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x)))
-Case conversion may be inaccurate. Consider using '#align finset.mul_e_transform_left_inv Finset.mulEtransformLeft_invₓ'. -/
 @[simp, to_additive]
 theorem mulEtransformLeft_inv : mulEtransformLeft e⁻¹ x = (mulEtransformRight e x.symm).symm := by
   simp [-op_inv, op_smul_eq_smul, mul_e_transform_left, mul_e_transform_right]
 #align finset.mul_e_transform_left_inv Finset.mulEtransformLeft_inv
 #align finset.add_e_transform_left_neg Finset.addEtransformLeft_neg
 
-/- warning: finset.mul_e_transform_right_inv -> Finset.mulEtransformRight_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))) e) x) (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) e (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : CommGroup.{u1} α] (e : α) (x : Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)), Eq.{succ u1} (Prod.{u1, u1} (Finset.{u1} α) (Finset.{u1} α)) (Finset.mulEtransformRight.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))) e) x) (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Finset.mulEtransformLeft.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (CommGroup.toGroup.{u1} α _inst_2) e (Prod.swap.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) x)))
-Case conversion may be inaccurate. Consider using '#align finset.mul_e_transform_right_inv Finset.mulEtransformRight_invₓ'. -/
 @[simp, to_additive]
 theorem mulEtransformRight_inv : mulEtransformRight e⁻¹ x = (mulEtransformLeft e x.symm).symm := by
   simp [-op_inv, op_smul_eq_smul, mul_e_transform_left, mul_e_transform_right]

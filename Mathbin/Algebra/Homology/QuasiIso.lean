@@ -39,12 +39,6 @@ variable [HasEqualizers V] [HasImages V] [HasImageMaps V] [HasCokernels V]
 
 variable {c : ComplexShape ι} {C D E : HomologicalComplex V c}
 
-/- warning: quasi_iso -> QuasiIso is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1] [_inst_5 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_6 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_5] [_inst_7 : CategoryTheory.Limits.HasCokernels.{u1, u2} V _inst_1 _inst_2] {c : ComplexShape.{u3} ι} {C : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c} {D : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c}, (Quiver.Hom.{succ (max u3 u1), max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 _inst_2 c))) C D) -> Prop
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_5 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_4] [_inst_6 : CategoryTheory.Limits.HasCokernels.{u1, u2} V _inst_1 _inst_2] {_inst_7 : ComplexShape.{u3} ι} {c : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7} {C : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7}, (Quiver.Hom.{max (succ u1) (succ u3), max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u3, max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (CategoryTheory.Category.toCategoryStruct.{max u1 u3, max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7))) c C) -> Prop
-Case conversion may be inaccurate. Consider using '#align quasi_iso QuasiIsoₓ'. -/
 /-- A chain map is a quasi-isomorphism if it induces isomorphisms on homology.
 -/
 class QuasiIso (f : C ⟶ D) : Prop where
@@ -53,12 +47,6 @@ class QuasiIso (f : C ⟶ D) : Prop where
 
 attribute [instance] QuasiIso.isIso
 
-/- warning: quasi_iso_of_iso -> quasiIso_of_iso is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1] [_inst_5 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_6 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_5] [_inst_7 : CategoryTheory.Limits.HasCokernels.{u1, u2} V _inst_1 _inst_2] {c : ComplexShape.{u3} ι} {C : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c} {D : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c} (f : Quiver.Hom.{succ (max u3 u1), max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 _inst_2 c))) C D) [_inst_8 : CategoryTheory.IsIso.{max u3 u1, max u2 u3 u1} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 _inst_2 c) C D f], QuasiIso.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 c C D f
-but is expected to have type
-  forall {ι : Type.{u3}} {V : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] [_inst_3 : CategoryTheory.Limits.HasEqualizers.{u1, u2} V _inst_1] [_inst_4 : CategoryTheory.Limits.HasImages.{u1, u2} V _inst_1] [_inst_5 : CategoryTheory.Limits.HasImageMaps.{u1, u2} V _inst_1 _inst_4] [_inst_6 : CategoryTheory.Limits.HasCokernels.{u1, u2} V _inst_1 _inst_2] {_inst_7 : ComplexShape.{u3} ι} {c : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7} {C : HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7} (D : Quiver.Hom.{max (succ u1) (succ u3), max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u3, max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (CategoryTheory.Category.toCategoryStruct.{max u1 u3, max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7))) c C) [f : CategoryTheory.IsIso.{max u1 u3, max (max u2 u1) u3} (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_7) c C D], QuasiIso.{u1, u2, u3} ι V _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 c C D
-Case conversion may be inaccurate. Consider using '#align quasi_iso_of_iso quasiIso_of_isoₓ'. -/
 instance (priority := 100) quasiIso_of_iso (f : C ⟶ D) [IsIso f] : QuasiIso f
     where IsIso i :=
     by
@@ -66,26 +54,17 @@ instance (priority := 100) quasiIso_of_iso (f : C ⟶ D) [IsIso f] : QuasiIso f
     infer_instance
 #align quasi_iso_of_iso quasiIso_of_iso
 
-/- warning: quasi_iso_comp -> quasiIso_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align quasi_iso_comp quasiIso_compₓ'. -/
 instance quasiIso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] : QuasiIso (f ≫ g)
     where IsIso i := by
     rw [functor.map_comp]
     infer_instance
 #align quasi_iso_comp quasiIso_comp
 
-/- warning: quasi_iso_of_comp_left -> quasiIso_of_comp_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align quasi_iso_of_comp_left quasiIso_of_comp_leftₓ'. -/
 theorem quasiIso_of_comp_left (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] :
     QuasiIso g :=
   { IsIso := fun i => IsIso.of_isIso_fac_left ((homologyFunctor V c i).map_comp f g).symm }
 #align quasi_iso_of_comp_left quasiIso_of_comp_left
 
-/- warning: quasi_iso_of_comp_right -> quasiIso_of_comp_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align quasi_iso_of_comp_right quasiIso_of_comp_rightₓ'. -/
 theorem quasiIso_of_comp_right (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] :
     QuasiIso f :=
   { IsIso := fun i => IsIso.of_isIso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
@@ -98,12 +77,6 @@ section
 variable {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W] [HasEqualizers W]
   [HasZeroObject W] [HasImageMaps W]
 
-/- warning: homotopy_equiv.to_quasi_iso -> HomotopyEquiv.toQuasiIso is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {c : ComplexShape.{u1} ι} {W : Type.{u2}} [_inst_8 : CategoryTheory.Category.{u3, u2} W] [_inst_9 : CategoryTheory.Preadditive.{u3, u2} W _inst_8] [_inst_10 : CategoryTheory.Limits.HasCokernels.{u3, u2} W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9)] [_inst_11 : CategoryTheory.Limits.HasImages.{u3, u2} W _inst_8] [_inst_12 : CategoryTheory.Limits.HasEqualizers.{u3, u2} W _inst_8] [_inst_13 : CategoryTheory.Limits.HasZeroObject.{u3, u2} W _inst_8] [_inst_14 : CategoryTheory.Limits.HasImageMaps.{u3, u2} W _inst_8 _inst_11] {C : HomologicalComplex.{u3, u2, u1} ι W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9) c} {D : HomologicalComplex.{u3, u2, u1} ι W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9) c} (e : HomotopyEquiv.{u3, u2, u1} ι W _inst_8 _inst_9 c C D), QuasiIso.{u3, u2, u1} ι W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9) _inst_13 _inst_12 _inst_11 _inst_14 _inst_10 c C D (HomotopyEquiv.hom.{u3, u2, u1} ι W _inst_8 _inst_9 c C D e)
-but is expected to have type
-  forall {ι : Type.{u1}} {c : ComplexShape.{u1} ι} {W : Type.{u2}} [_inst_8 : CategoryTheory.Category.{u3, u2} W] [_inst_9 : CategoryTheory.Preadditive.{u3, u2} W _inst_8] [_inst_10 : CategoryTheory.Limits.HasCokernels.{u3, u2} W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9)] [_inst_11 : CategoryTheory.Limits.HasImages.{u3, u2} W _inst_8] [_inst_12 : CategoryTheory.Limits.HasEqualizers.{u3, u2} W _inst_8] [_inst_13 : CategoryTheory.Limits.HasImageMaps.{u3, u2} W _inst_8 _inst_11] {_inst_14 : HomologicalComplex.{u3, u2, u1} ι W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9) c} {C : HomologicalComplex.{u3, u2, u1} ι W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9) c} (D : HomotopyEquiv.{u3, u2, u1} ι W _inst_8 _inst_9 c _inst_14 C), QuasiIso.{u3, u2, u1} ι W _inst_8 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u3, u2} W _inst_8 _inst_9) _inst_12 _inst_11 _inst_13 _inst_10 c _inst_14 C (HomotopyEquiv.hom.{u3, u2, u1} ι W _inst_8 _inst_9 c _inst_14 C D)
-Case conversion may be inaccurate. Consider using '#align homotopy_equiv.to_quasi_iso HomotopyEquiv.toQuasiIsoₓ'. -/
 /-- An homotopy equivalence is a quasi-isomorphism. -/
 theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
   ⟨fun i => by
@@ -113,9 +86,6 @@ theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : Quas
     exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
 #align homotopy_equiv.to_quasi_iso HomotopyEquiv.toQuasiIso
 
-/- warning: homotopy_equiv.to_quasi_iso_inv -> HomotopyEquiv.toQuasiIso_inv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homotopy_equiv.to_quasi_iso_inv HomotopyEquiv.toQuasiIso_invₓ'. -/
 theorem toQuasiIso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
     (@asIso _ _ _ _ _ (e.toQuasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv :=
   by
@@ -138,9 +108,6 @@ section
 
 variable {X : ChainComplex W ℕ} {Y : W} (f : X ⟶ (ChainComplex.single₀ _).obj Y) [hf : QuasiIso f]
 
-/- warning: homological_complex.hom.to_single₀_cokernel_at_zero_iso -> HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.to_single₀_cokernel_at_zero_iso HomologicalComplex.Hom.toSingle₀CokernelAtZeroIsoₓ'. -/
 /-- If a chain map `f : X ⟶ Y[0]` is a quasi-isomorphism, then the cokernel of the differential
 `d : X₁ → X₀` is isomorphic to `Y.` -/
 noncomputable def toSingle₀CokernelAtZeroIso : cokernel (X.d 1 0) ≅ Y :=
@@ -148,9 +115,6 @@ noncomputable def toSingle₀CokernelAtZeroIso : cokernel (X.d 1 0) ≅ Y :=
     ((@asIso _ _ _ _ _ (hf.1 0)).trans ((ChainComplex.homologyFunctor0Single₀ W).app Y))
 #align homological_complex.hom.to_single₀_cokernel_at_zero_iso HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso
 
-/- warning: homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq -> HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso_hom_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso_hom_eqₓ'. -/
 theorem toSingle₀CokernelAtZeroIso_hom_eq [hf : QuasiIso f] :
     f.toSingle₀CokernelAtZeroIso.Hom =
       cokernel.desc (X.d 1 0) (f.f 0) (by rw [← f.2 1 0 rfl] <;> exact comp_zero) :=
@@ -163,9 +127,6 @@ theorem toSingle₀CokernelAtZeroIso_hom_eq [hf : QuasiIso f] :
   simp [homology.desc, iso.refl_inv (X.X 0)]
 #align homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso_hom_eq
 
-/- warning: homological_complex.hom.to_single₀_epi_at_zero -> HomologicalComplex.Hom.to_single₀_epi_at_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.to_single₀_epi_at_zero HomologicalComplex.Hom.to_single₀_epi_at_zeroₓ'. -/
 theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) :=
   by
   constructor
@@ -175,9 +136,6 @@ theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) :=
   rw [(@cancel_epi _ _ _ _ _ _ (epi_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.to_single₀_epi_at_zero HomologicalComplex.Hom.to_single₀_epi_at_zero
 
-/- warning: homological_complex.hom.to_single₀_exact_d_f_at_zero -> HomologicalComplex.Hom.to_single₀_exact_d_f_at_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.to_single₀_exact_d_f_at_zeroₓ'. -/
 theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 0) :=
   by
   rw [preadditive.exact_iff_homology_zero]
@@ -189,9 +147,6 @@ theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 
     infer_instance
 #align homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.to_single₀_exact_d_f_at_zero
 
-/- warning: homological_complex.hom.to_single₀_exact_at_succ -> HomologicalComplex.Hom.to_single₀_exact_at_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.to_single₀_exact_at_succ HomologicalComplex.Hom.to_single₀_exact_at_succₓ'. -/
 theorem to_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
     Exact (X.d (n + 2) (n + 1)) (X.d (n + 1) n) :=
   (Preadditive.exact_iff_homology_zero _ _).2
@@ -206,9 +161,6 @@ section
 
 variable {X : CochainComplex W ℕ} {Y : W} (f : (CochainComplex.single₀ _).obj Y ⟶ X)
 
-/- warning: homological_complex.hom.from_single₀_kernel_at_zero_iso -> HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.from_single₀_kernel_at_zero_iso HomologicalComplex.Hom.fromSingle₀KernelAtZeroIsoₓ'. -/
 /-- If a cochain map `f : Y[0] ⟶ X` is a quasi-isomorphism, then the kernel of the differential
 `d : X₀ → X₁` is isomorphic to `Y.` -/
 noncomputable def fromSingle₀KernelAtZeroIso [hf : QuasiIso f] : kernel (X.d 0 1) ≅ Y :=
@@ -216,9 +168,6 @@ noncomputable def fromSingle₀KernelAtZeroIso [hf : QuasiIso f] : kernel (X.d 0
     ((@asIso _ _ _ _ _ (hf.1 0)).symm.trans ((CochainComplex.homologyFunctor0Single₀ W).app Y))
 #align homological_complex.hom.from_single₀_kernel_at_zero_iso HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso
 
-/- warning: homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq -> HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso_inv_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso_inv_eqₓ'. -/
 theorem fromSingle₀KernelAtZeroIso_inv_eq [hf : QuasiIso f] :
     f.fromSingle₀KernelAtZeroIso.inv =
       kernel.lift (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp) :=
@@ -235,9 +184,6 @@ theorem fromSingle₀KernelAtZeroIso_inv_eq [hf : QuasiIso f] :
   simp [homology.π, kernel_subobject_map_comp, iso.refl_hom (X.X 0), category.comp_id]
 #align homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso_inv_eq
 
-/- warning: homological_complex.hom.from_single₀_mono_at_zero -> HomologicalComplex.Hom.from_single₀_mono_at_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zeroₓ'. -/
 theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
   by
   constructor
@@ -247,9 +193,6 @@ theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
   rw [(@cancel_mono _ _ _ _ _ _ (mono_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zero
 
-/- warning: homological_complex.hom.from_single₀_exact_f_d_at_zero -> HomologicalComplex.Hom.from_single₀_exact_f_d_at_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.from_single₀_exact_f_d_at_zeroₓ'. -/
 theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 0 1) :=
   by
   rw [preadditive.exact_iff_homology_zero]
@@ -261,9 +204,6 @@ theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 
     infer_instance
 #align homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.from_single₀_exact_f_d_at_zero
 
-/- warning: homological_complex.hom.from_single₀_exact_at_succ -> HomologicalComplex.Hom.from_single₀_exact_at_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align homological_complex.hom.from_single₀_exact_at_succ HomologicalComplex.Hom.from_single₀_exact_at_succₓ'. -/
 theorem from_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
     Exact (X.d n (n + 1)) (X.d (n + 1) (n + 2)) :=
   (Preadditive.exact_iff_homology_zero _ _).2
@@ -281,9 +221,6 @@ end HomologicalComplex.Hom
 variable {A : Type _} [Category A] [Abelian A] {B : Type _} [Category B] [Abelian B] (F : A ⥤ B)
   [Functor.Additive F] [PreservesFiniteLimits F] [PreservesFiniteColimits F] [Faithful F]
 
-/- warning: category_theory.functor.quasi_iso_of_map_quasi_iso -> CategoryTheory.Functor.quasiIso_of_map_quasiIso is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasiIso_of_map_quasiIsoₓ'. -/
 theorem CategoryTheory.Functor.quasiIso_of_map_quasiIso {C D : HomologicalComplex A c} (f : C ⟶ D)
     (hf : QuasiIso ((F.mapHomologicalComplex _).map f)) : QuasiIso f :=
   ⟨fun i =>

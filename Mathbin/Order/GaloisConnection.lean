@@ -69,12 +69,6 @@ def GaloisConnection [Preorder α] [Preorder β] (l : α → β) (u : β → α)
 #align galois_connection GaloisConnection
 -/
 
-/- warning: order_iso.to_galois_connection -> OrderIso.to_galoisConnection is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (oi : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), GaloisConnection.{u1, u2} α β _inst_1 _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) oi) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderIso.{u2, u1} β α (Preorder.toHasLe.{u2} β _inst_2) (Preorder.toHasLe.{u1} α _inst_1)) (fun (_x : RelIso.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) => β -> α) (RelIso.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) (OrderIso.symm.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) oi))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (oi : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), GaloisConnection.{u1, u2} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) oi) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) β (fun (_x : β) => α) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (OrderIso.symm.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) oi))
-Case conversion may be inaccurate. Consider using '#align order_iso.to_galois_connection OrderIso.to_galoisConnectionₓ'. -/
 /-- Makes a Galois connection from an order-preserving bijection. -/
 theorem OrderIso.to_galoisConnection [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisConnection oi oi.symm := fun b g => oi.rel_symm_apply.symm
@@ -86,12 +80,6 @@ section
 
 variable [Preorder α] [Preorder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
 
-/- warning: galois_connection.monotone_intro -> GaloisConnection.monotone_intro is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (Monotone.{u2, u1} β α _inst_2 _inst_1 u) -> (Monotone.{u1, u2} α β _inst_1 _inst_2 l) -> (forall (a : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u (l a))) -> (forall (a : β), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (u a)) a) -> (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (Monotone.{u2, u1} β α _inst_2 _inst_1 u) -> (Monotone.{u1, u2} α β _inst_1 _inst_2 l) -> (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u (l a))) -> (forall (a : β), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (u a)) a) -> (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u)
-Case conversion may be inaccurate. Consider using '#align galois_connection.monotone_intro GaloisConnection.monotone_introₓ'. -/
 theorem monotone_intro (hu : Monotone u) (hl : Monotone l) (hul : ∀ a, a ≤ u (l a))
     (hlu : ∀ a, l (u a) ≤ a) : GaloisConnection l u := fun a b =>
   ⟨fun h => (hul _).trans (hu h), fun h => (hl h).trans (hlu _)⟩
@@ -107,52 +95,22 @@ protected theorem dual {l : α → β} {u : β → α} (gc : GaloisConnection l 
 #align galois_connection.dual GaloisConnection.dual
 -/
 
-/- warning: galois_connection.le_iff_le -> GaloisConnection.le_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : β}, Iff (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l a) b) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : β}, Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l a) b) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u b)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.le_iff_le GaloisConnection.le_iff_leₓ'. -/
 theorem le_iff_le {a : α} {b : β} : l a ≤ b ↔ a ≤ u b :=
   gc _ _
 #align galois_connection.le_iff_le GaloisConnection.le_iff_le
 
-/- warning: galois_connection.l_le -> GaloisConnection.l_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : β}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u b)) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l a) b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : β}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u b)) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l a) b))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_le GaloisConnection.l_leₓ'. -/
 theorem l_le {a : α} {b : β} : a ≤ u b → l a ≤ b :=
   (gc _ _).mpr
 #align galois_connection.l_le GaloisConnection.l_le
 
-/- warning: galois_connection.le_u -> GaloisConnection.le_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : β}, (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l a) b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : β}, (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l a) b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u b)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.le_u GaloisConnection.le_uₓ'. -/
 theorem le_u {a : α} {b : β} : l a ≤ b → a ≤ u b :=
   (gc _ _).mp
 #align galois_connection.le_u GaloisConnection.le_u
 
-/- warning: galois_connection.le_u_l -> GaloisConnection.le_u_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (a : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u (l a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u (l a)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.le_u_l GaloisConnection.le_u_lₓ'. -/
 theorem le_u_l (a) : a ≤ u (l a) :=
   gc.le_u <| le_rfl
 #align galois_connection.le_u_l GaloisConnection.le_u_l
 
-/- warning: galois_connection.l_u_le -> GaloisConnection.l_u_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (a : β), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (u a)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (a : β), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (u a)) a)
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_u_le GaloisConnection.l_u_leₓ'. -/
 theorem l_u_le (a) : l (u a) ≤ a :=
   gc.l_le <| le_rfl
 #align galois_connection.l_u_le GaloisConnection.l_u_le
@@ -205,52 +163,22 @@ theorem isGLB_u_image {s : Set β} {b : β} (h : IsGLB s b) : IsGLB (u '' s) (u 
 #align galois_connection.is_glb_u_image GaloisConnection.isGLB_u_image
 -/
 
-/- warning: galois_connection.is_least_l -> GaloisConnection.isLeast_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α}, IsLeast.{u2} β _inst_2 (setOf.{u2} β (fun (b : β) => LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u b))) (l a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α}, IsLeast.{u2} β _inst_2 (setOf.{u2} β (fun (b : β) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u b))) (l a))
-Case conversion may be inaccurate. Consider using '#align galois_connection.is_least_l GaloisConnection.isLeast_lₓ'. -/
 theorem isLeast_l {a : α} : IsLeast { b | a ≤ u b } (l a) :=
   ⟨gc.le_u_l _, fun b hb => gc.l_le hb⟩
 #align galois_connection.is_least_l GaloisConnection.isLeast_l
 
-/- warning: galois_connection.is_greatest_u -> GaloisConnection.isGreatest_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {b : β}, IsGreatest.{u1} α _inst_1 (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l a) b)) (u b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {b : β}, IsGreatest.{u1} α _inst_1 (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l a) b)) (u b))
-Case conversion may be inaccurate. Consider using '#align galois_connection.is_greatest_u GaloisConnection.isGreatest_uₓ'. -/
 theorem isGreatest_u {b : β} : IsGreatest { a | l a ≤ b } (u b) :=
   gc.dual.isLeast_l
 #align galois_connection.is_greatest_u GaloisConnection.isGreatest_u
 
-/- warning: galois_connection.is_glb_l -> GaloisConnection.isGLB_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α}, IsGLB.{u2} β _inst_2 (setOf.{u2} β (fun (b : β) => LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u b))) (l a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α}, IsGLB.{u2} β _inst_2 (setOf.{u2} β (fun (b : β) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u b))) (l a))
-Case conversion may be inaccurate. Consider using '#align galois_connection.is_glb_l GaloisConnection.isGLB_lₓ'. -/
 theorem isGLB_l {a : α} : IsGLB { b | a ≤ u b } (l a) :=
   gc.isLeast_l.IsGLB
 #align galois_connection.is_glb_l GaloisConnection.isGLB_l
 
-/- warning: galois_connection.is_lub_u -> GaloisConnection.isLUB_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {b : β}, IsLUB.{u1} α _inst_1 (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l a) b)) (u b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {b : β}, IsLUB.{u1} α _inst_1 (setOf.{u1} α (fun (a : α) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l a) b)) (u b))
-Case conversion may be inaccurate. Consider using '#align galois_connection.is_lub_u GaloisConnection.isLUB_uₓ'. -/
 theorem isLUB_u {b : β} : IsLUB { a | l a ≤ b } (u b) :=
   gc.isGreatest_u.IsLUB
 #align galois_connection.is_lub_u GaloisConnection.isLUB_u
 
-/- warning: galois_connection.le_u_l_trans -> GaloisConnection.le_u_l_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {x : α} {y : α} {z : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x (u (l y))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) y (u (l z))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x (u (l z))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {x : α} {y : α} {z : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x (u (l y))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) y (u (l z))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x (u (l z))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.le_u_l_trans GaloisConnection.le_u_l_transₓ'. -/
 /-- If `(l, u)` is a Galois connection, then the relation `x ≤ u (l y)` is a transitive relation.
 If `l` is a closure operator (`submodule.span`, `subgroup.closure`, ...) and `u` is the coercion to
 `set`, this reads as "if `U` is in the closure of `V` and `V` is in the closure of `W` then `U` is
@@ -259,12 +187,6 @@ theorem le_u_l_trans {x y z : α} (hxy : x ≤ u (l y)) (hyz : y ≤ u (l z)) : 
   hxy.trans (gc.monotone_u <| gc.l_le hyz)
 #align galois_connection.le_u_l_trans GaloisConnection.le_u_l_trans
 
-/- warning: galois_connection.l_u_le_trans -> GaloisConnection.l_u_le_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {x : β} {y : β} {z : β}, (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (u x)) y) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (u y)) z) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (u x)) z))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {x : β} {y : β} {z : β}, (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (u x)) y) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (u y)) z) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (u x)) z))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_u_le_trans GaloisConnection.l_u_le_transₓ'. -/
 theorem l_u_le_trans {x y z : β} (hxy : l (u x) ≤ y) (hyz : l (u y) ≤ z) : l (u x) ≤ z :=
   (gc.monotone_l <| gc.le_u hxy).trans hyz
 #align galois_connection.l_u_le_trans GaloisConnection.l_u_le_trans
@@ -303,12 +225,6 @@ theorem exists_eq_u (a : α) : (∃ b : β, a = u b) ↔ a = u (l a) :=
 #align galois_connection.exists_eq_u GaloisConnection.exists_eq_u
 -/
 
-/- warning: galois_connection.u_eq -> GaloisConnection.u_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (forall {z : α} {y : β}, Iff (Eq.{succ u1} α (u y) z) (forall (x : α), Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x z) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l x) y)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (forall {z : α} {y : β}, Iff (Eq.{succ u1} α (u y) z) (forall (x : α), Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x z) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l x) y)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_eq GaloisConnection.u_eqₓ'. -/
 theorem u_eq {z : α} {y : β} : u y = z ↔ ∀ x, x ≤ z ↔ l x ≤ y :=
   by
   constructor
@@ -352,12 +268,6 @@ theorem exists_eq_l (b : β) : (∃ a : α, b = l a) ↔ b = l (u b) :=
 #align galois_connection.exists_eq_l GaloisConnection.exists_eq_l
 -/
 
-/- warning: galois_connection.l_eq -> GaloisConnection.l_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {x : α} {z : β}, Iff (Eq.{succ u2} β (l x) z) (forall (y : β), Iff (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) z y) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x (u y))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {x : α} {z : β}, Iff (Eq.{succ u2} β (l x) z) (forall (y : β), Iff (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) z y) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x (u y))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_eq GaloisConnection.l_eqₓ'. -/
 theorem l_eq {x : α} {z : β} : l x = z ↔ ∀ y, z ≤ y ↔ x ≤ u y :=
   by
   constructor
@@ -373,22 +283,10 @@ section OrderTop
 
 variable [PartialOrder α] [Preorder β] [OrderTop α]
 
-/- warning: galois_connection.u_eq_top -> GaloisConnection.u_eq_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (forall {x : β}, Iff (Eq.{succ u1} α (u x) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) x))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (forall {x : β}, Iff (Eq.{succ u1} α (u x) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) x))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_eq_top GaloisConnection.u_eq_topₓ'. -/
 theorem u_eq_top {l : α → β} {u : β → α} (gc : GaloisConnection l u) {x} : u x = ⊤ ↔ l ⊤ ≤ x :=
   top_le_iff.symm.trans gc.le_iff_le.symm
 #align galois_connection.u_eq_top GaloisConnection.u_eq_top
 
-/- warning: galois_connection.u_top -> GaloisConnection.u_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2)] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (Eq.{succ u1} α (u (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2) _inst_4))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (Eq.{succ u1} α (u (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_4))) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_top GaloisConnection.u_topₓ'. -/
 theorem u_top [OrderTop β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) : u ⊤ = ⊤ :=
   gc.u_eq_top.2 le_top
 #align galois_connection.u_top GaloisConnection.u_top
@@ -399,22 +297,10 @@ section OrderBot
 
 variable [Preorder α] [PartialOrder β] [OrderBot β]
 
-/- warning: galois_connection.l_eq_bot -> GaloisConnection.l_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {x : α}, Iff (Eq.{succ u2} β (l x) (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_3))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_3)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {x : α}, Iff (Eq.{succ u2} β (l x) (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_3))) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x (u (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_3)))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_eq_bot GaloisConnection.l_eq_botₓ'. -/
 theorem l_eq_bot {l : α → β} {u : β → α} (gc : GaloisConnection l u) {x} : l x = ⊥ ↔ x ≤ u ⊥ :=
   gc.dual.u_eq_top
 #align galois_connection.l_eq_bot GaloisConnection.l_eq_bot
 
-/- warning: galois_connection.l_bot -> GaloisConnection.l_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_4 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_4))) (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_3)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_4 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_4))) (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_3)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_bot GaloisConnection.l_botₓ'. -/
 theorem l_bot [OrderBot α] {l : α → β} {u : β → α} (gc : GaloisConnection l u) : l ⊥ = ⊥ :=
   gc.dual.u_top
 #align galois_connection.l_bot GaloisConnection.l_bot
@@ -427,12 +313,6 @@ variable [SemilatticeSup α] [SemilatticeSup β] {l : α → β} {u : β → α}
 
 include gc
 
-/- warning: galois_connection.l_sup -> GaloisConnection.l_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {a₁ : α} {a₂ : α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a₁ a₂)) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (l a₁) (l a₂)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {a₁ : α} {a₂ : α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a₁ a₂)) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (l a₁) (l a₂)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_sup GaloisConnection.l_supₓ'. -/
 theorem l_sup : l (a₁ ⊔ a₂) = l a₁ ⊔ l a₂ :=
   (gc.isLUB_l_image isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
 #align galois_connection.l_sup GaloisConnection.l_sup
@@ -445,12 +325,6 @@ variable [SemilatticeInf α] [SemilatticeInf β] {l : α → β} {u : β → α}
 
 include gc
 
-/- warning: galois_connection.u_inf -> GaloisConnection.u_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {b₁ : β} {b₂ : β} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) b₁ b₂)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) (u b₁) (u b₂)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {b₁ : β} {b₂ : β} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) b₁ b₂)) (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) (u b₁) (u b₂)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_inf GaloisConnection.u_infₓ'. -/
 theorem u_inf : u (b₁ ⊓ b₂) = u b₁ ⊓ u b₂ :=
   gc.dual.l_sup
 #align galois_connection.u_inf GaloisConnection.u_inf
@@ -463,12 +337,6 @@ variable [CompleteLattice α] [CompleteLattice β] {l : α → β} {u : β → �
 
 include gc
 
-/- warning: galois_connection.l_supr -> GaloisConnection.l_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : ι -> α}, Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι f)) (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => l (f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : ι -> α}, Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι f)) (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => l (f i))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_supr GaloisConnection.l_iSupₓ'. -/
 theorem l_iSup {f : ι → α} : l (iSup f) = ⨆ i, l (f i) :=
   Eq.symm <|
     IsLUB.iSup_eq <|
@@ -476,55 +344,25 @@ theorem l_iSup {f : ι → α} : l (iSup f) = ⨆ i, l (f i) :=
         rw [range_comp, ← sSup_range] <;> exact gc.is_lub_l_image (isLUB_sSup _)
 #align galois_connection.l_supr GaloisConnection.l_iSup
 
-/- warning: galois_connection.l_supr₂ -> GaloisConnection.l_iSup₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : forall (i : ι), (κ i) -> α}, Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => iSup.{u1, u4} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => iSup.{u2, u4} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (κ i) (fun (j : κ i) => l (f i j)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u4}} {κ : ι -> Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u2, u3} α β (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))) l u) -> (forall {f : forall (i : ι), (κ i) -> α}, Eq.{succ u3} β (l (iSup.{u2, u4} α (CompleteLattice.toSupSet.{u2} α _inst_1) ι (fun (i : ι) => iSup.{u2, u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u3, u4} β (CompleteLattice.toSupSet.{u3} β _inst_2) ι (fun (i : ι) => iSup.{u3, u1} β (CompleteLattice.toSupSet.{u3} β _inst_2) (κ i) (fun (j : κ i) => l (f i j)))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_supr₂ GaloisConnection.l_iSup₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem l_iSup₂ {f : ∀ i, κ i → α} : l (⨆ (i) (j), f i j) = ⨆ (i) (j), l (f i j) := by
   simp_rw [gc.l_supr]
 #align galois_connection.l_supr₂ GaloisConnection.l_iSup₂
 
-/- warning: galois_connection.u_infi -> GaloisConnection.u_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : ι -> β}, Eq.{succ u1} α (u (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι f)) (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => u (f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : ι -> β}, Eq.{succ u1} α (u (iInf.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι f)) (iInf.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => u (f i))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_infi GaloisConnection.u_iInfₓ'. -/
 theorem u_iInf {f : ι → β} : u (iInf f) = ⨅ i, u (f i) :=
   gc.dual.l_iSup
 #align galois_connection.u_infi GaloisConnection.u_iInf
 
-/- warning: galois_connection.u_infi₂ -> GaloisConnection.u_iInf₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : forall (i : ι), (κ i) -> β}, Eq.{succ u1} α (u (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι (fun (i : ι) => iInf.{u2, u4} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => iInf.{u1, u4} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (κ i) (fun (j : κ i) => u (f i j)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u4}} {κ : ι -> Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u2, u3} α β (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))) l u) -> (forall {f : forall (i : ι), (κ i) -> β}, Eq.{succ u2} α (u (iInf.{u3, u4} β (CompleteLattice.toInfSet.{u3} β _inst_2) ι (fun (i : ι) => iInf.{u3, u1} β (CompleteLattice.toInfSet.{u3} β _inst_2) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u2, u4} α (CompleteLattice.toInfSet.{u2} α _inst_1) ι (fun (i : ι) => iInf.{u2, u1} α (CompleteLattice.toInfSet.{u2} α _inst_1) (κ i) (fun (j : κ i) => u (f i j)))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_infi₂ GaloisConnection.u_iInf₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem u_iInf₂ {f : ∀ i, κ i → β} : u (⨅ (i) (j), f i j) = ⨅ (i) (j), u (f i j) :=
   gc.dual.l_iSup₂
 #align galois_connection.u_infi₂ GaloisConnection.u_iInf₂
 
-/- warning: galois_connection.l_Sup -> GaloisConnection.l_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {s : Set.{u1} α}, Eq.{succ u2} β (l (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) s)) (iSup.{u2, succ u1} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) α (fun (a : α) => iSup.{u2, 0} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => l a))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {s : Set.{u1} α}, Eq.{succ u2} β (l (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s)) (iSup.{u2, succ u1} β (CompleteLattice.toSupSet.{u2} β _inst_2) α (fun (a : α) => iSup.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_2) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => l a))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_Sup GaloisConnection.l_sSupₓ'. -/
 theorem l_sSup {s : Set α} : l (sSup s) = ⨆ a ∈ s, l a := by simp only [sSup_eq_iSup, gc.l_supr]
 #align galois_connection.l_Sup GaloisConnection.l_sSup
 
-/- warning: galois_connection.u_Inf -> GaloisConnection.u_sInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {s : Set.{u2} β}, Eq.{succ u1} α (u (InfSet.sInf.{u2} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) s)) (iInf.{u1, succ u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) β (fun (a : β) => iInf.{u1, 0} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) => u a))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {s : Set.{u2} β}, Eq.{succ u1} α (u (InfSet.sInf.{u2} β (CompleteLattice.toInfSet.{u2} β _inst_2) s)) (iInf.{u1, succ u2} α (CompleteLattice.toInfSet.{u1} α _inst_1) β (fun (a : β) => iInf.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) a s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) a s) => u a))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_Inf GaloisConnection.u_sInfₓ'. -/
 theorem u_sInf {s : Set β} : u (sInf s) = ⨅ a ∈ s, u a :=
   gc.dual.l_sSup
 #align galois_connection.u_Inf GaloisConnection.u_sInf
@@ -535,12 +373,6 @@ section LinearOrder
 
 variable [LinearOrder α] [LinearOrder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
 
-/- warning: galois_connection.lt_iff_lt -> GaloisConnection.lt_iff_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) l u) -> (forall {a : α} {b : β}, Iff (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) b (l a)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (u b) a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) l u) -> (forall {a : α} {b : β}, Iff (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) b (l a)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (u b) a))
-Case conversion may be inaccurate. Consider using '#align galois_connection.lt_iff_lt GaloisConnection.lt_iff_ltₓ'. -/
 theorem lt_iff_lt {a : α} {b : β} : b < l a ↔ u b < a :=
   lt_iff_lt_of_le_iff_le (gc a b)
 #align galois_connection.lt_iff_lt GaloisConnection.lt_iff_lt
@@ -574,12 +406,6 @@ protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [
 
 end Constructions
 
-/- warning: galois_connection.l_comm_of_u_comm -> GaloisConnection.l_comm_of_u_comm is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : Preorder.{u1} X] {Y : Type.{u2}} [_inst_2 : Preorder.{u2} Y] {Z : Type.{u3}} [_inst_3 : Preorder.{u3} Z] {W : Type.{u4}} [_inst_4 : PartialOrder.{u4} W] {lYX : X -> Y} {uXY : Y -> X}, (GaloisConnection.{u1, u2} X Y _inst_1 _inst_2 lYX uXY) -> (forall {lWZ : Z -> W} {uZW : W -> Z}, (GaloisConnection.{u3, u4} Z W _inst_3 (PartialOrder.toPreorder.{u4} W _inst_4) lWZ uZW) -> (forall {lWY : Y -> W} {uYW : W -> Y}, (GaloisConnection.{u2, u4} Y W _inst_2 (PartialOrder.toPreorder.{u4} W _inst_4) lWY uYW) -> (forall {lZX : X -> Z} {uXZ : Z -> X}, (GaloisConnection.{u1, u3} X Z _inst_1 _inst_3 lZX uXZ) -> (forall (w : W), Eq.{succ u1} X (uXZ (uZW w)) (uXY (uYW w))) -> (forall {x : X}, Eq.{succ u4} W (lWZ (lZX x)) (lWY (lYX x))))))
-but is expected to have type
-  forall {X : Type.{u4}} [_inst_1 : Preorder.{u4} X] {Y : Type.{u3}} [_inst_2 : Preorder.{u3} Y] {Z : Type.{u2}} [_inst_3 : Preorder.{u2} Z] {W : Type.{u1}} [_inst_4 : PartialOrder.{u1} W] {lYX : X -> Y} {uXY : Y -> X}, (GaloisConnection.{u4, u3} X Y _inst_1 _inst_2 lYX uXY) -> (forall {lWZ : Z -> W} {uZW : W -> Z}, (GaloisConnection.{u2, u1} Z W _inst_3 (PartialOrder.toPreorder.{u1} W _inst_4) lWZ uZW) -> (forall {lWY : Y -> W} {uYW : W -> Y}, (GaloisConnection.{u3, u1} Y W _inst_2 (PartialOrder.toPreorder.{u1} W _inst_4) lWY uYW) -> (forall {lZX : X -> Z} {uXZ : Z -> X}, (GaloisConnection.{u4, u2} X Z _inst_1 _inst_3 lZX uXZ) -> (forall (w : W), Eq.{succ u4} X (uXZ (uZW w)) (uXY (uYW w))) -> (forall {x : X}, Eq.{succ u1} W (lWZ (lZX x)) (lWY (lYX x))))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_comm_of_u_comm GaloisConnection.l_comm_of_u_commₓ'. -/
 theorem l_comm_of_u_comm {X : Type _} [Preorder X] {Y : Type _} [Preorder Y] {Z : Type _}
     [Preorder Z] {W : Type _} [PartialOrder W] {lYX : X → Y} {uXY : Y → X}
     (hXY : GaloisConnection lYX uXY) {lWZ : Z → W} {uZW : W → Z} (hZW : GaloisConnection lWZ uZW)
@@ -589,12 +415,6 @@ theorem l_comm_of_u_comm {X : Type _} [Preorder X] {Y : Type _} [Preorder Y] {Z 
   (hXZ.compose hZW).l_unique (hXY.compose hWY) h
 #align galois_connection.l_comm_of_u_comm GaloisConnection.l_comm_of_u_comm
 
-/- warning: galois_connection.u_comm_of_l_comm -> GaloisConnection.u_comm_of_l_comm is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : PartialOrder.{u1} X] {Y : Type.{u2}} [_inst_2 : Preorder.{u2} Y] {Z : Type.{u3}} [_inst_3 : Preorder.{u3} Z] {W : Type.{u4}} [_inst_4 : Preorder.{u4} W] {lYX : X -> Y} {uXY : Y -> X}, (GaloisConnection.{u1, u2} X Y (PartialOrder.toPreorder.{u1} X _inst_1) _inst_2 lYX uXY) -> (forall {lWZ : Z -> W} {uZW : W -> Z}, (GaloisConnection.{u3, u4} Z W _inst_3 _inst_4 lWZ uZW) -> (forall {lWY : Y -> W} {uYW : W -> Y}, (GaloisConnection.{u2, u4} Y W _inst_2 _inst_4 lWY uYW) -> (forall {lZX : X -> Z} {uXZ : Z -> X}, (GaloisConnection.{u1, u3} X Z (PartialOrder.toPreorder.{u1} X _inst_1) _inst_3 lZX uXZ) -> (forall (x : X), Eq.{succ u4} W (lWZ (lZX x)) (lWY (lYX x))) -> (forall {w : W}, Eq.{succ u1} X (uXZ (uZW w)) (uXY (uYW w))))))
-but is expected to have type
-  forall {X : Type.{u4}} [_inst_1 : PartialOrder.{u4} X] {Y : Type.{u3}} [_inst_2 : Preorder.{u3} Y] {Z : Type.{u2}} [_inst_3 : Preorder.{u2} Z] {W : Type.{u1}} [_inst_4 : Preorder.{u1} W] {lYX : X -> Y} {uXY : Y -> X}, (GaloisConnection.{u4, u3} X Y (PartialOrder.toPreorder.{u4} X _inst_1) _inst_2 lYX uXY) -> (forall {lWZ : Z -> W} {uZW : W -> Z}, (GaloisConnection.{u2, u1} Z W _inst_3 _inst_4 lWZ uZW) -> (forall {lWY : Y -> W} {uYW : W -> Y}, (GaloisConnection.{u3, u1} Y W _inst_2 _inst_4 lWY uYW) -> (forall {lZX : X -> Z} {uXZ : Z -> X}, (GaloisConnection.{u4, u2} X Z (PartialOrder.toPreorder.{u4} X _inst_1) _inst_3 lZX uXZ) -> (forall (x : X), Eq.{succ u1} W (lWZ (lZX x)) (lWY (lYX x))) -> (forall {w : W}, Eq.{succ u4} X (uXZ (uZW w)) (uXY (uYW w))))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.u_comm_of_l_comm GaloisConnection.u_comm_of_l_commₓ'. -/
 theorem u_comm_of_l_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y] {Z : Type _}
     [Preorder Z] {W : Type _} [Preorder W] {lYX : X → Y} {uXY : Y → X}
     (hXY : GaloisConnection lYX uXY) {lWZ : Z → W} {uZW : W → Z} (hZW : GaloisConnection lWZ uZW)
@@ -604,12 +424,6 @@ theorem u_comm_of_l_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y]
   (hXZ.compose hZW).u_unique (hXY.compose hWY) h
 #align galois_connection.u_comm_of_l_comm GaloisConnection.u_comm_of_l_comm
 
-/- warning: galois_connection.l_comm_iff_u_comm -> GaloisConnection.l_comm_iff_u_comm is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : PartialOrder.{u1} X] {Y : Type.{u2}} [_inst_2 : Preorder.{u2} Y] {Z : Type.{u3}} [_inst_3 : Preorder.{u3} Z] {W : Type.{u4}} [_inst_4 : PartialOrder.{u4} W] {lYX : X -> Y} {uXY : Y -> X}, (GaloisConnection.{u1, u2} X Y (PartialOrder.toPreorder.{u1} X _inst_1) _inst_2 lYX uXY) -> (forall {lWZ : Z -> W} {uZW : W -> Z}, (GaloisConnection.{u3, u4} Z W _inst_3 (PartialOrder.toPreorder.{u4} W _inst_4) lWZ uZW) -> (forall {lWY : Y -> W} {uYW : W -> Y}, (GaloisConnection.{u2, u4} Y W _inst_2 (PartialOrder.toPreorder.{u4} W _inst_4) lWY uYW) -> (forall {lZX : X -> Z} {uXZ : Z -> X}, (GaloisConnection.{u1, u3} X Z (PartialOrder.toPreorder.{u1} X _inst_1) _inst_3 lZX uXZ) -> (Iff (forall (w : W), Eq.{succ u1} X (uXZ (uZW w)) (uXY (uYW w))) (forall (x : X), Eq.{succ u4} W (lWZ (lZX x)) (lWY (lYX x)))))))
-but is expected to have type
-  forall {X : Type.{u4}} [_inst_1 : PartialOrder.{u4} X] {Y : Type.{u3}} [_inst_2 : Preorder.{u3} Y] {Z : Type.{u2}} [_inst_3 : Preorder.{u2} Z] {W : Type.{u1}} [_inst_4 : PartialOrder.{u1} W] {lYX : X -> Y} {uXY : Y -> X}, (GaloisConnection.{u4, u3} X Y (PartialOrder.toPreorder.{u4} X _inst_1) _inst_2 lYX uXY) -> (forall {lWZ : Z -> W} {uZW : W -> Z}, (GaloisConnection.{u2, u1} Z W _inst_3 (PartialOrder.toPreorder.{u1} W _inst_4) lWZ uZW) -> (forall {lWY : Y -> W} {uYW : W -> Y}, (GaloisConnection.{u3, u1} Y W _inst_2 (PartialOrder.toPreorder.{u1} W _inst_4) lWY uYW) -> (forall {lZX : X -> Z} {uXZ : Z -> X}, (GaloisConnection.{u4, u2} X Z (PartialOrder.toPreorder.{u4} X _inst_1) _inst_3 lZX uXZ) -> (Iff (forall (w : W), Eq.{succ u4} X (uXZ (uZW w)) (uXY (uYW w))) (forall (x : X), Eq.{succ u1} W (lWZ (lZX x)) (lWY (lYX x)))))))
-Case conversion may be inaccurate. Consider using '#align galois_connection.l_comm_iff_u_comm GaloisConnection.l_comm_iff_u_commₓ'. -/
 theorem l_comm_iff_u_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y] {Z : Type _}
     [Preorder Z] {W : Type _} [PartialOrder W] {lYX : X → Y} {uXY : Y → X}
     (hXY : GaloisConnection lYX uXY) {lWZ : Z → W} {uZW : W → Z} (hZW : GaloisConnection lWZ uZW)
@@ -626,12 +440,6 @@ section
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] {f : α → β → γ} {s : Set α}
   {t : Set β} {l u : α → β → γ} {l₁ u₁ : β → γ → α} {l₂ u₂ : α → γ → β}
 
-/- warning: Sup_image2_eq_Sup_Sup -> sSup_image2_eq_sSup_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : CompleteLattice.{u3} γ] {s : Set.{u1} α} {t : Set.{u2} β} {l : α -> β -> γ} {u₁ : β -> γ -> α} {u₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u1, u3} α γ (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (Function.swap.{succ u1, succ u2, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) l b) (u₁ b)) -> (forall (a : α), GaloisConnection.{u2, u3} β γ (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (l a) (u₂ a)) -> (Eq.{succ u3} γ (SupSet.sSup.{u3} γ (CompleteSemilatticeSup.toHasSup.{u3} γ (CompleteLattice.toCompleteSemilatticeSup.{u3} γ _inst_3)) (Set.image2.{u1, u2, u3} α β γ l s t)) (l (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) s) (SupSet.sSup.{u2} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) t)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : CompleteLattice.{u3} γ] {s : Set.{u1} α} {t : Set.{u2} β} {l : α -> β -> γ} {u₁ : β -> γ -> α} {u₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u1, u3} α γ (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (Function.swap.{succ u1, succ u2, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) l b) (u₁ b)) -> (forall (a : α), GaloisConnection.{u2, u3} β γ (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (l a) (u₂ a)) -> (Eq.{succ u3} γ (SupSet.sSup.{u3} γ (CompleteLattice.toSupSet.{u3} γ _inst_3) (Set.image2.{u1, u2, u3} α β γ l s t)) (l (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s) (SupSet.sSup.{u2} β (CompleteLattice.toSupSet.{u2} β _inst_2) t)))
-Case conversion may be inaccurate. Consider using '#align Sup_image2_eq_Sup_Sup sSup_image2_eq_sSup_sSupₓ'. -/
 theorem sSup_image2_eq_sSup_sSup (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sSup (image2 l s t) = l (sSup s) (sSup t) := by
   simp_rw [sSup_image2, ← (h₂ _).l_sSup, ← (h₁ _).l_sSup]
@@ -660,12 +468,6 @@ theorem sSup_image2_eq_sInf_sInf (h₁ : ∀ b, GaloisConnection (swap l b ∘ o
 #align Sup_image2_eq_Inf_Inf sSup_image2_eq_sInf_sInf
 -/
 
-/- warning: Inf_image2_eq_Inf_Inf -> sInf_image2_eq_sInf_sInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : CompleteLattice.{u3} γ] {s : Set.{u1} α} {t : Set.{u2} β} {u : α -> β -> γ} {l₁ : β -> γ -> α} {l₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u1} γ α (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (l₁ b) (Function.swap.{succ u1, succ u2, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) u b)) -> (forall (a : α), GaloisConnection.{u3, u2} γ β (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) (l₂ a) (u a)) -> (Eq.{succ u3} γ (InfSet.sInf.{u3} γ (CompleteSemilatticeInf.toHasInf.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3)) (Set.image2.{u1, u2, u3} α β γ u s t)) (u (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) s) (InfSet.sInf.{u2} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) t)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : CompleteLattice.{u3} γ] {s : Set.{u1} α} {t : Set.{u2} β} {u : α -> β -> γ} {l₁ : β -> γ -> α} {l₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u1} γ α (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (l₁ b) (Function.swap.{succ u1, succ u2, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) u b)) -> (forall (a : α), GaloisConnection.{u3, u2} γ β (PartialOrder.toPreorder.{u3} γ (CompleteSemilatticeInf.toPartialOrder.{u3} γ (CompleteLattice.toCompleteSemilatticeInf.{u3} γ _inst_3))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) (l₂ a) (u a)) -> (Eq.{succ u3} γ (InfSet.sInf.{u3} γ (CompleteLattice.toInfSet.{u3} γ _inst_3) (Set.image2.{u1, u2, u3} α β γ u s t)) (u (InfSet.sInf.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) s) (InfSet.sInf.{u2} β (CompleteLattice.toInfSet.{u2} β _inst_2) t)))
-Case conversion may be inaccurate. Consider using '#align Inf_image2_eq_Inf_Inf sInf_image2_eq_sInf_sInfₓ'. -/
 theorem sInf_image2_eq_sInf_sInf (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
     (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : sInf (image2 u s t) = u (sInf s) (sInf t) := by
   simp_rw [sInf_image2, ← (h₂ _).u_sInf, ← (h₁ _).u_sInf]
@@ -700,45 +502,21 @@ namespace OrderIso
 
 variable [Preorder α] [Preorder β]
 
-/- warning: order_iso.bdd_above_image -> OrderIso.bddAbove_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) {s : Set.{u1} α}, Iff (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) e) s)) (BddAbove.{u1} α _inst_1 s)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) {s : Set.{u1} α}, Iff (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) e) s)) (BddAbove.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align order_iso.bdd_above_image OrderIso.bddAbove_imageₓ'. -/
 @[simp]
 theorem bddAbove_image (e : α ≃o β) {s : Set α} : BddAbove (e '' s) ↔ BddAbove s :=
   e.to_galoisConnection.bddAbove_l_image
 #align order_iso.bdd_above_image OrderIso.bddAbove_image
 
-/- warning: order_iso.bdd_below_image -> OrderIso.bddBelow_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) {s : Set.{u1} α}, Iff (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) e) s)) (BddBelow.{u1} α _inst_1 s)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) {s : Set.{u1} α}, Iff (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) e) s)) (BddBelow.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align order_iso.bdd_below_image OrderIso.bddBelow_imageₓ'. -/
 @[simp]
 theorem bddBelow_image (e : α ≃o β) {s : Set α} : BddBelow (e '' s) ↔ BddBelow s :=
   e.dual.bddAbove_image
 #align order_iso.bdd_below_image OrderIso.bddBelow_image
 
-/- warning: order_iso.bdd_above_preimage -> OrderIso.bddAbove_preimage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) {s : Set.{u2} β}, Iff (BddAbove.{u1} α _inst_1 (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) e) s)) (BddAbove.{u2} β _inst_2 s)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) {s : Set.{u2} β}, Iff (BddAbove.{u1} α _inst_1 (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) e) s)) (BddAbove.{u2} β _inst_2 s)
-Case conversion may be inaccurate. Consider using '#align order_iso.bdd_above_preimage OrderIso.bddAbove_preimageₓ'. -/
 @[simp]
 theorem bddAbove_preimage (e : α ≃o β) {s : Set β} : BddAbove (e ⁻¹' s) ↔ BddAbove s := by
   rw [← e.bdd_above_image, e.image_preimage]
 #align order_iso.bdd_above_preimage OrderIso.bddAbove_preimage
 
-/- warning: order_iso.bdd_below_preimage -> OrderIso.bddBelow_preimage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) {s : Set.{u2} β}, Iff (BddBelow.{u1} α _inst_1 (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) e) s)) (BddBelow.{u2} β _inst_2 s)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (e : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) {s : Set.{u2} β}, Iff (BddBelow.{u1} α _inst_1 (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) e) s)) (BddBelow.{u2} β _inst_2 s)
-Case conversion may be inaccurate. Consider using '#align order_iso.bdd_below_preimage OrderIso.bddBelow_preimageₓ'. -/
 @[simp]
 theorem bddBelow_preimage (e : α ≃o β) {s : Set β} : BddBelow (e ⁻¹' s) ↔ BddBelow s := by
   rw [← e.bdd_below_image, e.image_preimage]
@@ -769,12 +547,6 @@ structure GaloisInsertion {α β : Type _} [Preorder α] [Preorder β] (l : α �
 #align galois_insertion GaloisInsertion
 -/
 
-/- warning: galois_insertion.monotone_intro -> GaloisInsertion.monotoneIntro is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (Monotone.{u2, u1} β α _inst_2 _inst_1 u) -> (Monotone.{u1, u2} α β _inst_1 _inst_2 l) -> (forall (a : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a (u (l a))) -> (forall (b : β), Eq.{succ u2} β (l (u b)) b) -> (GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (Monotone.{u2, u1} β α _inst_2 _inst_1 u) -> (Monotone.{u1, u2} α β _inst_1 _inst_2 l) -> (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a (u (l a))) -> (forall (b : β), Eq.{succ u2} β (l (u b)) b) -> (GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-Case conversion may be inaccurate. Consider using '#align galois_insertion.monotone_intro GaloisInsertion.monotoneIntroₓ'. -/
 /-- A constructor for a Galois insertion with the trivial `choice` function. -/
 def GaloisInsertion.monotoneIntro {α β : Type _} [Preorder α] [Preorder β] {l : α → β} {u : β → α}
     (hu : Monotone u) (hl : Monotone l) (hul : ∀ a, a ≤ u (l a)) (hlu : ∀ b, l (u b) = b) :
@@ -785,12 +557,6 @@ def GaloisInsertion.monotoneIntro {α β : Type _} [Preorder α] [Preorder β] {
   choice_eq _ _ := rfl
 #align galois_insertion.monotone_intro GaloisInsertion.monotoneIntro
 
-/- warning: order_iso.to_galois_insertion -> OrderIso.toGaloisInsertion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (oi : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) oi) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderIso.{u2, u1} β α (Preorder.toHasLe.{u2} β _inst_2) (Preorder.toHasLe.{u1} α _inst_1)) (fun (_x : RelIso.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) => β -> α) (RelIso.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) (OrderIso.symm.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) oi))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (oi : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) oi) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) β (fun (_x : β) => α) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (OrderIso.symm.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) oi))
-Case conversion may be inaccurate. Consider using '#align order_iso.to_galois_insertion OrderIso.toGaloisInsertionₓ'. -/
 /-- Makes a Galois insertion from an order-preserving bijection. -/
 protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisInsertion oi oi.symm where
@@ -800,12 +566,6 @@ protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α �
   choice_eq b h := rfl
 #align order_iso.to_galois_insertion OrderIso.toGaloisInsertion
 
-/- warning: galois_connection.to_galois_insertion -> GaloisConnection.toGaloisInsertion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (b : β), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) b (l (u b))) -> (GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (b : β), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) b (l (u b))) -> (GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-Case conversion may be inaccurate. Consider using '#align galois_connection.to_galois_insertion GaloisConnection.toGaloisInsertionₓ'. -/
 /-- Make a `galois_insertion l u` from a `galois_connection l u` such that `∀ b, b ≤ l (u b)` -/
 def GaloisConnection.toGaloisInsertion {α β : Type _} [Preorder α] [Preorder β] {l : α → β}
     {u : β → α} (gc : GaloisConnection l u) (h : ∀ b, b ≤ l (u b)) : GaloisInsertion l u :=
@@ -815,12 +575,6 @@ def GaloisConnection.toGaloisInsertion {α β : Type _} [Preorder α] [Preorder 
     choice_eq := fun _ _ => rfl }
 #align galois_connection.to_galois_insertion GaloisConnection.toGaloisInsertion
 
-/- warning: galois_connection.lift_order_bot -> GaloisConnection.liftOrderBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] [_inst_3 : PartialOrder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_3) l u) -> (OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_3)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] [_inst_3 : PartialOrder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β _inst_3) l u) -> (OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_3)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.lift_order_bot GaloisConnection.liftOrderBotₓ'. -/
 /-- Lift the bottom along a Galois connection -/
 def GaloisConnection.liftOrderBot {α β : Type _} [Preorder α] [OrderBot α] [PartialOrder β]
     {l : α → β} {u : β → α} (gc : GaloisConnection l u) : OrderBot β
@@ -858,12 +612,6 @@ theorem u_injective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) :
 #align galois_insertion.u_injective GaloisInsertion.u_injective
 -/
 
-/- warning: galois_insertion.l_sup_u -> GaloisInsertion.l_sup_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) (u a) (u b))) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) (u a) (u b))) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) a b))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_sup_u GaloisInsertion.l_sup_uₓ'. -/
 theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l u) (a b : β) :
     l (u a ⊔ u b) = a ⊔ b :=
   calc
@@ -872,12 +620,6 @@ theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l 
     
 #align galois_insertion.l_sup_u GaloisInsertion.l_sup_u
 
-/- warning: galois_insertion.l_supr_u -> GaloisInsertion.l_iSup_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> β), Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => u (f i)))) (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> β), Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => u (f i)))) (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_supr_u GaloisInsertion.l_iSup_uₓ'. -/
 theorem l_iSup_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     (f : ι → β) : l (⨆ i, u (f i)) = ⨆ i, f i :=
   calc
@@ -886,12 +628,6 @@ theorem l_iSup_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     
 #align galois_insertion.l_supr_u GaloisInsertion.l_iSup_u
 
-/- warning: galois_insertion.l_bsupr_u -> GaloisInsertion.l_biSup_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> β), Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (p i) (fun (hi : p i) => u (f i hi))))) (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => iSup.{u2, 0} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (p i) (fun (hi : p i) => f i hi))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> β), Eq.{succ u2} β (l (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (p i) (fun (hi : p i) => u (f i hi))))) (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => iSup.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_2) (p i) (fun (hi : p i) => f i hi))))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_bsupr_u GaloisInsertion.l_biSup_uₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem l_biSup_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
@@ -899,22 +635,10 @@ theorem l_biSup_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertio
   simp only [iSup_subtype', gi.l_supr_u]
 #align galois_insertion.l_bsupr_u GaloisInsertion.l_biSup_u
 
-/- warning: galois_insertion.l_Sup_u_image -> GaloisInsertion.l_sSup_u_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u2} β), Eq.{succ u2} β (l (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (Set.image.{u2, u1} β α u s))) (SupSet.sSup.{u2} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u2} β), Eq.{succ u2} β (l (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Set.image.{u2, u1} β α u s))) (SupSet.sSup.{u2} β (CompleteLattice.toSupSet.{u2} β _inst_2) s))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_Sup_u_image GaloisInsertion.l_sSup_u_imageₓ'. -/
 theorem l_sSup_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     (s : Set β) : l (sSup (u '' s)) = sSup s := by rw [sSup_image, gi.l_bsupr_u, sSup_eq_iSup]
 #align galois_insertion.l_Sup_u_image GaloisInsertion.l_sSup_u_image
 
-/- warning: galois_insertion.l_inf_u -> GaloisInsertion.l_inf_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) (u a) (u b))) (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) (u a) (u b))) (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) a b))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_inf_u GaloisInsertion.l_inf_uₓ'. -/
 theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l u) (a b : β) :
     l (u a ⊓ u b) = a ⊓ b :=
   calc
@@ -923,12 +647,6 @@ theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l 
     
 #align galois_insertion.l_inf_u GaloisInsertion.l_inf_u
 
-/- warning: galois_insertion.l_infi_u -> GaloisInsertion.l_iInf_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> β), Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => u (f i)))) (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> β), Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => u (f i)))) (iInf.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_infi_u GaloisInsertion.l_iInf_uₓ'. -/
 theorem l_iInf_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     (f : ι → β) : l (⨅ i, u (f i)) = ⨅ i, f i :=
   calc
@@ -937,12 +655,6 @@ theorem l_iInf_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     
 #align galois_insertion.l_infi_u GaloisInsertion.l_iInf_u
 
-/- warning: galois_insertion.l_binfi_u -> GaloisInsertion.l_biInf_u is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> β), Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => iInf.{u1, 0} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (p i) (fun (hi : p i) => u (f i hi))))) (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι (fun (i : ι) => iInf.{u2, 0} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) (p i) (fun (hi : p i) => f i hi))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> β), Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (p i) (fun (hi : p i) => u (f i hi))))) (iInf.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι (fun (i : ι) => iInf.{u2, 0} β (CompleteLattice.toInfSet.{u2} β _inst_2) (p i) (fun (hi : p i) => f i hi))))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_binfi_u GaloisInsertion.l_biInf_uₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem l_biInf_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
@@ -950,22 +662,10 @@ theorem l_biInf_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertio
   simp only [iInf_subtype', gi.l_infi_u]
 #align galois_insertion.l_binfi_u GaloisInsertion.l_biInf_u
 
-/- warning: galois_insertion.l_Inf_u_image -> GaloisInsertion.l_sInf_u_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u2} β), Eq.{succ u2} β (l (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (Set.image.{u2, u1} β α u s))) (InfSet.sInf.{u2} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u2} β), Eq.{succ u2} β (l (InfSet.sInf.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) (Set.image.{u2, u1} β α u s))) (InfSet.sInf.{u2} β (CompleteLattice.toInfSet.{u2} β _inst_2) s))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_Inf_u_image GaloisInsertion.l_sInf_u_imageₓ'. -/
 theorem l_sInf_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     (s : Set β) : l (sInf (u '' s)) = sInf s := by rw [sInf_image, gi.l_binfi_u, sInf_eq_iInf]
 #align galois_insertion.l_Inf_u_image GaloisInsertion.l_sInf_u_image
 
-/- warning: galois_insertion.l_infi_of_ul_eq_self -> GaloisInsertion.l_iInf_of_ul_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> α), (forall (i : ι), Eq.{succ u1} α (u (l (f i))) (f i)) -> (Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => f i))) (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι (fun (i : ι) => l (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> α), (forall (i : ι), Eq.{succ u1} α (u (l (f i))) (f i)) -> (Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => f i))) (iInf.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι (fun (i : ι) => l (f i)))))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_infi_of_ul_eq_self GaloisInsertion.l_iInf_of_ul_eq_selfₓ'. -/
 theorem l_iInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     {ι : Sort x} (f : ι → α) (hf : ∀ i, u (l (f i)) = f i) : l (⨅ i, f i) = ⨅ i, l (f i) :=
   calc
@@ -974,12 +674,6 @@ theorem l_iInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     
 #align galois_insertion.l_infi_of_ul_eq_self GaloisInsertion.l_iInf_of_ul_eq_self
 
-/- warning: galois_insertion.l_binfi_of_ul_eq_self -> GaloisInsertion.l_biInf_of_ul_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> α), (forall (i : ι) (hi : p i), Eq.{succ u1} α (u (l (f i hi))) (f i hi)) -> (Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => iInf.{u1, 0} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (p i) (fun (hi : p i) => f i hi)))) (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι (fun (i : ι) => iInf.{u2, 0} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) (p i) (fun (hi : p i) => l (f i hi))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> α), (forall (i : ι) (hi : p i), Eq.{succ u1} α (u (l (f i hi))) (f i hi)) -> (Eq.{succ u2} β (l (iInf.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (p i) (fun (hi : p i) => f i hi)))) (iInf.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι (fun (i : ι) => iInf.{u2, 0} β (CompleteLattice.toInfSet.{u2} β _inst_2) (p i) (fun (hi : p i) => l (f i hi))))))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.l_binfi_of_ul_eq_self GaloisInsertion.l_biInf_of_ul_eq_selfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem l_biInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
@@ -988,12 +682,6 @@ theorem l_biInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Ga
   exact gi.l_infi_of_ul_eq_self _ fun _ => hf _ _
 #align galois_insertion.l_binfi_of_ul_eq_self GaloisInsertion.l_biInf_of_ul_eq_self
 
-/- warning: galois_insertion.u_le_u_iff -> GaloisInsertion.u_le_u_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : β} {b : β}, Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (u a) (u b)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (GaloisInsertion.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : β} {b : β}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (u a) (u b)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) a b))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.u_le_u_iff GaloisInsertion.u_le_u_iffₓ'. -/
 theorem u_le_u_iff [Preorder α] [Preorder β] (gi : GaloisInsertion l u) {a b} : u a ≤ u b ↔ a ≤ b :=
   ⟨fun h => (gi.le_l_u _).trans (gi.gc.l_le h), fun h => gi.gc.monotone_u h⟩
 #align galois_insertion.u_le_u_iff GaloisInsertion.u_le_u_iff
@@ -1069,12 +757,6 @@ def liftLattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
 #align galois_insertion.lift_lattice GaloisInsertion.liftLattice
 -/
 
-/- warning: galois_insertion.lift_order_top -> GaloisInsertion.liftOrderTop is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_2)], (GaloisInsertion.{u1, u2} α β _inst_2 (PartialOrder.toPreorder.{u2} β _inst_1) l u) -> (OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_2)], (GaloisInsertion.{u1, u2} α β _inst_2 (PartialOrder.toPreorder.{u2} β _inst_1) l u) -> (OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.lift_order_top GaloisInsertion.liftOrderTopₓ'. -/
 -- See note [reducible non instances]
 /-- Lift the top along a Galois insertion -/
 @[reducible]
@@ -1085,12 +767,6 @@ def liftOrderTop [Preorder α] [OrderTop α] (gi : GaloisInsertion l u) : OrderT
     simp only [gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top)
 #align galois_insertion.lift_order_top GaloisInsertion.liftOrderTop
 
-/- warning: galois_insertion.lift_bounded_order -> GaloisInsertion.liftBoundedOrder is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : Preorder.{u1} α] [_inst_3 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_2)], (GaloisInsertion.{u1, u2} α β _inst_2 (PartialOrder.toPreorder.{u2} β _inst_1) l u) -> (BoundedOrder.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : Preorder.{u1} α] [_inst_3 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α _inst_2)], (GaloisInsertion.{u1, u2} α β _inst_2 (PartialOrder.toPreorder.{u2} β _inst_1) l u) -> (BoundedOrder.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)))
-Case conversion may be inaccurate. Consider using '#align galois_insertion.lift_bounded_order GaloisInsertion.liftBoundedOrderₓ'. -/
 -- See note [reducible non instances]
 /-- Lift the top, bottom, suprema, and infima along a Galois insertion -/
 @[reducible]
@@ -1170,12 +846,6 @@ def GaloisInsertion.ofDual [Preorder α] [Preorder β] {l : αᵒᵈ → βᵒ�
 #align galois_insertion.of_dual GaloisInsertion.ofDual
 -/
 
-/- warning: order_iso.to_galois_coinsertion -> OrderIso.toGaloisCoinsertion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (oi : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) oi) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderIso.{u2, u1} β α (Preorder.toHasLe.{u2} β _inst_2) (Preorder.toHasLe.{u1} α _inst_1)) (fun (_x : RelIso.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) => β -> α) (RelIso.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) (OrderIso.symm.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) oi))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (oi : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u2} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) oi) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) β (fun (_x : β) => α) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (OrderIso.symm.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) oi))
-Case conversion may be inaccurate. Consider using '#align order_iso.to_galois_coinsertion OrderIso.toGaloisCoinsertionₓ'. -/
 /-- Makes a Galois coinsertion from an order-preserving bijection. -/
 protected def OrderIso.toGaloisCoinsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisCoinsertion oi oi.symm where
@@ -1185,12 +855,6 @@ protected def OrderIso.toGaloisCoinsertion [Preorder α] [Preorder β] (oi : α 
   choice_eq b h := rfl
 #align order_iso.to_galois_coinsertion OrderIso.toGaloisCoinsertion
 
-/- warning: galois_coinsertion.monotone_intro -> GaloisCoinsertion.monotoneIntro is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (Monotone.{u2, u1} β α _inst_2 _inst_1 u) -> (Monotone.{u1, u2} α β _inst_1 _inst_2 l) -> (forall (b : β), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l (u b)) b) -> (forall (a : α), Eq.{succ u1} α (u (l a)) a) -> (GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (Monotone.{u2, u1} β α _inst_2 _inst_1 u) -> (Monotone.{u1, u2} α β _inst_1 _inst_2 l) -> (forall (b : β), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l (u b)) b) -> (forall (a : α), Eq.{succ u1} α (u (l a)) a) -> (GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.monotone_intro GaloisCoinsertion.monotoneIntroₓ'. -/
 /-- A constructor for a Galois coinsertion with the trivial `choice` function. -/
 def GaloisCoinsertion.monotoneIntro [Preorder α] [Preorder β] {l : α → β} {u : β → α}
     (hu : Monotone u) (hl : Monotone l) (hlu : ∀ b, l (u b) ≤ b) (hul : ∀ a, u (l a) = a) :
@@ -1198,12 +862,6 @@ def GaloisCoinsertion.monotoneIntro [Preorder α] [Preorder β] {l : α → β} 
   (GaloisInsertion.monotoneIntro hl.dual hu.dual hlu hul).ofDual
 #align galois_coinsertion.monotone_intro GaloisCoinsertion.monotoneIntro
 
-/- warning: galois_connection.to_galois_coinsertion -> GaloisConnection.toGaloisCoinsertion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (a : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (u (l a)) a) -> (GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (u (l a)) a) -> (GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 l u)
-Case conversion may be inaccurate. Consider using '#align galois_connection.to_galois_coinsertion GaloisConnection.toGaloisCoinsertionₓ'. -/
 /-- Make a `galois_coinsertion l u` from a `galois_connection l u` such that `∀ b, b ≤ l (u b)` -/
 def GaloisConnection.toGaloisCoinsertion {α β : Type _} [Preorder α] [Preorder β] {l : α → β}
     {u : β → α} (gc : GaloisConnection l u) (h : ∀ a, u (l a) ≤ a) : GaloisCoinsertion l u :=
@@ -1213,12 +871,6 @@ def GaloisConnection.toGaloisCoinsertion {α β : Type _} [Preorder α] [Preorde
     choice_eq := fun _ _ => rfl }
 #align galois_connection.to_galois_coinsertion GaloisConnection.toGaloisCoinsertion
 
-/- warning: galois_connection.lift_order_top -> GaloisConnection.liftOrderTop is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2)] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align galois_connection.lift_order_top GaloisConnection.liftOrderTopₓ'. -/
 /-- Lift the top along a Galois connection -/
 def GaloisConnection.liftOrderTop {α β : Type _} [PartialOrder α] [Preorder β] [OrderTop β]
     {l : α → β} {u : β → α} (gc : GaloisConnection l u) : OrderTop α
@@ -1256,67 +908,31 @@ theorem l_injective [PartialOrder α] [Preorder β] (gi : GaloisCoinsertion l u)
 #align galois_coinsertion.l_injective GaloisCoinsertion.l_injective
 -/
 
-/- warning: galois_coinsertion.u_inf_l -> GaloisCoinsertion.u_inf_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (l a) (l b))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (l a) (l b))) (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_inf_l GaloisCoinsertion.u_inf_lₓ'. -/
 theorem u_inf_l [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisCoinsertion l u) (a b : α) :
     u (l a ⊓ l b) = a ⊓ b :=
   gi.dual.l_sup_u a b
 #align galois_coinsertion.u_inf_l GaloisCoinsertion.u_inf_l
 
-/- warning: galois_coinsertion.u_infi_l -> GaloisCoinsertion.u_iInf_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> α), Eq.{succ u1} α (u (iInf.{u2, u3} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) ι (fun (i : ι) => l (f i)))) (iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> α), Eq.{succ u1} α (u (iInf.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι (fun (i : ι) => l (f i)))) (iInf.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_infi_l GaloisCoinsertion.u_iInf_lₓ'. -/
 theorem u_iInf_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     (f : ι → α) : u (⨅ i, l (f i)) = ⨅ i, f i :=
   gi.dual.l_iSup_u _
 #align galois_coinsertion.u_infi_l GaloisCoinsertion.u_iInf_l
 
-/- warning: galois_coinsertion.u_Inf_l_image -> GaloisCoinsertion.u_sInf_l_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u1} α), Eq.{succ u1} α (u (InfSet.sInf.{u2} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) (Set.image.{u1, u2} α β l s))) (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u1} α), Eq.{succ u1} α (u (InfSet.sInf.{u2} β (CompleteLattice.toInfSet.{u2} β _inst_2) (Set.image.{u1, u2} α β l s))) (InfSet.sInf.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_Inf_l_image GaloisCoinsertion.u_sInf_l_imageₓ'. -/
 theorem u_sInf_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     (s : Set α) : u (sInf (l '' s)) = sInf s :=
   gi.dual.l_sSup_u_image _
 #align galois_coinsertion.u_Inf_l_image GaloisCoinsertion.u_sInf_l_image
 
-/- warning: galois_coinsertion.u_sup_l -> GaloisCoinsertion.u_sup_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (l a) (l b))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (l a) (l b))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_sup_l GaloisCoinsertion.u_sup_lₓ'. -/
 theorem u_sup_l [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisCoinsertion l u) (a b : α) :
     u (l a ⊔ l b) = a ⊔ b :=
   gi.dual.l_inf_u _ _
 #align galois_coinsertion.u_sup_l GaloisCoinsertion.u_sup_l
 
-/- warning: galois_coinsertion.u_supr_l -> GaloisCoinsertion.u_iSup_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> α), Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => l (f i)))) (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> α), Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => l (f i)))) (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_supr_l GaloisCoinsertion.u_iSup_lₓ'. -/
 theorem u_iSup_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     (f : ι → α) : u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_iInf_u _
 #align galois_coinsertion.u_supr_l GaloisCoinsertion.u_iSup_l
 
-/- warning: galois_coinsertion.u_bsupr_l -> GaloisCoinsertion.u_biSup_l is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> α), Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => iSup.{u2, 0} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (p i) (fun (hi : p i) => l (f i hi))))) (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (p i) (fun (hi : p i) => f i hi))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> α), Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => iSup.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_2) (p i) (fun (hi : p i) => l (f i hi))))) (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (p i) (fun (hi : p i) => f i hi))))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_bsupr_l GaloisCoinsertion.u_biSup_lₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem u_biSup_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
@@ -1324,34 +940,16 @@ theorem u_biSup_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsert
   gi.dual.l_biInf_u _
 #align galois_coinsertion.u_bsupr_l GaloisCoinsertion.u_biSup_l
 
-/- warning: galois_coinsertion.u_Sup_l_image -> GaloisCoinsertion.u_sSup_l_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u1} α), Eq.{succ u1} α (u (SupSet.sSup.{u2} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (Set.image.{u1, u2} α β l s))) (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall (s : Set.{u1} α), Eq.{succ u1} α (u (SupSet.sSup.{u2} β (CompleteLattice.toSupSet.{u2} β _inst_2) (Set.image.{u1, u2} α β l s))) (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_Sup_l_image GaloisCoinsertion.u_sSup_l_imageₓ'. -/
 theorem u_sSup_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     (s : Set α) : u (sSup (l '' s)) = sSup s :=
   gi.dual.l_sInf_u_image _
 #align galois_coinsertion.u_Sup_l_image GaloisCoinsertion.u_sSup_l_image
 
-/- warning: galois_coinsertion.u_supr_of_lu_eq_self -> GaloisCoinsertion.u_iSup_of_lu_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> β), (forall (i : ι), Eq.{succ u2} β (l (u (f i))) (f i)) -> (Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => f i))) (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => u (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} (f : ι -> β), (forall (i : ι), Eq.{succ u2} β (l (u (f i))) (f i)) -> (Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => f i))) (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => u (f i)))))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_supr_of_lu_eq_self GaloisCoinsertion.u_iSup_of_lu_eq_selfₓ'. -/
 theorem u_iSup_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     {ι : Sort x} (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_iInf_of_ul_eq_self _ hf
 #align galois_coinsertion.u_supr_of_lu_eq_self GaloisCoinsertion.u_iSup_of_lu_eq_self
 
-/- warning: galois_coinsertion.u_bsupr_of_lu_eq_self -> GaloisCoinsertion.u_biSup_of_lu_eq_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> β), (forall (i : ι) (hi : p i), Eq.{succ u2} β (l (u (f i hi))) (f i hi)) -> (Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) ι (fun (i : ι) => iSup.{u2, 0} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (p i) (fun (hi : p i) => f i hi)))) (iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (p i) (fun (hi : p i) => u (f i hi))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {ι : Sort.{u3}} {p : ι -> Prop} (f : forall (i : ι), (p i) -> β), (forall (i : ι) (hi : p i), Eq.{succ u2} β (l (u (f i hi))) (f i hi)) -> (Eq.{succ u1} α (u (iSup.{u2, u3} β (CompleteLattice.toSupSet.{u2} β _inst_2) ι (fun (i : ι) => iSup.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_2) (p i) (fun (hi : p i) => f i hi)))) (iSup.{u1, u3} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (p i) (fun (hi : p i) => u (f i hi))))))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_bsupr_of_lu_eq_self GaloisCoinsertion.u_biSup_of_lu_eq_selfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem u_biSup_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
@@ -1360,12 +958,6 @@ theorem u_biSup_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Ga
   gi.dual.l_biInf_of_ul_eq_self _ hf
 #align galois_coinsertion.u_bsupr_of_lu_eq_self GaloisCoinsertion.u_biSup_of_lu_eq_self
 
-/- warning: galois_coinsertion.l_le_l_iff -> GaloisCoinsertion.l_le_l_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (l a) (l b)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (GaloisCoinsertion.{u1, u2} α β _inst_1 _inst_2 l u) -> (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (l a) (l b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.l_le_l_iff GaloisCoinsertion.l_le_l_iffₓ'. -/
 theorem l_le_l_iff [Preorder α] [Preorder β] (gi : GaloisCoinsertion l u) {a b} :
     l a ≤ l b ↔ a ≤ b :=
   gi.dual.u_le_u_iff
@@ -1427,12 +1019,6 @@ def liftLattice [Lattice β] (gi : GaloisCoinsertion l u) : Lattice α :=
 #align galois_coinsertion.lift_lattice GaloisCoinsertion.liftLattice
 -/
 
-/- warning: galois_coinsertion.lift_order_bot -> GaloisCoinsertion.liftOrderBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β _inst_2)], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β _inst_2)], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.lift_order_bot GaloisCoinsertion.liftOrderBotₓ'. -/
 -- See note [reducible non instances]
 /-- Lift the bot along a Galois coinsertion -/
 @[reducible]
@@ -1440,12 +1026,6 @@ def liftOrderBot [Preorder β] [OrderBot β] (gi : GaloisCoinsertion l u) : Orde
   { @OrderDual.orderBot _ _ gi.dual.liftOrderTop with bot := gi.choice ⊥ <| bot_le }
 #align galois_coinsertion.lift_order_bot GaloisCoinsertion.liftOrderBot
 
-/- warning: galois_coinsertion.lift_bounded_order -> GaloisCoinsertion.liftBoundedOrder is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : BoundedOrder.{u2} β (Preorder.toHasLe.{u2} β _inst_2)], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : BoundedOrder.{u2} β (Preorder.toLE.{u2} β _inst_2)], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 l u) -> (BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align galois_coinsertion.lift_bounded_order GaloisCoinsertion.liftBoundedOrderₓ'. -/
 -- See note [reducible non instances]
 /-- Lift the top, bottom, suprema, and infima along a Galois coinsertion -/
 @[reducible]
@@ -1470,12 +1050,6 @@ end lift
 
 end GaloisCoinsertion
 
-/- warning: with_bot.gi_unbot'_bot -> WithBot.giUnbot'Bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], GaloisInsertion.{u1, u1} (WithBot.{u1} α) α (WithBot.preorder.{u1} α _inst_1) _inst_1 (WithBot.unbot'.{u1} α (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], GaloisInsertion.{u1, u1} (WithBot.{u1} α) α (WithBot.preorder.{u1} α _inst_1) _inst_1 (WithBot.unbot'.{u1} α (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (WithBot.some.{u1} α)
-Case conversion may be inaccurate. Consider using '#align with_bot.gi_unbot'_bot WithBot.giUnbot'Botₓ'. -/
 /-- If `α` is a partial order with bottom element (e.g., `ℕ`, `ℝ≥0`), then `with_bot.unbot' ⊥` and
 coercion form a Galois insertion. -/
 def WithBot.giUnbot'Bot [Preorder α] [OrderBot α] :

@@ -39,9 +39,6 @@ open BigOperators Topology
 
 variable {ι X E : Type _} [TopologicalSpace X] [AddCommGroup E] [Module ℝ E]
 
-/- warning: partition_of_unity.finsum_smul_mem_convex -> PartitionOfUnity.finsum_smul_mem_convex is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align partition_of_unity.finsum_smul_mem_convex PartitionOfUnity.finsum_smul_mem_convexₓ'. -/
 theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnity ι X s)
     {g : ι → X → E} {t : Set E} {x : X} (hx : x ∈ s) (hg : ∀ i, f i x ≠ 0 → g i x ∈ t)
     (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
@@ -51,9 +48,6 @@ theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnit
 variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [ContinuousAdd E]
   [ContinuousSMul ℝ E] {t : X → Set E}
 
-/- warning: exists_continuous_forall_mem_convex_of_local -> exists_continuous_forall_mem_convex_of_local is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_continuous_forall_mem_convex_of_local exists_continuous_forall_mem_convex_of_localₓ'. -/
 /-- Let `X` be a normal paracompact topological space (e.g., any extended metric space). Let `E` be
 a topological real vector space. Let `t : X → set E` be a family of convex sets. Suppose that for
 each point `x : X`, there exists a neighborhood `U ∈ 𝓝 X` and a function `g : X → E` that is
@@ -75,9 +69,6 @@ theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
   exact interior_subset (hf _ <| subset_closure hi)
 #align exists_continuous_forall_mem_convex_of_local exists_continuous_forall_mem_convex_of_local
 
-/- warning: exists_continuous_forall_mem_convex_of_local_const -> exists_continuous_forall_mem_convex_of_local_const is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_constₓ'. -/
 /-- Let `X` be a normal paracompact topological space (e.g., any extended metric space). Let `E` be
 a topological real vector space. Let `t : X → set E` be a family of convex sets. Suppose that for
 each point `x : X`, there exists a vector `c : E` that belongs to `t y` for all `y` in a

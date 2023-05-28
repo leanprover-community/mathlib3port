@@ -152,32 +152,14 @@ theorem IsLocalExtrOn.on_subset {t : Set α} (hf : IsLocalExtrOn f t a) (h : s �
 #align is_local_extr_on.on_subset IsLocalExtrOn.on_subset
 -/
 
-/- warning: is_local_min_on.inter -> IsLocalMinOn.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall (t : Set.{u1} α), IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall (t : Set.{u1} α), IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.inter IsLocalMinOn.interₓ'. -/
 theorem IsLocalMinOn.inter (hf : IsLocalMinOn f s a) (t) : IsLocalMinOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 #align is_local_min_on.inter IsLocalMinOn.inter
 
-/- warning: is_local_max_on.inter -> IsLocalMaxOn.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall (t : Set.{u1} α), IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall (t : Set.{u1} α), IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.inter IsLocalMaxOn.interₓ'. -/
 theorem IsLocalMaxOn.inter (hf : IsLocalMaxOn f s a) (t) : IsLocalMaxOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 #align is_local_max_on.inter IsLocalMaxOn.inter
 
-/- warning: is_local_extr_on.inter -> IsLocalExtrOn.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall (t : Set.{u1} α), IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall (t : Set.{u1} α), IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) a)
-Case conversion may be inaccurate. Consider using '#align is_local_extr_on.inter IsLocalExtrOn.interₓ'. -/
 theorem IsLocalExtrOn.inter (hf : IsLocalExtrOn f s a) (t) : IsLocalExtrOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 #align is_local_extr_on.inter IsLocalExtrOn.inter
@@ -238,12 +220,6 @@ theorem IsExtrOn.isLocalExtr (hf : IsExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocal
 #align is_extr_on.is_local_extr IsExtrOn.isLocalExtr
 -/
 
-/- warning: is_local_min_on.not_nhds_le_map -> IsLocalMinOn.not_nhds_le_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.not_nhds_le_map IsLocalMinOn.not_nhds_le_mapₓ'. -/
 theorem IsLocalMinOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMinOn f s a)
     [NeBot (𝓝[<] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) := fun hle =>
   have : ∀ᶠ y in 𝓝[<] f a, f a ≤ y := (eventually_map.2 hf).filter_mono (inf_le_left.trans hle)
@@ -251,23 +227,11 @@ theorem IsLocalMinOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMinOn f 
   hy.1.not_lt hy.2
 #align is_local_min_on.not_nhds_le_map IsLocalMinOn.not_nhds_le_map
 
-/- warning: is_local_max_on.not_nhds_le_map -> IsLocalMaxOn.not_nhds_le_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.not_nhds_le_map IsLocalMaxOn.not_nhds_le_mapₓ'. -/
 theorem IsLocalMaxOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMaxOn f s a)
     [NeBot (𝓝[>] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) :=
   @IsLocalMinOn.not_nhds_le_map α βᵒᵈ _ _ _ _ _ ‹_› hf ‹_›
 #align is_local_max_on.not_nhds_le_map IsLocalMaxOn.not_nhds_le_map
 
-/- warning: is_local_extr_on.not_nhds_le_map -> IsLocalExtrOn.not_nhds_le_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))] [_inst_6 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))] [_inst_6 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
-Case conversion may be inaccurate. Consider using '#align is_local_extr_on.not_nhds_le_map IsLocalExtrOn.not_nhds_le_mapₓ'. -/
 theorem IsLocalExtrOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalExtrOn f s a)
     [NeBot (𝓝[<] f a)] [NeBot (𝓝[>] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) :=
   hf.elim (fun h => h.not_nhds_le_map) fun h => h.not_nhds_le_map
@@ -399,36 +363,18 @@ theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (
 #align is_local_extr_on.comp_antitone IsLocalExtrOn.comp_antitone
 -/
 
-/- warning: is_local_min.bicomp_mono -> IsLocalMin.bicomp_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMin.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMin.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2290 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2292 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2290 x._@.Mathlib.Topology.LocalExtr._hyg.2292) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2308 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2310 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2308 x._@.Mathlib.Topology.LocalExtr._hyg.2310) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2323 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2325 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2323 x._@.Mathlib.Topology.LocalExtr._hyg.2325)) op op) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMin.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMin.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
-Case conversion may be inaccurate. Consider using '#align is_local_min.bicomp_mono IsLocalMin.bicomp_monoₓ'. -/
 theorem IsLocalMin.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMin f a) {g : α → γ}
     (hg : IsLocalMin g a) : IsLocalMin (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 #align is_local_min.bicomp_mono IsLocalMin.bicomp_mono
 
-/- warning: is_local_max.bicomp_mono -> IsLocalMax.bicomp_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMax.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMax.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2407 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2409 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2407 x._@.Mathlib.Topology.LocalExtr._hyg.2409) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2425 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2427 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2425 x._@.Mathlib.Topology.LocalExtr._hyg.2427) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2440 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2442 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2440 x._@.Mathlib.Topology.LocalExtr._hyg.2442)) op op) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMax.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMax.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
-Case conversion may be inaccurate. Consider using '#align is_local_max.bicomp_mono IsLocalMax.bicomp_monoₓ'. -/
 theorem IsLocalMax.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMax f a) {g : α → γ}
     (hg : IsLocalMax g a) : IsLocalMax (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 #align is_local_max.bicomp_mono IsLocalMax.bicomp_mono
 
-/- warning: is_local_min_on.bicomp_mono -> IsLocalMinOn.bicomp_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMinOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMinOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2524 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2526 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2524 x._@.Mathlib.Topology.LocalExtr._hyg.2526) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2542 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2544 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2542 x._@.Mathlib.Topology.LocalExtr._hyg.2544) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2557 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2559 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2557 x._@.Mathlib.Topology.LocalExtr._hyg.2559)) op op) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMinOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMinOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.bicomp_mono IsLocalMinOn.bicomp_monoₓ'. -/
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
 theorem IsLocalMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMinOn f s a) {g : α → γ}
@@ -436,12 +382,6 @@ theorem IsLocalMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
   hf.bicomp_mono hop hg
 #align is_local_min_on.bicomp_mono IsLocalMinOn.bicomp_mono
 
-/- warning: is_local_max_on.bicomp_mono -> IsLocalMaxOn.bicomp_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMaxOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMaxOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2644 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2646 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2644 x._@.Mathlib.Topology.LocalExtr._hyg.2646) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2662 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2664 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2662 x._@.Mathlib.Topology.LocalExtr._hyg.2664) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2677 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2679 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2677 x._@.Mathlib.Topology.LocalExtr._hyg.2679)) op op) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMaxOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMaxOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.bicomp_mono IsLocalMaxOn.bicomp_monoₓ'. -/
 theorem IsLocalMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMaxOn f s a) {g : α → γ}
     (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => op (f x) (g x)) s a :=
@@ -532,45 +472,21 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-/- warning: is_local_min.add -> IsLocalMin.add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.add IsLocalMin.addₓ'. -/
 theorem IsLocalMin.add (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => f x + g x) a :=
   hf.add hg
 #align is_local_min.add IsLocalMin.add
 
-/- warning: is_local_max.add -> IsLocalMax.add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.add IsLocalMax.addₓ'. -/
 theorem IsLocalMax.add (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => f x + g x) a :=
   hf.add hg
 #align is_local_max.add IsLocalMax.add
 
-/- warning: is_local_min_on.add -> IsLocalMinOn.add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.add IsLocalMinOn.addₓ'. -/
 theorem IsLocalMinOn.add (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => f x + g x) s a :=
   hf.add hg
 #align is_local_min_on.add IsLocalMinOn.add
 
-/- warning: is_local_max_on.add -> IsLocalMaxOn.add is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toHasAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.add IsLocalMaxOn.addₓ'. -/
 theorem IsLocalMaxOn.add (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => f x + g x) s a :=
   hf.add hg
@@ -585,105 +501,45 @@ section OrderedAddCommGroup
 
 variable [OrderedAddCommGroup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-/- warning: is_local_min.neg -> IsLocalMin.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))) (f x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))))) (f x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.neg IsLocalMin.negₓ'. -/
 theorem IsLocalMin.neg (hf : IsLocalMin f a) : IsLocalMax (fun x => -f x) a :=
   hf.neg
 #align is_local_min.neg IsLocalMin.neg
 
-/- warning: is_local_max.neg -> IsLocalMax.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))) (f x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))))) (f x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.neg IsLocalMax.negₓ'. -/
 theorem IsLocalMax.neg (hf : IsLocalMax f a) : IsLocalMin (fun x => -f x) a :=
   hf.neg
 #align is_local_max.neg IsLocalMax.neg
 
-/- warning: is_local_extr.neg -> IsLocalExtr.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α}, (IsLocalExtr.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalExtr.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))) (f x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α}, (IsLocalExtr.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalExtr.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))))) (f x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_extr.neg IsLocalExtr.negₓ'. -/
 theorem IsLocalExtr.neg (hf : IsLocalExtr f a) : IsLocalExtr (fun x => -f x) a :=
   hf.neg
 #align is_local_extr.neg IsLocalExtr.neg
 
-/- warning: is_local_min_on.neg -> IsLocalMinOn.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))) (f x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))))) (f x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.neg IsLocalMinOn.negₓ'. -/
 theorem IsLocalMinOn.neg (hf : IsLocalMinOn f s a) : IsLocalMaxOn (fun x => -f x) s a :=
   hf.neg
 #align is_local_min_on.neg IsLocalMinOn.neg
 
-/- warning: is_local_max_on.neg -> IsLocalMaxOn.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))) (f x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))))) (f x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.neg IsLocalMaxOn.negₓ'. -/
 theorem IsLocalMaxOn.neg (hf : IsLocalMaxOn f s a) : IsLocalMinOn (fun x => -f x) s a :=
   hf.neg
 #align is_local_max_on.neg IsLocalMaxOn.neg
 
-/- warning: is_local_extr_on.neg -> IsLocalExtrOn.neg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalExtrOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalExtrOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))) (f x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalExtrOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalExtrOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Neg.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2)))))) (f x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_extr_on.neg IsLocalExtrOn.negₓ'. -/
 theorem IsLocalExtrOn.neg (hf : IsLocalExtrOn f s a) : IsLocalExtrOn (fun x => -f x) s a :=
   hf.neg
 #align is_local_extr_on.neg IsLocalExtrOn.neg
 
-/- warning: is_local_min.sub -> IsLocalMin.sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.sub IsLocalMin.subₓ'. -/
 theorem IsLocalMin.sub (hf : IsLocalMin f a) (hg : IsLocalMax g a) :
     IsLocalMin (fun x => f x - g x) a :=
   hf.sub hg
 #align is_local_min.sub IsLocalMin.sub
 
-/- warning: is_local_max.sub -> IsLocalMax.sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.sub IsLocalMax.subₓ'. -/
 theorem IsLocalMax.sub (hf : IsLocalMax f a) (hg : IsLocalMin g a) :
     IsLocalMax (fun x => f x - g x) a :=
   hf.sub hg
 #align is_local_max.sub IsLocalMax.sub
 
-/- warning: is_local_min_on.sub -> IsLocalMinOn.sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.sub IsLocalMinOn.subₓ'. -/
 theorem IsLocalMinOn.sub (hf : IsLocalMinOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMinOn (fun x => f x - g x) s a :=
   hf.sub hg
 #align is_local_min_on.sub IsLocalMinOn.sub
 
-/- warning: is_local_max_on.sub -> IsLocalMaxOn.sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : OrderedAddCommGroup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddCommGroup.toAddGroup.{u2} β (OrderedAddCommGroup.toAddCommGroup.{u2} β _inst_2))))) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.sub IsLocalMaxOn.subₓ'. -/
 theorem IsLocalMaxOn.sub (hf : IsLocalMaxOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMaxOn (fun x => f x - g x) s a :=
   hf.sub hg
@@ -698,45 +554,21 @@ section SemilatticeSup
 
 variable [SemilatticeSup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-/- warning: is_local_min.sup -> IsLocalMin.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.sup IsLocalMin.supₓ'. -/
 theorem IsLocalMin.sup (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => f x ⊔ g x) a :=
   hf.sup hg
 #align is_local_min.sup IsLocalMin.sup
 
-/- warning: is_local_max.sup -> IsLocalMax.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.sup IsLocalMax.supₓ'. -/
 theorem IsLocalMax.sup (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => f x ⊔ g x) a :=
   hf.sup hg
 #align is_local_max.sup IsLocalMax.sup
 
-/- warning: is_local_min_on.sup -> IsLocalMinOn.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.sup IsLocalMinOn.supₓ'. -/
 theorem IsLocalMinOn.sup (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => f x ⊔ g x) s a :=
   hf.sup hg
 #align is_local_min_on.sup IsLocalMinOn.sup
 
-/- warning: is_local_max_on.sup -> IsLocalMaxOn.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.sup IsLocalMaxOn.supₓ'. -/
 theorem IsLocalMaxOn.sup (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => f x ⊔ g x) s a :=
   hf.sup hg
@@ -748,45 +580,21 @@ section SemilatticeInf
 
 variable [SemilatticeInf β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-/- warning: is_local_min.inf -> IsLocalMin.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.inf IsLocalMin.infₓ'. -/
 theorem IsLocalMin.inf (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => f x ⊓ g x) a :=
   hf.inf hg
 #align is_local_min.inf IsLocalMin.inf
 
-/- warning: is_local_max.inf -> IsLocalMax.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.inf IsLocalMax.infₓ'. -/
 theorem IsLocalMax.inf (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => f x ⊓ g x) a :=
   hf.inf hg
 #align is_local_max.inf IsLocalMax.inf
 
-/- warning: is_local_min_on.inf -> IsLocalMinOn.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.inf IsLocalMinOn.infₓ'. -/
 theorem IsLocalMinOn.inf (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => f x ⊓ g x) s a :=
   hf.inf hg
 #align is_local_min_on.inf IsLocalMinOn.inf
 
-/- warning: is_local_max_on.inf -> IsLocalMaxOn.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) (fun (x : α) => Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.inf IsLocalMaxOn.infₓ'. -/
 theorem IsLocalMaxOn.inf (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => f x ⊓ g x) s a :=
   hf.inf hg
@@ -801,89 +609,41 @@ section LinearOrder
 
 variable [LinearOrder β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-/- warning: is_local_min.min -> IsLocalMin.min is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.min.{u2} β _inst_2 (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Min.min.{u2} β (LinearOrder.toMin.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.min IsLocalMin.minₓ'. -/
 theorem IsLocalMin.min (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => min (f x) (g x)) a :=
   hf.min hg
 #align is_local_min.min IsLocalMin.min
 
-/- warning: is_local_max.min -> IsLocalMax.min is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.min.{u2} β _inst_2 (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Min.min.{u2} β (LinearOrder.toMin.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.min IsLocalMax.minₓ'. -/
 theorem IsLocalMax.min (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => min (f x) (g x)) a :=
   hf.min hg
 #align is_local_max.min IsLocalMax.min
 
-/- warning: is_local_min_on.min -> IsLocalMinOn.min is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.min.{u2} β _inst_2 (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Min.min.{u2} β (LinearOrder.toMin.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.min IsLocalMinOn.minₓ'. -/
 theorem IsLocalMinOn.min (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => min (f x) (g x)) s a :=
   hf.min hg
 #align is_local_min_on.min IsLocalMinOn.min
 
-/- warning: is_local_max_on.min -> IsLocalMaxOn.min is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.min.{u2} β _inst_2 (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Min.min.{u2} β (LinearOrder.toMin.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.min IsLocalMaxOn.minₓ'. -/
 theorem IsLocalMaxOn.min (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => min (f x) (g x)) s a :=
   hf.min hg
 #align is_local_max_on.min IsLocalMaxOn.min
 
-/- warning: is_local_min.max -> IsLocalMin.max is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.max.{u2} β _inst_2 (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g a) -> (IsLocalMin.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Max.max.{u2} β (LinearOrder.toMax.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_min.max IsLocalMin.maxₓ'. -/
 theorem IsLocalMin.max (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => max (f x) (g x)) a :=
   hf.max hg
 #align is_local_min.max IsLocalMin.max
 
-/- warning: is_local_max.max -> IsLocalMax.max is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.max.{u2} β _inst_2 (f x) (g x)) a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g a) -> (IsLocalMax.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Max.max.{u2} β (LinearOrder.toMax.{u2} β _inst_2) (f x) (g x)) a)
-Case conversion may be inaccurate. Consider using '#align is_local_max.max IsLocalMax.maxₓ'. -/
 theorem IsLocalMax.max (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => max (f x) (g x)) a :=
   hf.max hg
 #align is_local_max.max IsLocalMax.max
 
-/- warning: is_local_min_on.max -> IsLocalMinOn.max is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.max.{u2} β _inst_2 (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Max.max.{u2} β (LinearOrder.toMax.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_min_on.max IsLocalMinOn.maxₓ'. -/
 theorem IsLocalMinOn.max (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
 #align is_local_min_on.max IsLocalMinOn.max
 
-/- warning: is_local_max_on.max -> IsLocalMaxOn.max is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (fun (x : α) => LinearOrder.max.{u2} β _inst_2 (f x) (g x)) s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {s : Set.{u1} α}, (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) g s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) (fun (x : α) => Max.max.{u2} β (LinearOrder.toMax.{u2} β _inst_2) (f x) (g x)) s a)
-Case conversion may be inaccurate. Consider using '#align is_local_max_on.max IsLocalMaxOn.maxₓ'. -/
 theorem IsLocalMaxOn.max (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
@@ -898,12 +658,6 @@ section Eventually
 
 variable [Preorder β] {s : Set α}
 
-/- warning: filter.eventually_le.is_local_max_on -> Filter.EventuallyLE.isLocalMaxOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 g s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 g s a)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_max_on Filter.EventuallyLE.isLocalMaxOnₓ'. -/
 theorem Filter.EventuallyLE.isLocalMaxOn {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f)
     (hfga : f a = g a) (h : IsLocalMaxOn f s a) : IsLocalMaxOn g s a :=
   hle.IsMaxFilter hfga h
@@ -923,12 +677,6 @@ theorem Filter.EventuallyEq.isLocalMaxOn_iff {f g : α → β} {a : α} (heq : f
 #align filter.eventually_eq.is_local_max_on_iff Filter.EventuallyEq.isLocalMaxOn_iff
 -/
 
-/- warning: filter.eventually_le.is_local_min_on -> Filter.EventuallyLE.isLocalMinOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 g s a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 g s a)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_min_on Filter.EventuallyLE.isLocalMinOnₓ'. -/
 theorem Filter.EventuallyLE.isLocalMinOn {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝[s] a] g)
     (hfga : f a = g a) (h : IsLocalMinOn f s a) : IsLocalMinOn g s a :=
   hle.IsMinFilter hfga h
@@ -962,12 +710,6 @@ theorem Filter.EventuallyEq.isLocalExtrOn_iff {f g : α → β} {a : α} (heq : 
 #align filter.eventually_eq.is_local_extr_on_iff Filter.EventuallyEq.isLocalExtrOn_iff
 -/
 
-/- warning: filter.eventually_le.is_local_max -> Filter.EventuallyLE.isLocalMax is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 g a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 g a)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_max Filter.EventuallyLE.isLocalMaxₓ'. -/
 theorem Filter.EventuallyLE.isLocalMax {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝 a] f) (hfga : f a = g a)
     (h : IsLocalMax f a) : IsLocalMax g a :=
   hle.IsMaxFilter hfga h
@@ -987,12 +729,6 @@ theorem Filter.EventuallyEq.isLocalMax_iff {f g : α → β} {a : α} (heq : f =
 #align filter.eventually_eq.is_local_max_iff Filter.EventuallyEq.isLocalMax_iff
 -/
 
-/- warning: filter.eventually_le.is_local_min -> Filter.EventuallyLE.isLocalMin is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 g a)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 g a)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_min Filter.EventuallyLE.isLocalMinₓ'. -/
 theorem Filter.EventuallyLE.isLocalMin {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝 a] g) (hfga : f a = g a)
     (h : IsLocalMin f a) : IsLocalMin g a :=
   hle.IsMinFilter hfga h

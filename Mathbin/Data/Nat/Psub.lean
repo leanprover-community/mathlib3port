@@ -112,12 +112,6 @@ theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
 #align nat.psub_eq_sub Nat.psub_eq_sub
 -/
 
-/- warning: nat.psub_add -> Nat.psub_add is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n : Nat) (k : Nat), Eq.{1} (Option.{0} Nat) (Nat.psub m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n k)) (Bind.bind.{0, 0} Option.{0} (Monad.toHasBind.{0, 0} Option.{0} Option.monad.{0}) Nat Nat (Nat.psub m n) (fun (x : Nat) => Nat.psub x k))
-but is expected to have type
-  forall (m : Nat) (n : Nat) (k : Nat), Eq.{1} (Option.{0} Nat) (Nat.psub m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n k)) (Bind.bind.{0, 0} Option.{0} (Monad.toBind.{0, 0} Option.{0} instMonadOption.{0}) Nat Nat (Nat.psub m n) (fun (x : Nat) => Nat.psub x k))
-Case conversion may be inaccurate. Consider using '#align nat.psub_add Nat.psub_addₓ'. -/
 theorem psub_add (m n k) :
     psub m (n + k) = do
       let x ← psub m n

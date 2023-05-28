@@ -49,9 +49,6 @@ universe v
 
 variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 
-/- warning: algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map -> AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMapₓ'. -/
 theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj =>
   by
@@ -62,12 +59,6 @@ theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
     assoc, kernel_subobject_arrow_comp, comp_zero]
 #align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap
 
-/- warning: algebraic_topology.dold_kan.factors_normalized_Moore_complex_P_infty -> AlgebraicTopology.DoldKan.factors_normalizedMooreComplex_PInfty is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} A] [_inst_2 : CategoryTheory.Abelian.{u2, u1} A _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} A _inst_1} (n : Nat), CategoryTheory.Subobject.Factors.{u2, u1} A _inst_1 (HomologicalComplex.x.{u2, u1, 0} Nat A _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2)) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) n) (CategoryTheory.Functor.obj.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) A _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (AlgebraicTopology.NormalizedMooreComplex.objX.{u1, u2} A _inst_1 _inst_2 X n) (HomologicalComplex.Hom.f.{u2, u1, 0} Nat A _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2)) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) (AlgebraicTopology.DoldKan.PInfty.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) n)
-but is expected to have type
-  forall {A : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} A] [_inst_2 : CategoryTheory.Abelian.{u2, u1} A _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} A _inst_1} (n : Nat), CategoryTheory.Subobject.Factors.{u2, u1} A _inst_1 (HomologicalComplex.X.{u2, u1, 0} Nat A _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2)) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) n) (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) A (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} A (CategoryTheory.Category.toCategoryStruct.{u2, u1} A _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) A _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (AlgebraicTopology.NormalizedMooreComplex.objX.{u1, u2} A _inst_1 _inst_2 X n) (HomologicalComplex.Hom.f.{u2, u1, 0} Nat A _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2)) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring)) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) (AlgebraicTopology.DoldKan.PInfty.{u1, u2} A _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} A _inst_1 _inst_2) X) n)
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.factors_normalized_Moore_complex_P_infty AlgebraicTopology.DoldKan.factors_normalizedMooreComplex_PInftyₓ'. -/
 theorem factors_normalizedMooreComplex_PInfty (n : ℕ) :
     Subobject.Factors (NormalizedMooreComplex.objX X n) (PInfty.f n) :=
   by
@@ -94,9 +85,6 @@ def PInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
 #align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex
 -/
 
-/- warning: algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map -> AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMapₓ'. -/
 @[simp, reassoc]
 theorem PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap (X : SimplicialObject A) :
     PInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = PInfty := by tidy
@@ -118,9 +106,6 @@ theorem PInfty_comp_PInftyToNormalizedMooreComplex (X : SimplicialObject A) :
 #align algebraic_topology.dold_kan.P_infty_comp_P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.PInfty_comp_PInftyToNormalizedMooreComplex
 -/
 
-/- warning: algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty -> AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_PInfty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_PInftyₓ'. -/
 @[simp, reassoc]
 theorem inclusionOfMooreComplexMap_comp_PInfty (X : SimplicialObject A) :
     inclusionOfMooreComplexMap X ≫ PInfty = inclusionOfMooreComplexMap X :=
@@ -134,9 +119,6 @@ theorem inclusionOfMooreComplexMap_comp_PInfty (X : SimplicialObject A) :
 instance : Mono (inclusionOfMooreComplexMap X) :=
   ⟨fun Y f₁ f₂ hf => by ext n; exact HomologicalComplex.congr_hom hf n⟩
 
-/- warning: algebraic_topology.dold_kan.split_mono_inclusion_of_Moore_complex_map -> AlgebraicTopology.DoldKan.splitMonoInclusionOfMooreComplexMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.split_mono_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.splitMonoInclusionOfMooreComplexMapₓ'. -/
 /-- `inclusion_of_Moore_complex_map X` is a split mono. -/
 def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) :
     SplitMono (inclusionOfMooreComplexMap X)
@@ -150,9 +132,6 @@ def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) :
 
 variable (A)
 
-/- warning: algebraic_topology.dold_kan.N₁_iso_normalized_Moore_complex_comp_to_karoubi -> AlgebraicTopology.DoldKan.N₁_iso_normalizedMooreComplex_comp_toKaroubi is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.N₁_iso_normalized_Moore_complex_comp_to_karoubi AlgebraicTopology.DoldKan.N₁_iso_normalizedMooreComplex_comp_toKaroubiₓ'. -/
 /-- When the category `A` is abelian,
 the functor `N₁ : simplicial_object A ⥤ karoubi (chain_complex A ℕ)` defined
 using `P_infty` identifies to the composition of the normalized Moore complex functor

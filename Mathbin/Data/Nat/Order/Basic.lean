@@ -107,12 +107,6 @@ theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n �
 #align nat.one_lt_iff_ne_zero_and_ne_one Nat.one_lt_iff_ne_zero_and_ne_one
 -/
 
-/- warning: nat.mul_ne_zero -> Nat.mul_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) n m) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, (Ne.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
-Case conversion may be inaccurate. Consider using '#align nat.mul_ne_zero Nat.mul_ne_zeroₓ'. -/
 protected theorem mul_ne_zero (n0 : n ≠ 0) (m0 : m ≠ 0) : n * m ≠ 0
   | nm => (eq_zero_of_mul_eq_zero nm).elim n0 m0
 #align nat.mul_ne_zero Nat.mul_ne_zero
@@ -142,22 +136,10 @@ theorem eq_zero_of_mul_le (hb : 2 ≤ n) (h : n * m ≤ m) : m = 0 :=
 #align nat.eq_zero_of_mul_le Nat.eq_zero_of_mul_le
 -/
 
-/- warning: nat.zero_max -> Nat.zero_max is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} Nat (LinearOrder.max.{0} Nat Nat.linearOrder (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) n
-but is expected to have type
-  forall {n : Nat}, Eq.{1} Nat (Max.max.{0} Nat Nat.instMaxNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) n
-Case conversion may be inaccurate. Consider using '#align nat.zero_max Nat.zero_maxₓ'. -/
 theorem zero_max : max 0 n = n :=
   max_eq_right (zero_le _)
 #align nat.zero_max Nat.zero_max
 
-/- warning: nat.min_eq_zero_iff -> Nat.min_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (LinearOrder.min.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (Min.min.{0} Nat instMinNat m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
-Case conversion may be inaccurate. Consider using '#align nat.min_eq_zero_iff Nat.min_eq_zero_iffₓ'. -/
 @[simp]
 theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 :=
   by
@@ -169,12 +151,6 @@ theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 :=
   · rintro (rfl | rfl) <;> simp
 #align nat.min_eq_zero_iff Nat.min_eq_zero_iff
 
-/- warning: nat.max_eq_zero_iff -> Nat.max_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
-Case conversion may be inaccurate. Consider using '#align nat.max_eq_zero_iff Nat.max_eq_zero_iffₓ'. -/
 @[simp]
 theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 :=
   by
@@ -189,24 +165,12 @@ theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 :=
     simp
 #align nat.max_eq_zero_iff Nat.max_eq_zero_iff
 
-/- warning: nat.add_eq_max_iff -> Nat.add_eq_max_iff is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) (LinearOrder.max.{0} Nat Nat.linearOrder m n)) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) (Max.max.{0} Nat Nat.instMaxNat m n)) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
-Case conversion may be inaccurate. Consider using '#align nat.add_eq_max_iff Nat.add_eq_max_iffₓ'. -/
 theorem add_eq_max_iff : m + n = max m n ↔ m = 0 ∨ n = 0 :=
   by
   rw [← min_eq_zero_iff]
   cases' le_total m n with H H <;> simp [H]
 #align nat.add_eq_max_iff Nat.add_eq_max_iff
 
-/- warning: nat.add_eq_min_iff -> Nat.add_eq_min_iff is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) (LinearOrder.min.{0} Nat Nat.linearOrder m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
-but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) (Min.min.{0} Nat instMinNat m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
-Case conversion may be inaccurate. Consider using '#align nat.add_eq_min_iff Nat.add_eq_min_iffₓ'. -/
 theorem add_eq_min_iff : m + n = min m n ↔ m = 0 ∧ n = 0 :=
   by
   rw [← max_eq_zero_iff]
@@ -262,12 +226,6 @@ theorem add_pos_left {m : ℕ} (h : 0 < m) (n : ℕ) : 0 < m + n :=
 #align nat.add_pos_left Nat.add_pos_left
 -/
 
-/- warning: nat.add_pos_right -> Nat.add_pos_right is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n))
-but is expected to have type
-  forall {m : Nat} (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) m) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n m))
-Case conversion may be inaccurate. Consider using '#align nat.add_pos_right Nat.add_pos_rightₓ'. -/
 theorem add_pos_right (m : ℕ) {n : ℕ} (h : 0 < n) : 0 < m + n := by rw [add_comm];
   exact add_pos_left h m
 #align nat.add_pos_right Nat.add_pos_right
@@ -683,12 +641,6 @@ theorem dvd_sub_mod (k : ℕ) : n ∣ k - k % n :=
 #align nat.dvd_sub_mod Nat.dvd_sub_mod
 -/
 
-/- warning: nat.add_mod_eq_ite -> Nat.add_mod_eq_ite is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat} {k : Nat}, Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) k) (ite.{1} Nat (LE.le.{0} Nat Nat.hasLe k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k))) (Nat.decidableLe k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k)) k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k)))
-but is expected to have type
-  forall {m : Nat} {n : Nat} {k : Nat}, Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) k) (ite.{1} Nat (LE.le.{0} Nat instLENat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k))) (Nat.decLe k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k)) k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n k)))
-Case conversion may be inaccurate. Consider using '#align nat.add_mod_eq_ite Nat.add_mod_eq_iteₓ'. -/
 theorem add_mod_eq_ite :
     (m + n) % k = if k ≤ m % k + n % k then m % k + n % k - k else m % k + n % k :=
   by

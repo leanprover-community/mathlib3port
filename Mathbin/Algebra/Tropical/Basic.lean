@@ -250,54 +250,24 @@ instance [Preorder R] : Preorder (Tropical R) :=
     le_trans := fun _ _ _ h h' => le_trans h h'
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_le }
 
-/- warning: tropical.trop_order_iso -> Tropical.tropOrderIso is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], OrderIso.{u1, u1} R (Tropical.{u1} R) (Preorder.toHasLe.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], OrderIso.{u1, u1} R (Tropical.{u1} R) (Preorder.toLE.{u1} R _inst_1) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1))
-Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso Tropical.tropOrderIsoₓ'. -/
 /-- Reinterpret `x : R` as an element of `tropical R`, preserving the order. -/
 def tropOrderIso [Preorder R] : R ≃o Tropical R :=
   { tropEquiv with map_rel_iff' := fun _ _ => untrop_le_iff }
 #align tropical.trop_order_iso Tropical.tropOrderIso
 
-/- warning: tropical.trop_order_iso_coe_fn -> Tropical.tropOrderIso_coe_fn is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} ((fun (_x : RelIso.{u1, u1} R (Tropical.{u1} R) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_1)) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1)))) => R -> (Tropical.{u1} R)) (Tropical.tropOrderIso.{u1} R _inst_1)) (coeFn.{succ u1, succ u1} (OrderIso.{u1, u1} R (Tropical.{u1} R) (Preorder.toHasLe.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) (fun (_x : RelIso.{u1, u1} R (Tropical.{u1} R) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_1)) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1)))) => R -> (Tropical.{u1} R)) (RelIso.hasCoeToFun.{u1, u1} R (Tropical.{u1} R) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_1)) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1)))) (Tropical.tropOrderIso.{u1} R _inst_1)) (Tropical.trop.{u1} R)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} (R -> (Tropical.{u1} R)) (FunLike.coe.{succ u1, succ u1, succ u1} (RelIso.{u1, u1} R (Tropical.{u1} R) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) R (fun (_x : R) => Tropical.{u1} R) (RelHomClass.toFunLike.{u1, u1, u1} (RelIso.{u1, u1} R (Tropical.{u1} R) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) R (Tropical.{u1} R) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u1} R (Tropical.{u1} R) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (Tropical.tropOrderIso.{u1} R _inst_1)) (Tropical.trop.{u1} R)
-Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso_coe_fn Tropical.tropOrderIso_coe_fnₓ'. -/
 @[simp]
 theorem tropOrderIso_coe_fn [Preorder R] : (tropOrderIso : R → Tropical R) = trop :=
   rfl
 #align tropical.trop_order_iso_coe_fn Tropical.tropOrderIso_coe_fn
 
-/- warning: tropical.trop_order_iso_symm_coe_fn -> Tropical.tropOrderIso_symm_coe_fn is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} ((fun (_x : RelIso.{u1, u1} (Tropical.{u1} R) R (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) => (Tropical.{u1} R) -> R) (OrderIso.symm.{u1, u1} R (Tropical.{u1} R) (Preorder.toHasLe.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1)) (Tropical.tropOrderIso.{u1} R _inst_1))) (coeFn.{succ u1, succ u1} (OrderIso.{u1, u1} (Tropical.{u1} R) R (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1)) (Preorder.toHasLe.{u1} R _inst_1)) (fun (_x : RelIso.{u1, u1} (Tropical.{u1} R) R (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) => (Tropical.{u1} R) -> R) (RelIso.hasCoeToFun.{u1, u1} (Tropical.{u1} R) R (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R _inst_1))) (OrderIso.symm.{u1, u1} R (Tropical.{u1} R) (Preorder.toHasLe.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R _inst_1)) (Tropical.tropOrderIso.{u1} R _inst_1))) (Tropical.untrop.{u1} R)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} ((Tropical.{u1} R) -> R) (FunLike.coe.{succ u1, succ u1, succ u1} (RelIso.{u1, u1} (Tropical.{u1} R) R (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) (Tropical.{u1} R) (fun (_x : Tropical.{u1} R) => R) (RelHomClass.toFunLike.{u1, u1, u1} (RelIso.{u1, u1} (Tropical.{u1} R) R (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) (Tropical.{u1} R) R (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u1, u1} (Tropical.{u1} R) R (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (OrderIso.symm.{u1, u1} R (Tropical.{u1} R) (Preorder.toLE.{u1} R _inst_1) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) (Tropical.tropOrderIso.{u1} R _inst_1))) (Tropical.untrop.{u1} R)
-Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso_symm_coe_fn Tropical.tropOrderIso_symm_coe_fnₓ'. -/
 @[simp]
 theorem tropOrderIso_symm_coe_fn [Preorder R] : (tropOrderIso.symm : Tropical R → R) = untrop :=
   rfl
 #align tropical.trop_order_iso_symm_coe_fn Tropical.tropOrderIso_symm_coe_fn
 
-/- warning: tropical.trop_monotone -> Tropical.trop_monotone is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Monotone.{u1, u1} R (Tropical.{u1} R) _inst_1 (Tropical.preorder.{u1} R _inst_1) (Tropical.trop.{u1} R)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Monotone.{u1, u1} R (Tropical.{u1} R) _inst_1 (Tropical.instPreorderTropical.{u1} R _inst_1) (Tropical.trop.{u1} R)
-Case conversion may be inaccurate. Consider using '#align tropical.trop_monotone Tropical.trop_monotoneₓ'. -/
 theorem trop_monotone [Preorder R] : Monotone (trop : R → Tropical R) := fun _ _ => id
 #align tropical.trop_monotone Tropical.trop_monotone
 
-/- warning: tropical.untrop_monotone -> Tropical.untrop_monotone is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Monotone.{u1, u1} (Tropical.{u1} R) R (Tropical.preorder.{u1} R _inst_1) _inst_1 (Tropical.untrop.{u1} R)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Monotone.{u1, u1} (Tropical.{u1} R) R (Tropical.instPreorderTropical.{u1} R _inst_1) _inst_1 (Tropical.untrop.{u1} R)
-Case conversion may be inaccurate. Consider using '#align tropical.untrop_monotone Tropical.untrop_monotoneₓ'. -/
 theorem untrop_monotone [Preorder R] : Monotone (untrop : Tropical R → R) := fun _ _ => id
 #align tropical.untrop_monotone Tropical.untrop_monotone
 
@@ -338,12 +308,6 @@ theorem zero_ne_trop_coe (x : R) : (0 : Tropical (WithTop R)) ≠ trop x :=
 #align tropical.zero_ne_trop_coe Tropical.zero_ne_trop_coe
 -/
 
-/- warning: tropical.le_zero -> Tropical.le_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LE.{u1} R] [_inst_2 : OrderTop.{u1} R _inst_1] (x : Tropical.{u1} R), LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R _inst_1) x (OfNat.ofNat.{u1} (Tropical.{u1} R) 0 (OfNat.mk.{u1} (Tropical.{u1} R) 0 (Zero.zero.{u1} (Tropical.{u1} R) (Tropical.hasZero.{u1} R (OrderTop.toHasTop.{u1} R _inst_1 _inst_2)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LE.{u1} R] [_inst_2 : OrderTop.{u1} R _inst_1] (x : Tropical.{u1} R), LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R _inst_1) x (OfNat.ofNat.{u1} (Tropical.{u1} R) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} R) (Tropical.instZeroTropical.{u1} R (OrderTop.toTop.{u1} R _inst_1 _inst_2))))
-Case conversion may be inaccurate. Consider using '#align tropical.le_zero Tropical.le_zeroₓ'. -/
 @[simp]
 theorem le_zero [LE R] [OrderTop R] (x : Tropical R) : x ≤ 0 :=
   le_top
@@ -364,45 +328,21 @@ instance : AddCommSemigroup (Tropical R)
   add_assoc _ _ _ := untrop_injective (min_assoc _ _ _)
   add_comm _ _ := untrop_injective (min_comm _ _)
 
-/- warning: tropical.untrop_add -> Tropical.untrop_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} R (Tropical.untrop.{u1} R (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y)) (LinearOrder.min.{u1} R _inst_1 (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} R (Tropical.untrop.{u1} R (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y)) (Min.min.{u1} R (LinearOrder.toMin.{u1} R _inst_1) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y))
-Case conversion may be inaccurate. Consider using '#align tropical.untrop_add Tropical.untrop_addₓ'. -/
 @[simp]
 theorem untrop_add (x y : Tropical R) : untrop (x + y) = min (untrop x) (untrop y) :=
   rfl
 #align tropical.untrop_add Tropical.untrop_add
 
-/- warning: tropical.trop_min -> Tropical.trop_min is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : R) (y : R), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (LinearOrder.min.{u1} R _inst_1 x y)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) (Tropical.trop.{u1} R x) (Tropical.trop.{u1} R y))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : R) (y : R), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (Min.min.{u1} R (LinearOrder.toMin.{u1} R _inst_1) x y)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) (Tropical.trop.{u1} R x) (Tropical.trop.{u1} R y))
-Case conversion may be inaccurate. Consider using '#align tropical.trop_min Tropical.trop_minₓ'. -/
 @[simp]
 theorem trop_min (x y : R) : trop (min x y) = trop x + trop y :=
   rfl
 #align tropical.trop_min Tropical.trop_min
 
-/- warning: tropical.trop_inf -> Tropical.trop_inf is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : R) (y : R), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (Inf.inf.{u1} R (SemilatticeInf.toHasInf.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1))) x y)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) (Tropical.trop.{u1} R x) (Tropical.trop.{u1} R y))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : R) (y : R), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (Inf.inf.{u1} R (Lattice.toInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))) x y)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) (Tropical.trop.{u1} R x) (Tropical.trop.{u1} R y))
-Case conversion may be inaccurate. Consider using '#align tropical.trop_inf Tropical.trop_infₓ'. -/
 @[simp]
 theorem trop_inf (x y : R) : trop (x ⊓ y) = trop x + trop y :=
   rfl
 #align tropical.trop_inf Tropical.trop_inf
 
-/- warning: tropical.trop_add_def -> Tropical.trop_add_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) (Tropical.trop.{u1} R (LinearOrder.min.{u1} R _inst_1 (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) (Tropical.trop.{u1} R (Min.min.{u1} R (LinearOrder.toMin.{u1} R _inst_1) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y)))
-Case conversion may be inaccurate. Consider using '#align tropical.trop_add_def Tropical.trop_add_defₓ'. -/
 theorem trop_add_def (x y : Tropical R) : x + y = trop (min (untrop x) (untrop y)) :=
   rfl
 #align tropical.trop_add_def Tropical.trop_add_def
@@ -425,150 +365,66 @@ instance : LinearOrder (Tropical R) :=
       rw [trop_add_def, minDefault, min_def, apply_ite trop, trop_untrop, trop_untrop,
         if_congr untrop_le_iff rfl rfl] }
 
-/- warning: tropical.untrop_sup -> Tropical.untrop_sup is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} R (Tropical.untrop.{u1} R (Sup.sup.{u1} (Tropical.{u1} R) (SemilatticeSup.toHasSup.{u1} (Tropical.{u1} R) (Lattice.toSemilatticeSup.{u1} (Tropical.{u1} R) (LinearOrder.toLattice.{u1} (Tropical.{u1} R) (Tropical.linearOrder.{u1} R _inst_1)))) x y)) (Sup.sup.{u1} R (SemilatticeSup.toHasSup.{u1} R (Lattice.toSemilatticeSup.{u1} R (LinearOrder.toLattice.{u1} R _inst_1))) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} R (Tropical.untrop.{u1} R (Sup.sup.{u1} (Tropical.{u1} R) (SemilatticeSup.toSup.{u1} (Tropical.{u1} R) (Lattice.toSemilatticeSup.{u1} (Tropical.{u1} R) (DistribLattice.toLattice.{u1} (Tropical.{u1} R) (instDistribLattice.{u1} (Tropical.{u1} R) (Tropical.instLinearOrderTropical.{u1} R _inst_1))))) x y)) (Sup.sup.{u1} R (SemilatticeSup.toSup.{u1} R (Lattice.toSemilatticeSup.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1)))) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y))
-Case conversion may be inaccurate. Consider using '#align tropical.untrop_sup Tropical.untrop_supₓ'. -/
 @[simp]
 theorem untrop_sup (x y : Tropical R) : untrop (x ⊔ y) = untrop x ⊔ untrop y :=
   rfl
 #align tropical.untrop_sup Tropical.untrop_sup
 
-/- warning: tropical.untrop_max -> Tropical.untrop_max is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} R (Tropical.untrop.{u1} R (LinearOrder.max.{u1} (Tropical.{u1} R) (Tropical.linearOrder.{u1} R _inst_1) x y)) (LinearOrder.max.{u1} R _inst_1 (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} R (Tropical.untrop.{u1} R (Max.max.{u1} (Tropical.{u1} R) (LinearOrder.toMax.{u1} (Tropical.{u1} R) (Tropical.instLinearOrderTropical.{u1} R _inst_1)) x y)) (Max.max.{u1} R (LinearOrder.toMax.{u1} R _inst_1) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y))
-Case conversion may be inaccurate. Consider using '#align tropical.untrop_max Tropical.untrop_maxₓ'. -/
 @[simp]
 theorem untrop_max (x y : Tropical R) : untrop (max x y) = max (untrop x) (untrop y) :=
   rfl
 #align tropical.untrop_max Tropical.untrop_max
 
-/- warning: tropical.min_eq_add -> Tropical.min_eq_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R], Eq.{succ u1} ((Tropical.{u1} R) -> (Tropical.{u1} R) -> (Tropical.{u1} R)) (LinearOrder.min.{u1} (Tropical.{u1} R) (Tropical.linearOrder.{u1} R _inst_1)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R], Eq.{succ u1} ((Tropical.{u1} R) -> (Tropical.{u1} R) -> (Tropical.{u1} R)) (Min.min.{u1} (Tropical.{u1} R) (LinearOrder.toMin.{u1} (Tropical.{u1} R) (Tropical.instLinearOrderTropical.{u1} R _inst_1))) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.1534 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.1536 : Tropical.{u1} R) => HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x._@.Mathlib.Algebra.Tropical.Basic._hyg.1534 x._@.Mathlib.Algebra.Tropical.Basic._hyg.1536)
-Case conversion may be inaccurate. Consider using '#align tropical.min_eq_add Tropical.min_eq_addₓ'. -/
 @[simp]
 theorem min_eq_add : (min : Tropical R → Tropical R → Tropical R) = (· + ·) :=
   rfl
 #align tropical.min_eq_add Tropical.min_eq_add
 
-/- warning: tropical.inf_eq_add -> Tropical.inf_eq_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R], Eq.{succ u1} ((Tropical.{u1} R) -> (Tropical.{u1} R) -> (Tropical.{u1} R)) (Inf.inf.{u1} (Tropical.{u1} R) (SemilatticeInf.toHasInf.{u1} (Tropical.{u1} R) (Lattice.toSemilatticeInf.{u1} (Tropical.{u1} R) (LinearOrder.toLattice.{u1} (Tropical.{u1} R) (Tropical.linearOrder.{u1} R _inst_1))))) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R], Eq.{succ u1} ((Tropical.{u1} R) -> (Tropical.{u1} R) -> (Tropical.{u1} R)) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.1570 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.1572 : Tropical.{u1} R) => Inf.inf.{u1} (Tropical.{u1} R) (Lattice.toInf.{u1} (Tropical.{u1} R) (DistribLattice.toLattice.{u1} (Tropical.{u1} R) (instDistribLattice.{u1} (Tropical.{u1} R) (Tropical.instLinearOrderTropical.{u1} R _inst_1)))) x._@.Mathlib.Algebra.Tropical.Basic._hyg.1570 x._@.Mathlib.Algebra.Tropical.Basic._hyg.1572) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.1585 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.1587 : Tropical.{u1} R) => HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x._@.Mathlib.Algebra.Tropical.Basic._hyg.1585 x._@.Mathlib.Algebra.Tropical.Basic._hyg.1587)
-Case conversion may be inaccurate. Consider using '#align tropical.inf_eq_add Tropical.inf_eq_addₓ'. -/
 @[simp]
 theorem inf_eq_add : ((· ⊓ ·) : Tropical R → Tropical R → Tropical R) = (· + ·) :=
   rfl
 #align tropical.inf_eq_add Tropical.inf_eq_add
 
-/- warning: tropical.trop_max_def -> Tropical.trop_max_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (LinearOrder.max.{u1} (Tropical.{u1} R) (Tropical.linearOrder.{u1} R _inst_1) x y) (Tropical.trop.{u1} R (LinearOrder.max.{u1} R _inst_1 (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (Max.max.{u1} (Tropical.{u1} R) (LinearOrder.toMax.{u1} (Tropical.{u1} R) (Tropical.instLinearOrderTropical.{u1} R _inst_1)) x y) (Tropical.trop.{u1} R (Max.max.{u1} R (LinearOrder.toMax.{u1} R _inst_1) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y)))
-Case conversion may be inaccurate. Consider using '#align tropical.trop_max_def Tropical.trop_max_defₓ'. -/
 theorem trop_max_def (x y : Tropical R) : max x y = trop (max (untrop x) (untrop y)) :=
   rfl
 #align tropical.trop_max_def Tropical.trop_max_def
 
-/- warning: tropical.trop_sup_def -> Tropical.trop_sup_def is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (Sup.sup.{u1} (Tropical.{u1} R) (SemilatticeSup.toHasSup.{u1} (Tropical.{u1} R) (Lattice.toSemilatticeSup.{u1} (Tropical.{u1} R) (LinearOrder.toLattice.{u1} (Tropical.{u1} R) (Tropical.linearOrder.{u1} R _inst_1)))) x y) (Tropical.trop.{u1} R (Sup.sup.{u1} R (SemilatticeSup.toHasSup.{u1} R (Lattice.toSemilatticeSup.{u1} R (LinearOrder.toLattice.{u1} R _inst_1))) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R) (y : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (Sup.sup.{u1} (Tropical.{u1} R) (SemilatticeSup.toSup.{u1} (Tropical.{u1} R) (Lattice.toSemilatticeSup.{u1} (Tropical.{u1} R) (DistribLattice.toLattice.{u1} (Tropical.{u1} R) (instDistribLattice.{u1} (Tropical.{u1} R) (Tropical.instLinearOrderTropical.{u1} R _inst_1))))) x y) (Tropical.trop.{u1} R (Sup.sup.{u1} R (SemilatticeSup.toSup.{u1} R (Lattice.toSemilatticeSup.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1)))) (Tropical.untrop.{u1} R x) (Tropical.untrop.{u1} R y)))
-Case conversion may be inaccurate. Consider using '#align tropical.trop_sup_def Tropical.trop_sup_defₓ'. -/
 theorem trop_sup_def (x y : Tropical R) : x ⊔ y = trop (untrop x ⊔ untrop y) :=
   rfl
 #align tropical.trop_sup_def Tropical.trop_sup_def
 
-/- warning: tropical.add_eq_left -> Tropical.add_eq_left is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {{x : Tropical.{u1} R}} {{y : Tropical.{u1} R}}, (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))) x y) -> (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) x)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {{x : Tropical.{u1} R}} {{y : Tropical.{u1} R}}, (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) x y) -> (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) x)
-Case conversion may be inaccurate. Consider using '#align tropical.add_eq_left Tropical.add_eq_leftₓ'. -/
 @[simp]
 theorem add_eq_left ⦃x y : Tropical R⦄ (h : x ≤ y) : x + y = x :=
   untrop_injective (by simpa using h)
 #align tropical.add_eq_left Tropical.add_eq_left
 
-/- warning: tropical.add_eq_right -> Tropical.add_eq_right is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {{x : Tropical.{u1} R}} {{y : Tropical.{u1} R}}, (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))) y x) -> (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) y)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {{x : Tropical.{u1} R}} {{y : Tropical.{u1} R}}, (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) y x) -> (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) y)
-Case conversion may be inaccurate. Consider using '#align tropical.add_eq_right Tropical.add_eq_rightₓ'. -/
 @[simp]
 theorem add_eq_right ⦃x y : Tropical R⦄ (h : y ≤ x) : x + y = y :=
   untrop_injective (by simpa using h)
 #align tropical.add_eq_right Tropical.add_eq_right
 
-/- warning: tropical.add_eq_left_iff -> Tropical.add_eq_left_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) x) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))) x y)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) x) (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) x y)
-Case conversion may be inaccurate. Consider using '#align tropical.add_eq_left_iff Tropical.add_eq_left_iffₓ'. -/
 theorem add_eq_left_iff {x y : Tropical R} : x + y = x ↔ x ≤ y := by
   rw [trop_add_def, trop_eq_iff_eq_untrop, ← untrop_le_iff, min_eq_left_iff]
 #align tropical.add_eq_left_iff Tropical.add_eq_left_iff
 
-/- warning: tropical.add_eq_right_iff -> Tropical.add_eq_right_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) y) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))) y x)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) y) (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) y x)
-Case conversion may be inaccurate. Consider using '#align tropical.add_eq_right_iff Tropical.add_eq_right_iffₓ'. -/
 theorem add_eq_right_iff {x y : Tropical R} : x + y = y ↔ y ≤ x := by
   rw [trop_add_def, trop_eq_iff_eq_untrop, ← untrop_le_iff, min_eq_right_iff]
 #align tropical.add_eq_right_iff Tropical.add_eq_right_iff
 
-/- warning: tropical.add_self -> Tropical.add_self is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x x) x
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x x) x
-Case conversion may be inaccurate. Consider using '#align tropical.add_self Tropical.add_selfₓ'. -/
 @[simp]
 theorem add_self (x : Tropical R) : x + x = x :=
   untrop_injective (min_eq_right le_rfl)
 #align tropical.add_self Tropical.add_self
 
-/- warning: tropical.bit0 -> Tropical.bit0 is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (bit0.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1) x) x
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] (x : Tropical.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (bit0.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1) x) x
-Case conversion may be inaccurate. Consider using '#align tropical.bit0 Tropical.bit0ₓ'. -/
 @[simp]
 theorem bit0 (x : Tropical R) : bit0 x = x :=
   add_self x
 #align tropical.bit0 Tropical.bit0
 
-/- warning: tropical.add_eq_iff -> Tropical.add_eq_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R} {z : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) z) (Or (And (Eq.{succ u1} (Tropical.{u1} R) x z) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))) x y)) (And (Eq.{succ u1} (Tropical.{u1} R) y z) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))) y x)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R} {z : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) z) (Or (And (Eq.{succ u1} (Tropical.{u1} R) x z) (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) x y)) (And (Eq.{succ u1} (Tropical.{u1} R) y z) (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) y x)))
-Case conversion may be inaccurate. Consider using '#align tropical.add_eq_iff Tropical.add_eq_iffₓ'. -/
 theorem add_eq_iff {x y z : Tropical R} : x + y = z ↔ x = z ∧ x ≤ y ∨ y = z ∧ y ≤ x := by
   rw [trop_add_def, trop_eq_iff_eq_untrop]; simp [min_eq_iff]
 #align tropical.add_eq_iff Tropical.add_eq_iff
 
-/- warning: tropical.add_eq_zero_iff -> Tropical.add_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {a : Tropical.{u1} (WithTop.{u1} R)} {b : Tropical.{u1} (WithTop.{u1} R)}, Iff (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (instHAdd.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasAdd.{u1} (WithTop.{u1} R) (WithTop.linearOrder.{u1} R _inst_1))) a b) (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (OfNat.mk.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.zero.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasZero.{u1} (WithTop.{u1} R) (WithTop.hasTop.{u1} R)))))) (And (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) a (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (OfNat.mk.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.zero.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasZero.{u1} (WithTop.{u1} R) (WithTop.hasTop.{u1} R)))))) (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) b (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (OfNat.mk.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.zero.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasZero.{u1} (WithTop.{u1} R) (WithTop.hasTop.{u1} R)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {a : Tropical.{u1} (WithTop.{u1} R)} {b : Tropical.{u1} (WithTop.{u1} R)}, Iff (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (instHAdd.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instAddTropical.{u1} (WithTop.{u1} R) (WithTop.linearOrder.{u1} R _inst_1))) a b) (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instZeroTropical.{u1} (WithTop.{u1} R) (WithTop.top.{u1} R))))) (And (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) a (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instZeroTropical.{u1} (WithTop.{u1} R) (WithTop.top.{u1} R))))) (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) b (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instZeroTropical.{u1} (WithTop.{u1} R) (WithTop.top.{u1} R))))))
-Case conversion may be inaccurate. Consider using '#align tropical.add_eq_zero_iff Tropical.add_eq_zero_iffₓ'. -/
 @[simp]
 theorem add_eq_zero_iff {a b : Tropical (WithTop R)} : a + b = 0 ↔ a = 0 ∧ b = 0 :=
   by
@@ -672,24 +528,12 @@ instance [AddCommSemigroup R] : CommSemigroup (Tropical R) :=
 
 instance {α : Type _} [SMul α R] : Pow (Tropical R) α where pow x n := trop <| n • untrop x
 
-/- warning: tropical.untrop_pow -> Tropical.untrop_pow is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {α : Type.{u2}} [_inst_1 : SMul.{u2, u1} α R] (x : Tropical.{u1} R) (n : α), Eq.{succ u1} R (Tropical.untrop.{u1} R (HPow.hPow.{u1, u2, u1} (Tropical.{u1} R) α (Tropical.{u1} R) (instHPow.{u1, u2} (Tropical.{u1} R) α (Tropical.hasPow.{u1, u2} R α _inst_1)) x n)) (SMul.smul.{u2, u1} α R _inst_1 n (Tropical.untrop.{u1} R x))
-but is expected to have type
-  forall {R : Type.{u2}} {α : Type.{u1}} [_inst_1 : SMul.{u1, u2} α R] (x : Tropical.{u2} R) (n : α), Eq.{succ u2} R (Tropical.untrop.{u2} R (HPow.hPow.{u2, u1, u2} (Tropical.{u2} R) α (Tropical.{u2} R) (instHPow.{u2, u1} (Tropical.{u2} R) α (Tropical.instPowTropical.{u2, u1} R α _inst_1)) x n)) (HSMul.hSMul.{u1, u2, u2} α R R (instHSMul.{u1, u2} α R _inst_1) n (Tropical.untrop.{u2} R x))
-Case conversion may be inaccurate. Consider using '#align tropical.untrop_pow Tropical.untrop_powₓ'. -/
 @[simp]
 theorem untrop_pow {α : Type _} [SMul α R] (x : Tropical R) (n : α) :
     untrop (x ^ n) = n • untrop x :=
   rfl
 #align tropical.untrop_pow Tropical.untrop_pow
 
-/- warning: tropical.trop_smul -> Tropical.trop_smul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {α : Type.{u2}} [_inst_1 : SMul.{u2, u1} α R] (x : R) (n : α), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (SMul.smul.{u2, u1} α R _inst_1 n x)) (HPow.hPow.{u1, u2, u1} (Tropical.{u1} R) α (Tropical.{u1} R) (instHPow.{u1, u2} (Tropical.{u1} R) α (Tropical.hasPow.{u1, u2} R α _inst_1)) (Tropical.trop.{u1} R x) n)
-but is expected to have type
-  forall {R : Type.{u2}} {α : Type.{u1}} [_inst_1 : SMul.{u1, u2} α R] (x : R) (n : α), Eq.{succ u2} (Tropical.{u2} R) (Tropical.trop.{u2} R (HSMul.hSMul.{u1, u2, u2} α R R (instHSMul.{u1, u2} α R _inst_1) n x)) (HPow.hPow.{u2, u1, u2} (Tropical.{u2} R) α (Tropical.{u2} R) (instHPow.{u2, u1} (Tropical.{u2} R) α (Tropical.instPowTropical.{u2, u1} R α _inst_1)) (Tropical.trop.{u2} R x) n)
-Case conversion may be inaccurate. Consider using '#align tropical.trop_smul Tropical.trop_smulₓ'. -/
 @[simp]
 theorem trop_smul {α : Type _} [SMul α R] (x : R) (n : α) : trop (n • x) = trop x ^ n :=
   rfl
@@ -763,12 +607,6 @@ instance covariant_swap_mul [LE R] [Add R] [CovariantClass R R (Function.swap (�
 #align tropical.covariant_swap_mul Tropical.covariant_swap_mul
 -/
 
-/- warning: tropical.covariant_add -> Tropical.covariant_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R], CovariantClass.{u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1))) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R], CovariantClass.{u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3331 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3333 : Tropical.{u1} R) => HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3331 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3333) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3346 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3348 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3346 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3348)
-Case conversion may be inaccurate. Consider using '#align tropical.covariant_add Tropical.covariant_addₓ'. -/
 instance covariant_add [LinearOrder R] : CovariantClass (Tropical R) (Tropical R) (· + ·) (· ≤ ·) :=
   ⟨fun x y z h => by
     cases' le_total x y with hx hy
@@ -786,12 +624,6 @@ instance covariant_mul_lt [LT R] [Add R] [CovariantClass R R (· + ·) (· < ·)
 #align tropical.covariant_mul_lt Tropical.covariant_mul_lt
 -/
 
-/- warning: tropical.covariant_swap_mul_lt -> Tropical.covariant_swap_mul_lt is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R] [_inst_2 : Add.{u1} R] [_inst_3 : CovariantClass.{u1, u1} R R (Function.swap.{succ u1, succ u1, succ u1} R R (fun (ᾰ : R) (ᾰ : R) => R) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R _inst_2))) (LT.lt.{u1} R (Preorder.toHasLt.{u1} R _inst_1))], CovariantClass.{u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Function.swap.{succ u1, succ u1, succ u1} (Tropical.{u1} R) (Tropical.{u1} R) (fun (ᾰ : Tropical.{u1} R) (ᾰ : Tropical.{u1} R) => Tropical.{u1} R) (HMul.hMul.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHMul.{u1} (Tropical.{u1} R) (Tropical.hasMul.{u1} R _inst_2)))) (LT.lt.{u1} (Tropical.{u1} R) (Tropical.hasLt.{u1} R (Preorder.toHasLt.{u1} R _inst_1)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R] [_inst_2 : Add.{u1} R] [_inst_3 : CovariantClass.{u1, u1} R R (Function.swap.{succ u1, succ u1, succ u1} R R (fun (ᾰ : R) (ᾰ : R) => R) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3643 : R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3645 : R) => HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R _inst_2) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3643 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3645)) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3658 : R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3660 : R) => LT.lt.{u1} R (Preorder.toLT.{u1} R _inst_1) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3658 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3660)], CovariantClass.{u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Function.swap.{succ u1, succ u1, succ u1} (Tropical.{u1} R) (Tropical.{u1} R) (fun (ᾰ : Tropical.{u1} R) (ᾰ : Tropical.{u1} R) => Tropical.{u1} R) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3685 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3687 : Tropical.{u1} R) => HMul.hMul.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHMul.{u1} (Tropical.{u1} R) (Tropical.instMulTropical.{u1} R _inst_2)) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3685 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3687)) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3700 : Tropical.{u1} R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3702 : Tropical.{u1} R) => LT.lt.{u1} (Tropical.{u1} R) (Tropical.instLTTropical.{u1} R (Preorder.toLT.{u1} R _inst_1)) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3700 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3702)
-Case conversion may be inaccurate. Consider using '#align tropical.covariant_swap_mul_lt Tropical.covariant_swap_mul_ltₓ'. -/
 instance covariant_swap_mul_lt [Preorder R] [Add R]
     [CovariantClass R R (Function.swap (· + ·)) (· < ·)] :
     CovariantClass (Tropical R) (Tropical R) (Function.swap (· * ·)) (· < ·) :=
@@ -806,12 +638,6 @@ instance [LinearOrder R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)]
   left_distrib _ _ _ := untrop_injective (min_add_add_left _ _ _).symm
   right_distrib _ _ _ := untrop_injective (min_add_add_right _ _ _).symm
 
-/- warning: tropical.add_pow -> Tropical.add_pow is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] [_inst_2 : AddMonoid.{u1} R] [_inst_3 : CovariantClass.{u1, u1} R R (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_2)))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1))))))] [_inst_4 : CovariantClass.{u1, u1} R R (Function.swap.{succ u1, succ u1, succ u1} R R (fun (ᾰ : R) (ᾰ : R) => R) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_2))))) (LE.le.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_1))))))] (x : Tropical.{u1} R) (y : Tropical.{u1} R) (n : Nat), Eq.{succ u1} (Tropical.{u1} R) (HPow.hPow.{u1, 0, u1} (Tropical.{u1} R) Nat (Tropical.{u1} R) (instHPow.{u1, 0} (Tropical.{u1} R) Nat (Tropical.hasPow.{u1, 0} R Nat (AddMonoid.SMul.{u1} R _inst_2))) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) x y) n) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.hasAdd.{u1} R _inst_1)) (HPow.hPow.{u1, 0, u1} (Tropical.{u1} R) Nat (Tropical.{u1} R) (instHPow.{u1, 0} (Tropical.{u1} R) Nat (Tropical.hasPow.{u1, 0} R Nat (AddMonoid.SMul.{u1} R _inst_2))) x n) (HPow.hPow.{u1, 0, u1} (Tropical.{u1} R) Nat (Tropical.{u1} R) (instHPow.{u1, 0} (Tropical.{u1} R) Nat (Tropical.hasPow.{u1, 0} R Nat (AddMonoid.SMul.{u1} R _inst_2))) y n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] [_inst_2 : AddMonoid.{u1} R] [_inst_3 : CovariantClass.{u1, u1} R R (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3906 : R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3908 : R) => HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_2))) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3906 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3908) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3921 : R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3923 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1)))))) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3921 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3923)] [_inst_4 : CovariantClass.{u1, u1} R R (Function.swap.{succ u1, succ u1, succ u1} R R (fun (ᾰ : R) (ᾰ : R) => R) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3943 : R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3945 : R) => HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_2))) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3943 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3945)) (fun (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3958 : R) (x._@.Mathlib.Algebra.Tropical.Basic._hyg.3960 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1)))))) x._@.Mathlib.Algebra.Tropical.Basic._hyg.3958 x._@.Mathlib.Algebra.Tropical.Basic._hyg.3960)] (x : Tropical.{u1} R) (y : Tropical.{u1} R) (n : Nat), Eq.{succ u1} (Tropical.{u1} R) (HPow.hPow.{u1, 0, u1} (Tropical.{u1} R) Nat (Tropical.{u1} R) (instHPow.{u1, 0} (Tropical.{u1} R) Nat (Tropical.instPowTropical.{u1, 0} R Nat (AddMonoid.SMul.{u1} R _inst_2))) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) n) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) (HPow.hPow.{u1, 0, u1} (Tropical.{u1} R) Nat (Tropical.{u1} R) (instHPow.{u1, 0} (Tropical.{u1} R) Nat (Tropical.instPowTropical.{u1, 0} R Nat (AddMonoid.SMul.{u1} R _inst_2))) x n) (HPow.hPow.{u1, 0, u1} (Tropical.{u1} R) Nat (Tropical.{u1} R) (instHPow.{u1, 0} (Tropical.{u1} R) Nat (Tropical.instPowTropical.{u1, 0} R Nat (AddMonoid.SMul.{u1} R _inst_2))) y n))
-Case conversion may be inaccurate. Consider using '#align tropical.add_pow Tropical.add_powₓ'. -/
 @[simp]
 theorem add_pow [LinearOrder R] [AddMonoid R] [CovariantClass R R (· + ·) (· ≤ ·)]
     [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] (x y : Tropical R) (n : ℕ) :
@@ -833,12 +659,6 @@ instance : CommSemiring (Tropical R) :=
     zero_mul := fun _ => untrop_injective (top_add _)
     mul_zero := fun _ => untrop_injective (add_top _) }
 
-/- warning: tropical.succ_nsmul -> Tropical.succ_nsmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_2 : LinearOrder.{u1} R] [_inst_3 : OrderTop.{u1} R (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (LinearOrder.toLattice.{u1} R _inst_2)))))] (x : Tropical.{u1} R) (n : Nat), Eq.{succ u1} (Tropical.{u1} R) (SMul.smul.{0, u1} Nat (Tropical.{u1} R) (AddMonoid.SMul.{u1} (Tropical.{u1} R) (AddCommMonoid.toAddMonoid.{u1} (Tropical.{u1} R) (Tropical.addCommMonoid.{u1} R _inst_2 _inst_3))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) x) x
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_2 : LinearOrder.{u1} R] [_inst_3 : OrderTop.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_2))))))] (x : Tropical.{u1} R) (n : Nat), Eq.{succ u1} (Tropical.{u1} R) (HSMul.hSMul.{0, u1, u1} Nat (Tropical.{u1} R) (Tropical.{u1} R) (instHSMul.{0, u1} Nat (Tropical.{u1} R) (AddMonoid.SMul.{u1} (Tropical.{u1} R) (AddCommMonoid.toAddMonoid.{u1} (Tropical.{u1} R) (Tropical.instAddCommMonoidTropical.{u1} R _inst_2 _inst_3)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) x) x
-Case conversion may be inaccurate. Consider using '#align tropical.succ_nsmul Tropical.succ_nsmulₓ'. -/
 @[simp]
 theorem succ_nsmul {R} [LinearOrder R] [OrderTop R] (x : Tropical R) (n : ℕ) : (n + 1) • x = x :=
   by
@@ -847,12 +667,6 @@ theorem succ_nsmul {R} [LinearOrder R] [OrderTop R] (x : Tropical R) (n : ℕ) :
   · rw [add_nsmul, IH, one_nsmul, add_self]
 #align tropical.succ_nsmul Tropical.succ_nsmul
 
-/- warning: tropical.mul_eq_zero_iff -> Tropical.mul_eq_zero_iff is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_2 : LinearOrderedAddCommMonoid.{u1} R] {a : Tropical.{u1} (WithTop.{u1} R)} {b : Tropical.{u1} (WithTop.{u1} R)}, Iff (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) (HMul.hMul.{u1, u1, u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (instHMul.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasMul.{u1} (WithTop.{u1} R) (WithTop.add.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (OrderedAddCommMonoid.toAddCommMonoid.{u1} R (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} R _inst_2)))))))) a b) (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (OfNat.mk.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.zero.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasZero.{u1} (WithTop.{u1} R) (WithTop.hasTop.{u1} R)))))) (Or (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) a (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (OfNat.mk.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.zero.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasZero.{u1} (WithTop.{u1} R) (WithTop.hasTop.{u1} R)))))) (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) b (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (OfNat.mk.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.zero.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.hasZero.{u1} (WithTop.{u1} R) (WithTop.hasTop.{u1} R)))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_2 : LinearOrderedAddCommMonoid.{u1} R] {a : Tropical.{u1} (WithTop.{u1} R)} {b : Tropical.{u1} (WithTop.{u1} R)}, Iff (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) (HMul.hMul.{u1, u1, u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (Tropical.{u1} (WithTop.{u1} R)) (instHMul.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instMulTropical.{u1} (WithTop.{u1} R) (WithTop.add.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (LinearOrderedAddCommMonoid.toAddCommMonoid.{u1} R _inst_2))))))) a b) (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instZeroTropical.{u1} (WithTop.{u1} R) (WithTop.top.{u1} R))))) (Or (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) a (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instZeroTropical.{u1} (WithTop.{u1} R) (WithTop.top.{u1} R))))) (Eq.{succ u1} (Tropical.{u1} (WithTop.{u1} R)) b (OfNat.ofNat.{u1} (Tropical.{u1} (WithTop.{u1} R)) 0 (Zero.toOfNat0.{u1} (Tropical.{u1} (WithTop.{u1} R)) (Tropical.instZeroTropical.{u1} (WithTop.{u1} R) (WithTop.top.{u1} R))))))
-Case conversion may be inaccurate. Consider using '#align tropical.mul_eq_zero_iff Tropical.mul_eq_zero_iffₓ'. -/
 -- TODO: find/create the right classes to make this hold (for enat, ennreal, etc)
 -- Requires `zero_eq_bot` to be true
 -- lemma add_eq_zero_iff {a b : tropical R} :

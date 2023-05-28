@@ -85,12 +85,6 @@ theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) := by apply o
 #align list.palindrome.append_reverse List.Palindrome.append_reverse
 -/
 
-/- warning: list.palindrome.map -> List.Palindrome.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : List.{u1} α} (f : α -> β), (List.Palindrome.{u1} α l) -> (List.Palindrome.{u2} β (List.map.{u1, u2} α β f l))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {l : List.{u2} α} (f : α -> β), (List.Palindrome.{u2} α l) -> (List.Palindrome.{u1} β (List.map.{u2, u1} α β f l))
-Case conversion may be inaccurate. Consider using '#align list.palindrome.map List.Palindrome.mapₓ'. -/
 protected theorem map (f : α → β) (p : Palindrome l) : Palindrome (map f l) :=
   of_reverse_eq <| by rw [← map_reverse, p.reverse_eq]
 #align list.palindrome.map List.Palindrome.map

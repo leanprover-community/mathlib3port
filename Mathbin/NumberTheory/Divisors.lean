@@ -73,12 +73,6 @@ def divisorsAntidiagonal : Finset (ℕ × ℕ) :=
 
 variable {n}
 
-/- warning: nat.filter_dvd_eq_divisors -> Nat.filter_dvd_eq_divisors is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd _x n) (fun (a : Nat) => Nat.decidableDvd a n) (Finset.range (Nat.succ n))) (Nat.divisors n))
-but is expected to have type
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat _x n) (fun (a : Nat) => Nat.decidable_dvd a n) (Finset.range (Nat.succ n))) (Nat.divisors n))
-Case conversion may be inaccurate. Consider using '#align nat.filter_dvd_eq_divisors Nat.filter_dvd_eq_divisorsₓ'. -/
 @[simp]
 theorem filter_dvd_eq_divisors (h : n ≠ 0) : (Finset.range n.succ).filterₓ (· ∣ n) = n.divisors :=
   by
@@ -87,12 +81,6 @@ theorem filter_dvd_eq_divisors (h : n ≠ 0) : (Finset.range n.succ).filterₓ (
   exact fun ha _ => succ_le_iff.mpr (pos_of_dvd_of_pos ha h.bot_lt)
 #align nat.filter_dvd_eq_divisors Nat.filter_dvd_eq_divisors
 
-/- warning: nat.filter_dvd_eq_proper_divisors -> Nat.filter_dvd_eq_properDivisors is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.Dvd.{0} Nat Nat.hasDvd _x n) (fun (a : Nat) => Nat.decidableDvd a n) (Finset.range n)) (Nat.properDivisors n))
-but is expected to have type
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat _x n) (fun (a : Nat) => Nat.decidable_dvd a n) (Finset.range n)) (Nat.properDivisors n))
-Case conversion may be inaccurate. Consider using '#align nat.filter_dvd_eq_proper_divisors Nat.filter_dvd_eq_properDivisorsₓ'. -/
 @[simp]
 theorem filter_dvd_eq_properDivisors (h : n ≠ 0) :
     (Finset.range n).filterₓ (· ∣ n) = n.properDivisors :=
@@ -116,12 +104,6 @@ theorem mem_properDivisors {m : ℕ} : n ∈ properDivisors m ↔ n ∣ m ∧ n 
 #align nat.mem_proper_divisors Nat.mem_properDivisors
 -/
 
-/- warning: nat.insert_self_proper_divisors -> Nat.insert_self_properDivisors is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} (Finset.{0} Nat) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.hasInsert.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) n (Nat.properDivisors n)) (Nat.divisors n))
-but is expected to have type
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finset.{0} Nat) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.instInsertFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) n (Nat.properDivisors n)) (Nat.divisors n))
-Case conversion may be inaccurate. Consider using '#align nat.insert_self_proper_divisors Nat.insert_self_properDivisorsₓ'. -/
 theorem insert_self_properDivisors (h : n ≠ 0) : insert n (properDivisors n) = divisors n := by
   rw [divisors, proper_divisors, Ico_succ_right_eq_insert_Ico (one_le_iff_ne_zero.2 h),
     Finset.filter_insert, if_pos (dvd_refl n)]
@@ -316,23 +298,11 @@ theorem map_swap_divisorsAntidiagonal :
 #align nat.map_swap_divisors_antidiagonal Nat.map_swap_divisorsAntidiagonal
 -/
 
-/- warning: nat.image_fst_divisors_antidiagonal -> Nat.image_fst_divisorsAntidiagonal is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} (Prod.{0, 0} Nat Nat) Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Prod.fst.{0, 0} Nat Nat) (Nat.divisorsAntidiagonal n)) (Nat.divisors n)
-but is expected to have type
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} (Prod.{0, 0} Nat Nat) Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Prod.fst.{0, 0} Nat Nat) (Nat.divisorsAntidiagonal n)) (Nat.divisors n)
-Case conversion may be inaccurate. Consider using '#align nat.image_fst_divisors_antidiagonal Nat.image_fst_divisorsAntidiagonalₓ'. -/
 @[simp]
 theorem image_fst_divisorsAntidiagonal : (divisorsAntidiagonal n).image Prod.fst = divisors n := by
   ext; simp [Dvd.Dvd, @eq_comm _ n (_ * _)]
 #align nat.image_fst_divisors_antidiagonal Nat.image_fst_divisorsAntidiagonal
 
-/- warning: nat.image_snd_divisors_antidiagonal -> Nat.image_snd_divisorsAntidiagonal is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} (Prod.{0, 0} Nat Nat) Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Prod.snd.{0, 0} Nat Nat) (Nat.divisorsAntidiagonal n)) (Nat.divisors n)
-but is expected to have type
-  forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} (Prod.{0, 0} Nat Nat) Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Prod.snd.{0, 0} Nat Nat) (Nat.divisorsAntidiagonal n)) (Nat.divisors n)
-Case conversion may be inaccurate. Consider using '#align nat.image_snd_divisors_antidiagonal Nat.image_snd_divisorsAntidiagonalₓ'. -/
 @[simp]
 theorem image_snd_divisorsAntidiagonal : (divisorsAntidiagonal n).image Prod.snd = divisors n :=
   by
@@ -410,12 +380,6 @@ theorem mem_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ} :
 #align nat.mem_divisors_prime_pow Nat.mem_divisors_prime_pow
 -/
 
-/- warning: nat.prime.divisors -> Nat.Prime.divisors is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat}, (Nat.Prime p) -> (Eq.{1} (Finset.{0} Nat) (Nat.divisors p) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.hasInsert.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.hasSingleton.{0} Nat) p)))
-but is expected to have type
-  forall {p : Nat}, (Nat.Prime p) -> (Eq.{1} (Finset.{0} Nat) (Nat.divisors p) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.instInsertFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) p)))
-Case conversion may be inaccurate. Consider using '#align nat.prime.divisors Nat.Prime.divisorsₓ'. -/
 theorem Prime.divisors {p : ℕ} (pp : p.Prime) : divisors p = {1, p} :=
   by
   ext
@@ -490,12 +454,6 @@ theorem Prime.prod_properDivisors {α : Type _} [CommMonoid α] {p : ℕ} {f : �
 #align nat.prime.sum_proper_divisors Nat.Prime.sum_properDivisors
 -/
 
-/- warning: nat.prime.prod_divisors -> Nat.Prime.prod_divisors is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {p : Nat} {f : Nat -> α}, (Nat.Prime p) -> (Eq.{succ u1} α (Finset.prod.{u1, 0} α Nat _inst_1 (Nat.divisors p) (fun (x : Nat) => f x)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (f p) (f (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {p : Nat} {f : Nat -> α}, (Nat.Prime p) -> (Eq.{succ u1} α (Finset.prod.{u1, 0} α Nat _inst_1 (Nat.divisors p) (fun (x : Nat) => f x)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (f p) (f (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align nat.prime.prod_divisors Nat.Prime.prod_divisorsₓ'. -/
 @[simp, to_additive]
 theorem Prime.prod_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in p.divisors, f x) = f p * f 1 := by
@@ -598,12 +556,6 @@ theorem prod_divisorsAntidiagonal' {M : Type _} [CommMonoid M] (f : ℕ → ℕ 
 #align nat.sum_divisors_antidiagonal' Nat.sum_divisorsAntidiagonal'
 -/
 
-/- warning: nat.prime_divisors_eq_to_filter_divisors_prime -> Nat.prime_divisors_eq_to_filter_divisors_prime is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Finset.{0} Nat) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors n)) (Finset.filter.{0} Nat Nat.Prime (fun (a : Nat) => Nat.decidablePrime a) (Nat.divisors n))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Finset.{0} Nat) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors n)) (Finset.filter.{0} Nat Nat.Prime (fun (a : Nat) => Nat.decidablePrime a) (Nat.divisors n))
-Case conversion may be inaccurate. Consider using '#align nat.prime_divisors_eq_to_filter_divisors_prime Nat.prime_divisors_eq_to_filter_divisors_primeₓ'. -/
 /-- The factors of `n` are the prime divisors -/
 theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
     n.factors.toFinset = (divisors n).filterₓ Prime :=
@@ -614,12 +566,6 @@ theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
     simpa [hn, hn.ne', mem_factors] using and_comm' (Prime q) (q ∣ n)
 #align nat.prime_divisors_eq_to_filter_divisors_prime Nat.prime_divisors_eq_to_filter_divisors_prime
 
-/- warning: nat.image_div_divisors_eq_divisors -> Nat.image_div_divisors_eq_divisors is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (x : Nat) => HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n x) (Nat.divisors n)) (Nat.divisors n)
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (x : Nat) => HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n x) (Nat.divisors n)) (Nat.divisors n)
-Case conversion may be inaccurate. Consider using '#align nat.image_div_divisors_eq_divisors Nat.image_div_divisors_eq_divisorsₓ'. -/
 @[simp]
 theorem image_div_divisors_eq_divisors (n : ℕ) :
     image (fun x : ℕ => n / x) n.divisors = n.divisors :=

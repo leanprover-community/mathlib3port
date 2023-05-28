@@ -110,12 +110,6 @@ structure Word where
 
 variable {M}
 
-/- warning: free_product.of -> FreeProduct.of is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι}, MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι}, MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))
-Case conversion may be inaccurate. Consider using '#align free_product.of FreeProduct.ofₓ'. -/
 /-- The inclusion of a summand into the free product. -/
 def of {i : ι} : M i →* FreeProduct M
     where
@@ -124,21 +118,12 @@ def of {i : ι} : M i →* FreeProduct M
   map_mul' x y := Eq.symm <| (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_mul x y))
 #align free_product.of FreeProduct.of
 
-/- warning: free_product.of_apply -> FreeProduct.of_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.of_apply FreeProduct.of_applyₓ'. -/
 theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of <| Sigma.mk i m) :=
   rfl
 #align free_product.of_apply FreeProduct.of_apply
 
 variable {N : Type _} [Monoid N]
 
-/- warning: free_product.ext_hom -> FreeProduct.ext_hom is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {N : Type.{u3}} [_inst_2 : Monoid.{u3} N] (f : MonoidHom.{max u1 u2, u3} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2)) (g : MonoidHom.{max u1 u2, u3} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2)), (forall (i : ι), Eq.{max (succ u3) (succ u2)} (MonoidHom.{u2, u3} (M i) N (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{u3} N _inst_2)) (MonoidHom.comp.{u2, max u1 u2, u3} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2) f (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i)) (MonoidHom.comp.{u2, max u1 u2, u3} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2) g (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i))) -> (Eq.{max (succ u3) (succ (max u1 u2))} (MonoidHom.{max u1 u2, u3} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2)) f g)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u3}} [_inst_1 : forall (i : ι), Monoid.{u3} (M i)] {N : Type.{u1}} [_inst_2 : Monoid.{u1} N] (f : MonoidHom.{max u3 u2, u1} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u2 u3} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u1} N _inst_2)) (g : MonoidHom.{max u3 u2, u1} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u2 u3} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u1} N _inst_2)), (forall (i : ι), Eq.{max (succ u3) (succ u1)} (MonoidHom.{u3, u1} (M i) N (Monoid.toMulOneClass.{u3} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{u1} N _inst_2)) (MonoidHom.comp.{u3, max u2 u3, u1} (M i) (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{u3} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u3} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u1} N _inst_2) f (FreeProduct.of.{u2, u3} ι M (fun (i : ι) => _inst_1 i) i)) (MonoidHom.comp.{u3, max u2 u3, u1} (M i) (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{u3} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u3} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u1} N _inst_2) g (FreeProduct.of.{u2, u3} ι M (fun (i : ι) => _inst_1 i) i))) -> (Eq.{max (max (succ u2) (succ u3)) (succ u1)} (MonoidHom.{max u3 u2, u1} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u2 u3} (FreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u3} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u1} N _inst_2)) f g)
-Case conversion may be inaccurate. Consider using '#align free_product.ext_hom FreeProduct.ext_homₓ'. -/
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _) = g.comp of) : f = g :=
@@ -148,12 +133,6 @@ theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _
         MonoidHom.comp_apply, h]
 #align free_product.ext_hom FreeProduct.ext_hom
 
-/- warning: free_product.lift -> FreeProduct.lift is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {N : Type.{u3}} [_inst_2 : Monoid.{u3} N], Equiv.{max (succ u1) (succ u3) (succ u2), max (succ u3) (succ (max u1 u2))} (forall (i : ι), MonoidHom.{u2, u3} (M i) N (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{u3} N _inst_2)) (MonoidHom.{max u1 u2, u3} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2))
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {N : Type.{u3}} [_inst_2 : Monoid.{u3} N], Equiv.{max (max (succ u1) (succ u2)) (succ u3), max (succ u3) (succ (max u2 u1))} (forall (i : ι), MonoidHom.{u2, u3} (M i) N (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{u3} N _inst_2)) (MonoidHom.{max u2 u1, u3} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) N (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Monoid.toMulOneClass.{u3} N _inst_2))
-Case conversion may be inaccurate. Consider using '#align free_product.lift FreeProduct.liftₓ'. -/
 /-- A map out of the free product corresponds to a family of maps out of the summands. This is the
 universal property of the free product, charaterizing it as a categorical coproduct. -/
 @[simps symm_apply]
@@ -180,20 +159,11 @@ def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N)
     simp only [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of]
 #align free_product.lift FreeProduct.lift
 
-/- warning: free_product.lift_of -> FreeProduct.lift_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_of FreeProduct.lift_ofₓ'. -/
 @[simp]
 theorem lift_of {N} [Monoid N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift fi (of m) = fi i m := by
   conv_rhs => rw [← lift.symm_apply_apply fi, lift_symm_apply, MonoidHom.comp_apply]
 #align free_product.lift_of FreeProduct.lift_of
 
-/- warning: free_product.induction_on -> FreeProduct.induction_on is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {C : (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) -> Prop} (m : FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)), (C (OfNat.ofNat.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) 1 (OfNat.mk.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) 1 (One.one.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasOne.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))))))) -> (forall (i : ι) (m : M i), C (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (fun (_x : MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) => (M i) -> (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) m)) -> (forall (x : FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (y : FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)), (C x) -> (C y) -> (C (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))))) x y))) -> (C m)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {C : (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) -> Prop} (m : FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)), (C (OfNat.ofNat.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) 1 (One.toOfNat1.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toOne.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))))) -> (forall (i : ι) (m : M i), C (FunLike.coe.{max (succ u1) (succ u2), succ u1, max (succ u1) (succ u2)} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (fun (_x : M i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) _x) (MulHomClass.toFunLike.{max u1 u2, u1, max u1 u2} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{u1} (M i) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i))) (MulOneClass.toMul.{max u1 u2} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, max u1 u2} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.monoidHomClass.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))))) (FreeProduct.of.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) m)) -> (forall (x : FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (y : FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)), (C x) -> (C y) -> (C (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))))) x y))) -> (C m)
-Case conversion may be inaccurate. Consider using '#align free_product.induction_on FreeProduct.induction_onₓ'. -/
 @[elab_as_elim]
 theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1)
     (h_of : ∀ (i) (m : M i), C (of m)) (h_mul : ∀ x y, C x → C y → C (x * y)) : C m :=
@@ -206,27 +176,15 @@ theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C
   simp [MonoidHom.codRestrict]
 #align free_product.induction_on FreeProduct.induction_on
 
-/- warning: free_product.of_left_inverse -> FreeProduct.of_leftInverse is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.of_left_inverse FreeProduct.of_leftInverseₓ'. -/
 theorem of_leftInverse [DecidableEq ι] (i : ι) :
     Function.LeftInverse (lift <| Pi.mulSingle i (MonoidHom.id (M i))) of := fun x => by
   simp only [lift_of, Pi.mulSingle_eq_same, MonoidHom.id_apply]
 #align free_product.of_left_inverse FreeProduct.of_leftInverse
 
-/- warning: free_product.of_injective -> FreeProduct.of_injective is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] (i : ι), Function.Injective.{succ u2, succ (max u1 u2)} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (fun (_x : MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) => (M i) -> (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i))
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] (i : ι), Function.Injective.{succ u2, max (succ u1) (succ u2)} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FunLike.coe.{max (succ u1) (succ u2), succ u2, max (succ u1) (succ u2)} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (fun (_x : M i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) _x) (MulHomClass.toFunLike.{max u1 u2, u2, max u1 u2} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))) (MulOneClass.toMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u2, max u1 u2} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.monoidHomClass.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i))
-Case conversion may be inaccurate. Consider using '#align free_product.of_injective FreeProduct.of_injectiveₓ'. -/
 theorem of_injective (i : ι) : Function.Injective ⇑(of : M i →* _) := by
   classical exact (of_left_inverse i).Injective
 #align free_product.of_injective FreeProduct.of_injective
 
-/- warning: free_product.lift_mrange_le -> FreeProduct.lift_mrange_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_mrange_le FreeProduct.lift_mrange_leₓ'. -/
 theorem lift_mrange_le {N} [Monoid N] (f : ∀ i, M i →* N) {s : Submonoid N}
     (h : ∀ i, (f i).mrange ≤ s) : (lift f).mrange ≤ s :=
   by
@@ -255,9 +213,6 @@ instance : Inv (FreeProduct G)
     where inv :=
     MulOpposite.unop ∘ lift fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom
 
-/- warning: free_product.inv_def -> FreeProduct.inv_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.inv_def FreeProduct.inv_defₓ'. -/
 theorem inv_def (x : FreeProduct G) :
     x⁻¹ =
       MulOpposite.unop
@@ -277,9 +232,6 @@ instance : Group (FreeProduct G) :=
         rw [MonoidHom.map_mul, MulOpposite.unop_mul, mul_assoc, ← mul_assoc _ x y, hx, one_mul,
           hy] }
 
-/- warning: free_product.lift_range_le -> FreeProduct.lift_range_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_range_le FreeProduct.lift_range_leₓ'. -/
 theorem lift_range_le {N} [Group N] (f : ∀ i, G i →* N) {s : Subgroup N}
     (h : ∀ i, (f i).range ≤ s) : (lift f).range ≤ s :=
   by
@@ -323,12 +275,6 @@ def prod (w : Word M) : FreeProduct M :=
 #align free_product.word.prod FreeProduct.Word.prod
 -/
 
-/- warning: free_product.word.prod_empty -> FreeProduct.Word.prod_empty is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)], Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (FreeProduct.Word.empty.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (OfNat.ofNat.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) 1 (OfNat.mk.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) 1 (One.one.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasOne.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)], Eq.{max (succ u2) (succ u1)} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (FreeProduct.Word.empty.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) (OfNat.ofNat.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) 1 (One.toOfNat1.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toOne.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))))
-Case conversion may be inaccurate. Consider using '#align free_product.word.prod_empty FreeProduct.Word.prod_emptyₓ'. -/
 @[simp]
 theorem prod_empty : prod (empty : Word M) = 1 :=
   rfl
@@ -342,12 +288,6 @@ def fstIdx (w : Word M) : Option ι :=
 #align free_product.word.fst_idx FreeProduct.Word.fstIdx
 -/
 
-/- warning: free_product.word.fst_idx_ne_iff -> FreeProduct.Word.fstIdx_ne_iff is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {w : FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)} {i : ι}, Iff (Ne.{succ u1} (Option.{u1} ι) (FreeProduct.Word.fstIdx.{u1, u2} ι M (fun (i : ι) => _inst_1 i) w) (Option.some.{u1} ι i)) (forall (l : Sigma.{u1, u2} ι (fun (i : ι) => M i)), (Membership.Mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Option.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) (Option.hasMem.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) l (List.head?.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (FreeProduct.Word.toList.{u1, u2} ι M (fun (i : ι) => _inst_1 i) w))) -> (Ne.{succ u1} ι i (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {w : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)} {i : ι}, Iff (Ne.{succ u2} (Option.{u2} ι) (FreeProduct.Word.fstIdx.{u2, u1} ι M (fun (i : ι) => _inst_1 i) w) (Option.some.{u2} ι i)) (forall (l : Sigma.{u2, u1} ι (fun (i : ι) => M i)), (Membership.mem.{max u2 u1, max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)) (Option.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i))) (Option.instMembershipOption.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i))) l (List.head?.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)) (FreeProduct.Word.toList.{u2, u1} ι M (fun (i : ι) => _inst_1 i) w))) -> (Ne.{succ u2} ι i (Sigma.fst.{u2, u1} ι (fun (i : ι) => M i) l)))
-Case conversion may be inaccurate. Consider using '#align free_product.word.fst_idx_ne_iff FreeProduct.Word.fstIdx_ne_iffₓ'. -/
 theorem fstIdx_ne_iff {w : Word M} {i} :
     fstIdx w ≠ some i ↔ ∀ l ∈ w.toList.head?, i ≠ Sigma.fst l :=
   not_iff_not.mp <| by simp [fst_idx]
@@ -396,33 +336,18 @@ private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd 
     (h2 : (l::ls).Chain' _) : Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_mem _ hl), h2.tail⟩
 
-/- warning: free_product.word.cons_eq_rcons -> FreeProduct.Word.cons_eq_rcons is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.word.cons_eq_rcons FreeProduct.Word.cons_eq_rconsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cons_eq_rcons {i} {m : M i} {ls h1 h2} :
     Word.mk (⟨i, m⟩::ls) h1 h2 = rcons ⟨m, mkAux ls h1 h2, fstIdx_ne_iff.mpr h2.rel_head?⟩ := by
   rw [rcons, dif_neg]; rfl; exact h1 ⟨i, m⟩ (ls.mem_cons_self _)
 #align free_product.word.cons_eq_rcons FreeProduct.Word.cons_eq_rcons
 
-/- warning: free_product.word.prod_rcons -> FreeProduct.Word.prod_rcons is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] {i : ι} (p : FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i), Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (FreeProduct.Word.rcons.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) i p)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))))) (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (fun (_x : MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) => (M i) -> (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.Pair.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i p)) (FreeProduct.Word.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (FreeProduct.Word.Pair.tail.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i p)))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (M i)] {i : ι} (p : FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i), Eq.{max (succ u2) (succ u1)} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (FreeProduct.Word.rcons.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) i p)) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)) (instHMul.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)) (MulOneClass.toMul.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)) (Monoid.toMulOneClass.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, max (succ u1) (succ u2)} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (fun (_x : M i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) _x) (MulHomClass.toFunLike.{max u1 u2, u1, max u1 u2} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{u1} (M i) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i))) (MulOneClass.toMul.{max u1 u2} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, max u1 u2} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.monoidHomClass.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))))) (FreeProduct.of.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.Pair.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)) (FreeProduct.Word.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (FreeProduct.Word.Pair.tail.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i p)))
-Case conversion may be inaccurate. Consider using '#align free_product.word.prod_rcons FreeProduct.Word.prod_rconsₓ'. -/
 @[simp]
 theorem prod_rcons {i} (p : Pair M i) : prod (rcons p) = of p.headI * prod p.tail :=
   if hm : p.headI = 1 then by rw [rcons, dif_pos hm, hm, MonoidHom.map_one, one_mul]
   else by rw [rcons, dif_neg hm, Prod, List.map_cons, List.prod_cons, Prod]
 #align free_product.word.prod_rcons FreeProduct.Word.prod_rcons
 
-/- warning: free_product.word.rcons_inj -> FreeProduct.Word.rcons_inj is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] {i : ι}, Function.Injective.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.rcons.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) i)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (M i)] {i : ι}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.rcons.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) i)
-Case conversion may be inaccurate. Consider using '#align free_product.word.rcons_inj FreeProduct.Word.rcons_injₓ'. -/
 theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) :=
   by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
@@ -466,22 +391,10 @@ def equivPair (i) : Word M ≃ Pair M i
 #align free_product.word.equiv_pair FreeProduct.Word.equivPair
 -/
 
-/- warning: free_product.word.equiv_pair_symm -> FreeProduct.Word.equivPair_symm is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] [_inst_4 : DecidableEq.{succ u1} ι] (i : ι) (p : FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i), Eq.{max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (fun (_x : Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) => (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) -> (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.equivPair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b) i)) p) (FreeProduct.Word.rcons.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) i p)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (M i)] [_inst_4 : DecidableEq.{succ u2} ι] (i : ι) (p : FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i), Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) => FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) p) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) (fun (_x : FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) => FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) (Equiv.symm.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) (FreeProduct.Word.equivPair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b) i)) p) (FreeProduct.Word.rcons.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) i p)
-Case conversion may be inaccurate. Consider using '#align free_product.word.equiv_pair_symm FreeProduct.Word.equivPair_symmₓ'. -/
 theorem equivPair_symm (i) (p : Pair M i) : (equivPair i).symm p = rcons p :=
   rfl
 #align free_product.word.equiv_pair_symm FreeProduct.Word.equivPair_symm
 
-/- warning: free_product.word.equiv_pair_eq_of_fst_idx_ne -> FreeProduct.Word.equivPair_eq_of_fstIdx_ne is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] [_inst_4 : DecidableEq.{succ u1} ι] {i : ι} {w : FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)} (h : Ne.{succ u1} (Option.{u1} ι) (FreeProduct.Word.fstIdx.{u1, u2} ι M (fun (i : ι) => _inst_1 i) w) (Option.some.{u1} ι i)), Eq.{max (succ u1) (succ u2)} (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i)) (fun (_x : Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i)) => (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) -> (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i)) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i)) (FreeProduct.Word.equivPair.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b) i) w) (FreeProduct.Word.Pair.mk.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)))))) w h)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (M i)] [_inst_4 : DecidableEq.{succ u2} ι] {i : ι} {w : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)} (h : Ne.{succ u2} (Option.{u2} ι) (FreeProduct.Word.fstIdx.{u2, u1} ι M (fun (i : ι) => _inst_1 i) w) (Option.some.{u2} ι i)), Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) => FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) w) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i)) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (fun (_x : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) => FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.Pair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i)) (FreeProduct.Word.equivPair.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b) i) w) (FreeProduct.Word.Pair.mk.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i (OfNat.ofNat.{u1} (M i) 1 (One.toOfNat1.{u1} (M i) (Monoid.toOne.{u1} (M i) (_inst_1 i)))) w h)
-Case conversion may be inaccurate. Consider using '#align free_product.word.equiv_pair_eq_of_fst_idx_ne FreeProduct.Word.equivPair_eq_of_fstIdx_neₓ'. -/
 theorem equivPair_eq_of_fstIdx_ne {i} {w : Word M} (h : fstIdx w ≠ some i) :
     equivPair i w = ⟨1, w, h⟩ :=
   (equivPair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
@@ -499,29 +412,17 @@ instance summandAction (i) : MulAction (M i) (Word M)
 instance : MulAction (FreeProduct M) (Word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
 
-/- warning: free_product.word.of_smul_def -> FreeProduct.Word.of_smul_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.word.of_smul_def FreeProduct.Word.of_smul_defₓ'. -/
 theorem of_smul_def (i) (w : Word M) (m : M i) :
     of m • w = rcons { equivPair i w with headI := m * (equivPair i w).headI } :=
   rfl
 #align free_product.word.of_smul_def FreeProduct.Word.of_smul_def
 
-/- warning: free_product.word.cons_eq_smul -> FreeProduct.Word.cons_eq_smul is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] [_inst_4 : DecidableEq.{succ u1} ι] {i : ι} {m : M i} {ls : List.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))} {h1 : forall (l : Sigma.{u1, u2} ι (fun (i : ι) => M i)), (Membership.Mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (List.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) (List.hasMem.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) l (List.cons.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls)) -> (Ne.{succ u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (Sigma.snd.{u1, u2} ι (fun (i : ι) => M i) l) (OfNat.ofNat.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) 1 (OfNat.mk.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) 1 (One.one.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (MulOneClass.toHasOne.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (Monoid.toMulOneClass.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (_inst_1 (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l))))))))} {h2 : List.Chain'.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (fun (l : Sigma.{u1, u2} ι (fun (i : ι) => M i)) (l' : Sigma.{u1, u2} ι (fun (i : ι) => M i)) => Ne.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l) (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l')) (List.cons.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls)}, Eq.{max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι (fun {i : ι} => M i) (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.mk.{u1, u2} ι (fun {i : ι} => M i) (fun (i : ι) => _inst_1 i) (List.cons.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls) h1 h2) (SMul.smul.{max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u1, u2} ι (fun {i : ι} => M i) (fun (i : ι) => _inst_1 i)) (MulAction.toHasSmul.{max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u1, u2} ι (fun {i : ι} => M i) (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.mulAction.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b))) (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (fun (_x : MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) => (M i) -> (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) m) (_Private.1265251317.mkAux.{u1, u2} ι (fun {i : ι} => M i) (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls h1 h2))
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] [_inst_4 : DecidableEq.{succ u1} ι] {i : ι} {m : M i} {ls : List.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => M i))} {h1 : forall (l : Sigma.{u1, u2} ι (fun (i : ι) => M i)), (Membership.mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (List.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) (List.instMembershipList.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) l (List.cons.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls)) -> (Ne.{succ u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (Sigma.snd.{u1, u2} ι (fun (i : ι) => M i) l) (OfNat.ofNat.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) 1 (One.toOfNat1.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (Monoid.toOne.{u2} (M (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l)) (_inst_1 (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l))))))} {h2 : List.Chain'.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (fun (l : Sigma.{u1, u2} ι (fun (i : ι) => M i)) (l' : Sigma.{u1, u2} ι (fun (i : ι) => M i)) => Ne.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l) (Sigma.fst.{u1, u2} ι (fun (i : ι) => M i) l')) (List.cons.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls)}, Eq.{max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.mk.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (List.cons.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls) h1 h2) (HSMul.hSMul.{max u1 u2, max u2 u1, max u1 u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) m) (FreeProduct.Word.{u1, u2} ι (fun (i : ι) => M i) (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u1, u2} ι (fun (i : ι) => M i) (fun (i : ι) => _inst_1 i)) (instHSMul.{max u1 u2, max u1 u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) m) (FreeProduct.Word.{u1, u2} ι (fun (i : ι) => M i) (fun (i : ι) => _inst_1 i)) (MulAction.toSMul.{max u1 u2, max u1 u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) m) (FreeProduct.Word.{u1, u2} ι (fun (i : ι) => M i) (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.instMulActionFreeProductWordInstMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b)))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (fun (_x : M i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))) (MulOneClass.toMul.{max u2 u1} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.monoidHomClass.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) m) (_private.Mathlib.GroupTheory.FreeProduct.0.FreeProduct.Word.mkAux.{u1, u2} ι (fun (i : ι) => M i) (fun (i : ι) => _inst_1 i) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i m) ls h1 h2))
-Case conversion may be inaccurate. Consider using '#align free_product.word.cons_eq_smul FreeProduct.Word.cons_eq_smulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cons_eq_smul {i} {m : M i} {ls h1 h2} :
     Word.mk (⟨i, m⟩::ls) h1 h2 = of m • mkAux ls h1 h2 := by
   rw [cons_eq_rcons, of_smul_def, equiv_pair_eq_of_fst_idx_ne _] <;> simp only [mul_one]
 #align free_product.word.cons_eq_smul FreeProduct.Word.cons_eq_smul
 
-/- warning: free_product.word.smul_induction -> FreeProduct.Word.smul_induction is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.word.smul_induction FreeProduct.Word.smul_inductionₓ'. -/
 theorem smul_induction {C : Word M → Prop} (h_empty : C empty)
     (h_smul : ∀ (i) (m : M i) (w), C w → C (of m • w)) (w : Word M) : C w :=
   by
@@ -533,12 +434,6 @@ theorem smul_induction {C : Word M → Prop} (h_empty : C empty)
   exact h_smul _ _ _ (ih _ _)
 #align free_product.word.smul_induction FreeProduct.Word.smul_induction
 
-/- warning: free_product.word.prod_smul -> FreeProduct.Word.prod_smul is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (M i)] [_inst_4 : DecidableEq.{succ u1} ι] (m : FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (w : FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)), Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (SMul.smul.{max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulAction.toHasSmul.{max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.mulAction.{u1, u2} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b))) m w)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))))) m (FreeProduct.Word.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) w))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (M i)] [_inst_4 : DecidableEq.{succ u2} ι] (m : FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (w : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)), Eq.{max (succ u1) (succ u2)} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (HSMul.hSMul.{max u2 u1, max u2 u1, max u1 u2} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instHSMul.{max u2 u1, max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulAction.toSMul.{max u2 u1, max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.Word.instMulActionFreeProductWordInstMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i) (fun (i : ι) (a : M i) (b : M i) => _inst_3 i a b) (fun (a : ι) (b : ι) => _inst_4 a b)))) m w)) (HMul.hMul.{max u2 u1, max u2 u1, max u1 u2} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))))) m (FreeProduct.Word.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) w))
-Case conversion may be inaccurate. Consider using '#align free_product.word.prod_smul FreeProduct.Word.prod_smulₓ'. -/
 @[simp]
 theorem prod_smul (m) : ∀ w : Word M, prod (m • w) = m * prod w :=
   by
@@ -599,12 +494,6 @@ def toList : ∀ {i j} (w : NeWord M i j), List (Σi, M i)
 #align free_product.neword.to_list FreeProduct.NeWord.toList
 -/
 
-/- warning: free_product.neword.to_list_ne_nil -> FreeProduct.NeWord.toList_ne_nil is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j), Ne.{succ (max u1 u2)} (List.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) (FreeProduct.NeWord.toList.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w) (List.nil.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j), Ne.{max (succ u2) (succ u1)} (List.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => M i))) (FreeProduct.NeWord.toList.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w) (List.nil.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.to_list_ne_nil FreeProduct.NeWord.toList_ne_nilₓ'. -/
 theorem toList_ne_nil {i j} (w : NeWord M i j) : w.toList ≠ List.nil := by induction w;
   · rintro ⟨rfl⟩; · apply List.append_ne_nil_of_ne_nil_left; assumption
 #align free_product.neword.to_list_ne_nil FreeProduct.NeWord.toList_ne_nil
@@ -627,12 +516,6 @@ def last : ∀ {i j} (w : NeWord M i j), M j
 #align free_product.neword.last FreeProduct.NeWord.last
 -/
 
-/- warning: free_product.neword.to_list_head' -> FreeProduct.NeWord.toList_head? is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) (List.head?.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (FreeProduct.NeWord.toList.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)) (Option.some.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) i (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i))) (List.head?.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)) (FreeProduct.NeWord.toList.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w)) (Option.some.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)) (Sigma.mk.{u2, u1} ι (fun (i : ι) => M i) i (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w)))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.to_list_head' FreeProduct.NeWord.toList_head?ₓ'. -/
 @[simp]
 theorem toList_head? {i j} (w : NeWord M i j) : w.toList.head? = Option.some ⟨i, w.headI⟩ :=
   by
@@ -642,12 +525,6 @@ theorem toList_head? {i j} (w : NeWord M i j) : w.toList.head? = Option.some ⟨
   · exact List.head?_append w_ih_w₁
 #align free_product.neword.to_list_head' FreeProduct.NeWord.toList_head?
 
-/- warning: free_product.neword.to_list_last' -> FreeProduct.NeWord.toList_getLast? is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i))) (List.getLast?.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (FreeProduct.NeWord.toList.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)) (Option.some.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => M i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => M i) j (FreeProduct.NeWord.last.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i))) (List.getLast?.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)) (FreeProduct.NeWord.toList.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w)) (Option.some.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => M i)) (Sigma.mk.{u2, u1} ι (fun (i : ι) => M i) j (FreeProduct.NeWord.last.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w)))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.to_list_last' FreeProduct.NeWord.toList_getLast?ₓ'. -/
 @[simp]
 theorem toList_getLast? {i j} (w : NeWord M i j) : w.toList.getLast? = Option.some ⟨j, w.getLast⟩ :=
   by
@@ -684,12 +561,6 @@ def toWord {i j} (w : NeWord M i j) : Word M
 #align free_product.neword.to_word FreeProduct.NeWord.toWord
 -/
 
-/- warning: free_product.neword.of_word -> FreeProduct.NeWord.of_word is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] (w : FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)), (Ne.{max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) w (FreeProduct.Word.empty.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) -> (Exists.{succ u1} ι (fun (i : ι) => Exists.{succ u1} ι (fun (j : ι) => Exists.{succ (max u1 u2)} (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) (fun (w' : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) => Eq.{max (succ u1) (succ u2)} (FreeProduct.Word.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.toWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w') w))))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] (w : FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)), (Ne.{max (succ u2) (succ u1)} (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) w (FreeProduct.Word.empty.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) -> (Exists.{succ u2} ι (fun (i : ι) => Exists.{succ u2} ι (fun (j : ι) => Exists.{max (succ u2) (succ u1)} (FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j) (fun (w' : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j) => Eq.{max (succ u2) (succ u1)} (FreeProduct.Word.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.toWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w') w))))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.of_word FreeProduct.NeWord.of_wordₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
 theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : NeWord M i j), w'.toWord = w :=
@@ -718,80 +589,38 @@ def prod {i j} (w : NeWord M i j) :=
 #align free_product.neword.prod FreeProduct.NeWord.prod
 -/
 
-/- warning: free_product.neword.singleton_head -> FreeProduct.NeWord.singleton_head is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} (x : M i) (hne_one : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))), Eq.{succ u2} (M i) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i i (FreeProduct.NeWord.singleton.{u1, u2} ι M (fun {i : ι} => _inst_1 i) i x hne_one)) x
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} (x : M i) (hne_one : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (One.toOfNat1.{u2} (M i) (Monoid.toOne.{u2} (M i) (_inst_1 i))))), Eq.{succ u2} (M i) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i i (FreeProduct.NeWord.singleton.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i x hne_one)) x
-Case conversion may be inaccurate. Consider using '#align free_product.neword.singleton_head FreeProduct.NeWord.singleton_headₓ'. -/
 @[simp]
 theorem singleton_head {i} (x : M i) (hne_one : x ≠ 1) : (singleton x hne_one).headI = x :=
   rfl
 #align free_product.neword.singleton_head FreeProduct.NeWord.singleton_head
 
-/- warning: free_product.neword.singleton_last -> FreeProduct.NeWord.singleton_last is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} (x : M i) (hne_one : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))), Eq.{succ u2} (M i) (FreeProduct.NeWord.last.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i i (FreeProduct.NeWord.singleton.{u1, u2} ι M (fun {i : ι} => _inst_1 i) i x hne_one)) x
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} (x : M i) (hne_one : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (One.toOfNat1.{u2} (M i) (Monoid.toOne.{u2} (M i) (_inst_1 i))))), Eq.{succ u2} (M i) (FreeProduct.NeWord.last.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i i (FreeProduct.NeWord.singleton.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i x hne_one)) x
-Case conversion may be inaccurate. Consider using '#align free_product.neword.singleton_last FreeProduct.NeWord.singleton_lastₓ'. -/
 @[simp]
 theorem singleton_last {i} (x : M i) (hne_one : x ≠ 1) : (singleton x hne_one).getLast = x :=
   rfl
 #align free_product.neword.singleton_last FreeProduct.NeWord.singleton_last
 
-/- warning: free_product.neword.prod_singleton -> FreeProduct.NeWord.prod_singleton is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} (x : M i) (hne_one : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))), Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i i (FreeProduct.NeWord.singleton.{u1, u2} ι M (fun {i : ι} => _inst_1 i) i x hne_one)) (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (fun (_x : MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) => (M i) -> (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) x)
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} (x : M i) (hne_one : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (One.toOfNat1.{u2} (M i) (Monoid.toOne.{u2} (M i) (_inst_1 i))))), Eq.{max (succ u1) (succ u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i i (FreeProduct.NeWord.singleton.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i x hne_one)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, max (succ u2) (succ u1)} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (fun (_x : M i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) _x) (MulHomClass.toFunLike.{max u2 u1, u2, max u2 u1} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))) (MulOneClass.toMul.{max u2 u1} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, max u2 u1} (MonoidHom.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.monoidHomClass.{u2, max u2 u1} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) x)
-Case conversion may be inaccurate. Consider using '#align free_product.neword.prod_singleton FreeProduct.NeWord.prod_singletonₓ'. -/
 @[simp]
 theorem prod_singleton {i} (x : M i) (hne_one : x ≠ 1) : (singleton x hne_one).Prod = of x := by
   simp [to_word, Prod, word.prod]
 #align free_product.neword.prod_singleton FreeProduct.NeWord.prod_singleton
 
-/- warning: free_product.neword.append_head -> FreeProduct.NeWord.append_head is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} {k : ι} {l : ι} {w₁ : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j} {hne : Ne.{succ u1} ι j k} {w₂ : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) k l}, Eq.{succ u2} (M i) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i l (FreeProduct.NeWord.append.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j k l w₁ hne w₂)) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w₁)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} {k : ι} {l : ι} {w₁ : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j} {hne : Ne.{succ u2} ι j k} {w₂ : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) k l}, Eq.{succ u1} (M i) (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i l (FreeProduct.NeWord.append.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j k l w₁ hne w₂)) (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w₁)
-Case conversion may be inaccurate. Consider using '#align free_product.neword.append_head FreeProduct.NeWord.append_headₓ'. -/
 @[simp]
 theorem append_head {i j k l} {w₁ : NeWord M i j} {hne : j ≠ k} {w₂ : NeWord M k l} :
     (append w₁ hne w₂).headI = w₁.headI :=
   rfl
 #align free_product.neword.append_head FreeProduct.NeWord.append_head
 
-/- warning: free_product.neword.append_last -> FreeProduct.NeWord.append_last is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} {k : ι} {l : ι} {w₁ : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j} {hne : Ne.{succ u1} ι j k} {w₂ : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) k l}, Eq.{succ u2} (M l) (FreeProduct.NeWord.last.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i l (FreeProduct.NeWord.append.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j k l w₁ hne w₂)) (FreeProduct.NeWord.last.{u1, u2} ι M (fun (i : ι) => _inst_1 i) k l w₂)
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} {k : ι} {l : ι} {w₁ : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j} {hne : Ne.{succ u2} ι j k} {w₂ : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) k l}, Eq.{succ u1} (M l) (FreeProduct.NeWord.last.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i l (FreeProduct.NeWord.append.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j k l w₁ hne w₂)) (FreeProduct.NeWord.last.{u2, u1} ι M (fun (i : ι) => _inst_1 i) k l w₂)
-Case conversion may be inaccurate. Consider using '#align free_product.neword.append_last FreeProduct.NeWord.append_lastₓ'. -/
 @[simp]
 theorem append_last {i j k l} {w₁ : NeWord M i j} {hne : j ≠ k} {w₂ : NeWord M k l} :
     (append w₁ hne w₂).getLast = w₂.getLast :=
   rfl
 #align free_product.neword.append_last FreeProduct.NeWord.append_last
 
-/- warning: free_product.neword.append_prod -> FreeProduct.NeWord.append_prod is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} {k : ι} {l : ι} {w₁ : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j} {hne : Ne.{succ u1} ι j k} {w₂ : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) k l}, Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i l (FreeProduct.NeWord.append.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j k l w₁ hne w₂)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))))) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w₁) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) k l w₂))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} {k : ι} {l : ι} {w₁ : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j} {hne : Ne.{succ u2} ι j k} {w₂ : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) k l}, Eq.{max (succ u2) (succ u1)} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i l (FreeProduct.NeWord.append.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j k l w₁ hne w₂)) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))))) (FreeProduct.NeWord.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w₁) (FreeProduct.NeWord.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) k l w₂))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.append_prod FreeProduct.NeWord.append_prodₓ'. -/
 @[simp]
 theorem append_prod {i j k l} {w₁ : NeWord M i j} {hne : j ≠ k} {w₂ : NeWord M k l} :
     (append w₁ hne w₂).Prod = w₁.Prod * w₂.Prod := by simp [to_word, Prod, word.prod]
 #align free_product.neword.append_prod FreeProduct.NeWord.append_prod
 
-/- warning: free_product.neword.replace_head -> FreeProduct.NeWord.replaceHead is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (x : M i), (Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))) -> (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) -> (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j)
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (x : M i), (Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (One.toOfNat1.{u2} (M i) (Monoid.toOne.{u2} (M i) (_inst_1 i))))) -> (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) -> (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j)
-Case conversion may be inaccurate. Consider using '#align free_product.neword.replace_head FreeProduct.NeWord.replaceHeadₓ'. -/
 /-- One can replace the first letter in a non-empty reduced word by an element of the same
 group -/
 def replaceHead : ∀ {i j : ι} (x : M i) (hnotone : x ≠ 1) (w : NeWord M i j), NeWord M i j
@@ -799,46 +628,22 @@ def replaceHead : ∀ {i j : ι} (x : M i) (hnotone : x ≠ 1) (w : NeWord M i j
   | _, _, x, h, append w₁ hne w₂ => append (replace_head x h w₁) hne w₂
 #align free_product.neword.replace_head FreeProduct.NeWord.replaceHead
 
-/- warning: free_product.neword.replace_head_head -> FreeProduct.NeWord.replaceHead_head is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (x : M i) (hnotone : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))) (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j), Eq.{succ u2} (M i) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j (FreeProduct.NeWord.replaceHead.{u1, u2} ι M (fun {i : ι} => _inst_1 i) i j x hnotone w)) x
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (x : M i) (hnotone : Ne.{succ u2} (M i) x (OfNat.ofNat.{u2} (M i) 1 (One.toOfNat1.{u2} (M i) (Monoid.toOne.{u2} (M i) (_inst_1 i))))) (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j), Eq.{succ u2} (M i) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j (FreeProduct.NeWord.replaceHead.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j x hnotone w)) x
-Case conversion may be inaccurate. Consider using '#align free_product.neword.replace_head_head FreeProduct.NeWord.replaceHead_headₓ'. -/
 @[simp]
 theorem replaceHead_head {i j : ι} (x : M i) (hnotone : x ≠ 1) (w : NeWord M i j) :
     (replaceHead x hnotone w).headI = x := by induction w; rfl; exact w_ih_w₁ _ _
 #align free_product.neword.replace_head_head FreeProduct.NeWord.replaceHead_head
 
-/- warning: free_product.neword.mul_head -> FreeProduct.NeWord.mulHead is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) (x : M i), (Ne.{succ u2} (M i) (HMul.hMul.{u2, u2, u2} (M i) (M i) (M i) (instHMul.{u2} (M i) (MulOneClass.toHasMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)) (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))) -> (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j)
-but is expected to have type
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) (x : M i), (Ne.{succ u2} (M i) (HMul.hMul.{u2, u2, u2} (M i) (M i) (M i) (instHMul.{u2} (M i) (MulOneClass.toMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)) (OfNat.ofNat.{u2} (M i) 1 (One.toOfNat1.{u2} (M i) (Monoid.toOne.{u2} (M i) (_inst_1 i))))) -> (FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j)
-Case conversion may be inaccurate. Consider using '#align free_product.neword.mul_head FreeProduct.NeWord.mulHeadₓ'. -/
 /-- One can multiply an element from the left to a non-empty reduced word if it does not cancel
 with the first element in the word. -/
 def mulHead {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.headI ≠ 1) : NeWord M i j :=
   replaceHead (x * w.headI) hnotone w
 #align free_product.neword.mul_head FreeProduct.NeWord.mulHead
 
-/- warning: free_product.neword.mul_head_head -> FreeProduct.NeWord.mulHead_head is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) (x : M i) (hnotone : Ne.{succ u2} (M i) (HMul.hMul.{u2, u2, u2} (M i) (M i) (M i) (instHMul.{u2} (M i) (MulOneClass.toHasMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)) (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))), Eq.{succ u2} (M i) (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j (FreeProduct.NeWord.mulHead.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w x hnotone)) (HMul.hMul.{u2, u2, u2} (M i) (M i) (M i) (instHMul.{u2} (M i) (MulOneClass.toHasMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j) (x : M i) (hnotone : Ne.{succ u1} (M i) (HMul.hMul.{u1, u1, u1} (M i) (M i) (M i) (instHMul.{u1} (M i) (MulOneClass.toMul.{u1} (M i) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w)) (OfNat.ofNat.{u1} (M i) 1 (One.toOfNat1.{u1} (M i) (Monoid.toOne.{u1} (M i) (_inst_1 i))))), Eq.{succ u1} (M i) (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j (FreeProduct.NeWord.mulHead.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w x hnotone)) (HMul.hMul.{u1, u1, u1} (M i) (M i) (M i) (instHMul.{u1} (M i) (MulOneClass.toMul.{u1} (M i) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.mul_head_head FreeProduct.NeWord.mulHead_headₓ'. -/
 @[simp]
 theorem mulHead_head {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.headI ≠ 1) :
     (mulHead w x hnotone).headI = x * w.headI := by induction w; rfl; exact w_ih_w₁ _ _
 #align free_product.neword.mul_head_head FreeProduct.NeWord.mulHead_head
 
-/- warning: free_product.neword.mul_head_prod -> FreeProduct.NeWord.mulHead_prod is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Monoid.{u2} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j) (x : M i) (hnotone : Ne.{succ u2} (M i) (HMul.hMul.{u2, u2, u2} (M i) (M i) (M i) (instHMul.{u2} (M i) (MulOneClass.toHasMul.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w)) (OfNat.ofNat.{u2} (M i) 1 (OfNat.mk.{u2} (M i) 1 (One.one.{u2} (M i) (MulOneClass.toHasOne.{u2} (M i) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i))))))), Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j (FreeProduct.NeWord.mulHead.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w x hnotone)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (instHMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toHasMul.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i))))) (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (fun (_x : MonoidHom.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) => (M i) -> (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (M i) (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u2} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u1 u2} (FreeProduct.{u1, u2} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.monoid.{u1, u2} ι M (fun (i : ι) => _inst_1 i)))) (FreeProduct.of.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i) x) (FreeProduct.NeWord.prod.{u1, u2} ι M (fun (i : ι) => _inst_1 i) i j w))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Monoid.{u1} (M i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j) (x : M i) (hnotone : Ne.{succ u1} (M i) (HMul.hMul.{u1, u1, u1} (M i) (M i) (M i) (instHMul.{u1} (M i) (MulOneClass.toMul.{u1} (M i) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)))) x (FreeProduct.NeWord.head.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w)) (OfNat.ofNat.{u1} (M i) 1 (One.toOfNat1.{u1} (M i) (Monoid.toOne.{u1} (M i) (_inst_1 i))))), Eq.{max (succ u2) (succ u1)} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (FreeProduct.NeWord.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j (FreeProduct.NeWord.mulHead.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w x hnotone)) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) x) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) x) (instHMul.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) x) (MulOneClass.toMul.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) x) (Monoid.toMulOneClass.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) x) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, max (succ u1) (succ u2)} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (fun (_x : M i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M i) => FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) _x) (MulHomClass.toFunLike.{max u1 u2, u1, max u1 u2} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (MulOneClass.toMul.{u1} (M i) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i))) (MulOneClass.toMul.{max u1 u2} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, max u1 u2} (MonoidHom.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))) (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i))) (MonoidHom.monoidHomClass.{u1, max u1 u2} (M i) (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (Monoid.toMulOneClass.{u1} (M i) (_inst_1 i)) (Monoid.toMulOneClass.{max u2 u1} (FreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)) (instMonoidFreeProduct.{u2, u1} ι M (fun (i : ι) => _inst_1 i)))))) (FreeProduct.of.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i) x) (FreeProduct.NeWord.prod.{u2, u1} ι M (fun (i : ι) => _inst_1 i) i j w))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.mul_head_prod FreeProduct.NeWord.mulHead_prodₓ'. -/
 @[simp]
 theorem mulHead_prod {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.headI ≠ 1) :
     (mulHead w x hnotone).Prod = of x * w.Prod :=
@@ -863,34 +668,16 @@ def inv : ∀ {i j} (w : NeWord G i j), NeWord G j i
 #align free_product.neword.inv FreeProduct.NeWord.inv
 -/
 
-/- warning: free_product.neword.inv_prod -> FreeProduct.NeWord.inv_prod is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {G : ι -> Type.{u2}} [_inst_3 : forall (i : ι), Group.{u2} (G i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) i j), Eq.{succ (max u1 u2)} (FreeProduct.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i)))) (FreeProduct.NeWord.prod.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) j i (FreeProduct.NeWord.inv.{u1, u2} ι G (fun (i : ι) => _inst_3 i) i j w)) (Inv.inv.{max u1 u2} (FreeProduct.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i)))) (FreeProduct.hasInv.{u1, u2} ι G (fun (i : ι) => _inst_3 i)) (FreeProduct.NeWord.prod.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) i j w))
-but is expected to have type
-  forall {ι : Type.{u2}} {G : ι -> Type.{u1}} [_inst_3 : forall (i : ι), Group.{u1} (G i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) i j), Eq.{max (succ u2) (succ u1)} (FreeProduct.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i)))) (FreeProduct.NeWord.prod.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) j i (FreeProduct.NeWord.inv.{u2, u1} ι G (fun (i : ι) => _inst_3 i) i j w)) (Inv.inv.{max u2 u1} (FreeProduct.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i)))) (FreeProduct.instInvFreeProductToMonoidToDivInvMonoid.{u2, u1} ι G (fun (i : ι) => _inst_3 i)) (FreeProduct.NeWord.prod.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) i j w))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.inv_prod FreeProduct.NeWord.inv_prodₓ'. -/
 @[simp]
 theorem inv_prod {i j} (w : NeWord G i j) : w.inv.Prod = w.Prod⁻¹ := by
   induction w <;> simp [inv, *]
 #align free_product.neword.inv_prod FreeProduct.NeWord.inv_prod
 
-/- warning: free_product.neword.inv_head -> FreeProduct.NeWord.inv_head is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {G : ι -> Type.{u2}} [_inst_3 : forall (i : ι), Group.{u2} (G i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) i j), Eq.{succ u2} (G j) (FreeProduct.NeWord.head.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) j i (FreeProduct.NeWord.inv.{u1, u2} ι G (fun (i : ι) => _inst_3 i) i j w)) (Inv.inv.{u2} (G j) (DivInvMonoid.toHasInv.{u2} (G j) (Group.toDivInvMonoid.{u2} (G j) (_inst_3 j))) (FreeProduct.NeWord.last.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) i j w))
-but is expected to have type
-  forall {ι : Type.{u2}} {G : ι -> Type.{u1}} [_inst_3 : forall (i : ι), Group.{u1} (G i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) i j), Eq.{succ u1} (G j) (FreeProduct.NeWord.head.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) j i (FreeProduct.NeWord.inv.{u2, u1} ι G (fun (i : ι) => _inst_3 i) i j w)) (Inv.inv.{u1} (G j) (InvOneClass.toInv.{u1} (G j) (DivInvOneMonoid.toInvOneClass.{u1} (G j) (DivisionMonoid.toDivInvOneMonoid.{u1} (G j) (Group.toDivisionMonoid.{u1} (G j) (_inst_3 j))))) (FreeProduct.NeWord.last.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) i j w))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.inv_head FreeProduct.NeWord.inv_headₓ'. -/
 @[simp]
 theorem inv_head {i j} (w : NeWord G i j) : w.inv.headI = w.getLast⁻¹ := by
   induction w <;> simp [inv, *]
 #align free_product.neword.inv_head FreeProduct.NeWord.inv_head
 
-/- warning: free_product.neword.inv_last -> FreeProduct.NeWord.inv_last is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {G : ι -> Type.{u2}} [_inst_3 : forall (i : ι), Group.{u2} (G i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) i j), Eq.{succ u2} (G i) (FreeProduct.NeWord.last.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) j i (FreeProduct.NeWord.inv.{u1, u2} ι G (fun (i : ι) => _inst_3 i) i j w)) (Inv.inv.{u2} (G i) (DivInvMonoid.toHasInv.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) (FreeProduct.NeWord.head.{u1, u2} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u2} (G i) (Group.toDivInvMonoid.{u2} (G i) (_inst_3 i))) i j w))
-but is expected to have type
-  forall {ι : Type.{u2}} {G : ι -> Type.{u1}} [_inst_3 : forall (i : ι), Group.{u1} (G i)] {i : ι} {j : ι} (w : FreeProduct.NeWord.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) i j), Eq.{succ u1} (G i) (FreeProduct.NeWord.last.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) j i (FreeProduct.NeWord.inv.{u2, u1} ι G (fun (i : ι) => _inst_3 i) i j w)) (Inv.inv.{u1} (G i) (InvOneClass.toInv.{u1} (G i) (DivInvOneMonoid.toInvOneClass.{u1} (G i) (DivisionMonoid.toDivInvOneMonoid.{u1} (G i) (Group.toDivisionMonoid.{u1} (G i) (_inst_3 i))))) (FreeProduct.NeWord.head.{u2, u1} ι G (fun (i : ι) => DivInvMonoid.toMonoid.{u1} (G i) (Group.toDivInvMonoid.{u1} (G i) (_inst_3 i))) i j w))
-Case conversion may be inaccurate. Consider using '#align free_product.neword.inv_last FreeProduct.NeWord.inv_lastₓ'. -/
 @[simp]
 theorem inv_last {i j} (w : NeWord G i j) : w.inv.getLast = w.headI⁻¹ := by
   induction w <;> simp [inv, *]
@@ -930,9 +717,6 @@ variable (hpp : Pairwise fun i j => ∀ h : H i, h ≠ 1 → f i h • X j ⊆ X
 
 include hpp
 
-/- warning: free_product.lift_word_ping_pong -> FreeProduct.lift_word_ping_pong is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_word_ping_pong FreeProduct.lift_word_ping_pongₓ'. -/
 theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) : lift f w.Prod • X k ⊆ X i :=
   by
   rename' i => i', j => j', k => m, hk => hm
@@ -949,9 +733,6 @@ theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) : lift f w
 
 include X hXnonempty hXdisj
 
-/- warning: free_product.lift_word_prod_nontrivial_of_other_i -> FreeProduct.lift_word_prod_nontrivial_of_other_i is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_word_prod_nontrivial_of_other_i FreeProduct.lift_word_prod_nontrivial_of_other_iₓ'. -/
 theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : NeWord H i j) (hhead : k ≠ i)
     (hlast : k ≠ j) : lift f w.Prod ≠ 1 := by
   intro heq1
@@ -962,18 +743,12 @@ theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : NeWord H i j) (hhead :
 
 include hnontriv
 
-/- warning: free_product.lift_word_prod_nontrivial_of_head_eq_last -> FreeProduct.lift_word_prod_nontrivial_of_head_eq_last is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_word_prod_nontrivial_of_head_eq_last FreeProduct.lift_word_prod_nontrivial_of_head_eq_lastₓ'. -/
 theorem lift_word_prod_nontrivial_of_head_eq_last {i} (w : NeWord H i i) : lift f w.Prod ≠ 1 :=
   by
   obtain ⟨k, hk⟩ := exists_ne i
   exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w hk hk
 #align free_product.lift_word_prod_nontrivial_of_head_eq_last FreeProduct.lift_word_prod_nontrivial_of_head_eq_last
 
-/- warning: free_product.lift_word_prod_nontrivial_of_head_card -> FreeProduct.lift_word_prod_nontrivial_of_head_card is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_word_prod_nontrivial_of_head_card FreeProduct.lift_word_prod_nontrivial_of_head_cardₓ'. -/
 theorem lift_word_prod_nontrivial_of_head_card {i j} (w : NeWord H i j) (hcard : 3 ≤ (#H i))
     (hheadtail : i ≠ j) : lift f w.Prod ≠ 1 :=
   by
@@ -989,9 +764,6 @@ theorem lift_word_prod_nontrivial_of_head_card {i j} (w : NeWord H i j) (hcard :
 
 include hcard
 
-/- warning: free_product.lift_word_prod_nontrivial_of_not_empty -> FreeProduct.lift_word_prod_nontrivial_of_not_empty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_word_prod_nontrivial_of_not_empty FreeProduct.lift_word_prod_nontrivial_of_not_emptyₓ'. -/
 theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f w.Prod ≠ 1 := by
   classical
     cases hcard
@@ -1020,9 +792,6 @@ theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f
         intro heq1; apply hw'; simp [w', heq1]
 #align free_product.lift_word_prod_nontrivial_of_not_empty FreeProduct.lift_word_prod_nontrivial_of_not_empty
 
-/- warning: free_product.empty_of_word_prod_eq_one -> FreeProduct.empty_of_word_prod_eq_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.empty_of_word_prod_eq_one FreeProduct.empty_of_word_prod_eq_oneₓ'. -/
 theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = Word.empty :=
   by
   by_contra hnotempty
@@ -1030,9 +799,6 @@ theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = Wor
   exact lift_word_prod_nontrivial_of_not_empty f hcard X hXnonempty hXdisj hpp w h
 #align free_product.empty_of_word_prod_eq_one FreeProduct.empty_of_word_prod_eq_one
 
-/- warning: free_product.lift_injective_of_ping_pong -> FreeProduct.lift_injective_of_ping_pong is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_product.lift_injective_of_ping_pong FreeProduct.lift_injective_of_ping_pongₓ'. -/
 /-- The Ping-Pong-Lemma.
 
 Given a group action of `G` on `X` so that the `H i` acts in a specific way on disjoint subsets
@@ -1074,12 +840,6 @@ instance {ι : Type _} (G : ι → Type _) [∀ i, Group (G i)] [hG : ∀ i, IsF
           G i →* FreeGroup (Σi, IsFreeGroup.Generators (G i))))
       (by ext; simp) (by ext; simp)
 
-/- warning: free_group_equiv_free_product -> freeGroupEquivFreeProduct is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}}, MulEquiv.{u1, u1} (FreeGroup.{u1} ι) (FreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} (FreeGroup.{0} Unit) (Group.toDivInvMonoid.{0} (FreeGroup.{0} Unit) (FreeGroup.group.{0} Unit)))) (FreeGroup.hasMul.{u1} ι) (MulOneClass.toHasMul.{u1} (FreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} (FreeGroup.{0} Unit) (Group.toDivInvMonoid.{0} (FreeGroup.{0} Unit) (FreeGroup.group.{0} Unit)))) (Monoid.toMulOneClass.{u1} (FreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} (FreeGroup.{0} Unit) (Group.toDivInvMonoid.{0} (FreeGroup.{0} Unit) (FreeGroup.group.{0} Unit)))) (FreeProduct.monoid.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} (FreeGroup.{0} Unit) (Group.toDivInvMonoid.{0} (FreeGroup.{0} Unit) (FreeGroup.group.{0} Unit))))))
-but is expected to have type
-  forall {ι : Type.{u1}}, MulEquiv.{u1, u1} (FreeGroup.{u1} ι) (FreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (Group.toDivInvMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (FreeGroup.instGroupFreeGroup.{0} Unit)))) (FreeGroup.instMulFreeGroup.{u1} ι) (MulOneClass.toMul.{u1} (FreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (Group.toDivInvMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (FreeGroup.instGroupFreeGroup.{0} Unit)))) (Monoid.toMulOneClass.{u1} (FreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (Group.toDivInvMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (FreeGroup.instGroupFreeGroup.{0} Unit)))) (instMonoidFreeProduct.{u1, 0} ι (fun (_x : ι) => FreeGroup.{0} Unit) (fun (i : ι) => DivInvMonoid.toMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (Group.toDivInvMonoid.{0} ((fun (x._@.Mathlib.GroupTheory.FreeProduct._hyg.10093 : ι) => FreeGroup.{0} Unit) i) (FreeGroup.instGroupFreeGroup.{0} Unit))))))
-Case conversion may be inaccurate. Consider using '#align free_group_equiv_free_product freeGroupEquivFreeProductₓ'. -/
 -- NB: One might expect this theorem to be phrased with ℤ, but ℤ is an additive group,
 -- and using `multiplicative ℤ` runs into diamond issues.
 /-- A free group is a free product of copies of the free_group over one generator. -/
@@ -1121,9 +881,6 @@ variable (hY : ∀ i, a⁻¹ i • X iᶜ ⊆ Y i)
 
 include hXnonempty hXdisj hYdisj hXYdisj hX hY
 
-/- warning: free_group.injective_lift_of_ping_pong -> FreeGroup.injective_lift_of_ping_pong is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align free_group.injective_lift_of_ping_pong FreeGroup.injective_lift_of_ping_pongₓ'. -/
 /-- The Ping-Pong-Lemma.
 
 Given a group action of `G` on `X` so that the generators of the free groups act in specific

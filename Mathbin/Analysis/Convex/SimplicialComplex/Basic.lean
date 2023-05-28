@@ -106,9 +106,6 @@ protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.space :=
 #align geometry.simplicial_complex.subset_space Geometry.SimplicialComplex.subset_space
 -/
 
-/- warning: geometry.simplicial_complex.convex_hull_inter_convex_hull -> Geometry.SimplicialComplex.convexHull_inter_convexHull is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convexHull_inter_convexHullₓ'. -/
 theorem convexHull_inter_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t = convexHull 𝕜 (s ∩ t : Set E) :=
   (K.inter_subset_convexHull hs ht).antisymm <|
@@ -116,9 +113,6 @@ theorem convexHull_inter_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
       convexHull_mono <| Set.inter_subset_right _ _
 #align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convexHull_inter_convexHull
 
-/- warning: geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull -> Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHullₓ'. -/
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
@@ -138,9 +132,6 @@ theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ 
     · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
 #align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull
 
-/- warning: geometry.simplicial_complex.of_erase -> Geometry.SimplicialComplex.ofErase is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align geometry.simplicial_complex.of_erase Geometry.SimplicialComplex.ofEraseₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s t «expr ∈ » faces) -/
 /-- Construct a simplicial complex by removing the empty face for you. -/

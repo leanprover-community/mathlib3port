@@ -154,12 +154,6 @@ theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : rcomap r ∘ rcomap s =
 #align filter.rcomap_compose Filter.rcomap_compose
 -/
 
-/- warning: filter.rtendsto_iff_le_rcomap -> Filter.rtendsto_iff_le_rcomap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β), Iff (Filter.Rtendsto.{u1, u2} α β r l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ (Filter.rcomap.{u1, u2} α β r l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β), Iff (Filter.Rtendsto.{u1, u2} α β r l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ (Filter.rcomap.{u1, u2} α β r l₂))
-Case conversion may be inaccurate. Consider using '#align filter.rtendsto_iff_le_rcomap Filter.rtendsto_iff_le_rcomapₓ'. -/
 theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
     Rtendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r :=
   by
@@ -187,12 +181,6 @@ def rcomap' (r : Rel α β) (f : Filter β) : Filter α
 #align filter.rcomap' Filter.rcomap'
 -/
 
-/- warning: filter.mem_rcomap' -> Filter.mem_rcomap' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l : Filter.{u2} β) (s : Set.{u1} α), Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.rcomap'.{u1, u2} α β r l)) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t l) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t l) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Rel.preimage.{u1, u2} α β r t) s)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l : Filter.{u2} β) (s : Set.{u1} α), Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.rcomap'.{u1, u2} α β r l)) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t l) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Rel.preimage.{u1, u2} α β r t) s)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_rcomap' Filter.mem_rcomap'ₓ'. -/
 @[simp]
 theorem mem_rcomap' (r : Rel α β) (l : Filter β) (s : Set α) :
     s ∈ l.rcomap' r ↔ ∃ t ∈ l, r.Preimage t ⊆ s :=
@@ -300,12 +288,6 @@ theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →.
 #align filter.ptendsto_iff_rtendsto Filter.ptendsto_iff_rtendsto
 -/
 
-/- warning: filter.pmap_res -> Filter.pmap_res is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : Filter.{u1} α) (s : Set.{u1} α) (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.pmap.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : Filter.{u1} α) (s : Set.{u1} α) (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.pmap.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align filter.pmap_res Filter.pmap_resₓ'. -/
 theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (PFun.res f s) l = map f (l ⊓ 𝓟 s) :=
   by
   ext t
@@ -313,12 +295,6 @@ theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (PFun.res f
   rfl
 #align filter.pmap_res Filter.pmap_res
 
-/- warning: filter.tendsto_iff_ptendsto -> Filter.tendsto_iff_ptendsto is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β) (s : Set.{u1} α) (f : α -> β), Iff (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) (Filter.Ptendsto.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β) (s : Set.{u1} α) (f : α -> β), Iff (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) (Filter.Ptendsto.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendstoₓ'. -/
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
     Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (PFun.res f s) l₁ l₂ := by
   simp only [tendsto, ptendsto, pmap_res]

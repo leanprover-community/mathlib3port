@@ -53,9 +53,6 @@ variable [∀ i₂, AddCommGroup (M₂ i₂)] [AddCommGroup M₂']
 
 variable [∀ i₁, Module R (M₁ i₁)] [Module R M₁'] [∀ i₂, Module R (M₂ i₂)] [Module R M₂']
 
-/- warning: tensor_product.direct_sum -> TensorProduct.directSum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum TensorProduct.directSumₓ'. -/
 /-- The linear equivalence `(⨁ i₁, M₁ i₁) ⊗ (⨁ i₂, M₂ i₂) ≃ (⨁ i₁, ⨁ i₂, M₁ i₁ ⊗ M₂ i₂)`, i.e.
 "tensor product distributes over direct sum". -/
 protected def directSum :
@@ -76,9 +73,6 @@ protected def directSum :
       |rw [compr₂_apply]|rw [comp_apply]|rw [id_apply]|rw [mk_apply]|rw [DirectSum.toModule_lof]|rw [map_tmul]|rw [lift.tmul]|rw [flip_apply]|rw [curry_apply]
 #align tensor_product.direct_sum TensorProduct.directSum
 
-/- warning: tensor_product.direct_sum_left -> TensorProduct.directSumLeft is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_left TensorProduct.directSumLeftₓ'. -/
 /-- Tensor products distribute over a direct sum on the left . -/
 def directSumLeft : (⨁ i₁, M₁ i₁) ⊗[R] M₂' ≃ₗ[R] ⨁ i, M₁ i ⊗[R] M₂' :=
   LinearEquiv.ofLinear
@@ -102,9 +96,6 @@ def directSumLeft : (⨁ i₁, M₁ i₁) ⊗[R] M₂' ≃ₗ[R] ⨁ i, M₁ i �
             mk_apply, DirectSum.toModule_lof, rtensor_tmul])
 #align tensor_product.direct_sum_left TensorProduct.directSumLeft
 
-/- warning: tensor_product.direct_sum_right -> TensorProduct.directSumRight is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_right TensorProduct.directSumRightₓ'. -/
 /-- Tensor products distribute over a direct sum on the right. -/
 def directSumRight : (M₁' ⊗[R] ⨁ i, M₂ i) ≃ₗ[R] ⨁ i, M₁' ⊗[R] M₂ i :=
   TensorProduct.comm R _ _ ≪≫ₗ directSumLeft R M₂ M₁' ≪≫ₗ
@@ -113,9 +104,6 @@ def directSumRight : (M₁' ⊗[R] ⨁ i, M₂ i) ≃ₗ[R] ⨁ i, M₁' ⊗[R] 
 
 variable {M₁ M₁' M₂ M₂'}
 
-/- warning: tensor_product.direct_sum_lof_tmul_lof -> TensorProduct.directSum_lof_tmul_lof is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_lof_tmul_lof TensorProduct.directSum_lof_tmul_lofₓ'. -/
 @[simp]
 theorem directSum_lof_tmul_lof (i₁ : ι₁) (m₁ : M₁ i₁) (i₂ : ι₂) (m₂ : M₂ i₂) :
     TensorProduct.directSum R M₁ M₂ (DirectSum.lof R ι₁ M₁ i₁ m₁ ⊗ₜ DirectSum.lof R ι₂ M₂ i₂ m₂) =
@@ -123,9 +111,6 @@ theorem directSum_lof_tmul_lof (i₁ : ι₁) (m₁ : M₁ i₁) (i₂ : ι₂) 
   by simp [TensorProduct.directSum]
 #align tensor_product.direct_sum_lof_tmul_lof TensorProduct.directSum_lof_tmul_lof
 
-/- warning: tensor_product.direct_sum_left_tmul_lof -> TensorProduct.directSumLeft_tmul_lof is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_left_tmul_lof TensorProduct.directSumLeft_tmul_lofₓ'. -/
 @[simp]
 theorem directSumLeft_tmul_lof (i : ι₁) (x : M₁ i) (y : M₂') :
     directSumLeft R M₁ M₂' (DirectSum.lof R _ _ i x ⊗ₜ[R] y) = DirectSum.lof R _ _ i (x ⊗ₜ[R] y) :=
@@ -135,9 +120,6 @@ theorem directSumLeft_tmul_lof (i : ι₁) (x : M₁ i) (y : M₂') :
   rfl
 #align tensor_product.direct_sum_left_tmul_lof TensorProduct.directSumLeft_tmul_lof
 
-/- warning: tensor_product.direct_sum_left_symm_lof_tmul -> TensorProduct.directSumLeft_symm_lof_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_left_symm_lof_tmul TensorProduct.directSumLeft_symm_lof_tmulₓ'. -/
 @[simp]
 theorem directSumLeft_symm_lof_tmul (i : ι₁) (x : M₁ i) (y : M₂') :
     (directSumLeft R M₁ M₂').symm (DirectSum.lof R _ _ i (x ⊗ₜ[R] y)) =
@@ -145,9 +127,6 @@ theorem directSumLeft_symm_lof_tmul (i : ι₁) (x : M₁ i) (y : M₂') :
   by rw [LinearEquiv.symm_apply_eq, direct_sum_left_tmul_lof]
 #align tensor_product.direct_sum_left_symm_lof_tmul TensorProduct.directSumLeft_symm_lof_tmul
 
-/- warning: tensor_product.direct_sum_right_tmul_lof -> TensorProduct.directSumRight_tmul_lof is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_right_tmul_lof TensorProduct.directSumRight_tmul_lofₓ'. -/
 @[simp]
 theorem directSumRight_tmul_lof (x : M₁') (i : ι₂) (y : M₂ i) :
     directSumRight R M₁' M₂ (x ⊗ₜ[R] DirectSum.lof R _ _ i y) = DirectSum.lof R _ _ i (x ⊗ₜ[R] y) :=
@@ -157,9 +136,6 @@ theorem directSumRight_tmul_lof (x : M₁') (i : ι₂) (y : M₂ i) :
   exact Dfinsupp.mapRange_single
 #align tensor_product.direct_sum_right_tmul_lof TensorProduct.directSumRight_tmul_lof
 
-/- warning: tensor_product.direct_sum_right_symm_lof_tmul -> TensorProduct.directSumRight_symm_lof_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.direct_sum_right_symm_lof_tmul TensorProduct.directSumRight_symm_lof_tmulₓ'. -/
 @[simp]
 theorem directSumRight_symm_lof_tmul (x : M₁') (i : ι₂) (y : M₂ i) :
     (directSumRight R M₁' M₂).symm (DirectSum.lof R _ _ i (x ⊗ₜ[R] y)) =

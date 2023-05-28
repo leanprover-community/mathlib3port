@@ -112,12 +112,6 @@ namespace Filter
 
 variable {α : Type u} {f g : Filter α} {s t : Set α}
 
-/- warning: filter.mem_mk -> Filter.mem_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} (Set.{u1} α)} {h₁ : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (Set.univ.{u1} α) t} {h₂ : forall {x : Set.{u1} α} {y : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) x y) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) y t)} {h₃ : forall {x : Set.{u1} α} {y : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x t) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) y t) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) x y) t)}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.mk.{u1} α t h₁ h₂ h₃)) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} (Set.{u1} α)} {h₁ : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Set.univ.{u1} α) t} {h₂ : forall {x : Set.{u1} α} {y : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) x y) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) y t)} {h₃ : forall {x : Set.{u1} α} {y : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x t) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) y t) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x y) t)}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.mk.{u1} α t h₁ h₂ h₃)) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s t)
-Case conversion may be inaccurate. Consider using '#align filter.mem_mk Filter.mem_mkₓ'. -/
 @[simp]
 protected theorem mem_mk {t : Set (Set α)} {h₁ h₂ h₃} : s ∈ mk t h₁ h₂ h₃ ↔ s ∈ t :=
   Iff.rfl
@@ -161,12 +155,6 @@ protected theorem ext : (∀ s, s ∈ f ↔ s ∈ g) → f = g :=
 #align filter.ext Filter.ext
 -/
 
-/- warning: filter.coext -> Filter.coext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (forall (s : Set.{u1} α), Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) g)) -> (Eq.{succ u1} (Filter.{u1} α) f g)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (forall (s : Set.{u1} α), Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) f) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) g)) -> (Eq.{succ u1} (Filter.{u1} α) f g)
-Case conversion may be inaccurate. Consider using '#align filter.coext Filter.coextₓ'. -/
 /-- An extensionality lemma that is useful for filters with good lemmas about `sᶜ ∈ f` (e.g.,
 `filter.comap`, `filter.coprod`, `filter.Coprod`, `filter.cofinite`). -/
 protected theorem coext (h : ∀ s, sᶜ ∈ f ↔ sᶜ ∈ g) : f = g :=
@@ -186,34 +174,16 @@ theorem mem_of_superset {x y : Set α} (hx : x ∈ f) (hxy : x ⊆ y) : y ∈ f 
 #align filter.mem_of_superset Filter.mem_of_superset
 -/
 
-/- warning: filter.inter_mem -> Filter.inter_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) f)
-Case conversion may be inaccurate. Consider using '#align filter.inter_mem Filter.inter_memₓ'. -/
 theorem inter_mem {s t : Set α} (hs : s ∈ f) (ht : t ∈ f) : s ∩ t ∈ f :=
   f.inter_sets hs ht
 #align filter.inter_mem Filter.inter_mem
 
-/- warning: filter.inter_mem_iff -> Filter.inter_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) f) (And (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) f) (And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f))
-Case conversion may be inaccurate. Consider using '#align filter.inter_mem_iff Filter.inter_mem_iffₓ'. -/
 @[simp]
 theorem inter_mem_iff {s t : Set α} : s ∩ t ∈ f ↔ s ∈ f ∧ t ∈ f :=
   ⟨fun h => ⟨mem_of_superset h (inter_subset_left s t), mem_of_superset h (inter_subset_right s t)⟩,
     and_imp.2 inter_mem⟩
 #align filter.inter_mem_iff Filter.inter_mem_iff
 
-/- warning: filter.diff_mem -> Filter.diff_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) f)
-Case conversion may be inaccurate. Consider using '#align filter.diff_mem Filter.diff_memₓ'. -/
 theorem diff_mem {s t : Set α} (hs : s ∈ f) (ht : tᶜ ∈ f) : s \ t ∈ f :=
   inter_mem hs ht
 #align filter.diff_mem Filter.diff_mem
@@ -272,32 +242,14 @@ theorem iInter_mem {β : Type v} {s : β → Set α} [Finite β] : (⋂ i, s i) 
 #align filter.Inter_mem Filter.iInter_mem
 -/
 
-/- warning: filter.exists_mem_subset_iff -> Filter.exists_mem_subset_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, Iff (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, Iff (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s))) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f)
-Case conversion may be inaccurate. Consider using '#align filter.exists_mem_subset_iff Filter.exists_mem_subset_iffₓ'. -/
 theorem exists_mem_subset_iff : (∃ t ∈ f, t ⊆ s) ↔ s ∈ f :=
   ⟨fun ⟨t, ht, ts⟩ => mem_of_superset ht ts, fun hs => ⟨s, hs, Subset.rfl⟩⟩
 #align filter.exists_mem_subset_iff Filter.exists_mem_subset_iff
 
-/- warning: filter.monotone_mem -> Filter.monotone_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Monotone.{u1, 0} (Set.{u1} α) Prop (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) (fun (s : Set.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Monotone.{u1, 0} (Set.{u1} α) Prop (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) (fun (s : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f)
-Case conversion may be inaccurate. Consider using '#align filter.monotone_mem Filter.monotone_memₓ'. -/
 theorem monotone_mem {f : Filter α} : Monotone fun s => s ∈ f := fun s t hst h =>
   mem_of_superset h hst
 #align filter.monotone_mem Filter.monotone_mem
 
-/- warning: filter.exists_mem_and_iff -> Filter.exists_mem_and_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {P : (Set.{u1} α) -> Prop} {Q : (Set.{u1} α) -> Prop}, (Antitone.{u1, 0} (Set.{u1} α) Prop (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) P) -> (Antitone.{u1, 0} (Set.{u1} α) Prop (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) Q) -> (Iff (And (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u f) => P u))) (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u f) => Q u)))) (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u f) => And (P u) (Q u)))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {P : (Set.{u1} α) -> Prop} {Q : (Set.{u1} α) -> Prop}, (Antitone.{u1, 0} (Set.{u1} α) Prop (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) P) -> (Antitone.{u1, 0} (Set.{u1} α) Prop (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) Q) -> (Iff (And (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u f) (P u))) (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u f) (Q u)))) (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u f) (And (P u) (Q u)))))
-Case conversion may be inaccurate. Consider using '#align filter.exists_mem_and_iff Filter.exists_mem_and_iffₓ'. -/
 theorem exists_mem_and_iff {P : Set α → Prop} {Q : Set α → Prop} (hP : Antitone P)
     (hQ : Antitone Q) : ((∃ u ∈ f, P u) ∧ ∃ u ∈ f, Q u) ↔ ∃ u ∈ f, P u ∧ Q u :=
   by
@@ -308,12 +260,6 @@ theorem exists_mem_and_iff {P : Set α → Prop} {Q : Set α → Prop} (hP : Ant
   · rintro ⟨u, huf, hPu, hQu⟩; exact ⟨⟨u, huf, hPu⟩, u, huf, hQu⟩
 #align filter.exists_mem_and_iff Filter.exists_mem_and_iff
 
-/- warning: filter.forall_in_swap -> Filter.forall_in_swap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {β : Type.{u2}} {p : (Set.{u1} α) -> β -> Prop}, Iff (forall (a : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) a f) -> (forall (b : β), p a b)) (forall (b : β) (a : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) a f) -> (p a b))
-but is expected to have type
-  forall {α : Type.{u2}} {f : Filter.{u2} α} {β : Type.{u1}} {p : (Set.{u2} α) -> β -> Prop}, Iff (forall (a : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) a f) -> (forall (b : β), p a b)) (forall (b : β) (a : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) a f) -> (p a b))
-Case conversion may be inaccurate. Consider using '#align filter.forall_in_swap Filter.forall_in_swapₓ'. -/
 theorem forall_in_swap {β : Type _} {p : Set α → β → Prop} :
     (∀ a ∈ f, ∀ (b), p a b) ↔ ∀ (b), ∀ a ∈ f, p a b :=
   Set.forall_in_swap
@@ -430,22 +376,10 @@ instance : PartialOrder (Filter α)
   le_refl a := Subset.rfl
   le_trans a b c h₁ h₂ := Subset.trans h₂ h₁
 
-/- warning: filter.le_def -> Filter.le_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g) (forall (x : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) x g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) x f))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g) (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) x g) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) x f))
-Case conversion may be inaccurate. Consider using '#align filter.le_def Filter.le_defₓ'. -/
 theorem le_def : f ≤ g ↔ ∀ x ∈ g, x ∈ f :=
   Iff.rfl
 #align filter.le_def Filter.le_def
 
-/- warning: filter.not_le -> Filter.not_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Not (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s g) => Not (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Not (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s g) (Not (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f))))
-Case conversion may be inaccurate. Consider using '#align filter.not_le Filter.not_leₓ'. -/
 protected theorem not_le : ¬f ≤ g ↔ ∃ s ∈ g, s ∉ f := by simp_rw [le_def, not_forall]
 #align filter.not_le Filter.not_le
 
@@ -470,12 +404,6 @@ def generate (g : Set (Set α)) : Filter α
 #align filter.generate Filter.generate
 -/
 
-/- warning: filter.sets_iff_generate -> Filter.le_generate_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Set.{u1} α)} {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.generate.{u1} α s)) (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) s (Filter.sets.{u1} α f))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Set.{u1} α)} {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.generate.{u1} α s)) (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) s (Filter.sets.{u1} α f))
-Case conversion may be inaccurate. Consider using '#align filter.sets_iff_generate Filter.le_generate_iffₓ'. -/
 theorem le_generate_iff {s : Set (Set α)} {f : Filter α} : f ≤ Filter.generate s ↔ s ⊆ f.sets :=
   Iff.intro (fun h u hu => h <| GenerateSets.basic <| hu) fun h u hu =>
     hu.recOn h univ_mem (fun x y _ hxy hx => mem_of_superset hx hxy) fun x y _ _ hx hy =>
@@ -526,12 +454,6 @@ theorem mkOfClosure_sets {s : Set (Set α)} {hs : (generate s).sets = s} :
 #align filter.mk_of_closure_sets Filter.mkOfClosure_sets
 -/
 
-/- warning: filter.gi_generate -> Filter.giGenerate is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}), GaloisInsertion.{u1, u1} (Set.{u1} (Set.{u1} α)) (OrderDual.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Set.{u1} (Set.{u1} α)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Set.{u1} α)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Set.{u1} α)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Set.{u1} α)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Set.{u1} α)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Set.{u1} α)) (Set.completeBooleanAlgebra.{u1} (Set.{u1} α)))))))) (OrderDual.preorder.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.generate.{u1} α) (Filter.sets.{u1} α)
-but is expected to have type
-  forall (α : Type.{u1}), GaloisInsertion.{u1, u1} (Set.{u1} (Set.{u1} α)) (OrderDual.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Set.{u1} (Set.{u1} α)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Set.{u1} α)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Set.{u1} α)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Set.{u1} α)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Set.{u1} α)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Set.{u1} α)) (Set.instCompleteBooleanAlgebraSet.{u1} (Set.{u1} α)))))))) (OrderDual.preorder.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.generate.{u1} α) (Filter.sets.{u1} α)
-Case conversion may be inaccurate. Consider using '#align filter.gi_generate Filter.giGenerateₓ'. -/
 /-- Galois insertion from sets of sets into filters. -/
 def giGenerate (α : Type _) :
     @GaloisInsertion (Set (Set α)) (Filter α)ᵒᵈ _ _ Filter.generate Filter.sets
@@ -559,64 +481,28 @@ instance : Inf (Filter α) :=
         refine' ⟨a ∩ c, inter_mem ha hc, b ∩ d, inter_mem hb hd, _⟩
         ac_rfl }⟩
 
-/- warning: filter.mem_inf_iff -> Filter.mem_inf_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (t₁ : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₁ f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₁ f) => Exists.{succ u1} (Set.{u1} α) (fun (t₂ : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₂ g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₂ g) => Eq.{succ u1} (Set.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t₁ t₂))))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (t₁ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t₁ f) (Exists.{succ u1} (Set.{u1} α) (fun (t₂ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t₂ g) (Eq.{succ u1} (Set.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t₁ t₂))))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_iff Filter.mem_inf_iffₓ'. -/
 theorem mem_inf_iff {f g : Filter α} {s : Set α} : s ∈ f ⊓ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, s = t₁ ∩ t₂ :=
   Iff.rfl
 #align filter.mem_inf_iff Filter.mem_inf_iff
 
-/- warning: filter.mem_inf_of_left -> Filter.mem_inf_of_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g))
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_of_left Filter.mem_inf_of_leftₓ'. -/
 theorem mem_inf_of_left {f g : Filter α} {s : Set α} (h : s ∈ f) : s ∈ f ⊓ g :=
   ⟨s, h, univ, univ_mem, (inter_univ s).symm⟩
 #align filter.mem_inf_of_left Filter.mem_inf_of_left
 
-/- warning: filter.mem_inf_of_right -> Filter.mem_inf_of_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s g) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g))
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_of_right Filter.mem_inf_of_rightₓ'. -/
 theorem mem_inf_of_right {f g : Filter α} {s : Set α} (h : s ∈ g) : s ∈ f ⊓ g :=
   ⟨univ, univ_mem, s, h, (univ_inter s).symm⟩
 #align filter.mem_inf_of_right Filter.mem_inf_of_right
 
-/- warning: filter.inter_mem_inf -> Filter.inter_mem_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g))
-Case conversion may be inaccurate. Consider using '#align filter.inter_mem_inf Filter.inter_mem_infₓ'. -/
 theorem inter_mem_inf {α : Type u} {f g : Filter α} {s t : Set α} (hs : s ∈ f) (ht : t ∈ g) :
     s ∩ t ∈ f ⊓ g :=
   ⟨s, hs, t, ht, rfl⟩
 #align filter.inter_mem_inf Filter.inter_mem_inf
 
-/- warning: filter.mem_inf_of_inter -> Filter.mem_inf_of_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) u) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) u) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g))
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_of_inter Filter.mem_inf_of_interₓ'. -/
 theorem mem_inf_of_inter {f g : Filter α} {s t u : Set α} (hs : s ∈ f) (ht : t ∈ g)
     (h : s ∩ t ⊆ u) : u ∈ f ⊓ g :=
   mem_of_superset (inter_mem_inf hs ht) h
 #align filter.mem_inf_of_inter Filter.mem_inf_of_inter
 
-/- warning: filter.mem_inf_iff_superset -> Filter.mem_inf_iff_superset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (t₁ : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₁ f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₁ f) => Exists.{succ u1} (Set.{u1} α) (fun (t₂ : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₂ g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t₂ g) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t₁ t₂) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (t₁ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t₁ f) (Exists.{succ u1} (Set.{u1} α) (fun (t₂ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t₂ g) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t₁ t₂) s)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_iff_superset Filter.mem_inf_iff_supersetₓ'. -/
 theorem mem_inf_iff_superset {f g : Filter α} {s : Set α} :
     s ∈ f ⊓ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, t₁ ∩ t₂ ⊆ s :=
   ⟨fun ⟨t₁, h₁, t₂, h₂, Eq⟩ => ⟨t₁, h₁, t₂, h₂, Eq ▸ Subset.rfl⟩, fun ⟨t₁, h₁, t₂, h₂, sub⟩ =>
@@ -629,22 +515,10 @@ instance : Top (Filter α) :=
       sets_of_superset := fun x y hx hxy a => hxy (hx a)
       inter_sets := fun x y hx hy a => mem_inter (hx _) (hy _) }⟩
 
-/- warning: filter.mem_top_iff_forall -> Filter.mem_top_iff_forall is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (forall (x : α), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (forall (x : α), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)
-Case conversion may be inaccurate. Consider using '#align filter.mem_top_iff_forall Filter.mem_top_iff_forallₓ'. -/
 theorem mem_top_iff_forall {s : Set α} : s ∈ (⊤ : Filter α) ↔ ∀ x, x ∈ s :=
   Iff.rfl
 #align filter.mem_top_iff_forall Filter.mem_top_iff_forall
 
-/- warning: filter.mem_top -> Filter.mem_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Eq.{succ u1} (Set.{u1} α) s (Set.univ.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Eq.{succ u1} (Set.{u1} α) s (Set.univ.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.mem_top Filter.mem_topₓ'. -/
 @[simp]
 theorem mem_top {s : Set α} : s ∈ (⊤ : Filter α) ↔ s = univ := by
   rw [mem_top_iff_forall, eq_univ_iff_forall]
@@ -702,250 +576,106 @@ class NeBot (f : Filter α) : Prop where
 #align filter.ne_bot Filter.NeBot
 -/
 
-/- warning: filter.ne_bot_iff -> Filter.neBot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Filter.NeBot.{u1} α f) (Ne.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Filter.NeBot.{u1} α f) (Ne.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot_iff Filter.neBot_iffₓ'. -/
 theorem neBot_iff {f : Filter α} : NeBot f ↔ f ≠ ⊥ :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align filter.ne_bot_iff Filter.neBot_iff
 
-/- warning: filter.ne_bot.ne -> Filter.NeBot.ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (Ne.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (Ne.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.ne Filter.NeBot.neₓ'. -/
 theorem NeBot.ne {f : Filter α} (hf : NeBot f) : f ≠ ⊥ :=
   NeBot.ne'
 #align filter.ne_bot.ne Filter.NeBot.ne
 
-/- warning: filter.not_ne_bot -> Filter.not_neBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Not (Filter.NeBot.{u1} α f)) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Not (Filter.NeBot.{u1} α f)) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.not_ne_bot Filter.not_neBotₓ'. -/
 @[simp]
 theorem not_neBot {α : Type _} {f : Filter α} : ¬f.ne_bot ↔ f = ⊥ :=
   not_iff_comm.1 neBot_iff.symm
 #align filter.not_ne_bot Filter.not_neBot
 
-/- warning: filter.ne_bot.mono -> Filter.NeBot.mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g) -> (Filter.NeBot.{u1} α g)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g) -> (Filter.NeBot.{u1} α g)
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.mono Filter.NeBot.monoₓ'. -/
 theorem NeBot.mono {f g : Filter α} (hf : NeBot f) (hg : f ≤ g) : NeBot g :=
   ⟨ne_bot_of_le_ne_bot hf.1 hg⟩
 #align filter.ne_bot.mono Filter.NeBot.mono
 
-/- warning: filter.ne_bot_of_le -> Filter.neBot_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} [hf : Filter.NeBot.{u1} α f], (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g) -> (Filter.NeBot.{u1} α g)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} [hf : Filter.NeBot.{u1} α f], (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g) -> (Filter.NeBot.{u1} α g)
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot_of_le Filter.neBot_of_leₓ'. -/
 theorem neBot_of_le {f g : Filter α} [hf : NeBot f] (hg : f ≤ g) : NeBot g :=
   hf.mono hg
 #align filter.ne_bot_of_le Filter.neBot_of_le
 
-/- warning: filter.sup_ne_bot -> Filter.sup_neBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.NeBot.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g)) (Or (Filter.NeBot.{u1} α f) (Filter.NeBot.{u1} α g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.NeBot.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g)) (Or (Filter.NeBot.{u1} α f) (Filter.NeBot.{u1} α g))
-Case conversion may be inaccurate. Consider using '#align filter.sup_ne_bot Filter.sup_neBotₓ'. -/
 @[simp]
 theorem sup_neBot {f g : Filter α} : NeBot (f ⊔ g) ↔ NeBot f ∨ NeBot g := by
   simp [ne_bot_iff, not_and_or]
 #align filter.sup_ne_bot Filter.sup_neBot
 
-/- warning: filter.not_disjoint_self_iff -> Filter.not_disjoint_self_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Not (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) f f)) (Filter.NeBot.{u1} α f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Not (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) f f)) (Filter.NeBot.{u1} α f)
-Case conversion may be inaccurate. Consider using '#align filter.not_disjoint_self_iff Filter.not_disjoint_self_iffₓ'. -/
 theorem not_disjoint_self_iff : ¬Disjoint f f ↔ f.ne_bot := by rw [disjoint_self, ne_bot_iff]
 #align filter.not_disjoint_self_iff Filter.not_disjoint_self_iff
 
-/- warning: filter.bot_sets_eq -> Filter.bot_sets_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Set.univ.{u1} (Set.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Set.univ.{u1} (Set.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.bot_sets_eq Filter.bot_sets_eqₓ'. -/
 theorem bot_sets_eq : (⊥ : Filter α).sets = univ :=
   rfl
 #align filter.bot_sets_eq Filter.bot_sets_eq
 
-/- warning: filter.sup_sets_eq -> Filter.sup_sets_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g)) (Inter.inter.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasInter.{u1} (Set.{u1} α)) (Filter.sets.{u1} α f) (Filter.sets.{u1} α g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g)) (Inter.inter.{u1} (Set.{u1} (Set.{u1} α)) (Set.instInterSet.{u1} (Set.{u1} α)) (Filter.sets.{u1} α f) (Filter.sets.{u1} α g))
-Case conversion may be inaccurate. Consider using '#align filter.sup_sets_eq Filter.sup_sets_eqₓ'. -/
 theorem sup_sets_eq {f g : Filter α} : (f ⊔ g).sets = f.sets ∩ g.sets :=
   (giGenerate α).gc.u_inf
 #align filter.sup_sets_eq Filter.sup_sets_eq
 
-/- warning: filter.Sup_sets_eq -> Filter.sSup_sets_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (SupSet.sSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s)) (Set.iInter.{u1, succ u1} (Set.{u1} α) (Filter.{u1} α) (fun (f : Filter.{u1} α) => Set.iInter.{u1, 0} (Set.{u1} α) (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f s) (fun (H : Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f s) => Filter.sets.{u1} α f)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (SupSet.sSup.{u1} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) s)) (Set.iInter.{u1, succ u1} (Set.{u1} α) (Filter.{u1} α) (fun (f : Filter.{u1} α) => Set.iInter.{u1, 0} (Set.{u1} α) (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) f s) (fun (H : Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) f s) => Filter.sets.{u1} α f)))
-Case conversion may be inaccurate. Consider using '#align filter.Sup_sets_eq Filter.sSup_sets_eqₓ'. -/
 theorem sSup_sets_eq {s : Set (Filter α)} : (sSup s).sets = ⋂ f ∈ s, (f : Filter α).sets :=
   (giGenerate α).gc.u_sInf
 #align filter.Sup_sets_eq Filter.sSup_sets_eq
 
-/- warning: filter.supr_sets_eq -> Filter.iSup_sets_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Filter.sets.{u1} α (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Filter.sets.{u1} α (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.supr_sets_eq Filter.iSup_sets_eqₓ'. -/
 theorem iSup_sets_eq {f : ι → Filter α} : (iSup f).sets = ⋂ i, (f i).sets :=
   (giGenerate α).gc.u_iInf
 #align filter.supr_sets_eq Filter.iSup_sets_eq
 
-/- warning: filter.generate_empty -> Filter.generate_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasEmptyc.{u1} (Set.{u1} α)))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Set.{u1} α)) (Set.instEmptyCollectionSet.{u1} (Set.{u1} α)))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.generate_empty Filter.generate_emptyₓ'. -/
 theorem generate_empty : Filter.generate ∅ = (⊤ : Filter α) :=
   (giGenerate α).gc.l_bot
 #align filter.generate_empty Filter.generate_empty
 
-/- warning: filter.generate_univ -> Filter.generate_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (Set.univ.{u1} (Set.{u1} α))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (Set.univ.{u1} (Set.{u1} α))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.generate_univ Filter.generate_univₓ'. -/
 theorem generate_univ : Filter.generate univ = (⊥ : Filter α) :=
   mkOfClosure_sets.symm
 #align filter.generate_univ Filter.generate_univ
 
-/- warning: filter.generate_union -> Filter.generate_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Set.{u1} α)} {t : Set.{u1} (Set.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (Union.union.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasUnion.{u1} (Set.{u1} α)) s t)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.generate.{u1} α s) (Filter.generate.{u1} α t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Set.{u1} α)} {t : Set.{u1} (Set.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (Union.union.{u1} (Set.{u1} (Set.{u1} α)) (Set.instUnionSet.{u1} (Set.{u1} α)) s t)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (Filter.generate.{u1} α s) (Filter.generate.{u1} α t))
-Case conversion may be inaccurate. Consider using '#align filter.generate_union Filter.generate_unionₓ'. -/
 theorem generate_union {s t : Set (Set α)} :
     Filter.generate (s ∪ t) = Filter.generate s ⊓ Filter.generate t :=
   (giGenerate α).gc.l_sup
 #align filter.generate_union Filter.generate_union
 
-/- warning: filter.generate_Union -> Filter.generate_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => s i))) (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => Filter.generate.{u1} α (s i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => s i))) (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => Filter.generate.{u1} α (s i)))
-Case conversion may be inaccurate. Consider using '#align filter.generate_Union Filter.generate_iUnionₓ'. -/
 theorem generate_iUnion {s : ι → Set (Set α)} :
     Filter.generate (⋃ i, s i) = ⨅ i, Filter.generate (s i) :=
   (giGenerate α).gc.l_iSup
 #align filter.generate_Union Filter.generate_iUnion
 
-/- warning: filter.mem_bot -> Filter.mem_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_bot Filter.mem_botₓ'. -/
 @[simp]
 theorem mem_bot {s : Set α} : s ∈ (⊥ : Filter α) :=
   trivial
 #align filter.mem_bot Filter.mem_bot
 
-/- warning: filter.mem_sup -> Filter.mem_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g)) (And (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g)) (And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s g))
-Case conversion may be inaccurate. Consider using '#align filter.mem_sup Filter.mem_supₓ'. -/
 @[simp]
 theorem mem_sup {f g : Filter α} {s : Set α} : s ∈ f ⊔ g ↔ s ∈ f ∧ s ∈ g :=
   Iff.rfl
 #align filter.mem_sup Filter.mem_sup
 
-/- warning: filter.union_mem_sup -> Filter.union_mem_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.union_mem_sup Filter.union_mem_supₓ'. -/
 theorem union_mem_sup {f g : Filter α} {s t : Set α} (hs : s ∈ f) (ht : t ∈ g) : s ∪ t ∈ f ⊔ g :=
   ⟨mem_of_superset hs (subset_union_left s t), mem_of_superset ht (subset_union_right s t)⟩
 #align filter.union_mem_sup Filter.union_mem_sup
 
-/- warning: filter.mem_Sup -> Filter.mem_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : Set.{u1} α} {s : Set.{u1} (Filter.{u1} α)}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) x (SupSet.sSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s)) (forall (f : Filter.{u1} α), (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) x f))
-but is expected to have type
-  forall {α : Type.{u1}} {x : Set.{u1} α} {s : Set.{u1} (Filter.{u1} α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) x (SupSet.sSup.{u1} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) s)) (forall (f : Filter.{u1} α), (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) f s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) x f))
-Case conversion may be inaccurate. Consider using '#align filter.mem_Sup Filter.mem_sSupₓ'. -/
 @[simp]
 theorem mem_sSup {x : Set α} {s : Set (Filter α)} : x ∈ sSup s ↔ ∀ f ∈ s, x ∈ (f : Filter α) :=
   Iff.rfl
 #align filter.mem_Sup Filter.mem_sSup
 
-/- warning: filter.mem_supr -> Filter.mem_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {x : Set.{u1} α} {f : ι -> (Filter.{u1} α)}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) x (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (forall (i : ι), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) x (f i))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {x : Set.{u1} α} {f : ι -> (Filter.{u1} α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) x (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (forall (i : ι), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) x (f i))
-Case conversion may be inaccurate. Consider using '#align filter.mem_supr Filter.mem_iSupₓ'. -/
 @[simp]
 theorem mem_iSup {x : Set α} {f : ι → Filter α} : x ∈ iSup f ↔ ∀ i, x ∈ f i := by
   simp only [← Filter.mem_sets, supr_sets_eq, iff_self_iff, mem_Inter]
 #align filter.mem_supr Filter.mem_iSup
 
-/- warning: filter.supr_ne_bot -> Filter.iSup_neBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Iff (Filter.NeBot.{u1} α (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i))) (Exists.{u2} ι (fun (i : ι) => Filter.NeBot.{u1} α (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Iff (Filter.NeBot.{u1} α (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i))) (Exists.{u2} ι (fun (i : ι) => Filter.NeBot.{u1} α (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.supr_ne_bot Filter.iSup_neBotₓ'. -/
 @[simp]
 theorem iSup_neBot {f : ι → Filter α} : (⨆ i, f i).ne_bot ↔ ∃ i, (f i).ne_bot := by
   simp [ne_bot_iff]
 #align filter.supr_ne_bot Filter.iSup_neBot
 
-/- warning: filter.infi_eq_generate -> Filter.iInf_eq_generate is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (s : ι -> (Filter.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι s) (Filter.generate.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Filter.sets.{u1} α (s i))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (s : ι -> (Filter.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι s) (Filter.generate.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Filter.sets.{u1} α (s i))))
-Case conversion may be inaccurate. Consider using '#align filter.infi_eq_generate Filter.iInf_eq_generateₓ'. -/
 theorem iInf_eq_generate (s : ι → Filter α) : iInf s = generate (⋃ i, (s i).sets) :=
   show generate _ = generate _ from congr_arg _ <| congr_arg sSup <| (range_comp _ _).symm
 #align filter.infi_eq_generate Filter.iInf_eq_generate
 
-/- warning: filter.mem_infi_of_mem -> Filter.mem_iInf_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} (i : ι) {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (f i)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} (i : ι) {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (f i)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_of_mem Filter.mem_iInf_of_memₓ'. -/
 theorem mem_iInf_of_mem {f : ι → Filter α} (i : ι) : ∀ {s}, s ∈ f i → s ∈ ⨅ i, f i :=
   show (⨅ i, f i) ≤ f i from iInf_le _ _
 #align filter.mem_infi_of_mem Filter.mem_iInf_of_mem
 
-/- warning: filter.mem_infi_of_Inter -> Filter.mem_iInf_of_iInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : ι -> (Filter.{u1} α)} {U : Set.{u1} α} {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall {V : (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) -> (Set.{u1} α)}, (forall (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (V i) (s ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) x I))))) i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.iInter.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) (fun (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) => V i)) U) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => s i))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {s : ι -> (Filter.{u2} α)} {U : Set.{u2} α} {I : Set.{u1} ι}, (Set.Finite.{u1} ι I) -> (forall {V : (Set.Elem.{u1} ι I) -> (Set.{u2} α)}, (forall (i : Set.Elem.{u1} ι I), Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (V i) (s (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x I) i))) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Set.iInter.{u2, succ u1} α (Set.Elem.{u1} ι I) (fun (i : Set.Elem.{u1} ι I) => V i)) U) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => s i))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_of_Inter Filter.mem_iInf_of_iInterₓ'. -/
 theorem mem_iInf_of_iInter {ι} {s : ι → Filter α} {U : Set α} {I : Set ι} (I_fin : I.Finite)
     {V : I → Set α} (hV : ∀ i, V i ∈ s i) (hU : (⋂ i, V i) ⊆ U) : U ∈ ⨅ i, s i :=
   by
@@ -954,12 +684,6 @@ theorem mem_iInf_of_iInter {ι} {s : ι → Filter α} {U : Set α} {I : Set ι}
   exact mem_infi_of_mem i (hV _)
 #align filter.mem_infi_of_Inter Filter.mem_iInf_of_iInter
 
-/- warning: filter.mem_infi -> Filter.mem_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : ι -> (Filter.{u1} α)} {U : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => s i))) (Exists.{succ u2} (Set.{u2} ι) (fun (I : Set.{u2} ι) => And (Set.Finite.{u2} ι I) (Exists.{max (succ u2) (succ u1)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) -> (Set.{u1} α)) (fun (V : (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) -> (Set.{u1} α)) => And (forall (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (V i) (s ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) x I))))) i))) (Eq.{succ u1} (Set.{u1} α) U (Set.iInter.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) (fun (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) I) => V i)))))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {s : ι -> (Filter.{u2} α)} {U : Set.{u2} α}, Iff (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => s i))) (Exists.{succ u1} (Set.{u1} ι) (fun (I : Set.{u1} ι) => And (Set.Finite.{u1} ι I) (Exists.{max (succ u2) (succ u1)} ((Set.Elem.{u1} ι I) -> (Set.{u2} α)) (fun (V : (Set.Elem.{u1} ι I) -> (Set.{u2} α)) => And (forall (i : Set.Elem.{u1} ι I), Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (V i) (s (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x I) i))) (Eq.{succ u2} (Set.{u2} α) U (Set.iInter.{u2, succ u1} α (Set.Elem.{u1} ι I) (fun (i : Set.Elem.{u1} ι I) => V i)))))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi Filter.mem_iInfₓ'. -/
 theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔ ∃ I : Set ι, I.Finite ∧ ∃ V : I → Set α, (∀ i, V i ∈ s i) ∧ U = ⋂ i, V i :=
   by
@@ -981,12 +705,6 @@ theorem mem_iInf {ι} {s : ι → Filter α} {U : Set α} :
     exact mem_infi_of_Inter Ifin V_in subset.rfl
 #align filter.mem_infi Filter.mem_iInf
 
-/- warning: filter.mem_infi' -> Filter.mem_iInf' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : ι -> (Filter.{u1} α)} {U : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => s i))) (Exists.{succ u2} (Set.{u2} ι) (fun (I : Set.{u2} ι) => And (Set.Finite.{u2} ι I) (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (V : ι -> (Set.{u1} α)) => And (forall (i : ι), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (V i) (s i)) (And (forall (i : ι), (Not (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I)) -> (Eq.{succ u1} (Set.{u1} α) (V i) (Set.univ.{u1} α))) (And (Eq.{succ u1} (Set.{u1} α) U (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) => V i)))) (Eq.{succ u1} (Set.{u1} α) U (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => V i)))))))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {s : ι -> (Filter.{u2} α)} {U : Set.{u2} α}, Iff (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => s i))) (Exists.{succ u1} (Set.{u1} ι) (fun (I : Set.{u1} ι) => And (Set.Finite.{u1} ι I) (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u2} α)) (fun (V : ι -> (Set.{u2} α)) => And (forall (i : ι), Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (V i) (s i)) (And (forall (i : ι), (Not (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I)) -> (Eq.{succ u2} (Set.{u2} α) (V i) (Set.univ.{u2} α))) (And (Eq.{succ u2} (Set.{u2} α) U (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) => V i)))) (Eq.{succ u2} (Set.{u2} α) U (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => V i)))))))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi' Filter.mem_iInf'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem mem_iInf' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔
@@ -1007,24 +725,12 @@ theorem mem_iInf' {ι} {s : ι → Filter α} {U : Set α} :
       Inter_univ, inter_univ, eq_self_iff_true, true_and_iff]
 #align filter.mem_infi' Filter.mem_iInf'
 
-/- warning: filter.exists_Inter_of_mem_infi -> Filter.exists_iInter_of_mem_iInf is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {f : ι -> (Filter.{u2} α)} {s : Set.{u2} α}, (Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) s (iInf.{u2, succ u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.completeLattice.{u2} α))) ι (fun (i : ι) => f i))) -> (Exists.{max (succ u1) (succ u2)} (ι -> (Set.{u2} α)) (fun (t : ι -> (Set.{u2} α)) => And (forall (i : ι), Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) (t i) (f i)) (Eq.{succ u2} (Set.{u2} α) s (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => t i)))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {f : ι -> (Filter.{u1} α)} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i))) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (t : ι -> (Set.{u1} α)) => And (forall (i : ι), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (t i) (f i)) (Eq.{succ u1} (Set.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => t i)))))
-Case conversion may be inaccurate. Consider using '#align filter.exists_Inter_of_mem_infi Filter.exists_iInter_of_mem_iInfₓ'. -/
 theorem exists_iInter_of_mem_iInf {ι : Type _} {α : Type _} {f : ι → Filter α} {s}
     (hs : s ∈ ⨅ i, f i) : ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂ i, t i :=
   let ⟨I, If, V, hVs, hV', hVU, hVU'⟩ := mem_iInf'.1 hs
   ⟨V, hVs, hVU'⟩
 #align filter.exists_Inter_of_mem_infi Filter.exists_iInter_of_mem_iInf
 
-/- warning: filter.mem_infi_of_finite -> Filter.mem_iInf_of_finite is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {α : Type.{u2}} {f : ι -> (Filter.{u2} α)} (s : Set.{u2} α), Iff (Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) s (iInf.{u2, succ u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.completeLattice.{u2} α))) ι (fun (i : ι) => f i))) (Exists.{max (succ u1) (succ u2)} (ι -> (Set.{u2} α)) (fun (t : ι -> (Set.{u2} α)) => And (forall (i : ι), Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) (t i) (f i)) (Eq.{succ u2} (Set.{u2} α) s (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => t i)))))
-but is expected to have type
-  forall {ι : Type.{u2}} [_inst_1 : Finite.{succ u2} ι] {α : Type.{u1}} {f : ι -> (Filter.{u1} α)} (s : Set.{u1} α), Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i))) (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (t : ι -> (Set.{u1} α)) => And (forall (i : ι), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (t i) (f i)) (Eq.{succ u1} (Set.{u1} α) s (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => t i)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_of_finite Filter.mem_iInf_of_finiteₓ'. -/
 theorem mem_iInf_of_finite {ι : Type _} [Finite ι] {α : Type _} {f : ι → Filter α} (s) :
     (s ∈ ⨅ i, f i) ↔ ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂ i, t i :=
   by
@@ -1033,44 +739,20 @@ theorem mem_iInf_of_finite {ι : Type _} [Finite ι] {α : Type _} {f : ι → F
   exact Inter_mem.2 fun i => mem_infi_of_mem i (ht i)
 #align filter.mem_infi_of_finite Filter.mem_iInf_of_finite
 
-/- warning: filter.le_principal_iff -> Filter.le_principal_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.principal.{u1} α s)) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.principal.{u1} α s)) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f)
-Case conversion may be inaccurate. Consider using '#align filter.le_principal_iff Filter.le_principal_iffₓ'. -/
 @[simp]
 theorem le_principal_iff {s : Set α} {f : Filter α} : f ≤ 𝓟 s ↔ s ∈ f :=
   show (∀ {t}, s ⊆ t → t ∈ f) ↔ s ∈ f from
     ⟨fun h => h (Subset.refl s), fun hs t ht => mem_of_superset hs ht⟩
 #align filter.le_principal_iff Filter.le_principal_iff
 
-/- warning: filter.Iic_principal -> Filter.Iic_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α s)) (setOf.{u1} (Filter.{u1} α) (fun (l : Filter.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α s)) (setOf.{u1} (Filter.{u1} α) (fun (l : Filter.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l))
-Case conversion may be inaccurate. Consider using '#align filter.Iic_principal Filter.Iic_principalₓ'. -/
 theorem Iic_principal (s : Set α) : Iic (𝓟 s) = { l | s ∈ l } :=
   Set.ext fun x => le_principal_iff
 #align filter.Iic_principal Filter.Iic_principal
 
-/- warning: filter.principal_mono -> Filter.principal_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α s) (Filter.principal.{u1} α t)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.principal.{u1} α s) (Filter.principal.{u1} α t)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align filter.principal_mono Filter.principal_monoₓ'. -/
 theorem principal_mono {s t : Set α} : 𝓟 s ≤ 𝓟 t ↔ s ⊆ t := by
   simp only [le_principal_iff, iff_self_iff, mem_principal]
 #align filter.principal_mono Filter.principal_mono
 
-/- warning: filter.monotone_principal -> Filter.monotone_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Monotone.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, Monotone.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α)
-Case conversion may be inaccurate. Consider using '#align filter.monotone_principal Filter.monotone_principalₓ'. -/
 @[mono]
 theorem monotone_principal : Monotone (𝓟 : Set α → Filter α) := fun _ _ => principal_mono.2
 #align filter.monotone_principal Filter.monotone_principal
@@ -1082,45 +764,21 @@ theorem principal_eq_iff_eq {s t : Set α} : 𝓟 s = 𝓟 t ↔ s = t := by
 #align filter.principal_eq_iff_eq Filter.principal_eq_iff_eq
 -/
 
-/- warning: filter.join_principal_eq_Sup -> Filter.join_principal_eq_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (Filter.join.{u1} α (Filter.principal.{u1} (Filter.{u1} α) s)) (SupSet.sSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (Filter.join.{u1} α (Filter.principal.{u1} (Filter.{u1} α) s)) (SupSet.sSup.{u1} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) s)
-Case conversion may be inaccurate. Consider using '#align filter.join_principal_eq_Sup Filter.join_principal_eq_sSupₓ'. -/
 @[simp]
 theorem join_principal_eq_sSup {s : Set (Filter α)} : join (𝓟 s) = sSup s :=
   rfl
 #align filter.join_principal_eq_Sup Filter.join_principal_eq_sSup
 
-/- warning: filter.principal_univ -> Filter.principal_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α (Set.univ.{u1} α)) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α (Set.univ.{u1} α)) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.principal_univ Filter.principal_univₓ'. -/
 @[simp]
 theorem principal_univ : 𝓟 (univ : Set α) = ⊤ :=
   top_unique <| by simp only [le_principal_iff, mem_top, eq_self_iff_true]
 #align filter.principal_univ Filter.principal_univ
 
-/- warning: filter.principal_empty -> Filter.principal_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.principal_empty Filter.principal_emptyₓ'. -/
 @[simp]
 theorem principal_empty : 𝓟 (∅ : Set α) = ⊥ :=
   bot_unique fun s _ => empty_subset _
 #align filter.principal_empty Filter.principal_empty
 
-/- warning: filter.generate_eq_binfi -> Filter.generate_eq_biInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α S) (iInf.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) => Filter.principal.{u1} α s)))
-but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (Filter.generate.{u1} α S) (iInf.{u1, succ u1} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) => Filter.principal.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align filter.generate_eq_binfi Filter.generate_eq_biInfₓ'. -/
 theorem generate_eq_biInf (S : Set (Set α)) : generate S = ⨅ s ∈ S, 𝓟 s :=
   eq_of_forall_le_iff fun f => by simp [sets_iff_generate, le_principal_iff, subset_def]
 #align filter.generate_eq_binfi Filter.generate_eq_biInf
@@ -1128,12 +786,6 @@ theorem generate_eq_biInf (S : Set (Set α)) : generate S = ⨅ s ∈ S, 𝓟 s 
 /-! ### Lattice equations -/
 
 
-/- warning: filter.empty_mem_iff_bot -> Filter.empty_mem_iff_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) f) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) f) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.empty_mem_iff_bot Filter.empty_mem_iff_botₓ'. -/
 theorem empty_mem_iff_bot {f : Filter α} : ∅ ∈ f ↔ f = ⊥ :=
   ⟨fun h => bot_unique fun s _ => mem_of_superset h (empty_subset s), fun h => h.symm ▸ mem_bot⟩
 #align filter.empty_mem_iff_bot Filter.empty_mem_iff_bot
@@ -1162,75 +814,33 @@ theorem nonempty_of_neBot (f : Filter α) [NeBot f] : Nonempty α :=
 #align filter.nonempty_of_ne_bot Filter.nonempty_of_neBot
 -/
 
-/- warning: filter.compl_not_mem -> Filter.compl_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} [_inst_1 : Filter.NeBot.{u1} α f], (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Not (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} [_inst_1 : Filter.NeBot.{u1} α f], (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Not (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) f))
-Case conversion may be inaccurate. Consider using '#align filter.compl_not_mem Filter.compl_not_memₓ'. -/
 theorem compl_not_mem {f : Filter α} {s : Set α} [NeBot f] (h : s ∈ f) : sᶜ ∉ f := fun hsc =>
   (nonempty_of_mem (inter_mem h hsc)).ne_empty <| inter_compl_self s
 #align filter.compl_not_mem Filter.compl_not_mem
 
-/- warning: filter.filter_eq_bot_of_is_empty -> Filter.filter_eq_bot_of_isEmpty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : IsEmpty.{succ u1} α] (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : IsEmpty.{succ u1} α] (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.filter_eq_bot_of_is_empty Filter.filter_eq_bot_of_isEmptyₓ'. -/
 theorem filter_eq_bot_of_isEmpty [IsEmpty α] (f : Filter α) : f = ⊥ :=
   empty_mem_iff_bot.mp <| univ_mem' isEmptyElim
 #align filter.filter_eq_bot_of_is_empty Filter.filter_eq_bot_of_isEmpty
 
-/- warning: filter.disjoint_iff -> Filter.disjoint_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) f g) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) => Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) => Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t)))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) f g) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t)))))
-Case conversion may be inaccurate. Consider using '#align filter.disjoint_iff Filter.disjoint_iffₓ'. -/
 protected theorem disjoint_iff {f g : Filter α} : Disjoint f g ↔ ∃ s ∈ f, ∃ t ∈ g, Disjoint s t :=
   by
   simp only [disjoint_iff, ← empty_mem_iff_bot, mem_inf_iff, inf_eq_inter, bot_eq_empty,
     @eq_comm _ ∅]
 #align filter.disjoint_iff Filter.disjoint_iff
 
-/- warning: filter.disjoint_of_disjoint_of_mem -> Filter.disjoint_of_disjoint_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) f g)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) f g)
-Case conversion may be inaccurate. Consider using '#align filter.disjoint_of_disjoint_of_mem Filter.disjoint_of_disjoint_of_memₓ'. -/
 theorem disjoint_of_disjoint_of_mem {f g : Filter α} {s t : Set α} (h : Disjoint s t) (hs : s ∈ f)
     (ht : t ∈ g) : Disjoint f g :=
   Filter.disjoint_iff.mpr ⟨s, hs, t, ht, h⟩
 #align filter.disjoint_of_disjoint_of_mem Filter.disjoint_of_disjoint_of_mem
 
-/- warning: filter.ne_bot.not_disjoint -> Filter.NeBot.not_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.NeBot.{u1} α f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) -> (Not (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.NeBot.{u1} α f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) -> (Not (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t))
-Case conversion may be inaccurate. Consider using '#align filter.ne_bot.not_disjoint Filter.NeBot.not_disjointₓ'. -/
 theorem NeBot.not_disjoint (hf : f.ne_bot) (hs : s ∈ f) (ht : t ∈ f) : ¬Disjoint s t := fun h =>
   not_disjoint_self_iff.2 hf <| Filter.disjoint_iff.2 ⟨s, hs, t, ht, h⟩
 #align filter.ne_bot.not_disjoint Filter.NeBot.not_disjoint
 
-/- warning: filter.inf_eq_bot_iff -> Filter.inf_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U f) => Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V g) => Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) U V) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U f) (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) V g) (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U V) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))))))
-Case conversion may be inaccurate. Consider using '#align filter.inf_eq_bot_iff Filter.inf_eq_bot_iffₓ'. -/
 theorem inf_eq_bot_iff {f g : Filter α} : f ⊓ g = ⊥ ↔ ∃ U ∈ f, ∃ V ∈ g, U ∩ V = ∅ := by
   simpa only [← disjoint_iff, Set.disjoint_iff_inter_eq_empty] using Filter.disjoint_iff
 #align filter.inf_eq_bot_iff Filter.inf_eq_bot_iff
 
-/- warning: pairwise.exists_mem_filter_of_disjoint -> Pairwise.exists_mem_filter_of_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Finite.{succ u2} ι] {l : ι -> (Filter.{u1} α)}, (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Filter.{u1} α) Prop (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) l)) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (s : ι -> (Set.{u1} α)) => And (forall (i : ι), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (s i) (l i)) (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))) s))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {l : ι -> (Filter.{u2} α)}, (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Filter.{u2} α) Prop (Disjoint.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)))) l)) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u2} α)) (fun (s : ι -> (Set.{u2} α)) => And (forall (i : ι), Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (s i) (l i)) (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Set.{u2} α) Prop (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) s))))
-Case conversion may be inaccurate. Consider using '#align pairwise.exists_mem_filter_of_disjoint Pairwise.exists_mem_filter_of_disjointₓ'. -/
 theorem Pairwise.exists_mem_filter_of_disjoint {ι : Type _} [Finite ι] {l : ι → Filter α}
     (hd : Pairwise (Disjoint on l)) :
     ∃ s : ι → Set α, (∀ i, s i ∈ l i) ∧ Pairwise (Disjoint on s) :=
@@ -1243,12 +853,6 @@ theorem Pairwise.exists_mem_filter_of_disjoint {ι : Type _} [Finite ι] {l : ι
       ((Inter_subset _ i).trans (inter_subset_right _ _))]
 #align pairwise.exists_mem_filter_of_disjoint Pairwise.exists_mem_filter_of_disjoint
 
-/- warning: set.pairwise_disjoint.exists_mem_filter -> Set.PairwiseDisjoint.exists_mem_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {l : ι -> (Filter.{u1} α)} {t : Set.{u2} ι}, (Set.PairwiseDisjoint.{u1, u2} (Filter.{u1} α) ι (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) t l) -> (Set.Finite.{u2} ι t) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (s : ι -> (Set.{u1} α)) => And (forall (i : ι), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (s i) (l i)) (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) t s)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {l : ι -> (Filter.{u2} α)} {t : Set.{u1} ι}, (Set.PairwiseDisjoint.{u2, u1} (Filter.{u2} α) ι (Filter.instPartialOrderFilter.{u2} α) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) t l) -> (Set.Finite.{u1} ι t) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u2} α)) (fun (s : ι -> (Set.{u2} α)) => And (forall (i : ι), Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (s i) (l i)) (Set.PairwiseDisjoint.{u2, u1} (Set.{u2} α) ι (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) t s)))
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.exists_mem_filter Set.PairwiseDisjoint.exists_mem_filterₓ'. -/
 theorem Set.PairwiseDisjoint.exists_mem_filter {ι : Type _} {l : ι → Filter α} {t : Set ι}
     (hd : t.PairwiseDisjoint l) (ht : t.Finite) :
     ∃ s : ι → Set α, (∀ i, s i ∈ l i) ∧ t.PairwiseDisjoint s :=
@@ -1273,12 +877,6 @@ instance unique [IsEmpty α] : Unique (Filter α)
 #align filter.unique Filter.unique
 -/
 
-/- warning: filter.eq_top_of_ne_bot -> Filter.eq_top_of_neBot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Subsingleton.{succ u1} α] (l : Filter.{u1} α) [_inst_2 : Filter.NeBot.{u1} α l], Eq.{succ u1} (Filter.{u1} α) l (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Subsingleton.{succ u1} α] (l : Filter.{u1} α) [_inst_2 : Filter.NeBot.{u1} α l], Eq.{succ u1} (Filter.{u1} α) l (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.eq_top_of_ne_bot Filter.eq_top_of_neBotₓ'. -/
 /-- There are only two filters on a `subsingleton`: `⊥` and `⊤`. If the type is empty, then they are
 equal. -/
 theorem eq_top_of_neBot [Subsingleton α] (l : Filter α) [NeBot l] : l = ⊤ :=
@@ -1311,12 +909,6 @@ theorem nontrivial_iff_nonempty : Nontrivial (Filter α) ↔ Nonempty α :=
 #align filter.nontrivial_iff_nonempty Filter.nontrivial_iff_nonempty
 -/
 
-/- warning: filter.eq_Inf_of_mem_iff_exists_mem -> Filter.eq_sInf_of_mem_iff_exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {S : Set.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, (forall {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) (Exists.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f S) (fun (H : Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f S) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f)))) -> (Eq.{succ u1} (Filter.{u1} α) l (InfSet.sInf.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) S))
-but is expected to have type
-  forall {α : Type.{u1}} {S : Set.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, (forall {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (Exists.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => And (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) f S) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f)))) -> (Eq.{succ u1} (Filter.{u1} α) l (InfSet.sInf.{u1} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) S))
-Case conversion may be inaccurate. Consider using '#align filter.eq_Inf_of_mem_iff_exists_mem Filter.eq_sInf_of_mem_iff_exists_memₓ'. -/
 theorem eq_sInf_of_mem_iff_exists_mem {S : Set (Filter α)} {l : Filter α}
     (h : ∀ {s}, s ∈ l ↔ ∃ f ∈ S, s ∈ f) : l = sInf S :=
   le_antisymm (le_sInf fun f hf s hs => h.2 ⟨f, hf, hs⟩) fun s hs =>
@@ -1324,12 +916,6 @@ theorem eq_sInf_of_mem_iff_exists_mem {S : Set (Filter α)} {l : Filter α}
     (sInf_le hf : sInf S ≤ f) hs
 #align filter.eq_Inf_of_mem_iff_exists_mem Filter.eq_sInf_of_mem_iff_exists_mem
 
-/- warning: filter.eq_infi_of_mem_iff_exists_mem -> Filter.eq_iInf_of_mem_iff_exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} {l : Filter.{u1} α}, (forall {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (f i)))) -> (Eq.{succ u1} (Filter.{u1} α) l (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} {l : Filter.{u1} α}, (forall {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (f i)))) -> (Eq.{succ u1} (Filter.{u1} α) l (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f))
-Case conversion may be inaccurate. Consider using '#align filter.eq_infi_of_mem_iff_exists_mem Filter.eq_iInf_of_mem_iff_exists_memₓ'. -/
 theorem eq_iInf_of_mem_iff_exists_mem {f : ι → Filter α} {l : Filter α}
     (h : ∀ {s}, s ∈ l ↔ ∃ i, s ∈ f i) : l = iInf f :=
   eq_sInf_of_mem_iff_exists_mem fun s => h.trans exists_range_iff.symm
@@ -1344,12 +930,6 @@ theorem eq_biInf_of_mem_iff_exists_mem {f : ι → Filter α} {p : ι → Prop} 
   exact h.trans ⟨fun ⟨i, pi, si⟩ => ⟨⟨i, pi⟩, si⟩, fun ⟨⟨i, pi⟩, si⟩ => ⟨i, pi, si⟩⟩
 #align filter.eq_binfi_of_mem_iff_exists_mem Filter.eq_biInf_of_mem_iff_exists_memₓ
 
-/- warning: filter.infi_sets_eq -> Filter.iInf_sets_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, (Directed.{u1, u2} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (forall [ne : Nonempty.{u2} ι], Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Filter.sets.{u1} α (f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, (Directed.{u1, u2} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.10325 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.10327 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.10325 x._@.Mathlib.Order.Filter.Basic._hyg.10327) f) -> (forall [ne : Nonempty.{u2} ι], Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => Filter.sets.{u1} α (f i))))
-Case conversion may be inaccurate. Consider using '#align filter.infi_sets_eq Filter.iInf_sets_eqₓ'. -/
 theorem iInf_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : Nonempty ι] :
     (iInf f).sets = ⋃ i, (f i).sets :=
   let ⟨i⟩ := Ne
@@ -1369,22 +949,10 @@ theorem iInf_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : N
   congr_arg Filter.sets this.symm
 #align filter.infi_sets_eq Filter.iInf_sets_eq
 
-/- warning: filter.mem_infi_of_directed -> Filter.mem_iInf_of_directed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, (Directed.{u1, u2} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (forall [_inst_1 : Nonempty.{u2} ι] (s : Set.{u1} α), Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, (Directed.{u1, u2} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.10520 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.10522 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.10520 x._@.Mathlib.Order.Filter.Basic._hyg.10522) f) -> (forall [_inst_1 : Nonempty.{u2} ι] (s : Set.{u1} α), Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (f i))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_of_directed Filter.mem_iInf_of_directedₓ'. -/
 theorem mem_iInf_of_directed {f : ι → Filter α} (h : Directed (· ≥ ·) f) [Nonempty ι] (s) :
     s ∈ iInf f ↔ ∃ i, s ∈ f i := by simp only [← Filter.mem_sets, infi_sets_eq h, mem_Union]
 #align filter.mem_infi_of_directed Filter.mem_iInf_of_directed
 
-/- warning: filter.mem_binfi_of_directed -> Filter.mem_biInf_of_directed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : β -> (Filter.{u1} α)} {s : Set.{u2} β}, (DirectedOn.{u2} β (Order.Preimage.{succ u2, succ u1} β (Filter.{u1} α) f (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))) s) -> (Set.Nonempty.{u2} β s) -> (forall {t : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) β (fun (i : β) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) => f i)))) (Exists.{succ u2} β (fun (i : β) => Exists.{0} (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : β -> (Filter.{u1} α)} {s : Set.{u2} β}, (DirectedOn.{u2} β (Order.Preimage.{succ u2, succ u1} β (Filter.{u1} α) f (fun (x._@.Mathlib.Order.Filter.Basic._hyg.10595 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.10597 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.10595 x._@.Mathlib.Order.Filter.Basic._hyg.10597)) s) -> (Set.Nonempty.{u2} β s) -> (forall {t : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) β (fun (i : β) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) => f i)))) (Exists.{succ u2} β (fun (i : β) => And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (f i)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_binfi_of_directed Filter.mem_biInf_of_directedₓ'. -/
 theorem mem_biInf_of_directed {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s)
     (ne : s.Nonempty) {t : Set α} : (t ∈ ⨅ i ∈ s, f i) ↔ ∃ i ∈ s, t ∈ f i := by
   haveI : Nonempty { x // x ∈ s } := ne.to_subtype <;>
@@ -1392,23 +960,11 @@ theorem mem_biInf_of_directed {f : β → Filter α} {s : Set β} (h : DirectedO
     rfl
 #align filter.mem_binfi_of_directed Filter.mem_biInf_of_directed
 
-/- warning: filter.binfi_sets_eq -> Filter.biInf_sets_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : β -> (Filter.{u1} α)} {s : Set.{u2} β}, (DirectedOn.{u2} β (Order.Preimage.{succ u2, succ u1} β (Filter.{u1} α) f (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))) s) -> (Set.Nonempty.{u2} β s) -> (Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) β (fun (i : β) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) => f i)))) (Set.iUnion.{u1, succ u2} (Set.{u1} α) β (fun (i : β) => Set.iUnion.{u1, 0} (Set.{u1} α) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i s) => Filter.sets.{u1} α (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : β -> (Filter.{u1} α)} {s : Set.{u2} β}, (DirectedOn.{u2} β (Order.Preimage.{succ u2, succ u1} β (Filter.{u1} α) f (fun (x._@.Mathlib.Order.Filter.Basic._hyg.10736 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.10738 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.10736 x._@.Mathlib.Order.Filter.Basic._hyg.10738)) s) -> (Set.Nonempty.{u2} β s) -> (Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) β (fun (i : β) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) => f i)))) (Set.iUnion.{u1, succ u2} (Set.{u1} α) β (fun (i : β) => Set.iUnion.{u1, 0} (Set.{u1} α) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i s) => Filter.sets.{u1} α (f i)))))
-Case conversion may be inaccurate. Consider using '#align filter.binfi_sets_eq Filter.biInf_sets_eqₓ'. -/
 theorem biInf_sets_eq {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s)
     (ne : s.Nonempty) : (⨅ i ∈ s, f i).sets = ⋃ i ∈ s, (f i).sets :=
   ext fun t => by simp [mem_binfi_of_directed h Ne]
 #align filter.binfi_sets_eq Filter.biInf_sets_eq
 
-/- warning: filter.infi_sets_eq_finite -> Filter.iInf_sets_eq_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} (f : ι -> (Filter.{u1} α)), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i))) (Set.iUnion.{u1, succ u2} (Set.{u1} α) (Finset.{u2} ι) (fun (t : Finset.{u2} ι) => Filter.sets.{u1} α (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => f i)))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Set.{u2} (Set.{u2} α)) (Filter.sets.{u2} α (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => f i))) (Set.iUnion.{u2, succ u1} (Set.{u2} α) (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Filter.sets.{u2} α (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => iInf.{u2, 0} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => f i)))))
-Case conversion may be inaccurate. Consider using '#align filter.infi_sets_eq_finite Filter.iInf_sets_eq_finiteₓ'. -/
 theorem iInf_sets_eq_finite {ι : Type _} (f : ι → Filter α) :
     (⨅ i, f i).sets = ⋃ t : Finset ι, (⨅ i ∈ t, f i).sets :=
   by
@@ -1416,56 +972,26 @@ theorem iInf_sets_eq_finite {ι : Type _} (f : ι → Filter α) :
   exact directed_of_sup fun s₁ s₂ => biInf_mono
 #align filter.infi_sets_eq_finite Filter.iInf_sets_eq_finite
 
-/- warning: filter.infi_sets_eq_finite' -> Filter.iInf_sets_eq_finite' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Filter.{u1} α)), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i))) (Set.iUnion.{u1, succ u2} (Set.{u1} α) (Finset.{u2} (PLift.{u2} ι)) (fun (t : Finset.{u2} (PLift.{u2} ι)) => Filter.sets.{u1} α (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (PLift.{u2} ι) (fun (i : PLift.{u2} ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.hasMem.{u2} (PLift.{u2} ι)) i t) (fun (H : Membership.Mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.hasMem.{u2} (PLift.{u2} ι)) i t) => f (PLift.down.{u2} ι i))))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Filter.{u1} α)), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Filter.sets.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i))) (Set.iUnion.{u1, succ u2} (Set.{u1} α) (Finset.{u2} (PLift.{u2} ι)) (fun (t : Finset.{u2} (PLift.{u2} ι)) => Filter.sets.{u1} α (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (PLift.{u2} ι) (fun (i : PLift.{u2} ι) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.instMembershipFinset.{u2} (PLift.{u2} ι)) i t) (fun (H : Membership.mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.instMembershipFinset.{u2} (PLift.{u2} ι)) i t) => f (PLift.down.{u2} ι i))))))
-Case conversion may be inaccurate. Consider using '#align filter.infi_sets_eq_finite' Filter.iInf_sets_eq_finite'ₓ'. -/
 theorem iInf_sets_eq_finite' (f : ι → Filter α) :
     (⨅ i, f i).sets = ⋃ t : Finset (PLift ι), (⨅ i ∈ t, f (PLift.down i)).sets := by
   rw [← infi_sets_eq_finite, ← equiv.plift.surjective.infi_comp]; rfl
 #align filter.infi_sets_eq_finite' Filter.iInf_sets_eq_finite'
 
-/- warning: filter.mem_infi_finite -> Filter.mem_iInf_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Filter.{u1} α)} (s : Set.{u1} α), Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (Exists.{succ u2} (Finset.{u2} ι) (fun (t : Finset.{u2} ι) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => f i)))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {f : ι -> (Filter.{u2} α)} (s : Set.{u2} α), Iff (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι f)) (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s (iInf.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => iInf.{u2, 0} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => f i)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_finite Filter.mem_iInf_finiteₓ'. -/
 theorem mem_iInf_finite {ι : Type _} {f : ι → Filter α} (s) :
     s ∈ iInf f ↔ ∃ t : Finset ι, s ∈ ⨅ i ∈ t, f i :=
   (Set.ext_iff.1 (iInf_sets_eq_finite f) s).trans mem_iUnion
 #align filter.mem_infi_finite Filter.mem_iInf_finite
 
-/- warning: filter.mem_infi_finite' -> Filter.mem_iInf_finite' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} (s : Set.{u1} α), Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (Exists.{succ u2} (Finset.{u2} (PLift.{u2} ι)) (fun (t : Finset.{u2} (PLift.{u2} ι)) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (PLift.{u2} ι) (fun (i : PLift.{u2} ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.hasMem.{u2} (PLift.{u2} ι)) i t) (fun (H : Membership.Mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.hasMem.{u2} (PLift.{u2} ι)) i t) => f (PLift.down.{u2} ι i))))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} (s : Set.{u1} α), Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (Exists.{succ u2} (Finset.{u2} (PLift.{u2} ι)) (fun (t : Finset.{u2} (PLift.{u2} ι)) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (PLift.{u2} ι) (fun (i : PLift.{u2} ι) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.instMembershipFinset.{u2} (PLift.{u2} ι)) i t) (fun (H : Membership.mem.{u2, u2} (PLift.{u2} ι) (Finset.{u2} (PLift.{u2} ι)) (Finset.instMembershipFinset.{u2} (PLift.{u2} ι)) i t) => f (PLift.down.{u2} ι i))))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_finite' Filter.mem_iInf_finite'ₓ'. -/
 theorem mem_iInf_finite' {f : ι → Filter α} (s) :
     s ∈ iInf f ↔ ∃ t : Finset (PLift ι), s ∈ ⨅ i ∈ t, f (PLift.down i) :=
   (Set.ext_iff.1 (iInf_sets_eq_finite' f) s).trans mem_iUnion
 #align filter.mem_infi_finite' Filter.mem_iInf_finite'
 
-/- warning: filter.sup_join -> Filter.sup_join is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f₁ : Filter.{u1} (Filter.{u1} α)} {f₂ : Filter.{u1} (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) (Filter.join.{u1} α f₁) (Filter.join.{u1} α f₂)) (Filter.join.{u1} α (Sup.sup.{u1} (Filter.{u1} (Filter.{u1} α)) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} (Filter.{u1} α)) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))))) f₁ f₂))
-but is expected to have type
-  forall {α : Type.{u1}} {f₁ : Filter.{u1} (Filter.{u1} α)} {f₂ : Filter.{u1} (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Filter.join.{u1} α f₁) (Filter.join.{u1} α f₂)) (Filter.join.{u1} α (Sup.sup.{u1} (Filter.{u1} (Filter.{u1} α)) (SemilatticeSup.toSup.{u1} (Filter.{u1} (Filter.{u1} α)) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α))))) f₁ f₂))
-Case conversion may be inaccurate. Consider using '#align filter.sup_join Filter.sup_joinₓ'. -/
 @[simp]
 theorem sup_join {f₁ f₂ : Filter (Filter α)} : join f₁ ⊔ join f₂ = join (f₁ ⊔ f₂) :=
   Filter.ext fun x => by simp only [mem_sup, mem_join]
 #align filter.sup_join Filter.sup_join
 
-/- warning: filter.supr_join -> Filter.iSup_join is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} (Filter.{u1} α))}, Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (x : ι) => Filter.join.{u1} α (f x))) (Filter.join.{u1} α (iSup.{u1, u2} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) ι (fun (x : ι) => f x)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} (Filter.{u1} α))}, Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (x : ι) => Filter.join.{u1} α (f x))) (Filter.join.{u1} α (iSup.{u1, u2} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toSupSet.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α))) ι (fun (x : ι) => f x)))
-Case conversion may be inaccurate. Consider using '#align filter.supr_join Filter.iSup_joinₓ'. -/
 @[simp]
 theorem iSup_join {ι : Sort w} {f : ι → Filter (Filter α)} : (⨆ x, join (f x)) = join (⨆ x, f x) :=
   Filter.ext fun x => by simp only [mem_supr, mem_join]
@@ -1498,12 +1024,6 @@ instance : Coframe (Filter α) :=
       rw [Finset.inf_insert, sup_inf_left]
       exact le_inf (iInf_le _ _) ih }
 
-/- warning: filter.mem_infi_finset -> Filter.mem_iInf_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {f : α -> (Filter.{u2} β)} {t : Set.{u2} β}, Iff (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t (iInf.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (a : α) => iInf.{u2, 0} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => f a)))) (Exists.{max (succ u1) (succ u2)} (α -> (Set.{u2} β)) (fun (p : α -> (Set.{u2} β)) => And (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (p a) (f a))) (Eq.{succ u2} (Set.{u2} β) t (Set.iInter.{u2, succ u1} β α (fun (a : α) => Set.iInter.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => p a))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {f : α -> (Filter.{u2} β)} {t : Set.{u2} β}, Iff (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t (iInf.{u2, succ u1} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) α (fun (a : α) => iInf.{u2, 0} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) => f a)))) (Exists.{max (succ u1) (succ u2)} (α -> (Set.{u2} β)) (fun (p : α -> (Set.{u2} β)) => And (forall (a : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (p a) (f a))) (Eq.{succ u2} (Set.{u2} β) t (Set.iInter.{u2, succ u1} β α (fun (a : α) => Set.iInter.{u2, 0} β (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) => p a))))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_infi_finset Filter.mem_iInf_finsetₓ'. -/
 theorem mem_iInf_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
     (t ∈ ⨅ a ∈ s, f a) ↔ ∃ p : α → Set β, (∀ a ∈ s, p a ∈ f a) ∧ t = ⋂ a ∈ s, p a :=
   by
@@ -1518,12 +1038,6 @@ theorem mem_iInf_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
     exact Inter_mem.2 fun a => mem_infi_of_mem a (hpf a a.2)
 #align filter.mem_infi_finset Filter.mem_iInf_finset
 
-/- warning: filter.infi_ne_bot_of_directed' -> Filter.iInf_neBot_of_directed' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [_inst_1 : Nonempty.{u2} ι], (Directed.{u1, u2} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (forall (i : ι), Filter.NeBot.{u1} α (f i)) -> (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [_inst_1 : Nonempty.{u2} ι], (Directed.{u1, u2} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.11995 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.11997 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.11995 x._@.Mathlib.Order.Filter.Basic._hyg.11997) f) -> (forall (i : ι), Filter.NeBot.{u1} α (f i)) -> (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f))
-Case conversion may be inaccurate. Consider using '#align filter.infi_ne_bot_of_directed' Filter.iInf_neBot_of_directed'ₓ'. -/
 /-- If `f : ι → filter α` is directed, `ι` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed` for a version assuming `nonempty α` instead of `nonempty ι`. -/
 theorem iInf_neBot_of_directed' {f : ι → Filter α} [Nonempty ι] (hd : Directed (· ≥ ·) f)
@@ -1536,12 +1050,6 @@ theorem iInf_neBot_of_directed' {f : ι → Filter α} [Nonempty ι] (hd : Direc
     exact (hb i).Ne (empty_mem_iff_bot.1 hi)⟩
 #align filter.infi_ne_bot_of_directed' Filter.iInf_neBot_of_directed'
 
-/- warning: filter.infi_ne_bot_of_directed -> Filter.iInf_neBot_of_directed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [hn : Nonempty.{succ u1} α], (Directed.{u1, u2} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (forall (i : ι), Filter.NeBot.{u1} α (f i)) -> (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [hn : Nonempty.{succ u1} α], (Directed.{u1, u2} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.12062 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.12064 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.12062 x._@.Mathlib.Order.Filter.Basic._hyg.12064) f) -> (forall (i : ι), Filter.NeBot.{u1} α (f i)) -> (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f))
-Case conversion may be inaccurate. Consider using '#align filter.infi_ne_bot_of_directed Filter.iInf_neBot_of_directedₓ'. -/
 /-- If `f : ι → filter α` is directed, `α` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed'` for a version assuming `nonempty ι` instead of `nonempty α`. -/
 theorem iInf_neBot_of_directed {f : ι → Filter α} [hn : Nonempty α] (hd : Directed (· ≥ ·) f)
@@ -1552,12 +1060,6 @@ theorem iInf_neBot_of_directed {f : ι → Filter α} [hn : Nonempty α] (hd : D
   · exact infi_ne_bot_of_directed' hd hb
 #align filter.infi_ne_bot_of_directed Filter.iInf_neBot_of_directed
 
-/- warning: filter.Inf_ne_bot_of_directed' -> Filter.sInf_neBot_of_directed' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, (Set.Nonempty.{u1} (Filter.{u1} α) s) -> (DirectedOn.{u1} (Filter.{u1} α) (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) s) -> (Not (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s)) -> (Filter.NeBot.{u1} α (InfSet.sInf.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, (Set.Nonempty.{u1} (Filter.{u1} α) s) -> (DirectedOn.{u1} (Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Basic._hyg.12137 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.12139 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.12137 x._@.Mathlib.Order.Filter.Basic._hyg.12139) s) -> (Not (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) s)) -> (Filter.NeBot.{u1} α (InfSet.sInf.{u1} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align filter.Inf_ne_bot_of_directed' Filter.sInf_neBot_of_directed'ₓ'. -/
 theorem sInf_neBot_of_directed' {s : Set (Filter α)} (hne : s.Nonempty) (hd : DirectedOn (· ≥ ·) s)
     (hbot : ⊥ ∉ s) : NeBot (sInf s) :=
   (sInf_eq_iInf' s).symm ▸
@@ -1565,46 +1067,22 @@ theorem sInf_neBot_of_directed' {s : Set (Filter α)} (hne : s.Nonempty) (hd : D
       ⟨ne_of_mem_of_not_mem hf hbot⟩
 #align filter.Inf_ne_bot_of_directed' Filter.sInf_neBot_of_directed'
 
-/- warning: filter.Inf_ne_bot_of_directed -> Filter.sInf_neBot_of_directed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] {s : Set.{u1} (Filter.{u1} α)}, (DirectedOn.{u1} (Filter.{u1} α) (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) s) -> (Not (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s)) -> (Filter.NeBot.{u1} α (InfSet.sInf.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] {s : Set.{u1} (Filter.{u1} α)}, (DirectedOn.{u1} (Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Basic._hyg.12237 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.12239 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.12237 x._@.Mathlib.Order.Filter.Basic._hyg.12239) s) -> (Not (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) s)) -> (Filter.NeBot.{u1} α (InfSet.sInf.{u1} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align filter.Inf_ne_bot_of_directed Filter.sInf_neBot_of_directedₓ'. -/
 theorem sInf_neBot_of_directed [Nonempty α] {s : Set (Filter α)} (hd : DirectedOn (· ≥ ·) s)
     (hbot : ⊥ ∉ s) : NeBot (sInf s) :=
   (sInf_eq_iInf' s).symm ▸
     iInf_neBot_of_directed hd.directed_val fun ⟨f, hf⟩ => ⟨ne_of_mem_of_not_mem hf hbot⟩
 #align filter.Inf_ne_bot_of_directed Filter.sInf_neBot_of_directed
 
-/- warning: filter.infi_ne_bot_iff_of_directed' -> Filter.iInf_neBot_iff_of_directed' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [_inst_1 : Nonempty.{u2} ι], (Directed.{u1, u2} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (Iff (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (forall (i : ι), Filter.NeBot.{u1} α (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [_inst_1 : Nonempty.{u2} ι], (Directed.{u1, u2} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.12332 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.12334 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.12332 x._@.Mathlib.Order.Filter.Basic._hyg.12334) f) -> (Iff (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (forall (i : ι), Filter.NeBot.{u1} α (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.infi_ne_bot_iff_of_directed' Filter.iInf_neBot_iff_of_directed'ₓ'. -/
 theorem iInf_neBot_iff_of_directed' {f : ι → Filter α} [Nonempty ι] (hd : Directed (· ≥ ·) f) :
     NeBot (iInf f) ↔ ∀ i, NeBot (f i) :=
   ⟨fun H i => H.mono (iInf_le _ i), iInf_neBot_of_directed' hd⟩
 #align filter.infi_ne_bot_iff_of_directed' Filter.iInf_neBot_iff_of_directed'
 
-/- warning: filter.infi_ne_bot_iff_of_directed -> Filter.iInf_neBot_iff_of_directed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [_inst_1 : Nonempty.{succ u1} α], (Directed.{u1, u2} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (Iff (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (forall (i : ι), Filter.NeBot.{u1} α (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} [_inst_1 : Nonempty.{succ u1} α], (Directed.{u1, u2} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.12401 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.12403 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.12401 x._@.Mathlib.Order.Filter.Basic._hyg.12403) f) -> (Iff (Filter.NeBot.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (forall (i : ι), Filter.NeBot.{u1} α (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.infi_ne_bot_iff_of_directed Filter.iInf_neBot_iff_of_directedₓ'. -/
 theorem iInf_neBot_iff_of_directed {f : ι → Filter α} [Nonempty α] (hd : Directed (· ≥ ·) f) :
     NeBot (iInf f) ↔ ∀ i, NeBot (f i) :=
   ⟨fun H i => H.mono (iInf_le _ i), iInf_neBot_of_directed hd⟩
 #align filter.infi_ne_bot_iff_of_directed Filter.iInf_neBot_iff_of_directed
 
-/- warning: filter.infi_sets_induct -> Filter.iInf_sets_induct is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) -> (forall {p : (Set.{u1} α) -> Prop}, (p (Set.univ.{u1} α)) -> (forall {i : ι} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s₁ (f i)) -> (p s₂) -> (p (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂))) -> (p s))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (iInf.{u1, u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) -> (forall {p : (Set.{u1} α) -> Prop}, (p (Set.univ.{u1} α)) -> (forall {i : ι} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s₁ (f i)) -> (p s₂) -> (p (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁ s₂))) -> (p s))
-Case conversion may be inaccurate. Consider using '#align filter.infi_sets_induct Filter.iInf_sets_inductₓ'. -/
 @[elab_as_elim]
 theorem iInf_sets_induct {f : ι → Filter α} {s : Set α} (hs : s ∈ iInf f) {p : Set α → Prop}
     (uni : p univ) (ins : ∀ {i s₁ s₂}, s₁ ∈ f i → p s₂ → p (s₁ ∩ s₂)) : p s :=
@@ -1624,12 +1102,6 @@ theorem iInf_sets_induct {f : ι → Filter α} {s : Set α} (hs : s ∈ iInf f)
 /-! #### `principal` equations -/
 
 
-/- warning: filter.inf_principal -> Filter.inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.principal.{u1} α s) (Filter.principal.{u1} α t)) (Filter.principal.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (Filter.principal.{u1} α s) (Filter.principal.{u1} α t)) (Filter.principal.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align filter.inf_principal Filter.inf_principalₓ'. -/
 @[simp]
 theorem inf_principal {s t : Set α} : 𝓟 s ⊓ 𝓟 t = 𝓟 (s ∩ t) :=
   le_antisymm
@@ -1637,34 +1109,16 @@ theorem inf_principal {s t : Set α} : 𝓟 s ⊓ 𝓟 t = 𝓟 (s ∩ t) :=
     (by simp [le_inf_iff, inter_subset_left, inter_subset_right])
 #align filter.inf_principal Filter.inf_principal
 
-/- warning: filter.sup_principal -> Filter.sup_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) (Filter.principal.{u1} α s) (Filter.principal.{u1} α t)) (Filter.principal.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Filter.{u1} α) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Filter.principal.{u1} α s) (Filter.principal.{u1} α t)) (Filter.principal.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align filter.sup_principal Filter.sup_principalₓ'. -/
 @[simp]
 theorem sup_principal {s t : Set α} : 𝓟 s ⊔ 𝓟 t = 𝓟 (s ∪ t) :=
   Filter.ext fun u => by simp only [union_subset_iff, mem_sup, mem_principal]
 #align filter.sup_principal Filter.sup_principal
 
-/- warning: filter.supr_principal -> Filter.iSup_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (x : ι) => Filter.principal.{u1} α (s x))) (Filter.principal.{u1} α (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (x : ι) => Filter.principal.{u1} α (s x))) (Filter.principal.{u1} α (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i)))
-Case conversion may be inaccurate. Consider using '#align filter.supr_principal Filter.iSup_principalₓ'. -/
 @[simp]
 theorem iSup_principal {ι : Sort w} {s : ι → Set α} : (⨆ x, 𝓟 (s x)) = 𝓟 (⋃ i, s i) :=
   Filter.ext fun x => by simp only [mem_supr, mem_principal, Union_subset_iff]
 #align filter.supr_principal Filter.iSup_principal
 
-/- warning: filter.principal_eq_bot_iff -> Filter.principal_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α s) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u1} (Set.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α s) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Set.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.principal_eq_bot_iff Filter.principal_eq_bot_iffₓ'. -/
 @[simp]
 theorem principal_eq_bot_iff {s : Set α} : 𝓟 s = ⊥ ↔ s = ∅ :=
   empty_mem_iff_bot.symm.trans <| mem_principal.trans subset_empty_iff
@@ -1680,97 +1134,43 @@ theorem principal_neBot_iff {s : Set α} : NeBot (𝓟 s) ↔ s.Nonempty :=
 alias principal_ne_bot_iff ↔ _ _root_.set.nonempty.principal_ne_bot
 #align set.nonempty.principal_ne_bot Set.Nonempty.principal_neBot
 
-/- warning: filter.is_compl_principal -> Filter.isCompl_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α), IsCompl.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)) (Filter.principal.{u1} α s) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α), IsCompl.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Filter.principal.{u1} α s) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align filter.is_compl_principal Filter.isCompl_principalₓ'. -/
 theorem isCompl_principal (s : Set α) : IsCompl (𝓟 s) (𝓟 (sᶜ)) :=
   IsCompl.of_eq (by rw [inf_principal, inter_compl_self, principal_empty]) <| by
     rw [sup_principal, union_compl_self, principal_univ]
 #align filter.is_compl_principal Filter.isCompl_principal
 
-/- warning: filter.mem_inf_principal' -> Filter.mem_inf_principal' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α t))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) s) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α t))) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) s) f)
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_principal' Filter.mem_inf_principal'ₓ'. -/
 theorem mem_inf_principal' {f : Filter α} {s t : Set α} : s ∈ f ⊓ 𝓟 t ↔ tᶜ ∪ s ∈ f := by
   simp only [← le_principal_iff, (is_compl_principal s).le_left_iff, disjoint_assoc, inf_principal,
     ← (is_compl_principal (t ∩ sᶜ)).le_right_iff, compl_inter, compl_compl]
 #align filter.mem_inf_principal' Filter.mem_inf_principal'
 
-/- warning: filter.mem_inf_principal -> Filter.mem_inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α t))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (setOf.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α t))) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (setOf.{u1} α (fun (x : α) => (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))) f)
-Case conversion may be inaccurate. Consider using '#align filter.mem_inf_principal Filter.mem_inf_principalₓ'. -/
 theorem mem_inf_principal {f : Filter α} {s t : Set α} : s ∈ f ⊓ 𝓟 t ↔ { x | x ∈ t → x ∈ s } ∈ f :=
   by simp only [mem_inf_principal', imp_iff_not_or]; rfl
 #align filter.mem_inf_principal Filter.mem_inf_principal
 
-/- warning: filter.supr_inf_principal -> Filter.iSup_inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Filter.{u1} α)) (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (f i) (Filter.principal.{u1} α s))) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i)) (Filter.principal.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Filter.{u1} α)) (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (f i) (Filter.principal.{u1} α s))) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i)) (Filter.principal.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align filter.supr_inf_principal Filter.iSup_inf_principalₓ'. -/
 theorem iSup_inf_principal (f : ι → Filter α) (s : Set α) : (⨆ i, f i ⊓ 𝓟 s) = (⨆ i, f i) ⊓ 𝓟 s :=
   by ext; simp only [mem_supr, mem_inf_principal]
 #align filter.supr_inf_principal Filter.iSup_inf_principal
 
-/- warning: filter.inf_principal_eq_bot -> Filter.inf_principal_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) f)
-Case conversion may be inaccurate. Consider using '#align filter.inf_principal_eq_bot Filter.inf_principal_eq_botₓ'. -/
 theorem inf_principal_eq_bot {f : Filter α} {s : Set α} : f ⊓ 𝓟 s = ⊥ ↔ sᶜ ∈ f := by
   rw [← empty_mem_iff_bot, mem_inf_principal]; rfl
 #align filter.inf_principal_eq_bot Filter.inf_principal_eq_bot
 
-/- warning: filter.mem_of_eq_bot -> Filter.mem_of_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f)
-Case conversion may be inaccurate. Consider using '#align filter.mem_of_eq_bot Filter.mem_of_eq_botₓ'. -/
 theorem mem_of_eq_bot {f : Filter α} {s : Set α} (h : f ⊓ 𝓟 (sᶜ) = ⊥) : s ∈ f := by
   rwa [inf_principal_eq_bot, compl_compl] at h
 #align filter.mem_of_eq_bot Filter.mem_of_eq_bot
 
-/- warning: filter.diff_mem_inf_principal_compl -> Filter.diff_mem_inf_principal_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (forall (t : Set.{u1} α), Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (forall (t : Set.{u1} α), Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))))
-Case conversion may be inaccurate. Consider using '#align filter.diff_mem_inf_principal_compl Filter.diff_mem_inf_principal_complₓ'. -/
 theorem diff_mem_inf_principal_compl {f : Filter α} {s : Set α} (hs : s ∈ f) (t : Set α) :
     s \ t ∈ f ⊓ 𝓟 (tᶜ) :=
   inter_mem_inf hs <| mem_principal_self (tᶜ)
 #align filter.diff_mem_inf_principal_compl Filter.diff_mem_inf_principal_compl
 
-/- warning: filter.principal_le_iff -> Filter.principal_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α s) f) (forall (V : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V f) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s V))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {f : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.principal.{u1} α s) f) (forall (V : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) V f) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s V))
-Case conversion may be inaccurate. Consider using '#align filter.principal_le_iff Filter.principal_le_iffₓ'. -/
 theorem principal_le_iff {s : Set α} {f : Filter α} : 𝓟 s ≤ f ↔ ∀ V ∈ f, s ⊆ V :=
   by
   change (∀ V, V ∈ f → V ∈ _) ↔ _
   simp_rw [mem_principal]
 #align filter.principal_le_iff Filter.principal_le_iff
 
-/- warning: filter.infi_principal_finset -> Filter.iInf_principal_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} (s : Finset.{u2} ι) (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) => Filter.principal.{u1} α (f i)))) (Filter.principal.{u1} α (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} (s : Finset.{u2} ι) (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => Filter.principal.{u1} α (f i)))) (Filter.principal.{u1} α (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align filter.infi_principal_finset Filter.iInf_principal_finsetₓ'. -/
 @[simp]
 theorem iInf_principal_finset {ι : Type w} (s : Finset ι) (f : ι → Set α) :
     (⨅ i ∈ s, 𝓟 (f i)) = 𝓟 (⋂ i ∈ s, f i) :=
@@ -1780,23 +1180,11 @@ theorem iInf_principal_finset {ι : Type w} (s : Finset ι) (f : ι → Set α) 
   · rw [Finset.iInf_insert, Finset.set_biInter_insert, hs, inf_principal]
 #align filter.infi_principal_finset Filter.iInf_principal_finset
 
-/- warning: filter.infi_principal -> Filter.iInf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Finite.{succ u2} ι] (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => Filter.principal.{u1} α (f i))) (Filter.principal.{u1} α (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Finite.{succ u2} ι] (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => Filter.principal.{u1} α (f i))) (Filter.principal.{u1} α (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align filter.infi_principal Filter.iInf_principalₓ'. -/
 @[simp]
 theorem iInf_principal {ι : Type w} [Finite ι] (f : ι → Set α) : (⨅ i, 𝓟 (f i)) = 𝓟 (⋂ i, f i) := by
   cases nonempty_fintype ι; simpa using infi_principal_finset Finset.univ f
 #align filter.infi_principal Filter.iInf_principal
 
-/- warning: filter.infi_principal_finite -> Filter.iInf_principal_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι}, (Set.Finite.{u2} ι s) -> (forall (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => Filter.principal.{u1} α (f i)))) (Filter.principal.{u1} α (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι}, (Set.Finite.{u2} ι s) -> (forall (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Filter.{u1} α) (iInf.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => Filter.principal.{u1} α (f i)))) (Filter.principal.{u1} α (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i)))))
-Case conversion may be inaccurate. Consider using '#align filter.infi_principal_finite Filter.iInf_principal_finiteₓ'. -/
 theorem iInf_principal_finite {ι : Type w} {s : Set ι} (hs : s.Finite) (f : ι → Set α) :
     (⨅ i ∈ s, 𝓟 (f i)) = 𝓟 (⋂ i ∈ s, f i) :=
   by
@@ -1806,12 +1194,6 @@ theorem iInf_principal_finite {ι : Type w} {s : Set ι} (hs : s.Finite) (f : ι
 
 end Lattice
 
-/- warning: filter.join_mono -> Filter.join_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f₁ : Filter.{u1} (Filter.{u1} α)} {f₂ : Filter.{u1} (Filter.{u1} α)}, (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toHasLe.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.partialOrder.{u1} (Filter.{u1} α)))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.join.{u1} α f₁) (Filter.join.{u1} α f₂))
-but is expected to have type
-  forall {α : Type.{u1}} {f₁ : Filter.{u1} (Filter.{u1} α)} {f₂ : Filter.{u1} (Filter.{u1} α)}, (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toLE.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instPartialOrderFilter.{u1} (Filter.{u1} α)))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.join.{u1} α f₁) (Filter.join.{u1} α f₂))
-Case conversion may be inaccurate. Consider using '#align filter.join_mono Filter.join_monoₓ'. -/
 @[mono]
 theorem join_mono {f₁ f₂ : Filter (Filter α)} (h : f₁ ≤ f₂) : join f₁ ≤ join f₂ := fun s hs => h hs
 #align filter.join_mono Filter.join_mono
@@ -1850,12 +1232,6 @@ protected theorem ext' {f₁ f₂ : Filter α}
 #align filter.ext' Filter.ext'
 -/
 
-/- warning: filter.eventually.filter_mono -> Filter.Eventually.filter_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (forall {p : α -> Prop}, (Filter.Eventually.{u1} α (fun (x : α) => p x) f₂) -> (Filter.Eventually.{u1} α (fun (x : α) => p x) f₁))
-but is expected to have type
-  forall {α : Type.{u1}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f₁ f₂) -> (forall {p : α -> Prop}, (Filter.Eventually.{u1} α (fun (x : α) => p x) f₂) -> (Filter.Eventually.{u1} α (fun (x : α) => p x) f₁))
-Case conversion may be inaccurate. Consider using '#align filter.eventually.filter_mono Filter.Eventually.filter_monoₓ'. -/
 theorem Eventually.filter_mono {f₁ f₂ : Filter α} (h : f₁ ≤ f₂) {p : α → Prop}
     (hp : ∀ᶠ x in f₂, p x) : ∀ᶠ x in f₁, p x :=
   h hp
@@ -1894,12 +1270,6 @@ theorem forall_eventually_of_eventually_forall {f : Filter α} {p : α → β �
 #align filter.forall_eventually_of_eventually_forall Filter.forall_eventually_of_eventually_forall
 -/
 
-/- warning: filter.eventually_false_iff_eq_bot -> Filter.eventually_false_iff_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => False) f) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => False) f) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_false_iff_eq_bot Filter.eventually_false_iff_eq_botₓ'. -/
 @[simp]
 theorem eventually_false_iff_eq_bot {f : Filter α} : (∀ᶠ x in f, False) ↔ f = ⊥ :=
   empty_mem_iff_bot
@@ -1912,23 +1282,11 @@ theorem eventually_const {f : Filter α} [t : NeBot f] {p : Prop} : (∀ᶠ x in
 #align filter.eventually_const Filter.eventually_const
 -/
 
-/- warning: filter.eventually_iff_exists_mem -> Filter.eventually_iff_exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) f) (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) v f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) v f) => forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y v) -> (p y))))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) f) (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) v f) (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y v) -> (p y))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_iff_exists_mem Filter.eventually_iff_exists_memₓ'. -/
 theorem eventually_iff_exists_mem {p : α → Prop} {f : Filter α} :
     (∀ᶠ x in f, p x) ↔ ∃ v ∈ f, ∀ y ∈ v, p y :=
   exists_mem_subset_iff.symm
 #align filter.eventually_iff_exists_mem Filter.eventually_iff_exists_mem
 
-/- warning: filter.eventually.exists_mem -> Filter.Eventually.exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α}, (Filter.Eventually.{u1} α (fun (x : α) => p x) f) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) v f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) v f) => forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y v) -> (p y))))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α}, (Filter.Eventually.{u1} α (fun (x : α) => p x) f) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) v f) (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y v) -> (p y))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually.exists_mem Filter.Eventually.exists_memₓ'. -/
 theorem Eventually.exists_mem {p : α → Prop} {f : Filter α} (hp : ∀ᶠ x in f, p x) :
     ∃ v ∈ f, ∀ y ∈ v, p y :=
   eventually_iff_exists_mem.1 hp
@@ -1970,59 +1328,29 @@ theorem eventually_congr {f : Filter α} {p q : α → Prop} (h : ∀ᶠ x in f,
 #align filter.eventually_congr Filter.eventually_congr
 -/
 
-/- warning: filter.eventually_all -> Filter.eventually_all is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Finite.{succ u2} ι] {l : Filter.{u1} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => forall (i : ι), p i x) l) (forall (i : ι), Filter.Eventually.{u1} α (fun (x : α) => p i x) l)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {l : Filter.{u2} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u2} α (fun (x : α) => forall (i : ι), p i x) l) (forall (i : ι), Filter.Eventually.{u2} α (fun (x : α) => p i x) l)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_all Filter.eventually_allₓ'. -/
 @[simp]
 theorem eventually_all {ι : Type _} [Finite ι] {l} {p : ι → α → Prop} :
     (∀ᶠ x in l, ∀ i, p i x) ↔ ∀ i, ∀ᶠ x in l, p i x := by cases nonempty_fintype ι;
   simpa only [Filter.Eventually, set_of_forall] using Inter_mem
 #align filter.eventually_all Filter.eventually_all
 
-/- warning: filter.eventually_all_finite -> Filter.eventually_all_finite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall {l : Filter.{u1} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) -> (Filter.Eventually.{u1} α (fun (x : α) => p i x) l)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {I : Set.{u1} ι}, (Set.Finite.{u1} ι I) -> (forall {l : Filter.{u2} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u2} α (fun (x : α) => forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) -> (Filter.Eventually.{u2} α (fun (x : α) => p i x) l)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_all_finite Filter.eventually_all_finiteₓ'. -/
 @[simp]
 theorem eventually_all_finite {ι} {I : Set ι} (hI : I.Finite) {l} {p : ι → α → Prop} :
     (∀ᶠ x in l, ∀ i ∈ I, p i x) ↔ ∀ i ∈ I, ∀ᶠ x in l, p i x := by
   simpa only [Filter.Eventually, set_of_forall] using bInter_mem hI
 #align filter.eventually_all_finite Filter.eventually_all_finite
 
-/- warning: set.finite.eventually_all -> Set.Finite.eventually_all is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall {l : Filter.{u1} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) -> (Filter.Eventually.{u1} α (fun (x : α) => p i x) l)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {I : Set.{u1} ι}, (Set.Finite.{u1} ι I) -> (forall {l : Filter.{u2} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u2} α (fun (x : α) => forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) -> (Filter.Eventually.{u2} α (fun (x : α) => p i x) l)))
-Case conversion may be inaccurate. Consider using '#align set.finite.eventually_all Set.Finite.eventually_allₓ'. -/
 alias eventually_all_finite ← _root_.set.finite.eventually_all
 #align set.finite.eventually_all Set.Finite.eventually_all
 
 attribute [protected] Set.Finite.eventually_all
 
-/- warning: filter.eventually_all_finset -> Filter.eventually_all_finset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} (I : Finset.{u2} ι) {l : Filter.{u1} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i I) -> (Filter.Eventually.{u1} α (fun (x : α) => p i x) l))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} (I : Finset.{u1} ι) {l : Filter.{u2} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u2} α (fun (x : α) => forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i I) -> (Filter.Eventually.{u2} α (fun (x : α) => p i x) l))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_all_finset Filter.eventually_all_finsetₓ'. -/
 @[simp]
 theorem eventually_all_finset {ι} (I : Finset ι) {l} {p : ι → α → Prop} :
     (∀ᶠ x in l, ∀ i ∈ I, p i x) ↔ ∀ i ∈ I, ∀ᶠ x in l, p i x :=
   I.finite_toSet.eventually_all
 #align filter.eventually_all_finset Filter.eventually_all_finset
 
-/- warning: finset.eventually_all -> Finset.eventually_all is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} (I : Finset.{u2} ι) {l : Filter.{u1} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i I) -> (Filter.Eventually.{u1} α (fun (x : α) => p i x) l))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} (I : Finset.{u1} ι) {l : Filter.{u2} α} {p : ι -> α -> Prop}, Iff (Filter.Eventually.{u2} α (fun (x : α) => forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i I) -> (p i x)) l) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i I) -> (Filter.Eventually.{u2} α (fun (x : α) => p i x) l))
-Case conversion may be inaccurate. Consider using '#align finset.eventually_all Finset.eventually_allₓ'. -/
 alias eventually_all_finset ← _root_.finset.eventually_all
 #align finset.eventually_all Finset.eventually_all
 
@@ -2052,58 +1380,28 @@ theorem eventually_imp_distrib_left {f : Filter α} {p : Prop} {q : α → Prop}
 #align filter.eventually_imp_distrib_left Filter.eventually_imp_distrib_left
 -/
 
-/- warning: filter.eventually_bot -> Filter.eventually_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop}, Filter.Eventually.{u1} α (fun (x : α) => p x) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop}, Filter.Eventually.{u1} α (fun (x : α) => p x) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_bot Filter.eventually_botₓ'. -/
 @[simp]
 theorem eventually_bot {p : α → Prop} : ∀ᶠ x in ⊥, p x :=
   ⟨⟩
 #align filter.eventually_bot Filter.eventually_bot
 
-/- warning: filter.eventually_top -> Filter.eventually_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (forall (x : α), p x)
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (forall (x : α), p x)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_top Filter.eventually_topₓ'. -/
 @[simp]
 theorem eventually_top {p : α → Prop} : (∀ᶠ x in ⊤, p x) ↔ ∀ x, p x :=
   Iff.rfl
 #align filter.eventually_top Filter.eventually_top
 
-/- warning: filter.eventually_sup -> Filter.eventually_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g)) (And (Filter.Eventually.{u1} α (fun (x : α) => p x) f) (Filter.Eventually.{u1} α (fun (x : α) => p x) g))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g)) (And (Filter.Eventually.{u1} α (fun (x : α) => p x) f) (Filter.Eventually.{u1} α (fun (x : α) => p x) g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_sup Filter.eventually_supₓ'. -/
 @[simp]
 theorem eventually_sup {p : α → Prop} {f g : Filter α} :
     (∀ᶠ x in f ⊔ g, p x) ↔ (∀ᶠ x in f, p x) ∧ ∀ᶠ x in g, p x :=
   Iff.rfl
 #align filter.eventually_sup Filter.eventually_sup
 
-/- warning: filter.eventually_Sup -> Filter.eventually_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {fs : Set.{u1} (Filter.{u1} α)}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (SupSet.sSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) fs)) (forall (f : Filter.{u1} α), (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f fs) -> (Filter.Eventually.{u1} α (fun (x : α) => p x) f))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {fs : Set.{u1} (Filter.{u1} α)}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (SupSet.sSup.{u1} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) fs)) (forall (f : Filter.{u1} α), (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) f fs) -> (Filter.Eventually.{u1} α (fun (x : α) => p x) f))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_Sup Filter.eventually_sSupₓ'. -/
 @[simp]
 theorem eventually_sSup {p : α → Prop} {fs : Set (Filter α)} :
     (∀ᶠ x in sSup fs, p x) ↔ ∀ f ∈ fs, ∀ᶠ x in f, p x :=
   Iff.rfl
 #align filter.eventually_Sup Filter.eventually_sSup
 
-/- warning: filter.eventually_supr -> Filter.eventually_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {p : α -> Prop} {fs : ι -> (Filter.{u1} α)}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (iSup.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (b : ι) => fs b))) (forall (b : ι), Filter.Eventually.{u1} α (fun (x : α) => p x) (fs b))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {p : α -> Prop} {fs : ι -> (Filter.{u1} α)}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (iSup.{u1, u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (b : ι) => fs b))) (forall (b : ι), Filter.Eventually.{u1} α (fun (x : α) => p x) (fs b))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_supr Filter.eventually_iSupₓ'. -/
 @[simp]
 theorem eventually_iSup {p : α → Prop} {fs : ι → Filter α} :
     (∀ᶠ x in ⨆ b, fs b, p x) ↔ ∀ b, ∀ᶠ x in fs b, p x :=
@@ -2117,23 +1415,11 @@ theorem eventually_principal {a : Set α} {p : α → Prop} : (∀ᶠ x in 𝓟 
 #align filter.eventually_principal Filter.eventually_principal
 -/
 
-/- warning: filter.eventually_inf -> Filter.eventually_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) => Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (p x))))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) -> (p x))))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_inf Filter.eventually_infₓ'. -/
 theorem eventually_inf {f g : Filter α} {p : α → Prop} :
     (∀ᶠ x in f ⊓ g, p x) ↔ ∃ s ∈ f, ∃ t ∈ g, ∀ x ∈ s ∩ t, p x :=
   mem_inf_iff_superset
 #align filter.eventually_inf Filter.eventually_inf
 
-/- warning: filter.eventually_inf_principal -> Filter.eventually_inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {p : α -> Prop} {s : Set.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α s))) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (p x)) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {p : α -> Prop} {s : Set.{u1} α}, Iff (Filter.Eventually.{u1} α (fun (x : α) => p x) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α s))) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (p x)) f)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_inf_principal Filter.eventually_inf_principalₓ'. -/
 theorem eventually_inf_principal {f : Filter α} {p : α → Prop} {s : Set α} :
     (∀ᶠ x in f ⊓ 𝓟 s, p x) ↔ ∀ᶠ x in f, x ∈ s → p x :=
   mem_inf_principal
@@ -2174,12 +1460,6 @@ theorem Frequently.mp {p q : α → Prop} {f : Filter α} (h : ∃ᶠ x in f, p 
 #align filter.frequently.mp Filter.Frequently.mp
 -/
 
-/- warning: filter.frequently.filter_mono -> Filter.Frequently.filter_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Frequently.{u1} α (fun (x : α) => p x) f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g) -> (Filter.Frequently.{u1} α (fun (x : α) => p x) g)
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Frequently.{u1} α (fun (x : α) => p x) f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g) -> (Filter.Frequently.{u1} α (fun (x : α) => p x) g)
-Case conversion may be inaccurate. Consider using '#align filter.frequently.filter_mono Filter.Frequently.filter_monoₓ'. -/
 theorem Frequently.filter_mono {p : α → Prop} {f g : Filter α} (h : ∃ᶠ x in f, p x) (hle : f ≤ g) :
     ∃ᶠ x in g, p x :=
   mt (fun h' => h'.filter_mono hle) h
@@ -2232,12 +1512,6 @@ theorem frequently_iff_forall_eventually_exists_and {p : α → Prop} {f : Filte
 #align filter.frequently_iff_forall_eventually_exists_and Filter.frequently_iff_forall_eventually_exists_and
 -/
 
-/- warning: filter.frequently_iff -> Filter.frequently_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {P : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => P x) f) (forall {U : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U f) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) => P x))))
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {P : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => P x) f) (forall {U : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U f) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (P x))))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_iff Filter.frequently_iffₓ'. -/
 theorem frequently_iff {f : Filter α} {P : α → Prop} :
     (∃ᶠ x in f, P x) ↔ ∀ {U}, U ∈ f → ∃ x ∈ U, P x :=
   by
@@ -2343,66 +1617,30 @@ theorem frequently_and_distrib_right {f : Filter α} {p : α → Prop} {q : Prop
 #align filter.frequently_and_distrib_right Filter.frequently_and_distrib_right
 -/
 
-/- warning: filter.frequently_bot -> Filter.frequently_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop}, Not (Filter.Frequently.{u1} α (fun (x : α) => p x) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop}, Not (Filter.Frequently.{u1} α (fun (x : α) => p x) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_bot Filter.frequently_botₓ'. -/
 @[simp]
 theorem frequently_bot {p : α → Prop} : ¬∃ᶠ x in ⊥, p x := by simp
 #align filter.frequently_bot Filter.frequently_bot
 
-/- warning: filter.frequently_top -> Filter.frequently_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Exists.{succ u1} α (fun (x : α) => p x))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Exists.{succ u1} α (fun (x : α) => p x))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_top Filter.frequently_topₓ'. -/
 @[simp]
 theorem frequently_top {p : α → Prop} : (∃ᶠ x in ⊤, p x) ↔ ∃ x, p x := by simp [Filter.Frequently]
 #align filter.frequently_top Filter.frequently_top
 
-/- warning: filter.frequently_principal -> Filter.frequently_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : Set.{u1} α} {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.principal.{u1} α a)) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x a) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x a) => p x)))
-but is expected to have type
-  forall {α : Type.{u1}} {a : Set.{u1} α} {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.principal.{u1} α a)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x a) (p x)))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_principal Filter.frequently_principalₓ'. -/
 @[simp]
 theorem frequently_principal {a : Set α} {p : α → Prop} : (∃ᶠ x in 𝓟 a, p x) ↔ ∃ x ∈ a, p x := by
   simp [Filter.Frequently, not_forall]
 #align filter.frequently_principal Filter.frequently_principal
 
-/- warning: filter.frequently_sup -> Filter.frequently_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g)) (Or (Filter.Frequently.{u1} α (fun (x : α) => p x) f) (Filter.Frequently.{u1} α (fun (x : α) => p x) g))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g)) (Or (Filter.Frequently.{u1} α (fun (x : α) => p x) f) (Filter.Frequently.{u1} α (fun (x : α) => p x) g))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_sup Filter.frequently_supₓ'. -/
 theorem frequently_sup {p : α → Prop} {f g : Filter α} :
     (∃ᶠ x in f ⊔ g, p x) ↔ (∃ᶠ x in f, p x) ∨ ∃ᶠ x in g, p x := by
   simp only [Filter.Frequently, eventually_sup, not_and_or]
 #align filter.frequently_sup Filter.frequently_sup
 
-/- warning: filter.frequently_Sup -> Filter.frequently_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {fs : Set.{u1} (Filter.{u1} α)}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (SupSet.sSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) fs)) (Exists.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f fs) (fun (H : Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) f fs) => Filter.Frequently.{u1} α (fun (x : α) => p x) f)))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} {fs : Set.{u1} (Filter.{u1} α)}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (SupSet.sSup.{u1} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) fs)) (Exists.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => And (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) f fs) (Filter.Frequently.{u1} α (fun (x : α) => p x) f)))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_Sup Filter.frequently_sSupₓ'. -/
 @[simp]
 theorem frequently_sSup {p : α → Prop} {fs : Set (Filter α)} :
     (∃ᶠ x in sSup fs, p x) ↔ ∃ f ∈ fs, ∃ᶠ x in f, p x := by
   simp [Filter.Frequently, -not_eventually, not_forall]
 #align filter.frequently_Sup Filter.frequently_sSup
 
-/- warning: filter.frequently_supr -> Filter.frequently_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {p : α -> Prop} {fs : β -> (Filter.{u1} α)}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (iSup.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) β (fun (b : β) => fs b))) (Exists.{succ u2} β (fun (b : β) => Filter.Frequently.{u1} α (fun (x : α) => p x) (fs b)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {p : α -> Prop} {fs : β -> (Filter.{u1} α)}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (iSup.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) β (fun (b : β) => fs b))) (Exists.{succ u2} β (fun (b : β) => Filter.Frequently.{u1} α (fun (x : α) => p x) (fs b)))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_supr Filter.frequently_iSupₓ'. -/
 @[simp]
 theorem frequently_iSup {p : α → Prop} {fs : β → Filter α} :
     (∃ᶠ x in ⨆ b, fs b, p x) ↔ ∃ b, ∃ᶠ x in fs b, p x := by
@@ -2470,12 +1708,6 @@ theorem eventuallyEq_univ {s : Set α} {l : Filter α} : s =ᶠ[l] univ ↔ s �
 #align filter.eventually_eq_univ Filter.eventuallyEq_univ
 -/
 
-/- warning: filter.eventually_eq.exists_mem -> Filter.EventuallyEq.exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) => Set.EqOn.{u1, u2} α β f g s)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (Set.EqOn.{u1, u2} α β f g s)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.exists_mem Filter.EventuallyEq.exists_memₓ'. -/
 theorem EventuallyEq.exists_mem {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) :
     ∃ s ∈ l, EqOn f g s :=
   h.exists_mem
@@ -2488,23 +1720,11 @@ theorem eventuallyEq_of_mem {l : Filter α} {f g : α → β} {s : Set α} (hs :
 #align filter.eventually_eq_of_mem Filter.eventuallyEq_of_mem
 -/
 
-/- warning: filter.eventually_eq_iff_exists_mem -> Filter.eventuallyEq_iff_exists_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyEq.{u1, u2} α β l f g) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) => Set.EqOn.{u1, u2} α β f g s)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyEq.{u1, u2} α β l f g) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (Set.EqOn.{u1, u2} α β f g s)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq_iff_exists_mem Filter.eventuallyEq_iff_exists_memₓ'. -/
 theorem eventuallyEq_iff_exists_mem {l : Filter α} {f g : α → β} :
     f =ᶠ[l] g ↔ ∃ s ∈ l, EqOn f g s :=
   eventually_iff_exists_mem
 #align filter.eventually_eq_iff_exists_mem Filter.eventuallyEq_iff_exists_mem
 
-/- warning: filter.eventually_eq.filter_mono -> Filter.EventuallyEq.filter_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : Filter.{u1} α} {l' : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (Filter.EventuallyEq.{u1, u2} α β l' f g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l : Filter.{u1} α} {l' : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l' l) -> (Filter.EventuallyEq.{u1, u2} α β l' f g)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.filter_mono Filter.EventuallyEq.filter_monoₓ'. -/
 theorem EventuallyEq.filter_mono {l l' : Filter α} {f g : α → β} (h₁ : f =ᶠ[l] g) (h₂ : l' ≤ l) :
     f =ᶠ[l'] g :=
   h₂ h₁
@@ -2552,12 +1772,6 @@ theorem EventuallyEq.fun_comp {f g : α → β} {l : Filter α} (H : f =ᶠ[l] g
 #align filter.eventually_eq.fun_comp Filter.EventuallyEq.fun_comp
 -/
 
-/- warning: filter.eventually_eq.comp₂ -> Filter.EventuallyEq.comp₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {f : α -> β} {f' : α -> β} {g : α -> γ} {g' : α -> γ} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, u2} α β l f f') -> (forall (h : β -> γ -> δ), (Filter.EventuallyEq.{u1, u3} α γ l g g') -> (Filter.EventuallyEq.{u1, u4} α δ l (fun (x : α) => h (f x) (g x)) (fun (x : α) => h (f' x) (g' x))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} {f : α -> β} {f' : α -> β} {g : α -> γ} {g' : α -> γ} {l : Filter.{u2} α}, (Filter.EventuallyEq.{u2, u3} α β l f f') -> (forall (h : β -> γ -> δ), (Filter.EventuallyEq.{u2, u4} α γ l g g') -> (Filter.EventuallyEq.{u2, u1} α δ l (fun (x : α) => h (f x) (g x)) (fun (x : α) => h (f' x) (g' x))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.comp₂ Filter.EventuallyEq.comp₂ₓ'. -/
 theorem EventuallyEq.comp₂ {δ} {f f' : α → β} {g g' : α → γ} {l} (Hf : f =ᶠ[l] f') (h : β → γ → δ)
     (Hg : g =ᶠ[l] g') : (fun x => h (f x) (g x)) =ᶠ[l] fun x => h (f' x) (g' x) :=
   (Hf.prod_mk Hg).fun_comp (uncurry h)
@@ -2590,12 +1804,6 @@ theorem EventuallyEq.div [Div β] {f f' g g' : α → β} {l : Filter α} (h : f
 #align filter.eventually_eq.sub Filter.EventuallyEq.sub
 -/
 
-/- warning: filter.eventually_eq.const_smul -> Filter.EventuallyEq.const_smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {𝕜 : Type.{u3}} [_inst_1 : SMul.{u3, u2} 𝕜 β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (forall (c : 𝕜), Filter.EventuallyEq.{u1, u2} α β l (fun (x : α) => SMul.smul.{u3, u2} 𝕜 β _inst_1 c (f x)) (fun (x : α) => SMul.smul.{u3, u2} 𝕜 β _inst_1 c (g x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {𝕜 : Type.{u1}} [_inst_1 : SMul.{u1, u3} 𝕜 β] {l : Filter.{u2} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u2, u3} α β l f g) -> (forall (c : 𝕜), Filter.EventuallyEq.{u2, u3} α β l (fun (x : α) => HSMul.hSMul.{u1, u3, u3} 𝕜 β β (instHSMul.{u1, u3} 𝕜 β _inst_1) c (f x)) (fun (x : α) => HSMul.hSMul.{u1, u3, u3} 𝕜 β β (instHSMul.{u1, u3} 𝕜 β _inst_1) c (g x)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.const_smul Filter.EventuallyEq.const_smulₓ'. -/
 @[to_additive]
 theorem EventuallyEq.const_smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g)
     (c : 𝕜) : (fun x => c • f x) =ᶠ[l] fun x => c • g x :=
@@ -2603,12 +1811,6 @@ theorem EventuallyEq.const_smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f g : α 
 #align filter.eventually_eq.const_smul Filter.EventuallyEq.const_smul
 #align filter.eventually_eq.const_vadd Filter.EventuallyEq.const_vadd
 
-/- warning: filter.eventually_eq.smul -> Filter.EventuallyEq.smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {𝕜 : Type.{u3}} [_inst_1 : SMul.{u3, u2} 𝕜 β] {l : Filter.{u1} α} {f : α -> 𝕜} {f' : α -> 𝕜} {g : α -> β} {g' : α -> β}, (Filter.EventuallyEq.{u1, u3} α 𝕜 l f f') -> (Filter.EventuallyEq.{u1, u2} α β l g g') -> (Filter.EventuallyEq.{u1, u2} α β l (fun (x : α) => SMul.smul.{u3, u2} 𝕜 β _inst_1 (f x) (g x)) (fun (x : α) => SMul.smul.{u3, u2} 𝕜 β _inst_1 (f' x) (g' x)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {𝕜 : Type.{u1}} [_inst_1 : SMul.{u1, u3} 𝕜 β] {l : Filter.{u2} α} {f : α -> 𝕜} {f' : α -> 𝕜} {g : α -> β} {g' : α -> β}, (Filter.EventuallyEq.{u2, u1} α 𝕜 l f f') -> (Filter.EventuallyEq.{u2, u3} α β l g g') -> (Filter.EventuallyEq.{u2, u3} α β l (fun (x : α) => HSMul.hSMul.{u1, u3, u3} 𝕜 β β (instHSMul.{u1, u3} 𝕜 β _inst_1) (f x) (g x)) (fun (x : α) => HSMul.hSMul.{u1, u3, u3} 𝕜 β β (instHSMul.{u1, u3} 𝕜 β _inst_1) (f' x) (g' x)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.smul Filter.EventuallyEq.smulₓ'. -/
 @[to_additive]
 theorem EventuallyEq.smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f f' : α → 𝕜} {g g' : α → β}
     (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') : (fun x => f x • g x) =ᶠ[l] fun x => f' x • g' x :=
@@ -2637,45 +1839,21 @@ theorem EventuallyEq.preimage {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g
 #align filter.eventually_eq.preimage Filter.EventuallyEq.preimage
 -/
 
-/- warning: filter.eventually_eq.inter -> Filter.EventuallyEq.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l s' t') -> (Filter.EventuallyEq.{u1, 0} α Prop l (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t t'))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l s' t') -> (Filter.EventuallyEq.{u1, 0} α Prop l (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.inter Filter.EventuallyEq.interₓ'. -/
 theorem EventuallyEq.inter {s t s' t' : Set α} {l : Filter α} (h : s =ᶠ[l] t) (h' : s' =ᶠ[l] t') :
     (s ∩ s' : Set α) =ᶠ[l] (t ∩ t' : Set α) :=
   h.comp₂ (· ∧ ·) h'
 #align filter.eventually_eq.inter Filter.EventuallyEq.inter
 
-/- warning: filter.eventually_eq.union -> Filter.EventuallyEq.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l s' t') -> (Filter.EventuallyEq.{u1, 0} α Prop l (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t t'))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l s' t') -> (Filter.EventuallyEq.{u1, 0} α Prop l (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.union Filter.EventuallyEq.unionₓ'. -/
 theorem EventuallyEq.union {s t s' t' : Set α} {l : Filter α} (h : s =ᶠ[l] t) (h' : s' =ᶠ[l] t') :
     (s ∪ s' : Set α) =ᶠ[l] (t ∪ t' : Set α) :=
   h.comp₂ (· ∨ ·) h'
 #align filter.eventually_eq.union Filter.EventuallyEq.union
 
-/- warning: filter.eventually_eq.compl -> Filter.EventuallyEq.compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.compl Filter.EventuallyEq.complₓ'. -/
 theorem EventuallyEq.compl {s t : Set α} {l : Filter α} (h : s =ᶠ[l] t) :
     (sᶜ : Set α) =ᶠ[l] (tᶜ : Set α) :=
   h.fun_comp Not
 #align filter.eventually_eq.compl Filter.EventuallyEq.compl
 
-/- warning: filter.eventually_eq.diff -> Filter.EventuallyEq.diff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l s' t') -> (Filter.EventuallyEq.{u1, 0} α Prop l (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t t'))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop l s t) -> (Filter.EventuallyEq.{u1, 0} α Prop l s' t') -> (Filter.EventuallyEq.{u1, 0} α Prop l (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.diff Filter.EventuallyEq.diffₓ'. -/
 theorem EventuallyEq.diff {s t s' t' : Set α} {l : Filter α} (h : s =ᶠ[l] t) (h' : s' =ᶠ[l] t') :
     (s \ s' : Set α) =ᶠ[l] (t \ t' : Set α) :=
   h.inter h'.compl
@@ -2687,23 +1865,11 @@ theorem eventuallyEq_empty {s : Set α} {l : Filter α} : s =ᶠ[l] (∅ : Set �
 #align filter.eventually_eq_empty Filter.eventuallyEq_empty
 -/
 
-/- warning: filter.inter_eventually_eq_left -> Filter.inter_eventuallyEq_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, 0} α Prop l (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) s) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)) l)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, 0} α Prop l (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) s) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)) l)
-Case conversion may be inaccurate. Consider using '#align filter.inter_eventually_eq_left Filter.inter_eventuallyEq_leftₓ'. -/
 theorem inter_eventuallyEq_left {s t : Set α} {l : Filter α} :
     (s ∩ t : Set α) =ᶠ[l] s ↔ ∀ᶠ x in l, x ∈ s → x ∈ t := by
   simp only [eventually_eq_set, mem_inter_iff, and_iff_left_iff_imp]
 #align filter.inter_eventually_eq_left Filter.inter_eventuallyEq_left
 
-/- warning: filter.inter_eventually_eq_right -> Filter.inter_eventuallyEq_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, 0} α Prop l (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) t) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) l)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, 0} α Prop l (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) t) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) l)
-Case conversion may be inaccurate. Consider using '#align filter.inter_eventually_eq_right Filter.inter_eventuallyEq_rightₓ'. -/
 theorem inter_eventuallyEq_right {s t : Set α} {l : Filter α} :
     (s ∩ t : Set α) =ᶠ[l] t ↔ ∀ᶠ x in l, x ∈ t → x ∈ s := by
   rw [inter_comm, inter_eventually_eq_left]
@@ -2716,33 +1882,15 @@ theorem eventuallyEq_principal {s : Set α} {f g : α → β} : f =ᶠ[𝓟 s] g
 #align filter.eventually_eq_principal Filter.eventuallyEq_principal
 -/
 
-/- warning: filter.eventually_eq_inf_principal_iff -> Filter.eventuallyEq_inf_principal_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {F : Filter.{u1} α} {s : Set.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyEq.{u1, u2} α β (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) F (Filter.principal.{u1} α s)) f g) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Eq.{succ u2} β (f x) (g x))) F)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {F : Filter.{u1} α} {s : Set.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyEq.{u1, u2} α β (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) F (Filter.principal.{u1} α s)) f g) (Filter.Eventually.{u1} α (fun (x : α) => (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Eq.{succ u2} β (f x) (g x))) F)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq_inf_principal_iff Filter.eventuallyEq_inf_principal_iffₓ'. -/
 theorem eventuallyEq_inf_principal_iff {F : Filter α} {s : Set α} {f g : α → β} :
     f =ᶠ[F ⊓ 𝓟 s] g ↔ ∀ᶠ x in F, x ∈ s → f x = g x :=
   eventually_inf_principal
 #align filter.eventually_eq_inf_principal_iff Filter.eventuallyEq_inf_principal_iff
 
-/- warning: filter.eventually_eq.sub_eq -> Filter.EventuallyEq.sub_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddGroup.{u2} β] {f : α -> β} {g : α -> β} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Filter.EventuallyEq.{u1, u2} α β l (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_1)))) f g) (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_1)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddGroup.{u2} β] {f : α -> β} {g : α -> β} {l : Filter.{u1} α}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Filter.EventuallyEq.{u1, u2} α β l (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_1)))) f g) (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => β) (fun (i : α) => NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_1))))))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.sub_eq Filter.EventuallyEq.sub_eqₓ'. -/
 theorem EventuallyEq.sub_eq [AddGroup β] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) :
     f - g =ᶠ[l] 0 := by simpa using (eventually_eq.sub (eventually_eq.refl l f) h).symm
 #align filter.eventually_eq.sub_eq Filter.EventuallyEq.sub_eq
 
-/- warning: filter.eventually_eq_iff_sub -> Filter.eventuallyEq_iff_sub is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddGroup.{u2} β] {f : α -> β} {g : α -> β} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, u2} α β l f g) (Filter.EventuallyEq.{u1, u2} α β l (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_1)))) f g) (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => AddZeroClass.toHasZero.{u2} β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_1)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddGroup.{u2} β] {f : α -> β} {g : α -> β} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, u2} α β l f g) (Filter.EventuallyEq.{u1, u2} α β l (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_1)))) f g) (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19136 : α) => β) (fun (i : α) => NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_1))))))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq_iff_sub Filter.eventuallyEq_iff_subₓ'. -/
 theorem eventuallyEq_iff_sub [AddGroup β] {f g : α → β} {l : Filter α} :
     f =ᶠ[l] g ↔ f - g =ᶠ[l] 0 :=
   ⟨fun h => h.sub_eq, fun h => by simpa using h.add (eventually_eq.refl l g)⟩
@@ -2782,65 +1930,29 @@ section Preorder
 
 variable [Preorder β] {l : Filter α} {f g h : α → β}
 
-/- warning: filter.eventually_eq.le -> Filter.EventuallyEq.le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f g)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.le Filter.EventuallyEq.leₓ'. -/
 theorem EventuallyEq.le (h : f =ᶠ[l] g) : f ≤ᶠ[l] g :=
   h.mono fun x => le_of_eq
 #align filter.eventually_eq.le Filter.EventuallyEq.le
 
-/- warning: filter.eventually_le.refl -> Filter.EventuallyLE.refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] (l : Filter.{u1} α) (f : α -> β), Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f f
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] (l : Filter.{u1} α) (f : α -> β), Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f f
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.refl Filter.EventuallyLE.reflₓ'. -/
 @[refl]
 theorem EventuallyLE.refl (l : Filter α) (f : α → β) : f ≤ᶠ[l] f :=
   EventuallyEq.rfl.le
 #align filter.eventually_le.refl Filter.EventuallyLE.refl
 
-/- warning: filter.eventually_le.rfl -> Filter.EventuallyLE.rfl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β}, Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f f
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β}, Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f f
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.rfl Filter.EventuallyLE.rflₓ'. -/
 theorem EventuallyLE.rfl : f ≤ᶠ[l] f :=
   EventuallyLE.refl l f
 #align filter.eventually_le.rfl Filter.EventuallyLE.rfl
 
-/- warning: filter.eventually_le.trans -> Filter.EventuallyLE.trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f h)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f h)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.trans Filter.EventuallyLE.transₓ'. -/
 @[trans]
 theorem EventuallyLE.trans (H₁ : f ≤ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₂.mp <| H₁.mono fun x => le_trans
 #align filter.eventually_le.trans Filter.EventuallyLE.trans
 
-/- warning: filter.eventually_eq.trans_le -> Filter.EventuallyEq.trans_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f h)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyEq.{u1, u2} α β l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f h)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.trans_le Filter.EventuallyEq.trans_leₓ'. -/
 @[trans]
 theorem EventuallyEq.trans_le (H₁ : f =ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₁.le.trans H₂
 #align filter.eventually_eq.trans_le Filter.EventuallyEq.trans_le
 
-/- warning: filter.eventually_le.trans_eq -> Filter.EventuallyLE.trans_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f g) -> (Filter.EventuallyEq.{u1, u2} α β l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f h)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f g) -> (Filter.EventuallyEq.{u1, u2} α β l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f h)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.trans_eq Filter.EventuallyLE.trans_eqₓ'. -/
 @[trans]
 theorem EventuallyLE.trans_eq (H₁ : f ≤ᶠ[l] g) (H₂ : g =ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₁.trans H₂.le
@@ -2848,183 +1960,87 @@ theorem EventuallyLE.trans_eq (H₁ : f ≤ᶠ[l] g) (H₂ : g =ᶠ[l] h) : f �
 
 end Preorder
 
-/- warning: filter.eventually_le.antisymm -> Filter.EventuallyLE.antisymm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l g f) -> (Filter.EventuallyEq.{u1, u2} α β l f g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l g f) -> (Filter.EventuallyEq.{u1, u2} α β l f g)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.antisymm Filter.EventuallyLE.antisymmₓ'. -/
 theorem EventuallyLE.antisymm [PartialOrder β] {l : Filter α} {f g : α → β} (h₁ : f ≤ᶠ[l] g)
     (h₂ : g ≤ᶠ[l] f) : f =ᶠ[l] g :=
   h₂.mp <| h₁.mono fun x => le_antisymm
 #align filter.eventually_le.antisymm Filter.EventuallyLE.antisymm
 
-/- warning: filter.eventually_le_antisymm_iff -> Filter.eventuallyLE_antisymm_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyEq.{u1, u2} α β l f g) (And (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l f g) (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l g f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyEq.{u1, u2} α β l f g) (And (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l f g) (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l g f))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le_antisymm_iff Filter.eventuallyLE_antisymm_iffₓ'. -/
 theorem eventuallyLE_antisymm_iff [PartialOrder β] {l : Filter α} {f g : α → β} :
     f =ᶠ[l] g ↔ f ≤ᶠ[l] g ∧ g ≤ᶠ[l] f := by
   simp only [eventually_eq, eventually_le, le_antisymm_iff, eventually_and]
 #align filter.eventually_le_antisymm_iff Filter.eventuallyLE_antisymm_iff
 
-/- warning: filter.eventually_le.le_iff_eq -> Filter.EventuallyLE.le_iff_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l f g) -> (Iff (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l g f) (Filter.EventuallyEq.{u1, u2} α β l g f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l f g) -> (Iff (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) l g f) (Filter.EventuallyEq.{u1, u2} α β l g f))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_iff_eq Filter.EventuallyLE.le_iff_eqₓ'. -/
 theorem EventuallyLE.le_iff_eq [PartialOrder β] {l : Filter α} {f g : α → β} (h : f ≤ᶠ[l] g) :
     g ≤ᶠ[l] f ↔ g =ᶠ[l] f :=
   ⟨fun h' => h'.antisymm h, EventuallyEq.le⟩
 #align filter.eventually_le.le_iff_eq Filter.EventuallyLE.le_iff_eq
 
-/- warning: filter.eventually.ne_of_lt -> Filter.Eventually.ne_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β _inst_1) (f x) (g x)) l) -> (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (g x)) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_1) (f x) (g x)) l) -> (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (g x)) l)
-Case conversion may be inaccurate. Consider using '#align filter.eventually.ne_of_lt Filter.Eventually.ne_of_ltₓ'. -/
 theorem Eventually.ne_of_lt [Preorder β] {l : Filter α} {f g : α → β} (h : ∀ᶠ x in l, f x < g x) :
     ∀ᶠ x in l, f x ≠ g x :=
   h.mono fun x hx => hx.Ne
 #align filter.eventually.ne_of_lt Filter.Eventually.ne_of_lt
 
-/- warning: filter.eventually.ne_top_of_lt -> Filter.Eventually.ne_top_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1))] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) (f x) (g x)) l) -> (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1))] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) (f x) (g x)) l) -> (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l)
-Case conversion may be inaccurate. Consider using '#align filter.eventually.ne_top_of_lt Filter.Eventually.ne_top_of_ltₓ'. -/
 theorem Eventually.ne_top_of_lt [PartialOrder β] [OrderTop β] {l : Filter α} {f g : α → β}
     (h : ∀ᶠ x in l, f x < g x) : ∀ᶠ x in l, f x ≠ ⊤ :=
   h.mono fun x hx => hx.ne_top
 #align filter.eventually.ne_top_of_lt Filter.Eventually.ne_top_of_lt
 
-/- warning: filter.eventually.lt_top_of_ne -> Filter.Eventually.lt_top_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1))] {l : Filter.{u1} α} {f : α -> β}, (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l) -> (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) (f x) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1))] {l : Filter.{u1} α} {f : α -> β}, (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l) -> (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) (f x) (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l)
-Case conversion may be inaccurate. Consider using '#align filter.eventually.lt_top_of_ne Filter.Eventually.lt_top_of_neₓ'. -/
 theorem Eventually.lt_top_of_ne [PartialOrder β] [OrderTop β] {l : Filter α} {f : α → β}
     (h : ∀ᶠ x in l, f x ≠ ⊤) : ∀ᶠ x in l, f x < ⊤ :=
   h.mono fun x hx => hx.lt_top
 #align filter.eventually.lt_top_of_ne Filter.Eventually.lt_top_of_ne
 
-/- warning: filter.eventually.lt_top_iff_ne_top -> Filter.Eventually.lt_top_iff_ne_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1))] {l : Filter.{u1} α} {f : α -> β}, Iff (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) (f x) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l) (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u2} β] [_inst_2 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1))] {l : Filter.{u1} α} {f : α -> β}, Iff (Filter.Eventually.{u1} α (fun (x : α) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) (f x) (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l) (Filter.Eventually.{u1} α (fun (x : α) => Ne.{succ u2} β (f x) (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_1)) _inst_2))) l)
-Case conversion may be inaccurate. Consider using '#align filter.eventually.lt_top_iff_ne_top Filter.Eventually.lt_top_iff_ne_topₓ'. -/
 theorem Eventually.lt_top_iff_ne_top [PartialOrder β] [OrderTop β] {l : Filter α} {f : α → β} :
     (∀ᶠ x in l, f x < ⊤) ↔ ∀ᶠ x in l, f x ≠ ⊤ :=
   ⟨Eventually.ne_of_lt, Eventually.lt_top_of_ne⟩
 #align filter.eventually.lt_top_iff_ne_top Filter.Eventually.lt_top_iff_ne_top
 
-/- warning: filter.eventually_le.inter -> Filter.EventuallyLE.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t t'))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.inter Filter.EventuallyLE.interₓ'. -/
 @[mono]
 theorem EventuallyLE.inter {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
     (s ∩ s' : Set α) ≤ᶠ[l] (t ∩ t' : Set α) :=
   h'.mp <| h.mono fun x => And.imp
 #align filter.eventually_le.inter Filter.EventuallyLE.inter
 
-/- warning: filter.eventually_le.union -> Filter.EventuallyLE.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t t'))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.union Filter.EventuallyLE.unionₓ'. -/
 @[mono]
 theorem EventuallyLE.union {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
     (s ∪ s' : Set α) ≤ᶠ[l] (t ∪ t' : Set α) :=
   h'.mp <| h.mono fun x => Or.imp
 #align filter.eventually_le.union Filter.EventuallyLE.union
 
-/- warning: filter.eventually_le.compl -> Filter.EventuallyLE.compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.compl Filter.EventuallyLE.complₓ'. -/
 @[mono]
 theorem EventuallyLE.compl {s t : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) :
     (tᶜ : Set α) ≤ᶠ[l] (sᶜ : Set α) :=
   h.mono fun x => mt
 #align filter.eventually_le.compl Filter.EventuallyLE.compl
 
-/- warning: filter.eventually_le.diff -> Filter.EventuallyLE.diff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l t' s') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t t'))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l t' s') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.diff Filter.EventuallyLE.diffₓ'. -/
 @[mono]
 theorem EventuallyLE.diff {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : t' ≤ᶠ[l] s') :
     (s \ s' : Set α) ≤ᶠ[l] (t \ t' : Set α) :=
   h.inter h'.compl
 #align filter.eventually_le.diff Filter.EventuallyLE.diff
 
-/- warning: filter.set_eventually_le_iff_mem_inf_principal -> Filter.set_eventuallyLE_iff_mem_inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align filter.set_eventually_le_iff_mem_inf_principal Filter.set_eventuallyLE_iff_mem_inf_principalₓ'. -/
 theorem set_eventuallyLE_iff_mem_inf_principal {s t : Set α} {l : Filter α} :
     s ≤ᶠ[l] t ↔ t ∈ l ⊓ 𝓟 s :=
   mem_inf_principal.symm
 #align filter.set_eventually_le_iff_mem_inf_principal Filter.set_eventuallyLE_iff_mem_inf_principal
 
-/- warning: filter.set_eventually_le_iff_inf_principal_le -> Filter.set_eventuallyLE_iff_inf_principal_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α t)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α s)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α t)))
-Case conversion may be inaccurate. Consider using '#align filter.set_eventually_le_iff_inf_principal_le Filter.set_eventuallyLE_iff_inf_principal_leₓ'. -/
 theorem set_eventuallyLE_iff_inf_principal_le {s t : Set α} {l : Filter α} :
     s ≤ᶠ[l] t ↔ l ⊓ 𝓟 s ≤ l ⊓ 𝓟 t :=
   set_eventuallyLE_iff_mem_inf_principal.trans <| by
     simp only [le_inf_iff, inf_le_left, true_and_iff, le_principal_iff]
 #align filter.set_eventually_le_iff_inf_principal_le Filter.set_eventuallyLE_iff_inf_principal_le
 
-/- warning: filter.set_eventually_eq_iff_inf_principal -> Filter.set_eventuallyEq_iff_inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, 0} α Prop l s t) (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α t)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, Iff (Filter.EventuallyEq.{u1, 0} α Prop l s t) (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α s)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α t)))
-Case conversion may be inaccurate. Consider using '#align filter.set_eventually_eq_iff_inf_principal Filter.set_eventuallyEq_iff_inf_principalₓ'. -/
 theorem set_eventuallyEq_iff_inf_principal {s t : Set α} {l : Filter α} :
     s =ᶠ[l] t ↔ l ⊓ 𝓟 s = l ⊓ 𝓟 t := by
   simp only [eventually_le_antisymm_iff, le_antisymm_iff, set_eventually_le_iff_inf_principal_le]
 #align filter.set_eventually_eq_iff_inf_principal Filter.set_eventuallyEq_iff_inf_principal
 
-/- warning: filter.eventually_le.mul_le_mul -> Filter.EventuallyLE.mul_le_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulZeroClass.{u2} β] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : PosMulMono.{u2} β (MulZeroClass.toHasMul.{u2} β _inst_1) (MulZeroClass.toHasZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] [_inst_4 : MulPosMono.{u2} β (MulZeroClass.toHasMul.{u2} β _inst_1) (MulZeroClass.toHasZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β _inst_1))))) g₁) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β _inst_1))))) f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β _inst_1))) f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulZeroClass.{u2} β] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : PosMulMono.{u2} β (MulZeroClass.toMul.{u2} β _inst_1) (MulZeroClass.toZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] [_inst_4 : MulPosMono.{u2} β (MulZeroClass.toMul.{u2} β _inst_1) (MulZeroClass.toZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21854 : α) => β) (fun (i : α) => MulZeroClass.toZero.{u2} β _inst_1)))) g₁) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21854 : α) => β) (fun (i : α) => MulZeroClass.toZero.{u2} β _inst_1)))) f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β _inst_1))) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_le_mul Filter.EventuallyLE.mul_le_mulₓ'. -/
 theorem EventuallyLE.mul_le_mul [MulZeroClass β] [PartialOrder β] [PosMulMono β] [MulPosMono β]
     {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂) (hg : g₁ ≤ᶠ[l] g₂) (hg₀ : 0 ≤ᶠ[l] g₁)
     (hf₀ : 0 ≤ᶠ[l] f₂) : f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
   filter_upwards [hf, hg, hg₀, hf₀]with x using mul_le_mul
 #align filter.eventually_le.mul_le_mul Filter.EventuallyLE.mul_le_mul
 
-/- warning: filter.eventually_le.mul_le_mul' -> Filter.EventuallyLE.mul_le_mul' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : CovariantClass.{u2, u2} β β (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))] [_inst_4 : CovariantClass.{u2, u2} β β (Function.swap.{succ u2, succ u2, succ u2} β β (fun (ᾰ : β) (ᾰ : β) => β) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_1))) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1))) f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : CovariantClass.{u2, u2} β β (fun (x._@.Mathlib.Order.Filter.Basic._hyg.23940 : β) (x._@.Mathlib.Order.Filter.Basic._hyg.23942 : β) => HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_1) x._@.Mathlib.Order.Filter.Basic._hyg.23940 x._@.Mathlib.Order.Filter.Basic._hyg.23942) (fun (x._@.Mathlib.Order.Filter.Basic._hyg.23955 : β) (x._@.Mathlib.Order.Filter.Basic._hyg.23957 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Filter.Basic._hyg.23955 x._@.Mathlib.Order.Filter.Basic._hyg.23957)] [_inst_4 : CovariantClass.{u2, u2} β β (Function.swap.{succ u2, succ u2, succ u2} β β (fun (ᾰ : β) (ᾰ : β) => β) (fun (x._@.Mathlib.Order.Filter.Basic._hyg.23977 : β) (x._@.Mathlib.Order.Filter.Basic._hyg.23979 : β) => HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β _inst_1) x._@.Mathlib.Order.Filter.Basic._hyg.23977 x._@.Mathlib.Order.Filter.Basic._hyg.23979)) (fun (x._@.Mathlib.Order.Filter.Basic._hyg.23992 : β) (x._@.Mathlib.Order.Filter.Basic._hyg.23994 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Order.Filter.Basic._hyg.23992 x._@.Mathlib.Order.Filter.Basic._hyg.23994)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1))) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_le_mul' Filter.EventuallyLE.mul_le_mul'ₓ'. -/
 @[to_additive EventuallyLe.add_le_add]
 theorem EventuallyLE.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (· * ·) (· ≤ ·)]
     [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β}
@@ -3033,76 +2049,34 @@ theorem EventuallyLE.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (�
 #align filter.eventually_le.mul_le_mul' Filter.EventuallyLE.mul_le_mul'
 #align filter.eventually_le.add_le_add Filter.EventuallyLE.add_le_add
 
-/- warning: filter.eventually_le.mul_nonneg -> Filter.EventuallyLE.mul_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Distrib.toHasMul.{u2} β (NonUnitalNonAssocSemiring.toDistrib.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21854 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21854 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21854 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => NonUnitalNonAssocSemiring.toMul.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_nonneg Filter.EventuallyLE.mul_nonnegₓ'. -/
 theorem EventuallyLE.mul_nonneg [OrderedSemiring β] {l : Filter α} {f g : α → β} (hf : 0 ≤ᶠ[l] f)
     (hg : 0 ≤ᶠ[l] g) : 0 ≤ᶠ[l] f * g := by filter_upwards [hf, hg]with x using mul_nonneg
 #align filter.eventually_le.mul_nonneg Filter.EventuallyLE.mul_nonneg
 
-/- warning: filter.eventually_sub_nonneg -> Filter.eventually_sub_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedRing.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β (OrderedRing.toOrderedAddCommGroup.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} β (NonAssocRing.toNonUnitalNonAssocRing.{u2} β (Ring.toNonAssocRing.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))))))))) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (AddCommGroupWithOne.toAddGroupWithOne.{u2} β (Ring.toAddCommGroupWithOne.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))))))) g f)) (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β (OrderedRing.toOrderedAddCommGroup.{u2} β _inst_1)))) l f g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedRing.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedRing.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21854 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β (OrderedRing.toOrderedSemiring.{u2} β _inst_1))))))) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Ring.toSub.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))) g f)) (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedRing.toPartialOrder.{u2} β _inst_1))) l f g)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_sub_nonneg Filter.eventually_sub_nonnegₓ'. -/
 theorem eventually_sub_nonneg [OrderedRing β] {l : Filter α} {f g : α → β} :
     0 ≤ᶠ[l] g - f ↔ f ≤ᶠ[l] g :=
   eventually_congr <| eventually_of_forall fun x => sub_nonneg
 #align filter.eventually_sub_nonneg Filter.eventually_sub_nonneg
 
-/- warning: filter.eventually_le.sup -> Filter.EventuallyLE.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f₁ g₁) (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f₁ g₁) (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.sup Filter.EventuallyLE.supₓ'. -/
 theorem EventuallyLE.sup [SemilatticeSup β] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂)
     (hg : g₁ ≤ᶠ[l] g₂) : f₁ ⊔ g₁ ≤ᶠ[l] f₂ ⊔ g₂ := by
   filter_upwards [hf, hg]with x hfx hgx using sup_le_sup hfx hgx
 #align filter.eventually_le.sup Filter.EventuallyLE.sup
 
-/- warning: filter.eventually_le.sup_le -> Filter.EventuallyLE.sup_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g) h)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g) h)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.sup_le Filter.EventuallyLE.sup_leₓ'. -/
 theorem EventuallyLE.sup_le [SemilatticeSup β] {l : Filter α} {f g h : α → β} (hf : f ≤ᶠ[l] h)
     (hg : g ≤ᶠ[l] h) : f ⊔ g ≤ᶠ[l] h := by
   filter_upwards [hf, hg]with x hfx hgx using sup_le hfx hgx
 #align filter.eventually_le.sup_le Filter.EventuallyLE.sup_le
 
-/- warning: filter.eventually_le.le_sup_of_le_left -> Filter.EventuallyLE.le_sup_of_le_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_sup_of_le_left Filter.EventuallyLE.le_sup_of_le_leftₓ'. -/
 theorem EventuallyLE.le_sup_of_le_left [SemilatticeSup β] {l : Filter α} {f g h : α → β}
     (hf : h ≤ᶠ[l] f) : h ≤ᶠ[l] f ⊔ g := by filter_upwards [hf]with x hfx using le_sup_of_le_left hfx
 #align filter.eventually_le.le_sup_of_le_left Filter.EventuallyLE.le_sup_of_le_left
 
-/- warning: filter.eventually_le.le_sup_of_le_right -> Filter.EventuallyLE.le_sup_of_le_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_sup_of_le_right Filter.EventuallyLE.le_sup_of_le_rightₓ'. -/
 theorem EventuallyLE.le_sup_of_le_right [SemilatticeSup β] {l : Filter α} {f g h : α → β}
     (hg : h ≤ᶠ[l] g) : h ≤ᶠ[l] f ⊔ g := by
   filter_upwards [hg]with x hgx using le_sup_of_le_right hgx
 #align filter.eventually_le.le_sup_of_le_right Filter.EventuallyLE.le_sup_of_le_right
 
-/- warning: filter.join_le -> Filter.join_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, (Filter.Eventually.{u1} (Filter.{u1} α) (fun (m : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) m l) f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.join.{u1} α f) l)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, (Filter.Eventually.{u1} (Filter.{u1} α) (fun (m : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) m l) f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.join.{u1} α f) l)
-Case conversion may be inaccurate. Consider using '#align filter.join_le Filter.join_leₓ'. -/
 theorem join_le {f : Filter (Filter α)} {l : Filter α} (h : ∀ᶠ m in f, m ≤ l) : join f ≤ l :=
   fun s hs => h.mono fun m hm => hm hs
 #align filter.join_le Filter.join_le
@@ -3176,12 +2150,6 @@ theorem range_mem_map : range m ∈ map m f := by rw [← image_univ]; exact ima
 #align filter.range_mem_map Filter.range_mem_map
 -/
 
-/- warning: filter.mem_map_iff_exists_image -> Filter.mem_map_iff_exists_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β} {t : Set.{u2} β}, Iff (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t (Filter.map.{u1, u2} α β m f)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) => HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β m s) t)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β} {t : Set.{u2} β}, Iff (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t (Filter.map.{u1, u2} α β m f)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Set.image.{u1, u2} α β m s) t)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_map_iff_exists_image Filter.mem_map_iff_exists_imageₓ'. -/
 theorem mem_map_iff_exists_image : t ∈ map m f ↔ ∃ s ∈ f, m '' s ⊆ t :=
   ⟨fun ht => ⟨m ⁻¹' t, ht, image_preimage_subset _ _⟩, fun ⟨s, hs, ht⟩ =>
     mem_of_superset (image_mem_map hs) ht⟩
@@ -3277,23 +2245,11 @@ theorem frequently_comap : (∃ᶠ a in comap f l, p a) ↔ ∃ᶠ b in l, ∃ a
 #align filter.frequently_comap Filter.frequently_comap
 -/
 
-/- warning: filter.mem_comap_iff_compl -> Filter.mem_comap_iff_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.comap.{u1, u2} α β f l)) (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.image.{u1, u2} α β f (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.comap.{u1, u2} α β f l)) (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.image.{u1, u2} α β f (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) l)
-Case conversion may be inaccurate. Consider using '#align filter.mem_comap_iff_compl Filter.mem_comap_iff_complₓ'. -/
 theorem mem_comap_iff_compl : s ∈ comap f l ↔ (f '' sᶜ)ᶜ ∈ l := by
   simp only [mem_comap', compl_def, mem_image, mem_set_of_eq, not_exists, not_and',
     Classical.not_not]
 #align filter.mem_comap_iff_compl Filter.mem_comap_iff_compl
 
-/- warning: filter.compl_mem_comap -> Filter.compl_mem_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (Filter.comap.{u1, u2} α β f l)) (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.image.{u1, u2} α β f s)) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (Filter.comap.{u1, u2} α β f l)) (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.image.{u1, u2} α β f s)) l)
-Case conversion may be inaccurate. Consider using '#align filter.compl_mem_comap Filter.compl_mem_comapₓ'. -/
 theorem compl_mem_comap : sᶜ ∈ comap f l ↔ (f '' s)ᶜ ∈ l := by rw [mem_comap_iff_compl, compl_compl]
 #align filter.compl_mem_comap Filter.compl_mem_comap
 
@@ -3440,12 +2396,6 @@ section Map
 
 variable {f f₁ f₂ : Filter α} {g g₁ g₂ : Filter β} {m : α → β} {m' : β → γ} {s : Set α} {t : Set β}
 
-/- warning: filter.mem_comap -> Filter.mem_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {m : α -> β} {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (Filter.comap.{u1, u2} α β m g)) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.preimage.{u1, u2} α β m t) s)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {m : α -> β} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.comap.{u1, u2} α β m g)) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t g) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.preimage.{u1, u2} α β m t) s)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_comap Filter.mem_comapₓ'. -/
 @[simp]
 theorem mem_comap : s ∈ comap m g ↔ ∃ t ∈ g, m ⁻¹' t ⊆ s :=
   Iff.rfl
@@ -3476,22 +2426,10 @@ theorem comap_id' : comap (fun x => x) f = f :=
 #align filter.comap_id' Filter.comap_id'
 -/
 
-/- warning: filter.comap_const_of_not_mem -> Filter.comap_const_of_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {t : Set.{u2} β} {x : β}, (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) -> (Not (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t)) -> (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β (fun (y : α) => x) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {t : Set.{u2} β} {x : β}, (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t g) -> (Not (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x t)) -> (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β (fun (y : α) => x) g) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.comap_const_of_not_mem Filter.comap_const_of_not_memₓ'. -/
 theorem comap_const_of_not_mem {x : β} (ht : t ∈ g) (hx : x ∉ t) : comap (fun y : α => x) g = ⊥ :=
   empty_mem_iff_bot.1 <| mem_comap'.2 <| mem_of_superset ht fun x' hx' y h => hx <| h.symm ▸ hx'
 #align filter.comap_const_of_not_mem Filter.comap_const_of_not_mem
 
-/- warning: filter.comap_const_of_mem -> Filter.comap_const_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {x : β}, (forall (t : Set.{u2} β), (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) t g) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t)) -> (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β (fun (y : α) => x) g) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {x : β}, (forall (t : Set.{u2} β), (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) t g) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x t)) -> (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β (fun (y : α) => x) g) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.comap_const_of_mem Filter.comap_const_of_memₓ'. -/
 theorem comap_const_of_mem {x : β} (h : ∀ t ∈ g, x ∈ t) : comap (fun y : α => x) g = ⊤ :=
   top_unique fun s hs => univ_mem' fun y => h _ (mem_comap'.1 hs) rfl
 #align filter.comap_const_of_mem Filter.comap_const_of_mem
@@ -3526,22 +2464,10 @@ variable {φ : α → β} {θ : α → γ} {ψ : β → δ} {ρ : γ → δ} (H 
 
 include H
 
-/- warning: filter.map_comm -> Filter.map_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {φ : α -> β} {θ : α -> γ} {ψ : β -> δ} {ρ : γ -> δ}, (Eq.{max (succ u1) (succ u4)} (α -> δ) (Function.comp.{succ u1, succ u2, succ u4} α β δ ψ φ) (Function.comp.{succ u1, succ u3, succ u4} α γ δ ρ θ)) -> (forall (F : Filter.{u1} α), Eq.{succ u4} (Filter.{u4} δ) (Filter.map.{u2, u4} β δ ψ (Filter.map.{u1, u2} α β φ F)) (Filter.map.{u3, u4} γ δ ρ (Filter.map.{u1, u3} α γ θ F)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} {φ : α -> β} {θ : α -> γ} {ψ : β -> δ} {ρ : γ -> δ}, (Eq.{max (succ u2) (succ u1)} (α -> δ) (Function.comp.{succ u2, succ u3, succ u1} α β δ ψ φ) (Function.comp.{succ u2, succ u4, succ u1} α γ δ ρ θ)) -> (forall (F : Filter.{u2} α), Eq.{succ u1} (Filter.{u1} δ) (Filter.map.{u3, u1} β δ ψ (Filter.map.{u2, u3} α β φ F)) (Filter.map.{u4, u1} γ δ ρ (Filter.map.{u2, u4} α γ θ F)))
-Case conversion may be inaccurate. Consider using '#align filter.map_comm Filter.map_commₓ'. -/
 theorem map_comm (F : Filter α) : map ψ (map φ F) = map ρ (map θ F) := by
   rw [Filter.map_map, H, ← Filter.map_map]
 #align filter.map_comm Filter.map_comm
 
-/- warning: filter.comap_comm -> Filter.comap_comm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {φ : α -> β} {θ : α -> γ} {ψ : β -> δ} {ρ : γ -> δ}, (Eq.{max (succ u1) (succ u4)} (α -> δ) (Function.comp.{succ u1, succ u2, succ u4} α β δ ψ φ) (Function.comp.{succ u1, succ u3, succ u4} α γ δ ρ θ)) -> (forall (G : Filter.{u4} δ), Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β φ (Filter.comap.{u2, u4} β δ ψ G)) (Filter.comap.{u1, u3} α γ θ (Filter.comap.{u3, u4} γ δ ρ G)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} {φ : α -> β} {θ : α -> γ} {ψ : β -> δ} {ρ : γ -> δ}, (Eq.{max (succ u2) (succ u1)} (α -> δ) (Function.comp.{succ u2, succ u3, succ u1} α β δ ψ φ) (Function.comp.{succ u2, succ u4, succ u1} α γ δ ρ θ)) -> (forall (G : Filter.{u1} δ), Eq.{succ u2} (Filter.{u2} α) (Filter.comap.{u2, u3} α β φ (Filter.comap.{u3, u1} β δ ψ G)) (Filter.comap.{u2, u4} α γ θ (Filter.comap.{u4, u1} γ δ ρ G)))
-Case conversion may be inaccurate. Consider using '#align filter.comap_comm Filter.comap_commₓ'. -/
 theorem comap_comm (G : Filter δ) : comap φ (comap ψ G) = comap θ (comap ρ G) := by
   rw [Filter.comap_comap, H, ← Filter.comap_comap]
 #align filter.comap_comm Filter.comap_comm
@@ -3592,160 +2518,70 @@ theorem comap_pure {b : β} : comap m (pure b) = 𝓟 (m ⁻¹' {b}) := by
 #align filter.comap_pure Filter.comap_pure
 -/
 
-/- warning: filter.map_le_iff_le_comap -> Filter.map_le_iff_le_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u2} β} {m : α -> β}, Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.map.{u1, u2} α β m f) g) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.comap.{u1, u2} α β m g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u2} β} {m : α -> β}, Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.map.{u1, u2} α β m f) g) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.comap.{u1, u2} α β m g))
-Case conversion may be inaccurate. Consider using '#align filter.map_le_iff_le_comap Filter.map_le_iff_le_comapₓ'. -/
 theorem map_le_iff_le_comap : map m f ≤ g ↔ f ≤ comap m g :=
   ⟨fun h s ⟨t, ht, hts⟩ => mem_of_superset (h ht) hts, fun h s ht => h ⟨_, ht, Subset.rfl⟩⟩
 #align filter.map_le_iff_le_comap Filter.map_le_iff_le_comap
 
-/- warning: filter.gc_map_comap -> Filter.gc_map_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (m : α -> β), GaloisConnection.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β)) (Filter.map.{u1, u2} α β m) (Filter.comap.{u1, u2} α β m)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (m : α -> β), GaloisConnection.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β)) (Filter.map.{u1, u2} α β m) (Filter.comap.{u1, u2} α β m)
-Case conversion may be inaccurate. Consider using '#align filter.gc_map_comap Filter.gc_map_comapₓ'. -/
 theorem gc_map_comap (m : α → β) : GaloisConnection (map m) (comap m) := fun f g =>
   map_le_iff_le_comap
 #align filter.gc_map_comap Filter.gc_map_comap
 
-/- warning: filter.map_mono -> Filter.map_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Monotone.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β)) (Filter.map.{u1, u2} α β m)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Monotone.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β)) (Filter.map.{u1, u2} α β m)
-Case conversion may be inaccurate. Consider using '#align filter.map_mono Filter.map_monoₓ'. -/
 @[mono]
 theorem map_mono : Monotone (map m) :=
   (gc_map_comap m).monotone_l
 #align filter.map_mono Filter.map_mono
 
-/- warning: filter.comap_mono -> Filter.comap_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Monotone.{u2, u1} (Filter.{u2} β) (Filter.{u1} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β)) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.comap.{u1, u2} α β m)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Monotone.{u2, u1} (Filter.{u2} β) (Filter.{u1} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β)) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.comap.{u1, u2} α β m)
-Case conversion may be inaccurate. Consider using '#align filter.comap_mono Filter.comap_monoₓ'. -/
 @[mono]
 theorem comap_mono : Monotone (comap m) :=
   (gc_map_comap m).monotone_u
 #align filter.comap_mono Filter.comap_mono
 
-/- warning: filter.map_bot -> Filter.map_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align filter.map_bot Filter.map_botₓ'. -/
 @[simp]
 theorem map_bot : map m ⊥ = ⊥ :=
   (gc_map_comap m).l_bot
 #align filter.map_bot Filter.map_bot
 
-/- warning: filter.map_sup -> Filter.map_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {m : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f₁ f₂)) (Sup.sup.{u2} (Filter.{u2} β) (SemilatticeSup.toHasSup.{u2} (Filter.{u2} β) (Lattice.toSemilatticeSup.{u2} (Filter.{u2} β) (ConditionallyCompleteLattice.toLattice.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))))) (Filter.map.{u1, u2} α β m f₁) (Filter.map.{u1, u2} α β m f₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {m : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f₁ f₂)) (Sup.sup.{u2} (Filter.{u2} β) (SemilatticeSup.toSup.{u2} (Filter.{u2} β) (Lattice.toSemilatticeSup.{u2} (Filter.{u2} β) (CompleteLattice.toLattice.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Filter.map.{u1, u2} α β m f₁) (Filter.map.{u1, u2} α β m f₂))
-Case conversion may be inaccurate. Consider using '#align filter.map_sup Filter.map_supₓ'. -/
 @[simp]
 theorem map_sup : map m (f₁ ⊔ f₂) = map m f₁ ⊔ map m f₂ :=
   (gc_map_comap m).l_sup
 #align filter.map_sup Filter.map_sup
 
-/- warning: filter.map_supr -> Filter.map_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {m : α -> β} {f : ι -> (Filter.{u1} α)}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (iSup.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i))) (iSup.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => Filter.map.{u1, u2} α β m (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {m : α -> β} {f : ι -> (Filter.{u1} α)}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (iSup.{u1, u3} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => f i))) (iSup.{u2, u3} (Filter.{u2} β) (CompleteLattice.toSupSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι (fun (i : ι) => Filter.map.{u1, u2} α β m (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.map_supr Filter.map_iSupₓ'. -/
 @[simp]
 theorem map_iSup {f : ι → Filter α} : map m (⨆ i, f i) = ⨆ i, map m (f i) :=
   (gc_map_comap m).l_iSup
 #align filter.map_supr Filter.map_iSup
 
-/- warning: filter.map_top -> Filter.map_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Filter.principal.{u2} β (Set.range.{u2, succ u1} β α f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Filter.principal.{u2} β (Set.range.{u2, succ u1} β α f))
-Case conversion may be inaccurate. Consider using '#align filter.map_top Filter.map_topₓ'. -/
 @[simp]
 theorem map_top (f : α → β) : map f ⊤ = 𝓟 (range f) := by
   rw [← principal_univ, map_principal, image_univ]
 #align filter.map_top Filter.map_top
 
-/- warning: filter.comap_top -> Filter.comap_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Top.top.{u2} (Filter.{u2} β) (Filter.hasTop.{u2} β))) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Top.top.{u2} (Filter.{u2} β) (Filter.instTopFilter.{u2} β))) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
-Case conversion may be inaccurate. Consider using '#align filter.comap_top Filter.comap_topₓ'. -/
 @[simp]
 theorem comap_top : comap m ⊤ = ⊤ :=
   (gc_map_comap m).u_top
 #align filter.comap_top Filter.comap_top
 
-/- warning: filter.comap_inf -> Filter.comap_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) g₁ g₂)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) g₁ g₂)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂))
-Case conversion may be inaccurate. Consider using '#align filter.comap_inf Filter.comap_infₓ'. -/
 @[simp]
 theorem comap_inf : comap m (g₁ ⊓ g₂) = comap m g₁ ⊓ comap m g₂ :=
   (gc_map_comap m).u_inf
 #align filter.comap_inf Filter.comap_inf
 
-/- warning: filter.comap_infi -> Filter.comap_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {m : α -> β} {f : ι -> (Filter.{u2} β)}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (iInf.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => f i))) (iInf.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => Filter.comap.{u1, u2} α β m (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {m : α -> β} {f : ι -> (Filter.{u2} β)}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (iInf.{u2, u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι (fun (i : ι) => f i))) (iInf.{u1, u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => Filter.comap.{u1, u2} α β m (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.comap_infi Filter.comap_iInfₓ'. -/
 @[simp]
 theorem comap_iInf {f : ι → Filter β} : comap m (⨅ i, f i) = ⨅ i, comap m (f i) :=
   (gc_map_comap m).u_iInf
 #align filter.comap_infi Filter.comap_iInf
 
-/- warning: filter.le_comap_top -> Filter.le_comap_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (l : Filter.{u1} α), LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l (Filter.comap.{u1, u2} α β f (Top.top.{u2} (Filter.{u2} β) (Filter.hasTop.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (l : Filter.{u1} α), LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l (Filter.comap.{u1, u2} α β f (Top.top.{u2} (Filter.{u2} β) (Filter.instTopFilter.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align filter.le_comap_top Filter.le_comap_topₓ'. -/
 theorem le_comap_top (f : α → β) (l : Filter α) : l ≤ comap f ⊤ := by rw [comap_top]; exact le_top
 #align filter.le_comap_top Filter.le_comap_top
 
-/- warning: filter.map_comap_le -> Filter.map_comap_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {m : α -> β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.map.{u1, u2} α β m (Filter.comap.{u1, u2} α β m g)) g
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {m : α -> β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.map.{u1, u2} α β m (Filter.comap.{u1, u2} α β m g)) g
-Case conversion may be inaccurate. Consider using '#align filter.map_comap_le Filter.map_comap_leₓ'. -/
 theorem map_comap_le : map m (comap m g) ≤ g :=
   (gc_map_comap m).l_u_le _
 #align filter.map_comap_le Filter.map_comap_le
 
-/- warning: filter.le_comap_map -> Filter.le_comap_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β}, LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Filter.comap.{u1, u2} α β m (Filter.map.{u1, u2} α β m f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Filter.comap.{u1, u2} α β m (Filter.map.{u1, u2} α β m f))
-Case conversion may be inaccurate. Consider using '#align filter.le_comap_map Filter.le_comap_mapₓ'. -/
 theorem le_comap_map : f ≤ comap m (map m f) :=
   (gc_map_comap m).le_u_l _
 #align filter.le_comap_map Filter.le_comap_map
 
-/- warning: filter.comap_bot -> Filter.comap_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.comap_bot Filter.comap_botₓ'. -/
 @[simp]
 theorem comap_bot : comap m ⊥ = ⊥ :=
   bot_unique fun s _ => ⟨∅, mem_bot, by simp only [empty_subset, preimage_empty]⟩
@@ -3761,31 +2597,13 @@ theorem neBot_of_comap (h : (comap m g).ne_bot) : g.ne_bot :=
 #align filter.ne_bot_of_comap Filter.neBot_of_comap
 -/
 
-/- warning: filter.comap_inf_principal_range -> Filter.comap_inf_principal_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) g (Filter.principal.{u2} β (Set.range.{u2, succ u1} β α m)))) (Filter.comap.{u1, u2} α β m g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g : Filter.{u2} β} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) g (Filter.principal.{u2} β (Set.range.{u2, succ u1} β α m)))) (Filter.comap.{u1, u2} α β m g)
-Case conversion may be inaccurate. Consider using '#align filter.comap_inf_principal_range Filter.comap_inf_principal_rangeₓ'. -/
 theorem comap_inf_principal_range : comap m (g ⊓ 𝓟 (range m)) = comap m g := by simp
 #align filter.comap_inf_principal_range Filter.comap_inf_principal_range
 
-/- warning: filter.disjoint_comap -> Filter.disjoint_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, (Disjoint.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) g₁ g₂) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, (Disjoint.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β))) g₁ g₂) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂))
-Case conversion may be inaccurate. Consider using '#align filter.disjoint_comap Filter.disjoint_comapₓ'. -/
 theorem disjoint_comap (h : Disjoint g₁ g₂) : Disjoint (comap m g₁) (comap m g₂) := by
   simp only [disjoint_iff, ← comap_inf, h.eq_bot, comap_bot]
 #align filter.disjoint_comap Filter.disjoint_comap
 
-/- warning: filter.comap_supr -> Filter.comap_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> (Filter.{u2} β)} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (iSup.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι f)) (iSup.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => Filter.comap.{u1, u2} α β m (f i)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} {f : ι -> (Filter.{u3} β)} {m : α -> β}, Eq.{succ u2} (Filter.{u2} α) (Filter.comap.{u2, u3} α β m (iSup.{u3, u1} (Filter.{u3} β) (CompleteLattice.toSupSet.{u3} (Filter.{u3} β) (Filter.instCompleteLatticeFilter.{u3} β)) ι f)) (iSup.{u2, u1} (Filter.{u2} α) (CompleteLattice.toSupSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => Filter.comap.{u2, u3} α β m (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.comap_supr Filter.comap_iSupₓ'. -/
 theorem comap_iSup {ι} {f : ι → Filter β} {m : α → β} : comap m (iSup f) = ⨆ i, comap m (f i) :=
   le_antisymm
     (fun s hs =>
@@ -3799,32 +2617,14 @@ theorem comap_iSup {ι} {f : ι → Filter β} {m : α → β} : comap m (iSup f
     (iSup_le fun i => comap_mono <| le_iSup _ _)
 #align filter.comap_supr Filter.comap_iSup
 
-/- warning: filter.comap_Sup -> Filter.comap_sSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u2} (Filter.{u2} β)} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (SupSet.sSup.{u2} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) s)) (iSup.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Filter.{u2} β) (fun (f : Filter.{u2} β) => iSup.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} (Filter.{u2} β) (Set.{u2} (Filter.{u2} β)) (Set.hasMem.{u2} (Filter.{u2} β)) f s) (fun (H : Membership.Mem.{u2, u2} (Filter.{u2} β) (Set.{u2} (Filter.{u2} β)) (Set.hasMem.{u2} (Filter.{u2} β)) f s) => Filter.comap.{u1, u2} α β m f)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u2} (Filter.{u2} β)} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (SupSet.sSup.{u2} (Filter.{u2} β) (CompleteLattice.toSupSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) s)) (iSup.{u1, succ u2} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Filter.{u2} β) (fun (f : Filter.{u2} β) => iSup.{u1, 0} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Membership.mem.{u2, u2} (Filter.{u2} β) (Set.{u2} (Filter.{u2} β)) (Set.instMembershipSet.{u2} (Filter.{u2} β)) f s) (fun (H : Membership.mem.{u2, u2} (Filter.{u2} β) (Set.{u2} (Filter.{u2} β)) (Set.instMembershipSet.{u2} (Filter.{u2} β)) f s) => Filter.comap.{u1, u2} α β m f)))
-Case conversion may be inaccurate. Consider using '#align filter.comap_Sup Filter.comap_sSupₓ'. -/
 theorem comap_sSup {s : Set (Filter β)} {m : α → β} : comap m (sSup s) = ⨆ f ∈ s, comap m f := by
   simp only [sSup_eq_iSup, comap_supr, eq_self_iff_true]
 #align filter.comap_Sup Filter.comap_sSup
 
-/- warning: filter.comap_sup -> Filter.comap_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Sup.sup.{u2} (Filter.{u2} β) (SemilatticeSup.toHasSup.{u2} (Filter.{u2} β) (Lattice.toSemilatticeSup.{u2} (Filter.{u2} β) (ConditionallyCompleteLattice.toLattice.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))))) g₁ g₂)) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m (Sup.sup.{u2} (Filter.{u2} β) (SemilatticeSup.toSup.{u2} (Filter.{u2} β) (Lattice.toSemilatticeSup.{u2} (Filter.{u2} β) (CompleteLattice.toLattice.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) g₁ g₂)) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂))
-Case conversion may be inaccurate. Consider using '#align filter.comap_sup Filter.comap_supₓ'. -/
 theorem comap_sup : comap m (g₁ ⊔ g₂) = comap m g₁ ⊔ comap m g₂ := by
   rw [sup_eq_iSup, comap_supr, iSup_bool_eq, Bool.cond_true, Bool.cond_false]
 #align filter.comap_sup Filter.comap_sup
 
-/- warning: filter.map_comap -> Filter.map_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Filter.{u2} β) (m : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Filter.comap.{u1, u2} α β m f)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) f (Filter.principal.{u2} β (Set.range.{u2, succ u1} β α m)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Filter.{u2} β) (m : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Filter.comap.{u1, u2} α β m f)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) f (Filter.principal.{u2} β (Set.range.{u2, succ u1} β α m)))
-Case conversion may be inaccurate. Consider using '#align filter.map_comap Filter.map_comapₓ'. -/
 theorem map_comap (f : Filter β) (m : α → β) : (f.comap m).map m = f ⊓ 𝓟 (range m) :=
   by
   refine' le_antisymm (le_inf map_comap_le <| le_principal_iff.2 range_mem_map) _
@@ -3847,12 +2647,6 @@ instance canLift (c) (p) [CanLift α β c p] :
 #align filter.can_lift Filter.canLift
 -/
 
-/- warning: filter.comap_le_comap_iff -> Filter.comap_le_comap_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {g : Filter.{u2} β} {m : α -> β}, (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.range.{u2, succ u1} β α m) f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.comap.{u1, u2} α β m f) (Filter.comap.{u1, u2} α β m g)) (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {g : Filter.{u2} β} {m : α -> β}, (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.range.{u2, succ u1} β α m) f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.comap.{u1, u2} α β m f) (Filter.comap.{u1, u2} α β m g)) (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.comap_le_comap_iff Filter.comap_le_comap_iffₓ'. -/
 theorem comap_le_comap_iff {f g : Filter β} {m : α → β} (hf : range m ∈ f) :
     comap m f ≤ comap m g ↔ f ≤ g :=
   ⟨fun h => map_comap_of_mem hf ▸ (map_mono h).trans map_comap_le, fun h => comap_mono h⟩
@@ -3865,22 +2659,10 @@ theorem map_comap_of_surjective {f : α → β} (hf : Surjective f) (l : Filter 
 #align filter.map_comap_of_surjective Filter.map_comap_of_surjective
 -/
 
-/- warning: function.surjective.filter_map_top -> Function.Surjective.filter_map_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Top.top.{u2} (Filter.{u2} β) (Filter.hasTop.{u2} β)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Surjective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Top.top.{u2} (Filter.{u2} β) (Filter.instTopFilter.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align function.surjective.filter_map_top Function.Surjective.filter_map_topₓ'. -/
 theorem Function.Surjective.filter_map_top {f : α → β} (hf : Surjective f) : map f ⊤ = ⊤ :=
   (congr_arg _ comap_top).symm.trans <| map_comap_of_surjective hf ⊤
 #align function.surjective.filter_map_top Function.Surjective.filter_map_top
 
-/- warning: filter.subtype_coe_map_comap -> Filter.subtype_coe_map_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) (Filter.map.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))) (Filter.comap.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))) f)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f (Filter.principal.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) (Filter.map.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) (Filter.comap.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) f)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f (Filter.principal.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align filter.subtype_coe_map_comap Filter.subtype_coe_map_comapₓ'. -/
 theorem subtype_coe_map_comap (s : Set α) (f : Filter α) :
     map (coe : s → α) (comap (coe : s → α) f) = f ⊓ 𝓟 s := by rw [map_comap, Subtype.range_coe]
 #align filter.subtype_coe_map_comap Filter.subtype_coe_map_comap
@@ -3918,12 +2700,6 @@ theorem mem_comap_iff {f : Filter β} {m : α → β} (inj : Injective m) (large
 #align filter.mem_comap_iff Filter.mem_comap_iff
 -/
 
-/- warning: filter.map_le_map_iff_of_inj_on -> Filter.map_le_map_iff_of_injOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α} {f : α -> β} {s : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l₁) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l₂) -> (Set.InjOn.{u1, u2} α β f s) -> (Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.map.{u1, u2} α β f l₁) (Filter.map.{u1, u2} α β f l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α} {f : α -> β} {s : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l₁) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l₂) -> (Set.InjOn.{u1, u2} α β f s) -> (Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.map.{u1, u2} α β f l₁) (Filter.map.{u1, u2} α β f l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ l₂))
-Case conversion may be inaccurate. Consider using '#align filter.map_le_map_iff_of_inj_on Filter.map_le_map_iff_of_injOnₓ'. -/
 theorem map_le_map_iff_of_injOn {l₁ l₂ : Filter α} {f : α → β} {s : Set α} (h₁ : s ∈ l₁)
     (h₂ : s ∈ l₂) (hinj : InjOn f s) : map f l₁ ≤ map f l₂ ↔ l₁ ≤ l₂ :=
   ⟨fun h t ht =>
@@ -3933,12 +2709,6 @@ theorem map_le_map_iff_of_injOn {l₁ l₂ : Filter α} {f : α → β} {s : Set
     fun h => map_mono h⟩
 #align filter.map_le_map_iff_of_inj_on Filter.map_le_map_iff_of_injOn
 
-/- warning: filter.map_le_map_iff -> Filter.map_le_map_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β}, (Function.Injective.{succ u1, succ u2} α β m) -> (Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β}, (Function.Injective.{succ u1, succ u2} α β m) -> (Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.map_le_map_iff Filter.map_le_map_iffₓ'. -/
 theorem map_le_map_iff {f g : Filter α} {m : α → β} (hm : Injective m) :
     map m f ≤ map m g ↔ f ≤ g := by rw [map_le_iff_le_comap, comap_map hm]
 #align filter.map_le_map_iff Filter.map_le_map_iff
@@ -3984,43 +2754,19 @@ theorem comap_neBot_iff_frequently {f : Filter β} {m : α → β} :
 #align filter.comap_ne_bot_iff_frequently Filter.comap_neBot_iff_frequently
 -/
 
-/- warning: filter.comap_ne_bot_iff_compl_range -> Filter.comap_neBot_iff_compl_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, Iff (Filter.NeBot.{u1} α (Filter.comap.{u1, u2} α β m f)) (Not (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α m)) f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, Iff (Filter.NeBot.{u1} α (Filter.comap.{u1, u2} α β m f)) (Not (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u1} β α m)) f))
-Case conversion may be inaccurate. Consider using '#align filter.comap_ne_bot_iff_compl_range Filter.comap_neBot_iff_compl_rangeₓ'. -/
 theorem comap_neBot_iff_compl_range {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ range mᶜ ∉ f :=
   comap_neBot_iff_frequently
 #align filter.comap_ne_bot_iff_compl_range Filter.comap_neBot_iff_compl_range
 
-/- warning: filter.comap_eq_bot_iff_compl_range -> Filter.comap_eq_bot_iff_compl_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, Iff (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m f) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α m)) f)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, Iff (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m f) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u1} β α m)) f)
-Case conversion may be inaccurate. Consider using '#align filter.comap_eq_bot_iff_compl_range Filter.comap_eq_bot_iff_compl_rangeₓ'. -/
 theorem comap_eq_bot_iff_compl_range {f : Filter β} {m : α → β} : comap m f = ⊥ ↔ range mᶜ ∈ f :=
   not_iff_not.mp <| neBot_iff.symm.trans comap_neBot_iff_compl_range
 #align filter.comap_eq_bot_iff_compl_range Filter.comap_eq_bot_iff_compl_range
 
-/- warning: filter.comap_surjective_eq_bot -> Filter.comap_surjective_eq_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, (Function.Surjective.{succ u1, succ u2} α β m) -> (Iff (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m f) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u2} (Filter.{u2} β) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, (Function.Surjective.{succ u1, succ u2} α β m) -> (Iff (Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u2} α β m f) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u2} (Filter.{u2} β) f (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))))
-Case conversion may be inaccurate. Consider using '#align filter.comap_surjective_eq_bot Filter.comap_surjective_eq_botₓ'. -/
 theorem comap_surjective_eq_bot {f : Filter β} {m : α → β} (hm : Surjective m) :
     comap m f = ⊥ ↔ f = ⊥ := by
   rw [comap_eq_bot_iff_compl_range, hm.range_eq, compl_univ, empty_mem_iff_bot]
 #align filter.comap_surjective_eq_bot Filter.comap_surjective_eq_bot
 
-/- warning: filter.disjoint_comap_iff -> Filter.disjoint_comap_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, (Function.Surjective.{succ u1, succ u2} α β m) -> (Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂)) (Disjoint.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) g₁ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {g₁ : Filter.{u2} β} {g₂ : Filter.{u2} β} {m : α -> β}, (Function.Surjective.{succ u1, succ u2} α β m) -> (Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Filter.comap.{u1, u2} α β m g₁) (Filter.comap.{u1, u2} α β m g₂)) (Disjoint.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β))) g₁ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.disjoint_comap_iff Filter.disjoint_comap_iffₓ'. -/
 theorem disjoint_comap_iff (h : Surjective m) :
     Disjoint (comap m g₁) (comap m g₂) ↔ Disjoint g₁ g₂ := by
   rw [disjoint_iff, disjoint_iff, ← comap_inf, comap_surjective_eq_bot h]
@@ -4071,12 +2817,6 @@ theorem comap_snd_neBot [Nonempty α] {f : Filter β} [NeBot f] :
 #align filter.comap_snd_ne_bot Filter.comap_snd_neBot
 -/
 
-/- warning: filter.comap_eval_ne_bot_iff' -> Filter.comap_eval_neBot_iff' is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} {i : ι} {f : Filter.{u2} (α i)}, Iff (Filter.NeBot.{max u1 u2} (forall (x : ι), α x) (Filter.comap.{max u1 u2, u2} (forall (x : ι), α x) (α i) (Function.eval.{succ u1, succ u2} ι (fun {i : ι} => α i) i) f)) (And (forall (j : ι), Nonempty.{succ u2} (α j)) (Filter.NeBot.{u2} (α i) f))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {i : ι} {f : Filter.{u1} (α i)}, Iff (Filter.NeBot.{max u2 u1} (forall (x : ι), α x) (Filter.comap.{max u2 u1, u1} (forall (x : ι), α x) (α i) (Function.eval.{succ u2, succ u1} ι α i) f)) (And (forall (j : ι), Nonempty.{succ u1} (α j)) (Filter.NeBot.{u1} (α i) f))
-Case conversion may be inaccurate. Consider using '#align filter.comap_eval_ne_bot_iff' Filter.comap_eval_neBot_iff'ₓ'. -/
 theorem comap_eval_neBot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : Filter (α i)} :
     (comap (eval i) f).ne_bot ↔ (∀ j, Nonempty (α j)) ∧ NeBot f :=
   by
@@ -4087,35 +2827,17 @@ theorem comap_eval_neBot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : F
     simp [comap_ne_bot_iff_frequently, *]
 #align filter.comap_eval_ne_bot_iff' Filter.comap_eval_neBot_iff'
 
-/- warning: filter.comap_eval_ne_bot_iff -> Filter.comap_eval_neBot_iff is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (j : ι), Nonempty.{succ u2} (α j)] {i : ι} {f : Filter.{u2} (α i)}, Iff (Filter.NeBot.{max u1 u2} (forall (x : ι), α x) (Filter.comap.{max u1 u2, u2} (forall (x : ι), α x) (α i) (Function.eval.{succ u1, succ u2} ι (fun {i : ι} => α i) i) f)) (Filter.NeBot.{u2} (α i) f)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (j : ι), Nonempty.{succ u1} (α j)] {i : ι} {f : Filter.{u1} (α i)}, Iff (Filter.NeBot.{max u2 u1} (forall (x : ι), α x) (Filter.comap.{max u2 u1, u1} (forall (x : ι), α x) (α i) (Function.eval.{succ u2, succ u1} ι α i) f)) (Filter.NeBot.{u1} (α i) f)
-Case conversion may be inaccurate. Consider using '#align filter.comap_eval_ne_bot_iff Filter.comap_eval_neBot_iffₓ'. -/
 @[simp]
 theorem comap_eval_neBot_iff {ι : Type _} {α : ι → Type _} [∀ j, Nonempty (α j)] {i : ι}
     {f : Filter (α i)} : (comap (eval i) f).ne_bot ↔ NeBot f := by simp [comap_eval_ne_bot_iff', *]
 #align filter.comap_eval_ne_bot_iff Filter.comap_eval_neBot_iff
 
-/- warning: filter.comap_eval_ne_bot -> Filter.comap_eval_neBot is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (j : ι), Nonempty.{succ u2} (α j)] (i : ι) (f : Filter.{u2} (α i)) [_inst_2 : Filter.NeBot.{u2} (α i) f], Filter.NeBot.{max u1 u2} (forall (x : ι), α x) (Filter.comap.{max u1 u2, u2} (forall (x : ι), α x) (α i) (Function.eval.{succ u1, succ u2} ι (fun (i : ι) => α i) i) f)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (j : ι), Nonempty.{succ u1} (α j)] (i : ι) (f : Filter.{u1} (α i)) [_inst_2 : Filter.NeBot.{u1} (α i) f], Filter.NeBot.{max u2 u1} (forall (x : ι), α x) (Filter.comap.{max u2 u1, u1} (forall (x : ι), α x) (α i) (Function.eval.{succ u2, succ u1} ι α i) f)
-Case conversion may be inaccurate. Consider using '#align filter.comap_eval_ne_bot Filter.comap_eval_neBotₓ'. -/
 @[instance]
 theorem comap_eval_neBot {ι : Type _} {α : ι → Type _} [∀ j, Nonempty (α j)] (i : ι)
     (f : Filter (α i)) [NeBot f] : (comap (eval i) f).ne_bot :=
   comap_eval_neBot_iff.2 ‹_›
 #align filter.comap_eval_ne_bot Filter.comap_eval_neBot
 
-/- warning: filter.comap_inf_principal_ne_bot_of_image_mem -> Filter.comap_inf_principal_neBot_of_image_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, (Filter.NeBot.{u2} β f) -> (forall {s : Set.{u1} α}, (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.image.{u1, u2} α β m s) f) -> (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.comap.{u1, u2} α β m f) (Filter.principal.{u1} α s))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u2} β} {m : α -> β}, (Filter.NeBot.{u2} β f) -> (forall {s : Set.{u1} α}, (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.image.{u1, u2} α β m s) f) -> (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (Filter.comap.{u1, u2} α β m f) (Filter.principal.{u1} α s))))
-Case conversion may be inaccurate. Consider using '#align filter.comap_inf_principal_ne_bot_of_image_mem Filter.comap_inf_principal_neBot_of_image_memₓ'. -/
 theorem comap_inf_principal_neBot_of_image_mem {f : Filter β} {m : α → β} (hf : NeBot f) {s : Set α}
     (hs : m '' s ∈ f) : NeBot (comap m f ⊓ 𝓟 s) :=
   by
@@ -4125,12 +2847,6 @@ theorem comap_inf_principal_neBot_of_image_mem {f : Filter β} {m : α → β} (
   exact absurd hxs (hts hxt)
 #align filter.comap_inf_principal_ne_bot_of_image_mem Filter.comap_inf_principal_neBot_of_image_mem
 
-/- warning: filter.comap_coe_ne_bot_of_le_principal -> Filter.comap_coe_neBot_of_le_principal is a dubious translation:
-lean 3 declaration is
-  forall {γ : Type.{u1}} {s : Set.{u1} γ} {l : Filter.{u1} γ} [h : Filter.NeBot.{u1} γ l], (LE.le.{u1} (Filter.{u1} γ) (Preorder.toHasLe.{u1} (Filter.{u1} γ) (PartialOrder.toPreorder.{u1} (Filter.{u1} γ) (Filter.partialOrder.{u1} γ))) l (Filter.principal.{u1} γ s)) -> (Filter.NeBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) (Filter.comap.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) γ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) γ (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) γ (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) γ (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) γ (coeSubtype.{succ u1} γ (fun (x : γ) => Membership.Mem.{u1, u1} γ (Set.{u1} γ) (Set.hasMem.{u1} γ) x s)))))) l))
-but is expected to have type
-  forall {γ : Type.{u1}} {s : Set.{u1} γ} {l : Filter.{u1} γ} [h : Filter.NeBot.{u1} γ l], (LE.le.{u1} (Filter.{u1} γ) (Preorder.toLE.{u1} (Filter.{u1} γ) (PartialOrder.toPreorder.{u1} (Filter.{u1} γ) (Filter.instPartialOrderFilter.{u1} γ))) l (Filter.principal.{u1} γ s)) -> (Filter.NeBot.{u1} (Subtype.{succ u1} γ (fun (x : γ) => Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) x s)) (Filter.comap.{u1, u1} (Subtype.{succ u1} γ (fun (x : γ) => Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) x s)) γ (Subtype.val.{succ u1} γ (fun (x : γ) => Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) x s)) l))
-Case conversion may be inaccurate. Consider using '#align filter.comap_coe_ne_bot_of_le_principal Filter.comap_coe_neBot_of_le_principalₓ'. -/
 theorem comap_coe_neBot_of_le_principal {s : Set γ} {l : Filter γ} [h : NeBot l] (h' : l ≤ 𝓟 s) :
     NeBot (comap (coe : s → γ) l) :=
   h.comap_of_range_mem <| (@Subtype.range_coe γ s).symm ▸ h' (mem_principal_self s)
@@ -4150,12 +2866,6 @@ theorem NeBot.comap_of_image_mem {f : Filter β} {m : α → β} (hf : NeBot f) 
 #align filter.ne_bot.comap_of_image_mem Filter.NeBot.comap_of_image_mem
 -/
 
-/- warning: filter.map_eq_bot_iff -> Filter.map_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β}, Iff (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m f) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toHasBot.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β)))) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β}, Iff (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m f) (Bot.bot.{u2} (Filter.{u2} β) (CompleteLattice.toBot.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align filter.map_eq_bot_iff Filter.map_eq_bot_iffₓ'. -/
 @[simp]
 theorem map_eq_bot_iff : map m f = ⊥ ↔ f = ⊥ :=
   ⟨by rw [← empty_mem_iff_bot, ← empty_mem_iff_bot]; exact id, fun h => by simp only [h, map_bot]⟩
@@ -4203,23 +2913,11 @@ theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀ (comap f F).s
 
 end Map
 
-/- warning: filter.map_infi_le -> Filter.map_iInf_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> (Filter.{u1} α)} {m : α -> β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.map.{u1, u2} α β m (iInf.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (iInf.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => Filter.map.{u1, u2} α β m (f i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> (Filter.{u1} α)} {m : α -> β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.map.{u1, u2} α β m (iInf.{u1, u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (iInf.{u2, u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι (fun (i : ι) => Filter.map.{u1, u2} α β m (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.map_infi_le Filter.map_iInf_leₓ'. -/
 -- this is a generic rule for monotone functions:
 theorem map_iInf_le {f : ι → Filter α} {m : α → β} : map m (iInf f) ≤ ⨅ i, map m (f i) :=
   le_iInf fun i => map_mono <| iInf_le _ _
 #align filter.map_infi_le Filter.map_iInf_le
 
-/- warning: filter.map_infi_eq -> Filter.map_iInf_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> (Filter.{u1} α)} {m : α -> β}, (Directed.{u1, u3} (Filter.{u1} α) ι (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) f) -> (forall [_inst_1 : Nonempty.{u3} ι], Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (iInf.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (iInf.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => Filter.map.{u1, u2} α β m (f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> (Filter.{u1} α)} {m : α -> β}, (Directed.{u1, u3} (Filter.{u1} α) ι (fun (x._@.Mathlib.Order.Filter.Basic._hyg.33434 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.33436 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.33434 x._@.Mathlib.Order.Filter.Basic._hyg.33436) f) -> (forall [_inst_1 : Nonempty.{u3} ι], Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (iInf.{u1, u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι f)) (iInf.{u2, u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι (fun (i : ι) => Filter.map.{u1, u2} α β m (f i))))
-Case conversion may be inaccurate. Consider using '#align filter.map_infi_eq Filter.map_iInf_eqₓ'. -/
 theorem map_iInf_eq {f : ι → Filter α} {m : α → β} (hf : Directed (· ≥ ·) f) [Nonempty ι] :
     map m (iInf f) = ⨅ i, map m (f i) :=
   map_iInf_le.antisymm fun s (hs : Preimage m s ∈ iInf f) =>
@@ -4229,12 +2927,6 @@ theorem map_iInf_eq {f : ι → Filter α} {m : α → β} (hf : Directed (· �
     Filter.le_principal_iff.1 this
 #align filter.map_infi_eq Filter.map_iInf_eq
 
-/- warning: filter.map_binfi_eq -> Filter.map_biInf_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} {f : ι -> (Filter.{u1} α)} {m : α -> β} {p : ι -> Prop}, (DirectedOn.{u3} ι (Order.Preimage.{succ u3, succ u1} ι (Filter.{u1} α) f (GE.ge.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))))) (setOf.{u3} ι (fun (x : ι) => p x))) -> (Exists.{succ u3} ι (fun (i : ι) => p i)) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (iInf.{u1, succ u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (p i) (fun (h : p i) => f i)))) (iInf.{u2, succ u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => iInf.{u2, 0} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) (p i) (fun (h : p i) => Filter.map.{u1, u2} α β m (f i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} {f : ι -> (Filter.{u1} α)} {m : α -> β} {p : ι -> Prop}, (DirectedOn.{u3} ι (Order.Preimage.{succ u3, succ u1} ι (Filter.{u1} α) f (fun (x._@.Mathlib.Order.Filter.Basic._hyg.33591 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.33593 : Filter.{u1} α) => GE.ge.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.33591 x._@.Mathlib.Order.Filter.Basic._hyg.33593)) (setOf.{u3} ι (fun (x : ι) => p x))) -> (Exists.{succ u3} ι (fun (i : ι) => p i)) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (iInf.{u1, succ u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => iInf.{u1, 0} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (p i) (fun (h : p i) => f i)))) (iInf.{u2, succ u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι (fun (i : ι) => iInf.{u2, 0} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) (p i) (fun (h : p i) => Filter.map.{u1, u2} α β m (f i)))))
-Case conversion may be inaccurate. Consider using '#align filter.map_binfi_eq Filter.map_biInf_eqₓ'. -/
 theorem map_biInf_eq {ι : Type w} {f : ι → Filter α} {m : α → β} {p : ι → Prop}
     (h : DirectedOn (f ⁻¹'o (· ≥ ·)) { x | p x }) (ne : ∃ i, p i) :
     map m (⨅ (i) (h : p i), f i) = ⨅ (i) (h : p i), map m (f i) :=
@@ -4244,22 +2936,10 @@ theorem map_biInf_eq {ι : Type w} {f : ι → Filter α} {m : α → β} {p : �
   exact map_infi_eq h.directed_coe
 #align filter.map_binfi_eq Filter.map_biInf_eq
 
-/- warning: filter.map_inf_le -> Filter.map_inf_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.map.{u1, u2} α β m (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β}, LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.map.{u1, u2} α β m (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g))
-Case conversion may be inaccurate. Consider using '#align filter.map_inf_le Filter.map_inf_leₓ'. -/
 theorem map_inf_le {f g : Filter α} {m : α → β} : map m (f ⊓ g) ≤ map m f ⊓ map m g :=
   (@map_mono _ _ m).map_inf_le f g
 #align filter.map_inf_le Filter.map_inf_le
 
-/- warning: filter.map_inf -> Filter.map_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β}, (Function.Injective.{succ u1, succ u2} α β m) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β}, (Function.Injective.{succ u1, succ u2} α β m) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g)))
-Case conversion may be inaccurate. Consider using '#align filter.map_inf Filter.map_infₓ'. -/
 theorem map_inf {f g : Filter α} {m : α → β} (h : Injective m) :
     map m (f ⊓ g) = map m f ⊓ map m g :=
   by
@@ -4269,12 +2949,6 @@ theorem map_inf {f g : Filter α} {m : α → β} (h : Injective m) :
   rw [← image_inter h, image_subset_iff, ht]
 #align filter.map_inf Filter.map_inf
 
-/- warning: filter.map_inf' -> Filter.map_inf' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) -> (Set.InjOn.{u1, u2} α β m t) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {m : α -> β} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) -> (Set.InjOn.{u1, u2} α β m t) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β m (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (Filter.map.{u1, u2} α β m f) (Filter.map.{u1, u2} α β m g)))
-Case conversion may be inaccurate. Consider using '#align filter.map_inf' Filter.map_inf'ₓ'. -/
 theorem map_inf' {f g : Filter α} {m : α → β} {t : Set α} (htf : t ∈ f) (htg : t ∈ g)
     (h : InjOn m t) : map m (f ⊓ g) = map m f ⊓ map m g :=
   by
@@ -4283,12 +2957,6 @@ theorem map_inf' {f g : Filter α} {m : α → β} {t : Set α} (htf : t ∈ f) 
   simp only [map_map, ← map_inf Subtype.coe_injective, map_inf h]
 #align filter.map_inf' Filter.map_inf'
 
-/- warning: filter.disjoint_map -> Filter.disjoint_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, (Function.Injective.{succ u1, succ u2} α β m) -> (forall {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α}, Iff (Disjoint.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) (Filter.map.{u1, u2} α β m f₁) (Filter.map.{u1, u2} α β m f₂)) (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) f₁ f₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β}, (Function.Injective.{succ u1, succ u2} α β m) -> (forall {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α}, Iff (Disjoint.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β))) (Filter.map.{u1, u2} α β m f₁) (Filter.map.{u1, u2} α β m f₂)) (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) f₁ f₂))
-Case conversion may be inaccurate. Consider using '#align filter.disjoint_map Filter.disjoint_mapₓ'. -/
 theorem disjoint_map {m : α → β} (hm : Injective m) {f₁ f₂ : Filter α} :
     Disjoint (map m f₁) (map m f₂) ↔ Disjoint f₁ f₂ := by
   simp only [disjoint_iff, ← map_inf hm, map_eq_bot_iff]
@@ -4320,12 +2988,6 @@ theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap
 #align filter.map_swap_eq_comap_swap Filter.map_swap_eq_comap_swap
 -/
 
-/- warning: filter.map_swap4_eq_comap -> Filter.map_swap4_eq_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {f : Filter.{max (max u1 u2) u3 u4} (Prod.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ))}, Eq.{succ (max (max u1 u3) u2 u4)} (Filter.{max (max u1 u3) u2 u4} (Prod.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ))) (Filter.map.{max (max u1 u2) u3 u4, max (max u1 u3) u2 u4} (Prod.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ)) (Prod.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ)) (fun (p : Prod.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ)) => Prod.mk.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ) (Prod.mk.{u1, u3} α γ (Prod.fst.{u1, u2} α β (Prod.fst.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) p)) (Prod.fst.{u3, u4} γ δ (Prod.snd.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) p))) (Prod.mk.{u2, u4} β δ (Prod.snd.{u1, u2} α β (Prod.fst.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) p)) (Prod.snd.{u3, u4} γ δ (Prod.snd.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) p)))) f) (Filter.comap.{max (max u1 u3) u2 u4, max (max u1 u2) u3 u4} (Prod.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ)) (Prod.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ)) (fun (p : Prod.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ)) => Prod.mk.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.mk.{u1, u2} α β (Prod.fst.{u1, u3} α γ (Prod.fst.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ) p)) (Prod.fst.{u2, u4} β δ (Prod.snd.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ) p))) (Prod.mk.{u3, u4} γ δ (Prod.snd.{u1, u3} α γ (Prod.fst.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ) p)) (Prod.snd.{u2, u4} β δ (Prod.snd.{max u1 u3, max u2 u4} (Prod.{u1, u3} α γ) (Prod.{u2, u4} β δ) p)))) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} {f : Filter.{max (max u1 u4) u3 u2} (Prod.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ))}, Eq.{max (max (max (succ u2) (succ u3)) (succ u4)) (succ u1)} (Filter.{max (max u1 u3) u4 u2} (Prod.{max u4 u2, max u1 u3} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ))) (Filter.map.{max (max (max u2 u3) u4) u1, max (max u1 u3) u4 u2} (Prod.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ)) (Prod.{max u4 u2, max u1 u3} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ)) (fun (p : Prod.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ)) => Prod.mk.{max u4 u2, max u1 u3} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ) (Prod.mk.{u2, u4} α γ (Prod.fst.{u2, u3} α β (Prod.fst.{max u2 u3, max u4 u1} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) p)) (Prod.fst.{u4, u1} γ δ (Prod.snd.{max u2 u3, max u4 u1} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) p))) (Prod.mk.{u3, u1} β δ (Prod.snd.{u2, u3} α β (Prod.fst.{max u2 u3, max u4 u1} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) p)) (Prod.snd.{u4, u1} γ δ (Prod.snd.{max u2 u3, max u4 u1} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) p)))) f) (Filter.comap.{max (max (max u2 u3) u4) u1, max (max u1 u4) u3 u2} (Prod.{max u4 u2, max u1 u3} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ)) (Prod.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ)) (fun (p : Prod.{max u4 u2, max u1 u3} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ)) => Prod.mk.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) (Prod.mk.{u2, u3} α β (Prod.fst.{u2, u4} α γ (Prod.fst.{max u2 u4, max u3 u1} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ) p)) (Prod.fst.{u3, u1} β δ (Prod.snd.{max u2 u4, max u3 u1} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ) p))) (Prod.mk.{u4, u1} γ δ (Prod.snd.{u2, u4} α γ (Prod.fst.{max u2 u4, max u3 u1} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ) p)) (Prod.snd.{u3, u1} β δ (Prod.snd.{max u2 u4, max u3 u1} (Prod.{u2, u4} α γ) (Prod.{u3, u1} β δ) p)))) f)
-Case conversion may be inaccurate. Consider using '#align filter.map_swap4_eq_comap Filter.map_swap4_eq_comapₓ'. -/
 /-- A useful lemma when dealing with uniformities. -/
 theorem map_swap4_eq_comap {f : Filter ((α × β) × γ × δ)} :
     map (fun p : (α × β) × γ × δ => ((p.1.1, p.2.1), (p.1.2, p.2.2))) f =
@@ -4333,32 +2995,14 @@ theorem map_swap4_eq_comap {f : Filter ((α × β) × γ × δ)} :
   map_eq_comap_of_inverse (funext fun ⟨⟨_, _⟩, ⟨_, _⟩⟩ => rfl) (funext fun ⟨⟨_, _⟩, ⟨_, _⟩⟩ => rfl)
 #align filter.map_swap4_eq_comap Filter.map_swap4_eq_comap
 
-/- warning: filter.le_map -> Filter.le_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β} {g : Filter.{u2} β}, (forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.image.{u1, u2} α β m s) g)) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g (Filter.map.{u1, u2} α β m f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β} {g : Filter.{u2} β}, (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.image.{u1, u2} α β m s) g)) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) g (Filter.map.{u1, u2} α β m f))
-Case conversion may be inaccurate. Consider using '#align filter.le_map Filter.le_mapₓ'. -/
 theorem le_map {f : Filter α} {m : α → β} {g : Filter β} (h : ∀ s ∈ f, m '' s ∈ g) : g ≤ f.map m :=
   fun s hs => mem_of_superset (h _ hs) <| image_preimage_subset _ _
 #align filter.le_map Filter.le_map
 
-/- warning: filter.le_map_iff -> Filter.le_map_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β} {g : Filter.{u2} β}, Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g (Filter.map.{u1, u2} α β m f)) (forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s f) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.image.{u1, u2} α β m s) g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {m : α -> β} {g : Filter.{u2} β}, Iff (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) g (Filter.map.{u1, u2} α β m f)) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s f) -> (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.image.{u1, u2} α β m s) g))
-Case conversion may be inaccurate. Consider using '#align filter.le_map_iff Filter.le_map_iffₓ'. -/
 theorem le_map_iff {f : Filter α} {m : α → β} {g : Filter β} : g ≤ f.map m ↔ ∀ s ∈ f, m '' s ∈ g :=
   ⟨fun h s hs => h (image_mem_map hs), le_map⟩
 #align filter.le_map_iff Filter.le_map_iff
 
-/- warning: filter.push_pull -> Filter.push_pull is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (F : Filter.{u1} α) (G : Filter.{u2} β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) F (Filter.comap.{u1, u2} α β f G))) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (Filter.map.{u1, u2} α β f F) G)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (F : Filter.{u1} α) (G : Filter.{u2} β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) F (Filter.comap.{u1, u2} α β f G))) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (Filter.map.{u1, u2} α β f F) G)
-Case conversion may be inaccurate. Consider using '#align filter.push_pull Filter.push_pullₓ'. -/
 protected theorem push_pull (f : α → β) (F : Filter α) (G : Filter β) :
     map f (F ⊓ comap f G) = map f F ⊓ G :=
   by
@@ -4378,31 +3022,13 @@ protected theorem push_pull (f : α → β) (F : Filter α) (G : Filter β) :
       
 #align filter.push_pull Filter.push_pull
 
-/- warning: filter.push_pull' -> Filter.push_pull' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (F : Filter.{u1} α) (G : Filter.{u2} β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.comap.{u1, u2} α β f G) F)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) G (Filter.map.{u1, u2} α β f F))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (F : Filter.{u1} α) (G : Filter.{u2} β), Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (Filter.comap.{u1, u2} α β f G) F)) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) G (Filter.map.{u1, u2} α β f F))
-Case conversion may be inaccurate. Consider using '#align filter.push_pull' Filter.push_pull'ₓ'. -/
 protected theorem push_pull' (f : α → β) (F : Filter α) (G : Filter β) :
     map f (comap f G ⊓ F) = G ⊓ map f F := by simp only [Filter.push_pull, inf_comm]
 #align filter.push_pull' Filter.push_pull'
 
-/- warning: filter.principal_eq_map_coe_top -> Filter.principal_eq_map_coe_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α s) (Filter.map.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))) (Top.top.{u1} (Filter.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Filter.hasTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s))))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (Filter.principal.{u1} α s) (Filter.map.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) (Top.top.{u1} (Filter.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))) (Filter.instTopFilter.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)))))
-Case conversion may be inaccurate. Consider using '#align filter.principal_eq_map_coe_top Filter.principal_eq_map_coe_topₓ'. -/
 theorem principal_eq_map_coe_top (s : Set α) : 𝓟 s = map (coe : s → α) ⊤ := by simp
 #align filter.principal_eq_map_coe_top Filter.principal_eq_map_coe_top
 
-/- warning: filter.inf_principal_eq_bot_iff_comap -> Filter.inf_principal_eq_bot_iff_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {F : Filter.{u1} α} {s : Set.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) F (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Eq.{succ u1} (Filter.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Filter.comap.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))) F) (Bot.bot.{u1} (Filter.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (CompleteLattice.toHasBot.{u1} (Filter.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Filter.completeLattice.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} {F : Filter.{u1} α} {s : Set.{u1} α}, Iff (Eq.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) F (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Filter.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))) (Filter.comap.{u1, u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) F) (Bot.bot.{u1} (Filter.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))) (CompleteLattice.toBot.{u1} (Filter.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))) (Filter.instCompleteLatticeFilter.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s))))))
-Case conversion may be inaccurate. Consider using '#align filter.inf_principal_eq_bot_iff_comap Filter.inf_principal_eq_bot_iff_comapₓ'. -/
 theorem inf_principal_eq_bot_iff_comap {F : Filter α} {s : Set α} :
     F ⊓ 𝓟 s = ⊥ ↔ comap (coe : s → α) F = ⊥ := by
   rw [principal_eq_map_coe_top s, ← Filter.push_pull', inf_top_eq, map_eq_bot_iff]
@@ -4428,34 +3054,16 @@ instance pure_neBot {α : Type u} {a : α} : NeBot (pure a) :=
 #align filter.pure_ne_bot Filter.pure_neBot
 -/
 
-/- warning: filter.le_pure_iff -> Filter.le_pure_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {a : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α a)) (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {a : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a) f)
-Case conversion may be inaccurate. Consider using '#align filter.le_pure_iff Filter.le_pure_iffₓ'. -/
 @[simp]
 theorem le_pure_iff {f : Filter α} {a : α} : f ≤ pure a ↔ {a} ∈ f := by
   rw [← principal_singleton, le_principal_iff]
 #align filter.le_pure_iff Filter.le_pure_iff
 
-/- warning: filter.mem_seq_def -> Filter.mem_seq_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{max u1 u2} (α -> β)} {g : Filter.{u1} α} {s : Set.{u2} β}, Iff (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s (Filter.seq.{u1, u2} α β f g)) (Exists.{succ (max u1 u2)} (Set.{max u1 u2} (α -> β)) (fun (u : Set.{max u1 u2} (α -> β)) => Exists.{0} (Membership.Mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (Filter.hasMem.{max u1 u2} (α -> β)) u f) (fun (H : Membership.Mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (Filter.hasMem.{max u1 u2} (α -> β)) u f) => Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) => forall (x : α -> β), (Membership.Mem.{max u1 u2, max u1 u2} (α -> β) (Set.{max u1 u2} (α -> β)) (Set.hasMem.{max u1 u2} (α -> β)) x u) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (x y) s)))))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{max u1 u2} (α -> β)} {g : Filter.{u1} α} {s : Set.{u2} β}, Iff (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) s (Filter.seq.{u1, u2} α β f g)) (Exists.{succ (max u1 u2)} (Set.{max u1 u2} (α -> β)) (fun (u : Set.{max u1 u2} (α -> β)) => And (Membership.mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (instMembershipSetFilter.{max u1 u2} (α -> β)) u f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) (forall (x : α -> β), (Membership.mem.{max u1 u2, max u1 u2} (α -> β) (Set.{max u1 u2} (α -> β)) (Set.instMembershipSet.{max u1 u2} (α -> β)) x u) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (x y) s)))))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_seq_def Filter.mem_seq_defₓ'. -/
 theorem mem_seq_def {f : Filter (α → β)} {g : Filter α} {s : Set β} :
     s ∈ f.seq g ↔ ∃ u ∈ f, ∃ t ∈ g, ∀ x ∈ u, ∀ y ∈ t, (x : α → β) y ∈ s :=
   Iff.rfl
 #align filter.mem_seq_def Filter.mem_seq_def
 
-/- warning: filter.mem_seq_iff -> Filter.mem_seq_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{max u1 u2} (α -> β)} {g : Filter.{u1} α} {s : Set.{u2} β}, Iff (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s (Filter.seq.{u1, u2} α β f g)) (Exists.{succ (max u1 u2)} (Set.{max u1 u2} (α -> β)) (fun (u : Set.{max u1 u2} (α -> β)) => Exists.{0} (Membership.Mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (Filter.hasMem.{max u1 u2} (α -> β)) u f) (fun (H : Membership.Mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (Filter.hasMem.{max u1 u2} (α -> β)) u f) => Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t g) => HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.seq.{u1, u2} α β u t) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{max u1 u2} (α -> β)} {g : Filter.{u1} α} {s : Set.{u2} β}, Iff (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) s (Filter.seq.{u1, u2} α β f g)) (Exists.{succ (max u1 u2)} (Set.{max u1 u2} (α -> β)) (fun (u : Set.{max u1 u2} (α -> β)) => And (Membership.mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (instMembershipSetFilter.{max u1 u2} (α -> β)) u f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t g) (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Set.seq.{u1, u2} α β u t) s)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_seq_iff Filter.mem_seq_iffₓ'. -/
 theorem mem_seq_iff {f : Filter (α → β)} {g : Filter α} {s : Set β} :
     s ∈ f.seq g ↔ ∃ u ∈ f, ∃ t ∈ g, Set.seq u t ⊆ s := by
   simp only [mem_seq_def, seq_subset, exists_prop, iff_self_iff]
@@ -4477,23 +3085,11 @@ theorem seq_mem_seq {f : Filter (α → β)} {g : Filter α} {s : Set (α → β
 #align filter.seq_mem_seq Filter.seq_mem_seq
 -/
 
-/- warning: filter.le_seq -> Filter.le_seq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{max u1 u2} (α -> β)} {g : Filter.{u1} α} {h : Filter.{u2} β}, (forall (t : Set.{max u1 u2} (α -> β)), (Membership.Mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (Filter.hasMem.{max u1 u2} (α -> β)) t f) -> (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) u g) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.seq.{u1, u2} α β t u) h))) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) h (Filter.seq.{u1, u2} α β f g))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{max u1 u2} (α -> β)} {g : Filter.{u1} α} {h : Filter.{u2} β}, (forall (t : Set.{max u1 u2} (α -> β)), (Membership.mem.{max u1 u2, max u1 u2} (Set.{max u1 u2} (α -> β)) (Filter.{max u1 u2} (α -> β)) (instMembershipSetFilter.{max u1 u2} (α -> β)) t f) -> (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) u g) -> (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.seq.{u1, u2} α β t u) h))) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) h (Filter.seq.{u1, u2} α β f g))
-Case conversion may be inaccurate. Consider using '#align filter.le_seq Filter.le_seqₓ'. -/
 theorem le_seq {f : Filter (α → β)} {g : Filter α} {h : Filter β}
     (hh : ∀ t ∈ f, ∀ u ∈ g, Set.seq t u ∈ h) : h ≤ seq f g := fun s ⟨t, ht, u, hu, hs⟩ =>
   mem_of_superset (hh _ ht _ hu) fun b ⟨m, hm, a, ha, Eq⟩ => Eq ▸ hs _ hm _ ha
 #align filter.le_seq Filter.le_seq
 
-/- warning: filter.seq_mono -> Filter.seq_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{max u1 u2} (α -> β)} {f₂ : Filter.{max u1 u2} (α -> β)} {g₁ : Filter.{u1} α} {g₂ : Filter.{u1} α}, (LE.le.{max u1 u2} (Filter.{max u1 u2} (α -> β)) (Preorder.toHasLe.{max u1 u2} (Filter.{max u1 u2} (α -> β)) (PartialOrder.toPreorder.{max u1 u2} (Filter.{max u1 u2} (α -> β)) (Filter.partialOrder.{max u1 u2} (α -> β)))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.seq.{u1, u2} α β f₁ g₁) (Filter.seq.{u1, u2} α β f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{max u1 u2} (α -> β)} {f₂ : Filter.{max u1 u2} (α -> β)} {g₁ : Filter.{u1} α} {g₂ : Filter.{u1} α}, (LE.le.{max u1 u2} (Filter.{max u1 u2} (α -> β)) (Preorder.toLE.{max u1 u2} (Filter.{max u1 u2} (α -> β)) (PartialOrder.toPreorder.{max u1 u2} (Filter.{max u1 u2} (α -> β)) (Filter.instPartialOrderFilter.{max u1 u2} (α -> β)))) f₁ f₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.seq.{u1, u2} α β f₁ g₁) (Filter.seq.{u1, u2} α β f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.seq_mono Filter.seq_monoₓ'. -/
 @[mono]
 theorem seq_mono {f₁ f₂ : Filter (α → β)} {g₁ g₂ : Filter α} (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) :
     f₁.seq g₁ ≤ f₂.seq g₂ :=
@@ -4573,12 +3169,6 @@ instance : LawfulApplicative (Filter : Type u → Type u)
 instance : CommApplicative (Filter : Type u → Type u) :=
   ⟨fun α β f g => prod_map_seq_comm f g⟩
 
-/- warning: filter.seq_eq_filter_seq -> Filter.seq_eq_filter_seq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : Filter.{u1} (α -> β)) (g : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} β) (Seq.seq.{u1, u1} Filter.{u1} Filter.hasSeq.{u1} α β f g) (Filter.seq.{u1, u1} α β f g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : Filter.{u1} (α -> β)) (g : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} β) (Seq.seq.{u1, u1} Filter.{u1} (Applicative.toSeq.{u1, u1} Filter.{u1} (Alternative.toApplicative.{u1, u1} Filter.{u1} Filter.instAlternativeFilter.{u1})) α β f (fun (x._@.Mathlib.Order.Filter.Basic._hyg.36446 : Unit) => g)) (Filter.seq.{u1, u1} α β f g)
-Case conversion may be inaccurate. Consider using '#align filter.seq_eq_filter_seq Filter.seq_eq_filter_seqₓ'. -/
 theorem seq_eq_filter_seq.{l} {α β : Type l} (f : Filter (α → β)) (g : Filter α) :
     f <*> g = seq f g :=
   rfl
@@ -4622,12 +3212,6 @@ theorem mem_bind' {s : Set β} {f : Filter α} {m : α → Filter β} :
 #align filter.mem_bind' Filter.mem_bind'
 -/
 
-/- warning: filter.mem_bind -> Filter.mem_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u2} β} {f : Filter.{u1} α} {m : α -> (Filter.{u2} β)}, Iff (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s (Filter.bind.{u1, u2} α β f m)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t f) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s (m x)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u2} β} {f : Filter.{u1} α} {m : α -> (Filter.{u2} β)}, Iff (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) s (Filter.bind.{u1, u2} α β f m)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) s (m x)))))
-Case conversion may be inaccurate. Consider using '#align filter.mem_bind Filter.mem_bindₓ'. -/
 @[simp]
 theorem mem_bind {s : Set β} {f : Filter α} {m : α → Filter β} :
     s ∈ bind f m ↔ ∃ t ∈ f, ∀ x ∈ t, s ∈ m x :=
@@ -4638,23 +3222,11 @@ theorem mem_bind {s : Set β} {f : Filter α} {m : α → Filter β} :
     
 #align filter.mem_bind Filter.mem_bind
 
-/- warning: filter.bind_le -> Filter.bind_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : α -> (Filter.{u2} β)} {l : Filter.{u2} β}, (Filter.Eventually.{u1} α (fun (x : α) => LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (g x) l) f) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.bind.{u1, u2} α β f g) l)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : α -> (Filter.{u2} β)} {l : Filter.{u2} β}, (Filter.Eventually.{u1} α (fun (x : α) => LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (g x) l) f) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.bind.{u1, u2} α β f g) l)
-Case conversion may be inaccurate. Consider using '#align filter.bind_le Filter.bind_leₓ'. -/
 theorem bind_le {f : Filter α} {g : α → Filter β} {l : Filter β} (h : ∀ᶠ x in f, g x ≤ l) :
     f.bind g ≤ l :=
   join_le <| eventually_map.2 h
 #align filter.bind_le Filter.bind_le
 
-/- warning: filter.bind_mono -> Filter.bind_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : α -> (Filter.{u2} β)} {g₂ : α -> (Filter.{u2} β)}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f₁ g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.bind.{u1, u2} α β f₁ g₁) (Filter.bind.{u1, u2} α β f₂ g₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : α -> (Filter.{u2} β)} {g₂ : α -> (Filter.{u2} β)}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f₁ g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.bind.{u1, u2} α β f₁ g₁) (Filter.bind.{u1, u2} α β f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.bind_mono Filter.bind_monoₓ'. -/
 @[mono]
 theorem bind_mono {f₁ f₂ : Filter α} {g₁ g₂ : α → Filter β} (hf : f₁ ≤ f₂) (hg : g₁ ≤ᶠ[f₁] g₂) :
     bind f₁ g₁ ≤ bind f₂ g₂ :=
@@ -4664,33 +3236,15 @@ theorem bind_mono {f₁ f₂ : Filter α} {g₁ g₂ : α → Filter β} (hf : f
   filter_upwards [hg, hs]with _ hx hs using hx hs
 #align filter.bind_mono Filter.bind_mono
 
-/- warning: filter.bind_inf_principal -> Filter.bind_inf_principal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : α -> (Filter.{u2} β)} {s : Set.{u2} β}, Eq.{succ u2} (Filter.{u2} β) (Filter.bind.{u1, u2} α β f (fun (x : α) => Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (g x) (Filter.principal.{u2} β s))) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (Filter.bind.{u1, u2} α β f g) (Filter.principal.{u2} β s))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : α -> (Filter.{u2} β)} {s : Set.{u2} β}, Eq.{succ u2} (Filter.{u2} β) (Filter.bind.{u1, u2} α β f (fun (x : α) => Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (g x) (Filter.principal.{u2} β s))) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (Filter.bind.{u1, u2} α β f g) (Filter.principal.{u2} β s))
-Case conversion may be inaccurate. Consider using '#align filter.bind_inf_principal Filter.bind_inf_principalₓ'. -/
 theorem bind_inf_principal {f : Filter α} {g : α → Filter β} {s : Set β} :
     (f.bind fun x => g x ⊓ 𝓟 s) = f.bind g ⊓ 𝓟 s :=
   Filter.ext fun s => by simp only [mem_bind, mem_inf_principal]
 #align filter.bind_inf_principal Filter.bind_inf_principal
 
-/- warning: filter.sup_bind -> Filter.sup_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {h : α -> (Filter.{u2} β)}, Eq.{succ u2} (Filter.{u2} β) (Filter.bind.{u1, u2} α β (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g) h) (Sup.sup.{u2} (Filter.{u2} β) (SemilatticeSup.toHasSup.{u2} (Filter.{u2} β) (Lattice.toSemilatticeSup.{u2} (Filter.{u2} β) (ConditionallyCompleteLattice.toLattice.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))))) (Filter.bind.{u1, u2} α β f h) (Filter.bind.{u1, u2} α β g h))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u1} α} {h : α -> (Filter.{u2} β)}, Eq.{succ u2} (Filter.{u2} β) (Filter.bind.{u1, u2} α β (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) f g) h) (Sup.sup.{u2} (Filter.{u2} β) (SemilatticeSup.toSup.{u2} (Filter.{u2} β) (Lattice.toSemilatticeSup.{u2} (Filter.{u2} β) (CompleteLattice.toLattice.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)))) (Filter.bind.{u1, u2} α β f h) (Filter.bind.{u1, u2} α β g h))
-Case conversion may be inaccurate. Consider using '#align filter.sup_bind Filter.sup_bindₓ'. -/
 theorem sup_bind {f g : Filter α} {h : α → Filter β} : bind (f ⊔ g) h = bind f h ⊔ bind g h := by
   simp only [bind, sup_join, map_sup, eq_self_iff_true]
 #align filter.sup_bind Filter.sup_bind
 
-/- warning: filter.principal_bind -> Filter.principal_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> (Filter.{u2} β)}, Eq.{succ u2} (Filter.{u2} β) (Filter.bind.{u1, u2} α β (Filter.principal.{u1} α s) f) (iSup.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (x : α) => iSup.{u2, 0} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => f x)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> (Filter.{u2} β)}, Eq.{succ u2} (Filter.{u2} β) (Filter.bind.{u1, u2} α β (Filter.principal.{u1} α s) f) (iSup.{u2, succ u1} (Filter.{u2} β) (CompleteLattice.toSupSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) α (fun (x : α) => iSup.{u2, 0} (Filter.{u2} β) (CompleteLattice.toSupSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => f x)))
-Case conversion may be inaccurate. Consider using '#align filter.principal_bind Filter.principal_bindₓ'. -/
 theorem principal_bind {s : Set α} {f : α → Filter β} : bind (𝓟 s) f = ⨆ x ∈ s, f x :=
   show join (map f (𝓟 s)) = ⨆ x ∈ s, f x by
     simp only [sSup_image, join_principal_eq_Sup, map_principal, eq_self_iff_true]
@@ -4704,12 +3258,6 @@ section ListTraverse
    equality requirements in `traverse` -/
 open List
 
-/- warning: filter.sequence_mono -> Filter.sequence_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (as : List.{u1} (Filter.{u1} α)) (bs : List.{u1} (Filter.{u1} α)), (List.Forall₂.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)))) as bs) -> (LE.le.{u1} (Filter.{u1} (List.{u1} α)) (Preorder.toHasLe.{u1} (Filter.{u1} (List.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (List.{u1} α)) (Filter.partialOrder.{u1} (List.{u1} α)))) (sequence.{u1} List.{u1} α Filter.{u1} Filter.applicative.{u1} List.traversable.{u1} as) (sequence.{u1} List.{u1} α Filter.{u1} Filter.applicative.{u1} List.traversable.{u1} bs))
-but is expected to have type
-  forall {α : Type.{u1}} (as : List.{u1} (Filter.{u1} α)) (bs : List.{u1} (Filter.{u1} α)), (List.Forall₂.{u1, u1} (Filter.{u1} α) (Filter.{u1} α) (fun (x._@.Mathlib.Order.Filter.Basic._hyg.37301 : Filter.{u1} α) (x._@.Mathlib.Order.Filter.Basic._hyg.37303 : Filter.{u1} α) => LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x._@.Mathlib.Order.Filter.Basic._hyg.37301 x._@.Mathlib.Order.Filter.Basic._hyg.37303) as bs) -> (LE.le.{u1} (Filter.{u1} (List.{u1} α)) (Preorder.toLE.{u1} (Filter.{u1} (List.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (List.{u1} α)) (Filter.instPartialOrderFilter.{u1} (List.{u1} α)))) (sequence.{u1} List.{u1} α Filter.{u1} (Alternative.toApplicative.{u1, u1} Filter.{u1} Filter.instAlternativeFilter.{u1}) instTraversableList.{u1} as) (sequence.{u1} List.{u1} α Filter.{u1} (Alternative.toApplicative.{u1, u1} Filter.{u1} Filter.instAlternativeFilter.{u1}) instTraversableList.{u1} bs))
-Case conversion may be inaccurate. Consider using '#align filter.sequence_mono Filter.sequence_monoₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sequence_mono : ∀ as bs : List (Filter α), Forall₂ (· ≤ ·) as bs → sequence as ≤ sequence bs
@@ -4719,12 +3267,6 @@ theorem sequence_mono : ∀ as bs : List (Filter α), Forall₂ (· ≤ ·) as b
 
 variable {α' β' γ' : Type u} {f : β' → Filter α'} {s : γ' → Set α'}
 
-/- warning: filter.mem_traverse -> Filter.mem_traverse is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} {β' : Type.{u1}} {γ' : Type.{u1}} {f : β' -> (Filter.{u1} α')} {s : γ' -> (Set.{u1} α')} (fs : List.{u1} β') (us : List.{u1} γ'), (List.Forall₂.{u1, u1} β' γ' (fun (b : β') (c : γ') => Membership.Mem.{u1, u1} (Set.{u1} α') (Filter.{u1} α') (Filter.hasMem.{u1} α') (s c) (f b)) fs us) -> (Membership.Mem.{u1, u1} (Set.{u1} (List.{u1} α')) (Filter.{u1} (List.{u1} α')) (Filter.hasMem.{u1} (List.{u1} α')) (Traversable.traverse.{u1} (fun {γ' : Type.{u1}} => List.{u1} γ') List.traversable.{u1} Set.{u1} (Monad.toApplicative.{u1, u1} Set.{u1} Set.monad.{u1}) γ' α' s us) (Traversable.traverse.{u1} (fun {β' : Type.{u1}} => List.{u1} β') List.traversable.{u1} Filter.{u1} Filter.applicative.{u1} β' α' f fs))
-but is expected to have type
-  forall {α' : Type.{u1}} {β' : Type.{u1}} {γ' : Type.{u1}} {f : β' -> (Filter.{u1} α')} {s : γ' -> (Set.{u1} α')} (fs : List.{u1} β') (us : List.{u1} γ'), (List.Forall₂.{u1, u1} β' γ' (fun (b : β') (c : γ') => Membership.mem.{u1, u1} (Set.{u1} α') (Filter.{u1} α') (instMembershipSetFilter.{u1} α') (s c) (f b)) fs us) -> (Membership.mem.{u1, u1} (Set.{u1} (List.{u1} α')) (Filter.{u1} (List.{u1} α')) (instMembershipSetFilter.{u1} (List.{u1} α')) (Traversable.traverse.{u1} List.{u1} instTraversableList.{u1} Set.{u1} (Alternative.toApplicative.{u1, u1} Set.{u1} Set.instAlternativeSet.{u1}) γ' α' s us) (Traversable.traverse.{u1} List.{u1} instTraversableList.{u1} Filter.{u1} (Alternative.toApplicative.{u1, u1} Filter.{u1} Filter.instAlternativeFilter.{u1}) β' α' f fs))
-Case conversion may be inaccurate. Consider using '#align filter.mem_traverse Filter.mem_traverseₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mem_traverse :
@@ -4734,12 +3276,6 @@ theorem mem_traverse :
   | f::fs, u::us, forall₂.cons h hs => seq_mem_seq (image_mem_map h) (mem_traverse fs us hs)
 #align filter.mem_traverse Filter.mem_traverse
 
-/- warning: filter.mem_traverse_iff -> Filter.mem_traverse_iff is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} {β' : Type.{u1}} {f : β' -> (Filter.{u1} α')} (fs : List.{u1} β') (t : Set.{u1} (List.{u1} α')), Iff (Membership.Mem.{u1, u1} (Set.{u1} (List.{u1} α')) (Filter.{u1} (List.{u1} α')) (Filter.hasMem.{u1} (List.{u1} α')) t (Traversable.traverse.{u1} (fun {β' : Type.{u1}} => List.{u1} β') List.traversable.{u1} Filter.{u1} Filter.applicative.{u1} β' α' f fs)) (Exists.{succ u1} (List.{u1} (Set.{u1} α')) (fun (us : List.{u1} (Set.{u1} α')) => And (List.Forall₂.{u1, u1} β' (Set.{u1} α') (fun (b : β') (s : Set.{u1} α') => Membership.Mem.{u1, u1} (Set.{u1} α') (Filter.{u1} α') (Filter.hasMem.{u1} α') s (f b)) fs us) (HasSubset.Subset.{u1} (Set.{u1} (List.{u1} α')) (Set.hasSubset.{u1} (List.{u1} α')) (sequence.{u1} List.{u1} α' Set.{u1} (Monad.toApplicative.{u1, u1} Set.{u1} Set.monad.{u1}) List.traversable.{u1} us) t)))
-but is expected to have type
-  forall {α' : Type.{u1}} {β' : Type.{u1}} {f : β' -> (Filter.{u1} α')} (fs : List.{u1} β') (t : Set.{u1} (List.{u1} α')), Iff (Membership.mem.{u1, u1} (Set.{u1} (List.{u1} α')) (Filter.{u1} (List.{u1} α')) (instMembershipSetFilter.{u1} (List.{u1} α')) t (Traversable.traverse.{u1} List.{u1} instTraversableList.{u1} Filter.{u1} (Alternative.toApplicative.{u1, u1} Filter.{u1} Filter.instAlternativeFilter.{u1}) β' α' f fs)) (Exists.{succ u1} (List.{u1} (Set.{u1} α')) (fun (us : List.{u1} (Set.{u1} α')) => And (List.Forall₂.{u1, u1} β' (Set.{u1} α') (fun (b : β') (s : Set.{u1} α') => Membership.mem.{u1, u1} (Set.{u1} α') (Filter.{u1} α') (instMembershipSetFilter.{u1} α') s (f b)) fs us) (HasSubset.Subset.{u1} (Set.{u1} (List.{u1} α')) (Set.instHasSubsetSet.{u1} (List.{u1} α')) (sequence.{u1} List.{u1} α' Set.{u1} (Alternative.toApplicative.{u1, u1} Set.{u1} Set.instAlternativeSet.{u1}) instTraversableList.{u1} us) t)))
-Case conversion may be inaccurate. Consider using '#align filter.mem_traverse_iff Filter.mem_traverse_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mem_traverse_iff (fs : List β') (t : Set (List α')) :
     t ∈ traverse f fs ↔
@@ -4811,33 +3347,15 @@ theorem Tendsto.frequently_map {l₁ : Filter α} {l₂ : Filter β} {p : α →
 #align filter.tendsto.frequently_map Filter.Tendsto.frequently_map
 -/
 
-/- warning: filter.tendsto_bot -> Filter.tendsto_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β}, Filter.Tendsto.{u1, u2} α β f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) l
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β}, Filter.Tendsto.{u1, u2} α β f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) l
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_bot Filter.tendsto_botₓ'. -/
 @[simp]
 theorem tendsto_bot {f : α → β} {l : Filter β} : Tendsto f ⊥ l := by simp [tendsto]
 #align filter.tendsto_bot Filter.tendsto_bot
 
-/- warning: filter.tendsto_top -> Filter.tendsto_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u1} α}, Filter.Tendsto.{u1, u2} α β f l (Top.top.{u2} (Filter.{u2} β) (Filter.hasTop.{u2} β))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u1} α}, Filter.Tendsto.{u1, u2} α β f l (Top.top.{u2} (Filter.{u2} β) (Filter.instTopFilter.{u2} β))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_top Filter.tendsto_topₓ'. -/
 @[simp]
 theorem tendsto_top {f : α → β} {l : Filter α} : Tendsto f l ⊤ :=
   le_top
 #align filter.tendsto_top Filter.tendsto_top
 
-/- warning: filter.le_map_of_right_inverse -> Filter.le_map_of_right_inverse is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {mab : α -> β} {mba : β -> α} {f : Filter.{u1} α} {g : Filter.{u2} β}, (Filter.EventuallyEq.{u2, u2} β β g (Function.comp.{succ u2, succ u1, succ u2} β α β mab mba) (id.{succ u2} β)) -> (Filter.Tendsto.{u2, u1} β α mba g f) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) g (Filter.map.{u1, u2} α β mab f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {mab : α -> β} {mba : β -> α} {f : Filter.{u1} α} {g : Filter.{u2} β}, (Filter.EventuallyEq.{u2, u2} β β g (Function.comp.{succ u2, succ u1, succ u2} β α β mab mba) (id.{succ u2} β)) -> (Filter.Tendsto.{u2, u1} β α mba g f) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) g (Filter.map.{u1, u2} α β mab f))
-Case conversion may be inaccurate. Consider using '#align filter.le_map_of_right_inverse Filter.le_map_of_right_inverseₓ'. -/
 theorem le_map_of_right_inverse {mab : α → β} {mba : β → α} {f : Filter α} {g : Filter β}
     (h₁ : mab ∘ mba =ᶠ[g] id) (h₂ : Tendsto mba g f) : g ≤ map mab f := by
   rw [← @map_id _ g, ← map_congr h₁, ← map_map]; exact map_mono h₂
@@ -4857,32 +3375,14 @@ theorem eventuallyEq_of_left_inv_of_right_inv {f : α → β} {g₁ g₂ : β �
 #align filter.eventually_eq_of_left_inv_of_right_inv Filter.eventuallyEq_of_left_inv_of_right_inv
 -/
 
-/- warning: filter.tendsto_iff_comap -> Filter.tendsto_iff_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ (Filter.comap.{u1, u2} α β f l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ (Filter.comap.{u1, u2} α β f l₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_iff_comap Filter.tendsto_iff_comapₓ'. -/
 theorem tendsto_iff_comap {f : α → β} {l₁ : Filter α} {l₂ : Filter β} :
     Tendsto f l₁ l₂ ↔ l₁ ≤ l₂.comap f :=
   map_le_iff_le_comap
 #align filter.tendsto_iff_comap Filter.tendsto_iff_comap
 
-/- warning: filter.tendsto.le_comap -> Filter.Tendsto.le_comap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f l₁ l₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ (Filter.comap.{u1, u2} α β f l₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f l₁ l₂) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ (Filter.comap.{u1, u2} α β f l₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.le_comap Filter.Tendsto.le_comapₓ'. -/
 alias tendsto_iff_comap ↔ tendsto.le_comap _
 #align filter.tendsto.le_comap Filter.Tendsto.le_comap
 
-/- warning: filter.tendsto.disjoint -> Filter.Tendsto.disjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {la₁ : Filter.{u1} α} {la₂ : Filter.{u1} α} {lb₁ : Filter.{u2} β} {lb₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f la₁ lb₁) -> (Disjoint.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) lb₁ lb₂) -> (Filter.Tendsto.{u1, u2} α β f la₂ lb₂) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) la₁ la₂)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {la₁ : Filter.{u1} α} {la₂ : Filter.{u1} α} {lb₁ : Filter.{u2} β} {lb₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f la₁ lb₁) -> (Disjoint.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β))) lb₁ lb₂) -> (Filter.Tendsto.{u1, u2} α β f la₂ lb₂) -> (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) la₁ la₂)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.disjoint Filter.Tendsto.disjointₓ'. -/
 protected theorem Tendsto.disjoint {f : α → β} {la₁ la₂ : Filter α} {lb₁ lb₂ : Filter β}
     (h₁ : Tendsto f la₁ lb₁) (hd : Disjoint lb₁ lb₂) (h₂ : Tendsto f la₂ lb₂) : Disjoint la₁ la₂ :=
   (disjoint_comap hd).mono h₁.le_comap h₂.le_comap
@@ -4915,12 +3415,6 @@ theorem Tendsto.congr {f₁ f₂ : α → β} {l₁ : Filter α} {l₂ : Filter 
 #align filter.tendsto.congr Filter.Tendsto.congr
 -/
 
-/- warning: filter.tendsto_id' -> Filter.tendsto_id' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : Filter.{u1} α} {y : Filter.{u1} α}, Iff (Filter.Tendsto.{u1, u1} α α (id.{succ u1} α) x y) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) x y)
-but is expected to have type
-  forall {α : Type.{u1}} {x : Filter.{u1} α} {y : Filter.{u1} α}, Iff (Filter.Tendsto.{u1, u1} α α (id.{succ u1} α) x y) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) x y)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_id' Filter.tendsto_id'ₓ'. -/
 theorem tendsto_id' {x y : Filter α} : Tendsto id x y ↔ x ≤ y :=
   Iff.rfl
 #align filter.tendsto_id' Filter.tendsto_id'
@@ -4937,23 +3431,11 @@ theorem Tendsto.comp {f : α → β} {g : β → γ} {x : Filter α} {y : Filter
 #align filter.tendsto.comp Filter.Tendsto.comp
 -/
 
-/- warning: filter.tendsto.mono_left -> Filter.Tendsto.mono_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : Filter.{u1} α} {y : Filter.{u1} α} {z : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x z) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) y x) -> (Filter.Tendsto.{u1, u2} α β f y z)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : Filter.{u1} α} {y : Filter.{u1} α} {z : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x z) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) y x) -> (Filter.Tendsto.{u1, u2} α β f y z)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.mono_left Filter.Tendsto.mono_leftₓ'. -/
 theorem Tendsto.mono_left {f : α → β} {x y : Filter α} {z : Filter β} (hx : Tendsto f x z)
     (h : y ≤ x) : Tendsto f y z :=
   (map_mono h).trans hx
 #align filter.tendsto.mono_left Filter.Tendsto.mono_left
 
-/- warning: filter.tendsto.mono_right -> Filter.Tendsto.mono_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : Filter.{u1} α} {y : Filter.{u2} β} {z : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x y) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) y z) -> (Filter.Tendsto.{u1, u2} α β f x z)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : Filter.{u1} α} {y : Filter.{u2} β} {z : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x y) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) y z) -> (Filter.Tendsto.{u1, u2} α β f x z)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.mono_right Filter.Tendsto.mono_rightₓ'. -/
 theorem Tendsto.mono_right {f : α → β} {x : Filter α} {y z : Filter β} (hy : Tendsto f x y)
     (hz : y ≤ z) : Tendsto f x z :=
   le_trans hy hz
@@ -5006,12 +3488,6 @@ theorem tendsto_comap'_iff {m : α → β} {f : Filter α} {g : Filter β} {i : 
 #align filter.tendsto_comap'_iff Filter.tendsto_comap'_iff
 -/
 
-/- warning: filter.tendsto.of_tendsto_comp -> Filter.Tendsto.of_tendsto_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : β -> γ} {a : Filter.{u1} α} {b : Filter.{u2} β} {c : Filter.{u3} γ}, (Filter.Tendsto.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) a c) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.comap.{u2, u3} β γ g c) b) -> (Filter.Tendsto.{u1, u2} α β f a b)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : β -> γ} {a : Filter.{u1} α} {b : Filter.{u2} β} {c : Filter.{u3} γ}, (Filter.Tendsto.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) a c) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.comap.{u2, u3} β γ g c) b) -> (Filter.Tendsto.{u1, u2} α β f a b)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.of_tendsto_comp Filter.Tendsto.of_tendsto_compₓ'. -/
 theorem Tendsto.of_tendsto_comp {f : α → β} {g : β → γ} {a : Filter α} {b : Filter β} {c : Filter γ}
     (hfg : Tendsto (g ∘ f) a c) (hg : comap g c ≤ b) : Tendsto f a b :=
   by
@@ -5042,123 +3518,57 @@ theorem map_eq_of_inverse {f : Filter α} {g : Filter β} {φ : α → β} (ψ :
 #align filter.map_eq_of_inverse Filter.map_eq_of_inverse
 -/
 
-/- warning: filter.tendsto_inf -> Filter.tendsto_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : Filter.{u1} α} {y₁ : Filter.{u2} β} {y₂ : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f x (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) y₁ y₂)) (And (Filter.Tendsto.{u1, u2} α β f x y₁) (Filter.Tendsto.{u1, u2} α β f x y₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : Filter.{u1} α} {y₁ : Filter.{u2} β} {y₂ : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f x (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) y₁ y₂)) (And (Filter.Tendsto.{u1, u2} α β f x y₁) (Filter.Tendsto.{u1, u2} α β f x y₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_inf Filter.tendsto_infₓ'. -/
 theorem tendsto_inf {f : α → β} {x : Filter α} {y₁ y₂ : Filter β} :
     Tendsto f x (y₁ ⊓ y₂) ↔ Tendsto f x y₁ ∧ Tendsto f x y₂ := by
   simp only [tendsto, le_inf_iff, iff_self_iff]
 #align filter.tendsto_inf Filter.tendsto_inf
 
-/- warning: filter.tendsto_inf_left -> Filter.tendsto_inf_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₁ y) -> (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) x₁ x₂) y)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₁ y) -> (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) x₁ x₂) y)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_inf_left Filter.tendsto_inf_leftₓ'. -/
 theorem tendsto_inf_left {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} (h : Tendsto f x₁ y) :
     Tendsto f (x₁ ⊓ x₂) y :=
   le_trans (map_mono inf_le_left) h
 #align filter.tendsto_inf_left Filter.tendsto_inf_left
 
-/- warning: filter.tendsto_inf_right -> Filter.tendsto_inf_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₂ y) -> (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) x₁ x₂) y)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₂ y) -> (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) x₁ x₂) y)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_inf_right Filter.tendsto_inf_rightₓ'. -/
 theorem tendsto_inf_right {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} (h : Tendsto f x₂ y) :
     Tendsto f (x₁ ⊓ x₂) y :=
   le_trans (map_mono inf_le_right) h
 #align filter.tendsto_inf_right Filter.tendsto_inf_right
 
-/- warning: filter.tendsto.inf -> Filter.Tendsto.inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y₁ : Filter.{u2} β} {y₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₁ y₁) -> (Filter.Tendsto.{u1, u2} α β f x₂ y₂) -> (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) x₁ x₂) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) y₁ y₂))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y₁ : Filter.{u2} β} {y₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₁ y₁) -> (Filter.Tendsto.{u1, u2} α β f x₂ y₂) -> (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) x₁ x₂) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) y₁ y₂))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.inf Filter.Tendsto.infₓ'. -/
 theorem Tendsto.inf {f : α → β} {x₁ x₂ : Filter α} {y₁ y₂ : Filter β} (h₁ : Tendsto f x₁ y₁)
     (h₂ : Tendsto f x₂ y₂) : Tendsto f (x₁ ⊓ x₂) (y₁ ⊓ y₂) :=
   tendsto_inf.2 ⟨tendsto_inf_left h₁, tendsto_inf_right h₂⟩
 #align filter.tendsto.inf Filter.Tendsto.inf
 
-/- warning: filter.tendsto_infi -> Filter.tendsto_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : Filter.{u1} α} {y : ι -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α β f x (iInf.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => y i))) (forall (i : ι), Filter.Tendsto.{u1, u2} α β f x (y i))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : Filter.{u1} α} {y : ι -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α β f x (iInf.{u2, u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι (fun (i : ι) => y i))) (forall (i : ι), Filter.Tendsto.{u1, u2} α β f x (y i))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_infi Filter.tendsto_iInfₓ'. -/
 @[simp]
 theorem tendsto_iInf {f : α → β} {x : Filter α} {y : ι → Filter β} :
     Tendsto f x (⨅ i, y i) ↔ ∀ i, Tendsto f x (y i) := by
   simp only [tendsto, iff_self_iff, le_iInf_iff]
 #align filter.tendsto_infi Filter.tendsto_iInf
 
-/- warning: filter.tendsto_infi' -> Filter.tendsto_iInf' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : Filter.{u2} β} (i : ι), (Filter.Tendsto.{u1, u2} α β f (x i) y) -> (Filter.Tendsto.{u1, u2} α β f (iInf.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => x i)) y)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : Filter.{u2} β} (i : ι), (Filter.Tendsto.{u1, u2} α β f (x i) y) -> (Filter.Tendsto.{u1, u2} α β f (iInf.{u1, u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => x i)) y)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_infi' Filter.tendsto_iInf'ₓ'. -/
 theorem tendsto_iInf' {f : α → β} {x : ι → Filter α} {y : Filter β} (i : ι)
     (hi : Tendsto f (x i) y) : Tendsto f (⨅ i, x i) y :=
   hi.mono_left <| iInf_le _ _
 #align filter.tendsto_infi' Filter.tendsto_iInf'
 
-/- warning: filter.tendsto_infi_infi -> Filter.tendsto_iInf_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (iInf.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι x) (iInf.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι y))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (iInf.{u1, u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι x) (iInf.{u2, u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι y))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_infi_infi Filter.tendsto_iInf_iInfₓ'. -/
 theorem tendsto_iInf_iInf {f : α → β} {x : ι → Filter α} {y : ι → Filter β}
     (h : ∀ i, Tendsto f (x i) (y i)) : Tendsto f (iInf x) (iInf y) :=
   tendsto_iInf.2 fun i => tendsto_iInf' i (h i)
 #align filter.tendsto_infi_infi Filter.tendsto_iInf_iInf
 
-/- warning: filter.tendsto_sup -> Filter.tendsto_sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) x₁ x₂) y) (And (Filter.Tendsto.{u1, u2} α β f x₁ y) (Filter.Tendsto.{u1, u2} α β f x₂ y))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) x₁ x₂) y) (And (Filter.Tendsto.{u1, u2} α β f x₁ y) (Filter.Tendsto.{u1, u2} α β f x₂ y))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_sup Filter.tendsto_supₓ'. -/
 @[simp]
 theorem tendsto_sup {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} :
     Tendsto f (x₁ ⊔ x₂) y ↔ Tendsto f x₁ y ∧ Tendsto f x₂ y := by
   simp only [tendsto, map_sup, sup_le_iff]
 #align filter.tendsto_sup Filter.tendsto_sup
 
-/- warning: filter.tendsto.sup -> Filter.Tendsto.sup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₁ y) -> (Filter.Tendsto.{u1, u2} α β f x₂ y) -> (Filter.Tendsto.{u1, u2} α β f (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) x₁ x₂) y)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f x₁ y) -> (Filter.Tendsto.{u1, u2} α β f x₂ y) -> (Filter.Tendsto.{u1, u2} α β f (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) x₁ x₂) y)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.sup Filter.Tendsto.supₓ'. -/
 theorem Tendsto.sup {f : α → β} {x₁ x₂ : Filter α} {y : Filter β} :
     Tendsto f x₁ y → Tendsto f x₂ y → Tendsto f (x₁ ⊔ x₂) y := fun h₁ h₂ => tendsto_sup.mpr ⟨h₁, h₂⟩
 #align filter.tendsto.sup Filter.Tendsto.sup
 
-/- warning: filter.tendsto_supr -> Filter.tendsto_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f (iSup.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => x i)) y) (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) y)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f (iSup.{u1, u3} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι (fun (i : ι) => x i)) y) (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) y)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_supr Filter.tendsto_iSupₓ'. -/
 @[simp]
 theorem tendsto_iSup {f : α → β} {x : ι → Filter α} {y : Filter β} :
     Tendsto f (⨆ i, x i) y ↔ ∀ i, Tendsto f (x i) y := by simp only [tendsto, map_iSup, iSup_le_iff]
 #align filter.tendsto_supr Filter.tendsto_iSup
 
-/- warning: filter.tendsto_supr_supr -> Filter.tendsto_iSup_iSup is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (iSup.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι x) (iSup.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι y))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (iSup.{u1, u3} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι x) (iSup.{u2, u3} (Filter.{u2} β) (CompleteLattice.toSupSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι y))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto_supr_supr Filter.tendsto_iSup_iSupₓ'. -/
 theorem tendsto_iSup_iSup {f : α → β} {x : ι → Filter α} {y : ι → Filter β}
     (h : ∀ i, Tendsto f (x i) (y i)) : Tendsto f (iSup x) (iSup y) :=
   tendsto_iSup.2 fun i => (h i).mono_right <| le_iSup _ _
@@ -5200,12 +3610,6 @@ theorem tendsto_const_pure {a : Filter α} {b : β} : Tendsto (fun x => b) a (pu
 #align filter.tendsto_const_pure Filter.tendsto_const_pure
 -/
 
-/- warning: filter.pure_le_iff -> Filter.pure_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} {l : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Pure.pure.{u1, u1} (fun {α : Type.{u1}} => Filter.{u1} α) Filter.hasPure.{u1} α a) l) (forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s))
-but is expected to have type
-  forall {α : Type.{u1}} {a : α} {l : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a) l) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s))
-Case conversion may be inaccurate. Consider using '#align filter.pure_le_iff Filter.pure_le_iffₓ'. -/
 theorem pure_le_iff {a : α} {l : Filter α} : pure a ≤ l ↔ ∀ s ∈ l, a ∈ s :=
   Iff.rfl
 #align filter.pure_le_iff Filter.pure_le_iff
@@ -5217,24 +3621,12 @@ theorem tendsto_pure_left {f : α → β} {a : α} {l : Filter β} :
 #align filter.tendsto_pure_left Filter.tendsto_pure_left
 -/
 
-/- warning: filter.map_inf_principal_preimage -> Filter.map_inf_principal_preimage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u2} β} {l : Filter.{u1} α}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α (Set.preimage.{u1, u2} α β f s)))) (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) (Filter.map.{u1, u2} α β f l) (Filter.principal.{u2} β s))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u2} β} {l : Filter.{u1} α}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α (Set.preimage.{u1, u2} α β f s)))) (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) (Filter.map.{u1, u2} α β f l) (Filter.principal.{u2} β s))
-Case conversion may be inaccurate. Consider using '#align filter.map_inf_principal_preimage Filter.map_inf_principal_preimageₓ'. -/
 @[simp]
 theorem map_inf_principal_preimage {f : α → β} {s : Set β} {l : Filter α} :
     map f (l ⊓ 𝓟 (f ⁻¹' s)) = map f l ⊓ 𝓟 s :=
   Filter.ext fun t => by simp only [mem_map', mem_inf_principal, mem_set_of_eq, mem_preimage]
 #align filter.map_inf_principal_preimage Filter.map_inf_principal_preimage
 
-/- warning: filter.tendsto.not_tendsto -> Filter.Tendsto.not_tendsto is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {a : Filter.{u1} α} {b₁ : Filter.{u2} β} {b₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f a b₁) -> (forall [_inst_1 : Filter.NeBot.{u1} α a], (Disjoint.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) b₁ b₂) -> (Not (Filter.Tendsto.{u1, u2} α β f a b₂)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {a : Filter.{u1} α} {b₁ : Filter.{u2} β} {b₂ : Filter.{u2} β}, (Filter.Tendsto.{u1, u2} α β f a b₁) -> (forall [_inst_1 : Filter.NeBot.{u1} α a], (Disjoint.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β) (BoundedOrder.toOrderBot.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (CompleteLattice.toBoundedOrder.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β))) b₁ b₂) -> (Not (Filter.Tendsto.{u1, u2} α β f a b₂)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.not_tendsto Filter.Tendsto.not_tendstoₓ'. -/
 /-- If two filters are disjoint, then a function cannot tend to both of them along a non-trivial
 filter. -/
 theorem Tendsto.not_tendsto {f : α → β} {a : Filter α} {b₁ b₂ : Filter β} (hf : Tendsto f a b₁)
@@ -5242,12 +3634,6 @@ theorem Tendsto.not_tendsto {f : α → β} {a : Filter α} {b₁ b₂ : Filter 
   (tendsto_inf.2 ⟨hf, hf'⟩).ne_bot.Ne hb.eq_bot
 #align filter.tendsto.not_tendsto Filter.Tendsto.not_tendsto
 
-/- warning: filter.tendsto.if -> Filter.Tendsto.if is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {p : α -> Prop} [_inst_1 : forall (x : α), Decidable (p x)], (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α (setOf.{u1} α (fun (x : α) => p x)))) l₂) -> (Filter.Tendsto.{u1, u2} α β g (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α (setOf.{u1} α (fun (x : α) => Not (p x))))) l₂) -> (Filter.Tendsto.{u1, u2} α β (fun (x : α) => ite.{succ u2} β (p x) (_inst_1 x) (f x) (g x)) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {p : α -> Prop} [_inst_1 : forall (x : α), Decidable (p x)], (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ (Filter.principal.{u1} α (setOf.{u1} α (fun (x : α) => p x)))) l₂) -> (Filter.Tendsto.{u1, u2} α β g (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ (Filter.principal.{u1} α (setOf.{u1} α (fun (x : α) => Not (p x))))) l₂) -> (Filter.Tendsto.{u1, u2} α β (fun (x : α) => ite.{succ u2} β (p x) (_inst_1 x) (f x) (g x)) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.if Filter.Tendsto.ifₓ'. -/
 protected theorem Tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop}
     [∀ x, Decidable (p x)] (h₀ : Tendsto f (l₁ ⊓ 𝓟 { x | p x }) l₂)
     (h₁ : Tendsto g (l₁ ⊓ 𝓟 { x | ¬p x }) l₂) : Tendsto (fun x => if p x then f x else g x) l₁ l₂ :=
@@ -5261,12 +3647,6 @@ protected theorem Tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α →
   exacts[hp₀ h, hp₁ h]
 #align filter.tendsto.if Filter.Tendsto.if
 
-/- warning: filter.tendsto.if' -> Filter.Tendsto.if' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p], (Filter.Tendsto.{u1, u2} α β f l₁ l₂) -> (Filter.Tendsto.{u1, u2} α β g l₁ l₂) -> (Filter.Tendsto.{u1, u2} α β (fun (a : α) => ite.{succ u2} β (p a) (_inst_1 a) (f a) (g a)) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {l₁ : Filter.{u2} α} {l₂ : Filter.{u1} β} {f : α -> β} {g : α -> β} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u2} α p], (Filter.Tendsto.{u2, u1} α β f l₁ l₂) -> (Filter.Tendsto.{u2, u1} α β g l₁ l₂) -> (Filter.Tendsto.{u2, u1} α β (fun (a : α) => ite.{succ u1} β (p a) (_inst_1 a) (f a) (g a)) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.if' Filter.Tendsto.if'ₓ'. -/
 protected theorem Tendsto.if' {α β : Type _} {l₁ : Filter α} {l₂ : Filter β} {f g : α → β}
     {p : α → Prop} [DecidablePred p] (hf : Tendsto f l₁ l₂) (hg : Tendsto g l₁ l₂) :
     Tendsto (fun a => if p a then f a else g a) l₁ l₂ :=
@@ -5276,12 +3656,6 @@ protected theorem Tendsto.if' {α β : Type _} {l₁ : Filter α} {l₂ : Filter
   exact hf.if hg
 #align filter.tendsto.if' Filter.Tendsto.if'
 
-/- warning: filter.tendsto.piecewise -> Filter.Tendsto.piecewise is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)], (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) -> (Filter.Tendsto.{u1, u2} α β g (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) l₂) -> (Filter.Tendsto.{u1, u2} α β (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j)) l₁ l₂)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)], (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) -> (Filter.Tendsto.{u1, u2} α β g (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) l₂) -> (Filter.Tendsto.{u1, u2} α β (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j)) l₁ l₂)
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.piecewise Filter.Tendsto.piecewiseₓ'. -/
 protected theorem Tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {s : Set α}
     [∀ x, Decidable (x ∈ s)] (h₀ : Tendsto f (l₁ ⊓ 𝓟 s) l₂) (h₁ : Tendsto g (l₁ ⊓ 𝓟 (sᶜ)) l₂) :
     Tendsto (piecewise s f g) l₁ l₂ :=
@@ -5292,22 +3666,10 @@ end Filter
 
 open Filter
 
-/- warning: set.eq_on.eventually_eq -> Set.EqOn.eventuallyEq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} {g : α -> β}, (Set.EqOn.{u1, u2} α β f g s) -> (Filter.EventuallyEq.{u1, u2} α β (Filter.principal.{u1} α s) f g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} {g : α -> β}, (Set.EqOn.{u2, u1} α β f g s) -> (Filter.EventuallyEq.{u2, u1} α β (Filter.principal.{u2} α s) f g)
-Case conversion may be inaccurate. Consider using '#align set.eq_on.eventually_eq Set.EqOn.eventuallyEqₓ'. -/
 theorem Set.EqOn.eventuallyEq {α β} {s : Set α} {f g : α → β} (h : EqOn f g s) : f =ᶠ[𝓟 s] g :=
   h
 #align set.eq_on.eventually_eq Set.EqOn.eventuallyEq
 
-/- warning: set.eq_on.eventually_eq_of_mem -> Set.EqOn.eventuallyEq_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Set.EqOn.{u1, u2} α β f g s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) -> (Filter.EventuallyEq.{u1, u2} α β l f g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {l : Filter.{u2} α} {f : α -> β} {g : α -> β}, (Set.EqOn.{u2, u1} α β f g s) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s l) -> (Filter.EventuallyEq.{u2, u1} α β l f g)
-Case conversion may be inaccurate. Consider using '#align set.eq_on.eventually_eq_of_mem Set.EqOn.eventuallyEq_of_memₓ'. -/
 theorem Set.EqOn.eventuallyEq_of_mem {α β} {s : Set α} {l : Filter α} {f g : α → β} (h : EqOn f g s)
     (hl : s ∈ l) : f =ᶠ[l] g :=
   h.EventuallyEq.filter_mono <| Filter.le_principal_iff.2 hl
@@ -5319,12 +3681,6 @@ theorem HasSubset.Subset.eventuallyLE {α} {l : Filter α} {s t : Set α} (h : s
 #align has_subset.subset.eventually_le HasSubset.Subset.eventuallyLE
 -/
 
-/- warning: set.maps_to.tendsto -> Set.MapsTo.tendsto is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s t) -> (Filter.Tendsto.{u1, u2} α β f (Filter.principal.{u1} α s) (Filter.principal.{u2} β t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t) -> (Filter.Tendsto.{u2, u1} α β f (Filter.principal.{u2} α s) (Filter.principal.{u1} β t))
-Case conversion may be inaccurate. Consider using '#align set.maps_to.tendsto Set.MapsTo.tendstoₓ'. -/
 theorem Set.MapsTo.tendsto {α β} {s : Set α} {t : Set β} {f : α → β} (h : MapsTo f s t) :
     Filter.Tendsto f (𝓟 s) (𝓟 t) :=
   Filter.tendsto_principal_principal.2 h

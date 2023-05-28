@@ -64,23 +64,11 @@ instance KleisliCat.category {m} [Monad.{u, v} m] [LawfulMonad m] : Category (Kl
 #align category_theory.Kleisli.category CategoryTheory.KleisliCat.category
 -/
 
-/- warning: category_theory.Kleisli.id_def -> CategoryTheory.KleisliCat.id_def is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] (α : CategoryTheory.KleisliCat.{u1, u2} m), Eq.{succ (max u1 u2)} (Quiver.Hom.{succ (max u1 u2), succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.KleisliCat.categoryStruct.{u1, u2} m _inst_1)) α α) (CategoryTheory.CategoryStruct.id.{max u1 u2, succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.KleisliCat.categoryStruct.{u1, u2} m _inst_1) α) (Pure.pure.{u1, u2} m (Applicative.toHasPure.{u1, u2} m (Monad.toApplicative.{u1, u2} m _inst_1)) α)
-but is expected to have type
-  forall {m : Type.{u2} -> Type.{u1}} [_inst_1 : Monad.{u2, u1} m] (α : CategoryTheory.KleisliCat.{u2, u1} m), Eq.{max (succ u1) (succ u2)} (Quiver.Hom.{succ (max u1 u2), succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.KleisliCat.categoryStruct.{u2, u1} m _inst_1)) α α) (CategoryTheory.CategoryStruct.id.{max u1 u2, succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.KleisliCat.categoryStruct.{u2, u1} m _inst_1) α) (Pure.pure.{u2, u1} m (Applicative.toPure.{u2, u1} m (Monad.toApplicative.{u2, u1} m _inst_1)) α)
-Case conversion may be inaccurate. Consider using '#align category_theory.Kleisli.id_def CategoryTheory.KleisliCat.id_defₓ'. -/
 @[simp]
 theorem KleisliCat.id_def {m} [Monad m] (α : KleisliCat m) : 𝟙 α = @pure m _ α :=
   rfl
 #align category_theory.Kleisli.id_def CategoryTheory.KleisliCat.id_def
 
-/- warning: category_theory.Kleisli.comp_def -> CategoryTheory.KleisliCat.comp_def is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] (α : CategoryTheory.KleisliCat.{u1, u2} m) (β : CategoryTheory.KleisliCat.{u1, u2} m) (γ : CategoryTheory.KleisliCat.{u1, u2} m) (xs : Quiver.Hom.{succ (max u1 u2), succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.KleisliCat.categoryStruct.{u1, u2} m _inst_1)) α β) (ys : Quiver.Hom.{succ (max u1 u2), succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.KleisliCat.categoryStruct.{u1, u2} m _inst_1)) β γ) (a : α), Eq.{succ u2} (m γ) (CategoryTheory.CategoryStruct.comp.{max u1 u2, succ u1} (CategoryTheory.KleisliCat.{u1, u2} m) (CategoryTheory.KleisliCat.categoryStruct.{u1, u2} m _inst_1) α β γ xs ys a) (Bind.bind.{u1, u2} m (Monad.toHasBind.{u1, u2} m _inst_1) β γ (xs a) ys)
-but is expected to have type
-  forall {m : Type.{u2} -> Type.{u1}} [_inst_1 : Monad.{u2, u1} m] (α : CategoryTheory.KleisliCat.{u2, u1} m) (β : CategoryTheory.KleisliCat.{u2, u1} m) (γ : CategoryTheory.KleisliCat.{u2, u1} m) (xs : Quiver.Hom.{max (succ u1) (succ u2), succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.KleisliCat.categoryStruct.{u2, u1} m _inst_1)) α β) (ys : Quiver.Hom.{max (succ u1) (succ u2), succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.KleisliCat.categoryStruct.{u2, u1} m _inst_1)) β γ) (a : α), Eq.{succ u1} (m γ) (CategoryTheory.CategoryStruct.comp.{max u1 u2, succ u2} (CategoryTheory.KleisliCat.{u2, u1} m) (CategoryTheory.KleisliCat.categoryStruct.{u2, u1} m _inst_1) α β γ xs ys a) (Bind.bind.{u2, u1} m (Monad.toBind.{u2, u1} m _inst_1) β γ (xs a) ys)
-Case conversion may be inaccurate. Consider using '#align category_theory.Kleisli.comp_def CategoryTheory.KleisliCat.comp_defₓ'. -/
 theorem KleisliCat.comp_def {m} [Monad m] (α β γ : KleisliCat m) (xs : α ⟶ β) (ys : β ⟶ γ) (a : α) :
     (xs ≫ ys) a = xs a >>= ys :=
   rfl

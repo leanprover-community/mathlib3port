@@ -96,18 +96,12 @@ def strongUniformity [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
 #align continuous_linear_map.strong_uniformity ContinuousLinearMap.strongUniformity
 -/
 
-/- warning: continuous_linear_map.strong_uniformity_topology_eq -> ContinuousLinearMap.strongUniformity_topology_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_uniformity_topology_eq ContinuousLinearMap.strongUniformity_topology_eqₓ'. -/
 @[simp]
 theorem strongUniformity_topology_eq [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     (strongUniformity σ F 𝔖).toTopologicalSpace = strongTopology σ F 𝔖 :=
   rfl
 #align continuous_linear_map.strong_uniformity_topology_eq ContinuousLinearMap.strongUniformity_topology_eq
 
-/- warning: continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn -> ContinuousLinearMap.strongUniformity.uniformEmbedding_coeFn is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn ContinuousLinearMap.strongUniformity.uniformEmbedding_coeFnₓ'. -/
 theorem strongUniformity.uniformEmbedding_coeFn [UniformSpace F] [UniformAddGroup F]
     (𝔖 : Set (Set E)) :
     @UniformEmbedding (E →SL[σ] F) (E →ᵤ[𝔖] F) (strongUniformity σ F 𝔖)
@@ -116,18 +110,12 @@ theorem strongUniformity.uniformEmbedding_coeFn [UniformSpace F] [UniformAddGrou
   ⟨⟨rfl⟩, FunLike.coe_injective⟩
 #align continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn ContinuousLinearMap.strongUniformity.uniformEmbedding_coeFn
 
-/- warning: continuous_linear_map.strong_topology.embedding_coe_fn -> ContinuousLinearMap.strongTopology.embedding_coeFn is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_topology.embedding_coe_fn ContinuousLinearMap.strongTopology.embedding_coeFnₓ'. -/
 theorem strongTopology.embedding_coeFn [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     @Embedding (E →SL[σ] F) (E →ᵤ[𝔖] F) (strongTopology σ F 𝔖) (UniformOnFun.topologicalSpace E F 𝔖)
       (UniformOnFun.ofFun 𝔖 ∘ coeFn) :=
   @UniformEmbedding.embedding _ _ (id _) _ _ (strongUniformity.uniformEmbedding_coeFn _ _ _)
 #align continuous_linear_map.strong_topology.embedding_coe_fn ContinuousLinearMap.strongTopology.embedding_coeFn
 
-/- warning: continuous_linear_map.strong_uniformity.uniform_add_group -> ContinuousLinearMap.strongUniformity.uniformAddGroup is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniformAddGroupₓ'. -/
 theorem strongUniformity.uniformAddGroup [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     @UniformAddGroup (E →SL[σ] F) (strongUniformity σ F 𝔖) _ :=
   by
@@ -137,9 +125,6 @@ theorem strongUniformity.uniformAddGroup [UniformSpace F] [UniformAddGroup F] (�
   exact uniformAddGroup_comap φ
 #align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniformAddGroup
 
-/- warning: continuous_linear_map.strong_topology.topological_add_group -> ContinuousLinearMap.strongTopology.topologicalAddGroup is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_topology.topological_add_group ContinuousLinearMap.strongTopology.topologicalAddGroupₓ'. -/
 theorem strongTopology.topologicalAddGroup [TopologicalSpace F] [TopologicalAddGroup F]
     (𝔖 : Set (Set E)) : @TopologicalAddGroup (E →SL[σ] F) (strongTopology σ F 𝔖) _ :=
   by
@@ -150,9 +135,6 @@ theorem strongTopology.topologicalAddGroup [TopologicalSpace F] [TopologicalAddG
   infer_instance
 #align continuous_linear_map.strong_topology.topological_add_group ContinuousLinearMap.strongTopology.topologicalAddGroup
 
-/- warning: continuous_linear_map.strong_topology.t2_space -> ContinuousLinearMap.strongTopology.t2Space is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_topology.t2_space ContinuousLinearMap.strongTopology.t2Spaceₓ'. -/
 theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2Space F]
     (𝔖 : Set (Set E)) (h𝔖 : ⋃₀ 𝔖 = Set.univ) : @T2Space (E →SL[σ] F) (strongTopology σ F 𝔖) :=
   by
@@ -163,9 +145,6 @@ theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2S
   exact (strong_topology.embedding_coe_fn σ F 𝔖).T2Space
 #align continuous_linear_map.strong_topology.t2_space ContinuousLinearMap.strongTopology.t2Space
 
-/- warning: continuous_linear_map.strong_topology.has_continuous_smul -> ContinuousLinearMap.strongTopology.continuousSMul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.continuousSMulₓ'. -/
 theorem strongTopology.continuousSMul [RingHomSurjective σ] [RingHomIsometric σ]
     [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousSMul 𝕜₂ F] (𝔖 : Set (Set E))
     (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (h𝔖₃ : ∀ S ∈ 𝔖, Bornology.IsVonNBounded 𝕜₁ S) :
@@ -181,9 +160,6 @@ theorem strongTopology.continuousSMul [RingHomSurjective σ] [RingHomIsometric �
       fun u s hs => (h𝔖₃ s hs).image u
 #align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.continuousSMul
 
-/- warning: continuous_linear_map.strong_topology.has_basis_nhds_zero_of_basis -> ContinuousLinearMap.strongTopology.hasBasis_nhds_zero_of_basis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_topology.has_basis_nhds_zero_of_basis ContinuousLinearMap.strongTopology.hasBasis_nhds_zero_of_basisₓ'. -/
 theorem strongTopology.hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
     {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
@@ -196,9 +172,6 @@ theorem strongTopology.hasBasis_nhds_zero_of_basis [TopologicalSpace F] [Topolog
   exact (UniformOnFun.hasBasis_nhds_zero_of_basis 𝔖 h𝔖₁ h𝔖₂ h).comap coeFn
 #align continuous_linear_map.strong_topology.has_basis_nhds_zero_of_basis ContinuousLinearMap.strongTopology.hasBasis_nhds_zero_of_basis
 
-/- warning: continuous_linear_map.strong_topology.has_basis_nhds_zero -> ContinuousLinearMap.strongTopology.hasBasis_nhds_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.strong_topology.has_basis_nhds_zero ContinuousLinearMap.strongTopology.hasBasis_nhds_zeroₓ'. -/
 theorem strongTopology.hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F]
     (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (@nhds (E →SL[σ] F) (strongTopology σ F 𝔖) 0).HasBasis
@@ -241,9 +214,6 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousSMul 𝕜₁ E]
     (Set.eq_univ_of_forall fun x =>
       Set.mem_sUnion_of_mem (Set.mem_singleton x) (Bornology.isVonNBounded_singleton x))
 
-/- warning: continuous_linear_map.has_basis_nhds_zero_of_basis -> ContinuousLinearMap.hasBasis_nhds_zero_of_basis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.hasBasis_nhds_zero_of_basisₓ'. -/
 protected theorem hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} {p : ι → Prop} {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (𝓝 (0 : E →SL[σ] F)).HasBasis (fun Si : Set E × ι => Bornology.IsVonNBounded 𝕜₁ Si.1 ∧ p Si.2)
@@ -253,9 +223,6 @@ protected theorem hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalA
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
 #align continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.hasBasis_nhds_zero_of_basis
 
-/- warning: continuous_linear_map.has_basis_nhds_zero -> ContinuousLinearMap.hasBasis_nhds_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.hasBasis_nhds_zeroₓ'. -/
 protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F] :
     (𝓝 (0 : E →SL[σ] F)).HasBasis
       (fun SV : Set E × Set F => Bornology.IsVonNBounded 𝕜₁ SV.1 ∧ SV.2 ∈ (𝓝 0 : Filter F))

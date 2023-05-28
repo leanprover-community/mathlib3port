@@ -577,24 +577,12 @@ def concatRec {u v : V} (p : G.Walk u v) : motive u v p :=
 #align simple_graph.walk.concat_rec SimpleGraph.Walk.concatRec
 -/
 
-/- warning: simple_graph.walk.concat_rec_nil -> SimpleGraph.Walk.concatRec_nil is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {motive : forall (u : V) (v : V), (SimpleGraph.Walk.{u1} V G u v) -> Sort.{u2}} (Hnil : forall {u : V}, motive u u (SimpleGraph.Walk.nil.{u1} V G u)) (Hconcat : forall {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (h : SimpleGraph.Adj.{u1} V G v w), (motive u v p) -> (motive u w (SimpleGraph.Walk.concat.{u1} V G u v w p h))) (u : V), Eq.{u2} (motive u u (SimpleGraph.Walk.nil.{u1} V G u)) (SimpleGraph.Walk.concatRec.{u1, u2} V G motive Hnil Hconcat u u (SimpleGraph.Walk.nil.{u1} V G u)) (Hnil u)
-but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {motive : forall (u : V) (v : V), (SimpleGraph.Walk.{u2} V G u v) -> Sort.{u1}} (Hnil : forall {u : V}, motive u u (SimpleGraph.Walk.nil.{u2} V G u)) (Hconcat : forall {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u2} V G u v) (h : SimpleGraph.Adj.{u2} V G v w), (motive u v p) -> (motive u w (SimpleGraph.Walk.concat.{u2} V G u v w p h))) (u : V), Eq.{u1} (motive u u (SimpleGraph.Walk.nil.{u2} V G u)) (SimpleGraph.Walk.concatRec.{u2, u1} V G motive Hnil Hconcat u u (SimpleGraph.Walk.nil.{u2} V G u)) (Hnil u)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.concat_rec_nil SimpleGraph.Walk.concatRec_nilₓ'. -/
 @[simp]
 theorem concatRec_nil (u : V) :
     @concatRec _ _ motive @Hnil @Hconcat _ _ (nil : G.Walk u u) = Hnil :=
   rfl
 #align simple_graph.walk.concat_rec_nil SimpleGraph.Walk.concatRec_nil
 
-/- warning: simple_graph.walk.concat_rec_concat -> SimpleGraph.Walk.concatRec_concat is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {motive : forall (u : V) (v : V), (SimpleGraph.Walk.{u1} V G u v) -> Sort.{u2}} (Hnil : forall {u : V}, motive u u (SimpleGraph.Walk.nil.{u1} V G u)) (Hconcat : forall {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (h : SimpleGraph.Adj.{u1} V G v w), (motive u v p) -> (motive u w (SimpleGraph.Walk.concat.{u1} V G u v w p h))) {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (h : SimpleGraph.Adj.{u1} V G v w), Eq.{u2} (motive u w (SimpleGraph.Walk.concat.{u1} V G u v w p h)) (SimpleGraph.Walk.concatRec.{u1, u2} V G motive Hnil Hconcat u w (SimpleGraph.Walk.concat.{u1} V G u v w p h)) (Hconcat u v w p h (SimpleGraph.Walk.concatRec.{u1, u2} V G (fun (_x : V) (_x_1 : V) (_x_2 : SimpleGraph.Walk.{u1} V G _x _x_1) => motive _x _x_1 _x_2) Hnil Hconcat u v p))
-but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {motive : forall (u : V) (v : V), (SimpleGraph.Walk.{u2} V G u v) -> Sort.{u1}} (Hnil : forall {u : V}, motive u u (SimpleGraph.Walk.nil.{u2} V G u)) (Hconcat : forall {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u2} V G u v) (h : SimpleGraph.Adj.{u2} V G v w), (motive u v p) -> (motive u w (SimpleGraph.Walk.concat.{u2} V G u v w p h))) {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u2} V G u v) (h : SimpleGraph.Adj.{u2} V G v w), Eq.{u1} (motive u w (SimpleGraph.Walk.concat.{u2} V G u v w p h)) (SimpleGraph.Walk.concatRec.{u2, u1} V G motive Hnil Hconcat u w (SimpleGraph.Walk.concat.{u2} V G u v w p h)) (Hconcat u v w p h (SimpleGraph.Walk.concatRec.{u2, u1} V G (fun (_x : V) (_x_1 : V) (_x_2 : SimpleGraph.Walk.{u2} V G _x _x_1) => motive _x _x_1 _x_2) Hnil Hconcat u v p))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.concat_rec_concat SimpleGraph.Walk.concatRec_concatₓ'. -/
 @[simp]
 theorem concatRec_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
     @concatRec _ _ motive @Hnil @Hconcat _ _ (p.concat h) =
@@ -858,12 +846,6 @@ theorem chain'_dartAdj_darts : ∀ {u v : V} (p : G.Walk u v), List.Chain' G.Dar
 #align simple_graph.walk.chain'_dart_adj_darts SimpleGraph.Walk.chain'_dartAdj_darts
 -/
 
-/- warning: simple_graph.walk.edges_subset_edge_set -> SimpleGraph.Walk.edges_subset_edgeSet is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {{e : Sym2.{u1} V}}, (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {{e : Sym2.{u1} V}}, (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V G))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.edges_subset_edge_set SimpleGraph.Walk.edges_subset_edgeSetₓ'. -/
 /-- Every edge in a walk's edge list is an edge of the graph.
 It is written in this form (rather than using `⊆`) to avoid unsightly coercions. -/
 theorem edges_subset_edgeSet :
@@ -1873,12 +1855,6 @@ theorem map_copy (hu : u = u') (hv : v = v') :
 #align simple_graph.walk.map_copy SimpleGraph.Walk.map_copy
 -/
 
-/- warning: simple_graph.walk.map_id -> SimpleGraph.Walk.map_id is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v), Eq.{succ u1} (SimpleGraph.Walk.{u1} V G (coeFn.{succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V G G) (fun (_x : RelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G)) => V -> V) (RelHom.hasCoeToFun.{u1, u1} V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Hom.id.{u1} V G) u) (coeFn.{succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V G G) (fun (_x : RelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G)) => V -> V) (RelHom.hasCoeToFun.{u1, u1} V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Hom.id.{u1} V G) v)) (SimpleGraph.Walk.map.{u1, u1} V V G G (SimpleGraph.Hom.id.{u1} V G) u v p) p
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V}, (SimpleGraph.Walk.{u1} V G u v) -> (forall (p : SimpleGraph.Walk.{u1} V G u v), Eq.{succ u1} (SimpleGraph.Walk.{u1} V G (FunLike.coe.{succ u1, succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V G G) V (fun (a : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V) a) (RelHomClass.toFunLike.{u1, u1, u1} (SimpleGraph.Hom.{u1, u1} V V G G) V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G) (RelHom.instRelHomClassRelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Hom.id.{u1} V G) u) (FunLike.coe.{succ u1, succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V G G) V (fun (a : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V) a) (RelHomClass.toFunLike.{u1, u1, u1} (SimpleGraph.Hom.{u1, u1} V V G G) V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G) (RelHom.instRelHomClassRelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Hom.id.{u1} V G) v)) (SimpleGraph.Walk.map.{u1, u1} V V G G (SimpleGraph.Hom.id.{u1} V G) u v p) p)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.map_id SimpleGraph.Walk.map_idₓ'. -/
 @[simp]
 theorem map_id (p : G.Walk u v) : p.map Hom.id = p := by induction p <;> simp [*]
 #align simple_graph.walk.map_id SimpleGraph.Walk.map_id
@@ -2091,24 +2067,12 @@ theorem map_injective {f : G →g G'} (hinj : Function.Injective f) (u v : V) :
 #align simple_graph.path.map_injective SimpleGraph.Path.map_injective
 -/
 
-/- warning: simple_graph.path.map_embedding -> SimpleGraph.Path.mapEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} (f : SimpleGraph.Embedding.{u1, u2} V V' G G') {u : V} {v : V}, (SimpleGraph.Path.{u1} V G u v) -> (SimpleGraph.Path.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (fun (_x : RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelEmbedding.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) f u) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (fun (_x : RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelEmbedding.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) f v))
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} (f : SimpleGraph.Embedding.{u1, u2} V V' G G') {u : V} {v : V}, (SimpleGraph.Path.{u1} V G u v) -> (SimpleGraph.Path.{u2} V' G' (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V') _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) f u) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V') _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) f v))
-Case conversion may be inaccurate. Consider using '#align simple_graph.path.map_embedding SimpleGraph.Path.mapEmbeddingₓ'. -/
 /-- Given a graph embedding, map paths to paths. -/
 @[simps]
 protected def mapEmbedding (f : G ↪g G') {u v : V} (p : G.Path u v) : G'.Path (f u) (f v) :=
   Path.map f.toHom f.Injective p
 #align simple_graph.path.map_embedding SimpleGraph.Path.mapEmbedding
 
-/- warning: simple_graph.path.map_embedding_injective -> SimpleGraph.Path.mapEmbedding_injective is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} (f : SimpleGraph.Embedding.{u1, u2} V V' G G') (u : V) (v : V), Function.Injective.{succ u1, succ u2} (SimpleGraph.Path.{u1} V G u v) (SimpleGraph.Path.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (fun (_x : RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelEmbedding.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) f u) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (fun (_x : RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelEmbedding.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) f v)) (SimpleGraph.Path.mapEmbedding.{u1, u2} V V' G G' f u v)
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} (f : SimpleGraph.Embedding.{u1, u2} V V' G G') (u : V) (v : V), Function.Injective.{succ u1, succ u2} (SimpleGraph.Path.{u1} V G u v) (SimpleGraph.Path.{u2} V' G' (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V') _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) f u) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V') _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Embedding.{u1, u2} V V' G G') V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) f v)) (SimpleGraph.Path.mapEmbedding.{u1, u2} V V' G G' f u v)
-Case conversion may be inaccurate. Consider using '#align simple_graph.path.map_embedding_injective SimpleGraph.Path.mapEmbedding_injectiveₓ'. -/
 theorem mapEmbedding_injective (f : G ↪g G') (u v : V) :
     Function.Injective (Path.mapEmbedding f : G.Path u v → G'.Path (f u) (f v)) :=
   map_injective f.Injective u v
@@ -2123,12 +2087,6 @@ namespace Walk
 
 variable {G}
 
-/- warning: simple_graph.walk.transfer -> SimpleGraph.Walk.transfer is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) (H : SimpleGraph.{u1} V), (forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))) -> (SimpleGraph.Walk.{u1} V H u v)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) (H : SimpleGraph.{u1} V), (forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))) -> (SimpleGraph.Walk.{u1} V H u v)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.transfer SimpleGraph.Walk.transferₓ'. -/
 /-- The walk `p` transferred to lie in `H`, given that `H` contains its edges. -/
 @[protected, simp]
 def transfer :
@@ -2148,12 +2106,6 @@ theorem transfer_self : p.transfer G p.edges_subset_edgeSet = p := by
 #align simple_graph.walk.transfer_self SimpleGraph.Walk.transfer_self
 -/
 
-/- warning: simple_graph.walk.transfer_eq_map_of_le -> SimpleGraph.Walk.transfer_eq_map_of_le is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))) (GH : LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V) G H), Eq.{succ u1} (SimpleGraph.Walk.{u1} V H u v) (SimpleGraph.Walk.transfer.{u1} V G u v p H hp) (SimpleGraph.Walk.map.{u1, u1} V V G H (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V G H GH) u v p)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))) (GH : LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instLESimpleGraph.{u1} V) G H), Eq.{succ u1} (SimpleGraph.Walk.{u1} V H u v) (SimpleGraph.Walk.transfer.{u1} V G u v p H hp) (SimpleGraph.Walk.map.{u1, u1} V V G H (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V G H GH) u v p)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.transfer_eq_map_of_le SimpleGraph.Walk.transfer_eq_map_of_leₓ'. -/
 theorem transfer_eq_map_of_le (GH : G ≤ H) :
     p.transfer H hp = p.map (SimpleGraph.Hom.mapSpanningSubgraphs GH) := by
   induction p <;>
@@ -2161,58 +2113,28 @@ theorem transfer_eq_map_of_le (GH : G ≤ H) :
       heq_iff_eq, and_self_iff, map_nil]
 #align simple_graph.walk.transfer_eq_map_of_le SimpleGraph.Walk.transfer_eq_map_of_le
 
-/- warning: simple_graph.walk.edges_transfer -> SimpleGraph.Walk.edges_transfer is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))), Eq.{succ u1} (List.{u1} (Sym2.{u1} V)) (SimpleGraph.Walk.edges.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp)) (SimpleGraph.Walk.edges.{u1} V G u v p)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))), Eq.{succ u1} (List.{u1} (Sym2.{u1} V)) (SimpleGraph.Walk.edges.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp)) (SimpleGraph.Walk.edges.{u1} V G u v p)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.edges_transfer SimpleGraph.Walk.edges_transferₓ'. -/
 @[simp]
 theorem edges_transfer : (p.transfer H hp).edges = p.edges := by
   induction p <;> simp only [*, transfer, edges_nil, edges_cons, eq_self_iff_true, and_self_iff]
 #align simple_graph.walk.edges_transfer SimpleGraph.Walk.edges_transfer
 
-/- warning: simple_graph.walk.support_transfer -> SimpleGraph.Walk.support_transfer is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))), Eq.{succ u1} (List.{u1} V) (SimpleGraph.Walk.support.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp)) (SimpleGraph.Walk.support.{u1} V G u v p)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))), Eq.{succ u1} (List.{u1} V) (SimpleGraph.Walk.support.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp)) (SimpleGraph.Walk.support.{u1} V G u v p)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.support_transfer SimpleGraph.Walk.support_transferₓ'. -/
 @[simp]
 theorem support_transfer : (p.transfer H hp).support = p.support := by
   induction p <;> simp only [*, transfer, eq_self_iff_true, and_self_iff, support_nil, support_cons]
 #align simple_graph.walk.support_transfer SimpleGraph.Walk.support_transfer
 
-/- warning: simple_graph.walk.length_transfer -> SimpleGraph.Walk.length_transfer is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))), Eq.{1} Nat (SimpleGraph.Walk.length.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp)) (SimpleGraph.Walk.length.{u1} V G u v p)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v) {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))), Eq.{1} Nat (SimpleGraph.Walk.length.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp)) (SimpleGraph.Walk.length.{u1} V G u v p)
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.length_transfer SimpleGraph.Walk.length_transferₓ'. -/
 @[simp]
 theorem length_transfer : (p.transfer H hp).length = p.length := by induction p <;> simp [*]
 #align simple_graph.walk.length_transfer SimpleGraph.Walk.length_transfer
 
 variable {p}
 
-/- warning: simple_graph.walk.is_path.transfer -> SimpleGraph.Walk.IsPath.transfer is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v} {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))), (SimpleGraph.Walk.IsPath.{u1} V G u v p) -> (SimpleGraph.Walk.IsPath.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v} {H : SimpleGraph.{u1} V} (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))), (SimpleGraph.Walk.IsPath.{u1} V G u v p) -> (SimpleGraph.Walk.IsPath.{u1} V H u v (SimpleGraph.Walk.transfer.{u1} V G u v p H hp))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_path.transfer SimpleGraph.Walk.IsPath.transferₓ'. -/
 protected theorem IsPath.transfer (pp : p.IsPath) : (p.transfer H hp).IsPath :=
   by
   induction p <;> simp only [transfer, is_path.nil, cons_is_path_iff, support_transfer] at pp⊢
   · tauto
 #align simple_graph.walk.is_path.transfer SimpleGraph.Walk.IsPath.transfer
 
-/- warning: simple_graph.walk.is_cycle.transfer -> SimpleGraph.Walk.IsCycle.transfer is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {H : SimpleGraph.{u1} V} {p : SimpleGraph.Walk.{u1} V G u u}, (SimpleGraph.Walk.IsCycle.{u1} V G u p) -> (forall (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u u p)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) H))), SimpleGraph.Walk.IsCycle.{u1} V H u (SimpleGraph.Walk.transfer.{u1} V G u u p H hp))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {H : SimpleGraph.{u1} V} {p : SimpleGraph.Walk.{u1} V G u u}, (SimpleGraph.Walk.IsCycle.{u1} V G u p) -> (forall (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u u p)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V H))), SimpleGraph.Walk.IsCycle.{u1} V H u (SimpleGraph.Walk.transfer.{u1} V G u u p H hp))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_cycle.transfer SimpleGraph.Walk.IsCycle.transferₓ'. -/
 protected theorem IsCycle.transfer {p : G.Walk u u} (pc : p.IsCycle) (hp) :
     (p.transfer H hp).IsCycle :=
   by
@@ -2224,18 +2146,12 @@ protected theorem IsCycle.transfer {p : G.Walk u u} (pc : p.IsCycle) (hp) :
 
 variable (p)
 
-/- warning: simple_graph.walk.transfer_transfer -> SimpleGraph.Walk.transfer_transfer is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.transfer_transfer SimpleGraph.Walk.transfer_transferₓ'. -/
 @[simp]
 theorem transfer_transfer {K : SimpleGraph V} (hp' : ∀ e, e ∈ p.edges → e ∈ K.edgeSetEmbedding) :
     (p.transfer H hp).transfer K (by rw [p.edges_transfer hp]; exact hp') = p.transfer K hp' := by
   induction p <;> simp only [transfer, eq_self_iff_true, heq_iff_eq, true_and_iff]; apply p_ih
 #align simple_graph.walk.transfer_transfer SimpleGraph.Walk.transfer_transfer
 
-/- warning: simple_graph.walk.transfer_append -> SimpleGraph.Walk.transfer_append is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.transfer_append SimpleGraph.Walk.transfer_appendₓ'. -/
 @[simp]
 theorem transfer_append (hpq) :
     (p.append q).transfer H hpq =
@@ -2247,9 +2163,6 @@ theorem transfer_append (hpq) :
   apply p_ih
 #align simple_graph.walk.transfer_append SimpleGraph.Walk.transfer_append
 
-/- warning: simple_graph.walk.reverse_transfer -> SimpleGraph.Walk.reverse_transfer is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.reverse_transfer SimpleGraph.Walk.reverse_transferₓ'. -/
 @[simp]
 theorem reverse_transfer :
     (p.transfer H hp).reverse =
@@ -2307,43 +2220,22 @@ abbrev toDeleteEdge {v w : V} (e : Sym2 V) (p : G.Walk v w) (hp : e ∉ p.edges)
 #align simple_graph.walk.to_delete_edge SimpleGraph.Walk.toDeleteEdge
 -/
 
-/- warning: simple_graph.walk.map_to_delete_edges_eq -> SimpleGraph.Walk.map_toDeleteEdges_eq is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (s : Set.{u1} (Sym2.{u1} V)) {v : V} {w : V} {p : SimpleGraph.Walk.{u1} V G v w} (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G v w p)) -> (Not (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e s))), Eq.{succ u1} (SimpleGraph.Walk.{u1} V G (coeFn.{succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G s) G) (fun (_x : RelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G s)) (SimpleGraph.Adj.{u1} V G)) => V -> V) (RelHom.hasCoeToFun.{u1, u1} V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G s)) (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V (SimpleGraph.deleteEdges.{u1} V G s) G (SimpleGraph.deleteEdges_le.{u1} V G s)) v) (coeFn.{succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G s) G) (fun (_x : RelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G s)) (SimpleGraph.Adj.{u1} V G)) => V -> V) (RelHom.hasCoeToFun.{u1, u1} V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G s)) (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V (SimpleGraph.deleteEdges.{u1} V G s) G (SimpleGraph.deleteEdges_le.{u1} V G s)) w)) (SimpleGraph.Walk.map.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G s) G (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V (SimpleGraph.deleteEdges.{u1} V G s) G (SimpleGraph.deleteEdges_le.{u1} V G s)) v w (SimpleGraph.Walk.toDeleteEdges.{u1} V G s v w p hp)) p
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {s : V} {v : V} (w : Set.{u1} (Sym2.{u1} V)) {p : SimpleGraph.Walk.{u1} V G s v} (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G s v p)) -> (Not (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e w))), Eq.{succ u1} (SimpleGraph.Walk.{u1} V G (FunLike.coe.{succ u1, succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G w) G) V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V) _x) (RelHomClass.toFunLike.{u1, u1, u1} (SimpleGraph.Hom.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G w) G) V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G w)) (SimpleGraph.Adj.{u1} V G) (RelHom.instRelHomClassRelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G w)) (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V (SimpleGraph.deleteEdges.{u1} V G w) G (SimpleGraph.deleteEdges_le.{u1} V G w)) s) (FunLike.coe.{succ u1, succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G w) G) V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V) _x) (RelHomClass.toFunLike.{u1, u1, u1} (SimpleGraph.Hom.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G w) G) V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G w)) (SimpleGraph.Adj.{u1} V G) (RelHom.instRelHomClassRelHom.{u1, u1} V V (SimpleGraph.Adj.{u1} V (SimpleGraph.deleteEdges.{u1} V G w)) (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V (SimpleGraph.deleteEdges.{u1} V G w) G (SimpleGraph.deleteEdges_le.{u1} V G w)) v)) (SimpleGraph.Walk.map.{u1, u1} V V (SimpleGraph.deleteEdges.{u1} V G w) G (SimpleGraph.Hom.mapSpanningSubgraphs.{u1} V (SimpleGraph.deleteEdges.{u1} V G w) G (SimpleGraph.deleteEdges_le.{u1} V G w)) s v (SimpleGraph.Walk.toDeleteEdges.{u1} V G w s v p hp)) p
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.map_to_delete_edges_eq SimpleGraph.Walk.map_toDeleteEdges_eqₓ'. -/
 @[simp]
 theorem map_toDeleteEdges_eq (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (hp) :
     Walk.map (Hom.mapSpanningSubgraphs (G.deleteEdges_le s)) (p.toDeleteEdges s hp) = p := by
   rw [← transfer_eq_map_of_le, transfer_transfer, transfer_self]
 #align simple_graph.walk.map_to_delete_edges_eq SimpleGraph.Walk.map_toDeleteEdges_eq
 
-/- warning: simple_graph.walk.is_path.to_delete_edges -> SimpleGraph.Walk.IsPath.toDeleteEdges is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (s : Set.{u1} (Sym2.{u1} V)) {v : V} {w : V} {p : SimpleGraph.Walk.{u1} V G v w}, (SimpleGraph.Walk.IsPath.{u1} V G v w p) -> (forall (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G v w p)) -> (Not (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e s))), SimpleGraph.Walk.IsPath.{u1} V (SimpleGraph.deleteEdges.{u1} V G s) v w (SimpleGraph.Walk.toDeleteEdges.{u1} V G s v w p hp))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {s : V} {v : V} (w : Set.{u1} (Sym2.{u1} V)) {p : SimpleGraph.Walk.{u1} V G s v}, (SimpleGraph.Walk.IsPath.{u1} V G s v p) -> (forall (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G s v p)) -> (Not (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e w))), SimpleGraph.Walk.IsPath.{u1} V (SimpleGraph.deleteEdges.{u1} V G w) s v (SimpleGraph.Walk.toDeleteEdges.{u1} V G w s v p hp))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_path.to_delete_edges SimpleGraph.Walk.IsPath.toDeleteEdgesₓ'. -/
 protected theorem IsPath.toDeleteEdges (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (h : p.IsPath)
     (hp) : (p.toDeleteEdges s hp).IsPath :=
   h.transfer _
 #align simple_graph.walk.is_path.to_delete_edges SimpleGraph.Walk.IsPath.toDeleteEdges
 
-/- warning: simple_graph.walk.is_cycle.to_delete_edges -> SimpleGraph.Walk.IsCycle.toDeleteEdges is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (s : Set.{u1} (Sym2.{u1} V)) {v : V} {p : SimpleGraph.Walk.{u1} V G v v}, (SimpleGraph.Walk.IsCycle.{u1} V G v p) -> (forall (hp : forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G v v p)) -> (Not (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e s))), SimpleGraph.Walk.IsCycle.{u1} V (SimpleGraph.deleteEdges.{u1} V G s) v (SimpleGraph.Walk.toDeleteEdges.{u1} V G s v v p hp))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {s : V} (v : Set.{u1} (Sym2.{u1} V)) {p : SimpleGraph.Walk.{u1} V G s s}, (SimpleGraph.Walk.IsCycle.{u1} V G s p) -> (forall (hp : forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G s s p)) -> (Not (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e v))), SimpleGraph.Walk.IsCycle.{u1} V (SimpleGraph.deleteEdges.{u1} V G v) s (SimpleGraph.Walk.toDeleteEdges.{u1} V G v s s p hp))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_cycle.to_delete_edges SimpleGraph.Walk.IsCycle.toDeleteEdgesₓ'. -/
 protected theorem IsCycle.toDeleteEdges (s : Set (Sym2 V)) {v : V} {p : G.Walk v v} (h : p.IsCycle)
     (hp) : (p.toDeleteEdges s hp).IsCycle :=
   h.transfer _
 #align simple_graph.walk.is_cycle.to_delete_edges SimpleGraph.Walk.IsCycle.toDeleteEdges
 
-/- warning: simple_graph.walk.to_delete_edges_copy -> SimpleGraph.Walk.toDeleteEdges_copy is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.to_delete_edges_copy SimpleGraph.Walk.toDeleteEdges_copyₓ'. -/
 @[simp]
 theorem toDeleteEdges_copy (s : Set (Sym2 V)) {u v u' v'} (p : G.Walk u v) (hu : u = u')
     (hv : v = v') (h) :
@@ -2447,34 +2339,16 @@ theorem reachable_iff_reflTransGen (u v : V) : G.Reachable u v ↔ Relation.Refl
 #align simple_graph.reachable_iff_refl_trans_gen SimpleGraph.reachable_iff_reflTransGen
 -/
 
-/- warning: simple_graph.reachable.map -> SimpleGraph.Reachable.map is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} (f : SimpleGraph.Hom.{u1, u2} V V' G G') {u : V} {v : V}, (SimpleGraph.Reachable.{u1} V G u v) -> (SimpleGraph.Reachable.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Hom.{u1, u2} V V' G G') (fun (_x : RelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelHom.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) f u) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Hom.{u1, u2} V V' G G') (fun (_x : RelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelHom.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) f v))
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : V} {G' : V} {f : SimpleGraph.{u1} V} {u : SimpleGraph.{u2} V'} (v : SimpleGraph.Hom.{u1, u2} V V' f u), (SimpleGraph.Reachable.{u1} V f G G') -> (SimpleGraph.Reachable.{u2} V' u (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Hom.{u1, u2} V V' f u) V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V') _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Hom.{u1, u2} V V' f u) V V' (SimpleGraph.Adj.{u1} V f) (SimpleGraph.Adj.{u2} V' u) (RelHom.instRelHomClassRelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V f) (SimpleGraph.Adj.{u2} V' u))) v G) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Hom.{u1, u2} V V' f u) V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : V) => V') _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Hom.{u1, u2} V V' f u) V V' (SimpleGraph.Adj.{u1} V f) (SimpleGraph.Adj.{u2} V' u) (RelHom.instRelHomClassRelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V f) (SimpleGraph.Adj.{u2} V' u))) v G'))
-Case conversion may be inaccurate. Consider using '#align simple_graph.reachable.map SimpleGraph.Reachable.mapₓ'. -/
 protected theorem Reachable.map {G : SimpleGraph V} {G' : SimpleGraph V'} (f : G →g G') {u v : V}
     (h : G.Reachable u v) : G'.Reachable (f u) (f v) :=
   h.elim fun p => ⟨p.map f⟩
 #align simple_graph.reachable.map SimpleGraph.Reachable.map
 
-/- warning: simple_graph.iso.reachable_iff -> SimpleGraph.Iso.reachable_iff is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V}, Iff (SimpleGraph.Reachable.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ u) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ v)) (SimpleGraph.Reachable.{u1} V G u v)
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V}, Iff (SimpleGraph.Reachable.{u2} V' G' (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ u) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ v)) (SimpleGraph.Reachable.{u1} V G u v)
-Case conversion may be inaccurate. Consider using '#align simple_graph.iso.reachable_iff SimpleGraph.Iso.reachable_iffₓ'. -/
 theorem Iso.reachable_iff {G : SimpleGraph V} {G' : SimpleGraph V'} {φ : G ≃g G'} {u v : V} :
     G'.Reachable (φ u) (φ v) ↔ G.Reachable u v :=
   ⟨fun r => φ.left_inv u ▸ φ.left_inv v ▸ r.map φ.symm.toHom, Reachable.map φ.toHom⟩
 #align simple_graph.iso.reachable_iff SimpleGraph.Iso.reachable_iff
 
-/- warning: simple_graph.iso.symm_apply_reachable -> SimpleGraph.Iso.symm_apply_reachable is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V'}, Iff (SimpleGraph.Reachable.{u1} V G (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (SimpleGraph.Iso.{u2, u1} V' V G' G) (fun (_x : RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) => V' -> V) (RelIso.hasCoeToFun.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v) u) (SimpleGraph.Reachable.{u2} V' G' v (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ u))
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V'}, Iff (SimpleGraph.Reachable.{u1} V G (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' (fun (_x : V') => V) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G) (RelIso.instRelHomClassRelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v) u) (SimpleGraph.Reachable.{u2} V' G' v (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ u))
-Case conversion may be inaccurate. Consider using '#align simple_graph.iso.symm_apply_reachable SimpleGraph.Iso.symm_apply_reachableₓ'. -/
 theorem Iso.symm_apply_reachable {G : SimpleGraph V} {G' : SimpleGraph V'} {φ : G ≃g G'} {u : V}
     {v : V'} : G.Reachable (φ.symm v) u ↔ G'.Reachable v (φ u) := by
   rw [← iso.reachable_iff, RelIso.apply_symm_apply]
@@ -2630,12 +2504,6 @@ protected def lift {β : Sort _} (f : V → β)
 #align simple_graph.connected_component.lift SimpleGraph.ConnectedComponent.lift
 -/
 
-/- warning: simple_graph.connected_component.lift_mk -> SimpleGraph.ConnectedComponent.lift_mk is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {β : Sort.{u2}} {f : V -> β} {h : forall (v : V) (w : V) (p : SimpleGraph.Walk.{u1} V G v w), (SimpleGraph.Walk.IsPath.{u1} V G v w p) -> (Eq.{u2} β (f v) (f w))} {v : V}, Eq.{u2} β (SimpleGraph.ConnectedComponent.lift.{u1, u2} V G β f h (SimpleGraph.connectedComponentMk.{u1} V G v)) (f v)
-but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {β : Sort.{u1}} {f : V -> β} {h : forall (v : V) (w : V) (p : SimpleGraph.Walk.{u2} V G v w), (SimpleGraph.Walk.IsPath.{u2} V G v w p) -> (Eq.{u1} β (f v) (f w))} {v : V}, Eq.{u1} β (SimpleGraph.ConnectedComponent.lift.{u2, u1} V G β f h (SimpleGraph.connectedComponentMk.{u2} V G v)) (f v)
-Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.lift_mk SimpleGraph.ConnectedComponent.lift_mkₓ'. -/
 @[simp]
 protected theorem lift_mk {β : Sort _} {f : V → β}
     {h : ∀ (v w : V) (p : G.Walk v w), p.IsPath → f v = f w} {v : V} :
@@ -2696,12 +2564,6 @@ theorem map_comp (C : G.ConnectedComponent) (φ : G →g G') (ψ : G' →g G'') 
 
 variable {φ : G ≃g G'} {v : V} {v' : V'}
 
-/- warning: simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp -> SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v : V} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ v)) (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (RelEmbedding.RelHom.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))))) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (RelIso.RelEmbedding.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))))) φ)) C)) (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G v) C)
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v : V} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ v)) (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' (RelEmbedding.toRelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.toRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') φ)) C)) (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G v) C)
-Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_compₓ'. -/
 @[simp]
 theorem iso_image_comp_eq_map_iff_eq_comp {C : G.ConnectedComponent} :
     G'.connectedComponentMk (φ v) = C.map ↑(↑φ : G ↪g G') ↔ G.connectedComponentMk v = C :=
@@ -2711,12 +2573,6 @@ theorem iso_image_comp_eq_map_iff_eq_comp {C : G.ConnectedComponent} :
     RelIso.coe_coeFn, connected_component.eq]
 #align simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp
 
-/- warning: simple_graph.connected_component.iso_inv_image_comp_eq_iff_eq_map -> SimpleGraph.ConnectedComponent.iso_inv_image_comp_eq_iff_eq_map is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v' : V'} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (SimpleGraph.Iso.{u2, u1} V' V G' G) (fun (_x : RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) => V' -> V) (RelIso.hasCoeToFun.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v')) C) (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' v') (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (coeTrans.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) (SimpleGraph.Hom.{u1, u2} V V' G G') (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) (SimpleGraph.Hom.{u1, u2} V V' G G') (RelEmbedding.RelHom.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) (RelIso.RelEmbedding.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))))) φ) C))
-but is expected to have type
-  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v' : V'} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' (fun (_x : V') => V) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G) (RelIso.instRelHomClassRelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v')) C) (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' v') (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' (RelEmbedding.toRelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.toRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') φ)) C))
-Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.iso_inv_image_comp_eq_iff_eq_map SimpleGraph.ConnectedComponent.iso_inv_image_comp_eq_iff_eq_mapₓ'. -/
 @[simp]
 theorem iso_inv_image_comp_eq_iff_eq_map {C : G.ConnectedComponent} :
     G.connectedComponentMk (φ.symm v') = C ↔ G'.connectedComponentMk v' = C.map φ :=
@@ -2930,12 +2786,6 @@ theorem edgeSet_toSubgraph (p : G.Walk u v) : p.toSubgraph.edgeSetEmbedding = { 
 #align simple_graph.walk.edge_set_to_subgraph SimpleGraph.Walk.edgeSet_toSubgraph
 -/
 
-/- warning: simple_graph.walk.to_subgraph_append -> SimpleGraph.Walk.toSubgraph_append is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (q : SimpleGraph.Walk.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u w (SimpleGraph.Walk.append.{u1} V G u v w p q)) (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u v p) (SimpleGraph.Walk.toSubgraph.{u1} V G v w q))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (q : SimpleGraph.Walk.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u w (SimpleGraph.Walk.append.{u1} V G u v w p q)) (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instSupSubgraph.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u v p) (SimpleGraph.Walk.toSubgraph.{u1} V G v w q))
-Case conversion may be inaccurate. Consider using '#align simple_graph.walk.to_subgraph_append SimpleGraph.Walk.toSubgraph_appendₓ'. -/
 @[simp]
 theorem toSubgraph_append (p : G.Walk u v) (q : G.Walk v w) :
     (p.append q).toSubgraph = p.toSubgraph ⊔ q.toSubgraph := by induction p <;> simp [*, sup_assoc]
@@ -3156,23 +3006,11 @@ def IsBridge (G : SimpleGraph V) (e : Sym2 V) : Prop :=
 #align simple_graph.is_bridge SimpleGraph.IsBridge
 -/
 
-/- warning: simple_graph.is_bridge_iff -> SimpleGraph.isBridge_iff is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V}, Iff (SimpleGraph.IsBridge.{u1} V G (Quotient.mk'.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V u v))) (And (SimpleGraph.Adj.{u1} V G u v) (Not (SimpleGraph.Reachable.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasSdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V (Singleton.singleton.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasSingleton.{u1} (Sym2.{u1} V)) (Quotient.mk'.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V u v))))) u v)))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V}, Iff (SimpleGraph.IsBridge.{u1} V G (Quotient.mk.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V u v))) (And (SimpleGraph.Adj.{u1} V G u v) (Not (SimpleGraph.Reachable.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V (Singleton.singleton.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (Set.{u1} (Sym2.{u1} V)) (Set.instSingletonSet.{u1} (Sym2.{u1} V)) (Quotient.mk.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V u v))))) u v)))
-Case conversion may be inaccurate. Consider using '#align simple_graph.is_bridge_iff SimpleGraph.isBridge_iffₓ'. -/
 theorem isBridge_iff {u v : V} :
     G.IsBridge ⟦(u, v)⟧ ↔ G.Adj u v ∧ ¬(G \ fromEdgeSet {⟦(u, v)⟧}).Reachable u v :=
   Iff.rfl
 #align simple_graph.is_bridge_iff SimpleGraph.isBridge_iff
 
-/- warning: simple_graph.reachable_delete_edges_iff_exists_walk -> SimpleGraph.reachable_delete_edges_iff_exists_walk is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Iff (SimpleGraph.Reachable.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasSdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V (Singleton.singleton.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasSingleton.{u1} (Sym2.{u1} V)) (Quotient.mk'.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w))))) v w) (Exists.{succ u1} (SimpleGraph.Walk.{u1} V G v w) (fun (p : SimpleGraph.Walk.{u1} V G v w) => Not (Membership.Mem.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) (Quotient.mk'.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w)) (SimpleGraph.Walk.edges.{u1} V G v w p))))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Iff (SimpleGraph.Reachable.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V (Singleton.singleton.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (Set.{u1} (Sym2.{u1} V)) (Set.instSingletonSet.{u1} (Sym2.{u1} V)) (Quotient.mk.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w))))) v w) (Exists.{succ u1} (SimpleGraph.Walk.{u1} V G v w) (fun (p : SimpleGraph.Walk.{u1} V G v w) => Not (Membership.mem.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) (Quotient.mk.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w)) (SimpleGraph.Walk.edges.{u1} V G v w p))))
-Case conversion may be inaccurate. Consider using '#align simple_graph.reachable_delete_edges_iff_exists_walk SimpleGraph.reachable_delete_edges_iff_exists_walkₓ'. -/
 theorem reachable_delete_edges_iff_exists_walk {v w : V} :
     (G \ fromEdgeSet {⟦(v, w)⟧}).Reachable v w ↔ ∃ p : G.Walk v w, ¬⟦(v, w)⟧ ∈ p.edges :=
   by
@@ -3228,12 +3066,6 @@ theorem reachable_deleteEdges_iff_exists_cycle.aux [DecidableEq V] {u v w : V}
 #align simple_graph.reachable_delete_edges_iff_exists_cycle.aux SimpleGraph.reachable_deleteEdges_iff_exists_cycle.aux
 -/
 
-/- warning: simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle -> SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Iff (And (SimpleGraph.Adj.{u1} V G v w) (SimpleGraph.Reachable.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasSdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V (Singleton.singleton.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasSingleton.{u1} (Sym2.{u1} V)) (Quotient.mk'.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w))))) v w)) (Exists.{succ u1} V (fun (u : V) => Exists.{succ u1} (SimpleGraph.Walk.{u1} V G u u) (fun (p : SimpleGraph.Walk.{u1} V G u u) => And (SimpleGraph.Walk.IsCycle.{u1} V G u p) (Membership.Mem.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) (Quotient.mk'.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w)) (SimpleGraph.Walk.edges.{u1} V G u u p)))))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Iff (And (SimpleGraph.Adj.{u1} V G v w) (SimpleGraph.Reachable.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V (Singleton.singleton.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (Set.{u1} (Sym2.{u1} V)) (Set.instSingletonSet.{u1} (Sym2.{u1} V)) (Quotient.mk.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w))))) v w)) (Exists.{succ u1} V (fun (u : V) => Exists.{succ u1} (SimpleGraph.Walk.{u1} V G u u) (fun (p : SimpleGraph.Walk.{u1} V G u u) => And (SimpleGraph.Walk.IsCycle.{u1} V G u p) (Membership.mem.{u1, u1} (Quotient.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V)) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) (Quotient.mk.{succ u1} (Prod.{u1, u1} V V) (Sym2.Rel.setoid.{u1} V) (Prod.mk.{u1, u1} V V v w)) (SimpleGraph.Walk.edges.{u1} V G u u p)))))
-Case conversion may be inaccurate. Consider using '#align simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycleₓ'. -/
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
     G.Adj v w ∧ (G \ fromEdgeSet {⟦(v, w)⟧}).Reachable v w ↔
       ∃ (u : V)(p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
@@ -3284,12 +3116,6 @@ theorem isBridge_iff_adj_and_forall_cycle_not_mem {v w : V} :
 #align simple_graph.is_bridge_iff_adj_and_forall_cycle_not_mem SimpleGraph.isBridge_iff_adj_and_forall_cycle_not_mem
 -/
 
-/- warning: simple_graph.is_bridge_iff_mem_and_forall_cycle_not_mem -> SimpleGraph.isBridge_iff_mem_and_forall_cycle_not_mem is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {e : Sym2.{u1} V}, Iff (SimpleGraph.IsBridge.{u1} V G e) (And (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)) (forall {{u : V}} (p : SimpleGraph.Walk.{u1} V G u u), (SimpleGraph.Walk.IsCycle.{u1} V G u p) -> (Not (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u u p)))))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {e : Sym2.{u1} V}, Iff (SimpleGraph.IsBridge.{u1} V G e) (And (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V G)) (forall {{u : V}} (p : SimpleGraph.Walk.{u1} V G u u), (SimpleGraph.Walk.IsCycle.{u1} V G u p) -> (Not (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u u p)))))
-Case conversion may be inaccurate. Consider using '#align simple_graph.is_bridge_iff_mem_and_forall_cycle_not_mem SimpleGraph.isBridge_iff_mem_and_forall_cycle_not_memₓ'. -/
 theorem isBridge_iff_mem_and_forall_cycle_not_mem {e : Sym2 V} :
     G.IsBridge e ↔ e ∈ G.edgeSetEmbedding ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → e ∉ p.edges :=
   Sym2.ind (fun v w => isBridge_iff_adj_and_forall_cycle_not_mem) e

@@ -40,23 +40,12 @@ open Denumerable Encodable Function
 
 namespace Nat
 
-/- warning: nat.elim -> Nat.rec is a dubious translation:
-lean 3 declaration is
-  forall {C : Sort.{u1}}, C -> (Nat -> C -> C) -> Nat -> C
-but is expected to have type
-  forall {C : Nat -> Sort.{u1}}, (C Nat.zero) -> (forall (ᾰ : Nat), (C ᾰ) -> (C (Nat.succ ᾰ))) -> (forall (ᾰ : Nat), C ᾰ)
-Case conversion may be inaccurate. Consider using '#align nat.elim Nat.recₓ'. -/
 /-- The non-dependent recursor on naturals. -/
 def rec {C : Sort _} : C → (ℕ → C → C) → ℕ → C :=
   @Nat.rec fun _ => C
 #align nat.elim Nat.rec
 
 /- warning: nat.elim_zero clashes with nat.rec_zero -> Nat.rec_zero
-warning: nat.elim_zero -> Nat.rec_zero is a dubious translation:
-lean 3 declaration is
-  forall {C : Sort.{u1}} (a : C) (f : Nat -> C -> C), Eq.{u1} C (Nat.rec.{u1} C a f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a
-but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2994 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2994) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
 Case conversion may be inaccurate. Consider using '#align nat.elim_zero Nat.rec_zeroₓ'. -/
 @[simp]
 theorem rec_zero {C} (a f) : @Nat.rec C a f 0 = a :=
@@ -64,34 +53,18 @@ theorem rec_zero {C} (a f) : @Nat.rec C a f 0 = a :=
 #align nat.elim_zero Nat.rec_zero
 
 /- warning: nat.elim_succ clashes with nat.rec_add_one -> Nat.rec_add_one
-warning: nat.elim_succ -> Nat.rec_add_one is a dubious translation:
-lean 3 declaration is
-  forall {C : Sort.{u1}} (a : C) (f : Nat -> C -> C) (n : Nat), Eq.{u1} C (Nat.rec.{u1} C a f (Nat.succ n)) (f n (Nat.rec.{u1} C a f n))
-but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3044 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3044) a f n))
 Case conversion may be inaccurate. Consider using '#align nat.elim_succ Nat.rec_add_oneₓ'. -/
 @[simp]
 theorem rec_add_one {C} (a f n) : @Nat.rec C a f (succ n) = f n (Nat.rec a f n) :=
   rfl
 #align nat.elim_succ Nat.rec_add_one
 
-/- warning: nat.cases -> Nat.casesOn is a dubious translation:
-lean 3 declaration is
-  forall {C : Sort.{u1}}, C -> (Nat -> C) -> Nat -> C
-but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : Nat), (C Nat.zero) -> (forall (n : Nat), C (Nat.succ n)) -> (C a)
-Case conversion may be inaccurate. Consider using '#align nat.cases Nat.casesOnₓ'. -/
 /-- Cases on whether the input is 0 or a successor. -/
 def casesOn {C : Sort _} (a : C) (f : ℕ → C) : ℕ → C :=
   Nat.rec a fun n _ => f n
 #align nat.cases Nat.casesOn
 
 /- warning: nat.cases_zero clashes with nat.rec_zero -> Nat.rec_zero
-warning: nat.cases_zero -> Nat.rec_zero is a dubious translation:
-lean 3 declaration is
-  forall {C : Sort.{u1}} (a : C) (f : Nat -> C), Eq.{u1} C (Nat.casesOn.{u1} C a f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a
-but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2994 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2994) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
 Case conversion may be inaccurate. Consider using '#align nat.cases_zero Nat.rec_zeroₓ'. -/
 @[simp]
 theorem rec_zero {C} (a f) : @Nat.casesOn C a f 0 = a :=
@@ -99,11 +72,6 @@ theorem rec_zero {C} (a f) : @Nat.casesOn C a f 0 = a :=
 #align nat.cases_zero Nat.rec_zero
 
 /- warning: nat.cases_succ clashes with nat.rec_add_one -> Nat.rec_add_one
-warning: nat.cases_succ -> Nat.rec_add_one is a dubious translation:
-lean 3 declaration is
-  forall {C : Sort.{u1}} (a : C) (f : Nat -> C) (n : Nat), Eq.{u1} C (Nat.casesOn.{u1} C a f (Nat.succ n)) (f n)
-but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3044 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3044) a f n))
 Case conversion may be inaccurate. Consider using '#align nat.cases_succ Nat.rec_add_oneₓ'. -/
 @[simp]
 theorem rec_add_one {C} (a f n) : @Nat.casesOn C a f (succ n) = f n :=
@@ -315,12 +283,6 @@ protected theorem decode : Primrec (decode α) :=
 #align primrec.decode Primrec.decode
 -/
 
-/- warning: primrec.dom_denumerable -> Primrec.dom_denumerable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_4 : Denumerable.{u1} α] [_inst_5 : Primcodable.{u2} β] {f : α -> β}, Iff (Primrec.{u1, u2} α β (Primcodable.ofDenumerable.{u1} α _inst_4) _inst_5 f) (Nat.Primrec (fun (n : Nat) => Encodable.encode.{u2} β (Primcodable.toEncodable.{u2} β _inst_5) (f (Denumerable.ofNat.{u1} α _inst_4 n))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_4 : Denumerable.{u2} α] [_inst_5 : Primcodable.{u1} β] {f : α -> β}, Iff (Primrec.{u2, u1} α β (Primcodable.ofDenumerable.{u2} α _inst_4) _inst_5 f) (Nat.Primrec (fun (n : Nat) => Encodable.encode.{u1} β (Primcodable.toEncodable.{u1} β _inst_5) (f (Denumerable.ofNat.{u2} α _inst_4 n))))
-Case conversion may be inaccurate. Consider using '#align primrec.dom_denumerable Primrec.dom_denumerableₓ'. -/
 theorem dom_denumerable {α β} [Denumerable α] [Primcodable β] {f : α → β} :
     Primrec f ↔ Nat.Primrec fun n => encode (f (ofNat α n)) :=
   ⟨fun h => (pred.comp h).of_eq fun n => by simp <;> rfl, fun h =>
@@ -346,22 +308,10 @@ theorem option_some : Primrec (@some α) :=
 #align primrec.option_some Primrec.option_some
 -/
 
-/- warning: primrec.of_eq -> Primrec.of_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {f : α -> σ} {g : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_3 f) -> (forall (n : α), Eq.{succ u2} σ (f n) (g n)) -> (Primrec.{u1, u2} α σ _inst_1 _inst_3 g)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {f : α -> σ} {g : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_3 f) -> (forall (n : α), Eq.{succ u1} σ (f n) (g n)) -> (Primrec.{u2, u1} α σ _inst_1 _inst_3 g)
-Case conversion may be inaccurate. Consider using '#align primrec.of_eq Primrec.of_eqₓ'. -/
 theorem of_eq {f g : α → σ} (hf : Primrec f) (H : ∀ n, f n = g n) : Primrec g :=
   (funext H : f = g) ▸ hf
 #align primrec.of_eq Primrec.of_eq
 
-/- warning: primrec.const -> Primrec.const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] (x : σ), Primrec.{u1, u2} α σ _inst_1 _inst_3 (fun (a : α) => x)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] (x : σ), Primrec.{u2, u1} α σ _inst_1 _inst_3 (fun (a : α) => x)
-Case conversion may be inaccurate. Consider using '#align primrec.const Primrec.constₓ'. -/
 theorem const (x : σ) : Primrec fun a : α => x :=
   ((casesOn1 0 (const (encode x).succ)).comp (Primcodable.prim α)).of_eq fun n => by
     cases decode α n <;> rfl
@@ -373,12 +323,6 @@ protected theorem id : Primrec (@id α) :=
 #align primrec.id Primrec.id
 -/
 
-/- warning: primrec.comp -> Primrec.comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : β -> σ} {g : α -> β}, (Primrec.{u2, u3} β σ _inst_2 _inst_3 f) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 g) -> (Primrec.{u1, u3} α σ _inst_1 _inst_3 (fun (a : α) => f (g a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_3 : Primcodable.{u2} σ] {f : β -> σ} {g : α -> β}, (Primrec.{u3, u2} β σ _inst_2 _inst_3 f) -> (Primrec.{u1, u3} α β _inst_1 _inst_2 g) -> (Primrec.{u1, u2} α σ _inst_1 _inst_3 (fun (a : α) => f (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.comp Primrec.compₓ'. -/
 theorem comp {f : β → σ} {g : α → β} (hf : Primrec f) (hg : Primrec g) : Primrec fun a => f (g a) :=
   ((casesOn1 0 (hf.comp <| pred.comp hg)).comp (Primcodable.prim α)).of_eq fun n =>
     by
@@ -398,22 +342,10 @@ theorem pred : Primrec Nat.pred :=
 #align primrec.pred Primrec.pred
 -/
 
-/- warning: primrec.encode_iff -> Primrec.encode_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {f : α -> σ}, Iff (Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) => Encodable.encode.{u2} σ (Primcodable.toEncodable.{u2} σ _inst_3) (f a))) (Primrec.{u1, u2} α σ _inst_1 _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {f : α -> σ}, Iff (Primrec.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) => Encodable.encode.{u1} σ (Primcodable.toEncodable.{u1} σ _inst_3) (f a))) (Primrec.{u2, u1} α σ _inst_1 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align primrec.encode_iff Primrec.encode_iffₓ'. -/
 theorem encode_iff {f : α → σ} : (Primrec fun a => encode (f a)) ↔ Primrec f :=
   ⟨fun h => Nat.Primrec.of_eq h fun n => by cases decode α n <;> rfl, Primrec.encode.comp⟩
 #align primrec.encode_iff Primrec.encode_iff
 
-/- warning: primrec.of_nat_iff -> Primrec.ofNat_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_4 : Denumerable.{u1} α] [_inst_5 : Primcodable.{u2} β] {f : α -> β}, Iff (Primrec.{u1, u2} α β (Primcodable.ofDenumerable.{u1} α _inst_4) _inst_5 f) (Primrec.{0, u2} Nat β (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_5 (fun (n : Nat) => f (Denumerable.ofNat.{u1} α _inst_4 n)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_4 : Denumerable.{u2} α] [_inst_5 : Primcodable.{u1} β] {f : α -> β}, Iff (Primrec.{u2, u1} α β (Primcodable.ofDenumerable.{u2} α _inst_4) _inst_5 f) (Primrec.{0, u1} Nat β (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_5 (fun (n : Nat) => f (Denumerable.ofNat.{u2} α _inst_4 n)))
-Case conversion may be inaccurate. Consider using '#align primrec.of_nat_iff Primrec.ofNat_iffₓ'. -/
 theorem ofNat_iff {α β} [Denumerable α] [Primcodable β] {f : α → β} :
     Primrec f ↔ Primrec fun n => f (ofNat α n) :=
   dom_denumerable.trans <| nat_iff.symm.trans encode_iff
@@ -425,12 +357,6 @@ protected theorem ofNat (α) [Denumerable α] : Primrec (ofNat α) :=
 #align primrec.of_nat Primrec.ofNat
 -/
 
-/- warning: primrec.option_some_iff -> Primrec.option_some_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {f : α -> σ}, Iff (Primrec.{u1, u2} α (Option.{u2} σ) _inst_1 (Primcodable.option.{u2} σ _inst_3) (fun (a : α) => Option.some.{u2} σ (f a))) (Primrec.{u1, u2} α σ _inst_1 _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {f : α -> σ}, Iff (Primrec.{u2, u1} α (Option.{u1} σ) _inst_1 (Primcodable.option.{u1} σ _inst_3) (fun (a : α) => Option.some.{u1} σ (f a))) (Primrec.{u2, u1} α σ _inst_1 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align primrec.option_some_iff Primrec.option_some_iffₓ'. -/
 theorem option_some_iff {f : α → σ} : (Primrec fun a => some (f a)) ↔ Primrec f :=
   ⟨fun h => encode_iff.1 <| pred.comp <| encode_iff.2 h, option_some.comp⟩
 #align primrec.option_some_iff Primrec.option_some_iff
@@ -453,12 +379,6 @@ theorem of_equiv_symm {β} {e : β ≃ α} :
 #align primrec.of_equiv_symm Primrec.of_equiv_symm
 -/
 
-/- warning: primrec.of_equiv_iff -> Primrec.of_equiv_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u1} β α) {f : σ -> β}, Iff (Primrec.{u2, u1} σ α _inst_3 _inst_1 (fun (a : σ) => coeFn.{max 1 (max (succ u3) (succ u1)) (succ u1) (succ u3), max (succ u3) (succ u1)} (Equiv.{succ u3, succ u1} β α) (fun (_x : Equiv.{succ u3, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u3, succ u1} β α) e (f a))) (Primrec.{u2, u3} σ β _inst_3 (Primcodable.ofEquiv.{u1, u3} α β _inst_1 e) f)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> β}, Iff (Primrec.{u1, u2} σ α _inst_3 _inst_1 (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (Equiv.{succ u3, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u2} β α) e (f a))) (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) f)
-Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_iff Primrec.of_equiv_iffₓ'. -/
 theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
     haveI := Primcodable.ofEquiv α e
     (Primrec fun a => e (f a)) ↔ Primrec f :=
@@ -466,12 +386,6 @@ theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
   ⟨fun h => (of_equiv_symm.comp h).of_eq fun a => by simp, of_equiv.comp⟩
 #align primrec.of_equiv_iff Primrec.of_equiv_iff
 
-/- warning: primrec.of_equiv_symm_iff -> Primrec.of_equiv_symm_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u1} β α) {f : σ -> α}, Iff (Primrec.{u2, u3} σ β _inst_3 (Primcodable.ofEquiv.{u1, u3} α β _inst_1 e) (fun (a : σ) => coeFn.{max 1 (max (succ u1) (succ u3)) (succ u3) (succ u1), max (succ u1) (succ u3)} (Equiv.{succ u1, succ u3} α β) (fun (_x : Equiv.{succ u1, succ u3} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u3} α β) (Equiv.symm.{succ u3, succ u1} β α e) (f a))) (Primrec.{u2, u1} σ α _inst_3 _inst_1 f)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> α}, Iff (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Equiv.{succ u2, succ u3} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u3} α β) (Equiv.symm.{succ u3, succ u2} β α e) (f a))) (Primrec.{u1, u2} σ α _inst_3 _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_symm_iff Primrec.of_equiv_symm_iffₓ'. -/
 theorem of_equiv_symm_iff {β} (e : β ≃ α) {f : σ → α} :
     haveI := Primcodable.ofEquiv α e
     (Primrec fun a => e.symm (f a)) ↔ Primrec f :=
@@ -504,12 +418,6 @@ variable {α : Type _} {σ : Type _} [Primcodable α] [Primcodable σ]
 
 open Nat.Primrec
 
-/- warning: primrec.fst -> Primrec.fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} β], Primrec.{max u1 u2, u1} (Prod.{u1, u2} α β) α (Primcodable.prod.{u1, u2} α β _inst_3 _inst_4) _inst_3 (Prod.fst.{u1, u2} α β)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} β], Primrec.{max u2 u1, u2} (Prod.{u2, u1} α β) α (Primcodable.prod.{u2, u1} α β _inst_3 _inst_4) _inst_3 (Prod.fst.{u2, u1} α β)
-Case conversion may be inaccurate. Consider using '#align primrec.fst Primrec.fstₓ'. -/
 theorem fst {α β} [Primcodable α] [Primcodable β] : Primrec (@Prod.fst α β) :=
   ((casesOn' zero
             ((casesOn' zero (Nat.Primrec.succ.comp left)).comp
@@ -521,12 +429,6 @@ theorem fst {α β} [Primcodable α] [Primcodable β] : Primrec (@Prod.fst α β
     cases decode β n.unpair.2 <;> simp
 #align primrec.fst Primrec.fst
 
-/- warning: primrec.snd -> Primrec.snd is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} β], Primrec.{max u1 u2, u2} (Prod.{u1, u2} α β) β (Primcodable.prod.{u1, u2} α β _inst_3 _inst_4) _inst_4 (Prod.snd.{u1, u2} α β)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} β], Primrec.{max u2 u1, u1} (Prod.{u2, u1} α β) β (Primcodable.prod.{u2, u1} α β _inst_3 _inst_4) _inst_4 (Prod.snd.{u2, u1} α β)
-Case conversion may be inaccurate. Consider using '#align primrec.snd Primrec.sndₓ'. -/
 theorem snd {α β} [Primcodable α] [Primcodable β] : Primrec (@Prod.snd α β) :=
   ((casesOn' zero
             ((casesOn' zero (Nat.Primrec.succ.comp right)).comp
@@ -538,12 +440,6 @@ theorem snd {α β} [Primcodable α] [Primcodable β] : Primrec (@Prod.snd α β
     cases decode β n.unpair.2 <;> simp
 #align primrec.snd Primrec.snd
 
-/- warning: primrec.pair -> Primrec.pair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} γ] {f : α -> β} {g : α -> γ}, (Primrec.{u1, u2} α β _inst_3 _inst_4 f) -> (Primrec.{u1, u3} α γ _inst_3 _inst_5 g) -> (Primrec.{u1, max u2 u3} α (Prod.{u2, u3} β γ) _inst_3 (Primcodable.prod.{u2, u3} β γ _inst_4 _inst_5) (fun (a : α) => Prod.mk.{u2, u3} β γ (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_3 : Primcodable.{u3} α] [_inst_4 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u1} γ] {f : α -> β} {g : α -> γ}, (Primrec.{u3, u2} α β _inst_3 _inst_4 f) -> (Primrec.{u3, u1} α γ _inst_3 _inst_5 g) -> (Primrec.{u3, max u1 u2} α (Prod.{u2, u1} β γ) _inst_3 (Primcodable.prod.{u2, u1} β γ _inst_4 _inst_5) (fun (a : α) => Prod.mk.{u2, u1} β γ (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.pair Primrec.pairₓ'. -/
 theorem pair {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {f : α → β} {g : α → γ}
     (hf : Primrec f) (hg : Primrec g) : Primrec fun a => (f a, g a) :=
   ((casesOn1 0
@@ -606,52 +502,22 @@ variable {α : Type _} {β : Type _} {σ : Type _}
 
 variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
-/- warning: primrec₂.of_eq -> Primrec₂.of_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ} {g : α -> β -> σ}, (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f) -> (forall (a : α) (b : β), Eq.{succ u3} σ (f a b) (g a b)) -> (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 g)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ} {g : α -> β -> σ}, (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 f) -> (forall (a : α) (b : β), Eq.{succ u1} σ (f a b) (g a b)) -> (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 g)
-Case conversion may be inaccurate. Consider using '#align primrec₂.of_eq Primrec₂.of_eqₓ'. -/
 theorem of_eq {f g : α → β → σ} (hg : Primrec₂ f) (H : ∀ a b, f a b = g a b) : Primrec₂ g :=
   (by funext a b <;> apply H : f = g) ▸ hg
 #align primrec₂.of_eq Primrec₂.of_eq
 
-/- warning: primrec₂.const -> Primrec₂.const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] (x : σ), Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 (fun (a : α) (b : β) => x)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] (x : σ), Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 (fun (a : α) (b : β) => x)
-Case conversion may be inaccurate. Consider using '#align primrec₂.const Primrec₂.constₓ'. -/
 theorem const (x : σ) : Primrec₂ fun (a : α) (b : β) => x :=
   Primrec.const _
 #align primrec₂.const Primrec₂.const
 
-/- warning: primrec₂.pair -> Primrec₂.pair is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β], Primrec₂.{u1, u2, max u1 u2} α β (Prod.{u1, u2} α β) _inst_1 _inst_2 (Primcodable.prod.{u1, u2} α β _inst_1 _inst_2) (Prod.mk.{u1, u2} α β)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β], Primrec₂.{u2, u1, max u2 u1} α β (Prod.{u2, u1} α β) _inst_1 _inst_2 (Primcodable.prod.{u2, u1} α β _inst_1 _inst_2) (Prod.mk.{u2, u1} α β)
-Case conversion may be inaccurate. Consider using '#align primrec₂.pair Primrec₂.pairₓ'. -/
 protected theorem pair : Primrec₂ (@Prod.mk α β) :=
   Primrec.pair Primrec.fst Primrec.snd
 #align primrec₂.pair Primrec₂.pair
 
-/- warning: primrec₂.left -> Primrec₂.left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β], Primrec₂.{u1, u2, u1} α β α _inst_1 _inst_2 _inst_1 (fun (a : α) (b : β) => a)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β], Primrec₂.{u2, u1, u2} α β α _inst_1 _inst_2 _inst_1 (fun (a : α) (b : β) => a)
-Case conversion may be inaccurate. Consider using '#align primrec₂.left Primrec₂.leftₓ'. -/
 theorem left : Primrec₂ fun (a : α) (b : β) => a :=
   Primrec.fst
 #align primrec₂.left Primrec₂.left
 
-/- warning: primrec₂.right -> Primrec₂.right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β], Primrec₂.{u1, u2, u2} α β β _inst_1 _inst_2 _inst_2 (fun (a : α) (b : β) => b)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β], Primrec₂.{u2, u1, u1} α β β _inst_1 _inst_2 _inst_2 (fun (a : α) (b : β) => b)
-Case conversion may be inaccurate. Consider using '#align primrec₂.right Primrec₂.rightₓ'. -/
 theorem right : Primrec₂ fun (a : α) (b : β) => b :=
   Primrec.snd
 #align primrec₂.right Primrec₂.right
@@ -673,53 +539,23 @@ theorem unpaired' {f : ℕ → ℕ → ℕ} : Nat.Primrec (Nat.unpaired f) ↔ P
 #align primrec₂.unpaired' Primrec₂.unpaired'
 -/
 
-/- warning: primrec₂.encode_iff -> Primrec₂.encode_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u1, u2, 0} α β Nat _inst_1 _inst_2 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) (b : β) => Encodable.encode.{u3} σ (Primcodable.toEncodable.{u3} σ _inst_3) (f a b))) (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u3, u2, 0} α β Nat _inst_1 _inst_2 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) (b : β) => Encodable.encode.{u1} σ (Primcodable.toEncodable.{u1} σ _inst_3) (f a b))) (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align primrec₂.encode_iff Primrec₂.encode_iffₓ'. -/
 theorem encode_iff {f : α → β → σ} : (Primrec₂ fun a b => encode (f a b)) ↔ Primrec₂ f :=
   Primrec.encode_iff
 #align primrec₂.encode_iff Primrec₂.encode_iff
 
-/- warning: primrec₂.option_some_iff -> Primrec₂.option_some_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u1, u2, u3} α β (Option.{u3} σ) _inst_1 _inst_2 (Primcodable.option.{u3} σ _inst_3) (fun (a : α) (b : β) => Option.some.{u3} σ (f a b))) (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u3, u2, u1} α β (Option.{u1} σ) _inst_1 _inst_2 (Primcodable.option.{u1} σ _inst_3) (fun (a : α) (b : β) => Option.some.{u1} σ (f a b))) (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align primrec₂.option_some_iff Primrec₂.option_some_iffₓ'. -/
 theorem option_some_iff {f : α → β → σ} : (Primrec₂ fun a b => some (f a b)) ↔ Primrec₂ f :=
   Primrec.option_some_iff
 #align primrec₂.option_some_iff Primrec₂.option_some_iff
 
-/- warning: primrec₂.of_nat_iff -> Primrec₂.ofNat_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_4 : Denumerable.{u1} α] [_inst_5 : Denumerable.{u2} β] [_inst_6 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u1, u2, u3} α β σ (Primcodable.ofDenumerable.{u1} α _inst_4) (Primcodable.ofDenumerable.{u2} β _inst_5) _inst_6 f) (Primrec₂.{0, 0, u3} Nat Nat σ (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_6 (fun (m : Nat) (n : Nat) => f (Denumerable.ofNat.{u1} α _inst_4 m) (Denumerable.ofNat.{u2} β _inst_5 n)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_4 : Denumerable.{u3} α] [_inst_5 : Denumerable.{u2} β] [_inst_6 : Primcodable.{u1} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u3, u2, u1} α β σ (Primcodable.ofDenumerable.{u3} α _inst_4) (Primcodable.ofDenumerable.{u2} β _inst_5) _inst_6 f) (Primrec₂.{0, 0, u1} Nat Nat σ (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_6 (fun (m : Nat) (n : Nat) => f (Denumerable.ofNat.{u3} α _inst_4 m) (Denumerable.ofNat.{u2} β _inst_5 n)))
-Case conversion may be inaccurate. Consider using '#align primrec₂.of_nat_iff Primrec₂.ofNat_iffₓ'. -/
 theorem ofNat_iff {α β σ} [Denumerable α] [Denumerable β] [Primcodable σ] {f : α → β → σ} :
     Primrec₂ f ↔ Primrec₂ fun m n : ℕ => f (ofNat α m) (ofNat β n) :=
   (Primrec.ofNat_iff.trans <| by simp).trans unpaired
 #align primrec₂.of_nat_iff Primrec₂.ofNat_iff
 
-/- warning: primrec₂.uncurry -> Primrec₂.uncurry is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec.{max u1 u2, u3} (Prod.{u1, u2} α β) σ (Primcodable.prod.{u1, u2} α β _inst_1 _inst_2) _inst_3 (Function.uncurry.{u1, u2, u3} α β σ f)) (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ}, Iff (Primrec.{max u3 u2, u1} (Prod.{u2, u3} α β) σ (Primcodable.prod.{u2, u3} α β _inst_1 _inst_2) _inst_3 (Function.uncurry.{u2, u3, u1} α β σ f)) (Primrec₂.{u2, u3, u1} α β σ _inst_1 _inst_2 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align primrec₂.uncurry Primrec₂.uncurryₓ'. -/
 theorem uncurry {f : α → β → σ} : Primrec (Function.uncurry f) ↔ Primrec₂ f := by
   rw [show Function.uncurry f = fun p : α × β => f p.1 p.2 from funext fun ⟨a, b⟩ => rfl] <;> rfl
 #align primrec₂.uncurry Primrec₂.uncurry
 
-/- warning: primrec₂.curry -> Primrec₂.curry is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : (Prod.{u1, u2} α β) -> σ}, Iff (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 (Function.curry.{u1, u2, u3} α β σ f)) (Primrec.{max u1 u2, u3} (Prod.{u1, u2} α β) σ (Primcodable.prod.{u1, u2} α β _inst_1 _inst_2) _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : (Prod.{u3, u2} α β) -> σ}, Iff (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 (Function.curry.{u3, u2, u1} α β σ f)) (Primrec.{max u3 u2, u1} (Prod.{u3, u2} α β) σ (Primcodable.prod.{u3, u2} α β _inst_1 _inst_2) _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align primrec₂.curry Primrec₂.curryₓ'. -/
 theorem curry {f : α × β → σ} : Primrec₂ (Function.curry f) ↔ Primrec f := by
   rw [← uncurry, Function.uncurry_curry]
 #align primrec₂.curry Primrec₂.curry
@@ -732,34 +568,16 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {σ : Type _}
 
 variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
 
-/- warning: primrec.comp₂ -> Primrec.comp₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_5 : Primcodable.{u4} σ] {f : γ -> σ} {g : α -> β -> γ}, (Primrec.{u3, u4} γ σ _inst_3 _inst_5 f) -> (Primrec₂.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 g) -> (Primrec₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_5 (fun (a : α) (b : β) => f (g a b)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u4}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] [_inst_3 : Primcodable.{u4} γ] [_inst_5 : Primcodable.{u3} σ] {f : γ -> σ} {g : α -> β -> γ}, (Primrec.{u4, u3} γ σ _inst_3 _inst_5 f) -> (Primrec₂.{u2, u1, u4} α β γ _inst_1 _inst_2 _inst_3 g) -> (Primrec₂.{u2, u1, u3} α β σ _inst_1 _inst_2 _inst_5 (fun (a : α) (b : β) => f (g a b)))
-Case conversion may be inaccurate. Consider using '#align primrec.comp₂ Primrec.comp₂ₓ'. -/
 theorem Primrec.comp₂ {f : γ → σ} {g : α → β → γ} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec₂ fun a b => f (g a b) :=
   hf.comp hg
 #align primrec.comp₂ Primrec.comp₂
 
-/- warning: primrec₂.comp -> Primrec₂.comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_5 : Primcodable.{u4} σ] {f : β -> γ -> σ} {g : α -> β} {h : α -> γ}, (Primrec₂.{u2, u3, u4} β γ σ _inst_2 _inst_3 _inst_5 f) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 g) -> (Primrec.{u1, u3} α γ _inst_1 _inst_3 h) -> (Primrec.{u1, u4} α σ _inst_1 _inst_5 (fun (a : α) => f (g a) (h a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_5 : Primcodable.{u2} σ] {f : β -> γ -> σ} {g : α -> β} {h : α -> γ}, (Primrec₂.{u4, u3, u2} β γ σ _inst_2 _inst_3 _inst_5 f) -> (Primrec.{u1, u4} α β _inst_1 _inst_2 g) -> (Primrec.{u1, u3} α γ _inst_1 _inst_3 h) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 (fun (a : α) => f (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align primrec₂.comp Primrec₂.compₓ'. -/
 theorem Primrec₂.comp {f : β → γ → σ} {g : α → β} {h : α → γ} (hf : Primrec₂ f) (hg : Primrec g)
     (hh : Primrec h) : Primrec fun a => f (g a) (h a) :=
   hf.comp (hg.pair hh)
 #align primrec₂.comp Primrec₂.comp
 
-/- warning: primrec₂.comp₂ -> Primrec₂.comp₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {σ : Type.{u5}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} δ] [_inst_5 : Primcodable.{u5} σ] {f : γ -> δ -> σ} {g : α -> β -> γ} {h : α -> β -> δ}, (Primrec₂.{u3, u4, u5} γ δ σ _inst_3 _inst_4 _inst_5 f) -> (Primrec₂.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 g) -> (Primrec₂.{u1, u2, u4} α β δ _inst_1 _inst_2 _inst_4 h) -> (Primrec₂.{u1, u2, u5} α β σ _inst_1 _inst_2 _inst_5 (fun (a : α) (b : β) => f (g a b) (h a b)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u5}} {δ : Type.{u4}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] [_inst_3 : Primcodable.{u5} γ] [_inst_4 : Primcodable.{u4} δ] [_inst_5 : Primcodable.{u3} σ] {f : γ -> δ -> σ} {g : α -> β -> γ} {h : α -> β -> δ}, (Primrec₂.{u5, u4, u3} γ δ σ _inst_3 _inst_4 _inst_5 f) -> (Primrec₂.{u2, u1, u5} α β γ _inst_1 _inst_2 _inst_3 g) -> (Primrec₂.{u2, u1, u4} α β δ _inst_1 _inst_2 _inst_4 h) -> (Primrec₂.{u2, u1, u3} α β σ _inst_1 _inst_2 _inst_5 (fun (a : α) (b : β) => f (g a b) (h a b)))
-Case conversion may be inaccurate. Consider using '#align primrec₂.comp₂ Primrec₂.comp₂ₓ'. -/
 theorem Primrec₂.comp₂ {f : γ → δ → σ} {g : α → β → γ} {h : α → β → δ} (hf : Primrec₂ f)
     (hg : Primrec₂ g) (hh : Primrec₂ h) : Primrec₂ fun a b => f (g a b) (h a b) :=
   hf.comp hg hh
@@ -772,23 +590,11 @@ theorem PrimrecPred.comp {p : β → Prop} [DecidablePred p] {f : α → β} :
 #align primrec_pred.comp PrimrecPred.comp
 -/
 
-/- warning: primrec_rel.comp -> PrimrecRel.comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] {R : β -> γ -> Prop} [_inst_6 : forall (a : β) (b : γ), Decidable (R a b)] {f : α -> β} {g : α -> γ}, (PrimrecRel.{u2, u3} β γ _inst_2 _inst_3 R (fun (a : β) (b : γ) => _inst_6 a b)) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 f) -> (Primrec.{u1, u3} α γ _inst_1 _inst_3 g) -> (PrimrecPred.{u1} α _inst_1 (fun (a : α) => R (f a) (g a)) (fun (a : α) => _inst_6 (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_3 : Primcodable.{u2} γ] {R : β -> γ -> Prop} [_inst_6 : forall (a : β) (b : γ), Decidable (R a b)] {f : α -> β} {g : α -> γ}, (PrimrecRel.{u3, u2} β γ _inst_2 _inst_3 R (fun (a : β) (b : γ) => _inst_6 a b)) -> (Primrec.{u1, u3} α β _inst_1 _inst_2 f) -> (Primrec.{u1, u2} α γ _inst_1 _inst_3 g) -> (PrimrecPred.{u1} α _inst_1 (fun (a : α) => R (f a) (g a)) (fun (a : α) => _inst_6 (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec_rel.comp PrimrecRel.compₓ'. -/
 theorem PrimrecRel.comp {R : β → γ → Prop} [∀ a b, Decidable (R a b)] {f : α → β} {g : α → γ} :
     PrimrecRel R → Primrec f → Primrec g → PrimrecPred fun a => R (f a) (g a) :=
   Primrec₂.comp
 #align primrec_rel.comp PrimrecRel.comp
 
-/- warning: primrec_rel.comp₂ -> PrimrecRel.comp₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} δ] {R : γ -> δ -> Prop} [_inst_6 : forall (a : γ) (b : δ), Decidable (R a b)] {f : α -> β -> γ} {g : α -> β -> δ}, (PrimrecRel.{u3, u4} γ δ _inst_3 _inst_4 R (fun (a : γ) (b : δ) => _inst_6 a b)) -> (Primrec₂.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f) -> (Primrec₂.{u1, u2, u4} α β δ _inst_1 _inst_2 _inst_4 g) -> (PrimrecRel.{u1, u2} α β _inst_1 _inst_2 (fun (a : α) (b : β) => R (f a b) (g a b)) (fun (a : α) (b : β) => _inst_6 (f a b) (g a b)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u4}} {δ : Type.{u3}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] [_inst_3 : Primcodable.{u4} γ] [_inst_4 : Primcodable.{u3} δ] {R : γ -> δ -> Prop} [_inst_6 : forall (a : γ) (b : δ), Decidable (R a b)] {f : α -> β -> γ} {g : α -> β -> δ}, (PrimrecRel.{u4, u3} γ δ _inst_3 _inst_4 R (fun (a : γ) (b : δ) => _inst_6 a b)) -> (Primrec₂.{u2, u1, u4} α β γ _inst_1 _inst_2 _inst_3 f) -> (Primrec₂.{u2, u1, u3} α β δ _inst_1 _inst_2 _inst_4 g) -> (PrimrecRel.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) (b : β) => R (f a b) (g a b)) (fun (a : α) (b : β) => _inst_6 (f a b) (g a b)))
-Case conversion may be inaccurate. Consider using '#align primrec_rel.comp₂ PrimrecRel.comp₂ₓ'. -/
 theorem PrimrecRel.comp₂ {R : γ → δ → Prop} [∀ a b, Decidable (R a b)] {f : α → β → γ}
     {g : α → β → δ} :
     PrimrecRel R → Primrec₂ f → Primrec₂ g → PrimrecRel fun a b => R (f a b) (g a b) :=
@@ -804,12 +610,6 @@ theorem PrimrecPred.of_eq {α} [Primcodable α] {p q : α → Prop} [DecidablePr
 #align primrec_pred.of_eq PrimrecPred.of_eq
 -/
 
-/- warning: primrec_rel.of_eq -> PrimrecRel.of_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {r : α -> β -> Prop} {s : α -> β -> Prop} [_inst_3 : forall (a : α) (b : β), Decidable (r a b)] [_inst_4 : forall (a : α) (b : β), Decidable (s a b)], (PrimrecRel.{u1, u2} α β _inst_1 _inst_2 r (fun (a : α) (b : β) => _inst_3 a b)) -> (forall (a : α) (b : β), Iff (r a b) (s a b)) -> (PrimrecRel.{u1, u2} α β _inst_1 _inst_2 s (fun (a : α) (b : β) => _inst_4 a b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {r : α -> β -> Prop} {s : α -> β -> Prop} [_inst_3 : forall (a : α) (b : β), Decidable (r a b)] [_inst_4 : forall (a : α) (b : β), Decidable (s a b)], (PrimrecRel.{u2, u1} α β _inst_1 _inst_2 r (fun (a : α) (b : β) => _inst_3 a b)) -> (forall (a : α) (b : β), Iff (r a b) (s a b)) -> (PrimrecRel.{u2, u1} α β _inst_1 _inst_2 s (fun (a : α) (b : β) => _inst_4 a b))
-Case conversion may be inaccurate. Consider using '#align primrec_rel.of_eq PrimrecRel.of_eqₓ'. -/
 theorem PrimrecRel.of_eq {α β} [Primcodable α] [Primcodable β] {r s : α → β → Prop}
     [∀ a b, Decidable (r a b)] [∀ a b, Decidable (s a b)] (hr : PrimrecRel r)
     (H : ∀ a b, r a b ↔ s a b) : PrimrecRel s :=
@@ -824,22 +624,10 @@ variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 open Nat.Primrec
 
-/- warning: primrec₂.swap -> Primrec₂.swap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ}, (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f) -> (Primrec₂.{u2, u1, u3} β α σ _inst_2 _inst_1 _inst_3 (Function.swap.{succ u1, succ u2, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => σ) f))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ}, (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 f) -> (Primrec₂.{u2, u3, u1} β α σ _inst_2 _inst_1 _inst_3 (Function.swap.{succ u3, succ u2, succ u1} α β (fun (ᾰ : α) (ᾰ : β) => σ) f))
-Case conversion may be inaccurate. Consider using '#align primrec₂.swap Primrec₂.swapₓ'. -/
 theorem swap {f : α → β → σ} (h : Primrec₂ f) : Primrec₂ (swap f) :=
   h.comp₂ Primrec₂.right Primrec₂.left
 #align primrec₂.swap Primrec₂.swap
 
-/- warning: primrec₂.nat_iff -> Primrec₂.nat_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f) (Nat.Primrec (Nat.unpaired.{1} Nat (fun (m : Nat) (n : Nat) => Encodable.encode.{u3} (Option.{u3} σ) (Option.encodable.{u3} σ (Primcodable.toEncodable.{u3} σ _inst_3)) (Option.bind.{u1, u3} α σ (Encodable.decode.{u1} α (Primcodable.toEncodable.{u1} α _inst_1) m) (fun (a : α) => Option.map.{u2, u3} β σ (f a) (Encodable.decode.{u2} β (Primcodable.toEncodable.{u2} β _inst_2) n))))))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 f) (Nat.Primrec (Nat.unpaired.{1} Nat (fun (m : Nat) (n : Nat) => Encodable.encode.{u1} (Option.{u1} σ) (Option.encodable.{u1} σ (Primcodable.toEncodable.{u1} σ _inst_3)) (Option.bind.{u3, u1} α σ (Encodable.decode.{u3} α (Primcodable.toEncodable.{u3} α _inst_1) m) (fun (a : α) => Option.map.{u2, u1} β σ (f a) (Encodable.decode.{u2} β (Primcodable.toEncodable.{u2} β _inst_2) n))))))
-Case conversion may be inaccurate. Consider using '#align primrec₂.nat_iff Primrec₂.nat_iffₓ'. -/
 theorem nat_iff {f : α → β → σ} :
     Primrec₂ f ↔
       Nat.Primrec
@@ -854,12 +642,6 @@ theorem nat_iff {f : α → β → σ} :
   simp [Primrec₂, Primrec, this]
 #align primrec₂.nat_iff Primrec₂.nat_iff
 
-/- warning: primrec₂.nat_iff' -> Primrec₂.nat_iff' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_3 f) (Primrec₂.{0, 0, u3} Nat Nat (Option.{u3} σ) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.option.{u3} σ _inst_3) (fun (m : Nat) (n : Nat) => Option.bind.{u1, u3} α σ (Encodable.decode.{u1} α (Primcodable.toEncodable.{u1} α _inst_1) m) (fun (a : α) => Option.map.{u2, u3} β σ (f a) (Encodable.decode.{u2} β (Primcodable.toEncodable.{u2} β _inst_2) n))))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u1} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_3 f) (Primrec₂.{0, 0, u1} Nat Nat (Option.{u1} σ) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.option.{u1} σ _inst_3) (fun (m : Nat) (n : Nat) => Option.bind.{u3, u1} α σ (Encodable.decode.{u3} α (Primcodable.toEncodable.{u3} α _inst_1) m) (fun (a : α) => Option.map.{u2, u1} β σ (f a) (Encodable.decode.{u2} β (Primcodable.toEncodable.{u2} β _inst_2) n))))
-Case conversion may be inaccurate. Consider using '#align primrec₂.nat_iff' Primrec₂.nat_iff'ₓ'. -/
 theorem nat_iff' {f : α → β → σ} :
     Primrec₂ f ↔
       Primrec₂ fun m n : ℕ => Option.bind (decode α m) fun a => Option.map (f a) (decode β n) :=
@@ -874,12 +656,6 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {σ : Type _}
 
 variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
 
-/- warning: primrec.to₂ -> Primrec.to₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {f : (Prod.{u1, u2} α β) -> σ}, (Primrec.{max u1 u2, u3} (Prod.{u1, u2} α β) σ (Primcodable.prod.{u1, u2} α β _inst_1 _inst_2) _inst_5 f) -> (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_5 (fun (a : α) (b : β) => f (Prod.mk.{u1, u2} α β a b)))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u1} σ] {f : (Prod.{u3, u2} α β) -> σ}, (Primrec.{max u3 u2, u1} (Prod.{u3, u2} α β) σ (Primcodable.prod.{u3, u2} α β _inst_1 _inst_2) _inst_5 f) -> (Primrec₂.{u3, u2, u1} α β σ _inst_1 _inst_2 _inst_5 (fun (a : α) (b : β) => f (Prod.mk.{u3, u2} α β a b)))
-Case conversion may be inaccurate. Consider using '#align primrec.to₂ Primrec.to₂ₓ'. -/
 theorem to₂ {f : α × β → σ} (hf : Primrec f) : Primrec₂ fun a b => f (a, b) :=
   hf.of_eq fun ⟨a, b⟩ => rfl
 #align primrec.to₂ Primrec.to₂
@@ -918,23 +694,11 @@ theorem nat_rec₁ {f : ℕ → α → α} (a : α) (hf : Primrec₂ f) : Primre
 #align primrec.nat_elim₁ Primrec.nat_rec₁
 -/
 
-/- warning: primrec.nat_cases' -> Primrec.nat_casesOn' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> β} {g : α -> Nat -> β}, (Primrec.{u1, u2} α β _inst_1 _inst_2 f) -> (Primrec₂.{u1, 0, u2} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 g) -> (Primrec₂.{u1, 0, u2} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 (fun (a : α) => Nat.casesOn.{succ u2} β (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {f : α -> β} {g : α -> Nat -> β}, (Primrec.{u2, u1} α β _inst_1 _inst_2 f) -> (Primrec₂.{u2, 0, u1} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 g) -> (Primrec₂.{u2, 0, u1} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 (fun (a : α) (n : Nat) => Nat.casesOn.{succ u1} (fun (x._@.Mathlib.Computability.Primrec._hyg.4800 : Nat) => β) n (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.nat_cases' Primrec.nat_casesOn'ₓ'. -/
 theorem nat_casesOn' {f : α → β} {g : α → ℕ → β} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec₂ fun a => Nat.casesOn (f a) (g a) :=
   nat_rec hf <| hg.comp₂ Primrec₂.left <| comp₂ fst Primrec₂.right
 #align primrec.nat_cases' Primrec.nat_casesOn'
 
-/- warning: primrec.nat_cases -> Primrec.nat_casesOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> Nat} {g : α -> β} {h : α -> Nat -> β}, (Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 g) -> (Primrec₂.{u1, 0, u2} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 h) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 (fun (a : α) => Nat.casesOn.{succ u2} β (g a) (h a) (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {f : α -> Nat} {g : α -> β} {h : α -> Nat -> β}, (Primrec.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Primrec.{u2, u1} α β _inst_1 _inst_2 g) -> (Primrec₂.{u2, 0, u1} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 h) -> (Primrec.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => Nat.casesOn.{succ u1} (fun (x._@.Mathlib.Computability.Primrec._hyg.4875 : Nat) => β) (f a) (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align primrec.nat_cases Primrec.nat_casesOnₓ'. -/
 theorem nat_casesOn {f : α → ℕ} {g : α → β} {h : α → ℕ → β} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : Primrec fun a => (f a).cases (g a) (h a) :=
   (nat_casesOn' hg hh).comp Primrec.id hf
@@ -946,24 +710,12 @@ theorem nat_casesOn₁ {f : ℕ → α} (a : α) (hf : Primrec f) : Primrec (Nat
 #align primrec.nat_cases₁ Primrec.nat_casesOn₁
 -/
 
-/- warning: primrec.nat_iterate -> Primrec.nat_iterate is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> Nat} {g : α -> β} {h : α -> β -> β}, (Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 g) -> (Primrec₂.{u1, u2, u2} α β β _inst_1 _inst_2 _inst_2 h) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 (fun (a : α) => Nat.iterate.{succ u2} β (h a) (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {f : α -> Nat} {g : α -> β} {h : α -> β -> β}, (Primrec.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Primrec.{u2, u1} α β _inst_1 _inst_2 g) -> (Primrec₂.{u2, u1, u1} α β β _inst_1 _inst_2 _inst_2 h) -> (Primrec.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => Nat.iterate.{succ u1} β (h a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.nat_iterate Primrec.nat_iterateₓ'. -/
 theorem nat_iterate {f : α → ℕ} {g : α → β} {h : α → β → β} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : Primrec fun a => (h a^[f a]) (g a) :=
   (nat_rec' hf hg (hh.comp₂ Primrec₂.left <| snd.comp₂ Primrec₂.right)).of_eq fun a => by
     induction f a <;> simp [*, Function.iterate_succ']
 #align primrec.nat_iterate Primrec.nat_iterate
 
-/- warning: primrec.option_cases -> Primrec.option_casesOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {o : α -> (Option.{u2} β)} {f : α -> σ} {g : α -> β -> σ}, (Primrec.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) o) -> (Primrec.{u1, u3} α σ _inst_1 _inst_5 f) -> (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_5 g) -> (Primrec.{u1, u3} α σ _inst_1 _inst_5 (fun (a : α) => Option.casesOn.{succ u3, u2} β (fun (_x : Option.{u2} β) => σ) (o a) (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_5 : Primcodable.{u1} σ] {o : α -> (Option.{u3} β)} {f : α -> σ} {g : α -> β -> σ}, (Primrec.{u2, u3} α (Option.{u3} β) _inst_1 (Primcodable.option.{u3} β _inst_2) o) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 f) -> (Primrec₂.{u2, u3, u1} α β σ _inst_1 _inst_2 _inst_5 g) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 (fun (a : α) => Option.casesOn.{succ u1, u3} β (fun (_x : Option.{u3} β) => σ) (o a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.option_cases Primrec.option_casesOnₓ'. -/
 theorem option_casesOn {o : α → Option β} {f : α → σ} {g : α → β → σ} (ho : Primrec o)
     (hf : Primrec f) (hg : Primrec₂ g) :
     @Primrec _ σ _ _ fun a => Option.casesOn (o a) (f a) (g a) :=
@@ -976,12 +728,6 @@ theorem option_casesOn {o : α → Option β} {f : α → σ} {g : α → β →
       fun a => by cases' o a with b <;> simp [encodek] <;> rfl
 #align primrec.option_cases Primrec.option_casesOn
 
-/- warning: primrec.option_bind -> Primrec.option_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {f : α -> (Option.{u2} β)} {g : α -> β -> (Option.{u3} σ)}, (Primrec.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) f) -> (Primrec₂.{u1, u2, u3} α β (Option.{u3} σ) _inst_1 _inst_2 (Primcodable.option.{u3} σ _inst_5) g) -> (Primrec.{u1, u3} α (Option.{u3} σ) _inst_1 (Primcodable.option.{u3} σ _inst_5) (fun (a : α) => Option.bind.{u2, u3} β σ (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_5 : Primcodable.{u2} σ] {f : α -> (Option.{u3} β)} {g : α -> β -> (Option.{u2} σ)}, (Primrec.{u1, u3} α (Option.{u3} β) _inst_1 (Primcodable.option.{u3} β _inst_2) f) -> (Primrec₂.{u1, u3, u2} α β (Option.{u2} σ) _inst_1 _inst_2 (Primcodable.option.{u2} σ _inst_5) g) -> (Primrec.{u1, u2} α (Option.{u2} σ) _inst_1 (Primcodable.option.{u2} σ _inst_5) (fun (a : α) => Option.bind.{u3, u2} β σ (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.option_bind Primrec.option_bindₓ'. -/
 theorem option_bind {f : α → Option β} {g : α → β → Option σ} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec fun a => (f a).bind (g a) :=
   (option_casesOn hf (const none) hg).of_eq fun a => by cases f a <;> rfl
@@ -993,23 +739,11 @@ theorem option_bind₁ {f : α → Option σ} (hf : Primrec f) : Primrec fun o =
 #align primrec.option_bind₁ Primrec.option_bind₁
 -/
 
-/- warning: primrec.option_map -> Primrec.option_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {f : α -> (Option.{u2} β)} {g : α -> β -> σ}, (Primrec.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) f) -> (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_5 g) -> (Primrec.{u1, u3} α (Option.{u3} σ) _inst_1 (Primcodable.option.{u3} σ _inst_5) (fun (a : α) => Option.map.{u2, u3} β σ (g a) (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_5 : Primcodable.{u1} σ] {f : α -> (Option.{u3} β)} {g : α -> β -> σ}, (Primrec.{u2, u3} α (Option.{u3} β) _inst_1 (Primcodable.option.{u3} β _inst_2) f) -> (Primrec₂.{u2, u3, u1} α β σ _inst_1 _inst_2 _inst_5 g) -> (Primrec.{u2, u1} α (Option.{u1} σ) _inst_1 (Primcodable.option.{u1} σ _inst_5) (fun (a : α) => Option.map.{u3, u1} β σ (g a) (f a)))
-Case conversion may be inaccurate. Consider using '#align primrec.option_map Primrec.option_mapₓ'. -/
 theorem option_map {f : α → Option β} {g : α → β → σ} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec fun a => (f a).map (g a) :=
   option_bind hf (option_some.comp₂ hg)
 #align primrec.option_map Primrec.option_map
 
-/- warning: primrec.option_map₁ -> Primrec.option_map₁ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_5 : Primcodable.{u2} σ] {f : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_5 f) -> (Primrec.{u1, u2} (Option.{u1} α) (Option.{u2} σ) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u2} σ _inst_5) (Option.map.{u1, u2} α σ f))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_5 : Primcodable.{u1} σ] {f : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_5 f) -> (Primrec.{u2, u1} (Option.{u2} α) (Option.{u1} σ) (Primcodable.option.{u2} α _inst_1) (Primcodable.option.{u1} σ _inst_5) (Option.map.{u2, u1} α σ f))
-Case conversion may be inaccurate. Consider using '#align primrec.option_map₁ Primrec.option_map₁ₓ'. -/
 theorem option_map₁ {f : α → σ} (hf : Primrec f) : Primrec (Option.map f) :=
   option_map Primrec.id (hf.comp snd).to₂
 #align primrec.option_map₁ Primrec.option_map₁
@@ -1034,24 +768,12 @@ theorem option_getD : Primrec₂ (@Option.getD α) :=
 #align primrec.option_get_or_else Primrec.option_getD
 -/
 
-/- warning: primrec.bind_decode_iff -> Primrec.bind_decode_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {f : α -> β -> (Option.{u3} σ)}, Iff (Primrec₂.{u1, 0, u3} α Nat (Option.{u3} σ) _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.option.{u3} σ _inst_5) (fun (a : α) (n : Nat) => Option.bind.{u2, u3} β σ (Encodable.decode.{u2} β (Primcodable.toEncodable.{u2} β _inst_2) n) (f a))) (Primrec₂.{u1, u2, u3} α β (Option.{u3} σ) _inst_1 _inst_2 (Primcodable.option.{u3} σ _inst_5) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] [_inst_5 : Primcodable.{u3} σ] {f : α -> β -> (Option.{u3} σ)}, Iff (Primrec₂.{u2, 0, u3} α Nat (Option.{u3} σ) _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.option.{u3} σ _inst_5) (fun (a : α) (n : Nat) => Option.bind.{u1, u3} β σ (Encodable.decode.{u1} β (Primcodable.toEncodable.{u1} β _inst_2) n) (f a))) (Primrec₂.{u2, u1, u3} α β (Option.{u3} σ) _inst_1 _inst_2 (Primcodable.option.{u3} σ _inst_5) f)
-Case conversion may be inaccurate. Consider using '#align primrec.bind_decode_iff Primrec.bind_decode_iffₓ'. -/
 theorem bind_decode_iff {f : α → β → Option σ} :
     (Primrec₂ fun a n => (decode β n).bind (f a)) ↔ Primrec₂ f :=
   ⟨fun h => by simpa [encodek] using h.comp fst ((@Primrec.encode β _).comp snd), fun h =>
     option_bind (Primrec.decode.comp snd) <| h.comp (fst.comp fst) snd⟩
 #align primrec.bind_decode_iff Primrec.bind_decode_iff
 
-/- warning: primrec.map_decode_iff -> Primrec.map_decode_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u1, 0, u3} α Nat (Option.{u3} σ) _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.option.{u3} σ _inst_5) (fun (a : α) (n : Nat) => Option.map.{u2, u3} β σ (f a) (Encodable.decode.{u2} β (Primcodable.toEncodable.{u2} β _inst_2) n))) (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_5 f)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u3} α] [_inst_2 : Primcodable.{u1} β] [_inst_5 : Primcodable.{u2} σ] {f : α -> β -> σ}, Iff (Primrec₂.{u3, 0, u2} α Nat (Option.{u2} σ) _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.option.{u2} σ _inst_5) (fun (a : α) (n : Nat) => Option.map.{u1, u2} β σ (f a) (Encodable.decode.{u1} β (Primcodable.toEncodable.{u1} β _inst_2) n))) (Primrec₂.{u3, u1, u2} α β σ _inst_1 _inst_2 _inst_5 f)
-Case conversion may be inaccurate. Consider using '#align primrec.map_decode_iff Primrec.map_decode_iffₓ'. -/
 theorem map_decode_iff {f : α → β → σ} :
     (Primrec₂ fun a n => (decode β n).map (f a)) ↔ Primrec₂ f :=
   bind_decode_iff.trans Primrec₂.option_some_iff
@@ -1075,34 +797,16 @@ theorem nat_mul : Primrec₂ ((· * ·) : ℕ → ℕ → ℕ) :=
 #align primrec.nat_mul Primrec.nat_mul
 -/
 
-/- warning: primrec.cond -> Primrec.cond is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_5 : Primcodable.{u2} σ] {c : α -> Bool} {f : α -> σ} {g : α -> σ}, (Primrec.{u1, 0} α Bool _inst_1 Primcodable.bool c) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 f) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 g) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 (fun (a : α) => cond.{u2} σ (c a) (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_5 : Primcodable.{u1} σ] {c : α -> Bool} {f : α -> σ} {g : α -> σ}, (Primrec.{u2, 0} α Bool _inst_1 Primcodable.bool c) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 f) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 g) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 (fun (a : α) => cond.{u1} σ (c a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.cond Primrec.condₓ'. -/
 theorem cond {c : α → Bool} {f : α → σ} {g : α → σ} (hc : Primrec c) (hf : Primrec f)
     (hg : Primrec g) : Primrec fun a => cond (c a) (f a) (g a) :=
   (nat_casesOn (encode_iff.2 hc) hg (hf.comp fst).to₂).of_eq fun a => by cases c a <;> rfl
 #align primrec.cond Primrec.cond
 
-/- warning: primrec.ite -> Primrec.ite is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_5 : Primcodable.{u2} σ] {c : α -> Prop} [_inst_6 : DecidablePred.{succ u1} α c] {f : α -> σ} {g : α -> σ}, (PrimrecPred.{u1} α _inst_1 c (fun (a : α) => _inst_6 a)) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 f) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 g) -> (Primrec.{u1, u2} α σ _inst_1 _inst_5 (fun (a : α) => ite.{succ u2} σ (c a) (_inst_6 a) (f a) (g a)))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_5 : Primcodable.{u1} σ] {c : α -> Prop} [_inst_6 : DecidablePred.{succ u2} α c] {f : α -> σ} {g : α -> σ}, (PrimrecPred.{u2} α _inst_1 c (fun (a : α) => _inst_6 a)) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 f) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 g) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 (fun (a : α) => ite.{succ u1} σ (c a) (_inst_6 a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.ite Primrec.iteₓ'. -/
 theorem ite {c : α → Prop} [DecidablePred c] {f : α → σ} {g : α → σ} (hc : PrimrecPred c)
     (hf : Primrec f) (hg : Primrec g) : Primrec fun a => if c a then f a else g a := by
   simpa using cond hc hf hg
 #align primrec.ite Primrec.ite
 
-/- warning: primrec.nat_le -> Primrec.nat_le is a dubious translation:
-lean 3 declaration is
-  PrimrecRel.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (LE.le.{0} Nat Nat.hasLe) (fun (a : Nat) (b : Nat) => Nat.decidableLe a b)
-but is expected to have type
-  PrimrecRel.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (x._@.Mathlib.Computability.Primrec._hyg.6194 : Nat) (x._@.Mathlib.Computability.Primrec._hyg.6196 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Computability.Primrec._hyg.6194 x._@.Mathlib.Computability.Primrec._hyg.6196) (fun (a : Nat) (b : Nat) => Nat.decLe a b)
-Case conversion may be inaccurate. Consider using '#align primrec.nat_le Primrec.nat_leₓ'. -/
 theorem nat_le : PrimrecRel ((· ≤ ·) : ℕ → ℕ → Prop) :=
   (nat_casesOn nat_sub (const true) (const false).to₂).of_eq fun p =>
     by
@@ -1112,22 +816,10 @@ theorem nat_le : PrimrecRel ((· ≤ ·) : ℕ → ℕ → Prop) :=
     · simp [not_le.2 (Nat.lt_of_sub_eq_succ e)]
 #align primrec.nat_le Primrec.nat_le
 
-/- warning: primrec.nat_min -> Primrec.nat_min is a dubious translation:
-lean 3 declaration is
-  Primrec₂.{0, 0, 0} Nat Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (LinearOrder.min.{0} Nat Nat.linearOrder)
-but is expected to have type
-  Primrec₂.{0, 0, 0} Nat Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Min.min.{0} Nat instMinNat)
-Case conversion may be inaccurate. Consider using '#align primrec.nat_min Primrec.nat_minₓ'. -/
 theorem nat_min : Primrec₂ (@min ℕ _) :=
   ite nat_le fst snd
 #align primrec.nat_min Primrec.nat_min
 
-/- warning: primrec.nat_max -> Primrec.nat_max is a dubious translation:
-lean 3 declaration is
-  Primrec₂.{0, 0, 0} Nat Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (LinearOrder.max.{0} Nat Nat.linearOrder)
-but is expected to have type
-  Primrec₂.{0, 0, 0} Nat Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Max.max.{0} Nat Nat.instMaxNat)
-Case conversion may be inaccurate. Consider using '#align primrec.nat_max Primrec.nat_maxₓ'. -/
 theorem nat_max : Primrec₂ (@max ℕ _) :=
   ite (nat_le.comp Primrec.fst Primrec.snd) snd fst
 #align primrec.nat_max Primrec.nat_max
@@ -1193,33 +885,15 @@ protected theorem eq [DecidableEq α] : PrimrecRel (@Eq α) :=
 #align primrec.eq Primrec.eq
 -/
 
-/- warning: primrec.nat_lt -> Primrec.nat_lt is a dubious translation:
-lean 3 declaration is
-  PrimrecRel.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (LT.lt.{0} Nat Nat.hasLt) (fun (a : Nat) (b : Nat) => Nat.decidableLt a b)
-but is expected to have type
-  PrimrecRel.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (x._@.Mathlib.Computability.Primrec._hyg.6908 : Nat) (x._@.Mathlib.Computability.Primrec._hyg.6910 : Nat) => LT.lt.{0} Nat instLTNat x._@.Mathlib.Computability.Primrec._hyg.6908 x._@.Mathlib.Computability.Primrec._hyg.6910) (fun (a : Nat) (b : Nat) => Nat.decLt a b)
-Case conversion may be inaccurate. Consider using '#align primrec.nat_lt Primrec.nat_ltₓ'. -/
 theorem nat_lt : PrimrecRel ((· < ·) : ℕ → ℕ → Prop) :=
   (nat_le.comp snd fst).Not.of_eq fun p => by simp
 #align primrec.nat_lt Primrec.nat_lt
 
-/- warning: primrec.option_guard -> Primrec.option_guard is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {p : α -> β -> Prop} [_inst_6 : forall (a : α) (b : β), Decidable (p a b)], (PrimrecRel.{u1, u2} α β _inst_1 _inst_2 p (fun (a : α) (b : β) => _inst_6 a b)) -> (forall {f : α -> β}, (Primrec.{u1, u2} α β _inst_1 _inst_2 f) -> (Primrec.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) (fun (a : α) => Option.guard.{u2} β (p a) (fun (a_1 : β) => _inst_6 a a_1) (f a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {p : α -> β -> Prop} [_inst_6 : forall (a : α) (b : β), Decidable (p a b)], (PrimrecRel.{u2, u1} α β _inst_1 _inst_2 p (fun (a : α) (b : β) => _inst_6 a b)) -> (forall {f : α -> β}, (Primrec.{u2, u1} α β _inst_1 _inst_2 f) -> (Primrec.{u2, u1} α (Option.{u1} β) _inst_1 (Primcodable.option.{u1} β _inst_2) (fun (a : α) => Option.guard.{u1} β (p a) (fun (a_1 : β) => _inst_6 a a_1) (f a))))
-Case conversion may be inaccurate. Consider using '#align primrec.option_guard Primrec.option_guardₓ'. -/
 theorem option_guard {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hp : PrimrecRel p) {f : α → β}
     (hf : Primrec f) : Primrec fun a => Option.guard (p a) (f a) :=
   ite (hp.comp Primrec.id hf) (option_some_iff.2 hf) (const none)
 #align primrec.option_guard Primrec.option_guard
 
-/- warning: primrec.option_orelse -> Primrec.option_orElse is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Primcodable.{u1} α], Primrec₂.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u1} α _inst_1) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Primcodable.{u1} α], Primrec₂.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u1} α _inst_1) (fun (x._@.Mathlib.Computability.Primrec._hyg.7041 : Option.{u1} α) (x._@.Mathlib.Computability.Primrec._hyg.7043 : Option.{u1} α) => HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x._@.Mathlib.Computability.Primrec._hyg.7041 (fun (x._@.Mathlib.Computability.Primrec._hyg.7053 : Unit) => x._@.Mathlib.Computability.Primrec._hyg.7043))
-Case conversion may be inaccurate. Consider using '#align primrec.option_orelse Primrec.option_orElseₓ'. -/
 theorem option_orElse : Primrec₂ ((· <|> ·) : Option α → Option α → Option α) :=
   (option_casesOn fst snd (fst.comp fst).to₂).of_eq fun ⟨o₁, o₂⟩ => by cases o₁ <;> cases o₂ <;> rfl
 #align primrec.option_orelse Primrec.option_orElse
@@ -1231,12 +905,6 @@ protected theorem decode₂ : Primrec (decode₂ α) :=
 #align primrec.decode₂ Primrec.decode₂
 -/
 
-/- warning: primrec.list_find_index₁ -> Primrec.list_findIdx₁ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {p : α -> β -> Prop} [_inst_6 : forall (a : α) (b : β), Decidable (p a b)], (PrimrecRel.{u1, u2} α β _inst_1 _inst_2 p (fun (a : α) (b : β) => _inst_6 a b)) -> (forall (l : List.{u2} β), Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) => List.findIndex.{u2} β (p a) (fun (a_1 : β) => _inst_6 a a_1) l))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {p : α -> β -> Bool}, (Primrec₂.{u2, u1, 0} α β Bool _inst_1 _inst_2 Primcodable.bool p) -> (forall (hp : List.{u1} β), Primrec.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) => List.findIdx.{u1} β (p a) hp))
-Case conversion may be inaccurate. Consider using '#align primrec.list_find_index₁ Primrec.list_findIdx₁ₓ'. -/
 theorem list_findIdx₁ {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hp : PrimrecRel p) :
     ∀ l : List β, Primrec fun a => l.findIndex (p a)
   | [] => const 0
@@ -1249,12 +917,6 @@ theorem list_indexOf₁ [DecidableEq α] (l : List α) : Primrec fun a => l.inde
 #align primrec.list_index_of₁ Primrec.list_indexOf₁
 -/
 
-/- warning: primrec.dom_fintype -> Primrec.dom_fintype is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_5 : Primcodable.{u2} σ] [_inst_6 : Fintype.{u1} α] (f : α -> σ), Primrec.{u1, u2} α σ _inst_1 _inst_5 f
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_5 : Primcodable.{u1} σ] [_inst_6 : Fintype.{u2} α] (f : α -> σ), Primrec.{u2, u1} α σ _inst_1 _inst_5 f
-Case conversion may be inaccurate. Consider using '#align primrec.dom_fintype Primrec.dom_fintypeₓ'. -/
 theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
   let ⟨l, nd, m⟩ := Finite.exists_univ_list α
   option_some_iff.1 <| by
@@ -1264,11 +926,6 @@ theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
 #align primrec.dom_fintype Primrec.dom_fintype
 
 /- warning: primrec.nat_bodd_div2 clashes with [anonymous] -> [anonymous]
-warning: primrec.nat_bodd_div2 -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  Primrec.{0, 0} Nat (Prod.{0, 0} Bool Nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.prod.{0, 0} Bool Nat Primcodable.bool (Primcodable.ofDenumerable.{0} Nat Denumerable.nat)) Nat.boddDiv2
-but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}}, (Nat -> α -> β) -> Nat -> (List.{u} α) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align primrec.nat_bodd_div2 [anonymous]ₓ'. -/
 theorem [anonymous] : Primrec Nat.boddDiv2 :=
   (nat_rec' Primrec.id (const (false, 0))
@@ -1293,22 +950,10 @@ theorem nat_div2 : Primrec Nat.div2 :=
 #align primrec.nat_div2 Primrec.nat_div2
 -/
 
-/- warning: primrec.nat_bit0 -> Primrec.nat_double is a dubious translation:
-lean 3 declaration is
-  Primrec.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (bit0.{0} Nat Nat.hasAdd)
-but is expected to have type
-  Primrec.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (n : Nat) => HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)
-Case conversion may be inaccurate. Consider using '#align primrec.nat_bit0 Primrec.nat_doubleₓ'. -/
 theorem nat_double : Primrec (@bit0 ℕ _) :=
   nat_add.comp Primrec.id Primrec.id
 #align primrec.nat_bit0 Primrec.nat_double
 
-/- warning: primrec.nat_bit1 -> Primrec.nat_double_succ is a dubious translation:
-lean 3 declaration is
-  Primrec.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (bit1.{0} Nat Nat.hasOne Nat.hasAdd)
-but is expected to have type
-  Primrec.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (n : Nat) => HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
-Case conversion may be inaccurate. Consider using '#align primrec.nat_bit1 Primrec.nat_double_succₓ'. -/
 theorem nat_double_succ : Primrec (@bit1 ℕ _ _) :=
   nat_add.comp nat_double (const 1)
 #align primrec.nat_bit1 Primrec.nat_double_succ
@@ -1319,11 +964,6 @@ theorem nat_bit : Primrec₂ Nat.bit :=
 #align primrec.nat_bit Primrec.nat_bit
 
 /- warning: primrec.nat_div_mod clashes with [anonymous] -> [anonymous]
-warning: primrec.nat_div_mod -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  Primrec₂.{0, 0, 0} Nat Nat (Prod.{0, 0} Nat Nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.prod.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat)) (fun (n : Nat) (k : Nat) => Prod.mk.{0, 0} Nat Nat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n k))
-but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}}, (Nat -> α -> β) -> Nat -> (List.{u} α) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align primrec.nat_div_mod [anonymous]ₓ'. -/
 theorem [anonymous] : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
   let f (a : ℕ × ℕ) : ℕ × ℕ :=
@@ -1517,12 +1157,6 @@ variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
 variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
-/- warning: primrec.sum_inl -> Primrec.sum_inl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β], Primrec.{u1, max u1 u2} α (Sum.{u1, u2} α β) _inst_1 (Primcodable.sum.{u1, u2} α β _inst_1 _inst_2) (Sum.inl.{u1, u2} α β)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β], Primrec.{u2, max u2 u1} α (Sum.{u2, u1} α β) _inst_1 (Primcodable.sum.{u2, u1} α β _inst_1 _inst_2) (Sum.inl.{u2, u1} α β)
-Case conversion may be inaccurate. Consider using '#align primrec.sum_inl Primrec.sum_inlₓ'. -/
 theorem sum_inl : Primrec (@Sum.inl α β) :=
   encode_iff.1 <| nat_double.comp Primrec.encode
 #align primrec.sum_inl Primrec.sum_inl
@@ -1533,12 +1167,6 @@ theorem sum_inr : Primrec (@Sum.inr α β) :=
 #align primrec.sum_inr Primrec.sum_inr
 -/
 
-/- warning: primrec.sum_cases -> Primrec.sum_casesOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} σ] {f : α -> (Sum.{u2, u3} β γ)} {g : α -> β -> σ} {h : α -> γ -> σ}, (Primrec.{u1, max u2 u3} α (Sum.{u2, u3} β γ) _inst_1 (Primcodable.sum.{u2, u3} β γ _inst_2 _inst_3) f) -> (Primrec₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_4 g) -> (Primrec₂.{u1, u3, u4} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Primrec.{u1, u4} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u4, u2, u3} β γ (fun (_x : Sum.{u2, u3} β γ) => σ) (f a) (g a) (h a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u1} σ] {f : α -> (Sum.{u4, u3} β γ)} {g : α -> β -> σ} {h : α -> γ -> σ}, (Primrec.{u2, max u4 u3} α (Sum.{u4, u3} β γ) _inst_1 (Primcodable.sum.{u4, u3} β γ _inst_2 _inst_3) f) -> (Primrec₂.{u2, u4, u1} α β σ _inst_1 _inst_2 _inst_4 g) -> (Primrec₂.{u2, u3, u1} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Primrec.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u1, u4, u3} β γ (fun (_x : Sum.{u4, u3} β γ) => σ) (f a) (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align primrec.sum_cases Primrec.sum_casesOnₓ'. -/
 theorem sum_casesOn {f : α → Sum β γ} {g : α → β → σ} {h : α → γ → σ} (hf : Primrec f)
     (hg : Primrec₂ g) (hh : Primrec₂ h) : @Primrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
@@ -1554,12 +1182,6 @@ theorem list_cons : Primrec₂ (@List.cons α) :=
 #align primrec.list_cons Primrec.list_cons
 -/
 
-/- warning: primrec.list_cases -> Primrec.list_casesOn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {f : α -> (List.{u2} β)} {g : α -> σ} {h : α -> (Prod.{u2, u2} β (List.{u2} β)) -> σ}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, u2, u3} α (Prod.{u2, u2} β (List.{u2} β)) σ _inst_1 (Primcodable.prod.{u2, u2} β (List.{u2} β) _inst_2 (Primcodable.list.{u2} β _inst_2)) _inst_4 h) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => List.casesOn.{succ u3, u2} β (fun (_x : List.{u2} β) => σ) (f a) (g a) (fun (b : β) (l : List.{u2} β) => h a (Prod.mk.{u2, u2} β (List.{u2} β) b l))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u1} σ] {f : α -> (List.{u3} β)} {g : α -> σ} {h : α -> (Prod.{u3, u3} β (List.{u3} β)) -> σ}, (Primrec.{u2, u3} α (List.{u3} β) _inst_1 (Primcodable.list.{u3} β _inst_2) f) -> (Primrec.{u2, u1} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u2, u3, u1} α (Prod.{u3, u3} β (List.{u3} β)) σ _inst_1 (Primcodable.prod.{u3, u3} β (List.{u3} β) _inst_2 (Primcodable.list.{u3} β _inst_2)) _inst_4 h) -> (Primrec.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => List.casesOn.{succ u1, u3} β (fun (_x : List.{u3} β) => σ) (f a) (g a) (fun (b : β) (l : List.{u3} β) => h a (Prod.mk.{u3, u3} β (List.{u3} β) b l))))
-Case conversion may be inaccurate. Consider using '#align primrec.list_cases Primrec.list_casesOnₓ'. -/
 theorem list_casesOn {f : α → List β} {g : α → σ} {h : α → β × List β → σ} :
     Primrec f →
       Primrec g →
@@ -1567,12 +1189,6 @@ theorem list_casesOn {f : α → List β} {g : α → σ} {h : α → β × List
   list_cases' (Primcodable.prim _)
 #align primrec.list_cases Primrec.list_casesOn
 
-/- warning: primrec.list_foldl -> Primrec.list_foldl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {f : α -> (List.{u2} β)} {g : α -> σ} {h : α -> (Prod.{u3, u2} σ β) -> σ}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, max u3 u2, u3} α (Prod.{u3, u2} σ β) σ _inst_1 (Primcodable.prod.{u3, u2} σ β _inst_4 _inst_2) _inst_4 h) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => List.foldl.{u3, u2} σ β (fun (s : σ) (b : β) => h a (Prod.mk.{u3, u2} σ β s b)) (g a) (f a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u2} σ] {f : α -> (List.{u3} β)} {g : α -> σ} {h : α -> (Prod.{u2, u3} σ β) -> σ}, (Primrec.{u1, u3} α (List.{u3} β) _inst_1 (Primcodable.list.{u3} β _inst_2) f) -> (Primrec.{u1, u2} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, max u3 u2, u2} α (Prod.{u2, u3} σ β) σ _inst_1 (Primcodable.prod.{u2, u3} σ β _inst_4 _inst_2) _inst_4 h) -> (Primrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => List.foldl.{u2, u3} σ β (fun (s : σ) (b : β) => h a (Prod.mk.{u2, u3} σ β s b)) (g a) (f a)))
-Case conversion may be inaccurate. Consider using '#align primrec.list_foldl Primrec.list_foldlₓ'. -/
 theorem list_foldl {f : α → List β} {g : α → σ} {h : α → σ × β → σ} :
     Primrec f →
       Primrec g → Primrec₂ h → Primrec fun a => (f a).foldl (fun s b => h a (s, b)) (g a) :=
@@ -1585,12 +1201,6 @@ theorem list_reverse : Primrec (@List.reverse α) :=
 #align primrec.list_reverse Primrec.list_reverse
 -/
 
-/- warning: primrec.list_foldr -> Primrec.list_foldr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {f : α -> (List.{u2} β)} {g : α -> σ} {h : α -> (Prod.{u2, u3} β σ) -> σ}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, max u2 u3, u3} α (Prod.{u2, u3} β σ) σ _inst_1 (Primcodable.prod.{u2, u3} β σ _inst_2 _inst_4) _inst_4 h) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => List.foldr.{u2, u3} β σ (fun (b : β) (s : σ) => h a (Prod.mk.{u2, u3} β σ b s)) (g a) (f a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u2} σ] {f : α -> (List.{u3} β)} {g : α -> σ} {h : α -> (Prod.{u3, u2} β σ) -> σ}, (Primrec.{u1, u3} α (List.{u3} β) _inst_1 (Primcodable.list.{u3} β _inst_2) f) -> (Primrec.{u1, u2} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, max u3 u2, u2} α (Prod.{u3, u2} β σ) σ _inst_1 (Primcodable.prod.{u3, u2} β σ _inst_2 _inst_4) _inst_4 h) -> (Primrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => List.foldr.{u3, u2} β σ (fun (b : β) (s : σ) => h a (Prod.mk.{u3, u2} β σ b s)) (g a) (f a)))
-Case conversion may be inaccurate. Consider using '#align primrec.list_foldr Primrec.list_foldrₓ'. -/
 theorem list_foldr {f : α → List β} {g : α → σ} {h : α → β × σ → σ} (hf : Primrec f)
     (hg : Primrec g) (hh : Primrec₂ h) :
     Primrec fun a => (f a).foldr (fun b s => h a (b, s)) (g a) :=
@@ -1617,12 +1227,6 @@ theorem list_tail : Primrec (@List.tail α) :=
 #align primrec.list_tail Primrec.list_tail
 -/
 
-/- warning: primrec.list_rec -> Primrec.list_rec is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {f : α -> (List.{u2} β)} {g : α -> σ} {h : α -> (Prod.{u2, max u2 u3} β (Prod.{u2, u3} (List.{u2} β) σ)) -> σ}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, max u2 u3, u3} α (Prod.{u2, max u2 u3} β (Prod.{u2, u3} (List.{u2} β) σ)) σ _inst_1 (Primcodable.prod.{u2, max u2 u3} β (Prod.{u2, u3} (List.{u2} β) σ) _inst_2 (Primcodable.prod.{u2, u3} (List.{u2} β) σ (Primcodable.list.{u2} β _inst_2) _inst_4)) _inst_4 h) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => List.recOn.{succ u3, u2} β (fun (_x : List.{u2} β) => σ) (f a) (g a) (fun (b : β) (l : List.{u2} β) (IH : σ) => h a (Prod.mk.{u2, max u2 u3} β (Prod.{u2, u3} (List.{u2} β) σ) b (Prod.mk.{u2, u3} (List.{u2} β) σ l IH)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u2} σ] {f : α -> (List.{u3} β)} {g : α -> σ} {h : α -> (Prod.{u3, max u2 u3} β (Prod.{u3, u2} (List.{u3} β) σ)) -> σ}, (Primrec.{u1, u3} α (List.{u3} β) _inst_1 (Primcodable.list.{u3} β _inst_2) f) -> (Primrec.{u1, u2} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, max u3 u2, u2} α (Prod.{u3, max u2 u3} β (Prod.{u3, u2} (List.{u3} β) σ)) σ _inst_1 (Primcodable.prod.{u3, max u3 u2} β (Prod.{u3, u2} (List.{u3} β) σ) _inst_2 (Primcodable.prod.{u3, u2} (List.{u3} β) σ (Primcodable.list.{u3} β _inst_2) _inst_4)) _inst_4 h) -> (Primrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => List.recOn.{succ u2, u3} β (fun (_x : List.{u3} β) => σ) (f a) (g a) (fun (b : β) (l : List.{u3} β) (IH : σ) => h a (Prod.mk.{u3, max u3 u2} β (Prod.{u3, u2} (List.{u3} β) σ) b (Prod.mk.{u3, u2} (List.{u3} β) σ l IH)))))
-Case conversion may be inaccurate. Consider using '#align primrec.list_rec Primrec.list_recₓ'. -/
 theorem list_rec {f : α → List β} {g : α → σ} {h : α → β × List β × σ → σ} (hf : Primrec f)
     (hg : Primrec g) (hh : Primrec₂ h) :
     @Primrec _ σ _ _ fun a => List.recOn (f a) (g a) fun b l IH => h a (b, l, IH) :=
@@ -1689,12 +1293,6 @@ theorem list_concat : Primrec₂ fun l (a : α) => l ++ [a] :=
 #align primrec.list_concat Primrec.list_concat
 -/
 
-/- warning: primrec.list_map -> Primrec.list_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {f : α -> (List.{u2} β)} {g : α -> β -> σ}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_4 g) -> (Primrec.{u1, u3} α (List.{u3} σ) _inst_1 (Primcodable.list.{u3} σ _inst_4) (fun (a : α) => List.map.{u2, u3} β σ (g a) (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u1} σ] {f : α -> (List.{u3} β)} {g : α -> β -> σ}, (Primrec.{u2, u3} α (List.{u3} β) _inst_1 (Primcodable.list.{u3} β _inst_2) f) -> (Primrec₂.{u2, u3, u1} α β σ _inst_1 _inst_2 _inst_4 g) -> (Primrec.{u2, u1} α (List.{u1} σ) _inst_1 (Primcodable.list.{u1} σ _inst_4) (fun (a : α) => List.map.{u3, u1} β σ (g a) (f a)))
-Case conversion may be inaccurate. Consider using '#align primrec.list_map Primrec.list_mapₓ'. -/
 theorem list_map {f : α → List β} {g : α → β → σ} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec fun a => (f a).map (g a) :=
   (list_foldr hf (const []) <|
@@ -1723,12 +1321,6 @@ theorem list_length : Primrec (@List.length α) :=
 #align primrec.list_length Primrec.list_length
 -/
 
-/- warning: primrec.list_find_index -> Primrec.list_findIdx is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> (List.{u2} β)} {p : α -> β -> Prop} [_inst_5 : forall (a : α) (b : β), Decidable (p a b)], (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (PrimrecRel.{u1, u2} α β _inst_1 _inst_2 p (fun (a : α) (b : β) => _inst_5 a b)) -> (Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) => List.findIndex.{u2} β (p a) (fun (a_1 : β) => _inst_5 a a_1) (f a)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> (List.{u2} β)} {p : α -> β -> Bool}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec₂.{u1, u2, 0} α β Bool _inst_1 _inst_2 Primcodable.bool p) -> (Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (a : α) => List.findIdx.{u2} β (p a) (f a)))
-Case conversion may be inaccurate. Consider using '#align primrec.list_find_index Primrec.list_findIdxₓ'. -/
 theorem list_findIdx {f : α → List β} {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hf : Primrec f)
     (hp : PrimrecRel p) : Primrec fun a => (f a).findIndex (p a) :=
   (list_foldr hf (const 0) <|
@@ -1956,12 +1548,6 @@ theorem vector_get {n} : Primrec₂ (@Vector.get α n) :=
 #align primrec.vector_nth Primrec.vector_get
 -/
 
-/- warning: primrec.list_of_fn -> Primrec.list_ofFn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {n : Nat} {f : (Fin n) -> α -> σ}, (forall (i : Fin n), Primrec.{u1, u2} α σ _inst_1 _inst_4 (f i)) -> (Primrec.{u1, u2} α (List.{u2} σ) _inst_1 (Primcodable.list.{u2} σ _inst_4) (fun (a : α) => List.ofFn.{u2} σ n (fun (i : Fin n) => f i a)))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {n : Nat} {f : (Fin n) -> α -> σ}, (forall (i : Fin n), Primrec.{u2, u1} α σ _inst_1 _inst_4 (f i)) -> (Primrec.{u2, u1} α (List.{u1} σ) _inst_1 (Primcodable.list.{u1} σ _inst_4) (fun (a : α) => List.ofFn.{u1} σ n (fun (i : Fin n) => f i a)))
-Case conversion may be inaccurate. Consider using '#align primrec.list_of_fn Primrec.list_ofFnₓ'. -/
 theorem list_ofFn :
     ∀ {n} {f : Fin n → α → σ}, (∀ i, Primrec (f i)) → Primrec fun a => List.ofFn fun i => f i a
   | 0, f, hf => const []
@@ -1969,12 +1555,6 @@ theorem list_ofFn :
     simp [List.ofFn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
 #align primrec.list_of_fn Primrec.list_ofFn
 
-/- warning: primrec.vector_of_fn -> Primrec.vector_ofFn is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {n : Nat} {f : (Fin n) -> α -> σ}, (forall (i : Fin n), Primrec.{u1, u2} α σ _inst_1 _inst_4 (f i)) -> (Primrec.{u1, u2} α (Vector.{u2} σ n) _inst_1 (Primcodable.vector.{u2} σ _inst_4 n) (fun (a : α) => Vector.ofFn.{u2} σ n (fun (i : Fin n) => f i a)))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {n : Nat} {f : (Fin n) -> α -> σ}, (forall (i : Fin n), Primrec.{u2, u1} α σ _inst_1 _inst_4 (f i)) -> (Primrec.{u2, u1} α (Vector.{u1} σ n) _inst_1 (Primcodable.vector.{u1} σ _inst_4 n) (fun (a : α) => Vector.ofFn.{u1} σ n (fun (i : Fin n) => f i a)))
-Case conversion may be inaccurate. Consider using '#align primrec.vector_of_fn Primrec.vector_ofFnₓ'. -/
 theorem vector_ofFn {n} {f : Fin n → α → σ} (hf : ∀ i, Primrec (f i)) :
     Primrec fun a => Vector.ofFn fun i => f i a :=
   vector_toList_iff.1 <| by simp [list_of_fn hf]
@@ -1998,23 +1578,11 @@ theorem fin_app {n} : Primrec₂ (@id (Fin n → σ)) :=
 #align primrec.fin_app Primrec.fin_app
 -/
 
-/- warning: primrec.fin_curry₁ -> Primrec.fin_curry₁ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {n : Nat} {f : (Fin n) -> α -> σ}, Iff (Primrec₂.{0, u1, u2} (Fin n) α σ (Primcodable.fin n) _inst_1 _inst_4 f) (forall (i : Fin n), Primrec.{u1, u2} α σ _inst_1 _inst_4 (f i))
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {n : Nat} {f : (Fin n) -> α -> σ}, Iff (Primrec₂.{0, u2, u1} (Fin n) α σ (Primcodable.fin n) _inst_1 _inst_4 f) (forall (i : Fin n), Primrec.{u2, u1} α σ _inst_1 _inst_4 (f i))
-Case conversion may be inaccurate. Consider using '#align primrec.fin_curry₁ Primrec.fin_curry₁ₓ'. -/
 theorem fin_curry₁ {n} {f : Fin n → α → σ} : Primrec₂ f ↔ ∀ i, Primrec (f i) :=
   ⟨fun h i => h.comp (const i) Primrec.id, fun h =>
     (vector_get.comp ((vector_ofFn h).comp snd) fst).of_eq fun a => by simp⟩
 #align primrec.fin_curry₁ Primrec.fin_curry₁
 
-/- warning: primrec.fin_curry -> Primrec.fin_curry is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {n : Nat} {f : α -> (Fin n) -> σ}, Iff (Primrec.{u1, u2} α ((Fin n) -> σ) _inst_1 (Primcodable.finArrow.{u2} σ _inst_4 n) f) (Primrec₂.{u1, 0, u2} α (Fin n) σ _inst_1 (Primcodable.fin n) _inst_4 f)
-but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {n : Nat} {f : α -> (Fin n) -> σ}, Iff (Primrec.{u2, u1} α ((Fin n) -> σ) _inst_1 (Primcodable.finArrow.{u1} σ _inst_4 n) f) (Primrec₂.{u2, 0, u1} α (Fin n) σ _inst_1 (Primcodable.fin n) _inst_4 f)
-Case conversion may be inaccurate. Consider using '#align primrec.fin_curry Primrec.fin_curryₓ'. -/
 theorem fin_curry {n} {f : α → Fin n → σ} : Primrec f ↔ Primrec₂ f :=
   ⟨fun h => fin_app.comp (h.comp fst) snd, fun h =>
     (vector_get'.comp
@@ -2184,12 +1752,6 @@ theorem mul : @Primrec' 2 fun v => v.headI * v.tail.headI :=
 #align nat.primrec'.mul Nat.Primrec'.mul
 -/
 
-/- warning: nat.primrec'.if_lt -> Nat.Primrec'.if_lt is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : (Vector.{0} Nat n) -> Nat} {b : (Vector.{0} Nat n) -> Nat} {f : (Vector.{0} Nat n) -> Nat} {g : (Vector.{0} Nat n) -> Nat}, (Nat.Primrec' n a) -> (Nat.Primrec' n b) -> (Nat.Primrec' n f) -> (Nat.Primrec' n g) -> (Nat.Primrec' n (fun (v : Vector.{0} Nat n) => ite.{1} Nat (LT.lt.{0} Nat Nat.hasLt (a v) (b v)) (Nat.decidableLt (a v) (b v)) (f v) (g v)))
-but is expected to have type
-  forall {n : Nat} {a : (Vector.{0} Nat n) -> Nat} {b : (Vector.{0} Nat n) -> Nat} {f : (Vector.{0} Nat n) -> Nat} {g : (Vector.{0} Nat n) -> Nat}, (Nat.Primrec' n a) -> (Nat.Primrec' n b) -> (Nat.Primrec' n f) -> (Nat.Primrec' n g) -> (Nat.Primrec' n (fun (v : Vector.{0} Nat n) => ite.{1} Nat (LT.lt.{0} Nat instLTNat (a v) (b v)) (Nat.decLt (a v) (b v)) (f v) (g v)))
-Case conversion may be inaccurate. Consider using '#align nat.primrec'.if_lt Nat.Primrec'.if_ltₓ'. -/
 theorem if_lt {n a b f g} (ha : @Primrec' n a) (hb : @Primrec' n b) (hf : @Primrec' n f)
     (hg : @Primrec' n g) : @Primrec' n fun v => if a v < b v then f v else g v :=
   (prec' (sub.comp₂ _ hb ha) hg (tail <| tail hf)).of_eq fun v =>

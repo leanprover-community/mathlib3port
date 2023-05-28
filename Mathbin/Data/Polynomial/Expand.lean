@@ -117,9 +117,6 @@ theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
 #align polynomial.expand_pow Polynomial.expand_pow
 -/
 
-/- warning: polynomial.derivative_expand -> Polynomial.derivative_expand is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.derivative_expand Polynomial.derivative_expandₓ'. -/
 theorem derivative_expand (f : R[X]) :
     (expand R p f).derivative = expand R p f.derivative * (p * X ^ (p - 1)) := by
   rw [coe_expand, derivative_eval₂_C, derivative_pow, C_eq_nat_cast, derivative_X, mul_one]
@@ -232,9 +229,6 @@ theorem expand_eval (p : ℕ) (P : R[X]) (r : R) : eval r (expand R p P) = eval 
 #align polynomial.expand_eval Polynomial.expand_eval
 -/
 
-/- warning: polynomial.expand_aeval -> Polynomial.expand_aeval is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.expand_aeval Polynomial.expand_aevalₓ'. -/
 @[simp]
 theorem expand_aeval {A : Type _} [Semiring A] [Algebra R A] (p : ℕ) (P : R[X]) (r : A) :
     aeval r (expand R p P) = aeval (r ^ p) P :=
@@ -278,9 +272,6 @@ section CharP
 
 variable [CharP R p]
 
-/- warning: polynomial.expand_contract -> Polynomial.expand_contract is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.expand_contract Polynomial.expand_contractₓ'. -/
 theorem expand_contract [NoZeroDivisors R] {f : R[X]} (hf : f.derivative = 0) (hp : p ≠ 0) :
     expand R p (contract p f) = f := by
   ext n
@@ -332,9 +323,6 @@ section IsDomain
 
 variable (R : Type u) [CommRing R] [IsDomain R]
 
-/- warning: polynomial.is_local_ring_hom_expand -> Polynomial.isLocalRingHom_expand is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.is_local_ring_hom_expand Polynomial.isLocalRingHom_expandₓ'. -/
 theorem isLocalRingHom_expand {p : ℕ} (hp : 0 < p) :
     IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) :=
   by
@@ -346,18 +334,12 @@ theorem isLocalRingHom_expand {p : ℕ} (hp : 0 < p) :
 
 variable {R}
 
-/- warning: polynomial.of_irreducible_expand -> Polynomial.of_irreducible_expand is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.of_irreducible_expand Polynomial.of_irreducible_expandₓ'. -/
 theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) :
     Irreducible f :=
   let _ := isLocalRingHom_expand R hp.bot_lt
   of_irreducible_map (↑(expand R p)) hf
 #align polynomial.of_irreducible_expand Polynomial.of_irreducible_expand
 
-/- warning: polynomial.of_irreducible_expand_pow -> Polynomial.of_irreducible_expand_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.of_irreducible_expand_pow Polynomial.of_irreducible_expand_powₓ'. -/
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
   Nat.recOn n (fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>

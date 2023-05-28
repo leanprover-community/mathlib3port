@@ -76,12 +76,6 @@ theorem isQuasiSeparated_univ {α : Type _} [TopologicalSpace α] [QuasiSeparate
 #align is_quasi_separated_univ isQuasiSeparated_univ
 -/
 
-/- warning: is_quasi_separated.image_of_embedding -> IsQuasiSeparated.image_of_embedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {s : Set.{u1} α}, (IsQuasiSeparated.{u1} α _inst_1 s) -> (Embedding.{u1, u2} α β _inst_1 _inst_2 f) -> (IsQuasiSeparated.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {s : Set.{u2} α}, (IsQuasiSeparated.{u2} α _inst_1 s) -> (Embedding.{u2, u1} α β _inst_1 _inst_2 f) -> (IsQuasiSeparated.{u1} β _inst_2 (Set.image.{u2, u1} α β f s))
-Case conversion may be inaccurate. Consider using '#align is_quasi_separated.image_of_embedding IsQuasiSeparated.image_of_embeddingₓ'. -/
 theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s) (h : Embedding f) :
     IsQuasiSeparated (f '' s) := by
   intro U V hU hU' hU'' hV hV' hV''
@@ -102,12 +96,6 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
     exact hV.trans (Set.image_subset_range _ _)
 #align is_quasi_separated.image_of_embedding IsQuasiSeparated.image_of_embedding
 
-/- warning: open_embedding.is_quasi_separated_iff -> OpenEmbedding.isQuasiSeparated_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (OpenEmbedding.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u1} α}, Iff (IsQuasiSeparated.{u1} α _inst_1 s) (IsQuasiSeparated.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (OpenEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u2} α}, Iff (IsQuasiSeparated.{u2} α _inst_1 s) (IsQuasiSeparated.{u1} β _inst_2 (Set.image.{u2, u1} α β f s)))
-Case conversion may be inaccurate. Consider using '#align open_embedding.is_quasi_separated_iff OpenEmbedding.isQuasiSeparated_iffₓ'. -/
 theorem OpenEmbedding.isQuasiSeparated_iff (h : OpenEmbedding f) {s : Set α} :
     IsQuasiSeparated s ↔ IsQuasiSeparated (f '' s) :=
   by
@@ -156,12 +144,6 @@ theorem IsQuasiSeparated.of_quasiSeparatedSpace (s : Set α) [QuasiSeparatedSpac
 #align is_quasi_separated.of_quasi_separated_space IsQuasiSeparated.of_quasiSeparatedSpace
 -/
 
-/- warning: quasi_separated_space.of_open_embedding -> QuasiSeparatedSpace.of_openEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (OpenEmbedding.{u1, u2} α β _inst_1 _inst_2 f) -> (forall [_inst_3 : QuasiSeparatedSpace.{u2} β _inst_2], QuasiSeparatedSpace.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (OpenEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (forall [_inst_3 : QuasiSeparatedSpace.{u1} β _inst_2], QuasiSeparatedSpace.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align quasi_separated_space.of_open_embedding QuasiSeparatedSpace.of_openEmbeddingₓ'. -/
 theorem QuasiSeparatedSpace.of_openEmbedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] :
     QuasiSeparatedSpace α :=
   isQuasiSeparated_univ_iff.mp

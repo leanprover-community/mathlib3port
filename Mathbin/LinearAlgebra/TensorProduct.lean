@@ -146,9 +146,6 @@ infixl:100 " ⊗ₜ " => tmul _
 -- mathport name: «expr ⊗ₜ[ ] »
 notation:100 x " ⊗ₜ[" R "] " y:100 => tmul R x y
 
-/- warning: tensor_product.induction_on -> TensorProduct.induction_on is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.induction_on TensorProduct.induction_onₓ'. -/
 @[elab_as_elim]
 protected theorem induction_on {C : M ⊗[R] N → Prop} (z : M ⊗[R] N) (C0 : C 0)
     (C1 : ∀ {x y}, C <| x ⊗ₜ[R] y) (Cp : ∀ {x y}, C x → C y → C (x + y)) : C z :=
@@ -158,12 +155,6 @@ protected theorem induction_on {C : M ⊗[R] N → Prop} (z : M ⊗[R] N) (C0 : 
 
 variable (M)
 
-/- warning: tensor_product.zero_tmul -> TensorProduct.zero_tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4)))))) n) (OfNat.ofNat.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (OfNat.mk.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.zero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toHasZero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u3}) {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (OfNat.ofNat.{u3} M 0 (Zero.toOfNat0.{u3} M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)))) n) (OfNat.ofNat.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.toOfNat0.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toZero.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.zero_tmul TensorProduct.zero_tmulₓ'. -/
 @[simp]
 theorem zero_tmul (n : N) : (0 : M) ⊗ₜ[R] n = 0 :=
   Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_left _
@@ -171,24 +162,12 @@ theorem zero_tmul (n : N) : (0 : M) ⊗ₜ[R] n = 0 :=
 
 variable {M}
 
-/- warning: tensor_product.add_tmul -> TensorProduct.add_tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m₁ : M) (m₂ : M) (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (HAdd.hAdd.{u2, u2, u2} M M M (instHAdd.{u2} M (AddZeroClass.toHasAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4)))) m₁ m₂) n) (HAdd.hAdd.{max u2 u3, max u2 u3, max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (instHAdd.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toHasAdd.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m₁ n) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m₂ n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m₁ : M) (m₂ : M) (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (HAdd.hAdd.{u3, u3, u3} M M M (instHAdd.{u3} M (AddZeroClass.toAdd.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)))) m₁ m₂) n) (HAdd.hAdd.{max u3 u2, max u3 u2, max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (instHAdd.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toAdd.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m₁ n) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m₂ n))
-Case conversion may be inaccurate. Consider using '#align tensor_product.add_tmul TensorProduct.add_tmulₓ'. -/
 theorem add_tmul (m₁ m₂ : M) (n : N) : (m₁ + m₂) ⊗ₜ n = m₁ ⊗ₜ n + m₂ ⊗ₜ[R] n :=
   Eq.symm <| Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_add_left _ _ _
 #align tensor_product.add_tmul TensorProduct.add_tmul
 
 variable (N)
 
-/- warning: tensor_product.tmul_zero -> TensorProduct.tmul_zero is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m : M), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))))))) (OfNat.ofNat.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (OfNat.mk.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.zero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toHasZero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} (N : Type.{u2}) [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m : M), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (OfNat.ofNat.{u2} N 0 (Zero.toOfNat0.{u2} N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5))))) (OfNat.ofNat.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.toOfNat0.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toZero.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_zero TensorProduct.tmul_zeroₓ'. -/
 @[simp]
 theorem tmul_zero (m : M) : m ⊗ₜ[R] (0 : N) = 0 :=
   Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_right _
@@ -196,12 +175,6 @@ theorem tmul_zero (m : M) : m ⊗ₜ[R] (0 : N) = 0 :=
 
 variable {N}
 
-/- warning: tensor_product.tmul_add -> TensorProduct.tmul_add is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m : M) (n₁ : N) (n₂ : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (HAdd.hAdd.{u3, u3, u3} N N N (instHAdd.{u3} N (AddZeroClass.toHasAdd.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5)))) n₁ n₂)) (HAdd.hAdd.{max u2 u3, max u2 u3, max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (instHAdd.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toHasAdd.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n₁) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n₂))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m : M) (n₁ : N) (n₂ : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (HAdd.hAdd.{u2, u2, u2} N N N (instHAdd.{u2} N (AddZeroClass.toAdd.{u2} N (AddMonoid.toAddZeroClass.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5)))) n₁ n₂)) (HAdd.hAdd.{max u3 u2, max u3 u2, max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (instHAdd.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toAdd.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n₁) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n₂))
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_add TensorProduct.tmul_addₓ'. -/
 theorem tmul_add (m : M) (n₁ n₂ : N) : m ⊗ₜ (n₁ + n₂) = m ⊗ₜ n₁ + m ⊗ₜ[R] n₂ :=
   Eq.symm <| Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_add_right _ _ _
 #align tensor_product.tmul_add TensorProduct.tmul_add
@@ -228,12 +201,6 @@ class CompatibleSMul [DistribMulAction R' N] where
 
 end
 
-/- warning: tensor_product.compatible_smul.is_scalar_tower -> TensorProduct.CompatibleSMul.isScalarTower is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMul.{u2, u1} R' R] [_inst_17 : IsScalarTower.{u2, u1, u3} R' R M _inst_16 (SMulZeroClass.toHasSmul.{u1, u3} R M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u3} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toHasSmul.{u2, u3} R' M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (DistribSMul.toSmulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))] [_inst_18 : DistribMulAction.{u2, u4} R' N _inst_2 (AddCommMonoid.toAddMonoid.{u4} N _inst_5)] [_inst_19 : IsScalarTower.{u2, u1, u4} R' R N _inst_16 (SMulZeroClass.toHasSmul.{u1, u4} R N (AddZeroClass.toHasZero.{u4} N (AddMonoid.toAddZeroClass.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5))) (SMulWithZero.toSmulZeroClass.{u1, u4} R N (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u4} N (AddMonoid.toAddZeroClass.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5))) (MulActionWithZero.toSMulWithZero.{u1, u4} R N (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u4} N (AddMonoid.toAddZeroClass.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5))) (Module.toMulActionWithZero.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)))) (SMulZeroClass.toHasSmul.{u2, u4} R' N (AddZeroClass.toHasZero.{u4} N (AddMonoid.toAddZeroClass.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5))) (DistribSMul.toSmulZeroClass.{u2, u4} R' N (AddMonoid.toAddZeroClass.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5)) (DistribMulAction.toDistribSMul.{u2, u4} R' N _inst_2 (AddCommMonoid.toAddMonoid.{u4} N _inst_5) _inst_18)))], TensorProduct.CompatibleSMul.{u1, u2, u3, u4} R _inst_1 R' _inst_2 M N _inst_4 _inst_5 _inst_9 _inst_10 _inst_14 _inst_18
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMul.{u2, u1} R' R] [_inst_17 : IsScalarTower.{u2, u1, u3} R' R M _inst_16 (SMulZeroClass.toSMul.{u1, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (SMulWithZero.toSMulZeroClass.{u1, u3} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toSMul.{u2, u3} R' M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribSMul.toSMulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))] [_inst_18 : DistribMulAction.{u2, u4} R' N _inst_2 (AddCommMonoid.toAddMonoid.{u4} N _inst_5)] [_inst_19 : IsScalarTower.{u2, u1, u4} R' R N _inst_16 (SMulZeroClass.toSMul.{u1, u4} R N (AddMonoid.toZero.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5)) (SMulWithZero.toSMulZeroClass.{u1, u4} R N (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5)) (MulActionWithZero.toSMulWithZero.{u1, u4} R N (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5)) (Module.toMulActionWithZero.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)))) (SMulZeroClass.toSMul.{u2, u4} R' N (AddMonoid.toZero.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5)) (DistribSMul.toSMulZeroClass.{u2, u4} R' N (AddMonoid.toAddZeroClass.{u4} N (AddCommMonoid.toAddMonoid.{u4} N _inst_5)) (DistribMulAction.toDistribSMul.{u2, u4} R' N _inst_2 (AddCommMonoid.toAddMonoid.{u4} N _inst_5) _inst_18)))], TensorProduct.CompatibleSMul.{u1, u2, u3, u4} R _inst_1 R' _inst_2 M N _inst_4 _inst_5 _inst_9 _inst_10 _inst_14 _inst_18
-Case conversion may be inaccurate. Consider using '#align tensor_product.compatible_smul.is_scalar_tower TensorProduct.CompatibleSMul.isScalarTowerₓ'. -/
 /-- Note that this provides the default `compatible_smul R R M N` instance through
 `mul_action.is_scalar_tower.left`. -/
 instance (priority := 100) CompatibleSMul.isScalarTower [SMul R' R] [IsScalarTower R' R M]
@@ -245,29 +212,17 @@ instance (priority := 100) CompatibleSMul.isScalarTower [SMul R' R] [IsScalarTow
     exact Quotient.sound' <| AddConGen.Rel.of _ _ <| eqv.of_smul _ _ _⟩
 #align tensor_product.compatible_smul.is_scalar_tower TensorProduct.CompatibleSMul.isScalarTower
 
-/- warning: tensor_product.smul_tmul -> TensorProduct.smul_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul_tmul TensorProduct.smul_tmulₓ'. -/
 /-- `smul` can be moved from one side of the product to the other .-/
 theorem smul_tmul [DistribMulAction R' N] [CompatibleSMul R R' M N] (r : R') (m : M) (n : N) :
     (r • m) ⊗ₜ n = m ⊗ₜ[R] (r • n) :=
   CompatibleSMul.smul_tmul _ _ _
 #align tensor_product.smul_tmul TensorProduct.smul_tmul
 
-/- warning: tensor_product.smul.aux -> TensorProduct.SMul.aux is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] {R' : Type.{u4}} [_inst_16 : SMul.{u4, u2} R' M], R' -> (AddMonoidHom.{max u2 u3, max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddMonoid.toAddZeroClass.{max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (AddRightCancelMonoid.toAddMonoid.{max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (AddCancelMonoid.toAddRightCancelMonoid.{max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (FreeAddMonoid.cancelAddMonoid.{max u2 u3} (Prod.{u2, u3} M N))))) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] {R' : Type.{u4}} [_inst_16 : SMul.{u4, u2} R' M], R' -> (AddMonoidHom.{max u3 u2, max u3 u2} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddMonoid.toAddZeroClass.{max u2 u3} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (AddRightCancelMonoid.toAddMonoid.{max u2 u3} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (AddCancelMonoid.toAddRightCancelMonoid.{max u2 u3} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (FreeAddMonoid.instAddCancelMonoidFreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N))))) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul.aux TensorProduct.SMul.auxₓ'. -/
 /-- Auxiliary function to defining scalar multiplication on tensor product. -/
 def SMul.aux {R' : Type _} [SMul R' M] (r : R') : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
   FreeAddMonoid.lift fun p : M × N => (r • p.1) ⊗ₜ p.2
 #align tensor_product.smul.aux TensorProduct.SMul.aux
 
-/- warning: tensor_product.smul.aux_of -> TensorProduct.SMul.aux_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul.aux_of TensorProduct.SMul.aux_ofₓ'. -/
 theorem SMul.aux_of {R' : Type _} [SMul R' M] (r : R') (m : M) (n : N) :
     SMul.aux r (FreeAddMonoid.of (m, n)) = (r • m) ⊗ₜ[R] n :=
   rfl
@@ -277,12 +232,6 @@ variable [SMulCommClass R R' M]
 
 variable [SMulCommClass R R'' M]
 
-/- warning: tensor_product.left_has_smul -> TensorProduct.leftHasSMul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMulCommClass.{u1, u2, u3} R R' M (SMulZeroClass.toHasSmul.{u1, u3} R M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u3} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toHasSmul.{u2, u3} R' M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (DistribSMul.toSmulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))], SMul.{u2, max u3 u4} R' (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMulCommClass.{u1, u2, u3} R R' M (SMulZeroClass.toSMul.{u1, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (SMulWithZero.toSMulZeroClass.{u1, u3} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toSMul.{u2, u3} R' M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribSMul.toSMulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))], SMul.{u2, max u4 u3} R' (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)
-Case conversion may be inaccurate. Consider using '#align tensor_product.left_has_smul TensorProduct.leftHasSMulₓ'. -/
 /-- Given two modules over a commutative semiring `R`, if one of the factors carries a
 (distributive) action of a second type of scalars `R'`, which commutes with the action of `R`, then
 the tensor product (over `R`) carries an action of `R'`.
@@ -318,23 +267,14 @@ instance leftHasSMul : SMul R' (M ⊗[R] N) :=
 instance : SMul R (M ⊗[R] N) :=
   TensorProduct.leftHasSMul
 
-/- warning: tensor_product.smul_zero -> TensorProduct.smul_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul_zero TensorProduct.smul_zeroₓ'. -/
 protected theorem smul_zero (r : R') : (r • 0 : M ⊗[R] N) = 0 :=
   AddMonoidHom.map_zero _
 #align tensor_product.smul_zero TensorProduct.smul_zero
 
-/- warning: tensor_product.smul_add -> TensorProduct.smul_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul_add TensorProduct.smul_addₓ'. -/
 protected theorem smul_add (r : R') (x y : M ⊗[R] N) : r • (x + y) = r • x + r • y :=
   AddMonoidHom.map_add _ _ _
 #align tensor_product.smul_add TensorProduct.smul_add
 
-/- warning: tensor_product.zero_smul -> TensorProduct.zero_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.zero_smul TensorProduct.zero_smulₓ'. -/
 protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
   have : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x (by rw [TensorProduct.smul_zero])
@@ -342,18 +282,12 @@ protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
     rw [TensorProduct.smul_add, ihx, ihy, add_zero]
 #align tensor_product.zero_smul TensorProduct.zero_smul
 
-/- warning: tensor_product.one_smul -> TensorProduct.one_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.one_smul TensorProduct.one_smulₓ'. -/
 protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
   have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x (by rw [TensorProduct.smul_zero]) (fun m n => by rw [this, one_smul])
     fun x y ihx ihy => by rw [TensorProduct.smul_add, ihx, ihy]
 #align tensor_product.one_smul TensorProduct.one_smul
 
-/- warning: tensor_product.add_smul -> TensorProduct.add_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.add_smul TensorProduct.add_smulₓ'. -/
 protected theorem add_smul (r s : R'') (x : M ⊗[R] N) : (r + s) • x = r • x + s • x :=
   have : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x (by simp_rw [TensorProduct.smul_zero, add_zero])
@@ -368,12 +302,6 @@ instance : AddCommMonoid (M ⊗[R] N) :=
     nsmul_zero := by simp [TensorProduct.zero_smul]
     nsmul_succ := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul] }
 
-/- warning: tensor_product.left_distrib_mul_action -> TensorProduct.leftDistribMulAction is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMulCommClass.{u1, u2, u3} R R' M (SMulZeroClass.toHasSmul.{u1, u3} R M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u3} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toHasSmul.{u2, u3} R' M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (DistribSMul.toSmulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))], DistribMulAction.{u2, max u3 u4} R' (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_2 (AddCommMonoid.toAddMonoid.{max u3 u4} (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMulCommClass.{u1, u2, u3} R R' M (SMulZeroClass.toSMul.{u1, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (SMulWithZero.toSMulZeroClass.{u1, u3} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toSMul.{u2, u3} R' M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribSMul.toSMulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))], DistribMulAction.{u2, max u4 u3} R' (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_2 (AddCommMonoid.toAddMonoid.{max u3 u4} (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-Case conversion may be inaccurate. Consider using '#align tensor_product.left_distrib_mul_action TensorProduct.leftDistribMulActionₓ'. -/
 instance leftDistribMulAction : DistribMulAction R' (M ⊗[R] N) :=
   have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   { smul := (· • ·)
@@ -389,28 +317,16 @@ instance leftDistribMulAction : DistribMulAction R' (M ⊗[R] N) :=
 instance : DistribMulAction R (M ⊗[R] N) :=
   TensorProduct.leftDistribMulAction
 
-/- warning: tensor_product.smul_tmul' -> TensorProduct.smul_tmul' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul_tmul' TensorProduct.smul_tmul'ₓ'. -/
 theorem smul_tmul' (r : R') (m : M) (n : N) : r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n :=
   rfl
 #align tensor_product.smul_tmul' TensorProduct.smul_tmul'
 
-/- warning: tensor_product.tmul_smul -> TensorProduct.tmul_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_smul TensorProduct.tmul_smulₓ'. -/
 @[simp]
 theorem tmul_smul [DistribMulAction R' N] [CompatibleSMul R R' M N] (r : R') (x : M) (y : N) :
     x ⊗ₜ (r • y) = r • x ⊗ₜ[R] y :=
   (smul_tmul _ _ _).symm
 #align tensor_product.tmul_smul TensorProduct.tmul_smul
 
-/- warning: tensor_product.smul_tmul_smul -> TensorProduct.smul_tmul_smul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (r : R) (s : R) (m : M) (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (SMul.smul.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (Module.toMulActionWithZero.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) r m) (SMul.smul.{u1, u3} R N (SMulZeroClass.toHasSmul.{u1, u3} R N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) (SMulWithZero.toSmulZeroClass.{u1, u3} R N (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) (MulActionWithZero.toSMulWithZero.{u1, u3} R N (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) (Module.toMulActionWithZero.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)))) s n)) (SMul.smul.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.hasSmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) r s) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (r : R) (s : R) (m : M) (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (HSMul.hSMul.{u1, u3, u3} R M M (instHSMul.{u1, u3} R M (SMulZeroClass.toSMul.{u1, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (SMulWithZero.toSMulZeroClass.{u1, u3} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9))))) r m) (HSMul.hSMul.{u1, u2, u2} R N N (instHSMul.{u1, u2} R N (SMulZeroClass.toSMul.{u1, u2} R N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5)) (SMulWithZero.toSMulZeroClass.{u1, u2} R N (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5)) (MulActionWithZero.toSMulWithZero.{u1, u2} R N (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5)) (Module.toMulActionWithZero.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10))))) s n)) (HSMul.hSMul.{u1, max u2 u3, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (instHSMul.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instSMulTensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) r s) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n))
-Case conversion may be inaccurate. Consider using '#align tensor_product.smul_tmul_smul TensorProduct.smul_tmul_smulₓ'. -/
 theorem smul_tmul_smul (r s : R) (m : M) (n : N) : (r • m) ⊗ₜ[R] (s • n) = (r * s) • m ⊗ₜ[R] n := by
   simp only [tmul_smul, smul_tmul, mul_smul]
 #align tensor_product.smul_tmul_smul TensorProduct.smul_tmul_smul
@@ -440,9 +356,6 @@ variable {R'₂ : Type _} [Monoid R'₂] [DistribMulAction R'₂ M]
 
 variable [SMulCommClass R R'₂ M] [SMul R'₂ R']
 
-/- warning: tensor_product.is_scalar_tower_left -> TensorProduct.isScalarTower_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.is_scalar_tower_left TensorProduct.isScalarTower_leftₓ'. -/
 /-- `is_scalar_tower R'₂ R' M` implies `is_scalar_tower R'₂ R' (M ⊗[R] N)` -/
 instance isScalarTower_left [IsScalarTower R'₂ R' M] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
   ⟨fun s r x =>
@@ -455,9 +368,6 @@ variable [DistribMulAction R'₂ N] [DistribMulAction R' N]
 
 variable [CompatibleSMul R R'₂ M N] [CompatibleSMul R R' M N]
 
-/- warning: tensor_product.is_scalar_tower_right -> TensorProduct.isScalarTower_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.is_scalar_tower_right TensorProduct.isScalarTower_rightₓ'. -/
 /-- `is_scalar_tower R'₂ R' N` implies `is_scalar_tower R'₂ R' (M ⊗[R] N)` -/
 instance isScalarTower_right [IsScalarTower R'₂ R' N] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
   ⟨fun s r x =>
@@ -468,12 +378,6 @@ instance isScalarTower_right [IsScalarTower R'₂ R' N] : IsScalarTower R'₂ R'
 
 end
 
-/- warning: tensor_product.is_scalar_tower -> TensorProduct.isScalarTower is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMulCommClass.{u1, u2, u3} R R' M (SMulZeroClass.toHasSmul.{u1, u3} R M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u3} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toHasSmul.{u2, u3} R' M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (DistribSMul.toSmulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))] [_inst_18 : SMul.{u2, u1} R' R] [_inst_19 : IsScalarTower.{u2, u1, u3} R' R M _inst_18 (SMulZeroClass.toHasSmul.{u1, u3} R M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (SMulWithZero.toSmulZeroClass.{u1, u3} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toHasSmul.{u2, u3} R' M (AddZeroClass.toHasZero.{u3} M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))) (DistribSMul.toSmulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))], IsScalarTower.{u2, u1, max u3 u4} R' R (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_18 (TensorProduct.hasSmul.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.leftHasSMul.{u1, u2, u3, u4} R _inst_1 R' _inst_2 M N _inst_4 _inst_5 _inst_9 _inst_10 _inst_14 _inst_16)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {R' : Type.{u2}} [_inst_2 : Monoid.{u2} R'] {M : Type.{u3}} {N : Type.{u4}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u4} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u4} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_14 : DistribMulAction.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4)] [_inst_16 : SMulCommClass.{u1, u2, u3} R R' M (SMulZeroClass.toSMul.{u1, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (SMulWithZero.toSMulZeroClass.{u1, u3} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toSMul.{u2, u3} R' M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribSMul.toSMulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))] [_inst_18 : SMul.{u2, u1} R' R] [_inst_19 : IsScalarTower.{u2, u1, u3} R' R M _inst_18 (SMulZeroClass.toSMul.{u1, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (SMulWithZero.toSMulZeroClass.{u1, u3} R M (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (MulActionWithZero.toSMulWithZero.{u1, u3} R M (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (Module.toMulActionWithZero.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)))) (SMulZeroClass.toSMul.{u2, u3} R' M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribSMul.toSMulZeroClass.{u2, u3} R' M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4)) (DistribMulAction.toDistribSMul.{u2, u3} R' M _inst_2 (AddCommMonoid.toAddMonoid.{u3} M _inst_4) _inst_14)))], IsScalarTower.{u2, u1, max u4 u3} R' R (TensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_18 (TensorProduct.instSMulTensorProduct.{u1, u3, u4} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.leftHasSMul.{u1, u2, u3, u4} R _inst_1 R' _inst_2 M N _inst_4 _inst_5 _inst_9 _inst_10 _inst_14 _inst_16)
-Case conversion may be inaccurate. Consider using '#align tensor_product.is_scalar_tower TensorProduct.isScalarTowerₓ'. -/
 /-- A short-cut instance for the common case, where the requirements for the `compatible_smul`
 instances are sufficient. -/
 instance isScalarTower [SMul R' R] [IsScalarTower R' R M] : IsScalarTower R' R (M ⊗[R] N) :=
@@ -483,12 +387,6 @@ instance isScalarTower [SMul R' R] [IsScalarTower R' R M] : IsScalarTower R' R (
 -- or right
 variable (R M N)
 
-/- warning: tensor_product.mk -> TensorProduct.mk is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], LinearMap.{u1, u1, u2, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LinearMap.{u1, u1, u3, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_10 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) _inst_4 (LinearMap.addCommMonoid.{u1, u1, u3, max u2 u3} R R N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_10 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (LinearMap.module.{u1, u1, u1, u3, max u2 u3} R R R N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_10 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.mk._proof_1.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], LinearMap.{u1, u1, u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LinearMap.{u1, u1, u3, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) _inst_4 (LinearMap.addCommMonoid.{u1, u1, u3, max u2 u3} R R N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (LinearMap.instModuleLinearMapAddCommMonoid.{u1, u1, u1, u3, max u2 u3} R R R N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (smulCommClass_self.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddCommMonoid.toAddMonoid.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))) (Module.toMulActionWithZero.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.mk TensorProduct.mkₓ'. -/
 /-- The canonical bilinear map `M → N → M ⊗[R] N`. -/
 def mk : M →ₗ[R] N →ₗ[R] M ⊗[R] N :=
   LinearMap.mk₂ R (· ⊗ₜ ·) add_tmul (fun c m n => by rw [smul_tmul, tmul_smul]) tmul_add tmul_smul
@@ -496,30 +394,15 @@ def mk : M →ₗ[R] N →ₗ[R] M ⊗[R] N :=
 
 variable {R M N}
 
-/- warning: tensor_product.mk_apply -> TensorProduct.mk_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.mk_apply TensorProduct.mk_applyₓ'. -/
 @[simp]
 theorem mk_apply (m : M) (n : N) : mk R M N m n = m ⊗ₜ n :=
   rfl
 #align tensor_product.mk_apply TensorProduct.mk_apply
 
-/- warning: tensor_product.ite_tmul -> TensorProduct.ite_tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (x₁ : M) (x₂ : N) (P : Prop) [_inst_18 : Decidable P], Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (ite.{succ u2} M P _inst_18 x₁ (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))))))) x₂) (ite.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P _inst_18 (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 x₁ x₂) (OfNat.ofNat.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (OfNat.mk.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.zero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toHasZero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (x₁ : M) (x₂ : N) (P : Prop) [_inst_18 : Decidable P], Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (ite.{succ u3} M P _inst_18 x₁ (OfNat.ofNat.{u3} M 0 (Zero.toOfNat0.{u3} M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_4))))) x₂) (ite.{max (succ u2) (succ u3)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P _inst_18 (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 x₁ x₂) (OfNat.ofNat.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.toOfNat0.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddMonoid.toZero.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddCommMonoid.toAddMonoid.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.ite_tmul TensorProduct.ite_tmulₓ'. -/
 theorem ite_tmul (x₁ : M) (x₂ : N) (P : Prop) [Decidable P] :
     (if P then x₁ else 0) ⊗ₜ[R] x₂ = if P then x₁ ⊗ₜ x₂ else 0 := by split_ifs <;> simp
 #align tensor_product.ite_tmul TensorProduct.ite_tmul
 
-/- warning: tensor_product.tmul_ite -> TensorProduct.tmul_ite is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (x₁ : M) (x₂ : N) (P : Prop) [_inst_18 : Decidable P], Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 x₁ (ite.{succ u3} N P _inst_18 x₂ (OfNat.ofNat.{u3} N 0 (OfNat.mk.{u3} N 0 (Zero.zero.{u3} N (AddZeroClass.toHasZero.{u3} N (AddMonoid.toAddZeroClass.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5)))))))) (ite.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P _inst_18 (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 x₁ x₂) (OfNat.ofNat.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (OfNat.mk.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.zero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddZeroClass.toHasZero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))))))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (x₁ : M) (x₂ : N) (P : Prop) [_inst_18 : Decidable P], Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 x₁ (ite.{succ u2} N P _inst_18 x₂ (OfNat.ofNat.{u2} N 0 (Zero.toOfNat0.{u2} N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5)))))) (ite.{max (succ u2) (succ u3)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P _inst_18 (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 x₁ x₂) (OfNat.ofNat.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) 0 (Zero.toOfNat0.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddMonoid.toZero.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (AddCommMonoid.toAddMonoid.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_ite TensorProduct.tmul_iteₓ'. -/
 theorem tmul_ite (x₁ : M) (x₂ : N) (P : Prop) [Decidable P] :
     (x₁ ⊗ₜ[R] if P then x₂ else 0) = if P then x₁ ⊗ₜ x₂ else 0 := by split_ifs <;> simp
 #align tensor_product.tmul_ite TensorProduct.tmul_ite
@@ -528,12 +411,6 @@ section
 
 open BigOperators
 
-/- warning: tensor_product.sum_tmul -> TensorProduct.sum_tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] {α : Type.{u4}} (s : Finset.{u4} α) (m : α -> M) (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (Finset.sum.{u2, u4} M α _inst_4 s (fun (a : α) => m a)) n) (Finset.sum.{max u2 u3, u4} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) α (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) s (fun (a : α) => TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (m a) n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] {α : Type.{u4}} (s : Finset.{u4} α) (m : α -> M) (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (Finset.sum.{u3, u4} M α _inst_4 s (fun (a : α) => m a)) n) (Finset.sum.{max u2 u3, u4} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) α (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) s (fun (a : α) => TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 (m a) n))
-Case conversion may be inaccurate. Consider using '#align tensor_product.sum_tmul TensorProduct.sum_tmulₓ'. -/
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) :
     (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
   classical
@@ -542,12 +419,6 @@ theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) :
     · simp [Finset.sum_insert has, add_tmul, ih]
 #align tensor_product.sum_tmul TensorProduct.sum_tmul
 
-/- warning: tensor_product.tmul_sum -> TensorProduct.tmul_sum is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m : M) {α : Type.{u4}} (s : Finset.{u4} α) (n : α -> N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (Finset.sum.{u3, u4} N α _inst_5 s (fun (a : α) => n a))) (Finset.sum.{max u2 u3, u4} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) α (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) s (fun (a : α) => TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (n a)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] (m : M) {α : Type.{u4}} (s : Finset.{u4} α) (n : α -> N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (Finset.sum.{u2, u4} N α _inst_5 s (fun (a : α) => n a))) (Finset.sum.{max u2 u3, u4} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) α (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) s (fun (a : α) => TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m (n a)))
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_sum TensorProduct.tmul_sumₓ'. -/
 theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) :
     (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by
   classical
@@ -560,12 +431,6 @@ end
 
 variable (R M N)
 
-/- warning: tensor_product.span_tmul_eq_top -> TensorProduct.span_tmul_eq_top is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{succ (max u2 u3)} (Submodule.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.span.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (setOf.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (fun (t : TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) => Exists.{succ u2} M (fun (m : M) => Exists.{succ u3} N (fun (n : N) => Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n) t))))) (Top.top.{max u2 u3} (Submodule.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.hasTop.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u3}) (N : Type.{u2}) [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{max (succ u3) (succ u2)} (Submodule.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.span.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (setOf.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (fun (t : TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) => Exists.{succ u3} M (fun (m : M) => Exists.{succ u2} N (fun (n : N) => Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10 m n) t))))) (Top.top.{max u3 u2} (Submodule.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.instTopSubmodule.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))
-Case conversion may be inaccurate. Consider using '#align tensor_product.span_tmul_eq_top TensorProduct.span_tmul_eq_topₓ'. -/
 /-- The simple (aka pure) elements span the tensor product. -/
 theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ :=
   by
@@ -576,12 +441,6 @@ theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ
   · intro t₁ t₂ ht₁ ht₂; exact Submodule.add_mem _ ht₁ ht₂
 #align tensor_product.span_tmul_eq_top TensorProduct.span_tmul_eq_top
 
-/- warning: tensor_product.map₂_mk_top_top_eq_top -> TensorProduct.map₂_mk_top_top_eq_top is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{succ (max u2 u3)} (Submodule.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.map₂.{u1, u2, u3, max u2 u3} R M N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_1 _inst_4 _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_9 _inst_10 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.mk.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (Top.top.{u2} (Submodule.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9) (Submodule.hasTop.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)) (Top.top.{u3} (Submodule.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10) (Submodule.hasTop.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10))) (Top.top.{max u2 u3} (Submodule.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.hasTop.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u3}) (N : Type.{u2}) [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{max (succ u3) (succ u2)} (Submodule.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.map₂.{u1, u3, u2, max u3 u2} R M N (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_1 _inst_4 _inst_5 (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_9 _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.mk.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (Top.top.{u3} (Submodule.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9) (Submodule.instTopSubmodule.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9)) (Top.top.{u2} (Submodule.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10) (Submodule.instTopSubmodule.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10))) (Top.top.{max u3 u2} (Submodule.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (Submodule.instTopSubmodule.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)))
-Case conversion may be inaccurate. Consider using '#align tensor_product.map₂_mk_top_top_eq_top TensorProduct.map₂_mk_top_top_eq_topₓ'. -/
 @[simp]
 theorem map₂_mk_top_top_eq_top : Submodule.map₂ (mk R M N) ⊤ ⊤ = ⊤ :=
   by
@@ -624,18 +483,12 @@ def liftAux : M ⊗[R] N →+ P :=
 #align tensor_product.lift_aux TensorProduct.liftAux
 -/
 
-/- warning: tensor_product.lift_aux_tmul -> TensorProduct.liftAux_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift_aux_tmul TensorProduct.liftAux_tmulₓ'. -/
 theorem liftAux_tmul (m n) : liftAux f (m ⊗ₜ n) = f m n :=
   rfl
 #align tensor_product.lift_aux_tmul TensorProduct.liftAux_tmul
 
 variable {f}
 
-/- warning: tensor_product.lift_aux.smul -> TensorProduct.liftAux.smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift_aux.smul TensorProduct.liftAux.smulₓ'. -/
 @[simp]
 theorem liftAux.smul (r : R) (x) : liftAux f (r • x) = r • liftAux f x :=
   TensorProduct.induction_on x (smul_zero _).symm
@@ -657,65 +510,38 @@ def lift : M ⊗ N →ₗ[R] P :=
 
 variable {f}
 
-/- warning: tensor_product.lift.tmul -> TensorProduct.lift.tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift.tmul TensorProduct.lift.tmulₓ'. -/
 @[simp]
 theorem lift.tmul (x y) : lift f (x ⊗ₜ y) = f x y :=
   rfl
 #align tensor_product.lift.tmul TensorProduct.lift.tmul
 
-/- warning: tensor_product.lift.tmul' -> TensorProduct.lift.tmul' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift.tmul' TensorProduct.lift.tmul'ₓ'. -/
 @[simp]
 theorem lift.tmul' (x y) : (lift f).1 (x ⊗ₜ y) = f x y :=
   rfl
 #align tensor_product.lift.tmul' TensorProduct.lift.tmul'
 
-/- warning: tensor_product.ext' -> TensorProduct.ext' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.ext' TensorProduct.ext'ₓ'. -/
 theorem ext' {g h : M ⊗[R] N →ₗ[R] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
   LinearMap.ext fun z =>
     TensorProduct.induction_on z (by simp_rw [LinearMap.map_zero]) H fun x y ihx ihy => by
       rw [g.map_add, h.map_add, ihx, ihy]
 #align tensor_product.ext' TensorProduct.ext'
 
-/- warning: tensor_product.lift.unique -> TensorProduct.lift.unique is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift.unique TensorProduct.lift.uniqueₓ'. -/
 theorem lift.unique {g : M ⊗[R] N →ₗ[R] P} (H : ∀ x y, g (x ⊗ₜ y) = f x y) : g = lift f :=
   ext' fun m n => by rw [H, lift.tmul]
 #align tensor_product.lift.unique TensorProduct.lift.unique
 
-/- warning: tensor_product.lift_mk -> TensorProduct.lift_mk is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{succ (max u2 u3)} (LinearMap.{u1, u1, max u2 u3, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (TensorProduct.lift.{u1, u2, u3, max u2 u3} R _inst_1 M N (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_4 _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_9 _inst_10 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.mk.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (LinearMap.id.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{max (succ u3) (succ u2)} (LinearMap.{u1, u1, max u2 u3, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (TensorProduct.lift.{u1, u3, u2, max u3 u2} R _inst_1 M N (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_4 _inst_5 (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_9 _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.mk.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (LinearMap.id.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift_mk TensorProduct.lift_mkₓ'. -/
 theorem lift_mk : lift (mk R M N) = LinearMap.id :=
   Eq.symm <| lift.unique fun x y => rfl
 #align tensor_product.lift_mk TensorProduct.lift_mk
 
-/- warning: tensor_product.lift_compr₂ -> TensorProduct.lift_compr₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift_compr₂ TensorProduct.lift_compr₂ₓ'. -/
 theorem lift_compr₂ (g : P →ₗ[R] Q) : lift (f.compr₂ g) = g.comp (lift f) :=
   Eq.symm <| lift.unique fun x y => by simp
 #align tensor_product.lift_compr₂ TensorProduct.lift_compr₂
 
-/- warning: tensor_product.lift_mk_compr₂ -> TensorProduct.lift_mk_compr₂ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift_mk_compr₂ TensorProduct.lift_mk_compr₂ₓ'. -/
 theorem lift_mk_compr₂ (f : M ⊗ N →ₗ[R] P) : lift ((mk R M N).compr₂ f) = f := by
   rw [lift_compr₂ f, lift_mk, LinearMap.comp_id]
 #align tensor_product.lift_mk_compr₂ TensorProduct.lift_mk_compr₂
 
-/- warning: tensor_product.ext -> TensorProduct.ext is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.ext TensorProduct.extₓ'. -/
 /-- This used to be an `@[ext]` lemma, but it fails very slowly when the `ext` tactic tries to apply
 it in some cases, notably when one wants to show equality of two linear maps. The `@[ext]`
 attribute is now added locally where it is needed. Using this as the `@[ext]` lemma instead of
@@ -743,9 +569,6 @@ def uncurry : (M →ₗ[R] N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] P :=
 
 variable {R M N P}
 
-/- warning: tensor_product.uncurry_apply -> TensorProduct.uncurry_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.uncurry_apply TensorProduct.uncurry_applyₓ'. -/
 @[simp]
 theorem uncurry_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) :
     uncurry R M N P f (m ⊗ₜ n) = f m n := by rw [uncurry, LinearMap.flip_apply, lift.tmul] <;> rfl
@@ -765,27 +588,18 @@ def lift.equiv : (M →ₗ[R] N →ₗ[R] P) ≃ₗ[R] M ⊗ N →ₗ[R] P :=
 #align tensor_product.lift.equiv TensorProduct.lift.equiv
 -/
 
-/- warning: tensor_product.lift.equiv_apply -> TensorProduct.lift.equiv_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift.equiv_apply TensorProduct.lift.equiv_applyₓ'. -/
 @[simp]
 theorem lift.equiv_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) :
     lift.equiv R M N P f (m ⊗ₜ n) = f m n :=
   uncurry_apply f m n
 #align tensor_product.lift.equiv_apply TensorProduct.lift.equiv_apply
 
-/- warning: tensor_product.lift.equiv_symm_apply -> TensorProduct.lift.equiv_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift.equiv_symm_apply TensorProduct.lift.equiv_symm_applyₓ'. -/
 @[simp]
 theorem lift.equiv_symm_apply (f : M ⊗[R] N →ₗ[R] P) (m : M) (n : N) :
     (lift.equiv R M N P).symm f m n = f (m ⊗ₜ n) :=
   rfl
 #align tensor_product.lift.equiv_symm_apply TensorProduct.lift.equiv_symm_apply
 
-/- warning: tensor_product.lcurry -> TensorProduct.lcurry is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lcurry TensorProduct.lcurryₓ'. -/
 /-- Given a linear map `M ⊗ N → P`, compose it with the canonical bilinear map `M → N → M ⊗ N` to
 form a bilinear map `M → N → P`. -/
 def lcurry : (M ⊗[R] N →ₗ[R] P) →ₗ[R] M →ₗ[R] N →ₗ[R] P :=
@@ -794,47 +608,26 @@ def lcurry : (M ⊗[R] N →ₗ[R] P) →ₗ[R] M →ₗ[R] N →ₗ[R] P :=
 
 variable {R M N P}
 
-/- warning: tensor_product.lcurry_apply -> TensorProduct.lcurry_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lcurry_apply TensorProduct.lcurry_applyₓ'. -/
 @[simp]
 theorem lcurry_apply (f : M ⊗[R] N →ₗ[R] P) (m : M) (n : N) : lcurry R M N P f m n = f (m ⊗ₜ n) :=
   rfl
 #align tensor_product.lcurry_apply TensorProduct.lcurry_apply
 
-/- warning: tensor_product.curry -> TensorProduct.curry is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (LinearMap.{u1, u1, max u2 u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_6 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_11) -> (LinearMap.{u1, u1, u2, max u3 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (LinearMap.addCommMonoid.{u1, u1, u3, u4} R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (LinearMap.module.{u1, u1, u1, u3, u4} R R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_11 (TensorProduct.curry._proof_1.{u1, u4} R _inst_1 P _inst_6 _inst_11)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (LinearMap.{u1, u1, max u3 u2, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_6 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_11) -> (LinearMap.{u1, u1, u2, max u4 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (LinearMap.addCommMonoid.{u1, u1, u3, u4} R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (LinearMap.instModuleLinearMapAddCommMonoid.{u1, u1, u1, u3, u4} R R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_11 (smulCommClass_self.{u1, u4} R P (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u4} R P (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u4} P (AddCommMonoid.toAddMonoid.{u4} P _inst_6)) (Module.toMulActionWithZero.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6 _inst_11)))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.curry TensorProduct.curryₓ'. -/
 /-- Given a linear map `M ⊗ N → P`, compose it with the canonical bilinear map `M → N → M ⊗ N` to
 form a bilinear map `M → N → P`. -/
 def curry (f : M ⊗ N →ₗ[R] P) : M →ₗ[R] N →ₗ[R] P :=
   lcurry R M N P f
 #align tensor_product.curry TensorProduct.curry
 
-/- warning: tensor_product.curry_apply -> TensorProduct.curry_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.curry_apply TensorProduct.curry_applyₓ'. -/
 @[simp]
 theorem curry_apply (f : M ⊗ N →ₗ[R] P) (m : M) (n : N) : curry f m n = f (m ⊗ₜ n) :=
   rfl
 #align tensor_product.curry_apply TensorProduct.curry_apply
 
-/- warning: tensor_product.curry_injective -> TensorProduct.curry_injective is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], Function.Injective.{max (succ (max u2 u3)) (succ u4), max (succ u2) (succ (max u3 u4))} (LinearMap.{u1, u1, max u2 u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_6 (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_11) (LinearMap.{u1, u1, u2, max u3 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (LinearMap.addCommMonoid.{u1, u1, u3, u4} R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (LinearMap.module.{u1, u1, u1, u3, u4} R R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_11 (TensorProduct.curry._proof_1.{u1, u4} R _inst_1 P _inst_6 _inst_11))) (TensorProduct.curry.{u1, u2, u3, u4} R _inst_1 M N P _inst_4 _inst_5 _inst_6 _inst_9 _inst_10 _inst_11)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u4}} {N : Type.{u3}} {P : Type.{u2}} [_inst_4 : AddCommMonoid.{u4} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u2} P] [_inst_9 : Module.{u1, u4} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u2} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], Function.Injective.{max (max (succ u4) (succ u3)) (succ u2), max (max (succ u4) (succ u3)) (succ u2)} (LinearMap.{u1, u1, max u3 u4, u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u4, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) P (TensorProduct.addCommMonoid.{u1, u4, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_6 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u4, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) _inst_11) (LinearMap.{u1, u1, u4, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (LinearMap.{u1, u1, u3, u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (LinearMap.addCommMonoid.{u1, u1, u3, u2} R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (LinearMap.instModuleLinearMapAddCommMonoid.{u1, u1, u1, u3, u2} R R R N P (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_6 _inst_10 _inst_11 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (CommSemiring.toSemiring.{u1} R _inst_1) _inst_11 (smulCommClass_self.{u1, u2} R P (CommSemiring.toCommMonoid.{u1} R _inst_1) (MulActionWithZero.toMulAction.{u1, u2} R P (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (AddMonoid.toZero.{u2} P (AddCommMonoid.toAddMonoid.{u2} P _inst_6)) (Module.toMulActionWithZero.{u1, u2} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6 _inst_11))))) (TensorProduct.curry.{u1, u4, u3, u2} R _inst_1 M N P _inst_4 _inst_5 _inst_6 _inst_9 _inst_10 _inst_11)
-Case conversion may be inaccurate. Consider using '#align tensor_product.curry_injective TensorProduct.curry_injectiveₓ'. -/
 theorem curry_injective : Function.Injective (curry : (M ⊗[R] N →ₗ[R] P) → M →ₗ[R] N →ₗ[R] P) :=
   fun g h H => ext H
 #align tensor_product.curry_injective TensorProduct.curry_injective
 
-/- warning: tensor_product.ext_threefold -> TensorProduct.ext_threefold is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.ext_threefold TensorProduct.ext_threefoldₓ'. -/
 theorem ext_threefold {g h : (M ⊗[R] N) ⊗[R] P →ₗ[R] Q}
     (H : ∀ x y z, g (x ⊗ₜ y ⊗ₜ z) = h (x ⊗ₜ y ⊗ₜ z)) : g = h :=
   by
@@ -842,9 +635,6 @@ theorem ext_threefold {g h : (M ⊗[R] N) ⊗[R] P →ₗ[R] Q}
   exact H x y z
 #align tensor_product.ext_threefold TensorProduct.ext_threefold
 
-/- warning: tensor_product.ext_fourfold -> TensorProduct.ext_fourfold is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.ext_fourfold TensorProduct.ext_fourfoldₓ'. -/
 -- We'll need this one for checking the pentagon identity!
 theorem ext_fourfold {g h : ((M ⊗[R] N) ⊗[R] P) ⊗[R] Q →ₗ[R] S}
     (H : ∀ w x y z, g (w ⊗ₜ x ⊗ₜ y ⊗ₜ z) = h (w ⊗ₜ x ⊗ₜ y ⊗ₜ z)) : g = h :=
@@ -853,9 +643,6 @@ theorem ext_fourfold {g h : ((M ⊗[R] N) ⊗[R] P) ⊗[R] Q →ₗ[R] S}
   exact H w x y z
 #align tensor_product.ext_fourfold TensorProduct.ext_fourfold
 
-/- warning: tensor_product.ext_fourfold' -> TensorProduct.ext_fourfold' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.ext_fourfold' TensorProduct.ext_fourfold'ₓ'. -/
 /-- Two linear maps (M ⊗ N) ⊗ (P ⊗ Q) → S which agree on all elements of the
 form (m ⊗ₜ n) ⊗ₜ (p ⊗ₜ q) are equal. -/
 theorem ext_fourfold' {φ ψ : (M ⊗[R] N) ⊗[R] P ⊗[R] Q →ₗ[R] S}
@@ -873,12 +660,6 @@ section
 
 variable (R M)
 
-/- warning: tensor_product.lid -> TensorProduct.lid is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], LinearEquiv.{u1, u1, max u1 u2, u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.lid._proof_1.{u1} R _inst_1) (TensorProduct.lid._proof_2.{u1} R _inst_1) (TensorProduct.{u1, u1, u2} R _inst_1 R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_9) M (TensorProduct.addCommMonoid.{u1, u1, u2} R _inst_1 R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_9) _inst_4 (TensorProduct.module.{u1, u1, u2} R _inst_1 R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_9) _inst_9
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], LinearEquiv.{u1, u1, max u2 u1, u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (TensorProduct.{u1, u1, u2} R _inst_1 R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_9) M (TensorProduct.addCommMonoid.{u1, u1, u2} R _inst_1 R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_9) _inst_4 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u1, u2} R _inst_1 R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_4 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) _inst_9) _inst_9
-Case conversion may be inaccurate. Consider using '#align tensor_product.lid TensorProduct.lidₓ'. -/
 /-- The base ring is a left identity for the tensor product of modules, up to linear equivalence.
 -/
 protected def lid : R ⊗ M ≃ₗ[R] M :=
@@ -888,9 +669,6 @@ protected def lid : R ⊗ M ≃ₗ[R] M :=
 
 end
 
-/- warning: tensor_product.lid_tmul -> TensorProduct.lid_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lid_tmul TensorProduct.lid_tmulₓ'. -/
 @[simp]
 theorem lid_tmul (m : M) (r : R) : (TensorProduct.lid R M : R ⊗ M → M) (r ⊗ₜ m) = r • m :=
   by
@@ -898,9 +676,6 @@ theorem lid_tmul (m : M) (r : R) : (TensorProduct.lid R M : R ⊗ M → M) (r �
   simp
 #align tensor_product.lid_tmul TensorProduct.lid_tmul
 
-/- warning: tensor_product.lid_symm_apply -> TensorProduct.lid_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lid_symm_apply TensorProduct.lid_symm_applyₓ'. -/
 @[simp]
 theorem lid_symm_apply (m : M) : (TensorProduct.lid R M).symm m = 1 ⊗ₜ m :=
   rfl
@@ -910,12 +685,6 @@ section
 
 variable (R M N)
 
-/- warning: tensor_product.comm -> TensorProduct.comm is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], LinearEquiv.{u1, u1, max u2 u3, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.comm._proof_1.{u1} R _inst_1) (TensorProduct.comm._proof_2.{u1} R _inst_1) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], LinearEquiv.{u1, u1, max u3 u2, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9)
-Case conversion may be inaccurate. Consider using '#align tensor_product.comm TensorProduct.commₓ'. -/
 /-- The tensor product of modules is commutative, up to linear equivalence.
 -/
 protected def comm : M ⊗ N ≃ₗ[R] N ⊗ M :=
@@ -923,17 +692,11 @@ protected def comm : M ⊗ N ≃ₗ[R] N ⊗ M :=
     (ext' fun m n => rfl)
 #align tensor_product.comm TensorProduct.comm
 
-/- warning: tensor_product.comm_tmul -> TensorProduct.comm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.comm_tmul TensorProduct.comm_tmulₓ'. -/
 @[simp]
 theorem comm_tmul (m : M) (n : N) : (TensorProduct.comm R M N) (m ⊗ₜ n) = n ⊗ₜ m :=
   rfl
 #align tensor_product.comm_tmul TensorProduct.comm_tmul
 
-/- warning: tensor_product.comm_symm_tmul -> TensorProduct.comm_symm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.comm_symm_tmul TensorProduct.comm_symm_tmulₓ'. -/
 @[simp]
 theorem comm_symm_tmul (m : M) (n : N) : (TensorProduct.comm R M N).symm (n ⊗ₜ m) = m ⊗ₜ n :=
   rfl
@@ -945,12 +708,6 @@ section
 
 variable (R M)
 
-/- warning: tensor_product.rid -> TensorProduct.rid is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], LinearEquiv.{u1, u1, max u2 u1, u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.rid._proof_1.{u1} R _inst_1) (TensorProduct.rid._proof_2.{u1} R _inst_1) (TensorProduct.{u1, u2, u1} R _inst_1 M R _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (TensorProduct.addCommMonoid.{u1, u2, u1} R _inst_1 M R _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) _inst_4 (TensorProduct.module.{u1, u2, u1} R _inst_1 M R _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) _inst_9
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4], LinearEquiv.{u1, u1, max u1 u2, u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (TensorProduct.{u1, u2, u1} R _inst_1 M R _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M (TensorProduct.addCommMonoid.{u1, u2, u1} R _inst_1 M R _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) _inst_4 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u1} R _inst_1 M R _inst_4 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) _inst_9 (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) _inst_9
-Case conversion may be inaccurate. Consider using '#align tensor_product.rid TensorProduct.ridₓ'. -/
 /-- The base ring is a right identity for the tensor product of modules, up to linear equivalence.
 -/
 protected def rid : M ⊗[R] R ≃ₗ[R] M :=
@@ -959,9 +716,6 @@ protected def rid : M ⊗[R] R ≃ₗ[R] M :=
 
 end
 
-/- warning: tensor_product.rid_tmul -> TensorProduct.rid_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.rid_tmul TensorProduct.rid_tmulₓ'. -/
 @[simp]
 theorem rid_tmul (m : M) (r : R) : (TensorProduct.rid R M) (m ⊗ₜ r) = r • m :=
   by
@@ -969,9 +723,6 @@ theorem rid_tmul (m : M) (r : R) : (TensorProduct.rid R M) (m ⊗ₜ r) = r • 
   simp
 #align tensor_product.rid_tmul TensorProduct.rid_tmul
 
-/- warning: tensor_product.rid_symm_apply -> TensorProduct.rid_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.rid_symm_apply TensorProduct.rid_symm_applyₓ'. -/
 @[simp]
 theorem rid_symm_apply (m : M) : (TensorProduct.rid R M).symm m = m ⊗ₜ 1 :=
   rfl
@@ -983,9 +734,6 @@ section
 
 variable (R M N P)
 
-/- warning: tensor_product.assoc -> TensorProduct.assoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.assoc TensorProduct.assocₓ'. -/
 /-- The associator for tensor product of R-modules, as a linear equivalence. -/
 protected def assoc : (M ⊗[R] N) ⊗[R] P ≃ₗ[R] M ⊗[R] N ⊗[R] P := by
   refine'
@@ -1000,46 +748,28 @@ protected def assoc : (M ⊗[R] N) ⊗[R] P ≃ₗ[R] M ⊗[R] N ⊗[R] P := by
 
 end
 
-/- warning: tensor_product.assoc_tmul -> TensorProduct.assoc_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.assoc_tmul TensorProduct.assoc_tmulₓ'. -/
 @[simp]
 theorem assoc_tmul (m : M) (n : N) (p : P) :
     (TensorProduct.assoc R M N P) (m ⊗ₜ n ⊗ₜ p) = m ⊗ₜ (n ⊗ₜ p) :=
   rfl
 #align tensor_product.assoc_tmul TensorProduct.assoc_tmul
 
-/- warning: tensor_product.assoc_symm_tmul -> TensorProduct.assoc_symm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.assoc_symm_tmul TensorProduct.assoc_symm_tmulₓ'. -/
 @[simp]
 theorem assoc_symm_tmul (m : M) (n : N) (p : P) :
     (TensorProduct.assoc R M N P).symm (m ⊗ₜ (n ⊗ₜ p)) = m ⊗ₜ n ⊗ₜ p :=
   rfl
 #align tensor_product.assoc_symm_tmul TensorProduct.assoc_symm_tmul
 
-/- warning: tensor_product.map -> TensorProduct.map is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} {Q : Type.{u5}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_7 : AddCommMonoid.{u5} Q] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6] [_inst_12 : Module.{u1, u5} R Q (CommSemiring.toSemiring.{u1} R _inst_1) _inst_7], (LinearMap.{u1, u1, u2, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M P _inst_4 _inst_6 _inst_9 _inst_11) -> (LinearMap.{u1, u1, u3, u5} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N Q _inst_5 _inst_7 _inst_10 _inst_12) -> (LinearMap.{u1, u1, max u2 u3, max u4 u5} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} {Q : Type.{u5}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_7 : AddCommMonoid.{u5} Q] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6] [_inst_12 : Module.{u1, u5} R Q (CommSemiring.toSemiring.{u1} R _inst_1) _inst_7], (LinearMap.{u1, u1, u2, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) M P _inst_4 _inst_6 _inst_9 _inst_11) -> (LinearMap.{u1, u1, u3, u5} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N Q _inst_5 _inst_7 _inst_10 _inst_12) -> (LinearMap.{u1, u1, max u3 u2, max u5 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12))
-Case conversion may be inaccurate. Consider using '#align tensor_product.map TensorProduct.mapₓ'. -/
 /-- The tensor product of a pair of linear maps between modules. -/
 def map (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : M ⊗ N →ₗ[R] P ⊗ Q :=
   lift <| comp (compl₂ (mk _ _ _) g) f
 #align tensor_product.map TensorProduct.map
 
-/- warning: tensor_product.map_tmul -> TensorProduct.map_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_tmul TensorProduct.map_tmulₓ'. -/
 @[simp]
 theorem map_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) (m : M) (n : N) : map f g (m ⊗ₜ n) = f m ⊗ₜ g n :=
   rfl
 #align tensor_product.map_tmul TensorProduct.map_tmul
 
-/- warning: tensor_product.map_range_eq_span_tmul -> TensorProduct.map_range_eq_span_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_range_eq_span_tmul TensorProduct.map_range_eq_span_tmulₓ'. -/
 theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (map f g).range = Submodule.span R { t | ∃ m n, f m ⊗ₜ g n = t } :=
   by
@@ -1051,9 +781,6 @@ theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
   · rintro ⟨m, n, rfl⟩; use m ⊗ₜ n, m, n; simp only [map_tmul]
 #align tensor_product.map_range_eq_span_tmul TensorProduct.map_range_eq_span_tmul
 
-/- warning: tensor_product.map_incl -> TensorProduct.mapIncl is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_incl TensorProduct.mapInclₓ'. -/
 /-- Given submodules `p ⊆ P` and `q ⊆ Q`, this is the natural map: `p ⊗ q → P ⊗ Q`. -/
 @[simp]
 def mapIncl (p : Submodule R P) (q : Submodule R Q) : p ⊗[R] q →ₗ[R] P ⊗[R] Q :=
@@ -1068,17 +795,11 @@ variable [AddCommMonoid P'] [Module R P']
 
 variable [AddCommMonoid Q'] [Module R Q']
 
-/- warning: tensor_product.map_comp -> TensorProduct.map_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_comp TensorProduct.map_compₓ'. -/
 theorem map_comp (f₂ : P →ₗ[R] P') (f₁ : M →ₗ[R] P) (g₂ : Q →ₗ[R] Q') (g₁ : N →ₗ[R] Q) :
     map (f₂.comp f₁) (g₂.comp g₁) = (map f₂ g₂).comp (map f₁ g₁) :=
   ext' fun _ _ => rfl
 #align tensor_product.map_comp TensorProduct.map_comp
 
-/- warning: tensor_product.lift_comp_map -> TensorProduct.lift_comp_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.lift_comp_map TensorProduct.lift_comp_mapₓ'. -/
 theorem lift_comp_map (i : P →ₗ[R] Q →ₗ[R] Q') (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (lift i).comp (map f g) = lift ((i.comp f).compl₂ g) :=
   ext' fun _ _ => rfl
@@ -1086,36 +807,21 @@ theorem lift_comp_map (i : P →ₗ[R] Q →ₗ[R] Q') (f : M →ₗ[R] P) (g : 
 
 attribute [local ext] ext
 
-/- warning: tensor_product.map_id -> TensorProduct.map_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{succ (max u2 u3)} (LinearMap.{u1, u1, max u2 u3, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (TensorProduct.map.{u1, u2, u3, u2, u3} R _inst_1 M N M N _inst_4 _inst_5 _inst_4 _inst_5 _inst_9 _inst_10 _inst_9 _inst_10 (LinearMap.id.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9) (LinearMap.id.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)) (LinearMap.id.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{max (succ u3) (succ u2)} (LinearMap.{u1, u1, max u2 u3, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (TensorProduct.map.{u1, u3, u2, u3, u2} R _inst_1 M N M N _inst_4 _inst_5 _inst_4 _inst_5 _inst_9 _inst_10 _inst_9 _inst_10 (LinearMap.id.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4 _inst_9) (LinearMap.id.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)) (LinearMap.id.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_id TensorProduct.map_idₓ'. -/
 @[simp]
 theorem map_id : map (id : M →ₗ[R] M) (id : N →ₗ[R] N) = id := by ext;
   simp only [mk_apply, id_coe, compr₂_apply, id.def, map_tmul]
 #align tensor_product.map_id TensorProduct.map_id
 
-/- warning: tensor_product.map_one -> TensorProduct.map_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_one TensorProduct.map_oneₓ'. -/
 @[simp]
 theorem map_one : map (1 : M →ₗ[R] M) (1 : N →ₗ[R] N) = 1 :=
   map_id
 #align tensor_product.map_one TensorProduct.map_one
 
-/- warning: tensor_product.map_mul -> TensorProduct.map_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_mul TensorProduct.map_mulₓ'. -/
 theorem map_mul (f₁ f₂ : M →ₗ[R] M) (g₁ g₂ : N →ₗ[R] N) :
     map (f₁ * f₂) (g₁ * g₂) = map f₁ g₁ * map f₂ g₂ :=
   map_comp f₁ f₂ g₁ g₂
 #align tensor_product.map_mul TensorProduct.map_mul
 
-/- warning: tensor_product.map_pow -> TensorProduct.map_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_pow TensorProduct.map_powₓ'. -/
 @[simp]
 protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) :
     map f g ^ n = map (f ^ n) (g ^ n) :=
@@ -1125,39 +831,24 @@ protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) :
   · simp only [pow_succ', ih, map_mul]
 #align tensor_product.map_pow TensorProduct.map_pow
 
-/- warning: tensor_product.map_add_left -> TensorProduct.map_add_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_add_left TensorProduct.map_add_leftₓ'. -/
 theorem map_add_left (f₁ f₂ : M →ₗ[R] P) (g : N →ₗ[R] Q) : map (f₁ + f₂) g = map f₁ g + map f₂ g :=
   by ext; simp only [add_tmul, compr₂_apply, mk_apply, map_tmul, add_apply]
 #align tensor_product.map_add_left TensorProduct.map_add_left
 
-/- warning: tensor_product.map_add_right -> TensorProduct.map_add_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_add_right TensorProduct.map_add_rightₓ'. -/
 theorem map_add_right (f : M →ₗ[R] P) (g₁ g₂ : N →ₗ[R] Q) : map f (g₁ + g₂) = map f g₁ + map f g₂ :=
   by ext; simp only [tmul_add, compr₂_apply, mk_apply, map_tmul, add_apply]
 #align tensor_product.map_add_right TensorProduct.map_add_right
 
-/- warning: tensor_product.map_smul_left -> TensorProduct.map_smul_left is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_smul_left TensorProduct.map_smul_leftₓ'. -/
 theorem map_smul_left (r : R) (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : map (r • f) g = r • map f g := by
   ext; simp only [smul_tmul, compr₂_apply, mk_apply, map_tmul, smul_apply, tmul_smul]
 #align tensor_product.map_smul_left TensorProduct.map_smul_left
 
-/- warning: tensor_product.map_smul_right -> TensorProduct.map_smul_right is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_smul_right TensorProduct.map_smul_rightₓ'. -/
 theorem map_smul_right (r : R) (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : map f (r • g) = r • map f g := by
   ext; simp only [smul_tmul, compr₂_apply, mk_apply, map_tmul, smul_apply, tmul_smul]
 #align tensor_product.map_smul_right TensorProduct.map_smul_right
 
 variable (R M N P Q)
 
-/- warning: tensor_product.map_bilinear -> TensorProduct.mapBilinear is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_bilinear TensorProduct.mapBilinearₓ'. -/
 /-- The tensor product of a pair of linear maps between modules, bilinear in both maps. -/
 def mapBilinear : (M →ₗ[R] P) →ₗ[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] N →ₗ[R] P ⊗[R] Q :=
   LinearMap.mk₂ R map map_add_left map_smul_left map_add_right map_smul_right
@@ -1187,35 +878,23 @@ def homTensorHomMap : (M →ₗ[R] P) ⊗[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] 
 
 variable {R M N P Q}
 
-/- warning: tensor_product.map_bilinear_apply -> TensorProduct.mapBilinear_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.map_bilinear_apply TensorProduct.mapBilinear_applyₓ'. -/
 @[simp]
 theorem mapBilinear_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : mapBilinear R M N P Q f g = map f g :=
   rfl
 #align tensor_product.map_bilinear_apply TensorProduct.mapBilinear_apply
 
-/- warning: tensor_product.ltensor_hom_to_hom_ltensor_apply -> TensorProduct.lTensorHomToHomLTensor_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.ltensor_hom_to_hom_ltensor_apply TensorProduct.lTensorHomToHomLTensor_applyₓ'. -/
 @[simp]
 theorem lTensorHomToHomLTensor_apply (p : P) (f : M →ₗ[R] Q) (m : M) :
     lTensorHomToHomLTensor R M P Q (p ⊗ₜ f) m = p ⊗ₜ f m :=
   rfl
 #align tensor_product.ltensor_hom_to_hom_ltensor_apply TensorProduct.lTensorHomToHomLTensor_apply
 
-/- warning: tensor_product.rtensor_hom_to_hom_rtensor_apply -> TensorProduct.rTensorHomToHomRTensor_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.rtensor_hom_to_hom_rtensor_apply TensorProduct.rTensorHomToHomRTensor_applyₓ'. -/
 @[simp]
 theorem rTensorHomToHomRTensor_apply (f : M →ₗ[R] P) (q : Q) (m : M) :
     rTensorHomToHomRTensor R M P Q (f ⊗ₜ q) m = f m ⊗ₜ q :=
   rfl
 #align tensor_product.rtensor_hom_to_hom_rtensor_apply TensorProduct.rTensorHomToHomRTensor_apply
 
-/- warning: tensor_product.hom_tensor_hom_map_apply -> TensorProduct.homTensorHomMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.hom_tensor_hom_map_apply TensorProduct.homTensorHomMap_applyₓ'. -/
 @[simp]
 theorem homTensorHomMap_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     homTensorHomMap R M N P Q (f ⊗ₜ g) = map f g :=
@@ -1224,12 +903,6 @@ theorem homTensorHomMap_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
 
 end
 
-/- warning: tensor_product.congr -> TensorProduct.congr is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} {Q : Type.{u5}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_7 : AddCommMonoid.{u5} Q] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6] [_inst_12 : Module.{u1, u5} R Q (CommSemiring.toSemiring.{u1} R _inst_1) _inst_7], (LinearEquiv.{u1, u1, u2, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.congr._proof_1.{u1} R _inst_1) (TensorProduct.congr._proof_2.{u1} R _inst_1) M P _inst_4 _inst_6 _inst_9 _inst_11) -> (LinearEquiv.{u1, u1, u3, u5} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.congr._proof_3.{u1} R _inst_1) (TensorProduct.congr._proof_4.{u1} R _inst_1) N Q _inst_5 _inst_7 _inst_10 _inst_12) -> (LinearEquiv.{u1, u1, max u2 u3, max u4 u5} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.congr._proof_5.{u1} R _inst_1) (TensorProduct.congr._proof_6.{u1} R _inst_1) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} {P : Type.{u4}} {Q : Type.{u5}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_7 : AddCommMonoid.{u5} Q] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6] [_inst_12 : Module.{u1, u5} R Q (CommSemiring.toSemiring.{u1} R _inst_1) _inst_7], (LinearEquiv.{u1, u1, u2, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) M P _inst_4 _inst_6 _inst_9 _inst_11) -> (LinearEquiv.{u1, u1, u3, u5} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) N Q _inst_5 _inst_7 _inst_10 _inst_12) -> (LinearEquiv.{u1, u1, max u3 u2, max u5 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u4, u5} R _inst_1 P Q _inst_6 _inst_7 _inst_11 _inst_12))
-Case conversion may be inaccurate. Consider using '#align tensor_product.congr TensorProduct.congrₓ'. -/
 /-- If `M` and `P` are linearly equivalent and `N` and `Q` are linearly equivalent
 then `M ⊗ N` and `P ⊗ Q` are linearly equivalent. -/
 def congr (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) : M ⊗ N ≃ₗ[R] P ⊗ Q :=
@@ -1238,18 +911,12 @@ def congr (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) : M ⊗ N ≃ₗ[R] P ⊗ Q :=
     (ext' fun m n => by simp <;> simp only [LinearEquiv.symm_apply_apply])
 #align tensor_product.congr TensorProduct.congr
 
-/- warning: tensor_product.congr_tmul -> TensorProduct.congr_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.congr_tmul TensorProduct.congr_tmulₓ'. -/
 @[simp]
 theorem congr_tmul (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) (m : M) (n : N) :
     congr f g (m ⊗ₜ n) = f m ⊗ₜ g n :=
   rfl
 #align tensor_product.congr_tmul TensorProduct.congr_tmul
 
-/- warning: tensor_product.congr_symm_tmul -> TensorProduct.congr_symm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.congr_symm_tmul TensorProduct.congr_symm_tmulₓ'. -/
 @[simp]
 theorem congr_symm_tmul (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) (p : P) (q : Q) :
     (congr f g).symm (p ⊗ₜ q) = f.symm p ⊗ₜ g.symm q :=
@@ -1258,12 +925,6 @@ theorem congr_symm_tmul (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) (p : P) (q : Q) 
 
 variable (R M N P Q)
 
-/- warning: tensor_product.left_comm -> TensorProduct.leftComm is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) (P : Type.{u4}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], LinearEquiv.{u1, u1, max u2 u3 u4, max u3 u2 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.leftComm._proof_1.{u1} R _inst_1) (TensorProduct.leftComm._proof_2.{u1} R _inst_1) (TensorProduct.{u1, u2, max u3 u4} R _inst_1 M (TensorProduct.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_9 (TensorProduct.module.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11)) (TensorProduct.{u1, u3, max u2 u4} R _inst_1 N (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_10 (TensorProduct.module.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11)) (TensorProduct.addCommMonoid.{u1, u2, max u3 u4} R _inst_1 M (TensorProduct.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_9 (TensorProduct.module.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11)) (TensorProduct.addCommMonoid.{u1, u3, max u2 u4} R _inst_1 N (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_10 (TensorProduct.module.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11)) (TensorProduct.module.{u1, u2, max u3 u4} R _inst_1 M (TensorProduct.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_9 (TensorProduct.module.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11)) (TensorProduct.module.{u1, u3, max u2 u4} R _inst_1 N (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_10 (TensorProduct.module.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) (P : Type.{u4}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], LinearEquiv.{u1, u1, max (max u4 u3) u2, max (max u4 u2) u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (TensorProduct.{u1, u2, max u4 u3} R _inst_1 M (TensorProduct.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_9 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11)) (TensorProduct.{u1, u3, max u4 u2} R _inst_1 N (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11)) (TensorProduct.addCommMonoid.{u1, u2, max u3 u4} R _inst_1 M (TensorProduct.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_9 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11)) (TensorProduct.addCommMonoid.{u1, u3, max u2 u4} R _inst_1 N (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11)) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, max u3 u4} R _inst_1 M (TensorProduct.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_4 (TensorProduct.addCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11) _inst_9 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u4} R _inst_1 N P _inst_5 _inst_6 _inst_10 _inst_11)) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, max u2 u4} R _inst_1 N (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_5 (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) _inst_10 (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11))
-Case conversion may be inaccurate. Consider using '#align tensor_product.left_comm TensorProduct.leftCommₓ'. -/
 /-- A tensor product analogue of `mul_left_comm`. -/
 def leftComm : M ⊗[R] N ⊗[R] P ≃ₗ[R] N ⊗[R] M ⊗[R] P :=
   let e₁ := (TensorProduct.assoc R M N P).symm
@@ -1274,17 +935,11 @@ def leftComm : M ⊗[R] N ⊗[R] P ≃ₗ[R] N ⊗[R] M ⊗[R] P :=
 
 variable {M N P Q}
 
-/- warning: tensor_product.left_comm_tmul -> TensorProduct.leftComm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.left_comm_tmul TensorProduct.leftComm_tmulₓ'. -/
 @[simp]
 theorem leftComm_tmul (m : M) (n : N) (p : P) : leftComm R M N P (m ⊗ₜ (n ⊗ₜ p)) = n ⊗ₜ (m ⊗ₜ p) :=
   rfl
 #align tensor_product.left_comm_tmul TensorProduct.leftComm_tmul
 
-/- warning: tensor_product.left_comm_symm_tmul -> TensorProduct.leftComm_symm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.left_comm_symm_tmul TensorProduct.leftComm_symm_tmulₓ'. -/
 @[simp]
 theorem leftComm_symm_tmul (m : M) (n : N) (p : P) :
     (leftComm R M N P).symm (n ⊗ₜ (m ⊗ₜ p)) = m ⊗ₜ (n ⊗ₜ p) :=
@@ -1293,9 +948,6 @@ theorem leftComm_symm_tmul (m : M) (n : N) (p : P) :
 
 variable (M N P Q)
 
-/- warning: tensor_product.tensor_tensor_tensor_comm -> TensorProduct.tensorTensorTensorComm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tensor_tensor_tensor_comm TensorProduct.tensorTensorTensorCommₓ'. -/
 /-- This special case is worth defining explicitly since it is useful for defining multiplication
 on tensor products of modules carrying multiplications (e.g., associative rings, Lie rings, ...).
 
@@ -1315,18 +967,12 @@ def tensorTensorTensorComm : (M ⊗[R] N) ⊗[R] P ⊗[R] Q ≃ₗ[R] (M ⊗[R] 
 
 variable {M N P Q}
 
-/- warning: tensor_product.tensor_tensor_tensor_comm_tmul -> TensorProduct.tensorTensorTensorComm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tensor_tensor_tensor_comm_tmul TensorProduct.tensorTensorTensorComm_tmulₓ'. -/
 @[simp]
 theorem tensorTensorTensorComm_tmul (m : M) (n : N) (p : P) (q : Q) :
     tensorTensorTensorComm R M N P Q (m ⊗ₜ n ⊗ₜ (p ⊗ₜ q)) = m ⊗ₜ p ⊗ₜ (n ⊗ₜ q) :=
   rfl
 #align tensor_product.tensor_tensor_tensor_comm_tmul TensorProduct.tensorTensorTensorComm_tmul
 
-/- warning: tensor_product.tensor_tensor_tensor_comm_symm -> TensorProduct.tensorTensorTensorComm_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tensor_tensor_tensor_comm_symm TensorProduct.tensorTensorTensorComm_symmₓ'. -/
 @[simp]
 theorem tensorTensorTensorComm_symm :
     (tensorTensorTensorComm R M N P Q).symm = tensorTensorTensorComm R M P N Q :=
@@ -1335,9 +981,6 @@ theorem tensorTensorTensorComm_symm :
 
 variable (M N P Q)
 
-/- warning: tensor_product.tensor_tensor_tensor_assoc -> TensorProduct.tensorTensorTensorAssoc is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tensor_tensor_tensor_assoc TensorProduct.tensorTensorTensorAssocₓ'. -/
 /-- This special case is useful for describing the interplay between `dual_tensor_hom_equiv` and
 composition of linear maps.
 
@@ -1353,18 +996,12 @@ def tensorTensorTensorAssoc : (M ⊗[R] N) ⊗[R] P ⊗[R] Q ≃ₗ[R] (M ⊗[R]
 
 variable {M N P Q}
 
-/- warning: tensor_product.tensor_tensor_tensor_assoc_tmul -> TensorProduct.tensorTensorTensorAssoc_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tensor_tensor_tensor_assoc_tmul TensorProduct.tensorTensorTensorAssoc_tmulₓ'. -/
 @[simp]
 theorem tensorTensorTensorAssoc_tmul (m : M) (n : N) (p : P) (q : Q) :
     tensorTensorTensorAssoc R M N P Q (m ⊗ₜ n ⊗ₜ (p ⊗ₜ q)) = m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q :=
   rfl
 #align tensor_product.tensor_tensor_tensor_assoc_tmul TensorProduct.tensorTensorTensorAssoc_tmul
 
-/- warning: tensor_product.tensor_tensor_tensor_assoc_symm_tmul -> TensorProduct.tensorTensorTensorAssoc_symm_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.tensor_tensor_tensor_assoc_symm_tmul TensorProduct.tensorTensorTensorAssoc_symm_tmulₓ'. -/
 @[simp]
 theorem tensorTensorTensorAssoc_symm_tmul (m : M) (n : N) (p : P) (q : Q) :
     (tensorTensorTensorAssoc R M N P Q).symm (m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q) = m ⊗ₜ n ⊗ₜ (p ⊗ₜ q) :=
@@ -1377,23 +1014,11 @@ namespace LinearMap
 
 variable {R} (M) {N P Q}
 
-/- warning: linear_map.ltensor -> LinearMap.lTensor is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) -> (LinearMap.{u1, u1, max u2 u3, max u2 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) -> (LinearMap.{u1, u1, max u3 u2, max u4 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u4} R _inst_1 M P _inst_4 _inst_6 _inst_9 _inst_11))
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor LinearMap.lTensorₓ'. -/
 /-- `ltensor M f : M ⊗ N →ₗ M ⊗ P` is the natural linear map induced by `f : N →ₗ P`. -/
 def lTensor (f : N →ₗ[R] P) : M ⊗ N →ₗ[R] M ⊗ P :=
   TensorProduct.map id f
 #align linear_map.ltensor LinearMap.lTensor
 
-/- warning: linear_map.rtensor -> LinearMap.rTensor is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) -> (LinearMap.{u1, u1, max u3 u2, max u4 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.{u1, u4, u2} R _inst_1 P M _inst_6 _inst_4 _inst_11 _inst_9) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u4, u2} R _inst_1 P M _inst_6 _inst_4 _inst_11 _inst_9) (TensorProduct.module.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.module.{u1, u4, u2} R _inst_1 P M _inst_6 _inst_4 _inst_11 _inst_9))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) {N : Type.{u3}} {P : Type.{u4}} [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_6 : AddCommMonoid.{u4} P] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5] [_inst_11 : Module.{u1, u4} R P (CommSemiring.toSemiring.{u1} R _inst_1) _inst_6], (LinearMap.{u1, u1, u3, u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) N P _inst_5 _inst_6 _inst_10 _inst_11) -> (LinearMap.{u1, u1, max u2 u3, max u2 u4} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.{u1, u4, u2} R _inst_1 P M _inst_6 _inst_4 _inst_11 _inst_9) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u4, u2} R _inst_1 P M _inst_6 _inst_4 _inst_11 _inst_9) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u4, u2} R _inst_1 P M _inst_6 _inst_4 _inst_11 _inst_9))
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor LinearMap.rTensorₓ'. -/
 /-- `rtensor f M : N₁ ⊗ M →ₗ N₂ ⊗ M` is the natural linear map induced by `f : N₁ →ₗ N₂`. -/
 def rTensor (f : N →ₗ[R] P) : N ⊗ M →ₗ[R] P ⊗ M :=
   TensorProduct.map f id
@@ -1401,17 +1026,11 @@ def rTensor (f : N →ₗ[R] P) : N ⊗ M →ₗ[R] P ⊗ M :=
 
 variable (g : P →ₗ[R] Q) (f : N →ₗ[R] P)
 
-/- warning: linear_map.ltensor_tmul -> LinearMap.lTensor_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_tmul LinearMap.lTensor_tmulₓ'. -/
 @[simp]
 theorem lTensor_tmul (m : M) (n : N) : f.lTensor M (m ⊗ₜ n) = m ⊗ₜ f n :=
   rfl
 #align linear_map.ltensor_tmul LinearMap.lTensor_tmul
 
-/- warning: linear_map.rtensor_tmul -> LinearMap.rTensor_tmul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_tmul LinearMap.rTensor_tmulₓ'. -/
 @[simp]
 theorem rTensor_tmul (m : M) (n : N) : f.rTensor M (n ⊗ₜ m) = f n ⊗ₜ m :=
   rfl
@@ -1421,9 +1040,6 @@ open TensorProduct
 
 attribute [local ext] TensorProduct.ext
 
-/- warning: linear_map.ltensor_hom -> LinearMap.lTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_hom LinearMap.lTensorHomₓ'. -/
 /-- `ltensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
 def lTensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P
     where
@@ -1434,9 +1050,6 @@ def lTensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P
     simp only [compr₂_apply, mk_apply, tmul_smul, smul_apply, ltensor_tmul]
 #align linear_map.ltensor_hom LinearMap.lTensorHom
 
-/- warning: linear_map.rtensor_hom -> LinearMap.rTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_hom LinearMap.rTensorHomₓ'. -/
 /-- `rtensor_hom M` is the natural linear map that sends a linear map `f : N →ₗ P` to `M ⊗ f`. -/
 def rTensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M
     where
@@ -1447,147 +1060,87 @@ def rTensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M
     simp only [compr₂_apply, mk_apply, smul_tmul, tmul_smul, smul_apply, rtensor_tmul]
 #align linear_map.rtensor_hom LinearMap.rTensorHom
 
-/- warning: linear_map.coe_ltensor_hom -> LinearMap.coe_lTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_ltensor_hom LinearMap.coe_lTensorHomₓ'. -/
 @[simp]
 theorem coe_lTensorHom : (lTensorHom M : (N →ₗ[R] P) → M ⊗[R] N →ₗ[R] M ⊗[R] P) = lTensor M :=
   rfl
 #align linear_map.coe_ltensor_hom LinearMap.coe_lTensorHom
 
-/- warning: linear_map.coe_rtensor_hom -> LinearMap.coe_rTensorHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.coe_rtensor_hom LinearMap.coe_rTensorHomₓ'. -/
 @[simp]
 theorem coe_rTensorHom : (rTensorHom M : (N →ₗ[R] P) → N ⊗[R] M →ₗ[R] P ⊗[R] M) = rTensor M :=
   rfl
 #align linear_map.coe_rtensor_hom LinearMap.coe_rTensorHom
 
-/- warning: linear_map.ltensor_add -> LinearMap.lTensor_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_add LinearMap.lTensor_addₓ'. -/
 @[simp]
 theorem lTensor_add (f g : N →ₗ[R] P) : (f + g).lTensor M = f.lTensor M + g.lTensor M :=
   (lTensorHom M).map_add f g
 #align linear_map.ltensor_add LinearMap.lTensor_add
 
-/- warning: linear_map.rtensor_add -> LinearMap.rTensor_add is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_add LinearMap.rTensor_addₓ'. -/
 @[simp]
 theorem rTensor_add (f g : N →ₗ[R] P) : (f + g).rTensor M = f.rTensor M + g.rTensor M :=
   (rTensorHom M).map_add f g
 #align linear_map.rtensor_add LinearMap.rTensor_add
 
-/- warning: linear_map.ltensor_zero -> LinearMap.lTensor_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_zero LinearMap.lTensor_zeroₓ'. -/
 @[simp]
 theorem lTensor_zero : lTensor M (0 : N →ₗ[R] P) = 0 :=
   (lTensorHom M).map_zero
 #align linear_map.ltensor_zero LinearMap.lTensor_zero
 
-/- warning: linear_map.rtensor_zero -> LinearMap.rTensor_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_zero LinearMap.rTensor_zeroₓ'. -/
 @[simp]
 theorem rTensor_zero : rTensor M (0 : N →ₗ[R] P) = 0 :=
   (rTensorHom M).map_zero
 #align linear_map.rtensor_zero LinearMap.rTensor_zero
 
-/- warning: linear_map.ltensor_smul -> LinearMap.lTensor_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_smul LinearMap.lTensor_smulₓ'. -/
 @[simp]
 theorem lTensor_smul (r : R) (f : N →ₗ[R] P) : (r • f).lTensor M = r • f.lTensor M :=
   (lTensorHom M).map_smul r f
 #align linear_map.ltensor_smul LinearMap.lTensor_smul
 
-/- warning: linear_map.rtensor_smul -> LinearMap.rTensor_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_smul LinearMap.rTensor_smulₓ'. -/
 @[simp]
 theorem rTensor_smul (r : R) (f : N →ₗ[R] P) : (r • f).rTensor M = r • f.rTensor M :=
   (rTensorHom M).map_smul r f
 #align linear_map.rtensor_smul LinearMap.rTensor_smul
 
-/- warning: linear_map.ltensor_comp -> LinearMap.lTensor_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_comp LinearMap.lTensor_compₓ'. -/
 theorem lTensor_comp : (g.comp f).lTensor M = (g.lTensor M).comp (f.lTensor M) := by ext (m n);
   simp only [compr₂_apply, mk_apply, comp_apply, ltensor_tmul]
 #align linear_map.ltensor_comp LinearMap.lTensor_comp
 
-/- warning: linear_map.ltensor_comp_apply -> LinearMap.lTensor_comp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_comp_apply LinearMap.lTensor_comp_applyₓ'. -/
 theorem lTensor_comp_apply (x : M ⊗[R] N) :
     (g.comp f).lTensor M x = (g.lTensor M) ((f.lTensor M) x) := by rw [ltensor_comp, coe_comp]
 #align linear_map.ltensor_comp_apply LinearMap.lTensor_comp_apply
 
-/- warning: linear_map.rtensor_comp -> LinearMap.rTensor_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_comp LinearMap.rTensor_compₓ'. -/
 theorem rTensor_comp : (g.comp f).rTensor M = (g.rTensor M).comp (f.rTensor M) := by ext (m n);
   simp only [compr₂_apply, mk_apply, comp_apply, rtensor_tmul]
 #align linear_map.rtensor_comp LinearMap.rTensor_comp
 
-/- warning: linear_map.rtensor_comp_apply -> LinearMap.rTensor_comp_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_comp_apply LinearMap.rTensor_comp_applyₓ'. -/
 theorem rTensor_comp_apply (x : N ⊗[R] M) :
     (g.comp f).rTensor M x = (g.rTensor M) ((f.rTensor M) x) := by rw [rtensor_comp, coe_comp]
 #align linear_map.rtensor_comp_apply LinearMap.rTensor_comp_apply
 
-/- warning: linear_map.ltensor_mul -> LinearMap.lTensor_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_mul LinearMap.lTensor_mulₓ'. -/
 theorem lTensor_mul (f g : Module.End R N) : (f * g).lTensor M = f.lTensor M * g.lTensor M :=
   lTensor_comp M f g
 #align linear_map.ltensor_mul LinearMap.lTensor_mul
 
-/- warning: linear_map.rtensor_mul -> LinearMap.rTensor_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_mul LinearMap.rTensor_mulₓ'. -/
 theorem rTensor_mul (f g : Module.End R N) : (f * g).rTensor M = f.rTensor M * g.rTensor M :=
   rTensor_comp M f g
 #align linear_map.rtensor_mul LinearMap.rTensor_mul
 
 variable (N)
 
-/- warning: linear_map.ltensor_id -> LinearMap.lTensor_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{succ (max u2 u3)} (LinearMap.{u1, u1, max u2 u3, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (LinearMap.lTensor.{u1, u2, u3, u3} R _inst_1 M N N _inst_4 _inst_5 _inst_5 _inst_9 _inst_10 _inst_10 (LinearMap.id.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)) (LinearMap.id.{u1, max u2 u3} R (TensorProduct.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.module.{u1, u2, u3} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u3}) (N : Type.{u2}) [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{max (succ u3) (succ u2)} (LinearMap.{u1, u1, max u2 u3, max u2 u3} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10)) (LinearMap.lTensor.{u1, u3, u2, u2} R _inst_1 M N N _inst_4 _inst_5 _inst_5 _inst_9 _inst_10 _inst_10 (LinearMap.id.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)) (LinearMap.id.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u2} R _inst_1 M N _inst_4 _inst_5 _inst_9 _inst_10))
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_id LinearMap.lTensor_idₓ'. -/
 @[simp]
 theorem lTensor_id : (id : N →ₗ[R] N).lTensor M = id :=
   map_id
 #align linear_map.ltensor_id LinearMap.lTensor_id
 
-/- warning: linear_map.ltensor_id_apply -> LinearMap.lTensor_id_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_id_apply LinearMap.lTensor_id_applyₓ'. -/
 -- `simp` can prove this.
 theorem lTensor_id_apply (x : M ⊗[R] N) : (LinearMap.id : N →ₗ[R] N).lTensor M x = x := by
   rw [ltensor_id, id_coe, id.def]
 #align linear_map.ltensor_id_apply LinearMap.lTensor_id_apply
 
-/- warning: linear_map.rtensor_id -> LinearMap.rTensor_id is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u2}) (N : Type.{u3}) [_inst_4 : AddCommMonoid.{u2} M] [_inst_5 : AddCommMonoid.{u3} N] [_inst_9 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{succ (max u3 u2)} (LinearMap.{u1, u1, max u3 u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.module.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.module.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9)) (LinearMap.rTensor.{u1, u2, u3, u3} R _inst_1 M N N _inst_4 _inst_5 _inst_5 _inst_9 _inst_10 _inst_10 (LinearMap.id.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)) (LinearMap.id.{u1, max u3 u2} R (TensorProduct.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.module.{u1, u3, u2} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (M : Type.{u3}) (N : Type.{u2}) [_inst_4 : AddCommMonoid.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] [_inst_9 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) _inst_4] [_inst_10 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5], Eq.{max (succ u3) (succ u2)} (LinearMap.{u1, u1, max u3 u2, max u3 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (TensorProduct.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9)) (LinearMap.rTensor.{u1, u3, u2, u2} R _inst_1 M N N _inst_4 _inst_5 _inst_5 _inst_9 _inst_10 _inst_10 (LinearMap.id.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) _inst_5 _inst_10)) (LinearMap.id.{u1, max u3 u2} R (TensorProduct.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (CommSemiring.toSemiring.{u1} R _inst_1) (TensorProduct.addCommMonoid.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u2, u3} R _inst_1 N M _inst_5 _inst_4 _inst_10 _inst_9))
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_id LinearMap.rTensor_idₓ'. -/
 @[simp]
 theorem rTensor_id : (id : N →ₗ[R] N).rTensor M = id :=
   map_id
 #align linear_map.rtensor_id LinearMap.rTensor_id
 
-/- warning: linear_map.rtensor_id_apply -> LinearMap.rTensor_id_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_id_apply LinearMap.rTensor_id_applyₓ'. -/
 -- `simp` can prove this.
 theorem rTensor_id_apply (x : N ⊗[R] M) : (LinearMap.id : N →ₗ[R] N).rTensor M x = x := by
   rw [rtensor_id, id_coe, id.def]
@@ -1595,54 +1148,36 @@ theorem rTensor_id_apply (x : N ⊗[R] M) : (LinearMap.id : N →ₗ[R] N).rTens
 
 variable {N}
 
-/- warning: linear_map.ltensor_comp_rtensor -> LinearMap.lTensor_comp_rTensor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_comp_rtensor LinearMap.lTensor_comp_rTensorₓ'. -/
 @[simp]
 theorem lTensor_comp_rTensor (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (g.lTensor P).comp (f.rTensor N) = map f g := by
   simp only [ltensor, rtensor, ← map_comp, id_comp, comp_id]
 #align linear_map.ltensor_comp_rtensor LinearMap.lTensor_comp_rTensor
 
-/- warning: linear_map.rtensor_comp_ltensor -> LinearMap.rTensor_comp_lTensor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_comp_ltensor LinearMap.rTensor_comp_lTensorₓ'. -/
 @[simp]
 theorem rTensor_comp_lTensor (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (f.rTensor Q).comp (g.lTensor M) = map f g := by
   simp only [ltensor, rtensor, ← map_comp, id_comp, comp_id]
 #align linear_map.rtensor_comp_ltensor LinearMap.rTensor_comp_lTensor
 
-/- warning: linear_map.map_comp_rtensor -> LinearMap.map_comp_rTensor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.map_comp_rtensor LinearMap.map_comp_rTensorₓ'. -/
 @[simp]
 theorem map_comp_rTensor (f : M →ₗ[R] P) (g : N →ₗ[R] Q) (f' : S →ₗ[R] M) :
     (map f g).comp (f'.rTensor _) = map (f.comp f') g := by
   simp only [ltensor, rtensor, ← map_comp, id_comp, comp_id]
 #align linear_map.map_comp_rtensor LinearMap.map_comp_rTensor
 
-/- warning: linear_map.map_comp_ltensor -> LinearMap.map_comp_lTensor is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.map_comp_ltensor LinearMap.map_comp_lTensorₓ'. -/
 @[simp]
 theorem map_comp_lTensor (f : M →ₗ[R] P) (g : N →ₗ[R] Q) (g' : S →ₗ[R] N) :
     (map f g).comp (g'.lTensor _) = map f (g.comp g') := by
   simp only [ltensor, rtensor, ← map_comp, id_comp, comp_id]
 #align linear_map.map_comp_ltensor LinearMap.map_comp_lTensor
 
-/- warning: linear_map.rtensor_comp_map -> LinearMap.rTensor_comp_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_comp_map LinearMap.rTensor_comp_mapₓ'. -/
 @[simp]
 theorem rTensor_comp_map (f' : P →ₗ[R] S) (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (f'.rTensor _).comp (map f g) = map (f'.comp f) g := by
   simp only [ltensor, rtensor, ← map_comp, id_comp, comp_id]
 #align linear_map.rtensor_comp_map LinearMap.rTensor_comp_map
 
-/- warning: linear_map.ltensor_comp_map -> LinearMap.lTensor_comp_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_comp_map LinearMap.lTensor_comp_mapₓ'. -/
 @[simp]
 theorem lTensor_comp_map (g' : Q →ₗ[R] S) (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (g'.lTensor _).comp (map f g) = map f (g'.comp g) := by
@@ -1651,17 +1186,11 @@ theorem lTensor_comp_map (g' : Q →ₗ[R] S) (f : M →ₗ[R] P) (g : N →ₗ[
 
 variable {M}
 
-/- warning: linear_map.rtensor_pow -> LinearMap.rTensor_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_pow LinearMap.rTensor_powₓ'. -/
 @[simp]
 theorem rTensor_pow (f : M →ₗ[R] M) (n : ℕ) : f.rTensor N ^ n = (f ^ n).rTensor N := by
   have h := TensorProduct.map_pow f (id : N →ₗ[R] N) n; rwa [id_pow] at h
 #align linear_map.rtensor_pow LinearMap.rTensor_pow
 
-/- warning: linear_map.ltensor_pow -> LinearMap.lTensor_pow is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_pow LinearMap.lTensor_powₓ'. -/
 @[simp]
 theorem lTensor_pow (f : N →ₗ[R] N) (n : ℕ) : f.lTensor M ^ n = (f ^ n).lTensor M := by
   have h := TensorProduct.map_pow (id : M →ₗ[R] M) f n; rwa [id_pow] at h
@@ -1689,12 +1218,6 @@ open LinearMap
 
 variable (R)
 
-/- warning: tensor_product.neg.aux -> TensorProduct.Neg.aux is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)], AddMonoidHom.{max u2 u3, max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddMonoid.toAddZeroClass.{max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (AddRightCancelMonoid.toAddMonoid.{max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (AddCancelMonoid.toAddRightCancelMonoid.{max u2 u3} (FreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N)) (FreeAddMonoid.cancelAddMonoid.{max u2 u3} (Prod.{u2, u3} M N))))) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)], AddMonoidHom.{max u3 u2, max u3 u2} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddMonoid.toAddZeroClass.{max u2 u3} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (AddRightCancelMonoid.toAddMonoid.{max u2 u3} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (AddCancelMonoid.toAddRightCancelMonoid.{max u2 u3} (FreeAddMonoid.{max u3 u2} (Prod.{u2, u3} M N)) (FreeAddMonoid.instAddCancelMonoidFreeAddMonoid.{max u2 u3} (Prod.{u2, u3} M N))))) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8)
-Case conversion may be inaccurate. Consider using '#align tensor_product.neg.aux TensorProduct.Neg.auxₓ'. -/
 /-- Auxiliary function to defining negation multiplication on tensor product. -/
 def Neg.aux : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
   FreeAddMonoid.lift fun p : M × N => (-p.1) ⊗ₜ p.2
@@ -1702,9 +1225,6 @@ def Neg.aux : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
 
 variable {R}
 
-/- warning: tensor_product.neg.aux_of -> TensorProduct.Neg.aux_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tensor_product.neg.aux_of TensorProduct.Neg.aux_ofₓ'. -/
 theorem Neg.aux_of (m : M) (n : N) : Neg.aux R (FreeAddMonoid.of (m, n)) = (-m) ⊗ₜ[R] n :=
   rfl
 #align tensor_product.neg.aux_of TensorProduct.Neg.aux_of
@@ -1728,12 +1248,6 @@ instance : Neg (M ⊗[R] N)
         | _, _, eqv.add_comm x y =>
           (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 
-/- warning: tensor_product.add_left_neg -> TensorProduct.add_left_neg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] (x : TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (HAdd.hAdd.{max u2 u3, max u2 u3, max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (instHAdd.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddZeroClass.toHasAdd.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8))) (Neg.neg.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.hasNeg.{u1, u2, u3} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8) x) x) (OfNat.ofNat.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) 0 (OfNat.mk.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) 0 (Zero.zero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddZeroClass.toHasZero.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.addZeroClass.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8)))))
-but is expected to have type
-  forall {R : Type.{u3}} [_inst_1 : CommSemiring.{u3} R] {M : Type.{u2}} {N : Type.{u1}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u1} N] [_inst_7 : Module.{u3, u2} R M (CommSemiring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u3, u1} R N (CommSemiring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3)] (x : TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8), Eq.{max (succ u2) (succ u1)} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (instHAdd.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (AddZeroClass.toAdd.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (TensorProduct.addZeroClass.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8))) (Neg.neg.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (TensorProduct.neg.{u3, u2, u1} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8) x) x) (OfNat.ofNat.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) 0 (Zero.toOfNat0.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (AddMonoid.toZero.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (AddCommMonoid.toAddMonoid.{max u2 u1} (TensorProduct.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8) (TensorProduct.addCommMonoid.{u3, u2, u1} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} N _inst_3) _inst_7 _inst_8)))))
-Case conversion may be inaccurate. Consider using '#align tensor_product.add_left_neg TensorProduct.add_left_negₓ'. -/
 protected theorem add_left_neg (x : M ⊗[R] N) : -x + x = 0 :=
   TensorProduct.induction_on x (by rw [add_zero]; apply (neg.aux R).map_zero)
     (fun x y => by convert(add_tmul (-x) x y).symm; rw [add_left_neg, zero_tmul]) fun x y hx hy =>
@@ -1760,52 +1274,22 @@ instance : AddCommGroup (M ⊗[R] N) :=
         add_smul, ← sub_eq_add_neg, sub_self, zero_smul, add_zero]
       rfl }
 
-/- warning: tensor_product.neg_tmul -> TensorProduct.neg_tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] (m : M) (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 (Neg.neg.{u2} M (SubNegMonoid.toHasNeg.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_2))) m) n) (Neg.neg.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.hasNeg.{u1, u2, u3} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_2 : AddCommGroup.{u3} M] [_inst_3 : AddCommGroup.{u2} N] [_inst_7 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2)] [_inst_8 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3)] (m : M) (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 (Neg.neg.{u3} M (NegZeroClass.toNeg.{u3} M (SubNegZeroMonoid.toNegZeroClass.{u3} M (SubtractionMonoid.toSubNegZeroMonoid.{u3} M (SubtractionCommMonoid.toSubtractionMonoid.{u3} M (AddCommGroup.toDivisionAddCommMonoid.{u3} M _inst_2))))) m) n) (Neg.neg.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.neg.{u1, u3, u2} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m n))
-Case conversion may be inaccurate. Consider using '#align tensor_product.neg_tmul TensorProduct.neg_tmulₓ'. -/
 theorem neg_tmul (m : M) (n : N) : (-m) ⊗ₜ n = -m ⊗ₜ[R] n :=
   rfl
 #align tensor_product.neg_tmul TensorProduct.neg_tmul
 
-/- warning: tensor_product.tmul_neg -> TensorProduct.tmul_neg is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] (m : M) (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m (Neg.neg.{u3} N (SubNegMonoid.toHasNeg.{u3} N (AddGroup.toSubNegMonoid.{u3} N (AddCommGroup.toAddGroup.{u3} N _inst_3))) n)) (Neg.neg.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.hasNeg.{u1, u2, u3} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_2 : AddCommGroup.{u3} M] [_inst_3 : AddCommGroup.{u2} N] [_inst_7 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2)] [_inst_8 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3)] (m : M) (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m (Neg.neg.{u2} N (NegZeroClass.toNeg.{u2} N (SubNegZeroMonoid.toNegZeroClass.{u2} N (SubtractionMonoid.toSubNegZeroMonoid.{u2} N (SubtractionCommMonoid.toSubtractionMonoid.{u2} N (AddCommGroup.toDivisionAddCommMonoid.{u2} N _inst_3))))) n)) (Neg.neg.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.neg.{u1, u3, u2} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m n))
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_neg TensorProduct.tmul_negₓ'. -/
 theorem tmul_neg (m : M) (n : N) : m ⊗ₜ (-n) = -m ⊗ₜ[R] n :=
   (mk R M N _).map_neg _
 #align tensor_product.tmul_neg TensorProduct.tmul_neg
 
-/- warning: tensor_product.tmul_sub -> TensorProduct.tmul_sub is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] (m : M) (n₁ : N) (n₂ : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m (HSub.hSub.{u3, u3, u3} N N N (instHSub.{u3} N (SubNegMonoid.toHasSub.{u3} N (AddGroup.toSubNegMonoid.{u3} N (AddCommGroup.toAddGroup.{u3} N _inst_3)))) n₁ n₂)) (HSub.hSub.{max u2 u3, max u2 u3, max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (instHSub.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (SubNegMonoid.toHasSub.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddGroup.toSubNegMonoid.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddCommGroup.toAddGroup.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.addCommGroup.{u1, u2, u3} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8))))) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m n₁) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m n₂))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_2 : AddCommGroup.{u3} M] [_inst_3 : AddCommGroup.{u2} N] [_inst_7 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2)] [_inst_8 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3)] (m : M) (n₁ : N) (n₂ : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m (HSub.hSub.{u2, u2, u2} N N N (instHSub.{u2} N (SubNegMonoid.toSub.{u2} N (AddGroup.toSubNegMonoid.{u2} N (AddCommGroup.toAddGroup.{u2} N _inst_3)))) n₁ n₂)) (HSub.hSub.{max u3 u2, max u3 u2, max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (instHSub.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (SubNegMonoid.toSub.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (AddGroup.toSubNegMonoid.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (AddCommGroup.toAddGroup.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.addCommGroup.{u1, u3, u2} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8))))) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m n₁) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m n₂))
-Case conversion may be inaccurate. Consider using '#align tensor_product.tmul_sub TensorProduct.tmul_subₓ'. -/
 theorem tmul_sub (m : M) (n₁ n₂ : N) : m ⊗ₜ (n₁ - n₂) = m ⊗ₜ[R] n₁ - m ⊗ₜ[R] n₂ :=
   (mk R M N _).map_sub _ _
 #align tensor_product.tmul_sub TensorProduct.tmul_sub
 
-/- warning: tensor_product.sub_tmul -> TensorProduct.sub_tmul is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] (m₁ : M) (m₂ : M) (n : N), Eq.{succ (max u2 u3)} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 (HSub.hSub.{u2, u2, u2} M M M (instHSub.{u2} M (SubNegMonoid.toHasSub.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_2)))) m₁ m₂) n) (HSub.hSub.{max u2 u3, max u2 u3, max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (instHSub.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (SubNegMonoid.toHasSub.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddGroup.toSubNegMonoid.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (AddCommGroup.toAddGroup.{max u2 u3} (TensorProduct.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8) (TensorProduct.addCommGroup.{u1, u2, u3} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8))))) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m₁ n) (TensorProduct.tmul.{u1, u2, u3} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 m₂ n))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u3}} {N : Type.{u2}} [_inst_2 : AddCommGroup.{u3} M] [_inst_3 : AddCommGroup.{u2} N] [_inst_7 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} M _inst_2)] [_inst_8 : Module.{u1, u2} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3)] (m₁ : M) (m₂ : M) (n : N), Eq.{max (succ u3) (succ u2)} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 (HSub.hSub.{u3, u3, u3} M M M (instHSub.{u3} M (SubNegMonoid.toSub.{u3} M (AddGroup.toSubNegMonoid.{u3} M (AddCommGroup.toAddGroup.{u3} M _inst_2)))) m₁ m₂) n) (HSub.hSub.{max u3 u2, max u3 u2, max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (instHSub.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (SubNegMonoid.toSub.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (AddGroup.toSubNegMonoid.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (AddCommGroup.toAddGroup.{max u3 u2} (TensorProduct.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8) (TensorProduct.addCommGroup.{u1, u3, u2} R _inst_1 M N _inst_2 _inst_3 _inst_7 _inst_8))))) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m₁ n) (TensorProduct.tmul.{u1, u3, u2} R _inst_1 M N (AddCommGroup.toAddCommMonoid.{u3} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} N _inst_3) _inst_7 _inst_8 m₂ n))
-Case conversion may be inaccurate. Consider using '#align tensor_product.sub_tmul TensorProduct.sub_tmulₓ'. -/
 theorem sub_tmul (m₁ m₂ : M) (n : N) : (m₁ - m₂) ⊗ₜ n = m₁ ⊗ₜ[R] n - m₂ ⊗ₜ[R] n :=
   (mk R M N).map_sub₂ _ _ _
 #align tensor_product.sub_tmul TensorProduct.sub_tmul
 
-/- warning: tensor_product.compatible_smul.int -> TensorProduct.CompatibleSMul.int is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)], TensorProduct.CompatibleSMul.{u1, 0, u2, u3} R _inst_1 Int Int.monoid M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 (Module.toDistribMulAction.{0, u2} Int M Int.semiring (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.intModule.{u2} M _inst_2)) (Module.toDistribMulAction.{0, u3} Int N Int.semiring (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) (AddCommGroup.intModule.{u3} N _inst_3))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)], TensorProduct.CompatibleSMul.{u1, 0, u2, u3} R _inst_1 Int Int.instMonoidInt M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 (Module.toDistribMulAction.{0, u2} Int M (CommSemiring.toSemiring.{0} Int (CommRing.toCommSemiring.{0} Int Int.instCommRingInt)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.intModule.{u2} M _inst_2)) (Module.toDistribMulAction.{0, u3} Int N (CommSemiring.toSemiring.{0} Int (CommRing.toCommSemiring.{0} Int Int.instCommRingInt)) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) (AddCommGroup.intModule.{u3} N _inst_3))
-Case conversion may be inaccurate. Consider using '#align tensor_product.compatible_smul.int TensorProduct.CompatibleSMul.intₓ'. -/
 /-- While the tensor product will automatically inherit a ℤ-module structure from
 `add_comm_group.int_module`, that structure won't be compatible with lemmas like `tmul_smul` unless
 we use a `ℤ-module` instance provided by `tensor_product.left_module`.
@@ -1820,12 +1304,6 @@ instance CompatibleSMul.int : CompatibleSMul R ℤ M N :=
       fun r ih => by simpa [sub_smul, tmul_sub, sub_tmul] using ih⟩
 #align tensor_product.compatible_smul.int TensorProduct.CompatibleSMul.int
 
-/- warning: tensor_product.compatible_smul.unit -> TensorProduct.CompatibleSMul.unit is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] {S : Type.{u4}} [_inst_12 : Monoid.{u4} S] [_inst_13 : DistribMulAction.{u4, u2} S M _inst_12 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_2)))] [_inst_14 : DistribMulAction.{u4, u3} S N _inst_12 (SubNegMonoid.toAddMonoid.{u3} N (AddGroup.toSubNegMonoid.{u3} N (AddCommGroup.toAddGroup.{u3} N _inst_3)))] [_inst_15 : TensorProduct.CompatibleSMul.{u1, u4, u2, u3} R _inst_1 S _inst_12 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 _inst_13 _inst_14], TensorProduct.CompatibleSMul.{u1, u4, u2, u3} R _inst_1 (Units.{u4} S _inst_12) (DivInvMonoid.toMonoid.{u4} (Units.{u4} S _inst_12) (Group.toDivInvMonoid.{u4} (Units.{u4} S _inst_12) (Units.group.{u4} S _inst_12))) M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 (Units.distribMulAction.{u4, u2} S M _inst_12 (AddCommMonoid.toAddMonoid.{u2} M (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)) _inst_13) (Units.distribMulAction.{u4, u3} S N _inst_12 (AddCommMonoid.toAddMonoid.{u3} N (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)) _inst_14)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {M : Type.{u2}} {N : Type.{u3}} [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : AddCommGroup.{u3} N] [_inst_7 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] [_inst_8 : Module.{u1, u3} R N (CommSemiring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)] {S : Type.{u4}} [_inst_12 : Monoid.{u4} S] [_inst_13 : DistribMulAction.{u4, u2} S M _inst_12 (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_2)))] [_inst_14 : DistribMulAction.{u4, u3} S N _inst_12 (SubNegMonoid.toAddMonoid.{u3} N (AddGroup.toSubNegMonoid.{u3} N (AddCommGroup.toAddGroup.{u3} N _inst_3)))] [_inst_15 : TensorProduct.CompatibleSMul.{u1, u4, u2, u3} R _inst_1 S _inst_12 M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 _inst_13 _inst_14], TensorProduct.CompatibleSMul.{u1, u4, u2, u3} R _inst_1 (Units.{u4} S _inst_12) (DivInvMonoid.toMonoid.{u4} (Units.{u4} S _inst_12) (Group.toDivInvMonoid.{u4} (Units.{u4} S _inst_12) (Units.instGroupUnits.{u4} S _inst_12))) M N (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) (AddCommGroup.toAddCommMonoid.{u3} N _inst_3) _inst_7 _inst_8 (Units.instDistribMulActionUnitsToMonoidToDivInvMonoidInstGroupUnits.{u4, u2} S M _inst_12 (AddCommMonoid.toAddMonoid.{u2} M (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)) _inst_13) (Units.instDistribMulActionUnitsToMonoidToDivInvMonoidInstGroupUnits.{u4, u3} S N _inst_12 (AddCommMonoid.toAddMonoid.{u3} N (AddCommGroup.toAddCommMonoid.{u3} N _inst_3)) _inst_14)
-Case conversion may be inaccurate. Consider using '#align tensor_product.compatible_smul.unit TensorProduct.CompatibleSMul.unitₓ'. -/
 instance CompatibleSMul.unit {S} [Monoid S] [DistribMulAction S M] [DistribMulAction S N]
     [CompatibleSMul R S M N] : CompatibleSMul R Sˣ M N :=
   ⟨fun s m n => (CompatibleSMul.smul_tmul (s : S) m n : _)⟩
@@ -1835,33 +1313,21 @@ end TensorProduct
 
 namespace LinearMap
 
-/- warning: linear_map.ltensor_sub -> LinearMap.lTensor_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_sub LinearMap.lTensor_subₓ'. -/
 @[simp]
 theorem lTensor_sub (f g : N →ₗ[R] P) : (f - g).lTensor M = f.lTensor M - g.lTensor M := by
   simp only [← coe_ltensor_hom, map_sub]
 #align linear_map.ltensor_sub LinearMap.lTensor_sub
 
-/- warning: linear_map.rtensor_sub -> LinearMap.rTensor_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_sub LinearMap.rTensor_subₓ'. -/
 @[simp]
 theorem rTensor_sub (f g : N →ₗ[R] P) : (f - g).rTensor M = f.rTensor M - g.rTensor M := by
   simp only [← coe_rtensor_hom, map_sub]
 #align linear_map.rtensor_sub LinearMap.rTensor_sub
 
-/- warning: linear_map.ltensor_neg -> LinearMap.lTensor_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.ltensor_neg LinearMap.lTensor_negₓ'. -/
 @[simp]
 theorem lTensor_neg (f : N →ₗ[R] P) : (-f).lTensor M = -f.lTensor M := by
   simp only [← coe_ltensor_hom, map_neg]
 #align linear_map.ltensor_neg LinearMap.lTensor_neg
 
-/- warning: linear_map.rtensor_neg -> LinearMap.rTensor_neg is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.rtensor_neg LinearMap.rTensor_negₓ'. -/
 @[simp]
 theorem rTensor_neg (f : N →ₗ[R] P) : (-f).rTensor M = -f.rTensor M := by
   simp only [← coe_rtensor_hom, map_neg]

@@ -216,12 +216,6 @@ instance orderedStructure_LE [LE M] : OrderedStructure Language.order M :=
 #align first_order.language.ordered_structure_has_le FirstOrder.Language.orderedStructure_LE
 -/
 
-/- warning: first_order.language.model_preorder -> FirstOrder.Language.model_preorder is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Preorder.{u1} M], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toHasLe.{u1} M _inst_1)) (FirstOrder.Language.preorderTheory.{0, 0} FirstOrder.Language.order FirstOrder.Language.order.isOrdered)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Preorder.{u1} M], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toLE.{u1} M _inst_1)) (FirstOrder.Language.preorderTheory.{0, 0} FirstOrder.Language.order FirstOrder.Language.instIsOrderedOrder)
-Case conversion may be inaccurate. Consider using '#align first_order.language.model_preorder FirstOrder.Language.model_preorderₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_preorder [Preorder M] : M ⊨ Language.order.preorderTheory :=
   by
@@ -231,12 +225,6 @@ instance model_preorder [Preorder M] : M ⊨ Language.order.preorderTheory :=
   exact ⟨le_refl, fun _ _ _ => le_trans⟩
 #align first_order.language.model_preorder FirstOrder.Language.model_preorder
 
-/- warning: first_order.language.model_partial_order -> FirstOrder.Language.model_partialOrder is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : PartialOrder.{u1} M], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toHasLe.{u1} M (PartialOrder.toPreorder.{u1} M _inst_1))) (FirstOrder.Language.partialOrderTheory.{0, 0} FirstOrder.Language.order FirstOrder.Language.order.isOrdered)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : PartialOrder.{u1} M], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M _inst_1))) (FirstOrder.Language.partialOrderTheory.{0, 0} FirstOrder.Language.order FirstOrder.Language.instIsOrderedOrder)
-Case conversion may be inaccurate. Consider using '#align first_order.language.model_partial_order FirstOrder.Language.model_partialOrderₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_partialOrder [PartialOrder M] : M ⊨ Language.order.partialOrderTheory :=
   by
@@ -246,12 +234,6 @@ instance model_partialOrder [PartialOrder M] : M ⊨ Language.order.partialOrder
   exact ⟨le_refl, fun _ _ => le_antisymm, fun _ _ _ => le_trans⟩
 #align first_order.language.model_partial_order FirstOrder.Language.model_partialOrder
 
-/- warning: first_order.language.model_linear_order -> FirstOrder.Language.model_linearOrder is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : LinearOrder.{u1} M], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toHasLe.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (LinearOrder.toLattice.{u1} M _inst_1)))))) (FirstOrder.Language.linearOrderTheory.{0, 0} FirstOrder.Language.order FirstOrder.Language.order.isOrdered)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : LinearOrder.{u1} M], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (DistribLattice.toLattice.{u1} M (instDistribLattice.{u1} M _inst_1))))))) (FirstOrder.Language.linearOrderTheory.{0, 0} FirstOrder.Language.order FirstOrder.Language.instIsOrderedOrder)
-Case conversion may be inaccurate. Consider using '#align first_order.language.model_linear_order FirstOrder.Language.model_linearOrderₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_linearOrder [LinearOrder M] : M ⊨ Language.order.linearOrderTheory :=
   by
@@ -284,12 +266,6 @@ theorem Term.realize_le [LE M] [L.OrderedStructure M] {t₁ t₂ : L.term (Sum �
 #align first_order.language.term.realize_le FirstOrder.Language.Term.realize_le
 -/
 
-/- warning: first_order.language.term.realize_lt -> FirstOrder.Language.Term.realize_lt is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {M : Type.{u4}} {n : Nat} [_inst_1 : FirstOrder.Language.IsOrdered.{u1, u2} L] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L M] [_inst_3 : Preorder.{u4} M] [_inst_4 : FirstOrder.Language.OrderedStructure.{u1, u2, u4} L M _inst_1 (Preorder.toHasLe.{u4} M _inst_3) _inst_2] {t₁ : FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))} {t₂ : FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))} {v : α -> M} {xs : (Fin n) -> M}, Iff (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u4, u3} L M _inst_2 α n (FirstOrder.Language.Term.lt.{u1, u2, u3} L α n _inst_1 t₁ t₂) v xs) (LT.lt.{u4} M (Preorder.toHasLt.{u4} M _inst_3) (FirstOrder.Language.Term.realize.{u1, u2, u4, u3} L M _inst_2 (Sum.{u3, 0} α (Fin n)) (Sum.elim.{u3, 0, succ u4} α (Fin n) M v xs) t₁) (FirstOrder.Language.Term.realize.{u1, u2, u4, u3} L M _inst_2 (Sum.{u3, 0} α (Fin n)) (Sum.elim.{u3, 0, succ u4} α (Fin n) M v xs) t₂))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {M : Type.{u4}} {n : Nat} [_inst_1 : FirstOrder.Language.IsOrdered.{u1, u2} L] [_inst_2 : FirstOrder.Language.Structure.{u1, u2, u4} L M] [_inst_3 : Preorder.{u4} M] [_inst_4 : FirstOrder.Language.OrderedStructure.{u1, u2, u4} L M _inst_1 (Preorder.toLE.{u4} M _inst_3) _inst_2] {t₁ : FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))} {t₂ : FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))} {v : α -> M} {xs : (Fin n) -> M}, Iff (FirstOrder.Language.BoundedFormula.Realize.{u1, u2, u4, u3} L M _inst_2 α n (FirstOrder.Language.Term.lt.{u1, u2, u3} L α n _inst_1 t₁ t₂) v xs) (LT.lt.{u4} M (Preorder.toLT.{u4} M _inst_3) (FirstOrder.Language.Term.realize.{u1, u2, u4, u3} L M _inst_2 (Sum.{u3, 0} α (Fin n)) (Sum.elim.{u3, 0, succ u4} α (Fin n) M v xs) t₁) (FirstOrder.Language.Term.realize.{u1, u2, u4, u3} L M _inst_2 (Sum.{u3, 0} α (Fin n)) (Sum.elim.{u3, 0, succ u4} α (Fin n) M v xs) t₂))
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize_lt FirstOrder.Language.Term.realize_ltₓ'. -/
 @[simp]
 theorem Term.realize_lt [Preorder M] [L.OrderedStructure M] {t₁ t₂ : L.term (Sum α (Fin n))}
     {v : α → M} {xs : Fin n → M} :
@@ -345,12 +321,6 @@ theorem realize_noBotOrder [h : NoBotOrder M] : M ⊨ Language.order.noBotOrderS
 
 end LE
 
-/- warning: first_order.language.realize_densely_ordered_iff -> FirstOrder.Language.realize_denselyOrdered_iff is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Preorder.{u1} M], Iff (FirstOrder.Language.Sentence.Realize.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toHasLe.{u1} M _inst_1)) (FirstOrder.Language.denselyOrderedSentence.{0, 0} FirstOrder.Language.order FirstOrder.Language.order.isOrdered)) (DenselyOrdered.{u1} M (Preorder.toHasLt.{u1} M _inst_1))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Preorder.{u1} M], Iff (FirstOrder.Language.Sentence.Realize.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toLE.{u1} M _inst_1)) (FirstOrder.Language.denselyOrderedSentence.{0, 0} FirstOrder.Language.order FirstOrder.Language.instIsOrderedOrder)) (DenselyOrdered.{u1} M (Preorder.toLT.{u1} M _inst_1))
-Case conversion may be inaccurate. Consider using '#align first_order.language.realize_densely_ordered_iff FirstOrder.Language.realize_denselyOrdered_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem realize_denselyOrdered_iff [Preorder M] :
     M ⊨ Language.order.denselyOrderedSentence ↔ DenselyOrdered M :=
@@ -363,12 +333,6 @@ theorem realize_denselyOrdered_iff [Preorder M] :
   exact exists_between ab
 #align first_order.language.realize_densely_ordered_iff FirstOrder.Language.realize_denselyOrdered_iff
 
-/- warning: first_order.language.realize_densely_ordered -> FirstOrder.Language.realize_denselyOrdered is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Preorder.{u1} M] [h : DenselyOrdered.{u1} M (Preorder.toHasLt.{u1} M _inst_1)], FirstOrder.Language.Sentence.Realize.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toHasLe.{u1} M _inst_1)) (FirstOrder.Language.denselyOrderedSentence.{0, 0} FirstOrder.Language.order FirstOrder.Language.order.isOrdered)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Preorder.{u1} M] [h : DenselyOrdered.{u1} M (Preorder.toLT.{u1} M _inst_1)], FirstOrder.Language.Sentence.Realize.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toLE.{u1} M _inst_1)) (FirstOrder.Language.denselyOrderedSentence.{0, 0} FirstOrder.Language.order FirstOrder.Language.instIsOrderedOrder)
-Case conversion may be inaccurate. Consider using '#align first_order.language.realize_densely_ordered FirstOrder.Language.realize_denselyOrderedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_denselyOrdered [Preorder M] [h : DenselyOrdered M] :
@@ -376,12 +340,6 @@ theorem realize_denselyOrdered [Preorder M] [h : DenselyOrdered M] :
   realize_denselyOrdered_iff.2 h
 #align first_order.language.realize_densely_ordered FirstOrder.Language.realize_denselyOrdered
 
-/- warning: first_order.language.model_DLO -> FirstOrder.Language.model_dlo is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : LinearOrder.{u1} M] [_inst_2 : DenselyOrdered.{u1} M (Preorder.toHasLt.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (LinearOrder.toLattice.{u1} M _inst_1)))))] [_inst_3 : NoTopOrder.{u1} M (Preorder.toHasLe.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (LinearOrder.toLattice.{u1} M _inst_1)))))] [_inst_4 : NoBotOrder.{u1} M (Preorder.toHasLe.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (LinearOrder.toLattice.{u1} M _inst_1)))))], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toHasLe.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (LinearOrder.toLattice.{u1} M _inst_1)))))) (FirstOrder.Language.dlo.{0, 0} FirstOrder.Language.order FirstOrder.Language.order.isOrdered)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : LinearOrder.{u1} M] [_inst_2 : DenselyOrdered.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (DistribLattice.toLattice.{u1} M (instDistribLattice.{u1} M _inst_1))))))] [_inst_3 : NoTopOrder.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (DistribLattice.toLattice.{u1} M (instDistribLattice.{u1} M _inst_1))))))] [_inst_4 : NoBotOrder.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (DistribLattice.toLattice.{u1} M (instDistribLattice.{u1} M _inst_1))))))], FirstOrder.Language.Theory.Model.{0, 0, u1} FirstOrder.Language.order M (FirstOrder.Language.orderStructure.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (SemilatticeInf.toPartialOrder.{u1} M (Lattice.toSemilatticeInf.{u1} M (DistribLattice.toLattice.{u1} M (instDistribLattice.{u1} M _inst_1))))))) (FirstOrder.Language.dlo.{0, 0} FirstOrder.Language.order FirstOrder.Language.instIsOrderedOrder)
-Case conversion may be inaccurate. Consider using '#align first_order.language.model_DLO FirstOrder.Language.model_dloₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_dlo [LinearOrder M] [DenselyOrdered M] [NoTopOrder M] [NoBotOrder M] :
     M ⊨ Language.order.dlo :=

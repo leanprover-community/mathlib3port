@@ -148,12 +148,6 @@ protected def extend (f : α → β) : hatα → β :=
 
 variable {f : α → β}
 
-/- warning: abstract_completion.extend_def -> AbstractCompletion.extend_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{max (succ u1) (succ u2)} ((AbstractCompletion.Space.{u1} α _inst_1 pkg) -> β) (AbstractCompletion.extend.{u1, u2} α _inst_1 pkg β _inst_2 f) (DenseInducing.extend.{u1, u1, u2} α (AbstractCompletion.Space.{u1} α _inst_1 pkg) β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (AbstractCompletion.coe.{u1} α _inst_1 pkg) (UniformSpace.toTopologicalSpace.{u2} β _inst_2) (AbstractCompletion.denseInducing.{u1} α _inst_1 pkg) f))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β}, (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f) -> (Eq.{max (succ u2) (succ u1)} ((AbstractCompletion.space.{u2} α _inst_1 pkg) -> β) (AbstractCompletion.extend.{u2, u1} α _inst_1 pkg β _inst_2 f) (DenseInducing.extend.{u2, u2, u1} α (AbstractCompletion.space.{u2} α _inst_1 pkg) β (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} (AbstractCompletion.space.{u2} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg)) (AbstractCompletion.coe.{u2} α _inst_1 pkg) (UniformSpace.toTopologicalSpace.{u1} β _inst_2) (AbstractCompletion.denseInducing.{u2} α _inst_1 pkg) f))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.extend_def AbstractCompletion.extend_defₓ'. -/
 theorem extend_def (hf : UniformContinuous f) : pkg.extend f = pkg.DenseInducing.extend f :=
   if_pos hf
 #align abstract_completion.extend_def AbstractCompletion.extend_def
@@ -168,12 +162,6 @@ theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.exten
 
 variable [CompleteSpace β]
 
-/- warning: abstract_completion.uniform_continuous_extend -> AbstractCompletion.uniformContinuous_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_3 : CompleteSpace.{u2} β _inst_2], UniformContinuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) β (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) _inst_2 (AbstractCompletion.extend.{u1, u2} α _inst_1 pkg β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} [_inst_3 : CompleteSpace.{u1} β _inst_2], UniformContinuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) β (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg) _inst_2 (AbstractCompletion.extend.{u2, u1} α _inst_1 pkg β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.uniform_continuous_extend AbstractCompletion.uniformContinuous_extendₓ'. -/
 theorem uniformContinuous_extend : UniformContinuous (pkg.extend f) :=
   by
   by_cases hf : UniformContinuous f
@@ -184,24 +172,12 @@ theorem uniformContinuous_extend : UniformContinuous (pkg.extend f) :=
     exact uniformContinuous_of_const fun a b => by congr
 #align abstract_completion.uniform_continuous_extend AbstractCompletion.uniformContinuous_extend
 
-/- warning: abstract_completion.continuous_extend -> AbstractCompletion.continuous_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_3 : CompleteSpace.{u2} β _inst_2], Continuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) β (UniformSpace.toTopologicalSpace.{u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (UniformSpace.toTopologicalSpace.{u2} β _inst_2) (AbstractCompletion.extend.{u1, u2} α _inst_1 pkg β _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} [_inst_3 : CompleteSpace.{u1} β _inst_2], Continuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) β (UniformSpace.toTopologicalSpace.{u2} (AbstractCompletion.space.{u2} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg)) (UniformSpace.toTopologicalSpace.{u1} β _inst_2) (AbstractCompletion.extend.{u2, u1} α _inst_1 pkg β _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.continuous_extend AbstractCompletion.continuous_extendₓ'. -/
 theorem continuous_extend : Continuous (pkg.extend f) :=
   pkg.uniformContinuous_extend.Continuous
 #align abstract_completion.continuous_extend AbstractCompletion.continuous_extend
 
 variable [SeparatedSpace β]
 
-/- warning: abstract_completion.extend_unique -> AbstractCompletion.extend_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] {f : α -> β} [_inst_3 : CompleteSpace.{u2} β _inst_2] [_inst_4 : SeparatedSpace.{u2} β _inst_2], (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {g : (AbstractCompletion.Space.{u1} α _inst_1 pkg) -> β}, (UniformContinuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) β (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) _inst_2 g) -> (forall (a : α), Eq.{succ u2} β (f a) (g (AbstractCompletion.coe.{u1} α _inst_1 pkg a))) -> (Eq.{max (succ u1) (succ u2)} ((AbstractCompletion.Space.{u1} α _inst_1 pkg) -> β) (AbstractCompletion.extend.{u1, u2} α _inst_1 pkg β _inst_2 f) g))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] {f : α -> β} [_inst_3 : CompleteSpace.{u1} β _inst_2] [_inst_4 : SeparatedSpace.{u1} β _inst_2], (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {g : (AbstractCompletion.space.{u2} α _inst_1 pkg) -> β}, (UniformContinuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) β (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg) _inst_2 g) -> (forall (a : α), Eq.{succ u1} β (f a) (g (AbstractCompletion.coe.{u2} α _inst_1 pkg a))) -> (Eq.{max (succ u2) (succ u1)} ((AbstractCompletion.space.{u2} α _inst_1 pkg) -> β) (AbstractCompletion.extend.{u2, u1} α _inst_1 pkg β _inst_2 f) g))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.extend_unique AbstractCompletion.extend_uniqueₓ'. -/
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
     (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
   by
@@ -209,12 +185,6 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
   simpa only [pkg.extend_coe hf] using h
 #align abstract_completion.extend_unique AbstractCompletion.extend_unique
 
-/- warning: abstract_completion.extend_comp_coe -> AbstractCompletion.extend_comp_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] [_inst_3 : CompleteSpace.{u2} β _inst_2] [_inst_4 : SeparatedSpace.{u2} β _inst_2] {f : (AbstractCompletion.Space.{u1} α _inst_1 pkg) -> β}, (UniformContinuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) β (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) _inst_2 f) -> (Eq.{max (succ u1) (succ u2)} ((AbstractCompletion.Space.{u1} α _inst_1 pkg) -> β) (AbstractCompletion.extend.{u1, u2} α _inst_1 pkg β _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (AbstractCompletion.Space.{u1} α _inst_1 pkg) β f (AbstractCompletion.coe.{u1} α _inst_1 pkg))) f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] [_inst_3 : CompleteSpace.{u1} β _inst_2] [_inst_4 : SeparatedSpace.{u1} β _inst_2] {f : (AbstractCompletion.space.{u2} α _inst_1 pkg) -> β}, (UniformContinuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) β (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg) _inst_2 f) -> (Eq.{max (succ u2) (succ u1)} ((AbstractCompletion.space.{u2} α _inst_1 pkg) -> β) (AbstractCompletion.extend.{u2, u1} α _inst_1 pkg β _inst_2 (Function.comp.{succ u2, succ u2, succ u1} α (AbstractCompletion.space.{u2} α _inst_1 pkg) β f (AbstractCompletion.coe.{u2} α _inst_1 pkg))) f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.extend_comp_coe AbstractCompletion.extend_comp_coeₓ'. -/
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
@@ -246,45 +216,21 @@ local notation "map" => pkg.map pkg'
 
 variable (f : α → β)
 
-/- warning: abstract_completion.uniform_continuous_map -> AbstractCompletion.uniformContinuous_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) (f : α -> β), UniformContinuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg') (AbstractCompletion.map.{u1, u2} α _inst_1 pkg β _inst_2 pkg' f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] (pkg' : AbstractCompletion.{u1} β _inst_2) (f : α -> β), UniformContinuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) (AbstractCompletion.space.{u1} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} β _inst_2 pkg') (AbstractCompletion.map.{u2, u1} α _inst_1 pkg β _inst_2 pkg' f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.uniform_continuous_map AbstractCompletion.uniformContinuous_mapₓ'. -/
 theorem uniformContinuous_map : UniformContinuous (map f) :=
   pkg.uniformContinuous_extend
 #align abstract_completion.uniform_continuous_map AbstractCompletion.uniformContinuous_map
 
-/- warning: abstract_completion.continuous_map -> AbstractCompletion.continuous_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) (f : α -> β), Continuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u2} β _inst_2 pkg') (UniformSpace.toTopologicalSpace.{u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (UniformSpace.toTopologicalSpace.{u2} (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg')) (AbstractCompletion.map.{u1, u2} α _inst_1 pkg β _inst_2 pkg' f)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] (pkg' : AbstractCompletion.{u1} β _inst_2) (f : α -> β), Continuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) (AbstractCompletion.space.{u1} β _inst_2 pkg') (UniformSpace.toTopologicalSpace.{u2} (AbstractCompletion.space.{u2} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg)) (UniformSpace.toTopologicalSpace.{u1} (AbstractCompletion.space.{u1} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u1} β _inst_2 pkg')) (AbstractCompletion.map.{u2, u1} α _inst_1 pkg β _inst_2 pkg' f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.continuous_map AbstractCompletion.continuous_mapₓ'. -/
 theorem continuous_map : Continuous (map f) :=
   pkg.continuous_extend
 #align abstract_completion.continuous_map AbstractCompletion.continuous_map
 
 variable {f}
 
-/- warning: abstract_completion.map_coe -> AbstractCompletion.map_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {f : α -> β}, (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u2} (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.map.{u1, u2} α _inst_1 pkg β _inst_2 pkg' f (AbstractCompletion.coe.{u1} α _inst_1 pkg a)) (AbstractCompletion.coe.{u2} β _inst_2 pkg' (f a)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] (pkg' : AbstractCompletion.{u1} β _inst_2) {f : α -> β}, (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u1} (AbstractCompletion.space.{u1} β _inst_2 pkg') (AbstractCompletion.map.{u2, u1} α _inst_1 pkg β _inst_2 pkg' f (AbstractCompletion.coe.{u2} α _inst_1 pkg a)) (AbstractCompletion.coe.{u1} β _inst_2 pkg' (f a)))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.map_coe AbstractCompletion.map_coeₓ'. -/
 @[simp]
 theorem map_coe (hf : UniformContinuous f) (a : α) : map f (ι a) = ι' (f a) :=
   pkg.extend_coe (pkg'.uniformContinuous_coe.comp hf) a
 #align abstract_completion.map_coe AbstractCompletion.map_coe
 
-/- warning: abstract_completion.map_unique -> AbstractCompletion.map_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {f : α -> β} {g : (AbstractCompletion.Space.{u1} α _inst_1 pkg) -> (AbstractCompletion.Space.{u2} β _inst_2 pkg')}, (UniformContinuous.{u1, u2} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg') g) -> (forall (a : α), Eq.{succ u2} (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.coe.{u2} β _inst_2 pkg' (f a)) (g (AbstractCompletion.coe.{u1} α _inst_1 pkg a))) -> (Eq.{max (succ u1) (succ u2)} ((AbstractCompletion.Space.{u1} α _inst_1 pkg) -> (AbstractCompletion.Space.{u2} β _inst_2 pkg')) (AbstractCompletion.map.{u1, u2} α _inst_1 pkg β _inst_2 pkg' f) g)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u1}} [_inst_2 : UniformSpace.{u1} β] (pkg' : AbstractCompletion.{u1} β _inst_2) {f : α -> β} {g : (AbstractCompletion.space.{u2} α _inst_1 pkg) -> (AbstractCompletion.space.{u1} β _inst_2 pkg')}, (UniformContinuous.{u2, u1} (AbstractCompletion.space.{u2} α _inst_1 pkg) (AbstractCompletion.space.{u1} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u2} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} β _inst_2 pkg') g) -> (forall (a : α), Eq.{succ u1} (AbstractCompletion.space.{u1} β _inst_2 pkg') (AbstractCompletion.coe.{u1} β _inst_2 pkg' (f a)) (g (AbstractCompletion.coe.{u2} α _inst_1 pkg a))) -> (Eq.{max (succ u2) (succ u1)} ((AbstractCompletion.space.{u2} α _inst_1 pkg) -> (AbstractCompletion.space.{u1} β _inst_2 pkg')) (AbstractCompletion.map.{u2, u1} α _inst_1 pkg β _inst_2 pkg' f) g)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.map_unique AbstractCompletion.map_uniqueₓ'. -/
 theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous g)
     (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
   pkg.funext (pkg.continuous_map _ _) hg.Continuous <|
@@ -315,12 +261,6 @@ theorem extend_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : �
 
 variable (pkg'' : AbstractCompletion γ)
 
-/- warning: abstract_completion.map_comp -> AbstractCompletion.map_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (pkg'' : AbstractCompletion.{u3} γ _inst_3) {g : β -> γ} {f : α -> β}, (UniformContinuous.{u2, u3} β γ _inst_2 _inst_3 g) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{max (succ u1) (succ u3)} ((AbstractCompletion.Space.{u1} α _inst_1 pkg) -> (AbstractCompletion.Space.{u3} γ _inst_3 pkg'')) (Function.comp.{succ u1, succ u2, succ u3} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.Space.{u3} γ _inst_3 pkg'') (AbstractCompletion.map.{u2, u3} β _inst_2 pkg' γ _inst_3 pkg'' g) (AbstractCompletion.map.{u1, u2} α _inst_1 pkg β _inst_2 pkg' f)) (AbstractCompletion.map.{u1, u3} α _inst_1 pkg γ _inst_3 pkg'' (Function.comp.{succ u1, succ u2, succ u3} α β γ g f)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u3}} [_inst_2 : UniformSpace.{u3} β] (pkg' : AbstractCompletion.{u3} β _inst_2) {γ : Type.{u2}} [_inst_3 : UniformSpace.{u2} γ] (pkg'' : AbstractCompletion.{u2} γ _inst_3) {g : β -> γ} {f : α -> β}, (UniformContinuous.{u3, u2} β γ _inst_2 _inst_3 g) -> (UniformContinuous.{u1, u3} α β _inst_1 _inst_2 f) -> (Eq.{max (succ u1) (succ u2)} ((AbstractCompletion.space.{u1} α _inst_1 pkg) -> (AbstractCompletion.space.{u2} γ _inst_3 pkg'')) (Function.comp.{succ u1, succ u3, succ u2} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u3} β _inst_2 pkg') (AbstractCompletion.space.{u2} γ _inst_3 pkg'') (AbstractCompletion.map.{u3, u2} β _inst_2 pkg' γ _inst_3 pkg'' g) (AbstractCompletion.map.{u1, u3} α _inst_1 pkg β _inst_2 pkg' f)) (AbstractCompletion.map.{u1, u2} α _inst_1 pkg γ _inst_3 pkg'' (Function.comp.{succ u1, succ u3, succ u2} α β γ g f)))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.map_comp AbstractCompletion.map_compₓ'. -/
 theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf : UniformContinuous f) :
     pkg'.map pkg'' g ∘ pkg.map pkg' f = pkg.map pkg'' (g ∘ f) :=
   pkg.extend_map pkg' (pkg''.uniformContinuous_coe.comp hg) hf
@@ -377,22 +317,10 @@ def compareEquiv : pkg.Space ≃ᵤ pkg'.Space
 #align abstract_completion.compare_equiv AbstractCompletion.compareEquiv
 -/
 
-/- warning: abstract_completion.uniform_continuous_compare_equiv -> AbstractCompletion.uniformContinuous_compareEquiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) (pkg' : AbstractCompletion.{u1} α _inst_1), UniformContinuous.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (coeFn.{succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')) (fun (_x : UniformEquiv.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')) => (AbstractCompletion.Space.{u1} α _inst_1 pkg) -> (AbstractCompletion.Space.{u1} α _inst_1 pkg')) (UniformEquiv.hasCoeToFun.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')) (AbstractCompletion.compareEquiv.{u1} α _inst_1 pkg pkg'))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) (pkg' : AbstractCompletion.{u1} α _inst_1), UniformContinuous.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (FunLike.coe.{succ u1, succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')) (AbstractCompletion.space.{u1} α _inst_1 pkg) (fun (_x : AbstractCompletion.space.{u1} α _inst_1 pkg) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : AbstractCompletion.space.{u1} α _inst_1 pkg) => AbstractCompletion.space.{u1} α _inst_1 pkg') _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')) (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')) (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (UniformEquiv.instEquivLikeUniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg')))) (AbstractCompletion.compareEquiv.{u1} α _inst_1 pkg pkg'))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniformContinuous_compareEquivₓ'. -/
 theorem uniformContinuous_compareEquiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniformContinuous_compare pkg'
 #align abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniformContinuous_compareEquiv
 
-/- warning: abstract_completion.uniform_continuous_compare_equiv_symm -> AbstractCompletion.uniformContinuous_compareEquiv_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) (pkg' : AbstractCompletion.{u1} α _inst_1), UniformContinuous.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (coeFn.{succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (fun (_x : UniformEquiv.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) => (AbstractCompletion.Space.{u1} α _inst_1 pkg') -> (AbstractCompletion.Space.{u1} α _inst_1 pkg)) (UniformEquiv.hasCoeToFun.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (UniformEquiv.symm.{u1, u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.compareEquiv.{u1} α _inst_1 pkg pkg')))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) (pkg' : AbstractCompletion.{u1} α _inst_1), UniformContinuous.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (FunLike.coe.{succ u1, succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (AbstractCompletion.space.{u1} α _inst_1 pkg') (fun (_x : AbstractCompletion.space.{u1} α _inst_1 pkg') => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : AbstractCompletion.space.{u1} α _inst_1 pkg') => AbstractCompletion.space.{u1} α _inst_1 pkg) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (UniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (UniformEquiv.instEquivLikeUniformEquiv.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)))) (UniformEquiv.symm.{u1, u1} (AbstractCompletion.space.{u1} α _inst_1 pkg) (AbstractCompletion.space.{u1} α _inst_1 pkg') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg') (AbstractCompletion.compareEquiv.{u1} α _inst_1 pkg pkg')))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniformContinuous_compareEquiv_symmₓ'. -/
 theorem uniformContinuous_compareEquiv_symm : UniformContinuous (pkg.compareEquiv pkg').symm :=
   pkg'.uniformContinuous_compare pkg
 #align abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniformContinuous_compareEquiv_symm
@@ -409,12 +337,6 @@ local notation "hatβ" => pkg'.Space
 -- mathport name: exprι'
 local notation "ι'" => pkg'.coe
 
-/- warning: abstract_completion.prod -> AbstractCompletion.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], (AbstractCompletion.{u1} α _inst_1) -> (forall {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β], (AbstractCompletion.{u2} β _inst_2) -> (AbstractCompletion.{max u1 u2} (Prod.{u1, u2} α β) (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], (AbstractCompletion.{u1} α _inst_1) -> (forall {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β], (AbstractCompletion.{u2} β _inst_2) -> (AbstractCompletion.{max u2 u1} (Prod.{u1, u2} α β) (instUniformSpaceProd.{u1, u2} α β _inst_1 _inst_2)))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.prod AbstractCompletion.prodₓ'. -/
 /-- Products of completions -/
 protected def prod : AbstractCompletion (α × β)
     where
@@ -454,12 +376,6 @@ section SeparatedSpace
 
 variable [SeparatedSpace γ] {f : α → β → γ}
 
-/- warning: abstract_completion.extension₂_coe_coe -> AbstractCompletion.extension₂_coe_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] [_inst_4 : SeparatedSpace.{u3} γ _inst_3] {f : α -> β -> γ}, (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β _inst_1 _inst_2) _inst_3 (Function.uncurry.{u1, u2, u3} α β γ f)) -> (forall (a : α) (b : β), Eq.{succ u3} γ (AbstractCompletion.extend₂.{u1, u2, u3} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 f (AbstractCompletion.coe.{u1} α _inst_1 pkg a) (AbstractCompletion.coe.{u2} β _inst_2 pkg' b)) (f a b))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] (pkg : AbstractCompletion.{u2} α _inst_1) {β : Type.{u3}} [_inst_2 : UniformSpace.{u3} β] (pkg' : AbstractCompletion.{u3} β _inst_2) {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] [_inst_4 : SeparatedSpace.{u1} γ _inst_3] {f : α -> β -> γ}, (UniformContinuous.{max u3 u2, u1} (Prod.{u2, u3} α β) γ (instUniformSpaceProd.{u2, u3} α β _inst_1 _inst_2) _inst_3 (Function.uncurry.{u2, u3, u1} α β γ f)) -> (forall (a : α) (b : β), Eq.{succ u1} γ (AbstractCompletion.extend₂.{u2, u3, u1} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 f (AbstractCompletion.coe.{u2} α _inst_1 pkg a) (AbstractCompletion.coe.{u3} β _inst_2 pkg' b)) (f a b))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.extension₂_coe_coe AbstractCompletion.extension₂_coe_coeₓ'. -/
 theorem extension₂_coe_coe (hf : UniformContinuous <| uncurry f) (a : α) (b : β) :
     pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
   show (pkg.Prod pkg').extend (uncurry f) ((pkg.Prod pkg').coe (a, b)) = uncurry f (a, b) from
@@ -472,12 +388,6 @@ variable {f : α → β → γ}
 
 variable [CompleteSpace γ] (f)
 
-/- warning: abstract_completion.uniform_continuous_extension₂ -> AbstractCompletion.uniformContinuous_extension₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (f : α -> β -> γ) [_inst_4 : CompleteSpace.{u3} γ _inst_3], UniformContinuous₂.{u1, u2, u3} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u2} β _inst_2 pkg') γ (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg') _inst_3 (AbstractCompletion.extend₂.{u1, u2, u3} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 f)
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] (pkg : AbstractCompletion.{u3} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (f : α -> β -> γ) [_inst_4 : CompleteSpace.{u1} γ _inst_3], UniformContinuous₂.{u3, u2, u1} (AbstractCompletion.space.{u3} α _inst_1 pkg) (AbstractCompletion.space.{u2} β _inst_2 pkg') γ (AbstractCompletion.uniformStruct.{u3} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg') _inst_3 (AbstractCompletion.extend₂.{u3, u2, u1} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.uniform_continuous_extension₂ AbstractCompletion.uniformContinuous_extension₂ₓ'. -/
 theorem uniformContinuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) :=
   by
   rw [uniformContinuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
@@ -514,34 +424,16 @@ protected def map₂ (f : α → β → γ) : hatα → hatβ → hatγ :=
 #align abstract_completion.map₂ AbstractCompletion.map₂
 -/
 
-/- warning: abstract_completion.uniform_continuous_map₂ -> AbstractCompletion.uniformContinuous_map₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (pkg'' : AbstractCompletion.{u3} γ _inst_3) (f : α -> β -> γ), UniformContinuous₂.{u1, u2, u3} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.Space.{u3} γ _inst_3 pkg'') (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u3} γ _inst_3 pkg'') (AbstractCompletion.map₂.{u1, u2, u3} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 pkg'' f)
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] (pkg : AbstractCompletion.{u3} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (pkg'' : AbstractCompletion.{u1} γ _inst_3) (f : α -> β -> γ), UniformContinuous₂.{u3, u2, u1} (AbstractCompletion.space.{u3} α _inst_1 pkg) (AbstractCompletion.space.{u2} β _inst_2 pkg') (AbstractCompletion.space.{u1} γ _inst_3 pkg'') (AbstractCompletion.uniformStruct.{u3} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u1} γ _inst_3 pkg'') (AbstractCompletion.map₂.{u3, u2, u1} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 pkg'' f)
-Case conversion may be inaccurate. Consider using '#align abstract_completion.uniform_continuous_map₂ AbstractCompletion.uniformContinuous_map₂ₓ'. -/
 theorem uniformContinuous_map₂ (f : α → β → γ) : UniformContinuous₂ (pkg.zipWith pkg' pkg'' f) :=
   pkg.uniformContinuous_extension₂ pkg' _
 #align abstract_completion.uniform_continuous_map₂ AbstractCompletion.uniformContinuous_map₂
 
-/- warning: abstract_completion.continuous_map₂ -> AbstractCompletion.continuous_map₂ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (pkg'' : AbstractCompletion.{u3} γ _inst_3) {δ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} δ] {f : α -> β -> γ} {a : δ -> (AbstractCompletion.Space.{u1} α _inst_1 pkg)} {b : δ -> (AbstractCompletion.Space.{u2} β _inst_2 pkg')}, (Continuous.{u4, u1} δ (AbstractCompletion.Space.{u1} α _inst_1 pkg) _inst_4 (UniformSpace.toTopologicalSpace.{u1} (AbstractCompletion.Space.{u1} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u1} α _inst_1 pkg)) a) -> (Continuous.{u4, u2} δ (AbstractCompletion.Space.{u2} β _inst_2 pkg') _inst_4 (UniformSpace.toTopologicalSpace.{u2} (AbstractCompletion.Space.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg')) b) -> (Continuous.{u4, u3} δ (AbstractCompletion.Space.{u3} γ _inst_3 pkg'') _inst_4 (UniformSpace.toTopologicalSpace.{u3} (AbstractCompletion.Space.{u3} γ _inst_3 pkg'') (AbstractCompletion.uniformStruct.{u3} γ _inst_3 pkg'')) (fun (d : δ) => AbstractCompletion.map₂.{u1, u2, u3} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 pkg'' f (a d) (b d)))
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] (pkg : AbstractCompletion.{u3} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (pkg'' : AbstractCompletion.{u1} γ _inst_3) {δ : Type.{u4}} [_inst_4 : TopologicalSpace.{u4} δ] {f : α -> β -> γ} {a : δ -> (AbstractCompletion.space.{u3} α _inst_1 pkg)} {b : δ -> (AbstractCompletion.space.{u2} β _inst_2 pkg')}, (Continuous.{u4, u3} δ (AbstractCompletion.space.{u3} α _inst_1 pkg) _inst_4 (UniformSpace.toTopologicalSpace.{u3} (AbstractCompletion.space.{u3} α _inst_1 pkg) (AbstractCompletion.uniformStruct.{u3} α _inst_1 pkg)) a) -> (Continuous.{u4, u2} δ (AbstractCompletion.space.{u2} β _inst_2 pkg') _inst_4 (UniformSpace.toTopologicalSpace.{u2} (AbstractCompletion.space.{u2} β _inst_2 pkg') (AbstractCompletion.uniformStruct.{u2} β _inst_2 pkg')) b) -> (Continuous.{u4, u1} δ (AbstractCompletion.space.{u1} γ _inst_3 pkg'') _inst_4 (UniformSpace.toTopologicalSpace.{u1} (AbstractCompletion.space.{u1} γ _inst_3 pkg'') (AbstractCompletion.uniformStruct.{u1} γ _inst_3 pkg'')) (fun (d : δ) => AbstractCompletion.map₂.{u3, u2, u1} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 pkg'' f (a d) (b d)))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.continuous_map₂ AbstractCompletion.continuous_map₂ₓ'. -/
 theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → hatα} {b : δ → hatβ}
     (ha : Continuous a) (hb : Continuous b) :
     Continuous fun d : δ => pkg.zipWith pkg' pkg'' f (a d) (b d) :=
   ((pkg.uniformContinuous_map₂ pkg' pkg'' f).Continuous.comp (Continuous.prod_mk ha hb) : _)
 #align abstract_completion.continuous_map₂ AbstractCompletion.continuous_map₂
 
-/- warning: abstract_completion.map₂_coe_coe -> AbstractCompletion.map₂_coe_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (pkg : AbstractCompletion.{u1} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u3}} [_inst_3 : UniformSpace.{u3} γ] (pkg'' : AbstractCompletion.{u3} γ _inst_3) (a : α) (b : β) (f : α -> β -> γ), (UniformContinuous₂.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f) -> (Eq.{succ u3} (AbstractCompletion.Space.{u3} γ _inst_3 pkg'') (AbstractCompletion.map₂.{u1, u2, u3} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 pkg'' f (AbstractCompletion.coe.{u1} α _inst_1 pkg a) (AbstractCompletion.coe.{u2} β _inst_2 pkg' b)) (AbstractCompletion.coe.{u3} γ _inst_3 pkg'' (f a b)))
-but is expected to have type
-  forall {α : Type.{u3}} [_inst_1 : UniformSpace.{u3} α] (pkg : AbstractCompletion.{u3} α _inst_1) {β : Type.{u2}} [_inst_2 : UniformSpace.{u2} β] (pkg' : AbstractCompletion.{u2} β _inst_2) {γ : Type.{u1}} [_inst_3 : UniformSpace.{u1} γ] (pkg'' : AbstractCompletion.{u1} γ _inst_3) (a : α) (b : β) (f : α -> β -> γ), (UniformContinuous₂.{u3, u2, u1} α β γ _inst_1 _inst_2 _inst_3 f) -> (Eq.{succ u1} (AbstractCompletion.space.{u1} γ _inst_3 pkg'') (AbstractCompletion.map₂.{u3, u2, u1} α _inst_1 pkg β _inst_2 pkg' γ _inst_3 pkg'' f (AbstractCompletion.coe.{u3} α _inst_1 pkg a) (AbstractCompletion.coe.{u2} β _inst_2 pkg' b)) (AbstractCompletion.coe.{u1} γ _inst_3 pkg'' (f a b)))
-Case conversion may be inaccurate. Consider using '#align abstract_completion.map₂_coe_coe AbstractCompletion.map₂_coe_coeₓ'. -/
 theorem map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : UniformContinuous₂ f) :
     pkg.zipWith pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=
   pkg.extension₂_coe_coe pkg' (pkg''.uniformContinuous_coe.comp hf) a b

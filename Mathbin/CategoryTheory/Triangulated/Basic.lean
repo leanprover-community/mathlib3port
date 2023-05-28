@@ -41,12 +41,6 @@ We work in a category `C` equipped with a shift.
 -/
 variable (C : Type u) [Category.{v} C] [HasShift C ℤ]
 
-/- warning: category_theory.pretriangulated.triangle -> CategoryTheory.Pretriangulated.Triangle is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], Sort.{max (succ u2) (succ u1)}
-but is expected to have type
-  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], Sort.{max (succ u2) (succ u1)}
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle CategoryTheory.Pretriangulated.Triangleₓ'. -/
 /-- A triangle in `C` is a sextuple `(X,Y,Z,f,g,h)` where `X,Y,Z` are objects of `C`,
 and `f : X ⟶ Y`, `g : Y ⟶ Z`, `h : Z ⟶ X⟦1⟧` are morphisms in `C`.
 See <https://stacks.math.columbia.edu/tag/0144>.
@@ -62,12 +56,6 @@ structure Triangle where mk' ::
 
 variable {C}
 
-/- warning: category_theory.pretriangulated.triangle.mk -> CategoryTheory.Pretriangulated.Triangle.mk is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] {X : C} {Y : C} {Z : C}, (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) -> (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y Z) -> (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Z (CategoryTheory.Functor.obj.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.addMonoid _inst_2 (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) X)) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] {X : C} {Y : C} {Z : C}, (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) -> (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y Z) -> (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Z (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt _inst_2 (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) X)) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle.mk CategoryTheory.Pretriangulated.Triangle.mkₓ'. -/
 /-- A triangle `(X,Y,Z,f,g,h)` in `C` is defined by the morphisms `f : X ⟶ Y`, `g : Y ⟶ Z`
 and `h : Z ⟶ X⟦1⟧`.
 -/
@@ -91,12 +79,6 @@ open ZeroObject
 instance : Inhabited (Triangle C) :=
   ⟨⟨0, 0, 0, 0, 0, 0⟩⟩
 
-/- warning: category_theory.pretriangulated.contractible_triangle -> CategoryTheory.Pretriangulated.contractibleTriangle is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1], C -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1], C -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.contractible_triangle CategoryTheory.Pretriangulated.contractibleTriangleₓ'. -/
 /-- For each object in `C`, there is a triangle of the form `(X,X,0,𝟙 X,0,0)`
 -/
 @[simps]
@@ -106,12 +88,6 @@ def contractibleTriangle (X : C) : Triangle C :=
 
 end
 
-/- warning: category_theory.pretriangulated.triangle_morphism -> CategoryTheory.Pretriangulated.TriangleMorphism is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2) -> Type.{u1}
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2) -> (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2) -> Type.{u1}
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle_morphism CategoryTheory.Pretriangulated.TriangleMorphismₓ'. -/
 /-- A morphism of triangles `(X,Y,Z,f,g,h) ⟶ (X',Y',Z',f',g',h')` in `C` is a triple of morphisms
 `a : X ⟶ X'`, `b : Y ⟶ Y'`, `c : Z ⟶ Z'` such that
 `a ≫ f' = f ≫ b`, `b ≫ g' = g ≫ c`, and `a⟦1⟧' ≫ h = h' ≫ c`.
@@ -145,12 +121,6 @@ restate_axiom triangle_morphism.comm₃'
 
 attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
 
-/- warning: category_theory.pretriangulated.triangle_morphism_id -> CategoryTheory.Pretriangulated.triangleMorphismId is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] (T : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2), CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T T
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] (T : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2), CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T T
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle_morphism_id CategoryTheory.Pretriangulated.triangleMorphismIdₓ'. -/
 /-- The identity triangle morphism.
 -/
 @[simps]
@@ -166,12 +136,6 @@ instance (T : Triangle C) : Inhabited (TriangleMorphism T T) :=
 
 variable {T₁ T₂ T₃ : Triangle C}
 
-/- warning: category_theory.pretriangulated.triangle_morphism.comp -> CategoryTheory.Pretriangulated.TriangleMorphism.comp is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid] {T₁ : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2} {T₂ : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2} {T₃ : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2}, (CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T₁ T₂) -> (CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T₂ T₃) -> (CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T₁ T₃)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] {T₁ : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2} {T₂ : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2} {T₃ : CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2}, (CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T₁ T₂) -> (CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T₂ T₃) -> (CategoryTheory.Pretriangulated.TriangleMorphism.{u1, u2} C _inst_1 _inst_2 T₁ T₃)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle_morphism.comp CategoryTheory.Pretriangulated.TriangleMorphism.compₓ'. -/
 /-- Composition of triangle morphisms gives a triangle morphism.
 -/
 @[simps]
@@ -182,12 +146,6 @@ def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism
   hom₃ := f.hom₃ ≫ g.hom₃
 #align category_theory.pretriangulated.triangle_morphism.comp CategoryTheory.Pretriangulated.TriangleMorphism.comp
 
-/- warning: category_theory.pretriangulated.triangle_category -> CategoryTheory.Pretriangulated.triangleCategory is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.addMonoid], CategoryTheory.Category.{u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt], CategoryTheory.Category.{u1, max u2 u1} (CategoryTheory.Pretriangulated.Triangle.{u1, u2} C _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle_category CategoryTheory.Pretriangulated.triangleCategoryₓ'. -/
 /-- Triangles with triangle morphisms form a category.
 -/
 @[simps]
@@ -198,9 +156,6 @@ instance triangleCategory : Category (Triangle C)
   comp A B C f g := f.comp g
 #align category_theory.pretriangulated.triangle_category CategoryTheory.Pretriangulated.triangleCategory
 
-/- warning: category_theory.pretriangulated.triangle.hom_mk -> CategoryTheory.Pretriangulated.Triangle.homMk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle.hom_mk CategoryTheory.Pretriangulated.Triangle.homMkₓ'. -/
 /-- a constructor for morphisms of triangles -/
 @[simps]
 def Triangle.homMk (A B : Triangle C) (hom₁ : A.obj₁ ⟶ B.obj₁) (hom₂ : A.obj₂ ⟶ B.obj₂)
@@ -214,9 +169,6 @@ def Triangle.homMk (A B : Triangle C) (hom₁ : A.obj₁ ⟶ B.obj₁) (hom₂ :
     comm₃' := comm₃ }
 #align category_theory.pretriangulated.triangle.hom_mk CategoryTheory.Pretriangulated.Triangle.homMk
 
-/- warning: category_theory.pretriangulated.triangle.iso_mk -> CategoryTheory.Pretriangulated.Triangle.isoMk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated.triangle.iso_mk CategoryTheory.Pretriangulated.Triangle.isoMkₓ'. -/
 /-- a constructor for isomorphisms of triangles -/
 @[simps]
 def Triangle.isoMk (A B : Triangle C) (iso₁ : A.obj₁ ≅ B.obj₁) (iso₂ : A.obj₂ ≅ B.obj₂)

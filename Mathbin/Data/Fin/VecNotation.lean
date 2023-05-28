@@ -123,12 +123,6 @@ theorem head_fin_const (a : α) : (vecHead fun i : Fin (n + 1) => a) = a :=
 #align matrix.head_fin_const Matrix.head_fin_const
 -/
 
-/- warning: matrix.cons_val_zero -> Matrix.cons_val_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : Nat} (x : α) (u : (Fin m) -> α), Eq.{succ u1} α (Matrix.vecCons.{u1} α m x u (OfNat.ofNat.{0} (Fin (Nat.succ m)) 0 (OfNat.mk.{0} (Fin (Nat.succ m)) 0 (Zero.zero.{0} (Fin (Nat.succ m)) (Fin.hasZeroOfNeZero (Nat.succ m) (NeZero.succ m)))))) x
-but is expected to have type
-  forall {α : Type.{u1}} {m : Nat} (x : α) (u : (Fin m) -> α), Eq.{succ u1} α (Matrix.vecCons.{u1} α m x u (OfNat.ofNat.{0} (Fin (Nat.succ m)) 0 (Fin.instOfNatFin (Nat.succ m) 0 (NeZero.succ m)))) x
-Case conversion may be inaccurate. Consider using '#align matrix.cons_val_zero Matrix.cons_val_zeroₓ'. -/
 @[simp]
 theorem cons_val_zero (x : α) (u : Fin m → α) : vecCons x u 0 = x :=
   rfl
@@ -168,12 +162,6 @@ theorem tail_cons (x : α) (u : Fin m → α) : vecTail (vecCons x u) = u := by 
 #align matrix.tail_cons Matrix.tail_cons
 -/
 
-/- warning: matrix.empty_val' -> Matrix.empty_val' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n' : Type.{u2}} (j : n'), Eq.{succ u1} ((Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) (fun (i : Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Matrix.vecEmpty.{max u2 u1} (n' -> α) i j) (Matrix.vecEmpty.{u1} α)
-but is expected to have type
-  forall {α : Type.{u2}} {n' : Type.{u1}} (j : n'), Eq.{succ u2} ((Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α) (fun (i : Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Matrix.vecEmpty.{max u2 u1} (n' -> α) i j) (Matrix.vecEmpty.{u2} α)
-Case conversion may be inaccurate. Consider using '#align matrix.empty_val' Matrix.empty_val'ₓ'. -/
 @[simp]
 theorem empty_val' {n' : Type _} (j : n') : (fun i => (![] : Fin 0 → n' → α) i j) = ![] :=
   empty_eq _
@@ -186,12 +174,6 @@ theorem cons_head_tail (u : Fin m.succ → α) : vecCons (vecHead u) (vecTail u)
 #align matrix.cons_head_tail Matrix.cons_head_tail
 -/
 
-/- warning: matrix.range_cons -> Matrix.range_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (x : α) (u : (Fin n) -> α), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, 1} α (Fin (Nat.succ n)) (Matrix.vecCons.{u1} α n x u)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x) (Set.range.{u1, 1} α (Fin n) u))
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (x : α) (u : (Fin n) -> α), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, 1} α (Fin (Nat.succ n)) (Matrix.vecCons.{u1} α n x u)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x) (Set.range.{u1, 1} α (Fin n) u))
-Case conversion may be inaccurate. Consider using '#align matrix.range_cons Matrix.range_consₓ'. -/
 @[simp]
 theorem range_cons (x : α) (u : Fin n → α) : Set.range (vecCons x u) = {x} ∪ Set.range u :=
   Set.ext fun y => by simp [Fin.exists_fin_succ, eq_comm]
@@ -308,9 +290,6 @@ def vecAppend {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : F
 #align matrix.vec_append Matrix.vecAppend
 -/
 
-/- warning: matrix.vec_append_eq_ite -> Matrix.vecAppend_eq_ite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.vec_append_eq_ite Matrix.vecAppend_eq_iteₓ'. -/
 theorem vecAppend_eq_ite {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : Fin n → α) :
     vecAppend ho u v = fun i =>
       if h : (i : ℕ) < m then u ⟨i, h⟩
@@ -323,24 +302,12 @@ theorem vecAppend_eq_ite {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m →
   rfl
 #align matrix.vec_append_eq_ite Matrix.vecAppend_eq_ite
 
-/- warning: matrix.vec_append_apply_zero -> Matrix.vecAppend_apply_zero is a dubious translation:
-lean 3 declaration is
-  forall {m : Nat} {n : Nat} {α : Type.{u1}} {o : Nat} (ho : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) o (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) n)) (u : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> α) (v : (Fin n) -> α), Eq.{succ u1} α (Matrix.vecAppend.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) n α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) o (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) ho u v (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) o (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) o (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) o (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) o (One.one.{0} Nat Nat.hasOne)) (NeZero.succ o)))))) (u (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (One.one.{0} Nat Nat.hasOne)) (NeZero.succ m))))))
-but is expected to have type
-  forall {m : Nat} {n : Nat} {α : Type.{u1}} {o : Nat} (ho : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) o (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) n)) (u : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> α) (v : (Fin n) -> α), Eq.{succ u1} α (Matrix.vecAppend.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) n α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) o (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) ho u v (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) o (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) o (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ o)))) (u (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ m))))
-Case conversion may be inaccurate. Consider using '#align matrix.vec_append_apply_zero Matrix.vecAppend_apply_zeroₓ'. -/
 @[simp]
 theorem vecAppend_apply_zero {α : Type _} {o : ℕ} (ho : o + 1 = m + 1 + n) (u : Fin (m + 1) → α)
     (v : Fin n → α) : vecAppend ho u v 0 = u 0 :=
   rfl
 #align matrix.vec_append_apply_zero Matrix.vecAppend_apply_zero
 
-/- warning: matrix.empty_vec_append -> Matrix.empty_vecAppend is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} (v : (Fin n) -> α), Eq.{succ u1} ((Fin n) -> α) (Matrix.vecAppend.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat (AddZeroClass.toHasZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))))) n α n (Eq.symm.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toHasAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat (AddZeroClass.toHasZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))))) n) n (zero_add.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) n)) (Matrix.vecEmpty.{u1} α) v) v
-but is expected to have type
-  forall {α : Type.{u1}} {n : Nat} (v : (Fin n) -> α), Eq.{succ u1} ((Fin n) -> α) (Matrix.vecAppend.{u1} (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n α n (Eq.symm.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n) n (zero_add.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) n)) (Matrix.vecEmpty.{u1} α) v) v
-Case conversion may be inaccurate. Consider using '#align matrix.empty_vec_append Matrix.empty_vecAppendₓ'. -/
 @[simp]
 theorem empty_vecAppend (v : Fin n → α) : vecAppend (zero_add _).symm ![] v = v := by ext;
   simp [vec_append_eq_ite]
@@ -422,12 +389,6 @@ theorem vecAlt1_vecAppend (v : Fin (n + 1) → α) : vecAlt1 rfl (vecAppend rfl 
 #align matrix.vec_alt1_vec_append Matrix.vecAlt1_vecAppend
 -/
 
-/- warning: matrix.vec_head_vec_alt0 -> Matrix.vecHead_vecAlt0 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : Nat} {n : Nat} (hm : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (v : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) -> α), Eq.{succ u1} α (Matrix.vecHead.{u1} α n (Matrix.vecAlt0.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Nat.succ n) hm v)) (v (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))) (NeZero.succ (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (One.one.{0} Nat Nat.hasOne))))))))
-but is expected to have type
-  forall {α : Type.{u1}} {m : Nat} {n : Nat} (hm : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (v : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) -> α), Eq.{succ u1} α (Matrix.vecHead.{u1} α n (Matrix.vecAlt0.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Nat.succ n) hm v)) (v (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (NeZero.succ (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
-Case conversion may be inaccurate. Consider using '#align matrix.vec_head_vec_alt0 Matrix.vecHead_vecAlt0ₓ'. -/
 @[simp]
 theorem vecHead_vecAlt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) :
     vecHead (vecAlt0 hm v) = v 0 :=
@@ -517,23 +478,11 @@ section Smul
 
 variable {M : Type _} [SMul M α]
 
-/- warning: matrix.smul_empty -> Matrix.smul_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : SMul.{u2, u1} M α] (x : M) (v : (Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α), Eq.{succ u1} ((Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) (SMul.smul.{u2, u1} M ((Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) (Function.hasSMul.{0, u2, u1} (Fin (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) M α _inst_1) x v) (Matrix.vecEmpty.{u1} α)
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : SMul.{u1, u2} M α] (x : M) (v : (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α), Eq.{succ u2} ((Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α) (HSMul.hSMul.{u1, u2, u2} M ((Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α) ((Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α) (instHSMul.{u1, u2} M ((Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α) (Pi.instSMul.{0, u2, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) M (fun (a._@.Mathlib.Data.Fin.VecNotation._hyg.4198 : Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => α) (fun (i : Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => _inst_1))) x v) (Matrix.vecEmpty.{u2} α)
-Case conversion may be inaccurate. Consider using '#align matrix.smul_empty Matrix.smul_emptyₓ'. -/
 @[simp]
 theorem smul_empty (x : M) (v : Fin 0 → α) : x • v = ![] :=
   empty_eq _
 #align matrix.smul_empty Matrix.smul_empty
 
-/- warning: matrix.smul_cons -> Matrix.smul_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {n : Nat} {M : Type.{u2}} [_inst_1 : SMul.{u2, u1} M α] (x : M) (y : α) (v : (Fin n) -> α), Eq.{succ u1} ((Fin (Nat.succ n)) -> α) (SMul.smul.{u2, u1} M ((Fin (Nat.succ n)) -> α) (Function.hasSMul.{0, u2, u1} (Fin (Nat.succ n)) M α _inst_1) x (Matrix.vecCons.{u1} α n y v)) (Matrix.vecCons.{u1} α n (SMul.smul.{u2, u1} M α _inst_1 x y) (SMul.smul.{u2, u1} M ((Fin n) -> α) (Function.hasSMul.{0, u2, u1} (Fin n) M α _inst_1) x v))
-but is expected to have type
-  forall {α : Type.{u2}} {n : Nat} {M : Type.{u1}} [_inst_1 : SMul.{u1, u2} M α] (x : M) (y : α) (v : (Fin n) -> α), Eq.{succ u2} ((Fin (Nat.succ n)) -> α) (HSMul.hSMul.{u1, u2, u2} M ((Fin (Nat.succ n)) -> α) ((Fin (Nat.succ n)) -> α) (instHSMul.{u1, u2} M ((Fin (Nat.succ n)) -> α) (Pi.instSMul.{0, u2, u1} (Fin (Nat.succ n)) M (fun (a._@.Mathlib.Data.Fin.VecNotation._hyg.29 : Fin (Nat.succ n)) => α) (fun (i : Fin (Nat.succ n)) => _inst_1))) x (Matrix.vecCons.{u2} α n y v)) (Matrix.vecCons.{u2} α n (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α _inst_1) x y) (HSMul.hSMul.{u1, u2, u2} M ((Fin n) -> α) ((Fin n) -> α) (instHSMul.{u1, u2} M ((Fin n) -> α) (Pi.instSMul.{0, u2, u1} (Fin n) M (fun (a._@.Mathlib.Data.Fin.VecNotation._hyg.4235 : Fin n) => α) (fun (i : Fin n) => _inst_1))) x v))
-Case conversion may be inaccurate. Consider using '#align matrix.smul_cons Matrix.smul_consₓ'. -/
 @[simp]
 theorem smul_cons (x : M) (y : α) (v : Fin n → α) : x • vecCons y v = vecCons (x • y) (x • v) := by
   ext i; refine' Fin.cases _ _ i <;> simp

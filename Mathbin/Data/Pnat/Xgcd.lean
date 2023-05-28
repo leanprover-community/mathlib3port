@@ -532,12 +532,6 @@ theorem gcdB'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b :=
 #align pnat.gcd_b'_coe PNat.gcdB'_coe
 -/
 
-/- warning: pnat.gcd_props -> PNat.gcd_props is a dubious translation:
-lean 3 declaration is
-  forall (a : PNat) (b : PNat), let d : PNat := PNat.gcdD a b; let w : PNat := PNat.gcdW a b; let x : Nat := PNat.gcdX a b; let y : Nat := PNat.gcdY a b; let z : PNat := PNat.gcdZ a b; let a' : PNat := PNat.gcdA' a b; let b' : PNat := PNat.gcdB' a b; And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) w z) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x y))) (And (Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) a' d)) (And (Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) b' d)) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) z a') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b')))) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) w b') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a')))) (And (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) z) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d))) (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) w) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d))))))))
-but is expected to have type
-  forall (a : PNat) (b : PNat), let d : PNat := PNat.gcdD a b; let w : PNat := PNat.gcdW a b; let x : Nat := PNat.gcdX a b; let y : Nat := PNat.gcdY a b; let z : PNat := PNat.gcdZ a b; let a' : PNat := PNat.gcdA' a b; let b' : PNat := PNat.gcdB' a b; And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) w z) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x y))) (And (Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) a' d)) (And (Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) b' d)) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) z a') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x (PNat.val b')))) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) w b') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y (PNat.val a')))) (And (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.val z) (PNat.val a)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x (PNat.val b)) (PNat.val d))) (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.val w) (PNat.val b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y (PNat.val a)) (PNat.val d))))))))
-Case conversion may be inaccurate. Consider using '#align pnat.gcd_props PNat.gcd_propsₓ'. -/
 theorem gcd_props :
     let d := gcdD a b
     let w := gcdW a b
@@ -595,52 +589,22 @@ theorem gcd_eq : gcdD a b = gcd a b :=
 #align pnat.gcd_eq PNat.gcd_eq
 -/
 
-/- warning: pnat.gcd_det_eq -> PNat.gcd_det_eq is a dubious translation:
-lean 3 declaration is
-  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdW a b) (PNat.gcdZ a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (PNat.gcdX a b) (PNat.gcdY a b)))
-but is expected to have type
-  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdW a b) (PNat.gcdZ a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.gcdX a b) (PNat.gcdY a b)))
-Case conversion may be inaccurate. Consider using '#align pnat.gcd_det_eq PNat.gcd_det_eqₓ'. -/
 theorem gcd_det_eq : gcdW a b * gcdZ a b = succPNat (gcdX a b * gcdY a b) :=
   (gcd_props a b).1
 #align pnat.gcd_det_eq PNat.gcd_det_eq
 
-/- warning: pnat.gcd_a_eq -> PNat.gcd_a_eq is a dubious translation:
-lean 3 declaration is
-  forall (a : PNat) (b : PNat), Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdA' a b) (PNat.gcd a b))
-but is expected to have type
-  forall (a : PNat) (b : PNat), Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdA' a b) (PNat.gcd a b))
-Case conversion may be inaccurate. Consider using '#align pnat.gcd_a_eq PNat.gcd_a_eqₓ'. -/
 theorem gcd_a_eq : a = gcdA' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.1
 #align pnat.gcd_a_eq PNat.gcd_a_eq
 
-/- warning: pnat.gcd_b_eq -> PNat.gcd_b_eq is a dubious translation:
-lean 3 declaration is
-  forall (a : PNat) (b : PNat), Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdB' a b) (PNat.gcd a b))
-but is expected to have type
-  forall (a : PNat) (b : PNat), Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdB' a b) (PNat.gcd a b))
-Case conversion may be inaccurate. Consider using '#align pnat.gcd_b_eq PNat.gcd_b_eqₓ'. -/
 theorem gcd_b_eq : b = gcdB' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.1
 #align pnat.gcd_b_eq PNat.gcd_b_eq
 
-/- warning: pnat.gcd_rel_left' -> PNat.gcd_rel_left' is a dubious translation:
-lean 3 declaration is
-  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdZ a b) (PNat.gcdA' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (PNat.gcdX a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (PNat.gcdB' a b))))
-but is expected to have type
-  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdZ a b) (PNat.gcdA' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.gcdX a b) (PNat.val (PNat.gcdB' a b))))
-Case conversion may be inaccurate. Consider using '#align pnat.gcd_rel_left' PNat.gcd_rel_left'ₓ'. -/
 theorem gcd_rel_left' : gcdZ a b * gcdA' a b = succPNat (gcdX a b * gcdB' a b) :=
   (gcd_props a b).2.2.2.1
 #align pnat.gcd_rel_left' PNat.gcd_rel_left'
 
-/- warning: pnat.gcd_rel_right' -> PNat.gcd_rel_right' is a dubious translation:
-lean 3 declaration is
-  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdW a b) (PNat.gcdB' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (PNat.gcdY a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (PNat.gcdA' a b))))
-but is expected to have type
-  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdW a b) (PNat.gcdB' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.gcdY a b) (PNat.val (PNat.gcdA' a b))))
-Case conversion may be inaccurate. Consider using '#align pnat.gcd_rel_right' PNat.gcd_rel_right'ₓ'. -/
 theorem gcd_rel_right' : gcdW a b * gcdB' a b = succPNat (gcdY a b * gcdA' a b) :=
   (gcd_props a b).2.2.2.2.1
 #align pnat.gcd_rel_right' PNat.gcd_rel_right'

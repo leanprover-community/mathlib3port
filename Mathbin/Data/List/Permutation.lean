@@ -57,12 +57,6 @@ variable {α β : Type _}
 
 namespace List
 
-/- warning: list.permutations_aux2_fst -> List.permutationsAux2_fst is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (r : List.{u2} β) (ys : List.{u1} α) (f : (List.{u1} α) -> β), Eq.{succ u1} (List.{u1} α) (Prod.fst.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r ys f)) (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) ys ts)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (r : List.{u1} β) (ys : List.{u2} α) (f : (List.{u2} α) -> β), Eq.{succ u2} (List.{u2} α) (Prod.fst.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r ys f)) (HAppend.hAppend.{u2, u2, u2} (List.{u2} α) (List.{u2} α) (List.{u2} α) (instHAppend.{u2} (List.{u2} α) (List.instAppendList.{u2} α)) ys ts)
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_fst List.permutationsAux2_fstₓ'. -/
 theorem permutationsAux2_fst (t : α) (ts : List α) (r : List β) :
     ∀ (ys : List α) (f : List α → β), (permutationsAux2 t ts r ys f).1 = ys ++ ts
   | [], f => rfl
@@ -73,24 +67,12 @@ theorem permutationsAux2_fst (t : α) (ts : List α) (r : List β) :
     | ⟨_, zs⟩, rfl => rfl
 #align list.permutations_aux2_fst List.permutationsAux2_fst
 
-/- warning: list.permutations_aux2_snd_nil -> List.permutationsAux2_snd_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (r : List.{u2} β) (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r (List.nil.{u1} α) f)) r
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (r : List.{u1} β) (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r (List.nil.{u2} α) f)) r
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_snd_nil List.permutationsAux2_snd_nilₓ'. -/
 @[simp]
 theorem permutationsAux2_snd_nil (t : α) (ts : List α) (r : List β) (f : List α → β) :
     (permutationsAux2 t ts r [] f).2 = r :=
   rfl
 #align list.permutations_aux2_snd_nil List.permutationsAux2_snd_nil
 
-/- warning: list.permutations_aux2_snd_cons -> List.permutationsAux2_snd_cons is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (r : List.{u2} β) (y : α) (ys : List.{u1} α) (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r (List.cons.{u1} α y ys) f)) (List.cons.{u2} β (f (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) (List.cons.{u1} α t (List.cons.{u1} α y ys)) ts)) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r ys (fun (x : List.{u1} α) => f (List.cons.{u1} α y x)))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (r : List.{u1} β) (y : α) (ys : List.{u2} α) (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r (List.cons.{u2} α y ys) f)) (List.cons.{u1} β (f (HAppend.hAppend.{u2, u2, u2} (List.{u2} α) (List.{u2} α) (List.{u2} α) (instHAppend.{u2} (List.{u2} α) (List.instAppendList.{u2} α)) (List.cons.{u2} α t (List.cons.{u2} α y ys)) ts)) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r ys (fun (x : List.{u2} α) => f (List.cons.{u2} α y x)))))
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_snd_cons List.permutationsAux2_snd_consₓ'. -/
 @[simp]
 theorem permutationsAux2_snd_cons (t : α) (ts : List α) (r : List β) (y : α) (ys : List α)
     (f : List α → β) :
@@ -103,24 +85,12 @@ theorem permutationsAux2_snd_cons (t : α) (ts : List α) (r : List β) (y : α)
   | ⟨_, zs⟩, rfl => rfl
 #align list.permutations_aux2_snd_cons List.permutationsAux2_snd_cons
 
-/- warning: list.permutations_aux2_append -> List.permutationsAux2_append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (r : List.{u2} β) (ys : List.{u1} α) (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts (List.nil.{u2} β) ys f)) r) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r ys f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (r : List.{u1} β) (ys : List.{u2} α) (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (HAppend.hAppend.{u1, u1, u1} (List.{u1} β) (List.{u1} β) (List.{u1} β) (instHAppend.{u1} (List.{u1} β) (List.instAppendList.{u1} β)) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts (List.nil.{u1} β) ys f)) r) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r ys f))
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_append List.permutationsAux2_appendₓ'. -/
 /-- The `r` argument to `permutations_aux2` is the same as appending. -/
 theorem permutationsAux2_append (t : α) (ts : List α) (r : List β) (ys : List α) (f : List α → β) :
     (permutationsAux2 t ts nil ys f).2 ++ r = (permutationsAux2 t ts r ys f).2 := by
   induction ys generalizing f <;> simp [*]
 #align list.permutations_aux2_append List.permutationsAux2_append
 
-/- warning: list.permutations_aux2_comp_append -> List.permutationsAux2_comp_append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {t : α} {ts : List.{u1} α} {ys : List.{u1} α} {r : List.{u2} β} (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t (List.nil.{u1} α) r ys (fun (x : List.{u1} α) => f (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) x ts)))) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r ys f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {t : α} {ts : List.{u2} α} {ys : List.{u2} α} {r : List.{u1} β} (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t (List.nil.{u2} α) r ys (fun (x : List.{u2} α) => f (HAppend.hAppend.{u2, u2, u2} (List.{u2} α) (List.{u2} α) (List.{u2} α) (instHAppend.{u2} (List.{u2} α) (List.instAppendList.{u2} α)) x ts)))) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r ys f))
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_comp_append List.permutationsAux2_comp_appendₓ'. -/
 /-- The `ts` argument to `permutations_aux2` can be folded into the `f` argument. -/
 theorem permutationsAux2_comp_append {t : α} {ts ys : List α} {r : List β} (f : List α → β) :
     (permutationsAux2 t [] r ys fun x => f (x ++ ts)).2 = (permutationsAux2 t ts r ys f).2 :=
@@ -130,12 +100,6 @@ theorem permutationsAux2_comp_append {t : α} {ts ys : List α} {r : List β} (f
   · simp [ys_ih fun xs => f (ys_hd :: xs)]
 #align list.permutations_aux2_comp_append List.permutationsAux2_comp_append
 
-/- warning: list.map_permutations_aux2' -> List.map_permutationsAux2' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {α' : Type.{u3}} {β' : Type.{u4}} (g : α -> α') (g' : β -> β') (t : α) (ts : List.{u1} α) (ys : List.{u1} α) (r : List.{u2} β) (f : (List.{u1} α) -> β) (f' : (List.{u3} α') -> β'), (forall (a : List.{u1} α), Eq.{succ u4} β' (g' (f a)) (f' (List.map.{u1, u3} α α' g a))) -> (Eq.{succ u4} (List.{u4} β') (List.map.{u2, u4} β β' g' (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r ys f))) (Prod.snd.{u3, u4} (List.{u3} α') (List.{u4} β') (List.permutationsAux2.{u3, u4} α' β' (g t) (List.map.{u1, u3} α α' g ts) (List.map.{u2, u4} β β' g' r) (List.map.{u1, u3} α α' g ys) f')))
-but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {α' : Type.{u2}} {β' : Type.{u1}} (g : α -> α') (g' : β -> β') (t : α) (ts : List.{u4} α) (ys : List.{u4} α) (r : List.{u3} β) (f : (List.{u4} α) -> β) (f' : (List.{u2} α') -> β'), (forall (a : List.{u4} α), Eq.{succ u1} β' (g' (f a)) (f' (List.map.{u4, u2} α α' g a))) -> (Eq.{succ u1} (List.{u1} β') (List.map.{u3, u1} β β' g' (Prod.snd.{u4, u3} (List.{u4} α) (List.{u3} β) (List.permutationsAux2.{u4, u3} α β t ts r ys f))) (Prod.snd.{u2, u1} (List.{u2} α') (List.{u1} β') (List.permutationsAux2.{u2, u1} α' β' (g t) (List.map.{u4, u2} α α' g ts) (List.map.{u3, u1} β β' g' r) (List.map.{u4, u2} α α' g ys) f')))
-Case conversion may be inaccurate. Consider using '#align list.map_permutations_aux2' List.map_permutationsAux2'ₓ'. -/
 theorem map_permutationsAux2' {α β α' β'} (g : α → α') (g' : β → β') (t : α) (ts ys : List α)
     (r : List β) (f : List α → β) (f' : List α' → β') (H : ∀ a, g' (f a) = f' (map g a)) :
     map g' (permutationsAux2 t ts r ys f).2 =
@@ -145,12 +109,6 @@ theorem map_permutationsAux2' {α β α' β'} (g : α → α') (g' : β → β')
   apply ys_ih; simp [H]
 #align list.map_permutations_aux2' List.map_permutationsAux2'
 
-/- warning: list.map_permutations_aux2 -> List.map_permutationsAux2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (ys : List.{u1} α) (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (List.map.{u1, u2} (List.{u1} α) β f (Prod.snd.{u1, u1} (List.{u1} α) (List.{u1} (List.{u1} α)) (List.permutationsAux2.{u1, u1} α (List.{u1} α) t ts (List.nil.{u1} (List.{u1} α)) ys (id.{succ u1} (List.{u1} α))))) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts (List.nil.{u2} β) ys f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (ys : List.{u2} α) (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (List.map.{u2, u1} (List.{u2} α) β f (Prod.snd.{u2, u2} (List.{u2} α) (List.{u2} (List.{u2} α)) (List.permutationsAux2.{u2, u2} α (List.{u2} α) t ts (List.nil.{u2} (List.{u2} α)) ys (id.{succ u2} (List.{u2} α))))) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts (List.nil.{u1} β) ys f))
-Case conversion may be inaccurate. Consider using '#align list.map_permutations_aux2 List.map_permutationsAux2ₓ'. -/
 /-- The `f` argument to `permutations_aux2` when `r = []` can be eliminated. -/
 theorem map_permutationsAux2 (t : α) (ts : List α) (ys : List α) (f : List α → β) :
     (permutationsAux2 t ts [] ys id).2.map f = (permutationsAux2 t ts [] ys f).2 :=
@@ -159,12 +117,6 @@ theorem map_permutationsAux2 (t : α) (ts : List α) (ys : List α) (f : List α
   simp
 #align list.map_permutations_aux2 List.map_permutationsAux2
 
-/- warning: list.permutations_aux2_snd_eq -> List.permutationsAux2_snd_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (r : List.{u2} β) (ys : List.{u1} α) (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r ys f)) (Append.append.{u2} (List.{u2} β) (List.hasAppend.{u2} β) (List.map.{u1, u2} (List.{u1} α) β (fun (x : List.{u1} α) => f (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) x ts)) (Prod.snd.{u1, u1} (List.{u1} α) (List.{u1} (List.{u1} α)) (List.permutationsAux2.{u1, u1} α (List.{u1} α) t (List.nil.{u1} α) (List.nil.{u1} (List.{u1} α)) ys (id.{succ u1} (List.{u1} α))))) r)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (r : List.{u1} β) (ys : List.{u2} α) (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r ys f)) (HAppend.hAppend.{u1, u1, u1} (List.{u1} β) (List.{u1} β) (List.{u1} β) (instHAppend.{u1} (List.{u1} β) (List.instAppendList.{u1} β)) (List.map.{u2, u1} (List.{u2} α) β (fun (x : List.{u2} α) => f (HAppend.hAppend.{u2, u2, u2} (List.{u2} α) (List.{u2} α) (List.{u2} α) (instHAppend.{u2} (List.{u2} α) (List.instAppendList.{u2} α)) x ts)) (Prod.snd.{u2, u2} (List.{u2} α) (List.{u2} (List.{u2} α)) (List.permutationsAux2.{u2, u2} α (List.{u2} α) t (List.nil.{u2} α) (List.nil.{u2} (List.{u2} α)) ys (id.{succ u2} (List.{u2} α))))) r)
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_snd_eq List.permutationsAux2_snd_eqₓ'. -/
 /-- An expository lemma to show how all of `ts`, `r`, and `f` can be eliminated from
 `permutations_aux2`.
 
@@ -181,24 +133,12 @@ theorem permutationsAux2_snd_eq (t : α) (ts : List α) (r : List β) (ys : List
   by rw [← permutations_aux2_append, map_permutations_aux2, permutations_aux2_comp_append]
 #align list.permutations_aux2_snd_eq List.permutationsAux2_snd_eq
 
-/- warning: list.map_map_permutations_aux2 -> List.map_map_permutationsAux2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {α' : Type.{u2}} (g : α -> α') (t : α) (ts : List.{u1} α) (ys : List.{u1} α), Eq.{succ u2} (List.{u2} (List.{u2} α')) (List.map.{u1, u2} (List.{u1} α) (List.{u2} α') (List.map.{u1, u2} α α' g) (Prod.snd.{u1, u1} (List.{u1} α) (List.{u1} (List.{u1} α)) (List.permutationsAux2.{u1, u1} α (List.{u1} α) t ts (List.nil.{u1} (List.{u1} α)) ys (id.{succ u1} (List.{u1} α))))) (Prod.snd.{u2, u2} (List.{u2} α') (List.{u2} (List.{u2} α')) (List.permutationsAux2.{u2, u2} α' (List.{u2} α') (g t) (List.map.{u1, u2} α α' g ts) (List.nil.{u2} (List.{u2} α')) (List.map.{u1, u2} α α' g ys) (id.{succ u2} (List.{u2} α'))))
-but is expected to have type
-  forall {α : Type.{u2}} {α' : Type.{u1}} (g : α -> α') (t : α) (ts : List.{u2} α) (ys : List.{u2} α), Eq.{succ u1} (List.{u1} (List.{u1} α')) (List.map.{u2, u1} (List.{u2} α) (List.{u1} α') (List.map.{u2, u1} α α' g) (Prod.snd.{u2, u2} (List.{u2} α) (List.{u2} (List.{u2} α)) (List.permutationsAux2.{u2, u2} α (List.{u2} α) t ts (List.nil.{u2} (List.{u2} α)) ys (id.{succ u2} (List.{u2} α))))) (Prod.snd.{u1, u1} (List.{u1} α') (List.{u1} (List.{u1} α')) (List.permutationsAux2.{u1, u1} α' (List.{u1} α') (g t) (List.map.{u2, u1} α α' g ts) (List.nil.{u1} (List.{u1} α')) (List.map.{u2, u1} α α' g ys) (id.{succ u1} (List.{u1} α'))))
-Case conversion may be inaccurate. Consider using '#align list.map_map_permutations_aux2 List.map_map_permutationsAux2ₓ'. -/
 theorem map_map_permutationsAux2 {α α'} (g : α → α') (t : α) (ts ys : List α) :
     map (map g) (permutationsAux2 t ts [] ys id).2 =
       (permutationsAux2 (g t) (map g ts) [] (map g ys) id).2 :=
   map_permutationsAux2' _ _ _ _ _ _ _ _ fun _ => rfl
 #align list.map_map_permutations_aux2 List.map_map_permutationsAux2
 
-/- warning: list.map_map_permutations'_aux -> List.map_map_permutations'Aux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (t : α) (ts : List.{u1} α), Eq.{succ u2} (List.{u2} (List.{u2} β)) (List.map.{u1, u2} (List.{u1} α) (List.{u2} β) (List.map.{u1, u2} α β f) (List.permutations'Aux.{u1} α t ts)) (List.permutations'Aux.{u2} β (f t) (List.map.{u1, u2} α β f ts))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (t : α) (ts : List.{u2} α), Eq.{succ u1} (List.{u1} (List.{u1} β)) (List.map.{u2, u1} (List.{u2} α) (List.{u1} β) (List.map.{u2, u1} α β f) (List.permutations'Aux.{u2} α t ts)) (List.permutations'Aux.{u1} β (f t) (List.map.{u2, u1} α β f ts))
-Case conversion may be inaccurate. Consider using '#align list.map_map_permutations'_aux List.map_map_permutations'Auxₓ'. -/
 theorem map_map_permutations'Aux (f : α → β) (t : α) (ts : List α) :
     map (map f) (permutations'Aux t ts) = permutations'Aux (f t) (map f ts) := by
   induction' ts with a ts ih <;> [rfl;· simp [← ih]; rfl]
@@ -243,12 +183,6 @@ theorem mem_permutationsAux2' {t : α} {ts : List α} {ys : List α} {l : List �
 #align list.mem_permutations_aux2' List.mem_permutationsAux2'
 -/
 
-/- warning: list.length_permutations_aux2 -> List.length_permutationsAux2 is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (ys : List.{u1} α) (f : (List.{u1} α) -> β), Eq.{1} Nat (List.length.{u2} β (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts (List.nil.{u2} β) ys f))) (List.length.{u1} α ys)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (ys : List.{u2} α) (f : (List.{u2} α) -> β), Eq.{1} Nat (List.length.{u1} β (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts (List.nil.{u1} β) ys f))) (List.length.{u2} α ys)
-Case conversion may be inaccurate. Consider using '#align list.length_permutations_aux2 List.length_permutationsAux2ₓ'. -/
 theorem length_permutationsAux2 (t : α) (ts : List α) (ys : List α) (f : List α → β) :
     length (permutationsAux2 t ts [] ys f).2 = length ys := by
   induction ys generalizing f <;> simp [*]
@@ -324,12 +258,6 @@ theorem permutations_nil : permutations ([] : List α) = [[]] := by
 #align list.permutations_nil List.permutations_nil
 -/
 
-/- warning: list.map_permutations_aux -> List.map_permutationsAux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (ts : List.{u1} α) (is : List.{u1} α), Eq.{succ u2} (List.{u2} (List.{u2} β)) (List.map.{u1, u2} (List.{u1} α) (List.{u2} β) (List.map.{u1, u2} α β f) (List.permutationsAux.{u1} α ts is)) (List.permutationsAux.{u2} β (List.map.{u1, u2} α β f ts) (List.map.{u1, u2} α β f is))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (ts : List.{u2} α) (is : List.{u2} α), Eq.{succ u1} (List.{u1} (List.{u1} β)) (List.map.{u2, u1} (List.{u2} α) (List.{u1} β) (List.map.{u2, u1} α β f) (List.permutationsAux.{u2} α ts is)) (List.permutationsAux.{u1} β (List.map.{u2, u1} α β f ts) (List.map.{u2, u1} α β f is))
-Case conversion may be inaccurate. Consider using '#align list.map_permutations_aux List.map_permutationsAuxₓ'. -/
 theorem map_permutationsAux (f : α → β) :
     ∀ ts is : List α, map (map f) (permutationsAux ts is) = permutationsAux (map f ts) (map f is) :=
   by
@@ -339,23 +267,11 @@ theorem map_permutationsAux (f : α → β) :
     bind_map, IH1, append_assoc, permutations_aux_cons, cons_bind, ← IH2, map_bind]
 #align list.map_permutations_aux List.map_permutationsAux
 
-/- warning: list.map_permutations -> List.map_permutations is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (ts : List.{u1} α), Eq.{succ u2} (List.{u2} (List.{u2} β)) (List.map.{u1, u2} (List.{u1} α) (List.{u2} β) (List.map.{u1, u2} α β f) (List.permutations.{u1} α ts)) (List.permutations.{u2} β (List.map.{u1, u2} α β f ts))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (ts : List.{u2} α), Eq.{succ u1} (List.{u1} (List.{u1} β)) (List.map.{u2, u1} (List.{u2} α) (List.{u1} β) (List.map.{u2, u1} α β f) (List.permutations.{u2} α ts)) (List.permutations.{u1} β (List.map.{u2, u1} α β f ts))
-Case conversion may be inaccurate. Consider using '#align list.map_permutations List.map_permutationsₓ'. -/
 theorem map_permutations (f : α → β) (ts : List α) :
     map (map f) (permutations ts) = permutations (map f ts) := by
   rw [permutations, permutations, map, map_permutations_aux, map]
 #align list.map_permutations List.map_permutations
 
-/- warning: list.map_permutations' -> List.map_permutations' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (ts : List.{u1} α), Eq.{succ u2} (List.{u2} (List.{u2} β)) (List.map.{u1, u2} (List.{u1} α) (List.{u2} β) (List.map.{u1, u2} α β f) (List.permutations'.{u1} α ts)) (List.permutations'.{u2} β (List.map.{u1, u2} α β f ts))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (ts : List.{u2} α), Eq.{succ u1} (List.{u1} (List.{u1} β)) (List.map.{u2, u1} (List.{u2} α) (List.{u1} β) (List.map.{u2, u1} α β f) (List.permutations'.{u2} α ts)) (List.permutations'.{u1} β (List.map.{u2, u1} α β f ts))
-Case conversion may be inaccurate. Consider using '#align list.map_permutations' List.map_permutations'ₓ'. -/
 theorem map_permutations' (f : α → β) (ts : List α) :
     map (map f) (permutations' ts) = permutations' (map f ts) := by
   induction' ts with t ts ih <;> [rfl;simp [← ih, map_bind, ← map_map_permutations'_aux, bind_map]]

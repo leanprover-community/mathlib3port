@@ -415,12 +415,6 @@ theorem toOption_eq_none_iff {a : Part α} [Decidable a.Dom] : a.toOption = Opti
 #align part.to_option_eq_none_iff Part.toOption_eq_none_iff
 -/
 
-/- warning: part.elim_to_option -> Part.elim_toOption is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (a : Part.{u1} α) [_inst_1 : Decidable (Part.Dom.{u1} α a)] (b : β) (f : α -> β), Eq.{succ u2} β (Option.elim'.{u1, u2} α β b f (Part.toOption.{u1} α a _inst_1)) (dite.{succ u2} β (Part.Dom.{u1} α a) _inst_1 (fun (h : Part.Dom.{u1} α a) => f (Part.get.{u1} α a h)) (fun (h : Not (Part.Dom.{u1} α a)) => b))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (a : Part.{u2} α) [_inst_1 : Decidable (Part.Dom.{u2} α a)] (b : β) (f : α -> β), Eq.{succ u1} β (Option.elim.{u2, succ u1} α β (Part.toOption.{u2} α a _inst_1) b f) (dite.{succ u1} β (Part.Dom.{u2} α a) _inst_1 (fun (h : Part.Dom.{u2} α a) => f (Part.get.{u2} α a h)) (fun (h : Not (Part.Dom.{u2} α a)) => b))
-Case conversion may be inaccurate. Consider using '#align part.elim_to_option Part.elim_toOptionₓ'. -/
 @[simp]
 theorem elim_toOption {α β : Type _} (a : Part α) [Decidable a.Dom] (b : β) (f : α → β) :
     a.toOption.elim b f = if h : a.Dom then f (a.get h) else b :=
@@ -536,12 +530,6 @@ instance : OrderBot (Part α) where
   bot := none
   bot_le := by introv x; rintro ⟨⟨_⟩, _⟩
 
-/- warning: part.le_total_of_le_of_le -> Part.le_total_of_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {x : Part.{u1} α} {y : Part.{u1} α} (z : Part.{u1} α), (LE.le.{u1} (Part.{u1} α) (Preorder.toHasLe.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.partialOrder.{u1} α))) x z) -> (LE.le.{u1} (Part.{u1} α) (Preorder.toHasLe.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.partialOrder.{u1} α))) y z) -> (Or (LE.le.{u1} (Part.{u1} α) (Preorder.toHasLe.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.partialOrder.{u1} α))) x y) (LE.le.{u1} (Part.{u1} α) (Preorder.toHasLe.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.partialOrder.{u1} α))) y x))
-but is expected to have type
-  forall {α : Type.{u1}} {x : Part.{u1} α} {y : Part.{u1} α} (z : Part.{u1} α), (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) x z) -> (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) y z) -> (Or (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) x y) (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) y x))
-Case conversion may be inaccurate. Consider using '#align part.le_total_of_le_of_le Part.le_total_of_le_of_leₓ'. -/
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) :
     x ≤ y ∨ y ≤ x := by
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
@@ -577,22 +565,10 @@ def map (f : α → β) (o : Part α) : Part β :=
 #align part.map Part.map
 -/
 
-/- warning: part.mem_map -> Part.mem_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) {o : Part.{u1} α} {a : α}, (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a o) -> (Membership.Mem.{u2, u2} β (Part.{u2} β) (Part.hasMem.{u2} β) (f a) (Part.map.{u1, u2} α β f o))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) {o : Part.{u2} α} {a : α}, (Membership.mem.{u2, u2} α (Part.{u2} α) (Part.instMembershipPart.{u2} α) a o) -> (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) (f a) (Part.map.{u2, u1} α β f o))
-Case conversion may be inaccurate. Consider using '#align part.mem_map Part.mem_mapₓ'. -/
 theorem mem_map (f : α → β) {o : Part α} : ∀ {a}, a ∈ o → f a ∈ map f o
   | _, ⟨h, rfl⟩ => ⟨_, rfl⟩
 #align part.mem_map Part.mem_map
 
-/- warning: part.mem_map_iff -> Part.mem_map_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) {o : Part.{u1} α} {b : β}, Iff (Membership.Mem.{u2, u2} β (Part.{u2} β) (Part.hasMem.{u2} β) b (Part.map.{u1, u2} α β f o)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a o) (fun (H : Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a o) => Eq.{succ u2} β (f a) b)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) {o : Part.{u2} α} {b : β}, Iff (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) b (Part.map.{u2, u1} α β f o)) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Part.{u2} α) (Part.instMembershipPart.{u2} α) a o) (Eq.{succ u1} β (f a) b)))
-Case conversion may be inaccurate. Consider using '#align part.mem_map_iff Part.mem_map_iffₓ'. -/
 @[simp]
 theorem mem_map_iff (f : α → β) {o : Part α} {b} : b ∈ map f o ↔ ∃ a ∈ o, f a = b :=
   ⟨match b with
@@ -652,22 +628,10 @@ theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none 
 #align part.assert_neg Part.assert_neg
 -/
 
-/- warning: part.mem_bind -> Part.mem_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Part.{u1} α} {g : α -> (Part.{u2} β)} {a : α} {b : β}, (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a f) -> (Membership.Mem.{u2, u2} β (Part.{u2} β) (Part.hasMem.{u2} β) b (g a)) -> (Membership.Mem.{u2, u2} β (Part.{u2} β) (Part.hasMem.{u2} β) b (Part.bind.{u1, u2} α β f g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : Part.{u2} α} {g : α -> (Part.{u1} β)} {a : α} {b : β}, (Membership.mem.{u2, u2} α (Part.{u2} α) (Part.instMembershipPart.{u2} α) a f) -> (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) b (g a)) -> (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) b (Part.bind.{u2, u1} α β f g))
-Case conversion may be inaccurate. Consider using '#align part.mem_bind Part.mem_bindₓ'. -/
 theorem mem_bind {f : Part α} {g : α → Part β} : ∀ {a b}, a ∈ f → b ∈ g a → b ∈ f.bind g
   | _, _, ⟨h, rfl⟩, ⟨h₂, rfl⟩ => ⟨⟨h, h₂⟩, rfl⟩
 #align part.mem_bind Part.mem_bind
 
-/- warning: part.mem_bind_iff -> Part.mem_bind_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Part.{u1} α} {g : α -> (Part.{u2} β)} {b : β}, Iff (Membership.Mem.{u2, u2} β (Part.{u2} β) (Part.hasMem.{u2} β) b (Part.bind.{u1, u2} α β f g)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a f) (fun (H : Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a f) => Membership.Mem.{u2, u2} β (Part.{u2} β) (Part.hasMem.{u2} β) b (g a))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : Part.{u2} α} {g : α -> (Part.{u1} β)} {b : β}, Iff (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) b (Part.bind.{u2, u1} α β f g)) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Part.{u2} α) (Part.instMembershipPart.{u2} α) a f) (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) b (g a))))
-Case conversion may be inaccurate. Consider using '#align part.mem_bind_iff Part.mem_bind_iffₓ'. -/
 @[simp]
 theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔ ∃ a ∈ f, b ∈ g a :=
   ⟨match b with
@@ -675,12 +639,6 @@ theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔
     fun ⟨a, h₁, h₂⟩ => mem_bind h₁ h₂⟩
 #align part.mem_bind_iff Part.mem_bind_iff
 
-/- warning: part.dom.bind -> Part.Dom.bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {o : Part.{u1} α} (h : Part.Dom.{u1} α o) (f : α -> (Part.{u2} β)), Eq.{succ u2} (Part.{u2} β) (Part.bind.{u1, u2} α β o f) (f (Part.get.{u1} α o h))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {o : Part.{u2} α} (h : Part.Dom.{u2} α o) (f : α -> (Part.{u1} β)), Eq.{succ u1} (Part.{u1} β) (Part.bind.{u2, u1} α β o f) (f (Part.get.{u2} α o h))
-Case conversion may be inaccurate. Consider using '#align part.dom.bind Part.Dom.bindₓ'. -/
 protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) :=
   by
   ext b
@@ -710,22 +668,10 @@ theorem bind_some (a : α) (f : α → Part β) : (some a).bind f = f a :=
 #align part.bind_some Part.bind_some
 -/
 
-/- warning: part.bind_of_mem -> Part.bind_of_mem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {o : Part.{u1} α} {a : α}, (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a o) -> (forall (f : α -> (Part.{u2} β)), Eq.{succ u2} (Part.{u2} β) (Part.bind.{u1, u2} α β o f) (f a))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {o : Part.{u2} α} {a : α}, (Membership.mem.{u2, u2} α (Part.{u2} α) (Part.instMembershipPart.{u2} α) a o) -> (forall (f : α -> (Part.{u1} β)), Eq.{succ u1} (Part.{u1} β) (Part.bind.{u2, u1} α β o f) (f a))
-Case conversion may be inaccurate. Consider using '#align part.bind_of_mem Part.bind_of_memₓ'. -/
 theorem bind_of_mem {o : Part α} {a : α} (h : a ∈ o) (f : α → Part β) : o.bind f = f a := by
   rw [eq_some_iff.2 h, bind_some]
 #align part.bind_of_mem Part.bind_of_mem
 
-/- warning: part.bind_some_eq_map -> Part.bind_some_eq_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (x : Part.{u1} α), Eq.{succ u2} (Part.{u2} β) (Part.bind.{u1, u2} α β x (Function.comp.{succ u1, succ u2, succ u2} α β (Part.{u2} β) (Part.some.{u2} β) f)) (Part.map.{u1, u2} α β f x)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (x : Part.{u2} α), Eq.{succ u1} (Part.{u1} β) (Part.bind.{u2, u1} α β x (Function.comp.{succ u2, succ u1, succ u1} α β (Part.{u1} β) (Part.some.{u1} β) f)) (Part.map.{u2, u1} α β f x)
-Case conversion may be inaccurate. Consider using '#align part.bind_some_eq_map Part.bind_some_eq_mapₓ'. -/
 theorem bind_some_eq_map (f : α → β) (x : Part α) : x.bind (some ∘ f) = map f x :=
   ext <| by simp [eq_comm]
 #align part.bind_some_eq_map Part.bind_some_eq_map
@@ -743,12 +689,6 @@ theorem bind_toOption (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀ 
 #align part.bind_to_option Part.bind_toOption
 -/
 
-/- warning: part.bind_assoc -> Part.bind_assoc is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : Part.{u1} α) (g : α -> (Part.{u2} β)) (k : β -> (Part.{u3} γ)), Eq.{succ u3} (Part.{u3} γ) (Part.bind.{u2, u3} β γ (Part.bind.{u1, u2} α β f g) k) (Part.bind.{u1, u3} α γ f (fun (x : α) => Part.bind.{u2, u3} β γ (g x) k))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (f : Part.{u2} α) (g : α -> (Part.{u1} β)) (k : β -> (Part.{u3} γ)), Eq.{succ u3} (Part.{u3} γ) (Part.bind.{u1, u3} β γ (Part.bind.{u2, u1} α β f g) k) (Part.bind.{u2, u3} α γ f (fun (x : α) => Part.bind.{u1, u3} β γ (g x) k))
-Case conversion may be inaccurate. Consider using '#align part.bind_assoc Part.bind_assocₓ'. -/
 theorem bind_assoc {γ} (f : Part α) (g : α → Part β) (k : β → Part γ) :
     (f.bind g).bind k = f.bind fun x => (g x).bind k :=
   ext fun a => by
@@ -758,12 +698,6 @@ theorem bind_assoc {γ} (f : Part α) (g : α → Part β) (k : β → Part γ) 
           ⟨_, ⟨_, h₁, h₂⟩, h₃⟩⟩
 #align part.bind_assoc Part.bind_assoc
 
-/- warning: part.bind_map -> Part.bind_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (x : Part.{u1} α) (g : β -> (Part.{u3} γ)), Eq.{succ u3} (Part.{u3} γ) (Part.bind.{u2, u3} β γ (Part.map.{u1, u2} α β f x) g) (Part.bind.{u1, u3} α γ x (fun (y : α) => g (f y)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (f : α -> β) (x : Part.{u2} α) (g : β -> (Part.{u3} γ)), Eq.{succ u3} (Part.{u3} γ) (Part.bind.{u1, u3} β γ (Part.map.{u2, u1} α β f x) g) (Part.bind.{u2, u3} α γ x (fun (y : α) => g (f y)))
-Case conversion may be inaccurate. Consider using '#align part.bind_map Part.bind_mapₓ'. -/
 @[simp]
 theorem bind_map {γ} (f : α → β) (x) (g : β → Part γ) :
     (map f x).bind g = x.bind fun y => g (f y) := by rw [← bind_some_eq_map, bind_assoc] <;> simp
@@ -777,12 +711,6 @@ theorem map_bind {γ} (f : α → Part β) (x : Part α) (g : β → γ) :
 #align part.map_bind Part.map_bind
 -/
 
-/- warning: part.map_map -> Part.map_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (g : β -> γ) (f : α -> β) (o : Part.{u1} α), Eq.{succ u3} (Part.{u3} γ) (Part.map.{u2, u3} β γ g (Part.map.{u1, u2} α β f o)) (Part.map.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) o)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} (g : β -> γ) (f : α -> β) (o : Part.{u3} α), Eq.{succ u2} (Part.{u2} γ) (Part.map.{u1, u2} β γ g (Part.map.{u3, u1} α β f o)) (Part.map.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f) o)
-Case conversion may be inaccurate. Consider using '#align part.map_map Part.map_mapₓ'. -/
 theorem map_map (g : β → γ) (f : α → β) (o : Part α) : map g (map f o) = map (g ∘ f) o := by
   rw [← bind_some_eq_map, bind_map, bind_some_eq_map]
 #align part.map_map Part.map_map
@@ -812,56 +740,26 @@ theorem bind_some_right (x : Part α) : x.bind some = x := by
 #align part.bind_some_right Part.bind_some_right
 -/
 
-/- warning: part.pure_eq_some -> Part.pure_eq_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Part.{u1} α) (Pure.pure.{u1, u1} Part.{u1} (Applicative.toHasPure.{u1, u1} Part.{u1} (Monad.toApplicative.{u1, u1} Part.{u1} Part.monad.{u1})) α a) (Part.some.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Part.{u1} α) (Pure.pure.{u1, u1} Part.{u1} (Applicative.toPure.{u1, u1} Part.{u1} (Monad.toApplicative.{u1, u1} Part.{u1} Part.instMonadPart.{u1})) α a) (Part.some.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.pure_eq_some Part.pure_eq_someₓ'. -/
 @[simp]
 theorem pure_eq_some (a : α) : pure a = some a :=
   rfl
 #align part.pure_eq_some Part.pure_eq_some
 
-/- warning: part.ret_eq_some -> Part.ret_eq_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Part.{u1} α) (return.{u1, u1} Part.{u1} Part.monad.{u1} α a) (Part.some.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Part.{u1} α) (Pure.pure.{u1, u1} Part.{u1} (Applicative.toPure.{u1, u1} Part.{u1} (Monad.toApplicative.{u1, u1} Part.{u1} Part.instMonadPart.{u1})) α a) (Part.some.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.ret_eq_some Part.ret_eq_someₓ'. -/
 @[simp]
 theorem ret_eq_some (a : α) : return a = some a :=
   rfl
 #align part.ret_eq_some Part.ret_eq_some
 
-/- warning: part.map_eq_map -> Part.map_eq_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (o : Part.{u1} α), Eq.{succ u1} (Part.{u1} β) (Functor.map.{u1, u1} (fun {α : Type.{u1}} => Part.{u1} α) (Applicative.toFunctor.{u1, u1} (fun {α : Type.{u1}} => Part.{u1} α) (Monad.toApplicative.{u1, u1} (fun {α : Type.{u1}} => Part.{u1} α) Part.monad.{u1})) α β f o) (Part.map.{u1, u1} α β f o)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (o : Part.{u1} α), Eq.{succ u1} (Part.{u1} β) (Functor.map.{u1, u1} Part.{u1} (Applicative.toFunctor.{u1, u1} Part.{u1} (Monad.toApplicative.{u1, u1} Part.{u1} Part.instMonadPart.{u1})) α β f o) (Part.map.{u1, u1} α β f o)
-Case conversion may be inaccurate. Consider using '#align part.map_eq_map Part.map_eq_mapₓ'. -/
 @[simp]
 theorem map_eq_map {α β} (f : α → β) (o : Part α) : f <$> o = map f o :=
   rfl
 #align part.map_eq_map Part.map_eq_map
 
-/- warning: part.bind_eq_bind -> Part.bind_eq_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : Part.{u1} α) (g : α -> (Part.{u1} β)), Eq.{succ u1} (Part.{u1} β) (Bind.bind.{u1, u1} Part.{u1} (Monad.toHasBind.{u1, u1} Part.{u1} Part.monad.{u1}) α β f g) (Part.bind.{u1, u1} α β f g)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : Part.{u1} α) (g : α -> (Part.{u1} β)), Eq.{succ u1} (Part.{u1} β) (Bind.bind.{u1, u1} Part.{u1} (Monad.toBind.{u1, u1} Part.{u1} Part.instMonadPart.{u1}) α β f g) (Part.bind.{u1, u1} α β f g)
-Case conversion may be inaccurate. Consider using '#align part.bind_eq_bind Part.bind_eq_bindₓ'. -/
 @[simp]
 theorem bind_eq_bind {α β} (f : Part α) (g : α → Part β) : f >>= g = f.bind g :=
   rfl
 #align part.bind_eq_bind Part.bind_eq_bind
 
-/- warning: part.bind_le -> Part.bind_le is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} {α : Type.{u1}} (x : Part.{u1} α) (f : α -> (Part.{u1} β)) (y : Part.{u1} β), Iff (LE.le.{u1} (Part.{u1} β) (Preorder.toHasLe.{u1} (Part.{u1} β) (PartialOrder.toPreorder.{u1} (Part.{u1} β) (Part.partialOrder.{u1} β))) (Bind.bind.{u1, u1} Part.{u1} (Monad.toHasBind.{u1, u1} Part.{u1} Part.monad.{u1}) α β x f) y) (forall (a : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) a x) -> (LE.le.{u1} (Part.{u1} β) (Preorder.toHasLe.{u1} (Part.{u1} β) (PartialOrder.toPreorder.{u1} (Part.{u1} β) (Part.partialOrder.{u1} β))) (f a) y))
-but is expected to have type
-  forall {β : Type.{u1}} {α : Type.{u1}} (x : Part.{u1} α) (f : α -> (Part.{u1} β)) (y : Part.{u1} β), Iff (LE.le.{u1} (Part.{u1} β) (Preorder.toLE.{u1} (Part.{u1} β) (PartialOrder.toPreorder.{u1} (Part.{u1} β) (Part.instPartialOrderPart.{u1} β))) (Bind.bind.{u1, u1} Part.{u1} (Monad.toBind.{u1, u1} Part.{u1} Part.instMonadPart.{u1}) α β x f) y) (forall (a : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) a x) -> (LE.le.{u1} (Part.{u1} β) (Preorder.toLE.{u1} (Part.{u1} β) (PartialOrder.toPreorder.{u1} (Part.{u1} β) (Part.instPartialOrderPart.{u1} β))) (f a) y))
-Case conversion may be inaccurate. Consider using '#align part.bind_le Part.bind_leₓ'. -/
 theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
     x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y :=
   by
@@ -909,23 +807,11 @@ theorem assert_defined {p : Prop} {f : p → Part α} : ∀ h : p, (f h).Dom →
 #align part.assert_defined Part.assert_defined
 -/
 
-/- warning: part.bind_defined -> Part.bind_defined is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Part.{u1} α} {g : α -> (Part.{u2} β)} (h : Part.Dom.{u1} α f), (Part.Dom.{u2} β (g (Part.get.{u1} α f h))) -> (Part.Dom.{u2} β (Part.bind.{u1, u2} α β f g))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : Part.{u2} α} {g : α -> (Part.{u1} β)} (h : Part.Dom.{u2} α f), (Part.Dom.{u1} β (g (Part.get.{u2} α f h))) -> (Part.Dom.{u1} β (Part.bind.{u2, u1} α β f g))
-Case conversion may be inaccurate. Consider using '#align part.bind_defined Part.bind_definedₓ'. -/
 theorem bind_defined {f : Part α} {g : α → Part β} :
     ∀ h : f.Dom, (g (f.get h)).Dom → (f.bind g).Dom :=
   assert_defined
 #align part.bind_defined Part.bind_defined
 
-/- warning: part.bind_dom -> Part.bind_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Part.{u1} α} {g : α -> (Part.{u2} β)}, Iff (Part.Dom.{u2} β (Part.bind.{u1, u2} α β f g)) (Exists.{0} (Part.Dom.{u1} α f) (fun (h : Part.Dom.{u1} α f) => Part.Dom.{u2} β (g (Part.get.{u1} α f h))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : Part.{u2} α} {g : α -> (Part.{u1} β)}, Iff (Part.Dom.{u1} β (Part.bind.{u2, u1} α β f g)) (Exists.{0} (Part.Dom.{u2} α f) (fun (h : Part.Dom.{u2} α f) => Part.Dom.{u1} β (g (Part.get.{u2} α f h))))
-Case conversion may be inaccurate. Consider using '#align part.bind_dom Part.bind_domₓ'. -/
 @[simp]
 theorem bind_dom {f : Part α} {g : α → Part β} : (f.bind g).Dom ↔ ∃ h : f.Dom, (g (f.get h)).Dom :=
   Iff.rfl
@@ -956,70 +842,34 @@ instance [Union α] : Union (Part α) where union a b := (· ∪ ·) <$> a <*> b
 
 instance [SDiff α] : SDiff (Part α) where sdiff a b := (· \ ·) <$> a <*> b
 
-/- warning: part.one_mem_one -> Part.one_mem_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α], Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Part.{u1} α) 1 (OfNat.mk.{u1} (Part.{u1} α) 1 (One.one.{u1} (Part.{u1} α) (Part.hasOne.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : One.{u1} α], Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)) (OfNat.ofNat.{u1} (Part.{u1} α) 1 (One.toOfNat1.{u1} (Part.{u1} α) (Part.instOnePart.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align part.one_mem_one Part.one_mem_oneₓ'. -/
 @[to_additive]
 theorem one_mem_one [One α] : (1 : α) ∈ (1 : Part α) :=
   ⟨trivial, rfl⟩
 #align part.one_mem_one Part.one_mem_one
 #align part.zero_mem_zero Part.zero_mem_zero
 
-/- warning: part.mul_mem_mul -> Part.mul_mem_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) ma mb) (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.hasMul.{u1} α _inst_1)) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) ma mb) (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.instMulPart.{u1} α _inst_1)) a b))
-Case conversion may be inaccurate. Consider using '#align part.mul_mem_mul Part.mul_mem_mulₓ'. -/
 @[to_additive]
 theorem mul_mem_mul [Mul α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma * mb ∈ a * b := by tidy
 #align part.mul_mem_mul Part.mul_mem_mul
 #align part.add_mem_add Part.add_mem_add
 
-/- warning: part.left_dom_of_mul_dom -> Part.left_dom_of_mul_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.hasMul.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.instMulPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_mul_dom Part.left_dom_of_mul_domₓ'. -/
 @[to_additive]
 theorem left_dom_of_mul_dom [Mul α] {a b : Part α} (hab : Dom (a * b)) : a.Dom := by tidy
 #align part.left_dom_of_mul_dom Part.left_dom_of_mul_dom
 #align part.left_dom_of_add_dom Part.left_dom_of_add_dom
 
-/- warning: part.right_dom_of_mul_dom -> Part.right_dom_of_mul_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.hasMul.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.instMulPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_mul_dom Part.right_dom_of_mul_domₓ'. -/
 @[to_additive]
 theorem right_dom_of_mul_dom [Mul α] {a b : Part α} (hab : Dom (a * b)) : b.Dom := by tidy
 #align part.right_dom_of_mul_dom Part.right_dom_of_mul_dom
 #align part.right_dom_of_add_dom Part.right_dom_of_add_dom
 
-/- warning: part.mul_get_eq -> Part.mul_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.hasMul.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.hasMul.{u1} α _inst_1)) a b) hab) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_mul_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_mul_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.instMulPart.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.instMulPart.{u1} α _inst_1)) a b) hab) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_mul_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_mul_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.mul_get_eq Part.mul_get_eqₓ'. -/
 @[simp, to_additive]
 theorem mul_get_eq [Mul α] (a b : Part α) (hab : Dom (a * b)) :
     (a * b).get hab = a.get (left_dom_of_mul_dom hab) * b.get (right_dom_of_mul_dom hab) := by tidy
 #align part.mul_get_eq Part.mul_get_eq
 #align part.add_get_eq Part.add_get_eq
 
-/- warning: part.some_mul_some -> Part.some_mul_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.hasMul.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HMul.hMul.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMul.{u1} (Part.{u1} α) (Part.instMulPart.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.some_mul_some Part.some_mul_someₓ'. -/
 @[to_additive]
 theorem some_mul_some [Mul α] (a b : α) : some a * some b = some (a * b) := by tidy
 #align part.some_mul_some Part.some_mul_some
@@ -1040,304 +890,124 @@ theorem inv_some [Inv α] (a : α) : (some a)⁻¹ = some a⁻¹ :=
 #align part.neg_some Part.neg_some
 -/
 
-/- warning: part.div_mem_div -> Part.div_mem_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α _inst_1) ma mb) (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.hasDiv.{u1} α _inst_1)) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α _inst_1) ma mb) (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.instDivPart.{u1} α _inst_1)) a b))
-Case conversion may be inaccurate. Consider using '#align part.div_mem_div Part.div_mem_divₓ'. -/
 @[to_additive]
 theorem div_mem_div [Div α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma / mb ∈ a / b := by tidy
 #align part.div_mem_div Part.div_mem_div
 #align part.sub_mem_sub Part.sub_mem_sub
 
-/- warning: part.left_dom_of_div_dom -> Part.left_dom_of_div_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.hasDiv.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.instDivPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_div_dom Part.left_dom_of_div_domₓ'. -/
 @[to_additive]
 theorem left_dom_of_div_dom [Div α] {a b : Part α} (hab : Dom (a / b)) : a.Dom := by tidy
 #align part.left_dom_of_div_dom Part.left_dom_of_div_dom
 #align part.left_dom_of_sub_dom Part.left_dom_of_sub_dom
 
-/- warning: part.right_dom_of_div_dom -> Part.right_dom_of_div_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.hasDiv.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.instDivPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_div_dom Part.right_dom_of_div_domₓ'. -/
 @[to_additive]
 theorem right_dom_of_div_dom [Div α] {a b : Part α} (hab : Dom (a / b)) : b.Dom := by tidy
 #align part.right_dom_of_div_dom Part.right_dom_of_div_dom
 #align part.right_dom_of_sub_dom Part.right_dom_of_sub_dom
 
-/- warning: part.div_get_eq -> Part.div_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.hasDiv.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.hasDiv.{u1} α _inst_1)) a b) hab) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_div_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_div_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.instDivPart.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.instDivPart.{u1} α _inst_1)) a b) hab) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_div_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_div_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.div_get_eq Part.div_get_eqₓ'. -/
 @[simp, to_additive]
 theorem div_get_eq [Div α] (a b : Part α) (hab : Dom (a / b)) :
     (a / b).get hab = a.get (left_dom_of_div_dom hab) / b.get (right_dom_of_div_dom hab) := by tidy
 #align part.div_get_eq Part.div_get_eq
 #align part.sub_get_eq Part.sub_get_eq
 
-/- warning: part.some_div_some -> Part.some_div_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.hasDiv.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Div.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHDiv.{u1} (Part.{u1} α) (Part.instDivPart.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.some_div_some Part.some_div_someₓ'. -/
 @[to_additive]
 theorem some_div_some [Div α] (a b : α) : some a / some b = some (a / b) := by tidy
 #align part.some_div_some Part.some_div_some
 #align part.some_sub_some Part.some_sub_some
 
-/- warning: part.mod_mem_mod -> Part.mod_mem_mod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (HMod.hMod.{u1, u1, u1} α α α (instHMod.{u1} α _inst_1) ma mb) (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.hasMod.{u1} α _inst_1)) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (HMod.hMod.{u1, u1, u1} α α α (instHMod.{u1} α _inst_1) ma mb) (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.instModPart.{u1} α _inst_1)) a b))
-Case conversion may be inaccurate. Consider using '#align part.mod_mem_mod Part.mod_mem_modₓ'. -/
 theorem mod_mem_mod [Mod α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma % mb ∈ a % b := by tidy
 #align part.mod_mem_mod Part.mod_mem_mod
 
-/- warning: part.left_dom_of_mod_dom -> Part.left_dom_of_mod_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.hasMod.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.instModPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_mod_dom Part.left_dom_of_mod_domₓ'. -/
 theorem left_dom_of_mod_dom [Mod α] {a b : Part α} (hab : Dom (a % b)) : a.Dom := by tidy
 #align part.left_dom_of_mod_dom Part.left_dom_of_mod_dom
 
-/- warning: part.right_dom_of_mod_dom -> Part.right_dom_of_mod_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.hasMod.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.instModPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_mod_dom Part.right_dom_of_mod_domₓ'. -/
 theorem right_dom_of_mod_dom [Mod α] {a b : Part α} (hab : Dom (a % b)) : b.Dom := by tidy
 #align part.right_dom_of_mod_dom Part.right_dom_of_mod_dom
 
-/- warning: part.mod_get_eq -> Part.mod_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.hasMod.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.hasMod.{u1} α _inst_1)) a b) hab) (HMod.hMod.{u1, u1, u1} α α α (instHMod.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_mod_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_mod_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.instModPart.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.instModPart.{u1} α _inst_1)) a b) hab) (HMod.hMod.{u1, u1, u1} α α α (instHMod.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_mod_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_mod_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.mod_get_eq Part.mod_get_eqₓ'. -/
 @[simp]
 theorem mod_get_eq [Mod α] (a b : Part α) (hab : Dom (a % b)) :
     (a % b).get hab = a.get (left_dom_of_mod_dom hab) % b.get (right_dom_of_mod_dom hab) := by tidy
 #align part.mod_get_eq Part.mod_get_eq
 
-/- warning: part.some_mod_some -> Part.some_mod_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.hasMod.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HMod.hMod.{u1, u1, u1} α α α (instHMod.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mod.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HMod.hMod.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHMod.{u1} (Part.{u1} α) (Part.instModPart.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HMod.hMod.{u1, u1, u1} α α α (instHMod.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.some_mod_some Part.some_mod_someₓ'. -/
 theorem some_mod_some [Mod α] (a b : α) : some a % some b = some (a % b) := by tidy
 #align part.some_mod_some Part.some_mod_some
 
-/- warning: part.append_mem_append -> Part.append_mem_append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (Append.append.{u1} α _inst_1 ma mb) (Append.append.{u1} (Part.{u1} α) (Part.hasAppend.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (HAppend.hAppend.{u1, u1, u1} α α α (instHAppend.{u1} α _inst_1) ma mb) (HAppend.hAppend.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHAppend.{u1} (Part.{u1} α) (Part.instAppendPart.{u1} α _inst_1)) a b))
-Case conversion may be inaccurate. Consider using '#align part.append_mem_append Part.append_mem_appendₓ'. -/
 theorem append_mem_append [Append α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma ++ mb ∈ a ++ b := by tidy
 #align part.append_mem_append Part.append_mem_append
 
-/- warning: part.left_dom_of_append_dom -> Part.left_dom_of_append_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Append.append.{u1} (Part.{u1} α) (Part.hasAppend.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HAppend.hAppend.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHAppend.{u1} (Part.{u1} α) (Part.instAppendPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_append_dom Part.left_dom_of_append_domₓ'. -/
 theorem left_dom_of_append_dom [Append α] {a b : Part α} (hab : Dom (a ++ b)) : a.Dom := by tidy
 #align part.left_dom_of_append_dom Part.left_dom_of_append_dom
 
-/- warning: part.right_dom_of_append_dom -> Part.right_dom_of_append_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Append.append.{u1} (Part.{u1} α) (Part.hasAppend.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (HAppend.hAppend.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHAppend.{u1} (Part.{u1} α) (Part.instAppendPart.{u1} α _inst_1)) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_append_dom Part.right_dom_of_append_domₓ'. -/
 theorem right_dom_of_append_dom [Append α] {a b : Part α} (hab : Dom (a ++ b)) : b.Dom := by tidy
 #align part.right_dom_of_append_dom Part.right_dom_of_append_dom
 
-/- warning: part.append_get_eq -> Part.append_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (Append.append.{u1} (Part.{u1} α) (Part.hasAppend.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (Append.append.{u1} (Part.{u1} α) (Part.hasAppend.{u1} α _inst_1) a b) hab) (Append.append.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_append_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_append_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (HAppend.hAppend.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHAppend.{u1} (Part.{u1} α) (Part.instAppendPart.{u1} α _inst_1)) a b)), Eq.{succ u1} α (Part.get.{u1} α (HAppend.hAppend.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHAppend.{u1} (Part.{u1} α) (Part.instAppendPart.{u1} α _inst_1)) a b) hab) (HAppend.hAppend.{u1, u1, u1} α α α (instHAppend.{u1} α _inst_1) (Part.get.{u1} α a (Part.left_dom_of_append_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_append_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.append_get_eq Part.append_get_eqₓ'. -/
 @[simp]
 theorem append_get_eq [Append α] (a b : Part α) (hab : Dom (a ++ b)) :
     (a ++ b).get hab = a.get (left_dom_of_append_dom hab) ++ b.get (right_dom_of_append_dom hab) :=
   by tidy
 #align part.append_get_eq Part.append_get_eq
 
-/- warning: part.some_append_some -> Part.some_append_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (Append.append.{u1} (Part.{u1} α) (Part.hasAppend.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (Append.append.{u1} α _inst_1 a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Append.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (HAppend.hAppend.{u1, u1, u1} (Part.{u1} α) (Part.{u1} α) (Part.{u1} α) (instHAppend.{u1} (Part.{u1} α) (Part.instAppendPart.{u1} α _inst_1)) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (HAppend.hAppend.{u1, u1, u1} α α α (instHAppend.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.some_append_some Part.some_append_someₓ'. -/
 theorem some_append_some [Append α] (a b : α) : some a ++ some b = some (a ++ b) := by tidy
 #align part.some_append_some Part.some_append_some
 
-/- warning: part.inter_mem_inter -> Part.inter_mem_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (Inter.inter.{u1} α _inst_1 ma mb) (Inter.inter.{u1} (Part.{u1} α) (Part.hasInter.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (Inter.inter.{u1} α _inst_1 ma mb) (Inter.inter.{u1} (Part.{u1} α) (Part.instInterPart.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.inter_mem_inter Part.inter_mem_interₓ'. -/
 theorem inter_mem_inter [Inter α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma ∩ mb ∈ a ∩ b := by tidy
 #align part.inter_mem_inter Part.inter_mem_inter
 
-/- warning: part.left_dom_of_inter_dom -> Part.left_dom_of_inter_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.hasInter.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.instInterPart.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_inter_dom Part.left_dom_of_inter_domₓ'. -/
 theorem left_dom_of_inter_dom [Inter α] {a b : Part α} (hab : Dom (a ∩ b)) : a.Dom := by tidy
 #align part.left_dom_of_inter_dom Part.left_dom_of_inter_dom
 
-/- warning: part.right_dom_of_inter_dom -> Part.right_dom_of_inter_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.hasInter.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.instInterPart.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_inter_dom Part.right_dom_of_inter_domₓ'. -/
 theorem right_dom_of_inter_dom [Inter α] {a b : Part α} (hab : Dom (a ∩ b)) : b.Dom := by tidy
 #align part.right_dom_of_inter_dom Part.right_dom_of_inter_dom
 
-/- warning: part.inter_get_eq -> Part.inter_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.hasInter.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.hasInter.{u1} α _inst_1) a b) hab) (Inter.inter.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_inter_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_inter_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.instInterPart.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (Inter.inter.{u1} (Part.{u1} α) (Part.instInterPart.{u1} α _inst_1) a b) hab) (Inter.inter.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_inter_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_inter_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.inter_get_eq Part.inter_get_eqₓ'. -/
 @[simp]
 theorem inter_get_eq [Inter α] (a b : Part α) (hab : Dom (a ∩ b)) :
     (a ∩ b).get hab = a.get (left_dom_of_inter_dom hab) ∩ b.get (right_dom_of_inter_dom hab) := by
   tidy
 #align part.inter_get_eq Part.inter_get_eq
 
-/- warning: part.some_inter_some -> Part.some_inter_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (Inter.inter.{u1} (Part.{u1} α) (Part.hasInter.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (Inter.inter.{u1} α _inst_1 a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inter.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (Inter.inter.{u1} (Part.{u1} α) (Part.instInterPart.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (Inter.inter.{u1} α _inst_1 a b))
-Case conversion may be inaccurate. Consider using '#align part.some_inter_some Part.some_inter_someₓ'. -/
 theorem some_inter_some [Inter α] (a b : α) : some a ∩ some b = some (a ∩ b) := by tidy
 #align part.some_inter_some Part.some_inter_some
 
-/- warning: part.union_mem_union -> Part.union_mem_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (Union.union.{u1} α _inst_1 ma mb) (Union.union.{u1} (Part.{u1} α) (Part.hasUnion.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (Union.union.{u1} α _inst_1 ma mb) (Union.union.{u1} (Part.{u1} α) (Part.instUnionPart.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.union_mem_union Part.union_mem_unionₓ'. -/
 theorem union_mem_union [Union α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma ∪ mb ∈ a ∪ b := by tidy
 #align part.union_mem_union Part.union_mem_union
 
-/- warning: part.left_dom_of_union_dom -> Part.left_dom_of_union_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.hasUnion.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.instUnionPart.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_union_dom Part.left_dom_of_union_domₓ'. -/
 theorem left_dom_of_union_dom [Union α] {a b : Part α} (hab : Dom (a ∪ b)) : a.Dom := by tidy
 #align part.left_dom_of_union_dom Part.left_dom_of_union_dom
 
-/- warning: part.right_dom_of_union_dom -> Part.right_dom_of_union_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.hasUnion.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.instUnionPart.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_union_dom Part.right_dom_of_union_domₓ'. -/
 theorem right_dom_of_union_dom [Union α] {a b : Part α} (hab : Dom (a ∪ b)) : b.Dom := by tidy
 #align part.right_dom_of_union_dom Part.right_dom_of_union_dom
 
-/- warning: part.union_get_eq -> Part.union_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.hasUnion.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.hasUnion.{u1} α _inst_1) a b) hab) (Union.union.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_union_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_union_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.instUnionPart.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (Union.union.{u1} (Part.{u1} α) (Part.instUnionPart.{u1} α _inst_1) a b) hab) (Union.union.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_union_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_union_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.union_get_eq Part.union_get_eqₓ'. -/
 @[simp]
 theorem union_get_eq [Union α] (a b : Part α) (hab : Dom (a ∪ b)) :
     (a ∪ b).get hab = a.get (left_dom_of_union_dom hab) ∪ b.get (right_dom_of_union_dom hab) := by
   tidy
 #align part.union_get_eq Part.union_get_eq
 
-/- warning: part.some_union_some -> Part.some_union_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (Union.union.{u1} (Part.{u1} α) (Part.hasUnion.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (Union.union.{u1} α _inst_1 a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Union.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (Union.union.{u1} (Part.{u1} α) (Part.instUnionPart.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (Union.union.{u1} α _inst_1 a b))
-Case conversion may be inaccurate. Consider using '#align part.some_union_some Part.some_union_someₓ'. -/
 theorem some_union_some [Union α] (a b : α) : some a ∪ some b = some (a ∪ b) := by tidy
 #align part.some_union_some Part.some_union_some
 
-/- warning: part.sdiff_mem_sdiff -> Part.sdiff_mem_sdiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) ma a) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) mb b) -> (Membership.Mem.{u1, u1} α (Part.{u1} α) (Part.hasMem.{u1} α) (SDiff.sdiff.{u1} α _inst_1 ma mb) (SDiff.sdiff.{u1} (Part.{u1} α) (Part.hasSdiff.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (ma : α) (mb : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) ma a) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) mb b) -> (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) (SDiff.sdiff.{u1} α _inst_1 ma mb) (SDiff.sdiff.{u1} (Part.{u1} α) (Part.instSDiffPart.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align part.sdiff_mem_sdiff Part.sdiff_mem_sdiffₓ'. -/
 theorem sdiff_mem_sdiff [SDiff α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma \ mb ∈ a \ b := by tidy
 #align part.sdiff_mem_sdiff Part.sdiff_mem_sdiff
 
-/- warning: part.left_dom_of_sdiff_dom -> Part.left_dom_of_sdiff_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.hasSdiff.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.instSDiffPart.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align part.left_dom_of_sdiff_dom Part.left_dom_of_sdiff_domₓ'. -/
 theorem left_dom_of_sdiff_dom [SDiff α] {a b : Part α} (hab : Dom (a \ b)) : a.Dom := by tidy
 #align part.left_dom_of_sdiff_dom Part.left_dom_of_sdiff_dom
 
-/- warning: part.right_dom_of_sdiff_dom -> Part.right_dom_of_sdiff_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.hasSdiff.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] {a : Part.{u1} α} {b : Part.{u1} α}, (Part.Dom.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.instSDiffPart.{u1} α _inst_1) a b)) -> (Part.Dom.{u1} α b)
-Case conversion may be inaccurate. Consider using '#align part.right_dom_of_sdiff_dom Part.right_dom_of_sdiff_domₓ'. -/
 theorem right_dom_of_sdiff_dom [SDiff α] {a b : Part α} (hab : Dom (a \ b)) : b.Dom := by tidy
 #align part.right_dom_of_sdiff_dom Part.right_dom_of_sdiff_dom
 
-/- warning: part.sdiff_get_eq -> Part.sdiff_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.hasSdiff.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.hasSdiff.{u1} α _inst_1) a b) hab) (SDiff.sdiff.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_sdiff_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_sdiff_dom.{u1} α _inst_1 a b hab)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] (a : Part.{u1} α) (b : Part.{u1} α) (hab : Part.Dom.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.instSDiffPart.{u1} α _inst_1) a b)), Eq.{succ u1} α (Part.get.{u1} α (SDiff.sdiff.{u1} (Part.{u1} α) (Part.instSDiffPart.{u1} α _inst_1) a b) hab) (SDiff.sdiff.{u1} α _inst_1 (Part.get.{u1} α a (Part.left_dom_of_sdiff_dom.{u1} α _inst_1 a b hab)) (Part.get.{u1} α b (Part.right_dom_of_sdiff_dom.{u1} α _inst_1 a b hab)))
-Case conversion may be inaccurate. Consider using '#align part.sdiff_get_eq Part.sdiff_get_eqₓ'. -/
 @[simp]
 theorem sdiff_get_eq [SDiff α] (a b : Part α) (hab : Dom (a \ b)) :
     (a \ b).get hab = a.get (left_dom_of_sdiff_dom hab) \ b.get (right_dom_of_sdiff_dom hab) := by
   tidy
 #align part.sdiff_get_eq Part.sdiff_get_eq
 
-/- warning: part.some_sdiff_some -> Part.some_sdiff_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (SDiff.sdiff.{u1} (Part.{u1} α) (Part.hasSdiff.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (SDiff.sdiff.{u1} α _inst_1 a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SDiff.{u1} α] (a : α) (b : α), Eq.{succ u1} (Part.{u1} α) (SDiff.sdiff.{u1} (Part.{u1} α) (Part.instSDiffPart.{u1} α _inst_1) (Part.some.{u1} α a) (Part.some.{u1} α b)) (Part.some.{u1} α (SDiff.sdiff.{u1} α _inst_1 a b))
-Case conversion may be inaccurate. Consider using '#align part.some_sdiff_some Part.some_sdiff_someₓ'. -/
 theorem some_sdiff_some [SDiff α] (a b : α) : some a \ some b = some (a \ b) := by tidy
 #align part.some_sdiff_some Part.some_sdiff_some
 

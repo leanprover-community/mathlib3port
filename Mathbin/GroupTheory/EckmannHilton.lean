@@ -46,12 +46,6 @@ structure IsUnital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId
 #align eckmann_hilton.is_unital EckmannHilton.IsUnital
 -/
 
-/- warning: eckmann_hilton.mul_one_class.is_unital -> EckmannHilton.MulOneClass.isUnital is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} [G : MulOneClass.{u1} X], EckmannHilton.IsUnital.{u1} X (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X G))) (OfNat.ofNat.{u1} X 1 (OfNat.mk.{u1} X 1 (One.one.{u1} X (MulOneClass.toHasOne.{u1} X G))))
-but is expected to have type
-  forall {X : Type.{u1}} [G : MulOneClass.{u1} X], EckmannHilton.IsUnital.{u1} X (fun (x._@.Mathlib.GroupTheory.EckmannHilton._hyg.285 : X) (x._@.Mathlib.GroupTheory.EckmannHilton._hyg.287 : X) => HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X G)) x._@.Mathlib.GroupTheory.EckmannHilton._hyg.285 x._@.Mathlib.GroupTheory.EckmannHilton._hyg.287) (OfNat.ofNat.{u1} X 1 (One.toOfNat1.{u1} X (MulOneClass.toOne.{u1} X G)))
-Case conversion may be inaccurate. Consider using '#align eckmann_hilton.mul_one_class.is_unital EckmannHilton.MulOneClass.isUnitalₓ'. -/
 @[to_additive EckmannHilton.AddZeroClass.IsUnital]
 theorem MulOneClass.isUnital [G : MulOneClass X] : IsUnital (· * ·) (1 : X) :=
   IsUnital.mk (by infer_instance) (by infer_instance)
@@ -114,12 +108,6 @@ theorem mul_assoc : IsAssociative _ m₂ :=
 
 omit h₁ h₂ distrib
 
-/- warning: eckmann_hilton.comm_monoid -> EckmannHilton.commMonoid is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {m₁ : X -> X -> X} {e₁ : X}, (EckmannHilton.IsUnital.{u1} X m₁ e₁) -> (forall [h : MulOneClass.{u1} X], (forall (a : X) (b : X) (c : X) (d : X), Eq.{succ u1} X (m₁ (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X h)) a b) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X h)) c d)) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X h)) (m₁ a c) (m₁ b d))) -> (CommMonoid.{u1} X))
-but is expected to have type
-  forall {X : Type.{u1}} {m₁ : X -> X -> X} {e₁ : X}, (EckmannHilton.IsUnital.{u1} X m₁ e₁) -> (forall [h : MulOneClass.{u1} X], (forall (a : X) (b : X) (c : X) (d : X), Eq.{succ u1} X (m₁ (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X h)) a b) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X h)) c d)) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X h)) (m₁ a c) (m₁ b d))) -> (CommMonoid.{u1} X))
-Case conversion may be inaccurate. Consider using '#align eckmann_hilton.comm_monoid EckmannHilton.commMonoidₓ'. -/
 /-- If a type carries a unital magma structure that distributes over a unital binary
 operations, then the magma structure is a commutative monoid. -/
 @[reducible,
@@ -135,12 +123,6 @@ def commMonoid [h : MulOneClass X]
 #align eckmann_hilton.comm_monoid EckmannHilton.commMonoid
 #align eckmann_hilton.add_comm_monoid EckmannHilton.addCommMonoid
 
-/- warning: eckmann_hilton.comm_group -> EckmannHilton.commGroup is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {m₁ : X -> X -> X} {e₁ : X}, (EckmannHilton.IsUnital.{u1} X m₁ e₁) -> (forall [G : Group.{u1} X], (forall (a : X) (b : X) (c : X) (d : X), Eq.{succ u1} X (m₁ (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X (Monoid.toMulOneClass.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X G))))) a b) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X (Monoid.toMulOneClass.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X G))))) c d)) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toHasMul.{u1} X (Monoid.toMulOneClass.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X G))))) (m₁ a c) (m₁ b d))) -> (CommGroup.{u1} X))
-but is expected to have type
-  forall {X : Type.{u1}} {m₁ : X -> X -> X} {e₁ : X}, (EckmannHilton.IsUnital.{u1} X m₁ e₁) -> (forall [G : Group.{u1} X], (forall (a : X) (b : X) (c : X) (d : X), Eq.{succ u1} X (m₁ (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X (Monoid.toMulOneClass.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X G))))) a b) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X (Monoid.toMulOneClass.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X G))))) c d)) (HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X (Monoid.toMulOneClass.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X G))))) (m₁ a c) (m₁ b d))) -> (CommGroup.{u1} X))
-Case conversion may be inaccurate. Consider using '#align eckmann_hilton.comm_group EckmannHilton.commGroupₓ'. -/
 /-- If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/
 @[reducible,

@@ -64,12 +64,6 @@ abbrev G : MonCat :=
 #align AddGroup.filtered_colimits.G AddGroupCat.FilteredColimits.G
 -/
 
-/- warning: Group.filtered_colimits.G.mk -> GroupCat.FilteredColimits.G.mk is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.IsFiltered.{u1, u1} J _inst_1] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2}), (Sigma.{u1, max u1 u2} J (fun (j : J) => coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} GroupCat.{max u1 u2} Type.{max u1 u2} GroupCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2} F j))) -> (coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} MonCat.{max u1 u2} Type.{max u1 u2} MonCat.hasCoeToSort.{max u1 u2} (GroupCat.FilteredColimits.G.{u1, u2} J _inst_1 _inst_2 F))
-but is expected to have type
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.IsFiltered.{u1, u1} J _inst_1] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1}), (Sigma.{u1, max u2 u1} J (fun (j : J) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Group.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) GroupCat.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1} F) j))) -> (CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Monoid.{max u2 u1} (GroupCat.FilteredColimits.G.{u1, u2} J _inst_1 _inst_2 F))
-Case conversion may be inaccurate. Consider using '#align Group.filtered_colimits.G.mk GroupCat.FilteredColimits.G.mkₓ'. -/
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
 abbrev G.mk : (Σj, F.obj j) → G :=
@@ -77,9 +71,6 @@ abbrev G.mk : (Σj, F.obj j) → G :=
 #align Group.filtered_colimits.G.mk GroupCat.FilteredColimits.G.mk
 #align AddGroup.filtered_colimits.G.mk AddGroupCat.FilteredColimits.G.mk
 
-/- warning: Group.filtered_colimits.G.mk_eq -> GroupCat.FilteredColimits.G.mk_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Group.filtered_colimits.G.mk_eq GroupCat.FilteredColimits.G.mk_eqₓ'. -/
 @[to_additive]
 theorem G.mk_eq (x y : Σj, F.obj j)
     (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : G.mk x = G.mk y :=
@@ -87,12 +78,6 @@ theorem G.mk_eq (x y : Σj, F.obj j)
 #align Group.filtered_colimits.G.mk_eq GroupCat.FilteredColimits.G.mk_eq
 #align AddGroup.filtered_colimits.G.mk_eq AddGroupCat.FilteredColimits.G.mk_eq
 
-/- warning: Group.filtered_colimits.colimit_inv_aux -> GroupCat.FilteredColimits.colimitInvAux is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.IsFiltered.{u1, u1} J _inst_1] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2}), (Sigma.{u1, max u1 u2} J (fun (j : J) => coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} GroupCat.{max u1 u2} Type.{max u1 u2} GroupCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2} F j))) -> (coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} MonCat.{max u1 u2} Type.{max u1 u2} MonCat.hasCoeToSort.{max u1 u2} (GroupCat.FilteredColimits.G.{u1, u2} J _inst_1 _inst_2 F))
-but is expected to have type
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.IsFiltered.{u1, u1} J _inst_1] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1}), (Sigma.{u1, max u2 u1} J (fun (j : J) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Group.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) GroupCat.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1} F) j))) -> (CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Monoid.{max u2 u1} (GroupCat.FilteredColimits.G.{u1, u2} J _inst_1 _inst_2 F))
-Case conversion may be inaccurate. Consider using '#align Group.filtered_colimits.colimit_inv_aux GroupCat.FilteredColimits.colimitInvAuxₓ'. -/
 /-- The "unlifted" version of taking inverses in the colimit. -/
 @[to_additive "The \"unlifted\" version of negation in the colimit."]
 def colimitInvAux (x : Σj, F.obj j) : G :=
@@ -100,12 +85,6 @@ def colimitInvAux (x : Σj, F.obj j) : G :=
 #align Group.filtered_colimits.colimit_inv_aux GroupCat.FilteredColimits.colimitInvAux
 #align AddGroup.filtered_colimits.colimit_neg_aux AddGroupCat.FilteredColimits.colimitNegAux
 
-/- warning: Group.filtered_colimits.colimit_inv_aux_eq_of_rel -> GroupCat.FilteredColimits.colimitInvAux_eq_of_rel is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.IsFiltered.{u1, u1} J _inst_1] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2}) (x : Sigma.{u1, max u1 u2} J (fun (j : J) => coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} GroupCat.{max u1 u2} Type.{max u1 u2} GroupCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2} F j))) (y : Sigma.{u1, max u1 u2} J (fun (j : J) => coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} GroupCat.{max u1 u2} Type.{max u1 u2} GroupCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2} F j))), (CategoryTheory.Limits.Types.FilteredColimit.Rel.{u1, u2} J _inst_1 (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} GroupCat.{max u1 u2} GroupCat.largeCategory.{max u1 u2} GroupCat.concreteCategory.{max u1 u2})) x y) -> (Eq.{succ (max u1 u2)} (coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} MonCat.{max u1 u2} Type.{max u1 u2} MonCat.hasCoeToSort.{max u1 u2} (GroupCat.FilteredColimits.G.{u1, u2} J _inst_1 _inst_2 F)) (GroupCat.FilteredColimits.colimitInvAux.{u1, u2} J _inst_1 _inst_2 F x) (GroupCat.FilteredColimits.colimitInvAux.{u1, u2} J _inst_1 _inst_2 F y))
-but is expected to have type
-  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] [_inst_2 : CategoryTheory.IsFiltered.{u1, u1} J _inst_1] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1}) (x : Sigma.{u1, max u2 u1} J (fun (j : J) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Group.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) GroupCat.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1} F) j))) (y : Sigma.{u1, max u2 u1} J (fun (j : J) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Group.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) GroupCat.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1} F) j))), (CategoryTheory.Limits.Types.FilteredColimit.Rel.{u1, u2} J _inst_1 (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 GroupCat.{max u1 u2} instGroupCatLargeCategory.{max u2 u1} TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} GroupCat.{max u2 u1} instGroupCatLargeCategory.{max u2 u1} GroupCat.concreteCategory.{max u2 u1})) x y) -> (Eq.{max (succ u2) (succ u1)} (CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Monoid.{max u2 u1} (GroupCat.FilteredColimits.G.{u1, u2} J _inst_1 _inst_2 F)) (GroupCat.FilteredColimits.colimitInvAux.{u1, u2} J _inst_1 _inst_2 F x) (GroupCat.FilteredColimits.colimitInvAux.{u1, u2} J _inst_1 _inst_2 F y))
-Case conversion may be inaccurate. Consider using '#align Group.filtered_colimits.colimit_inv_aux_eq_of_rel GroupCat.FilteredColimits.colimitInvAux_eq_of_relₓ'. -/
 @[to_additive]
 theorem colimitInvAux_eq_of_rel (x y : Σj, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
@@ -133,9 +112,6 @@ instance colimitInv : Inv G
 #align AddGroup.filtered_colimits.colimit_has_neg AddGroupCat.FilteredColimits.colimitNeg
 -/
 
-/- warning: Group.filtered_colimits.colimit_inv_mk_eq -> GroupCat.FilteredColimits.colimit_inv_mk_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Group.filtered_colimits.colimit_inv_mk_eq GroupCat.FilteredColimits.colimit_inv_mk_eqₓ'. -/
 @[simp, to_additive]
 theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
   rfl

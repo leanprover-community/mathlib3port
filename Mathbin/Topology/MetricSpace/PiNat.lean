@@ -111,12 +111,6 @@ theorem firstDiff_comm (x y : ∀ n, E n) : firstDiff x y = firstDiff y x :=
 #align pi_nat.first_diff_comm PiNat.firstDiff_comm
 -/
 
-/- warning: pi_nat.min_first_diff_le -> PiNat.min_firstDiff_le is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (z : forall (n : Nat), E n), (Ne.{succ u1} (forall (n : Nat), E n) x z) -> (LE.le.{0} Nat Nat.hasLe (LinearOrder.min.{0} Nat Nat.linearOrder (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) x y) (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) y z)) (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) x z))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (z : forall (n : Nat), E n), (Ne.{succ u1} (forall (n : Nat), E n) x z) -> (LE.le.{0} Nat instLENat (Min.min.{0} Nat instMinNat (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) x y) (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) y z)) (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) x z))
-Case conversion may be inaccurate. Consider using '#align pi_nat.min_first_diff_le PiNat.min_firstDiff_leₓ'. -/
 theorem min_firstDiff_le (x y z : ∀ n, E n) (h : x ≠ z) :
     min (firstDiff x y) (firstDiff y z) ≤ firstDiff x z :=
   by
@@ -225,12 +219,6 @@ theorem cylinder_eq_cylinder_of_le_firstDiff (x y : ∀ n, E n) {n : ℕ} (hn : 
 #align pi_nat.cylinder_eq_cylinder_of_le_first_diff PiNat.cylinder_eq_cylinder_of_le_firstDiff
 -/
 
-/- warning: pi_nat.Union_cylinder_update -> PiNat.iUnion_cylinder_update is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat), Eq.{succ u1} (Set.{u1} (forall (n : Nat), E n)) (Set.iUnion.{u1, succ u1} (forall (n : Nat), E n) (E n) (fun (k : E n) => PiNat.cylinder.{u1} (fun (n : Nat) => E n) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) x n k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat), Eq.{succ u1} (Set.{u1} (forall (n : Nat), E n)) (Set.iUnion.{u1, succ u1} (forall (n : Nat), E n) (E n) (fun (k : E n) => PiNat.cylinder.{u1} (fun (n : Nat) => E n) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) x n k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
-Case conversion may be inaccurate. Consider using '#align pi_nat.Union_cylinder_update PiNat.iUnion_cylinder_updateₓ'. -/
 theorem iUnion_cylinder_update (x : ∀ n, E n) (n : ℕ) :
     (⋃ k, cylinder (update x n k) (n + 1)) = cylinder x n :=
   by
@@ -246,12 +234,6 @@ theorem iUnion_cylinder_update (x : ∀ n, E n) (n : ℕ) :
     · simp
 #align pi_nat.Union_cylinder_update PiNat.iUnion_cylinder_update
 
-/- warning: pi_nat.update_mem_cylinder -> PiNat.update_mem_cylinder is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat) (y : E n), Membership.Mem.{u1, u1} (forall (a : Nat), E a) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) x n y) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat) (y : E n), Membership.mem.{u1, u1} (forall (a : Nat), E a) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) x n y) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
-Case conversion may be inaccurate. Consider using '#align pi_nat.update_mem_cylinder PiNat.update_mem_cylinderₓ'. -/
 theorem update_mem_cylinder (x : ∀ n, E n) (n : ℕ) (y : E n) : update x n y ∈ cylinder x n :=
   mem_cylinder_iff.2 fun i hi => by simp [hi.ne]
 #align pi_nat.update_mem_cylinder PiNat.update_mem_cylinder
@@ -357,22 +339,10 @@ protected def dist : Dist (∀ n, E n) :=
 
 attribute [local instance] PiNat.dist
 
-/- warning: pi_nat.dist_eq_of_ne -> PiNat.dist_eq_of_ne is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} {x : forall (n : Nat), E n} {y : forall (n : Nat), E n}, (Ne.{succ u1} (forall (n : Nat), E n) x y) -> (Eq.{1} Real (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) x y)))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} {x : forall (n : Nat), E n} {y : forall (n : Nat), E n}, (Ne.{succ u1} (forall (n : Nat), E n) x y) -> (Eq.{1} Real (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (PiNat.firstDiff.{u1} (fun (n : Nat) => E n) x y)))
-Case conversion may be inaccurate. Consider using '#align pi_nat.dist_eq_of_ne PiNat.dist_eq_of_neₓ'. -/
 theorem dist_eq_of_ne {x y : ∀ n, E n} (h : x ≠ y) : dist x y = (1 / 2 : ℝ) ^ firstDiff x y := by
   simp [dist, h]
 #align pi_nat.dist_eq_of_ne PiNat.dist_eq_of_ne
 
-/- warning: pi_nat.dist_self -> PiNat.dist_self is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n), Eq.{1} Real (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x x) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n), Eq.{1} Real (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align pi_nat.dist_self PiNat.dist_selfₓ'. -/
 protected theorem dist_self (x : ∀ n, E n) : dist x x = 0 := by simp [dist]
 #align pi_nat.dist_self PiNat.dist_self
 
@@ -382,12 +352,6 @@ protected theorem dist_comm (x y : ∀ n, E n) : dist x y = dist y x := by
 #align pi_nat.dist_comm PiNat.dist_comm
 -/
 
-/- warning: pi_nat.dist_nonneg -> PiNat.dist_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n), LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y)
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y)
-Case conversion may be inaccurate. Consider using '#align pi_nat.dist_nonneg PiNat.dist_nonnegₓ'. -/
 protected theorem dist_nonneg (x y : ∀ n, E n) : 0 ≤ dist x y :=
   by
   rcases eq_or_ne x y with (rfl | h)
@@ -395,12 +359,6 @@ protected theorem dist_nonneg (x y : ∀ n, E n) : 0 ≤ dist x y :=
   · simp [dist, h]
 #align pi_nat.dist_nonneg PiNat.dist_nonneg
 
-/- warning: pi_nat.dist_triangle_nonarch -> PiNat.dist_triangle_nonarch is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (z : forall (n : Nat), E n), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x z) (LinearOrder.max.{0} Real Real.linearOrder (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) y z))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (z : forall (n : Nat), E n), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x z) (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) y z))
-Case conversion may be inaccurate. Consider using '#align pi_nat.dist_triangle_nonarch PiNat.dist_triangle_nonarchₓ'. -/
 theorem dist_triangle_nonarch (x y z : ∀ n, E n) : dist x z ≤ max (dist x y) (dist y z) :=
   by
   rcases eq_or_ne x z with (rfl | hxz)
@@ -414,12 +372,6 @@ theorem dist_triangle_nonarch (x y z : ∀ n, E n) : dist x z ≤ max (dist x y)
     min_le_iff.1 (min_first_diff_le x y z hxz)]
 #align pi_nat.dist_triangle_nonarch PiNat.dist_triangle_nonarch
 
-/- warning: pi_nat.dist_triangle -> PiNat.dist_triangle is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (z : forall (n : Nat), E n), LE.le.{0} Real Real.hasLe (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) y z))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (z : forall (n : Nat), E n), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) y z))
-Case conversion may be inaccurate. Consider using '#align pi_nat.dist_triangle PiNat.dist_triangleₓ'. -/
 protected theorem dist_triangle (x y z : ∀ n, E n) : dist x z ≤ dist x y + dist y z :=
   calc
     dist x z ≤ max (dist x y) (dist y z) := dist_triangle_nonarch x y z
@@ -427,12 +379,6 @@ protected theorem dist_triangle (x y z : ∀ n, E n) : dist x z ≤ dist x y + d
     
 #align pi_nat.dist_triangle PiNat.dist_triangle
 
-/- warning: pi_nat.eq_of_dist_eq_zero -> PiNat.eq_of_dist_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n), (Eq.{1} Real (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{succ u1} (forall (n : Nat), E n) x y)
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (y : forall (n : Nat), E n), (Eq.{1} Real (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{succ u1} (forall (n : Nat), E n) x y)
-Case conversion may be inaccurate. Consider using '#align pi_nat.eq_of_dist_eq_zero PiNat.eq_of_dist_eq_zeroₓ'. -/
 protected theorem eq_of_dist_eq_zero (x y : ∀ n, E n) (hxy : dist x y = 0) : x = y :=
   by
   rcases eq_or_ne x y with (rfl | h); · rfl
@@ -440,12 +386,6 @@ protected theorem eq_of_dist_eq_zero (x y : ∀ n, E n) (hxy : dist x y = 0) : x
   exact (two_ne_zero (pow_eq_zero hxy)).elim
 #align pi_nat.eq_of_dist_eq_zero PiNat.eq_of_dist_eq_zero
 
-/- warning: pi_nat.mem_cylinder_iff_dist_le -> PiNat.mem_cylinder_iff_dist_le is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} {x : forall (n : Nat), E n} {y : forall (n : Nat), E n} {n : Nat}, Iff (Membership.Mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) y (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)) (LE.le.{0} Real Real.hasLe (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) y x) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) n))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} {x : forall (n : Nat), E n} {y : forall (n : Nat), E n} {n : Nat}, Iff (Membership.mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) y (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)) (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) y x) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) n))
-Case conversion may be inaccurate. Consider using '#align pi_nat.mem_cylinder_iff_dist_le PiNat.mem_cylinder_iff_dist_leₓ'. -/
 theorem mem_cylinder_iff_dist_le {x y : ∀ n, E n} {n : ℕ} :
     y ∈ cylinder x n ↔ dist y x ≤ (1 / 2) ^ n :=
   by
@@ -459,12 +399,6 @@ theorem mem_cylinder_iff_dist_le {x y : ∀ n, E n} {n : ℕ} :
     exact apply_eq_of_lt_first_diff (hi.trans_le h)
 #align pi_nat.mem_cylinder_iff_dist_le PiNat.mem_cylinder_iff_dist_le
 
-/- warning: pi_nat.apply_eq_of_dist_lt -> PiNat.apply_eq_of_dist_lt is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} {x : forall (n : Nat), E n} {y : forall (n : Nat), E n} {n : Nat}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) n)) -> (forall {i : Nat}, (LE.le.{0} Nat Nat.hasLe i n) -> (Eq.{succ u1} (E i) (x i) (y i)))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} {x : forall (n : Nat), E n} {y : forall (n : Nat), E n} {n : Nat}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) n)) -> (forall {i : Nat}, (LE.le.{0} Nat instLENat i n) -> (Eq.{succ u1} (E i) (x i) (y i)))
-Case conversion may be inaccurate. Consider using '#align pi_nat.apply_eq_of_dist_lt PiNat.apply_eq_of_dist_ltₓ'. -/
 theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2) ^ n) {i : ℕ}
     (hi : i ≤ n) : x i = y i :=
   by
@@ -474,12 +408,6 @@ theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2)
   exact apply_eq_of_lt_first_diff (hi.trans_lt this)
 #align pi_nat.apply_eq_of_dist_lt PiNat.apply_eq_of_dist_lt
 
-/- warning: pi_nat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder -> PiNat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {f : (forall (n : Nat), E n) -> α}, Iff (forall (x : forall (n : Nat), E n) (y : forall (n : Nat), E n), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} α (PseudoMetricSpace.toHasDist.{u2} α _inst_1) (f x) (f y)) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y)) (forall (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (n : Nat), (Membership.Mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) y (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u2} α (PseudoMetricSpace.toHasDist.{u2} α _inst_1) (f x) (f y)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) n)))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} {α : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u2} α] {f : (forall (n : Nat), E n) -> α}, Iff (forall (x : forall (n : Nat), E n) (y : forall (n : Nat), E n), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f x) (f y)) (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y)) (forall (x : forall (n : Nat), E n) (y : forall (n : Nat), E n) (n : Nat), (Membership.mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) y (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) (f x) (f y)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) n)))
-Case conversion may be inaccurate. Consider using '#align pi_nat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder PiNat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinderₓ'. -/
 /-- A function to a pseudo-metric-space is `1`-Lipschitz if and only if points in the same cylinder
 of length `n` are sent to points within distance `(1/2)^n`.
 Not expressed using `lipschitz_with` as we don't have a metric space structure -/
@@ -542,12 +470,6 @@ theorem isTopologicalBasis_cylinders :
 
 variable {E}
 
-/- warning: pi_nat.is_open_iff_dist -> PiNat.isOpen_iff_dist is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] (s : Set.{u1} (forall (n : Nat), E n)), Iff (IsOpen.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) (forall (x : forall (n : Nat), E n), (Membership.Mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (y : forall (n : Nat), E n), (LT.lt.{0} Real Real.hasLt (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) ε) -> (Membership.Mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) y s)))))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] (s : Set.{u1} (forall (n : Nat), E n)), Iff (IsOpen.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) (forall (x : forall (n : Nat), E n), (Membership.mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (y : forall (n : Nat), E n), (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u1} (forall (n : Nat), E n) (PiNat.dist.{u1} (fun (n : Nat) => E n)) x y) ε) -> (Membership.mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) y s)))))
-Case conversion may be inaccurate. Consider using '#align pi_nat.is_open_iff_dist PiNat.isOpen_iff_distₓ'. -/
 theorem isOpen_iff_dist (s : Set (∀ n, E n)) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s :=
   by
@@ -657,12 +579,6 @@ where `z_w` is an element of `s` starting with `w`.
 -/
 
 
-/- warning: pi_nat.exists_disjoint_cylinder -> PiNat.exists_disjoint_cylinder is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] {s : Set.{u1} (forall (n : Nat), E n)}, (IsClosed.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) -> (forall {x : forall (n : Nat), E n}, (Not (Membership.Mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) x s)) -> (Exists.{1} Nat (fun (n : Nat) => Disjoint.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.completeBooleanAlgebra.{u1} (forall (n : Nat), E n))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (forall (n : Nat), E n)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.booleanAlgebra.{u1} (forall (n : Nat), E n)))) s (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n))))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] {s : Set.{u1} (forall (n : Nat), E n)}, (IsClosed.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) -> (forall {x : forall (n : Nat), E n}, (Not (Membership.mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) x s)) -> (Exists.{1} Nat (fun (n : Nat) => Disjoint.{u1} (Set.{u1} (forall (n : Nat), E n)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instCompleteBooleanAlgebraSet.{u1} (forall (n : Nat), E n))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (forall (n : Nat), E n)) (Preorder.toLE.{u1} (Set.{u1} (forall (n : Nat), E n)) (PartialOrder.toPreorder.{u1} (Set.{u1} (forall (n : Nat), E n)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instCompleteBooleanAlgebraSet.{u1} (forall (n : Nat), E n))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instCompleteBooleanAlgebraSet.{u1} (forall (n : Nat), E n))))))) s (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n))))
-Case conversion may be inaccurate. Consider using '#align pi_nat.exists_disjoint_cylinder PiNat.exists_disjoint_cylinderₓ'. -/
 theorem exists_disjoint_cylinder {s : Set (∀ n, E n)} (hs : IsClosed s) {x : ∀ n, E n}
     (hx : x ∉ s) : ∃ n, Disjoint s (cylinder x n) :=
   by
@@ -732,12 +648,6 @@ theorem firstDiff_le_longestPrefix {s : Set (∀ n, E n)} (hs : IsClosed s) {x y
 #align pi_nat.first_diff_le_longest_prefix PiNat.firstDiff_le_longestPrefix
 -/
 
-/- warning: pi_nat.inter_cylinder_longest_prefix_nonempty -> PiNat.inter_cylinder_longestPrefix_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] {s : Set.{u1} (forall (n : Nat), E n)}, (IsClosed.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) -> (Set.Nonempty.{u1} (forall (n : Nat), E n) s) -> (forall (x : forall (n : Nat), E n), Set.Nonempty.{u1} (forall (n : Nat), E n) (Inter.inter.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.hasInter.{u1} (forall (n : Nat), E n)) s (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x (PiNat.longestPrefix.{u1} (fun (n : Nat) => E n) x s))))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] {s : Set.{u1} (forall (n : Nat), E n)}, (IsClosed.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) -> (Set.Nonempty.{u1} (forall (n : Nat), E n) s) -> (forall (x : forall (n : Nat), E n), Set.Nonempty.{u1} (forall (n : Nat), E n) (Inter.inter.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instInterSet.{u1} (forall (n : Nat), E n)) s (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x (PiNat.longestPrefix.{u1} (fun (n : Nat) => E n) x s))))
-Case conversion may be inaccurate. Consider using '#align pi_nat.inter_cylinder_longest_prefix_nonempty PiNat.inter_cylinder_longestPrefix_nonemptyₓ'. -/
 theorem inter_cylinder_longestPrefix_nonempty {s : Set (∀ n, E n)} (hs : IsClosed s)
     (hne : s.Nonempty) (x : ∀ n, E n) : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
   by
@@ -757,12 +667,6 @@ theorem inter_cylinder_longestPrefix_nonempty {s : Set (∀ n, E n)} (hs : IsClo
   rw [hy]
 #align pi_nat.inter_cylinder_longest_prefix_nonempty PiNat.inter_cylinder_longestPrefix_nonempty
 
-/- warning: pi_nat.disjoint_cylinder_of_longest_prefix_lt -> PiNat.disjoint_cylinder_of_longestPrefix_lt is a dubious translation:
-lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] {s : Set.{u1} (forall (n : Nat), E n)}, (IsClosed.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) -> (forall {x : forall (n : Nat), E n}, (Not (Membership.Mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.hasMem.{u1} (forall (n : Nat), E n)) x s)) -> (forall {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (PiNat.longestPrefix.{u1} (fun (n : Nat) => E n) x s) n) -> (Disjoint.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.completeBooleanAlgebra.{u1} (forall (n : Nat), E n))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (forall (n : Nat), E n)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.booleanAlgebra.{u1} (forall (n : Nat), E n)))) s (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n))))
-but is expected to have type
-  forall {E : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), TopologicalSpace.{u1} (E n)] [_inst_2 : forall (n : Nat), DiscreteTopology.{u1} (E n) (_inst_1 n)] {s : Set.{u1} (forall (n : Nat), E n)}, (IsClosed.{u1} (forall (n : Nat), E n) (Pi.topologicalSpace.{0, u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) => _inst_1 a)) s) -> (forall {x : forall (n : Nat), E n}, (Not (Membership.mem.{u1, u1} (forall (n : Nat), E n) (Set.{u1} (forall (n : Nat), E n)) (Set.instMembershipSet.{u1} (forall (n : Nat), E n)) x s)) -> (forall {n : Nat}, (LT.lt.{0} Nat instLTNat (PiNat.longestPrefix.{u1} (fun (n : Nat) => E n) x s) n) -> (Disjoint.{u1} (Set.{u1} (forall (n : Nat), E n)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instCompleteBooleanAlgebraSet.{u1} (forall (n : Nat), E n))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (forall (n : Nat), E n)) (Preorder.toLE.{u1} (Set.{u1} (forall (n : Nat), E n)) (PartialOrder.toPreorder.{u1} (Set.{u1} (forall (n : Nat), E n)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instCompleteBooleanAlgebraSet.{u1} (forall (n : Nat), E n))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (forall (n : Nat), E n)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (forall (n : Nat), E n)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (forall (n : Nat), E n)) (Set.instCompleteBooleanAlgebraSet.{u1} (forall (n : Nat), E n))))))) s (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n))))
-Case conversion may be inaccurate. Consider using '#align pi_nat.disjoint_cylinder_of_longest_prefix_lt PiNat.disjoint_cylinder_of_longestPrefix_ltₓ'. -/
 theorem disjoint_cylinder_of_longestPrefix_lt {s : Set (∀ n, E n)} (hs : IsClosed s) {x : ∀ n, E n}
     (hx : x ∉ s) {n : ℕ} (hn : longestPrefix x s < n) : Disjoint s (cylinder x n) :=
   by
@@ -949,12 +853,6 @@ end PiNat
 
 open PiNat
 
-/- warning: exists_nat_nat_continuous_surjective_of_complete_space -> exists_nat_nat_continuous_surjective_of_completeSpace is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : MetricSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))] [_inst_3 : TopologicalSpace.SecondCountableTopology.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))] [_inst_4 : Nonempty.{succ u1} α], Exists.{succ u1} ((Nat -> Nat) -> α) (fun (f : (Nat -> Nat) -> α) => And (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => Nat.topologicalSpace)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) f) (Function.Surjective.{1, succ u1} (Nat -> Nat) α f))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : MetricSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))] [_inst_3 : TopologicalSpace.SecondCountableTopology.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))] [_inst_4 : Nonempty.{succ u1} α], Exists.{succ u1} ((Nat -> Nat) -> α) (fun (f : (Nat -> Nat) -> α) => And (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => instTopologicalSpaceNat)) (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))) f) (Function.Surjective.{1, succ u1} (Nat -> Nat) α f))
-Case conversion may be inaccurate. Consider using '#align exists_nat_nat_continuous_surjective_of_complete_space exists_nat_nat_continuous_surjective_of_completeSpaceₓ'. -/
 /-- Any nonempty complete second countable metric space is the continuous image of the
 fundamental space `ℕ → ℕ`. For a version of this theorem in the context of Polish spaces, see
 `exists_nat_nat_continuous_surjective_of_polish_space`. -/
@@ -1082,23 +980,11 @@ protected def dist : Dist (∀ i, F i) :=
 
 attribute [local instance] PiCountable.dist
 
-/- warning: pi_countable.dist_eq_tsum -> PiCountable.dist_eq_tsum is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Encodable.{u1} ι] {F : ι -> Type.{u2}} [_inst_2 : forall (i : ι), MetricSpace.{u2} (F i)] (x : forall (i : ι), F i) (y : forall (i : ι), F i), Eq.{1} Real (Dist.dist.{max u1 u2} (forall (i : ι), F i) (PiCountable.dist.{u1, u2} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y) (tsum.{0, u1} Real Real.addCommMonoid (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) ι (fun (i : ι) => LinearOrder.min.{0} Real Real.linearOrder (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (Encodable.encode.{u1} ι _inst_1 i)) (Dist.dist.{u2} (F i) (PseudoMetricSpace.toHasDist.{u2} (F i) (MetricSpace.toPseudoMetricSpace.{u2} (F i) (_inst_2 i))) (x i) (y i))))
-but is expected to have type
-  forall {ι : Type.{u2}} [_inst_1 : Encodable.{u2} ι] {F : ι -> Type.{u1}} [_inst_2 : forall (i : ι), MetricSpace.{u1} (F i)] (x : forall (i : ι), F i) (y : forall (i : ι), F i), Eq.{1} Real (Dist.dist.{max u2 u1} (forall (i : ι), F i) (PiCountable.dist.{u2, u1} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y) (tsum.{0, u2} Real Real.instAddCommMonoidReal (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) ι (fun (i : ι) => Min.min.{0} Real (LinearOrderedRing.toMin.{0} Real Real.instLinearOrderedRingReal) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (Encodable.encode.{u2} ι _inst_1 i)) (Dist.dist.{u1} (F i) (PseudoMetricSpace.toDist.{u1} (F i) (MetricSpace.toPseudoMetricSpace.{u1} (F i) (_inst_2 i))) (x i) (y i))))
-Case conversion may be inaccurate. Consider using '#align pi_countable.dist_eq_tsum PiCountable.dist_eq_tsumₓ'. -/
 theorem dist_eq_tsum (x y : ∀ i, F i) :
     dist x y = ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i)) :=
   rfl
 #align pi_countable.dist_eq_tsum PiCountable.dist_eq_tsum
 
-/- warning: pi_countable.dist_summable -> PiCountable.dist_summable is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Encodable.{u1} ι] {F : ι -> Type.{u2}} [_inst_2 : forall (i : ι), MetricSpace.{u2} (F i)] (x : forall (i : ι), F i) (y : forall (i : ι), F i), Summable.{0, u1} Real ι Real.addCommMonoid (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (i : ι) => LinearOrder.min.{0} Real Real.linearOrder (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (Encodable.encode.{u1} ι _inst_1 i)) (Dist.dist.{u2} (F i) (PseudoMetricSpace.toHasDist.{u2} (F i) (MetricSpace.toPseudoMetricSpace.{u2} (F i) (_inst_2 i))) (x i) (y i)))
-but is expected to have type
-  forall {ι : Type.{u2}} [_inst_1 : Encodable.{u2} ι] {F : ι -> Type.{u1}} [_inst_2 : forall (i : ι), MetricSpace.{u1} (F i)] (x : forall (i : ι), F i) (y : forall (i : ι), F i), Summable.{0, u2} Real ι Real.instAddCommMonoidReal (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (i : ι) => Min.min.{0} Real (LinearOrderedRing.toMin.{0} Real Real.instLinearOrderedRingReal) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (Encodable.encode.{u2} ι _inst_1 i)) (Dist.dist.{u1} (F i) (PseudoMetricSpace.toDist.{u1} (F i) (MetricSpace.toPseudoMetricSpace.{u1} (F i) (_inst_2 i))) (x i) (y i)))
-Case conversion may be inaccurate. Consider using '#align pi_countable.dist_summable PiCountable.dist_summableₓ'. -/
 theorem dist_summable (x y : ∀ i, F i) :
     Summable fun i : ι => min ((1 / 2) ^ encode i) (dist (x i) (y i)) :=
   by
@@ -1107,23 +993,11 @@ theorem dist_summable (x y : ∀ i, F i) :
   exact le_min (pow_nonneg (by norm_num) _) dist_nonneg
 #align pi_countable.dist_summable PiCountable.dist_summable
 
-/- warning: pi_countable.min_dist_le_dist_pi -> PiCountable.min_dist_le_dist_pi is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Encodable.{u1} ι] {F : ι -> Type.{u2}} [_inst_2 : forall (i : ι), MetricSpace.{u2} (F i)] (x : forall (i : ι), F i) (y : forall (i : ι), F i) (i : ι), LE.le.{0} Real Real.hasLe (LinearOrder.min.{0} Real Real.linearOrder (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (Encodable.encode.{u1} ι _inst_1 i)) (Dist.dist.{u2} (F i) (PseudoMetricSpace.toHasDist.{u2} (F i) (MetricSpace.toPseudoMetricSpace.{u2} (F i) (_inst_2 i))) (x i) (y i))) (Dist.dist.{max u1 u2} (forall (i : ι), F i) (PiCountable.dist.{u1, u2} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y)
-but is expected to have type
-  forall {ι : Type.{u2}} [_inst_1 : Encodable.{u2} ι] {F : ι -> Type.{u1}} [_inst_2 : forall (i : ι), MetricSpace.{u1} (F i)] (x : forall (i : ι), F i) (y : forall (i : ι), F i) (i : ι), LE.le.{0} Real Real.instLEReal (Min.min.{0} Real (LinearOrderedRing.toMin.{0} Real Real.instLinearOrderedRingReal) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (Encodable.encode.{u2} ι _inst_1 i)) (Dist.dist.{u1} (F i) (PseudoMetricSpace.toDist.{u1} (F i) (MetricSpace.toPseudoMetricSpace.{u1} (F i) (_inst_2 i))) (x i) (y i))) (Dist.dist.{max u2 u1} (forall (i : ι), F i) (PiCountable.dist.{u2, u1} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y)
-Case conversion may be inaccurate. Consider using '#align pi_countable.min_dist_le_dist_pi PiCountable.min_dist_le_dist_piₓ'. -/
 theorem min_dist_le_dist_pi (x y : ∀ i, F i) (i : ι) :
     min ((1 / 2) ^ encode i) (dist (x i) (y i)) ≤ dist x y :=
   le_tsum (dist_summable x y) i fun j hj => le_min (by simp) dist_nonneg
 #align pi_countable.min_dist_le_dist_pi PiCountable.min_dist_le_dist_pi
 
-/- warning: pi_countable.dist_le_dist_pi_of_dist_lt -> PiCountable.dist_le_dist_pi_of_dist_lt is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} [_inst_1 : Encodable.{u1} ι] {F : ι -> Type.{u2}} [_inst_2 : forall (i : ι), MetricSpace.{u2} (F i)] {x : forall (i : ι), F i} {y : forall (i : ι), F i} {i : ι}, (LT.lt.{0} Real Real.hasLt (Dist.dist.{max u1 u2} (forall (i : ι), F i) (PiCountable.dist.{u1, u2} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))) (Encodable.encode.{u1} ι _inst_1 i))) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u2} (F i) (PseudoMetricSpace.toHasDist.{u2} (F i) (MetricSpace.toPseudoMetricSpace.{u2} (F i) (_inst_2 i))) (x i) (y i)) (Dist.dist.{max u1 u2} (forall (i : ι), F i) (PiCountable.dist.{u1, u2} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y))
-but is expected to have type
-  forall {ι : Type.{u2}} [_inst_1 : Encodable.{u2} ι] {F : ι -> Type.{u1}} [_inst_2 : forall (i : ι), MetricSpace.{u1} (F i)] {x : forall (i : ι), F i} {y : forall (i : ι), F i} {i : ι}, (LT.lt.{0} Real Real.instLTReal (Dist.dist.{max u2 u1} (forall (i : ι), F i) (PiCountable.dist.{u2, u1} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (Encodable.encode.{u2} ι _inst_1 i))) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} (F i) (PseudoMetricSpace.toDist.{u1} (F i) (MetricSpace.toPseudoMetricSpace.{u1} (F i) (_inst_2 i))) (x i) (y i)) (Dist.dist.{max u2 u1} (forall (i : ι), F i) (PiCountable.dist.{u2, u1} ι _inst_1 (fun (i : ι) => F i) (fun (i : ι) => _inst_2 i)) x y))
-Case conversion may be inaccurate. Consider using '#align pi_countable.dist_le_dist_pi_of_dist_lt PiCountable.dist_le_dist_pi_of_dist_ltₓ'. -/
 theorem dist_le_dist_pi_of_dist_lt {x y : ∀ i, F i} {i : ι} (h : dist x y < (1 / 2) ^ encode i) :
     dist (x i) (y i) ≤ dist x y := by
   simpa only [not_le.2 h, false_or_iff] using min_le_iff.1 (min_dist_le_dist_pi x y i)

@@ -163,12 +163,6 @@ instance : BoundedOrder (Finset α) :=
     top := univ
     le_top := subset_univ }
 
-/- warning: finset.top_eq_univ -> Finset.top_eq_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} α) (Top.top.{u1} (Finset.{u1} α) (OrderTop.toHasTop.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (BoundedOrder.toOrderTop.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.boundedOrder.{u1} α _inst_1)))) (Finset.univ.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} α) (Top.top.{u1} (Finset.{u1} α) (OrderTop.toTop.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (BoundedOrder.toOrderTop.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.boundedOrder.{u1} α _inst_1)))) (Finset.univ.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align finset.top_eq_univ Finset.top_eq_univₓ'. -/
 @[simp]
 theorem top_eq_univ : (⊤ : Finset α) = univ :=
   rfl
@@ -222,12 +216,6 @@ theorem not_mem_compl : a ∉ sᶜ ↔ a ∈ s := by rw [mem_compl, Classical.no
 #align finset.not_mem_compl Finset.not_mem_compl
 -/
 
-/- warning: finset.coe_compl -> Finset.coe_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.coe_compl Finset.coe_complₓ'. -/
 @[simp, norm_cast]
 theorem coe_compl (s : Finset α) : ↑(sᶜ) = (↑s : Set α)ᶜ :=
   Set.ext fun x => mem_compl
@@ -371,23 +359,11 @@ theorem inter_univ [DecidableEq α] (s : Finset α) : s ∩ univ = s := by rw [i
 #align finset.inter_univ Finset.inter_univ
 -/
 
-/- warning: finset.piecewise_univ -> Finset.piecewise_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (Finset.univ.{u1} α _inst_1))] {δ : α -> Sort.{u2}} (f : forall (i : α), δ i) (g : forall (i : α), δ i), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (Finset.univ.{u1} α _inst_1) f g (fun (j : α) => _inst_2 j)) f
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Fintype.{u2} α] [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i (Finset.univ.{u2} α _inst_1))] {δ : α -> Sort.{u1}} (f : forall (i : α), δ i) (g : forall (i : α), δ i), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (Finset.univ.{u2} α _inst_1) f g (fun (j : α) => _inst_2 j)) f
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_univ Finset.piecewise_univₓ'. -/
 @[simp]
 theorem piecewise_univ [∀ i : α, Decidable (i ∈ (univ : Finset α))] {δ : α → Sort _}
     (f g : ∀ i, δ i) : univ.piecewise f g = f := by ext i; simp [piecewise]
 #align finset.piecewise_univ Finset.piecewise_univ
 
-/- warning: finset.piecewise_compl -> Finset.piecewise_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) [_inst_3 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s)] [_inst_4 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s))] {δ : α -> Sort.{u2}} (f : forall (i : α), δ i) (g : forall (i : α), δ i), Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s) f g (fun (j : α) => _inst_4 j)) (Finset.piecewise.{u1, u2} α (fun (i : α) => δ i) s g f (fun (j : α) => _inst_3 j))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u2} α] (s : Finset.{u2} α) [_inst_3 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)] [_inst_4 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i (HasCompl.compl.{u2} (Finset.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} α) (Finset.booleanAlgebra.{u2} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s))] {δ : α -> Sort.{u1}} (f : forall (i : α), δ i) (g : forall (i : α), δ i), Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) (HasCompl.compl.{u2} (Finset.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} α) (Finset.booleanAlgebra.{u2} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s) f g (fun (j : α) => _inst_4 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s g f (fun (j : α) => _inst_3 j))
-Case conversion may be inaccurate. Consider using '#align finset.piecewise_compl Finset.piecewise_complₓ'. -/
 theorem piecewise_compl [DecidableEq α] (s : Finset α) [∀ i : α, Decidable (i ∈ s)]
     [∀ i : α, Decidable (i ∈ sᶜ)] {δ : α → Sort _} (f g : ∀ i, δ i) :
     sᶜ.piecewise f g = s.piecewise g f := by ext i; simp [piecewise]
@@ -401,12 +377,6 @@ theorem piecewise_erase_univ {δ : α → Sort _} [DecidableEq α] (a : α) (f g
 #align finset.piecewise_erase_univ Finset.piecewise_erase_univ
 -/
 
-/- warning: finset.univ_map_equiv_to_embedding -> Finset.univ_map_equiv_to_embedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : Fintype.{u1} α] [_inst_3 : Fintype.{u2} β] (e : Equiv.{succ u1, succ u2} α β), Eq.{succ u2} (Finset.{u2} β) (Finset.map.{u1, u2} α β (Equiv.toEmbedding.{succ u1, succ u2} α β e) (Finset.univ.{u1} α _inst_2)) (Finset.univ.{u2} β _inst_3)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : Fintype.{u2} α] [_inst_3 : Fintype.{u1} β] (e : Equiv.{succ u2, succ u1} α β), Eq.{succ u1} (Finset.{u1} β) (Finset.map.{u2, u1} α β (Equiv.toEmbedding.{succ u2, succ u1} α β e) (Finset.univ.{u2} α _inst_2)) (Finset.univ.{u1} β _inst_3)
-Case conversion may be inaccurate. Consider using '#align finset.univ_map_equiv_to_embedding Finset.univ_map_equiv_to_embeddingₓ'. -/
 theorem univ_map_equiv_to_embedding {α β : Type _} [Fintype α] [Fintype β] (e : α ≃ β) :
     univ.map e.toEmbedding = univ :=
   eq_univ_iff_forall.mpr fun b => mem_map.mpr ⟨e.symm b, mem_univ _, by simp⟩
@@ -660,23 +630,11 @@ theorem left_inv_of_invOfMemRange (b : Set.range f) : f (hf.invOfMemRange b) = b
 #align function.injective.left_inv_of_inv_of_mem_range Function.Injective.left_inv_of_invOfMemRange
 -/
 
-/- warning: function.injective.right_inv_of_inv_of_mem_range -> Function.Injective.right_inv_of_invOfMemRange is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β} (hf : Function.Injective.{succ u1, succ u2} α β f) (a : α), Eq.{succ u1} α (Function.Injective.invOfMemRange.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f hf (Subtype.mk.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (Set.range.{u2, succ u1} β α f)) (f a) (Set.mem_range_self.{u2, succ u1} β α f a))) a
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β} (hf : Function.Injective.{succ u2, succ u1} α β f) (a : α), Eq.{succ u2} α (Function.Injective.invOfMemRange.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f hf (Subtype.mk.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x (Set.range.{u1, succ u2} β α f)) (f a) (Set.mem_range_self.{succ u2, u1} β α f a))) a
-Case conversion may be inaccurate. Consider using '#align function.injective.right_inv_of_inv_of_mem_range Function.Injective.right_inv_of_invOfMemRangeₓ'. -/
 @[simp]
 theorem right_inv_of_invOfMemRange (a : α) : hf.invOfMemRange ⟨f a, Set.mem_range_self a⟩ = a :=
   hf (Finset.choose_spec (fun a' => f a' = f a) _ _).right
 #align function.injective.right_inv_of_inv_of_mem_range Function.Injective.right_inv_of_invOfMemRange
 
-/- warning: function.injective.inv_fun_restrict -> Function.Injective.invFun_restrict is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β} (hf : Function.Injective.{succ u1, succ u2} α β f) [_inst_3 : Nonempty.{succ u1} α], Eq.{max (succ u2) (succ u1)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f)) -> α) (Set.restrict.{u2, u1} β (fun (ᾰ : β) => α) (Set.range.{u2, succ u1} β α f) (Function.invFun.{succ u1, succ u2} α β _inst_3 f)) (Function.Injective.invOfMemRange.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f hf)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β} (hf : Function.Injective.{succ u2, succ u1} α β f) [_inst_3 : Nonempty.{succ u2} α], Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) -> α) (Set.restrict.{u1, u2} β (fun (ᾰ : β) => α) (Set.range.{u1, succ u2} β α f) (Function.invFun.{succ u2, succ u1} α β _inst_3 f)) (Function.Injective.invOfMemRange.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f hf)
-Case conversion may be inaccurate. Consider using '#align function.injective.inv_fun_restrict Function.Injective.invFun_restrictₓ'. -/
 theorem invFun_restrict [Nonempty α] : (Set.range f).restrict (invFun f) = hf.invOfMemRange :=
   by
   ext ⟨b, h⟩
@@ -717,23 +675,11 @@ theorem left_inv_of_invOfMemRange : f (f.invOfMemRange b) = b :=
 #align function.embedding.left_inv_of_inv_of_mem_range Function.Embedding.left_inv_of_invOfMemRange
 -/
 
-/- warning: function.embedding.right_inv_of_inv_of_mem_range -> Function.Embedding.right_inv_of_invOfMemRange is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] (f : Function.Embedding.{succ u1, succ u2} α β) (a : α), Eq.{succ u1} α (Function.Embedding.invOfMemRange.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f (Subtype.mk.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (Set.range.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f))) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f a) (Set.mem_range_self.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f) a))) a
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] (f : Function.Embedding.{succ u2, succ u1} α β) (a : α), Eq.{succ u2} α (Function.Embedding.invOfMemRange.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f (Subtype.mk.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f a) (Set.mem_range_self.{succ u2, u1} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f) a))) a
-Case conversion may be inaccurate. Consider using '#align function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_invOfMemRangeₓ'. -/
 @[simp]
 theorem right_inv_of_invOfMemRange (a : α) : f.invOfMemRange ⟨f a, Set.mem_range_self a⟩ = a :=
   f.Injective.right_inv_of_invOfMemRange a
 #align function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_invOfMemRange
 
-/- warning: function.embedding.inv_fun_restrict -> Function.Embedding.invFun_restrict is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] (f : Function.Embedding.{succ u1, succ u2} α β) [_inst_3 : Nonempty.{succ u1} α], Eq.{max (succ u2) (succ u1)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f))) -> α) (Set.restrict.{u2, u1} β (fun (ᾰ : β) => α) (Set.range.{u2, succ u1} β α (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f)) (Function.invFun.{succ u1, succ u2} α β _inst_3 (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} α β) (fun (_x : Function.Embedding.{succ u1, succ u2} α β) => α -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} α β) f))) (Function.Embedding.invOfMemRange.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] (f : Function.Embedding.{succ u2, succ u1} α β) [_inst_3 : Nonempty.{succ u2} α], Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u1} β (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f))) -> α) (Set.restrict.{u1, u2} β (fun (ᾰ : β) => α) (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f)) (Function.invFun.{succ u2, succ u1} α β _inst_3 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f))) (Function.Embedding.invOfMemRange.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f)
-Case conversion may be inaccurate. Consider using '#align function.embedding.inv_fun_restrict Function.Embedding.invFun_restrictₓ'. -/
 theorem invFun_restrict [Nonempty α] : (Set.range f).restrict (invFun f) = f.invOfMemRange :=
   by
   ext ⟨b, h⟩
@@ -879,12 +825,6 @@ theorem toFinset_subset_toFinset [Fintype s] [Fintype t] : s.toFinset ⊆ t.toFi
 #align set.to_finset_subset_to_finset Set.toFinset_subset_toFinset
 -/
 
-/- warning: set.to_finset_ssubset -> Set.toFinset_ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) (Set.toFinset.{u1} α s _inst_1) t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Fintype.{u1} (Set.Elem.{u1} α s)] {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Set.toFinset.{u1} α s _inst_1) t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s (Finset.toSet.{u1} α t))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_ssubset Set.toFinset_ssubsetₓ'. -/
 @[simp]
 theorem toFinset_ssubset [Fintype s] {t : Finset α} : s.toFinset ⊂ t ↔ s ⊂ t := by
   rw [← Finset.coe_ssubset, coe_to_finset]
@@ -897,23 +837,11 @@ theorem subset_toFinset {s : Finset α} [Fintype t] : s ⊆ t.toFinset ↔ ↑s 
 #align set.subset_to_finset Set.subset_toFinset
 -/
 
-/- warning: set.ssubset_to_finset -> Set.ssubset_toFinset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {t : Set.{u1} α} {s : Finset.{u1} α} [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s (Set.toFinset.{u1} α t _inst_1)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) t)
-but is expected to have type
-  forall {α : Type.{u1}} {t : Set.{u1} α} {s : Finset.{u1} α} [_inst_1 : Fintype.{u1} (Set.Elem.{u1} α t)], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s (Set.toFinset.{u1} α t _inst_1)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (Finset.toSet.{u1} α s) t)
-Case conversion may be inaccurate. Consider using '#align set.ssubset_to_finset Set.ssubset_toFinsetₓ'. -/
 @[simp]
 theorem ssubset_toFinset {s : Finset α} [Fintype t] : s ⊂ t.toFinset ↔ ↑s ⊂ t := by
   rw [← Finset.coe_ssubset, coe_to_finset]
 #align set.ssubset_to_finset Set.ssubset_toFinset
 
-/- warning: set.to_finset_ssubset_to_finset -> Set.toFinset_ssubset_toFinset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) (Set.toFinset.{u1} α s _inst_1) (Set.toFinset.{u1} α t _inst_2)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α t)], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Set.toFinset.{u1} α s _inst_1) (Set.toFinset.{u1} α t _inst_2)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align set.to_finset_ssubset_to_finset Set.toFinset_ssubset_toFinsetₓ'. -/
 @[mono]
 theorem toFinset_ssubset_toFinset [Fintype s] [Fintype t] : s.toFinset ⊂ t.toFinset ↔ s ⊂ t := by
   simp only [Finset.ssubset_def, to_finset_subset_to_finset, ssubset_def]
@@ -929,21 +857,9 @@ theorem toFinset_subset [Fintype s] {t : Finset α} : s.toFinset ⊆ t ↔ s ⊆
 alias to_finset_subset_to_finset ↔ _ to_finset_mono
 #align set.to_finset_mono Set.toFinset_mono
 
-/- warning: set.to_finset_strict_mono -> Set.toFinset_strict_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)], (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t) -> (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) (Set.toFinset.{u1} α s _inst_1) (Set.toFinset.{u1} α t _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α t)], (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t) -> (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Set.toFinset.{u1} α s _inst_1) (Set.toFinset.{u1} α t _inst_2))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_strict_mono Set.toFinset_strict_monoₓ'. -/
 alias to_finset_ssubset_to_finset ↔ _ to_finset_strict_mono
 #align set.to_finset_strict_mono Set.toFinset_strict_mono
 
-/- warning: set.disjoint_to_finset -> Set.disjoint_toFinset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)], Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Set.toFinset.{u1} α s _inst_1) (Set.toFinset.{u1} α t _inst_2)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α t)], Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Set.toFinset.{u1} α s _inst_1) (Set.toFinset.{u1} α t _inst_2)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t)
-Case conversion may be inaccurate. Consider using '#align set.disjoint_to_finset Set.disjoint_toFinsetₓ'. -/
 @[simp]
 theorem disjoint_toFinset [Fintype s] [Fintype t] : Disjoint s.toFinset t.toFinset ↔ Disjoint s t :=
   by simp only [← disjoint_coe, coe_to_finset]
@@ -953,56 +869,26 @@ section DecidableEq
 
 variable [DecidableEq α] (s t) [Fintype s] [Fintype t]
 
-/- warning: set.to_finset_inter -> Set.toFinset_inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)] [_inst_4 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) _inst_4) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) _inst_4) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_inter Set.toFinset_interₓ'. -/
 @[simp]
 theorem toFinset_inter [Fintype ↥(s ∩ t)] : (s ∩ t).toFinset = s.toFinset ∩ t.toFinset := by ext;
   simp
 #align set.to_finset_inter Set.toFinset_inter
 
-/- warning: set.to_finset_union -> Set.toFinset_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)] [_inst_4 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) _inst_4) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) _inst_4) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_union Set.toFinset_unionₓ'. -/
 @[simp]
 theorem toFinset_union [Fintype ↥(s ∪ t)] : (s ∪ t).toFinset = s.toFinset ∪ t.toFinset := by ext;
   simp
 #align set.to_finset_union Set.toFinset_union
 
-/- warning: set.to_finset_diff -> Set.toFinset_diff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)] [_inst_4 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) _inst_4) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) _inst_4) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_diff Set.toFinset_diffₓ'. -/
 @[simp]
 theorem toFinset_diff [Fintype ↥(s \ t)] : (s \ t).toFinset = s.toFinset \ t.toFinset := by ext;
   simp
 #align set.to_finset_diff Set.toFinset_diff
 
-/- warning: set.to_finset_symm_diff -> Set.toFinset_symmDiff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)] [_inst_4 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) _inst_4) (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t) _inst_4) (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_symm_diff Set.toFinset_symmDiffₓ'. -/
 @[simp]
 theorem toFinset_symmDiff [Fintype ↥(s ∆ t)] : (s ∆ t).toFinset = s.toFinset ∆ t.toFinset := by ext;
   simp [mem_symm_diff, Finset.mem_symmDiff]
 #align set.to_finset_symm_diff Set.toFinset_symmDiff
 
-/- warning: set.to_finset_compl -> Set.toFinset_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_4 : Fintype.{u1} α] [_inst_5 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) _inst_5) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_4 (fun (a : α) (b : α) => _inst_1 a b))) (Set.toFinset.{u1} α s _inst_2))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_4 : Fintype.{u1} α] [_inst_5 : Fintype.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) _inst_5) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_4 (fun (a : α) (b : α) => _inst_1 a b))) (Set.toFinset.{u1} α s _inst_2))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_compl Set.toFinset_complₓ'. -/
 @[simp]
 theorem toFinset_compl [Fintype α] [Fintype ↥(sᶜ)] : sᶜ.toFinset = s.toFinsetᶜ := by ext; simp
 #align set.to_finset_compl Set.toFinset_compl
@@ -1047,12 +933,6 @@ theorem toFinset_setOf [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype
 #align set.to_finset_set_of Set.toFinset_setOf
 -/
 
-/- warning: set.to_finset_ssubset_univ -> Set.toFinset_ssubset_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] {s : Set.{u1} α} [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) (Set.toFinset.{u1} α s _inst_2) (Finset.univ.{u1} α _inst_1)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s (Set.univ.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] {s : Set.{u1} α} [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Set.toFinset.{u1} α s _inst_2) (Finset.univ.{u1} α _inst_1)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s (Set.univ.{u1} α))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_ssubset_univ Set.toFinset_ssubset_univₓ'. -/
 @[simp]
 theorem toFinset_ssubset_univ [Fintype α] {s : Set α} [Fintype s] :
     s.toFinset ⊂ Finset.univ ↔ s ⊂ univ := by rw [← coe_ssubset, coe_to_finset, coe_univ]
@@ -1066,12 +946,6 @@ theorem toFinset_image [DecidableEq β] (f : α → β) (s : Set α) [Fintype s]
 #align set.to_finset_image Set.toFinset_image
 -/
 
-/- warning: set.to_finset_range -> Set.toFinset_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u2} β] (f : β -> α) [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.range.{u1, succ u2} α β f))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Set.range.{u1, succ u2} α β f) _inst_3) (Finset.image.{u2, u1} β α (fun (a : α) (b : α) => _inst_1 a b) f (Finset.univ.{u2} β _inst_2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u1} β] (f : β -> α) [_inst_3 : Fintype.{u2} (Set.Elem.{u2} α (Set.range.{u2, succ u1} α β f))], Eq.{succ u2} (Finset.{u2} α) (Set.toFinset.{u2} α (Set.range.{u2, succ u1} α β f) _inst_3) (Finset.image.{u1, u2} β α (fun (a : α) (b : α) => _inst_1 a b) f (Finset.univ.{u1} β _inst_2))
-Case conversion may be inaccurate. Consider using '#align set.to_finset_range Set.toFinset_rangeₓ'. -/
 @[simp]
 theorem toFinset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.range f)] :
     (Set.range f).toFinset = Finset.univ.image f := by ext; simp
@@ -1117,39 +991,21 @@ theorem Fin.univ_def (n : ℕ) : (univ : Finset (Fin n)) = ⟨List.finRange n, L
 #align fin.univ_def Fin.univ_def
 -/
 
-/- warning: fin.image_succ_above_univ -> Fin.image_succAbove_univ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align fin.image_succ_above_univ Fin.image_succAbove_univₓ'. -/
 @[simp]
 theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAbove = {i}ᶜ := by
   ext m; simp
 #align fin.image_succ_above_univ Fin.image_succAbove_univ
 
-/- warning: fin.image_succ_univ -> Fin.image_succ_univ is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Finset.{0} (Fin (Nat.succ n))) (Finset.image.{0, 0} (Fin n) (Fin (Nat.succ n)) (fun (a : Fin (Nat.succ n)) (b : Fin (Nat.succ n)) => Fin.decidableEq (Nat.succ n) a b) (Fin.succ n) (Finset.univ.{0} (Fin n) (Fin.fintype n))) (HasCompl.compl.{0} (Finset.{0} (Fin (Nat.succ n))) (BooleanAlgebra.toHasCompl.{0} (Finset.{0} (Fin (Nat.succ n))) (Finset.booleanAlgebra.{0} (Fin (Nat.succ n)) (Fin.fintype (Nat.succ n)) (fun (a : Fin (Nat.succ n)) (b : Fin (Nat.succ n)) => Fin.decidableEq (Nat.succ n) a b))) (Singleton.singleton.{0, 0} (Fin (Nat.succ n)) (Finset.{0} (Fin (Nat.succ n))) (Finset.hasSingleton.{0} (Fin (Nat.succ n))) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Finset.{0} (Fin (Nat.succ n))) (Finset.image.{0, 0} (Fin n) (Fin (Nat.succ n)) (fun (a : Fin (Nat.succ n)) (b : Fin (Nat.succ n)) => instDecidableEqFin (Nat.succ n) a b) (Fin.succ n) (Finset.univ.{0} (Fin n) (Fin.fintype n))) (HasCompl.compl.{0} (Finset.{0} (Fin (Nat.succ n))) (BooleanAlgebra.toHasCompl.{0} (Finset.{0} (Fin (Nat.succ n))) (Finset.booleanAlgebra.{0} (Fin (Nat.succ n)) (Fin.fintype (Nat.succ n)) (fun (a : Fin (Nat.succ n)) (b : Fin (Nat.succ n)) => instDecidableEqFin (Nat.succ n) a b))) (Singleton.singleton.{0, 0} (Fin (Nat.succ n)) (Finset.{0} (Fin (Nat.succ n))) (Finset.instSingletonFinset.{0} (Fin (Nat.succ n))) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))))
-Case conversion may be inaccurate. Consider using '#align fin.image_succ_univ Fin.image_succ_univₓ'. -/
 @[simp]
 theorem Fin.image_succ_univ (n : ℕ) : (univ : Finset (Fin n)).image Fin.succ = {0}ᶜ := by
   rw [← Fin.succAbove_zero, Fin.image_succAbove_univ]
 #align fin.image_succ_univ Fin.image_succ_univ
 
-/- warning: fin.image_cast_succ -> Fin.image_castSucc is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Finset.image.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (a : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (b : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => Fin.decidableEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a b) (coeFn.{1, 1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe n) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (fun (_x : RelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) => (Fin n) -> (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (RelEmbedding.hasCoeToFun.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (Fin.castSucc n)) (Finset.univ.{0} (Fin n) (Fin.fintype n))) (HasCompl.compl.{0} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (BooleanAlgebra.toHasCompl.{0} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Finset.booleanAlgebra.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.fintype (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (a : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (b : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => Fin.decidableEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a b))) (Singleton.singleton.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Finset.hasSingleton.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Fin.last n)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Finset.image.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (a : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (b : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => instDecidableEqFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a b) (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (Fin.castSucc n)) (Finset.univ.{0} (Fin n) (Fin.fintype n))) (HasCompl.compl.{0} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (BooleanAlgebra.toHasCompl.{0} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Finset.booleanAlgebra.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.fintype (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (a : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (b : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => instDecidableEqFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a b))) (Singleton.singleton.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Finset.instSingletonFinset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin.last n)))
-Case conversion may be inaccurate. Consider using '#align fin.image_cast_succ Fin.image_castSuccₓ'. -/
 @[simp]
 theorem Fin.image_castSucc (n : ℕ) : (univ : Finset (Fin n)).image Fin.castSucc = {Fin.last n}ᶜ :=
   by rw [← Fin.succAbove_last, Fin.image_succAbove_univ]
 #align fin.image_cast_succ Fin.image_castSucc
 
-/- warning: fin.univ_succ -> Fin.univ_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align fin.univ_succ Fin.univ_succₓ'. -/
 /- The following three lemmas use `finset.cons` instead of `insert` and `finset.map` instead of
 `finset.image` to reduce proof obligations downstream. -/
 /-- Embed `fin n` into `fin (n + 1)` by prepending zero to the `univ` -/
@@ -1310,12 +1166,6 @@ theorem Finset.univ_eq_attach {α : Type u} (s : Finset α) : (univ : Finset s) 
 
 end Finset
 
-/- warning: fintype.coe_image_univ -> Fintype.coe_image_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β}, Eq.{succ u2} (Set.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) f (Finset.univ.{u1} α _inst_1))) (Set.range.{u2, succ u1} β α f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β}, Eq.{succ u1} (Set.{u1} β) (Finset.toSet.{u1} β (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_2 a b) f (Finset.univ.{u2} α _inst_1))) (Set.range.{u1, succ u2} β α f)
-Case conversion may be inaccurate. Consider using '#align fintype.coe_image_univ Fintype.coe_image_univₓ'. -/
 theorem Fintype.coe_image_univ [Fintype α] [DecidableEq β] {f : α → β} :
     ↑(Finset.image f Finset.univ) = Set.range f := by ext x; simp
 #align fintype.coe_image_univ Fintype.coe_image_univ
@@ -1386,12 +1236,6 @@ section
 
 variable (α)
 
-/- warning: units_equiv_prod_subtype -> unitsEquivProdSubtype is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Monoid.{u1} α], Equiv.{succ u1, succ u1} (Units.{u1} α _inst_1) (Subtype.{succ u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => And (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))))) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (Prod.snd.{u1, u1} α α p) (Prod.fst.{u1, u1} α α p)) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Monoid.{u1} α], Equiv.{succ u1, succ u1} (Units.{u1} α _inst_1) (Subtype.{succ u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => And (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α _inst_1)))) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (Prod.snd.{u1, u1} α α p) (Prod.fst.{u1, u1} α α p)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align units_equiv_prod_subtype unitsEquivProdSubtypeₓ'. -/
 /-- The `αˣ` type is equivalent to a subtype of `α × α`. -/
 @[simps]
 def unitsEquivProdSubtype [Monoid α] : αˣ ≃ { p : α × α // p.1 * p.2 = 1 ∧ p.2 * p.1 = 1 }
@@ -1402,12 +1246,6 @@ def unitsEquivProdSubtype [Monoid α] : αˣ ≃ { p : α × α // p.1 * p.2 = 1
   right_inv p := Subtype.ext <| Prod.ext rfl rfl
 #align units_equiv_prod_subtype unitsEquivProdSubtype
 
-/- warning: units_equiv_ne_zero -> unitsEquivNeZero is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : GroupWithZero.{u1} α], Equiv.{succ u1, succ u1} (Units.{u1} α (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))) (Subtype.{succ u1} α (fun (a : α) => Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : GroupWithZero.{u1} α], Equiv.{succ u1, succ u1} (Units.{u1} α (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))) (Subtype.{succ u1} α (fun (a : α) => Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align units_equiv_ne_zero unitsEquivNeZeroₓ'. -/
 /-- In a `group_with_zero` `α`, the unit group `αˣ` is equivalent to the subtype of nonzero
 elements. -/
 @[simps]
@@ -1486,12 +1324,6 @@ instance pfunFintype (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, Finty
 #align pfun_fintype pfunFintype
 -/
 
-/- warning: mem_image_univ_iff_mem_range -> mem_image_univ_iff_mem_range is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β} {b : β}, Iff (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) f (Finset.univ.{u1} α _inst_1))) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b (Set.range.{u2, succ u1} β α f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β} {b : β}, Iff (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_2 a b) f (Finset.univ.{u2} α _inst_1))) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b (Set.range.{u1, succ u2} β α f))
-Case conversion may be inaccurate. Consider using '#align mem_image_univ_iff_mem_range mem_image_univ_iff_mem_rangeₓ'. -/
 theorem mem_image_univ_iff_mem_range {α β : Type _} [Fintype α] [DecidableEq β] {f : α → β}
     {b : β} : b ∈ univ.image f ↔ b ∈ Set.range f := by simp
 #align mem_image_univ_iff_mem_range mem_image_univ_iff_mem_range
@@ -1557,32 +1389,14 @@ def bijInv (f_bij : Bijective f) (b : β) : α :=
 #align fintype.bij_inv Fintype.bijInv
 -/
 
-/- warning: fintype.left_inverse_bij_inv -> Fintype.leftInverse_bijInv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β} (f_bij : Function.Bijective.{succ u1, succ u2} α β f), Function.LeftInverse.{succ u1, succ u2} α β (Fintype.bijInv.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f f_bij) f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β} (f_bij : Function.Bijective.{succ u2, succ u1} α β f), Function.LeftInverse.{succ u2, succ u1} α β (Fintype.bijInv.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f f_bij) f
-Case conversion may be inaccurate. Consider using '#align fintype.left_inverse_bij_inv Fintype.leftInverse_bijInvₓ'. -/
 theorem leftInverse_bijInv (f_bij : Bijective f) : LeftInverse (bijInv f_bij) f := fun a =>
   f_bij.left (choose_spec (fun a' => f a' = f a) _)
 #align fintype.left_inverse_bij_inv Fintype.leftInverse_bijInv
 
-/- warning: fintype.right_inverse_bij_inv -> Fintype.rightInverse_bijInv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β} (f_bij : Function.Bijective.{succ u1, succ u2} α β f), Function.RightInverse.{succ u1, succ u2} α β (Fintype.bijInv.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f f_bij) f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β} (f_bij : Function.Bijective.{succ u2, succ u1} α β f), Function.RightInverse.{succ u2, succ u1} α β (Fintype.bijInv.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f f_bij) f
-Case conversion may be inaccurate. Consider using '#align fintype.right_inverse_bij_inv Fintype.rightInverse_bijInvₓ'. -/
 theorem rightInverse_bijInv (f_bij : Bijective f) : RightInverse (bijInv f_bij) f := fun b =>
   choose_spec (fun a' => f a' = b) _
 #align fintype.right_inverse_bij_inv Fintype.rightInverse_bijInv
 
-/- warning: fintype.bijective_bij_inv -> Fintype.bijective_bijInv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β} (f_bij : Function.Bijective.{succ u1, succ u2} α β f), Function.Bijective.{succ u2, succ u1} β α (Fintype.bijInv.{u1, u2} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f f_bij)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β} (f_bij : Function.Bijective.{succ u2, succ u1} α β f), Function.Bijective.{succ u1, succ u2} β α (Fintype.bijInv.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f f_bij)
-Case conversion may be inaccurate. Consider using '#align fintype.bijective_bij_inv Fintype.bijective_bijInvₓ'. -/
 theorem bijective_bijInv (f_bij : Bijective f) : Bijective (bijInv f_bij) :=
   ⟨(rightInverse_bijInv _).Injective, (leftInverse_bijInv _).Surjective⟩
 #align fintype.bijective_bij_inv Fintype.bijective_bijInv

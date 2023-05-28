@@ -86,12 +86,6 @@ theorem proj_equiv₁' (f : Fin n → α) : graph.proj ∘ graphEquiv₁ f = f :
 #align tuple.proj_equiv₁' Tuple.proj_equiv₁'
 -/
 
-/- warning: tuple.graph_equiv₂ -> Tuple.graphEquiv₂ is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (f : (Fin n) -> α), OrderIso.{0, u1} (Fin n) (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) Type.{u1} (Finset.hasCoeToSort.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Tuple.graph.{u1} n α _inst_1 f)) (Fin.hasLe n) (Subtype.hasLe.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Prod.Lex.instLE.{u1, 0} α (Fin n) (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (Fin.hasLe n)) (fun (x : Lex.{u1} (Prod.{u1, 0} α (Fin n))) => Membership.Mem.{u1, u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Finset.hasMem.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) x (Tuple.graph.{u1} n α _inst_1 f)))
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (f : (Fin n) -> α), OrderIso.{0, u1} (Fin n) (Subtype.{succ u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (fun (x : Lex.{u1} (Prod.{u1, 0} α (Fin n))) => Membership.mem.{u1, u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Finset.instMembershipFinset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) x (Tuple.graph.{u1} n α _inst_1 f))) (instLEFin n) (Subtype.le.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Prod.Lex.instLE.{u1, 0} α (Fin n) (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (instLEFin n)) (fun (x : Lex.{u1} (Prod.{u1, 0} α (Fin n))) => Membership.mem.{u1, u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Finset.instMembershipFinset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) x (Tuple.graph.{u1} n α _inst_1 f)))
-Case conversion may be inaccurate. Consider using '#align tuple.graph_equiv₂ Tuple.graphEquiv₂ₓ'. -/
 /-- `graph_equiv₂ f` is an equivalence between `fin n` and `graph f` that respects the order.
 -/
 def graphEquiv₂ (f : Fin n → α) : Fin n ≃o graph f :=
@@ -105,9 +99,6 @@ def sort (f : Fin n → α) : Equiv.Perm (Fin n) :=
 #align tuple.sort Tuple.sort
 -/
 
-/- warning: tuple.graph_equiv₂_apply -> Tuple.graphEquiv₂_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tuple.graph_equiv₂_apply Tuple.graphEquiv₂_applyₓ'. -/
 theorem graphEquiv₂_apply (f : Fin n → α) (i : Fin n) :
     graphEquiv₂ f i = graphEquiv₁ f (sort f i) :=
   ((graphEquiv₁ f).apply_symm_apply _).symm
@@ -119,12 +110,6 @@ theorem self_comp_sort (f : Fin n → α) : f ∘ sort f = graph.proj ∘ graphE
 #align tuple.self_comp_sort Tuple.self_comp_sort
 -/
 
-/- warning: tuple.monotone_proj -> Tuple.monotone_proj is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (f : (Fin n) -> α), Monotone.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) Type.{u1} (Finset.hasCoeToSort.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Tuple.graph.{u1} n α _inst_1 f)) α (Subtype.preorder.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Prod.Lex.preorder.{u1, 0} α (Fin n) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n))) (fun (x : Lex.{u1} (Prod.{u1, 0} α (Fin n))) => Membership.Mem.{u1, u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Finset.hasMem.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) x (Tuple.graph.{u1} n α _inst_1 f))) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (Tuple.graph.proj.{u1} n α _inst_1 f)
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (f : (Fin n) -> α), Monotone.{u1, u1} (Subtype.{succ u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (fun (x : Lex.{u1} (Prod.{u1, 0} α (Fin n))) => Membership.mem.{u1, u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Finset.instMembershipFinset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) x (Tuple.graph.{u1} n α _inst_1 f))) α (Subtype.preorder.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Prod.Lex.preorder.{u1, 0} α (Fin n) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n))) (fun (x : Lex.{u1} (Prod.{u1, 0} α (Fin n))) => Membership.mem.{u1, u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n))) (Finset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) (Finset.instMembershipFinset.{u1} (Lex.{u1} (Prod.{u1, 0} α (Fin n)))) x (Tuple.graph.{u1} n α _inst_1 f))) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (Tuple.graph.proj.{u1} n α _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align tuple.monotone_proj Tuple.monotone_projₓ'. -/
 theorem monotone_proj (f : Fin n → α) : Monotone (graph.proj : graph f → α) :=
   by
   rintro ⟨⟨x, i⟩, hx⟩ ⟨⟨y, j⟩, hy⟩ (_ | h)
@@ -187,12 +172,6 @@ theorem eq_sort_iff :
 #align tuple.eq_sort_iff Tuple.eq_sort_iff
 -/
 
-/- warning: tuple.sort_eq_refl_iff_monotone -> Tuple.sort_eq_refl_iff_monotone is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : (Fin n) -> α}, Iff (Eq.{1} (Equiv.Perm.{1} (Fin n)) (Tuple.sort.{u1} n α _inst_1 f) (Equiv.refl.{1} (Fin n))) (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) f)
-but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : (Fin n) -> α}, Iff (Eq.{1} (Equiv.Perm.{1} (Fin n)) (Tuple.sort.{u1} n α _inst_1 f) (Equiv.refl.{1} (Fin n))) (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) f)
-Case conversion may be inaccurate. Consider using '#align tuple.sort_eq_refl_iff_monotone Tuple.sort_eq_refl_iff_monotoneₓ'. -/
 /-- The permutation that sorts `f` is the identity if and only if `f` is monotone. -/
 theorem sort_eq_refl_iff_monotone : sort f = Equiv.refl _ ↔ Monotone f :=
   by

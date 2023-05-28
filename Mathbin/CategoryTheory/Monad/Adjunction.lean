@@ -74,12 +74,6 @@ def toComonad (h : L ⊣ R) : Comonad D
 #align category_theory.adjunction.to_comonad CategoryTheory.Adjunction.toComonad
 -/
 
-/- warning: category_theory.adjunction.adj_to_monad_iso -> CategoryTheory.Adjunction.adjToMonadIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (T : CategoryTheory.Monad.{u1, u2} C _inst_1), CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.Monad.category.{u1, u2} C _inst_1) (CategoryTheory.Adjunction.toMonad.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Monad.Algebra.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.free.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.forget.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.adj.{u1, u2} C _inst_1 T)) T
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (T : CategoryTheory.Monad.{u1, u2} C _inst_1), CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Monad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryMonad.{u1, u2} C _inst_1) (CategoryTheory.Adjunction.toMonad.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Monad.Algebra.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.free.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.forget.{u1, u2} C _inst_1 T) (CategoryTheory.Monad.adj.{u1, u2} C _inst_1 T)) T
-Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.adj_to_monad_iso CategoryTheory.Adjunction.adjToMonadIsoₓ'. -/
 /-- The monad induced by the Eilenberg-Moore adjunction is the original monad.  -/
 @[simps]
 def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
@@ -87,12 +81,6 @@ def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
     fun X => by dsimp; simp
 #align category_theory.adjunction.adj_to_monad_iso CategoryTheory.Adjunction.adjToMonadIso
 
-/- warning: category_theory.adjunction.adj_to_comonad_iso -> CategoryTheory.Adjunction.adjToComonadIso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (G : CategoryTheory.Comonad.{u1, u2} C _inst_1), CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.Comonad.category.{u1, u2} C _inst_1) (CategoryTheory.Adjunction.toComonad.{u1, u1, max u2 u1, u2} (CategoryTheory.Comonad.Coalgebra.{u1, u2} C _inst_1 G) (CategoryTheory.Comonad.Coalgebra.eilenbergMoore.{u1, u2} C _inst_1 G) C _inst_1 (CategoryTheory.Comonad.forget.{u1, u2} C _inst_1 G) (CategoryTheory.Comonad.cofree.{u1, u2} C _inst_1 G) (CategoryTheory.Comonad.adj.{u1, u2} C _inst_1 G)) G
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (G : CategoryTheory.Comonad.{u1, u2} C _inst_1), CategoryTheory.Iso.{max u2 u1, max u2 u1} (CategoryTheory.Comonad.{u1, u2} C _inst_1) (CategoryTheory.instCategoryComonad.{u1, u2} C _inst_1) (CategoryTheory.Adjunction.toComonad.{u1, u1, max u2 u1, u2} (CategoryTheory.Comonad.Coalgebra.{u1, u2} C _inst_1 G) (CategoryTheory.Comonad.Coalgebra.eilenbergMoore.{u1, u2} C _inst_1 G) C _inst_1 (CategoryTheory.Comonad.forget.{u1, u2} C _inst_1 G) (CategoryTheory.Comonad.cofree.{u1, u2} C _inst_1 G) (CategoryTheory.Comonad.adj.{u1, u2} C _inst_1 G)) G
-Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.adj_to_comonad_iso CategoryTheory.Adjunction.adjToComonadIsoₓ'. -/
 /-- The comonad induced by the Eilenberg-Moore adjunction is the original comonad. -/
 @[simps]
 def adjToComonadIso (G : Comonad C) : G.adj.toComonad ≅ G :=

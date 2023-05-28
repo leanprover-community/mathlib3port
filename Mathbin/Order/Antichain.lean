@@ -115,12 +115,6 @@ theorem swap (hs : IsAntichain r s) : IsAntichain (swap r) s :=
 #align is_antichain.swap IsAntichain.swap
 -/
 
-/- warning: is_antichain.image -> IsAntichain.image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsAntichain.{u1} α r s) -> (forall (f : α -> β), (forall {{a : α}} {{b : α}}, (r' (f a) (f b)) -> (r a b)) -> (IsAntichain.{u2} β r' (Set.image.{u1, u2} α β f s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (f : α -> β), (forall {{a : α}} {{b : α}}, (r' (f a) (f b)) -> (r a b)) -> (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β f s)))
-Case conversion may be inaccurate. Consider using '#align is_antichain.image IsAntichain.imageₓ'. -/
 theorem image (hs : IsAntichain r s) (f : α → β) (h : ∀ ⦃a b⦄, r' (f a) (f b) → r a b) :
     IsAntichain r' (f '' s) :=
   by
@@ -128,12 +122,6 @@ theorem image (hs : IsAntichain r s) (f : α → β) (h : ∀ ⦃a b⦄, r' (f a
   exact hs hb hc (ne_of_apply_ne _ hbc) (h hr)
 #align is_antichain.image IsAntichain.image
 
-/- warning: is_antichain.preimage -> IsAntichain.preimage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsAntichain.{u1} α r s) -> (forall {f : β -> α}, (Function.Injective.{succ u2, succ u1} β α f) -> (forall {{a : β}} {{b : β}}, (r' a b) -> (r (f a) (f b))) -> (IsAntichain.{u2} β r' (Set.preimage.{u2, u1} β α f s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall {f : β -> α}, (Function.Injective.{succ u1, succ u2} β α f) -> (forall {{a : β}} {{b : β}}, (r' a b) -> (r (f a) (f b))) -> (IsAntichain.{u1} β r' (Set.preimage.{u1, u2} β α f s)))
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage IsAntichain.preimageₓ'. -/
 theorem preimage (hs : IsAntichain r s) {f : β → α} (hf : Injective f)
     (h : ∀ ⦃a b⦄, r' a b → r (f a) (f b)) : IsAntichain r' (f ⁻¹' s) := fun b hb c hc hbc hr =>
   hs hb hc (hf.Ne hbc) <| h hr
@@ -167,12 +155,6 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r)
 #align is_antichain.insert_of_symmetric IsAntichain.insert_of_symmetric
 -/
 
-/- warning: is_antichain.image_rel_embedding -> IsAntichain.image_relEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsAntichain.{u1} α r s) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r r') (fun (_x : RelEmbedding.{u1, u2} α β r r') => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r r') φ) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelEmbedding.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelEmbedding.{u2, u1} α β r r') α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelEmbedding.{u2, u1} α β r r') α β r r' (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β r r')) φ) s))
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_embedding IsAntichain.image_relEmbeddingₓ'. -/
 theorem image_relEmbedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain r' (φ '' s) :=
   by
   intro b hb b' hb' h₁ h₂
@@ -181,131 +163,59 @@ theorem image_relEmbedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain
   exact hs has has' (fun haa' => h₁ (haa'.subst (by rfl))) (φ.map_rel_iff.mp h₂)
 #align is_antichain.image_rel_embedding IsAntichain.image_relEmbedding
 
-/- warning: is_antichain.preimage_rel_embedding -> IsAntichain.preimage_relEmbedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r r') (fun (_x : RelEmbedding.{u1, u2} α β r r') => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r r') φ) t))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelEmbedding.{u1, u2} α β r r') α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelEmbedding.{u1, u2} α β r r') α β r r' (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} α β r r')) φ) t))
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_rel_embedding IsAntichain.preimage_relEmbeddingₓ'. -/
 theorem preimage_relEmbedding {t : Set β} (ht : IsAntichain r' t) (φ : r ↪r r') :
     IsAntichain r (φ ⁻¹' t) := fun a ha a' ha' hne hle =>
   ht ha ha' (fun h => hne (φ.Injective h)) (φ.map_rel_iff.mpr hle)
 #align is_antichain.preimage_rel_embedding IsAntichain.preimage_relEmbedding
 
-/- warning: is_antichain.image_rel_iso -> IsAntichain.image_relIso is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsAntichain.{u1} α r s) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r r') (fun (_x : RelIso.{u1, u2} α β r r') => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r r') φ) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelIso.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β r r') α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β r r') α β r r' (RelIso.instRelHomClassRelIso.{u2, u1} α β r r')) φ) s))
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_iso IsAntichain.image_relIsoₓ'. -/
 theorem image_relIso (hs : IsAntichain r s) (φ : r ≃r r') : IsAntichain r' (φ '' s) :=
   hs.image_relEmbedding φ
 #align is_antichain.image_rel_iso IsAntichain.image_relIso
 
-/- warning: is_antichain.preimage_rel_iso -> IsAntichain.preimage_relIso is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r r') (fun (_x : RelIso.{u1, u2} α β r r') => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r r') φ) t))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} α β r r') α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} α β r r') α β r r' (RelIso.instRelHomClassRelIso.{u1, u2} α β r r')) φ) t))
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_rel_iso IsAntichain.preimage_relIsoₓ'. -/
 theorem preimage_relIso {t : Set β} (hs : IsAntichain r' t) (φ : r ≃r r') :
     IsAntichain r (φ ⁻¹' t) :=
   hs.preimage_relEmbedding φ
 #align is_antichain.preimage_rel_iso IsAntichain.preimage_relIso
 
-/- warning: is_antichain.image_rel_embedding_iff -> IsAntichain.image_relEmbedding_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α} {φ : RelEmbedding.{u1, u2} α β r r'}, Iff (IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r r') (fun (_x : RelEmbedding.{u1, u2} α β r r') => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r r') φ) s)) (IsAntichain.{u1} α r s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelEmbedding.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelEmbedding.{u2, u1} α β r r') α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelEmbedding.{u2, u1} α β r r') α β r r' (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β r r')) φ) s)) (IsAntichain.{u2} α r s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iffₓ'. -/
 theorem image_relEmbedding_iff {φ : r ↪r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
   ⟨fun h => (φ.Injective.preimage_image s).subst (h.preimage_relEmbedding φ), fun h =>
     h.image_relEmbedding φ⟩
 #align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iff
 
-/- warning: is_antichain.image_rel_iso_iff -> IsAntichain.image_relIso_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α} {φ : RelIso.{u1, u2} α β r r'}, Iff (IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r r') (fun (_x : RelIso.{u1, u2} α β r r') => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r r') φ) s)) (IsAntichain.{u1} α r s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelIso.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β r r') α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β r r') α β r r' (RelIso.instRelHomClassRelIso.{u2, u1} α β r r')) φ) s)) (IsAntichain.{u2} α r s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_iso_iff IsAntichain.image_relIso_iffₓ'. -/
 theorem image_relIso_iff {φ : r ≃r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
   @image_relEmbedding_iff _ _ _ _ _ (φ : r ↪r r')
 #align is_antichain.image_rel_iso_iff IsAntichain.image_relIso_iff
 
-/- warning: is_antichain.image_embedding -> IsAntichain.image_embedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β], (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s) -> (forall (φ : OrderEmbedding.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1625 : α) (x._@.Mathlib.Order.Antichain._hyg.1627 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1625 x._@.Mathlib.Order.Antichain._hyg.1627) s) -> (forall (φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1647 : β) (x._@.Mathlib.Order.Antichain._hyg.1649 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1647 x._@.Mathlib.Order.Antichain._hyg.1649) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β _inst_1 _inst_2) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) φ) s))
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_embedding IsAntichain.image_embeddingₓ'. -/
 theorem image_embedding [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ↪o β) :
     IsAntichain (· ≤ ·) (φ '' s) :=
   image_relEmbedding hs _
 #align is_antichain.image_embedding IsAntichain.image_embedding
 
-/- warning: is_antichain.preimage_embedding -> IsAntichain.preimage_embedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {t : Set.{u2} β}, (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) t) -> (forall (φ : OrderEmbedding.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u1} α (LE.le.{u1} α _inst_1) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β}, (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1712 : β) (x._@.Mathlib.Order.Antichain._hyg.1714 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1712 x._@.Mathlib.Order.Antichain._hyg.1714) t) -> (forall (φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1734 : α) (x._@.Mathlib.Order.Antichain._hyg.1736 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1734 x._@.Mathlib.Order.Antichain._hyg.1736) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β _inst_1 _inst_2) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) φ) t))
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_embedding IsAntichain.preimage_embeddingₓ'. -/
 theorem preimage_embedding [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) t) (φ : α ↪o β) :
     IsAntichain (· ≤ ·) (φ ⁻¹' t) :=
   preimage_relEmbedding ht _
 #align is_antichain.preimage_embedding IsAntichain.preimage_embedding
 
-/- warning: is_antichain.image_embedding_iff -> IsAntichain.image_embedding_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {φ : OrderEmbedding.{u1, u2} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s)) (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1805 : β) (x._@.Mathlib.Order.Antichain._hyg.1807 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1805 x._@.Mathlib.Order.Antichain._hyg.1807) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β _inst_1 _inst_2) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) φ) s)) (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1829 : α) (x._@.Mathlib.Order.Antichain._hyg.1831 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1829 x._@.Mathlib.Order.Antichain._hyg.1831) s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_embedding_iff IsAntichain.image_embedding_iffₓ'. -/
 theorem image_embedding_iff [LE α] [LE β] {φ : α ↪o β} :
     IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
   image_relEmbedding_iff
 #align is_antichain.image_embedding_iff IsAntichain.image_embedding_iff
 
-/- warning: is_antichain.image_iso -> IsAntichain.image_iso is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β], (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s) -> (forall (φ : OrderIso.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1883 : α) (x._@.Mathlib.Order.Antichain._hyg.1885 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1883 x._@.Mathlib.Order.Antichain._hyg.1885) s) -> (forall (φ : OrderIso.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1905 : β) (x._@.Mathlib.Order.Antichain._hyg.1907 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1905 x._@.Mathlib.Order.Antichain._hyg.1907) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) φ) s))
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_iso IsAntichain.image_isoₓ'. -/
 theorem image_iso [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ≃o β) :
     IsAntichain (· ≤ ·) (φ '' s) :=
   image_relEmbedding hs _
 #align is_antichain.image_iso IsAntichain.image_iso
 
-/- warning: is_antichain.image_iso_iff -> IsAntichain.image_iso_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {φ : OrderIso.{u1, u2} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s)) (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {φ : OrderIso.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1976 : β) (x._@.Mathlib.Order.Antichain._hyg.1978 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1976 x._@.Mathlib.Order.Antichain._hyg.1978) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) φ) s)) (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2000 : α) (x._@.Mathlib.Order.Antichain._hyg.2002 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2000 x._@.Mathlib.Order.Antichain._hyg.2002) s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_iso_iff IsAntichain.image_iso_iffₓ'. -/
 theorem image_iso_iff [LE α] [LE β] {φ : α ≃o β} :
     IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
   image_relEmbedding_iff
 #align is_antichain.image_iso_iff IsAntichain.image_iso_iff
 
-/- warning: is_antichain.preimage_iso -> IsAntichain.preimage_iso is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {t : Set.{u2} β}, (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) t) -> (forall (φ : OrderIso.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u1} α (LE.le.{u1} α _inst_1) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β}, (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.2056 : β) (x._@.Mathlib.Order.Antichain._hyg.2058 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.2056 x._@.Mathlib.Order.Antichain._hyg.2058) t) -> (forall (φ : OrderIso.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2078 : α) (x._@.Mathlib.Order.Antichain._hyg.2080 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2078 x._@.Mathlib.Order.Antichain._hyg.2080) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) φ) t))
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_iso IsAntichain.preimage_isoₓ'. -/
 theorem preimage_iso [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) t) (φ : α ≃o β) :
     IsAntichain (· ≤ ·) (φ ⁻¹' t) :=
   preimage_relEmbedding ht _
 #align is_antichain.preimage_iso IsAntichain.preimage_iso
 
-/- warning: is_antichain.preimage_iso_iff -> IsAntichain.preimage_iso_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {t : Set.{u2} β} {φ : OrderIso.{u1, u2} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) t)) (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) t)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β} {φ : OrderIso.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2151 : α) (x._@.Mathlib.Order.Antichain._hyg.2153 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2151 x._@.Mathlib.Order.Antichain._hyg.2153) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) φ) t)) (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.2175 : β) (x._@.Mathlib.Order.Antichain._hyg.2177 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.2175 x._@.Mathlib.Order.Antichain._hyg.2177) t)
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_iso_iff IsAntichain.preimage_iso_iffₓ'. -/
 theorem preimage_iso_iff [LE α] [LE β] {t : Set β} {φ : α ≃o β} :
     IsAntichain (· ≤ ·) (φ ⁻¹' t) ↔ IsAntichain (· ≤ ·) t :=
   ⟨fun h => (φ.image_preimage t).subst (h.image_iso φ), fun h => h.preimage_iso _⟩
@@ -323,23 +233,11 @@ theorem to_dual_iff [LE α] : IsAntichain (· ≤ ·) s ↔ @IsAntichain αᵒ�
 #align is_antichain.to_dual_iff IsAntichain.to_dual_iff
 -/
 
-/- warning: is_antichain.image_compl -> IsAntichain.image_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : BooleanAlgebra.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))))))) s) -> (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))))))) (Set.image.{u1, u1} α α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : BooleanAlgebra.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2406 : α) (x._@.Mathlib.Order.Antichain._hyg.2408 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) x._@.Mathlib.Order.Antichain._hyg.2406 x._@.Mathlib.Order.Antichain._hyg.2408) s) -> (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2423 : α) (x._@.Mathlib.Order.Antichain._hyg.2425 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) x._@.Mathlib.Order.Antichain._hyg.2423 x._@.Mathlib.Order.Antichain._hyg.2425) (Set.image.{u1, u1} α α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1)) s))
-Case conversion may be inaccurate. Consider using '#align is_antichain.image_compl IsAntichain.image_complₓ'. -/
 theorem image_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) :
     IsAntichain (· ≤ ·) (compl '' s) :=
   (hs.image_embedding (OrderIso.compl α).toOrderEmbedding).flip
 #align is_antichain.image_compl IsAntichain.image_compl
 
-/- warning: is_antichain.preimage_compl -> IsAntichain.preimage_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : BooleanAlgebra.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))))))) s) -> (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))))))) (Set.preimage.{u1, u1} α α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1)) s))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : BooleanAlgebra.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2488 : α) (x._@.Mathlib.Order.Antichain._hyg.2490 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) x._@.Mathlib.Order.Antichain._hyg.2488 x._@.Mathlib.Order.Antichain._hyg.2490) s) -> (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2505 : α) (x._@.Mathlib.Order.Antichain._hyg.2507 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) x._@.Mathlib.Order.Antichain._hyg.2505 x._@.Mathlib.Order.Antichain._hyg.2507) (Set.preimage.{u1, u1} α α (HasCompl.compl.{u1} α (BooleanAlgebra.toHasCompl.{u1} α _inst_1)) s))
-Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_compl IsAntichain.preimage_complₓ'. -/
 theorem preimage_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) :
     IsAntichain (· ≤ ·) (compl ⁻¹' s) := fun a ha a' ha' hne hle =>
   hs ha' ha (fun h => hne (compl_inj_iff.mp h.symm)) (compl_le_compl hle)
@@ -363,94 +261,40 @@ section Preorder
 
 variable [Preorder α]
 
-/- warning: is_antichain.not_lt -> IsAntichain.not_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} {b : α} [_inst_1 : Preorder.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} {b : α} [_inst_1 : Preorder.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2724 : α) (x._@.Mathlib.Order.Antichain._hyg.2726 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.2724 x._@.Mathlib.Order.Antichain._hyg.2726) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
-Case conversion may be inaccurate. Consider using '#align is_antichain.not_lt IsAntichain.not_ltₓ'. -/
 theorem IsAntichain.not_lt (hs : IsAntichain (· ≤ ·) s) (ha : a ∈ s) (hb : b ∈ s) : ¬a < b :=
   fun h => hs ha hb h.Ne h.le
 #align is_antichain.not_lt IsAntichain.not_lt
 
-/- warning: is_antichain_and_least_iff -> isAntichain_and_least_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], Iff (And (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) (IsLeast.{u1} α _inst_1 s a)) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], Iff (And (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2807 : α) (x._@.Mathlib.Order.Antichain._hyg.2809 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.2807 x._@.Mathlib.Order.Antichain._hyg.2809) s) (IsLeast.{u1} α _inst_1 s a)) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
-Case conversion may be inaccurate. Consider using '#align is_antichain_and_least_iff isAntichain_and_least_iffₓ'. -/
 theorem isAntichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq'' hb h.2.1 (h.2.2 hb)⟩, by
     rintro rfl; exact ⟨isAntichain_singleton _ _, isLeast_singleton⟩⟩
 #align is_antichain_and_least_iff isAntichain_and_least_iff
 
-/- warning: is_antichain_and_greatest_iff -> isAntichain_and_greatest_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], Iff (And (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) (IsGreatest.{u1} α _inst_1 s a)) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], Iff (And (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2938 : α) (x._@.Mathlib.Order.Antichain._hyg.2940 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.2938 x._@.Mathlib.Order.Antichain._hyg.2940) s) (IsGreatest.{u1} α _inst_1 s a)) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
-Case conversion may be inaccurate. Consider using '#align is_antichain_and_greatest_iff isAntichain_and_greatest_iffₓ'. -/
 theorem isAntichain_and_greatest_iff : IsAntichain (· ≤ ·) s ∧ IsGreatest s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩, by
     rintro rfl; exact ⟨isAntichain_singleton _ _, isGreatest_singleton⟩⟩
 #align is_antichain_and_greatest_iff isAntichain_and_greatest_iff
 
-/- warning: is_antichain.least_iff -> IsAntichain.least_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Iff (IsLeast.{u1} α _inst_1 s a) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3066 : α) (x._@.Mathlib.Order.Antichain._hyg.3068 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.3066 x._@.Mathlib.Order.Antichain._hyg.3068) s) -> (Iff (IsLeast.{u1} α _inst_1 s a) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))
-Case conversion may be inaccurate. Consider using '#align is_antichain.least_iff IsAntichain.least_iffₓ'. -/
 theorem IsAntichain.least_iff (hs : IsAntichain (· ≤ ·) s) : IsLeast s a ↔ s = {a} :=
   (and_iff_right hs).symm.trans isAntichain_and_least_iff
 #align is_antichain.least_iff IsAntichain.least_iff
 
-/- warning: is_antichain.greatest_iff -> IsAntichain.greatest_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Iff (IsGreatest.{u1} α _inst_1 s a) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3172 : α) (x._@.Mathlib.Order.Antichain._hyg.3174 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.3172 x._@.Mathlib.Order.Antichain._hyg.3174) s) -> (Iff (IsGreatest.{u1} α _inst_1 s a) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))
-Case conversion may be inaccurate. Consider using '#align is_antichain.greatest_iff IsAntichain.greatest_iffₓ'. -/
 theorem IsAntichain.greatest_iff (hs : IsAntichain (· ≤ ·) s) : IsGreatest s a ↔ s = {a} :=
   (and_iff_right hs).symm.trans isAntichain_and_greatest_iff
 #align is_antichain.greatest_iff IsAntichain.greatest_iff
 
-/- warning: is_least.antichain_iff -> IsLeast.antichain_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsLeast.{u1} α _inst_1 s a) -> (Iff (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsLeast.{u1} α _inst_1 s a) -> (Iff (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3284 : α) (x._@.Mathlib.Order.Antichain._hyg.3286 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.3284 x._@.Mathlib.Order.Antichain._hyg.3286) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))
-Case conversion may be inaccurate. Consider using '#align is_least.antichain_iff IsLeast.antichain_iffₓ'. -/
 theorem IsLeast.antichain_iff (hs : IsLeast s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
   (and_iff_left hs).symm.trans isAntichain_and_least_iff
 #align is_least.antichain_iff IsLeast.antichain_iff
 
-/- warning: is_greatest.antichain_iff -> IsGreatest.antichain_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsGreatest.{u1} α _inst_1 s a) -> (Iff (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], (IsGreatest.{u1} α _inst_1 s a) -> (Iff (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3390 : α) (x._@.Mathlib.Order.Antichain._hyg.3392 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.3390 x._@.Mathlib.Order.Antichain._hyg.3392) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))
-Case conversion may be inaccurate. Consider using '#align is_greatest.antichain_iff IsGreatest.antichain_iffₓ'. -/
 theorem IsGreatest.antichain_iff (hs : IsGreatest s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
   (and_iff_left hs).symm.trans isAntichain_and_greatest_iff
 #align is_greatest.antichain_iff IsGreatest.antichain_iff
 
-/- warning: is_antichain.bot_mem_iff -> IsAntichain.bot_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2)) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2)))))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3493 : α) (x._@.Mathlib.Order.Antichain._hyg.3495 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.3493 x._@.Mathlib.Order.Antichain._hyg.3495) s) -> (Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
-Case conversion may be inaccurate. Consider using '#align is_antichain.bot_mem_iff IsAntichain.bot_mem_iffₓ'. -/
 theorem IsAntichain.bot_mem_iff [OrderBot α] (hs : IsAntichain (· ≤ ·) s) : ⊥ ∈ s ↔ s = {⊥} :=
   isLeast_bot_iff.symm.trans hs.least_iff
 #align is_antichain.bot_mem_iff IsAntichain.bot_mem_iff
 
-/- warning: is_antichain.top_mem_iff -> IsAntichain.top_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2)) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2)))))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3571 : α) (x._@.Mathlib.Order.Antichain._hyg.3573 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.3571 x._@.Mathlib.Order.Antichain._hyg.3573) s) -> (Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)) s) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
-Case conversion may be inaccurate. Consider using '#align is_antichain.top_mem_iff IsAntichain.top_mem_iffₓ'. -/
 theorem IsAntichain.top_mem_iff [OrderTop α] (hs : IsAntichain (· ≤ ·) s) : ⊤ ∈ s ↔ s = {⊤} :=
   isGreatest_top_iff.symm.trans hs.greatest_iff
 #align is_antichain.top_mem_iff IsAntichain.top_mem_iff
@@ -461,12 +305,6 @@ section PartialOrder
 
 variable [PartialOrder α]
 
-/- warning: is_antichain_iff_forall_not_lt -> isAntichain_iff_forall_not_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : PartialOrder.{u1} α], Iff (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (forall {{b : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : PartialOrder.{u1} α], Iff (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.3681 : α) (x._@.Mathlib.Order.Antichain._hyg.3683 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Antichain._hyg.3681 x._@.Mathlib.Order.Antichain._hyg.3683) s) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (forall {{b : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))))
-Case conversion may be inaccurate. Consider using '#align is_antichain_iff_forall_not_lt isAntichain_iff_forall_not_ltₓ'. -/
 theorem isAntichain_iff_forall_not_lt :
     IsAntichain (· ≤ ·) s ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → ¬a < b :=
   ⟨fun hs a ha b => hs.not_lt ha, fun hs a ha b hb h h' => hs ha hb <| h'.lt_of_ne h⟩
@@ -532,12 +370,6 @@ theorem swap [IsSymm α r] (hs : IsStrongAntichain r s) : IsStrongAntichain (swa
 #align is_strong_antichain.swap IsStrongAntichain.swap
 -/
 
-/- warning: is_strong_antichain.image -> IsStrongAntichain.image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsStrongAntichain.{u1} α r s) -> (forall {f : α -> β}, (Function.Surjective.{succ u1, succ u2} α β f) -> (forall (a : α) (b : α), (r' (f a) (f b)) -> (r a b)) -> (IsStrongAntichain.{u2} β r' (Set.image.{u1, u2} α β f s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsStrongAntichain.{u2} α r s) -> (forall {f : α -> β}, (Function.Surjective.{succ u2, succ u1} α β f) -> (forall (a : α) (b : α), (r' (f a) (f b)) -> (r a b)) -> (IsStrongAntichain.{u1} β r' (Set.image.{u2, u1} α β f s)))
-Case conversion may be inaccurate. Consider using '#align is_strong_antichain.image IsStrongAntichain.imageₓ'. -/
 theorem image (hs : IsStrongAntichain r s) {f : α → β} (hf : Surjective f)
     (h : ∀ a b, r' (f a) (f b) → r a b) : IsStrongAntichain r' (f '' s) :=
   by
@@ -546,12 +378,6 @@ theorem image (hs : IsStrongAntichain r s) {f : α → β} (hf : Surjective f)
   exact (hs ha hb (ne_of_apply_ne _ hab) _).imp (mt <| h _ _) (mt <| h _ _)
 #align is_strong_antichain.image IsStrongAntichain.image
 
-/- warning: is_strong_antichain.preimage -> IsStrongAntichain.preimage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsStrongAntichain.{u1} α r s) -> (forall {f : β -> α}, (Function.Injective.{succ u2, succ u1} β α f) -> (forall (a : β) (b : β), (r' a b) -> (r (f a) (f b))) -> (IsStrongAntichain.{u2} β r' (Set.preimage.{u2, u1} β α f s)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsStrongAntichain.{u2} α r s) -> (forall {f : β -> α}, (Function.Injective.{succ u1, succ u2} β α f) -> (forall (a : β) (b : β), (r' a b) -> (r (f a) (f b))) -> (IsStrongAntichain.{u1} β r' (Set.preimage.{u1, u2} β α f s)))
-Case conversion may be inaccurate. Consider using '#align is_strong_antichain.preimage IsStrongAntichain.preimageₓ'. -/
 theorem preimage (hs : IsStrongAntichain r s) {f : β → α} (hf : Injective f)
     (h : ∀ a b, r' a b → r (f a) (f b)) : IsStrongAntichain r' (f ⁻¹' s) := fun a ha b hb hab c =>
   (hs ha hb (hf.Ne hab) _).imp (mt <| h _ _) (mt <| h _ _)
@@ -604,32 +430,14 @@ def IsWeakAntichain (s : Set (∀ i, α i)) : Prop :=
 
 namespace IsWeakAntichain
 
-/- warning: is_weak_antichain.subset -> IsWeakAntichain.subset is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)} {t : Set.{max u1 u2} (forall (i : ι), α i)}, (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (HasSubset.Subset.{max u1 u2} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasSubset.{max u1 u2} (forall (i : ι), α i)) t s) -> (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) t)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {t : Set.{max u2 u1} (forall (i : ι), α i)}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instHasSubsetSet.{max u2 u1} (forall (i : ι), α i)) t s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) t)
-Case conversion may be inaccurate. Consider using '#align is_weak_antichain.subset IsWeakAntichain.subsetₓ'. -/
 protected theorem subset (hs : IsWeakAntichain s) : t ⊆ s → IsWeakAntichain t :=
   hs.Subset
 #align is_weak_antichain.subset IsWeakAntichain.subset
 
-/- warning: is_weak_antichain.eq -> IsWeakAntichain.eq is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)} {a : forall (i : ι), α i} {b : forall (i : ι), α i}, (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasMem.{max u1 u2} (forall (i : ι), α i)) a s) -> (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasMem.{max u1 u2} (forall (i : ι), α i)) b s) -> (StrongLT.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_1 i)) a b) -> (Eq.{max (succ u1) (succ u2)} (forall (i : ι), α i) a b)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i} {b : forall (i : ι), α i}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) a s) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b) -> (Eq.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b)
-Case conversion may be inaccurate. Consider using '#align is_weak_antichain.eq IsWeakAntichain.eqₓ'. -/
 protected theorem eq (hs : IsWeakAntichain s) : a ∈ s → b ∈ s → a ≺ b → a = b :=
   hs.Eq
 #align is_weak_antichain.eq IsWeakAntichain.eq
 
-/- warning: is_weak_antichain.insert -> IsWeakAntichain.insert is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)} {a : forall (i : ι), α i}, (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (forall {{b : forall (i : ι), α i}}, (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasMem.{max u1 u2} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u1) (succ u2)} (forall (i : ι), α i) a b) -> (Not (StrongLT.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_1 i)) b a))) -> (forall {{b : forall (i : ι), α i}}, (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasMem.{max u1 u2} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u1) (succ u2)} (forall (i : ι), α i) a b) -> (Not (StrongLT.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_1 i)) a b))) -> (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Insert.insert.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasInsert.{max u1 u2} (forall (i : ι), α i)) a s))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (forall {{b : forall (i : ι), α i}}, (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b) -> (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) b a))) -> (forall {{b : forall (i : ι), α i}}, (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b) -> (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b))) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Insert.insert.{max u2 u1, max u1 u2} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instInsertSet.{max u2 u1} (forall (i : ι), α i)) a s))
-Case conversion may be inaccurate. Consider using '#align is_weak_antichain.insert IsWeakAntichain.insertₓ'. -/
 protected theorem insert (hs : IsWeakAntichain s) :
     (∀ ⦃b⦄, b ∈ s → a ≠ b → ¬b ≺ a) →
       (∀ ⦃b⦄, b ∈ s → a ≠ b → ¬a ≺ b) → IsWeakAntichain (insert a s) :=
@@ -638,33 +446,15 @@ protected theorem insert (hs : IsWeakAntichain s) :
 
 end IsWeakAntichain
 
-/- warning: is_weak_antichain_insert -> isWeakAntichain_insert is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)} {a : forall (i : ι), α i}, Iff (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Insert.insert.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasInsert.{max u1 u2} (forall (i : ι), α i)) a s)) (And (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) (forall {{b : forall (i : ι), α i}}, (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : ι), α i) (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasMem.{max u1 u2} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u1) (succ u2)} (forall (i : ι), α i) a b) -> (And (Not (StrongLT.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_1 i)) a b)) (Not (StrongLT.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_1 i)) b a)))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i}, Iff (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Insert.insert.{max u2 u1, max u1 u2} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instInsertSet.{max u2 u1} (forall (i : ι), α i)) a s)) (And (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) (forall {{b : forall (i : ι), α i}}, (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b) -> (And (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b)) (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) b a)))))
-Case conversion may be inaccurate. Consider using '#align is_weak_antichain_insert isWeakAntichain_insertₓ'. -/
 theorem isWeakAntichain_insert :
     IsWeakAntichain (insert a s) ↔ IsWeakAntichain s ∧ ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬a ≺ b ∧ ¬b ≺ a :=
   isAntichain_insert
 #align is_weak_antichain_insert isWeakAntichain_insert
 
-/- warning: is_antichain.is_weak_antichain -> IsAntichain.isWeakAntichain is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)}, (IsAntichain.{max u1 u2} (forall (i : ι), α i) (LE.le.{max u1 u2} (forall (i : ι), α i) (Pi.hasLe.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_1 i)))) s) -> (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)}, (IsAntichain.{max u2 u1} (forall (i : ι), α i) (fun (x._@.Mathlib.Order.Antichain._hyg.6025 : forall (i : ι), α i) (x._@.Mathlib.Order.Antichain._hyg.6027 : forall (i : ι), α i) => LE.le.{max u2 u1} (forall (i : ι), α i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{u1} (α i) (_inst_1 i))) x._@.Mathlib.Order.Antichain._hyg.6025 x._@.Mathlib.Order.Antichain._hyg.6027) s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
-Case conversion may be inaccurate. Consider using '#align is_antichain.is_weak_antichain IsAntichain.isWeakAntichainₓ'. -/
 protected theorem IsAntichain.isWeakAntichain (hs : IsAntichain (· ≤ ·) s) : IsWeakAntichain s :=
   hs.mono fun a b => le_of_strongLT
 #align is_antichain.is_weak_antichain IsAntichain.isWeakAntichain
 
-/- warning: set.subsingleton.is_weak_antichain -> Set.Subsingleton.isWeakAntichain is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)}, (Set.Subsingleton.{max u1 u2} (forall (i : ι), α i) s) -> (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)}, (Set.Subsingleton.{max u2 u1} (forall (i : ι), α i) s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
-Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_weak_antichain Set.Subsingleton.isWeakAntichainₓ'. -/
 theorem Set.Subsingleton.isWeakAntichain (hs : s.Subsingleton) : IsWeakAntichain s :=
   hs.IsAntichain _
 #align set.subsingleton.is_weak_antichain Set.Subsingleton.isWeakAntichain

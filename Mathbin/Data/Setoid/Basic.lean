@@ -154,12 +154,6 @@ theorem ker_apply_mk_out' {f : α → β} (a : α) :
 #align setoid.ker_apply_mk_out' Setoid.ker_apply_mk_out'
 -/
 
-/- warning: setoid.ker_def -> Setoid.ker_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : α} {y : α}, Iff (Setoid.Rel.{u1} α (Setoid.ker.{u1, u2} α β f) x y) (Eq.{succ u2} β (f x) (f y))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {x : α} {y : α}, Iff (Setoid.Rel.{u2} α (Setoid.ker.{u2, u1} α β f) x y) (Eq.{succ u1} β (f x) (f y))
-Case conversion may be inaccurate. Consider using '#align setoid.ker_def Setoid.ker_defₓ'. -/
 theorem ker_def {f : α → β} {x y : α} : (ker f).Rel x y ↔ f x = f y :=
   Iff.rfl
 #align setoid.ker_def Setoid.ker_def
@@ -184,24 +178,12 @@ instance : Inf (Setoid α) :=
       ⟨fun x => ⟨r.refl' x, s.refl' x⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩, fun _ _ _ h1 h2 =>
         ⟨r.trans' h1.1 h2.1, s.trans' h1.2 h2.2⟩⟩⟩⟩
 
-/- warning: setoid.inf_def -> Setoid.inf_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : Setoid.{succ u1} α} {s : Setoid.{succ u1} α}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Inf.inf.{u1} (Setoid.{succ u1} α) (Setoid.hasInf.{u1} α) r s)) (Inf.inf.{u1} (α -> α -> Prop) (Pi.hasInf.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasInf.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => SemilatticeInf.toHasInf.{0} Prop (Lattice.toSemilatticeInf.{0} Prop (CompleteLattice.toLattice.{0} Prop Prop.completeLattice))))) (Setoid.Rel.{u1} α r) (Setoid.Rel.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} {r : Setoid.{succ u1} α} {s : Setoid.{succ u1} α}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Inf.inf.{u1} (Setoid.{succ u1} α) (Setoid.instInfSetoid.{u1} α) r s)) (Inf.inf.{u1} (α -> α -> Prop) (Pi.instInfForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instInfForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Lattice.toInf.{0} Prop (CompleteLattice.toLattice.{0} Prop Prop.completeLattice)))) (Setoid.Rel.{u1} α r) (Setoid.Rel.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align setoid.inf_def Setoid.inf_defₓ'. -/
 /-- The infimum of 2 equivalence relations r and s is the same relation as the infimum
     of the underlying binary operations. -/
 theorem inf_def {r s : Setoid α} : (r ⊓ s).Rel = r.Rel ⊓ s.Rel :=
   rfl
 #align setoid.inf_def Setoid.inf_def
 
-/- warning: setoid.inf_iff_and -> Setoid.inf_iff_and is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : Setoid.{succ u1} α} {s : Setoid.{succ u1} α} {x : α} {y : α}, Iff (Setoid.Rel.{u1} α (Inf.inf.{u1} (Setoid.{succ u1} α) (Setoid.hasInf.{u1} α) r s) x y) (And (Setoid.Rel.{u1} α r x y) (Setoid.Rel.{u1} α s x y))
-but is expected to have type
-  forall {α : Type.{u1}} {r : Setoid.{succ u1} α} {s : Setoid.{succ u1} α} {x : α} {y : α}, Iff (Setoid.Rel.{u1} α (Inf.inf.{u1} (Setoid.{succ u1} α) (Setoid.instInfSetoid.{u1} α) r s) x y) (And (Setoid.Rel.{u1} α r x y) (Setoid.Rel.{u1} α s x y))
-Case conversion may be inaccurate. Consider using '#align setoid.inf_iff_and Setoid.inf_iff_andₓ'. -/
 theorem inf_iff_and {r s : Setoid α} {x y} : (r ⊓ s).Rel x y ↔ r.Rel x y ∧ s.Rel x y :=
   Iff.rfl
 #align setoid.inf_iff_and Setoid.inf_iff_and
@@ -248,34 +230,16 @@ instance completeLattice : CompleteLattice (Setoid α) :=
 #align setoid.complete_lattice Setoid.completeLattice
 -/
 
-/- warning: setoid.top_def -> Setoid.top_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Top.top.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasTop.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (Top.top.{u1} (α -> α -> Prop) (Pi.hasTop.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasTop.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasTop.{0} Prop Prop.completeLattice))))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Top.top.{u1} (Setoid.{succ u1} α) (CompleteLattice.toTop.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (Top.top.{u1} (α -> α -> Prop) (Pi.instTopForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instTopForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toTop.{0} Prop Prop.completeLattice))))
-Case conversion may be inaccurate. Consider using '#align setoid.top_def Setoid.top_defₓ'. -/
 @[simp]
 theorem top_def : (⊤ : Setoid α).Rel = ⊤ :=
   rfl
 #align setoid.top_def Setoid.top_def
 
-/- warning: setoid.bot_def -> Setoid.bot_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (Eq.{succ u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1211 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1213 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1211 x._@.Mathlib.Data.Setoid.Basic._hyg.1213)
-Case conversion may be inaccurate. Consider using '#align setoid.bot_def Setoid.bot_defₓ'. -/
 @[simp]
 theorem bot_def : (⊥ : Setoid α).Rel = (· = ·) :=
   rfl
 #align setoid.bot_def Setoid.bot_def
 
-/- warning: setoid.eq_top_iff -> Setoid.eq_top_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Setoid.{succ u1} α}, Iff (Eq.{succ u1} (Setoid.{succ u1} α) s (Top.top.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasTop.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (forall (x : α) (y : α), Setoid.Rel.{u1} α s x y)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Setoid.{succ u1} α}, Iff (Eq.{succ u1} (Setoid.{succ u1} α) s (Top.top.{u1} (Setoid.{succ u1} α) (CompleteLattice.toTop.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (forall (x : α) (y : α), Setoid.Rel.{u1} α s x y)
-Case conversion may be inaccurate. Consider using '#align setoid.eq_top_iff Setoid.eq_top_iffₓ'. -/
 theorem eq_top_iff {s : Setoid α} : s = (⊤ : Setoid α) ↔ ∀ x y : α, s.Rel x y := by
   simp [eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply]
 #align setoid.eq_top_iff Setoid.eq_top_iff
@@ -293,12 +257,6 @@ theorem eqvGen_eq (r : α → α → Prop) :
 #align setoid.eqv_gen_eq Setoid.eqvGen_eq
 -/
 
-/- warning: setoid.sup_eq_eqv_gen -> Setoid.sup_eq_eqvGen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (r : Setoid.{succ u1} α) (s : Setoid.{succ u1} α), Eq.{succ u1} (Setoid.{succ u1} α) (Sup.sup.{u1} (Setoid.{succ u1} α) (SemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (Lattice.toSemilatticeSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toLattice.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) r s) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Or (Setoid.Rel.{u1} α r x y) (Setoid.Rel.{u1} α s x y)))
-but is expected to have type
-  forall {α : Type.{u1}} (r : Setoid.{succ u1} α) (s : Setoid.{succ u1} α), Eq.{succ u1} (Setoid.{succ u1} α) (Sup.sup.{u1} (Setoid.{succ u1} α) (SemilatticeSup.toSup.{u1} (Setoid.{succ u1} α) (Lattice.toSemilatticeSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toLattice.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) r s) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Or (Setoid.Rel.{u1} α r x y) (Setoid.Rel.{u1} α s x y)))
-Case conversion may be inaccurate. Consider using '#align setoid.sup_eq_eqv_gen Setoid.sup_eq_eqvGenₓ'. -/
 /-- The supremum of two equivalence relations r and s is the equivalence closure of the binary
     relation `x is related to y by r or s`. -/
 theorem sup_eq_eqvGen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.Rel x y ∨ s.Rel x y :=
@@ -308,24 +266,12 @@ theorem sup_eq_eqvGen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.R
   simp only [le_def, or_imp, ← forall_and]
 #align setoid.sup_eq_eqv_gen Setoid.sup_eq_eqvGen
 
-/- warning: setoid.sup_def -> Setoid.sup_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {r : Setoid.{succ u1} α} {s : Setoid.{succ u1} α}, Eq.{succ u1} (Setoid.{succ u1} α) (Sup.sup.{u1} (Setoid.{succ u1} α) (SemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (Lattice.toSemilatticeSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toLattice.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) r s) (EqvGen.Setoid.{u1} α (Sup.sup.{u1} (α -> α -> Prop) (Pi.hasSup.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasSup.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => SemilatticeSup.toHasSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (CompleteLattice.toLattice.{0} Prop Prop.completeLattice))))) (Setoid.Rel.{u1} α r) (Setoid.Rel.{u1} α s)))
-but is expected to have type
-  forall {α : Type.{u1}} {r : Setoid.{succ u1} α} {s : Setoid.{succ u1} α}, Eq.{succ u1} (Setoid.{succ u1} α) (Sup.sup.{u1} (Setoid.{succ u1} α) (SemilatticeSup.toSup.{u1} (Setoid.{succ u1} α) (Lattice.toSemilatticeSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toLattice.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) r s) (EqvGen.Setoid.{u1} α (Sup.sup.{u1} (α -> α -> Prop) (Pi.instSupForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instSupForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => SemilatticeSup.toSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (CompleteLattice.toLattice.{0} Prop Prop.completeLattice))))) (Setoid.Rel.{u1} α r) (Setoid.Rel.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align setoid.sup_def Setoid.sup_defₓ'. -/
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
 theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) := by
   rw [sup_eq_eqv_gen] <;> rfl
 #align setoid.sup_def Setoid.sup_def
 
-/- warning: setoid.Sup_eq_eqv_gen -> Setoid.sSup_eq_eqvGen is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (S : Set.{u1} (Setoid.{succ u1} α)), Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteSemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))) S) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Exists.{succ u1} (Setoid.{succ u1} α) (fun (r : Setoid.{succ u1} α) => And (Membership.Mem.{u1, u1} (Setoid.{succ u1} α) (Set.{u1} (Setoid.{succ u1} α)) (Set.hasMem.{u1} (Setoid.{succ u1} α)) r S) (Setoid.Rel.{u1} α r x y))))
-but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Setoid.{succ u1} α)), Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toSupSet.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)) S) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Exists.{succ u1} (Setoid.{succ u1} α) (fun (r : Setoid.{succ u1} α) => And (Membership.mem.{u1, u1} (Setoid.{succ u1} α) (Set.{u1} (Setoid.{succ u1} α)) (Set.instMembershipSet.{u1} (Setoid.{succ u1} α)) r S) (Setoid.Rel.{u1} α r x y))))
-Case conversion may be inaccurate. Consider using '#align setoid.Sup_eq_eqv_gen Setoid.sSup_eq_eqvGenₓ'. -/
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
 theorem sSup_eq_eqvGen (S : Set (Setoid α)) :
@@ -338,12 +284,6 @@ theorem sSup_eq_eqvGen (S : Set (Setoid α)) :
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
 #align setoid.Sup_eq_eqv_gen Setoid.sSup_eq_eqvGen
 
-/- warning: setoid.Sup_def -> Setoid.sSup_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Setoid.{succ u1} α)}, Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteSemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))) s) (EqvGen.Setoid.{u1} α (SupSet.sSup.{u1} (α -> α -> Prop) (Pi.supSet.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteSemilatticeSup.toHasSup.{0} Prop (CompleteLattice.toCompleteSemilatticeSup.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Setoid.{succ u1} α) (α -> α -> Prop) (Setoid.Rel.{u1} α) s)))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Setoid.{succ u1} α)}, Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toSupSet.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)) s) (EqvGen.Setoid.{u1} α (SupSet.sSup.{u1} (α -> α -> Prop) (Pi.supSet.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toSupSet.{0} Prop Prop.completeLattice))) (Set.image.{u1, u1} (Setoid.{succ u1} α) (α -> α -> Prop) (Setoid.Rel.{u1} α) s)))
-Case conversion may be inaccurate. Consider using '#align setoid.Sup_def Setoid.sSup_defₓ'. -/
 /-- The supremum of a set of equivalence relations is the equivalence closure of the
     supremum of the set's image under the map to the underlying binary operation. -/
 theorem sSup_def {s : Set (Setoid α)} : sSup s = EqvGen.Setoid (sSup (Rel '' s)) :=
@@ -385,12 +325,6 @@ theorem eqvGen_mono {r s : α → α → Prop} (h : ∀ x y, r x y → s x y) :
 #align setoid.eqv_gen_mono Setoid.eqvGen_mono
 -/
 
-/- warning: setoid.gi -> Setoid.gi is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, GaloisInsertion.{u1, u1} (α -> α -> Prop) (Setoid.{succ u1} α) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.preorder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => PartialOrder.toPreorder.{0} Prop Prop.partialOrder))) (PartialOrder.toPreorder.{u1} (Setoid.{succ u1} α) (Setoid.partialOrder.{u1} α)) (EqvGen.Setoid.{u1} α) (Setoid.Rel.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, GaloisInsertion.{u1, u1} (α -> α -> Prop) (Setoid.{succ u1} α) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.preorder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => PartialOrder.toPreorder.{0} Prop Prop.partialOrder))) (PartialOrder.toPreorder.{u1} (Setoid.{succ u1} α) (Setoid.instPartialOrderSetoid.{u1} α)) (EqvGen.Setoid.{u1} α) (Setoid.Rel.{u1} α)
-Case conversion may be inaccurate. Consider using '#align setoid.gi Setoid.giₓ'. -/
 /-- There is a Galois insertion of equivalence relations on α into binary relations
     on α, with equivalence closure the lower adjoint. -/
 def gi : @GaloisInsertion (α → α → Prop) (Setoid α) _ _ EqvGen.Setoid Rel
@@ -403,24 +337,12 @@ def gi : @GaloisInsertion (α → α → Prop) (Setoid α) _ _ EqvGen.Setoid Rel
 
 open Function
 
-/- warning: setoid.injective_iff_ker_bot -> Setoid.injective_iff_ker_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), Iff (Function.Injective.{succ u1, succ u2} α β f) (Eq.{succ u1} (Setoid.{succ u1} α) (Setoid.ker.{u1, u2} α β f) (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β), Iff (Function.Injective.{succ u2, succ u1} α β f) (Eq.{succ u2} (Setoid.{succ u2} α) (Setoid.ker.{u2, u1} α β f) (Bot.bot.{u2} (Setoid.{succ u2} α) (CompleteLattice.toBot.{u2} (Setoid.{succ u2} α) (Setoid.completeLattice.{u2} α))))
-Case conversion may be inaccurate. Consider using '#align setoid.injective_iff_ker_bot Setoid.injective_iff_ker_botₓ'. -/
 /-- A function from α to β is injective iff its kernel is the bottom element of the complete lattice
     of equivalence relations on α. -/
 theorem injective_iff_ker_bot (f : α → β) : Injective f ↔ ker f = ⊥ :=
   (@eq_bot_iff (Setoid α) _ _ (ker f)).symm
 #align setoid.injective_iff_ker_bot Setoid.injective_iff_ker_bot
 
-/- warning: setoid.ker_iff_mem_preimage -> Setoid.ker_iff_mem_preimage is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x : α} {y : α}, Iff (Setoid.Rel.{u1} α (Setoid.ker.{u1, u2} α β f) x y) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.preimage.{u1, u2} α β f (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) (f y))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {x : α} {y : α}, Iff (Setoid.Rel.{u2} α (Setoid.ker.{u2, u1} α β f) x y) (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Set.preimage.{u2, u1} α β f (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) (f y))))
-Case conversion may be inaccurate. Consider using '#align setoid.ker_iff_mem_preimage Setoid.ker_iff_mem_preimageₓ'. -/
 /-- The elements related to x ∈ α by the kernel of f are those in the preimage of f(x) under f. -/
 theorem ker_iff_mem_preimage {f : α → β} {x y} : (ker f).Rel x y ↔ x ∈ f ⁻¹' {f y} :=
   Iff.rfl
@@ -438,12 +360,6 @@ def liftEquiv (r : Setoid α) : { f : α → β // r ≤ ker f } ≃ (Quotient r
 #align setoid.lift_equiv Setoid.liftEquiv
 -/
 
-/- warning: setoid.lift_unique -> Setoid.lift_unique is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : Setoid.{succ u1} α} {f : α -> β} (H : LE.le.{u1} (Setoid.{succ u1} α) (Setoid.hasLe.{u1} α) r (Setoid.ker.{u1, u2} α β f)) (g : (Quotient.{succ u1} α r) -> β), (Eq.{max (succ u1) (succ u2)} (α -> β) f (Function.comp.{succ u1, succ u1, succ u2} α (Quotient.{succ u1} α r) β g (Quotient.mk'.{succ u1} α r))) -> (Eq.{max (succ u1) (succ u2)} ((Quotient.{succ u1} α r) -> β) (Quotient.lift.{succ u1, succ u2} α β r f H) g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : Setoid.{succ u2} α} {f : α -> β} (H : LE.le.{u2} (Setoid.{succ u2} α) (Setoid.instLESetoid.{u2} α) r (Setoid.ker.{u2, u1} α β f)) (g : (Quotient.{succ u2} α r) -> β), (Eq.{max (succ u2) (succ u1)} (α -> β) f (Function.comp.{succ u2, succ u2, succ u1} α (Quotient.{succ u2} α r) β g (Quotient.mk''.{succ u2} α r))) -> (Eq.{max (succ u2) (succ u1)} ((Quotient.{succ u2} α r) -> β) (Quotient.lift.{succ u2, succ u1} α β r f H) g)
-Case conversion may be inaccurate. Consider using '#align setoid.lift_unique Setoid.lift_uniqueₓ'. -/
 /-- The uniqueness part of the universal property for quotients of an arbitrary type. -/
 theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quotient r → β)
     (Hg : f = g ∘ Quotient.mk') : Quotient.lift f H = g :=
@@ -453,24 +369,12 @@ theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quoti
   rfl
 #align setoid.lift_unique Setoid.lift_unique
 
-/- warning: setoid.ker_lift_injective -> Setoid.ker_lift_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), Function.Injective.{succ u1, succ u2} (Quotient.{succ u1} α (Setoid.ker.{u1, u2} α β f)) β (Quotient.lift.{succ u1, succ u2} α β (Setoid.ker.{u1, u2} α β f) f (fun (_x : α) (_x_1 : α) (h : HasEquivₓ.Equiv.{succ u1} α (setoidHasEquiv.{succ u1} α (Setoid.ker.{u1, u2} α β f)) _x _x_1) => h))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β), Function.Injective.{succ u2, succ u1} (Quotient.{succ u2} α (Setoid.ker.{u2, u1} α β f)) β (Quotient.lift.{succ u2, succ u1} α β (Setoid.ker.{u2, u1} α β f) f (fun (_x : α) (_x_1 : α) (h : HasEquiv.Equiv.{succ u2, 0} α (instHasEquiv.{succ u2} α (Setoid.ker.{u2, u1} α β f)) _x _x_1) => h))
-Case conversion may be inaccurate. Consider using '#align setoid.ker_lift_injective Setoid.ker_lift_injectiveₓ'. -/
 /-- Given a map f from α to β, the natural map from the quotient of α by the kernel of f is
     injective. -/
 theorem ker_lift_injective (f : α → β) : Injective (@Quotient.lift _ _ (ker f) f fun _ _ h => h) :=
   fun x y => Quotient.inductionOn₂' x y fun a b h => Quotient.sound' h
 #align setoid.ker_lift_injective Setoid.ker_lift_injective
 
-/- warning: setoid.ker_eq_lift_of_injective -> Setoid.ker_eq_lift_of_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : Setoid.{succ u1} α} (f : α -> β) (H : forall (x : α) (y : α), (Setoid.Rel.{u1} α r x y) -> (Eq.{succ u2} β (f x) (f y))), (Function.Injective.{succ u1, succ u2} (Quotient.{succ u1} α r) β (Quotient.lift.{succ u1, succ u2} α β r f H)) -> (Eq.{succ u1} (Setoid.{succ u1} α) (Setoid.ker.{u1, u2} α β f) r)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : Setoid.{succ u2} α} (f : α -> β) (H : forall (x : α) (y : α), (Setoid.Rel.{u2} α r x y) -> (Eq.{succ u1} β (f x) (f y))), (Function.Injective.{succ u2, succ u1} (Quotient.{succ u2} α r) β (Quotient.lift.{succ u2, succ u1} α β r f H)) -> (Eq.{succ u2} (Setoid.{succ u2} α) (Setoid.ker.{u2, u1} α β f) r)
-Case conversion may be inaccurate. Consider using '#align setoid.ker_eq_lift_of_injective Setoid.ker_eq_lift_of_injectiveₓ'. -/
 /-- Given a map f from α to β, the kernel of f is the unique equivalence relation on α whose
     induced map from the quotient of α to β is injective. -/
 theorem ker_eq_lift_of_injective {r : Setoid α} (f : α → β) (H : ∀ x y, r.Rel x y → f x = f y)
@@ -546,12 +450,6 @@ def mapOfSurjective (r) (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : 
 #align setoid.map_of_surjective Setoid.mapOfSurjective
 -/
 
-/- warning: setoid.map_of_surjective_eq_map -> Setoid.mapOfSurjective_eq_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : Setoid.{succ u1} α} {f : α -> β} (h : LE.le.{u1} (Setoid.{succ u1} α) (Setoid.hasLe.{u1} α) (Setoid.ker.{u1, u2} α β f) r) (hf : Function.Surjective.{succ u1, succ u2} α β f), Eq.{succ u2} (Setoid.{succ u2} β) (Setoid.map.{u1, u2} α β r f) (Setoid.mapOfSurjective.{u1, u2} α β r f h hf)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : Setoid.{succ u2} α} {f : α -> β} (h : LE.le.{u2} (Setoid.{succ u2} α) (Setoid.instLESetoid.{u2} α) (Setoid.ker.{u2, u1} α β f) r) (hf : Function.Surjective.{succ u2, succ u1} α β f), Eq.{succ u1} (Setoid.{succ u1} β) (Setoid.map.{u2, u1} α β r f) (Setoid.mapOfSurjective.{u2, u1} α β r f h hf)
-Case conversion may be inaccurate. Consider using '#align setoid.map_of_surjective_eq_map Setoid.mapOfSurjective_eq_mapₓ'. -/
 /-- A special case of the equivalence closure of an equivalence relation r equalling r. -/
 theorem mapOfSurjective_eq_map (h : ker f ≤ r) (hf : Surjective f) :
     map r f = mapOfSurjective r f h hf := by
@@ -649,12 +547,6 @@ def correspondence (r : Setoid α) : { s // r ≤ s } ≃o Setoid (Quotient r)
 
 end Setoid
 
-/- warning: quotient.subsingleton_iff -> Quotient.subsingleton_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Setoid.{succ u1} α}, Iff (Subsingleton.{succ u1} (Quotient.{succ u1} α s)) (Eq.{succ u1} (Setoid.{succ u1} α) s (Top.top.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasTop.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} {s : Setoid.{succ u1} α}, Iff (Subsingleton.{succ u1} (Quotient.{succ u1} α s)) (Eq.{succ u1} (Setoid.{succ u1} α) s (Top.top.{u1} (Setoid.{succ u1} α) (CompleteLattice.toTop.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align quotient.subsingleton_iff Quotient.subsingleton_iffₓ'. -/
 @[simp]
 theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) ↔ s = ⊤ :=
   by
@@ -665,12 +557,6 @@ theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) �
   exact Quotient.eq''
 #align quotient.subsingleton_iff Quotient.subsingleton_iff
 
-/- warning: quot.subsingleton_iff -> Quot.subsingleton_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (r : α -> α -> Prop), Iff (Subsingleton.{succ u1} (Quot.{succ u1} α r)) (Eq.{succ u1} (α -> α -> Prop) (EqvGen.{u1} α r) (Top.top.{u1} (α -> α -> Prop) (Pi.hasTop.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasTop.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasTop.{0} Prop Prop.completeLattice)))))
-but is expected to have type
-  forall {α : Type.{u1}} (r : α -> α -> Prop), Iff (Subsingleton.{succ u1} (Quot.{succ u1} α r)) (Eq.{succ u1} (α -> α -> Prop) (EqvGen.{u1} α r) (Top.top.{u1} (α -> α -> Prop) (Pi.instTopForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instTopForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toTop.{0} Prop Prop.completeLattice)))))
-Case conversion may be inaccurate. Consider using '#align quot.subsingleton_iff Quot.subsingleton_iffₓ'. -/
 theorem Quot.subsingleton_iff (r : α → α → Prop) : Subsingleton (Quot r) ↔ EqvGen r = ⊤ :=
   by
   simp only [subsingleton_iff, _root_.eq_top_iff, Pi.le_def, Pi.top_apply, forall_const]

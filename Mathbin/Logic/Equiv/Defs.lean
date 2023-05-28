@@ -62,12 +62,6 @@ universe u v w z
 
 variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
-/- warning: equiv -> Equiv is a dubious translation:
-lean 3 declaration is
-  Sort.{u1} -> Sort.{u2} -> Sort.{max 1 (imax u1 u2) (imax u2 u1)}
-but is expected to have type
-  Sort.{u1} -> Sort.{u2} -> Sort.{max (max 1 u1) u2}
-Case conversion may be inaccurate. Consider using '#align equiv Equivₓ'. -/
 /-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
 structure Equiv (α : Sort _) (β : Sort _) where
   toFun : α → β
@@ -139,22 +133,10 @@ protected theorem congr_arg {f : Equiv α β} {x x' : α} : x = x' → f x = f x
 #align equiv.congr_arg Equiv.congr_arg
 -/
 
-/- warning: equiv.congr_fun -> Equiv.congr_fun is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : Equiv.{u1, u2} α β} {g : Equiv.{u1, u2} α β}, (Eq.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β) f g) -> (forall (x : α), Eq.{u2} β (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) f x) (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) g x))
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : Equiv.{u1, u2} α β} {g : Equiv.{u1, u2} α β}, (Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) f g) -> (forall (x : α), Eq.{u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u1, u2} α β) f x) (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u1, u2} α β) g x))
-Case conversion may be inaccurate. Consider using '#align equiv.congr_fun Equiv.congr_funₓ'. -/
 protected theorem congr_fun {f g : Equiv α β} (h : f = g) (x : α) : f x = g x :=
   FunLike.congr_fun h x
 #align equiv.congr_fun Equiv.congr_fun
 
-/- warning: equiv.ext_iff -> Equiv.ext_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : Equiv.{u1, u2} α β} {g : Equiv.{u1, u2} α β}, Iff (Eq.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β) f g) (forall (x : α), Eq.{u2} β (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) f x) (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) g x))
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : Equiv.{u1, u2} α β} {g : Equiv.{u1, u2} α β}, Iff (Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) f g) (forall (x : α), Eq.{u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) x) (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u1, u2} α β) f x) (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u1, u2} α β) g x))
-Case conversion may be inaccurate. Consider using '#align equiv.ext_iff Equiv.ext_iffₓ'. -/
 theorem ext_iff {f g : Equiv α β} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align equiv.ext_iff Equiv.ext_iff
@@ -273,22 +255,10 @@ theorem subsingleton_congr (e : α ≃ β) : Subsingleton α ↔ Subsingleton β
 #align equiv.subsingleton_congr Equiv.subsingleton_congr
 -/
 
-/- warning: equiv.equiv_subsingleton_cod -> Equiv.equiv_subsingleton_cod is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Subsingleton.{u2} β], Subsingleton.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Subsingleton.{u2} β], Subsingleton.{max (max 1 u2) u1} (Equiv.{u1, u2} α β)
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_subsingleton_cod Equiv.equiv_subsingleton_codₓ'. -/
 instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
   FunLike.subsingleton_cod
 #align equiv.equiv_subsingleton_cod Equiv.equiv_subsingleton_cod
 
-/- warning: equiv.equiv_subsingleton_dom -> Equiv.equiv_subsingleton_dom is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Subsingleton.{u1} α], Subsingleton.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Subsingleton.{u1} α], Subsingleton.{max (max 1 u2) u1} (Equiv.{u1, u2} α β)
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_subsingleton_dom Equiv.equiv_subsingleton_domₓ'. -/
 instance equiv_subsingleton_dom [Subsingleton α] : Subsingleton (α ≃ β) :=
   EquivLike.subsingleton_dom
 #align equiv.equiv_subsingleton_dom Equiv.equiv_subsingleton_dom
@@ -436,12 +406,6 @@ theorem apply_eq_iff_eq (f : α ≃ β) {x y : α} : f x = f y ↔ x = y :=
 #align equiv.apply_eq_iff_eq Equiv.apply_eq_iff_eq
 -/
 
-/- warning: equiv.apply_eq_iff_eq_symm_apply -> Equiv.apply_eq_iff_eq_symm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : Equiv.{u1, u2} α β) {x : α} {y : β}, Iff (Eq.{u2} β (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) f x) y) (Eq.{u1} α x (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β f) y))
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {f : α} {x : (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) f} (y : Equiv.{u1, u2} α β), Iff (Eq.{u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) f) (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u1, u2} α β) y f) x) (Eq.{u1} α f (FunLike.coe.{max (max 1 u1) u2, u2, u1} (Equiv.{u2, u1} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u2, u1} β α) (Equiv.symm.{u1, u2} α β y) x))
-Case conversion may be inaccurate. Consider using '#align equiv.apply_eq_iff_eq_symm_apply Equiv.apply_eq_iff_eq_symm_applyₓ'. -/
 theorem apply_eq_iff_eq_symm_apply {α β : Sort _} (f : α ≃ β) {x : α} {y : β} :
     f x = y ↔ x = f.symm y := by
   conv_lhs => rw [← apply_symm_apply f y]
@@ -483,42 +447,18 @@ theorem cast_eq_iff_heq {α β} (h : α = β) {a : α} {b : β} : Equiv.cast h a
 #align equiv.cast_eq_iff_heq Equiv.cast_eq_iff_heq
 -/
 
-/- warning: equiv.symm_apply_eq -> Equiv.symm_apply_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β) {x : β} {y : α}, Iff (Eq.{u1} α (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β e) x) y) (Eq.{u2} β x (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) e y))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} (e : Equiv.{u2, u1} α β) {x : β} {y : (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) x}, Iff (Eq.{u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) x) (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u1, u2} β α) (Equiv.symm.{u2, u1} α β e) x) y) (Eq.{u1} β x (FunLike.coe.{max (max 1 u1) u2, u2, u1} (Equiv.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u2, u1} α β) e y))
-Case conversion may be inaccurate. Consider using '#align equiv.symm_apply_eq Equiv.symm_apply_eqₓ'. -/
 theorem symm_apply_eq {α β} (e : α ≃ β) {x y} : e.symm x = y ↔ x = e y :=
   ⟨fun H => by simp [H.symm], fun H => by simp [H]⟩
 #align equiv.symm_apply_eq Equiv.symm_apply_eq
 
-/- warning: equiv.eq_symm_apply -> Equiv.eq_symm_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β) {x : β} {y : α}, Iff (Eq.{u1} α y (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β e) x)) (Eq.{u2} β (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) e y) x)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} (e : Equiv.{u2, u1} α β) {x : β} {y : (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) x}, Iff (Eq.{u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) x) y (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u1, u2} β α) (Equiv.symm.{u2, u1} α β e) x)) (Eq.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) y) (FunLike.coe.{max (max 1 u1) u2, u2, u1} (Equiv.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u2, u1} α β) e y) x)
-Case conversion may be inaccurate. Consider using '#align equiv.eq_symm_apply Equiv.eq_symm_applyₓ'. -/
 theorem eq_symm_apply {α β} (e : α ≃ β) {x y} : y = e.symm x ↔ e y = x :=
   (eq_comm.trans e.symm_apply_eq).trans eq_comm
 #align equiv.eq_symm_apply Equiv.eq_symm_apply
 
-/- warning: equiv.symm_symm -> Equiv.symm_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β) (Equiv.symm.{u2, u1} β α (Equiv.symm.{u1, u2} α β e)) e
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) (Equiv.symm.{u2, u1} β α (Equiv.symm.{u1, u2} α β e)) e
-Case conversion may be inaccurate. Consider using '#align equiv.symm_symm Equiv.symm_symmₓ'. -/
 @[simp]
 theorem symm_symm (e : α ≃ β) : e.symm.symm = e := by cases e; rfl
 #align equiv.symm_symm Equiv.symm_symm
 
-/- warning: equiv.trans_refl -> Equiv.trans_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β) (Equiv.trans.{u1, u2, u2} α β β e (Equiv.refl.{u2} β)) e
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) (Equiv.trans.{u1, u2, u2} α β β e (Equiv.refl.{u2} β)) e
-Case conversion may be inaccurate. Consider using '#align equiv.trans_refl Equiv.trans_reflₓ'. -/
 @[simp]
 theorem trans_refl (e : α ≃ β) : e.trans (Equiv.refl β) = e := by cases e; rfl
 #align equiv.trans_refl Equiv.trans_refl
@@ -530,12 +470,6 @@ theorem refl_symm : (Equiv.refl α).symm = Equiv.refl α :=
 #align equiv.refl_symm Equiv.refl_symm
 -/
 
-/- warning: equiv.refl_trans -> Equiv.refl_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β) (Equiv.trans.{u1, u1, u2} α α β (Equiv.refl.{u1} α) e) e
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) (Equiv.trans.{u1, u1, u2} α α β (Equiv.refl.{u1} α) e) e
-Case conversion may be inaccurate. Consider using '#align equiv.refl_trans Equiv.refl_transₓ'. -/
 @[simp]
 theorem refl_trans (e : α ≃ β) : (Equiv.refl α).trans e = e := by cases e; rfl
 #align equiv.refl_trans Equiv.refl_trans
@@ -554,12 +488,6 @@ theorem self_trans_symm (e : α ≃ β) : e.trans e.symm = Equiv.refl α :=
 #align equiv.self_trans_symm Equiv.self_trans_symm
 -/
 
-/- warning: equiv.trans_assoc -> Equiv.trans_assoc is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {δ : Sort.{u4}} (ab : Equiv.{u1, u2} α β) (bc : Equiv.{u2, u3} β γ) (cd : Equiv.{u3, u4} γ δ), Eq.{max 1 (imax u1 u4) (imax u4 u1)} (Equiv.{u1, u4} α δ) (Equiv.trans.{u1, u3, u4} α γ δ (Equiv.trans.{u1, u2, u3} α β γ ab bc) cd) (Equiv.trans.{u1, u2, u4} α β δ ab (Equiv.trans.{u2, u3, u4} β γ δ bc cd))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u3}} {γ : Sort.{u4}} {δ : Sort.{u1}} (ab : Equiv.{u2, u3} α β) (bc : Equiv.{u3, u4} β γ) (cd : Equiv.{u4, u1} γ δ), Eq.{max (max 1 u2) u1} (Equiv.{u2, u1} α δ) (Equiv.trans.{u2, u4, u1} α γ δ (Equiv.trans.{u2, u3, u4} α β γ ab bc) cd) (Equiv.trans.{u2, u3, u1} α β δ ab (Equiv.trans.{u3, u4, u1} β γ δ bc cd))
-Case conversion may be inaccurate. Consider using '#align equiv.trans_assoc Equiv.trans_assocₓ'. -/
 theorem trans_assoc {δ} (ab : α ≃ β) (bc : β ≃ γ) (cd : γ ≃ δ) :
     (ab.trans bc).trans cd = ab.trans (bc.trans cd) :=
   Equiv.ext fun a => rfl
@@ -613,12 +541,6 @@ theorem comp_bijective (f : α → β) (e : β ≃ γ) : Bijective (e ∘ f) ↔
 #align equiv.comp_bijective Equiv.comp_bijective
 -/
 
-/- warning: equiv.equiv_congr -> Equiv.equivCongr is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {δ : Sort.{u4}}, (Equiv.{u1, u2} α β) -> (Equiv.{u3, u4} γ δ) -> (Equiv.{max 1 (imax u1 u3) (imax u3 u1), max 1 (imax u2 u4) (imax u4 u2)} (Equiv.{u1, u3} α γ) (Equiv.{u2, u4} β δ))
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {δ : Sort.{u4}}, (Equiv.{u1, u2} α β) -> (Equiv.{u3, u4} γ δ) -> (Equiv.{max (max 1 u3) u1, max (max 1 u4) u2} (Equiv.{u1, u3} α γ) (Equiv.{u2, u4} β δ))
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr Equiv.equivCongrₓ'. -/
 /-- If `α` is equivalent to `β` and `γ` is equivalent to `δ`, then the type of equivalences `α ≃ γ`
 is equivalent to the type of equivalences `β ≃ δ`. -/
 def equivCongr {δ} (ab : α ≃ β) (cd : γ ≃ δ) : α ≃ γ ≃ (β ≃ δ) :=
@@ -626,70 +548,34 @@ def equivCongr {δ} (ab : α ≃ β) (cd : γ ≃ δ) : α ≃ γ ≃ (β ≃ δ
     ext x; simp, fun ac => by ext x; simp⟩
 #align equiv.equiv_congr Equiv.equivCongr
 
-/- warning: equiv.equiv_congr_refl -> Equiv.equivCongr_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, Eq.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{max 1 (imax u1 u2) (imax u2 u1), max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β) (Equiv.{u1, u2} α β)) (Equiv.equivCongr.{u1, u1, u2, u2} α α β β (Equiv.refl.{u1} α) (Equiv.refl.{u2} β)) (Equiv.refl.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, Eq.{max (max 1 u2) u1} (Equiv.{max (max 1 u1) u2, max (max 1 u1) u2} (Equiv.{u2, u1} α β) (Equiv.{u2, u1} α β)) (Equiv.equivCongr.{u2, u2, u1, u1} α α β β (Equiv.refl.{u2} α) (Equiv.refl.{u1} β)) (Equiv.refl.{max (max 1 u1) u2} (Equiv.{u2, u1} α β))
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_refl Equiv.equivCongr_reflₓ'. -/
 @[simp]
 theorem equivCongr_refl {α β} : (Equiv.refl α).equivCongr (Equiv.refl β) = Equiv.refl (α ≃ β) := by
   ext; rfl
 #align equiv.equiv_congr_refl Equiv.equivCongr_refl
 
-/- warning: equiv.equiv_congr_symm -> Equiv.equivCongr_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {δ : Sort.{u4}} (ab : Equiv.{u1, u2} α β) (cd : Equiv.{u3, u4} γ δ), Eq.{max 1 (max (max 1 (imax u2 u4) (imax u4 u2)) 1 (imax u1 u3) (imax u3 u1)) (max 1 (imax u1 u3) (imax u3 u1)) 1 (imax u2 u4) (imax u4 u2)} (Equiv.{max 1 (imax u2 u4) (imax u4 u2), max 1 (imax u1 u3) (imax u3 u1)} (Equiv.{u2, u4} β δ) (Equiv.{u1, u3} α γ)) (Equiv.symm.{max 1 (imax u1 u3) (imax u3 u1), max 1 (imax u2 u4) (imax u4 u2)} (Equiv.{u1, u3} α γ) (Equiv.{u2, u4} β δ) (Equiv.equivCongr.{u1, u2, u3, u4} α β γ δ ab cd)) (Equiv.equivCongr.{u2, u1, u4, u3} β α δ γ (Equiv.symm.{u1, u2} α β ab) (Equiv.symm.{u3, u4} γ δ cd))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u3}} {γ : Sort.{u4}} {δ : Sort.{u1}} (ab : Equiv.{u2, u3} α β) (cd : Equiv.{u4, u1} γ δ), Eq.{max (max (max (max 1 u2) u3) u4) u1} (Equiv.{max (max 1 u3) u1, max (max 1 u2) u4} (Equiv.{u3, u1} β δ) (Equiv.{u2, u4} α γ)) (Equiv.symm.{max (max 1 u2) u4, max (max 1 u3) u1} (Equiv.{u2, u4} α γ) (Equiv.{u3, u1} β δ) (Equiv.equivCongr.{u2, u3, u4, u1} α β γ δ ab cd)) (Equiv.equivCongr.{u3, u2, u1, u4} β α δ γ (Equiv.symm.{u2, u3} α β ab) (Equiv.symm.{u4, u1} γ δ cd))
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_symm Equiv.equivCongr_symmₓ'. -/
 @[simp]
 theorem equivCongr_symm {δ} (ab : α ≃ β) (cd : γ ≃ δ) :
     (ab.equivCongr cd).symm = ab.symm.equivCongr cd.symm := by ext; rfl
 #align equiv.equiv_congr_symm Equiv.equivCongr_symm
 
-/- warning: equiv.equiv_congr_trans -> Equiv.equivCongr_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {δ : Sort.{u4}} {ε : Sort.{u5}} {ζ : Sort.{u6}} (ab : Equiv.{u1, u2} α β) (de : Equiv.{u4, u5} δ ε) (bc : Equiv.{u2, u3} β γ) (ef : Equiv.{u5, u6} ε ζ), Eq.{max 1 (max (max 1 (imax u1 u4) (imax u4 u1)) 1 (imax u3 u6) (imax u6 u3)) (max 1 (imax u3 u6) (imax u6 u3)) 1 (imax u1 u4) (imax u4 u1)} (Equiv.{max 1 (imax u1 u4) (imax u4 u1), max 1 (imax u3 u6) (imax u6 u3)} (Equiv.{u1, u4} α δ) (Equiv.{u3, u6} γ ζ)) (Equiv.trans.{max 1 (imax u1 u4) (imax u4 u1), max 1 (imax u2 u5) (imax u5 u2), max 1 (imax u3 u6) (imax u6 u3)} (Equiv.{u1, u4} α δ) (Equiv.{u2, u5} β ε) (Equiv.{u3, u6} γ ζ) (Equiv.equivCongr.{u1, u2, u4, u5} α β δ ε ab de) (Equiv.equivCongr.{u2, u3, u5, u6} β γ ε ζ bc ef)) (Equiv.equivCongr.{u1, u3, u4, u6} α γ δ ζ (Equiv.trans.{u1, u2, u3} α β γ ab bc) (Equiv.trans.{u4, u5, u6} δ ε ζ de ef))
-but is expected to have type
-  forall {α : Sort.{u4}} {β : Sort.{u5}} {γ : Sort.{u6}} {δ : Sort.{u3}} {ε : Sort.{u2}} {ζ : Sort.{u1}} (ab : Equiv.{u4, u5} α β) (de : Equiv.{u3, u2} δ ε) (bc : Equiv.{u5, u6} β γ) (ef : Equiv.{u2, u1} ε ζ), Eq.{max (max (max (max 1 u4) u6) u3) u1} (Equiv.{max (max 1 u4) u3, max (max 1 u6) u1} (Equiv.{u4, u3} α δ) (Equiv.{u6, u1} γ ζ)) (Equiv.trans.{max (max 1 u4) u3, max (max 1 u5) u2, max (max 1 u6) u1} (Equiv.{u4, u3} α δ) (Equiv.{u5, u2} β ε) (Equiv.{u6, u1} γ ζ) (Equiv.equivCongr.{u4, u5, u3, u2} α β δ ε ab de) (Equiv.equivCongr.{u5, u6, u2, u1} β γ ε ζ bc ef)) (Equiv.equivCongr.{u4, u6, u3, u1} α γ δ ζ (Equiv.trans.{u4, u5, u6} α β γ ab bc) (Equiv.trans.{u3, u2, u1} δ ε ζ de ef))
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_trans Equiv.equivCongr_transₓ'. -/
 @[simp]
 theorem equivCongr_trans {δ ε ζ} (ab : α ≃ β) (de : δ ≃ ε) (bc : β ≃ γ) (ef : ε ≃ ζ) :
     (ab.equivCongr de).trans (bc.equivCongr ef) = (ab.trans bc).equivCongr (de.trans ef) := by ext;
   rfl
 #align equiv.equiv_congr_trans Equiv.equivCongr_trans
 
-/- warning: equiv.equiv_congr_refl_left -> Equiv.equivCongr_refl_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (bg : Equiv.{u2, u3} β γ) (e : Equiv.{u1, u2} α β), Eq.{max 1 (imax u1 u3) (imax u3 u1)} (Equiv.{u1, u3} α γ) (coeFn.{max 1 (max (max 1 (imax u1 u2) (imax u2 u1)) 1 (imax u1 u3) (imax u3 u1)) (max 1 (imax u1 u3) (imax u3 u1)) 1 (imax u1 u2) (imax u2 u1), max (max 1 (imax u1 u2) (imax u2 u1)) 1 (imax u1 u3) (imax u3 u1)} (Equiv.{max 1 (imax u1 u2) (imax u2 u1), max 1 (imax u1 u3) (imax u3 u1)} (Equiv.{u1, u2} α β) (Equiv.{u1, u3} α γ)) (fun (_x : Equiv.{max 1 (imax u1 u2) (imax u2 u1), max 1 (imax u1 u3) (imax u3 u1)} (Equiv.{u1, u2} α β) (Equiv.{u1, u3} α γ)) => (Equiv.{u1, u2} α β) -> (Equiv.{u1, u3} α γ)) (Equiv.hasCoeToFun.{max 1 (imax u1 u2) (imax u2 u1), max 1 (imax u1 u3) (imax u3 u1)} (Equiv.{u1, u2} α β) (Equiv.{u1, u3} α γ)) (Equiv.equivCongr.{u1, u1, u2, u3} α α β γ (Equiv.refl.{u1} α) bg) e) (Equiv.trans.{u1, u2, u3} α β γ e bg)
-but is expected to have type
-  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (bg : Equiv.{u2, u1} β γ) (e : Equiv.{u3, u2} α β), Eq.{max (max 1 u1) u3} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.{u3, u2} α β) => Equiv.{u3, u1} α γ) e) (FunLike.coe.{max (max (max 1 u1) u2) u3, max (max 1 u2) u3, max (max 1 u1) u3} (Equiv.{max (max 1 u2) u3, max (max 1 u1) u3} (Equiv.{u3, u2} α β) (Equiv.{u3, u1} α γ)) (Equiv.{u3, u2} α β) (fun (_x : Equiv.{u3, u2} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.{u3, u2} α β) => Equiv.{u3, u1} α γ) _x) (Equiv.instFunLikeEquiv.{max (max 1 u2) u3, max (max 1 u1) u3} (Equiv.{u3, u2} α β) (Equiv.{u3, u1} α γ)) (Equiv.equivCongr.{u3, u3, u2, u1} α α β γ (Equiv.refl.{u3} α) bg) e) (Equiv.trans.{u3, u2, u1} α β γ e bg)
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_refl_left Equiv.equivCongr_refl_leftₓ'. -/
 @[simp]
 theorem equivCongr_refl_left {α β γ} (bg : β ≃ γ) (e : α ≃ β) :
     (Equiv.refl α).equivCongr bg e = e.trans bg :=
   rfl
 #align equiv.equiv_congr_refl_left Equiv.equivCongr_refl_left
 
-/- warning: equiv.equiv_congr_refl_right -> Equiv.equivCongr_refl_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (ab : Equiv.{u1, u2} α β) (e : Equiv.{u1, u2} α β), Eq.{max 1 u2} (Equiv.{u2, u2} β β) (coeFn.{max 1 (max (max 1 (imax u1 u2) (imax u2 u1)) 1 u2) (max 1 u2) 1 (imax u1 u2) (imax u2 u1), max (max 1 (imax u1 u2) (imax u2 u1)) 1 u2} (Equiv.{max 1 (imax u1 u2) (imax u2 u1), max 1 u2} (Equiv.{u1, u2} α β) (Equiv.{u2, u2} β β)) (fun (_x : Equiv.{max 1 (imax u1 u2) (imax u2 u1), max 1 u2} (Equiv.{u1, u2} α β) (Equiv.{u2, u2} β β)) => (Equiv.{u1, u2} α β) -> (Equiv.{u2, u2} β β)) (Equiv.hasCoeToFun.{max 1 (imax u1 u2) (imax u2 u1), max 1 u2} (Equiv.{u1, u2} α β) (Equiv.{u2, u2} β β)) (Equiv.equivCongr.{u1, u2, u2, u2} α β β β ab (Equiv.refl.{u2} β)) e) (Equiv.trans.{u2, u1, u2} β α β (Equiv.symm.{u1, u2} α β ab) e)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} (ab : Equiv.{u2, u1} α β) (e : Equiv.{u2, u1} α β), Eq.{max 1 u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.{u2, u1} α β) => Equiv.{u1, u1} β β) e) (FunLike.coe.{max (max 1 u1) u2, max (max 1 u1) u2, max 1 u1} (Equiv.{max (max 1 u1) u2, max 1 u1} (Equiv.{u2, u1} α β) (Equiv.{u1, u1} β β)) (Equiv.{u2, u1} α β) (fun (_x : Equiv.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.{u2, u1} α β) => Equiv.{u1, u1} β β) _x) (Equiv.instFunLikeEquiv.{max (max 1 u1) u2, max 1 u1} (Equiv.{u2, u1} α β) (Equiv.{u1, u1} β β)) (Equiv.equivCongr.{u2, u1, u1, u1} α β β β ab (Equiv.refl.{u1} β)) e) (Equiv.trans.{u1, u2, u1} β α β (Equiv.symm.{u2, u1} α β ab) e)
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_refl_right Equiv.equivCongr_refl_rightₓ'. -/
 @[simp]
 theorem equivCongr_refl_right {α β} (ab e : α ≃ β) :
     ab.equivCongr (Equiv.refl β) e = ab.symm.trans e :=
   rfl
 #align equiv.equiv_congr_refl_right Equiv.equivCongr_refl_right
 
-/- warning: equiv.equiv_congr_apply_apply -> Equiv.equivCongr_apply_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {δ : Sort.{u4}} (ab : Equiv.{u1, u2} α β) (cd : Equiv.{u3, u4} γ δ) (e : Equiv.{u1, u3} α γ) (x : β), Eq.{u4} δ (coeFn.{max 1 (imax u2 u4) (imax u4 u2), imax u2 u4} (Equiv.{u2, u4} β δ) (fun (_x : Equiv.{u2, u4} β δ) => β -> δ) (Equiv.hasCoeToFun.{u2, u4} β δ) (coeFn.{max 1 (max (max 1 (imax u1 u3) (imax u3 u1)) 1 (imax u2 u4) (imax u4 u2)) (max 1 (imax u2 u4) (imax u4 u2)) 1 (imax u1 u3) (imax u3 u1), max (max 1 (imax u1 u3) (imax u3 u1)) 1 (imax u2 u4) (imax u4 u2)} (Equiv.{max 1 (imax u1 u3) (imax u3 u1), max 1 (imax u2 u4) (imax u4 u2)} (Equiv.{u1, u3} α γ) (Equiv.{u2, u4} β δ)) (fun (_x : Equiv.{max 1 (imax u1 u3) (imax u3 u1), max 1 (imax u2 u4) (imax u4 u2)} (Equiv.{u1, u3} α γ) (Equiv.{u2, u4} β δ)) => (Equiv.{u1, u3} α γ) -> (Equiv.{u2, u4} β δ)) (Equiv.hasCoeToFun.{max 1 (imax u1 u3) (imax u3 u1), max 1 (imax u2 u4) (imax u4 u2)} (Equiv.{u1, u3} α γ) (Equiv.{u2, u4} β δ)) (Equiv.equivCongr.{u1, u2, u3, u4} α β γ δ ab cd) e) x) (coeFn.{max 1 (imax u3 u4) (imax u4 u3), imax u3 u4} (Equiv.{u3, u4} γ δ) (fun (_x : Equiv.{u3, u4} γ δ) => γ -> δ) (Equiv.hasCoeToFun.{u3, u4} γ δ) cd (coeFn.{max 1 (imax u1 u3) (imax u3 u1), imax u1 u3} (Equiv.{u1, u3} α γ) (fun (_x : Equiv.{u1, u3} α γ) => α -> γ) (Equiv.hasCoeToFun.{u1, u3} α γ) e (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β ab) x)))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u3}} {γ : Sort.{u4}} {δ : Sort.{u1}} (ab : Equiv.{u2, u3} α β) (cd : Equiv.{u4, u1} γ δ) (e : Equiv.{u2, u4} α γ) (x : β), Eq.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => δ) x) (FunLike.coe.{max (max 1 u3) u1, u3, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.{u2, u4} α γ) => Equiv.{u3, u1} β δ) e) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => δ) _x) (Equiv.instFunLikeEquiv.{u3, u1} β δ) (FunLike.coe.{max (max (max (max 1 u2) u3) u4) u1, max (max 1 u2) u4, max (max 1 u3) u1} (Equiv.{max (max 1 u4) u2, max (max 1 u1) u3} (Equiv.{u2, u4} α γ) (Equiv.{u3, u1} β δ)) (Equiv.{u2, u4} α γ) (fun (_x : Equiv.{u2, u4} α γ) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.{u2, u4} α γ) => Equiv.{u3, u1} β δ) _x) (Equiv.instFunLikeEquiv.{max (max 1 u2) u4, max (max 1 u3) u1} (Equiv.{u2, u4} α γ) (Equiv.{u3, u1} β δ)) (Equiv.equivCongr.{u2, u3, u4, u1} α β γ δ ab cd) e) x) (FunLike.coe.{max (max 1 u4) u1, u4, u1} (Equiv.{u4, u1} γ δ) γ (fun (_x : γ) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : γ) => δ) _x) (Equiv.instFunLikeEquiv.{u4, u1} γ δ) cd (FunLike.coe.{max (max 1 u2) u4, u2, u4} (Equiv.{u2, u4} α γ) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => γ) _x) (Equiv.instFunLikeEquiv.{u2, u4} α γ) e (FunLike.coe.{max (max 1 u2) u3, u3, u2} (Equiv.{u3, u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u3, u2} β α) (Equiv.symm.{u2, u3} α β ab) x)))
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_apply_apply Equiv.equivCongr_apply_applyₓ'. -/
 @[simp]
 theorem equivCongr_apply_apply {δ} (ab : α ≃ β) (cd : γ ≃ δ) (e : α ≃ γ) (x) :
     ab.equivCongr cd e x = cd (e (ab.symm x)) :=
@@ -707,12 +593,6 @@ def permCongr : Perm α' ≃ Perm β' :=
 #align equiv.perm_congr Equiv.permCongr
 -/
 
-/- warning: equiv.perm_congr_def -> Equiv.permCongr_def is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} {β' : Type.{u2}} (e : Equiv.{succ u1, succ u2} α' β') (p : Equiv.Perm.{succ u1} α'), Eq.{succ u2} (Equiv.Perm.{succ u2} β') (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (fun (_x : Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) => (Equiv.Perm.{succ u1} α') -> (Equiv.Perm.{succ u2} β')) (Equiv.hasCoeToFun.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (Equiv.permCongr.{u1, u2} α' β' e) p) (Equiv.trans.{succ u2, succ u1, succ u2} β' α' β' (Equiv.trans.{succ u2, succ u1, succ u1} β' α' α' (Equiv.symm.{succ u1, succ u2} α' β' e) p) e)
-but is expected to have type
-  forall {α' : Type.{u2}} {β' : Type.{u1}} (e : Equiv.{succ u2, succ u1} α' β') (p : Equiv.Perm.{succ u2} α'), Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) p) (Equiv.trans.{succ u1, succ u2, succ u1} β' α' β' (Equiv.trans.{succ u1, succ u2, succ u2} β' α' α' (Equiv.symm.{succ u2, succ u1} α' β' e) p) e)
-Case conversion may be inaccurate. Consider using '#align equiv.perm_congr_def Equiv.permCongr_defₓ'. -/
 theorem permCongr_def (p : Equiv.Perm α') : e.permCongr p = (e.symm.trans p).trans e :=
   rfl
 #align equiv.perm_congr_def Equiv.permCongr_def
@@ -723,23 +603,11 @@ theorem permCongr_refl : e.permCongr (Equiv.refl _) = Equiv.refl _ := by simp [p
 #align equiv.perm_congr_refl Equiv.permCongr_refl
 -/
 
-/- warning: equiv.perm_congr_symm -> Equiv.permCongr_symm is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} {β' : Type.{u2}} (e : Equiv.{succ u1, succ u2} α' β'), Eq.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} β') (Equiv.Perm.{succ u1} α')) (Equiv.symm.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β') (Equiv.permCongr.{u1, u2} α' β' e)) (Equiv.permCongr.{u2, u1} β' α' (Equiv.symm.{succ u1, succ u2} α' β' e))
-but is expected to have type
-  forall {α' : Type.{u2}} {β' : Type.{u1}} (e : Equiv.{succ u2, succ u1} α' β'), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} β') (Equiv.Perm.{succ u2} α')) (Equiv.symm.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β') (Equiv.permCongr.{u2, u1} α' β' e)) (Equiv.permCongr.{u1, u2} β' α' (Equiv.symm.{succ u2, succ u1} α' β' e))
-Case conversion may be inaccurate. Consider using '#align equiv.perm_congr_symm Equiv.permCongr_symmₓ'. -/
 @[simp]
 theorem permCongr_symm : e.permCongr.symm = e.symm.permCongr :=
   rfl
 #align equiv.perm_congr_symm Equiv.permCongr_symm
 
-/- warning: equiv.perm_congr_apply -> Equiv.permCongr_apply is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} {β' : Type.{u2}} (e : Equiv.{succ u1, succ u2} α' β') (p : Equiv.Perm.{succ u1} α') (x : β'), Eq.{succ u2} β' (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β') (fun (_x : Equiv.{succ u2, succ u2} β' β') => β' -> β') (Equiv.hasCoeToFun.{succ u2, succ u2} β' β') (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (fun (_x : Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) => (Equiv.Perm.{succ u1} α') -> (Equiv.Perm.{succ u2} β')) (Equiv.hasCoeToFun.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (Equiv.permCongr.{u1, u2} α' β' e) p) x) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α' β') (fun (_x : Equiv.{succ u1, succ u2} α' β') => α' -> β') (Equiv.hasCoeToFun.{succ u1, succ u2} α' β') e (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α') (fun (_x : Equiv.{succ u1, succ u1} α' α') => α' -> α') (Equiv.hasCoeToFun.{succ u1, succ u1} α' α') p (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} β' α') (fun (_x : Equiv.{succ u2, succ u1} β' α') => β' -> α') (Equiv.hasCoeToFun.{succ u2, succ u1} β' α') (Equiv.symm.{succ u1, succ u2} α' β' e) x)))
-but is expected to have type
-  forall {α' : Type.{u2}} {β' : Type.{u1}} (e : Equiv.{succ u2, succ u1} α' β') (p : Equiv.Perm.{succ u2} α') (x : β'), Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β') => β') x) (FunLike.coe.{succ u1, succ u1, succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') p) β' (fun (_x : β') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β') => β') _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} β' β') (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) p) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α' β') α' (fun (_x : α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α') => β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α' β') e (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α') α' (fun (_x : α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α') => α') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} α' α') p (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} β' α') β' (fun (_x : β') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β') => α') _x) (Equiv.instFunLikeEquiv.{succ u1, succ u2} β' α') (Equiv.symm.{succ u2, succ u1} α' β' e) x)))
-Case conversion may be inaccurate. Consider using '#align equiv.perm_congr_apply Equiv.permCongr_applyₓ'. -/
 @[simp]
 theorem permCongr_apply (p : Equiv.Perm α') (x) : e.permCongr p x = e (p (e.symm x)) :=
   rfl
@@ -751,12 +619,6 @@ theorem permCongr_symm_apply (p : Equiv.Perm β') (x) : e.permCongr.symm p x = e
 #align equiv.perm_congr_symm_apply Equiv.permCongr_symm_apply
 -/
 
-/- warning: equiv.perm_congr_trans -> Equiv.permCongr_trans is a dubious translation:
-lean 3 declaration is
-  forall {α' : Type.{u1}} {β' : Type.{u2}} (e : Equiv.{succ u1, succ u2} α' β') (p : Equiv.Perm.{succ u1} α') (p' : Equiv.Perm.{succ u1} α'), Eq.{succ u2} (Equiv.{succ u2, succ u2} β' β') (Equiv.trans.{succ u2, succ u2, succ u2} β' β' β' (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (fun (_x : Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) => (Equiv.Perm.{succ u1} α') -> (Equiv.Perm.{succ u2} β')) (Equiv.hasCoeToFun.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (Equiv.permCongr.{u1, u2} α' β' e) p) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (fun (_x : Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) => (Equiv.Perm.{succ u1} α') -> (Equiv.Perm.{succ u2} β')) (Equiv.hasCoeToFun.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (Equiv.permCongr.{u1, u2} α' β' e) p')) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (fun (_x : Equiv.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) => (Equiv.Perm.{succ u1} α') -> (Equiv.Perm.{succ u2} β')) (Equiv.hasCoeToFun.{succ u1, succ u2} (Equiv.Perm.{succ u1} α') (Equiv.Perm.{succ u2} β')) (Equiv.permCongr.{u1, u2} α' β' e) (Equiv.trans.{succ u1, succ u1, succ u1} α' α' α' p p'))
-but is expected to have type
-  forall {α' : Type.{u2}} {β' : Type.{u1}} (e : Equiv.{succ u2, succ u1} α' β') (p : Equiv.Perm.{succ u2} α') (p' : Equiv.Perm.{succ u2} α'), Eq.{succ u1} (Equiv.{succ u1, succ u1} β' β') (Equiv.trans.{succ u1, succ u1, succ u1} β' β' β' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) p')) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) (Equiv.trans.{succ u2, succ u2, succ u2} α' α' α' p p'))
-Case conversion may be inaccurate. Consider using '#align equiv.perm_congr_trans Equiv.permCongr_transₓ'. -/
 theorem permCongr_trans (p p' : Equiv.Perm α') :
     (e.permCongr p).trans (e.permCongr p') = e.permCongr (p.trans p') := by ext; simp
 #align equiv.perm_congr_trans Equiv.permCongr_trans
@@ -784,12 +646,6 @@ def equivPEmpty (α : Sort v) [IsEmpty α] : α ≃ PEmpty.{u} :=
 #align equiv.equiv_pempty Equiv.equivPEmpty
 -/
 
-/- warning: equiv.equiv_empty_equiv -> Equiv.equivEmptyEquiv is a dubious translation:
-lean 3 declaration is
-  forall (α : Sort.{u1}), Equiv.{max 1 (max u1 1) (imax 1 u1), 0} (Equiv.{u1, 1} α Empty) (IsEmpty.{u1} α)
-but is expected to have type
-  forall (α : Sort.{u1}), Equiv.{max 1 u1, 0} (Equiv.{u1, 1} α Empty) (IsEmpty.{u1} α)
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_empty_equiv Equiv.equivEmptyEquivₓ'. -/
 /-- `α` is equivalent to an empty type iff `α` is empty. -/
 def equivEmptyEquiv (α : Sort u) : α ≃ Empty ≃ IsEmpty α :=
   ⟨fun e => Function.isEmpty e, @equivEmpty α, fun e => ext fun x => (e x).elim, fun p => rfl⟩
@@ -813,23 +669,11 @@ def equivOfUnique (α β : Sort _) [Unique α] [Unique β] : α ≃ β
 #align equiv.equiv_of_unique Equiv.equivOfUnique
 -/
 
-/- warning: equiv.equiv_punit -> Equiv.equivPUnit is a dubious translation:
-lean 3 declaration is
-  forall (α : Sort.{u2}) [_inst_1 : Unique.{u2} α], Equiv.{u2, u1} α PUnit.{u1}
-but is expected to have type
-  forall (α : Sort.{u1}) [_inst_1 : Unique.{u1} α], Equiv.{u1, u2} α PUnit.{u2}
-Case conversion may be inaccurate. Consider using '#align equiv.equiv_punit Equiv.equivPUnitₓ'. -/
 /-- If `α` has a unique element, then it is equivalent to any `punit`. -/
 def equivPUnit (α : Sort _) [Unique α] : α ≃ PUnit.{v} :=
   equivOfUnique α _
 #align equiv.equiv_punit Equiv.equivPUnit
 
-/- warning: equiv.prop_equiv_punit -> Equiv.propEquivPUnit is a dubious translation:
-lean 3 declaration is
-  forall {p : Prop}, p -> (Equiv.{0, u_1} p PUnit.{u_1})
-but is expected to have type
-  forall {p : Prop}, p -> (Equiv.{0, 0} p PUnit.{0})
-Case conversion may be inaccurate. Consider using '#align equiv.prop_equiv_punit Equiv.propEquivPUnitₓ'. -/
 /-- The `Sort` of proofs of a true proposition is equivalent to `punit`. -/
 def propEquivPUnit {p : Prop} (h : p) : p ≃ PUnit :=
   @equivPUnit p <| uniqueProp h
@@ -875,36 +719,18 @@ def arrowCongr {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α₂) (e₂
 #align equiv.arrow_congr Equiv.arrowCongr
 -/
 
-/- warning: equiv.arrow_congr_comp -> Equiv.arrowCongr_comp is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {β₁ : Sort.{u2}} {γ₁ : Sort.{u3}} {α₂ : Sort.{u4}} {β₂ : Sort.{u5}} {γ₂ : Sort.{u6}} (ea : Equiv.{u1, u4} α₁ α₂) (eb : Equiv.{u2, u5} β₁ β₂) (ec : Equiv.{u3, u6} γ₁ γ₂) (f : α₁ -> β₁) (g : β₁ -> γ₁), Eq.{imax u4 u6} (α₂ -> γ₂) (coeFn.{max 1 (imax (imax u1 u3) u4 u6) (imax (imax u4 u6) u1 u3), imax (imax u1 u3) u4 u6} (Equiv.{imax u1 u3, imax u4 u6} (α₁ -> γ₁) (α₂ -> γ₂)) (fun (_x : Equiv.{imax u1 u3, imax u4 u6} (α₁ -> γ₁) (α₂ -> γ₂)) => (α₁ -> γ₁) -> α₂ -> γ₂) (Equiv.hasCoeToFun.{imax u1 u3, imax u4 u6} (α₁ -> γ₁) (α₂ -> γ₂)) (Equiv.arrowCongr.{u1, u3, u4, u6} α₁ γ₁ α₂ γ₂ ea ec) (Function.comp.{u1, u2, u3} α₁ β₁ γ₁ g f)) (Function.comp.{u4, u5, u6} α₂ β₂ γ₂ (coeFn.{max 1 (imax (imax u2 u3) u5 u6) (imax (imax u5 u6) u2 u3), imax (imax u2 u3) u5 u6} (Equiv.{imax u2 u3, imax u5 u6} (β₁ -> γ₁) (β₂ -> γ₂)) (fun (_x : Equiv.{imax u2 u3, imax u5 u6} (β₁ -> γ₁) (β₂ -> γ₂)) => (β₁ -> γ₁) -> β₂ -> γ₂) (Equiv.hasCoeToFun.{imax u2 u3, imax u5 u6} (β₁ -> γ₁) (β₂ -> γ₂)) (Equiv.arrowCongr.{u2, u3, u5, u6} β₁ γ₁ β₂ γ₂ eb ec) g) (coeFn.{max 1 (imax (imax u1 u2) u4 u5) (imax (imax u4 u5) u1 u2), imax (imax u1 u2) u4 u5} (Equiv.{imax u1 u2, imax u4 u5} (α₁ -> β₁) (α₂ -> β₂)) (fun (_x : Equiv.{imax u1 u2, imax u4 u5} (α₁ -> β₁) (α₂ -> β₂)) => (α₁ -> β₁) -> α₂ -> β₂) (Equiv.hasCoeToFun.{imax u1 u2, imax u4 u5} (α₁ -> β₁) (α₂ -> β₂)) (Equiv.arrowCongr.{u1, u2, u4, u5} α₁ β₁ α₂ β₂ ea eb) f))
-but is expected to have type
-  forall {α₁ : Sort.{u6}} {β₁ : Sort.{u5}} {γ₁ : Sort.{u4}} {α₂ : Sort.{u3}} {β₂ : Sort.{u2}} {γ₂ : Sort.{u1}} (ea : Equiv.{u6, u3} α₁ α₂) (eb : Equiv.{u5, u2} β₁ β₂) (ec : Equiv.{u4, u1} γ₁ γ₂) (f : α₁ -> β₁) (g : β₁ -> γ₁), Eq.{imax u3 u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₁ -> γ₁) => α₂ -> γ₂) (Function.comp.{u6, u5, u4} α₁ β₁ γ₁ g f)) (FunLike.coe.{max (max 1 (imax u6 u4)) (imax u3 u1), imax u6 u4, imax u3 u1} (Equiv.{imax u6 u4, imax u3 u1} (α₁ -> γ₁) (α₂ -> γ₂)) (α₁ -> γ₁) (fun (_x : α₁ -> γ₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₁ -> γ₁) => α₂ -> γ₂) _x) (Equiv.instFunLikeEquiv.{imax u6 u4, imax u3 u1} (α₁ -> γ₁) (α₂ -> γ₂)) (Equiv.arrowCongr.{u6, u4, u3, u1} α₁ γ₁ α₂ γ₂ ea ec) (Function.comp.{u6, u5, u4} α₁ β₁ γ₁ g f)) (Function.comp.{u3, u2, u1} α₂ β₂ γ₂ (FunLike.coe.{max (max 1 (imax u5 u4)) (imax u2 u1), imax u5 u4, imax u2 u1} (Equiv.{imax u5 u4, imax u2 u1} (β₁ -> γ₁) (β₂ -> γ₂)) (β₁ -> γ₁) (fun (_x : β₁ -> γ₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β₁ -> γ₁) => β₂ -> γ₂) _x) (Equiv.instFunLikeEquiv.{imax u5 u4, imax u2 u1} (β₁ -> γ₁) (β₂ -> γ₂)) (Equiv.arrowCongr.{u5, u4, u2, u1} β₁ γ₁ β₂ γ₂ eb ec) g) (FunLike.coe.{max (max 1 (imax u6 u5)) (imax u3 u2), imax u6 u5, imax u3 u2} (Equiv.{imax u6 u5, imax u3 u2} (α₁ -> β₁) (α₂ -> β₂)) (α₁ -> β₁) (fun (_x : α₁ -> β₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₁ -> β₁) => α₂ -> β₂) _x) (Equiv.instFunLikeEquiv.{imax u6 u5, imax u3 u2} (α₁ -> β₁) (α₂ -> β₂)) (Equiv.arrowCongr.{u6, u5, u3, u2} α₁ β₁ α₂ β₂ ea eb) f))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr_comp Equiv.arrowCongr_compₓ'. -/
 theorem arrowCongr_comp {α₁ β₁ γ₁ α₂ β₂ γ₂ : Sort _} (ea : α₁ ≃ α₂) (eb : β₁ ≃ β₂) (ec : γ₁ ≃ γ₂)
     (f : α₁ → β₁) (g : β₁ → γ₁) :
     arrowCongr ea ec (g ∘ f) = arrowCongr eb ec g ∘ arrowCongr ea eb f := by ext;
   simp only [comp, arrow_congr_apply, eb.symm_apply_apply]
 #align equiv.arrow_congr_comp Equiv.arrowCongr_comp
 
-/- warning: equiv.arrow_congr_refl -> Equiv.arrowCongr_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, Eq.{max 1 (imax u1 u2)} (Equiv.{imax u1 u2, imax u1 u2} (α -> β) (α -> β)) (Equiv.arrowCongr.{u1, u2, u1, u2} α β α β (Equiv.refl.{u1} α) (Equiv.refl.{u2} β)) (Equiv.refl.{imax u1 u2} (α -> β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, Eq.{max 1 (imax u2 u1)} (Equiv.{imax u2 u1, imax u2 u1} (α -> β) (α -> β)) (Equiv.arrowCongr.{u2, u1, u2, u1} α β α β (Equiv.refl.{u2} α) (Equiv.refl.{u1} β)) (Equiv.refl.{imax u2 u1} (α -> β))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr_refl Equiv.arrowCongr_reflₓ'. -/
 @[simp]
 theorem arrowCongr_refl {α β : Sort _} :
     arrowCongr (Equiv.refl α) (Equiv.refl β) = Equiv.refl (α → β) :=
   rfl
 #align equiv.arrow_congr_refl Equiv.arrowCongr_refl
 
-/- warning: equiv.arrow_congr_trans -> Equiv.arrowCongr_trans is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {β₁ : Sort.{u2}} {α₂ : Sort.{u3}} {β₂ : Sort.{u4}} {α₃ : Sort.{u5}} {β₃ : Sort.{u6}} (e₁ : Equiv.{u1, u3} α₁ α₂) (e₁' : Equiv.{u2, u4} β₁ β₂) (e₂ : Equiv.{u3, u5} α₂ α₃) (e₂' : Equiv.{u4, u6} β₂ β₃), Eq.{max 1 (imax (imax u1 u2) u5 u6) (imax (imax u5 u6) u1 u2)} (Equiv.{imax u1 u2, imax u5 u6} (α₁ -> β₁) (α₃ -> β₃)) (Equiv.arrowCongr.{u1, u2, u5, u6} α₁ β₁ α₃ β₃ (Equiv.trans.{u1, u3, u5} α₁ α₂ α₃ e₁ e₂) (Equiv.trans.{u2, u4, u6} β₁ β₂ β₃ e₁' e₂')) (Equiv.trans.{imax u1 u2, imax u3 u4, imax u5 u6} (α₁ -> β₁) (α₂ -> β₂) (α₃ -> β₃) (Equiv.arrowCongr.{u1, u2, u3, u4} α₁ β₁ α₂ β₂ e₁ e₁') (Equiv.arrowCongr.{u3, u4, u5, u6} α₂ β₂ α₃ β₃ e₂ e₂'))
-but is expected to have type
-  forall {α₁ : Sort.{u6}} {β₁ : Sort.{u5}} {α₂ : Sort.{u4}} {β₂ : Sort.{u3}} {α₃ : Sort.{u2}} {β₃ : Sort.{u1}} (e₁ : Equiv.{u6, u5} α₁ β₁) (e₁' : Equiv.{u4, u3} α₂ β₂) (e₂ : Equiv.{u5, u2} β₁ α₃) (e₂' : Equiv.{u3, u1} β₂ β₃), Eq.{max (max 1 (imax u6 u4)) (imax u2 u1)} (Equiv.{imax u6 u4, imax u2 u1} (α₁ -> α₂) (α₃ -> β₃)) (Equiv.arrowCongr.{u6, u4, u2, u1} α₁ α₂ α₃ β₃ (Equiv.trans.{u6, u5, u2} α₁ β₁ α₃ e₁ e₂) (Equiv.trans.{u4, u3, u1} α₂ β₂ β₃ e₁' e₂')) (Equiv.trans.{imax u6 u4, imax u5 u3, imax u2 u1} (α₁ -> α₂) (β₁ -> β₂) (α₃ -> β₃) (Equiv.arrowCongr.{u6, u4, u5, u3} α₁ α₂ β₁ β₂ e₁ e₁') (Equiv.arrowCongr.{u5, u3, u2, u1} β₁ β₂ α₃ β₃ e₂ e₂'))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr_trans Equiv.arrowCongr_transₓ'. -/
 @[simp]
 theorem arrowCongr_trans {α₁ β₁ α₂ β₂ α₃ β₃ : Sort _} (e₁ : α₁ ≃ α₂) (e₁' : β₁ ≃ β₂) (e₂ : α₂ ≃ α₃)
     (e₂' : β₂ ≃ β₃) :
@@ -912,12 +738,6 @@ theorem arrowCongr_trans {α₁ β₁ α₂ β₂ α₃ β₃ : Sort _} (e₁ : 
   rfl
 #align equiv.arrow_congr_trans Equiv.arrowCongr_trans
 
-/- warning: equiv.arrow_congr_symm -> Equiv.arrowCongr_symm is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {β₁ : Sort.{u2}} {α₂ : Sort.{u3}} {β₂ : Sort.{u4}} (e₁ : Equiv.{u1, u3} α₁ α₂) (e₂ : Equiv.{u2, u4} β₁ β₂), Eq.{max 1 (imax (imax u3 u4) u1 u2) (imax (imax u1 u2) u3 u4)} (Equiv.{imax u3 u4, imax u1 u2} (α₂ -> β₂) (α₁ -> β₁)) (Equiv.symm.{imax u1 u2, imax u3 u4} (α₁ -> β₁) (α₂ -> β₂) (Equiv.arrowCongr.{u1, u2, u3, u4} α₁ β₁ α₂ β₂ e₁ e₂)) (Equiv.arrowCongr.{u3, u4, u1, u2} α₂ β₂ α₁ β₁ (Equiv.symm.{u1, u3} α₁ α₂ e₁) (Equiv.symm.{u2, u4} β₁ β₂ e₂))
-but is expected to have type
-  forall {α₁ : Sort.{u4}} {β₁ : Sort.{u3}} {α₂ : Sort.{u2}} {β₂ : Sort.{u1}} (e₁ : Equiv.{u4, u3} α₁ β₁) (e₂ : Equiv.{u2, u1} α₂ β₂), Eq.{max (max 1 (imax u3 u1)) (imax u4 u2)} (Equiv.{imax u3 u1, imax u4 u2} (β₁ -> β₂) (α₁ -> α₂)) (Equiv.symm.{imax u4 u2, imax u3 u1} (α₁ -> α₂) (β₁ -> β₂) (Equiv.arrowCongr.{u4, u2, u3, u1} α₁ α₂ β₁ β₂ e₁ e₂)) (Equiv.arrowCongr.{u3, u1, u4, u2} β₁ β₂ α₁ α₂ (Equiv.symm.{u4, u3} α₁ β₁ e₁) (Equiv.symm.{u2, u1} α₂ β₂ e₂))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr_symm Equiv.arrowCongr_symmₓ'. -/
 @[simp]
 theorem arrowCongr_symm {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α₂) (e₂ : β₁ ≃ β₂) :
     (arrowCongr e₁ e₂).symm = arrowCongr e₁.symm e₂.symm :=
@@ -936,24 +756,12 @@ def arrowCongr' {α₁ β₁ α₂ β₂ : Type _} (hα : α₁ ≃ α₂) (hβ 
 #align equiv.arrow_congr' Equiv.arrowCongr'
 -/
 
-/- warning: equiv.arrow_congr'_refl -> Equiv.arrowCongr'_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (α -> β) (α -> β)) (Equiv.arrowCongr'.{u1, u2, u1, u2} α β α β (Equiv.refl.{succ u1} α) (Equiv.refl.{succ u2} β)) (Equiv.refl.{max (succ u1) (succ u2)} (α -> β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}}, Eq.{max (succ u2) (succ u1)} (Equiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (α -> β) (α -> β)) (Equiv.arrowCongr'.{u2, u1, u2, u1} α β α β (Equiv.refl.{succ u2} α) (Equiv.refl.{succ u1} β)) (Equiv.refl.{max (succ u2) (succ u1)} (α -> β))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr'_refl Equiv.arrowCongr'_reflₓ'. -/
 @[simp]
 theorem arrowCongr'_refl {α β : Type _} :
     arrowCongr' (Equiv.refl α) (Equiv.refl β) = Equiv.refl (α → β) :=
   rfl
 #align equiv.arrow_congr'_refl Equiv.arrowCongr'_refl
 
-/- warning: equiv.arrow_congr'_trans -> Equiv.arrowCongr'_trans is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Type.{u1}} {β₁ : Type.{u2}} {α₂ : Type.{u3}} {β₂ : Type.{u4}} {α₃ : Type.{u5}} {β₃ : Type.{u6}} (e₁ : Equiv.{succ u1, succ u3} α₁ α₂) (e₁' : Equiv.{succ u2, succ u4} β₁ β₂) (e₂ : Equiv.{succ u3, succ u5} α₂ α₃) (e₂' : Equiv.{succ u4, succ u6} β₂ β₃), Eq.{max 1 (max (max (succ u1) (succ u2)) (succ u5) (succ u6)) (max (succ u5) (succ u6)) (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u5) (succ u6)} (α₁ -> β₁) (α₃ -> β₃)) (Equiv.arrowCongr'.{u1, u2, u5, u6} α₁ β₁ α₃ β₃ (Equiv.trans.{succ u1, succ u3, succ u5} α₁ α₂ α₃ e₁ e₂) (Equiv.trans.{succ u2, succ u4, succ u6} β₁ β₂ β₃ e₁' e₂')) (Equiv.trans.{max (succ u1) (succ u2), max (succ u3) (succ u4), max (succ u5) (succ u6)} (α₁ -> β₁) (α₂ -> β₂) (α₃ -> β₃) (Equiv.arrowCongr'.{u1, u2, u3, u4} α₁ β₁ α₂ β₂ e₁ e₁') (Equiv.arrowCongr'.{u3, u4, u5, u6} α₂ β₂ α₃ β₃ e₂ e₂'))
-but is expected to have type
-  forall {α₁ : Type.{u6}} {β₁ : Type.{u5}} {α₂ : Type.{u4}} {β₂ : Type.{u3}} {α₃ : Type.{u2}} {β₃ : Type.{u1}} (e₁ : Equiv.{succ u6, succ u5} α₁ β₁) (e₁' : Equiv.{succ u4, succ u3} α₂ β₂) (e₂ : Equiv.{succ u5, succ u2} β₁ α₃) (e₂' : Equiv.{succ u3, succ u1} β₂ β₃), Eq.{max (max (max (succ u1) (succ u2)) (succ u4)) (succ u6)} (Equiv.{max (succ u6) (succ u4), max (succ u2) (succ u1)} (α₁ -> α₂) (α₃ -> β₃)) (Equiv.arrowCongr'.{u6, u4, u2, u1} α₁ α₂ α₃ β₃ (Equiv.trans.{succ u6, succ u5, succ u2} α₁ β₁ α₃ e₁ e₂) (Equiv.trans.{succ u4, succ u3, succ u1} α₂ β₂ β₃ e₁' e₂')) (Equiv.trans.{max (succ u4) (succ u6), max (succ u3) (succ u5), max (succ u1) (succ u2)} (α₁ -> α₂) (β₁ -> β₂) (α₃ -> β₃) (Equiv.arrowCongr'.{u6, u4, u5, u3} α₁ α₂ β₁ β₂ e₁ e₁') (Equiv.arrowCongr'.{u5, u3, u2, u1} β₁ β₂ α₃ β₃ e₂ e₂'))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr'_trans Equiv.arrowCongr'_transₓ'. -/
 @[simp]
 theorem arrowCongr'_trans {α₁ β₁ α₂ β₂ α₃ β₃ : Type _} (e₁ : α₁ ≃ α₂) (e₁' : β₁ ≃ β₂) (e₂ : α₂ ≃ α₃)
     (e₂' : β₂ ≃ β₃) :
@@ -961,12 +769,6 @@ theorem arrowCongr'_trans {α₁ β₁ α₂ β₂ α₃ β₃ : Type _} (e₁ :
   rfl
 #align equiv.arrow_congr'_trans Equiv.arrowCongr'_trans
 
-/- warning: equiv.arrow_congr'_symm -> Equiv.arrowCongr'_symm is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Type.{u1}} {β₁ : Type.{u2}} {α₂ : Type.{u3}} {β₂ : Type.{u4}} (e₁ : Equiv.{succ u1, succ u3} α₁ α₂) (e₂ : Equiv.{succ u2, succ u4} β₁ β₂), Eq.{max 1 (max (max (succ u3) (succ u4)) (succ u1) (succ u2)) (max (succ u1) (succ u2)) (succ u3) (succ u4)} (Equiv.{max (succ u3) (succ u4), max (succ u1) (succ u2)} (α₂ -> β₂) (α₁ -> β₁)) (Equiv.symm.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (α₁ -> β₁) (α₂ -> β₂) (Equiv.arrowCongr'.{u1, u2, u3, u4} α₁ β₁ α₂ β₂ e₁ e₂)) (Equiv.arrowCongr'.{u3, u4, u1, u2} α₂ β₂ α₁ β₁ (Equiv.symm.{succ u1, succ u3} α₁ α₂ e₁) (Equiv.symm.{succ u2, succ u4} β₁ β₂ e₂))
-but is expected to have type
-  forall {α₁ : Type.{u4}} {β₁ : Type.{u3}} {α₂ : Type.{u2}} {β₂ : Type.{u1}} (e₁ : Equiv.{succ u4, succ u3} α₁ β₁) (e₂ : Equiv.{succ u2, succ u1} α₂ β₂), Eq.{max (max (max (succ u1) (succ u3)) (succ u2)) (succ u4)} (Equiv.{max (succ u1) (succ u3), max (succ u2) (succ u4)} (β₁ -> β₂) (α₁ -> α₂)) (Equiv.symm.{max (succ u2) (succ u4), max (succ u1) (succ u3)} (α₁ -> α₂) (β₁ -> β₂) (Equiv.arrowCongr'.{u4, u2, u3, u1} α₁ α₂ β₁ β₂ e₁ e₂)) (Equiv.arrowCongr'.{u3, u1, u4, u2} β₁ β₂ α₁ α₂ (Equiv.symm.{succ u4, succ u3} α₁ β₁ e₁) (Equiv.symm.{succ u2, succ u1} α₂ β₂ e₂))
-Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr'_symm Equiv.arrowCongr'_symmₓ'. -/
 @[simp]
 theorem arrowCongr'_symm {α₁ β₁ α₂ β₂ : Type _} (e₁ : α₁ ≃ α₂) (e₂ : β₁ ≃ β₂) :
     (arrowCongr' e₁ e₂).symm = arrowCongr' e₁.symm e₂.symm :=
@@ -988,23 +790,11 @@ theorem conj_refl : conj (Equiv.refl α) = Equiv.refl (α → α) :=
 #align equiv.conj_refl Equiv.conj_refl
 -/
 
-/- warning: equiv.conj_symm -> Equiv.conj_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max 1 (imax u2 u1) (imax u1 u2)} (Equiv.{u2, u1} (β -> β) (α -> α)) (Equiv.symm.{u1, u2} (α -> α) (β -> β) (Equiv.conj.{u1, u2} α β e)) (Equiv.conj.{u2, u1} β α (Equiv.symm.{u1, u2} α β e))
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u2, u1} (β -> β) (α -> α)) (Equiv.symm.{u1, u2} (α -> α) (β -> β) (Equiv.conj.{u1, u2} α β e)) (Equiv.conj.{u2, u1} β α (Equiv.symm.{u1, u2} α β e))
-Case conversion may be inaccurate. Consider using '#align equiv.conj_symm Equiv.conj_symmₓ'. -/
 @[simp]
 theorem conj_symm (e : α ≃ β) : e.conj.symm = e.symm.conj :=
   rfl
 #align equiv.conj_symm Equiv.conj_symm
 
-/- warning: equiv.conj_trans -> Equiv.conj_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (e₁ : Equiv.{u1, u2} α β) (e₂ : Equiv.{u2, u3} β γ), Eq.{max 1 (imax u1 u3) (imax u3 u1)} (Equiv.{u1, u3} (α -> α) (γ -> γ)) (Equiv.conj.{u1, u3} α γ (Equiv.trans.{u1, u2, u3} α β γ e₁ e₂)) (Equiv.trans.{u1, u2, u3} (α -> α) (β -> β) (γ -> γ) (Equiv.conj.{u1, u2} α β e₁) (Equiv.conj.{u2, u3} β γ e₂))
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (e₁ : Equiv.{u1, u2} α β) (e₂ : Equiv.{u2, u3} β γ), Eq.{max (max 1 u1) u3} (Equiv.{u1, u3} (α -> α) (γ -> γ)) (Equiv.conj.{u1, u3} α γ (Equiv.trans.{u1, u2, u3} α β γ e₁ e₂)) (Equiv.trans.{u1, u2, u3} (α -> α) (β -> β) (γ -> γ) (Equiv.conj.{u1, u2} α β e₁) (Equiv.conj.{u2, u3} β γ e₂))
-Case conversion may be inaccurate. Consider using '#align equiv.conj_trans Equiv.conj_transₓ'. -/
 @[simp]
 theorem conj_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : (e₁.trans e₂).conj = e₁.conj.trans e₂.conj :=
   rfl
@@ -1019,42 +809,18 @@ theorem conj_comp (e : α ≃ β) (f₁ f₂ : α → α) : e.conj (f₁ ∘ f�
 #align equiv.conj_comp Equiv.conj_comp
 -/
 
-/- warning: equiv.eq_comp_symm -> Equiv.eq_comp_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (e : Equiv.{u1, u2} α β) (f : β -> γ) (g : α -> γ), Iff (Eq.{imax u2 u3} (β -> γ) f (Function.comp.{u2, u1, u3} β α γ g (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β e)))) (Eq.{imax u1 u3} (α -> γ) (Function.comp.{u1, u2, u3} α β γ f (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) e)) g)
-but is expected to have type
-  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (e : Equiv.{u3, u2} α β) (f : β -> γ) (g : α -> γ), Iff (Eq.{imax u2 u1} (β -> γ) f (Function.comp.{u2, u3, u1} β α γ g (FunLike.coe.{max (max 1 u2) u3, u2, u3} (Equiv.{u2, u3} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u2, u3} β α) (Equiv.symm.{u3, u2} α β e)))) (Eq.{imax u3 u1} (α -> γ) (Function.comp.{u3, u2, u1} α β γ f (FunLike.coe.{max (max 1 u2) u3, u3, u2} (Equiv.{u3, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u3, u2} α β) e)) g)
-Case conversion may be inaccurate. Consider using '#align equiv.eq_comp_symm Equiv.eq_comp_symmₓ'. -/
 theorem eq_comp_symm {α β γ} (e : α ≃ β) (f : β → γ) (g : α → γ) : f = g ∘ e.symm ↔ f ∘ e = g :=
   (e.arrowCongr (Equiv.refl γ)).symm_apply_eq.symm
 #align equiv.eq_comp_symm Equiv.eq_comp_symm
 
-/- warning: equiv.comp_symm_eq -> Equiv.comp_symm_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (e : Equiv.{u1, u2} α β) (f : β -> γ) (g : α -> γ), Iff (Eq.{imax u2 u3} (β -> γ) (Function.comp.{u2, u1, u3} β α γ g (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β e))) f) (Eq.{imax u1 u3} (α -> γ) g (Function.comp.{u1, u2, u3} α β γ f (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) e)))
-but is expected to have type
-  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (e : Equiv.{u3, u2} α β) (f : β -> γ) (g : α -> γ), Iff (Eq.{imax u2 u1} (β -> γ) (Function.comp.{u2, u3, u1} β α γ g (FunLike.coe.{max (max 1 u2) u3, u2, u3} (Equiv.{u2, u3} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u2, u3} β α) (Equiv.symm.{u3, u2} α β e))) f) (Eq.{imax u3 u1} (α -> γ) g (Function.comp.{u3, u2, u1} α β γ f (FunLike.coe.{max (max 1 u2) u3, u3, u2} (Equiv.{u3, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u3, u2} α β) e)))
-Case conversion may be inaccurate. Consider using '#align equiv.comp_symm_eq Equiv.comp_symm_eqₓ'. -/
 theorem comp_symm_eq {α β γ} (e : α ≃ β) (f : β → γ) (g : α → γ) : g ∘ e.symm = f ↔ g = f ∘ e :=
   (e.arrowCongr (Equiv.refl γ)).eq_symm_apply.symm
 #align equiv.comp_symm_eq Equiv.comp_symm_eq
 
-/- warning: equiv.eq_symm_comp -> Equiv.eq_symm_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (e : Equiv.{u1, u2} α β) (f : γ -> α) (g : γ -> β), Iff (Eq.{imax u3 u1} (γ -> α) f (Function.comp.{u3, u2, u1} γ β α (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β e)) g)) (Eq.{imax u3 u2} (γ -> β) (Function.comp.{u3, u1, u2} γ α β (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) e) f) g)
-but is expected to have type
-  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (e : Equiv.{u3, u2} α β) (f : γ -> α) (g : γ -> β), Iff (Eq.{imax u1 u3} (γ -> α) f (Function.comp.{u1, u2, u3} γ β α (FunLike.coe.{max (max 1 u2) u3, u2, u3} (Equiv.{u2, u3} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u2, u3} β α) (Equiv.symm.{u3, u2} α β e)) g)) (Eq.{imax u1 u2} (γ -> β) (Function.comp.{u1, u3, u2} γ α β (FunLike.coe.{max (max 1 u2) u3, u3, u2} (Equiv.{u3, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u3, u2} α β) e) f) g)
-Case conversion may be inaccurate. Consider using '#align equiv.eq_symm_comp Equiv.eq_symm_compₓ'. -/
 theorem eq_symm_comp {α β γ} (e : α ≃ β) (f : γ → α) (g : γ → β) : f = e.symm ∘ g ↔ e ∘ f = g :=
   ((Equiv.refl γ).arrowCongr e).eq_symm_apply
 #align equiv.eq_symm_comp Equiv.eq_symm_comp
 
-/- warning: equiv.symm_comp_eq -> Equiv.symm_comp_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} (e : Equiv.{u1, u2} α β) (f : γ -> α) (g : γ -> β), Iff (Eq.{imax u3 u1} (γ -> α) (Function.comp.{u3, u2, u1} γ β α (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β e)) g) f) (Eq.{imax u3 u2} (γ -> β) g (Function.comp.{u3, u1, u2} γ α β (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α β) (fun (_x : Equiv.{u1, u2} α β) => α -> β) (Equiv.hasCoeToFun.{u1, u2} α β) e) f))
-but is expected to have type
-  forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (e : Equiv.{u3, u2} α β) (f : γ -> α) (g : γ -> β), Iff (Eq.{imax u1 u3} (γ -> α) (Function.comp.{u1, u2, u3} γ β α (FunLike.coe.{max (max 1 u2) u3, u2, u3} (Equiv.{u2, u3} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u2, u3} β α) (Equiv.symm.{u3, u2} α β e)) g) f) (Eq.{imax u1 u2} (γ -> β) g (Function.comp.{u1, u3, u2} γ α β (FunLike.coe.{max (max 1 u2) u3, u3, u2} (Equiv.{u3, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{u3, u2} α β) e) f))
-Case conversion may be inaccurate. Consider using '#align equiv.symm_comp_eq Equiv.symm_comp_eqₓ'. -/
 theorem symm_comp_eq {α β γ} (e : α ≃ β) (f : γ → α) (g : γ → β) : e.symm ∘ g = f ↔ g = e ∘ f :=
   ((Equiv.refl γ).arrowCongr e).symm_apply_eq
 #align equiv.symm_comp_eq Equiv.symm_comp_eq
@@ -1178,12 +944,6 @@ def psigmaCongrRight {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ 
 #align equiv.psigma_congr_right Equiv.psigmaCongrRight
 -/
 
-/- warning: equiv.psigma_congr_right_trans -> Equiv.psigmaCongrRight_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β₁ : α -> Sort.{u2}} {β₂ : α -> Sort.{u3}} {β₃ : α -> Sort.{u4}} (F : forall (a : α), Equiv.{u2, u3} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{u3, u4} (β₂ a) (β₃ a)), Eq.{max 1 (max (max 1 u1 u2) 1 u1 u4) (max 1 u1 u4) 1 u1 u2} (Equiv.{max 1 u1 u2, max 1 u1 u4} (PSigma.{u1, u2} α (fun (a : α) => β₁ a)) (PSigma.{u1, u4} α (fun (a : α) => β₃ a))) (Equiv.trans.{max 1 u1 u2, max 1 u1 u3, max 1 u1 u4} (PSigma.{u1, u2} α (fun (a : α) => β₁ a)) (PSigma.{u1, u3} α (fun (a : α) => β₂ a)) (PSigma.{u1, u4} α (fun (a : α) => β₃ a)) (Equiv.psigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.psigmaCongrRight.{u1, u3, u4} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.psigmaCongrRight.{u1, u2, u4} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{u2, u3, u4} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
-but is expected to have type
-  forall {α : Sort.{u4}} {β₁ : α -> Sort.{u3}} {β₂ : α -> Sort.{u2}} {β₃ : α -> Sort.{u1}} (F : forall (a : α), Equiv.{u3, u2} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{u2, u1} (β₂ a) (β₃ a)), Eq.{max (max (max 1 u4) u3) u1} (Equiv.{max (max 1 u4) u3, max (max 1 u4) u1} (PSigma.{u4, u3} α (fun (a : α) => β₁ a)) (PSigma.{u4, u1} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (max 1 u4) u3, max (max 1 u4) u2, max (max 1 u4) u1} (PSigma.{u4, u3} α (fun (a : α) => β₁ a)) (PSigma.{u4, u2} α (fun (a : α) => β₂ a)) (PSigma.{u4, u1} α (fun (a : α) => β₃ a)) (Equiv.psigmaCongrRight.{u4, u3, u2} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.psigmaCongrRight.{u4, u2, u1} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.psigmaCongrRight.{u4, u3, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{u3, u2, u1} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
-Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_right_trans Equiv.psigmaCongrRight_transₓ'. -/
 @[simp]
 theorem psigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
@@ -1191,23 +951,11 @@ theorem psigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Sort _} (F : ∀
   by ext1 x; cases x; rfl
 #align equiv.psigma_congr_right_trans Equiv.psigmaCongrRight_trans
 
-/- warning: equiv.psigma_congr_right_symm -> Equiv.psigmaCongrRight_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β₁ : α -> Sort.{u2}} {β₂ : α -> Sort.{u3}} (F : forall (a : α), Equiv.{u2, u3} (β₁ a) (β₂ a)), Eq.{max 1 (max (max 1 u1 u3) 1 u1 u2) (max 1 u1 u2) 1 u1 u3} (Equiv.{max 1 u1 u3, max 1 u1 u2} (PSigma.{u1, u3} α (fun (a : α) => β₂ a)) (PSigma.{u1, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max 1 u1 u2, max 1 u1 u3} (PSigma.{u1, u2} α (fun (a : α) => β₁ a)) (PSigma.{u1, u3} α (fun (a : α) => β₂ a)) (Equiv.psigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.psigmaCongrRight.{u1, u3, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{u2, u3} (β₁ a) (β₂ a) (F a)))
-but is expected to have type
-  forall {α : Sort.{u3}} {β₁ : α -> Sort.{u2}} {β₂ : α -> Sort.{u1}} (F : forall (a : α), Equiv.{u2, u1} (β₁ a) (β₂ a)), Eq.{max (max (max 1 u3) u2) u1} (Equiv.{max (max 1 u3) u1, max (max 1 u3) u2} (PSigma.{u3, u1} α (fun (a : α) => β₂ a)) (PSigma.{u3, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max (max 1 u3) u2, max (max 1 u3) u1} (PSigma.{u3, u2} α (fun (a : α) => β₁ a)) (PSigma.{u3, u1} α (fun (a : α) => β₂ a)) (Equiv.psigmaCongrRight.{u3, u2, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.psigmaCongrRight.{u3, u1, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{u2, u1} (β₁ a) (β₂ a) (F a)))
-Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_right_symm Equiv.psigmaCongrRight_symmₓ'. -/
 @[simp]
 theorem psigmaCongrRight_symm {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a) :
     (psigmaCongrRight F).symm = psigmaCongrRight fun a => (F a).symm := by ext1 x; cases x; rfl
 #align equiv.psigma_congr_right_symm Equiv.psigmaCongrRight_symm
 
-/- warning: equiv.psigma_congr_right_refl -> Equiv.psigmaCongrRight_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : α -> Sort.{u2}}, Eq.{max 1 u1 u2} (Equiv.{max 1 u1 u2, max 1 u1 u2} (PSigma.{u1, u2} α (fun (a : α) => β a)) (PSigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.psigmaCongrRight.{u1, u2, u2} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{u2} (β a))) (Equiv.refl.{max 1 u1 u2} (PSigma.{u1, u2} α (fun (a : α) => β a)))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : α -> Sort.{u1}}, Eq.{max (max 1 u2) u1} (Equiv.{max (max 1 u1) u2, max (max 1 u1) u2} (PSigma.{u2, u1} α (fun (a : α) => β a)) (PSigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.psigmaCongrRight.{u2, u1, u1} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{u1} (β a))) (Equiv.refl.{max (max 1 u1) u2} (PSigma.{u2, u1} α (fun (a : α) => β a)))
-Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_right_refl Equiv.psigmaCongrRight_reflₓ'. -/
 @[simp]
 theorem psigmaCongrRight_refl {α} {β : α → Sort _} :
     (psigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σ'a, β a) := by ext1 x; cases x; rfl
@@ -1224,12 +972,6 @@ def sigmaCongrRight {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ �
 #align equiv.sigma_congr_right Equiv.sigmaCongrRight
 -/
 
-/- warning: equiv.sigma_congr_right_trans -> Equiv.sigmaCongrRight_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u3}} {β₃ : α -> Type.{u4}} (F : forall (a : α), Equiv.{succ u2, succ u3} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u3, succ u4} (β₂ a) (β₃ a)), Eq.{max 1 (max (max (succ u1) (succ u2)) (succ u1) (succ u4)) (max (succ u1) (succ u4)) (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u4)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u4} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u3), max (succ u1) (succ u4)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Sigma.{u1, u4} α (fun (a : α) => β₃ a)) (Equiv.sigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.sigmaCongrRight.{u1, u3, u4} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.sigmaCongrRight.{u1, u2, u4} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{succ u2, succ u3, succ u4} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
-but is expected to have type
-  forall {α : Type.{u4}} {β₁ : α -> Type.{u3}} {β₂ : α -> Type.{u2}} {β₃ : α -> Type.{u1}} (F : forall (a : α), Equiv.{succ u3, succ u2} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u2, succ u1} (β₂ a) (β₃ a)), Eq.{max (max (succ u3) (succ u1)) (succ u4)} (Equiv.{max (succ u3) (succ u4), max (succ u4) (succ u1)} (Sigma.{u4, u3} α (fun (a : α) => β₁ a)) (Sigma.{u4, u1} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (succ u3) (succ u4), max (succ u2) (succ u4), max (succ u4) (succ u1)} (Sigma.{u4, u3} α (fun (a : α) => β₁ a)) (Sigma.{u4, u2} α (fun (a : α) => β₂ a)) (Sigma.{u4, u1} α (fun (a : α) => β₃ a)) (Equiv.sigmaCongrRight.{u4, u3, u2} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.sigmaCongrRight.{u4, u2, u1} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.sigmaCongrRight.{u4, u3, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{succ u3, succ u2, succ u1} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
-Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_transₓ'. -/
 @[simp]
 theorem sigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
@@ -1237,23 +979,11 @@ theorem sigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ 
   ext1 x; cases x; rfl
 #align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_trans
 
-/- warning: equiv.sigma_congr_right_symm -> Equiv.sigmaCongrRight_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u3}} (F : forall (a : α), Equiv.{succ u2, succ u3} (β₁ a) (β₂ a)), Eq.{max 1 (max (max (succ u1) (succ u3)) (succ u1) (succ u2)) (max (succ u1) (succ u2)) (succ u1) (succ u3)} (Equiv.{max (succ u1) (succ u3), max (succ u1) (succ u2)} (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Sigma.{u1, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u3)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Equiv.sigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.sigmaCongrRight.{u1, u3, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{succ u2, succ u3} (β₁ a) (β₂ a) (F a)))
-but is expected to have type
-  forall {α : Type.{u3}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u1}} (F : forall (a : α), Equiv.{succ u2, succ u1} (β₁ a) (β₂ a)), Eq.{max (max (succ u2) (succ u1)) (succ u3)} (Equiv.{max (succ u1) (succ u3), max (succ u2) (succ u3)} (Sigma.{u3, u1} α (fun (a : α) => β₂ a)) (Sigma.{u3, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max (succ u2) (succ u3), max (succ u1) (succ u3)} (Sigma.{u3, u2} α (fun (a : α) => β₁ a)) (Sigma.{u3, u1} α (fun (a : α) => β₂ a)) (Equiv.sigmaCongrRight.{u3, u2, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.sigmaCongrRight.{u3, u1, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{succ u2, succ u1} (β₁ a) (β₂ a) (F a)))
-Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_symm Equiv.sigmaCongrRight_symmₓ'. -/
 @[simp]
 theorem sigmaCongrRight_symm {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) :
     (sigmaCongrRight F).symm = sigmaCongrRight fun a => (F a).symm := by ext1 x; cases x; rfl
 #align equiv.sigma_congr_right_symm Equiv.sigmaCongrRight_symm
 
-/- warning: equiv.sigma_congr_right_refl -> Equiv.sigmaCongrRight_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.sigmaCongrRight.{u1, u2, u2} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u2} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}}, Eq.{max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.sigmaCongrRight.{u2, u1, u1} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u1} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)))
-Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_refl Equiv.sigmaCongrRight_reflₓ'. -/
 @[simp]
 theorem sigmaCongrRight_refl {α} {β : α → Type _} :
     (sigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σa, β a) := by ext1 x; cases x; rfl
@@ -1298,36 +1028,18 @@ def sigmaCongrRight {α} {β : α → Sort _} (F : ∀ a, Perm (β a)) : Perm (�
 #align equiv.perm.sigma_congr_right Equiv.Perm.sigmaCongrRight
 -/
 
-/- warning: equiv.perm.sigma_congr_right_trans -> Equiv.Perm.sigmaCongrRight_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} (F : forall (a : α), Equiv.Perm.{succ u2} (β a)) (G : forall (a : α), Equiv.Perm.{succ u2} (β a)), Eq.{max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a)) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) F) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) G)) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) (fun (a : α) => Equiv.trans.{succ u2, succ u2, succ u2} (β a) (β a) (β a) (F a) (G a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} (F : forall (a : α), Equiv.Perm.{succ u1} (β a)) (G : forall (a : α), Equiv.Perm.{succ u1} (β a)), Eq.{max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a)) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) F) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) G)) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) (fun (a : α) => Equiv.trans.{succ u1, succ u1, succ u1} (β a) (β a) (β a) (F a) (G a)))
-Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_trans Equiv.Perm.sigmaCongrRight_transₓ'. -/
 @[simp]
 theorem sigmaCongrRight_trans {α} {β : α → Sort _} (F : ∀ a, Perm (β a)) (G : ∀ a, Perm (β a)) :
     (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) :=
   Equiv.sigmaCongrRight_trans F G
 #align equiv.perm.sigma_congr_right_trans Equiv.Perm.sigmaCongrRight_trans
 
-/- warning: equiv.perm.sigma_congr_right_symm -> Equiv.Perm.sigmaCongrRight_symm is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} (F : forall (a : α), Equiv.Perm.{succ u2} (β a)), Eq.{max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a)) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) F)) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) (fun (a : α) => Equiv.symm.{succ u2, succ u2} (β a) (β a) (F a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}} (F : forall (a : α), Equiv.Perm.{succ u1} (β a)), Eq.{max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a)) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) F)) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) (fun (a : α) => Equiv.symm.{succ u1, succ u1} (β a) (β a) (F a)))
-Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_symm Equiv.Perm.sigmaCongrRight_symmₓ'. -/
 @[simp]
 theorem sigmaCongrRight_symm {α} {β : α → Sort _} (F : ∀ a, Perm (β a)) :
     (sigmaCongrRight F).symm = sigmaCongrRight fun a => (F a).symm :=
   Equiv.sigmaCongrRight_symm F
 #align equiv.perm.sigma_congr_right_symm Equiv.Perm.sigmaCongrRight_symm
 
-/- warning: equiv.perm.sigma_congr_right_refl -> Equiv.Perm.sigmaCongrRight_refl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.Perm.sigmaCongrRight.{u1, u2} α (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u2} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u1}}, Eq.{max (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.Perm.sigmaCongrRight.{u2, u1} α (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u1} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)))
-Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr_right_refl Equiv.Perm.sigmaCongrRight_reflₓ'. -/
 @[simp]
 theorem sigmaCongrRight_refl {α} {β : α → Sort _} :
     (sigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σa, β a) :=
@@ -1336,12 +1048,6 @@ theorem sigmaCongrRight_refl {α} {β : α → Sort _} :
 
 end Perm
 
-/- warning: equiv.sigma_congr_left -> Equiv.sigmaCongrLeft is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Type.{u1}} {α₂ : Type.{u2}} {β : α₂ -> Type.{u3}} (e : Equiv.{succ u1, succ u2} α₁ α₂), Equiv.{max (succ u1) (succ u3), max (succ u2) (succ u3)} (Sigma.{u1, u3} α₁ (fun (a : α₁) => β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α₁ α₂) (fun (_x : Equiv.{succ u1, succ u2} α₁ α₂) => α₁ -> α₂) (Equiv.hasCoeToFun.{succ u1, succ u2} α₁ α₂) e a))) (Sigma.{u2, u3} α₂ (fun (a : α₂) => β a))
-but is expected to have type
-  forall {α₁ : Type.{u1}} {α₂ : Type.{u2}} {β : α₁ -> Type.{u3}} (e : Equiv.{succ u2, succ u1} α₂ α₁), Equiv.{max (succ u3) (succ u2), max (succ u3) (succ u1)} (Sigma.{u2, u3} α₂ (fun (a : α₂) => β (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} α₂ α₁) α₂ (fun (_x : α₂) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₂) => α₁) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α₂ α₁) e a))) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β a))
-Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_left Equiv.sigmaCongrLeftₓ'. -/
 /-- An equivalence `f : α₁ ≃ α₂` generates an equivalence between `Σ a, β (f a)` and `Σ a, β a`. -/
 @[simps apply]
 def sigmaCongrLeft {α₁ α₂} {β : α₂ → Sort _} (e : α₁ ≃ α₂) : (Σa : α₁, β (e a)) ≃ Σa : α₂, β a :=
@@ -1458,12 +1164,6 @@ universe ua1 ua2 ub1 ub2 ug1 ug2
 variable {α₁ : Sort ua1} {α₂ : Sort ua2} {β₁ : Sort ub1} {β₂ : Sort ub2} {γ₁ : Sort ug1}
   {γ₂ : Sort ug2}
 
-/- warning: equiv.forall₂_congr -> Equiv.forall₂_congr is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {α₂ : Sort.{u2}} {β₁ : Sort.{u3}} {β₂ : Sort.{u4}} {p : α₁ -> β₁ -> Prop} {q : α₂ -> β₂ -> Prop} (eα : Equiv.{u1, u2} α₁ α₂) (eβ : Equiv.{u3, u4} β₁ β₂), (forall {x : α₁} {y : β₁}, Iff (p x y) (q (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α₁ α₂) (fun (_x : Equiv.{u1, u2} α₁ α₂) => α₁ -> α₂) (Equiv.hasCoeToFun.{u1, u2} α₁ α₂) eα x) (coeFn.{max 1 (imax u3 u4) (imax u4 u3), imax u3 u4} (Equiv.{u3, u4} β₁ β₂) (fun (_x : Equiv.{u3, u4} β₁ β₂) => β₁ -> β₂) (Equiv.hasCoeToFun.{u3, u4} β₁ β₂) eβ y))) -> (Iff (forall (x : α₁) (y : β₁), p x y) (forall (x : α₂) (y : β₂), q x y))
-but is expected to have type
-  forall {α₁ : Sort.{u4}} {α₂ : Sort.{u3}} {β₁ : Sort.{u2}} {β₂ : Sort.{u1}} {p : α₁ -> α₂ -> Prop} {q : β₁ -> β₂ -> Prop} (eα : Equiv.{u4, u2} α₁ β₁) (eβ : Equiv.{u3, u1} α₂ β₂), (forall {x : α₁} {y : α₂}, Iff (p x y) (q (FunLike.coe.{max (max 1 u4) u2, u4, u2} (Equiv.{u4, u2} α₁ β₁) α₁ (fun (_x : α₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₁) => β₁) _x) (Equiv.instFunLikeEquiv.{u4, u2} α₁ β₁) eα x) (FunLike.coe.{max (max 1 u3) u1, u3, u1} (Equiv.{u3, u1} α₂ β₂) α₂ (fun (_x : α₂) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₂) => β₂) _x) (Equiv.instFunLikeEquiv.{u3, u1} α₂ β₂) eβ y))) -> (Iff (forall (x : α₁) (y : α₂), p x y) (forall (x : β₁) (y : β₂), q x y))
-Case conversion may be inaccurate. Consider using '#align equiv.forall₂_congr Equiv.forall₂_congrₓ'. -/
 protected theorem forall₂_congr {p : α₁ → β₁ → Prop} {q : α₂ → β₂ → Prop} (eα : α₁ ≃ α₂)
     (eβ : β₁ ≃ β₂) (h : ∀ {x y}, p x y ↔ q (eα x) (eβ y)) : (∀ x y, p x y) ↔ ∀ x y, q x y :=
   by
@@ -1474,24 +1174,12 @@ protected theorem forall₂_congr {p : α₁ → β₁ → Prop} {q : α₂ → 
   apply h
 #align equiv.forall₂_congr Equiv.forall₂_congr
 
-/- warning: equiv.forall₂_congr' -> Equiv.forall₂_congr' is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {α₂ : Sort.{u2}} {β₁ : Sort.{u3}} {β₂ : Sort.{u4}} {p : α₁ -> β₁ -> Prop} {q : α₂ -> β₂ -> Prop} (eα : Equiv.{u1, u2} α₁ α₂) (eβ : Equiv.{u3, u4} β₁ β₂), (forall {x : α₂} {y : β₂}, Iff (p (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} α₂ α₁) (fun (_x : Equiv.{u2, u1} α₂ α₁) => α₂ -> α₁) (Equiv.hasCoeToFun.{u2, u1} α₂ α₁) (Equiv.symm.{u1, u2} α₁ α₂ eα) x) (coeFn.{max 1 (imax u4 u3) (imax u3 u4), imax u4 u3} (Equiv.{u4, u3} β₂ β₁) (fun (_x : Equiv.{u4, u3} β₂ β₁) => β₂ -> β₁) (Equiv.hasCoeToFun.{u4, u3} β₂ β₁) (Equiv.symm.{u3, u4} β₁ β₂ eβ) y)) (q x y)) -> (Iff (forall (x : α₁) (y : β₁), p x y) (forall (x : α₂) (y : β₂), q x y))
-but is expected to have type
-  forall {α₁ : Sort.{u4}} {α₂ : Sort.{u3}} {β₁ : Sort.{u2}} {β₂ : Sort.{u1}} {p : α₁ -> α₂ -> Prop} {q : β₁ -> β₂ -> Prop} (eα : Equiv.{u4, u2} α₁ β₁) (eβ : Equiv.{u3, u1} α₂ β₂), (forall {x : β₁} {y : β₂}, Iff (p (FunLike.coe.{max (max 1 u4) u2, u2, u4} (Equiv.{u2, u4} β₁ α₁) β₁ (fun (_x : β₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β₁) => α₁) _x) (Equiv.instFunLikeEquiv.{u2, u4} β₁ α₁) (Equiv.symm.{u4, u2} α₁ β₁ eα) x) (FunLike.coe.{max (max 1 u3) u1, u1, u3} (Equiv.{u1, u3} β₂ α₂) β₂ (fun (_x : β₂) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β₂) => α₂) _x) (Equiv.instFunLikeEquiv.{u1, u3} β₂ α₂) (Equiv.symm.{u3, u1} α₂ β₂ eβ) y)) (q x y)) -> (Iff (forall (x : α₁) (y : α₂), p x y) (forall (x : β₁) (y : β₂), q x y))
-Case conversion may be inaccurate. Consider using '#align equiv.forall₂_congr' Equiv.forall₂_congr'ₓ'. -/
 protected theorem forall₂_congr' {p : α₁ → β₁ → Prop} {q : α₂ → β₂ → Prop} (eα : α₁ ≃ α₂)
     (eβ : β₁ ≃ β₂) (h : ∀ {x y}, p (eα.symm x) (eβ.symm y) ↔ q x y) :
     (∀ x y, p x y) ↔ ∀ x y, q x y :=
   (Equiv.forall₂_congr eα.symm eβ.symm fun x y => h.symm).symm
 #align equiv.forall₂_congr' Equiv.forall₂_congr'
 
-/- warning: equiv.forall₃_congr -> Equiv.forall₃_congr is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {α₂ : Sort.{u2}} {β₁ : Sort.{u3}} {β₂ : Sort.{u4}} {γ₁ : Sort.{u5}} {γ₂ : Sort.{u6}} {p : α₁ -> β₁ -> γ₁ -> Prop} {q : α₂ -> β₂ -> γ₂ -> Prop} (eα : Equiv.{u1, u2} α₁ α₂) (eβ : Equiv.{u3, u4} β₁ β₂) (eγ : Equiv.{u5, u6} γ₁ γ₂), (forall {x : α₁} {y : β₁} {z : γ₁}, Iff (p x y z) (q (coeFn.{max 1 (imax u1 u2) (imax u2 u1), imax u1 u2} (Equiv.{u1, u2} α₁ α₂) (fun (_x : Equiv.{u1, u2} α₁ α₂) => α₁ -> α₂) (Equiv.hasCoeToFun.{u1, u2} α₁ α₂) eα x) (coeFn.{max 1 (imax u3 u4) (imax u4 u3), imax u3 u4} (Equiv.{u3, u4} β₁ β₂) (fun (_x : Equiv.{u3, u4} β₁ β₂) => β₁ -> β₂) (Equiv.hasCoeToFun.{u3, u4} β₁ β₂) eβ y) (coeFn.{max 1 (imax u5 u6) (imax u6 u5), imax u5 u6} (Equiv.{u5, u6} γ₁ γ₂) (fun (_x : Equiv.{u5, u6} γ₁ γ₂) => γ₁ -> γ₂) (Equiv.hasCoeToFun.{u5, u6} γ₁ γ₂) eγ z))) -> (Iff (forall (x : α₁) (y : β₁) (z : γ₁), p x y z) (forall (x : α₂) (y : β₂) (z : γ₂), q x y z))
-but is expected to have type
-  forall {α₁ : Sort.{u6}} {α₂ : Sort.{u5}} {β₁ : Sort.{u4}} {β₂ : Sort.{u3}} {γ₁ : Sort.{u2}} {γ₂ : Sort.{u1}} {p : α₁ -> α₂ -> β₁ -> Prop} {q : β₂ -> γ₁ -> γ₂ -> Prop} (eα : Equiv.{u6, u3} α₁ β₂) (eβ : Equiv.{u5, u2} α₂ γ₁) (eγ : Equiv.{u4, u1} β₁ γ₂), (forall {x : α₁} {y : α₂} {z : β₁}, Iff (p x y z) (q (FunLike.coe.{max (max 1 u6) u3, u6, u3} (Equiv.{u6, u3} α₁ β₂) α₁ (fun (_x : α₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₁) => β₂) _x) (Equiv.instFunLikeEquiv.{u6, u3} α₁ β₂) eα x) (FunLike.coe.{max (max 1 u5) u2, u5, u2} (Equiv.{u5, u2} α₂ γ₁) α₂ (fun (_x : α₂) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α₂) => γ₁) _x) (Equiv.instFunLikeEquiv.{u5, u2} α₂ γ₁) eβ y) (FunLike.coe.{max (max 1 u4) u1, u4, u1} (Equiv.{u4, u1} β₁ γ₂) β₁ (fun (_x : β₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β₁) => γ₂) _x) (Equiv.instFunLikeEquiv.{u4, u1} β₁ γ₂) eγ z))) -> (Iff (forall (x : α₁) (y : α₂) (z : β₁), p x y z) (forall (x : β₂) (y : γ₁) (z : γ₂), q x y z))
-Case conversion may be inaccurate. Consider using '#align equiv.forall₃_congr Equiv.forall₃_congrₓ'. -/
 protected theorem forall₃_congr {p : α₁ → β₁ → γ₁ → Prop} {q : α₂ → β₂ → γ₂ → Prop} (eα : α₁ ≃ α₂)
     (eβ : β₁ ≃ β₂) (eγ : γ₁ ≃ γ₂) (h : ∀ {x y z}, p x y z ↔ q (eα x) (eβ y) (eγ z)) :
     (∀ x y z, p x y z) ↔ ∀ x y z, q x y z :=
@@ -1503,12 +1191,6 @@ protected theorem forall₃_congr {p : α₁ → β₁ → γ₁ → Prop} {q : 
   apply h
 #align equiv.forall₃_congr Equiv.forall₃_congr
 
-/- warning: equiv.forall₃_congr' -> Equiv.forall₃_congr' is a dubious translation:
-lean 3 declaration is
-  forall {α₁ : Sort.{u1}} {α₂ : Sort.{u2}} {β₁ : Sort.{u3}} {β₂ : Sort.{u4}} {γ₁ : Sort.{u5}} {γ₂ : Sort.{u6}} {p : α₁ -> β₁ -> γ₁ -> Prop} {q : α₂ -> β₂ -> γ₂ -> Prop} (eα : Equiv.{u1, u2} α₁ α₂) (eβ : Equiv.{u3, u4} β₁ β₂) (eγ : Equiv.{u5, u6} γ₁ γ₂), (forall {x : α₂} {y : β₂} {z : γ₂}, Iff (p (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} α₂ α₁) (fun (_x : Equiv.{u2, u1} α₂ α₁) => α₂ -> α₁) (Equiv.hasCoeToFun.{u2, u1} α₂ α₁) (Equiv.symm.{u1, u2} α₁ α₂ eα) x) (coeFn.{max 1 (imax u4 u3) (imax u3 u4), imax u4 u3} (Equiv.{u4, u3} β₂ β₁) (fun (_x : Equiv.{u4, u3} β₂ β₁) => β₂ -> β₁) (Equiv.hasCoeToFun.{u4, u3} β₂ β₁) (Equiv.symm.{u3, u4} β₁ β₂ eβ) y) (coeFn.{max 1 (imax u6 u5) (imax u5 u6), imax u6 u5} (Equiv.{u6, u5} γ₂ γ₁) (fun (_x : Equiv.{u6, u5} γ₂ γ₁) => γ₂ -> γ₁) (Equiv.hasCoeToFun.{u6, u5} γ₂ γ₁) (Equiv.symm.{u5, u6} γ₁ γ₂ eγ) z)) (q x y z)) -> (Iff (forall (x : α₁) (y : β₁) (z : γ₁), p x y z) (forall (x : α₂) (y : β₂) (z : γ₂), q x y z))
-but is expected to have type
-  forall {α₁ : Sort.{u6}} {α₂ : Sort.{u5}} {β₁ : Sort.{u4}} {β₂ : Sort.{u3}} {γ₁ : Sort.{u2}} {γ₂ : Sort.{u1}} {p : α₁ -> α₂ -> β₁ -> Prop} {q : β₂ -> γ₁ -> γ₂ -> Prop} (eα : Equiv.{u6, u3} α₁ β₂) (eβ : Equiv.{u5, u2} α₂ γ₁) (eγ : Equiv.{u4, u1} β₁ γ₂), (forall {x : β₂} {y : γ₁} {z : γ₂}, Iff (p (FunLike.coe.{max (max 1 u6) u3, u3, u6} (Equiv.{u3, u6} β₂ α₁) β₂ (fun (_x : β₂) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β₂) => α₁) _x) (Equiv.instFunLikeEquiv.{u3, u6} β₂ α₁) (Equiv.symm.{u6, u3} α₁ β₂ eα) x) (FunLike.coe.{max (max 1 u5) u2, u2, u5} (Equiv.{u2, u5} γ₁ α₂) γ₁ (fun (_x : γ₁) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : γ₁) => α₂) _x) (Equiv.instFunLikeEquiv.{u2, u5} γ₁ α₂) (Equiv.symm.{u5, u2} α₂ γ₁ eβ) y) (FunLike.coe.{max (max 1 u4) u1, u1, u4} (Equiv.{u1, u4} γ₂ β₁) γ₂ (fun (_x : γ₂) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : γ₂) => β₁) _x) (Equiv.instFunLikeEquiv.{u1, u4} γ₂ β₁) (Equiv.symm.{u4, u1} β₁ γ₂ eγ) z)) (q x y z)) -> (Iff (forall (x : α₁) (y : α₂) (z : β₁), p x y z) (forall (x : β₂) (y : γ₁) (z : γ₂), q x y z))
-Case conversion may be inaccurate. Consider using '#align equiv.forall₃_congr' Equiv.forall₃_congr'ₓ'. -/
 protected theorem forall₃_congr' {p : α₁ → β₁ → γ₁ → Prop} {q : α₂ → β₂ → γ₂ → Prop} (eα : α₁ ≃ α₂)
     (eβ : β₁ ≃ β₂) (eγ : γ₁ ≃ γ₂) (h : ∀ {x y z}, p (eα.symm x) (eβ.symm y) (eγ.symm z) ↔ q x y z) :
     (∀ x y z, p x y z) ↔ ∀ x y z, q x y z :=
@@ -1527,12 +1209,6 @@ protected theorem forall_congr_left {p : β → Prop} (f : α ≃ β) : (∀ x, 
 #align equiv.forall_congr_left Equiv.forall_congr_left
 -/
 
-/- warning: equiv.exists_congr_left -> Equiv.exists_congr_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}} (f : Equiv.{u1, u2} α β) {p : α -> Prop}, Iff (Exists.{u1} α (fun (a : α) => p a)) (Exists.{u2} β (fun (b : β) => p (coeFn.{max 1 (imax u2 u1) (imax u1 u2), imax u2 u1} (Equiv.{u2, u1} β α) (fun (_x : Equiv.{u2, u1} β α) => β -> α) (Equiv.hasCoeToFun.{u2, u1} β α) (Equiv.symm.{u1, u2} α β f) b)))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} (f : Equiv.{u2, u1} α β) {p : α -> Prop}, Iff (Exists.{u2} α (fun (a : α) => p a)) (Exists.{u1} β (fun (b : β) => p (FunLike.coe.{max (max 1 u1) u2, u1, u2} (Equiv.{u1, u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{u1, u2} β α) (Equiv.symm.{u2, u1} α β f) b)))
-Case conversion may be inaccurate. Consider using '#align equiv.exists_congr_left Equiv.exists_congr_leftₓ'. -/
 protected theorem exists_congr_left {α β} (f : α ≃ β) {p : α → Prop} :
     (∃ a, p a) ↔ ∃ b, p (f.symm b) :=
   ⟨fun ⟨a, h⟩ => ⟨f a, by simpa using h⟩, fun ⟨b, h⟩ => ⟨_, h⟩⟩

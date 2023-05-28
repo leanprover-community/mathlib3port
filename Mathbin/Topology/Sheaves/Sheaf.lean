@@ -109,22 +109,10 @@ theorem isSheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf
 #align Top.presheaf.is_sheaf_unit TopCat.Presheaf.isSheaf_unit
 -/
 
-/- warning: Top.presheaf.is_sheaf_iso_iff -> TopCat.Presheaf.isSheaf_iso_iff is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {X : TopCat.{u1}} {F : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X} {G : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X}, (CategoryTheory.Iso.{max u1 u2, max u3 u2 u1} (TopCat.Presheaf.{u1, u2, u3} C _inst_1 X) (TopCat.Presheaf.category.{u2, u1, u3} C _inst_1 X) F G) -> (Iff (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X F) (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X G))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {X : TopCat.{u1}} {F : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X} {G : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X}, (CategoryTheory.Iso.{max u2 u1, max (max u3 u2) u1} (TopCat.Presheaf.{u1, u2, u3} C _inst_1 X) (TopCat.instCategoryPresheaf.{u1, u2, u3} C _inst_1 X) F G) -> (Iff (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X F) (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X G))
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_sheaf_iso_iff TopCat.Presheaf.isSheaf_iso_iffₓ'. -/
 theorem isSheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
   Presheaf.isSheaf_of_iso_iff α
 #align Top.presheaf.is_sheaf_iso_iff TopCat.Presheaf.isSheaf_iso_iff
 
-/- warning: Top.presheaf.is_sheaf_of_iso -> TopCat.Presheaf.isSheaf_of_iso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {X : TopCat.{u1}} {F : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X} {G : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X}, (CategoryTheory.Iso.{max u1 u2, max u3 u2 u1} (TopCat.Presheaf.{u1, u2, u3} C _inst_1 X) (TopCat.Presheaf.category.{u2, u1, u3} C _inst_1 X) F G) -> (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X F) -> (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X G)
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {X : TopCat.{u1}} {F : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X} {G : TopCat.Presheaf.{u1, u2, u3} C _inst_1 X}, (CategoryTheory.Iso.{max u2 u1, max (max u3 u2) u1} (TopCat.Presheaf.{u1, u2, u3} C _inst_1 X) (TopCat.instCategoryPresheaf.{u1, u2, u3} C _inst_1 X) F G) -> (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X F) -> (TopCat.Presheaf.IsSheaf.{u1, u2, u3} C _inst_1 X G)
-Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_sheaf_of_iso TopCat.Presheaf.isSheaf_of_isoₓ'. -/
 /-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
 theorem isSheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf :=
@@ -164,29 +152,17 @@ instance sheafInhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
 
 namespace Sheaf
 
-/- warning: Top.sheaf.forget -> TopCat.Sheaf.forget is a dubious translation:
-lean 3 declaration is
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] (X : TopCat.{u1}), CategoryTheory.Functor.{max u1 u2, max u1 u2, max u3 u2 u1, max u3 u2 u1} (TopCat.Sheaf.{u1, u2, u3} C _inst_1 X) (TopCat.Sheaf.category.{u2, u1, u3} C _inst_1 X) (TopCat.Presheaf.{u1, u2, u3} C _inst_1 X) (TopCat.Presheaf.category.{u2, u1, u3} C _inst_1 X)
-but is expected to have type
-  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] (X : TopCat.{u1}), CategoryTheory.Functor.{max u2 u1, max u2 u1, max (max u3 u2) u1, max (max u3 u2) u1} (TopCat.Sheaf.{u1, u2, u3} C _inst_1 X) (TopCat.SheafCat.{u1, u2, u3} C _inst_1 X) (TopCat.Presheaf.{u1, u2, u3} C _inst_1 X) (TopCat.instCategoryPresheaf.{u1, u2, u3} C _inst_1 X)
-Case conversion may be inaccurate. Consider using '#align Top.sheaf.forget TopCat.Sheaf.forgetₓ'. -/
 /-- The forgetful functor from sheaves to presheaves.
 -/
 def forget : TopCat.Sheaf C X ⥤ TopCat.Presheaf C X :=
   sheafToPresheaf _ _ deriving Full, Faithful
 #align Top.sheaf.forget TopCat.Sheaf.forget
 
-/- warning: Top.sheaf.id_app -> TopCat.Sheaf.id_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.sheaf.id_app TopCat.Sheaf.id_appₓ'. -/
 -- Note: These can be proved by simp.
 theorem id_app (F : Sheaf C X) (t) : (𝟙 F : F ⟶ F).1.app t = 𝟙 _ :=
   rfl
 #align Top.sheaf.id_app TopCat.Sheaf.id_app
 
-/- warning: Top.sheaf.comp_app -> TopCat.Sheaf.comp_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align Top.sheaf.comp_app TopCat.Sheaf.comp_appₓ'. -/
 theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) (t) :
     (f ≫ g).1.app t = f.1.app t ≫ g.1.app t :=
   rfl

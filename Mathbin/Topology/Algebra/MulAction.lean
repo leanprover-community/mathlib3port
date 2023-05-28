@@ -88,12 +88,6 @@ instance (priority := 100) ContinuousSMul.continuousConstSMul : ContinuousConstS
 #align has_continuous_vadd.has_continuous_const_vadd ContinuousVAdd.continuousConstVAdd
 -/
 
-/- warning: filter.tendsto.smul -> Filter.Tendsto.smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_4 : SMul.{u1, u2} M X] [_inst_5 : ContinuousSMul.{u1, u2} M X _inst_4 _inst_1 _inst_2] {f : α -> M} {g : α -> X} {l : Filter.{u3} α} {c : M} {a : X}, (Filter.Tendsto.{u3, u1} α M f l (nhds.{u1} M _inst_1 c)) -> (Filter.Tendsto.{u3, u2} α X g l (nhds.{u2} X _inst_2 a)) -> (Filter.Tendsto.{u3, u2} α X (fun (x : α) => SMul.smul.{u1, u2} M X _inst_4 (f x) (g x)) l (nhds.{u2} X _inst_2 (SMul.smul.{u1, u2} M X _inst_4 c a)))
-but is expected to have type
-  forall {M : Type.{u2}} {X : Type.{u1}} {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : TopologicalSpace.{u1} X] [_inst_4 : SMul.{u2, u1} M X] [_inst_5 : ContinuousSMul.{u2, u1} M X _inst_4 _inst_1 _inst_2] {f : α -> M} {g : α -> X} {l : Filter.{u3} α} {c : M} {a : X}, (Filter.Tendsto.{u3, u2} α M f l (nhds.{u2} M _inst_1 c)) -> (Filter.Tendsto.{u3, u1} α X g l (nhds.{u1} X _inst_2 a)) -> (Filter.Tendsto.{u3, u1} α X (fun (x : α) => HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) (f x) (g x)) l (nhds.{u1} X _inst_2 (HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) c a)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.smul Filter.Tendsto.smulₓ'. -/
 @[to_additive]
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X}
     (hf : Tendsto f l (𝓝 c)) (hg : Tendsto g l (𝓝 a)) :
@@ -102,12 +96,6 @@ theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M
 #align filter.tendsto.smul Filter.Tendsto.smul
 #align filter.tendsto.vadd Filter.Tendsto.vadd
 
-/- warning: filter.tendsto.smul_const -> Filter.Tendsto.smul_const is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_4 : SMul.{u1, u2} M X] [_inst_5 : ContinuousSMul.{u1, u2} M X _inst_4 _inst_1 _inst_2] {f : α -> M} {l : Filter.{u3} α} {c : M}, (Filter.Tendsto.{u3, u1} α M f l (nhds.{u1} M _inst_1 c)) -> (forall (a : X), Filter.Tendsto.{u3, u2} α X (fun (x : α) => SMul.smul.{u1, u2} M X _inst_4 (f x) a) l (nhds.{u2} X _inst_2 (SMul.smul.{u1, u2} M X _inst_4 c a)))
-but is expected to have type
-  forall {M : Type.{u2}} {X : Type.{u1}} {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : TopologicalSpace.{u1} X] [_inst_4 : SMul.{u2, u1} M X] [_inst_5 : ContinuousSMul.{u2, u1} M X _inst_4 _inst_1 _inst_2] {f : α -> M} {l : Filter.{u3} α} {c : M}, (Filter.Tendsto.{u3, u2} α M f l (nhds.{u2} M _inst_1 c)) -> (forall (a : X), Filter.Tendsto.{u3, u1} α X (fun (x : α) => HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) (f x) a) l (nhds.{u1} X _inst_2 (HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) c a)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.smul_const Filter.Tendsto.smul_constₓ'. -/
 @[to_additive]
 theorem Filter.Tendsto.smul_const {f : α → M} {l : Filter α} {c : M} (hf : Tendsto f l (𝓝 c))
     (a : X) : Tendsto (fun x => f x • a) l (𝓝 (c • a)) :=
@@ -117,12 +105,6 @@ theorem Filter.Tendsto.smul_const {f : α → M} {l : Filter α} {c : M} (hf : T
 
 variable {f : Y → M} {g : Y → X} {b : Y} {s : Set Y}
 
-/- warning: continuous_within_at.smul -> ContinuousWithinAt.smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u1, u2} M X] [_inst_5 : ContinuousSMul.{u1, u2} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X} {b : Y} {s : Set.{u3} Y}, (ContinuousWithinAt.{u3, u1} Y M _inst_3 _inst_1 f s b) -> (ContinuousWithinAt.{u3, u2} Y X _inst_3 _inst_2 g s b) -> (ContinuousWithinAt.{u3, u2} Y X _inst_3 _inst_2 (fun (x : Y) => SMul.smul.{u1, u2} M X _inst_4 (f x) (g x)) s b)
-but is expected to have type
-  forall {M : Type.{u2}} {X : Type.{u1}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : TopologicalSpace.{u1} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u2, u1} M X] [_inst_5 : ContinuousSMul.{u2, u1} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X} {b : Y} {s : Set.{u3} Y}, (ContinuousWithinAt.{u3, u2} Y M _inst_3 _inst_1 f s b) -> (ContinuousWithinAt.{u3, u1} Y X _inst_3 _inst_2 g s b) -> (ContinuousWithinAt.{u3, u1} Y X _inst_3 _inst_2 (fun (x : Y) => HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) (f x) (g x)) s b)
-Case conversion may be inaccurate. Consider using '#align continuous_within_at.smul ContinuousWithinAt.smulₓ'. -/
 @[to_additive]
 theorem ContinuousWithinAt.smul (hf : ContinuousWithinAt f s b) (hg : ContinuousWithinAt g s b) :
     ContinuousWithinAt (fun x => f x • g x) s b :=
@@ -130,12 +112,6 @@ theorem ContinuousWithinAt.smul (hf : ContinuousWithinAt f s b) (hg : Continuous
 #align continuous_within_at.smul ContinuousWithinAt.smul
 #align continuous_within_at.vadd ContinuousWithinAt.vadd
 
-/- warning: continuous_at.smul -> ContinuousAt.smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u1, u2} M X] [_inst_5 : ContinuousSMul.{u1, u2} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X} {b : Y}, (ContinuousAt.{u3, u1} Y M _inst_3 _inst_1 f b) -> (ContinuousAt.{u3, u2} Y X _inst_3 _inst_2 g b) -> (ContinuousAt.{u3, u2} Y X _inst_3 _inst_2 (fun (x : Y) => SMul.smul.{u1, u2} M X _inst_4 (f x) (g x)) b)
-but is expected to have type
-  forall {M : Type.{u2}} {X : Type.{u1}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : TopologicalSpace.{u1} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u2, u1} M X] [_inst_5 : ContinuousSMul.{u2, u1} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X} {b : Y}, (ContinuousAt.{u3, u2} Y M _inst_3 _inst_1 f b) -> (ContinuousAt.{u3, u1} Y X _inst_3 _inst_2 g b) -> (ContinuousAt.{u3, u1} Y X _inst_3 _inst_2 (fun (x : Y) => HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) (f x) (g x)) b)
-Case conversion may be inaccurate. Consider using '#align continuous_at.smul ContinuousAt.smulₓ'. -/
 @[to_additive]
 theorem ContinuousAt.smul (hf : ContinuousAt f b) (hg : ContinuousAt g b) :
     ContinuousAt (fun x => f x • g x) b :=
@@ -143,24 +119,12 @@ theorem ContinuousAt.smul (hf : ContinuousAt f b) (hg : ContinuousAt g b) :
 #align continuous_at.smul ContinuousAt.smul
 #align continuous_at.vadd ContinuousAt.vadd
 
-/- warning: continuous_on.smul -> ContinuousOn.smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u1, u2} M X] [_inst_5 : ContinuousSMul.{u1, u2} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X} {s : Set.{u3} Y}, (ContinuousOn.{u3, u1} Y M _inst_3 _inst_1 f s) -> (ContinuousOn.{u3, u2} Y X _inst_3 _inst_2 g s) -> (ContinuousOn.{u3, u2} Y X _inst_3 _inst_2 (fun (x : Y) => SMul.smul.{u1, u2} M X _inst_4 (f x) (g x)) s)
-but is expected to have type
-  forall {M : Type.{u2}} {X : Type.{u1}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : TopologicalSpace.{u1} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u2, u1} M X] [_inst_5 : ContinuousSMul.{u2, u1} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X} {s : Set.{u3} Y}, (ContinuousOn.{u3, u2} Y M _inst_3 _inst_1 f s) -> (ContinuousOn.{u3, u1} Y X _inst_3 _inst_2 g s) -> (ContinuousOn.{u3, u1} Y X _inst_3 _inst_2 (fun (x : Y) => HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) (f x) (g x)) s)
-Case conversion may be inaccurate. Consider using '#align continuous_on.smul ContinuousOn.smulₓ'. -/
 @[to_additive]
 theorem ContinuousOn.smul (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
     ContinuousOn (fun x => f x • g x) s := fun x hx => (hf x hx).smul (hg x hx)
 #align continuous_on.smul ContinuousOn.smul
 #align continuous_on.vadd ContinuousOn.vadd
 
-/- warning: continuous.smul -> Continuous.smul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u1, u2} M X] [_inst_5 : ContinuousSMul.{u1, u2} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X}, (Continuous.{u3, u1} Y M _inst_3 _inst_1 f) -> (Continuous.{u3, u2} Y X _inst_3 _inst_2 g) -> (Continuous.{u3, u2} Y X _inst_3 _inst_2 (fun (x : Y) => SMul.smul.{u1, u2} M X _inst_4 (f x) (g x)))
-but is expected to have type
-  forall {M : Type.{u2}} {X : Type.{u1}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : TopologicalSpace.{u1} X] [_inst_3 : TopologicalSpace.{u3} Y] [_inst_4 : SMul.{u2, u1} M X] [_inst_5 : ContinuousSMul.{u2, u1} M X _inst_4 _inst_1 _inst_2] {f : Y -> M} {g : Y -> X}, (Continuous.{u3, u2} Y M _inst_3 _inst_1 f) -> (Continuous.{u3, u1} Y X _inst_3 _inst_2 g) -> (Continuous.{u3, u1} Y X _inst_3 _inst_2 (fun (x : Y) => HSMul.hSMul.{u2, u1, u1} M X X (instHSMul.{u2, u1} M X _inst_4) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align continuous.smul Continuous.smulₓ'. -/
 @[continuity, to_additive]
 theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x • g x :=
   continuous_smul.comp (hf.prod_mk hg)
@@ -195,12 +159,6 @@ section Monoid
 
 variable [Monoid M] [MulAction M X] [ContinuousSMul M X]
 
-/- warning: units.has_continuous_smul -> Units.continuousSMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_4 : Monoid.{u1} M] [_inst_5 : MulAction.{u1, u2} M X _inst_4] [_inst_6 : ContinuousSMul.{u1, u2} M X (MulAction.toHasSmul.{u1, u2} M X _inst_4 _inst_5) _inst_1 _inst_2], ContinuousSMul.{u1, u2} (Units.{u1} M _inst_4) X (Units.hasSmul.{u1, u2} M X _inst_4 (MulAction.toHasSmul.{u1, u2} M X _inst_4 _inst_5)) (Units.topologicalSpace.{u1} M _inst_1 _inst_4) _inst_2
-but is expected to have type
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : TopologicalSpace.{u2} X] [_inst_4 : Monoid.{u1} M] [_inst_5 : MulAction.{u1, u2} M X _inst_4] [_inst_6 : ContinuousSMul.{u1, u2} M X (MulAction.toSMul.{u1, u2} M X _inst_4 _inst_5) _inst_1 _inst_2], ContinuousSMul.{u1, u2} (Units.{u1} M _inst_4) X (Units.instSMulUnits.{u1, u2} M X _inst_4 (MulAction.toSMul.{u1, u2} M X _inst_4 _inst_5)) (Units.instTopologicalSpaceUnits.{u1} M _inst_1 _inst_4) _inst_2
-Case conversion may be inaccurate. Consider using '#align units.has_continuous_smul Units.continuousSMulₓ'. -/
 @[to_additive]
 instance Units.continuousSMul : ContinuousSMul Mˣ X
     where continuous_smul :=
@@ -230,12 +188,6 @@ section LatticeOps
 
 variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [SMul M X]
 
-/- warning: has_continuous_smul_Inf -> continuousSMul_sInf is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {ts : Set.{u2} (TopologicalSpace.{u2} X)}, (forall (t : TopologicalSpace.{u2} X), (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} X) (Set.{u2} (TopologicalSpace.{u2} X)) (Set.hasMem.{u2} (TopologicalSpace.{u2} X)) t ts) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t)) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (InfSet.sInf.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.completeLattice.{u2} X))) ts))
-but is expected to have type
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {ts : Set.{u2} (TopologicalSpace.{u2} X)}, (forall (t : TopologicalSpace.{u2} X), (Membership.mem.{u2, u2} (TopologicalSpace.{u2} X) (Set.{u2} (TopologicalSpace.{u2} X)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} X)) t ts) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t)) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (InfSet.sInf.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} X))) ts))
-Case conversion may be inaccurate. Consider using '#align has_continuous_smul_Inf continuousSMul_sInfₓ'. -/
 @[to_additive]
 theorem continuousSMul_sInf {ts : Set (TopologicalSpace X)}
     (h : ∀ t ∈ ts, @ContinuousSMul M X _ _ t) : @ContinuousSMul M X _ _ (sInf ts) :=
@@ -248,12 +200,6 @@ theorem continuousSMul_sInf {ts : Set (TopologicalSpace X)}
 #align has_continuous_smul_Inf continuousSMul_sInf
 #align has_continuous_vadd_Inf continuousVAdd_sInf
 
-/- warning: has_continuous_smul_infi -> continuousSMul_iInf is a dubious translation:
-lean 3 declaration is
-  forall {ι : Sort.{u1}} {M : Type.{u2}} {X : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : SMul.{u2, u3} M X] {ts' : ι -> (TopologicalSpace.{u3} X)}, (forall (i : ι), ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (ts' i)) -> (ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (iInf.{u3, u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.completeLattice.{u3} X))) ι (fun (i : ι) => ts' i)))
-but is expected to have type
-  forall {ι : Sort.{u1}} {M : Type.{u2}} {X : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : SMul.{u2, u3} M X] {ts' : ι -> (TopologicalSpace.{u3} X)}, (forall (i : ι), ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (ts' i)) -> (ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (iInf.{u3, u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} X))) ι (fun (i : ι) => ts' i)))
-Case conversion may be inaccurate. Consider using '#align has_continuous_smul_infi continuousSMul_iInfₓ'. -/
 @[to_additive]
 theorem continuousSMul_iInf {ts' : ι → TopologicalSpace X}
     (h : ∀ i, @ContinuousSMul M X _ _ (ts' i)) : @ContinuousSMul M X _ _ (⨅ i, ts' i) :=
@@ -261,12 +207,6 @@ theorem continuousSMul_iInf {ts' : ι → TopologicalSpace X}
 #align has_continuous_smul_infi continuousSMul_iInf
 #align has_continuous_vadd_infi continuousVAdd_iInf
 
-/- warning: has_continuous_smul_inf -> continuousSMul_inf is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {t₁ : TopologicalSpace.{u2} X} {t₂ : TopologicalSpace.{u2} X} [_inst_3 : ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t₁] [_inst_4 : ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t₂], ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (Inf.inf.{u2} (TopologicalSpace.{u2} X) (SemilatticeInf.toHasInf.{u2} (TopologicalSpace.{u2} X) (Lattice.toSemilatticeInf.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toLattice.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.completeLattice.{u2} X))))) t₁ t₂)
-but is expected to have type
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {t₁ : TopologicalSpace.{u2} X} {t₂ : TopologicalSpace.{u2} X} [_inst_3 : ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t₁] [_inst_4 : ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t₂], ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (Inf.inf.{u2} (TopologicalSpace.{u2} X) (Lattice.toInf.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toLattice.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} X)))) t₁ t₂)
-Case conversion may be inaccurate. Consider using '#align has_continuous_smul_inf continuousSMul_infₓ'. -/
 @[to_additive]
 theorem continuousSMul_inf {t₁ t₂ : TopologicalSpace X} [@ContinuousSMul M X _ _ t₁]
     [@ContinuousSMul M X _ _ t₂] : @ContinuousSMul M X _ _ (t₁ ⊓ t₂) := by rw [inf_eq_iInf];
@@ -284,12 +224,6 @@ variable [PreconnectedSpace G] [TopologicalSpace P] [ContinuousVAdd G P]
 
 include G
 
-/- warning: add_torsor.connected_space -> AddTorsor.connectedSpace is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) (P : Type.{u2}) [_inst_1 : AddGroup.{u1} G] [_inst_2 : AddTorsor.{u1, u2} G P _inst_1] [_inst_3 : TopologicalSpace.{u1} G] [_inst_4 : PreconnectedSpace.{u1} G _inst_3] [_inst_5 : TopologicalSpace.{u2} P] [_inst_6 : ContinuousVAdd.{u1, u2} G P (AddAction.toHasVadd.{u1, u2} G P (SubNegMonoid.toAddMonoid.{u1} G (AddGroup.toSubNegMonoid.{u1} G _inst_1)) (AddTorsor.toAddAction.{u1, u2} G P _inst_1 _inst_2)) _inst_3 _inst_5], ConnectedSpace.{u2} P _inst_5
-but is expected to have type
-  forall (G : Type.{u2}) (P : Type.{u1}) [_inst_1 : AddGroup.{u2} G] [_inst_2 : AddTorsor.{u2, u1} G P _inst_1] [_inst_3 : TopologicalSpace.{u2} G] [_inst_4 : PreconnectedSpace.{u2} G _inst_3] [_inst_5 : TopologicalSpace.{u1} P] [_inst_6 : ContinuousVAdd.{u2, u1} G P (AddAction.toVAdd.{u2, u1} G P (SubNegMonoid.toAddMonoid.{u2} G (AddGroup.toSubNegMonoid.{u2} G _inst_1)) (AddTorsor.toAddAction.{u2, u1} G P _inst_1 _inst_2)) _inst_3 _inst_5], ConnectedSpace.{u1} P _inst_5
-Case conversion may be inaccurate. Consider using '#align add_torsor.connected_space AddTorsor.connectedSpaceₓ'. -/
 /-- An `add_torsor` for a connected space is a connected space. This is not an instance because
 it loops for a group as a torsor over itself. -/
 protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=

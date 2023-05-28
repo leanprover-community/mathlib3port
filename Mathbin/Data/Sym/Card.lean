@@ -69,12 +69,6 @@ section Sym
 
 variable (α) (n : ℕ)
 
-/- warning: sym.E1 -> Sym.e1 is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (Nat.succ n)) (Nat.succ k)) (fun (s : Sym.{0} (Fin (Nat.succ n)) (Nat.succ k)) => Membership.Mem.{0, 0} (Fin (Nat.succ n)) (Sym.{0} (Fin (Nat.succ n)) (Nat.succ k)) (Sym.hasMem.{0} (Fin (Nat.succ n)) (Nat.succ k)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin (Nat.succ n)) (HasLiftT.mk.{1, 1} Nat (Fin (Nat.succ n)) (CoeTCₓ.coe.{1, 1} Nat (Fin (Nat.succ n)) (Nat.castCoe.{0} (Fin (Nat.succ n)) (AddMonoidWithOne.toNatCast.{0} (Fin (Nat.succ n)) (Fin.addMonoidWithOne (Nat.succ n) (NeZero.succ n)))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) s)) (Sym.{0} (Fin (Nat.succ n)) k)
-but is expected to have type
-  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (s : Sym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => Membership.mem.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Sym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Sym.instMembershipSym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n))) s)) (Sym.{0} (Fin (Nat.succ n)) k)
-Case conversion may be inaccurate. Consider using '#align sym.E1 Sym.e1ₓ'. -/
 /-- Over `fin n+1`, the multisets of size `k+1` containing `0` are equivalent to those of size `k`,
 as demonstrated by respectively erasing or appending `0`.
 -/
@@ -86,12 +80,6 @@ protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃
   right_inv s := by simp
 #align sym.E1 Sym.e1
 
-/- warning: sym.E2 -> Sym.e2 is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (fun (s : Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) => Not (Membership.Mem.{0, 0} (Fin (Nat.succ (Nat.succ n))) (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (Sym.hasMem.{0} (Fin (Nat.succ (Nat.succ n))) k) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin (Nat.succ (Nat.succ n))) (HasLiftT.mk.{1, 1} Nat (Fin (Nat.succ (Nat.succ n))) (CoeTCₓ.coe.{1, 1} Nat (Fin (Nat.succ (Nat.succ n))) (Nat.castCoe.{0} (Fin (Nat.succ (Nat.succ n))) (AddMonoidWithOne.toNatCast.{0} (Fin (Nat.succ (Nat.succ n))) (Fin.addMonoidWithOne (Nat.succ (Nat.succ n)) (Sym.e2._proof_1 n)))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) s))) (Sym.{0} (Fin (Nat.succ n)) k)
-but is expected to have type
-  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (fun (s : Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) => Not (Membership.mem.{0, 0} (Fin (Nat.succ (Nat.succ n))) (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (Sym.instMembershipSym.{0} (Fin (Nat.succ (Nat.succ n))) k) (OfNat.ofNat.{0} (Fin (Nat.succ (Nat.succ n))) 0 (Fin.instOfNatFin (Nat.succ (Nat.succ n)) 0 (NeZero.succ (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) s))) (Sym.{0} (Fin (Nat.succ n)) k)
-Case conversion may be inaccurate. Consider using '#align sym.E2 Sym.e2ₓ'. -/
 /-- The multisets of size `k` over `fin n+2` not containing `0`
 are equivalent to those of size `k` over `fin n+1`,
 as demonstrated by respectively decrementing or incrementing every element of the multiset.

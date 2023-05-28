@@ -106,12 +106,6 @@ theorem measurable_im : Measurable im :=
 #align complex.measurable_im Complex.measurable_im
 -/
 
-/- warning: complex.measurable_of_real -> Complex.measurable_of_real is a dubious translation:
-lean 3 declaration is
-  Measurable.{0, 0} Real Complex Real.measurableSpace Complex.measurableSpace ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))))
-but is expected to have type
-  Measurable.{0, 0} Real Complex Real.measurableSpace Complex.measurableSpace Complex.ofReal'
-Case conversion may be inaccurate. Consider using '#align complex.measurable_of_real Complex.measurable_of_realₓ'. -/
 @[measurability]
 theorem measurable_of_real : Measurable (coe : ℝ → ℂ) :=
   continuous_ofReal.Measurable

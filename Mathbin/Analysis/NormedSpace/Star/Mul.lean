@@ -28,9 +28,6 @@ variable [DenselyNormedField 𝕜] [NonUnitalNormedRing E] [StarRing E] [CstarRi
 
 variable [NormedSpace 𝕜 E] [IsScalarTower 𝕜 E E] [SMulCommClass 𝕜 E E] (a : E)
 
-/- warning: op_nnnorm_mul -> op_nnnorm_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align op_nnnorm_mul op_nnnorm_mulₓ'. -/
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the left by `a : E` has
 norm equal to the norm of `a`. -/
 @[simp]
@@ -55,9 +52,6 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
       rwa [← NNReal.div_lt_iff (mul_pos ha ha).ne', div_eq_mul_inv, mul_inv, ← mul_assoc]
 #align op_nnnorm_mul op_nnnorm_mul
 
-/- warning: op_nnnorm_mul_flip -> op_nnnorm_mul_flip is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align op_nnnorm_mul_flip op_nnnorm_mul_flipₓ'. -/
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the right by `a : E` has
 norm eqaul to the norm of `a`. -/
 @[simp]
@@ -74,18 +68,12 @@ theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ :=
 
 variable (E)
 
-/- warning: mul_isometry -> mul_isometry is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mul_isometry mul_isometryₓ'. -/
 /-- In a C⋆-algebra `E`, either unital or non-unital, the left regular representation is an
 isometry. -/
 theorem mul_isometry : Isometry (mul 𝕜 E) :=
   AddMonoidHomClass.isometry_of_norm _ fun a => congr_arg coe <| op_nnnorm_mul 𝕜 a
 #align mul_isometry mul_isometry
 
-/- warning: mul_flip_isometry -> mul_flip_isometry is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mul_flip_isometry mul_flip_isometryₓ'. -/
 /-- In a C⋆-algebra `E`, either unital or non-unital, the right regular anti-representation is an
 isometry. -/
 theorem mul_flip_isometry : Isometry (mul 𝕜 E).flip :=

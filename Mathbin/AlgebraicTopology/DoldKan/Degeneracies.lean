@@ -43,9 +43,6 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C]
 
-/- warning: algebraic_topology.dold_kan.higher_faces_vanish.comp_σ -> AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σₓ'. -/
 theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ} {φ : Y ⟶ X _[n + 1]}
     (v : HigherFacesVanish q φ) (hnbq : n + 1 = b + q) :
     HigherFacesVanish q
@@ -63,9 +60,6 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
     linarith
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
-/- warning: algebraic_topology.dold_kan.σ_comp_P_eq_zero -> AlgebraicTopology.DoldKan.σ_comp_P_eq_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zeroₓ'. -/
 theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
     X.σ i ≫ (P q).f (n + 1) = 0 :=
   by
@@ -129,9 +123,6 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           linarith
 #align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zero
 
-/- warning: algebraic_topology.dold_kan.σ_comp_P_infty -> AlgebraicTopology.DoldKan.σ_comp_PInfty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_PInftyₓ'. -/
 @[simp, reassoc]
 theorem σ_comp_PInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ PInfty.f (n + 1) = 0 :=
@@ -140,9 +131,6 @@ theorem σ_comp_PInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
   simp only [le_add_iff_nonneg_left, zero_le]
 #align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_PInfty
 
-/- warning: algebraic_topology.dold_kan.degeneracy_comp_P_infty -> AlgebraicTopology.DoldKan.degeneracy_comp_PInfty is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_PInftyₓ'. -/
 @[reassoc]
 theorem degeneracy_comp_PInfty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
     (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ PInfty.f n = 0 :=

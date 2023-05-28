@@ -22,12 +22,6 @@ This file defines a bunch of functions for the `string` datatype.
 
 namespace String
 
-/- warning: string.split_on -> String.splitOn is a dubious translation:
-lean 3 declaration is
-  String -> Char -> (List.{0} String)
-but is expected to have type
-  String -> (optParam.{1} String " ") -> (List.{0} String)
-Case conversion may be inaccurate. Consider using '#align string.split_on String.splitOnₓ'. -/
 /-- `s.split_on c` tokenizes `s : string` on `c : char`. -/
 def splitOn (s : String) (c : Char) : List String :=
   split (· = c) s

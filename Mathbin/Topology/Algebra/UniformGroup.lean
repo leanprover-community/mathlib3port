@@ -69,12 +69,6 @@ class UniformAddGroup (α : Type _) [UniformSpace α] [AddGroup α] : Prop where
 
 attribute [to_additive] UniformGroup
 
-/- warning: uniform_group.mk' -> UniformGroup.mk' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α], (UniformContinuous.{u1, u1} (Prod.{u1, u1} α α) α (Prod.uniformSpace.{u1, u1} α α _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))) -> (UniformContinuous.{u1, u1} α α _inst_1 _inst_1 (fun (p : α) => Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) p)) -> (UniformGroup.{u1} α _inst_1 _inst_2)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α], (UniformContinuous.{u1, u1} (Prod.{u1, u1} α α) α (instUniformSpaceProd.{u1, u1} α α _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))) -> (UniformContinuous.{u1, u1} α α _inst_1 _inst_1 (fun (p : α) => Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) p)) -> (UniformGroup.{u1} α _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align uniform_group.mk' UniformGroup.mk'ₓ'. -/
 @[to_additive]
 theorem UniformGroup.mk' {α} [UniformSpace α] [Group α]
     (h₁ : UniformContinuous fun p : α × α => p.1 * p.2) (h₂ : UniformContinuous fun p : α => p⁻¹) :
@@ -87,24 +81,12 @@ theorem UniformGroup.mk' {α} [UniformSpace α] [Group α]
 
 variable [UniformSpace α] [Group α] [UniformGroup α]
 
-/- warning: uniform_continuous_div -> uniformContinuous_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], UniformContinuous.{u1, u1} (Prod.{u1, u1} α α) α (Prod.uniformSpace.{u1, u1} α α _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} α α) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], UniformContinuous.{u1, u1} (Prod.{u1, u1} α α) α (instUniformSpaceProd.{u1, u1} α α _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} α α) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_div uniformContinuous_divₓ'. -/
 @[to_additive]
 theorem uniformContinuous_div : UniformContinuous fun p : α × α => p.1 / p.2 :=
   UniformGroup.uniformContinuous_div
 #align uniform_continuous_div uniformContinuous_div
 #align uniform_continuous_sub uniformContinuous_sub
 
-/- warning: uniform_continuous.div -> UniformContinuous.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] {f : β -> α} {g : β -> α}, (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 f) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 g) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 (fun (x : β) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (f x) (g x)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] {f : β -> α} {g : β -> α}, (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 f) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 g) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 (fun (x : β) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous.div UniformContinuous.divₓ'. -/
 @[to_additive]
 theorem UniformContinuous.div [UniformSpace β] {f : β → α} {g : β → α} (hf : UniformContinuous f)
     (hg : UniformContinuous g) : UniformContinuous fun x => f x / g x :=
@@ -112,12 +94,6 @@ theorem UniformContinuous.div [UniformSpace β] {f : β → α} {g : β → α} 
 #align uniform_continuous.div UniformContinuous.div
 #align uniform_continuous.sub UniformContinuous.sub
 
-/- warning: uniform_continuous.inv -> UniformContinuous.inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] {f : β -> α}, (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 f) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 (fun (x : β) => Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (f x)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] {f : β -> α}, (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 f) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 (fun (x : β) => Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (f x)))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous.inv UniformContinuous.invₓ'. -/
 @[to_additive]
 theorem UniformContinuous.inv [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
     UniformContinuous fun x => (f x)⁻¹ :=
@@ -127,24 +103,12 @@ theorem UniformContinuous.inv [UniformSpace β] {f : β → α} (hf : UniformCon
 #align uniform_continuous.inv UniformContinuous.inv
 #align uniform_continuous.neg UniformContinuous.neg
 
-/- warning: uniform_continuous_inv -> uniformContinuous_inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], UniformContinuous.{u1, u1} α α _inst_1 _inst_1 (fun (x : α) => Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], UniformContinuous.{u1, u1} α α _inst_1 _inst_1 (fun (x : α) => Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) x)
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_inv uniformContinuous_invₓ'. -/
 @[to_additive]
 theorem uniformContinuous_inv : UniformContinuous fun x : α => x⁻¹ :=
   uniformContinuous_id.inv
 #align uniform_continuous_inv uniformContinuous_inv
 #align uniform_continuous_neg uniformContinuous_neg
 
-/- warning: uniform_continuous.mul -> UniformContinuous.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] {f : β -> α} {g : β -> α}, (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 f) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 g) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 (fun (x : β) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (f x) (g x)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] {f : β -> α} {g : β -> α}, (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 f) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 g) -> (UniformContinuous.{u2, u1} β α _inst_4 _inst_1 (fun (x : β) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous.mul UniformContinuous.mulₓ'. -/
 @[to_additive]
 theorem UniformContinuous.mul [UniformSpace β] {f : β → α} {g : β → α} (hf : UniformContinuous f)
     (hg : UniformContinuous g) : UniformContinuous fun x => f x * g x :=
@@ -154,12 +118,6 @@ theorem UniformContinuous.mul [UniformSpace β] {f : β → α} {g : β → α} 
 #align uniform_continuous.mul UniformContinuous.mul
 #align uniform_continuous.add UniformContinuous.add
 
-/- warning: uniform_continuous_mul -> uniformContinuous_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], UniformContinuous.{u1, u1} (Prod.{u1, u1} α α) α (Prod.uniformSpace.{u1, u1} α α _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], UniformContinuous.{u1, u1} (Prod.{u1, u1} α α) α (instUniformSpaceProd.{u1, u1} α α _inst_1 _inst_1) _inst_1 (fun (p : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_mul uniformContinuous_mulₓ'. -/
 @[to_additive]
 theorem uniformContinuous_mul : UniformContinuous fun p : α × α => p.1 * p.2 :=
   uniformContinuous_fst.mul uniformContinuous_snd
@@ -219,12 +177,6 @@ instance [UniformSpace β] [Group β] [UniformGroup β] : UniformGroup (α × β
       ((uniformContinuous_snd.comp uniformContinuous_fst).div
         (uniformContinuous_snd.comp uniformContinuous_snd))⟩
 
-/- warning: uniformity_translate_mul -> uniformity_translate_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] (a : α), Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.map.{u1, u1} (Prod.{u1, u1} α α) (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Prod.mk.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.fst.{u1, u1} α α x) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.snd.{u1, u1} α α x) a)) (uniformity.{u1} α _inst_1)) (uniformity.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] (a : α), Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.map.{u1, u1} (Prod.{u1, u1} α α) (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Prod.mk.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.fst.{u1, u1} α α x) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Prod.snd.{u1, u1} α α x) a)) (uniformity.{u1} α _inst_1)) (uniformity.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniformity_translate_mul uniformity_translate_mulₓ'. -/
 @[to_additive]
 theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (x.1 * a, x.2 * a)) = 𝓤 α :=
   le_antisymm (uniformContinuous_id.mul uniformContinuous_const)
@@ -239,12 +191,6 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
 #align uniformity_translate_mul uniformity_translate_mul
 #align uniformity_translate_add uniformity_translate_add
 
-/- warning: uniform_embedding_translate_mul -> uniformEmbedding_translate_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] (a : α), UniformEmbedding.{u1, u1} α α _inst_1 _inst_1 (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] (a : α), UniformEmbedding.{u1, u1} α α _inst_1 _inst_1 (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x a)
-Case conversion may be inaccurate. Consider using '#align uniform_embedding_translate_mul uniformEmbedding_translate_mulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 @[to_additive]
 theorem uniformEmbedding_translate_mul (a : α) : UniformEmbedding fun x : α => x * a :=
@@ -280,12 +226,6 @@ section LatticeOps
 
 variable [Group β]
 
-/- warning: uniform_group_Inf -> uniformGroup_sInf is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {us : Set.{u1} (UniformSpace.{u1} β)}, (forall (u : UniformSpace.{u1} β), (Membership.Mem.{u1, u1} (UniformSpace.{u1} β) (Set.{u1} (UniformSpace.{u1} β)) (Set.hasMem.{u1} (UniformSpace.{u1} β)) u us) -> (UniformGroup.{u1} β u _inst_4)) -> (UniformGroup.{u1} β (InfSet.sInf.{u1} (UniformSpace.{u1} β) (UniformSpace.hasInf.{u1} β) us) _inst_4)
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {us : Set.{u1} (UniformSpace.{u1} β)}, (forall (u : UniformSpace.{u1} β), (Membership.mem.{u1, u1} (UniformSpace.{u1} β) (Set.{u1} (UniformSpace.{u1} β)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} β)) u us) -> (UniformGroup.{u1} β u _inst_4)) -> (UniformGroup.{u1} β (InfSet.sInf.{u1} (UniformSpace.{u1} β) (instInfSetUniformSpace.{u1} β) us) _inst_4)
-Case conversion may be inaccurate. Consider using '#align uniform_group_Inf uniformGroup_sInfₓ'. -/
 @[to_additive]
 theorem uniformGroup_sInf {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @UniformGroup β u _) :
     @UniformGroup β (sInf us) _ :=
@@ -296,12 +236,6 @@ theorem uniformGroup_sInf {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @Unifo
 #align uniform_group_Inf uniformGroup_sInf
 #align uniform_add_group_Inf uniformAddGroup_sInf
 
-/- warning: uniform_group_infi -> uniformGroup_iInf is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {ι : Sort.{u2}} {us' : ι -> (UniformSpace.{u1} β)}, (forall (i : ι), UniformGroup.{u1} β (us' i) _inst_4) -> (UniformGroup.{u1} β (iInf.{u1, u2} (UniformSpace.{u1} β) (UniformSpace.hasInf.{u1} β) ι (fun (i : ι) => us' i)) _inst_4)
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {ι : Sort.{u2}} {us' : ι -> (UniformSpace.{u1} β)}, (forall (i : ι), UniformGroup.{u1} β (us' i) _inst_4) -> (UniformGroup.{u1} β (iInf.{u1, u2} (UniformSpace.{u1} β) (instInfSetUniformSpace.{u1} β) ι (fun (i : ι) => us' i)) _inst_4)
-Case conversion may be inaccurate. Consider using '#align uniform_group_infi uniformGroup_iInfₓ'. -/
 @[to_additive]
 theorem uniformGroup_iInf {ι : Sort _} {us' : ι → UniformSpace β}
     (h' : ∀ i, @UniformGroup β (us' i) _) : @UniformGroup β (⨅ i, us' i) _ := by rw [← sInf_range];
@@ -318,12 +252,6 @@ theorem uniformGroup_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β 
 #align uniform_add_group_inf uniformAddGroup_inf
 -/
 
-/- warning: uniform_group_comap -> uniformGroup_comap is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {γ : Type.{u2}} [_inst_5 : Group.{u2} γ] {u : UniformSpace.{u2} γ} [_inst_6 : UniformGroup.{u2} γ u _inst_5] {F : Type.{u3}} [_inst_7 : MonoidHomClass.{u3, u1, u2} F β γ (Monoid.toMulOneClass.{u1} β (DivInvMonoid.toMonoid.{u1} β (Group.toDivInvMonoid.{u1} β _inst_4))) (Monoid.toMulOneClass.{u2} γ (DivInvMonoid.toMonoid.{u2} γ (Group.toDivInvMonoid.{u2} γ _inst_5)))] (f : F), UniformGroup.{u1} β (UniformSpace.comap.{u1, u2} β γ (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => β -> γ) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F β (fun (_x : β) => γ) (MulHomClass.toFunLike.{u3, u1, u2} F β γ (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (DivInvMonoid.toMonoid.{u1} β (Group.toDivInvMonoid.{u1} β _inst_4)))) (MulOneClass.toHasMul.{u2} γ (Monoid.toMulOneClass.{u2} γ (DivInvMonoid.toMonoid.{u2} γ (Group.toDivInvMonoid.{u2} γ _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} F β γ (Monoid.toMulOneClass.{u1} β (DivInvMonoid.toMonoid.{u1} β (Group.toDivInvMonoid.{u1} β _inst_4))) (Monoid.toMulOneClass.{u2} γ (DivInvMonoid.toMonoid.{u2} γ (Group.toDivInvMonoid.{u2} γ _inst_5))) _inst_7))) f) u) _inst_4
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {γ : Type.{u3}} [_inst_5 : Group.{u3} γ] {u : UniformSpace.{u3} γ} [_inst_6 : UniformGroup.{u3} γ u _inst_5] {F : Type.{u2}} [_inst_7 : MonoidHomClass.{u2, u1, u3} F β γ (Monoid.toMulOneClass.{u1} β (DivInvMonoid.toMonoid.{u1} β (Group.toDivInvMonoid.{u1} β _inst_4))) (Monoid.toMulOneClass.{u3} γ (DivInvMonoid.toMonoid.{u3} γ (Group.toDivInvMonoid.{u3} γ _inst_5)))] (f : F), UniformGroup.{u1} β (UniformSpace.comap.{u1, u3} β γ (FunLike.coe.{succ u2, succ u1, succ u3} F β (fun (_x : β) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : β) => γ) _x) (MulHomClass.toFunLike.{u2, u1, u3} F β γ (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (DivInvMonoid.toMonoid.{u1} β (Group.toDivInvMonoid.{u1} β _inst_4)))) (MulOneClass.toMul.{u3} γ (Monoid.toMulOneClass.{u3} γ (DivInvMonoid.toMonoid.{u3} γ (Group.toDivInvMonoid.{u3} γ _inst_5)))) (MonoidHomClass.toMulHomClass.{u2, u1, u3} F β γ (Monoid.toMulOneClass.{u1} β (DivInvMonoid.toMonoid.{u1} β (Group.toDivInvMonoid.{u1} β _inst_4))) (Monoid.toMulOneClass.{u3} γ (DivInvMonoid.toMonoid.{u3} γ (Group.toDivInvMonoid.{u3} γ _inst_5))) _inst_7)) f) u) _inst_4
-Case conversion may be inaccurate. Consider using '#align uniform_group_comap uniformGroup_comapₓ'. -/
 @[to_additive]
 theorem uniformGroup_comap {γ : Type _} [Group γ] {u : UniformSpace γ} [UniformGroup γ] {F : Type _}
     [MonoidHomClass F β γ] (f : F) : @UniformGroup β (u.comap f) _ :=
@@ -344,12 +272,6 @@ section
 
 variable (α)
 
-/- warning: uniformity_eq_comap_nhds_one -> uniformity_eq_comap_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.snd.{u1, u1} α α x) (Prod.fst.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.snd.{u1, u1} α α x) (Prod.fst.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_nhds_one uniformity_eq_comap_nhds_oneₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_nhds_one : 𝓤 α = comap (fun x : α × α => x.2 / x.1) (𝓝 (1 : α)) :=
   by
@@ -367,12 +289,6 @@ theorem uniformity_eq_comap_nhds_one : 𝓤 α = comap (fun x : α × α => x.2 
 #align uniformity_eq_comap_nhds_one uniformity_eq_comap_nhds_one
 #align uniformity_eq_comap_nhds_zero uniformity_eq_comap_nhds_zero
 
-/- warning: uniformity_eq_comap_nhds_one_swapped -> uniformity_eq_comap_nhds_one_swapped is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.fst.{u1, u1} α α x) (Prod.snd.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.fst.{u1, u1} α α x) (Prod.snd.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_nhds_one_swapped uniformity_eq_comap_nhds_one_swappedₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_nhds_one_swapped :
     𝓤 α = comap (fun x : α × α => x.1 / x.2) (𝓝 (1 : α)) := by
@@ -380,12 +296,6 @@ theorem uniformity_eq_comap_nhds_one_swapped :
 #align uniformity_eq_comap_nhds_one_swapped uniformity_eq_comap_nhds_one_swapped
 #align uniformity_eq_comap_nhds_zero_swapped uniformity_eq_comap_nhds_zero_swapped
 
-/- warning: uniform_group.ext -> UniformGroup.ext is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_4 : Group.{u1} G] {u : UniformSpace.{u1} G} {v : UniformSpace.{u1} G}, (UniformGroup.{u1} G u _inst_4) -> (UniformGroup.{u1} G v _inst_4) -> (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G u) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4)))))))) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G v) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4))))))))) -> (Eq.{succ u1} (UniformSpace.{u1} G) u v)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_4 : Group.{u1} G] {u : UniformSpace.{u1} G} {v : UniformSpace.{u1} G}, (UniformGroup.{u1} G u _inst_4) -> (UniformGroup.{u1} G v _inst_4) -> (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G u) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_4))))))) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G v) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_4)))))))) -> (Eq.{succ u1} (UniformSpace.{u1} G) u v)
-Case conversion may be inaccurate. Consider using '#align uniform_group.ext UniformGroup.extₓ'. -/
 @[to_additive]
 theorem UniformGroup.ext {G : Type _} [Group G] {u v : UniformSpace G} (hu : @UniformGroup G u _)
     (hv : @UniformGroup G v _)
@@ -395,12 +305,6 @@ theorem UniformGroup.ext {G : Type _} [Group G] {u v : UniformSpace G} (hu : @Un
 #align uniform_group.ext UniformGroup.ext
 #align uniform_add_group.ext UniformAddGroup.ext
 
-/- warning: uniform_group.ext_iff -> UniformGroup.ext_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_4 : Group.{u1} G] {u : UniformSpace.{u1} G} {v : UniformSpace.{u1} G}, (UniformGroup.{u1} G u _inst_4) -> (UniformGroup.{u1} G v _inst_4) -> (Iff (Eq.{succ u1} (UniformSpace.{u1} G) u v) (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G u) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4)))))))) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G v) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4))))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_4 : Group.{u1} G] {u : UniformSpace.{u1} G} {v : UniformSpace.{u1} G}, (UniformGroup.{u1} G u _inst_4) -> (UniformGroup.{u1} G v _inst_4) -> (Iff (Eq.{succ u1} (UniformSpace.{u1} G) u v) (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G u) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_4))))))) (nhds.{u1} G (UniformSpace.toTopologicalSpace.{u1} G v) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_4)))))))))
-Case conversion may be inaccurate. Consider using '#align uniform_group.ext_iff UniformGroup.ext_iffₓ'. -/
 @[to_additive]
 theorem UniformGroup.ext_iff {G : Type _} [Group G] {u v : UniformSpace G}
     (hu : @UniformGroup G u _) (hv : @UniformGroup G v _) :
@@ -411,12 +315,6 @@ theorem UniformGroup.ext_iff {G : Type _} [Group G] {u v : UniformSpace G}
 
 variable {α}
 
-/- warning: uniform_group.uniformity_countably_generated -> UniformGroup.uniformity_countably_generated is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : Filter.IsCountablyGenerated.{u1} α (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))], Filter.IsCountablyGenerated.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : Filter.IsCountablyGenerated.{u1} α (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))], Filter.IsCountablyGenerated.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align uniform_group.uniformity_countably_generated UniformGroup.uniformity_countably_generatedₓ'. -/
 @[to_additive]
 theorem UniformGroup.uniformity_countably_generated [(𝓝 (1 : α)).IsCountablyGenerated] :
     (𝓤 α).IsCountablyGenerated := by rw [uniformity_eq_comap_nhds_one];
@@ -426,12 +324,6 @@ theorem UniformGroup.uniformity_countably_generated [(𝓝 (1 : α)).IsCountably
 
 open MulOpposite
 
-/- warning: uniformity_eq_comap_inv_mul_nhds_one -> uniformity_eq_comap_inv_mul_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Prod.fst.{u1, u1} α α x)) (Prod.snd.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (Prod.fst.{u1, u1} α α x)) (Prod.snd.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_inv_mul_nhds_one uniformity_eq_comap_inv_mul_nhds_oneₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_inv_mul_nhds_one :
     𝓤 α = comap (fun x : α × α => x.1⁻¹ * x.2) (𝓝 (1 : α)) :=
@@ -442,12 +334,6 @@ theorem uniformity_eq_comap_inv_mul_nhds_one :
 #align uniformity_eq_comap_inv_mul_nhds_one uniformity_eq_comap_inv_mul_nhds_one
 #align uniformity_eq_comap_neg_add_nhds_zero uniformity_eq_comap_neg_add_nhds_zero
 
-/- warning: uniformity_eq_comap_inv_mul_nhds_one_swapped -> uniformity_eq_comap_inv_mul_nhds_one_swapped is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Prod.snd.{u1, u1} α α x)) (Prod.fst.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (Filter.comap.{u1, u1} (Prod.{u1, u1} α α) α (fun (x : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (Prod.snd.{u1, u1} α α x)) (Prod.fst.{u1, u1} α α x)) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_inv_mul_nhds_one_swapped uniformity_eq_comap_inv_mul_nhds_one_swappedₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_inv_mul_nhds_one_swapped :
     𝓤 α = comap (fun x : α × α => x.2⁻¹ * x.1) (𝓝 (1 : α)) := by
@@ -457,12 +343,6 @@ theorem uniformity_eq_comap_inv_mul_nhds_one_swapped :
 
 end
 
-/- warning: filter.has_basis.uniformity_of_nhds_one -> Filter.HasBasis.uniformity_of_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.snd.{u1, u1} α α x) (Prod.fst.{u1, u1} α α x)) (U i))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.snd.{u1, u1} α α x) (Prod.fst.{u1, u1} α α x)) (U i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniformity_of_nhds_one Filter.HasBasis.uniformity_of_nhds_oneₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one {ι} {p : ι → Prop} {U : ι → Set α}
     (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2 / x.1 ∈ U i } := by
@@ -470,12 +350,6 @@ theorem Filter.HasBasis.uniformity_of_nhds_one {ι} {p : ι → Prop} {U : ι �
 #align filter.has_basis.uniformity_of_nhds_one Filter.HasBasis.uniformity_of_nhds_one
 #align filter.has_basis.uniformity_of_nhds_zero Filter.HasBasis.uniformity_of_nhds_zero
 
-/- warning: filter.has_basis.uniformity_of_nhds_one_inv_mul -> Filter.HasBasis.uniformity_of_nhds_one_inv_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Prod.fst.{u1, u1} α α x)) (Prod.snd.{u1, u1} α α x)) (U i))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (Prod.fst.{u1, u1} α α x)) (Prod.snd.{u1, u1} α α x)) (U i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniformity_of_nhds_one_inv_mul Filter.HasBasis.uniformity_of_nhds_one_inv_mulₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul {ι} {p : ι → Prop} {U : ι → Set α}
     (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1⁻¹ * x.2 ∈ U i } :=
@@ -483,12 +357,6 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul {ι} {p : ι → Prop} {U
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul Filter.HasBasis.uniformity_of_nhds_one_inv_mul
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add Filter.HasBasis.uniformity_of_nhds_zero_neg_add
 
-/- warning: filter.has_basis.uniformity_of_nhds_one_swapped -> Filter.HasBasis.uniformity_of_nhds_one_swapped is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.fst.{u1, u1} α α x) (Prod.snd.{u1, u1} α α x)) (U i))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Prod.fst.{u1, u1} α α x) (Prod.snd.{u1, u1} α α x)) (U i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swappedₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_swapped {ι} {p : ι → Prop} {U : ι → Set α}
     (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1 / x.2 ∈ U i } := by
@@ -496,12 +364,6 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_swapped {ι} {p : ι → Prop} {U
 #align filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swapped
 #align filter.has_basis.uniformity_of_nhds_zero_swapped Filter.HasBasis.uniformity_of_nhds_zero_swapped
 
-/- warning: filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped -> Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Prod.snd.{u1, u1} α α x)) (Prod.fst.{u1, u1} α α x)) (U i))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) p U) -> (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p (fun (i : ι) => setOf.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (Prod.snd.{u1, u1} α α x)) (Prod.fst.{u1, u1} α α x)) (U i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swappedₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → Prop} {U : ι → Set α}
     (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2⁻¹ * x.1 ∈ U i } :=
@@ -509,12 +371,6 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → 
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add_swapped Filter.HasBasis.uniformity_of_nhds_zero_neg_add_swapped
 
-/- warning: group_separation_rel -> group_separationRel is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] (x : α) (y : α), Iff (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (separationRel.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) x y) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] (x : α) (y : α), Iff (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (separationRel.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) x y) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))))
-Case conversion may be inaccurate. Consider using '#align group_separation_rel group_separationRelₓ'. -/
 @[to_additive]
 theorem group_separationRel (x y : α) : (x, y) ∈ separationRel α ↔ x / y ∈ closure ({1} : Set α) :=
   have : Embedding fun a => a * (y / x) := (uniformEmbedding_translate_mul (y / x)).Embedding
@@ -525,12 +381,6 @@ theorem group_separationRel (x y : α) : (x, y) ∈ separationRel α ↔ x / y �
 #align group_separation_rel group_separationRel
 #align add_group_separation_rel addGroup_separationRel
 
-/- warning: uniform_continuous_of_tendsto_one -> uniformContinuous_of_tendsto_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {hom : Type.{u3}} [_inst_4 : UniformSpace.{u2} β] [_inst_5 : Group.{u2} β] [_inst_6 : UniformGroup.{u2} β _inst_4 _inst_5] [_inst_7 : MonoidHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))] {f : hom}, (Filter.Tendsto.{u1, u2} α β (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7))) f) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_4) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β (MulOneClass.toHasOne.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))))))))) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7))) f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {hom : Type.{u3}} [_inst_4 : UniformSpace.{u2} β] [_inst_5 : Group.{u2} β] [_inst_6 : UniformGroup.{u2} β _inst_4 _inst_5] [_inst_7 : MonoidHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))] {f : hom}, (Filter.Tendsto.{u1, u2} α β (FunLike.coe.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7)) f) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_4) (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β (InvOneClass.toOne.{u2} β (DivInvOneMonoid.toInvOneClass.{u2} β (DivisionMonoid.toDivInvOneMonoid.{u2} β (Group.toDivisionMonoid.{u2} β _inst_5)))))))) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (FunLike.coe.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7)) f))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_of_tendsto_one uniformContinuous_of_tendsto_oneₓ'. -/
 @[to_additive]
 theorem uniformContinuous_of_tendsto_one {hom : Type _} [UniformSpace β] [Group β] [UniformGroup β]
     [MonoidHomClass hom α β] {f : hom} (h : Tendsto f (𝓝 1) (𝓝 1)) : UniformContinuous f :=
@@ -545,12 +395,6 @@ theorem uniformContinuous_of_tendsto_one {hom : Type _} [UniformSpace β] [Group
 #align uniform_continuous_of_tendsto_one uniformContinuous_of_tendsto_one
 #align uniform_continuous_of_tendsto_zero uniformContinuous_of_tendsto_zero
 
-/- warning: uniform_continuous_of_continuous_at_one -> uniformContinuous_of_continuousAt_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {hom : Type.{u3}} [_inst_4 : UniformSpace.{u2} β] [_inst_5 : Group.{u2} β] [_inst_6 : UniformGroup.{u2} β _inst_4 _inst_5] [_inst_7 : MonoidHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))] (f : hom), (ContinuousAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_4) (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7))) f) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7))) f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {hom : Type.{u3}} [_inst_4 : UniformSpace.{u2} β] [_inst_5 : Group.{u2} β] [_inst_6 : UniformGroup.{u2} β _inst_4 _inst_5] [_inst_7 : MonoidHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))] (f : hom), (ContinuousAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_4) (FunLike.coe.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7)) f) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (FunLike.coe.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) _inst_7)) f))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_of_continuous_at_one uniformContinuous_of_continuousAt_oneₓ'. -/
 /-- A group homomorphism (a bundled morphism of a type that implements `monoid_hom_class`) between
 two uniform groups is uniformly continuous provided that it is continuous at one. See also
 `continuous_of_continuous_at_one`. -/
@@ -563,12 +407,6 @@ theorem uniformContinuous_of_continuousAt_one {hom : Type _} [UniformSpace β] [
 #align uniform_continuous_of_continuous_at_one uniformContinuous_of_continuousAt_one
 #align uniform_continuous_of_continuous_at_zero uniformContinuous_of_continuousAt_zero
 
-/- warning: monoid_hom.uniform_continuous_of_continuous_at_one -> MonoidHom.uniformContinuous_of_continuousAt_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] [_inst_5 : Group.{u2} β] [_inst_6 : UniformGroup.{u2} β _inst_4 _inst_5] (f : MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))), (ContinuousAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_4) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (fun (_x : MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) => α -> β) (MonoidHom.hasCoeToFun.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) f) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))))) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (fun (_x : MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) => α -> β) (MonoidHom.hasCoeToFun.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) f))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] [_inst_4 : UniformSpace.{u2} β] [_inst_5 : Group.{u2} β] [_inst_6 : UniformGroup.{u2} β _inst_4 _inst_5] (f : MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))), (ContinuousAt.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_4) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) (MonoidHom.monoidHomClass.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))))) f) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))))) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))) α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5))) (MonoidHom.monoidHomClass.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_5)))))) f))
-Case conversion may be inaccurate. Consider using '#align monoid_hom.uniform_continuous_of_continuous_at_one MonoidHom.uniformContinuous_of_continuousAt_oneₓ'. -/
 @[to_additive]
 theorem MonoidHom.uniformContinuous_of_continuousAt_one [UniformSpace β] [Group β] [UniformGroup β]
     (f : α →* β) (hf : ContinuousAt f 1) : UniformContinuous f :=
@@ -576,12 +414,6 @@ theorem MonoidHom.uniformContinuous_of_continuousAt_one [UniformSpace β] [Group
 #align monoid_hom.uniform_continuous_of_continuous_at_one MonoidHom.uniformContinuous_of_continuousAt_one
 #align add_monoid_hom.uniform_continuous_of_continuous_at_zero AddMonoidHom.uniformContinuous_of_continuousAt_zero
 
-/- warning: uniform_group.uniform_continuous_iff_open_ker -> UniformGroup.uniformContinuous_iff_open_ker is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {hom : Type.{u3}} [_inst_4 : UniformSpace.{u2} β] [_inst_5 : DiscreteTopology.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_4)] [_inst_6 : Group.{u2} β] [_inst_7 : UniformGroup.{u2} β _inst_4 _inst_6] [_inst_8 : MonoidHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))] {f : hom}, Iff (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6))) _inst_8))) f)) (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} α _inst_2) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} α _inst_2) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} α _inst_2) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.setLike.{u1} α _inst_2)))) (MonoidHom.ker.{u1, u2} α _inst_2 β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6))) ((fun (a : Type.{u3}) (b : Sort.{max (succ u2) (succ u1)}) [self : HasLiftT.{succ u3, max (succ u2) (succ u1)} a b] => self.0) hom (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))) (HasLiftT.mk.{succ u3, max (succ u2) (succ u1)} hom (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))) (CoeTCₓ.coe.{succ u3, max (succ u2) (succ u1)} hom (MonoidHom.{u1, u2} α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))) (MonoidHom.hasCoeT.{u1, u2, u3} α β hom (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6))) _inst_8))) f))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {hom : Type.{u3}} [_inst_4 : UniformSpace.{u2} β] [_inst_5 : DiscreteTopology.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_4)] [_inst_6 : Group.{u2} β] [_inst_7 : UniformGroup.{u2} β _inst_4 _inst_6] [_inst_8 : MonoidHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))] {f : hom}, Iff (UniformContinuous.{u1, u2} α β _inst_1 _inst_4 (FunLike.coe.{succ u3, succ u1, succ u2} hom α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u3, u1, u2} hom α β (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom α β (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6))) _inst_8)) f)) (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (SetLike.coe.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_2) (MonoidHom.ker.{u1, u2} α _inst_2 β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6))) (MonoidHomClass.toMonoidHom.{u1, u2, u3} α β hom (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_6))) _inst_8 f))))
-Case conversion may be inaccurate. Consider using '#align uniform_group.uniform_continuous_iff_open_ker UniformGroup.uniformContinuous_iff_open_kerₓ'. -/
 /-- A homomorphism from a uniform group to a discrete uniform group is continuous if and only if
 its kernel is open. -/
 @[to_additive
@@ -609,12 +441,6 @@ theorem uniformContinuous_monoidHom_of_continuous {hom : Type _} [UniformSpace �
 #align uniform_continuous_add_monoid_hom_of_continuous uniformContinuous_addMonoidHom_of_continuous
 -/
 
-/- warning: cauchy_seq.mul -> CauchySeq.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α} {v : ι -> α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 v) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (ι -> α) (ι -> α) (ι -> α) (instHMul.{max u2 u1} (ι -> α) (Pi.instMul.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) u v))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α} {v : ι -> α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 v) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (ι -> α) (ι -> α) (ι -> α) (instHMul.{max u1 u2} (ι -> α) (Pi.instMul.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) u v))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.mul CauchySeq.mulₓ'. -/
 @[to_additive]
 theorem CauchySeq.mul {ι : Type _} [SemilatticeSup ι] {u v : ι → α} (hu : CauchySeq u)
     (hv : CauchySeq v) : CauchySeq (u * v) :=
@@ -622,12 +448,6 @@ theorem CauchySeq.mul {ι : Type _} [SemilatticeSup ι] {u v : ι → α} (hu : 
 #align cauchy_seq.mul CauchySeq.mul
 #align cauchy_seq.add CauchySeq.add
 
-/- warning: cauchy_seq.mul_const -> CauchySeq.mul_const is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α} {x : α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (fun (n : ι) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (u n) x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α} {x : α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (fun (n : ι) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) (u n) x))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.mul_const CauchySeq.mul_constₓ'. -/
 @[to_additive]
 theorem CauchySeq.mul_const {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x : α} (hu : CauchySeq u) :
     CauchySeq fun n => u n * x :=
@@ -635,12 +455,6 @@ theorem CauchySeq.mul_const {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x
 #align cauchy_seq.mul_const CauchySeq.mul_const
 #align cauchy_seq.add_const CauchySeq.add_const
 
-/- warning: cauchy_seq.const_mul -> CauchySeq.const_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α} {x : α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (fun (n : ι) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x (u n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α} {x : α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (fun (n : ι) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x (u n)))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.const_mul CauchySeq.const_mulₓ'. -/
 @[to_additive]
 theorem CauchySeq.const_mul {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x : α} (hu : CauchySeq u) :
     CauchySeq fun n => x * u n :=
@@ -648,12 +462,6 @@ theorem CauchySeq.const_mul {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x
 #align cauchy_seq.const_mul CauchySeq.const_mul
 #align cauchy_seq.const_add CauchySeq.const_add
 
-/- warning: cauchy_seq.inv -> CauchySeq.inv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (Inv.inv.{max u2 u1} (ι -> α) (Pi.instInv.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))) u))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u2}} [_inst_4 : SemilatticeSup.{u2} ι] {u : ι -> α}, (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 u) -> (CauchySeq.{u1, u2} α ι _inst_1 _inst_4 (Inv.inv.{max u2 u1} (ι -> α) (Pi.instInv.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))) u))
-Case conversion may be inaccurate. Consider using '#align cauchy_seq.inv CauchySeq.invₓ'. -/
 @[to_additive]
 theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : CauchySeq u) :
     CauchySeq u⁻¹ :=
@@ -661,12 +469,6 @@ theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : Cau
 #align cauchy_seq.inv CauchySeq.inv
 #align cauchy_seq.neg CauchySeq.neg
 
-/- warning: totally_bounded_iff_subset_finite_Union_nhds_one -> totallyBounded_iff_subset_finite_iUnion_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (U : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => SMul.smul.{u1, u1} α (Set.{u1} α) (Set.smulSet.{u1, u1} α α (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) y U)))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => HSMul.hSMul.{u1, u1, u1} α (Set.{u1} α) (Set.{u1} α) (instHSMul.{u1, u1} α (Set.{u1} α) (Set.smulSet.{u1, u1} α α (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) y U)))))))
-Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset_finite_Union_nhds_one totallyBounded_iff_subset_finite_iUnion_nhds_oneₓ'. -/
 @[to_additive]
 theorem totallyBounded_iff_subset_finite_iUnion_nhds_one {s : Set α} :
     TotallyBounded s ↔ ∀ U ∈ 𝓝 (1 : α), ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, y • U :=
@@ -679,9 +481,6 @@ section UniformConvergence
 
 variable {ι : Type _} {l : Filter ι} {l' : Filter β} {f f' : ι → β → α} {g g' : β → α} {s : Set β}
 
-/- warning: tendsto_uniformly_on_filter.mul -> TendstoUniformlyOnFilter.mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformly_on_filter.mul TendstoUniformlyOnFilter.mulₓ'. -/
 @[to_additive]
 theorem TendstoUniformlyOnFilter.mul (hf : TendstoUniformlyOnFilter f g l l')
     (hf' : TendstoUniformlyOnFilter f' g' l l') : TendstoUniformlyOnFilter (f * f') (g * g') l l' :=
@@ -690,12 +489,6 @@ theorem TendstoUniformlyOnFilter.mul (hf : TendstoUniformlyOnFilter f g l l')
 #align tendsto_uniformly_on_filter.mul TendstoUniformlyOnFilter.mul
 #align tendsto_uniformly_on_filter.add TendstoUniformlyOnFilter.add
 
-/- warning: tendsto_uniformly_on_filter.div -> TendstoUniformlyOnFilter.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u3}} {l : Filter.{u3} ι} {l' : Filter.{u2} β} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α}, (TendstoUniformlyOnFilter.{u2, u1, u3} β α ι _inst_1 f g l l') -> (TendstoUniformlyOnFilter.{u2, u1, u3} β α ι _inst_1 f' g' l l') -> (TendstoUniformlyOnFilter.{u2, u1, u3} β α ι _inst_1 (HDiv.hDiv.{max u3 u2 u1, max u3 u2 u1, max u3 u2 u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max u3 u2 u1} (ι -> β -> α) (Pi.instDiv.{u3, max u2 u1} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) f f') (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (β -> α) (β -> α) (β -> α) (instHDiv.{max u2 u1} (β -> α) (Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) g g') l l')
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : Group.{u2} α] [_inst_3 : UniformGroup.{u2} α _inst_1 _inst_2] {ι : Type.{u1}} {l : Filter.{u1} ι} {l' : Filter.{u3} β} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α}, (TendstoUniformlyOnFilter.{u3, u2, u1} β α ι _inst_1 f g l l') -> (TendstoUniformlyOnFilter.{u3, u2, u1} β α ι _inst_1 f' g' l l') -> (TendstoUniformlyOnFilter.{u3, u2, u1} β α ι _inst_1 (HDiv.hDiv.{max (max u2 u3) u1, max (max u2 u3) u1, max (max u2 u3) u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max (max u2 u3) u1} (ι -> β -> α) (Pi.instDiv.{u1, max u2 u3} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2))))) f f') (HDiv.hDiv.{max u2 u3, max u2 u3, max u2 u3} (β -> α) (β -> α) (β -> α) (instHDiv.{max u2 u3} (β -> α) (Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2)))) g g') l l')
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformly_on_filter.div TendstoUniformlyOnFilter.divₓ'. -/
 @[to_additive]
 theorem TendstoUniformlyOnFilter.div (hf : TendstoUniformlyOnFilter f g l l')
     (hf' : TendstoUniformlyOnFilter f' g' l l') : TendstoUniformlyOnFilter (f / f') (g / g') l l' :=
@@ -704,9 +497,6 @@ theorem TendstoUniformlyOnFilter.div (hf : TendstoUniformlyOnFilter f g l l')
 #align tendsto_uniformly_on_filter.div TendstoUniformlyOnFilter.div
 #align tendsto_uniformly_on_filter.sub TendstoUniformlyOnFilter.sub
 
-/- warning: tendsto_uniformly_on.mul -> TendstoUniformlyOn.mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformly_on.mul TendstoUniformlyOn.mulₓ'. -/
 @[to_additive]
 theorem TendstoUniformlyOn.mul (hf : TendstoUniformlyOn f g l s)
     (hf' : TendstoUniformlyOn f' g' l s) : TendstoUniformlyOn (f * f') (g * g') l s := fun u hu =>
@@ -714,12 +504,6 @@ theorem TendstoUniformlyOn.mul (hf : TendstoUniformlyOn f g l s)
 #align tendsto_uniformly_on.mul TendstoUniformlyOn.mul
 #align tendsto_uniformly_on.add TendstoUniformlyOn.add
 
-/- warning: tendsto_uniformly_on.div -> TendstoUniformlyOn.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u3}} {l : Filter.{u3} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α} {s : Set.{u2} β}, (TendstoUniformlyOn.{u2, u1, u3} β α ι _inst_1 f g l s) -> (TendstoUniformlyOn.{u2, u1, u3} β α ι _inst_1 f' g' l s) -> (TendstoUniformlyOn.{u2, u1, u3} β α ι _inst_1 (HDiv.hDiv.{max u3 u2 u1, max u3 u2 u1, max u3 u2 u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max u3 u2 u1} (ι -> β -> α) (Pi.instDiv.{u3, max u2 u1} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) f f') (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (β -> α) (β -> α) (β -> α) (instHDiv.{max u2 u1} (β -> α) (Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) g g') l s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : Group.{u2} α] [_inst_3 : UniformGroup.{u2} α _inst_1 _inst_2] {ι : Type.{u1}} {l : Filter.{u1} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α} {s : Set.{u3} β}, (TendstoUniformlyOn.{u3, u2, u1} β α ι _inst_1 f g l s) -> (TendstoUniformlyOn.{u3, u2, u1} β α ι _inst_1 f' g' l s) -> (TendstoUniformlyOn.{u3, u2, u1} β α ι _inst_1 (HDiv.hDiv.{max (max u2 u3) u1, max (max u2 u3) u1, max (max u2 u3) u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max (max u2 u3) u1} (ι -> β -> α) (Pi.instDiv.{u1, max u2 u3} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2))))) f f') (HDiv.hDiv.{max u2 u3, max u2 u3, max u2 u3} (β -> α) (β -> α) (β -> α) (instHDiv.{max u2 u3} (β -> α) (Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2)))) g g') l s)
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformly_on.div TendstoUniformlyOn.divₓ'. -/
 @[to_additive]
 theorem TendstoUniformlyOn.div (hf : TendstoUniformlyOn f g l s)
     (hf' : TendstoUniformlyOn f' g' l s) : TendstoUniformlyOn (f / f') (g / g') l s := fun u hu =>
@@ -727,12 +511,6 @@ theorem TendstoUniformlyOn.div (hf : TendstoUniformlyOn f g l s)
 #align tendsto_uniformly_on.div TendstoUniformlyOn.div
 #align tendsto_uniformly_on.sub TendstoUniformlyOn.sub
 
-/- warning: tendsto_uniformly.mul -> TendstoUniformly.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u3}} {l : Filter.{u3} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α}, (TendstoUniformly.{u2, u1, u3} β α ι _inst_1 f g l) -> (TendstoUniformly.{u2, u1, u3} β α ι _inst_1 f' g' l) -> (TendstoUniformly.{u2, u1, u3} β α ι _inst_1 (HMul.hMul.{max u3 u2 u1, max u3 u2 u1, max u3 u2 u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHMul.{max u3 u2 u1} (ι -> β -> α) (Pi.instMul.{u3, max u2 u1} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instMul.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))) f f') (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (β -> α) (β -> α) (β -> α) (instHMul.{max u2 u1} (β -> α) (Pi.instMul.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) g g') l)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : Group.{u2} α] [_inst_3 : UniformGroup.{u2} α _inst_1 _inst_2] {ι : Type.{u1}} {l : Filter.{u1} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α}, (TendstoUniformly.{u3, u2, u1} β α ι _inst_1 f g l) -> (TendstoUniformly.{u3, u2, u1} β α ι _inst_1 f' g' l) -> (TendstoUniformly.{u3, u2, u1} β α ι _inst_1 (HMul.hMul.{max (max u2 u3) u1, max (max u2 u3) u1, max (max u2 u3) u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHMul.{max (max u2 u3) u1} (ι -> β -> α) (Pi.instMul.{u1, max u2 u3} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instMul.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2))))))) f f') (HMul.hMul.{max u2 u3, max u2 u3, max u2 u3} (β -> α) (β -> α) (β -> α) (instHMul.{max u2 u3} (β -> α) (Pi.instMul.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2)))))) g g') l)
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformly.mul TendstoUniformly.mulₓ'. -/
 @[to_additive]
 theorem TendstoUniformly.mul (hf : TendstoUniformly f g l) (hf' : TendstoUniformly f' g' l) :
     TendstoUniformly (f * f') (g * g') l := fun u hu =>
@@ -740,12 +518,6 @@ theorem TendstoUniformly.mul (hf : TendstoUniformly f g l) (hf' : TendstoUniform
 #align tendsto_uniformly.mul TendstoUniformly.mul
 #align tendsto_uniformly.add TendstoUniformly.add
 
-/- warning: tendsto_uniformly.div -> TendstoUniformly.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u3}} {l : Filter.{u3} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α}, (TendstoUniformly.{u2, u1, u3} β α ι _inst_1 f g l) -> (TendstoUniformly.{u2, u1, u3} β α ι _inst_1 f' g' l) -> (TendstoUniformly.{u2, u1, u3} β α ι _inst_1 (HDiv.hDiv.{max u3 u2 u1, max u3 u2 u1, max u3 u2 u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max u3 u2 u1} (ι -> β -> α) (Pi.instDiv.{u3, max u2 u1} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) f f') (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (β -> α) (β -> α) (β -> α) (instHDiv.{max u2 u1} (β -> α) (Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) g g') l)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : Group.{u2} α] [_inst_3 : UniformGroup.{u2} α _inst_1 _inst_2] {ι : Type.{u1}} {l : Filter.{u1} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {g : β -> α} {g' : β -> α}, (TendstoUniformly.{u3, u2, u1} β α ι _inst_1 f g l) -> (TendstoUniformly.{u3, u2, u1} β α ι _inst_1 f' g' l) -> (TendstoUniformly.{u3, u2, u1} β α ι _inst_1 (HDiv.hDiv.{max (max u2 u3) u1, max (max u2 u3) u1, max (max u2 u3) u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max (max u2 u3) u1} (ι -> β -> α) (Pi.instDiv.{u1, max u2 u3} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2))))) f f') (HDiv.hDiv.{max u2 u3, max u2 u3, max u2 u3} (β -> α) (β -> α) (β -> α) (instHDiv.{max u2 u3} (β -> α) (Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2)))) g g') l)
-Case conversion may be inaccurate. Consider using '#align tendsto_uniformly.div TendstoUniformly.divₓ'. -/
 @[to_additive]
 theorem TendstoUniformly.div (hf : TendstoUniformly f g l) (hf' : TendstoUniformly f' g' l) :
     TendstoUniformly (f / f') (g / g') l := fun u hu =>
@@ -753,12 +525,6 @@ theorem TendstoUniformly.div (hf : TendstoUniformly f g l) (hf' : TendstoUniform
 #align tendsto_uniformly.div TendstoUniformly.div
 #align tendsto_uniformly.sub TendstoUniformly.sub
 
-/- warning: uniform_cauchy_seq_on.mul -> UniformCauchySeqOn.mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u3}} {l : Filter.{u3} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {s : Set.{u2} β}, (UniformCauchySeqOn.{u2, u1, u3} β α ι _inst_1 f l s) -> (UniformCauchySeqOn.{u2, u1, u3} β α ι _inst_1 f' l s) -> (UniformCauchySeqOn.{u2, u1, u3} β α ι _inst_1 (HMul.hMul.{max u3 u2 u1, max u3 u2 u1, max u3 u2 u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHMul.{max u3 u2 u1} (ι -> β -> α) (Pi.instMul.{u3, max u2 u1} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instMul.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))) f f') l s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : Group.{u2} α] [_inst_3 : UniformGroup.{u2} α _inst_1 _inst_2] {ι : Type.{u1}} {l : Filter.{u1} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {s : Set.{u3} β}, (UniformCauchySeqOn.{u3, u2, u1} β α ι _inst_1 f l s) -> (UniformCauchySeqOn.{u3, u2, u1} β α ι _inst_1 f' l s) -> (UniformCauchySeqOn.{u3, u2, u1} β α ι _inst_1 (HMul.hMul.{max (max u2 u3) u1, max (max u2 u3) u1, max (max u2 u3) u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHMul.{max (max u2 u3) u1} (ι -> β -> α) (Pi.instMul.{u1, max u2 u3} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instMul.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2))))))) f f') l s)
-Case conversion may be inaccurate. Consider using '#align uniform_cauchy_seq_on.mul UniformCauchySeqOn.mulₓ'. -/
 @[to_additive]
 theorem UniformCauchySeqOn.mul (hf : UniformCauchySeqOn f l s) (hf' : UniformCauchySeqOn f' l s) :
     UniformCauchySeqOn (f * f') l s := fun u hu => by
@@ -766,12 +532,6 @@ theorem UniformCauchySeqOn.mul (hf : UniformCauchySeqOn f l s) (hf' : UniformCau
 #align uniform_cauchy_seq_on.mul UniformCauchySeqOn.mul
 #align uniform_cauchy_seq_on.add UniformCauchySeqOn.add
 
-/- warning: uniform_cauchy_seq_on.div -> UniformCauchySeqOn.div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {ι : Type.{u3}} {l : Filter.{u3} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {s : Set.{u2} β}, (UniformCauchySeqOn.{u2, u1, u3} β α ι _inst_1 f l s) -> (UniformCauchySeqOn.{u2, u1, u3} β α ι _inst_1 f' l s) -> (UniformCauchySeqOn.{u2, u1, u3} β α ι _inst_1 (HDiv.hDiv.{max u3 u2 u1, max u3 u2 u1, max u3 u2 u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max u3 u2 u1} (ι -> β -> α) (Pi.instDiv.{u3, max u2 u1} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) f f') l s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : Group.{u2} α] [_inst_3 : UniformGroup.{u2} α _inst_1 _inst_2] {ι : Type.{u1}} {l : Filter.{u1} ι} {f : ι -> β -> α} {f' : ι -> β -> α} {s : Set.{u3} β}, (UniformCauchySeqOn.{u3, u2, u1} β α ι _inst_1 f l s) -> (UniformCauchySeqOn.{u3, u2, u1} β α ι _inst_1 f' l s) -> (UniformCauchySeqOn.{u3, u2, u1} β α ι _inst_1 (HDiv.hDiv.{max (max u2 u3) u1, max (max u2 u3) u1, max (max u2 u3) u1} (ι -> β -> α) (ι -> β -> α) (ι -> β -> α) (instHDiv.{max (max u2 u3) u1} (ι -> β -> α) (Pi.instDiv.{u1, max u2 u3} ι (fun (ᾰ : ι) => β -> α) (fun (i : ι) => Pi.instDiv.{u3, u2} β (fun (ᾰ : β) => α) (fun (i : β) => DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_2))))) f f') l s)
-Case conversion may be inaccurate. Consider using '#align uniform_cauchy_seq_on.div UniformCauchySeqOn.divₓ'. -/
 @[to_additive]
 theorem UniformCauchySeqOn.div (hf : UniformCauchySeqOn f l s) (hf' : UniformCauchySeqOn f' l s) :
     UniformCauchySeqOn (f / f') l s := fun u hu => by
@@ -847,12 +607,6 @@ def TopologicalGroup.toUniformSpace : UniformSpace G
 
 attribute [local instance] TopologicalGroup.toUniformSpace
 
-/- warning: uniformity_eq_comap_nhds_one' -> uniformity_eq_comap_nhds_one' is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} G G)) (uniformity.{u1} G (TopologicalGroup.toUniformSpace.{u1} G _inst_1 _inst_2 _inst_3)) (Filter.comap.{u1, u1} (Prod.{u1, u1} G G) G (fun (p : Prod.{u1, u1} G G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Prod.snd.{u1, u1} G G p) (Prod.fst.{u1, u1} G G p)) (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} G G)) (uniformity.{u1} G (TopologicalGroup.toUniformSpace.{u1} G _inst_1 _inst_2 _inst_3)) (Filter.comap.{u1, u1} (Prod.{u1, u1} G G) G (fun (p : Prod.{u1, u1} G G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Prod.snd.{u1, u1} G G p) (Prod.fst.{u1, u1} G G p)) (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))))))
-Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_nhds_one' uniformity_eq_comap_nhds_one'ₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_nhds_one' : 𝓤 G = comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G)) :=
   rfl
@@ -871,12 +625,6 @@ theorem topologicalGroup_is_uniform_of_compactSpace [CompactSpace G] : UniformGr
 
 variable {G}
 
-/- warning: subgroup.is_closed_of_discrete -> Subgroup.isClosed_of_discrete is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] [_inst_4 : T2Space.{u1} G _inst_2] {H : Subgroup.{u1} G _inst_1} [_inst_5 : DiscreteTopology.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (Subtype.topologicalSpace.{u1} G (fun (x : G) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x H) _inst_2)], IsClosed.{u1} G _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) H)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] [_inst_4 : T2Space.{u1} G _inst_2] {H : Subgroup.{u1} G _inst_1} [_inst_5 : DiscreteTopology.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (instTopologicalSpaceSubtype.{u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H) _inst_2)], IsClosed.{u1} G _inst_2 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) H)
-Case conversion may be inaccurate. Consider using '#align subgroup.is_closed_of_discrete Subgroup.isClosed_of_discreteₓ'. -/
 @[to_additive]
 instance Subgroup.isClosed_of_discrete [T2Space G] {H : Subgroup G} [DiscreteTopology H] :
     IsClosed (H : Set G) :=
@@ -894,12 +642,6 @@ instance Subgroup.isClosed_of_discrete [T2Space G] {H : Subgroup G} [DiscreteTop
 #align subgroup.is_closed_of_discrete Subgroup.isClosed_of_discrete
 #align add_subgroup.is_closed_of_discrete AddSubgroup.isClosed_of_discrete
 
-/- warning: topological_group.tendsto_uniformly_iff -> TopologicalGroup.tendstoUniformly_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] {ι : Type.{u2}} {α : Type.{u3}} (F : ι -> α -> G) (f : α -> G) (p : Filter.{u2} ι), Iff (TendstoUniformly.{u3, u1, u2} α G ι (TopologicalGroup.toUniformSpace.{u1} G _inst_1 _inst_2 _inst_3) F f p) (forall (u : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) u (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))) -> (Filter.Eventually.{u2} ι (fun (i : ι) => forall (a : α), Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (F i a) (f a)) u) p))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] {ι : Type.{u3}} {α : Type.{u2}} (F : ι -> α -> G) (f : α -> G) (p : Filter.{u3} ι), Iff (TendstoUniformly.{u2, u1, u3} α G ι (TopologicalGroup.toUniformSpace.{u1} G _inst_1 _inst_2 _inst_3) F f p) (forall (u : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) u (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))) -> (Filter.Eventually.{u3} ι (fun (i : ι) => forall (a : α), Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (F i a) (f a)) u) p))
-Case conversion may be inaccurate. Consider using '#align topological_group.tendsto_uniformly_iff TopologicalGroup.tendstoUniformly_iffₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.tendstoUniformly_iff {ι α : Type _} (F : ι → α → G) (f : α → G)
     (p : Filter ι) :
@@ -910,12 +652,6 @@ theorem TopologicalGroup.tendstoUniformly_iff {ι α : Type _} (F : ι → α �
 #align topological_group.tendsto_uniformly_iff TopologicalGroup.tendstoUniformly_iff
 #align topological_add_group.tendsto_uniformly_iff TopologicalAddGroup.tendstoUniformly_iff
 
-/- warning: topological_group.tendsto_uniformly_on_iff -> TopologicalGroup.tendstoUniformlyOn_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] {ι : Type.{u2}} {α : Type.{u3}} (F : ι -> α -> G) (f : α -> G) (p : Filter.{u2} ι) (s : Set.{u3} α), Iff (TendstoUniformlyOn.{u3, u1, u2} α G ι (TopologicalGroup.toUniformSpace.{u1} G _inst_1 _inst_2 _inst_3) F f p s) (forall (u : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) u (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))) -> (Filter.Eventually.{u2} ι (fun (i : ι) => forall (a : α), (Membership.Mem.{u3, u3} α (Set.{u3} α) (Set.hasMem.{u3} α) a s) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (F i a) (f a)) u)) p))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] {ι : Type.{u3}} {α : Type.{u2}} (F : ι -> α -> G) (f : α -> G) (p : Filter.{u3} ι) (s : Set.{u2} α), Iff (TendstoUniformlyOn.{u2, u1, u3} α G ι (TopologicalGroup.toUniformSpace.{u1} G _inst_1 _inst_2 _inst_3) F f p s) (forall (u : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) u (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))) -> (Filter.Eventually.{u3} ι (fun (i : ι) => forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (F i a) (f a)) u)) p))
-Case conversion may be inaccurate. Consider using '#align topological_group.tendsto_uniformly_on_iff TopologicalGroup.tendstoUniformlyOn_iffₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.tendstoUniformlyOn_iff {ι α : Type _} (F : ι → α → G) (f : α → G)
     (p : Filter ι) (s : Set α) :
@@ -926,9 +662,6 @@ theorem TopologicalGroup.tendstoUniformlyOn_iff {ι α : Type _} (F : ι → α 
 #align topological_group.tendsto_uniformly_on_iff TopologicalGroup.tendstoUniformlyOn_iff
 #align topological_add_group.tendsto_uniformly_on_iff TopologicalAddGroup.tendstoUniformlyOn_iff
 
-/- warning: topological_group.tendsto_locally_uniformly_iff -> TopologicalGroup.tendstoLocallyUniformly_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align topological_group.tendsto_locally_uniformly_iff TopologicalGroup.tendstoLocallyUniformly_iffₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.tendstoLocallyUniformly_iff {ι α : Type _} [TopologicalSpace α]
     (F : ι → α → G) (f : α → G) (p : Filter ι) :
@@ -940,9 +673,6 @@ theorem TopologicalGroup.tendstoLocallyUniformly_iff {ι α : Type _} [Topologic
 #align topological_group.tendsto_locally_uniformly_iff TopologicalGroup.tendstoLocallyUniformly_iff
 #align topological_add_group.tendsto_locally_uniformly_iff TopologicalAddGroup.tendstoLocallyUniformly_iff
 
-/- warning: topological_group.tendsto_locally_uniformly_on_iff -> TopologicalGroup.tendstoLocallyUniformlyOn_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align topological_group.tendsto_locally_uniformly_on_iff TopologicalGroup.tendstoLocallyUniformlyOn_iffₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.tendstoLocallyUniformlyOn_iff {ι α : Type _} [TopologicalSpace α]
     (F : ι → α → G) (f : α → G) (p : Filter ι) (s : Set α) :
@@ -990,12 +720,6 @@ theorem comm_topologicalGroup_is_uniform : UniformGroup G :=
 
 open Set
 
-/- warning: topological_group.t2_space_iff_one_closed -> TopologicalGroup.t2Space_iff_one_closed is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 (CommGroup.toGroup.{u1} G _inst_1)], Iff (T2Space.{u1} G _inst_2) (IsClosed.{u1} G _inst_2 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.hasSingleton.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 (CommGroup.toGroup.{u1} G _inst_1)], Iff (T2Space.{u1} G _inst_2) (IsClosed.{u1} G _inst_2 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.instSingletonSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1)))))))))
-Case conversion may be inaccurate. Consider using '#align topological_group.t2_space_iff_one_closed TopologicalGroup.t2Space_iff_one_closedₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.t2Space_iff_one_closed : T2Space G ↔ IsClosed ({1} : Set G) :=
   by
@@ -1017,12 +741,6 @@ theorem TopologicalGroup.t2Space_iff_one_closed : T2Space G ↔ IsClosed ({1} : 
 #align topological_group.t2_space_iff_one_closed TopologicalGroup.t2Space_iff_one_closed
 #align topological_add_group.t2_space_iff_zero_closed TopologicalAddGroup.t2Space_iff_zero_closed
 
-/- warning: topological_group.t2_space_of_one_sep -> TopologicalGroup.t2Space_of_one_sep is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 (CommGroup.toGroup.{u1} G _inst_1)], (forall (x : G), (Ne.{succ u1} G x (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))))))) -> (Exists.{succ u1} (Set.{u1} G) (fun (U : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) U (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))))))))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) U (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))))))))) => Not (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x U))))) -> (T2Space.{u1} G _inst_2)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 (CommGroup.toGroup.{u1} G _inst_1)], (forall (x : G), (Ne.{succ u1} G x (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1)))))))) -> (Exists.{succ u1} (Set.{u1} G) (fun (U : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) U (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1))))))))) (Not (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x U))))) -> (T2Space.{u1} G _inst_2)
-Case conversion may be inaccurate. Consider using '#align topological_group.t2_space_of_one_sep TopologicalGroup.t2Space_of_one_sepₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.t2Space_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U ∈ nhds (1 : G), x ∉ U) :
     T2Space G :=
@@ -1071,9 +789,6 @@ variable [MonoidHomClass hom β α] {e : hom} (de : DenseInducing e)
 
 include de
 
-/- warning: tendsto_div_comap_self -> tendsto_div_comap_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align tendsto_div_comap_self tendsto_div_comap_selfₓ'. -/
 @[to_additive]
 theorem tendsto_div_comap_self (x₀ : α) :
     Tendsto (fun t : β × β => t.2 / t.1) ((comap fun p : β × β => (e p.1, e p.2)) <| 𝓝 (x₀, x₀))
@@ -1223,9 +938,6 @@ omit W'_nhd
 
 open DenseInducing
 
-/- warning: dense_inducing.extend_Z_bilin -> DenseInducing.extend_Z_bilin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align dense_inducing.extend_Z_bilin DenseInducing.extend_Z_bilinₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

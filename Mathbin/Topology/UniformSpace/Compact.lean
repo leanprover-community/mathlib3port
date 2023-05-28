@@ -53,12 +53,6 @@ variable {α β γ : Type _} [UniformSpace α] [UniformSpace β]
 -/
 
 
-/- warning: nhds_set_diagonal_eq_uniformity -> nhdsSet_diagonal_eq_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Set.diagonal.{u1} α)) (uniformity.{u1} α _inst_1)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Set.diagonal.{u1} α)) (uniformity.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align nhds_set_diagonal_eq_uniformity nhdsSet_diagonal_eq_uniformityₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
@@ -75,12 +69,6 @@ theorem nhdsSet_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α) 
   exact mem_of_superset hU fun ⟨x, y⟩ hxy => mem_Union₂.2 ⟨(x, x), rfl, refl_mem_uniformity hU, hxy⟩
 #align nhds_set_diagonal_eq_uniformity nhdsSet_diagonal_eq_uniformity
 
-/- warning: compact_space_uniformity -> compactSpace_uniformity is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x)))
-Case conversion may be inaccurate. Consider using '#align compact_space_uniformity compactSpace_uniformityₓ'. -/
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
 theorem compactSpace_uniformity [CompactSpace α] : 𝓤 α = ⨆ x, 𝓝 (x, x) :=
@@ -200,12 +188,6 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
 -/
 
 
-/- warning: compact_space.uniform_continuous_of_continuous -> CompactSpace.uniformContinuous_of_continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)] {f : α -> β}, (Continuous.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2) f) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : UniformSpace.{u1} β] [_inst_3 : CompactSpace.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1)] {f : α -> β}, (Continuous.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} β _inst_2) f) -> (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuousₓ'. -/
 /-- Heine-Cantor: a continuous function on a compact uniform space is uniformly
 continuous. -/
 theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α → β}
@@ -215,12 +197,6 @@ theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α �
   (this.mono_left nhdsSet_diagonal_eq_uniformity.ge).mono_right nhdsSet_diagonal_le_uniformity
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuous
 
-/- warning: is_compact.uniform_continuous_on_of_continuous -> IsCompact.uniformContinuousOn_of_continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {s : Set.{u1} α} {f : α -> β}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (ContinuousOn.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2) f s) -> (UniformContinuousOn.{u1, u2} α β _inst_1 _inst_2 f s)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : UniformSpace.{u1} β] {s : Set.{u2} α} {f : α -> β}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) s) -> (ContinuousOn.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} β _inst_2) f s) -> (UniformContinuousOn.{u2, u1} α β _inst_1 _inst_2 f s)
-Case conversion may be inaccurate. Consider using '#align is_compact.uniform_continuous_on_of_continuous IsCompact.uniformContinuousOn_of_continuousₓ'. -/
 /-- Heine-Cantor: a continuous function on a compact set of a uniform space is uniformly
 continuous. -/
 theorem IsCompact.uniformContinuousOn_of_continuous {s : Set α} {f : α → β} (hs : IsCompact s)
@@ -255,12 +231,6 @@ theorem IsCompact.uniformContinuousAt_of_continuousAt {r : Set (β × β)} {s : 
 #align is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniformContinuousAt_of_continuousAt
 -/
 
-/- warning: continuous.uniform_continuous_of_tendsto_cocompact -> Continuous.uniformContinuous_of_tendsto_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : α -> β} {x : β}, (Continuous.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2) f) -> (Filter.Tendsto.{u1, u2} α β f (Filter.cocompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (nhds.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_2) x)) -> (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : UniformSpace.{u2} α] [_inst_2 : UniformSpace.{u1} β] {f : α -> β} {x : β}, (Continuous.{u2, u1} α β (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} β _inst_2) f) -> (Filter.Tendsto.{u2, u1} α β f (Filter.cocompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1)) (nhds.{u1} β (UniformSpace.toTopologicalSpace.{u1} β _inst_2) x)) -> (UniformContinuous.{u2, u1} α β _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align continuous.uniform_continuous_of_tendsto_cocompact Continuous.uniformContinuous_of_tendsto_cocompactₓ'. -/
 theorem Continuous.uniformContinuous_of_tendsto_cocompact {f : α → β} {x : β}
     (h_cont : Continuous f) (hx : Tendsto f (cocompact α) (𝓝 x)) : UniformContinuous f :=
   uniformContinuous_def.2 fun r hr =>
@@ -306,12 +276,6 @@ theorem HasCompactMulSupport.uniformContinuous_of_continuous {f : α → β} [On
 #align has_compact_support.uniform_continuous_of_continuous HasCompactSupport.uniformContinuous_of_continuous
 -/
 
-/- warning: continuous_on.tendsto_uniformly -> ContinuousOn.tendstoUniformly is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : LocallyCompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)] [_inst_4 : CompactSpace.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_2)] [_inst_5 : UniformSpace.{u3} γ] {f : α -> β -> γ} {x : α} {U : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x)) -> (ContinuousOn.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u3} γ _inst_5) (Function.HasUncurry.uncurry.{max u1 u2 u3, max u1 u2, u3} (α -> β -> γ) (Prod.{u1, u2} α β) γ (Function.hasUncurryInduction.{u1, max u2 u3, u2, u3} α (β -> γ) β γ (Function.hasUncurryBase.{u2, u3} β γ)) f) (Set.prod.{u1, u2} α β U (Set.univ.{u2} β))) -> (TendstoUniformly.{u2, u3, u1} β γ α _inst_5 f (f x) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : UniformSpace.{u3} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : LocallyCompactSpace.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_1)] [_inst_4 : CompactSpace.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_2)] [_inst_5 : UniformSpace.{u1} γ] {f : α -> β -> γ} {x : α} {U : Set.{u3} α}, (Membership.mem.{u3, u3} (Set.{u3} α) (Filter.{u3} α) (instMembershipSetFilter.{u3} α) U (nhds.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_1) x)) -> (ContinuousOn.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instTopologicalSpaceProd.{u3, u2} α β (UniformSpace.toTopologicalSpace.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u1} γ _inst_5) (Function.HasUncurry.uncurry.{max (max u3 u2) u1, max u3 u2, u1} (α -> β -> γ) (Prod.{u3, u2} α β) γ (Function.hasUncurryInduction.{u3, max u2 u1, u2, u1} α (β -> γ) β γ (Function.hasUncurryBase.{u2, u1} β γ)) f) (Set.prod.{u3, u2} α β U (Set.univ.{u2} β))) -> (TendstoUniformly.{u2, u1, u3} β γ α _inst_5 f (f x) (nhds.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_1) x))
-Case conversion may be inaccurate. Consider using '#align continuous_on.tendsto_uniformly ContinuousOn.tendstoUniformlyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
@@ -327,12 +291,6 @@ theorem ContinuousOn.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β]
   exact this.tendsto_uniformly hxK
 #align continuous_on.tendsto_uniformly ContinuousOn.tendstoUniformly
 
-/- warning: continuous.tendsto_uniformly -> Continuous.tendstoUniformly is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : LocallyCompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)] [_inst_4 : CompactSpace.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_2)] [_inst_5 : UniformSpace.{u3} γ] (f : α -> β -> γ), (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u3} γ _inst_5) (Function.HasUncurry.uncurry.{max u1 u2 u3, max u1 u2, u3} (α -> β -> γ) (Prod.{u1, u2} α β) γ (Function.hasUncurryInduction.{u1, max u2 u3, u2, u3} α (β -> γ) β γ (Function.hasUncurryBase.{u2, u3} β γ)) f)) -> (forall (x : α), TendstoUniformly.{u2, u3, u1} β γ α _inst_5 f (f x) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x))
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : UniformSpace.{u3} α] [_inst_2 : UniformSpace.{u2} β] [_inst_3 : LocallyCompactSpace.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_1)] [_inst_4 : CompactSpace.{u2} β (UniformSpace.toTopologicalSpace.{u2} β _inst_2)] [_inst_5 : UniformSpace.{u1} γ] (f : α -> β -> γ), (Continuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instTopologicalSpaceProd.{u3, u2} α β (UniformSpace.toTopologicalSpace.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u2} β _inst_2)) (UniformSpace.toTopologicalSpace.{u1} γ _inst_5) (Function.HasUncurry.uncurry.{max (max u3 u2) u1, max u3 u2, u1} (α -> β -> γ) (Prod.{u3, u2} α β) γ (Function.hasUncurryInduction.{u3, max u2 u1, u2, u1} α (β -> γ) β γ (Function.hasUncurryBase.{u2, u1} β γ)) f)) -> (forall (x : α), TendstoUniformly.{u2, u1, u3} β γ α _inst_5 f (f x) (nhds.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_1) x))
-Case conversion may be inaccurate. Consider using '#align continuous.tendsto_uniformly Continuous.tendstoUniformlyₓ'. -/
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
 locally compact and `β` is compact. -/
 theorem Continuous.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ]

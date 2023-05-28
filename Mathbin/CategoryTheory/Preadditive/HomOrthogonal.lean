@@ -67,12 +67,6 @@ namespace HomOrthogonal
 
 variable {ι : Type _} {s : ι → C}
 
-/- warning: category_theory.hom_orthogonal.eq_zero -> CategoryTheory.HomOrthogonal.eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {ι : Type.{u3}} {s : ι -> C} [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1], (CategoryTheory.HomOrthogonal.{u1, u2, u3} C _inst_1 ι s) -> (forall {i : ι} {j : ι}, (Ne.{succ u3} ι i j) -> (forall (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (s i) (s j)), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (s i) (s j)) f (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (s i) (s j)) 0 (OfNat.mk.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (s i) (s j)) 0 (Zero.zero.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (s i) (s j)) (CategoryTheory.Limits.HasZeroMorphisms.hasZero.{u1, u2} C _inst_1 _inst_2 (s i) (s j)))))))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {ι : Type.{u1}} {s : ι -> C} [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u3} C _inst_1], (CategoryTheory.HomOrthogonal.{u2, u3, u1} C _inst_1 ι s) -> (forall {i : ι} {j : ι}, (Ne.{succ u1} ι i j) -> (forall (f : Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)) f (OfNat.ofNat.{u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)) 0 (Zero.toOfNat0.{u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u2, u3} C _inst_1 _inst_2 (s i) (s j))))))
-Case conversion may be inaccurate. Consider using '#align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zeroₓ'. -/
 theorem eq_zero [HasZeroMorphisms C] (o : HomOrthogonal s) {i j : ι} (w : i ≠ j) (f : s i ⟶ s j) :
     f = 0 := by haveI := o i j w; apply Subsingleton.elim
 #align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zero
@@ -117,9 +111,6 @@ section
 
 variable [Preadditive C] [HasFiniteBiproducts C]
 
-/- warning: category_theory.hom_orthogonal.matrix_decomposition_add_equiv -> CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquivₓ'. -/
 /-- `hom_orthogonal.matrix_decomposition` as an additive equivalence. -/
 @[simps]
 noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Type} [Fintype α]
@@ -129,9 +120,6 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
   { o.matrixDecomposition with map_add' := fun w z => by ext; dsimp [biproduct.components]; simp }
 #align category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
 
-/- warning: category_theory.hom_orthogonal.matrix_decomposition_id -> CategoryTheory.HomOrthogonal.matrixDecomposition_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrixDecomposition_idₓ'. -/
 @[simp]
 theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
     o.matrixDecomposition (𝟙 (⨁ fun a => s (f a))) i = 1 :=
@@ -146,9 +134,6 @@ theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
 #align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrixDecomposition_id
 
-/- warning: category_theory.hom_orthogonal.matrix_decomposition_comp -> CategoryTheory.HomOrthogonal.matrixDecomposition_comp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrixDecomposition_compₓ'. -/
 theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β]
     [Fintype γ] {f : α → ι} {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
     (w : (⨁ fun b => s (g b)) ⟶ ⨁ fun c => s (h c)) (i : ι) :
@@ -199,12 +184,6 @@ if `s i` is simple (as then `End (s i)` is a division ring).
 
 variable [∀ i, InvariantBasisNumber (End (s i))]
 
-/- warning: category_theory.hom_orthogonal.equiv_of_iso -> CategoryTheory.HomOrthogonal.equiv_of_iso is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {ι : Type.{u3}} {s : ι -> C} [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasFiniteBiproducts.{u1, u2} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2)] [_inst_4 : forall (i : ι), InvariantBasisNumber.{u1} (CategoryTheory.End.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (s i)) (Ring.toSemiring.{u1} (CategoryTheory.End.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (s i)) (CategoryTheory.Preadditive.CategoryTheory.End.ring.{u1, u2} C _inst_1 _inst_2 (s i)))], (CategoryTheory.HomOrthogonal.{u1, u2, u3} C _inst_1 ι s) -> (forall {α : Type} {β : Type} [_inst_5 : Fintype.{0} α] [_inst_6 : Fintype.{0} β] {f : α -> ι} {g : β -> ι}, (CategoryTheory.Iso.{u1, u2} C _inst_1 (CategoryTheory.Limits.biproduct.{0, u1, u2} α C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2) (fun (a : α) => s (f a)) (CategoryTheory.Limits.HasBiproductsOfShape.hasBiproduct.{0, u1, u2} α C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Limits.hasBiproductsOfShape_finite.{0, u1, u2} α C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2) _inst_3 (Finite.of_fintype.{0} α _inst_5)) (fun (a : α) => s (f a)))) (CategoryTheory.Limits.biproduct.{0, u1, u2} β C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2) (fun (b : β) => s (g b)) (CategoryTheory.Limits.HasBiproductsOfShape.hasBiproduct.{0, u1, u2} β C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Limits.hasBiproductsOfShape_finite.{0, u1, u2} β C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 _inst_2) _inst_3 (Finite.of_fintype.{0} β _inst_6)) (fun (b : β) => s (g b))))) -> (Exists.{1} (Equiv.{1, 1} α β) (fun (e : Equiv.{1, 1} α β) => forall (a : α), Eq.{succ u3} ι (g (coeFn.{1, 1} (Equiv.{1, 1} α β) (fun (_x : Equiv.{1, 1} α β) => α -> β) (Equiv.hasCoeToFun.{1, 1} α β) e a)) (f a))))
-but is expected to have type
-  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {ι : Type.{u1}} {s : ι -> C} [_inst_2 : CategoryTheory.Preadditive.{u2, u3} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasFiniteBiproducts.{u2, u3} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2)] [_inst_4 : forall (i : ι), InvariantBasisNumber.{u2} (CategoryTheory.End.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (s i)) (CategoryTheory.Preadditive.instSemiringEndToCategoryStruct.{u2, u3} C _inst_1 _inst_2 (s i))], (CategoryTheory.HomOrthogonal.{u2, u3, u1} C _inst_1 ι s) -> (forall {α : Type} {β : Type} [_inst_5 : Fintype.{0} α] [_inst_6 : Fintype.{0} β] {f : α -> ι} {g : β -> ι}, (CategoryTheory.Iso.{u2, u3} C _inst_1 (CategoryTheory.Limits.biproduct.{0, u2, u3} α C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2) (fun (a : α) => s (f a)) (CategoryTheory.Limits.HasBiproductsOfShape.has_biproduct.{0, u2, u3} α C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2) (CategoryTheory.Limits.hasBiproductsOfShape_finite.{0, u2, u3} α C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2) _inst_3 (Finite.of_fintype.{0} α _inst_5)) (fun (a : α) => s (f a)))) (CategoryTheory.Limits.biproduct.{0, u2, u3} β C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2) (fun (b : β) => s (g b)) (CategoryTheory.Limits.HasBiproductsOfShape.has_biproduct.{0, u2, u3} β C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2) (CategoryTheory.Limits.hasBiproductsOfShape_finite.{0, u2, u3} β C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u3} C _inst_1 _inst_2) _inst_3 (Finite.of_fintype.{0} β _inst_6)) (fun (b : β) => s (g b))))) -> (Exists.{1} (Equiv.{1, 1} α β) (fun (e : Equiv.{1, 1} α β) => forall (a : α), Eq.{succ u1} ι (g (FunLike.coe.{1, 1, 1} (Equiv.{1, 1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{1, 1} α β) e a)) (f a))))
-Case conversion may be inaccurate. Consider using '#align category_theory.hom_orthogonal.equiv_of_iso CategoryTheory.HomOrthogonal.equiv_of_isoₓ'. -/
 /-- Given a hom orthogonal family `s : ι → C`
 for which each `End (s i)` is a ring with invariant basis number (e.g. if each `s i` is simple),
 if two direct sums over `s` are isomorphic, then they have the same multiplicities.

@@ -125,12 +125,6 @@ theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : Ico n
 #align list.Ico.append_consecutive List.Ico.append_consecutive
 -/
 
-/- warning: list.Ico.inter_consecutive -> List.Ico.inter_consecutive is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (Inter.inter.{0} (List.{0} Nat) (List.hasInter.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (List.Ico n m) (List.Ico m l)) (List.nil.{0} Nat)
-but is expected to have type
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (Inter.inter.{0} (List.{0} Nat) (List.instInterList.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (List.Ico n m) (List.Ico m l)) (List.nil.{0} Nat)
-Case conversion may be inaccurate. Consider using '#align list.Ico.inter_consecutive List.Ico.inter_consecutiveₓ'. -/
 @[simp]
 theorem inter_consecutive (n m l : ℕ) : Ico n m ∩ Ico m l = [] :=
   by
@@ -142,12 +136,6 @@ theorem inter_consecutive (n m l : ℕ) : Ico n m ∩ Ico m l = [] :=
   exact not_lt_of_ge h₃ h₂
 #align list.Ico.inter_consecutive List.Ico.inter_consecutive
 
-/- warning: list.Ico.bag_inter_consecutive -> List.Ico.bagInter_consecutive is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (List.bagInterₓ.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (List.Ico n m) (List.Ico m l)) (List.nil.{0} Nat)
-but is expected to have type
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (List.bagInter.{0} Nat (instBEq.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (List.Ico n m) (List.Ico m l)) (List.nil.{0} Nat)
-Case conversion may be inaccurate. Consider using '#align list.Ico.bag_inter_consecutive List.Ico.bagInter_consecutiveₓ'. -/
 @[simp]
 theorem bagInter_consecutive (n m l : ℕ) : List.bagInter (Ico n m) (Ico m l) = [] :=
   (bagInter_nil_iff_inter_nil _ _).2 (inter_consecutive n m l)
@@ -193,33 +181,15 @@ theorem not_mem_top {n m : ℕ} : m ∉ Ico n m := by simp
 #align list.Ico.not_mem_top List.Ico.not_mem_top
 -/
 
-/- warning: list.Ico.filter_lt_of_top_le -> List.Ico.filter_lt_of_top_le is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat Nat.hasLe m l) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LT.lt.{0} Nat Nat.hasLt x l) (fun (a : Nat) => Nat.decidableLt a l) (List.Ico n m)) (List.Ico n m))
-but is expected to have type
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat instLENat m l) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LT.lt.{0} Nat instLTNat a l) (Nat.decLt a l)) (List.Ico n m)) (List.Ico n m))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_lt_of_top_le List.Ico.filter_lt_of_top_leₓ'. -/
 theorem filter_lt_of_top_le {n m l : ℕ} (hml : m ≤ l) :
     ((Ico n m).filterₓ fun x => x < l) = Ico n m :=
   filter_eq_self.2 fun k hk => lt_of_lt_of_le (mem.1 hk).2 hml
 #align list.Ico.filter_lt_of_top_le List.Ico.filter_lt_of_top_le
 
-/- warning: list.Ico.filter_lt_of_le_bot -> List.Ico.filter_lt_of_le_bot is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat Nat.hasLe l n) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LT.lt.{0} Nat Nat.hasLt x l) (fun (a : Nat) => Nat.decidableLt a l) (List.Ico n m)) (List.nil.{0} Nat))
-but is expected to have type
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat instLENat l n) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LT.lt.{0} Nat instLTNat a l) (Nat.decLt a l)) (List.Ico n m)) (List.nil.{0} Nat))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_lt_of_le_bot List.Ico.filter_lt_of_le_botₓ'. -/
 theorem filter_lt_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((Ico n m).filterₓ fun x => x < l) = [] :=
   filter_eq_nil.2 fun k hk => not_lt_of_le <| le_trans hln <| (mem.1 hk).1
 #align list.Ico.filter_lt_of_le_bot List.Ico.filter_lt_of_le_bot
 
-/- warning: list.Ico.filter_lt_of_ge -> List.Ico.filter_lt_of_ge is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat Nat.hasLe l m) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LT.lt.{0} Nat Nat.hasLt x l) (fun (a : Nat) => Nat.decidableLt a l) (List.Ico n m)) (List.Ico n l))
-but is expected to have type
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat instLENat l m) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LT.lt.{0} Nat instLTNat a l) (Nat.decLt a l)) (List.Ico n m)) (List.Ico n l))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_lt_of_ge List.Ico.filter_lt_of_geₓ'. -/
 theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((Ico n m).filterₓ fun x => x < l) = Ico n l :=
   by
   cases' le_total n l with hnl hln
@@ -229,12 +199,6 @@ theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((Ico n m).filterₓ fun
   · rw [eq_nil_of_le hln, filter_lt_of_le_bot hln]
 #align list.Ico.filter_lt_of_ge List.Ico.filter_lt_of_ge
 
-/- warning: list.Ico.filter_lt -> List.Ico.filter_lt is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LT.lt.{0} Nat Nat.hasLt x l) (fun (a : Nat) => Nat.decidableLt a l) (List.Ico n m)) (List.Ico n (LinearOrder.min.{0} Nat Nat.linearOrder m l))
-but is expected to have type
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LT.lt.{0} Nat instLTNat a l) (Nat.decLt a l)) (List.Ico n m)) (List.Ico n (Min.min.{0} Nat instMinNat m l))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_lt List.Ico.filter_ltₓ'. -/
 @[simp]
 theorem filter_lt (n m l : ℕ) : ((Ico n m).filterₓ fun x => x < l) = Ico n (min m l) :=
   by
@@ -243,33 +207,15 @@ theorem filter_lt (n m l : ℕ) : ((Ico n m).filterₓ fun x => x < l) = Ico n (
   · rw [min_eq_right hlm, filter_lt_of_ge hlm]
 #align list.Ico.filter_lt List.Ico.filter_lt
 
-/- warning: list.Ico.filter_le_of_le_bot -> List.Ico.filter_le_of_le_bot is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat Nat.hasLe l n) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LE.le.{0} Nat Nat.hasLe l x) (fun (a : Nat) => Nat.decidableLe l a) (List.Ico n m)) (List.Ico n m))
-but is expected to have type
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat instLENat l n) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LE.le.{0} Nat instLENat l a) (Nat.decLe l a)) (List.Ico n m)) (List.Ico n m))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_le_of_le_bot List.Ico.filter_le_of_le_botₓ'. -/
 theorem filter_le_of_le_bot {n m l : ℕ} (hln : l ≤ n) :
     ((Ico n m).filterₓ fun x => l ≤ x) = Ico n m :=
   filter_eq_self.2 fun k hk => le_trans hln (mem.1 hk).1
 #align list.Ico.filter_le_of_le_bot List.Ico.filter_le_of_le_bot
 
-/- warning: list.Ico.filter_le_of_top_le -> List.Ico.filter_le_of_top_le is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat Nat.hasLe m l) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LE.le.{0} Nat Nat.hasLe l x) (fun (a : Nat) => Nat.decidableLe l a) (List.Ico n m)) (List.nil.{0} Nat))
-but is expected to have type
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat instLENat m l) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LE.le.{0} Nat instLENat l a) (Nat.decLe l a)) (List.Ico n m)) (List.nil.{0} Nat))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_le_of_top_le List.Ico.filter_le_of_top_leₓ'. -/
 theorem filter_le_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((Ico n m).filterₓ fun x => l ≤ x) = [] :=
   filter_eq_nil.2 fun k hk => not_le_of_gt (lt_of_lt_of_le (mem.1 hk).2 hml)
 #align list.Ico.filter_le_of_top_le List.Ico.filter_le_of_top_le
 
-/- warning: list.Ico.filter_le_of_le -> List.Ico.filter_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat Nat.hasLe n l) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LE.le.{0} Nat Nat.hasLe l x) (fun (a : Nat) => Nat.decidableLe l a) (List.Ico n m)) (List.Ico l m))
-but is expected to have type
-  forall {n : Nat} {m : Nat} {l : Nat}, (LE.le.{0} Nat instLENat n l) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LE.le.{0} Nat instLENat l a) (Nat.decLe l a)) (List.Ico n m)) (List.Ico l m))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_le_of_le List.Ico.filter_le_of_leₓ'. -/
 theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((Ico n m).filterₓ fun x => l ≤ x) = Ico l m :=
   by
   cases' le_total l m with hlm hml
@@ -279,12 +225,6 @@ theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((Ico n m).filterₓ fun
   · rw [eq_nil_of_le hml, filter_le_of_top_le hml]
 #align list.Ico.filter_le_of_le List.Ico.filter_le_of_le
 
-/- warning: list.Ico.filter_le -> List.Ico.filter_le is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LE.le.{0} Nat Nat.hasLe l x) (fun (a : Nat) => Nat.decidableLe l a) (List.Ico n m)) (List.Ico (LinearOrder.max.{0} Nat Nat.linearOrder n l) m)
-but is expected to have type
-  forall (n : Nat) (m : Nat) (l : Nat), Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LE.le.{0} Nat instLENat l a) (Nat.decLe l a)) (List.Ico n m)) (List.Ico (Max.max.{0} Nat Nat.instMaxNat n l) m)
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_le List.Ico.filter_leₓ'. -/
 @[simp]
 theorem filter_le (n m l : ℕ) : ((Ico n m).filterₓ fun x => l ≤ x) = Ico (max n l) m :=
   by
@@ -293,12 +233,6 @@ theorem filter_le (n m l : ℕ) : ((Ico n m).filterₓ fun x => l ≤ x) = Ico (
   · rw [max_eq_left hln, filter_le_of_le_bot hln]
 #align list.Ico.filter_le List.Ico.filter_le
 
-/- warning: list.Ico.filter_lt_of_succ_bot -> List.Ico.filter_lt_of_succ_bot is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt n m) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LT.lt.{0} Nat Nat.hasLt x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (a : Nat) => Nat.decidableLt a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (List.Ico n m)) (List.cons.{0} Nat n (List.nil.{0} Nat)))
-but is expected to have type
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat instLTNat n m) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LT.lt.{0} Nat instLTNat a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.decLt a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (List.Ico n m)) (List.cons.{0} Nat n (List.nil.{0} Nat)))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_lt_of_succ_bot List.Ico.filter_lt_of_succ_botₓ'. -/
 theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) :
     ((Ico n m).filterₓ fun x => x < n + 1) = [n] :=
   by
@@ -306,12 +240,6 @@ theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) :
   simp [filter_lt n m (n + 1), r]
 #align list.Ico.filter_lt_of_succ_bot List.Ico.filter_lt_of_succ_bot
 
-/- warning: list.Ico.filter_le_of_bot -> List.Ico.filter_le_of_bot is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt n m) -> (Eq.{1} (List.{0} Nat) (List.filterₓ.{0} Nat (fun (x : Nat) => LE.le.{0} Nat Nat.hasLe x n) (fun (a : Nat) => Nat.decidableLe a n) (List.Ico n m)) (List.cons.{0} Nat n (List.nil.{0} Nat)))
-but is expected to have type
-  forall {n : Nat} {m : Nat}, (LT.lt.{0} Nat instLTNat n m) -> (Eq.{1} (List.{0} Nat) (List.filter.{0} Nat (fun (a : Nat) => Decidable.decide (LE.le.{0} Nat instLENat a n) (Nat.decLe a n)) (List.Ico n m)) (List.cons.{0} Nat n (List.nil.{0} Nat)))
-Case conversion may be inaccurate. Consider using '#align list.Ico.filter_le_of_bot List.Ico.filter_le_of_botₓ'. -/
 @[simp]
 theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filterₓ fun x => x ≤ n) = [n] :=
   by

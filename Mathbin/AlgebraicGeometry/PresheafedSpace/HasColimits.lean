@@ -71,9 +71,6 @@ attribute [local simp] eq_to_hom_map
 
 attribute [local tidy] tactic.auto_cases_opens
 
-/- warning: algebraic_geometry.PresheafedSpace.map_id_c_app -> AlgebraicGeometry.PresheafedSpace.map_id_c_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.map_id_c_app AlgebraicGeometry.PresheafedSpace.map_id_c_appₓ'. -/
 @[simp]
 theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) (j) (U) :
     (F.map (𝟙 j)).c.app (op U) =
@@ -86,9 +83,6 @@ theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) (j) (U) :
   rfl
 #align algebraic_geometry.PresheafedSpace.map_id_c_app AlgebraicGeometry.PresheafedSpace.map_id_c_app
 
-/- warning: algebraic_geometry.PresheafedSpace.map_comp_c_app -> AlgebraicGeometry.PresheafedSpace.map_comp_c_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.map_comp_c_app AlgebraicGeometry.PresheafedSpace.map_comp_c_appₓ'. -/
 @[simp]
 theorem map_comp_c_app (F : J ⥤ PresheafedSpace.{v} C) {j₁ j₂ j₃} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃) (U) :
     (F.map (f ≫ g)).c.app (op U) =
@@ -103,12 +97,6 @@ theorem map_comp_c_app (F : J ⥤ PresheafedSpace.{v} C) {j₁ j₂ j₃} (f : j
   dsimp; simp; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.map_comp_c_app AlgebraicGeometry.PresheafedSpace.map_comp_c_app
 
-/- warning: algebraic_geometry.PresheafedSpace.componentwise_diagram -> AlgebraicGeometry.PresheafedSpace.componentwiseDiagram is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] (F : CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)) [_inst_3 : CategoryTheory.Limits.HasColimit.{u1, u2, u3, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F], (TopologicalSpace.Opens.{u3} (coeSort.{succ (succ u3), succ (succ u3)} TopCat.{u3} Type.{u3} TopCat.hasCoeToSort.{u3} (AlgebraicGeometry.PresheafedSpace.carrier.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F _inst_3))) (TopCat.topologicalSpace.{u3} (AlgebraicGeometry.PresheafedSpace.carrier.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F _inst_3)))) -> (CategoryTheory.Functor.{u1, u3, u2, u4} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) C _inst_2)
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] (F : CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)) [_inst_3 : CategoryTheory.Limits.HasColimit.{u1, u2, u3, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F], (TopologicalSpace.Opens.{u3} (CategoryTheory.Bundled.α.{u3, u3} TopologicalSpace.{u3} (AlgebraicGeometry.PresheafedSpace.carrier.{u4, u3, u3} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F _inst_3))) (AlgebraicGeometry.PresheafedSpace.instTopologicalSpaceαCarrier.{u4, u3, u3} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F _inst_3))) -> (CategoryTheory.Functor.{u1, u3, u2, u4} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) C _inst_2)
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.componentwise_diagram AlgebraicGeometry.PresheafedSpace.componentwiseDiagramₓ'. -/
 -- See note [dsimp, simp]
 /-- Given a diagram of `PresheafedSpace C`s, its colimit is computed by pushing the sheaves onto
 the colimit of the underlying spaces, and taking componentwise limit.
@@ -137,12 +125,6 @@ def componentwiseDiagram (F : J ⥤ PresheafedSpace.{v} C) [HasColimit F]
 
 variable [HasColimitsOfShape J TopCat.{v}]
 
-/- warning: algebraic_geometry.PresheafedSpace.pushforward_diagram_to_colimit -> AlgebraicGeometry.PresheafedSpace.pushforwardDiagramToColimit is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3}] (F : CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)), CategoryTheory.Functor.{u1, u3, u2, max u4 u3} J _inst_1 (Opposite.{succ (max u4 u3)} (TopCat.Presheaf.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) TopCat.{u3} TopCat.largeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u3, u4} C _inst_2)) (AlgebraicGeometry.PresheafedSpace.pushforwardDiagramToColimit._proof_1.{u4, u2, u3, u1} J _inst_1 C _inst_2 _inst_3 F)))) (CategoryTheory.Category.opposite.{u3, max u4 u3} (TopCat.Presheaf.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) TopCat.{u3} TopCat.largeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u3, u4} C _inst_2)) (AlgebraicGeometry.PresheafedSpace.pushforwardDiagramToColimit._proof_1.{u4, u2, u3, u1} J _inst_1 C _inst_2 _inst_3 F))) (TopCat.Presheaf.category.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) TopCat.{u3} TopCat.largeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u3, u4} C _inst_2)) (AlgebraicGeometry.PresheafedSpace.pushforwardDiagramToColimit._proof_1.{u4, u2, u3, u1} J _inst_1 C _inst_2 _inst_3 F))))
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3}] (F : CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)), CategoryTheory.Functor.{u1, u3, u2, max u4 u3} J _inst_1 (Opposite.{max (succ u4) (succ u3)} (TopCat.Presheaf.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2)) (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u2, u3, succ u3} TopCat.{u3} instTopCatLargeCategory.{u3} J _inst_1 _inst_3 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2)))))) (CategoryTheory.Category.opposite.{u3, max u4 u3} (TopCat.Presheaf.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2)) (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u2, u3, succ u3} TopCat.{u3} instTopCatLargeCategory.{u3} J _inst_1 _inst_3 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2))))) (TopCat.instCategoryPresheaf.{u3, u3, u4} C _inst_2 (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2)) (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u2, u3, succ u3} TopCat.{u3} instTopCatLargeCategory.{u3} J _inst_1 _inst_3 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2))))))
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.pushforward_diagram_to_colimit AlgebraicGeometry.PresheafedSpace.pushforwardDiagramToColimitₓ'. -/
 /-- Given a diagram of presheafed spaces,
 we can push all the presheaves forward to the colimit `X` of the underlying topological spaces,
 obtaining a diagram in `(presheaf C X)ᵒᵖ`.
@@ -191,12 +173,6 @@ def pushforwardDiagramToColimit (F : J ⥤ PresheafedSpace.{v} C) :
 
 variable [∀ X : TopCat.{v}, HasLimitsOfShape Jᵒᵖ (X.Presheaf C)]
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit -> AlgebraicGeometry.PresheafedSpace.colimit is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.Presheaf.category.{u3, u3, u4} C _inst_2 X)], (CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)) -> (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2)
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.instCategoryPresheaf.{u3, u3, u4} C _inst_2 X)], (CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)) -> (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2)
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit AlgebraicGeometry.PresheafedSpace.colimitₓ'. -/
 /-- Auxiliary definition for `PresheafedSpace.has_colimits`.
 -/
 def colimit (F : J ⥤ PresheafedSpace.{v} C) : PresheafedSpace C
@@ -205,33 +181,18 @@ def colimit (F : J ⥤ PresheafedSpace.{v} C) : PresheafedSpace C
   Presheaf := limit (pushforwardDiagramToColimit F).leftOp
 #align algebraic_geometry.PresheafedSpace.colimit AlgebraicGeometry.PresheafedSpace.colimit
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_carrier -> AlgebraicGeometry.PresheafedSpace.colimit_carrier is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.Presheaf.category.{u3, u3, u4} C _inst_2 X)] (F : CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)), Eq.{succ (succ u3)} TopCat.{u3} (AlgebraicGeometry.PresheafedSpace.carrier.{u3, u3, u4} C _inst_2 (AlgebraicGeometry.PresheafedSpace.colimit.{u1, u2, u3, u4} J _inst_1 C _inst_2 _inst_3 (fun (X : TopCat.{u3}) => _inst_4 X) F)) (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) TopCat.{u3} TopCat.largeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u3, u4} C _inst_2)) (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u2, u3, succ u3} TopCat.{u3} TopCat.largeCategory.{u3} J _inst_1 _inst_3 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) TopCat.{u3} TopCat.largeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u3, u4} C _inst_2))))
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.instCategoryPresheaf.{u3, u3, u4} C _inst_2 X)] (F : CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)), Eq.{succ (succ u3)} TopCat.{u3} (AlgebraicGeometry.PresheafedSpace.carrier.{u4, u3, u3} C _inst_2 (AlgebraicGeometry.PresheafedSpace.colimit.{u1, u2, u3, u4} J _inst_1 C _inst_2 _inst_3 (fun (X : TopCat.{u3}) => _inst_4 X) F)) (CategoryTheory.Limits.colimit.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3} (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2)) (CategoryTheory.Limits.hasColimitOfHasColimitsOfShape.{u1, u2, u3, succ u3} TopCat.{u3} instTopCatLargeCategory.{u3} J _inst_1 _inst_3 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 (succ u3), succ u3} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) TopCat.{u3} instTopCatLargeCategory.{u3} F (AlgebraicGeometry.PresheafedSpace.forget.{u4, u3, u3} C _inst_2))))
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_carrier AlgebraicGeometry.PresheafedSpace.colimit_carrierₓ'. -/
 @[simp]
 theorem colimit_carrier (F : J ⥤ PresheafedSpace.{v} C) :
     (colimit F).carrier = Limits.colimit (F ⋙ PresheafedSpace.forget C) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.colimit_carrier AlgebraicGeometry.PresheafedSpace.colimit_carrier
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_presheaf -> AlgebraicGeometry.PresheafedSpace.colimit_presheaf is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_presheaf AlgebraicGeometry.PresheafedSpace.colimit_presheafₓ'. -/
 @[simp]
 theorem colimit_presheaf (F : J ⥤ PresheafedSpace.{v} C) :
     (colimit F).Presheaf = limit (pushforwardDiagramToColimit F).leftOp :=
   rfl
 #align algebraic_geometry.PresheafedSpace.colimit_presheaf AlgebraicGeometry.PresheafedSpace.colimit_presheaf
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_cocone -> AlgebraicGeometry.PresheafedSpace.colimitCocone is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.Presheaf.category.{u3, u3, u4} C _inst_2 X)] (F : CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)), CategoryTheory.Limits.Cocone.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.instCategoryPresheaf.{u3, u3, u4} C _inst_2 X)] (F : CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)), CategoryTheory.Limits.Cocone.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_cocone AlgebraicGeometry.PresheafedSpace.colimitCoconeₓ'. -/
 /-- Auxiliary definition for `PresheafedSpace.has_colimits`.
 -/
 @[simps]
@@ -265,9 +226,6 @@ variable [HasLimitsOfShape Jᵒᵖ C]
 
 namespace ColimitCoconeIsColimit
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_app -> AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.descCApp is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_app AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.descCAppₓ'. -/
 /-- Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
 def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.pt.carrier)ᵒᵖ) :
@@ -301,9 +259,6 @@ def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.p
     dsimp; simp; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_app AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.descCApp
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_naturality -> AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc_c_naturality is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_naturality AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc_c_naturalityₓ'. -/
 theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F)
     {U V : (Opens ↥s.pt.carrier)ᵒᵖ} (i : U ⟶ V) :
     s.pt.Presheaf.map i ≫ descCApp F s V =
@@ -328,12 +283,6 @@ theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F)
   dsimp; simp
 #align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_naturality AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc_c_naturality
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc -> AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.Presheaf.category.{u3, u3, u4} C _inst_2 X)] [_inst_5 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, u4} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) C _inst_2] (F : CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)) (s : CategoryTheory.Limits.Cocone.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F), Quiver.Hom.{succ u3, max u4 (succ u3)} (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u3, max u4 (succ u3)} (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (CategoryTheory.Category.toCategoryStruct.{u3, max u4 (succ u3)} (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2))) (AlgebraicGeometry.PresheafedSpace.colimit.{u1, u2, u3, u4} J _inst_1 C _inst_2 _inst_3 (AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc._proof_1.{u4, u2, u3, u1} J _inst_1 C _inst_2 _inst_4) F) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F s)
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.instCategoryPresheaf.{u3, u3, u4} C _inst_2 X)] [_inst_5 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, u4} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) C _inst_2] (F : CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)) (s : CategoryTheory.Limits.Cocone.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F), Quiver.Hom.{succ u3, max u4 (succ u3)} (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u3, max u4 (succ u3)} (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (CategoryTheory.Category.toCategoryStruct.{u3, max u4 (succ u3)} (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2))) (AlgebraicGeometry.PresheafedSpace.colimit.{u1, u2, u3, u4} J _inst_1 C _inst_2 _inst_3 (fun (X : TopCat.{u3}) => _inst_4 X) F) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F s)
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.descₓ'. -/
 /-- Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
 def desc (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) : colimit F ⟶ s.pt
@@ -344,9 +293,6 @@ def desc (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) : colimit F ⟶ s.pt
       naturality' := fun U V i => desc_c_naturality F s i }
 #align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_fac -> AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc_fac is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_fac AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc_facₓ'. -/
 theorem desc_fac (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (j : J) :
     (colimitCocone F).ι.app j ≫ desc F s = s.ι.app j :=
   by
@@ -361,12 +307,6 @@ end ColimitCoconeIsColimit
 
 open ColimitCoconeIsColimit
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit -> AlgebraicGeometry.PresheafedSpace.colimitCoconeIsColimit is a dubious translation:
-lean 3 declaration is
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} TopCat.largeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.Presheaf.category.{u3, u3, u4} C _inst_2 X)] [_inst_5 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, u4} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) C _inst_2] (F : CategoryTheory.Functor.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2)), CategoryTheory.Limits.IsColimit.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u3, u3, u4} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u3, u4} C _inst_2) F (AlgebraicGeometry.PresheafedSpace.colimitCocone.{u1, u2, u3, u4} J _inst_1 C _inst_2 _inst_3 (AlgebraicGeometry.PresheafedSpace.colimitCoconeIsColimit._proof_1.{u4, u2, u3, u1} J _inst_1 C _inst_2 _inst_4) F)
-but is expected to have type
-  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} C] [_inst_3 : CategoryTheory.Limits.HasColimitsOfShape.{u1, u2, u3, succ u3} J _inst_1 TopCat.{u3} instTopCatLargeCategory.{u3}] [_inst_4 : forall (X : TopCat.{u3}), CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, max u4 u3} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) (TopCat.Presheaf.{u3, u3, u4} C _inst_2 X) (TopCat.instCategoryPresheaf.{u3, u3, u4} C _inst_2 X)] [_inst_5 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u3, u4} (Opposite.{succ u2} J) (CategoryTheory.Category.opposite.{u1, u2} J _inst_1) C _inst_2] (F : CategoryTheory.Functor.{u1, u3, u2, max (succ u3) u4} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2)), CategoryTheory.Limits.IsColimit.{u1, u3, u2, max u4 (succ u3)} J _inst_1 (AlgebraicGeometry.PresheafedSpace.{u4, u3, u3} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u4, u3, u3} C _inst_2) F (AlgebraicGeometry.PresheafedSpace.colimitCocone.{u1, u2, u3, u4} J _inst_1 C _inst_2 _inst_3 (fun (X : TopCat.{u3}) => _inst_4 X) F)
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit AlgebraicGeometry.PresheafedSpace.colimitCoconeIsColimitₓ'. -/
 /-- Auxiliary definition for `PresheafedSpace.has_colimits`.
 -/
 def colimitCoconeIsColimit (F : J ⥤ PresheafedSpace.{v} C) : IsColimit (colimitCocone F)
@@ -424,12 +364,6 @@ instance [HasLimits C] : HasColimits (PresheafedSpace.{v} C)
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
 
-/- warning: algebraic_geometry.PresheafedSpace.forget_preserves_colimits -> AlgebraicGeometry.PresheafedSpace.forgetPreservesColimits is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} C] [_inst_6 : CategoryTheory.Limits.HasLimits.{u1, u2} C _inst_2], CategoryTheory.Limits.PreservesColimits.{u1, u1, max u2 (succ u1), succ u1} (AlgebraicGeometry.PresheafedSpace.{u1, u1, u2} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u1, u2} C _inst_2) TopCat.{u1} TopCat.largeCategory.{u1} (AlgebraicGeometry.PresheafedSpace.forget.{u1, u2} C _inst_2)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} C] [_inst_6 : CategoryTheory.Limits.HasLimits.{u1, u2} C _inst_2], CategoryTheory.Limits.PreservesColimits.{u1, u1, max (max u2 u1) (succ u1), succ u1} (AlgebraicGeometry.PresheafedSpace.{u2, u1, u1} C _inst_2) (AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces.{u2, u1, u1} C _inst_2) TopCat.{u1} instTopCatLargeCategory.{u1} (AlgebraicGeometry.PresheafedSpace.forget.{u2, u1, u1} C _inst_2)
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.forget_preserves_colimits AlgebraicGeometry.PresheafedSpace.forgetPreservesColimitsₓ'. -/
 /-- The underlying topological space of a colimit of presheaved spaces is
 the colimit of the underlying topological spaces.
 -/
@@ -445,9 +379,6 @@ instance forgetPreservesColimits [HasLimits C] : PreservesColimits (PresheafedSp
             · intro j; dsimp; simp) }
 #align algebraic_geometry.PresheafedSpace.forget_preserves_colimits AlgebraicGeometry.PresheafedSpace.forgetPreservesColimits
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit -> AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimitₓ'. -/
 /-- The components of the colimit of a diagram of `PresheafedSpace C` is obtained
 via taking componentwise limits.
 -/
@@ -478,9 +409,6 @@ def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpace.{v} C) [H
     congr
 #align algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app -> AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_inv_ι_app is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_inv_ι_appₓ'. -/
 @[simp]
 theorem colimitPresheafObjIsoComponentwiseLimit_inv_ι_app (F : J ⥤ PresheafedSpace.{v} C)
     (U : Opens (Limits.colimit F).carrier) (j : J) :
@@ -502,9 +430,6 @@ theorem colimitPresheafObjIsoComponentwiseLimit_inv_ι_app (F : J ⥤ Presheafed
   congr
 #align algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_inv_ι_app
 
-/- warning: algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π -> AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_hom_π is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_hom_πₓ'. -/
 @[simp]
 theorem colimitPresheafObjIsoComponentwiseLimit_hom_π (F : J ⥤ PresheafedSpace.{v} C)
     (U : Opens (Limits.colimit F).carrier) (j : J) :

@@ -54,11 +54,6 @@ theorem preimage_boolIndicator_true : s.boolIndicator ⁻¹' {true} = s :=
 -/
 
 /- warning: set.preimage_bool_indicator_ff clashes with set.preimage_bool_indicator_false -> Set.preimage_boolIndicator_false
-warning: set.preimage_bool_indicator_ff -> Set.preimage_boolIndicator_false is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.hasSingleton.{0} Bool) Bool.false)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.instSingletonSet.{0} Bool) Bool.false)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)
 Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator_ff Set.preimage_boolIndicator_falseₓ'. -/
 theorem preimage_boolIndicator_false : s.boolIndicator ⁻¹' {false} = sᶜ :=
   ext fun x => (s.not_mem_iff_boolIndicator x).symm
@@ -66,12 +61,6 @@ theorem preimage_boolIndicator_false : s.boolIndicator ⁻¹' {false} = sᶜ :=
 
 open Classical
 
-/- warning: set.preimage_bool_indicator_eq_union -> Set.preimage_boolIndicator_eq_union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (ite.{succ u1} (Set.{u1} α) (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.true t) (Classical.propDecidable (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.true t)) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (ite.{succ u1} (Set.{u1} α) (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.false t) (Classical.propDecidable (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.false t)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (ite.{succ u1} (Set.{u1} α) (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.true t) (Classical.propDecidable (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.true t)) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (ite.{succ u1} (Set.{u1} α) (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.false t) (Classical.propDecidable (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.false t)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))
-Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator_eq_union Set.preimage_boolIndicator_eq_unionₓ'. -/
 theorem preimage_boolIndicator_eq_union (t : Set Bool) :
     s.boolIndicator ⁻¹' t = (if true ∈ t then s else ∅) ∪ if false ∈ t then sᶜ else ∅ :=
   by
@@ -80,12 +69,6 @@ theorem preimage_boolIndicator_eq_union (t : Set Bool) :
   split_ifs <;> tauto
 #align set.preimage_bool_indicator_eq_union Set.preimage_boolIndicator_eq_union
 
-/- warning: set.preimage_bool_indicator -> Set.preimage_boolIndicator is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Set.univ.{u1} α)) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) s) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))))
-but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Set.univ.{u1} α)) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) s) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))))
-Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator Set.preimage_boolIndicatorₓ'. -/
 theorem preimage_boolIndicator (t : Set Bool) :
     s.boolIndicator ⁻¹' t = univ ∨
       s.boolIndicator ⁻¹' t = s ∨ s.boolIndicator ⁻¹' t = sᶜ ∨ s.boolIndicator ⁻¹' t = ∅ :=

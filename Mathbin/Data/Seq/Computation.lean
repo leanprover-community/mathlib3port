@@ -980,12 +980,6 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
 #align computation.of_results_bind Computation.of_results_bind
 -/
 
-/- warning: computation.exists_of_mem_bind -> Computation.exists_of_mem_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Computation.{u1} α} {f : α -> (Computation.{u2} β)} {b : β}, (Membership.Mem.{u2, u2} β (Computation.{u2} β) (Computation.hasMem.{u2} β) b (Computation.bind.{u1, u2} α β s f)) -> (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Computation.{u1} α) (Computation.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Computation.{u1} α) (Computation.hasMem.{u1} α) a s) => Membership.Mem.{u2, u2} β (Computation.{u2} β) (Computation.hasMem.{u2} β) b (f a))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Computation.{u1} α} {f : α -> (Computation.{u2} β)} {b : β}, (Membership.mem.{u2, u2} β (Computation.{u2} β) (Computation.instMembershipComputation.{u2} β) b (Computation.bind.{u1, u2} α β s f)) -> (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Computation.{u1} α) (Computation.instMembershipComputation.{u1} α) a s) (Membership.mem.{u2, u2} β (Computation.{u2} β) (Computation.instMembershipComputation.{u2} β) b (f a))))
-Case conversion may be inaccurate. Consider using '#align computation.exists_of_mem_bind Computation.exists_of_mem_bindₓ'. -/
 theorem exists_of_mem_bind {s : Computation α} {f : α → Computation β} {b} (h : b ∈ bind s f) :
     ∃ a ∈ s, b ∈ f a :=
   let ⟨k, h⟩ := exists_results_of_mem h
@@ -1071,12 +1065,6 @@ theorem terminates_map_iff (f : α → β) (s : Computation α) : Terminates (ma
 #align computation.terminates_map_iff Computation.terminates_map_iff
 -/
 
-/- warning: computation.orelse -> Computation.orElse is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, (Computation.{u1} α) -> (Computation.{u1} α) -> (Computation.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, (Computation.{u1} α) -> (Unit -> (Computation.{u1} α)) -> (Computation.{u1} α)
-Case conversion may be inaccurate. Consider using '#align computation.orelse Computation.orElseₓ'. -/
 -- Parallel computation
 /-- `c₁ <|> c₂` calculates `c₁` and `c₂` simultaneously, returning
   the first one that gives a result. -/
@@ -1097,45 +1085,21 @@ instance : Alternative Computation :=
     orelse := @orElse
     failure := @empty }
 
-/- warning: computation.ret_orelse -> Computation.ret_orElse is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (a : α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.pure.{u1} α a) c₂) (Computation.pure.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} (a : α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.pure.{u1} α a) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10396 : Unit) => c₂)) (Computation.pure.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align computation.ret_orelse Computation.ret_orElseₓ'. -/
 @[simp]
 theorem ret_orElse (a : α) (c₂ : Computation α) : (pure a <|> c₂) = pure a :=
   destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.ret_orelse Computation.ret_orElse
 
-/- warning: computation.orelse_ret -> Computation.orelse_pure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (a : α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.think.{u1} α c₁) (Computation.pure.{u1} α a)) (Computation.pure.{u1} α a)
-but is expected to have type
-  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (a : α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.think.{u1} α c₁) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10424 : Unit) => Computation.pure.{u1} α a)) (Computation.pure.{u1} α a)
-Case conversion may be inaccurate. Consider using '#align computation.orelse_ret Computation.orelse_pureₓ'. -/
 @[simp]
 theorem orelse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) = pure a :=
   destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.orelse_ret Computation.orelse_pure
 
-/- warning: computation.orelse_think -> Computation.orelse_think is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.think.{u1} α c₁) (Computation.think.{u1} α c₂)) (Computation.think.{u1} α (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α c₁ c₂))
-but is expected to have type
-  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.think.{u1} α c₁) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10460 : Unit) => Computation.think.{u1} α c₂)) (Computation.think.{u1} α (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) c₁ (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10459 : Unit) => c₂)))
-Case conversion may be inaccurate. Consider using '#align computation.orelse_think Computation.orelse_thinkₓ'. -/
 @[simp]
 theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
   destruct_eq_think <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.orelse_think Computation.orelse_think
 
-/- warning: computation.empty_orelse -> Computation.empty_orelse is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.empty.{u1} α) c) c
-but is expected to have type
-  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.empty.{u1} α) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10484 : Unit) => c)) c
-Case conversion may be inaccurate. Consider using '#align computation.empty_orelse Computation.empty_orelseₓ'. -/
 @[simp]
 theorem empty_orelse (c) : (empty α <|> c) = c :=
   by
@@ -1145,12 +1109,6 @@ theorem empty_orelse (c) : (empty α <|> c) = c :=
   rw [← think_empty]
 #align computation.empty_orelse Computation.empty_orelse
 
-/- warning: computation.orelse_empty -> Computation.orelse_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α c (Computation.empty.{u1} α)) c
-but is expected to have type
-  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) c (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10682 : Unit) => Computation.empty.{u1} α)) c
-Case conversion may be inaccurate. Consider using '#align computation.orelse_empty Computation.orelse_emptyₓ'. -/
 @[simp]
 theorem orelse_empty (c : Computation α) : (c <|> empty α) = c :=
   by
@@ -1391,12 +1349,6 @@ theorem liftRel_def {R : α → β → Prop} {ca cb} :
 #align computation.lift_rel_def Computation.liftRel_def
 -/
 
-/- warning: computation.lift_rel_bind -> Computation.liftRel_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Computation.{u1} α} {s2 : Computation.{u2} β} {f1 : α -> (Computation.{u3} γ)} {f2 : β -> (Computation.{u4} δ)}, (Computation.LiftRel.{u1, u2} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (Computation.LiftRel.{u3, u4} γ δ S (f1 a) (f2 b))) -> (Computation.LiftRel.{u3, u4} γ δ S (Computation.bind.{u1, u3} α γ s1 f1) (Computation.bind.{u2, u4} β δ s2 f2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Computation.{u2} α} {s2 : Computation.{u3} β} {f1 : α -> (Computation.{u4} γ)} {f2 : β -> (Computation.{u1} δ)}, (Computation.LiftRel.{u2, u3} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (Computation.LiftRel.{u4, u1} γ δ S (f1 a) (f2 b))) -> (Computation.LiftRel.{u4, u1} γ δ S (Computation.bind.{u2, u4} α γ s1 f1) (Computation.bind.{u3, u1} β δ s2 f2))
-Case conversion may be inaccurate. Consider using '#align computation.lift_rel_bind Computation.liftRel_bindₓ'. -/
 theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
     {s2 : Computation β} {f1 : α → Computation γ} {f2 : β → Computation δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → LiftRel S (f1 a) (f2 b)) : LiftRel S (bind s1 f1) (bind s2 f2) :=
@@ -1474,24 +1426,12 @@ theorem liftRel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb'
 #align computation.lift_rel_congr Computation.liftRel_congr
 -/
 
-/- warning: computation.lift_rel_map -> Computation.liftRel_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Computation.{u1} α} {s2 : Computation.{u2} β} {f1 : α -> γ} {f2 : β -> δ}, (Computation.LiftRel.{u1, u2} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (S (f1 a) (f2 b))) -> (Computation.LiftRel.{u3, u4} γ δ S (Computation.map.{u1, u3} α γ f1 s1) (Computation.map.{u2, u4} β δ f2 s2))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} (R : α -> β -> Prop) (S : γ -> δ -> Prop) {s1 : Computation.{u2} α} {s2 : Computation.{u3} β} {f1 : α -> γ} {f2 : β -> δ}, (Computation.LiftRel.{u2, u3} α β R s1 s2) -> (forall {a : α} {b : β}, (R a b) -> (S (f1 a) (f2 b))) -> (Computation.LiftRel.{u4, u1} γ δ S (Computation.map.{u2, u4} α γ f1 s1) (Computation.map.{u3, u1} β δ f2 s2))
-Case conversion may be inaccurate. Consider using '#align computation.lift_rel_map Computation.liftRel_mapₓ'. -/
 theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
     {s2 : Computation β} {f1 : α → γ} {f2 : β → δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) := by
   rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
 #align computation.lift_rel_map Computation.liftRel_map
 
-/- warning: computation.map_congr -> Computation.map_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (α -> α -> Prop) -> (β -> β -> Prop) -> (forall {s1 : Computation.{u1} α} {s2 : Computation.{u1} α} {f : α -> β}, (Computation.Equiv.{u1} α s1 s2) -> (Computation.Equiv.{u2} β (Computation.map.{u1, u2} α β f s1) (Computation.map.{u1, u2} α β f s2)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {R : Computation.{u1} α} {S : Computation.{u1} α} {s1 : α -> β}, (Computation.Equiv.{u1} α R S) -> (Computation.Equiv.{u2} β (Computation.map.{u1, u2} α β s1 R) (Computation.map.{u1, u2} α β s1 S))
-Case conversion may be inaccurate. Consider using '#align computation.map_congr Computation.map_congrₓ'. -/
 theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β}
     (h1 : s1 ~ s2) : map f s1 ~ map f s2 := by
   rw [← lift_eq_iff_equiv] <;>

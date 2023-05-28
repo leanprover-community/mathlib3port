@@ -91,34 +91,16 @@ namespace Sorted
 
 variable [Preorder α] {l : List α}
 
-/- warning: list.sorted.nth_le_mono -> List.Sorted.get_mono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α}, (List.Sorted.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) l) -> (Monotone.{0, u1} (Fin (List.length.{u1} α l)) α (PartialOrder.toPreorder.{0} (Fin (List.length.{u1} α l)) (Fin.partialOrder (List.length.{u1} α l))) _inst_1 (fun (i : Fin (List.length.{u1} α l)) => List.nthLe.{u1} α l ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (List.length.{u1} α l)) Nat (HasLiftT.mk.{1, 1} (Fin (List.length.{u1} α l)) Nat (CoeTCₓ.coe.{1, 1} (Fin (List.length.{u1} α l)) Nat (coeBase.{1, 1} (Fin (List.length.{u1} α l)) Nat (Fin.coeToNat (List.length.{u1} α l))))) i) (Fin.property (List.length.{u1} α l) i)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α}, (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.263 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.265 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.263 x._@.Mathlib.Data.List.NodupEquivFin._hyg.265) l) -> (Monotone.{0, u1} (Fin (List.length.{u1} α l)) α (PartialOrder.toPreorder.{0} (Fin (List.length.{u1} α l)) (Fin.instPartialOrderFin (List.length.{u1} α l))) _inst_1 (List.get.{u1} α l))
-Case conversion may be inaccurate. Consider using '#align list.sorted.nth_le_mono List.Sorted.get_monoₓ'. -/
 theorem get_mono (h : l.Sorted (· ≤ ·)) : Monotone fun i : Fin l.length => l.nthLe i i.2 :=
   fun i j => h.rel_nthLe_of_le _ _
 #align list.sorted.nth_le_mono List.Sorted.get_mono
 
-/- warning: list.sorted.nth_le_strict_mono -> List.Sorted.get_strictMono is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α}, (List.Sorted.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) l) -> (StrictMono.{0, u1} (Fin (List.length.{u1} α l)) α (PartialOrder.toPreorder.{0} (Fin (List.length.{u1} α l)) (Fin.partialOrder (List.length.{u1} α l))) _inst_1 (fun (i : Fin (List.length.{u1} α l)) => List.nthLe.{u1} α l ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (List.length.{u1} α l)) Nat (HasLiftT.mk.{1, 1} (Fin (List.length.{u1} α l)) Nat (CoeTCₓ.coe.{1, 1} (Fin (List.length.{u1} α l)) Nat (coeBase.{1, 1} (Fin (List.length.{u1} α l)) Nat (Fin.coeToNat (List.length.{u1} α l))))) i) (Fin.property (List.length.{u1} α l) i)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α}, (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.296 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.298 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.296 x._@.Mathlib.Data.List.NodupEquivFin._hyg.298) l) -> (StrictMono.{0, u1} (Fin (List.length.{u1} α l)) α (PartialOrder.toPreorder.{0} (Fin (List.length.{u1} α l)) (Fin.instPartialOrderFin (List.length.{u1} α l))) _inst_1 (List.get.{u1} α l))
-Case conversion may be inaccurate. Consider using '#align list.sorted.nth_le_strict_mono List.Sorted.get_strictMonoₓ'. -/
 theorem get_strictMono (h : l.Sorted (· < ·)) : StrictMono fun i : Fin l.length => l.nthLe i i.2 :=
   fun i j => h.rel_nthLe_of_lt _ _
 #align list.sorted.nth_le_strict_mono List.Sorted.get_strictMono
 
 variable [DecidableEq α]
 
-/- warning: list.sorted.nth_le_iso -> List.Sorted.getIso is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Sorted.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) l) -> (OrderIso.{0, u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l)) (Fin.hasLe (List.length.{u1} α l)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.345 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.347 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.345 x._@.Mathlib.Data.List.NodupEquivFin._hyg.347) l) -> (OrderIso.{0, u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (instLEFin (List.length.{u1} α l)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)))
-Case conversion may be inaccurate. Consider using '#align list.sorted.nth_le_iso List.Sorted.getIsoₓ'. -/
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
 def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l }
@@ -129,17 +111,11 @@ def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x
 
 variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Fin l.length}
 
-/- warning: list.sorted.coe_nth_le_iso_apply -> List.Sorted.coe_getIso_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_getIso_applyₓ'. -/
 @[simp]
 theorem coe_getIso_apply : (H.getIso l i : α) = nthLe l i i.2 :=
   rfl
 #align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_getIso_apply
 
-/- warning: list.sorted.coe_nth_le_iso_symm_apply -> List.Sorted.coe_getIso_symm_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align list.sorted.coe_nth_le_iso_symm_apply List.Sorted.coe_getIso_symm_applyₓ'. -/
 @[simp]
 theorem coe_getIso_symm_apply : ((H.getIso l).symm x : ℕ) = indexOf (↑x) l :=
   rfl
@@ -149,12 +125,6 @@ end Sorted
 
 section Sublist
 
-/- warning: list.sublist_of_order_embedding_nth_eq -> List.sublist_of_orderEmbedding_get?_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α} (f : OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe), (forall (ix : Nat), Eq.{succ u1} (Option.{u1} α) (List.get?.{u1} α l ix) (List.get?.{u1} α l' (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) f ix))) -> (List.Sublist.{u1} α l l')
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α} (f : OrderEmbedding.{0, 0} Nat Nat instLENat instLENat), (forall (ix : Nat), Eq.{succ u1} (Option.{u1} α) (List.get?.{u1} α l ix) (List.get?.{u1} α l' (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Nat) => Nat) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) f ix))) -> (List.Sublist.{u1} α l l')
-Case conversion may be inaccurate. Consider using '#align list.sublist_of_order_embedding_nth_eq List.sublist_of_orderEmbedding_get?_eqₓ'. -/
 /-- If there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`,
 then `sublist l l'`.
@@ -180,12 +150,6 @@ theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
   apply List.nthLe_mem
 #align list.sublist_of_order_embedding_nth_eq List.sublist_of_orderEmbedding_get?_eq
 
-/- warning: list.sublist_iff_exists_order_embedding_nth_eq -> List.sublist_iff_exists_orderEmbedding_get?_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α}, Iff (List.Sublist.{u1} α l l') (Exists.{1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (f : OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) => forall (ix : Nat), Eq.{succ u1} (Option.{u1} α) (List.get?.{u1} α l ix) (List.get?.{u1} α l' (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) f ix))))
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α}, Iff (List.Sublist.{u1} α l l') (Exists.{1} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) (fun (f : OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) => forall (ix : Nat), Eq.{succ u1} (Option.{u1} α) (List.get?.{u1} α l ix) (List.get?.{u1} α l' (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Nat) => Nat) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) f ix))))
-Case conversion may be inaccurate. Consider using '#align list.sublist_iff_exists_order_embedding_nth_eq List.sublist_iff_exists_orderEmbedding_get?_eqₓ'. -/
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
@@ -211,12 +175,6 @@ theorem sublist_iff_exists_orderEmbedding_get?_eq {l l' : List α} :
     exact sublist_of_order_embedding_nth_eq f hf
 #align list.sublist_iff_exists_order_embedding_nth_eq List.sublist_iff_exists_orderEmbedding_get?_eq
 
-/- warning: list.sublist_iff_exists_fin_order_embedding_nth_le_eq -> List.sublist_iff_exists_fin_orderEmbedding_get_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α}, Iff (List.Sublist.{u1} α l l') (Exists.{1} (OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l'))) (fun (f : OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l'))) => forall (ix : Fin (List.length.{u1} α l)), Eq.{succ u1} α (List.nthLe.{u1} α l ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (List.length.{u1} α l)) Nat (HasLiftT.mk.{1, 1} (Fin (List.length.{u1} α l)) Nat (CoeTCₓ.coe.{1, 1} (Fin (List.length.{u1} α l)) Nat (coeBase.{1, 1} (Fin (List.length.{u1} α l)) Nat (Fin.coeToNat (List.length.{u1} α l))))) ix) (Fin.is_lt (List.length.{u1} α l) ix)) (List.nthLe.{u1} α l' ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (List.length.{u1} α l')) Nat (HasLiftT.mk.{1, 1} (Fin (List.length.{u1} α l')) Nat (CoeTCₓ.coe.{1, 1} (Fin (List.length.{u1} α l')) Nat (coeBase.{1, 1} (Fin (List.length.{u1} α l')) Nat (Fin.coeToNat (List.length.{u1} α l'))))) (coeFn.{1, 1} (OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l'))) (fun (_x : RelEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (LE.le.{0} (Fin (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l))) (LE.le.{0} (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l')))) => (Fin (List.length.{u1} α l)) -> (Fin (List.length.{u1} α l'))) (RelEmbedding.hasCoeToFun.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (LE.le.{0} (Fin (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l))) (LE.le.{0} (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l')))) f ix)) (Fin.is_lt (List.length.{u1} α l') (coeFn.{1, 1} (OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l'))) (fun (_x : RelEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (LE.le.{0} (Fin (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l))) (LE.le.{0} (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l')))) => (Fin (List.length.{u1} α l)) -> (Fin (List.length.{u1} α l'))) (RelEmbedding.hasCoeToFun.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (LE.le.{0} (Fin (List.length.{u1} α l)) (Fin.hasLe (List.length.{u1} α l))) (LE.le.{0} (Fin (List.length.{u1} α l')) (Fin.hasLe (List.length.{u1} α l')))) f ix)))))
-but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} {l' : List.{u1} α}, Iff (List.Sublist.{u1} α l l') (Exists.{1} (OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (instLEFin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l'))) (fun (f : OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (instLEFin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l'))) => forall (ix : Fin (List.length.{u1} α l)), Eq.{succ u1} α (List.get.{u1} α l ix) (List.get.{u1} α l' (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (instLEFin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l'))) (Fin (List.length.{u1} α l)) (fun (a : Fin (List.length.{u1} α l)) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin (List.length.{u1} α l)) => Fin (List.length.{u1} α l')) a) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (instLEFin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l'))) (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin (List.length.{u1} α l)) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin (List.length.{u1} α l)) => LE.le.{0} (Fin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l)) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (List.length.{u1} α l')) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (List.length.{u1} α l')) => LE.le.{0} (Fin (List.length.{u1} α l')) (instLEFin (List.length.{u1} α l')) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} (Fin (List.length.{u1} α l)) (Fin (List.length.{u1} α l')) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin (List.length.{u1} α l)) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin (List.length.{u1} α l)) => LE.le.{0} (Fin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l)) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (List.length.{u1} α l')) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (List.length.{u1} α l')) => LE.le.{0} (Fin (List.length.{u1} α l')) (instLEFin (List.length.{u1} α l')) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) f ix))))
-Case conversion may be inaccurate. Consider using '#align list.sublist_iff_exists_fin_order_embedding_nth_le_eq List.sublist_iff_exists_fin_orderEmbedding_get_eqₓ'. -/
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `fin l.length` into `fin l'.length` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.

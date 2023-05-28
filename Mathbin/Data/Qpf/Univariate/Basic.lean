@@ -536,9 +536,6 @@ theorem Cofix.bisim (r : Cofix F → Cofix F → Prop)
 #align qpf.cofix.bisim Qpf.Cofix.bisim
 -/
 
-/- warning: qpf.cofix.bisim' -> Qpf.Cofix.bisim' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align qpf.cofix.bisim' Qpf.Cofix.bisim'ₓ'. -/
 theorem Cofix.bisim' {α : Type _} (Q : α → Prop) (u v : α → Cofix F)
     (h :
       ∀ x,

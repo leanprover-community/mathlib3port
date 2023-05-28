@@ -55,35 +55,17 @@ noncomputable def rank (A : Matrix m n R) : ℕ :=
 #align matrix.rank Matrix.rank
 -/
 
-/- warning: matrix.rank_one -> Matrix.rank_one is a dubious translation:
-lean 3 declaration is
-  forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n], Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} n n R) 1 (OfNat.mk.{max u1 u2} (Matrix.{u1, u1, u2} n n R) 1 (One.one.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.hasOne.{u2, u1} n R (fun (a : n) (b : n) => _inst_5 a b) (MulZeroClass.toHasZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_3)))))) (AddMonoidWithOne.toOne.{u2} R (AddGroupWithOne.toAddMonoidWithOne.{u2} R (AddCommGroupWithOne.toAddGroupWithOne.{u2} R (Ring.toAddCommGroupWithOne.{u2} R (CommRing.toRing.{u2} R _inst_3)))))))))) (Fintype.card.{u1} n _inst_1)
-but is expected to have type
-  forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n], Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} n n R) 1 (One.toOfNat1.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.one.{u2, u1} n R (fun (a : n) (b : n) => _inst_5 a b) (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3))) (Semiring.toOne.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3))))))) (Fintype.card.{u1} n _inst_1)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_one Matrix.rank_oneₓ'. -/
 @[simp]
 theorem rank_one [StrongRankCondition R] [DecidableEq n] :
     rank (1 : Matrix n n R) = Fintype.card n := by
   rw [rank, mul_vec_lin_one, LinearMap.range_id, finrank_top, finrank_pi]
 #align matrix.rank_one Matrix.rank_one
 
-/- warning: matrix.rank_zero -> Matrix.rank_zero is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : Nontrivial.{u3} R], Eq.{1} Nat (Matrix.rank.{u1, u2, u3} m n R _inst_1 _inst_3 (OfNat.ofNat.{max u1 u2 u3} (Matrix.{u1, u2, u3} m n R) 0 (OfNat.mk.{max u1 u2 u3} (Matrix.{u1, u2, u3} m n R) 0 (Zero.zero.{max u1 u2 u3} (Matrix.{u1, u2, u3} m n R) (Matrix.hasZero.{u3, u1, u2} m n R (MulZeroClass.toHasZero.{u3} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} R (NonAssocRing.toNonUnitalNonAssocRing.{u3} R (Ring.toNonAssocRing.{u3} R (CommRing.toRing.{u3} R _inst_3))))))))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} {R : Type.{u3}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : Nontrivial.{u3} R], Eq.{1} Nat (Matrix.rank.{u2, u1, u3} m n R _inst_1 _inst_3 (OfNat.ofNat.{max (max u2 u1) u3} (Matrix.{u2, u1, u3} m n R) 0 (Zero.toOfNat0.{max (max u2 u1) u3} (Matrix.{u2, u1, u3} m n R) (Matrix.zero.{u3, u2, u1} m n R (CommMonoidWithZero.toZero.{u3} R (CommSemiring.toCommMonoidWithZero.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3))))))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
-Case conversion may be inaccurate. Consider using '#align matrix.rank_zero Matrix.rank_zeroₓ'. -/
 @[simp]
 theorem rank_zero [Nontrivial R] : rank (0 : Matrix m n R) = 0 := by
   rw [rank, mul_vec_lin_zero, LinearMap.range_zero, finrank_bot]
 #align matrix.rank_zero Matrix.rank_zero
 
-/- warning: matrix.rank_le_card_width -> Matrix.rank_le_card_width is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : StrongRankCondition.{u3} R (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3))] (A : Matrix.{u1, u2, u3} m n R), LE.le.{0} Nat Nat.hasLe (Matrix.rank.{u1, u2, u3} m n R _inst_1 _inst_3 A) (Fintype.card.{u2} n _inst_1)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} {R : Type.{u3}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : StrongRankCondition.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3))] (A : Matrix.{u2, u1, u3} m n R), LE.le.{0} Nat instLENat (Matrix.rank.{u2, u1, u3} m n R _inst_1 _inst_3 A) (Fintype.card.{u1} n _inst_1)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_le_card_width Matrix.rank_le_card_widthₓ'. -/
 theorem rank_le_card_width [StrongRankCondition R] (A : Matrix m n R) : A.rank ≤ Fintype.card n :=
   by
   haveI : Module.Finite R (n → R) := Module.Finite.pi
@@ -98,12 +80,6 @@ theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (F
 #align matrix.rank_le_width Matrix.rank_le_width
 -/
 
-/- warning: matrix.rank_mul_le_left -> Matrix.rank_mul_le_left is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {o : Type.{u3}} {R : Type.{u4}} [_inst_1 : Fintype.{u2} n] [_inst_2 : Fintype.{u3} o] [_inst_3 : CommRing.{u4} R] [_inst_4 : StrongRankCondition.{u4} R (Ring.toSemiring.{u4} R (CommRing.toRing.{u4} R _inst_3))] (A : Matrix.{u1, u2, u4} m n R) (B : Matrix.{u2, u3, u4} n o R), LE.le.{0} Nat Nat.hasLe (Matrix.rank.{u1, u3, u4} m o R _inst_2 _inst_3 (Matrix.mul.{u4, u1, u2, u3} m n o R _inst_1 (Distrib.toHasMul.{u4} R (Ring.toDistrib.{u4} R (CommRing.toRing.{u4} R _inst_3))) (AddCommGroup.toAddCommMonoid.{u4} R (NonUnitalNonAssocRing.toAddCommGroup.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3))))) A B)) (Matrix.rank.{u1, u2, u4} m n R _inst_1 _inst_3 A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {o : Type.{u1}} {R : Type.{u4}} [_inst_1 : Fintype.{u2} n] [_inst_2 : Fintype.{u1} o] [_inst_3 : CommRing.{u4} R] [_inst_4 : StrongRankCondition.{u4} R (CommSemiring.toSemiring.{u4} R (CommRing.toCommSemiring.{u4} R _inst_3))] (A : Matrix.{u3, u2, u4} m n R) (B : Matrix.{u2, u1, u4} n o R), LE.le.{0} Nat instLENat (Matrix.rank.{u3, u1, u4} m o R _inst_2 _inst_3 (Matrix.mul.{u4, u3, u2, u1} m n o R _inst_1 (NonUnitalNonAssocRing.toMul.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3))))) A B)) (Matrix.rank.{u3, u2, u4} m n R _inst_1 _inst_3 A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_mul_le_left Matrix.rank_mul_le_leftₓ'. -/
 theorem rank_mul_le_left [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ A.rank := by
   rw [rank, rank, mul_vec_lin_mul]
@@ -112,12 +88,6 @@ theorem rank_mul_le_left [StrongRankCondition R] (A : Matrix m n R) (B : Matrix 
 
 include m_fin
 
-/- warning: matrix.rank_mul_le_right -> Matrix.rank_mul_le_right is a dubious translation:
-lean 3 declaration is
-  forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u3}} {R : Type.{u4}} [m_fin : Fintype.{u2} m] [_inst_1 : Fintype.{u3} n] [_inst_3 : CommRing.{u4} R] [_inst_4 : StrongRankCondition.{u4} R (Ring.toSemiring.{u4} R (CommRing.toRing.{u4} R _inst_3))] (A : Matrix.{u1, u2, u4} l m R) (B : Matrix.{u2, u3, u4} m n R), LE.le.{0} Nat Nat.hasLe (Matrix.rank.{u1, u3, u4} l n R _inst_1 _inst_3 (Matrix.mul.{u4, u1, u2, u3} l m n R m_fin (Distrib.toHasMul.{u4} R (Ring.toDistrib.{u4} R (CommRing.toRing.{u4} R _inst_3))) (AddCommGroup.toAddCommMonoid.{u4} R (NonUnitalNonAssocRing.toAddCommGroup.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3))))) A B)) (Matrix.rank.{u2, u3, u4} m n R _inst_1 _inst_3 B)
-but is expected to have type
-  forall {l : Type.{u3}} {m : Type.{u2}} {n : Type.{u1}} {R : Type.{u4}} [m_fin : Fintype.{u2} m] [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u4} R] [_inst_4 : StrongRankCondition.{u4} R (CommSemiring.toSemiring.{u4} R (CommRing.toCommSemiring.{u4} R _inst_3))] (A : Matrix.{u3, u2, u4} l m R) (B : Matrix.{u2, u1, u4} m n R), LE.le.{0} Nat instLENat (Matrix.rank.{u3, u1, u4} l n R _inst_1 _inst_3 (Matrix.mul.{u4, u3, u2, u1} l m n R m_fin (NonUnitalNonAssocRing.toMul.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3))))) A B)) (Matrix.rank.{u2, u1, u4} m n R _inst_1 _inst_3 B)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_mul_le_right Matrix.rank_mul_le_rightₓ'. -/
 theorem rank_mul_le_right [StrongRankCondition R] (A : Matrix l m R) (B : Matrix m n R) :
     (A ⬝ B).rank ≤ B.rank := by
   rw [rank, rank, mul_vec_lin_mul]
@@ -127,23 +97,11 @@ theorem rank_mul_le_right [StrongRankCondition R] (A : Matrix l m R) (B : Matrix
 
 omit m_fin
 
-/- warning: matrix.rank_mul_le -> Matrix.rank_mul_le is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {o : Type.{u3}} {R : Type.{u4}} [_inst_1 : Fintype.{u2} n] [_inst_2 : Fintype.{u3} o] [_inst_3 : CommRing.{u4} R] [_inst_4 : StrongRankCondition.{u4} R (Ring.toSemiring.{u4} R (CommRing.toRing.{u4} R _inst_3))] (A : Matrix.{u1, u2, u4} m n R) (B : Matrix.{u2, u3, u4} n o R), LE.le.{0} Nat Nat.hasLe (Matrix.rank.{u1, u3, u4} m o R _inst_2 _inst_3 (Matrix.mul.{u4, u1, u2, u3} m n o R _inst_1 (Distrib.toHasMul.{u4} R (Ring.toDistrib.{u4} R (CommRing.toRing.{u4} R _inst_3))) (AddCommGroup.toAddCommMonoid.{u4} R (NonUnitalNonAssocRing.toAddCommGroup.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3))))) A B)) (LinearOrder.min.{0} Nat Nat.linearOrder (Matrix.rank.{u1, u2, u4} m n R _inst_1 _inst_3 A) (Matrix.rank.{u2, u3, u4} n o R _inst_2 _inst_3 B))
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {o : Type.{u1}} {R : Type.{u4}} [_inst_1 : Fintype.{u2} n] [_inst_2 : Fintype.{u1} o] [_inst_3 : CommRing.{u4} R] [_inst_4 : StrongRankCondition.{u4} R (CommSemiring.toSemiring.{u4} R (CommRing.toCommSemiring.{u4} R _inst_3))] (A : Matrix.{u3, u2, u4} m n R) (B : Matrix.{u2, u1, u4} n o R), LE.le.{0} Nat instLENat (Matrix.rank.{u3, u1, u4} m o R _inst_2 _inst_3 (Matrix.mul.{u4, u3, u2, u1} m n o R _inst_1 (NonUnitalNonAssocRing.toMul.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} R (NonAssocRing.toNonUnitalNonAssocRing.{u4} R (Ring.toNonAssocRing.{u4} R (CommRing.toRing.{u4} R _inst_3))))) A B)) (Min.min.{0} Nat instMinNat (Matrix.rank.{u3, u2, u4} m n R _inst_1 _inst_3 A) (Matrix.rank.{u2, u1, u4} n o R _inst_2 _inst_3 B))
-Case conversion may be inaccurate. Consider using '#align matrix.rank_mul_le Matrix.rank_mul_leₓ'. -/
 theorem rank_mul_le [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ min A.rank B.rank :=
   le_min (rank_mul_le_left _ _) (rank_mul_le_right _ _)
 #align matrix.rank_mul_le Matrix.rank_mul_le
 
-/- warning: matrix.rank_unit -> Matrix.rank_unit is a dubious translation:
-lean 3 declaration is
-  forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n] (A : Units.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3)))), Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 ((fun (a : Type.{max u1 u2}) (b : Type.{max u1 u2}) [self : HasLiftT.{succ (max u1 u2), succ (max u1 u2)} a b] => self.0) (Units.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3)))) (Matrix.{u1, u1, u2} n n R) (HasLiftT.mk.{succ (max u1 u2), succ (max u1 u2)} (Units.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3)))) (Matrix.{u1, u1, u2} n n R) (CoeTCₓ.coe.{succ (max u1 u2), succ (max u1 u2)} (Units.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3)))) (Matrix.{u1, u1, u2} n n R) (coeBase.{succ (max u1 u2), succ (max u1 u2)} (Units.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3)))) (Matrix.{u1, u1, u2} n n R) (Units.hasCoe.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3))))))) A)) (Fintype.card.{u1} n _inst_1)
-but is expected to have type
-  forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n] (A : Units.{max u2 u1} (Matrix.{u1, u1, u2} n n R) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.semiring.{u2, u1} n R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) _inst_1 (fun (a : n) (b : n) => _inst_5 a b))))), Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 (Units.val.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.semiring.{u2, u1} n R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) _inst_1 (fun (a : n) (b : n) => _inst_5 a b)))) A)) (Fintype.card.{u1} n _inst_1)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_unit Matrix.rank_unitₓ'. -/
 theorem rank_unit [StrongRankCondition R] [DecidableEq n] (A : (Matrix n n R)ˣ) :
     (A : Matrix n n R).rank = Fintype.card n :=
   by
@@ -152,22 +110,10 @@ theorem rank_unit [StrongRankCondition R] [DecidableEq n] (A : (Matrix n n R)ˣ)
   rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this
 #align matrix.rank_unit Matrix.rank_unit
 
-/- warning: matrix.rank_of_is_unit -> Matrix.rank_of_isUnit is a dubious translation:
-lean 3 declaration is
-  forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n] (A : Matrix.{u1, u1, u2} n n R), (IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Ring.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.ring.{u2, u1} n R _inst_1 (fun (a : n) (b : n) => _inst_5 a b) (CommRing.toRing.{u2} R _inst_3))) A) -> (Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 A) (Fintype.card.{u1} n _inst_1))
-but is expected to have type
-  forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n] (A : Matrix.{u1, u1, u2} n n R), (IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.semiring.{u2, u1} n R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) _inst_1 (fun (a : n) (b : n) => _inst_5 a b)))) A) -> (Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 A) (Fintype.card.{u1} n _inst_1))
-Case conversion may be inaccurate. Consider using '#align matrix.rank_of_is_unit Matrix.rank_of_isUnitₓ'. -/
 theorem rank_of_isUnit [StrongRankCondition R] [DecidableEq n] (A : Matrix n n R) (h : IsUnit A) :
     A.rank = Fintype.card n := by obtain ⟨A, rfl⟩ := h; exact rank_unit A
 #align matrix.rank_of_is_unit Matrix.rank_of_isUnit
 
-/- warning: matrix.rank_submatrix_le -> Matrix.rank_submatrix_le is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : StrongRankCondition.{u3} R (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3))] [_inst_5 : Fintype.{u1} m] (f : n -> m) (e : Equiv.{succ u2, succ u1} n m) (A : Matrix.{u1, u1, u3} m m R), LE.le.{0} Nat Nat.hasLe (Matrix.rank.{u2, u2, u3} n n R _inst_1 _inst_3 (Matrix.submatrix.{u3, u2, u1, u1, u2} n m m n R A f (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} n m) (fun (_x : Equiv.{succ u2, succ u1} n m) => n -> m) (Equiv.hasCoeToFun.{succ u2, succ u1} n m) e))) (Matrix.rank.{u1, u1, u3} m m R _inst_5 _inst_3 A)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} {R : Type.{u3}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : StrongRankCondition.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3))] [_inst_5 : Fintype.{u2} m] (f : n -> m) (e : Equiv.{succ u1, succ u2} n m) (A : Matrix.{u2, u2, u3} m m R), LE.le.{0} Nat instLENat (Matrix.rank.{u1, u1, u3} n n R _inst_1 _inst_3 (Matrix.submatrix.{u3, u1, u2, u2, u1} n m m n R A f (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} n m) n (fun (_x : n) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : n) => m) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u2} n m) e))) (Matrix.rank.{u2, u2, u3} m m R _inst_5 _inst_3 A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_submatrix_le Matrix.rank_submatrix_leₓ'. -/
 /-- Taking a subset of the rows and permuting the columns reduces the rank. -/
 theorem rank_submatrix_le [StrongRankCondition R] [Fintype m] (f : n → m) (e : n ≃ m)
     (A : Matrix m m R) : rank (A.submatrix f e) ≤ rank A :=
@@ -178,24 +124,12 @@ theorem rank_submatrix_le [StrongRankCondition R] [Fintype m] (f : n → m) (e :
   exact Submodule.finrank_map_le _ _
 #align matrix.rank_submatrix_le Matrix.rank_submatrix_le
 
-/- warning: matrix.rank_reindex -> Matrix.rank_reindex is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : Fintype.{u1} m] (e₁ : Equiv.{succ u1, succ u2} m n) (e₂ : Equiv.{succ u1, succ u2} m n) (A : Matrix.{u1, u1, u3} m m R), Eq.{1} Nat (Matrix.rank.{u2, u2, u3} n n R _inst_1 _inst_3 (coeFn.{max 1 (max (succ (max u1 u3)) (succ (max u2 u3))) (succ (max u2 u3)) (succ (max u1 u3)), max (succ (max u1 u3)) (succ (max u2 u3))} (Equiv.{succ (max u1 u3), succ (max u2 u3)} (Matrix.{u1, u1, u3} m m R) (Matrix.{u2, u2, u3} n n R)) (fun (_x : Equiv.{succ (max u1 u3), succ (max u2 u3)} (Matrix.{u1, u1, u3} m m R) (Matrix.{u2, u2, u3} n n R)) => (Matrix.{u1, u1, u3} m m R) -> (Matrix.{u2, u2, u3} n n R)) (Equiv.hasCoeToFun.{succ (max u1 u3), succ (max u2 u3)} (Matrix.{u1, u1, u3} m m R) (Matrix.{u2, u2, u3} n n R)) (Matrix.reindex.{u3, u2, u1, u1, u2} n m m n R e₁ e₂) A)) (Matrix.rank.{u1, u1, u3} m m R _inst_4 _inst_3 A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u1} R] [_inst_4 : Fintype.{u3} m] (e₁ : Equiv.{succ u3, succ u2} m n) (e₂ : Equiv.{succ u3, succ u2} m n) (A : Matrix.{u3, u3, u1} m m R), Eq.{1} Nat (Matrix.rank.{u2, u2, u1} n n R _inst_1 _inst_3 (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), max (succ u3) (succ u1), max (succ u2) (succ u1)} (Equiv.{max (succ u1) (succ u3), max (succ u1) (succ u2)} (Matrix.{u3, u3, u1} m m R) (Matrix.{u2, u2, u1} n n R)) (Matrix.{u3, u3, u1} m m R) (fun (_x : Matrix.{u3, u3, u1} m m R) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Matrix.{u3, u3, u1} m m R) => Matrix.{u2, u2, u1} n n R) _x) (Equiv.instFunLikeEquiv.{max (succ u3) (succ u1), max (succ u2) (succ u1)} (Matrix.{u3, u3, u1} m m R) (Matrix.{u2, u2, u1} n n R)) (Matrix.reindex.{u1, u2, u3, u3, u2} n m m n R e₁ e₂) A)) (Matrix.rank.{u3, u3, u1} m m R _inst_4 _inst_3 A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_reindex Matrix.rank_reindexₓ'. -/
 theorem rank_reindex [Fintype m] (e₁ e₂ : m ≃ n) (A : Matrix m m R) :
     rank (reindex e₁ e₂ A) = rank A := by
   rw [rank, rank, mul_vec_lin_reindex, LinearMap.range_comp, LinearMap.range_comp,
     LinearEquiv.range, Submodule.map_top, LinearEquiv.finrank_map_eq]
 #align matrix.rank_reindex Matrix.rank_reindex
 
-/- warning: matrix.rank_submatrix -> Matrix.rank_submatrix is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : Fintype.{u1} m] (A : Matrix.{u1, u1, u3} m m R) (e₁ : Equiv.{succ u2, succ u1} n m) (e₂ : Equiv.{succ u2, succ u1} n m), Eq.{1} Nat (Matrix.rank.{u2, u2, u3} n n R _inst_1 _inst_3 (Matrix.submatrix.{u3, u2, u1, u1, u2} n m m n R A (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} n m) (fun (_x : Equiv.{succ u2, succ u1} n m) => n -> m) (Equiv.hasCoeToFun.{succ u2, succ u1} n m) e₁) (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} n m) (fun (_x : Equiv.{succ u2, succ u1} n m) => n -> m) (Equiv.hasCoeToFun.{succ u2, succ u1} n m) e₂))) (Matrix.rank.{u1, u1, u3} m m R _inst_4 _inst_3 A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : Fintype.{u3} m] (A : Matrix.{u3, u3, u2} m m R) (e₁ : Equiv.{succ u1, succ u3} n m) (e₂ : Equiv.{succ u1, succ u3} n m), Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 (Matrix.submatrix.{u2, u1, u3, u3, u1} n m m n R A (FunLike.coe.{max (succ u3) (succ u1), succ u1, succ u3} (Equiv.{succ u1, succ u3} n m) n (fun (_x : n) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : n) => m) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u3} n m) e₁) (FunLike.coe.{max (succ u3) (succ u1), succ u1, succ u3} (Equiv.{succ u1, succ u3} n m) n (fun (_x : n) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : n) => m) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u3} n m) e₂))) (Matrix.rank.{u3, u3, u2} m m R _inst_4 _inst_3 A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_submatrix Matrix.rank_submatrixₓ'. -/
 @[simp]
 theorem rank_submatrix [Fintype m] (A : Matrix m m R) (e₁ e₂ : n ≃ m) :
     rank (A.submatrix e₁ e₂) = rank A := by
@@ -204,9 +138,6 @@ theorem rank_submatrix [Fintype m] (A : Matrix m m R) (e₁ e₂ : n ≃ m) :
 
 include m_fin
 
-/- warning: matrix.rank_eq_finrank_range_to_lin -> Matrix.rank_eq_finrank_range_toLin is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLinₓ'. -/
 theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCommGroup M₁]
     [AddCommGroup M₂] [Module R M₁] [Module R M₂] (A : Matrix m n R) (v₁ : Basis m R M₁)
     (v₂ : Basis n R M₂) : A.rank = finrank R (toLin v₂ v₁ A).range :=
@@ -227,12 +158,6 @@ theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCom
     LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
 
-/- warning: matrix.rank_le_card_height -> Matrix.rank_le_card_height is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [m_fin : Fintype.{u1} m] [_inst_1 : Fintype.{u2} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : StrongRankCondition.{u3} R (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_3))] (A : Matrix.{u1, u2, u3} m n R), LE.le.{0} Nat Nat.hasLe (Matrix.rank.{u1, u2, u3} m n R _inst_1 _inst_3 A) (Fintype.card.{u1} m m_fin)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u1}} {R : Type.{u3}} [m_fin : Fintype.{u2} m] [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u3} R] [_inst_4 : StrongRankCondition.{u3} R (CommSemiring.toSemiring.{u3} R (CommRing.toCommSemiring.{u3} R _inst_3))] (A : Matrix.{u2, u1, u3} m n R), LE.le.{0} Nat instLENat (Matrix.rank.{u2, u1, u3} m n R _inst_1 _inst_3 A) (Fintype.card.{u2} m m_fin)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_le_card_height Matrix.rank_le_card_heightₓ'. -/
 theorem rank_le_card_height [StrongRankCondition R] (A : Matrix m n R) : A.rank ≤ Fintype.card m :=
   by
   haveI : Module.Finite R (m → R) := Module.Finite.pi
@@ -249,9 +174,6 @@ theorem rank_le_height [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (
 #align matrix.rank_le_height Matrix.rank_le_height
 -/
 
-/- warning: matrix.rank_eq_finrank_span_cols -> Matrix.rank_eq_finrank_span_cols is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.rank_eq_finrank_span_cols Matrix.rank_eq_finrank_span_colsₓ'. -/
 /-- The rank of a matrix is the rank of the space spanned by its columns. -/
 theorem rank_eq_finrank_span_cols (A : Matrix m n R) :
     A.rank = finrank R (Submodule.span R (Set.range Aᵀ)) := by rw [rank, Matrix.range_mulVecLin]
@@ -278,9 +200,6 @@ section StarOrderedField
 
 variable [Fintype m] [Field R] [PartialOrder R] [StarOrderedRing R]
 
-/- warning: matrix.ker_mul_vec_lin_conj_transpose_mul_self -> Matrix.ker_mulVecLin_conjTranspose_mul_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.ker_mul_vec_lin_conj_transpose_mul_self Matrix.ker_mulVecLin_conjTranspose_mul_selfₓ'. -/
 theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
     LinearMap.ker (Aᴴ ⬝ A).mulVecLin = LinearMap.ker (mulVecLin A) :=
   by
@@ -294,12 +213,6 @@ theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
   · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_conj_transpose_mul_self Matrix.ker_mulVecLin_conjTranspose_mul_self
 
-/- warning: matrix.rank_conj_transpose_mul_self -> Matrix.rank_conjTranspose_mul_self is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u1} m] [_inst_4 : Field.{u3} R] [_inst_5 : PartialOrder.{u3} R] [_inst_6 : StarOrderedRing.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) _inst_5] (A : Matrix.{u1, u2, u3} m n R), Eq.{1} Nat (Matrix.rank.{u2, u2, u3} n n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)) (Matrix.mul.{u3, u2, u1, u2} n m n R _inst_3 (Distrib.toHasMul.{u3} R (Ring.toDistrib.{u3} R (DivisionRing.toRing.{u3} R (Field.toDivisionRing.{u3} R _inst_4)))) (AddCommGroup.toAddCommMonoid.{u3} R (OrderedAddCommGroup.toAddCommGroup.{u3} R (StarOrderedRing.orderedAddCommGroup.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)))) _inst_5 _inst_6))) (Matrix.conjTranspose.{u3, u1, u2} m n R (InvolutiveStar.toHasStar.{u3} R (StarAddMonoid.toHasInvolutiveStar.{u3} R (AddCommMonoid.toAddMonoid.{u3} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)))))))) (StarRing.toStarAddMonoid.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) (StarOrderedRing.toStarRing.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) _inst_5 _inst_6)))) A) A)) (Matrix.rank.{u1, u2, u3} m n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)) A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u3} m] [_inst_4 : Field.{u1} R] [_inst_5 : PartialOrder.{u1} R] [_inst_6 : StarOrderedRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) _inst_5] (A : Matrix.{u3, u2, u1} m n R), Eq.{1} Nat (Matrix.rank.{u2, u2, u1} n n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)) (Matrix.mul.{u1, u2, u3, u2} n m n R _inst_3 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_4))))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u1} R (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u1} R (StarOrderedRing.instOrderedAddCommGroup.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)))) _inst_5 _inst_6))) (Matrix.conjTranspose.{u1, u3, u2} m n R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_4))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) (StarOrderedRing.toStarRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) _inst_5 _inst_6)))) A) A)) (Matrix.rank.{u3, u2, u1} m n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)) A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_conj_transpose_mul_self Matrix.rank_conjTranspose_mul_selfₓ'. -/
 theorem rank_conjTranspose_mul_self (A : Matrix m n R) : (Aᴴ ⬝ A).rank = A.rank :=
   by
   dsimp only [rank]
@@ -310,12 +223,6 @@ theorem rank_conjTranspose_mul_self (A : Matrix m n R) : (Aᴴ ⬝ A).rank = A.r
   rw [ker_mul_vec_lin_conj_transpose_mul_self]
 #align matrix.rank_conj_transpose_mul_self Matrix.rank_conjTranspose_mul_self
 
-/- warning: matrix.rank_conj_transpose -> Matrix.rank_conjTranspose is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u1} m] [_inst_4 : Field.{u3} R] [_inst_5 : PartialOrder.{u3} R] [_inst_6 : StarOrderedRing.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) _inst_5] (A : Matrix.{u1, u2, u3} m n R), Eq.{1} Nat (Matrix.rank.{u2, u1, u3} n m R _inst_3 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)) (Matrix.conjTranspose.{u3, u1, u2} m n R (InvolutiveStar.toHasStar.{u3} R (StarAddMonoid.toHasInvolutiveStar.{u3} R (AddCommMonoid.toAddMonoid.{u3} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)))))))) (StarRing.toStarAddMonoid.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) (StarOrderedRing.toStarRing.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) _inst_5 _inst_6)))) A)) (Matrix.rank.{u1, u2, u3} m n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)) A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u3} m] [_inst_4 : Field.{u1} R] [_inst_5 : PartialOrder.{u1} R] [_inst_6 : StarOrderedRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) _inst_5] (A : Matrix.{u3, u2, u1} m n R), Eq.{1} Nat (Matrix.rank.{u2, u3, u1} n m R _inst_3 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)) (Matrix.conjTranspose.{u1, u3, u2} m n R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_4))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) (StarOrderedRing.toStarRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) _inst_5 _inst_6)))) A)) (Matrix.rank.{u3, u2, u1} m n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)) A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_conj_transpose Matrix.rank_conjTransposeₓ'. -/
 -- this follows the proof here https://math.stackexchange.com/a/81903/1896
 /-- TODO: prove this in greater generality. -/
 @[simp]
@@ -326,12 +233,6 @@ theorem rank_conjTranspose (A : Matrix m n R) : Aᴴ.rank = A.rank :=
     ((rank_conjTranspose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
 #align matrix.rank_conj_transpose Matrix.rank_conjTranspose
 
-/- warning: matrix.rank_self_mul_conj_transpose -> Matrix.rank_self_mul_conjTranspose is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u1} m] [_inst_4 : Field.{u3} R] [_inst_5 : PartialOrder.{u3} R] [_inst_6 : StarOrderedRing.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) _inst_5] (A : Matrix.{u1, u2, u3} m n R), Eq.{1} Nat (Matrix.rank.{u1, u1, u3} m m R _inst_3 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)) (Matrix.mul.{u3, u1, u2, u1} m n m R _inst_1 (Distrib.toHasMul.{u3} R (Ring.toDistrib.{u3} R (DivisionRing.toRing.{u3} R (Field.toDivisionRing.{u3} R _inst_4)))) (AddCommGroup.toAddCommMonoid.{u3} R (OrderedAddCommGroup.toAddCommGroup.{u3} R (StarOrderedRing.orderedAddCommGroup.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)))) _inst_5 _inst_6))) A (Matrix.conjTranspose.{u3, u1, u2} m n R (InvolutiveStar.toHasStar.{u3} R (StarAddMonoid.toHasInvolutiveStar.{u3} R (AddCommMonoid.toAddMonoid.{u3} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)))))))) (StarRing.toStarAddMonoid.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) (StarOrderedRing.toStarRing.{u3} R (NonUnitalRing.toNonUnitalSemiring.{u3} R (NonUnitalCommRing.toNonUnitalRing.{u3} R (CommRing.toNonUnitalCommRing.{u3} R (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4))))) _inst_5 _inst_6)))) A))) (Matrix.rank.{u1, u2, u3} m n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R _inst_4)) A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u3} m] [_inst_4 : Field.{u1} R] [_inst_5 : PartialOrder.{u1} R] [_inst_6 : StarOrderedRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) _inst_5] (A : Matrix.{u3, u2, u1} m n R), Eq.{1} Nat (Matrix.rank.{u3, u3, u1} m m R _inst_3 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)) (Matrix.mul.{u1, u3, u2, u3} m n m R _inst_1 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_4))))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u1} R (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u1} R (StarOrderedRing.instOrderedAddCommGroup.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)))) _inst_5 _inst_6))) A (Matrix.conjTranspose.{u1, u3, u2} m n R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_4))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) (StarOrderedRing.toStarRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalCommSemiring.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4))))) _inst_5 _inst_6)))) A))) (Matrix.rank.{u3, u2, u1} m n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_4)) A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_self_mul_conj_transpose Matrix.rank_self_mul_conjTransposeₓ'. -/
 @[simp]
 theorem rank_self_mul_conjTranspose (A : Matrix m n R) : (A ⬝ Aᴴ).rank = A.rank := by
   simpa only [rank_conj_transpose, conj_transpose_conj_transpose] using
@@ -344,9 +245,6 @@ section LinearOrderedField
 
 variable [Fintype m] [LinearOrderedField R]
 
-/- warning: matrix.ker_mul_vec_lin_transpose_mul_self -> Matrix.ker_mulVecLin_transpose_mul_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.ker_mul_vec_lin_transpose_mul_self Matrix.ker_mulVecLin_transpose_mul_selfₓ'. -/
 theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
     LinearMap.ker (Aᵀ ⬝ A).mulVecLin = LinearMap.ker (mulVecLin A) :=
   by
@@ -359,12 +257,6 @@ theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
   · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_transpose_mul_self Matrix.ker_mulVecLin_transpose_mul_self
 
-/- warning: matrix.rank_transpose_mul_self -> Matrix.rank_transpose_mul_self is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u1} m] [_inst_4 : LinearOrderedField.{u3} R] (A : Matrix.{u1, u2, u3} m n R), Eq.{1} Nat (Matrix.rank.{u2, u2, u3} n n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))) (Matrix.mul.{u3, u2, u1, u2} n m n R _inst_3 (Distrib.toHasMul.{u3} R (Ring.toDistrib.{u3} R (DivisionRing.toRing.{u3} R (Field.toDivisionRing.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))))) (AddCommGroup.toAddCommMonoid.{u3} R (OrderedAddCommGroup.toAddCommGroup.{u3} R (StrictOrderedRing.toOrderedAddCommGroup.{u3} R (LinearOrderedRing.toStrictOrderedRing.{u3} R (LinearOrderedCommRing.toLinearOrderedRing.{u3} R (LinearOrderedField.toLinearOrderedCommRing.{u3} R _inst_4)))))) (Matrix.transpose.{u3, u1, u2} m n R A) A)) (Matrix.rank.{u1, u2, u3} m n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))) A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u3} m] [_inst_4 : LinearOrderedField.{u1} R] (A : Matrix.{u3, u2, u1} m n R), Eq.{1} Nat (Matrix.rank.{u2, u2, u1} n n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R (LinearOrderedField.toField.{u1} R _inst_4))) (Matrix.mul.{u1, u2, u3, u2} n m n R _inst_3 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R (LinearOrderedCommRing.toLinearOrderedRing.{u1} R (LinearOrderedField.toLinearOrderedCommRing.{u1} R _inst_4))))))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u1} R (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} R (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} R (LinearOrderedField.toLinearOrderedSemifield.{u1} R _inst_4)))))) (Matrix.transpose.{u1, u3, u2} m n R A) A)) (Matrix.rank.{u3, u2, u1} m n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R (LinearOrderedField.toField.{u1} R _inst_4))) A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_transpose_mul_self Matrix.rank_transpose_mul_selfₓ'. -/
 theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ ⬝ A).rank = A.rank :=
   by
   dsimp only [rank]
@@ -375,12 +267,6 @@ theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ ⬝ A).rank = A.rank 
   rw [ker_mul_vec_lin_transpose_mul_self]
 #align matrix.rank_transpose_mul_self Matrix.rank_transpose_mul_self
 
-/- warning: matrix.rank_transpose -> Matrix.rank_transpose is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u1} m] [_inst_4 : LinearOrderedField.{u3} R] (A : Matrix.{u1, u2, u3} m n R), Eq.{1} Nat (Matrix.rank.{u2, u1, u3} n m R _inst_3 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))) (Matrix.transpose.{u3, u1, u2} m n R A)) (Matrix.rank.{u1, u2, u3} m n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))) A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u3} m] [_inst_4 : LinearOrderedField.{u1} R] (A : Matrix.{u3, u2, u1} m n R), Eq.{1} Nat (Matrix.rank.{u2, u3, u1} n m R _inst_3 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R (LinearOrderedField.toField.{u1} R _inst_4))) (Matrix.transpose.{u1, u3, u2} m n R A)) (Matrix.rank.{u3, u2, u1} m n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R (LinearOrderedField.toField.{u1} R _inst_4))) A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_transpose Matrix.rank_transposeₓ'. -/
 /-- TODO: prove this in greater generality. -/
 @[simp]
 theorem rank_transpose (A : Matrix m n R) : Aᵀ.rank = A.rank :=
@@ -388,12 +274,6 @@ theorem rank_transpose (A : Matrix m n R) : Aᵀ.rank = A.rank :=
     ((rank_transpose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
 #align matrix.rank_transpose Matrix.rank_transpose
 
-/- warning: matrix.rank_self_mul_transpose -> Matrix.rank_self_mul_transpose is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {R : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u1} m] [_inst_4 : LinearOrderedField.{u3} R] (A : Matrix.{u1, u2, u3} m n R), Eq.{1} Nat (Matrix.rank.{u1, u1, u3} m m R _inst_3 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))) (Matrix.mul.{u3, u1, u2, u1} m n m R _inst_1 (Distrib.toHasMul.{u3} R (Ring.toDistrib.{u3} R (DivisionRing.toRing.{u3} R (Field.toDivisionRing.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))))) (AddCommGroup.toAddCommMonoid.{u3} R (OrderedAddCommGroup.toAddCommGroup.{u3} R (StrictOrderedRing.toOrderedAddCommGroup.{u3} R (LinearOrderedRing.toStrictOrderedRing.{u3} R (LinearOrderedCommRing.toLinearOrderedRing.{u3} R (LinearOrderedField.toLinearOrderedCommRing.{u3} R _inst_4)))))) A (Matrix.transpose.{u3, u1, u2} m n R A))) (Matrix.rank.{u1, u2, u3} m n R _inst_1 (EuclideanDomain.toCommRing.{u3} R (Field.toEuclideanDomain.{u3} R (LinearOrderedField.toField.{u3} R _inst_4))) A)
-but is expected to have type
-  forall {m : Type.{u3}} {n : Type.{u2}} {R : Type.{u1}} [_inst_1 : Fintype.{u2} n] [_inst_3 : Fintype.{u3} m] [_inst_4 : LinearOrderedField.{u1} R] (A : Matrix.{u3, u2, u1} m n R), Eq.{1} Nat (Matrix.rank.{u3, u3, u1} m m R _inst_3 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R (LinearOrderedField.toField.{u1} R _inst_4))) (Matrix.mul.{u1, u3, u2, u3} m n m R _inst_1 (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R (LinearOrderedCommRing.toLinearOrderedRing.{u1} R (LinearOrderedField.toLinearOrderedCommRing.{u1} R _inst_4))))))) (OrderedCancelAddCommMonoid.toAddCommMonoid.{u1} R (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} R (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} R (LinearOrderedField.toLinearOrderedSemifield.{u1} R _inst_4)))))) A (Matrix.transpose.{u1, u3, u2} m n R A))) (Matrix.rank.{u3, u2, u1} m n R _inst_1 (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R (LinearOrderedField.toField.{u1} R _inst_4))) A)
-Case conversion may be inaccurate. Consider using '#align matrix.rank_self_mul_transpose Matrix.rank_self_mul_transposeₓ'. -/
 @[simp]
 theorem rank_self_mul_transpose (A : Matrix m n R) : (A ⬝ Aᵀ).rank = A.rank := by
   simpa only [rank_transpose, transpose_transpose] using rank_transpose_mul_self Aᵀ
@@ -401,9 +281,6 @@ theorem rank_self_mul_transpose (A : Matrix m n R) : (A ⬝ Aᵀ).rank = A.rank 
 
 end LinearOrderedField
 
-/- warning: matrix.rank_eq_finrank_span_row -> Matrix.rank_eq_finrank_span_row is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align matrix.rank_eq_finrank_span_row Matrix.rank_eq_finrank_span_rowₓ'. -/
 /-- The rank of a matrix is the rank of the space spanned by its rows.
 
 TODO: prove this in a generality that works for `ℂ` too, not just `ℚ` and `ℝ`. -/

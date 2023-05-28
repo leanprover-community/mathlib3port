@@ -142,9 +142,6 @@ theorem toFractionRing_injective : Function.Injective (toFractionRing : _ → Fr
 #align ratfunc.to_fraction_ring_injective RatFunc.toFractionRing_injective
 -/
 
-/- warning: ratfunc.lift_on -> RatFunc.liftOn is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_on RatFunc.liftOnₓ'. -/
 /-- Non-dependent recursion principle for `ratfunc K`:
 To construct a term of `P : Sort*` out of `x : ratfunc K`,
 it suffices to provide a constructor `f : Π (p q : K[X]), P`
@@ -169,9 +166,6 @@ protected irreducible_def liftOn {P : Sort v} (x : RatFunc K) (f : ∀ p q : K[X
       mul_cancel_left_coe_nonZeroDivisors.mp mul_eq)
 #align ratfunc.lift_on RatFunc.liftOn
 
-/- warning: ratfunc.lift_on_of_fraction_ring_mk -> RatFunc.liftOn_ofFractionRing_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_on_of_fraction_ring_mk RatFunc.liftOn_ofFractionRing_mkₓ'. -/
 theorem liftOn_ofFractionRing_mk {P : Sort v} (n : K[X]) (d : K[X]⁰) (f : ∀ p q : K[X], P)
     (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q') :
     RatFunc.liftOn (of_fraction_ring (Localization.mk n d)) f @H = f n d :=
@@ -195,9 +189,6 @@ protected irreducible_def mk (p q : K[X]) : RatFunc K :=
 #align ratfunc.mk RatFunc.mk
 -/
 
-/- warning: ratfunc.mk_eq_div' -> RatFunc.mk_eq_div' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_eq_div' RatFunc.mk_eq_div'ₓ'. -/
 theorem mk_eq_div' (p q : K[X]) :
     RatFunc.mk p q = ofFractionRing (algebraMap _ _ p / algebraMap _ _ q) := by unfold RatFunc.mk
 #align ratfunc.mk_eq_div' RatFunc.mk_eq_div'
@@ -208,43 +199,28 @@ theorem mk_zero (p : K[X]) : RatFunc.mk p 0 = ofFractionRing 0 := by
 #align ratfunc.mk_zero RatFunc.mk_zero
 -/
 
-/- warning: ratfunc.mk_coe_def -> RatFunc.mk_coe_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_coe_def RatFunc.mk_coe_defₓ'. -/
 theorem mk_coe_def (p : K[X]) (q : K[X]⁰) :
     RatFunc.mk p q = ofFractionRing (IsLocalization.mk' _ p q) := by
   simp only [mk_eq_div', ← Localization.mk_eq_mk', FractionRing.mk_eq_div]
 #align ratfunc.mk_coe_def RatFunc.mk_coe_def
 
-/- warning: ratfunc.mk_def_of_mem -> RatFunc.mk_def_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_def_of_mem RatFunc.mk_def_of_memₓ'. -/
 theorem mk_def_of_mem (p : K[X]) {q} (hq : q ∈ K[X]⁰) :
     RatFunc.mk p q = ofFractionRing (IsLocalization.mk' _ p ⟨q, hq⟩) := by
   simp only [← mk_coe_def, [anonymous]]
 #align ratfunc.mk_def_of_mem RatFunc.mk_def_of_mem
 
-/- warning: ratfunc.mk_def_of_ne -> RatFunc.mk_def_of_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_def_of_ne RatFunc.mk_def_of_neₓ'. -/
 theorem mk_def_of_ne (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     RatFunc.mk p q =
       ofFractionRing (IsLocalization.mk' _ p ⟨q, mem_nonZeroDivisors_iff_ne_zero.mpr hq⟩) :=
   mk_def_of_mem p _
 #align ratfunc.mk_def_of_ne RatFunc.mk_def_of_ne
 
-/- warning: ratfunc.mk_eq_localization_mk -> RatFunc.mk_eq_localization_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_eq_localization_mk RatFunc.mk_eq_localization_mkₓ'. -/
 theorem mk_eq_localization_mk (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     RatFunc.mk p q =
       ofFractionRing (Localization.mk p ⟨q, mem_nonZeroDivisors_iff_ne_zero.mpr hq⟩) :=
   by rw [mk_def_of_ne, Localization.mk_eq_mk']
 #align ratfunc.mk_eq_localization_mk RatFunc.mk_eq_localization_mk
 
-/- warning: ratfunc.mk_one' -> RatFunc.mk_one' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_one' RatFunc.mk_one'ₓ'. -/
 theorem mk_one' (p : K[X]) : RatFunc.mk p 1 = ofFractionRing (algebraMap _ _ p) := by
   rw [← IsLocalization.mk'_one (FractionRing K[X]) p, ← mk_coe_def, Submonoid.coe_one]
 #align ratfunc.mk_one' RatFunc.mk_one'
@@ -258,9 +234,6 @@ theorem mk_eq_mk {p q p' q' : K[X]} (hq : q ≠ 0) (hq' : q' ≠ 0) :
 #align ratfunc.mk_eq_mk RatFunc.mk_eq_mk
 -/
 
-/- warning: ratfunc.lift_on_mk -> RatFunc.liftOn_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_on_mk RatFunc.liftOn_mkₓ'. -/
 theorem liftOn_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p, f p 0 = f 0 1)
     (H' : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), q' * p = q * p' → f p q = f p' q')
     (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q' :=
@@ -382,12 +355,6 @@ protected irreducible_def sub : RatFunc K → RatFunc K → RatFunc K
 instance : Sub (RatFunc K) :=
   ⟨RatFunc.sub⟩
 
-/- warning: ratfunc.of_fraction_ring_sub -> RatFunc.ofFractionRing_sub is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] (p : FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (q : FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (HSub.hSub.{u1, u1, u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (instHSub.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (SubNegMonoid.toHasSub.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (AddGroup.toSubNegMonoid.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (AddGroupWithOne.toAddGroup.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Ring.toAddCommGroupWithOne.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (CommRing.toRing.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Localization.commRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring) (nonZeroDivisors.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Ring.toSemiring.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (CommRing.toRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring))))))))))))) p q)) (HSub.hSub.{u1, u1, u1} (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (instHSub.{u1} (RatFunc.{u1} K hring) (RatFunc.hasSub.{u1} K hring)) (RatFunc.ofFractionRing.{u1} K hring p) (RatFunc.ofFractionRing.{u1} K hring q))
-but is expected to have type
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] (p : FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (q : FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (HSub.hSub.{u1, u1, u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (instHSub.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Ring.toSub.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (CommRing.toRing.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Localization.instCommRingLocalizationToCommMonoid.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring) (nonZeroDivisors.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommSemiring.toSemiring.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommRing.toCommSemiring.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring))))))))) p q)) (HSub.hSub.{u1, u1, u1} (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (instHSub.{u1} (RatFunc.{u1} K hring) (RatFunc.instSubRatFunc.{u1} K hring)) (RatFunc.ofFractionRing.{u1} K hring p) (RatFunc.ofFractionRing.{u1} K hring q))
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_sub RatFunc.ofFractionRing_subₓ'. -/
 theorem ofFractionRing_sub (p q : FractionRing K[X]) :
     ofFractionRing (p - q) = ofFractionRing p - ofFractionRing q := by unfold Sub.sub RatFunc.sub
 #align ratfunc.of_fraction_ring_sub RatFunc.ofFractionRing_sub
@@ -451,12 +418,6 @@ protected irreducible_def div : RatFunc K → RatFunc K → RatFunc K
 instance : Div (RatFunc K) :=
   ⟨RatFunc.div⟩
 
-/- warning: ratfunc.of_fraction_ring_div -> RatFunc.ofFractionRing_div is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))] (p : FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (q : FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (HDiv.hDiv.{u1, u1, u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (instHDiv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (DivInvMonoid.toHasDiv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (DivisionRing.toDivInvMonoid.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Field.toDivisionRing.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.field.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring) (Polynomial.isDomain.{u1} K (CommRing.toRing.{u1} K hring) hdomain)))))) p q)) (HDiv.hDiv.{u1, u1, u1} (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (instHDiv.{u1} (RatFunc.{u1} K hring) (RatFunc.hasDiv.{u1} K hring hdomain)) (RatFunc.ofFractionRing.{u1} K hring p) (RatFunc.ofFractionRing.{u1} K hring q))
-but is expected to have type
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))] (p : FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (q : FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (HDiv.hDiv.{u1, u1, u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (instHDiv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Field.toDiv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.instFieldFractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring) (Polynomial.instIsDomainPolynomialToSemiringSemiring.{u1} K (CommRing.toRing.{u1} K hring) hdomain)))) p q)) (HDiv.hDiv.{u1, u1, u1} (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (RatFunc.{u1} K hring) (instHDiv.{u1} (RatFunc.{u1} K hring) (RatFunc.instDivRatFunc.{u1} K hring hdomain)) (RatFunc.ofFractionRing.{u1} K hring p) (RatFunc.ofFractionRing.{u1} K hring q))
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_div RatFunc.ofFractionRing_divₓ'. -/
 theorem ofFractionRing_div (p q : FractionRing K[X]) :
     ofFractionRing (p / q) = ofFractionRing p / ofFractionRing q := by unfold Div.div RatFunc.div
 #align ratfunc.of_fraction_ring_div RatFunc.ofFractionRing_div
@@ -471,12 +432,6 @@ protected irreducible_def inv : RatFunc K → RatFunc K
 instance : Inv (RatFunc K) :=
   ⟨RatFunc.inv⟩
 
-/- warning: ratfunc.of_fraction_ring_inv -> RatFunc.ofFractionRing_inv is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))] (p : FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (Inv.inv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (DivInvMonoid.toHasInv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (DivisionRing.toDivInvMonoid.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Field.toDivisionRing.{u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.field.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring) (Polynomial.isDomain.{u1} K (CommRing.toRing.{u1} K hring) hdomain))))) p)) (Inv.inv.{u1} (RatFunc.{u1} K hring) (RatFunc.hasInv.{u1} K hring hdomain) (RatFunc.ofFractionRing.{u1} K hring p))
-but is expected to have type
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))] (p : FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (Inv.inv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (Field.toInv.{u1} (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (FractionRing.instFieldFractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring) (Polynomial.instIsDomainPolynomialToSemiringSemiring.{u1} K (CommRing.toRing.{u1} K hring) hdomain))) p)) (Inv.inv.{u1} (RatFunc.{u1} K hring) (RatFunc.instInvRatFunc.{u1} K hring hdomain) (RatFunc.ofFractionRing.{u1} K hring p))
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_inv RatFunc.ofFractionRing_invₓ'. -/
 theorem ofFractionRing_inv (p : FractionRing K[X]) : ofFractionRing p⁻¹ = (ofFractionRing p)⁻¹ := by
   unfold Inv.inv RatFunc.inv
 #align ratfunc.of_fraction_ring_inv RatFunc.ofFractionRing_inv
@@ -509,29 +464,14 @@ protected irreducible_def smul [SMul R (FractionRing K[X])] : R → RatFunc K �
 instance [SMul R (FractionRing K[X])] : SMul R (RatFunc K) :=
   ⟨RatFunc.smul⟩
 
-/- warning: ratfunc.of_fraction_ring_smul -> RatFunc.ofFractionRing_smul is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] {R : Type.{u2}} [_inst_1 : SMul.{u2, u1} R (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring))] (c : R) (p : FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)), Eq.{succ u1} (RatFunc.{u1} K hring) (RatFunc.ofFractionRing.{u1} K hring (SMul.smul.{u2, u1} R (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) _inst_1 c p)) (SMul.smul.{u2, u1} R (RatFunc.{u1} K hring) (RatFunc.hasSmul.{u1, u2} K hring R _inst_1) c (RatFunc.ofFractionRing.{u1} K hring p))
-but is expected to have type
-  forall {K : Type.{u2}} [hring : CommRing.{u2} K] {R : Type.{u1}} [_inst_1 : SMul.{u1, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring))] (c : R) (p : FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)), Eq.{succ u2} (RatFunc.{u2} K hring) (RatFunc.ofFractionRing.{u2} K hring (HSMul.hSMul.{u1, u2, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (instHSMul.{u1, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) _inst_1) c p)) (HSMul.hSMul.{u1, u2, u2} R (RatFunc.{u2} K hring) (RatFunc.{u2} K hring) (instHSMul.{u1, u2} R (RatFunc.{u2} K hring) (RatFunc.instSMulRatFunc.{u2, u1} K hring R _inst_1)) c (RatFunc.ofFractionRing.{u2} K hring p))
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_smul RatFunc.ofFractionRing_smulₓ'. -/
 theorem ofFractionRing_smul [SMul R (FractionRing K[X])] (c : R) (p : FractionRing K[X]) :
     ofFractionRing (c • p) = c • ofFractionRing p := by unfold SMul.smul RatFunc.smul
 #align ratfunc.of_fraction_ring_smul RatFunc.ofFractionRing_smul
 
-/- warning: ratfunc.to_fraction_ring_smul -> RatFunc.toFractionRing_smul is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] {R : Type.{u2}} [_inst_1 : SMul.{u2, u1} R (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring))] (c : R) (p : RatFunc.{u1} K hring), Eq.{succ u1} (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (RatFunc.toFractionRing.{u1} K hring (SMul.smul.{u2, u1} R (RatFunc.{u1} K hring) (RatFunc.hasSmul.{u1, u2} K hring R _inst_1) c p)) (SMul.smul.{u2, u1} R (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) _inst_1 c (RatFunc.toFractionRing.{u1} K hring p))
-but is expected to have type
-  forall {K : Type.{u2}} [hring : CommRing.{u2} K] {R : Type.{u1}} [_inst_1 : SMul.{u1, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring))] (c : R) (p : RatFunc.{u2} K hring), Eq.{succ u2} (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (RatFunc.toFractionRing.{u2} K hring (HSMul.hSMul.{u1, u2, u2} R (RatFunc.{u2} K hring) (RatFunc.{u2} K hring) (instHSMul.{u1, u2} R (RatFunc.{u2} K hring) (RatFunc.instSMulRatFunc.{u2, u1} K hring R _inst_1)) c p)) (HSMul.hSMul.{u1, u2, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (instHSMul.{u1, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) _inst_1) c (RatFunc.toFractionRing.{u2} K hring p))
-Case conversion may be inaccurate. Consider using '#align ratfunc.to_fraction_ring_smul RatFunc.toFractionRing_smulₓ'. -/
 theorem toFractionRing_smul [SMul R (FractionRing K[X])] (c : R) (p : RatFunc K) :
     toFractionRing (c • p) = c • toFractionRing p := by cases p; rw [← of_fraction_ring_smul]
 #align ratfunc.to_fraction_ring_smul RatFunc.toFractionRing_smul
 
-/- warning: ratfunc.smul_eq_C_smul -> RatFunc.smul_eq_C_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.smul_eq_C_smul RatFunc.smul_eq_C_smulₓ'. -/
 theorem smul_eq_C_smul (x : RatFunc K) (r : K) : r • x = Polynomial.C r • x :=
   by
   cases x
@@ -550,9 +490,6 @@ variable [htower : IsScalarTower R K[X] K[X]]
 
 include htower
 
-/- warning: ratfunc.mk_smul -> RatFunc.mk_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_smul RatFunc.mk_smulₓ'. -/
 theorem mk_smul (c : R) (p q : K[X]) : RatFunc.mk (c • p) q = c • RatFunc.mk p q :=
   by
   by_cases hq : q = 0
@@ -580,12 +517,6 @@ instance : Inhabited (RatFunc K) :=
 instance [Nontrivial K] : Nontrivial (RatFunc K) :=
   ofFractionRing_injective.Nontrivial
 
-/- warning: ratfunc.to_fraction_ring_ring_equiv -> RatFunc.toFractionRingRingEquiv is a dubious translation:
-lean 3 declaration is
-  forall (K : Type.{u1}) [hring : CommRing.{u1} K], RingEquiv.{u1, u1} (RatFunc.{u1} K hring) (FractionRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (RatFunc.hasMul.{u1} K hring) (RatFunc.hasAdd.{u1} K hring) (Localization.hasMul.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (CommRing.toCommMonoid.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (nonZeroDivisors.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Ring.toSemiring.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (CommRing.toRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring)))))) (Localization.hasAdd.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring)) (nonZeroDivisors.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Ring.toSemiring.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (CommRing.toRing.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commRing.{u1} K hring))))))
-but is expected to have type
-  forall (K : Type.{u1}) [hring : CommRing.{u1} K], RingEquiv.{u1, u1} (RatFunc.{u1} K hring) (FractionRing.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (RatFunc.instMulRatFunc.{u1} K hring) (Localization.instMulLocalization.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommRing.toCommMonoid.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)) (nonZeroDivisors.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommSemiring.toSemiring.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommRing.toCommSemiring.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring)))))) (RatFunc.instAddRatFunc.{u1} K hring) (Localization.instAddLocalizationToCommMonoid.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring)) (nonZeroDivisors.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommSemiring.toSemiring.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (CommRing.toCommSemiring.{u1} (Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Polynomial.commRing.{u1} K hring))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.to_fraction_ring_ring_equiv RatFunc.toFractionRingRingEquivₓ'. -/
 /-- `ratfunc K` is isomorphic to the field of fractions of `K[X]`, as rings.
 
 This is an auxiliary definition; `simp`-normal form is `is_localization.alg_equiv`.
@@ -704,9 +635,6 @@ variable {G₀ L R S F : Type _} [CommGroupWithZero G₀] [Field L] [CommRing R]
 
 omit hring
 
-/- warning: ratfunc.map -> RatFunc.map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map RatFunc.mapₓ'. -/
 /-- Lift a monoid homomorphism that maps polynomials `φ : R[X] →* S[X]`
 to a `ratfunc R →* ratfunc S`,
 on the condition that `φ` maps non zero divisors to non zero divisors,
@@ -741,9 +669,6 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
     · rfl
 #align ratfunc.map RatFunc.map
 
-/- warning: ratfunc.map_apply_of_fraction_ring_mk -> RatFunc.map_apply_ofFractionRing_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_apply_of_fraction_ring_mk RatFunc.map_apply_ofFractionRing_mkₓ'. -/
 theorem map_apply_ofFractionRing_mk [MonoidHomClass F R[X] S[X]] (φ : F)
     (hφ : R[X]⁰ ≤ S[X]⁰.comap φ) (n : R[X]) (d : R[X]⁰) :
     map φ hφ (ofFractionRing (Localization.mk n d)) =
@@ -753,9 +678,6 @@ theorem map_apply_ofFractionRing_mk [MonoidHomClass F R[X] S[X]] (φ : F)
   rw [dif_pos]
 #align ratfunc.map_apply_of_fraction_ring_mk RatFunc.map_apply_ofFractionRing_mk
 
-/- warning: ratfunc.map_injective -> RatFunc.map_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_injective RatFunc.map_injectiveₓ'. -/
 theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap φ)
     (hf : Function.Injective φ) : Function.Injective (map φ hφ) :=
   by
@@ -768,9 +690,6 @@ theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S
   · rfl
 #align ratfunc.map_injective RatFunc.map_injective
 
-/- warning: ratfunc.map_ring_hom -> RatFunc.mapRingHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_ring_hom RatFunc.mapRingHomₓ'. -/
 /-- Lift a ring homomorphism that maps polynomials `φ : R[X] →+* S[X]`
 to a `ratfunc R →+* ratfunc S`,
 on the condition that `φ` maps non zero divisors to non zero divisors,
@@ -794,17 +713,11 @@ def mapRingHom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.co
       · rfl }
 #align ratfunc.map_ring_hom RatFunc.mapRingHom
 
-/- warning: ratfunc.coe_map_ring_hom_eq_coe_map -> RatFunc.coe_mapRingHom_eq_coe_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_map_ring_hom_eq_coe_map RatFunc.coe_mapRingHom_eq_coe_mapₓ'. -/
 theorem coe_mapRingHom_eq_coe_map [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap φ) :
     (mapRingHom φ hφ : RatFunc R → RatFunc S) = map φ hφ :=
   rfl
 #align ratfunc.coe_map_ring_hom_eq_coe_map RatFunc.coe_mapRingHom_eq_coe_map
 
-/- warning: ratfunc.lift_monoid_with_zero_hom -> RatFunc.liftMonoidWithZeroHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_monoid_with_zero_hom RatFunc.liftMonoidWithZeroHomₓ'. -/
 -- TODO: Generalize to `fun_like` classes,
 /-- Lift an monoid with zero homomorphism `R[X] →*₀ G₀` to a `ratfunc R →*₀ G₀`
 on the condition that `φ` maps non zero divisors to non zero divisors,
@@ -834,18 +747,12 @@ def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.co
     simp only [map_zero, zero_div]
 #align ratfunc.lift_monoid_with_zero_hom RatFunc.liftMonoidWithZeroHom
 
-/- warning: ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk -> RatFunc.liftMonoidWithZeroHom_apply_ofFractionRing_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk RatFunc.liftMonoidWithZeroHom_apply_ofFractionRing_mkₓ'. -/
 theorem liftMonoidWithZeroHom_apply_ofFractionRing_mk (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.comap φ)
     (n : R[X]) (d : R[X]⁰) :
     liftMonoidWithZeroHom φ hφ (ofFractionRing (Localization.mk n d)) = φ n / φ d :=
   liftOn_ofFractionRing_mk _ _ _ _
 #align ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk RatFunc.liftMonoidWithZeroHom_apply_ofFractionRing_mk
 
-/- warning: ratfunc.lift_monoid_with_zero_hom_injective -> RatFunc.liftMonoidWithZeroHom_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_monoid_with_zero_hom_injective RatFunc.liftMonoidWithZeroHom_injectiveₓ'. -/
 theorem liftMonoidWithZeroHom_injective [Nontrivial R] (φ : R[X] →*₀ G₀) (hφ : Function.Injective φ)
     (hφ' : R[X]⁰ ≤ G₀⁰.comap φ := nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _ hφ) :
     Function.Injective (liftMonoidWithZeroHom φ hφ') :=
@@ -861,9 +768,6 @@ theorem liftMonoidWithZeroHom_injective [Nontrivial R] (φ : R[X] →*₀ G₀) 
   · exact fun _ => rfl
 #align ratfunc.lift_monoid_with_zero_hom_injective RatFunc.liftMonoidWithZeroHom_injective
 
-/- warning: ratfunc.lift_ring_hom -> RatFunc.liftRingHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_ring_hom RatFunc.liftRingHomₓ'. -/
 /-- Lift an injective ring homomorphism `R[X] →+* L` to a `ratfunc R →+* L`
 by mapping both the numerator and denominator and quotienting them. -/
 def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : RatFunc R →+* L :=
@@ -886,17 +790,11 @@ def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : RatFunc 
       · rfl }
 #align ratfunc.lift_ring_hom RatFunc.liftRingHom
 
-/- warning: ratfunc.lift_ring_hom_apply_of_fraction_ring_mk -> RatFunc.liftRingHom_apply_ofFractionRing_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_ring_hom_apply_of_fraction_ring_mk RatFunc.liftRingHom_apply_ofFractionRing_mkₓ'. -/
 theorem liftRingHom_apply_ofFractionRing_mk (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) (n : R[X])
     (d : R[X]⁰) : liftRingHom φ hφ (ofFractionRing (Localization.mk n d)) = φ n / φ d :=
   liftMonoidWithZeroHom_apply_ofFractionRing_mk _ _ _ _
 #align ratfunc.lift_ring_hom_apply_of_fraction_ring_mk RatFunc.liftRingHom_apply_ofFractionRing_mk
 
-/- warning: ratfunc.lift_ring_hom_injective -> RatFunc.liftRingHom_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_ring_hom_injective RatFunc.liftRingHom_injectiveₓ'. -/
 theorem liftRingHom_injective [Nontrivial R] (φ : R[X] →+* L) (hφ : Function.Injective φ)
     (hφ' : R[X]⁰ ≤ L⁰.comap φ := nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _ hφ) :
     Function.Injective (liftRingHom φ hφ') :=
@@ -950,32 +848,20 @@ instance (R : Type _) [CommSemiring R] [Algebra R K[X]] : Algebra R (RatFunc K)
 
 variable {K}
 
-/- warning: ratfunc.mk_one -> RatFunc.mk_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_one RatFunc.mk_oneₓ'. -/
 theorem mk_one (x : K[X]) : RatFunc.mk x 1 = algebraMap _ _ x :=
   rfl
 #align ratfunc.mk_one RatFunc.mk_one
 
-/- warning: ratfunc.of_fraction_ring_algebra_map -> RatFunc.ofFractionRing_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_algebra_map RatFunc.ofFractionRing_algebraMapₓ'. -/
 theorem ofFractionRing_algebraMap (x : K[X]) :
     ofFractionRing (algebraMap _ (FractionRing K[X]) x) = algebraMap _ _ x := by
   rw [← mk_one, mk_one']
 #align ratfunc.of_fraction_ring_algebra_map RatFunc.ofFractionRing_algebraMap
 
-/- warning: ratfunc.mk_eq_div -> RatFunc.mk_eq_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.mk_eq_div RatFunc.mk_eq_divₓ'. -/
 @[simp]
 theorem mk_eq_div (p q : K[X]) : RatFunc.mk p q = algebraMap _ _ p / algebraMap _ _ q := by
   simp only [mk_eq_div', of_fraction_ring_div, of_fraction_ring_algebra_map]
 #align ratfunc.mk_eq_div RatFunc.mk_eq_div
 
-/- warning: ratfunc.div_smul -> RatFunc.div_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.div_smul RatFunc.div_smulₓ'. -/
 @[simp]
 theorem div_smul {R} [Monoid R] [DistribMulAction R K[X]] [IsScalarTower R K[X] K[X]] (c : R)
     (p q : K[X]) :
@@ -984,17 +870,11 @@ theorem div_smul {R} [Monoid R] [DistribMulAction R K[X]] [IsScalarTower R K[X] 
   by rw [← mk_eq_div, mk_smul, mk_eq_div]
 #align ratfunc.div_smul RatFunc.div_smul
 
-/- warning: ratfunc.algebra_map_apply -> RatFunc.algebraMap_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_apply RatFunc.algebraMap_applyₓ'. -/
 theorem algebraMap_apply {R : Type _} [CommSemiring R] [Algebra R K[X]] (x : R) :
     algebraMap R (RatFunc K) x = algebraMap _ _ (algebraMap R K[X] x) / algebraMap K[X] _ 1 := by
   rw [← mk_eq_div]; rfl
 #align ratfunc.algebra_map_apply RatFunc.algebraMap_apply
 
-/- warning: ratfunc.map_apply_div_ne_zero -> RatFunc.map_apply_div_ne_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_apply_div_ne_zero RatFunc.map_apply_div_ne_zeroₓ'. -/
 theorem map_apply_div_ne_zero {R F : Type _} [CommRing R] [IsDomain R] [MonoidHomClass F K[X] R[X]]
     (φ : F) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) (p q : K[X]) (hq : q ≠ 0) :
     map φ hφ (algebraMap _ _ p / algebraMap _ _ q) = algebraMap _ _ (φ p) / algebraMap _ _ (φ q) :=
@@ -1004,9 +884,6 @@ theorem map_apply_div_ne_zero {R F : Type _} [CommRing R] [IsDomain R] [MonoidHo
     mk_eq_localization_mk _ hq', [anonymous]]
 #align ratfunc.map_apply_div_ne_zero RatFunc.map_apply_div_ne_zero
 
-/- warning: ratfunc.map_apply_div -> RatFunc.map_apply_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_apply_div RatFunc.map_apply_divₓ'. -/
 @[simp]
 theorem map_apply_div {R F : Type _} [CommRing R] [IsDomain R] [MonoidWithZeroHomClass F K[X] R[X]]
     (φ : F) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) (p q : K[X]) :
@@ -1020,9 +897,6 @@ theorem map_apply_div {R F : Type _} [CommRing R] [IsDomain R] [MonoidWithZeroHo
   exact map_apply_div_ne_zero _ _ _ _ hq
 #align ratfunc.map_apply_div RatFunc.map_apply_div
 
-/- warning: ratfunc.lift_monoid_with_zero_hom_apply_div -> RatFunc.liftMonoidWithZeroHom_apply_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_monoid_with_zero_hom_apply_div RatFunc.liftMonoidWithZeroHom_apply_divₓ'. -/
 @[simp]
 theorem liftMonoidWithZeroHom_apply_div {L : Type _} [CommGroupWithZero L]
     (φ : MonoidWithZeroHom K[X] L) (hφ : K[X]⁰ ≤ L⁰.comap φ) (p q : K[X]) :
@@ -1034,9 +908,6 @@ theorem liftMonoidWithZeroHom_apply_div {L : Type _} [CommGroupWithZero L]
     lift_monoid_with_zero_hom_apply_of_fraction_ring_mk]
 #align ratfunc.lift_monoid_with_zero_hom_apply_div RatFunc.liftMonoidWithZeroHom_apply_div
 
-/- warning: ratfunc.lift_ring_hom_apply_div -> RatFunc.liftRingHom_apply_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_ring_hom_apply_div RatFunc.liftRingHom_apply_divₓ'. -/
 @[simp]
 theorem liftRingHom_apply_div {L : Type _} [Field L] (φ : K[X] →+* L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
     (p q : K[X]) : liftRingHom φ hφ (algebraMap _ _ p / algebraMap _ _ q) = φ p / φ q :=
@@ -1045,26 +916,17 @@ theorem liftRingHom_apply_div {L : Type _} [Field L] (φ : K[X] →+* L) (hφ : 
 
 variable (K)
 
-/- warning: ratfunc.of_fraction_ring_comp_algebra_map -> RatFunc.ofFractionRing_comp_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_comp_algebra_map RatFunc.ofFractionRing_comp_algebraMapₓ'. -/
 theorem ofFractionRing_comp_algebraMap :
     ofFractionRing ∘ algebraMap K[X] (FractionRing K[X]) = algebraMap _ _ :=
   funext ofFractionRing_algebraMap
 #align ratfunc.of_fraction_ring_comp_algebra_map RatFunc.ofFractionRing_comp_algebraMap
 
-/- warning: ratfunc.algebra_map_injective -> RatFunc.algebraMap_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_injective RatFunc.algebraMap_injectiveₓ'. -/
 theorem algebraMap_injective : Function.Injective (algebraMap K[X] (RatFunc K)) :=
   by
   rw [← of_fraction_ring_comp_algebra_map]
   exact of_fraction_ring_injective.comp (IsFractionRing.injective _ _)
 #align ratfunc.algebra_map_injective RatFunc.algebraMap_injective
 
-/- warning: ratfunc.algebra_map_eq_zero_iff -> RatFunc.algebraMap_eq_zero_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_eq_zero_iff RatFunc.algebraMap_eq_zero_iffₓ'. -/
 @[simp]
 theorem algebraMap_eq_zero_iff {x : K[X]} : algebraMap K[X] (RatFunc K) x = 0 ↔ x = 0 :=
   ⟨(injective_iff_map_eq_zero _).mp (algebraMap_injective K) _, fun hx => by
@@ -1073,9 +935,6 @@ theorem algebraMap_eq_zero_iff {x : K[X]} : algebraMap K[X] (RatFunc K) x = 0 �
 
 variable {K}
 
-/- warning: ratfunc.algebra_map_ne_zero -> RatFunc.algebraMap_ne_zero is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_ne_zero RatFunc.algebraMap_ne_zeroₓ'. -/
 theorem algebraMap_ne_zero {x : K[X]} (hx : x ≠ 0) : algebraMap K[X] (RatFunc K) x ≠ 0 :=
   mt (algebraMap_eq_zero_iff K).mp hx
 #align ratfunc.algebra_map_ne_zero RatFunc.algebraMap_ne_zero
@@ -1085,9 +944,6 @@ section LiftAlgHom
 variable {L R S : Type _} [Field L] [CommRing R] [IsDomain R] [CommSemiring S] [Algebra S K[X]]
   [Algebra S L] [Algebra S R[X]] (φ : K[X] →ₐ[S] L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
 
-/- warning: ratfunc.map_alg_hom -> RatFunc.mapAlgHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_alg_hom RatFunc.mapAlgHomₓ'. -/
 /-- Lift an algebra homomorphism that maps polynomials `φ : K[X] →ₐ[S] R[X]`
 to a `ratfunc K →ₐ[S] ratfunc R`,
 on the condition that `φ` maps non zero divisors to non zero divisors,
@@ -1099,17 +955,11 @@ def mapAlgHom (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) : 
         map_one, AlgHom.commutes] }
 #align ratfunc.map_alg_hom RatFunc.mapAlgHom
 
-/- warning: ratfunc.coe_map_alg_hom_eq_coe_map -> RatFunc.coe_mapAlgHom_eq_coe_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_map_alg_hom_eq_coe_map RatFunc.coe_mapAlgHom_eq_coe_mapₓ'. -/
 theorem coe_mapAlgHom_eq_coe_map (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) :
     (mapAlgHom φ hφ : RatFunc K → RatFunc R) = map φ hφ :=
   rfl
 #align ratfunc.coe_map_alg_hom_eq_coe_map RatFunc.coe_mapAlgHom_eq_coe_map
 
-/- warning: ratfunc.lift_alg_hom -> RatFunc.liftAlgHom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_alg_hom RatFunc.liftAlgHomₓ'. -/
 /-- Lift an injective algebra homomorphism `K[X] →ₐ[S] L` to a `ratfunc K →ₐ[S] L`
 by mapping both the numerator and denominator and quotienting them. -/
 def liftAlgHom : RatFunc K →ₐ[S] L :=
@@ -1119,26 +969,17 @@ def liftAlgHom : RatFunc K →ₐ[S] L :=
         lift_ring_hom_apply_div, AlgHom.coe_toRingHom, map_one, div_one, AlgHom.commutes] }
 #align ratfunc.lift_alg_hom RatFunc.liftAlgHom
 
-/- warning: ratfunc.lift_alg_hom_apply_of_fraction_ring_mk -> RatFunc.liftAlgHom_apply_ofFractionRing_mk is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_alg_hom_apply_of_fraction_ring_mk RatFunc.liftAlgHom_apply_ofFractionRing_mkₓ'. -/
 theorem liftAlgHom_apply_ofFractionRing_mk (n : K[X]) (d : K[X]⁰) :
     liftAlgHom φ hφ (ofFractionRing (Localization.mk n d)) = φ n / φ d :=
   liftMonoidWithZeroHom_apply_ofFractionRing_mk _ _ _ _
 #align ratfunc.lift_alg_hom_apply_of_fraction_ring_mk RatFunc.liftAlgHom_apply_ofFractionRing_mk
 
-/- warning: ratfunc.lift_alg_hom_injective -> RatFunc.liftAlgHom_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_alg_hom_injective RatFunc.liftAlgHom_injectiveₓ'. -/
 theorem liftAlgHom_injective (φ : K[X] →ₐ[S] L) (hφ : Function.Injective φ)
     (hφ' : K[X]⁰ ≤ L⁰.comap φ := nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _ hφ) :
     Function.Injective (liftAlgHom φ hφ') :=
   liftMonoidWithZeroHom_injective _ hφ
 #align ratfunc.lift_alg_hom_injective RatFunc.liftAlgHom_injective
 
-/- warning: ratfunc.lift_alg_hom_apply_div -> RatFunc.liftAlgHom_apply_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_alg_hom_apply_div RatFunc.liftAlgHom_apply_divₓ'. -/
 @[simp]
 theorem liftAlgHom_apply_div (p q : K[X]) :
     liftAlgHom φ hφ (algebraMap _ _ p / algebraMap _ _ q) = φ p / φ q :=
@@ -1170,9 +1011,6 @@ instance : IsFractionRing K[X] (RatFunc K)
 
 variable {K}
 
-/- warning: ratfunc.lift_on_div -> RatFunc.liftOn_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_on_div RatFunc.liftOn_divₓ'. -/
 @[simp]
 theorem liftOn_div {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p, f p 0 = f 0 1)
     (H' : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), q' * p = q * p' → f p q = f p' q')
@@ -1182,9 +1020,6 @@ theorem liftOn_div {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p
   rw [← mk_eq_div, lift_on_mk _ _ f f0 @H']
 #align ratfunc.lift_on_div RatFunc.liftOn_div
 
-/- warning: ratfunc.lift_on'_div -> RatFunc.liftOn'_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_on'_div RatFunc.liftOn'_divₓ'. -/
 @[simp]
 theorem liftOn'_div {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p, f p 0 = f 0 1) (H) :
     (algebraMap _ (RatFunc K) p / algebraMap _ _ q).liftOn' f @H = f p q :=
@@ -1193,9 +1028,6 @@ theorem liftOn'_div {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ 
   exact lift_on_condition_of_lift_on'_condition @H
 #align ratfunc.lift_on'_div RatFunc.liftOn'_div
 
-/- warning: ratfunc.induction_on -> RatFunc.induction_on is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.induction_on RatFunc.induction_onₓ'. -/
 /-- Induction principle for `ratfunc K`: if `f p q : P (p / q)` for all `p q : K[X]`,
 then `P` holds on all elements of `ratfunc K`.
 
@@ -1206,17 +1038,11 @@ protected theorem induction_on {P : RatFunc K → Prop} (x : RatFunc K)
   x.inductionOn' fun p q hq => by simpa using f p q hq
 #align ratfunc.induction_on RatFunc.induction_on
 
-/- warning: ratfunc.of_fraction_ring_mk' -> RatFunc.ofFractionRing_mk' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_mk' RatFunc.ofFractionRing_mk'ₓ'. -/
 theorem ofFractionRing_mk' (x : K[X]) (y : K[X]⁰) :
     ofFractionRing (IsLocalization.mk' _ x y) = IsLocalization.mk' (RatFunc K) x y := by
   rw [IsFractionRing.mk'_eq_div, IsFractionRing.mk'_eq_div, ← mk_eq_div', ← mk_eq_div]
 #align ratfunc.of_fraction_ring_mk' RatFunc.ofFractionRing_mk'
 
-/- warning: ratfunc.of_fraction_ring_eq -> RatFunc.ofFractionRing_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.of_fraction_ring_eq RatFunc.ofFractionRing_eqₓ'. -/
 @[simp]
 theorem ofFractionRing_eq :
     (ofFractionRing : FractionRing K[X] → RatFunc K) = IsLocalization.algEquiv K[X]⁰ _ _ :=
@@ -1227,9 +1053,6 @@ theorem ofFractionRing_eq :
         RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
 #align ratfunc.of_fraction_ring_eq RatFunc.ofFractionRing_eq
 
-/- warning: ratfunc.to_fraction_ring_eq -> RatFunc.toFractionRing_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.to_fraction_ring_eq RatFunc.toFractionRing_eqₓ'. -/
 @[simp]
 theorem toFractionRing_eq :
     (toFractionRing : RatFunc K → FractionRing K[X]) = IsLocalization.algEquiv K[X]⁰ _ _ :=
@@ -1240,9 +1063,6 @@ theorem toFractionRing_eq :
         RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
 #align ratfunc.to_fraction_ring_eq RatFunc.toFractionRing_eq
 
-/- warning: ratfunc.to_fraction_ring_ring_equiv_symm_eq -> RatFunc.toFractionRingRingEquiv_symm_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.to_fraction_ring_ring_equiv_symm_eq RatFunc.toFractionRingRingEquiv_symm_eqₓ'. -/
 @[simp]
 theorem toFractionRingRingEquiv_symm_eq :
     (toFractionRingRingEquiv K).symm = (IsLocalization.algEquiv K[X]⁰ _ _).toRingEquiv :=
@@ -1304,9 +1124,6 @@ def numDenom (x : RatFunc K) : K[X] × K[X] :=
 #align ratfunc.num_denom RatFunc.numDenom
 -/
 
-/- warning: ratfunc.num_denom_div -> RatFunc.numDenom_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_denom_div RatFunc.numDenom_divₓ'. -/
 @[simp]
 theorem numDenom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     numDenom (algebraMap _ _ p / algebraMap _ _ q) =
@@ -1338,9 +1155,6 @@ theorem num_zero : num (0 : RatFunc K) = 0 := by convert num_div' (0 : K[X]) one
 #align ratfunc.num_zero RatFunc.num_zero
 -/
 
-/- warning: ratfunc.num_div -> RatFunc.num_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_div RatFunc.num_divₓ'. -/
 @[simp]
 theorem num_div (p q : K[X]) :
     num (algebraMap _ _ p / algebraMap _ _ q) =
@@ -1357,16 +1171,10 @@ theorem num_one : num (1 : RatFunc K) = 1 := by convert num_div (1 : K[X]) 1 <;>
 #align ratfunc.num_one RatFunc.num_one
 -/
 
-/- warning: ratfunc.num_algebra_map -> RatFunc.num_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_algebra_map RatFunc.num_algebraMapₓ'. -/
 @[simp]
 theorem num_algebraMap (p : K[X]) : num (algebraMap _ _ p) = p := by convert num_div p 1 <;> simp
 #align ratfunc.num_algebra_map RatFunc.num_algebraMap
 
-/- warning: ratfunc.num_div_dvd -> RatFunc.num_div_dvd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_div_dvd RatFunc.num_div_dvdₓ'. -/
 theorem num_div_dvd (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     num (algebraMap _ _ p / algebraMap _ _ q) ∣ p :=
   by
@@ -1375,9 +1183,6 @@ theorem num_div_dvd (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
   · simpa only [Ne.def, inv_eq_zero, Polynomial.leadingCoeff_eq_zero] using right_div_gcd_ne_zero hq
 #align ratfunc.num_div_dvd RatFunc.num_div_dvd
 
-/- warning: ratfunc.num_div_dvd' -> RatFunc.num_div_dvd' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_div_dvd' RatFunc.num_div_dvd'ₓ'. -/
 /-- A version of `num_div_dvd` with the LHS in simp normal form -/
 @[simp]
 theorem num_div_dvd' (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
@@ -1392,9 +1197,6 @@ def denom (x : RatFunc K) : K[X] :=
 #align ratfunc.denom RatFunc.denom
 -/
 
-/- warning: ratfunc.denom_div -> RatFunc.denom_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.denom_div RatFunc.denom_divₓ'. -/
 @[simp]
 theorem denom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     denom (algebraMap _ _ p / algebraMap _ _ q) =
@@ -1430,17 +1232,11 @@ theorem denom_one : denom (1 : RatFunc K) = 1 := by
 #align ratfunc.denom_one RatFunc.denom_one
 -/
 
-/- warning: ratfunc.denom_algebra_map -> RatFunc.denom_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.denom_algebra_map RatFunc.denom_algebraMapₓ'. -/
 @[simp]
 theorem denom_algebraMap (p : K[X]) : denom (algebraMap _ (RatFunc K) p) = 1 := by
   convert denom_div p one_ne_zero <;> simp
 #align ratfunc.denom_algebra_map RatFunc.denom_algebraMap
 
-/- warning: ratfunc.denom_div_dvd -> RatFunc.denom_div_dvd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.denom_div_dvd RatFunc.denom_div_dvdₓ'. -/
 @[simp]
 theorem denom_div_dvd (p q : K[X]) : denom (algebraMap _ _ p / algebraMap _ _ q) ∣ q :=
   by
@@ -1451,9 +1247,6 @@ theorem denom_div_dvd (p q : K[X]) : denom (algebraMap _ _ p / algebraMap _ _ q)
   · simpa only [Ne.def, inv_eq_zero, Polynomial.leadingCoeff_eq_zero] using right_div_gcd_ne_zero hq
 #align ratfunc.denom_div_dvd RatFunc.denom_div_dvd
 
-/- warning: ratfunc.num_div_denom -> RatFunc.num_div_denom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_div_denom RatFunc.num_div_denomₓ'. -/
 @[simp]
 theorem num_div_denom (x : RatFunc K) : algebraMap _ _ (num x) / algebraMap _ _ (denom x) = x :=
   x.inductionOn fun p q hq =>
@@ -1483,9 +1276,6 @@ theorem num_ne_zero {x : RatFunc K} (hx : x ≠ 0) : num x ≠ 0 :=
 #align ratfunc.num_ne_zero RatFunc.num_ne_zero
 -/
 
-/- warning: ratfunc.num_mul_eq_mul_denom_iff -> RatFunc.num_mul_eq_mul_denom_iff is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_mul_eq_mul_denom_iff RatFunc.num_mul_eq_mul_denom_iffₓ'. -/
 theorem num_mul_eq_mul_denom_iff {x : RatFunc K} {p q : K[X]} (hq : q ≠ 0) :
     x.num * q = p * x.den ↔ x = algebraMap _ _ p / algebraMap _ _ q :=
   by
@@ -1524,9 +1314,6 @@ theorem num_denom_mul (x y : RatFunc K) :
 #align ratfunc.num_denom_mul RatFunc.num_denom_mul
 -/
 
-/- warning: ratfunc.num_dvd -> RatFunc.num_dvd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_dvd RatFunc.num_dvdₓ'. -/
 theorem num_dvd {x : RatFunc K} {p : K[X]} (hp : p ≠ 0) :
     num x ∣ p ↔ ∃ (q : K[X])(hq : q ≠ 0), x = algebraMap _ _ p / algebraMap _ _ q :=
   by
@@ -1541,9 +1328,6 @@ theorem num_dvd {x : RatFunc K} {p : K[X]} (hp : p ≠ 0) :
     exact num_div_dvd p hq
 #align ratfunc.num_dvd RatFunc.num_dvd
 
-/- warning: ratfunc.denom_dvd -> RatFunc.denom_dvd is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.denom_dvd RatFunc.denom_dvdₓ'. -/
 theorem denom_dvd {x : RatFunc K} {q : K[X]} (hq : q ≠ 0) :
     denom x ∣ q ↔ ∃ p : K[X], x = algebraMap _ _ p / algebraMap _ _ q :=
   by
@@ -1591,20 +1375,11 @@ theorem denom_add_dvd (x y : RatFunc K) : denom (x + y) ∣ denom x * denom y :=
 #align ratfunc.denom_add_dvd RatFunc.denom_add_dvd
 -/
 
-/- warning: ratfunc.map_denom_ne_zero -> RatFunc.map_denom_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} {F : Type.{u3}} [_inst_1 : Zero.{u2} L] [_inst_2 : ZeroHomClass.{u3, u1, u2} F (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) L (Polynomial.zero.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) _inst_1] (φ : F), (Function.Injective.{succ u1, succ u2} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) L (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) -> L) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (fun (_x : Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) => L) (ZeroHomClass.toFunLike.{u3, u1, u2} F (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) L (Polynomial.zero.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) _inst_1 _inst_2)) φ)) -> (forall (f : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)), Ne.{succ u2} L (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) -> L) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (fun (_x : Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) => L) (ZeroHomClass.toFunLike.{u3, u1, u2} F (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) L (Polynomial.zero.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) _inst_1 _inst_2)) φ (RatFunc.denom.{u1} K hfield f)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L _inst_1))))
-but is expected to have type
-  forall {K : Type.{u3}} [hfield : Field.{u3} K] {L : Type.{u2}} {F : Type.{u1}} [_inst_1 : Zero.{u2} L] [_inst_2 : ZeroHomClass.{u1, u3, u2} F (Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) L (Polynomial.zero.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) _inst_1] (φ : F), (Function.Injective.{succ u3, succ u2} (Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) L (FunLike.coe.{succ u1, succ u3, succ u2} F (Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) (fun (_x : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.124 : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => L) _x) (ZeroHomClass.toFunLike.{u1, u3, u2} F (Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) L (Polynomial.zero.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) _inst_1 _inst_2) φ)) -> (forall (f : RatFunc.{u3} K (Field.toCommRing.{u3} K hfield)), Ne.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.124 : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => L) (RatFunc.denom.{u3} K hfield f)) (FunLike.coe.{succ u1, succ u3, succ u2} F (Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) (fun (_x : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.124 : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => L) _x) (ZeroHomClass.toFunLike.{u1, u3, u2} F (Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) L (Polynomial.zero.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) _inst_1 _inst_2) φ (RatFunc.denom.{u3} K hfield f)) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.124 : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => L) (RatFunc.denom.{u3} K hfield f)) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.124 : Polynomial.{u3} K (DivisionSemiring.toSemiring.{u3} K (Semifield.toDivisionSemiring.{u3} K (Field.toSemifield.{u3} K hfield)))) => L) (RatFunc.denom.{u3} K hfield f)) _inst_1)))
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_denom_ne_zero RatFunc.map_denom_ne_zeroₓ'. -/
 theorem map_denom_ne_zero {L F : Type _} [Zero L] [ZeroHomClass F K[X] L] (φ : F)
     (hφ : Function.Injective φ) (f : RatFunc K) : φ f.den ≠ 0 := fun H =>
   (denom_ne_zero f) ((map_eq_zero_iff φ hφ).mp H)
 #align ratfunc.map_denom_ne_zero RatFunc.map_denom_ne_zero
 
-/- warning: ratfunc.map_apply -> RatFunc.map_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.map_apply RatFunc.map_applyₓ'. -/
 theorem map_apply {R F : Type _} [CommRing R] [IsDomain R] [MonoidHomClass F K[X] R[X]] (φ : F)
     (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) (f : RatFunc K) :
     map φ hφ f = algebraMap _ _ (φ f.num) / algebraMap _ _ (φ f.den) :=
@@ -1613,25 +1388,16 @@ theorem map_apply {R F : Type _} [CommRing R] [IsDomain R] [MonoidHomClass F K[X
   exact denom_ne_zero _
 #align ratfunc.map_apply RatFunc.map_apply
 
-/- warning: ratfunc.lift_monoid_with_zero_hom_apply -> RatFunc.liftMonoidWithZeroHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_monoid_with_zero_hom_apply RatFunc.liftMonoidWithZeroHom_applyₓ'. -/
 theorem liftMonoidWithZeroHom_apply {L : Type _} [CommGroupWithZero L] (φ : K[X] →*₀ L)
     (hφ : K[X]⁰ ≤ L⁰.comap φ) (f : RatFunc K) : liftMonoidWithZeroHom φ hφ f = φ f.num / φ f.den :=
   by rw [← num_div_denom f, lift_monoid_with_zero_hom_apply_div, num_div_denom]
 #align ratfunc.lift_monoid_with_zero_hom_apply RatFunc.liftMonoidWithZeroHom_apply
 
-/- warning: ratfunc.lift_ring_hom_apply -> RatFunc.liftRingHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_ring_hom_apply RatFunc.liftRingHom_applyₓ'. -/
 theorem liftRingHom_apply {L : Type _} [Field L] (φ : K[X] →+* L) (hφ : K[X]⁰ ≤ L⁰.comap φ)
     (f : RatFunc K) : liftRingHom φ hφ f = φ f.num / φ f.den :=
   liftMonoidWithZeroHom_apply _ _ _
 #align ratfunc.lift_ring_hom_apply RatFunc.liftRingHom_apply
 
-/- warning: ratfunc.lift_alg_hom_apply -> RatFunc.liftAlgHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.lift_alg_hom_apply RatFunc.liftAlgHom_applyₓ'. -/
 theorem liftAlgHom_apply {L S : Type _} [Field L] [CommSemiring S] [Algebra S K[X]] [Algebra S L]
     (φ : K[X] →ₐ[S] L) (hφ : K[X]⁰ ≤ L⁰.comap φ) (f : RatFunc K) :
     liftAlgHom φ hφ f = φ f.num / φ f.den :=
@@ -1657,68 +1423,35 @@ section Eval
 
 include hdomain
 
-/- warning: ratfunc.C -> RatFunc.C is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], RingHom.{u1, u1} K (RatFunc.{u1} K hring) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K hring))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K hring) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K hring) (DivisionRing.toRing.{u1} (RatFunc.{u1} K hring) (Field.toDivisionRing.{u1} (RatFunc.{u1} K hring) (RatFunc.field.{u1} K hring hdomain)))))
-but is expected to have type
-  forall {K : Type.{u1}} [hring : Field.{u1} K], RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.C RatFunc.Cₓ'. -/
 /-- `ratfunc.C a` is the constant rational function `a`. -/
 def C : K →+* RatFunc K :=
   algebraMap _ _
 #align ratfunc.C RatFunc.C
 
-/- warning: ratfunc.algebra_map_eq_C -> RatFunc.algebraMap_eq_C is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], Eq.{succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K hring) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K hring) (Ring.toSemiring.{u1} (RatFunc.{u1} K hring) (DivisionRing.toRing.{u1} (RatFunc.{u1} K hring) (Field.toDivisionRing.{u1} (RatFunc.{u1} K hring) (RatFunc.field.{u1} K hring hdomain)))))) (algebraMap.{u1, u1} K (RatFunc.{u1} K hring) (CommRing.toCommSemiring.{u1} K hring) (Ring.toSemiring.{u1} (RatFunc.{u1} K hring) (DivisionRing.toRing.{u1} (RatFunc.{u1} K hring) (Field.toDivisionRing.{u1} (RatFunc.{u1} K hring) (RatFunc.field.{u1} K hring hdomain)))) (RatFunc.algebra.{u1, u1} K hring hdomain K (CommRing.toCommSemiring.{u1} K hring) (Polynomial.algebraOfAlgebra.{u1, u1} K K (CommRing.toCommSemiring.{u1} K hring) (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring)) (Algebra.id.{u1} K (CommRing.toCommSemiring.{u1} K hring))))) (RatFunc.C.{u1} K hring hdomain)
-but is expected to have type
-  forall {K : Type.{u1}} [hring : Field.{u1} K], Eq.{succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring))))))) (algebraMap.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring))))) (RatFunc.instAlgebraRatFuncToSemiringToDivisionSemiringToSemifieldInstFieldRatFunc.{u1, u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring) K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring)) (Polynomial.algebraOfAlgebra.{u1, u1} K K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring)) (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K (Field.toCommRing.{u1} K hring))) (Algebra.id.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring)))))) (RatFunc.C.{u1} K hring)
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_eq_C RatFunc.algebraMap_eq_Cₓ'. -/
 @[simp]
 theorem algebraMap_eq_C : algebraMap K (RatFunc K) = C :=
   rfl
 #align ratfunc.algebra_map_eq_C RatFunc.algebraMap_eq_C
 
-/- warning: ratfunc.algebra_map_C -> RatFunc.algebraMap_C is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_C RatFunc.algebraMap_Cₓ'. -/
 @[simp]
 theorem algebraMap_C (a : K) : algebraMap K[X] (RatFunc K) (Polynomial.C a) = C a :=
   rfl
 #align ratfunc.algebra_map_C RatFunc.algebraMap_C
 
-/- warning: ratfunc.algebra_map_comp_C -> RatFunc.algebraMap_comp_C is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], Eq.{succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K hring) (Semiring.toNonAssocSemiring.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K hring) (Ring.toSemiring.{u1} (RatFunc.{u1} K hring) (DivisionRing.toRing.{u1} (RatFunc.{u1} K hring) (Field.toDivisionRing.{u1} (RatFunc.{u1} K hring) (RatFunc.field.{u1} K hring hdomain)))))) (RingHom.comp.{u1, u1, u1} K (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (RatFunc.{u1} K hring) (Semiring.toNonAssocSemiring.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (CommSemiring.toSemiring.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K hring) (Ring.toSemiring.{u1} (RatFunc.{u1} K hring) (DivisionRing.toRing.{u1} (RatFunc.{u1} K hring) (Field.toDivisionRing.{u1} (RatFunc.{u1} K hring) (RatFunc.field.{u1} K hring hdomain))))) (algebraMap.{u1, u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (RatFunc.{u1} K hring) (Polynomial.commSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring)) (Ring.toSemiring.{u1} (RatFunc.{u1} K hring) (DivisionRing.toRing.{u1} (RatFunc.{u1} K hring) (Field.toDivisionRing.{u1} (RatFunc.{u1} K hring) (RatFunc.field.{u1} K hring hdomain)))) (RatFunc.algebra.{u1, u1} K hring hdomain (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring)) (Algebra.id.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))) (Polynomial.commSemiring.{u1} K (CommRing.toCommSemiring.{u1} K hring))))) (Polynomial.C.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring)))) (RatFunc.C.{u1} K hring hdomain)
-but is expected to have type
-  forall {K : Type.{u1}} [hring : Field.{u1} K], Eq.{succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring))))))) (RingHom.comp.{u1, u1, u1} K (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (CommSemiring.toSemiring.{u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Polynomial.commSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring))))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring)))))) (algebraMap.{u1, u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Polynomial.commSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring))) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hring)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring))))) (RatFunc.instAlgebraRatFuncToSemiringToDivisionSemiringToSemifieldInstFieldRatFunc.{u1, u1} K (Field.toCommRing.{u1} K hring) (Field.isDomain.{u1} K hring) (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Polynomial.commSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring))) (Algebra.id.{u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring)))) (Polynomial.commSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K hring)))))) (Polynomial.C.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hring))))) (RatFunc.C.{u1} K hring)
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_comp_C RatFunc.algebraMap_comp_Cₓ'. -/
 @[simp]
 theorem algebraMap_comp_C : (algebraMap K[X] (RatFunc K)).comp Polynomial.C = C :=
   rfl
 #align ratfunc.algebra_map_comp_C RatFunc.algebraMap_comp_C
 
-/- warning: ratfunc.smul_eq_C_mul -> RatFunc.smul_eq_C_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.smul_eq_C_mul RatFunc.smul_eq_C_mulₓ'. -/
 theorem smul_eq_C_mul (r : K) (x : RatFunc K) : r • x = C r * x := by
   rw [Algebra.smul_def, algebra_map_eq_C]
 #align ratfunc.smul_eq_C_mul RatFunc.smul_eq_C_mul
 
-/- warning: ratfunc.X -> RatFunc.X is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hring : CommRing.{u1} K] [hdomain : IsDomain.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K hring))], RatFunc.{u1} K hring
-but is expected to have type
-  forall {K : Type.{u1}} [hring : Field.{u1} K], RatFunc.{u1} K (Field.toCommRing.{u1} K hring)
-Case conversion may be inaccurate. Consider using '#align ratfunc.X RatFunc.Xₓ'. -/
 /-- `ratfunc.X` is the polynomial variable (aka indeterminate). -/
 def X : RatFunc K :=
   algebraMap K[X] (RatFunc K) Polynomial.X
 #align ratfunc.X RatFunc.X
 
-/- warning: ratfunc.algebra_map_X -> RatFunc.algebraMap_X is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_X RatFunc.algebraMap_Xₓ'. -/
 @[simp]
 theorem algebraMap_X : algebraMap K[X] (RatFunc K) Polynomial.X = X :=
   rfl
@@ -1730,20 +1463,11 @@ variable [hfield : Field K]
 
 include hfield
 
-/- warning: ratfunc.num_C -> RatFunc.num_C is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.num_C RatFunc.num_Cₓ'. -/
 @[simp]
 theorem num_C (c : K) : num (C c) = Polynomial.C c :=
   num_algebraMap _
 #align ratfunc.num_C RatFunc.num_C
 
-/- warning: ratfunc.denom_C -> RatFunc.denom_C is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] (c : K), Eq.{succ u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (RatFunc.denom.{u1} K hfield (coeFn.{succ u1, succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K (Field.toCommRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionRing.toRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toDivisionRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.field.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) (fun (_x : RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K (Field.toCommRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionRing.toRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toDivisionRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.field.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) => K -> (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield))) (RingHom.hasCoeToFun.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K (Field.toCommRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionRing.toRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toDivisionRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.field.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) (RatFunc.C.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield)) c)) (OfNat.ofNat.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) 1 (OfNat.mk.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) 1 (One.one.{u1} (Polynomial.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (Polynomial.hasOne.{u1} K (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))))))
-but is expected to have type
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] (c : K), Eq.{succ u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (RatFunc.denom.{u1} K hfield (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) K (fun (_x : K) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (NonUnitalNonAssocSemiring.toMul.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))))) (NonUnitalNonAssocSemiring.toMul.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield)))))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))))))) K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield)))))) (RingHom.instRingHomClassRingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield)))))))))) (RatFunc.C.{u1} K hfield) c)) (OfNat.ofNat.{u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) 1 (One.toOfNat1.{u1} (Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield)))) (Polynomial.one.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K hfield))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.denom_C RatFunc.denom_Cₓ'. -/
 @[simp]
 theorem denom_C (c : K) : denom (C c) = 1 :=
   denom_algebraMap _
@@ -1785,22 +1509,10 @@ def eval (f : K →+* L) (a : L) (p : RatFunc K) : L :=
 
 variable {f : K →+* L} {a : L}
 
-/- warning: ratfunc.eval_eq_zero_of_eval₂_denom_eq_zero -> RatFunc.eval_eq_zero_of_eval₂_denom_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] {f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))} {a : L} {x : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)}, (Eq.{succ u2} L (Polynomial.eval₂.{u1, u2} K L (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield))) (Ring.toSemiring.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))) f a (RatFunc.denom.{u1} K hfield x)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))) -> (Eq.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a x) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1)))))))))))
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] {f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))} {a : L} {x : RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)}, (Eq.{succ u1} L (Polynomial.eval₂.{u2, u1} K L (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield))) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))) f a (RatFunc.denom.{u2} K hfield x)) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))) -> (Eq.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a x) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_eq_zero_of_eval₂_denom_eq_zero RatFunc.eval_eq_zero_of_eval₂_denom_eq_zeroₓ'. -/
 theorem eval_eq_zero_of_eval₂_denom_eq_zero {x : RatFunc K}
     (h : Polynomial.eval₂ f a (denom x) = 0) : eval f a x = 0 := by rw [eval, h, div_zero]
 #align ratfunc.eval_eq_zero_of_eval₂_denom_eq_zero RatFunc.eval_eq_zero_of_eval₂_denom_eq_zero
 
-/- warning: ratfunc.eval₂_denom_ne_zero -> RatFunc.eval₂_denom_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] {f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))} {a : L} {x : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)}, (Ne.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a x) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))) -> (Ne.{succ u2} L (Polynomial.eval₂.{u1, u2} K L (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield))) (Ring.toSemiring.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))) f a (RatFunc.denom.{u1} K hfield x)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1)))))))))))
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] {f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))} {a : L} {x : RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)}, (Ne.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a x) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))) -> (Ne.{succ u1} L (Polynomial.eval₂.{u2, u1} K L (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield))) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))) f a (RatFunc.denom.{u2} K hfield x)) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval₂_denom_ne_zero RatFunc.eval₂_denom_ne_zeroₓ'. -/
 theorem eval₂_denom_ne_zero {x : RatFunc K} (h : eval f a x ≠ 0) :
     Polynomial.eval₂ f a (denom x) ≠ 0 :=
   mt eval_eq_zero_of_eval₂_denom_eq_zero h
@@ -1808,58 +1520,28 @@ theorem eval₂_denom_ne_zero {x : RatFunc K} (h : eval f a x ≠ 0) :
 
 variable (f a)
 
-/- warning: ratfunc.eval_C -> RatFunc.eval_C is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_C RatFunc.eval_Cₓ'. -/
 @[simp]
 theorem eval_C {c : K} : eval f a (C c) = f c := by simp [eval]
 #align ratfunc.eval_C RatFunc.eval_C
 
-/- warning: ratfunc.eval_X -> RatFunc.eval_X is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] (f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (a : L), Eq.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a (RatFunc.X.{u1} K (Field.toCommRing.{u1} K hfield) (Field.isDomain.{u1} K hfield))) a
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] (f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))) (a : L), Eq.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a (RatFunc.X.{u2} K hfield)) a
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_X RatFunc.eval_Xₓ'. -/
 @[simp]
 theorem eval_X : eval f a X = a := by simp [eval]
 #align ratfunc.eval_X RatFunc.eval_X
 
-/- warning: ratfunc.eval_zero -> RatFunc.eval_zero is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] (f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (a : L), Eq.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a (OfNat.ofNat.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) 0 (OfNat.mk.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) 0 (Zero.zero.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.hasZero.{u1} K (Field.toCommRing.{u1} K hfield)))))) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] (f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))) (a : L), Eq.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a (OfNat.ofNat.{u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) 0 (Zero.toOfNat0.{u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.instZeroRatFunc.{u2} K (Field.toCommRing.{u2} K hfield))))) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_zero RatFunc.eval_zeroₓ'. -/
 @[simp]
 theorem eval_zero : eval f a 0 = 0 := by simp [eval]
 #align ratfunc.eval_zero RatFunc.eval_zero
 
-/- warning: ratfunc.eval_one -> RatFunc.eval_one is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] (f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (a : L), Eq.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a (OfNat.ofNat.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) 1 (OfNat.mk.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) 1 (One.one.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.hasOne.{u1} K (Field.toCommRing.{u1} K hfield)))))) (OfNat.ofNat.{u2} L 1 (OfNat.mk.{u2} L 1 (One.one.{u2} L (AddMonoidWithOne.toOne.{u2} L (AddGroupWithOne.toAddMonoidWithOne.{u2} L (AddCommGroupWithOne.toAddGroupWithOne.{u2} L (Ring.toAddCommGroupWithOne.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1)))))))))
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] (f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))) (a : L), Eq.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a (OfNat.ofNat.{u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) 1 (One.toOfNat1.{u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.instOneRatFunc.{u2} K (Field.toCommRing.{u2} K hfield))))) (OfNat.ofNat.{u1} L 1 (One.toOfNat1.{u1} L (Semiring.toOne.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_one RatFunc.eval_oneₓ'. -/
 @[simp]
 theorem eval_one : eval f a 1 = 1 := by simp [eval]
 #align ratfunc.eval_one RatFunc.eval_one
 
-/- warning: ratfunc.eval_algebra_map -> RatFunc.eval_algebraMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_algebra_map RatFunc.eval_algebraMapₓ'. -/
 @[simp]
 theorem eval_algebraMap {S : Type _} [CommSemiring S] [Algebra S K[X]] (p : S) :
     eval f a (algebraMap _ _ p) = (algebraMap _ K[X] p).eval₂ f a := by
   simp [eval, IsScalarTower.algebraMap_apply S K[X] (RatFunc K)]
 #align ratfunc.eval_algebra_map RatFunc.eval_algebraMap
 
-/- warning: ratfunc.eval_add -> RatFunc.eval_add is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] (f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (a : L) {x : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)} {y : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)}, (Ne.{succ u2} L (Polynomial.eval₂.{u1, u2} K L (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield))) (Ring.toSemiring.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))) f a (RatFunc.denom.{u1} K hfield x)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))) -> (Ne.{succ u2} L (Polynomial.eval₂.{u1, u2} K L (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield))) (Ring.toSemiring.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))) f a (RatFunc.denom.{u1} K hfield y)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))) -> (Eq.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (instHAdd.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.hasAdd.{u1} K (Field.toCommRing.{u1} K hfield))) x y)) (HAdd.hAdd.{u2, u2, u2} L L L (instHAdd.{u2} L (Distrib.toHasAdd.{u2} L (Ring.toDistrib.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a x) (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a y)))
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] (f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))) (a : L) {x : RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)} {y : RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)}, (Ne.{succ u1} L (Polynomial.eval₂.{u2, u1} K L (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield))) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))) f a (RatFunc.denom.{u2} K hfield x)) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))) -> (Ne.{succ u1} L (Polynomial.eval₂.{u2, u1} K L (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield))) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))) f a (RatFunc.denom.{u2} K hfield y)) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))) -> (Eq.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a (HAdd.hAdd.{u2, u2, u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (instHAdd.{u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.instAddRatFunc.{u2} K (Field.toCommRing.{u2} K hfield))) x y)) (HAdd.hAdd.{u1, u1, u1} L L L (instHAdd.{u1} L (Distrib.toAdd.{u1} L (NonUnitalNonAssocSemiring.toDistrib.{u1} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} L (NonAssocRing.toNonUnitalNonAssocRing.{u1} L (Ring.toNonAssocRing.{u1} L (DivisionRing.toRing.{u1} L (Field.toDivisionRing.{u1} L _inst_1)))))))) (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a x) (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a y)))
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_add RatFunc.eval_addₓ'. -/
 /-- `eval` is an additive homomorphism except when a denominator evaluates to `0`.
 
 Counterexample: `eval _ 1 (X / (X-1)) + eval _ 1 (-1 / (X-1)) = 0`
@@ -1882,12 +1564,6 @@ theorem eval_add {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
   apply num_denom_add
 #align ratfunc.eval_add RatFunc.eval_add
 
-/- warning: ratfunc.eval_mul -> RatFunc.eval_mul is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [hfield : Field.{u1} K] {L : Type.{u2}} [_inst_1 : Field.{u2} L] (f : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield)))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (a : L) {x : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)} {y : RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)}, (Ne.{succ u2} L (Polynomial.eval₂.{u1, u2} K L (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield))) (Ring.toSemiring.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))) f a (RatFunc.denom.{u1} K hfield x)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))) -> (Ne.{succ u2} L (Polynomial.eval₂.{u1, u2} K L (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K hfield))) (Ring.toSemiring.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))) f a (RatFunc.denom.{u1} K hfield y)) (OfNat.ofNat.{u2} L 0 (OfNat.mk.{u2} L 0 (Zero.zero.{u2} L (MulZeroClass.toHasZero.{u2} L (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} L (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} L (NonAssocRing.toNonUnitalNonAssocRing.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))))))))) -> (Eq.{succ u2} L (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a (HMul.hMul.{u1, u1, u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (instHMul.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K hfield)) (RatFunc.hasMul.{u1} K (Field.toCommRing.{u1} K hfield))) x y)) (HMul.hMul.{u2, u2, u2} L L L (instHMul.{u2} L (Distrib.toHasMul.{u2} L (Ring.toDistrib.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_1))))) (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a x) (RatFunc.eval.{u1, u2} K hfield L _inst_1 f a y)))
-but is expected to have type
-  forall {K : Type.{u2}} [hfield : Field.{u2} K] {L : Type.{u1}} [_inst_1 : Field.{u1} L] (f : RingHom.{u2, u1} K L (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield)))) (Semiring.toNonAssocSemiring.{u1} L (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))))) (a : L) {x : RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)} {y : RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)}, (Ne.{succ u1} L (Polynomial.eval₂.{u2, u1} K L (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield))) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))) f a (RatFunc.denom.{u2} K hfield x)) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))) -> (Ne.{succ u1} L (Polynomial.eval₂.{u2, u1} K L (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K hfield))) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_1))) f a (RatFunc.denom.{u2} K hfield y)) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (CommMonoidWithZero.toZero.{u1} L (CommGroupWithZero.toCommMonoidWithZero.{u1} L (Semifield.toCommGroupWithZero.{u1} L (Field.toSemifield.{u1} L _inst_1))))))) -> (Eq.{succ u1} L (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a (HMul.hMul.{u2, u2, u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (instHMul.{u2} (RatFunc.{u2} K (Field.toCommRing.{u2} K hfield)) (RatFunc.instMulRatFunc.{u2} K (Field.toCommRing.{u2} K hfield))) x y)) (HMul.hMul.{u1, u1, u1} L L L (instHMul.{u1} L (NonUnitalNonAssocRing.toMul.{u1} L (NonAssocRing.toNonUnitalNonAssocRing.{u1} L (Ring.toNonAssocRing.{u1} L (DivisionRing.toRing.{u1} L (Field.toDivisionRing.{u1} L _inst_1)))))) (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a x) (RatFunc.eval.{u2, u1} K hfield L _inst_1 f a y)))
-Case conversion may be inaccurate. Consider using '#align ratfunc.eval_mul RatFunc.eval_mulₓ'. -/
 /-- `eval` is a multiplicative homomorphism except when a denominator evaluates to `0`.
 
 Counterexample: `eval _ 0 X * eval _ 0 (1/X) = 0 ≠ 1 = eval _ 0 1 = eval _ 0 (X * 1/X)`.
@@ -1942,12 +1618,6 @@ theorem intDegree_one : intDegree (1 : RatFunc K) = 0 := by
 #align ratfunc.int_degree_one RatFunc.intDegree_one
 -/
 
-/- warning: ratfunc.int_degree_C -> RatFunc.intDegree_C is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] (k : K), Eq.{1} Int (RatFunc.intDegree.{u1} K _inst_1 (coeFn.{succ u1, succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K (Field.toCommRing.{u1} K _inst_1)))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionRing.toRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toDivisionRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.field.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) (fun (_x : RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K (Field.toCommRing.{u1} K _inst_1)))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionRing.toRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toDivisionRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.field.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) => K -> (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1))) (RingHom.hasCoeToFun.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K (Field.toCommRing.{u1} K _inst_1)))) (NonAssocRing.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Ring.toNonAssocRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionRing.toRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toDivisionRing.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.field.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) (RatFunc.C.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1)) k)) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
-but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] (k : K), Eq.{1} Int (RatFunc.intDegree.{u1} K _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) K (fun (_x : K) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))))) (NonUnitalNonAssocSemiring.toMul.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1)))))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1))))))) K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1)))))) (RingHom.instRingHomClassRingHom.{u1, u1} K (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instFieldRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1) (Field.isDomain.{u1} K _inst_1)))))))))) (RatFunc.C.{u1} K _inst_1) k)) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
-Case conversion may be inaccurate. Consider using '#align ratfunc.int_degree_C RatFunc.intDegree_Cₓ'. -/
 @[simp]
 theorem intDegree_C (k : K) : intDegree (RatFunc.C k) = 0 := by
   rw [int_degree, num_C, nat_degree_C, denom_C, nat_degree_one, sub_self]
@@ -1961,9 +1631,6 @@ theorem intDegree_X : intDegree (X : RatFunc K) = 1 := by
 #align ratfunc.int_degree_X RatFunc.intDegree_X
 -/
 
-/- warning: ratfunc.int_degree_polynomial -> RatFunc.intDegree_polynomial is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.int_degree_polynomial RatFunc.intDegree_polynomialₓ'. -/
 @[simp]
 theorem intDegree_polynomial {p : K[X]} : intDegree (algebraMap K[X] (RatFunc K) p) = natDegree p :=
   by
@@ -2021,12 +1688,6 @@ theorem natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree {x : R
 #align ratfunc.nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree RatFunc.natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree
 -/
 
-/- warning: ratfunc.int_degree_add_le -> RatFunc.intDegree_add_le is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] {x : RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)} {y : RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)}, (Ne.{succ u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) y (OfNat.ofNat.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) 0 (OfNat.mk.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) 0 (Zero.zero.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.hasZero.{u1} K (Field.toCommRing.{u1} K _inst_1)))))) -> (Ne.{succ u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (instHAdd.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.hasAdd.{u1} K (Field.toCommRing.{u1} K _inst_1))) x y) (OfNat.ofNat.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) 0 (OfNat.mk.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) 0 (Zero.zero.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.hasZero.{u1} K (Field.toCommRing.{u1} K _inst_1)))))) -> (LE.le.{0} Int Int.hasLe (RatFunc.intDegree.{u1} K _inst_1 (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (instHAdd.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.hasAdd.{u1} K (Field.toCommRing.{u1} K _inst_1))) x y)) (LinearOrder.max.{0} Int Int.linearOrder (RatFunc.intDegree.{u1} K _inst_1 x) (RatFunc.intDegree.{u1} K _inst_1 y)))
-but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] {x : RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)} {y : RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)}, (Ne.{succ u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) y (OfNat.ofNat.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) 0 (Zero.toOfNat0.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instZeroRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1))))) -> (Ne.{succ u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (instHAdd.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instAddRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1))) x y) (OfNat.ofNat.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) 0 (Zero.toOfNat0.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instZeroRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1))))) -> (LE.le.{0} Int Int.instLEInt (RatFunc.intDegree.{u1} K _inst_1 (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (instHAdd.{u1} (RatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1)) (RatFunc.instAddRatFunc.{u1} K (Field.toCommRing.{u1} K _inst_1))) x y)) (Max.max.{0} Int Int.instMaxInt (RatFunc.intDegree.{u1} K _inst_1 x) (RatFunc.intDegree.{u1} K _inst_1 y)))
-Case conversion may be inaccurate. Consider using '#align ratfunc.int_degree_add_le RatFunc.intDegree_add_leₓ'. -/
 theorem intDegree_add_le {x y : RatFunc K} (hy : y ≠ 0) (hxy : x + y ≠ 0) :
     intDegree (x + y) ≤ max (intDegree x) (intDegree y) :=
   by
@@ -2051,12 +1712,6 @@ omit hring
 
 variable {F : Type u} [Field F] (p q : F[X]) (f g : RatFunc F)
 
-/- warning: ratfunc.coe_alg_hom -> RatFunc.coeAlgHom is a dubious translation:
-lean 3 declaration is
-  forall (F : Type.{u1}) [_inst_2 : Field.{u1} F], AlgHom.{u1, u1, u1} (Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))))))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) (Ring.toSemiring.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (DivisionRing.toRing.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (Field.toDivisionRing.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (RatFunc.field.{u1} F (Field.toCommRing.{u1} F _inst_2) (Field.isDomain.{u1} F _inst_2))))) (HahnSeries.semiring.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (StrictOrderedRing.toStrictOrderedSemiring.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))) (RatFunc.algebra.{u1, u1} F (Field.toCommRing.{u1} F _inst_2) (Field.isDomain.{u1} F _inst_2) (Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) (Algebra.id.{u1} (Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))))) (HahnSeries.powerSeriesAlgebra.{0, u1, u1} Int F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (StrictOrderedRing.toStrictOrderedSemiring.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))) (Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_2)))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) (PowerSeries.algebraPolynomial.{u1, u1} F F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (Algebra.id.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))))
-but is expected to have type
-  forall (F : Type.{u1}) [_inst_2 : Field.{u1} F], AlgHom.{u1, u1, u1} (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_2))))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (Field.toSemifield.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2)) (RatFunc.instFieldRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_2) (Field.isDomain.{u1} F _inst_2))))) (HahnSeries.instSemiringHahnSeriesToPartialOrderToZeroToMonoidWithZero.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing)))) (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))) (RatFunc.instAlgebraRatFuncToSemiringToDivisionSemiringToSemifieldInstFieldRatFunc.{u1, u1} F (Field.toCommRing.{u1} F _inst_2) (Field.isDomain.{u1} F _inst_2) (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) (Algebra.id.{u1} (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))))) (HahnSeries.powerSeriesAlgebra.{0, u1, u1} Int F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing))) (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))) (Polynomial.commSemiring.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2))) (PowerSeries.algebraPolynomial.{u1, u1} F F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)) (Algebra.id.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_2)))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_alg_hom RatFunc.coeAlgHomₓ'. -/
 /-- The coercion `ratfunc F → laurent_series F` as bundled alg hom. -/
 def coeAlgHom (F : Type u) [Field F] : RatFunc F →ₐ[F[X]] LaurentSeries F :=
   liftAlgHom (Algebra.ofId _ _) <|
@@ -2064,152 +1719,80 @@ def coeAlgHom (F : Type u) [Field F] : RatFunc F →ₐ[F[X]] LaurentSeries F :=
       Polynomial.algebraMap_hahnSeries_injective _
 #align ratfunc.coe_alg_hom RatFunc.coeAlgHom
 
-/- warning: ratfunc.coe_to_laurent_series -> RatFunc.coeToLaurentSeries is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))))))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_to_laurent_series RatFunc.coeToLaurentSeriesₓ'. -/
 instance coeToLaurentSeries : Coe (RatFunc F) (LaurentSeries F) :=
   ⟨coeAlgHom F⟩
 #align ratfunc.coe_to_laurent_series RatFunc.coeToLaurentSeries
 
-/- warning: ratfunc.coe_def -> RatFunc.coe_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_def RatFunc.coe_defₓ'. -/
 theorem coe_def : (f : LaurentSeries F) = coeAlgHom F f :=
   rfl
 #align ratfunc.coe_def RatFunc.coe_def
 
-/- warning: ratfunc.coe_num_denom -> RatFunc.coe_num_denom is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_num_denom RatFunc.coe_num_denomₓ'. -/
 theorem coe_num_denom : (f : LaurentSeries F) = f.num / f.den :=
   liftAlgHom_apply _ _ f
 #align ratfunc.coe_num_denom RatFunc.coe_num_denom
 
-/- warning: ratfunc.coe_injective -> RatFunc.coe_injective is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Function.Injective.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Function.Injective.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1)
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_injective RatFunc.coe_injectiveₓ'. -/
 theorem coe_injective : Function.Injective (coe : RatFunc F → LaurentSeries F) :=
   liftAlgHom_injective _ (Polynomial.algebraMap_hahnSeries_injective _)
 #align ratfunc.coe_injective RatFunc.coe_injective
 
-/- warning: ratfunc.coe_apply -> RatFunc.coe_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_apply RatFunc.coe_applyₓ'. -/
 @[simp, norm_cast]
 theorem coe_apply : coeAlgHom F f = f :=
   rfl
 #align ratfunc.coe_apply RatFunc.coe_apply
 
-/- warning: ratfunc.coe_zero -> RatFunc.coe_zero is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Eq.{succ u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) (OfNat.ofNat.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) 0 (OfNat.mk.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) 0 (Zero.zero.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.hasZero.{u1} F (Field.toCommRing.{u1} F _inst_1)))))) (OfNat.ofNat.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) 0 (OfNat.mk.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) 0 (Zero.zero.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HahnSeries.hasZero.{0, u1} Int F (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Eq.{succ u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 (OfNat.ofNat.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) 0 (Zero.toOfNat0.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.instZeroRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1))))) (OfNat.ofNat.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) 0 (Zero.toOfNat0.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (HahnSeries.instZeroHahnSeries.{0, u1} Int F (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))) (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_zero RatFunc.coe_zeroₓ'. -/
 @[simp, norm_cast]
 theorem coe_zero : ((0 : RatFunc F) : LaurentSeries F) = 0 :=
   (coeAlgHom F).map_zero
 #align ratfunc.coe_zero RatFunc.coe_zero
 
-/- warning: ratfunc.coe_one -> RatFunc.coe_one is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Eq.{succ u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) (OfNat.ofNat.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) 1 (OfNat.mk.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) 1 (One.one.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.hasOne.{u1} F (Field.toCommRing.{u1} F _inst_1)))))) (OfNat.ofNat.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) 1 (OfNat.mk.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) 1 (One.one.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HahnSeries.hasOne.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (StrictOrderedRing.toStrictOrderedSemiring.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))))))) (AddMonoidWithOne.toOne.{u1} F (AddGroupWithOne.toAddMonoidWithOne.{u1} F (AddCommGroupWithOne.toAddGroupWithOne.{u1} F (Ring.toAddCommGroupWithOne.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))))))))))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F], Eq.{succ u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 (OfNat.ofNat.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) 1 (One.toOfNat1.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.instOneRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1))))) (OfNat.ofNat.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) 1 (One.toOfNat1.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (HahnSeries.instOneHahnSeriesToPartialOrder.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing)))) (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toOne.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_one RatFunc.coe_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_one : ((1 : RatFunc F) : LaurentSeries F) = 1 :=
   (coeAlgHom F).map_one
 #align ratfunc.coe_one RatFunc.coe_one
 
-/- warning: ratfunc.coe_add -> RatFunc.coe_add is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (g : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)), Eq.{succ u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (instHAdd.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.hasAdd.{u1} F (Field.toCommRing.{u1} F _inst_1))) f g)) (HAdd.hAdd.{u1, u1, u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (instHAdd.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HahnSeries.hasAdd.{0, u1} Int F (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (AddMonoidWithOne.toAddMonoid.{u1} F (AddGroupWithOne.toAddMonoidWithOne.{u1} F (AddCommGroupWithOne.toAddGroupWithOne.{u1} F (Ring.toAddCommGroupWithOne.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) f) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) g))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (g : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)), Eq.{succ u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 (HAdd.hAdd.{u1, u1, u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (instHAdd.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.instAddRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1))) f g)) (HAdd.hAdd.{u1, u1, u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (instHAdd.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (HahnSeries.instAddHahnSeriesToZero.{0, u1} Int F (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))) (AddMonoidWithOne.toAddMonoid.{u1} F (AddGroupWithOne.toAddMonoidWithOne.{u1} F (Ring.toAddGroupWithOne.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 f) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 g))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_add RatFunc.coe_addₓ'. -/
 @[simp, norm_cast]
 theorem coe_add : ((f + g : RatFunc F) : LaurentSeries F) = f + g :=
   (coeAlgHom F).map_add _ _
 #align ratfunc.coe_add RatFunc.coe_add
 
-/- warning: ratfunc.coe_sub -> RatFunc.coe_sub is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_sub RatFunc.coe_subₓ'. -/
 @[simp, norm_cast]
 theorem coe_sub : ((f - g : RatFunc F) : LaurentSeries F) = f - g :=
   (coeAlgHom F).map_sub _ _
 #align ratfunc.coe_sub RatFunc.coe_sub
 
-/- warning: ratfunc.coe_neg -> RatFunc.coe_neg is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)), Eq.{succ u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) (Neg.neg.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.hasNeg.{u1} F (Field.toCommRing.{u1} F _inst_1)) f)) (Neg.neg.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (SubNegMonoid.toHasNeg.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (AddGroup.toSubNegMonoid.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HahnSeries.addGroup.{0, u1} Int F (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (AddGroupWithOne.toAddGroup.{u1} F (AddCommGroupWithOne.toAddGroupWithOne.{u1} F (Ring.toAddCommGroupWithOne.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) f))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)), Eq.{succ u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 (Neg.neg.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.instNegRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) f)) (Neg.neg.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (Ring.toNeg.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (HahnSeries.instRingHahnSeriesToPartialOrderToZeroToMonoidWithZeroToSemiring.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing)))) (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 f))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_neg RatFunc.coe_negₓ'. -/
 @[simp, norm_cast]
 theorem coe_neg : ((-f : RatFunc F) : LaurentSeries F) = -f :=
   (coeAlgHom F).map_neg _
 #align ratfunc.coe_neg RatFunc.coe_neg
 
-/- warning: ratfunc.coe_mul -> RatFunc.coe_mul is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (g : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)), Eq.{succ u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) (HMul.hMul.{u1, u1, u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (instHMul.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.hasMul.{u1} F (Field.toCommRing.{u1} F _inst_1))) f g)) (HMul.hMul.{u1, u1, u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (instHMul.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HahnSeries.hasMul.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (StrictOrderedRing.toStrictOrderedSemiring.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) f) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) g))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (g : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)), Eq.{succ u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 (HMul.hMul.{u1, u1, u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (instHMul.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.instMulRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1))) f g)) (HMul.hMul.{u1, u1, u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (instHMul.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (HahnSeries.instMulHahnSeriesToPartialOrderToZeroToMulZeroClass.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing)))) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 f) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 g))
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_mul RatFunc.coe_mulₓ'. -/
 @[simp, norm_cast]
 theorem coe_mul : ((f * g : RatFunc F) : LaurentSeries F) = f * g :=
   (coeAlgHom F).map_mul _ _
 #align ratfunc.coe_mul RatFunc.coe_mul
 
-/- warning: ratfunc.coe_pow -> RatFunc.coe_pow is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (n : Nat), Eq.{succ u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) (HPow.hPow.{u1, 0, u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) Nat (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (instHPow.{u1, 0} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) Nat (Monoid.Pow.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (Ring.toMonoid.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (DivisionRing.toRing.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (Field.toDivisionRing.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.field.{u1} F (Field.toCommRing.{u1} F _inst_1) (Field.isDomain.{u1} F _inst_1))))))) f n)) (HPow.hPow.{u1, 0, u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) Nat (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (instHPow.{u1, 0} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) Nat (Monoid.Pow.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (Ring.toMonoid.{u1} (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HahnSeries.ring.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (StrictOrderedRing.toStrictOrderedSemiring.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (HasLiftT.mk.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (CoeTCₓ.coe.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (coeBase.{succ u1, succ u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (LaurentSeries.{u1} F (MulZeroClass.toHasZero.{u1} F (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} F (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} F (NonAssocRing.toNonUnitalNonAssocRing.{u1} F (Ring.toNonAssocRing.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries.{u1} F _inst_1)))) f) n)
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (f : RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (n : Nat), Eq.{succ u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 (HPow.hPow.{u1, 0, u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) Nat (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (instHPow.{u1, 0} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) Nat (Monoid.Pow.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (MonoidWithZero.toMonoid.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (Semiring.toMonoidWithZero.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (DivisionSemiring.toSemiring.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (Semifield.toDivisionSemiring.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (Field.toSemifield.{u1} (RatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1)) (RatFunc.instFieldRatFunc.{u1} F (Field.toCommRing.{u1} F _inst_1) (Field.isDomain.{u1} F _inst_1))))))))) f n)) (HPow.hPow.{u1, 0, u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) Nat (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (instHPow.{u1, 0} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) Nat (Monoid.Pow.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (MonoidWithZero.toMonoid.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (Semiring.toMonoidWithZero.{u1} (LaurentSeries.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (HahnSeries.instSemiringHahnSeriesToPartialOrderToZeroToMonoidWithZero.{0, u1} Int F (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Int (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Int (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Int (LinearOrderedCommRing.toLinearOrderedCommSemiring.{0} Int Int.linearOrderedCommRing)))) (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))))))) (RatFunc.coeToLaurentSeries_fun.{u1} F _inst_1 f) n)
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_pow RatFunc.coe_powₓ'. -/
 @[simp, norm_cast]
 theorem coe_pow (n : ℕ) : ((f ^ n : RatFunc F) : LaurentSeries F) = f ^ n :=
   (coeAlgHom F).map_pow _ _
 #align ratfunc.coe_pow RatFunc.coe_pow
 
-/- warning: ratfunc.coe_div -> RatFunc.coe_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_div RatFunc.coe_divₓ'. -/
 @[simp, norm_cast]
 theorem coe_div :
     ((f / g : RatFunc F) : LaurentSeries F) = (f : LaurentSeries F) / (g : LaurentSeries F) :=
   map_div₀ (coeAlgHom F) _ _
 #align ratfunc.coe_div RatFunc.coe_div
 
-/- warning: ratfunc.coe_C -> RatFunc.coe_C is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_C RatFunc.coe_Cₓ'. -/
 @[simp, norm_cast]
 theorem coe_C (r : F) : ((C r : RatFunc F) : LaurentSeries F) = HahnSeries.C r := by
   rw [coe_num_denom, num_C, denom_C, coe_coe, Polynomial.coe_C, coe_C, coe_coe, Polynomial.coe_one,
     PowerSeries.coe_one, div_one]
 #align ratfunc.coe_C RatFunc.coe_C
 
-/- warning: ratfunc.coe_smul -> RatFunc.coe_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_smul RatFunc.coe_smulₓ'. -/
 -- TODO: generalize over other modules
 @[simp, norm_cast]
 theorem coe_smul (r : F) : ((r • f : RatFunc F) : LaurentSeries F) = r • f := by
   rw [smul_eq_C_mul, ← C_mul_eq_smul, coe_mul, coe_C]
 #align ratfunc.coe_smul RatFunc.coe_smul
 
-/- warning: ratfunc.coe_X -> RatFunc.coe_X is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.coe_X RatFunc.coe_Xₓ'. -/
 @[simp, norm_cast]
 theorem coe_X : ((X : RatFunc F) : LaurentSeries F) = single 1 1 := by
   rw [coe_num_denom, num_X, denom_X, coe_coe, Polynomial.coe_X, coe_X, coe_coe, Polynomial.coe_one,
@@ -2219,9 +1802,6 @@ theorem coe_X : ((X : RatFunc F) : LaurentSeries F) = single 1 1 := by
 instance : Algebra (RatFunc F) (LaurentSeries F) :=
   RingHom.toAlgebra (coeAlgHom F).toRingHom
 
-/- warning: ratfunc.algebra_map_apply_div -> RatFunc.algebraMap_apply_div is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_apply_div RatFunc.algebraMap_apply_divₓ'. -/
 theorem algebraMap_apply_div :
     algebraMap (RatFunc F) (LaurentSeries F) (algebraMap _ _ p / algebraMap _ _ q) =
       algebraMap F[X] (LaurentSeries F) p / algebraMap _ _ q :=

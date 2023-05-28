@@ -90,12 +90,6 @@ instance decidableForallMem {p : α → Prop} [DecidablePred p] :
 #align option.decidable_forall_mem Option.decidableForallMem
 -/
 
-/- warning: option.decidable_exists_mem -> Option.decidableExistsMem is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] (o : Option.{u1} α), Decidable (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Option.{u1} α) (Option.hasMem.{u1} α) a o) (fun (H : Membership.Mem.{u1, u1} α (Option.{u1} α) (Option.hasMem.{u1} α) a o) => p a)))
-but is expected to have type
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] (o : Option.{u1} α), Decidable (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Option.{u1} α) (Option.instMembershipOption.{u1} α) a o) (p a)))
-Case conversion may be inaccurate. Consider using '#align option.decidable_exists_mem Option.decidableExistsMemₓ'. -/
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] :
     ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
@@ -125,12 +119,6 @@ def guard (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
 #align option.guard Option.guard
 -/
 
-/- warning: option.filter -> Option.filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], (Option.{u1} α) -> (Option.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, (α -> Bool) -> (Option.{u1} α) -> (Option.{u1} α)
-Case conversion may be inaccurate. Consider using '#align option.filter Option.filterₓ'. -/
 /-- `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
 def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
   o.bind (guard p)
@@ -263,36 +251,18 @@ def maybe.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α)
 #align option.maybe Option.maybe
 -/
 
-/- warning: option.mmap -> Option.mapM is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] {α : Type.{u3}} {β : Type.{u1}}, (α -> (m β)) -> (Option.{u3} α) -> (m (Option.{u1} β))
-but is expected to have type
-  forall {m : Type.{u1} -> Type.{u2}} {_inst_1 : Type.{u3}} {α : Type.{u1}} [β : Monad.{u1, u2} m], (_inst_1 -> (m α)) -> (Option.{u3} _inst_1) -> (m (Option.{u1} α))
-Case conversion may be inaccurate. Consider using '#align option.mmap Option.mapMₓ'. -/
 /-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
 def mapM.{u, v, w} {m : Type u → Type v} [Monad m] {α : Type w} {β : Type u} (f : α → m β)
     (o : Option α) : m (Option β) :=
   (o.map f).maybe
 #align option.mmap Option.mapM
 
-/- warning: option.melim -> Option.elimM is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m], (m β) -> (α -> (m β)) -> (m (Option.{u1} α)) -> (m β)
-but is expected to have type
-  forall {α : Type.{u1} -> Type.{u2}} {β : Type.{u1}} {m : Type.{u1}} [_inst_1 : Monad.{u1, u2} α], (α (Option.{u1} β)) -> (α m) -> (β -> (α m)) -> (α m)
-Case conversion may be inaccurate. Consider using '#align option.melim Option.elimMₓ'. -/
 /-- A monadic analogue of `option.elim`. -/
 def elimM {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α → m β)
     (x : m (Option α)) : m β :=
   x >>= Option.elim' y z
 #align option.melim Option.elimM
 
-/- warning: option.mget_or_else -> Option.getDM' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m], (m (Option.{u1} α)) -> (m α) -> (m α)
-but is expected to have type
-  forall {α : Type.{u1} -> Type.{u2}} {m : Type.{u1}} [_inst_1 : Monad.{u1, u2} α], (α (Option.{u1} m)) -> (α m) -> (α m)
-Case conversion may be inaccurate. Consider using '#align option.mget_or_else Option.getDM'ₓ'. -/
 /-- A monadic analogue of `option.get_or_else`. -/
 def getDM' {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
   elimM y pure x

@@ -64,22 +64,10 @@ theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
 #align nat.finite_of_card_ne_zero Nat.finite_of_card_ne_zero
 -/
 
-/- warning: nat.card_congr -> Nat.card_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Equiv.{succ u1, succ u2} α β) -> (Eq.{1} Nat (Nat.card.{u1} α) (Nat.card.{u2} β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}}, (Equiv.{succ u2, succ u1} α β) -> (Eq.{1} Nat (Nat.card.{u2} α) (Nat.card.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nat.card_congr Nat.card_congrₓ'. -/
 theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
   Cardinal.toNat_congr f
 #align nat.card_congr Nat.card_congr
 
-/- warning: nat.card_eq_of_bijective -> Nat.card_eq_of_bijective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β), (Function.Bijective.{succ u1, succ u2} α β f) -> (Eq.{1} Nat (Nat.card.{u1} α) (Nat.card.{u2} β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β), (Function.Bijective.{succ u2, succ u1} α β f) -> (Eq.{1} Nat (Nat.card.{u2} α) (Nat.card.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nat.card_eq_of_bijective Nat.card_eq_of_bijectiveₓ'. -/
 theorem card_eq_of_bijective (f : α → β) (hf : Function.Bijective f) : Nat.card α = Nat.card β :=
   card_congr (Equiv.ofBijective f hf)
 #align nat.card_eq_of_bijective Nat.card_eq_of_bijective
@@ -139,23 +127,11 @@ theorem card_of_isEmpty [IsEmpty α] : Nat.card α = 0 := by simp
 #align nat.card_of_is_empty Nat.card_of_isEmpty
 -/
 
-/- warning: nat.card_prod -> Nat.card_prod is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}), Eq.{1} Nat (Nat.card.{max u1 u2} (Prod.{u1, u2} α β)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.card.{u1} α) (Nat.card.{u2} β))
-but is expected to have type
-  forall (α : Type.{u2}) (β : Type.{u1}), Eq.{1} Nat (Nat.card.{max u1 u2} (Prod.{u2, u1} α β)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.card.{u2} α) (Nat.card.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nat.card_prod Nat.card_prodₓ'. -/
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
   simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
 #align nat.card_prod Nat.card_prod
 
-/- warning: nat.card_ulift -> Nat.card_ulift is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}), Eq.{1} Nat (Nat.card.{max u1 u2} (ULift.{u2, u1} α)) (Nat.card.{u1} α)
-but is expected to have type
-  forall (α : Type.{u2}), Eq.{1} Nat (Nat.card.{max u2 u1} (ULift.{u1, u2} α)) (Nat.card.{u2} α)
-Case conversion may be inaccurate. Consider using '#align nat.card_ulift Nat.card_uliftₓ'. -/
 @[simp]
 theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
   card_congr Equiv.ulift
@@ -174,12 +150,6 @@ theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏
 #align nat.card_pi Nat.card_pi
 -/
 
-/- warning: nat.card_fun -> Nat.card_fun is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Finite.{succ u1} α], Eq.{1} Nat (Nat.card.{max u1 u2} (α -> β)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Nat.card.{u2} β) (Nat.card.{u1} α))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α], Eq.{1} Nat (Nat.card.{max u2 u1} (α -> β)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Nat.card.{u1} β) (Nat.card.{u2} α))
-Case conversion may be inaccurate. Consider using '#align nat.card_fun Nat.card_funₓ'. -/
 theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α :=
   by
   haveI := Fintype.ofFinite α
@@ -208,12 +178,6 @@ def card (α : Type _) : PartENat :=
 #align part_enat.card PartENat.card
 -/
 
-/- warning: part_enat.card_eq_coe_fintype_card -> PartENat.card_eq_coe_fintype_card is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α], Eq.{1} PartENat (PartENat.card.{u1} α) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat PartENat (HasLiftT.mk.{1, 1} Nat PartENat (CoeTCₓ.coe.{1, 1} Nat PartENat (Nat.castCoe.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.addCommMonoidWithOne))))) (Fintype.card.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α], Eq.{1} PartENat (PartENat.card.{u1} α) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) (Fintype.card.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align part_enat.card_eq_coe_fintype_card PartENat.card_eq_coe_fintype_cardₓ'. -/
 @[simp]
 theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
   mk_toPartENat_eq_coe_card

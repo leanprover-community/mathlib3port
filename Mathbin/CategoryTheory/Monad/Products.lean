@@ -82,12 +82,6 @@ def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X)
 #align category_theory.over_to_coalgebra CategoryTheory.overToCoalgebra
 -/
 
-/- warning: category_theory.coalgebra_equiv_over -> CategoryTheory.coalgebraEquivOver is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryProducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Comonad.Coalgebra.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Comonad.Coalgebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Over.{u1, u2} C _inst_1 X) (CategoryTheory.Over.category.{u2, u1} C _inst_1 X)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryProducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Comonad.Coalgebra.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Over.{u1, u2} C _inst_1 X) (CategoryTheory.Comonad.Coalgebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_1 X)
-Case conversion may be inaccurate. Consider using '#align category_theory.coalgebra_equiv_over CategoryTheory.coalgebraEquivOverₓ'. -/
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
 def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X
@@ -147,12 +141,6 @@ def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X)
 #align category_theory.under_to_algebra CategoryTheory.underToAlgebra
 -/
 
-/- warning: category_theory.algebra_equiv_under -> CategoryTheory.algebraEquivUnder is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryCoproducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Monad.Algebra.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Under.{u1, u2} C _inst_1 X) (CategoryTheory.Under.category.{u2, u1} C _inst_1 X)
-but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryCoproducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Monad.Algebra.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Under.{u1, u2} C _inst_1 X) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.instCategoryUnder.{u1, u2} C _inst_1 X)
-Case conversion may be inaccurate. Consider using '#align category_theory.algebra_equiv_under CategoryTheory.algebraEquivUnderₓ'. -/
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/
 @[simps]

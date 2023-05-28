@@ -51,12 +51,6 @@ theorem smallSets_eq_generate {f : Filter α} : f.smallSets = generate (powerset
 #align filter.small_sets_eq_generate Filter.smallSets_eq_generate
 -/
 
-/- warning: filter.has_basis.small_sets -> Filter.HasBasis.smallSets is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {l : Filter.{u1} α} {p : ι -> Prop} {s : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι l p s) -> (Filter.HasBasis.{u1, u2} (Set.{u1} α) ι (Filter.smallSets.{u1} α l) p (fun (i : ι) => Set.powerset.{u1} α (s i)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Filter.HasBasis.{u2, u1} (Set.{u2} α) ι (Filter.smallSets.{u2} α l) p (fun (i : ι) => Set.powerset.{u2} α (s i)))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.small_sets Filter.HasBasis.smallSetsₓ'. -/
 theorem HasBasis.smallSets {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
     HasBasis l.smallSets p fun i => 𝒫 s i :=
   h.lift' monotone_powerset
@@ -77,36 +71,18 @@ theorem tendsto_smallSets_iff {f : α → Set β} :
 #align filter.tendsto_small_sets_iff Filter.tendsto_smallSets_iff
 -/
 
-/- warning: filter.eventually_small_sets -> Filter.eventually_smallSets is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) => forall (t : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) -> (p t))))
-but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (forall (t : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) -> (p t))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_small_sets Filter.eventually_smallSetsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem eventually_smallSets {p : Set α → Prop} :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 #align filter.eventually_small_sets Filter.eventually_smallSets
 
-/- warning: filter.eventually_small_sets' -> Filter.eventually_small_sets' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, (forall {{s : Set.{u1} α}} {{t : Set.{u1} α}}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (p t) -> (p s)) -> (Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l) => p s))))
-but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, (forall {{s : Set.{u1} α}} {{t : Set.{u1} α}}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (p t) -> (p s)) -> (Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (p s))))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_small_sets' Filter.eventually_small_sets'ₓ'. -/
 theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_smallSets.trans <|
     exists₂_congr fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 #align filter.eventually_small_sets' Filter.eventually_small_sets'
 
-/- warning: filter.frequently_small_sets -> Filter.frequently_smallSets is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Frequently.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) => p s))))
-but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Frequently.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) (p s))))
-Case conversion may be inaccurate. Consider using '#align filter.frequently_small_sets Filter.frequently_smallSetsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem frequently_smallSets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
@@ -126,34 +102,16 @@ theorem HasAntitoneBasis.tendsto_smallSets {ι} [Preorder ι] {s : ι → Set α
 #align filter.has_antitone_basis.tendsto_small_sets Filter.HasAntitoneBasis.tendsto_smallSets
 -/
 
-/- warning: filter.monotone_small_sets -> Filter.monotone_smallSets is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Monotone.{u1, u1} (Filter.{u1} α) (Filter.{u1} (Set.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.partialOrder.{u1} (Set.{u1} α))) (Filter.smallSets.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, Monotone.{u1, u1} (Filter.{u1} α) (Filter.{u1} (Set.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.instPartialOrderFilter.{u1} (Set.{u1} α))) (Filter.smallSets.{u1} α)
-Case conversion may be inaccurate. Consider using '#align filter.monotone_small_sets Filter.monotone_smallSetsₓ'. -/
 @[mono]
 theorem monotone_smallSets : Monotone (@smallSets α) :=
   monotone_lift' monotone_id monotone_const
 #align filter.monotone_small_sets Filter.monotone_smallSets
 
-/- warning: filter.small_sets_bot -> Filter.smallSets_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} (Set.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} (Set.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.small_sets_bot Filter.smallSets_botₓ'. -/
 @[simp]
 theorem smallSets_bot : (⊥ : Filter α).smallSets = pure ∅ := by
   rw [small_sets, lift'_bot monotone_powerset, powerset_empty, principal_singleton]
 #align filter.small_sets_bot Filter.smallSets_bot
 
-/- warning: filter.small_sets_top -> Filter.smallSets_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Top.top.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.hasTop.{u1} (Set.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Top.top.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.instTopFilter.{u1} (Set.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align filter.small_sets_top Filter.smallSets_topₓ'. -/
 @[simp]
 theorem smallSets_top : (⊤ : Filter α).smallSets = ⊤ := by
   rw [small_sets, lift'_top, powerset_univ, principal_univ]
@@ -180,22 +138,10 @@ theorem comap_smallSets (l : Filter β) (f : α → Set β) :
 #align filter.comap_small_sets Filter.comap_smallSets
 -/
 
-/- warning: filter.small_sets_infi -> Filter.smallSets_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (iInf.{u1, u2} (Filter.{u1} (Set.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Set.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.completeLattice.{u1} (Set.{u1} α)))) ι (fun (i : ι) => Filter.smallSets.{u1} α (f i)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> (Filter.{u2} α)}, Eq.{succ u2} (Filter.{u2} (Set.{u2} α)) (Filter.smallSets.{u2} α (iInf.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι f)) (iInf.{u2, u1} (Filter.{u2} (Set.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Set.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Set.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Set.{u2} α)))) ι (fun (i : ι) => Filter.smallSets.{u2} α (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.small_sets_infi Filter.smallSets_iInfₓ'. -/
 theorem smallSets_iInf {f : ι → Filter α} : (iInf f).smallSets = ⨅ i, (f i).smallSets :=
   lift'_iInf_of_map_univ powerset_inter powerset_univ
 #align filter.small_sets_infi Filter.smallSets_iInf
 
-/- warning: filter.small_sets_inf -> Filter.smallSets_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₂)) (Inf.inf.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.hasInf.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α l₁) (Filter.smallSets.{u1} α l₂))
-but is expected to have type
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ l₂)) (Inf.inf.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.instInfFilter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α l₁) (Filter.smallSets.{u1} α l₂))
-Case conversion may be inaccurate. Consider using '#align filter.small_sets_inf Filter.smallSets_infₓ'. -/
 theorem smallSets_inf (l₁ l₂ : Filter α) : (l₁ ⊓ l₂).smallSets = l₁.smallSets ⊓ l₂.smallSets :=
   lift'_inf _ _ powerset_inter
 #align filter.small_sets_inf Filter.smallSets_inf
@@ -229,12 +175,6 @@ theorem Tendsto.of_smallSets {s : α → Set β} {f : α → β} (hs : Tendsto s
 #align filter.tendsto.of_small_sets Filter.Tendsto.of_smallSets
 -/
 
-/- warning: filter.eventually_small_sets_eventually -> Filter.eventually_smallSets_eventually is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {l' : Filter.{u1} α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Filter.Eventually.{u1} α (fun (x : α) => (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (p x)) l') (Filter.smallSets.{u1} α l)) (Filter.Eventually.{u1} α (fun (x : α) => p x) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l l'))
-but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {l' : Filter.{u1} α} {p : α -> Prop}, Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Filter.Eventually.{u1} α (fun (x : α) => (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (p x)) l') (Filter.smallSets.{u1} α l)) (Filter.Eventually.{u1} α (fun (x : α) => p x) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l l'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_small_sets_eventually Filter.eventually_smallSets_eventuallyₓ'. -/
 @[simp]
 theorem eventually_smallSets_eventually {p : α → Prop} :
     (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l ⊓ l', p x :=

@@ -63,9 +63,6 @@ end CharP
 
 section Homomorphism
 
-/- warning: mv_polynomial.map_range_eq_map -> MvPolynomial.mapRange_eq_map is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.map_range_eq_map MvPolynomial.mapRange_eq_mapₓ'. -/
 theorem mapRange_eq_map {R S : Type _} [CommRing R] [CommRing S] (p : MvPolynomial σ R)
     (f : R →+* S) : Finsupp.mapRange f f.map_zero p = map f p :=
   by
@@ -135,9 +132,6 @@ def basisMonomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
 #align mv_polynomial.basis_monomials MvPolynomial.basisMonomials
 -/
 
-/- warning: mv_polynomial.coe_basis_monomials -> MvPolynomial.coe_basisMonomials is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.coe_basis_monomials MvPolynomial.coe_basisMonomialsₓ'. -/
 @[simp]
 theorem coe_basisMonomials :
     (basisMonomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
@@ -165,9 +159,6 @@ noncomputable def basisMonomials : Basis ℕ R R[X] :=
 #align polynomial.basis_monomials Polynomial.basisMonomials
 -/
 
-/- warning: polynomial.coe_basis_monomials -> Polynomial.coe_basisMonomials is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.coe_basis_monomials Polynomial.coe_basisMonomialsₓ'. -/
 @[simp]
 theorem coe_basisMonomials : (basisMonomials R : ℕ → R[X]) = fun s => monomial s 1 :=
   funext fun n => ofFinsupp_single _ _

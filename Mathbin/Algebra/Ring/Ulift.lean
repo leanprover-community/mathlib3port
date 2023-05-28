@@ -99,12 +99,6 @@ instance semiring [Semiring α] : Semiring (ULift α) := by
 #align ulift.semiring ULift.semiring
 -/
 
-/- warning: ulift.ring_equiv -> ULift.ringEquiv is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α], RingEquiv.{max u1 u2, u1} (ULift.{u2, u1} α) α (ULift.mul.{u1, u2} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1))) (ULift.add.{u1, u2} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1))) (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1)) (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α], RingEquiv.{max u1 u2, u1} (ULift.{u2, u1} α) α (ULift.mul.{u1, u2} α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_1) (ULift.add.{u1, u2} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1))) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align ulift.ring_equiv ULift.ringEquivₓ'. -/
 /-- The ring equivalence between `ulift α` and `α`.
 -/
 def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α

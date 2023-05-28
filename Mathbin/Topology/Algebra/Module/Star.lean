@@ -55,41 +55,26 @@ def starL' (R : Type _) {A : Type _} [CommSemiring R] [StarRing R] [TrivialStar 
 variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R] [AddCommGroup A]
   [Module R A] [StarAddMonoid A] [StarModule R A] [Invertible (2 : R)] [TopologicalSpace A]
 
-/- warning: continuous_self_adjoint_part -> continuous_selfAdjointPart is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_self_adjoint_part continuous_selfAdjointPartₓ'. -/
 theorem continuous_selfAdjointPart [ContinuousAdd A] [ContinuousStar A] [ContinuousConstSMul R A] :
     Continuous (@selfAdjointPart R A _ _ _ _ _ _ _ _) :=
   ((continuous_const_smul _).comp <| continuous_id.add continuous_star).subtype_mk _
 #align continuous_self_adjoint_part continuous_selfAdjointPart
 
-/- warning: continuous_skew_adjoint_part -> continuous_skewAdjointPart is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_skew_adjoint_part continuous_skewAdjointPartₓ'. -/
 theorem continuous_skewAdjointPart [ContinuousSub A] [ContinuousStar A] [ContinuousConstSMul R A] :
     Continuous (@skewAdjointPart R A _ _ _ _ _ _ _ _) :=
   ((continuous_const_smul _).comp <| continuous_id.sub continuous_star).subtype_mk _
 #align continuous_skew_adjoint_part continuous_skewAdjointPart
 
-/- warning: continuous_decompose_prod_adjoint -> continuous_decomposeProdAdjoint is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_decompose_prod_adjoint continuous_decomposeProdAdjointₓ'. -/
 theorem continuous_decomposeProdAdjoint [TopologicalAddGroup A] [ContinuousStar A]
     [ContinuousConstSMul R A] : Continuous (@StarModule.decomposeProdAdjoint R A _ _ _ _ _ _ _ _) :=
   (continuous_selfAdjointPart R A).prod_mk (continuous_skewAdjointPart R A)
 #align continuous_decompose_prod_adjoint continuous_decomposeProdAdjoint
 
-/- warning: continuous_decompose_prod_adjoint_symm -> continuous_decomposeProdAdjoint_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align continuous_decompose_prod_adjoint_symm continuous_decomposeProdAdjoint_symmₓ'. -/
 theorem continuous_decomposeProdAdjoint_symm [TopologicalAddGroup A] :
     Continuous (@StarModule.decomposeProdAdjoint R A _ _ _ _ _ _ _ _).symm :=
   (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
 #align continuous_decompose_prod_adjoint_symm continuous_decomposeProdAdjoint_symm
 
-/- warning: self_adjoint_partL -> selfAdjointPartL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align self_adjoint_partL selfAdjointPartLₓ'. -/
 /-- The self-adjoint part of an element of a star module, as a continuous linear map. -/
 @[simps]
 def selfAdjointPartL [ContinuousAdd A] [ContinuousStar A] [ContinuousConstSMul R A] :
@@ -98,9 +83,6 @@ def selfAdjointPartL [ContinuousAdd A] [ContinuousStar A] [ContinuousConstSMul R
   cont := continuous_selfAdjointPart _ _
 #align self_adjoint_partL selfAdjointPartL
 
-/- warning: skew_adjoint_partL -> skewAdjointPartL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align skew_adjoint_partL skewAdjointPartLₓ'. -/
 /-- The skew-adjoint part of an element of a star module, as a continuous linear map. -/
 @[simps]
 def skewAdjointPartL [ContinuousSub A] [ContinuousStar A] [ContinuousConstSMul R A] :
@@ -109,9 +91,6 @@ def skewAdjointPartL [ContinuousSub A] [ContinuousStar A] [ContinuousConstSMul R
   cont := continuous_skewAdjointPart _ _
 #align skew_adjoint_partL skewAdjointPartL
 
-/- warning: star_module.decompose_prod_adjointL -> StarModule.decomposeProdAdjointL is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align star_module.decompose_prod_adjointL StarModule.decomposeProdAdjointLₓ'. -/
 /-- The decomposition of elements of a star module into their self- and skew-adjoint parts,
 as a continuous linear equivalence. -/
 @[simps]

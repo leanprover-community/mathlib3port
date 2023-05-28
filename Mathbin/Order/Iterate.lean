@@ -46,12 +46,6 @@ lemmas in this section formalize this fact for different inequalities made stric
 -/
 
 
-/- warning: monotone.seq_le_seq -> Monotone.seq_le_seq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (y (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x n) (y n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (y (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x n) (y n)))
-Case conversion may be inaccurate. Consider using '#align monotone.seq_le_seq Monotone.seq_le_seqₓ'. -/
 theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k < n, x (k + 1) ≤ f (x k))
     (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n ≤ y n :=
   by
@@ -62,12 +56,6 @@ theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k 
     exact fun k hk => hy _ (hk.trans n.lt_succ_self)
 #align monotone.seq_le_seq Monotone.seq_le_seq
 
-/- warning: monotone.seq_pos_lt_seq_of_lt_of_le -> Monotone.seq_pos_lt_seq_of_lt_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (y (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x n) (y n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (y (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x n) (y n)))
-Case conversion may be inaccurate. Consider using '#align monotone.seq_pos_lt_seq_of_lt_of_le Monotone.seq_pos_lt_seq_of_lt_of_leₓ'. -/
 theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
     (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n :=
   by
@@ -79,34 +67,16 @@ theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h�
     exact hk.trans n.succ.lt_succ_self
 #align monotone.seq_pos_lt_seq_of_lt_of_le Monotone.seq_pos_lt_seq_of_lt_of_le
 
-/- warning: monotone.seq_pos_lt_seq_of_le_of_lt -> Monotone.seq_pos_lt_seq_of_le_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (y (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x n) (y n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (y (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x n) (y n)))
-Case conversion may be inaccurate. Consider using '#align monotone.seq_pos_lt_seq_of_le_of_lt Monotone.seq_pos_lt_seq_of_le_of_ltₓ'. -/
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
     (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
   hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
 #align monotone.seq_pos_lt_seq_of_le_of_lt Monotone.seq_pos_lt_seq_of_le_of_lt
 
-/- warning: monotone.seq_lt_seq_of_lt_of_le -> Monotone.seq_lt_seq_of_lt_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (y (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x n) (y n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (y (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x n) (y n)))
-Case conversion may be inaccurate. Consider using '#align monotone.seq_lt_seq_of_lt_of_le Monotone.seq_lt_seq_of_lt_of_leₓ'. -/
 theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
     (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
   cases n; exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 #align monotone.seq_lt_seq_of_lt_of_le Monotone.seq_lt_seq_of_lt_of_le
 
-/- warning: monotone.seq_lt_seq_of_le_of_lt -> Monotone.seq_lt_seq_of_le_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (y (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat Nat.hasLt k n) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (x n) (y n)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (y (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x n) (y n)))
-Case conversion may be inaccurate. Consider using '#align monotone.seq_lt_seq_of_le_of_lt Monotone.seq_lt_seq_of_le_of_ltₓ'. -/
 theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
     (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
   hf.dual.seq_lt_seq_of_lt_of_le n h₀ hy hx
@@ -127,45 +97,21 @@ variable {g : β → β} {h : β → α}
 
 open Function
 
-/- warning: monotone.le_iterate_comp_of_le -> Monotone.le_iterate_comp_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_1)) (Function.comp.{succ u2, succ u2, succ u1} β β α h g) (Function.comp.{succ u2, succ u1, succ u1} β α α f h)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_1)) (Function.comp.{succ u2, succ u2, succ u1} β β α h (Nat.iterate.{succ u2} β g n)) (Function.comp.{succ u2, succ u1, succ u1} β α α (Nat.iterate.{succ u1} α f n) h))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u2, u2} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u1, succ u2} β β α h g) (Function.comp.{succ u1, succ u2, succ u2} β α α f h)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u1, succ u2} β β α h (Nat.iterate.{succ u1} β g n)) (Function.comp.{succ u1, succ u2, succ u2} β α α (Nat.iterate.{succ u2} α f n) h))
-Case conversion may be inaccurate. Consider using '#align monotone.le_iterate_comp_of_le Monotone.le_iterate_comp_of_leₓ'. -/
 theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : ℕ) :
     h ∘ g^[n] ≤ f^[n] ∘ h := fun x => by
   refine' hf.seq_le_seq n _ (fun k hk => _) fun k hk => _ <;> simp [iterate_succ', H _]
 #align monotone.le_iterate_comp_of_le Monotone.le_iterate_comp_of_le
 
-/- warning: monotone.iterate_comp_le_of_le -> Monotone.iterate_comp_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_1)) (Function.comp.{succ u2, succ u1, succ u1} β α α f h) (Function.comp.{succ u2, succ u2, succ u1} β β α h g)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toHasLe.{u1} α _inst_1)) (Function.comp.{succ u2, succ u1, succ u1} β α α (Nat.iterate.{succ u1} α f n) h) (Function.comp.{succ u2, succ u2, succ u1} β β α h (Nat.iterate.{succ u2} β g n)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u2, u2} α α _inst_1 _inst_1 f) -> (LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u2, succ u2} β α α f h) (Function.comp.{succ u1, succ u1, succ u2} β β α h g)) -> (forall (n : Nat), LE.le.{max u2 u1} (β -> α) (Pi.hasLe.{u1, u2} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u2} α _inst_1)) (Function.comp.{succ u1, succ u2, succ u2} β α α (Nat.iterate.{succ u2} α f n) h) (Function.comp.{succ u1, succ u1, succ u2} β β α h (Nat.iterate.{succ u1} β g n)))
-Case conversion may be inaccurate. Consider using '#align monotone.iterate_comp_le_of_le Monotone.iterate_comp_le_of_leₓ'. -/
 theorem iterate_comp_le_of_le (hf : Monotone f) (H : f ∘ h ≤ h ∘ g) (n : ℕ) :
     f^[n] ∘ h ≤ h ∘ g^[n] :=
   hf.dual.le_iterate_comp_of_le H n
 #align monotone.iterate_comp_le_of_le Monotone.iterate_comp_le_of_le
 
-/- warning: monotone.iterate_le_of_le -> Monotone.iterate_le_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) f g) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) (Nat.iterate.{succ u1} α f n) (Nat.iterate.{succ u1} α g n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) f g) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (Nat.iterate.{succ u1} α f n) (Nat.iterate.{succ u1} α g n))
-Case conversion may be inaccurate. Consider using '#align monotone.iterate_le_of_le Monotone.iterate_le_of_leₓ'. -/
 /-- If `f ≤ g` and `f` is monotone, then `f^[n] ≤ g^[n]`. -/
 theorem iterate_le_of_le {g : α → α} (hf : Monotone f) (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   hf.iterate_comp_le_of_le h n
 #align monotone.iterate_le_of_le Monotone.iterate_le_of_le
 
-/- warning: monotone.le_iterate_of_le -> Monotone.le_iterate_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 g) -> (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) f g) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) (Nat.iterate.{succ u1} α f n) (Nat.iterate.{succ u1} α g n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 g) -> (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) f g) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (Nat.iterate.{succ u1} α f n) (Nat.iterate.{succ u1} α g n))
-Case conversion may be inaccurate. Consider using '#align monotone.le_iterate_of_le Monotone.le_iterate_of_leₓ'. -/
 /-- If `f ≤ g` and `g` is monotone, then `f^[n] ≤ g^[n]`. -/
 theorem le_iterate_of_le {g : α → α} (hg : Monotone g) (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   hg.dual.iterate_le_of_le h n
@@ -187,44 +133,20 @@ section Preorder
 
 variable [Preorder α] {f : α → α}
 
-/- warning: function.id_le_iterate_of_id_le -> Function.id_le_iterate_of_id_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) (id.{succ u1} α) f) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) (id.{succ u1} α) (Nat.iterate.{succ u1} α f n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (id.{succ u1} α) f) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (id.{succ u1} α) (Nat.iterate.{succ u1} α f n))
-Case conversion may be inaccurate. Consider using '#align function.id_le_iterate_of_id_le Function.id_le_iterate_of_id_leₓ'. -/
 /-- If $x ≤ f x$ for all $x$ (we write this as `id ≤ f`), then the same is true for any iterate
 `f^[n]` of `f`. -/
 theorem id_le_iterate_of_id_le (h : id ≤ f) (n : ℕ) : id ≤ f^[n] := by
   simpa only [iterate_id] using monotone_id.iterate_le_of_le h n
 #align function.id_le_iterate_of_id_le Function.id_le_iterate_of_id_le
 
-/- warning: function.iterate_le_id_of_le_id -> Function.iterate_le_id_of_le_id is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) f (id.{succ u1} α)) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) (Nat.iterate.{succ u1} α f n) (id.{succ u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) f (id.{succ u1} α)) -> (forall (n : Nat), LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (Nat.iterate.{succ u1} α f n) (id.{succ u1} α))
-Case conversion may be inaccurate. Consider using '#align function.iterate_le_id_of_le_id Function.iterate_le_id_of_le_idₓ'. -/
 theorem iterate_le_id_of_le_id (h : f ≤ id) (n : ℕ) : f^[n] ≤ id :=
   @id_le_iterate_of_id_le αᵒᵈ _ f h n
 #align function.iterate_le_id_of_le_id Function.iterate_le_id_of_le_id
 
-/- warning: function.monotone_iterate_of_id_le -> Function.monotone_iterate_of_id_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) (id.{succ u1} α) f) -> (Monotone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (id.{succ u1} α) f) -> (Monotone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-Case conversion may be inaccurate. Consider using '#align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_leₓ'. -/
 theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
   monotone_nat_of_le_succ fun n x => by rw [iterate_succ_apply']; exact h _
 #align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
 
-/- warning: function.antitone_iterate_of_le_id -> Function.antitone_iterate_of_le_id is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toHasLe.{u1} α _inst_1)) f (id.{succ u1} α)) -> (Antitone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) f (id.{succ u1} α)) -> (Antitone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
-Case conversion may be inaccurate. Consider using '#align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_idₓ'. -/
 theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
   @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
 #align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_id
@@ -246,36 +168,18 @@ section Preorder
 
 variable [Preorder α] {f g : α → α}
 
-/- warning: function.commute.iterate_le_of_map_le -> Function.Commute.iterate_le_of_map_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 g) -> (forall {x : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (f x) (g x)) -> (forall (n : Nat), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 g) -> (forall {x : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f x) (g x)) -> (forall (n : Nat), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_le_of_map_le Function.Commute.iterate_le_of_map_leₓ'. -/
 theorem iterate_le_of_map_le (h : Commute f g) (hf : Monotone f) (hg : Monotone g) {x}
     (hx : f x ≤ g x) (n : ℕ) : (f^[n]) x ≤ (g^[n]) x := by
   refine' hf.seq_le_seq n _ (fun k hk => _) fun k hk => _ <;>
     simp [iterate_succ' f, h.iterate_right _ _, hg.iterate _ hx]
 #align function.commute.iterate_le_of_map_le Function.Commute.iterate_le_of_map_le
 
-/- warning: function.commute.iterate_pos_lt_of_map_lt -> Function.Commute.iterate_pos_lt_of_map_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (StrictMono.{u1, u1} α α _inst_1 _inst_1 g) -> (forall {x : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (f x) (g x)) -> (forall {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (StrictMono.{u1, u1} α α _inst_1 _inst_1 g) -> (forall {x : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f x) (g x)) -> (forall {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x))))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_pos_lt_of_map_lt Function.Commute.iterate_pos_lt_of_map_ltₓ'. -/
 theorem iterate_pos_lt_of_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x}
     (hx : f x < g x) {n} (hn : 0 < n) : (f^[n]) x < (g^[n]) x := by
   refine' hf.seq_pos_lt_seq_of_le_of_lt hn _ (fun k hk => _) fun k hk => _ <;>
     simp [iterate_succ' f, h.iterate_right _ _, hg.iterate _ hx]
 #align function.commute.iterate_pos_lt_of_map_lt Function.Commute.iterate_pos_lt_of_map_lt
 
-/- warning: function.commute.iterate_pos_lt_of_map_lt' -> Function.Commute.iterate_pos_lt_of_map_lt' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (StrictMono.{u1, u1} α α _inst_1 _inst_1 f) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 g) -> (forall {x : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (f x) (g x)) -> (forall {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (StrictMono.{u1, u1} α α _inst_1 _inst_1 f) -> (Monotone.{u1, u1} α α _inst_1 _inst_1 g) -> (forall {x : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f x) (g x)) -> (forall {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x))))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_pos_lt_of_map_lt' Function.Commute.iterate_pos_lt_of_map_lt'ₓ'. -/
 theorem iterate_pos_lt_of_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x}
     (hx : f x < g x) {n} (hn : 0 < n) : (f^[n]) x < (g^[n]) x :=
   @iterate_pos_lt_of_map_lt αᵒᵈ _ g f h.symm hg.dual hf.dual x hx n hn
@@ -285,12 +189,6 @@ end Preorder
 
 variable [LinearOrder α] {f g : α → α}
 
-/- warning: function.commute.iterate_pos_lt_iff_map_lt -> Function.Commute.iterate_pos_lt_iff_map_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_pos_lt_iff_map_lt Function.Commute.iterate_pos_lt_iff_map_ltₓ'. -/
 theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
     (hn : 0 < n) : (f^[n]) x < (g^[n]) x ↔ f x < g x :=
   by
@@ -300,34 +198,16 @@ theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : Stri
   · simp only [lt_asymm H, lt_asymm (h.symm.iterate_pos_lt_of_map_lt' hg hf H hn)]
 #align function.commute.iterate_pos_lt_iff_map_lt Function.Commute.iterate_pos_lt_iff_map_lt
 
-/- warning: function.commute.iterate_pos_lt_iff_map_lt' -> Function.Commute.iterate_pos_lt_iff_map_lt' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_pos_lt_iff_map_lt' Function.Commute.iterate_pos_lt_iff_map_lt'ₓ'. -/
 theorem iterate_pos_lt_iff_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n}
     (hn : 0 < n) : (f^[n]) x < (g^[n]) x ↔ f x < g x :=
   @iterate_pos_lt_iff_map_lt αᵒᵈ _ _ _ h.symm hg.dual hf.dual x n hn
 #align function.commute.iterate_pos_lt_iff_map_lt' Function.Commute.iterate_pos_lt_iff_map_lt'
 
-/- warning: function.commute.iterate_pos_le_iff_map_le -> Function.Commute.iterate_pos_le_iff_map_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_pos_le_iff_map_le Function.Commute.iterate_pos_le_iff_map_leₓ'. -/
 theorem iterate_pos_le_iff_map_le (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
     (hn : 0 < n) : (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by
   simpa only [not_lt] using not_congr (h.symm.iterate_pos_lt_iff_map_lt' hg hf hn)
 #align function.commute.iterate_pos_le_iff_map_le Function.Commute.iterate_pos_le_iff_map_le
 
-/- warning: function.commute.iterate_pos_le_iff_map_le' -> Function.Commute.iterate_pos_le_iff_map_le' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {f : α -> α} {g : α -> α}, (Function.Commute.{u1} α f g) -> (StrictMono.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) f) -> (Monotone.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)) g) -> (forall {x : α} {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (Nat.iterate.{succ u1} α f n x) (Nat.iterate.{succ u1} α g n x)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (f x) (g x))))
-Case conversion may be inaccurate. Consider using '#align function.commute.iterate_pos_le_iff_map_le' Function.Commute.iterate_pos_le_iff_map_le'ₓ'. -/
 theorem iterate_pos_le_iff_map_le' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n}
     (hn : 0 < n) : (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by
   simpa only [not_lt] using not_congr (h.symm.iterate_pos_lt_iff_map_lt hg hf hn)
@@ -349,24 +229,12 @@ namespace Monotone
 
 variable [Preorder α] {f : α → α} {x : α}
 
-/- warning: monotone.monotone_iterate_of_le_map -> Monotone.monotone_iterate_of_le_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x (f x)) -> (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x (f x)) -> (Monotone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-Case conversion may be inaccurate. Consider using '#align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_mapₓ'. -/
 /-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
 a monotone sequence. -/
 theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => (f^[n]) x :=
   monotone_nat_of_le_succ fun n => by rw [iterate_succ_apply]; exact hf.iterate n hx
 #align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_map
 
-/- warning: monotone.antitone_iterate_of_map_le -> Monotone.antitone_iterate_of_map_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (f x) x) -> (Antitone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f x) x) -> (Antitone.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-Case conversion may be inaccurate. Consider using '#align monotone.antitone_iterate_of_map_le Monotone.antitone_iterate_of_map_leₓ'. -/
 /-- If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
 a antitone sequence. -/
 theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) : Antitone fun n => (f^[n]) x :=
@@ -379,12 +247,6 @@ namespace StrictMono
 
 variable [Preorder α] {f : α → α} {x : α}
 
-/- warning: strict_mono.strict_mono_iterate_of_lt_map -> StrictMono.strictMono_iterate_of_lt_map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (StrictMono.{u1, u1} α α _inst_1 _inst_1 f) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x (f x)) -> (StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (StrictMono.{u1, u1} α α _inst_1 _inst_1 f) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x (f x)) -> (StrictMono.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-Case conversion may be inaccurate. Consider using '#align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_mapₓ'. -/
 /-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
 form a strictly monotone sequence. -/
 theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
@@ -392,12 +254,6 @@ theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
   strictMono_nat_of_lt_succ fun n => by rw [iterate_succ_apply]; exact hf.iterate n hx
 #align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_map
 
-/- warning: strict_mono.strict_anti_iterate_of_map_lt -> StrictMono.strictAnti_iterate_of_map_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (StrictMono.{u1, u1} α α _inst_1 _inst_1 f) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (f x) x) -> (StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : α}, (StrictMono.{u1, u1} α α _inst_1 _inst_1 f) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (f x) x) -> (StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u1} α f n x))
-Case conversion may be inaccurate. Consider using '#align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strictAnti_iterate_of_map_ltₓ'. -/
 /-- If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
 form a strictly antitone sequence. -/
 theorem strictAnti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) :

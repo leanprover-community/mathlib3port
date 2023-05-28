@@ -44,9 +44,6 @@ namespace Real
 
 variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 
-/- warning: real.exists_extension_norm_eq -> Real.exists_extension_norm_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align real.exists_extension_norm_eq Real.exists_extension_norm_eqₓ'. -/
 /-- Hahn-Banach theorem for continuous linear functions over `ℝ`. -/
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
     ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ‖g‖ = ‖f‖ :=
@@ -75,9 +72,6 @@ open IsROrC
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-/- warning: exists_extension_norm_eq -> exists_extension_norm_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_extension_norm_eq exists_extension_norm_eqₓ'. -/
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
 theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ‖g‖ = ‖f‖ :=
@@ -133,16 +127,10 @@ open ContinuousLinearEquiv Submodule
 
 open Classical
 
-/- warning: coord_norm' -> coord_norm' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coord_norm' coord_norm'ₓ'. -/
 theorem coord_norm' {x : E} (h : x ≠ 0) : ‖(‖x‖ : 𝕜) • coord 𝕜 x h‖ = 1 := by
   rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
 #align coord_norm' coord_norm'
 
-/- warning: exists_dual_vector -> exists_dual_vector is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_dual_vector exists_dual_vectorₓ'. -/
 /-- Corollary of Hahn-Banach.  Given a nonzero element `x` of a normed space, there exists an
     element of the dual space, of norm `1`, whose value on `x` is `‖x‖`. -/
 theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, ‖g‖ = 1 ∧ g x = ‖x‖ :=
@@ -160,9 +148,6 @@ theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, �
       
 #align exists_dual_vector exists_dual_vector
 
-/- warning: exists_dual_vector' -> exists_dual_vector' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_dual_vector' exists_dual_vector'ₓ'. -/
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing
     the dual element arbitrarily when `x = 0`. -/
 theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, ‖g‖ = 1 ∧ g x = ‖x‖ :=
@@ -175,9 +160,6 @@ theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, 
   · exact exists_dual_vector 𝕜 x hx
 #align exists_dual_vector' exists_dual_vector'
 
-/- warning: exists_dual_vector'' -> exists_dual_vector'' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align exists_dual_vector'' exists_dual_vector''ₓ'. -/
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, but only ensuring that
     the dual element has norm at most `1` (this can not be improved for the trivial
     vector space). -/

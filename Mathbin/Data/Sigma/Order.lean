@@ -162,23 +162,11 @@ instance LT [LT ι] [∀ i, LT (α i)] : LT (Σₗ i, α i) :=
 #align sigma.lex.has_lt Sigma.Lex.LT
 -/
 
-/- warning: sigma.lex.le_def -> Sigma.Lex.le_def is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : LT.{u1} ι] [_inst_2 : forall (i : ι), LE.{u2} (α i)] {a : Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))} {b : Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))}, Iff (LE.le.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) _inst_1 (fun (i : ι) => _inst_2 i)) a b) (Or (LT.lt.{u1} ι _inst_1 (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) => LE.le.{u2} (α (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (_inst_2 (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (Eq.ndrec.{succ u2, succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) α (Sigma.snd.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u1, u2} ι (fun (i : ι) => α i) b))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : LT.{u2} ι] [_inst_2 : forall (i : ι), LE.{u1} (α i)] {a : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))} {b : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))}, Iff (LE.le.{max u2 u1} (Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u2, u1} ι (fun (i : ι) => α i) _inst_1 (fun (i : ι) => _inst_2 i)) a b) (Or (LT.lt.{u2} ι _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => LE.le.{u1} (α (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (_inst_2 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Eq.rec.{succ u1, succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Order._hyg.1527 : ι) (x._@.Mathlib.Data.Sigma.Order._hyg.1526 : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Order._hyg.1527) => α x._@.Mathlib.Data.Sigma.Order._hyg.1527) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.le_def Sigma.Lex.le_defₓ'. -/
 theorem le_def [LT ι] [∀ i, LE (α i)] {a b : Σₗ i, α i} :
     a ≤ b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 :=
   Sigma.lex_iff
 #align sigma.lex.le_def Sigma.Lex.le_def
 
-/- warning: sigma.lex.lt_def -> Sigma.Lex.lt_def is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : LT.{u1} ι] [_inst_2 : forall (i : ι), LT.{u2} (α i)] {a : Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))} {b : Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))}, Iff (LT.lt.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) _inst_1 (fun (i : ι) => _inst_2 i)) a b) (Or (LT.lt.{u1} ι _inst_1 (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) => LT.lt.{u2} (α (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (_inst_2 (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b)) (Eq.ndrec.{succ u2, succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) a) α (Sigma.snd.{u1, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u1, u2} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u1, u2} ι (fun (i : ι) => α i) b))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : LT.{u2} ι] [_inst_2 : forall (i : ι), LT.{u1} (α i)] {a : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))} {b : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))}, Iff (LT.lt.{max u2 u1} (Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u2, u1} ι (fun (i : ι) => α i) _inst_1 (fun (i : ι) => _inst_2 i)) a b) (Or (LT.lt.{u2} ι _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => LT.lt.{u1} (α (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (_inst_2 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Eq.rec.{succ u1, succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Order._hyg.1627 : ι) (x._@.Mathlib.Data.Sigma.Order._hyg.1626 : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Order._hyg.1627) => α x._@.Mathlib.Data.Sigma.Order._hyg.1627) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.lt_def Sigma.Lex.lt_defₓ'. -/
 theorem lt_def [LT ι] [∀ i, LT (α i)] {a b : Σₗ i, α i} :
     a < b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.rec a.2 < b.2 :=
   Sigma.lex_iff
@@ -221,12 +209,6 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
 #align sigma.lex.linear_order Sigma.Lex.linearOrder
 -/
 
-/- warning: sigma.lex.order_bot -> Sigma.Lex.orderBot is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toHasLe.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderBot.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_3 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toLE.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderBot.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.order_bot Sigma.Lex.orderBotₓ'. -/
 /-- The lexicographical linear order on a sigma type. -/
 instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] :
     OrderBot (Σₗ i, α i) where
@@ -237,12 +219,6 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
     · exact lex.left _ _ ha
 #align sigma.lex.order_bot Sigma.Lex.orderBot
 
-/- warning: sigma.lex.order_top -> Sigma.Lex.orderTop is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toHasLe.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderTop.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_3 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toLE.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderTop.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.order_top Sigma.Lex.orderTopₓ'. -/
 /-- The lexicographical linear order on a sigma type. -/
 instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] :
     OrderTop (Σₗ i, α i) where
@@ -253,24 +229,12 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
     · exact lex.left _ _ ha
 #align sigma.lex.order_top Sigma.Lex.orderTop
 
-/- warning: sigma.lex.bounded_order -> Sigma.Lex.boundedOrder is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : BoundedOrder.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toHasLe.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))] [_inst_5 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toHasLe.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))], BoundedOrder.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_3 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : BoundedOrder.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toLE.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))] [_inst_5 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toLE.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))], BoundedOrder.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.bounded_order Sigma.Lex.boundedOrderₓ'. -/
 /-- The lexicographical linear order on a sigma type. -/
 instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)]
     [OrderTop (α ⊤)] : BoundedOrder (Σₗ i, α i) :=
   { Lex.orderBot, Lex.orderTop with }
 #align sigma.lex.bounded_order Sigma.Lex.boundedOrder
 
-/- warning: sigma.lex.densely_ordered -> Sigma.Lex.denselyOrdered is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : DenselyOrdered.{u1} ι (Preorder.toHasLt.{u1} ι _inst_1)] [_inst_3 : forall (i : ι), Nonempty.{succ u2} (α i)] [_inst_4 : forall (i : ι), Preorder.{u2} (α i)] [_inst_5 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_4 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_4 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : DenselyOrdered.{u1} ι (Preorder.toLT.{u1} ι _inst_1)] [_inst_3 : forall (i : ι), Nonempty.{succ u2} (α i)] [_inst_4 : forall (i : ι), Preorder.{u2} (α i)] [_inst_5 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_4 i))], DenselyOrdered.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_4 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.densely_ordered Sigma.Lex.denselyOrderedₓ'. -/
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σₗ i, α i) :=
   ⟨by
@@ -282,12 +246,6 @@ instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i
       exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered Sigma.Lex.denselyOrdered
 
-/- warning: sigma.lex.densely_ordered_of_no_max_order -> Sigma.Lex.denselyOrdered_of_noMaxOrder is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.densely_ordered_of_no_max_order Sigma.Lex.denselyOrdered_of_noMaxOrderₓ'. -/
 instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ i, α i) :=
   ⟨by
@@ -298,12 +256,6 @@ instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [�
       exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered_of_no_max_order Sigma.Lex.denselyOrdered_of_noMaxOrder
 
-/- warning: sigma.lex.densely_ordered_of_no_min_order -> Sigma.Lex.denselyOrdered_of_noMinOrder is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.densely_ordered_of_no_min_order Sigma.Lex.denselyOrdered_of_noMinOrderₓ'. -/
 instance denselyOrdered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ i, α i) :=
   ⟨by
@@ -314,12 +266,6 @@ instance denselyOrdered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [�
       exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered_of_no_min_order Sigma.Lex.denselyOrdered_of_noMinOrder
 
-/- warning: sigma.lex.no_max_order_of_nonempty -> Sigma.Lex.noMaxOrder_of_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toHasLt.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toLT.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.no_max_order_of_nonempty Sigma.Lex.noMaxOrder_of_nonemptyₓ'. -/
 instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ i, α i) :=
   ⟨by
@@ -330,11 +276,6 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
 #align sigma.lex.no_max_order_of_nonempty Sigma.Lex.noMaxOrder_of_nonempty
 
 /- warning: sigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
-warning: sigma.lex.no_min_order_of_nonempty -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toHasLt.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : Type.{u2}}, (Nat -> ι -> α) -> Nat -> (List.{u1} ι) -> (List.{u2} α)
 Case conversion may be inaccurate. Consider using '#align sigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
 instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
     NoMaxOrder (Σₗ i, α i) :=
@@ -345,23 +286,11 @@ instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align sigma.lex.no_min_order_of_nonempty [anonymous]
 
-/- warning: sigma.lex.no_max_order -> Sigma.Lex.noMaxOrder is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], NoMaxOrder.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.no_max_order Sigma.Lex.noMaxOrderₓ'. -/
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ i, α i) :=
   ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_gt a; exact ⟨⟨i, b⟩, right _ _ h⟩⟩
 #align sigma.lex.no_max_order Sigma.Lex.noMaxOrder
 
-/- warning: sigma.lex.no_min_order -> Sigma.Lex.noMinOrder is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], NoMinOrder.{max u1 u2} (Lex.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], NoMinOrder.{max u2 u1} (Lex.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
-Case conversion may be inaccurate. Consider using '#align sigma.lex.no_min_order Sigma.Lex.noMinOrderₓ'. -/
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ i, α i) :=
   ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_lt a; exact ⟨⟨i, b⟩, right _ _ h⟩⟩

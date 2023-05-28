@@ -27,12 +27,6 @@ universe v u
 -- morphism levels before object levels. See note [category_theory universes].
 variable (α : Sort u)
 
-/- warning: opposite -> Opposite is a dubious translation:
-lean 3 declaration is
-  Sort.{u1} -> Sort.{u1}
-but is expected to have type
-  Sort.{u1} -> Sort.{max 1 u1}
-Case conversion may be inaccurate. Consider using '#align opposite Oppositeₓ'. -/
 /-- The type of objects of the opposite of `α`; used to define the opposite category.
 
   In order to avoid confusion between `α` and its opposite type, we
@@ -84,30 +78,12 @@ def unop : αᵒᵖ → α :=
 #align opposite.unop Opposite.unop
 -/
 
-/- warning: opposite.op_injective -> Opposite.op_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}}, Function.Injective.{u1, u1} α (Opposite.{u1} α) (Opposite.op.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u1}}, Function.Injective.{u1, max 1 u1} α (Opposite.{u1} α) (Opposite.op.{u1} α)
-Case conversion may be inaccurate. Consider using '#align opposite.op_injective Opposite.op_injectiveₓ'. -/
 theorem op_injective : Function.Injective (op : α → αᵒᵖ) := fun _ _ => id
 #align opposite.op_injective Opposite.op_injective
 
-/- warning: opposite.unop_injective -> Opposite.unop_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}}, Function.Injective.{u1, u1} (Opposite.{u1} α) α (Opposite.unop.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u1}}, Function.Injective.{max 1 u1, u1} (Opposite.{u1} α) α (Opposite.unop.{u1} α)
-Case conversion may be inaccurate. Consider using '#align opposite.unop_injective Opposite.unop_injectiveₓ'. -/
 theorem unop_injective : Function.Injective (unop : αᵒᵖ → α) := fun _ _ => id
 #align opposite.unop_injective Opposite.unop_injective
 
-/- warning: opposite.op_unop -> Opposite.op_unop is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} (x : Opposite.{u1} α), Eq.{u1} (Opposite.{u1} α) (Opposite.op.{u1} α (Opposite.unop.{u1} α x)) x
-but is expected to have type
-  forall {α : Sort.{u1}} (x : Opposite.{u1} α), Eq.{max 1 u1} (Opposite.{u1} α) (Opposite.op.{u1} α (Opposite.unop.{u1} α x)) x
-Case conversion may be inaccurate. Consider using '#align opposite.op_unop Opposite.op_unopₓ'. -/
 @[simp]
 theorem op_unop (x : αᵒᵖ) : op (unop x) = x :=
   rfl
@@ -120,12 +96,6 @@ theorem unop_op (x : α) : unop (op x) = x :=
 #align opposite.unop_op Opposite.unop_op
 -/
 
-/- warning: opposite.op_inj_iff -> Opposite.op_inj_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} (x : α) (y : α), Iff (Eq.{u1} (Opposite.{u1} α) (Opposite.op.{u1} α x) (Opposite.op.{u1} α y)) (Eq.{u1} α x y)
-but is expected to have type
-  forall {α : Sort.{u1}} (x : α) (y : α), Iff (Eq.{max 1 u1} (Opposite.{u1} α) (Opposite.op.{u1} α x) (Opposite.op.{u1} α y)) (Eq.{u1} α x y)
-Case conversion may be inaccurate. Consider using '#align opposite.op_inj_iff Opposite.op_inj_iffₓ'. -/
 -- We could prove these by `iff.rfl`, but that would make these eligible for `dsimp`. That would be
 -- a bad idea because `opposite` is irreducible.
 @[simp]
@@ -133,23 +103,11 @@ theorem op_inj_iff (x y : α) : op x = op y ↔ x = y :=
   op_injective.eq_iff
 #align opposite.op_inj_iff Opposite.op_inj_iff
 
-/- warning: opposite.unop_inj_iff -> Opposite.unop_inj_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} (x : Opposite.{u1} α) (y : Opposite.{u1} α), Iff (Eq.{u1} α (Opposite.unop.{u1} α x) (Opposite.unop.{u1} α y)) (Eq.{u1} (Opposite.{u1} α) x y)
-but is expected to have type
-  forall {α : Sort.{u1}} (x : Opposite.{u1} α) (y : Opposite.{u1} α), Iff (Eq.{u1} α (Opposite.unop.{u1} α x) (Opposite.unop.{u1} α y)) (Eq.{max 1 u1} (Opposite.{u1} α) x y)
-Case conversion may be inaccurate. Consider using '#align opposite.unop_inj_iff Opposite.unop_inj_iffₓ'. -/
 @[simp]
 theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
   unop_injective.eq_iff
 #align opposite.unop_inj_iff Opposite.unop_inj_iff
 
-/- warning: opposite.equiv_to_opposite -> Opposite.equivToOpposite is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}}, Equiv.{u1, u1} α (Opposite.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u1}}, Equiv.{u1, max 1 u1} α (Opposite.{u1} α)
-Case conversion may be inaccurate. Consider using '#align opposite.equiv_to_opposite Opposite.equivToOppositeₓ'. -/
 /-- The type-level equivalence between a type and its opposite. -/
 def equivToOpposite : α ≃ αᵒᵖ where
   toFun := op
@@ -158,44 +116,20 @@ def equivToOpposite : α ≃ αᵒᵖ where
   right_inv := op_unop
 #align opposite.equiv_to_opposite Opposite.equivToOpposite
 
-/- warning: opposite.equiv_to_opposite_coe -> Opposite.equivToOpposite_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}}, Eq.{u1} ((fun (_x : Equiv.{u1, u1} α (Opposite.{u1} α)) => α -> (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (coeFn.{max 1 u1, u1} (Equiv.{u1, u1} α (Opposite.{u1} α)) (fun (_x : Equiv.{u1, u1} α (Opposite.{u1} α)) => α -> (Opposite.{u1} α)) (Equiv.hasCoeToFun.{u1, u1} α (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (Opposite.op.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u1}}, Eq.{max 1 u1} (forall (a : α), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Opposite.{u1} α) a) (FunLike.coe.{max 1 u1, u1, max 1 u1} (Equiv.{u1, max 1 u1} α (Opposite.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Opposite.{u1} α) _x) (Equiv.instFunLikeEquiv.{u1, max 1 u1} α (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (Opposite.op.{u1} α)
-Case conversion may be inaccurate. Consider using '#align opposite.equiv_to_opposite_coe Opposite.equivToOpposite_coeₓ'. -/
 @[simp]
 theorem equivToOpposite_coe : (equivToOpposite : α → αᵒᵖ) = op :=
   rfl
 #align opposite.equiv_to_opposite_coe Opposite.equivToOpposite_coe
 
-/- warning: opposite.equiv_to_opposite_symm_coe -> Opposite.equivToOpposite_symm_coe is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}}, Eq.{u1} ((fun (_x : Equiv.{u1, u1} (Opposite.{u1} α) α) => (Opposite.{u1} α) -> α) (Equiv.symm.{u1, u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (coeFn.{max 1 u1, u1} (Equiv.{u1, u1} (Opposite.{u1} α) α) (fun (_x : Equiv.{u1, u1} (Opposite.{u1} α) α) => (Opposite.{u1} α) -> α) (Equiv.hasCoeToFun.{u1, u1} (Opposite.{u1} α) α) (Equiv.symm.{u1, u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (Opposite.unop.{u1} α)
-but is expected to have type
-  forall {α : Sort.{u1}}, Eq.{imax (max 1 u1) u1} (forall (a : Opposite.{u1} α), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Opposite.{u1} α) => α) a) (FunLike.coe.{max 1 u1, max 1 u1, u1} (Equiv.{max 1 u1, u1} (Opposite.{u1} α) α) (Opposite.{u1} α) (fun (_x : Opposite.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Opposite.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{max 1 u1, u1} (Opposite.{u1} α) α) (Equiv.symm.{u1, max 1 u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (Opposite.unop.{u1} α)
-Case conversion may be inaccurate. Consider using '#align opposite.equiv_to_opposite_symm_coe Opposite.equivToOpposite_symm_coeₓ'. -/
 @[simp]
 theorem equivToOpposite_symm_coe : (equivToOpposite.symm : αᵒᵖ → α) = unop :=
   rfl
 #align opposite.equiv_to_opposite_symm_coe Opposite.equivToOpposite_symm_coe
 
-/- warning: opposite.op_eq_iff_eq_unop -> Opposite.op_eq_iff_eq_unop is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {x : α} {y : Opposite.{u1} α}, Iff (Eq.{u1} (Opposite.{u1} α) (Opposite.op.{u1} α x) y) (Eq.{u1} α x (Opposite.unop.{u1} α y))
-but is expected to have type
-  forall {α : Sort.{u1}} {x : α} {y : Opposite.{u1} α}, Iff (Eq.{max 1 u1} (Opposite.{u1} α) (Opposite.op.{u1} α x) y) (Eq.{u1} α x (Opposite.unop.{u1} α y))
-Case conversion may be inaccurate. Consider using '#align opposite.op_eq_iff_eq_unop Opposite.op_eq_iff_eq_unopₓ'. -/
 theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
   equivToOpposite.apply_eq_iff_eq_symm_apply
 #align opposite.op_eq_iff_eq_unop Opposite.op_eq_iff_eq_unop
 
-/- warning: opposite.unop_eq_iff_eq_op -> Opposite.unop_eq_iff_eq_op is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {x : Opposite.{u1} α} {y : α}, Iff (Eq.{u1} α (Opposite.unop.{u1} α x) y) (Eq.{u1} (Opposite.{u1} α) x (Opposite.op.{u1} α y))
-but is expected to have type
-  forall {α : Sort.{u1}} {x : Opposite.{u1} α} {y : α}, Iff (Eq.{u1} α (Opposite.unop.{u1} α x) y) (Eq.{max 1 u1} (Opposite.{u1} α) x (Opposite.op.{u1} α y))
-Case conversion may be inaccurate. Consider using '#align opposite.unop_eq_iff_eq_op Opposite.unop_eq_iff_eq_opₓ'. -/
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equivToOpposite.symm.apply_eq_iff_eq_symm_apply
 #align opposite.unop_eq_iff_eq_op Opposite.unop_eq_iff_eq_op

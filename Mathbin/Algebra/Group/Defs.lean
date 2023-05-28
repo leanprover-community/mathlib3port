@@ -291,24 +291,12 @@ section Semigroup
 
 variable [Semigroup G]
 
-/- warning: mul_assoc -> mul_assoc is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] (a : G) (b : G) (c : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) a b) c) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) a (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) b c))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] (a : G) (b : G) (c : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) a b) c) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) a (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) b c))
-Case conversion may be inaccurate. Consider using '#align mul_assoc mul_assocₓ'. -/
 @[no_rsimp, to_additive]
 theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
   Semigroup.mul_assoc
 #align mul_assoc mul_assoc
 #align add_assoc add_assoc
 
-/- warning: semigroup.to_is_associative -> Semigroup.to_isAssociative is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3053 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3055 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) x._@.Mathlib.Algebra.Group.Defs._hyg.3053 x._@.Mathlib.Algebra.Group.Defs._hyg.3055)
-Case conversion may be inaccurate. Consider using '#align semigroup.to_is_associative Semigroup.to_isAssociativeₓ'. -/
 @[to_additive]
 instance Semigroup.to_isAssociative : IsAssociative G (· * ·) :=
   ⟨mul_assoc⟩
@@ -339,36 +327,18 @@ section CommSemigroup
 
 variable [CommSemigroup G]
 
-/- warning: mul_comm -> mul_comm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) b a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) b a)
-Case conversion may be inaccurate. Consider using '#align mul_comm mul_commₓ'. -/
 @[no_rsimp, to_additive]
 theorem mul_comm : ∀ a b : G, a * b = b * a :=
   CommSemigroup.mul_comm
 #align mul_comm mul_comm
 #align add_comm add_comm
 
-/- warning: comm_semigroup.to_is_commutative -> CommSemigroup.to_isCommutative is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3166 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3168 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3166 x._@.Mathlib.Algebra.Group.Defs._hyg.3168)
-Case conversion may be inaccurate. Consider using '#align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutativeₓ'. -/
 @[to_additive]
 instance CommSemigroup.to_isCommutative : IsCommutative G (· * ·) :=
   ⟨mul_comm⟩
 #align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutative
 #align add_comm_semigroup.to_is_commutative AddCommSemigroup.to_isCommutative
 
-/- warning: comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul -> CommSemigroup.IsRightCancelMul.toIsLeftCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsRightCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsLeftCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsRightCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsLeftCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_right_cancel_mul G` also satisfies
 `is_left_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsRightCancelAdd.toIsLeftCancelAdd
@@ -379,12 +349,6 @@ theorem CommSemigroup.IsRightCancelMul.toIsLeftCancelMul (G : Type u) [CommSemig
 #align comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMul
 #align add_comm_semigroup.is_right_cancel_add.to_is_left_cancel_add AddCommSemigroup.IsRightCancelAdd.toIsLeftCancelAdd
 
-/- warning: comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul -> CommSemigroup.IsLeftCancelMul.toIsRightCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsLeftCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsRightCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsLeftCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsRightCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_left_cancel_mul G` also satisfies
 `is_right_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsLeftCancelAdd.toIsRightCancelAdd
@@ -395,12 +359,6 @@ theorem CommSemigroup.IsLeftCancelMul.toIsRightCancelMul (G : Type u) [CommSemig
 #align comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMul
 #align add_comm_semigroup.is_left_cancel_add.to_is_right_cancel_add AddCommSemigroup.IsLeftCancelAdd.toIsRightCancelAdd
 
-/- warning: comm_semigroup.is_left_cancel_mul.to_is_cancel_mul -> CommSemigroup.IsLeftCancelMul.toIsCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsLeftCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsLeftCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_left_cancel_mul G` also satisfies
 `is_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsLeftCancelAdd.toIsCancelAdd
@@ -411,12 +369,6 @@ theorem CommSemigroup.IsLeftCancelMul.toIsCancelMul (G : Type u) [CommSemigroup 
 #align comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMul
 #align add_comm_semigroup.is_left_cancel_add.to_is_cancel_add AddCommSemigroup.IsLeftCancelAdd.toIsCancelAdd
 
-/- warning: comm_semigroup.is_right_cancel_mul.to_is_cancel_mul -> CommSemigroup.IsRightCancelMul.toIsCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsRightCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_2 : CommSemigroup.{u1} G] [_inst_3 : IsRightCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))], IsCancelMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.toIsCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_right_cancel_mul G` also satisfies
 `is_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsRightCancelAdd.toIsCancelAdd
@@ -448,12 +400,6 @@ class AddLeftCancelSemigroup (G : Type u) extends AddSemigroup G where
 
 attribute [to_additive AddLeftCancelSemigroup] LeftCancelSemigroup
 
-/- warning: left_cancel_semigroup.to_is_left_cancel_mul -> LeftCancelSemigroup.toIsLeftCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : LeftCancelSemigroup.{u1} G], IsLeftCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (LeftCancelSemigroup.toSemigroup.{u1} G _inst_1))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : LeftCancelSemigroup.{u1} G], IsLeftCancelMul.{u1} G (Semigroup.toMul.{u1} G (LeftCancelSemigroup.toSemigroup.{u1} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align left_cancel_semigroup.to_is_left_cancel_mul LeftCancelSemigroup.toIsLeftCancelMulₓ'. -/
 /-- Any `left_cancel_semigroup` satisfies `is_left_cancel_mul`. -/
 @[to_additive "Any `add_left_cancel_semigroup` satisfies `is_left_cancel_add`."]
 instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
@@ -481,12 +427,6 @@ class AddRightCancelSemigroup (G : Type u) extends AddSemigroup G where
 
 attribute [to_additive AddRightCancelSemigroup] RightCancelSemigroup
 
-/- warning: right_cancel_semigroup.to_is_right_cancel_mul -> RightCancelSemigroup.toIsRightCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : RightCancelSemigroup.{u1} G], IsRightCancelMul.{u1} G (Semigroup.toHasMul.{u1} G (RightCancelSemigroup.toSemigroup.{u1} G _inst_1))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : RightCancelSemigroup.{u1} G], IsRightCancelMul.{u1} G (Semigroup.toMul.{u1} G (RightCancelSemigroup.toSemigroup.{u1} G _inst_1))
-Case conversion may be inaccurate. Consider using '#align right_cancel_semigroup.to_is_right_cancel_mul RightCancelSemigroup.toIsRightCancelMulₓ'. -/
 /-- Any `right_cancel_semigroup` satisfies `is_right_cancel_mul`. -/
 @[to_additive "Any `add_right_cancel_semigroup` satisfies `is_right_cancel_add`."]
 instance (priority := 100) RightCancelSemigroup.toIsRightCancelMul (G : Type u)
@@ -515,12 +455,6 @@ class AddZeroClass (M : Type u) extends Zero M, Add M where
 
 attribute [to_additive] MulOneClass
 
-/- warning: mul_one_class.ext -> MulOneClass.ext is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {{m₁ : MulOneClass.{u1} M}} {{m₂ : MulOneClass.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (MulOneClass.mul.{u1} M m₁) (MulOneClass.mul.{u1} M m₂)) -> (Eq.{succ u1} (MulOneClass.{u1} M) m₁ m₂)
-but is expected to have type
-  forall {M : Type.{u1}} {{m₁ : MulOneClass.{u1} M}} {{m₂ : MulOneClass.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (MulOneClass.toMul.{u1} M m₁)) (Mul.mul.{u1} M (MulOneClass.toMul.{u1} M m₂))) -> (Eq.{succ u1} (MulOneClass.{u1} M) m₁ m₂)
-Case conversion may be inaccurate. Consider using '#align mul_one_class.ext MulOneClass.extₓ'. -/
 @[ext, to_additive]
 theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ :=
   by
@@ -534,24 +468,12 @@ section MulOneClass
 
 variable {M : Type u} [MulOneClass M]
 
-/- warning: one_mul -> one_mul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (a : M), Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M _inst_1)) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M _inst_1)))) a) a
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (a : M), Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1))) a) a
-Case conversion may be inaccurate. Consider using '#align one_mul one_mulₓ'. -/
 @[ematch, simp, to_additive]
 theorem one_mul : ∀ a : M, 1 * a = a :=
   MulOneClass.one_mul
 #align one_mul one_mul
 #align zero_add zero_add
 
-/- warning: mul_one -> mul_one is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (a : M), Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M _inst_1)) a (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M _inst_1))))) a
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (a : M), Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) a (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1)))) a
-Case conversion may be inaccurate. Consider using '#align mul_one mul_oneₓ'. -/
 @[ematch, simp, to_additive]
 theorem mul_one : ∀ a : M, a * 1 = a :=
   MulOneClass.mul_one
@@ -740,12 +662,6 @@ theorem npow_eq_pow (n : ℕ) (x : M) : Monoid.npow n x = x ^ n :=
 #align nsmul_eq_smul nsmul_eq_smul
 -/
 
-/- warning: pow_zero -> pow_zero is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : M), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : M), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))
-Case conversion may be inaccurate. Consider using '#align pow_zero pow_zeroₓ'. -/
 -- the attributes are intentionally out of order. `zero_smul` proves `zero_nsmul`.
 @[to_additive zero_nsmul, simp]
 theorem pow_zero (a : M) : a ^ 0 = 1 :=
@@ -753,12 +669,6 @@ theorem pow_zero (a : M) : a ^ 0 = 1 :=
 #align pow_zero pow_zero
 #align zero_nsmul zero_nsmul
 
-/- warning: pow_succ -> pow_succ is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : M) (n : Nat), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a n))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : M) (n : Nat), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a n))
-Case conversion may be inaccurate. Consider using '#align pow_succ pow_succₓ'. -/
 @[to_additive succ_nsmul]
 theorem pow_succ (a : M) (n : ℕ) : a ^ (n + 1) = a * a ^ n :=
   Monoid.npow_succ n a
@@ -771,12 +681,6 @@ section Monoid
 
 variable {M : Type u} [Monoid M]
 
-/- warning: left_inv_eq_right_inv -> left_inv_eq_right_inv is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M} {b : M} {c : M}, (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) b a) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a c) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M b c)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M} {b : M} {c : M}, (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) b a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a c) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) -> (Eq.{succ u1} M b c)
-Case conversion may be inaccurate. Consider using '#align left_inv_eq_right_inv left_inv_eq_right_invₓ'. -/
 @[to_additive]
 theorem left_inv_eq_right_inv {a b c : M} (hba : b * a = 1) (hac : a * c = 1) : b = c := by
   rw [← one_mul c, ← hba, mul_assoc, hac, mul_one b]
@@ -886,12 +790,6 @@ instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelC
 #align add_cancel_comm_monoid.to_cancel_add_monoid AddCancelCommMonoid.toAddCancelMonoid
 -/
 
-/- warning: cancel_monoid.to_is_cancel_mul -> CancelMonoid.toIsCancelMul is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u1}) [_inst_1 : CancelMonoid.{u1} M], IsCancelMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M (CancelMonoid.toRightCancelMonoid.{u1} M _inst_1))))
-but is expected to have type
-  forall (M : Type.{u1}) [_inst_1 : CancelMonoid.{u1} M], IsCancelMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M (CancelMonoid.toRightCancelMonoid.{u1} M _inst_1))))
-Case conversion may be inaccurate. Consider using '#align cancel_monoid.to_is_cancel_mul CancelMonoid.toIsCancelMulₓ'. -/
 /-- Any `cancel_monoid M` satisfies `is_cancel_mul M`. -/
 @[to_additive "Any `add_cancel_monoid M` satisfies `is_cancel_add M`."]
 instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid M] : IsCancelMul M
@@ -947,12 +845,6 @@ class InvolutiveInv (G : Type _) extends Inv G where
 
 variable [InvolutiveInv G]
 
-/- warning: inv_inv -> inv_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] (a : G), Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a)) a
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] (a : G), Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a)) a
-Case conversion may be inaccurate. Consider using '#align inv_inv inv_invₓ'. -/
 @[simp, to_additive]
 theorem inv_inv (a : G) : a⁻¹⁻¹ = a :=
   InvolutiveInv.inv_inv _
@@ -1083,12 +975,6 @@ theorem zpow_eq_pow (n : ℤ) (x : G) : DivInvMonoid.zpow n x = x ^ n :=
 #align zsmul_eq_smul zsmul_eq_smul
 -/
 
-/- warning: zpow_zero -> zpow_zero is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))))
-Case conversion may be inaccurate. Consider using '#align zpow_zero zpow_zeroₓ'. -/
 @[simp, to_additive zero_zsmul]
 theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
   DivInvMonoid.zpow_zero' a
@@ -1119,24 +1005,12 @@ theorem zpow_ofNat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
 #align of_nat_zsmul ofNat_zsmul
 -/
 
-/- warning: zpow_neg_succ_of_nat -> zpow_negSucc is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Int.negSucc n)) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Int.negSucc n)) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align zpow_neg_succ_of_nat zpow_negSuccₓ'. -/
 @[simp, to_additive]
 theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by rw [← zpow_ofNat];
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_negSucc
 #align zsmul_neg_succ_of_nat negSucc_zsmul
 
-/- warning: div_eq_mul_inv -> div_eq_mul_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G _inst_1)) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G _inst_1) b))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G _inst_1)) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) b))
-Case conversion may be inaccurate. Consider using '#align div_eq_mul_inv div_eq_mul_invₓ'. -/
 /-- Dividing by an element is the same as multiplying by its inverse.
 
 This is a duplicate of `div_inv_monoid.div_eq_mul_inv` ensuring that the types unfold better.
@@ -1148,12 +1022,6 @@ theorem div_eq_mul_inv (a b : G) : a / b = a * b⁻¹ :=
 #align div_eq_mul_inv div_eq_mul_inv
 #align sub_eq_add_neg sub_eq_add_neg
 
-/- warning: division_def -> division_def is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G _inst_1)) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G _inst_1) b))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G _inst_1)) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) b))
-Case conversion may be inaccurate. Consider using '#align division_def division_defₓ'. -/
 alias div_eq_mul_inv ← division_def
 #align division_def division_def
 
@@ -1204,12 +1072,6 @@ attribute [to_additive SubNegZeroMonoid.toNegZeroClass] DivInvOneMonoid.toInvOne
 
 variable [InvOneClass G]
 
-/- warning: inv_one -> inv_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : InvOneClass.{u1} G], Eq.{succ u1} G (Inv.inv.{u1} G (InvOneClass.toHasInv.{u1} G _inst_1) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (InvOneClass.toHasOne.{u1} G _inst_1))))) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (InvOneClass.toHasOne.{u1} G _inst_1))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : InvOneClass.{u1} G], Eq.{succ u1} G (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G _inst_1) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G _inst_1)))) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G _inst_1)))
-Case conversion may be inaccurate. Consider using '#align inv_one inv_oneₓ'. -/
 @[simp, to_additive]
 theorem inv_one : (1 : G)⁻¹ = 1 :=
   InvOneClass.inv_one
@@ -1249,24 +1111,12 @@ section DivisionMonoid
 
 variable [DivisionMonoid G] {a b : G}
 
-/- warning: mul_inv_rev -> mul_inv_rev is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) b) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) b) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) a))
-Case conversion may be inaccurate. Consider using '#align mul_inv_rev mul_inv_revₓ'. -/
 @[simp, to_additive neg_add_rev]
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
   DivisionMonoid.mul_inv_rev _ _
 #align mul_inv_rev mul_inv_rev
 #align neg_add_rev neg_add_rev
 
-/- warning: inv_eq_of_mul_eq_one_right -> inv_eq_of_mul_eq_one_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1))))) a b) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)))))))) -> (Eq.{succ u1} G (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) a) b)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1))))) a b) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)))))) -> (Eq.{succ u1} G (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)) a) b)
-Case conversion may be inaccurate. Consider using '#align inv_eq_of_mul_eq_one_right inv_eq_of_mul_eq_one_rightₓ'. -/
 @[to_additive]
 theorem inv_eq_of_mul_eq_one_right : a * b = 1 → a⁻¹ = b :=
   DivisionMonoid.inv_eq_of_mul _ _
@@ -1335,24 +1185,12 @@ section Group
 
 variable [Group G] {a b c : G}
 
-/- warning: mul_left_inv -> mul_left_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) a) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) a) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align mul_left_inv mul_left_invₓ'. -/
 @[simp, to_additive]
 theorem mul_left_inv : ∀ a : G, a⁻¹ * a = 1 :=
   Group.mul_left_inv
 #align mul_left_inv mul_left_inv
 #align add_left_neg add_left_neg
 
-/- warning: inv_mul_self -> inv_mul_self is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) a) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) a) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align inv_mul_self inv_mul_selfₓ'. -/
 @[to_additive]
 theorem inv_mul_self (a : G) : a⁻¹ * a = 1 :=
   mul_left_inv a
@@ -1363,72 +1201,36 @@ theorem inv_mul_self (a : G) : a⁻¹ * a = 1 :=
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b :=
   left_inv_eq_right_inv (inv_mul_self a) h
 
-/- warning: mul_right_inv -> mul_right_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a)) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a)) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align mul_right_inv mul_right_invₓ'. -/
 @[simp, to_additive]
 theorem mul_right_inv (a : G) : a * a⁻¹ = 1 := by
   rw [← mul_left_inv a⁻¹, inv_eq_of_mul (mul_left_inv a)]
 #align mul_right_inv mul_right_inv
 #align add_right_neg add_right_neg
 
-/- warning: mul_inv_self -> mul_inv_self is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a)) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a)) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align mul_inv_self mul_inv_selfₓ'. -/
 @[to_additive]
 theorem mul_inv_self (a : G) : a * a⁻¹ = 1 :=
   mul_right_inv a
 #align mul_inv_self mul_inv_self
 #align add_neg_self add_neg_self
 
-/- warning: inv_mul_cancel_left -> inv_mul_cancel_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b)) b
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b)) b
-Case conversion may be inaccurate. Consider using '#align inv_mul_cancel_left inv_mul_cancel_leftₓ'. -/
 @[simp, to_additive]
 theorem inv_mul_cancel_left (a b : G) : a⁻¹ * (a * b) = b := by
   rw [← mul_assoc, mul_left_inv, one_mul]
 #align inv_mul_cancel_left inv_mul_cancel_left
 #align neg_add_cancel_left neg_add_cancel_left
 
-/- warning: mul_inv_cancel_left -> mul_inv_cancel_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) b)) b
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) b)) b
-Case conversion may be inaccurate. Consider using '#align mul_inv_cancel_left mul_inv_cancel_leftₓ'. -/
 @[simp, to_additive]
 theorem mul_inv_cancel_left (a b : G) : a * (a⁻¹ * b) = b := by
   rw [← mul_assoc, mul_right_inv, one_mul]
 #align mul_inv_cancel_left mul_inv_cancel_left
 #align add_neg_cancel_left add_neg_cancel_left
 
-/- warning: mul_inv_cancel_right -> mul_inv_cancel_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)) a
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)) a
-Case conversion may be inaccurate. Consider using '#align mul_inv_cancel_right mul_inv_cancel_rightₓ'. -/
 @[simp, to_additive]
 theorem mul_inv_cancel_right (a b : G) : a * b * b⁻¹ = a := by
   rw [mul_assoc, mul_right_inv, mul_one]
 #align mul_inv_cancel_right mul_inv_cancel_right
 #align add_neg_cancel_right add_neg_cancel_right
 
-/- warning: inv_mul_cancel_right -> inv_mul_cancel_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)) b) a
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)) b) a
-Case conversion may be inaccurate. Consider using '#align inv_mul_cancel_right inv_mul_cancel_rightₓ'. -/
 @[simp, to_additive]
 theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc, mul_left_inv, mul_one]
 #align inv_mul_cancel_right inv_mul_cancel_right

@@ -256,23 +256,11 @@ theorem Pairwise.of_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : 
 #align list.pairwise.of_map List.Pairwise.of_map
 -/
 
-/- warning: list.pairwise.map -> List.Pairwise.map is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {R : α -> α -> Prop} {l : List.{u1} α} {S : β -> β -> Prop} (f : α -> β), (forall (a : α) (b : α), (R a b) -> (S (f a) (f b))) -> (List.Pairwise.{u1} α R l) -> (List.Pairwise.{u2} β S (List.map.{u1, u2} α β f l))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> α -> Prop} {l : List.{u2} α} {S : β -> β -> Prop} (f : α -> β), (forall (a : α) (b : α), (R a b) -> (S (f a) (f b))) -> (List.Pairwise.{u2} α R l) -> (List.Pairwise.{u1} β S (List.map.{u2, u1} α β f l))
-Case conversion may be inaccurate. Consider using '#align list.pairwise.map List.Pairwise.mapₓ'. -/
 theorem Pairwise.map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b))
     (p : Pairwise R l) : Pairwise S (map f l) :=
   (pairwise_map' f).2 <| p.imp H
 #align list.pairwise.map List.Pairwise.map
 
-/- warning: list.pairwise_filter_map -> List.pairwise_filterMap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {R : α -> α -> Prop} (f : β -> (Option.{u1} α)) {l : List.{u2} β}, Iff (List.Pairwise.{u1} α R (List.filterMap.{u2, u1} β α f l)) (List.Pairwise.{u2} β (fun (a : β) (a' : β) => forall (b : α), (Membership.Mem.{u1, u1} α (Option.{u1} α) (Option.hasMem.{u1} α) b (f a)) -> (forall (b' : α), (Membership.Mem.{u1, u1} α (Option.{u1} α) (Option.hasMem.{u1} α) b' (f a')) -> (R b b'))) l)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> α -> Prop} (f : β -> (Option.{u2} α)) {l : List.{u1} β}, Iff (List.Pairwise.{u2} α R (List.filterMap.{u1, u2} β α f l)) (List.Pairwise.{u1} β (fun (a : β) (a' : β) => forall (b : α), (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) b (f a)) -> (forall (b' : α), (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) b' (f a')) -> (R b b'))) l)
-Case conversion may be inaccurate. Consider using '#align list.pairwise_filter_map List.pairwise_filterMapₓ'. -/
 theorem pairwise_filterMap (f : β → Option α) {l : List β} :
     Pairwise R (filterMap f l) ↔ Pairwise (fun a a' : β => ∀ b ∈ f a, ∀ b' ∈ f a', R b b') l :=
   by
@@ -298,12 +286,6 @@ theorem Pairwise.filter_map {S : β → β → Prop} (f : α → Option β)
 #align list.pairwise.filter_map List.Pairwise.filter_map
 -/
 
-/- warning: list.pairwise_filter -> List.pairwise_filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : α -> α -> Prop} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {l : List.{u1} α}, Iff (List.Pairwise.{u1} α R (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l)) (List.Pairwise.{u1} α (fun (x : α) (y : α) => (p x) -> (p y) -> (R x y)) l)
-but is expected to have type
-  forall {α : Type.{u1}} {R : α -> α -> Prop} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {l : List.{u1} α}, Iff (List.Pairwise.{u1} α R (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l)) (List.Pairwise.{u1} α (fun (x : α) (y : α) => (p x) -> (p y) -> (R x y)) l)
-Case conversion may be inaccurate. Consider using '#align list.pairwise_filter List.pairwise_filterₓ'. -/
 theorem pairwise_filter (p : α → Prop) [DecidablePred p] {l : List α} :
     Pairwise R (filter p l) ↔ Pairwise (fun x y => p x → p y → R x y) l :=
   by
@@ -329,12 +311,6 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
 #align list.pairwise_pmap List.pairwise_pmap
 -/
 
-/- warning: list.pairwise.pmap -> List.Pairwise.pmap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {R : α -> α -> Prop} {l : List.{u1} α}, (List.Pairwise.{u1} α R l) -> (forall {p : α -> Prop} {f : forall (a : α), (p a) -> β} (h : forall (x : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l) -> (p x)) {S : β -> β -> Prop}, (forall {{x : α}} (hx : p x) {{y : α}} (hy : p y), (R x y) -> (S (f x hx) (f y hy))) -> (List.Pairwise.{u2} β S (List.pmap.{u1, u2} α β (fun (a : α) => p a) f l h)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> α -> Prop} {l : List.{u2} α}, (List.Pairwise.{u2} α R l) -> (forall {p : α -> Prop} {f : forall (a : α), (p a) -> β} (h : forall (x : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) x l) -> (p x)) {S : β -> β -> Prop}, (forall {{x : α}} (hx : p x) {{y : α}} (hy : p y), (R x y) -> (S (f x hx) (f y hy))) -> (List.Pairwise.{u1} β S (List.pmap.{u2, u1} α β (fun (a : α) => p a) f l h)))
-Case conversion may be inaccurate. Consider using '#align list.pairwise.pmap List.Pairwise.pmapₓ'. -/
 theorem Pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : ∀ a, p a → β}
     (h : ∀ x ∈ l, p x) {S : β → β → Prop}
     (hS : ∀ ⦃x⦄ (hx : p x) ⦃y⦄ (hy : p y), R x y → S (f x hx) (f y hy)) : Pairwise S (l.pmap f h) :=
@@ -360,12 +336,6 @@ theorem pairwise_join {L : List (List α)} :
 #align list.pairwise_join List.pairwise_join
 -/
 
-/- warning: list.pairwise_bind -> List.pairwise_bind is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {R : β -> β -> Prop} {l : List.{u1} α} {f : α -> (List.{u2} β)}, Iff (List.Pairwise.{u2} β R (List.bind.{u1, u2} α β l f)) (And (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) -> (List.Pairwise.{u2} β R (f a))) (List.Pairwise.{u1} α (fun (a₁ : α) (a₂ : α) => forall (x : β), (Membership.Mem.{u2, u2} β (List.{u2} β) (List.hasMem.{u2} β) x (f a₁)) -> (forall (y : β), (Membership.Mem.{u2, u2} β (List.{u2} β) (List.hasMem.{u2} β) y (f a₂)) -> (R x y))) l))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {R : β -> β -> Prop} {l : List.{u2} α} {f : α -> (List.{u1} β)}, Iff (List.Pairwise.{u1} β R (List.bind.{u2, u1} α β l f)) (And (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (List.Pairwise.{u1} β R (f a))) (List.Pairwise.{u2} α (fun (a₁ : α) (a₂ : α) => forall (x : β), (Membership.mem.{u1, u1} β (List.{u1} β) (List.instMembershipList.{u1} β) x (f a₁)) -> (forall (y : β), (Membership.mem.{u1, u1} β (List.{u1} β) (List.instMembershipList.{u1} β) y (f a₂)) -> (R x y))) l))
-Case conversion may be inaccurate. Consider using '#align list.pairwise_bind List.pairwise_bindₓ'. -/
 theorem pairwise_bind {R : β → β → Prop} {l : List α} {f : α → List β} :
     List.Pairwise R (l.bind f) ↔
       (∀ a ∈ l, Pairwise R (f a)) ∧ Pairwise (fun a₁ a₂ => ∀ x ∈ f a₁, ∀ y ∈ f a₂, R x y) l :=
@@ -431,12 +401,6 @@ theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop
 #align list.pairwise_of_reflexive_of_forall_ne List.pairwise_of_reflexive_of_forall_ne
 -/
 
-/- warning: list.pairwise_iff_nth_le -> List.pairwise_iff_nthLe is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {R : α -> α -> Prop} {l : List.{u1} α}, Iff (List.Pairwise.{u1} α R l) (forall (i : Nat) (j : Nat) (h₁ : LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) j (List.length.{u1} α l)) (h₂ : LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) i j), R (List.nthLe.{u1} α l i (lt_trans.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) i j (List.length.{u1} α l) h₂ h₁)) (List.nthLe.{u1} α l j h₁))
-but is expected to have type
-  forall {α : Type.{u1}} {R : α -> α -> Prop} {l : List.{u1} α}, Iff (List.Pairwise.{u1} α R l) (forall (i : Nat) (j : Nat) (h₁ : LT.lt.{0} Nat instLTNat j (List.length.{u1} α l)) (h₂ : LT.lt.{0} Nat instLTNat i j), R (List.nthLe.{u1} α l i (lt_trans.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) i j (List.length.{u1} α l) h₂ h₁)) (List.nthLe.{u1} α l j h₁))
-Case conversion may be inaccurate. Consider using '#align list.pairwise_iff_nth_le List.pairwise_iff_nthLeₓ'. -/
 theorem pairwise_iff_nthLe {R} :
     ∀ {l : List α},
       Pairwise R l ↔

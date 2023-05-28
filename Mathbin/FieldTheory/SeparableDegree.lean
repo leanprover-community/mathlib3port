@@ -84,12 +84,6 @@ def HasSeparableContraction.degree : ℕ :=
 #align polynomial.has_separable_contraction.degree Polynomial.HasSeparableContraction.degree
 -/
 
-/- warning: polynomial.is_separable_contraction.dvd_degree' -> Polynomial.IsSeparableContraction.dvd_degree' is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : CommSemiring.{u1} F] {q : Nat} {f : Polynomial.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1)} {g : Polynomial.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1)}, (Polynomial.IsSeparableContraction.{u1} F _inst_1 q f g) -> (Exists.{1} Nat (fun (m : Nat) => Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Polynomial.natDegree.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1) g) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) q m)) (Polynomial.natDegree.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1) f)))
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : CommSemiring.{u1} F] {q : Nat} {f : Polynomial.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1)}, (Polynomial.HasSeparableContraction.{u1} F _inst_1 q f) -> (forall {hf : Polynomial.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1)}, (Polynomial.IsSeparableContraction.{u1} F _inst_1 q f hf) -> (Exists.{1} Nat (fun (m : Nat) => Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Polynomial.natDegree.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1) hf) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) q m)) (Polynomial.natDegree.{u1} F (CommSemiring.toSemiring.{u1} F _inst_1) f))))
-Case conversion may be inaccurate. Consider using '#align polynomial.is_separable_contraction.dvd_degree' Polynomial.IsSeparableContraction.dvd_degree'ₓ'. -/
 /-- The separable degree divides the degree, in function of the exponential characteristic of F. -/
 theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f g) :
     ∃ m : ℕ, g.natDegree * q ^ m = f.natDegree :=
@@ -130,12 +124,6 @@ variable {F : Type _} [Field F]
 
 variable (q : ℕ) {f : F[X]} (hf : HasSeparableContraction q f)
 
-/- warning: irreducible.has_separable_contraction -> Polynomial.Irreducible.hasSeparableContraction is a dubious translation:
-lean 3 declaration is
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (q : Nat) [hF : ExpChar.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1))) q] (f : Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))), (Irreducible.{u1} (Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))) (Ring.toMonoid.{u1} (Polynomial.{u1} F (Ring.toSemiring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))) (Polynomial.ring.{u1} F (DivisionRing.toRing.{u1} F (Field.toDivisionRing.{u1} F _inst_1)))) f) -> (Polynomial.HasSeparableContraction.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)) q f)
-but is expected to have type
-  forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] (q : Nat) [hF : ExpChar.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1))) q] (f : Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))), (Irreducible.{u1} (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (MonoidWithZero.toMonoid.{u1} (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Polynomial.semiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))))) f) -> (Polynomial.HasSeparableContraction.{u1} F (Semifield.toCommSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)) q f)
-Case conversion may be inaccurate. Consider using '#align irreducible.has_separable_contraction Polynomial.Irreducible.hasSeparableContractionₓ'. -/
 /-- Every irreducible polynomial can be contracted to a separable polynomial.
 https://stacks.math.columbia.edu/tag/09H0 -/
 theorem Polynomial.Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
@@ -147,9 +135,6 @@ theorem Polynomial.Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F
     exact ⟨g, hgs, n, hge⟩
 #align irreducible.has_separable_contraction Polynomial.Irreducible.hasSeparableContraction
 
-/- warning: polynomial.contraction_degree_eq_or_insep -> Polynomial.contraction_degree_eq_or_insep is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align polynomial.contraction_degree_eq_or_insep Polynomial.contraction_degree_eq_or_insepₓ'. -/
 /-- If two expansions (along the positive characteristic) of two separable polynomials `g` and `g'`
 agree, then they have the same degree. -/
 theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X]) (m m' : ℕ)

@@ -79,32 +79,14 @@ theorem one_ne_zero [NeZero (1 : α)] : (1 : α) ≠ 0 :=
 #align one_ne_zero one_ne_zero
 -/
 
-/- warning: two_ne_zero -> two_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align two_ne_zero two_ne_zeroₓ'. -/
 theorem two_ne_zero [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
   NeZero.ne (2 : α)
 #align two_ne_zero two_ne_zero
 
-/- warning: three_ne_zero -> three_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align three_ne_zero three_ne_zeroₓ'. -/
 theorem three_ne_zero [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
   NeZero.ne (3 : α)
 #align three_ne_zero three_ne_zero
 
-/- warning: four_ne_zero -> four_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align four_ne_zero four_ne_zeroₓ'. -/
 theorem four_ne_zero [Add α] [NeZero (4 : α)] : (4 : α) ≠ 0 :=
   NeZero.ne (4 : α)
 #align four_ne_zero four_ne_zero
@@ -132,32 +114,14 @@ theorem one_ne_zero' [NeZero (1 : α)] : (1 : α) ≠ 0 :=
 #align one_ne_zero' one_ne_zero'
 -/
 
-/- warning: two_ne_zero' -> two_ne_zero' is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 2 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 2 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align two_ne_zero' two_ne_zero'ₓ'. -/
 theorem two_ne_zero' [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
   NeZero.ne (2 : α)
 #align two_ne_zero' two_ne_zero'
 
-/- warning: three_ne_zero' -> three_ne_zero' is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 (OfNat.mk.{u1} α 3 (bit1.{u1} α _inst_2 _inst_3 (One.one.{u1} α _inst_2)))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 3 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 3 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align three_ne_zero' three_ne_zero'ₓ'. -/
 theorem three_ne_zero' [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
   NeZero.ne (3 : α)
 #align three_ne_zero' three_ne_zero'
 
-/- warning: four_ne_zero' -> four_ne_zero' is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : Add.{u1} α] [_inst_4 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2)))))], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 (OfNat.mk.{u1} α 4 (bit0.{u1} α _inst_3 (bit0.{u1} α _inst_3 (One.one.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1)))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : OfNat.{u1} α (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))] [_inst_3 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 4 _inst_2)], Ne.{succ u1} α (OfNat.ofNat.{u1} α 4 _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align four_ne_zero' four_ne_zero'ₓ'. -/
 theorem four_ne_zero' [Add α] [NeZero (4 : α)] : (4 : α) ≠ 0 :=
   NeZero.ne (4 : α)
 #align four_ne_zero' four_ne_zero'
@@ -175,12 +139,6 @@ instance succ : NeZero (n + 1) :=
 #align ne_zero.succ NeZero.succ
 -/
 
-/- warning: ne_zero.of_pos -> NeZero.of_pos is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {x : M} [_inst_1 : Preorder.{u1} M] [_inst_2 : Zero.{u1} M], (LT.lt.{u1} M (Preorder.toHasLt.{u1} M _inst_1) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M _inst_2))) x) -> (NeZero.{u1} M _inst_2 x)
-but is expected to have type
-  forall {M : Type.{u1}} {x : M} [_inst_1 : Preorder.{u1} M] [_inst_2 : Zero.{u1} M], (LT.lt.{u1} M (Preorder.toLT.{u1} M _inst_1) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_2)) x) -> (NeZero.{u1} M _inst_2 x)
-Case conversion may be inaccurate. Consider using '#align ne_zero.of_pos NeZero.of_posₓ'. -/
 theorem of_pos [Preorder M] [Zero M] (h : 0 < x) : NeZero x :=
   ⟨ne_of_gt h⟩
 #align ne_zero.of_pos NeZero.of_pos

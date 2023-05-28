@@ -95,41 +95,17 @@ theorem coe_nat_modEq_iff {a b n : ℕ} : a ≡ b [ZMOD n] ↔ a ≡ b [MOD n] :
 #align int.coe_nat_modeq_iff Int.coe_nat_modEq_iff
 -/
 
-/- warning: int.modeq_zero_iff_dvd -> Int.modEq_zero_iff_dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int}, Iff (Int.ModEq n a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n a)
-but is expected to have type
-  forall {n : Int} {a : Int}, Iff (Int.ModEq n a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Dvd.dvd.{0} Int Int.instDvdInt n a)
-Case conversion may be inaccurate. Consider using '#align int.modeq_zero_iff_dvd Int.modEq_zero_iff_dvdₓ'. -/
 theorem modEq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by rw [modeq, zero_mod, dvd_iff_mod_eq_zero]
 #align int.modeq_zero_iff_dvd Int.modEq_zero_iff_dvd
 
-/- warning: has_dvd.dvd.modeq_zero_int -> Dvd.dvd.modEq_zero_int is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n a) -> (Int.ModEq n a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
-but is expected to have type
-  forall {n : Int} {a : Int}, (Dvd.dvd.{0} Int Int.instDvdInt n a) -> (Int.ModEq n a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
-Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.modeq_zero_int Dvd.dvd.modEq_zero_intₓ'. -/
 theorem Dvd.dvd.modEq_zero_int (h : n ∣ a) : a ≡ 0 [ZMOD n] :=
   modEq_zero_iff_dvd.2 h
 #align has_dvd.dvd.modeq_zero_int Dvd.dvd.modEq_zero_int
 
-/- warning: has_dvd.dvd.zero_modeq_int -> Dvd.dvd.zero_modEq_int is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n a) -> (Int.ModEq n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a)
-but is expected to have type
-  forall {n : Int} {a : Int}, (Dvd.dvd.{0} Int Int.instDvdInt n a) -> (Int.ModEq n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a)
-Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.zero_modeq_int Dvd.dvd.zero_modEq_intₓ'. -/
 theorem Dvd.dvd.zero_modEq_int (h : n ∣ a) : 0 ≡ a [ZMOD n] :=
   h.modEq_zero_int.symm
 #align has_dvd.dvd.zero_modeq_int Dvd.dvd.zero_modEq_int
 
-/- warning: int.modeq_iff_dvd -> Int.modEq_iff_dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int} {b : Int}, Iff (Int.ModEq n a b) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a))
-but is expected to have type
-  forall {n : Int} {a : Int} {b : Int}, Iff (Int.ModEq n a b) (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
-Case conversion may be inaccurate. Consider using '#align int.modeq_iff_dvd Int.modEq_iff_dvdₓ'. -/
 theorem modEq_iff_dvd : a ≡ b [ZMOD n] ↔ n ∣ b - a := by
   rw [modeq, eq_comm] <;> simp [mod_eq_mod_iff_mod_sub_eq_zero, dvd_iff_mod_eq_zero]
 #align int.modeq_iff_dvd Int.modEq_iff_dvd
@@ -142,18 +118,6 @@ theorem modEq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n 
 #align int.modeq_iff_add_fac Int.modEq_iff_add_fac
 -/
 
-/- warning: int.modeq.dvd -> Int.ModEq.dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int} {b : Int}, (Int.ModEq n a b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a))
-but is expected to have type
-  forall {n : Int} {a : Int} {b : Int}, (Int.ModEq n a b) -> (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
-Case conversion may be inaccurate. Consider using '#align int.modeq.dvd Int.ModEq.dvdₓ'. -/
-/- warning: int.modeq_of_dvd -> Int.modEq_of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a)) -> (Int.ModEq n a b)
-but is expected to have type
-  forall {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a)) -> (Int.ModEq n a b)
-Case conversion may be inaccurate. Consider using '#align int.modeq_of_dvd Int.modEq_of_dvdₓ'. -/
 alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
 #align int.modeq.dvd Int.ModEq.dvd
 #align int.modeq_of_dvd Int.modEq_of_dvd
@@ -178,12 +142,6 @@ theorem modEq_neg : a ≡ b [ZMOD -n] ↔ a ≡ b [ZMOD n] := by simp [modeq_iff
 
 namespace Modeq
 
-/- warning: int.modeq.of_dvd -> Int.ModEq.of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
-but is expected to have type
-  forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
-Case conversion may be inaccurate. Consider using '#align int.modeq.of_dvd Int.ModEq.of_dvdₓ'. -/
 protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
   modEq_of_dvd <| d.trans h.Dvd
 #align int.modeq.of_dvd Int.ModEq.of_dvd
@@ -291,12 +249,6 @@ protected theorem mul (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a * 
 #align int.modeq.mul Int.ModEq.mul
 -/
 
-/- warning: int.modeq.pow -> Int.ModEq.pow is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int} {b : Int} (m : Nat), (Int.ModEq n a b) -> (Int.ModEq n (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a m) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) b m))
-but is expected to have type
-  forall {n : Int} {a : Int} {b : Int} (m : Nat), (Int.ModEq n a b) -> (Int.ModEq n (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat a m) (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat b m))
-Case conversion may be inaccurate. Consider using '#align int.modeq.pow Int.ModEq.powₓ'. -/
 protected theorem pow (m : ℕ) (h : a ≡ b [ZMOD n]) : a ^ m ≡ b ^ m [ZMOD n] :=
   by
   induction' m with d hd; · rfl
@@ -339,12 +291,6 @@ theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [ZMOD m]) : a ≡ 
 #align int.modeq.cancel_left_div_gcd Int.ModEq.cancel_left_div_gcd
 -/
 
-/- warning: int.modeq.of_div -> Int.ModEq.of_div is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {a : Int} {b : Int} {c : Int}, (Int.ModEq (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) m c) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a c) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b c)) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) c a) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) c b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) c m) -> (Int.ModEq m a b)
-but is expected to have type
-  forall {m : Int} {a : Int} {b : Int} {c : Int}, (Int.ModEq (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) m c) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a c) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) b c)) -> (Dvd.dvd.{0} Int Int.instDvdInt c a) -> (Dvd.dvd.{0} Int Int.instDvdInt c b) -> (Dvd.dvd.{0} Int Int.instDvdInt c m) -> (Int.ModEq m a b)
-Case conversion may be inaccurate. Consider using '#align int.modeq.of_div Int.ModEq.of_divₓ'. -/
 theorem of_div (h : a / c ≡ b / c [ZMOD m / c]) (ha : c ∣ a) (ha : c ∣ b) (ha : c ∣ m) :
     a ≡ b [ZMOD m] := by convert h.mul_left' <;> rwa [Int.mul_ediv_cancel']
 #align int.modeq.of_div Int.ModEq.of_div

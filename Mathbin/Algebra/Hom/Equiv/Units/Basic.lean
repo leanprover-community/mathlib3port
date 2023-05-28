@@ -21,12 +21,6 @@ import Mathbin.Algebra.Hom.Units
 
 variable {F α β A B M N P Q G H : Type _}
 
-/- warning: to_units -> toUnits is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toHasMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.mulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G], MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))
-Case conversion may be inaccurate. Consider using '#align to_units toUnitsₓ'. -/
 /-- A group is isomorphic to its group of units. -/
 @[to_additive "An additive group is isomorphic to its group of additive units"]
 def toUnits [Group G] : G ≃* Gˣ
@@ -39,12 +33,6 @@ def toUnits [Group G] : G ≃* Gˣ
 #align to_units toUnits
 #align to_add_units toAddUnits
 
-/- warning: coe_to_units -> coe_toUnits is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Eq.{succ u1} G ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) G (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) G (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) G (coeBase.{succ u1, succ u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) G (Units.hasCoe.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))) (coeFn.{succ u1, succ u1} (MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toHasMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.mulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (fun (_x : MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toHasMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.mulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) => G -> (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulEquiv.hasCoeToFun.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toHasMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.mulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (toUnits.{u1} G _inst_1) g)) g
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Eq.{succ u1} G (Units.val.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) G (fun (_x : G) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulEquivClass.toEquivLike.{u1, u1, u1} (MulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulEquiv.instMulEquivClassMulEquiv.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Units.instMulOneClassUnits.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))))) (toUnits.{u1} G _inst_1) g)) g
-Case conversion may be inaccurate. Consider using '#align coe_to_units coe_toUnitsₓ'. -/
 @[simp, to_additive]
 theorem coe_toUnits [Group G] (g : G) : (toUnits g : G) = g :=
   rfl
@@ -55,12 +43,6 @@ namespace Units
 
 variable [Monoid M] [Monoid N] [Monoid P]
 
-/- warning: units.map_equiv -> Units.mapEquiv is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} N], (MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) -> (MulEquiv.{u1, u2} (Units.{u1} M _inst_1) (Units.{u2} N _inst_2) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} (Units.{u2} N _inst_2) (Units.mulOneClass.{u2} N _inst_2)))
-but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} N], (MulEquiv.{u1, u2} M N (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) -> (MulEquiv.{u1, u2} (Units.{u1} M _inst_1) (Units.{u2} N _inst_2) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)) (MulOneClass.toMul.{u2} (Units.{u2} N _inst_2) (Units.instMulOneClassUnits.{u2} N _inst_2)))
-Case conversion may be inaccurate. Consider using '#align units.map_equiv Units.mapEquivₓ'. -/
 /-- A multiplicative equivalence of monoids defines a multiplicative equivalence
 of their groups of units. -/
 def mapEquiv (h : M ≃* N) : Mˣ ≃* Nˣ :=
@@ -70,23 +52,11 @@ def mapEquiv (h : M ≃* N) : Mˣ ≃* Nˣ :=
     right_inv := fun u => ext <| h.right_inv u }
 #align units.map_equiv Units.mapEquiv
 
-/- warning: units.map_equiv_symm -> Units.mapEquiv_symm is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} N] (h : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))), Eq.{max (succ u2) (succ u1)} (MulEquiv.{u2, u1} (Units.{u2} N _inst_2) (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} (Units.{u2} N _inst_2) (Units.mulOneClass.{u2} N _inst_2)) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulEquiv.symm.{u1, u2} (Units.{u1} M _inst_1) (Units.{u2} N _inst_2) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} (Units.{u2} N _inst_2) (Units.mulOneClass.{u2} N _inst_2)) (Units.mapEquiv.{u1, u2} M N _inst_1 _inst_2 h)) (Units.mapEquiv.{u2, u1} N M _inst_2 _inst_1 (MulEquiv.symm.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2)) h))
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_2 : Monoid.{u1} N] (h : MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2))), Eq.{max (succ u2) (succ u1)} (MulEquiv.{u1, u2} (Units.{u1} N _inst_2) (Units.{u2} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2)) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1))) (MulEquiv.symm.{u2, u1} (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2)) (Units.mapEquiv.{u2, u1} M N _inst_1 _inst_2 h)) (Units.mapEquiv.{u1, u2} N M _inst_2 _inst_1 (MulEquiv.symm.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2)) h))
-Case conversion may be inaccurate. Consider using '#align units.map_equiv_symm Units.mapEquiv_symmₓ'. -/
 @[simp]
 theorem mapEquiv_symm (h : M ≃* N) : (mapEquiv h).symm = mapEquiv h.symm :=
   rfl
 #align units.map_equiv_symm Units.mapEquiv_symm
 
-/- warning: units.coe_map_equiv -> Units.coe_mapEquiv is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Monoid.{u2} N] (h : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) (x : Units.{u1} M _inst_1), Eq.{succ u2} N ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Units.{u2} N _inst_2) N (HasLiftT.mk.{succ u2, succ u2} (Units.{u2} N _inst_2) N (CoeTCₓ.coe.{succ u2, succ u2} (Units.{u2} N _inst_2) N (coeBase.{succ u2, succ u2} (Units.{u2} N _inst_2) N (Units.hasCoe.{u2} N _inst_2)))) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} (Units.{u1} M _inst_1) (Units.{u2} N _inst_2) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} (Units.{u2} N _inst_2) (Units.mulOneClass.{u2} N _inst_2))) (fun (_x : MulEquiv.{u1, u2} (Units.{u1} M _inst_1) (Units.{u2} N _inst_2) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} (Units.{u2} N _inst_2) (Units.mulOneClass.{u2} N _inst_2))) => (Units.{u1} M _inst_1) -> (Units.{u2} N _inst_2)) (MulEquiv.hasCoeToFun.{u1, u2} (Units.{u1} M _inst_1) (Units.{u2} N _inst_2) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} (Units.{u2} N _inst_2) (Units.mulOneClass.{u2} N _inst_2))) (Units.mapEquiv.{u1, u2} M N _inst_1 _inst_2 h) x)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) (fun (_x : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) => M -> N) (MulEquiv.hasCoeToFun.{u1, u2} M N (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOneClass.toHasMul.{u2} N (Monoid.toMulOneClass.{u2} N _inst_2))) h ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) x))
-but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_2 : Monoid.{u1} N] (h : MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2))) (x : Units.{u2} M _inst_1), Eq.{succ u1} N (Units.val.{u1} N _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2))) (Units.{u2} M _inst_1) (fun (_x : Units.{u2} M _inst_1) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Units.{u2} M _inst_1) => Units.{u1} N _inst_2) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2))) (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2))) (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulEquivClass.toEquivLike.{max u2 u1, u2, u1} (MulEquiv.{u2, u1} (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2))) (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2)) (MulEquiv.instMulEquivClassMulEquiv.{u2, u1} (Units.{u2} M _inst_1) (Units.{u1} N _inst_2) (MulOneClass.toMul.{u2} (Units.{u2} M _inst_1) (Units.instMulOneClassUnits.{u2} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} N _inst_2) (Units.instMulOneClassUnits.{u1} N _inst_2)))))) (Units.mapEquiv.{u2, u1} M N _inst_1 _inst_2 h) x)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2))) M (fun (_x : M) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2))) M N (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2))) M N (MulEquivClass.toEquivLike.{max u2 u1, u2, u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2))) M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2)) (MulEquiv.instMulEquivClassMulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N _inst_2)))))) h (Units.val.{u2} M _inst_1 x))
-Case conversion may be inaccurate. Consider using '#align units.coe_map_equiv Units.coe_mapEquivₓ'. -/
 @[simp]
 theorem coe_mapEquiv (h : M ≃* N) (x : Mˣ) : (mapEquiv h x : N) = h x :=
   rfl
@@ -113,12 +83,6 @@ theorem mulLeft_symm (u : Mˣ) : u.mulLeft.symm = u⁻¹.mulLeft :=
 #align add_units.add_left_symm AddUnits.addLeft_symm
 -/
 
-/- warning: units.mul_left_bijective -> Units.mulLeft_bijective is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) a))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.476 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 a) x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.476)
-Case conversion may be inaccurate. Consider using '#align units.mul_left_bijective Units.mulLeft_bijectiveₓ'. -/
 @[to_additive]
 theorem mulLeft_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M) :=
   (mulLeft a).Bijective
@@ -146,12 +110,6 @@ theorem mulRight_symm (u : Mˣ) : u.mulRight.symm = u⁻¹.mulRight :=
 #align add_units.add_right_symm AddUnits.addRight_symm
 -/
 
-/- warning: units.mul_right_bijective -> Units.mulRight_bijective is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (fun (_x : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) _x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) a))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (fun (_x : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) _x (Units.val.{u1} M _inst_1 a))
-Case conversion may be inaccurate. Consider using '#align units.mul_right_bijective Units.mulRight_bijectiveₓ'. -/
 @[to_additive]
 theorem mulRight_bijective (a : Mˣ) : Function.Bijective ((· * a) : M → M) :=
   (mulRight a).Bijective
@@ -193,24 +151,12 @@ theorem mulLeft_symm_apply (a : G) : ((Equiv.mulLeft a).symm : G → G) = (· * 
 #align equiv.add_left_symm_apply Equiv.addLeft_symm_apply
 -/
 
-/- warning: equiv.mul_left_symm -> Equiv.mulLeft_symm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.symm.{succ u1, succ u1} G G (Equiv.mulLeft.{u1} G _inst_1 a)) (Equiv.mulLeft.{u1} G _inst_1 (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.symm.{succ u1, succ u1} G G (Equiv.mulLeft.{u1} G _inst_1 a)) (Equiv.mulLeft.{u1} G _inst_1 (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) a))
-Case conversion may be inaccurate. Consider using '#align equiv.mul_left_symm Equiv.mulLeft_symmₓ'. -/
 @[simp, to_additive]
 theorem mulLeft_symm (a : G) : (Equiv.mulLeft a).symm = Equiv.mulLeft a⁻¹ :=
   ext fun x => rfl
 #align equiv.mul_left_symm Equiv.mulLeft_symm
 #align equiv.add_left_symm Equiv.addLeft_symm
 
-/- warning: group.mul_left_bijective -> Group.mulLeft_bijective is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.890 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.890)
-Case conversion may be inaccurate. Consider using '#align group.mul_left_bijective Group.mulLeft_bijectiveₓ'. -/
 @[to_additive]
 theorem Group.mulLeft_bijective (a : G) : Function.Bijective ((· * ·) a) :=
   (Equiv.mulLeft a).Bijective
@@ -234,12 +180,6 @@ theorem coe_mulRight (a : G) : ⇑(Equiv.mulRight a) = fun x => x * a :=
 #align equiv.coe_add_right Equiv.coe_addRight
 -/
 
-/- warning: equiv.mul_right_symm -> Equiv.mulRight_symm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.symm.{succ u1, succ u1} G G (Equiv.mulRight.{u1} G _inst_1 a)) (Equiv.mulRight.{u1} G _inst_1 (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.symm.{succ u1, succ u1} G G (Equiv.mulRight.{u1} G _inst_1 a)) (Equiv.mulRight.{u1} G _inst_1 (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) a))
-Case conversion may be inaccurate. Consider using '#align equiv.mul_right_symm Equiv.mulRight_symmₓ'. -/
 @[simp, to_additive]
 theorem mulRight_symm (a : G) : (Equiv.mulRight a).symm = Equiv.mulRight a⁻¹ :=
   ext fun x => rfl
@@ -256,12 +196,6 @@ theorem mulRight_symm_apply (a : G) : ((Equiv.mulRight a).symm : G → G) = fun 
 #align equiv.add_right_symm_apply Equiv.addRight_symm_apply
 -/
 
-/- warning: group.mul_right_bijective -> Group.mulRight_bijective is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (fun (_x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) _x a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (fun (_x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) _x a)
-Case conversion may be inaccurate. Consider using '#align group.mul_right_bijective Group.mulRight_bijectiveₓ'. -/
 @[to_additive]
 theorem Group.mulRight_bijective (a : G) : Function.Bijective (· * a) :=
   (Equiv.mulRight a).Bijective
@@ -280,12 +214,6 @@ protected def divLeft (a : G) : G ≃ G where
 #align equiv.sub_left Equiv.subLeft
 -/
 
-/- warning: equiv.div_left_eq_inv_trans_mul_left -> Equiv.divLeft_eq_inv_trans_mulLeft is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.divLeft.{u1} G _inst_1 a) (Equiv.trans.{succ u1, succ u1, succ u1} G G G (Equiv.inv.{u1} G (DivisionMonoid.toHasInvolutiveInv.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))) (Equiv.mulLeft.{u1} G _inst_1 a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.divLeft.{u1} G _inst_1 a) (Equiv.trans.{succ u1, succ u1, succ u1} G G G (Equiv.inv.{u1} G (DivisionMonoid.toInvolutiveInv.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))) (Equiv.mulLeft.{u1} G _inst_1 a))
-Case conversion may be inaccurate. Consider using '#align equiv.div_left_eq_inv_trans_mul_left Equiv.divLeft_eq_inv_trans_mulLeftₓ'. -/
 @[to_additive]
 theorem divLeft_eq_inv_trans_mulLeft (a : G) :
     Equiv.divLeft a = (Equiv.inv G).trans (Equiv.mulLeft a) :=
@@ -306,12 +234,6 @@ protected def divRight (a : G) : G ≃ G
 #align equiv.sub_right Equiv.subRight
 -/
 
-/- warning: equiv.div_right_eq_mul_right_inv -> Equiv.divRight_eq_mulRight_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.divRight.{u1} G _inst_1 a) (Equiv.mulRight.{u1} G _inst_1 (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Eq.{succ u1} (Equiv.{succ u1, succ u1} G G) (Equiv.divRight.{u1} G _inst_1 a) (Equiv.mulRight.{u1} G _inst_1 (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) a))
-Case conversion may be inaccurate. Consider using '#align equiv.div_right_eq_mul_right_inv Equiv.divRight_eq_mulRight_invₓ'. -/
 @[to_additive]
 theorem divRight_eq_mulRight_inv (a : G) : Equiv.divRight a = Equiv.mulRight a⁻¹ :=
   ext fun _ => div_eq_mul_inv _ _
@@ -322,12 +244,6 @@ end Group
 
 end Equiv
 
-/- warning: mul_equiv.inv -> MulEquiv.inv is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : DivisionCommMonoid.{u1} G], MulEquiv.{u1, u1} G G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1)))))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : DivisionCommMonoid.{u1} G], MulEquiv.{u1, u1} G G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align mul_equiv.inv MulEquiv.invₓ'. -/
 /-- In a `division_comm_monoid`, `equiv.inv` is a `mul_equiv`. There is a variant of this
 `mul_equiv.inv' G : G ≃* Gᵐᵒᵖ` for the non-commutative case. -/
 @[to_additive "When the `add_group` is commutative, `equiv.neg` is an `add_equiv`.", simps apply]
@@ -339,12 +255,6 @@ def MulEquiv.inv (G : Type _) [DivisionCommMonoid G] : G ≃* G :=
 #align mul_equiv.inv MulEquiv.inv
 #align add_equiv.neg AddEquiv.neg
 
-/- warning: mul_equiv.inv_symm -> MulEquiv.inv_symm is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : DivisionCommMonoid.{u1} G], Eq.{succ u1} (MulEquiv.{u1, u1} G G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1)))))) (MulEquiv.symm.{u1, u1} G G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulEquiv.inv.{u1} G _inst_1)) (MulEquiv.inv.{u1} G _inst_1)
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : DivisionCommMonoid.{u1} G], Eq.{succ u1} (MulEquiv.{u1, u1} G G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1)))))) (MulEquiv.symm.{u1, u1} G G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G _inst_1))))) (MulEquiv.inv.{u1} G _inst_1)) (MulEquiv.inv.{u1} G _inst_1)
-Case conversion may be inaccurate. Consider using '#align mul_equiv.inv_symm MulEquiv.inv_symmₓ'. -/
 @[simp]
 theorem MulEquiv.inv_symm (G : Type _) [DivisionCommMonoid G] :
     (MulEquiv.inv G).symm = MulEquiv.inv G :=

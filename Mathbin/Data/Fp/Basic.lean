@@ -130,12 +130,6 @@ def Float.zero (s : Bool) : Float :=
 instance : Inhabited Float :=
   ⟨Float.zero true⟩
 
-/- warning: fp.float.sign' -> FP.Float.sign' is a dubious translation:
-lean 3 declaration is
-  forall [C : FP.FloatCfg], (FP.Float C) -> (Semiquotₓ.{u_1, 0} Bool)
-but is expected to have type
-  forall [C : FP.FloatCfg], (FP.Float C) -> (Semiquot.{0} Bool)
-Case conversion may be inaccurate. Consider using '#align fp.float.sign' FP.Float.sign'ₓ'. -/
 protected def Float.sign' : Float → Semiquot Bool
   | float.inf s => pure s
   | float.nan => ⊤
@@ -165,12 +159,6 @@ protected def Float.neg : Float → Float
 #align fp.float.neg FP.Float.neg
 -/
 
-/- warning: fp.div_nat_lt_two_pow -> FP.divNatLtTwoPowₓ is a dubious translation:
-lean 3 declaration is
-  forall [C : FP.FloatCfg], Nat -> Nat -> Int -> Bool
-but is expected to have type
-  Nat -> Nat -> Int -> Bool
-Case conversion may be inaccurate. Consider using '#align fp.div_nat_lt_two_pow FP.divNatLtTwoPowₓₓ'. -/
 def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
   | -[e+1] => n.shiftl e.succ < d

@@ -48,11 +48,6 @@ universe u
 variable {α : Type u}
 
 /- warning: tree.repr clashes with [anonymous] -> [anonymous]
-warning: tree.repr -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Repr.{u} α], (Tree.{u} α) -> String
-but is expected to have type
-  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align tree.repr [anonymous]ₓ'. -/
 /-- Construct a string representation of a tree. Provides a `has_repr` instance. -/
 def [anonymous] [Repr α] : Tree α → String
@@ -66,12 +61,6 @@ instance [Repr α] : Repr (Tree α) :=
 instance : Inhabited (Tree α) :=
   ⟨nil⟩
 
-/- warning: tree.of_rbnode -> Tree.ofRBNode is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, (Rbnode.{u1} α) -> (Tree.{u1} α)
-but is expected to have type
-  forall {α : Type.{u1}}, (Std.RBNode.{u1} α) -> (Tree.{u1} α)
-Case conversion may be inaccurate. Consider using '#align tree.of_rbnode Tree.ofRBNodeₓ'. -/
 /-- Makes a `tree α` out of a red-black tree. -/
 def ofRBNode : Rbnode α → Tree α
   | Rbnode.leaf => nil

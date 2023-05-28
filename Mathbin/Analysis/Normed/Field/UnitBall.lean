@@ -28,12 +28,6 @@ open Set Metric
 
 variable {𝕜 : Type _}
 
-/- warning: subsemigroup.unit_ball -> Subsemigroup.unitBall is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) [_inst_1 : NonUnitalSeminormedRing.{u1} 𝕜], Subsemigroup.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonUnitalRing.toNonUnitalNonAssocRing.{u1} 𝕜 (NonUnitalSeminormedRing.toNonUnitalRing.{u1} 𝕜 _inst_1)))))
-but is expected to have type
-  forall (𝕜 : Type.{u1}) [_inst_1 : NonUnitalSeminormedRing.{u1} 𝕜], Subsemigroup.{u1} 𝕜 (NonUnitalNonAssocRing.toMul.{u1} 𝕜 (NonUnitalRing.toNonUnitalNonAssocRing.{u1} 𝕜 (NonUnitalSeminormedRing.toNonUnitalRing.{u1} 𝕜 _inst_1)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.unit_ball Subsemigroup.unitBallₓ'. -/
 /-- Unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
 def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSeminormedRing 𝕜] : Subsemigroup 𝕜
     where
@@ -55,21 +49,12 @@ instance [SeminormedCommRing 𝕜] : CommSemigroup (ball (0 : 𝕜) 1) :=
 instance [NonUnitalSeminormedRing 𝕜] : HasDistribNeg (ball (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : ball (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
-/- warning: coe_mul_unit_ball -> coe_mul_unitBall is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_mul_unit_ball coe_mul_unitBallₓ'. -/
 @[simp, norm_cast]
 theorem coe_mul_unitBall [NonUnitalSeminormedRing 𝕜] (x y : ball (0 : 𝕜) 1) :
     ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_ball coe_mul_unitBall
 
-/- warning: subsemigroup.unit_closed_ball -> Subsemigroup.unitClosedBall is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) [_inst_1 : NonUnitalSeminormedRing.{u1} 𝕜], Subsemigroup.{u1} 𝕜 (Distrib.toHasMul.{u1} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonUnitalRing.toNonUnitalNonAssocRing.{u1} 𝕜 (NonUnitalSeminormedRing.toNonUnitalRing.{u1} 𝕜 _inst_1)))))
-but is expected to have type
-  forall (𝕜 : Type.{u1}) [_inst_1 : NonUnitalSeminormedRing.{u1} 𝕜], Subsemigroup.{u1} 𝕜 (NonUnitalNonAssocRing.toMul.{u1} 𝕜 (NonUnitalRing.toNonUnitalNonAssocRing.{u1} 𝕜 (NonUnitalSeminormedRing.toNonUnitalRing.{u1} 𝕜 _inst_1)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.unit_closed_ball Subsemigroup.unitClosedBallₓ'. -/
 /-- Closed unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
 def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSeminormedRing 𝕜] : Subsemigroup 𝕜
     where
@@ -88,21 +73,12 @@ instance [NonUnitalSeminormedRing 𝕜] : HasDistribNeg (closedBall (0 : 𝕜) 1
 instance [NonUnitalSeminormedRing 𝕜] : ContinuousMul (closedBall (0 : 𝕜) 1) :=
   (Subsemigroup.unitClosedBall 𝕜).ContinuousMul
 
-/- warning: coe_mul_unit_closed_ball -> coe_mul_unitClosedBall is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_mul_unit_closed_ball coe_mul_unitClosedBallₓ'. -/
 @[simp, norm_cast]
 theorem coe_mul_unitClosedBall [NonUnitalSeminormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
     ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_closed_ball coe_mul_unitClosedBall
 
-/- warning: submonoid.unit_closed_ball -> Submonoid.unitClosedBall is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : NormOneClass.{u1} 𝕜 (SeminormedRing.toHasNorm.{u1} 𝕜 _inst_1) (AddMonoidWithOne.toOne.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))], Submonoid.{u1} 𝕜 (MulZeroOneClass.toMulOneClass.{u1} 𝕜 (NonAssocSemiring.toMulZeroOneClass.{u1} 𝕜 (NonAssocRing.toNonAssocSemiring.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))
-but is expected to have type
-  forall (𝕜 : Type.{u1}) [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : NormOneClass.{u1} 𝕜 (SeminormedRing.toNorm.{u1} 𝕜 _inst_1) (Semiring.toOne.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))], Submonoid.{u1} 𝕜 (MulZeroOneClass.toMulOneClass.{u1} 𝕜 (NonAssocSemiring.toMulZeroOneClass.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align submonoid.unit_closed_ball Submonoid.unitClosedBallₓ'. -/
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
 def Submonoid.unitClosedBall (𝕜 : Type _) [SeminormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
   { Subsemigroup.unitClosedBall 𝕜 with
@@ -116,21 +92,12 @@ instance [SeminormedRing 𝕜] [NormOneClass 𝕜] : Monoid (closedBall (0 : �
 instance [SeminormedCommRing 𝕜] [NormOneClass 𝕜] : CommMonoid (closedBall (0 : 𝕜) 1) :=
   SubmonoidClass.toCommMonoid (Submonoid.unitClosedBall 𝕜)
 
-/- warning: coe_one_unit_closed_ball -> coe_one_unitClosedBall is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : NormOneClass.{u1} 𝕜 (SeminormedRing.toHasNorm.{u1} 𝕜 _inst_1) (AddMonoidWithOne.toOne.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))], Eq.{succ u1} 𝕜 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (coeSubtype.{succ u1} 𝕜 (fun (x : 𝕜) => Membership.Mem.{u1, u1} 𝕜 (Set.{u1} 𝕜) (Set.hasMem.{u1} 𝕜) x (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))))))) (OfNat.ofNat.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))) (One.one.{0} Real Real.hasOne))) 1 (OfNat.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))) (One.one.{0} Real Real.hasOne))) 1 (One.one.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))) (One.one.{0} Real Real.hasOne))) (MulOneClass.toHasOne.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))) (One.one.{0} Real Real.hasOne))) (Monoid.toMulOneClass.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))) (One.one.{0} Real Real.hasOne))) (Metric.closedBall.monoid.{u1} 𝕜 _inst_1 _inst_2))))))) (OfNat.ofNat.{u1} 𝕜 1 (OfNat.mk.{u1} 𝕜 1 (One.one.{u1} 𝕜 (AddMonoidWithOne.toOne.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1))))))))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : NormOneClass.{u1} 𝕜 (SeminormedRing.toNorm.{u1} 𝕜 _inst_1) (Semiring.toOne.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))], Eq.{succ u1} 𝕜 (Subtype.val.{succ u1} 𝕜 (fun (x : 𝕜) => Membership.mem.{u1, u1} 𝕜 (Set.{u1} 𝕜) (Set.instMembershipSet.{u1} 𝕜) x (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (OfNat.ofNat.{u1} (Set.Elem.{u1} 𝕜 (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) 1 (One.toOfNat1.{u1} (Set.Elem.{u1} 𝕜 (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Monoid.toOne.{u1} (Set.Elem.{u1} 𝕜 (Metric.closedBall.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 _inst_1) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Metric.unitClosedBall.monoid.{u1} 𝕜 _inst_1 _inst_2))))) (OfNat.ofNat.{u1} 𝕜 1 (One.toOfNat1.{u1} 𝕜 (Semiring.toOne.{u1} 𝕜 (Ring.toSemiring.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align coe_one_unit_closed_ball coe_one_unitClosedBallₓ'. -/
 @[simp, norm_cast]
 theorem coe_one_unitClosedBall [SeminormedRing 𝕜] [NormOneClass 𝕜] :
     ((1 : closedBall (0 : 𝕜) 1) : 𝕜) = 1 :=
   rfl
 #align coe_one_unit_closed_ball coe_one_unitClosedBall
 
-/- warning: coe_pow_unit_closed_ball -> coe_pow_unitClosedBall is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_pow_unit_closed_ball coe_pow_unitClosedBallₓ'. -/
 @[simp, norm_cast]
 theorem coe_pow_unitClosedBall [SeminormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1)
     (n : ℕ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
@@ -153,9 +120,6 @@ instance [NormedDivisionRing 𝕜] : Inv (sphere (0 : 𝕜) 1) :=
       mem_sphere_zero_iff_norm.2 <| by
         rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
 
-/- warning: coe_inv_unit_sphere -> coe_inv_unitSphere is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_inv_unit_sphere coe_inv_unitSphereₓ'. -/
 @[simp, norm_cast]
 theorem coe_inv_unitSphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) : ↑x⁻¹ = (x⁻¹ : 𝕜) :=
   rfl
@@ -168,9 +132,6 @@ instance [NormedDivisionRing 𝕜] : Div (sphere (0 : 𝕜) 1) :=
         rw [norm_div, mem_sphere_zero_iff_norm.1 x.coe_prop, mem_sphere_zero_iff_norm.1 y.coe_prop,
           div_one]⟩⟩
 
-/- warning: coe_div_unit_sphere -> coe_div_unitSphere is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_div_unit_sphere coe_div_unitSphereₓ'. -/
 @[simp, norm_cast]
 theorem coe_div_unitSphere [NormedDivisionRing 𝕜] (x y : sphere (0 : 𝕜) 1) :
     ↑(x / y) = (x / y : 𝕜) :=
@@ -182,9 +143,6 @@ instance [NormedDivisionRing 𝕜] : Pow (sphere (0 : 𝕜) 1) ℤ :=
     ⟨x ^ n, by
       rw [mem_sphere_zero_iff_norm, norm_zpow, mem_sphere_zero_iff_norm.1 x.coe_prop, one_zpow]⟩⟩
 
-/- warning: coe_zpow_unit_sphere -> coe_zpow_unitSphere is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_zpow_unit_sphere coe_zpow_unitSphereₓ'. -/
 @[simp, norm_cast]
 theorem coe_zpow_unitSphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) (n : ℤ) :
     ↑(x ^ n) = (x ^ n : 𝕜) :=
@@ -194,59 +152,35 @@ theorem coe_zpow_unitSphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) 
 instance [NormedDivisionRing 𝕜] : Monoid (sphere (0 : 𝕜) 1) :=
   SubmonoidClass.toMonoid (Submonoid.unitSphere 𝕜)
 
-/- warning: coe_one_unit_sphere -> coe_one_unitSphere is a dubious translation:
-lean 3 declaration is
-  forall {𝕜 : Type.{u1}} [_inst_1 : NormedDivisionRing.{u1} 𝕜], Eq.{succ u1} 𝕜 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) 𝕜 (coeSubtype.{succ u1} 𝕜 (fun (x : 𝕜) => Membership.Mem.{u1, u1} 𝕜 (Set.{u1} 𝕜) (Set.hasMem.{u1} 𝕜) x (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))))))) (OfNat.ofNat.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))) (One.one.{0} Real Real.hasOne))) 1 (OfNat.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))) (One.one.{0} Real Real.hasOne))) 1 (One.one.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))) (One.one.{0} Real Real.hasOne))) (MulOneClass.toHasOne.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))) (One.one.{0} Real Real.hasOne))) (Monoid.toMulOneClass.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))) (One.one.{0} Real Real.hasOne))) (Metric.sphere.monoid.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{u1} 𝕜 1 (OfNat.mk.{u1} 𝕜 1 (One.one.{u1} 𝕜 (AddMonoidWithOne.toOne.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u1} 𝕜 (Ring.toAddCommGroupWithOne.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))
-but is expected to have type
-  forall {𝕜 : Type.{u1}} [_inst_1 : NormedDivisionRing.{u1} 𝕜], Eq.{succ u1} 𝕜 (Subtype.val.{succ u1} 𝕜 (fun (x : 𝕜) => Membership.mem.{u1, u1} 𝕜 (Set.{u1} 𝕜) (Set.instMembershipSet.{u1} 𝕜) x (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (OfNat.ofNat.{u1} (Set.Elem.{u1} 𝕜 (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) 1 (One.toOfNat1.{u1} (Set.Elem.{u1} 𝕜 (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Monoid.toOne.{u1} (Set.Elem.{u1} 𝕜 (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Metric.unitSphere.monoid.{u1} 𝕜 _inst_1))))) (OfNat.ofNat.{u1} 𝕜 1 (One.toOfNat1.{u1} 𝕜 (Semiring.toOne.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align coe_one_unit_sphere coe_one_unitSphereₓ'. -/
 @[simp, norm_cast]
 theorem coe_one_unitSphere [NormedDivisionRing 𝕜] : ((1 : sphere (0 : 𝕜) 1) : 𝕜) = 1 :=
   rfl
 #align coe_one_unit_sphere coe_one_unitSphere
 
-/- warning: coe_mul_unit_sphere -> coe_mul_unitSphere is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_mul_unit_sphere coe_mul_unitSphereₓ'. -/
 @[simp, norm_cast]
 theorem coe_mul_unitSphere [NormedDivisionRing 𝕜] (x y : sphere (0 : 𝕜) 1) :
     ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_sphere coe_mul_unitSphere
 
-/- warning: coe_pow_unit_sphere -> coe_pow_unitSphere is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align coe_pow_unit_sphere coe_pow_unitSphereₓ'. -/
 @[simp, norm_cast]
 theorem coe_pow_unitSphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) (n : ℕ) :
     ↑(x ^ n) = (x ^ n : 𝕜) :=
   rfl
 #align coe_pow_unit_sphere coe_pow_unitSphere
 
-/- warning: unit_sphere_to_units -> unitSphereToUnits is a dubious translation:
-lean 3 declaration is
-  forall (𝕜 : Type.{u1}) [_inst_1 : NormedDivisionRing.{u1} 𝕜], MonoidHom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) (Units.{u1} 𝕜 (Ring.toMonoid.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))) (Monoid.toMulOneClass.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} 𝕜) Type.{u1} (Set.hasCoeToSort.{u1} 𝕜) (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1)))))))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))))) (Metric.sphere.monoid.{u1} 𝕜 _inst_1)) (Units.mulOneClass.{u1} 𝕜 (Ring.toMonoid.{u1} 𝕜 (NormedRing.toRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))))
-but is expected to have type
-  forall (𝕜 : Type.{u1}) [_inst_1 : NormedDivisionRing.{u1} 𝕜], MonoidHom.{u1, u1} (Set.Elem.{u1} 𝕜 (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Units.{u1} 𝕜 (MonoidWithZero.toMonoid.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1)))))) (Monoid.toMulOneClass.{u1} (Set.Elem.{u1} 𝕜 (Metric.sphere.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (NormedRing.toSeminormedRing.{u1} 𝕜 (NormedDivisionRing.toNormedRing.{u1} 𝕜 _inst_1))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (MonoidWithZero.toZero.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Metric.unitSphere.monoid.{u1} 𝕜 _inst_1)) (Units.instMulOneClassUnits.{u1} 𝕜 (MonoidWithZero.toMonoid.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (DivisionRing.toDivisionSemiring.{u1} 𝕜 (NormedDivisionRing.toDivisionRing.{u1} 𝕜 _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align unit_sphere_to_units unitSphereToUnitsₓ'. -/
 /-- Monoid homomorphism from the unit sphere to the group of units. -/
 def unitSphereToUnits (𝕜 : Type _) [NormedDivisionRing 𝕜] : sphere (0 : 𝕜) 1 →* Units 𝕜 :=
   Units.liftRight (Submonoid.unitSphere 𝕜).Subtype
     (fun x => Units.mk0 x <| ne_zero_of_mem_unit_sphere _) fun x => rfl
 #align unit_sphere_to_units unitSphereToUnits
 
-/- warning: unit_sphere_to_units_apply_coe -> unitSphereToUnits_apply_coe is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align unit_sphere_to_units_apply_coe unitSphereToUnits_apply_coeₓ'. -/
 @[simp]
 theorem unitSphereToUnits_apply_coe [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) :
     (unitSphereToUnits 𝕜 x : 𝕜) = x :=
   rfl
 #align unit_sphere_to_units_apply_coe unitSphereToUnits_apply_coe
 
-/- warning: unit_sphere_to_units_injective -> unitSphereToUnits_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align unit_sphere_to_units_injective unitSphereToUnits_injectiveₓ'. -/
 theorem unitSphereToUnits_injective [NormedDivisionRing 𝕜] :
     Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
   Subtype.eq <| by convert congr_arg Units.val h

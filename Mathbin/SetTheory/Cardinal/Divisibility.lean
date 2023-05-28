@@ -81,12 +81,6 @@ theorem dvd_of_le_of_aleph0_le (ha : a ≠ 0) (h : a ≤ b) (hb : ℵ₀ ≤ b) 
 #align cardinal.dvd_of_le_of_aleph_0_le Cardinal.dvd_of_le_of_aleph0_le
 -/
 
-/- warning: cardinal.prime_of_aleph_0_le -> Cardinal.prime_of_aleph0_le is a dubious translation:
-lean 3 declaration is
-  forall {a : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} a) -> (Prime.{succ u1} Cardinal.{u1} Cardinal.commMonoidWithZero.{u1} a)
-but is expected to have type
-  forall {a : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} a) -> (Prime.{succ u1} Cardinal.{u1} Cardinal.instCommMonoidWithZeroCardinal.{u1} a)
-Case conversion may be inaccurate. Consider using '#align cardinal.prime_of_aleph_0_le Cardinal.prime_of_aleph0_leₓ'. -/
 @[simp]
 theorem prime_of_aleph0_le (ha : ℵ₀ ≤ a) : Prime a :=
   by
@@ -113,12 +107,6 @@ theorem not_irreducible_of_aleph0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a :=
 #align cardinal.not_irreducible_of_aleph_0_le Cardinal.not_irreducible_of_aleph0_le
 -/
 
-/- warning: cardinal.nat_coe_dvd_iff -> Cardinal.nat_coe_dvd_iff is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {m : Nat}, Iff (Dvd.Dvd.{succ u1} Cardinal.{u1} (semigroupDvd.{succ u1} Cardinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Cardinal.{u1} (NonUnitalSemiring.toSemigroupWithZero.{succ u1} Cardinal.{u1} (NonUnitalCommSemiring.toNonUnitalSemiring.{succ u1} Cardinal.{u1} (CommSemiring.toNonUnitalCommSemiring.{succ u1} Cardinal.{u1} Cardinal.commSemiring.{u1}))))) ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) n) ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) m)) (Dvd.Dvd.{0} Nat Nat.hasDvd n m)
-but is expected to have type
-  forall {n : Nat} {m : Nat}, Iff (Dvd.dvd.{succ u1} Cardinal.{u1} (semigroupDvd.{succ u1} Cardinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Cardinal.{u1} (NonUnitalSemiring.toSemigroupWithZero.{succ u1} Cardinal.{u1} (NonUnitalCommSemiring.toNonUnitalSemiring.{succ u1} Cardinal.{u1} (CommSemiring.toNonUnitalCommSemiring.{succ u1} Cardinal.{u1} Cardinal.commSemiring.{u1}))))) (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} n) (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} m)) (Dvd.dvd.{0} Nat Nat.instDvdNat n m)
-Case conversion may be inaccurate. Consider using '#align cardinal.nat_coe_dvd_iff Cardinal.nat_coe_dvd_iffₓ'. -/
 @[simp, norm_cast]
 theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m :=
   by
@@ -133,12 +121,6 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m :=
   exact ⟨k, by exact_mod_cast hk⟩
 #align cardinal.nat_coe_dvd_iff Cardinal.nat_coe_dvd_iff
 
-/- warning: cardinal.nat_is_prime_iff -> Cardinal.nat_is_prime_iff is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat}, Iff (Prime.{succ u1} Cardinal.{u1} Cardinal.commMonoidWithZero.{u1} ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) n)) (Nat.Prime n)
-but is expected to have type
-  forall {n : Nat}, Iff (Prime.{succ u1} Cardinal.{u1} Cardinal.instCommMonoidWithZeroCardinal.{u1} (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} n)) (Nat.Prime n)
-Case conversion may be inaccurate. Consider using '#align cardinal.nat_is_prime_iff Cardinal.nat_is_prime_iffₓ'. -/
 @[simp]
 theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
   by
@@ -164,12 +146,6 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
   exact Or.inl (dvd_of_le_of_aleph_0_le hn ((nat_lt_aleph_0 n).le.trans hℵ₀b) hℵ₀b)
 #align cardinal.nat_is_prime_iff Cardinal.nat_is_prime_iff
 
-/- warning: cardinal.is_prime_iff -> Cardinal.is_prime_iff is a dubious translation:
-lean 3 declaration is
-  forall {a : Cardinal.{u1}}, Iff (Prime.{succ u1} Cardinal.{u1} Cardinal.commMonoidWithZero.{u1} a) (Or (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} a) (Exists.{1} Nat (fun (p : Nat) => And (Eq.{succ (succ u1)} Cardinal.{u1} a ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) p)) (Nat.Prime p))))
-but is expected to have type
-  forall {a : Cardinal.{u1}}, Iff (Prime.{succ u1} Cardinal.{u1} Cardinal.instCommMonoidWithZeroCardinal.{u1} a) (Or (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} a) (Exists.{1} Nat (fun (p : Nat) => And (Eq.{succ (succ u1)} Cardinal.{u1} a (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} p)) (Nat.Prime p))))
-Case conversion may be inaccurate. Consider using '#align cardinal.is_prime_iff Cardinal.is_prime_iffₓ'. -/
 theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, a = p ∧ p.Prime :=
   by
   cases' le_or_lt ℵ₀ a with h h
@@ -178,12 +154,6 @@ theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, 
   simp [not_le.mpr h]
 #align cardinal.is_prime_iff Cardinal.is_prime_iff
 
-/- warning: cardinal.is_prime_pow_iff -> Cardinal.isPrimePow_iff is a dubious translation:
-lean 3 declaration is
-  forall {a : Cardinal.{u1}}, Iff (IsPrimePow.{succ u1} Cardinal.{u1} Cardinal.commMonoidWithZero.{u1} a) (Or (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} a) (Exists.{1} Nat (fun (n : Nat) => And (Eq.{succ (succ u1)} Cardinal.{u1} a ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) n)) (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n))))
-but is expected to have type
-  forall {a : Cardinal.{u1}}, Iff (IsPrimePow.{succ u1} Cardinal.{u1} Cardinal.instCommMonoidWithZeroCardinal.{u1} a) (Or (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} a) (Exists.{1} Nat (fun (n : Nat) => And (Eq.{succ (succ u1)} Cardinal.{u1} a (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} n)) (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n))))
-Case conversion may be inaccurate. Consider using '#align cardinal.is_prime_pow_iff Cardinal.isPrimePow_iffₓ'. -/
 theorem isPrimePow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n : ℕ, a = n ∧ IsPrimePow n :=
   by
   by_cases h : ℵ₀ ≤ a

@@ -86,33 +86,15 @@ instance funLike : FunLike (AffineBasis ι k P) ι fun _ => P
 #align affine_basis.fun_like AffineBasis.funLike
 -/
 
-/- warning: affine_basis.ext -> AffineBasis.ext is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] {b₁ : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4} {b₂ : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4}, (Eq.{max (succ u1) (succ u4)} ((fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) b₁) (coeFn.{max (succ u1) (succ u4), max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b₁) (coeFn.{max (succ u1) (succ u4), max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b₂)) -> (Eq.{max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b₁ b₂)
-but is expected to have type
-  forall {ι : Type.{u4}} {k : Type.{u3}} {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : AddCommGroup.{u2} V] [_inst_2 : AddTorsor.{u2, u1} V P (AddCommGroup.toAddGroup.{u2} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u2} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u2} V _inst_1)] {b₁ : AffineBasis.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4} {b₂ : AffineBasis.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4}, (Eq.{max (succ u4) (succ u1)} (forall (a : ι), (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) a) (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (AffineBasis.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b₁) (FunLike.coe.{max (succ u4) (succ u1), succ u4, succ u1} (AffineBasis.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b₂)) -> (Eq.{max (succ u4) (succ u1)} (AffineBasis.{u4, u3, u2, u1} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b₁ b₂)
-Case conversion may be inaccurate. Consider using '#align affine_basis.ext AffineBasis.extₓ'. -/
 @[ext]
 theorem ext {b₁ b₂ : AffineBasis ι k P} (h : (b₁ : ι → P) = b₂) : b₁ = b₂ :=
   FunLike.coe_injective h
 #align affine_basis.ext AffineBasis.ext
 
-/- warning: affine_basis.ind -> AffineBasis.ind is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4), AffineIndependent.{u2, u3, u4, u1} k V P _inst_3 _inst_1 _inst_4 _inst_2 ι (coeFn.{max (succ u1) (succ u4), max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b)
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u4}} {V : Type.{u3}} {P : Type.{u2}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u2} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u4} k] [_inst_4 : Module.{u4, u3} k V (Ring.toSemiring.{u4} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u4, u3, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4), AffineIndependent.{u4, u3, u2, u1} k V P _inst_3 _inst_1 _inst_4 _inst_2 ι (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (AffineBasis.{u1, u4, u3, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u1, u4, u3, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b)
-Case conversion may be inaccurate. Consider using '#align affine_basis.ind AffineBasis.indₓ'. -/
 theorem ind : AffineIndependent k b :=
   b.ind'
 #align affine_basis.ind AffineBasis.ind
 
-/- warning: affine_basis.tot -> AffineBasis.tot is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4), Eq.{succ u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (affineSpan.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2 (Set.range.{u4, succ u1} P ι (coeFn.{max (succ u1) (succ u4), max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b))) (Top.top.{u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (CompleteLattice.toHasTop.{u4} (AffineSubspace.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (AffineSubspace.completeLattice.{u2, u3, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2)))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u3}} {V : Type.{u2}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u2} V] [_inst_2 : AddTorsor.{u2, u4} V P (AddCommGroup.toAddGroup.{u2} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u2} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u2} V _inst_1)] (b : AffineBasis.{u1, u3, u2, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4), Eq.{succ u4} (AffineSubspace.{u3, u2, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (affineSpan.{u3, u2, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2 (Set.range.{u4, succ u1} P ι (FunLike.coe.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u3, u2, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u1, u3, u2, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b))) (Top.top.{u4} (AffineSubspace.{u3, u2, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (CompleteLattice.toTop.{u4} (AffineSubspace.{u3, u2, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2) (AffineSubspace.instCompleteLatticeAffineSubspace.{u3, u2, u4} k V P _inst_3 _inst_1 _inst_4 _inst_2)))
-Case conversion may be inaccurate. Consider using '#align affine_basis.tot AffineBasis.totₓ'. -/
 theorem tot : affineSpan k (range b) = ⊤ :=
   b.tot'
 #align affine_basis.tot AffineBasis.tot
@@ -134,34 +116,16 @@ def reindex (e : ι ≃ ι') : AffineBasis ι' k P :=
 #align affine_basis.reindex AffineBasis.reindex
 -/
 
-/- warning: affine_basis.coe_reindex -> AffineBasis.coe_reindex is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {ι' : Type.{u2}} {k : Type.{u3}} {V : Type.{u4}} {P : Type.{u5}} [_inst_1 : AddCommGroup.{u4} V] [_inst_2 : AddTorsor.{u4, u5} V P (AddCommGroup.toAddGroup.{u4} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u4} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u4} V _inst_1)] (b : AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (e : Equiv.{succ u1, succ u2} ι ι'), Eq.{max (succ u2) (succ u5)} (ι' -> P) (coeFn.{max (succ u2) (succ u5), max (succ u2) (succ u5)} (AffineBasis.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι' -> P) (FunLike.hasCoeToFun.{max (succ u2) (succ u5), succ u2, succ u5} (AffineBasis.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) ι' (fun (_x : ι') => P) (AffineBasis.funLike.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4)) (AffineBasis.reindex.{u1, u2, u3, u4, u5} ι ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 b e)) (Function.comp.{succ u2, succ u1, succ u5} ι' ι P (coeFn.{max (succ u1) (succ u5), max (succ u1) (succ u5)} (AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u5), succ u1, succ u5} (AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b) (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} ι' ι) (fun (_x : Equiv.{succ u2, succ u1} ι' ι) => ι' -> ι) (Equiv.hasCoeToFun.{succ u2, succ u1} ι' ι) (Equiv.symm.{succ u1, succ u2} ι ι' e)))
-but is expected to have type
-  forall {ι : Type.{u1}} {ι' : Type.{u5}} {k : Type.{u3}} {V : Type.{u2}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u2} V] [_inst_2 : AddTorsor.{u2, u4} V P (AddCommGroup.toAddGroup.{u2} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u2} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u2} V _inst_1)] (b : AffineBasis.{u1, u3, u2, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (e : Equiv.{succ u1, succ u5} ι ι'), Eq.{max (succ u5) (succ u4)} (forall (a : ι'), (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι') => P) a) (FunLike.coe.{max (succ u5) (succ u4), succ u5, succ u4} (AffineBasis.{u5, u3, u2, u4} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) ι' (fun (_x : ι') => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι') => P) _x) (AffineBasis.funLike.{u5, u3, u2, u4} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) (AffineBasis.reindex.{u1, u5, u3, u2, u4} ι ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 b e)) (Function.comp.{succ u5, succ u1, succ u4} ι' ι P (FunLike.coe.{max (succ u1) (succ u4), succ u1, succ u4} (AffineBasis.{u1, u3, u2, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u1, u3, u2, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b) (FunLike.coe.{max (succ u1) (succ u5), succ u5, succ u1} (Equiv.{succ u5, succ u1} ι' ι) ι' (fun (_x : ι') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : ι') => ι) _x) (Equiv.instFunLikeEquiv.{succ u5, succ u1} ι' ι) (Equiv.symm.{succ u1, succ u5} ι ι' e)))
-Case conversion may be inaccurate. Consider using '#align affine_basis.coe_reindex AffineBasis.coe_reindexₓ'. -/
 @[simp, norm_cast]
 theorem coe_reindex : ⇑(b.reindex e) = b ∘ e.symm :=
   rfl
 #align affine_basis.coe_reindex AffineBasis.coe_reindex
 
-/- warning: affine_basis.reindex_apply -> AffineBasis.reindex_apply is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {ι' : Type.{u2}} {k : Type.{u3}} {V : Type.{u4}} {P : Type.{u5}} [_inst_1 : AddCommGroup.{u4} V] [_inst_2 : AddTorsor.{u4, u5} V P (AddCommGroup.toAddGroup.{u4} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u4} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u4} V _inst_1)] (b : AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (e : Equiv.{succ u1, succ u2} ι ι') (i' : ι'), Eq.{succ u5} P (coeFn.{max (succ u2) (succ u5), max (succ u2) (succ u5)} (AffineBasis.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι' -> P) (FunLike.hasCoeToFun.{max (succ u2) (succ u5), succ u2, succ u5} (AffineBasis.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) ι' (fun (_x : ι') => P) (AffineBasis.funLike.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4)) (AffineBasis.reindex.{u1, u2, u3, u4, u5} ι ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 b e) i') (coeFn.{max (succ u1) (succ u5), max (succ u1) (succ u5)} (AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (fun (_x : AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) => ι -> P) (FunLike.hasCoeToFun.{max (succ u1) (succ u5), succ u1, succ u5} (AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => P) (AffineBasis.funLike.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4)) b (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} ι' ι) (fun (_x : Equiv.{succ u2, succ u1} ι' ι) => ι' -> ι) (Equiv.hasCoeToFun.{succ u2, succ u1} ι' ι) (Equiv.symm.{succ u1, succ u2} ι ι' e) i'))
-but is expected to have type
-  forall {ι : Type.{u1}} {ι' : Type.{u4}} {k : Type.{u3}} {V : Type.{u2}} {P : Type.{u5}} [_inst_1 : AddCommGroup.{u2} V] [_inst_2 : AddTorsor.{u2, u5} V P (AddCommGroup.toAddGroup.{u2} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u2} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u2} V _inst_1)] (b : AffineBasis.{u1, u3, u2, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (e : Equiv.{succ u1, succ u4} ι ι') (i' : ι'), Eq.{succ u5} ((fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι') => P) i') (FunLike.coe.{max (succ u4) (succ u5), succ u4, succ u5} (AffineBasis.{u4, u3, u2, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) ι' (fun (_x : ι') => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι') => P) _x) (AffineBasis.funLike.{u4, u3, u2, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4) (AffineBasis.reindex.{u1, u4, u3, u2, u5} ι ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 b e) i') (FunLike.coe.{max (succ u1) (succ u5), succ u1, succ u5} (AffineBasis.{u1, u3, u2, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) ι (fun (_x : ι) => (fun (x._@.Mathlib.LinearAlgebra.AffineSpace.Basis._hyg.252 : ι) => P) _x) (AffineBasis.funLike.{u1, u3, u2, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) b (FunLike.coe.{max (succ u1) (succ u4), succ u4, succ u1} (Equiv.{succ u4, succ u1} ι' ι) ι' (fun (_x : ι') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : ι') => ι) _x) (Equiv.instFunLikeEquiv.{succ u4, succ u1} ι' ι) (Equiv.symm.{succ u1, succ u4} ι ι' e) i'))
-Case conversion may be inaccurate. Consider using '#align affine_basis.reindex_apply AffineBasis.reindex_applyₓ'. -/
 @[simp]
 theorem reindex_apply (i' : ι') : b.reindex e i' = b (e.symm i') :=
   rfl
 #align affine_basis.reindex_apply AffineBasis.reindex_apply
 
-/- warning: affine_basis.reindex_refl -> AffineBasis.reindex_refl is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4), Eq.{max (succ u1) (succ u4)} (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (AffineBasis.reindex.{u1, u1, u2, u3, u4} ι ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b (Equiv.refl.{succ u1} ι)) b
-but is expected to have type
-  forall {ι : Type.{u4}} {k : Type.{u2}} {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : AddCommGroup.{u1} V] [_inst_2 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u1} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u1} V _inst_1)] (b : AffineBasis.{u4, u2, u1, u3} ι k V P _inst_1 _inst_2 _inst_3 _inst_4), Eq.{max (succ u4) (succ u3)} (AffineBasis.{u4, u2, u1, u3} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (AffineBasis.reindex.{u4, u4, u2, u1, u3} ι ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b (Equiv.refl.{succ u4} ι)) b
-Case conversion may be inaccurate. Consider using '#align affine_basis.reindex_refl AffineBasis.reindex_reflₓ'. -/
 @[simp]
 theorem reindex_refl : b.reindex (Equiv.refl _) = b :=
   ext rfl
@@ -187,17 +151,11 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
 #align affine_basis.basis_of AffineBasis.basisOf
 -/
 
-/- warning: affine_basis.basis_of_apply -> AffineBasis.basisOf_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.basis_of_apply AffineBasis.basisOf_applyₓ'. -/
 @[simp]
 theorem basisOf_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basisOf i j = b ↑j -ᵥ b i := by
   simp [basis_of]
 #align affine_basis.basis_of_apply AffineBasis.basisOf_apply
 
-/- warning: affine_basis.basis_of_reindex -> AffineBasis.basisOf_reindex is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.basis_of_reindex AffineBasis.basisOf_reindexₓ'. -/
 @[simp]
 theorem basisOf_reindex (i : ι') :
     (b.reindex e).basisOf i =
@@ -205,12 +163,6 @@ theorem basisOf_reindex (i : ι') :
   by ext j; simp
 #align affine_basis.basis_of_reindex AffineBasis.basisOf_reindex
 
-/- warning: affine_basis.coord -> AffineBasis.coord is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)], (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) -> ι -> (AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3)))))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)], (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) -> ι -> (AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u2} k _inst_3) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_3))))
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord AffineBasis.coordₓ'. -/
 /-- The `i`th barycentric coordinate of a point. -/
 noncomputable def coord (i : ι) : P →ᵃ[k] k
     where
@@ -221,23 +173,11 @@ noncomputable def coord (i : ι) : P →ᵃ[k] k
       sub_add_eq_sub_sub_swap, add_comm, sub_eq_add_neg]
 #align affine_basis.coord AffineBasis.coord
 
-/- warning: affine_basis.linear_eq_sum_coords -> AffineBasis.linear_eq_sumCoords is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (i : ι), Eq.{max (succ u3) (succ u2)} (LinearMap.{u2, u2, u3, u2} k k (Ring.toSemiring.{u2} k _inst_3) (Ring.toSemiring.{u2} k _inst_3) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_3))) V k (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) (AddCommGroup.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3)))) _inst_4 (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3))) (AffineMap.linear.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3)))) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) (Neg.neg.{max u3 u2} (LinearMap.{u2, u2, u3, u2} k k (Ring.toSemiring.{u2} k _inst_3) (Ring.toSemiring.{u2} k _inst_3) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_3))) V k (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) (AddCommGroup.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3)))) _inst_4 (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3))) (LinearMap.hasNeg.{u2, u2, u3, u2} k k V k (Ring.toSemiring.{u2} k _inst_3) (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) _inst_4 (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (RingHom.id.{u2} k (Semiring.toNonAssocSemiring.{u2} k (Ring.toSemiring.{u2} k _inst_3)))) (Basis.sumCoords.{u1, u2, u3} (Subtype.{succ u1} ι (fun (j : ι) => Ne.{succ u1} ι j i)) k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) _inst_4 (AffineBasis.basisOf.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u4}} {V : Type.{u3}} {P : Type.{u2}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u2} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u4} k] [_inst_4 : Module.{u4, u3} k V (Ring.toSemiring.{u4} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u4, u3, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (i : ι), Eq.{max (succ u4) (succ u3)} (LinearMap.{u4, u4, u3, u4} k k (Ring.toSemiring.{u4} k _inst_3) (Ring.toSemiring.{u4} k _inst_3) (RingHom.id.{u4} k (Semiring.toNonAssocSemiring.{u4} k (Ring.toSemiring.{u4} k _inst_3))) V k (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) (AddCommGroup.toAddCommMonoid.{u4} k (Ring.toAddCommGroup.{u4} k _inst_3)) _inst_4 (Semiring.toModule.{u4} k (Ring.toSemiring.{u4} k _inst_3))) (AffineMap.linear.{u4, u3, u2, u4, u4} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u4} k _inst_3) (Semiring.toModule.{u4} k (Ring.toSemiring.{u4} k _inst_3)) (addGroupIsAddTorsor.{u4} k (AddGroupWithOne.toAddGroup.{u4} k (Ring.toAddGroupWithOne.{u4} k _inst_3))) (AffineBasis.coord.{u1, u4, u3, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) (Neg.neg.{max u4 u3} (LinearMap.{u4, u4, u3, u4} k k (Ring.toSemiring.{u4} k _inst_3) (Ring.toSemiring.{u4} k _inst_3) (RingHom.id.{u4} k (Semiring.toNonAssocSemiring.{u4} k (Ring.toSemiring.{u4} k _inst_3))) V k (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u4} k (Semiring.toNonAssocSemiring.{u4} k (Ring.toSemiring.{u4} k _inst_3)))) _inst_4 (Semiring.toModule.{u4} k (Ring.toSemiring.{u4} k _inst_3))) (LinearMap.instNegLinearMapToAddCommMonoid.{u4, u4, u3, u4} k k V k (Ring.toSemiring.{u4} k _inst_3) (Ring.toSemiring.{u4} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) (Ring.toAddCommGroup.{u4} k _inst_3) _inst_4 (Semiring.toModule.{u4} k (Ring.toSemiring.{u4} k _inst_3)) (RingHom.id.{u4} k (Semiring.toNonAssocSemiring.{u4} k (Ring.toSemiring.{u4} k _inst_3)))) (Basis.sumCoords.{u1, u4, u3} (Subtype.{succ u1} ι (fun (j : ι) => Ne.{succ u1} ι j i)) k V (Ring.toSemiring.{u4} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1) _inst_4 (AffineBasis.basisOf.{u1, u4, u3, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)))
-Case conversion may be inaccurate. Consider using '#align affine_basis.linear_eq_sum_coords AffineBasis.linear_eq_sumCoordsₓ'. -/
 @[simp]
 theorem linear_eq_sumCoords (i : ι) : (b.Coord i).linear = -(b.basisOf i).sumCoords :=
   rfl
 #align affine_basis.linear_eq_sum_coords AffineBasis.linear_eq_sumCoords
 
-/- warning: affine_basis.coord_reindex -> AffineBasis.coord_reindex is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {ι' : Type.{u2}} {k : Type.{u3}} {V : Type.{u4}} {P : Type.{u5}} [_inst_1 : AddCommGroup.{u4} V] [_inst_2 : AddTorsor.{u4, u5} V P (AddCommGroup.toAddGroup.{u4} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u4} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u4} V _inst_1)] (b : AffineBasis.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (e : Equiv.{succ u1, succ u2} ι ι') (i : ι'), Eq.{max (succ u4) (succ u5) (succ u3)} (AffineMap.{u3, u4, u5, u3, u3} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u3} k (NonAssocRing.toNonUnitalNonAssocRing.{u3} k (Ring.toNonAssocRing.{u3} k _inst_3))) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_3)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (AddCommGroupWithOne.toAddGroupWithOne.{u3} k (Ring.toAddCommGroupWithOne.{u3} k _inst_3))))) (AffineBasis.coord.{u2, u3, u4, u5} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 (AffineBasis.reindex.{u1, u2, u3, u4, u5} ι ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 b e) i) (AffineBasis.coord.{u1, u3, u4, u5} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} ι' ι) (fun (_x : Equiv.{succ u2, succ u1} ι' ι) => ι' -> ι) (Equiv.hasCoeToFun.{succ u2, succ u1} ι' ι) (Equiv.symm.{succ u1, succ u2} ι ι' e) i))
-but is expected to have type
-  forall {ι : Type.{u1}} {ι' : Type.{u2}} {k : Type.{u5}} {V : Type.{u4}} {P : Type.{u3}} [_inst_1 : AddCommGroup.{u4} V] [_inst_2 : AddTorsor.{u4, u3} V P (AddCommGroup.toAddGroup.{u4} V _inst_1)] [_inst_3 : Ring.{u5} k] [_inst_4 : Module.{u5, u4} k V (Ring.toSemiring.{u5} k _inst_3) (AddCommGroup.toAddCommMonoid.{u4} V _inst_1)] (b : AffineBasis.{u1, u5, u4, u3} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) (e : Equiv.{succ u1, succ u2} ι ι') (i : ι'), Eq.{max (max (succ u5) (succ u4)) (succ u3)} (AffineMap.{u5, u4, u3, u5, u5} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u5} k _inst_3) (Semiring.toModule.{u5} k (Ring.toSemiring.{u5} k _inst_3)) (addGroupIsAddTorsor.{u5} k (AddGroupWithOne.toAddGroup.{u5} k (Ring.toAddGroupWithOne.{u5} k _inst_3)))) (AffineBasis.coord.{u2, u5, u4, u3} ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 (AffineBasis.reindex.{u1, u2, u5, u4, u3} ι ι' k V P _inst_1 _inst_2 _inst_3 _inst_4 b e) i) (AffineBasis.coord.{u1, u5, u4, u3} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} ι' ι) ι' (fun (_x : ι') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : ι') => ι) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} ι' ι) (Equiv.symm.{succ u1, succ u2} ι ι' e) i))
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_reindex AffineBasis.coord_reindexₓ'. -/
 @[simp]
 theorem coord_reindex (i : ι') : (b.reindex e).Coord i = b.Coord (e.symm i) :=
   by
@@ -245,34 +185,22 @@ theorem coord_reindex (i : ι') : (b.reindex e).Coord i = b.Coord (e.symm i) :=
   classical simp [AffineBasis.coord]
 #align affine_basis.coord_reindex AffineBasis.coord_reindex
 
-/- warning: affine_basis.coord_apply_eq -> AffineBasis.coord_apply_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_apply_eq AffineBasis.coord_apply_eqₓ'. -/
 @[simp]
 theorem coord_apply_eq (i : ι) : b.Coord i (b i) = 1 := by
   simp only [coord, Basis.coe_sumCoords, LinearEquiv.map_zero, LinearEquiv.coe_coe, sub_zero,
     AffineMap.coe_mk, Finsupp.sum_zero_index, vsub_self]
 #align affine_basis.coord_apply_eq AffineBasis.coord_apply_eq
 
-/- warning: affine_basis.coord_apply_ne -> AffineBasis.coord_apply_ne is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_apply_ne AffineBasis.coord_apply_neₓ'. -/
 @[simp]
 theorem coord_apply_ne (h : i ≠ j) : b.Coord i (b j) = 0 := by
   rw [coord, AffineMap.coe_mk, ← Subtype.coe_mk j h.symm, ← b.basis_of_apply,
     Basis.sumCoords_self_apply, sub_self]
 #align affine_basis.coord_apply_ne AffineBasis.coord_apply_ne
 
-/- warning: affine_basis.coord_apply -> AffineBasis.coord_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_apply AffineBasis.coord_applyₓ'. -/
 theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b j) = if i = j then 1 else 0 := by
   cases eq_or_ne i j <;> simp [h]
 #align affine_basis.coord_apply AffineBasis.coord_apply
 
-/- warning: affine_basis.coord_apply_combination_of_mem -> AffineBasis.coord_apply_combination_of_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_apply_combination_of_mem AffineBasis.coord_apply_combination_of_memₓ'. -/
 @[simp]
 theorem coord_apply_combination_of_mem (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination k b w) = w i := by
@@ -281,9 +209,6 @@ theorem coord_apply_combination_of_mem (hi : i ∈ s) {w : ι → k} (hw : s.Sum
       s.map_affine_combination b w hw]
 #align affine_basis.coord_apply_combination_of_mem AffineBasis.coord_apply_combination_of_mem
 
-/- warning: affine_basis.coord_apply_combination_of_not_mem -> AffineBasis.coord_apply_combination_of_not_mem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_memₓ'. -/
 @[simp]
 theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination k b w) = 0 := by
@@ -292,9 +217,6 @@ theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s
       s.map_affine_combination b w hw]
 #align affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
 
-/- warning: affine_basis.sum_coord_apply_eq_one -> AffineBasis.sum_coord_apply_eq_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.sum_coord_apply_eq_one AffineBasis.sum_coord_apply_eq_oneₓ'. -/
 @[simp]
 theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :=
   by
@@ -305,9 +227,6 @@ theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :
   exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
 #align affine_basis.sum_coord_apply_eq_one AffineBasis.sum_coord_apply_eq_one
 
-/- warning: affine_basis.affine_combination_coord_eq_self -> AffineBasis.affineCombination_coord_eq_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.affine_combination_coord_eq_self AffineBasis.affineCombination_coord_eq_selfₓ'. -/
 @[simp]
 theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
     (Finset.univ.affineCombination k b fun i => b.Coord i q) = q :=
@@ -319,9 +238,6 @@ theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
   exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
 #align affine_basis.affine_combination_coord_eq_self AffineBasis.affineCombination_coord_eq_self
 
-/- warning: affine_basis.linear_combination_coord_eq_self -> AffineBasis.linear_combination_coord_eq_self is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.linear_combination_coord_eq_self AffineBasis.linear_combination_coord_eq_selfₓ'. -/
 /-- A variant of `affine_basis.affine_combination_coord_eq_self` for the special case when the
 affine space is a module so we can talk about linear combinations. -/
 @[simp]
@@ -332,9 +248,6 @@ theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (
   rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
 #align affine_basis.linear_combination_coord_eq_self AffineBasis.linear_combination_coord_eq_self
 
-/- warning: affine_basis.ext_elem -> AffineBasis.ext_elem is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.ext_elem AffineBasis.ext_elemₓ'. -/
 theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ :=
   by
   cases nonempty_fintype ι
@@ -342,12 +255,6 @@ theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coor
   simp only [h]
 #align affine_basis.ext_elem AffineBasis.ext_elem
 
-/- warning: affine_basis.coe_coord_of_subsingleton_eq_one -> AffineBasis.coe_coord_of_subsingleton_eq_one is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_5 : Subsingleton.{succ u1} ι] (i : ι), Eq.{max (succ u4) (succ u2)} ((fun (_x : AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) => P -> k) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) (coeFn.{max (succ u3) (succ u4) (succ u2), max (succ u4) (succ u2)} (AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) (fun (_x : AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) => P -> k) (AffineMap.hasCoeToFun.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) (OfNat.ofNat.{max u4 u2} ((fun (_x : AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) => P -> k) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) 1 (OfNat.mk.{max u4 u2} ((fun (_x : AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) => P -> k) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) 1 (One.one.{max u4 u2} ((fun (_x : AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) => P -> k) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) (Pi.instOne.{u4, u2} P (fun (ᾰ : P) => k) (fun (i : P) => AddMonoidWithOne.toOne.{u2} k (AddGroupWithOne.toAddMonoidWithOne.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))))))
-but is expected to have type
-  forall {ι : Type.{u4}} {k : Type.{u3}} {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : AddCommGroup.{u1} V] [_inst_2 : AddTorsor.{u1, u2} V P (AddCommGroup.toAddGroup.{u1} V _inst_1)] [_inst_3 : Ring.{u3} k] [_inst_4 : Module.{u3, u1} k V (Ring.toSemiring.{u3} k _inst_3) (AddCommGroup.toAddCommMonoid.{u1} V _inst_1)] (b : AffineBasis.{u4, u3, u1, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_5 : Subsingleton.{succ u4} ι] (i : ι), Eq.{max (succ u3) (succ u2)} (forall (a : P), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) a) (FunLike.coe.{max (max (succ u1) (succ u2)) (succ u3), succ u2, succ u3} (AffineMap.{u3, u1, u2, u3, u3} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u3} k _inst_3) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_3)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (Ring.toAddGroupWithOne.{u3} k _inst_3)))) P (fun (_x : P) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) _x) (AffineMap.funLike.{u3, u1, u2, u3, u3} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u3} k _inst_3) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_3)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (Ring.toAddGroupWithOne.{u3} k _inst_3)))) (AffineBasis.coord.{u4, u3, u1, u2} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i)) (OfNat.ofNat.{max u3 u2} (forall (a : P), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) a) 1 (One.toOfNat1.{max u3 u2} (forall (a : P), (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) a) (Pi.instOne.{u2, u3} P (fun (a : P) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) a) (fun (i : P) => Semiring.toOne.{u3} ((fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) i) (Ring.toSemiring.{u3} ((fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) i) _inst_3)))))
-Case conversion may be inaccurate. Consider using '#align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_oneₓ'. -/
 @[simp]
 theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i : P → k) = 1 :=
   by
@@ -364,12 +271,6 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_one
 
-/- warning: affine_basis.surjective_coord -> AffineBasis.surjective_coord is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)] (b : AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_5 : Nontrivial.{u1} ι] (i : ι), Function.Surjective.{succ u4, succ u2} P k (coeFn.{max (succ u3) (succ u4) (succ u2), max (succ u4) (succ u2)} (AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) (fun (_x : AffineMap.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) => P -> k) (AffineMap.hasCoeToFun.{u2, u3, u4, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3))) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))) (AffineBasis.coord.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i))
-but is expected to have type
-  forall {ι : Type.{u4}} {k : Type.{u2}} {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : AddCommGroup.{u1} V] [_inst_2 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u1} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u1} V _inst_1)] (b : AffineBasis.{u4, u2, u1, u3} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) [_inst_5 : Nontrivial.{u4} ι] (i : ι), Function.Surjective.{succ u3, succ u2} P k (FunLike.coe.{max (max (succ u1) (succ u3)) (succ u2), succ u3, succ u2} (AffineMap.{u2, u1, u3, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u2} k _inst_3) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_3)))) P (fun (_x : P) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : P) => k) _x) (AffineMap.funLike.{u2, u1, u3, u2, u2} k V P k k _inst_3 _inst_1 _inst_4 _inst_2 (Ring.toAddCommGroup.{u2} k _inst_3) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_3)))) (AffineBasis.coord.{u4, u2, u1, u3} ι k V P _inst_1 _inst_2 _inst_3 _inst_4 b i))
-Case conversion may be inaccurate. Consider using '#align affine_basis.surjective_coord AffineBasis.surjective_coordₓ'. -/
 theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
   classical
     intro x
@@ -383,12 +284,6 @@ theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coo
     simp [b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.surjective_coord AffineBasis.surjective_coord
 
-/- warning: affine_basis.coords -> AffineBasis.coords is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)], (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) -> (AffineMap.{u2, u3, u4, max u1 u2, max u1 u2} k V P (ι -> k) (ι -> k) _inst_3 _inst_1 _inst_4 _inst_2 (Pi.addCommGroup.{u1, u2} ι (fun (i : ι) => k) (fun (i : ι) => NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3)))) (Pi.module.{u1, u2, u2} ι (fun (i : ι) => k) k (Ring.toSemiring.{u2} k _inst_3) (fun (i : ι) => AddCommGroup.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toAddCommGroup.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3))) (Pi.addTorsor.{u1, u2, u2} ι (fun (i : ι) => k) (fun (i : ι) => AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))) (fun (ᾰ : ι) => k) (fun (i : ι) => addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (AddCommGroupWithOne.toAddGroupWithOne.{u2} k (Ring.toAddCommGroupWithOne.{u2} k _inst_3))))))
-but is expected to have type
-  forall {ι : Type.{u1}} {k : Type.{u2}} {V : Type.{u3}} {P : Type.{u4}} [_inst_1 : AddCommGroup.{u3} V] [_inst_2 : AddTorsor.{u3, u4} V P (AddCommGroup.toAddGroup.{u3} V _inst_1)] [_inst_3 : Ring.{u2} k] [_inst_4 : Module.{u2, u3} k V (Ring.toSemiring.{u2} k _inst_3) (AddCommGroup.toAddCommMonoid.{u3} V _inst_1)], (AffineBasis.{u1, u2, u3, u4} ι k V P _inst_1 _inst_2 _inst_3 _inst_4) -> (AffineMap.{u2, u3, u4, max u1 u2, max u1 u2} k V P (ι -> k) (ι -> k) _inst_3 _inst_1 _inst_4 _inst_2 (Pi.addCommGroup.{u1, u2} ι (fun (i : ι) => k) (fun (i : ι) => Ring.toAddCommGroup.{u2} k _inst_3)) (Pi.module.{u1, u2, u2} ι (fun (i : ι) => k) k (Ring.toSemiring.{u2} k _inst_3) (fun (i : ι) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} k (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} k (NonAssocRing.toNonUnitalNonAssocRing.{u2} k (Ring.toNonAssocRing.{u2} k _inst_3)))) (fun (i : ι) => Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_3))) (Finset.instAddTorsorForAllAddGroupToAddGroupToAddGroupWithOne.{u2, u1} k _inst_3 ι))
-Case conversion may be inaccurate. Consider using '#align affine_basis.coords AffineBasis.coordsₓ'. -/
 /-- Barycentric coordinates as an affine map. -/
 noncomputable def coords : P →ᵃ[k] ι → k
     where
@@ -403,9 +298,6 @@ noncomputable def coords : P →ᵃ[k] ι → k
       AffineMap.map_vadd]
 #align affine_basis.coords AffineBasis.coords
 
-/- warning: affine_basis.coords_apply -> AffineBasis.coords_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coords_apply AffineBasis.coords_applyₓ'. -/
 @[simp]
 theorem coords_apply (q : P) (i : ι) : b.coords q i = b.Coord i q :=
   rfl
@@ -419,9 +311,6 @@ variable [DivisionRing k] [Module k V]
 
 include V
 
-/- warning: affine_basis.coord_apply_centroid -> AffineBasis.coord_apply_centroid is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.coord_apply_centroid AffineBasis.coord_apply_centroidₓ'. -/
 @[simp]
 theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset ι} {i : ι}
     (hi : i ∈ s) : b.Coord i (s.centroid k b) = (s.card : k)⁻¹ := by
@@ -430,9 +319,6 @@ theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset �
     Finset.centroidWeights]
 #align affine_basis.coord_apply_centroid AffineBasis.coord_apply_centroid
 
-/- warning: affine_basis.exists_affine_subbasis -> AffineBasis.exists_affine_subbasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.exists_affine_subbasis AffineBasis.exists_affine_subbasisₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
     ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), ⇑b = coe :=
@@ -444,9 +330,6 @@ theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
 
 variable (k V P)
 
-/- warning: affine_basis.exists_affine_basis -> AffineBasis.exists_affineBasis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align affine_basis.exists_affine_basis AffineBasis.exists_affineBasisₓ'. -/
 theorem exists_affineBasis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), ⇑b = coe :=
   let ⟨s, _, hs⟩ := exists_affine_subbasis (AffineSubspace.span_univ k V P)
   ⟨s, hs⟩

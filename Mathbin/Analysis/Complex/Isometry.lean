@@ -43,9 +43,6 @@ open ComplexConjugate
 -- mathport name: complex.abs
 local notation "|" x "|" => Complex.abs x
 
-/- warning: rotation -> rotation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation rotationₓ'. -/
 /-- An element of the unit circle defines a `linear_isometry_equiv` from `ℂ` to itself, by
 rotation. -/
 def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ
@@ -57,33 +54,21 @@ def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ
   map_mul' _ _ := LinearIsometryEquiv.ext <| mul_smul _ _
 #align rotation rotation
 
-/- warning: rotation_apply -> rotation_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation_apply rotation_applyₓ'. -/
 @[simp]
 theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
   rfl
 #align rotation_apply rotation_apply
 
-/- warning: rotation_symm -> rotation_symm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation_symm rotation_symmₓ'. -/
 @[simp]
 theorem rotation_symm (a : circle) : (rotation a).symm = rotation a⁻¹ :=
   LinearIsometryEquiv.ext fun x => rfl
 #align rotation_symm rotation_symm
 
-/- warning: rotation_trans -> rotation_trans is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation_trans rotation_transₓ'. -/
 @[simp]
 theorem rotation_trans (a b : circle) : (rotation a).trans (rotation b) = rotation (b * a) := by
   ext1; simp
 #align rotation_trans rotation_trans
 
-/- warning: rotation_ne_conj_lie -> rotation_ne_conjLie is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation_ne_conj_lie rotation_ne_conjLieₓ'. -/
 theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
   by
   intro h
@@ -94,12 +79,6 @@ theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
   exact one_ne_zero hI
 #align rotation_ne_conj_lie rotation_ne_conjLie
 
-/- warning: rotation_of -> rotationOf is a dubious translation:
-lean 3 declaration is
-  (LinearIsometryEquiv.{0, 0, 0, 0} Real Real Real.semiring Real.semiring (RingHom.id.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (RingHom.id.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (RingHomInvPair.ids.{0} Real Real.semiring) (RingHomInvPair.ids.{0} Real Real.semiring) Complex Complex (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Complex (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Complex (NormedRing.toNonUnitalNormedRing.{0} Complex (NormedCommRing.toNormedRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.normedField))))) (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Complex (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Complex (NormedRing.toNonUnitalNormedRing.{0} Complex (NormedCommRing.toNormedRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.normedField))))) (Complex.module.{0} Real Real.semiring Real.module) (Complex.module.{0} Real Real.semiring Real.module)) -> (coeSort.{1, 2} (Submonoid.{0} Complex (MulZeroOneClass.toMulOneClass.{0} Complex (NonAssocSemiring.toMulZeroOneClass.{0} Complex (NonAssocRing.toNonAssocSemiring.{0} Complex (Ring.toNonAssocRing.{0} Complex Complex.ring))))) Type (SetLike.hasCoeToSort.{0, 0} (Submonoid.{0} Complex (MulZeroOneClass.toMulOneClass.{0} Complex (NonAssocSemiring.toMulZeroOneClass.{0} Complex (NonAssocRing.toNonAssocSemiring.{0} Complex (Ring.toNonAssocRing.{0} Complex Complex.ring))))) Complex (Submonoid.setLike.{0} Complex (MulZeroOneClass.toMulOneClass.{0} Complex (NonAssocSemiring.toMulZeroOneClass.{0} Complex (NonAssocRing.toNonAssocSemiring.{0} Complex (Ring.toNonAssocRing.{0} Complex Complex.ring)))))) circle)
-but is expected to have type
-  (LinearIsometryEquiv.{0, 0, 0, 0} Real Real Real.semiring Real.semiring (RingHom.id.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (RingHom.id.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (RingHomInvPair.ids.{0} Real Real.semiring) (RingHomInvPair.ids.{0} Real Real.semiring) Complex Complex (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Complex (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Complex (NormedRing.toNonUnitalNormedRing.{0} Complex (NormedCommRing.toNormedRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex))))) (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Complex (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Complex (NormedRing.toNonUnitalNormedRing.{0} Complex (NormedCommRing.toNormedRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex))))) (Complex.instModuleComplexToAddCommMonoidToNonUnitalNonAssocSemiringToNonUnitalNonAssocRingToNonAssocRingInstRingComplex.{0} Real Real.semiring (NormedSpace.toModule.{0, 0} Real Real Real.normedField (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Real (NormedRing.toNonUnitalNormedRing.{0} Real (NormedCommRing.toNormedRing.{0} Real Real.normedCommRing)))) (NormedField.toNormedSpace.{0} Real Real.normedField))) (Complex.instModuleComplexToAddCommMonoidToNonUnitalNonAssocSemiringToNonUnitalNonAssocRingToNonAssocRingInstRingComplex.{0} Real Real.semiring (NormedSpace.toModule.{0, 0} Real Real Real.normedField (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real (NonUnitalNormedRing.toNonUnitalSeminormedRing.{0} Real (NormedRing.toNonUnitalNormedRing.{0} Real (NormedCommRing.toNormedRing.{0} Real Real.normedCommRing)))) (NormedField.toNormedSpace.{0} Real Real.normedField)))) -> (Subtype.{1} Complex (fun (x : Complex) => Membership.mem.{0, 0} Complex (Submonoid.{0} Complex (MulZeroOneClass.toMulOneClass.{0} Complex (NonAssocSemiring.toMulZeroOneClass.{0} Complex (Semiring.toNonAssocSemiring.{0} Complex Complex.instSemiringComplex)))) (SetLike.instMembership.{0, 0} (Submonoid.{0} Complex (MulZeroOneClass.toMulOneClass.{0} Complex (NonAssocSemiring.toMulZeroOneClass.{0} Complex (Semiring.toNonAssocSemiring.{0} Complex Complex.instSemiringComplex)))) Complex (Submonoid.instSetLikeSubmonoid.{0} Complex (MulZeroOneClass.toMulOneClass.{0} Complex (NonAssocSemiring.toMulZeroOneClass.{0} Complex (Semiring.toNonAssocSemiring.{0} Complex Complex.instSemiringComplex))))) x circle))
-Case conversion may be inaccurate. Consider using '#align rotation_of rotationOfₓ'. -/
 /-- Takes an element of `ℂ ≃ₗᵢ[ℝ] ℂ` and checks if it is a rotation, returns an element of the
 unit circle. -/
 @[simps]
@@ -107,33 +86,21 @@ def rotationOf (e : ℂ ≃ₗᵢ[ℝ] ℂ) : circle :=
   ⟨e 1 / Complex.abs (e 1), by simp⟩
 #align rotation_of rotationOf
 
-/- warning: rotation_of_rotation -> rotationOf_rotation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation_of_rotation rotationOf_rotationₓ'. -/
 @[simp]
 theorem rotationOf_rotation (a : circle) : rotationOf (rotation a) = a :=
   Subtype.ext <| by simp
 #align rotation_of_rotation rotationOf_rotation
 
-/- warning: rotation_injective -> rotation_injective is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align rotation_injective rotation_injectiveₓ'. -/
 theorem rotation_injective : Function.Injective rotation :=
   Function.LeftInverse.injective rotationOf_rotation
 #align rotation_injective rotation_injective
 
-/- warning: linear_isometry.re_apply_eq_re_of_add_conj_eq -> LinearIsometry.re_apply_eq_re_of_add_conj_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry.re_apply_eq_re_of_add_conj_eq LinearIsometry.re_apply_eq_re_of_add_conj_eqₓ'. -/
 theorem LinearIsometry.re_apply_eq_re_of_add_conj_eq (f : ℂ →ₗᵢ[ℝ] ℂ)
     (h₃ : ∀ z, z + conj z = f z + conj (f z)) (z : ℂ) : (f z).re = z.re := by
   simpa [ext_iff, add_re, add_im, conj_re, conj_im, ← two_mul,
     show (2 : ℝ) ≠ 0 by simp [two_ne_zero]] using (h₃ z).symm
 #align linear_isometry.re_apply_eq_re_of_add_conj_eq LinearIsometry.re_apply_eq_re_of_add_conj_eq
 
-/- warning: linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re -> LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_reₓ'. -/
 theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ}
     (h₂ : ∀ z, (f z).re = z.re) (z : ℂ) : (f z).im = z.im ∨ (f z).im = -z.im :=
   by
@@ -143,9 +110,6 @@ theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗ�
     h₂, add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁
 #align linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re
 
-/- warning: linear_isometry.im_apply_eq_im -> LinearIsometry.im_apply_eq_im is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry.im_apply_eq_im LinearIsometry.im_apply_eq_imₓ'. -/
 theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) :
     z + conj z = f z + conj (f z) :=
   by
@@ -162,9 +126,6 @@ theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   rw [add_comm, ← this, add_comm]
 #align linear_isometry.im_apply_eq_im LinearIsometry.im_apply_eq_im
 
-/- warning: linear_isometry.re_apply_eq_re -> LinearIsometry.re_apply_eq_re is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry.re_apply_eq_re LinearIsometry.re_apply_eq_reₓ'. -/
 theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : (f z).re = z.re :=
   by
   apply LinearIsometry.re_apply_eq_re_of_add_conj_eq
@@ -172,9 +133,6 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   apply LinearIsometry.im_apply_eq_im h
 #align linear_isometry.re_apply_eq_re LinearIsometry.re_apply_eq_re
 
-/- warning: linear_isometry_complex_aux -> linear_isometry_complex_aux is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry_complex_aux linear_isometry_complex_auxₓ'. -/
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
     f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conjLie :=
   by
@@ -194,9 +152,6 @@ theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
       fin_cases i <;> simp [h, h']
 #align linear_isometry_complex_aux linear_isometry_complex_aux
 
-/- warning: linear_isometry_complex -> linear_isometry_complex is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_isometry_complex linear_isometry_complexₓ'. -/
 theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) :
     ∃ a : circle, f = rotation a ∨ f = conjLie.trans (rotation a) :=
   by
@@ -208,9 +163,6 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) :
   · exact eq_mul_of_inv_mul_eq h₂
 #align linear_isometry_complex linear_isometry_complex
 
-/- warning: to_matrix_rotation -> toMatrix_rotation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align to_matrix_rotation toMatrix_rotationₓ'. -/
 /-- The matrix representation of `rotation a` is equal to the conformal matrix
 `!![re a, -im a; im a, re a]`. -/
 theorem toMatrix_rotation (a : circle) :
@@ -222,9 +174,6 @@ theorem toMatrix_rotation (a : circle) :
   fin_cases i <;> fin_cases j <;> simp
 #align to_matrix_rotation toMatrix_rotation
 
-/- warning: det_rotation -> det_rotation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align det_rotation det_rotationₓ'. -/
 /-- The determinant of `rotation` (as a linear map) is equal to `1`. -/
 @[simp]
 theorem det_rotation (a : circle) : ((rotation a).toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = 1 :=
@@ -233,9 +182,6 @@ theorem det_rotation (a : circle) : ((rotation a).toLinearEquiv : ℂ →ₗ[ℝ
   simp [← norm_sq_apply]
 #align det_rotation det_rotation
 
-/- warning: linear_equiv_det_rotation -> linearEquiv_det_rotation is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_equiv_det_rotation linearEquiv_det_rotationₓ'. -/
 /-- The determinant of `rotation` (as a linear equiv) is equal to `1`. -/
 @[simp]
 theorem linearEquiv_det_rotation (a : circle) : (rotation a).toLinearEquiv.det = 1 := by

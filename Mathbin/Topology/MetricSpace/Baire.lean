@@ -320,12 +320,6 @@ theorem dense_biInter_of_Gδ {S : Set β} {f : ∀ x ∈ S, Set α} (ho : ∀ s 
 #align dense_bInter_of_Gδ dense_biInter_of_Gδ
 -/
 
-/- warning: dense.inter_of_Gδ -> Dense.inter_of_Gδ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : BaireSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (Dense.{u1} α _inst_1 s) -> (Dense.{u1} α _inst_1 t) -> (Dense.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : BaireSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (Dense.{u1} α _inst_1 s) -> (Dense.{u1} α _inst_1 t) -> (Dense.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
-Case conversion may be inaccurate. Consider using '#align dense.inter_of_Gδ Dense.inter_of_Gδₓ'. -/
 /-- Baire theorem: the intersection of two dense Gδ sets is dense. -/
 theorem Dense.inter_of_Gδ {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) (hsc : Dense s)
     (htc : Dense t) : Dense (s ∩ t) := by
@@ -404,12 +398,6 @@ theorem dense_iUnion_interior_of_closed [Encodable β] {f : β → Set α} (hc :
 #align dense_Union_interior_of_closed dense_iUnion_interior_of_closed
 -/
 
-/- warning: nonempty_interior_of_Union_of_closed -> nonempty_interior_of_iUnion_of_closed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : BaireSpace.{u1} α _inst_1] [_inst_3 : Nonempty.{succ u1} α] [_inst_4 : Encodable.{u2} β] {f : β -> (Set.{u1} α)}, (forall (s : β), IsClosed.{u1} α _inst_1 (f s)) -> (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α β (fun (s : β) => f s)) (Set.univ.{u1} α)) -> (Exists.{succ u2} β (fun (s : β) => Set.Nonempty.{u1} α (interior.{u1} α _inst_1 (f s))))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : BaireSpace.{u2} α _inst_1] [_inst_3 : Nonempty.{succ u2} α] [_inst_4 : Encodable.{u1} β] {f : β -> (Set.{u2} α)}, (forall (s : β), IsClosed.{u2} α _inst_1 (f s)) -> (Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α β (fun (s : β) => f s)) (Set.univ.{u2} α)) -> (Exists.{succ u1} β (fun (s : β) => Set.Nonempty.{u2} α (interior.{u2} α _inst_1 (f s))))
-Case conversion may be inaccurate. Consider using '#align nonempty_interior_of_Union_of_closed nonempty_interior_of_iUnion_of_closedₓ'. -/
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/
 theorem nonempty_interior_of_iUnion_of_closed [Nonempty α] [Encodable β] {f : β → Set α}

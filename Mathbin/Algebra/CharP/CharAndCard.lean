@@ -24,12 +24,6 @@ characterstic, cardinality, ring
 -/
 
 
-/- warning: is_unit_iff_not_dvd_char_of_ring_char_ne_zero -> isUnit_iff_not_dvd_char_of_ringChar_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] (p : Nat) [_inst_2 : Fact (Nat.Prime p)], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Iff (IsUnit.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))) p)) (Not (Dvd.Dvd.{0} Nat Nat.hasDvd p (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] (p : Nat) [_inst_2 : Fact (Nat.Prime p)], (Ne.{1} Nat (ringChar.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Iff (IsUnit.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) p)) (Not (Dvd.dvd.{0} Nat Nat.instDvdNat p (ringChar.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align is_unit_iff_not_dvd_char_of_ring_char_ne_zero isUnit_iff_not_dvd_char_of_ringChar_ne_zeroₓ'. -/
 /-- A prime `p` is a unit in a commutative ring `R` of nonzero characterstic iff it does not divide
 the characteristic. -/
 theorem isUnit_iff_not_dvd_char_of_ringChar_ne_zero (R : Type _) [CommRing R] (p : ℕ) [Fact p.Prime]
@@ -59,12 +53,6 @@ theorem isUnit_iff_not_dvd_char_of_ringChar_ne_zero (R : Type _) [CommRing R] (p
     exact isUnit_of_mul_eq_one (p : R) a hab
 #align is_unit_iff_not_dvd_char_of_ring_char_ne_zero isUnit_iff_not_dvd_char_of_ringChar_ne_zero
 
-/- warning: is_unit_iff_not_dvd_char -> isUnit_iff_not_dvd_char is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : Finite.{succ u1} R], Iff (IsUnit.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))) p)) (Not (Dvd.Dvd.{0} Nat Nat.hasDvd p (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : Finite.{succ u1} R], Iff (IsUnit.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) p)) (Not (Dvd.dvd.{0} Nat Nat.instDvdNat p (ringChar.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align is_unit_iff_not_dvd_char isUnit_iff_not_dvd_charₓ'. -/
 /-- A prime `p` is a unit in a finite commutative ring `R`
 iff it does not divide the characteristic. -/
 theorem isUnit_iff_not_dvd_char (R : Type _) [CommRing R] (p : ℕ) [Fact p.Prime] [Finite R] :
@@ -98,12 +86,6 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : �
 #align prime_dvd_char_iff_dvd_card prime_dvd_char_iff_dvd_card
 -/
 
-/- warning: not_is_unit_prime_of_dvd_card -> not_isUnit_prime_of_dvd_card is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Fintype.{u1} R] (p : Nat) [_inst_3 : Fact (Nat.Prime p)], (Dvd.Dvd.{0} Nat Nat.hasDvd p (Fintype.card.{u1} R _inst_2)) -> (Not (IsUnit.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))) p)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Fintype.{u1} R] (p : Nat) [_inst_3 : Fact (Nat.Prime p)], (Dvd.dvd.{0} Nat Nat.instDvdNat p (Fintype.card.{u1} R _inst_2)) -> (Not (IsUnit.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) p)))
-Case conversion may be inaccurate. Consider using '#align not_is_unit_prime_of_dvd_card not_isUnit_prime_of_dvd_cardₓ'. -/
 /-- A prime that does not divide the cardinality of a finite commutative ring `R`
 is a unit in `R`. -/
 theorem not_isUnit_prime_of_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : ℕ) [Fact p.Prime]

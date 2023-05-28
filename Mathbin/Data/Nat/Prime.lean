@@ -344,12 +344,6 @@ theorem minFac_one : minFac 1 = 1 :=
 #align nat.min_fac_one Nat.minFac_one
 -/
 
-/- warning: nat.min_fac_eq -> Nat.minFac_eq is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Nat.minFac n) (ite.{1} Nat (Dvd.Dvd.{0} Nat Nat.hasDvd (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n) (Nat.decidableDvd (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Nat.minFacAux n (OfNat.ofNat.{0} Nat 3 (OfNat.mk.{0} Nat 3 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Nat.minFac n) (ite.{1} Nat (Dvd.dvd.{0} Nat Nat.instDvdNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n) (Nat.decidable_dvd (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Nat.minFacAux n (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))))
-Case conversion may be inaccurate. Consider using '#align nat.min_fac_eq Nat.minFac_eqₓ'. -/
 theorem minFac_eq : ∀ n, minFac n = if 2 ∣ n then 2 else minFacAux n 3
   | 0 => by simp
   | 1 => by simp [show 2 ≠ 1 by decide] <;> rw [min_fac_aux] <;> rfl
@@ -874,12 +868,6 @@ theorem eq_or_coprime_of_le_prime {n p} (n_pos : 0 < n) (hle : n ≤ p) (pp : Pr
 #align nat.eq_or_coprime_of_le_prime Nat.eq_or_coprime_of_le_prime
 -/
 
-/- warning: nat.dvd_prime_pow -> Nat.dvd_prime_pow is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat}, (Nat.Prime p) -> (forall {m : Nat} {i : Nat}, Iff (Dvd.Dvd.{0} Nat Nat.hasDvd i (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p m)) (Exists.{1} Nat (fun (k : Nat) => Exists.{0} (LE.le.{0} Nat Nat.hasLe k m) (fun (H : LE.le.{0} Nat Nat.hasLe k m) => Eq.{1} Nat i (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p k)))))
-but is expected to have type
-  forall {p : Nat}, (Nat.Prime p) -> (forall {m : Nat} {i : Nat}, Iff (Dvd.dvd.{0} Nat Nat.instDvdNat i (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p m)) (Exists.{1} Nat (fun (k : Nat) => And (LE.le.{0} Nat instLENat k m) (Eq.{1} Nat i (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p k)))))
-Case conversion may be inaccurate. Consider using '#align nat.dvd_prime_pow Nat.dvd_prime_powₓ'. -/
 theorem dvd_prime_pow {p : ℕ} (pp : Prime p) {m i : ℕ} : i ∣ p ^ m ↔ ∃ k ≤ m, i = p ^ k := by
   simp_rw [dvd_prime_pow (prime_iff.mp pp) m, associated_eq_eq]
 #align nat.dvd_prime_pow Nat.dvd_prime_pow
@@ -938,12 +926,6 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
 #align nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul Nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul
 -/
 
-/- warning: nat.prime_iff_prime_int -> Nat.prime_iff_prime_int is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat}, Iff (Nat.Prime p) (Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.commSemiring) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p))
-but is expected to have type
-  forall {p : Nat}, Iff (Nat.Prime p) (Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.instCommSemiringInt) (Nat.cast.{0} Int instNatCastInt p))
-Case conversion may be inaccurate. Consider using '#align nat.prime_iff_prime_int Nat.prime_iff_prime_intₓ'. -/
 theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
   ⟨fun hp =>
     ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.isUnit_iff_natAbs_eq.1 hp.ne_one, fun a b h => by
@@ -1020,22 +1002,10 @@ end Nat
 
 namespace Int
 
-/- warning: int.prime_two -> Int.prime_two is a dubious translation:
-lean 3 declaration is
-  Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.commSemiring) (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))
-but is expected to have type
-  Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.instCommSemiringInt) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))
-Case conversion may be inaccurate. Consider using '#align int.prime_two Int.prime_twoₓ'. -/
 theorem prime_two : Prime (2 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_two
 #align int.prime_two Int.prime_two
 
-/- warning: int.prime_three -> Int.prime_three is a dubious translation:
-lean 3 declaration is
-  Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.commSemiring) (OfNat.ofNat.{0} Int 3 (OfNat.mk.{0} Int 3 (bit1.{0} Int Int.hasOne Int.hasAdd (One.one.{0} Int Int.hasOne))))
-but is expected to have type
-  Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.instCommSemiringInt) (OfNat.ofNat.{0} Int 3 (instOfNatInt 3))
-Case conversion may be inaccurate. Consider using '#align int.prime_three Int.prime_threeₓ'. -/
 theorem prime_three : Prime (3 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_three
 #align int.prime_three Int.prime_three

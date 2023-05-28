@@ -90,12 +90,6 @@ theorem decode_list_zero : decode (List α) 0 = some [] :=
 #align encodable.decode_list_zero Encodable.decode_list_zero
 -/
 
-/- warning: encodable.decode_list_succ -> Encodable.decode_list_succ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Encodable.{u1} α] (v : Nat), Eq.{succ u1} (Option.{u1} (List.{u1} α)) (Encodable.decode.{u1} (List.{u1} α) (List.encodable.{u1} α _inst_1) (Nat.succ v)) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toHasSeq.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) (List.{u1} α) (List.{u1} α) (Functor.map.{u1, u1} Option.{u1} (Traversable.toFunctor.{u1} Option.{u1} Option.traversable.{u1}) α ((List.{u1} α) -> (List.{u1} α)) (fun (_x : α) (_y : List.{u1} α) => List.cons.{u1} α _x _y) (Encodable.decode.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair v)))) (Encodable.decode.{u1} (List.{u1} α) (List.encodable.{u1} α _inst_1) (Prod.snd.{0, 0} Nat Nat (Nat.unpair v))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Encodable.{u1} α] (v : Nat), Eq.{succ u1} (Option.{u1} (List.{u1} α)) (Encodable.decode.{u1} (List.{u1} α) (List.encodable.{u1} α _inst_1) (Nat.succ v)) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) (List.{u1} α) (List.{u1} α) (Functor.map.{u1, u1} Option.{u1} instFunctorOption.{u1} α ((List.{u1} α) -> (List.{u1} α)) (fun (_x : α) (_y : List.{u1} α) => List.cons.{u1} α _x _y) (Encodable.decode.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair v)))) (fun (x._@.Mathlib.Logic.Equiv.List._hyg.562 : Unit) => Encodable.decode.{u1} (List.{u1} α) (List.encodable.{u1} α _inst_1) (Prod.snd.{0, 0} Nat Nat (Nat.unpair v))))
-Case conversion may be inaccurate. Consider using '#align encodable.decode_list_succ Encodable.decode_list_succₓ'. -/
 @[simp]
 theorem decode_list_succ (v : ℕ) :
     decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
@@ -314,12 +308,6 @@ open Encodable
 
 section List
 
-/- warning: denumerable.denumerable_list_aux -> Denumerable.denumerable_list_aux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Denumerable.{u1} α] (n : Nat), Exists.{succ u1} (List.{u1} α) (fun (a : List.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (List.{u1} α) (Option.{u1} (List.{u1} α)) (Option.hasMem.{u1} (List.{u1} α)) a (Encodable.decodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) n)) (fun (H : Membership.Mem.{u1, u1} (List.{u1} α) (Option.{u1} (List.{u1} α)) (Option.hasMem.{u1} (List.{u1} α)) a (Encodable.decodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) n)) => Eq.{1} Nat (Encodable.encodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) a) n))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Denumerable.{u1} α] (n : Nat), Exists.{succ u1} (List.{u1} α) (fun (a : List.{u1} α) => And (Membership.mem.{u1, u1} (List.{u1} α) (Option.{u1} (List.{u1} α)) (Option.instMembershipOption.{u1} (List.{u1} α)) a (Encodable.decodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) n)) (Eq.{1} Nat (Encodable.encodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) a) n))
-Case conversion may be inaccurate. Consider using '#align denumerable.denumerable_list_aux Denumerable.denumerable_list_auxₓ'. -/
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
   | 0 => by rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
   | succ v => by

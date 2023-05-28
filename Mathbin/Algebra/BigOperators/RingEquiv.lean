@@ -25,58 +25,37 @@ open BigOperators
 
 variable {α R S : Type _}
 
-/- warning: ring_equiv.map_list_prod -> RingEquiv.map_list_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.map_list_prod RingEquiv.map_list_prodₓ'. -/
 protected theorem map_list_prod [Semiring R] [Semiring S] (f : R ≃+* S) (l : List R) :
     f l.Prod = (l.map f).Prod :=
   map_list_prod f l
 #align ring_equiv.map_list_prod RingEquiv.map_list_prod
 
-/- warning: ring_equiv.map_list_sum -> RingEquiv.map_list_sum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.map_list_sum RingEquiv.map_list_sumₓ'. -/
 protected theorem map_list_sum [NonAssocSemiring R] [NonAssocSemiring S] (f : R ≃+* S)
     (l : List R) : f l.Sum = (l.map f).Sum :=
   map_list_sum f l
 #align ring_equiv.map_list_sum RingEquiv.map_list_sum
 
-/- warning: ring_equiv.unop_map_list_prod -> RingEquiv.unop_map_list_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.unop_map_list_prod RingEquiv.unop_map_list_prodₓ'. -/
 /-- An isomorphism into the opposite ring acts on the product by acting on the reversed elements -/
 protected theorem unop_map_list_prod [Semiring R] [Semiring S] (f : R ≃+* Sᵐᵒᵖ) (l : List R) :
     MulOpposite.unop (f l.Prod) = (l.map (MulOpposite.unop ∘ f)).reverse.Prod :=
   unop_map_list_prod f l
 #align ring_equiv.unop_map_list_prod RingEquiv.unop_map_list_prod
 
-/- warning: ring_equiv.map_multiset_prod -> RingEquiv.map_multiset_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.map_multiset_prod RingEquiv.map_multiset_prodₓ'. -/
 protected theorem map_multiset_prod [CommSemiring R] [CommSemiring S] (f : R ≃+* S)
     (s : Multiset R) : f s.Prod = (s.map f).Prod :=
   map_multiset_prod f s
 #align ring_equiv.map_multiset_prod RingEquiv.map_multiset_prod
 
-/- warning: ring_equiv.map_multiset_sum -> RingEquiv.map_multiset_sum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.map_multiset_sum RingEquiv.map_multiset_sumₓ'. -/
 protected theorem map_multiset_sum [NonAssocSemiring R] [NonAssocSemiring S] (f : R ≃+* S)
     (s : Multiset R) : f s.Sum = (s.map f).Sum :=
   map_multiset_sum f s
 #align ring_equiv.map_multiset_sum RingEquiv.map_multiset_sum
 
-/- warning: ring_equiv.map_prod -> RingEquiv.map_prod is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.map_prod RingEquiv.map_prodₓ'. -/
 protected theorem map_prod [CommSemiring R] [CommSemiring S] (g : R ≃+* S) (f : α → R)
     (s : Finset α) : g (∏ x in s, f x) = ∏ x in s, g (f x) :=
   map_prod g f s
 #align ring_equiv.map_prod RingEquiv.map_prod
 
-/- warning: ring_equiv.map_sum -> RingEquiv.map_sum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align ring_equiv.map_sum RingEquiv.map_sumₓ'. -/
 protected theorem map_sum [NonAssocSemiring R] [NonAssocSemiring S] (g : R ≃+* S) (f : α → R)
     (s : Finset α) : g (∑ x in s, f x) = ∑ x in s, g (f x) :=
   map_sum g f s

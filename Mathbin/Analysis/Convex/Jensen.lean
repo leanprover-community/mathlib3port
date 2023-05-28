@@ -48,9 +48,6 @@ section Jensen
 variable [LinearOrderedField 𝕜] [AddCommGroup E] [OrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
   [OrderedSMul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
-/- warning: convex_on.map_center_mass_le -> ConvexOn.map_centerMass_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_on.map_center_mass_le ConvexOn.map_centerMass_leₓ'. -/
 /-- Convex **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConvexOn.map_centerMass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
     (h₁ : 0 < ∑ i in t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
@@ -62,9 +59,6 @@ theorem ConvexOn.map_centerMass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t,
     simp only [center_mass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
 #align convex_on.map_center_mass_le ConvexOn.map_centerMass_le
 
-/- warning: concave_on.le_map_center_mass -> ConcaveOn.le_map_centerMass is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align concave_on.le_map_center_mass ConcaveOn.le_map_centerMassₓ'. -/
 /-- Concave **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConcaveOn.le_map_centerMass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
     (h₁ : 0 < ∑ i in t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
@@ -72,9 +66,6 @@ theorem ConcaveOn.le_map_centerMass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ 
   @ConvexOn.map_centerMass_le 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
 #align concave_on.le_map_center_mass ConcaveOn.le_map_centerMass
 
-/- warning: convex_on.map_sum_le -> ConvexOn.map_sum_le is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_on.map_sum_le ConvexOn.map_sum_leₓ'. -/
 /-- Convex **Jensen's inequality**, `finset.sum` version. -/
 theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
     (hmem : ∀ i ∈ t, p i ∈ s) : f (∑ i in t, w i • p i) ≤ ∑ i in t, w i • f (p i) := by
@@ -82,9 +73,6 @@ theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ 
     hf.map_center_mass_le h₀ (h₁.symm ▸ zero_lt_one) hmem
 #align convex_on.map_sum_le ConvexOn.map_sum_le
 
-/- warning: concave_on.le_map_sum -> ConcaveOn.le_map_sum is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align concave_on.le_map_sum ConcaveOn.le_map_sumₓ'. -/
 /-- Concave **Jensen's inequality**, `finset.sum` version. -/
 theorem ConcaveOn.le_map_sum (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
     (h₁ : (∑ i in t, w i) = 1) (hmem : ∀ i ∈ t, p i ∈ s) :
@@ -103,9 +91,6 @@ variable [LinearOrderedField 𝕜] [AddCommGroup E] [LinearOrderedAddCommGroup �
   [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
   {x : E}
 
-/- warning: le_sup_of_mem_convex_hull -> le_sup_of_mem_convexHull is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align le_sup_of_mem_convex_hull le_sup_of_mem_convexHullₓ'. -/
 theorem le_sup_of_mem_convexHull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
     (hx : x ∈ convexHull 𝕜 (s : Set E)) :
     f x ≤ s.sup' (coe_nonempty.1 <| convexHull_nonempty_iff.1 ⟨x, hx⟩) f :=
@@ -116,18 +101,12 @@ theorem le_sup_of_mem_convexHull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull 
       (center_mass_le_sup hw₀ <| by positivity)
 #align le_sup_of_mem_convex_hull le_sup_of_mem_convexHull
 
-/- warning: inf_le_of_mem_convex_hull -> inf_le_of_mem_convexHull is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align inf_le_of_mem_convex_hull inf_le_of_mem_convexHullₓ'. -/
 theorem inf_le_of_mem_convexHull {s : Finset E} (hf : ConcaveOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
     (hx : x ∈ convexHull 𝕜 (s : Set E)) :
     s.inf' (coe_nonempty.1 <| convexHull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x :=
   le_sup_of_mem_convexHull hf.dual hx
 #align inf_le_of_mem_convex_hull inf_le_of_mem_convexHull
 
-/- warning: convex_on.exists_ge_of_center_mass -> ConvexOn.exists_ge_of_centerMass is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_on.exists_ge_of_center_mass ConvexOn.exists_ge_of_centerMassₓ'. -/
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of
 `s` is less than the value it takes on one of those points. -/
 theorem ConvexOn.exists_ge_of_centerMass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i)
@@ -145,9 +124,6 @@ theorem ConvexOn.exists_ge_of_centerMass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i 
   infer_instance
 #align convex_on.exists_ge_of_center_mass ConvexOn.exists_ge_of_centerMass
 
-/- warning: concave_on.exists_le_of_center_mass -> ConcaveOn.exists_le_of_centerMass is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align concave_on.exists_le_of_center_mass ConcaveOn.exists_le_of_centerMassₓ'. -/
 /-- If a function `f` is concave on `s`, then the value it takes at some center of mass of points of
 `s` is greater than the value it takes on one of those points. -/
 theorem ConcaveOn.exists_le_of_centerMass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i)
@@ -155,9 +131,6 @@ theorem ConcaveOn.exists_le_of_centerMass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀ 
   @ConvexOn.exists_ge_of_centerMass 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ h hw₀ hw₁ hp
 #align concave_on.exists_le_of_center_mass ConcaveOn.exists_le_of_centerMass
 
-/- warning: convex_on.exists_ge_of_mem_convex_hull -> ConvexOn.exists_ge_of_mem_convexHull is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align convex_on.exists_ge_of_mem_convex_hull ConvexOn.exists_ge_of_mem_convexHullₓ'. -/
 /-- Maximum principle for convex functions. If a function `f` is convex on the convex hull of `s`,
 then the eventual maximum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
 theorem ConvexOn.exists_ge_of_mem_convexHull (hf : ConvexOn 𝕜 (convexHull 𝕜 s) f) {x}
@@ -171,9 +144,6 @@ theorem ConvexOn.exists_ge_of_mem_convexHull (hf : ConvexOn 𝕜 (convexHull �
   exact ⟨p i, hp i hit, Hi⟩
 #align convex_on.exists_ge_of_mem_convex_hull ConvexOn.exists_ge_of_mem_convexHull
 
-/- warning: concave_on.exists_le_of_mem_convex_hull -> ConcaveOn.exists_le_of_mem_convexHull is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align concave_on.exists_le_of_mem_convex_hull ConcaveOn.exists_le_of_mem_convexHullₓ'. -/
 /-- Minimum principle for concave functions. If a function `f` is concave on the convex hull of `s`,
 then the eventual minimum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
 theorem ConcaveOn.exists_le_of_mem_convexHull (hf : ConcaveOn 𝕜 (convexHull 𝕜 s) f) {x}

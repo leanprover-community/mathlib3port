@@ -128,42 +128,18 @@ theorem nullMeasurableSet_univ : NullMeasurableSet univ μ :=
 
 namespace NullMeasurableSet
 
-/- warning: measure_theory.null_measurable_set.of_null -> MeasureTheory.NullMeasurableSet.of_null is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.of_null MeasureTheory.NullMeasurableSet.of_nullₓ'. -/
 theorem of_null (h : μ s = 0) : NullMeasurableSet s μ :=
   ⟨∅, MeasurableSet.empty, ae_eq_empty.2 h⟩
 #align measure_theory.null_measurable_set.of_null MeasureTheory.NullMeasurableSet.of_null
 
-/- warning: measure_theory.null_measurable_set.compl -> MeasureTheory.NullMeasurableSet.compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.compl MeasureTheory.NullMeasurableSet.complₓ'. -/
 theorem compl (h : NullMeasurableSet s μ) : NullMeasurableSet (sᶜ) μ :=
   h.compl
 #align measure_theory.null_measurable_set.compl MeasureTheory.NullMeasurableSet.compl
 
-/- warning: measure_theory.null_measurable_set.of_compl -> MeasureTheory.NullMeasurableSet.of_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.of_compl MeasureTheory.NullMeasurableSet.of_complₓ'. -/
 theorem of_compl (h : NullMeasurableSet (sᶜ) μ) : NullMeasurableSet s μ :=
   h.ofCompl
 #align measure_theory.null_measurable_set.of_compl MeasureTheory.NullMeasurableSet.of_compl
 
-/- warning: measure_theory.null_measurable_set.compl_iff -> MeasureTheory.NullMeasurableSet.compl_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, Iff (MeasureTheory.NullMeasurableSet.{u1} α m0 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) μ) (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, Iff (MeasureTheory.NullMeasurableSet.{u1} α m0 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) μ) (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.compl_iff MeasureTheory.NullMeasurableSet.compl_iffₓ'. -/
 @[simp]
 theorem compl_iff : NullMeasurableSet (sᶜ) μ ↔ NullMeasurableSet s μ :=
   MeasurableSet.compl_iff
@@ -190,12 +166,6 @@ protected theorem iUnion {ι : Sort _} [Countable ι] {s : ι → Set α}
 #align measure_theory.null_measurable_set.Union MeasureTheory.NullMeasurableSet.iUnion
 -/
 
-/- warning: measure_theory.null_measurable_set.bUnion_decode₂ -> MeasureTheory.NullMeasurableSet.biUnion_decode₂ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_1 : Encodable.{u1} ι] {{f : ι -> (Set.{u2} α)}}, (forall (i : ι), MeasureTheory.NullMeasurableSet.{u2} α m0 (f i) μ) -> (forall (n : Nat), MeasureTheory.NullMeasurableSet.{u2} α m0 (Set.iUnion.{u2, succ u1} α ι (fun (b : ι) => Set.iUnion.{u2, 0} α (Membership.Mem.{u1, u1} ι (Option.{u1} ι) (Option.hasMem.{u1} ι) b (Encodable.decode₂.{u1} ι _inst_1 n)) (fun (H : Membership.Mem.{u1, u1} ι (Option.{u1} ι) (Option.hasMem.{u1} ι) b (Encodable.decode₂.{u1} ι _inst_1 n)) => f b))) μ)
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} [_inst_1 : Encodable.{u2} ι] {{f : ι -> (Set.{u1} α)}}, (forall (i : ι), MeasureTheory.NullMeasurableSet.{u1} α m0 (f i) μ) -> (forall (n : Nat), MeasureTheory.NullMeasurableSet.{u1} α m0 (Set.iUnion.{u1, succ u2} α ι (fun (b : ι) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} ι (Option.{u2} ι) (Option.instMembershipOption.{u2} ι) b (Encodable.decode₂.{u2} ι _inst_1 n)) (fun (H : Membership.mem.{u2, u2} ι (Option.{u2} ι) (Option.instMembershipOption.{u2} ι) b (Encodable.decode₂.{u2} ι _inst_1 n)) => f b))) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.biUnion_decode₂ₓ'. -/
 protected theorem biUnion_decode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, NullMeasurableSet (f i) μ)
     (n : ℕ) : NullMeasurableSet (⋃ b ∈ Encodable.decode₂ ι n, f b) μ :=
   MeasurableSet.biUnion_decode₂ h n
@@ -221,12 +191,6 @@ protected theorem iInter {ι : Sort _} [Countable ι] {f : ι → Set α}
 #align measure_theory.null_measurable_set.Inter MeasureTheory.NullMeasurableSet.iInter
 -/
 
-/- warning: measure_theory.null_measurable_set.bInter -> MeasureTheory.NullMeasurableSet.biInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Countable.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (f b) μ)) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Set.iInter.{u1, succ u2} α β (fun (b : β) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))) μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Countable.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasureTheory.NullMeasurableSet.{u2} α m0 (f b) μ)) -> (MeasureTheory.NullMeasurableSet.{u2} α m0 (Set.iInter.{u2, succ u1} α β (fun (b : β) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.bInter MeasureTheory.NullMeasurableSet.biInterₓ'. -/
 protected theorem biInter {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   MeasurableSet.biInter hs h
@@ -239,59 +203,29 @@ protected theorem sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s,
 #align measure_theory.null_measurable_set.sInter MeasureTheory.NullMeasurableSet.sInter
 -/
 
-/- warning: measure_theory.null_measurable_set.union -> MeasureTheory.NullMeasurableSet.union is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.union MeasureTheory.NullMeasurableSet.unionₓ'. -/
 @[simp]
 protected theorem union (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) :
     NullMeasurableSet (s ∪ t) μ :=
   hs.union ht
 #align measure_theory.null_measurable_set.union MeasureTheory.NullMeasurableSet.union
 
-/- warning: measure_theory.null_measurable_set.union_null -> MeasureTheory.NullMeasurableSet.union_null is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ t) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) t) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.union_null MeasureTheory.NullMeasurableSet.union_nullₓ'. -/
 protected theorem union_null (hs : NullMeasurableSet s μ) (ht : μ t = 0) :
     NullMeasurableSet (s ∪ t) μ :=
   hs.union (of_null ht)
 #align measure_theory.null_measurable_set.union_null MeasureTheory.NullMeasurableSet.union_null
 
-/- warning: measure_theory.null_measurable_set.inter -> MeasureTheory.NullMeasurableSet.inter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.inter MeasureTheory.NullMeasurableSet.interₓ'. -/
 @[simp]
 protected theorem inter (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) :
     NullMeasurableSet (s ∩ t) μ :=
   hs.inter ht
 #align measure_theory.null_measurable_set.inter MeasureTheory.NullMeasurableSet.inter
 
-/- warning: measure_theory.null_measurable_set.diff -> MeasureTheory.NullMeasurableSet.diff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.diff MeasureTheory.NullMeasurableSet.diffₓ'. -/
 @[simp]
 protected theorem diff (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) :
     NullMeasurableSet (s \ t) μ :=
   hs.diffₓ ht
 #align measure_theory.null_measurable_set.diff MeasureTheory.NullMeasurableSet.diff
 
-/- warning: measure_theory.null_measurable_set.disjointed -> MeasureTheory.NullMeasurableSet.disjointed is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : Nat -> (Set.{u1} α)}, (forall (i : Nat), MeasureTheory.NullMeasurableSet.{u1} α m0 (f i) μ) -> (forall (n : Nat), MeasureTheory.NullMeasurableSet.{u1} α m0 (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) f n) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {f : Nat -> (Set.{u1} α)}, (forall (i : Nat), MeasureTheory.NullMeasurableSet.{u1} α m0 (f i) μ) -> (forall (n : Nat), MeasureTheory.NullMeasurableSet.{u1} α m0 (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) f n) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.disjointed MeasureTheory.NullMeasurableSet.disjointedₓ'. -/
 @[simp]
 protected theorem disjointed {f : ℕ → Set α} (h : ∀ i, NullMeasurableSet (f i) μ) (n) :
     NullMeasurableSet (disjointed f n) μ :=
@@ -336,12 +270,6 @@ theorem toMeasurable_ae_eq (h : NullMeasurableSet s μ) : toMeasurable μ s =ᵐ
 #align measure_theory.null_measurable_set.to_measurable_ae_eq MeasureTheory.NullMeasurableSet.toMeasurable_ae_eq
 -/
 
-/- warning: measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq -> MeasureTheory.NullMeasurableSet.compl_toMeasurable_compl_ae_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α m0 μ) (HasCompl.compl.{u1} (α -> Prop) (Pi.hasCompl.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.hasCompl)) (MeasureTheory.toMeasurable.{u1} α m0 μ (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) s)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α m0 μ) (HasCompl.compl.{u1} (α -> Prop) (Pi.hasCompl.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.hasCompl)) (MeasureTheory.toMeasurable.{u1} α m0 μ (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) s)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_toMeasurable_compl_ae_eqₓ'. -/
 theorem compl_toMeasurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s :=
   by simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 #align measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_toMeasurable_compl_ae_eq
@@ -357,12 +285,6 @@ theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
 
 end NullMeasurableSet
 
-/- warning: measure_theory.exists_subordinate_pairwise_disjoint -> MeasureTheory.exists_subordinate_pairwise_disjoint is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_1 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), MeasureTheory.NullMeasurableSet.{u2} α m0 (s i) μ) -> (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Set.{u2} α) Prop (MeasureTheory.AEDisjoint.{u2} α m0 μ) s)) -> (Exists.{max (succ u1) (succ u2)} (ι -> (Set.{u2} α)) (fun (t : ι -> (Set.{u2} α)) => And (forall (i : ι), HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (t i) (s i)) (And (forall (i : ι), Filter.EventuallyEq.{u2, 0} α Prop (MeasureTheory.Measure.ae.{u2} α m0 μ) (s i) (t i)) (And (forall (i : ι), MeasurableSet.{u2} α m0 (t i)) (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Set.{u2} α) Prop (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.completeBooleanAlgebra.{u2} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} α) (Set.booleanAlgebra.{u2} α)))) t))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} [_inst_1 : Countable.{succ u2} ι] {s : ι -> (Set.{u1} α)}, (forall (i : ι), MeasureTheory.NullMeasurableSet.{u1} α m0 (s i) μ) -> (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (MeasureTheory.AEDisjoint.{u1} α m0 μ) s)) -> (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u1} α)) (fun (t : ι -> (Set.{u1} α)) => And (forall (i : ι), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (t i) (s i)) (And (forall (i : ι), Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α m0 μ) (s i) (t i)) (And (forall (i : ι), MeasurableSet.{u1} α m0 (t i)) (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) t))))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.exists_subordinate_pairwise_disjoint MeasureTheory.exists_subordinate_pairwise_disjointₓ'. -/
 /-- If `sᵢ` is a countable family of (null) measurable pairwise `μ`-a.e. disjoint sets, then there
 exists a subordinate family `tᵢ ⊆ sᵢ` of measurable pairwise disjoint sets such that
 `tᵢ =ᵐ[μ] sᵢ`. -/
@@ -381,12 +303,6 @@ theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α}
         h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
 #align measure_theory.exists_subordinate_pairwise_disjoint MeasureTheory.exists_subordinate_pairwise_disjoint
 
-/- warning: measure_theory.measure_Union -> MeasureTheory.measure_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_1 : Countable.{succ u1} ι] {f : ι -> (Set.{u2} α)}, (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Set.{u2} α) Prop (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.completeBooleanAlgebra.{u2} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} α) (Set.booleanAlgebra.{u2} α)))) f)) -> (forall (i : ι), MeasurableSet.{u2} α m0 (f i)) -> (Eq.{1} ENNReal (coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} α m0) (fun (_x : MeasureTheory.Measure.{u2} α m0) => (Set.{u2} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} α m0) μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => f i))) (tsum.{0, u1} ENNReal (OrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))) ENNReal.topologicalSpace ι (fun (i : ι) => coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} α m0) (fun (_x : MeasureTheory.Measure.{u2} α m0) => (Set.{u2} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} α m0) μ (f i))))
-but is expected to have type
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_1 : Countable.{succ u1} ι] {f : ι -> (Set.{u2} α)}, (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Set.{u2} α) Prop (Disjoint.{u2} (Set.{u2} α) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) f)) -> (forall (i : ι), MeasurableSet.{u2} α m0 (f i)) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m0 μ) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => f i))) (tsum.{0, u1} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal ι (fun (i : ι) => MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m0 μ) (f i))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_Union MeasureTheory.measure_iUnionₓ'. -/
 theorem measure_iUnion {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι] {f : ι → Set α}
     (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) :=
   by
@@ -397,12 +313,6 @@ theorem measure_iUnion {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι
   · exact μ.m_Union
 #align measure_theory.measure_Union MeasureTheory.measure_iUnion
 
-/- warning: measure_theory.measure_Union₀ -> MeasureTheory.measure_iUnion₀ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_1 : Countable.{succ u1} ι] {f : ι -> (Set.{u2} α)}, (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι (Set.{u2} α) Prop (MeasureTheory.AEDisjoint.{u2} α m0 μ) f)) -> (forall (i : ι), MeasureTheory.NullMeasurableSet.{u2} α m0 (f i) μ) -> (Eq.{1} ENNReal (coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} α m0) (fun (_x : MeasureTheory.Measure.{u2} α m0) => (Set.{u2} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} α m0) μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => f i))) (tsum.{0, u1} ENNReal (OrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))) ENNReal.topologicalSpace ι (fun (i : ι) => coeFn.{succ u2, succ u2} (MeasureTheory.Measure.{u2} α m0) (fun (_x : MeasureTheory.Measure.{u2} α m0) => (Set.{u2} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u2} α m0) μ (f i))))
-but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} [_inst_1 : Countable.{succ u2} ι] {f : ι -> (Set.{u1} α)}, (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (MeasureTheory.AEDisjoint.{u1} α m0 μ) f)) -> (forall (i : ι), MeasureTheory.NullMeasurableSet.{u1} α m0 (f i) μ) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => f i))) (tsum.{0, u2} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal ι (fun (i : ι) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (f i))))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_Union₀ MeasureTheory.measure_iUnion₀ₓ'. -/
 theorem measure_iUnion₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AEDisjoint μ on f))
     (h : ∀ i, NullMeasurableSet (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) :=
   by
@@ -414,12 +324,6 @@ theorem measure_iUnion₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AED
     
 #align measure_theory.measure_Union₀ MeasureTheory.measure_iUnion₀
 
-/- warning: measure_theory.measure_union₀_aux -> MeasureTheory.measure_union₀_aux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.AEDisjoint.{u1} α m0 μ s t) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ t)))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.AEDisjoint.{u1} α m0 μ s t) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) t)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_union₀_aux MeasureTheory.measure_union₀_auxₓ'. -/
 theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ)
     (hd : AEDisjoint μ s t) : μ (s ∪ t) = μ s + μ t :=
   by
@@ -427,12 +331,6 @@ theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableS
   exacts[(pairwise_on_bool ae_disjoint.symmetric).2 hd, fun b => Bool.casesOn b ht hs]
 #align measure_theory.measure_union₀_aux MeasureTheory.measure_union₀_aux
 
-/- warning: measure_theory.measure_inter_add_diff₀ -> MeasureTheory.measure_inter_add_diff₀ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {t : Set.{u1} α} (s : Set.{u1} α), (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {t : Set.{u1} α} (s : Set.{u1} α), (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_inter_add_diff₀ MeasureTheory.measure_inter_add_diff₀ₓ'. -/
 /-- A null measurable set `t` is Carathéodory measurable: for any `s`, we have
 `μ (s ∩ t) + μ (s \ t) = μ s`. -/
 theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
@@ -457,55 +355,25 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
       
 #align measure_theory.measure_inter_add_diff₀ MeasureTheory.measure_inter_add_diff₀
 
-/- warning: measure_theory.measure_union_add_inter₀ -> MeasureTheory.measure_union_add_inter₀ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {t : Set.{u1} α} (s : Set.{u1} α), (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ t)))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {t : Set.{u1} α} (s : Set.{u1} α), (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) t)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_union_add_inter₀ MeasureTheory.measure_union_add_inter₀ₓ'. -/
 theorem measure_union_add_inter₀ (s : Set α) (ht : NullMeasurableSet t μ) :
     μ (s ∪ t) + μ (s ∩ t) = μ s + μ t := by
   rw [← measure_inter_add_diff₀ (s ∪ t) ht, union_inter_cancel_right, union_diff_right, ←
     measure_inter_add_diff₀ s ht, add_comm, ← add_assoc, add_right_comm]
 #align measure_theory.measure_union_add_inter₀ MeasureTheory.measure_union_add_inter₀
 
-/- warning: measure_theory.measure_union_add_inter₀' -> MeasureTheory.measure_union_add_inter₀' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (forall (t : Set.{u1} α), Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ t)))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (forall (t : Set.{u1} α), Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) t)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_union_add_inter₀' MeasureTheory.measure_union_add_inter₀'ₓ'. -/
 theorem measure_union_add_inter₀' (hs : NullMeasurableSet s μ) (t : Set α) :
     μ (s ∪ t) + μ (s ∩ t) = μ s + μ t := by
   rw [union_comm, inter_comm, measure_union_add_inter₀ t hs, add_comm]
 #align measure_theory.measure_union_add_inter₀' MeasureTheory.measure_union_add_inter₀'
 
-/- warning: measure_theory.measure_union₀ -> MeasureTheory.measure_union₀ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.AEDisjoint.{u1} α m0 μ s t) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ t)))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 t μ) -> (MeasureTheory.AEDisjoint.{u1} α m0 μ s t) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) t)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_union₀ MeasureTheory.measure_union₀ₓ'. -/
 theorem measure_union₀ (ht : NullMeasurableSet t μ) (hd : AEDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by rw [← measure_union_add_inter₀ s ht, hd.eq, add_zero]
 #align measure_theory.measure_union₀ MeasureTheory.measure_union₀
 
-/- warning: measure_theory.measure_union₀' -> MeasureTheory.measure_union₀' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.AEDisjoint.{u1} α m0 μ s t) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ t)))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (MeasureTheory.AEDisjoint.{u1} α m0 μ s t) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) t)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_union₀' MeasureTheory.measure_union₀'ₓ'. -/
 theorem measure_union₀' (hs : NullMeasurableSet s μ) (hd : AEDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by rw [union_comm, measure_union₀ hs hd.symm, add_comm]
 #align measure_theory.measure_union₀' MeasureTheory.measure_union₀'
 
-/- warning: measure_theory.measure_add_measure_compl₀ -> MeasureTheory.measure_add_measure_compl₀ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ (Set.univ.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α}, (MeasureTheory.NullMeasurableSet.{u1} α m0 s μ) -> (Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (Set.univ.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure_add_measure_compl₀ MeasureTheory.measure_add_measure_compl₀ₓ'. -/
 theorem measure_add_measure_compl₀ {s : Set α} (hs : NullMeasurableSet s μ) :
     μ s + μ (sᶜ) = μ univ := by rw [← measure_union₀' hs ae_disjoint_compl_right, union_compl_self]
 #align measure_theory.measure_add_measure_compl₀ MeasureTheory.measure_add_measure_compl₀
@@ -611,44 +479,20 @@ def NullMeasurable (f : α → β) (μ : Measure α := by exact MeasureTheory.Me
 #align measure_theory.null_measurable MeasureTheory.NullMeasurable
 -/
 
-/- warning: measurable.null_measurable -> Measurable.nullMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1}, (Measurable.{u1, u2} α β _inst_1 _inst_2 f) -> (MeasureTheory.NullMeasurable.{u1, u2} α β _inst_1 _inst_2 f μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1}, (Measurable.{u2, u1} α β _inst_1 _inst_2 f) -> (MeasureTheory.NullMeasurable.{u2, u1} α β _inst_1 _inst_2 f μ)
-Case conversion may be inaccurate. Consider using '#align measurable.null_measurable Measurable.nullMeasurableₓ'. -/
 protected theorem Measurable.nullMeasurable (h : Measurable f) : NullMeasurable f μ := fun s hs =>
   (h hs).NullMeasurableSet
 #align measurable.null_measurable Measurable.nullMeasurable
 
-/- warning: measure_theory.null_measurable.measurable' -> MeasureTheory.NullMeasurable.measurable' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1}, (MeasureTheory.NullMeasurable.{u1, u2} α β _inst_1 _inst_2 f μ) -> (Measurable.{u1, u2} (MeasureTheory.NullMeasurableSpace.{u1} α _inst_1 μ) β (MeasureTheory.NullMeasurableSpace.instMeasurableSpace.{u1} α _inst_1 μ) _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1}, (MeasureTheory.NullMeasurable.{u2, u1} α β _inst_1 _inst_2 f μ) -> (Measurable.{u2, u1} (MeasureTheory.NullMeasurableSpace.{u2} α _inst_1 μ) β (MeasureTheory.NullMeasurableSpace.instMeasurableSpace.{u2} α _inst_1 μ) _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable.measurable' MeasureTheory.NullMeasurable.measurable'ₓ'. -/
 protected theorem NullMeasurable.measurable' (h : NullMeasurable f μ) :
     @Measurable (NullMeasurableSpace α μ) β _ _ f :=
   h
 #align measure_theory.null_measurable.measurable' MeasureTheory.NullMeasurable.measurable'
 
-/- warning: measure_theory.measurable.comp_null_measurable -> MeasureTheory.Measurable.comp_nullMeasurable is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] [_inst_3 : MeasurableSpace.{u3} γ] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1} {g : β -> γ}, (Measurable.{u2, u3} β γ _inst_2 _inst_3 g) -> (MeasureTheory.NullMeasurable.{u1, u2} α β _inst_1 _inst_2 f μ) -> (MeasureTheory.NullMeasurable.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) μ)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u3} β] [_inst_3 : MeasurableSpace.{u2} γ] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1} {g : β -> γ}, (Measurable.{u3, u2} β γ _inst_2 _inst_3 g) -> (MeasureTheory.NullMeasurable.{u1, u3} α β _inst_1 _inst_2 f μ) -> (MeasureTheory.NullMeasurable.{u1, u2} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u3, succ u2} α β γ g f) μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measurable.comp_null_measurable MeasureTheory.Measurable.comp_nullMeasurableₓ'. -/
 theorem Measurable.comp_nullMeasurable {g : β → γ} (hg : Measurable g) (hf : NullMeasurable f μ) :
     NullMeasurable (g ∘ f) μ :=
   hg.comp hf
 #align measure_theory.measurable.comp_null_measurable MeasureTheory.Measurable.comp_nullMeasurable
 
-/- warning: measure_theory.null_measurable.congr -> MeasureTheory.NullMeasurable.congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1} {g : α -> β}, (MeasureTheory.NullMeasurable.{u1, u2} α β _inst_1 _inst_2 f μ) -> (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) f g) -> (MeasureTheory.NullMeasurable.{u1, u2} α β _inst_1 _inst_2 g μ)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {g : α -> β}, (MeasureTheory.NullMeasurable.{u2, u1} α β _inst_1 _inst_2 f μ) -> (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) f g) -> (MeasureTheory.NullMeasurable.{u2, u1} α β _inst_1 _inst_2 g μ)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable.congr MeasureTheory.NullMeasurable.congrₓ'. -/
 theorem NullMeasurable.congr {g : α → β} (hf : NullMeasurable f μ) (hg : f =ᵐ[μ] g) :
     NullMeasurable g μ := fun s hs =>
   (hf hs).congr <| eventuallyEq_set.2 <| hg.mono fun x hx => by rw [mem_preimage, mem_preimage, hx]
@@ -670,32 +514,14 @@ class Measure.IsComplete {_ : MeasurableSpace α} (μ : Measure α) : Prop where
 
 variable {m0 : MeasurableSpace α} {μ : Measure α} {s t : Set α}
 
-/- warning: measure_theory.measure.is_complete_iff -> MeasureTheory.Measure.isComplete_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0}, Iff (MeasureTheory.Measure.IsComplete.{u1} α m0 μ) (forall (s : Set.{u1} α), (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (MeasurableSet.{u1} α m0 s))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0}, Iff (MeasureTheory.Measure.IsComplete.{u1} α m0 μ) (forall (s : Set.{u1} α), (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (MeasurableSet.{u1} α m0 s))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.is_complete_iff MeasureTheory.Measure.isComplete_iffₓ'. -/
 theorem Measure.isComplete_iff : μ.IsComplete ↔ ∀ s, μ s = 0 → MeasurableSet s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align measure_theory.measure.is_complete_iff MeasureTheory.Measure.isComplete_iff
 
-/- warning: measure_theory.measure.is_complete.out -> MeasureTheory.Measure.IsComplete.out is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0}, (MeasureTheory.Measure.IsComplete.{u1} α m0 μ) -> (forall (s : Set.{u1} α), (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (MeasurableSet.{u1} α m0 s))
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0}, (MeasureTheory.Measure.IsComplete.{u1} α m0 μ) -> (forall (s : Set.{u1} α), (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (MeasurableSet.{u1} α m0 s))
-Case conversion may be inaccurate. Consider using '#align measure_theory.measure.is_complete.out MeasureTheory.Measure.IsComplete.outₓ'. -/
 theorem Measure.IsComplete.out (h : μ.IsComplete) : ∀ s, μ s = 0 → MeasurableSet s :=
   h.1
 #align measure_theory.measure.is_complete.out MeasureTheory.Measure.IsComplete.out
 
-/- warning: measure_theory.measurable_set_of_null -> MeasureTheory.measurableSet_of_null is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} [_inst_1 : MeasureTheory.Measure.IsComplete.{u1} α m0 μ], (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m0) (fun (_x : MeasureTheory.Measure.{u1} α m0) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m0) μ s) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) -> (MeasurableSet.{u1} α m0 s)
-but is expected to have type
-  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} [_inst_1 : MeasureTheory.Measure.IsComplete.{u1} α m0 μ], (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (MeasurableSet.{u1} α m0 s)
-Case conversion may be inaccurate. Consider using '#align measure_theory.measurable_set_of_null MeasureTheory.measurableSet_of_nullₓ'. -/
 theorem measurableSet_of_null [μ.IsComplete] (hs : μ s = 0) : MeasurableSet s :=
   MeasureTheory.Measure.IsComplete.out' s hs
 #align measure_theory.measurable_set_of_null MeasureTheory.measurableSet_of_null
@@ -709,22 +535,10 @@ theorem NullMeasurableSet.measurable_of_complete (hs : NullMeasurableSet s μ) [
 #align measure_theory.null_measurable_set.measurable_of_complete MeasureTheory.NullMeasurableSet.measurable_of_complete
 -/
 
-/- warning: measure_theory.null_measurable.measurable_of_complete -> MeasureTheory.NullMeasurable.measurable_of_complete is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} [_inst_1 : MeasureTheory.Measure.IsComplete.{u1} α m0 μ] {m1 : MeasurableSpace.{u2} β} {f : α -> β}, (MeasureTheory.NullMeasurable.{u1, u2} α β m0 m1 f μ) -> (Measurable.{u1, u2} α β m0 m1 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_1 : MeasureTheory.Measure.IsComplete.{u2} α m0 μ] {m1 : MeasurableSpace.{u1} β} {f : α -> β}, (MeasureTheory.NullMeasurable.{u2, u1} α β m0 m1 f μ) -> (Measurable.{u2, u1} α β m0 m1 f)
-Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable.measurable_of_complete MeasureTheory.NullMeasurable.measurable_of_completeₓ'. -/
 theorem NullMeasurable.measurable_of_complete [μ.IsComplete] {m1 : MeasurableSpace β} {f : α → β}
     (hf : NullMeasurable f μ) : Measurable f := fun s hs => (hf hs).measurable_of_complete
 #align measure_theory.null_measurable.measurable_of_complete MeasureTheory.NullMeasurable.measurable_of_complete
 
-/- warning: measurable.congr_ae -> Measurable.congr_ae is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] {μ : MeasureTheory.Measure.{u1} α _inst_1} [hμ : MeasureTheory.Measure.IsComplete.{u1} α _inst_1 μ] {f : α -> β} {g : α -> β}, (Measurable.{u1, u2} α β _inst_1 _inst_2 f) -> (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) f g) -> (Measurable.{u1, u2} α β _inst_1 _inst_2 g)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] {μ : MeasureTheory.Measure.{u2} α _inst_1} [hμ : MeasureTheory.Measure.IsComplete.{u2} α _inst_1 μ] {f : α -> β} {g : α -> β}, (Measurable.{u2, u1} α β _inst_1 _inst_2 f) -> (Filter.EventuallyEq.{u2, u1} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) f g) -> (Measurable.{u2, u1} α β _inst_1 _inst_2 g)
-Case conversion may be inaccurate. Consider using '#align measurable.congr_ae Measurable.congr_aeₓ'. -/
 theorem Measurable.congr_ae {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α}
     [hμ : μ.IsComplete] {f g : α → β} (hf : Measurable f) (hfg : f =ᵐ[μ] g) : Measurable g :=
   (hf.NullMeasurable.congr hfg).measurable_of_complete

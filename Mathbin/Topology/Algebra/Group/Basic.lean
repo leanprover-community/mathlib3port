@@ -59,12 +59,6 @@ In this section we prove a few statements about groups with continuous `(*)`.
 
 variable [TopologicalSpace G] [Group G] [ContinuousMul G]
 
-/- warning: homeomorph.mul_left -> Homeomorph.mulLeft is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], G -> (Homeomorph.{u1, u1} G G _inst_1 _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], G -> (Homeomorph.{u1, u1} G G _inst_1 _inst_1)
-Case conversion may be inaccurate. Consider using '#align homeomorph.mul_left Homeomorph.mulLeftₓ'. -/
 /-- Multiplication from the left in a topological group as a homeomorphism. -/
 @[to_additive "Addition from the left in a topological additive group as a homeomorphism."]
 protected def Homeomorph.mulLeft (a : G) : G ≃ₜ G :=
@@ -74,84 +68,42 @@ protected def Homeomorph.mulLeft (a : G) : G ≃ₜ G :=
 #align homeomorph.mul_left Homeomorph.mulLeft
 #align homeomorph.add_left Homeomorph.addLeft
 
-/- warning: homeomorph.coe_mul_left -> Homeomorph.coe_mulLeft is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (G -> G) (coeFn.{succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (fun (_x : Homeomorph.{u1, u1} G G _inst_1 _inst_1) => G -> G) (Homeomorph.hasCoeToFun.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 a)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (G -> G) (FunLike.coe.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) G (fun (_x : G) => G) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) G G (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) G G (Homeomorph.instEquivLikeHomeomorph.{u1, u1} G G _inst_1 _inst_1))) (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 a)) ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.111 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.113 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.111 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.113) a)
-Case conversion may be inaccurate. Consider using '#align homeomorph.coe_mul_left Homeomorph.coe_mulLeftₓ'. -/
 @[simp, to_additive]
 theorem Homeomorph.coe_mulLeft (a : G) : ⇑(Homeomorph.mulLeft a) = (· * ·) a :=
   rfl
 #align homeomorph.coe_mul_left Homeomorph.coe_mulLeft
 #align homeomorph.coe_add_left Homeomorph.coe_addLeft
 
-/- warning: homeomorph.mul_left_symm -> Homeomorph.mulLeft_symm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.symm.{u1, u1} G G _inst_1 _inst_1 (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 a)) (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.symm.{u1, u1} G G _inst_1 _inst_1 (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 a)) (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))) a))
-Case conversion may be inaccurate. Consider using '#align homeomorph.mul_left_symm Homeomorph.mulLeft_symmₓ'. -/
 @[to_additive]
 theorem Homeomorph.mulLeft_symm (a : G) : (Homeomorph.mulLeft a).symm = Homeomorph.mulLeft a⁻¹ := by
   ext; rfl
 #align homeomorph.mul_left_symm Homeomorph.mulLeft_symm
 #align homeomorph.add_left_symm Homeomorph.addLeft_symm
 
-/- warning: is_open_map_mul_left -> isOpenMap_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsOpenMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) a x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsOpenMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) a x)
-Case conversion may be inaccurate. Consider using '#align is_open_map_mul_left isOpenMap_mul_leftₓ'. -/
 @[to_additive]
 theorem isOpenMap_mul_left (a : G) : IsOpenMap fun x => a * x :=
   (Homeomorph.mulLeft a).IsOpenMap
 #align is_open_map_mul_left isOpenMap_mul_left
 #align is_open_map_add_left isOpenMap_add_left
 
-/- warning: is_open.left_coset -> IsOpen.leftCoset is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsOpen.{u1} G _inst_1 U) -> (forall (x : G), IsOpen.{u1} G _inst_1 (leftCoset.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) x U))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsOpen.{u1} G _inst_1 U) -> (forall (x : G), IsOpen.{u1} G _inst_1 (leftCoset.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) x U))
-Case conversion may be inaccurate. Consider using '#align is_open.left_coset IsOpen.leftCosetₓ'. -/
 @[to_additive IsOpen.left_addCoset]
 theorem IsOpen.leftCoset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (leftCoset x U) :=
   isOpenMap_mul_left x _ h
 #align is_open.left_coset IsOpen.leftCoset
 #align is_open.left_add_coset IsOpen.left_addCoset
 
-/- warning: is_closed_map_mul_left -> isClosedMap_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsClosedMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) a x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsClosedMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) a x)
-Case conversion may be inaccurate. Consider using '#align is_closed_map_mul_left isClosedMap_mul_leftₓ'. -/
 @[to_additive]
 theorem isClosedMap_mul_left (a : G) : IsClosedMap fun x => a * x :=
   (Homeomorph.mulLeft a).IsClosedMap
 #align is_closed_map_mul_left isClosedMap_mul_left
 #align is_closed_map_add_left isClosedMap_add_left
 
-/- warning: is_closed.left_coset -> IsClosed.leftCoset is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsClosed.{u1} G _inst_1 U) -> (forall (x : G), IsClosed.{u1} G _inst_1 (leftCoset.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) x U))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsClosed.{u1} G _inst_1 U) -> (forall (x : G), IsClosed.{u1} G _inst_1 (leftCoset.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) x U))
-Case conversion may be inaccurate. Consider using '#align is_closed.left_coset IsClosed.leftCosetₓ'. -/
 @[to_additive IsClosed.left_addCoset]
 theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (leftCoset x U) :=
   isClosedMap_mul_left x _ h
 #align is_closed.left_coset IsClosed.leftCoset
 #align is_closed.left_add_coset IsClosed.left_addCoset
 
-/- warning: homeomorph.mul_right -> Homeomorph.mulRight is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], G -> (Homeomorph.{u1, u1} G G _inst_1 _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], G -> (Homeomorph.{u1, u1} G G _inst_1 _inst_1)
-Case conversion may be inaccurate. Consider using '#align homeomorph.mul_right Homeomorph.mulRightₓ'. -/
 /-- Multiplication from the right in a topological group as a homeomorphism. -/
 @[to_additive "Addition from the right in a topological additive group as a homeomorphism."]
 protected def Homeomorph.mulRight (a : G) : G ≃ₜ G :=
@@ -161,84 +113,42 @@ protected def Homeomorph.mulRight (a : G) : G ≃ₜ G :=
 #align homeomorph.mul_right Homeomorph.mulRight
 #align homeomorph.add_right Homeomorph.addRight
 
-/- warning: homeomorph.coe_mul_right -> Homeomorph.coe_mulRight is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (G -> G) (coeFn.{succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (fun (_x : Homeomorph.{u1, u1} G G _inst_1 _inst_1) => G -> G) (Homeomorph.hasCoeToFun.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.mulRight.{u1} G _inst_1 _inst_2 _inst_3 a)) (fun (g : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (G -> G) (FunLike.coe.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) G (fun (_x : G) => G) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) G G (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) G G (Homeomorph.instEquivLikeHomeomorph.{u1, u1} G G _inst_1 _inst_1))) (Homeomorph.mulRight.{u1} G _inst_1 _inst_2 _inst_3 a)) (fun (g : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g a)
-Case conversion may be inaccurate. Consider using '#align homeomorph.coe_mul_right Homeomorph.coe_mulRightₓ'. -/
 @[simp, to_additive]
 theorem Homeomorph.coe_mulRight (a : G) : ⇑(Homeomorph.mulRight a) = fun g => g * a :=
   rfl
 #align homeomorph.coe_mul_right Homeomorph.coe_mulRight
 #align homeomorph.coe_add_right Homeomorph.coe_addRight
 
-/- warning: homeomorph.mul_right_symm -> Homeomorph.mulRight_symm is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.symm.{u1, u1} G G _inst_1 _inst_1 (Homeomorph.mulRight.{u1} G _inst_1 _inst_2 _inst_3 a)) (Homeomorph.mulRight.{u1} G _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.symm.{u1, u1} G G _inst_1 _inst_1 (Homeomorph.mulRight.{u1} G _inst_1 _inst_2 _inst_3 a)) (Homeomorph.mulRight.{u1} G _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))) a))
-Case conversion may be inaccurate. Consider using '#align homeomorph.mul_right_symm Homeomorph.mulRight_symmₓ'. -/
 @[to_additive]
 theorem Homeomorph.mulRight_symm (a : G) : (Homeomorph.mulRight a).symm = Homeomorph.mulRight a⁻¹ :=
   by ext; rfl
 #align homeomorph.mul_right_symm Homeomorph.mulRight_symm
 #align homeomorph.add_right_symm Homeomorph.addRight_symm
 
-/- warning: is_open_map_mul_right -> isOpenMap_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsOpenMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsOpenMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x a)
-Case conversion may be inaccurate. Consider using '#align is_open_map_mul_right isOpenMap_mul_rightₓ'. -/
 @[to_additive]
 theorem isOpenMap_mul_right (a : G) : IsOpenMap fun x => x * a :=
   (Homeomorph.mulRight a).IsOpenMap
 #align is_open_map_mul_right isOpenMap_mul_right
 #align is_open_map_add_right isOpenMap_add_right
 
-/- warning: is_open.right_coset -> IsOpen.rightCoset is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsOpen.{u1} G _inst_1 U) -> (forall (x : G), IsOpen.{u1} G _inst_1 (rightCoset.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) U x))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsOpen.{u1} G _inst_1 U) -> (forall (x : G), IsOpen.{u1} G _inst_1 (rightCoset.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) U x))
-Case conversion may be inaccurate. Consider using '#align is_open.right_coset IsOpen.rightCosetₓ'. -/
 @[to_additive IsOpen.right_addCoset]
 theorem IsOpen.rightCoset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (rightCoset U x) :=
   isOpenMap_mul_right x _ h
 #align is_open.right_coset IsOpen.rightCoset
 #align is_open.right_add_coset IsOpen.right_addCoset
 
-/- warning: is_closed_map_mul_right -> isClosedMap_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsClosedMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), IsClosedMap.{u1, u1} G G _inst_1 _inst_1 (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x a)
-Case conversion may be inaccurate. Consider using '#align is_closed_map_mul_right isClosedMap_mul_rightₓ'. -/
 @[to_additive]
 theorem isClosedMap_mul_right (a : G) : IsClosedMap fun x => x * a :=
   (Homeomorph.mulRight a).IsClosedMap
 #align is_closed_map_mul_right isClosedMap_mul_right
 #align is_closed_map_add_right isClosedMap_add_right
 
-/- warning: is_closed.right_coset -> IsClosed.rightCoset is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsClosed.{u1} G _inst_1 U) -> (forall (x : G), IsClosed.{u1} G _inst_1 (rightCoset.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) U x))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] {U : Set.{u1} G}, (IsClosed.{u1} G _inst_1 U) -> (forall (x : G), IsClosed.{u1} G _inst_1 (rightCoset.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) U x))
-Case conversion may be inaccurate. Consider using '#align is_closed.right_coset IsClosed.rightCosetₓ'. -/
 @[to_additive IsClosed.right_addCoset]
 theorem IsClosed.rightCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (rightCoset U x) :=
   isClosedMap_mul_right x _ h
 #align is_closed.right_coset IsClosed.rightCoset
 #align is_closed.right_add_coset IsClosed.right_addCoset
 
-/- warning: discrete_topology_of_open_singleton_one -> discreteTopology_of_open_singleton_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], (IsOpen.{u1} G _inst_1 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.hasSingleton.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) -> (DiscreteTopology.{u1} G _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], (IsOpen.{u1} G _inst_1 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.instSingletonSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) -> (DiscreteTopology.{u1} G _inst_1)
-Case conversion may be inaccurate. Consider using '#align discrete_topology_of_open_singleton_one discreteTopology_of_open_singleton_oneₓ'. -/
 @[to_additive]
 theorem discreteTopology_of_open_singleton_one (h : IsOpen ({1} : Set G)) : DiscreteTopology G :=
   by
@@ -251,12 +161,6 @@ theorem discreteTopology_of_open_singleton_one (h : IsOpen ({1} : Set G)) : Disc
 #align discrete_topology_of_open_singleton_one discreteTopology_of_open_singleton_one
 #align discrete_topology_of_open_singleton_zero discreteTopology_of_open_singleton_zero
 
-/- warning: discrete_topology_iff_open_singleton_one -> discreteTopology_iff_open_singleton_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], Iff (DiscreteTopology.{u1} G _inst_1) (IsOpen.{u1} G _inst_1 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.hasSingleton.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], Iff (DiscreteTopology.{u1} G _inst_1) (IsOpen.{u1} G _inst_1 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.instSingletonSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align discrete_topology_iff_open_singleton_one discreteTopology_iff_open_singleton_oneₓ'. -/
 @[to_additive]
 theorem discreteTopology_iff_open_singleton_one : DiscreteTopology G ↔ IsOpen ({1} : Set G) :=
   ⟨fun h => forall_open_iff_discrete.mpr h {1}, discreteTopology_of_open_singleton_one⟩
@@ -417,12 +321,6 @@ section PointwiseLimits
 
 variable (G₁ G₂ : Type _) [TopologicalSpace G₂] [T2Space G₂]
 
-/- warning: is_closed_set_of_map_inv -> isClosed_setOf_map_inv is a dubious translation:
-lean 3 declaration is
-  forall (G₁ : Type.{u1}) (G₂ : Type.{u2}) [_inst_5 : TopologicalSpace.{u2} G₂] [_inst_6 : T2Space.{u2} G₂ _inst_5] [_inst_7 : Inv.{u1} G₁] [_inst_8 : Inv.{u2} G₂] [_inst_9 : ContinuousInv.{u2} G₂ _inst_5 _inst_8], IsClosed.{max u1 u2} (G₁ -> G₂) (Pi.topologicalSpace.{u1, u2} G₁ (fun (ᾰ : G₁) => G₂) (fun (a : G₁) => _inst_5)) (setOf.{max u1 u2} (G₁ -> G₂) (fun (f : G₁ -> G₂) => forall (x : G₁), Eq.{succ u2} G₂ (f (Inv.inv.{u1} G₁ _inst_7 x)) (Inv.inv.{u2} G₂ _inst_8 (f x))))
-but is expected to have type
-  forall (G₁ : Type.{u2}) (G₂ : Type.{u1}) [_inst_5 : TopologicalSpace.{u1} G₂] [_inst_6 : T2Space.{u1} G₂ _inst_5] [_inst_7 : Inv.{u2} G₁] [_inst_8 : Inv.{u1} G₂] [_inst_9 : ContinuousInv.{u1} G₂ _inst_5 _inst_8], IsClosed.{max u2 u1} (G₁ -> G₂) (Pi.topologicalSpace.{u2, u1} G₁ (fun (ᾰ : G₁) => G₂) (fun (a : G₁) => _inst_5)) (setOf.{max u2 u1} (G₁ -> G₂) (fun (f : G₁ -> G₂) => forall (x : G₁), Eq.{succ u1} G₂ (f (Inv.inv.{u2} G₁ _inst_7 x)) (Inv.inv.{u1} G₂ _inst_8 (f x))))
-Case conversion may be inaccurate. Consider using '#align is_closed_set_of_map_inv isClosed_setOf_map_invₓ'. -/
 @[to_additive]
 theorem isClosed_setOf_map_inv [Inv G₁] [Inv G₂] [ContinuousInv G₂] :
     IsClosed { f : G₁ → G₂ | ∀ x, f x⁻¹ = (f x)⁻¹ } :=
@@ -446,12 +344,6 @@ section ContinuousInvolutiveInv
 
 variable [TopologicalSpace G] [InvolutiveInv G] [ContinuousInv G] {s : Set G}
 
-/- warning: is_compact.inv -> IsCompact.inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toHasInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsCompact.{u1} G _inst_1 s) -> (IsCompact.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2)) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsCompact.{u1} G _inst_1 s) -> (IsCompact.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2)) s))
-Case conversion may be inaccurate. Consider using '#align is_compact.inv IsCompact.invₓ'. -/
 @[to_additive]
 theorem IsCompact.inv (hs : IsCompact s) : IsCompact s⁻¹ := by rw [← image_inv];
   exact hs.image continuous_inv
@@ -460,12 +352,6 @@ theorem IsCompact.inv (hs : IsCompact s) : IsCompact s⁻¹ := by rw [← image_
 
 variable (G)
 
-/- warning: homeomorph.inv -> Homeomorph.inv is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_4 : TopologicalSpace.{u1} G] [_inst_5 : InvolutiveInv.{u1} G] [_inst_6 : ContinuousInv.{u1} G _inst_4 (InvolutiveInv.toHasInv.{u1} G _inst_5)], Homeomorph.{u1, u1} G G _inst_4 _inst_4
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_4 : TopologicalSpace.{u1} G] [_inst_5 : InvolutiveInv.{u1} G] [_inst_6 : ContinuousInv.{u1} G _inst_4 (InvolutiveInv.toInv.{u1} G _inst_5)], Homeomorph.{u1, u1} G G _inst_4 _inst_4
-Case conversion may be inaccurate. Consider using '#align homeomorph.inv Homeomorph.invₓ'. -/
 /-- Inversion in a topological group as a homeomorphism. -/
 @[to_additive "Negation in a topological group as a homeomorphism."]
 protected def Homeomorph.inv (G : Type _) [TopologicalSpace G] [InvolutiveInv G] [ContinuousInv G] :
@@ -476,24 +362,12 @@ protected def Homeomorph.inv (G : Type _) [TopologicalSpace G] [InvolutiveInv G]
 #align homeomorph.inv Homeomorph.inv
 #align homeomorph.neg Homeomorph.neg
 
-/- warning: is_open_map_inv -> isOpenMap_inv is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toHasInv.{u1} G _inst_2)], IsOpenMap.{u1, u1} G G _inst_1 _inst_1 (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)], IsOpenMap.{u1, u1} G G _inst_1 _inst_1 (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align is_open_map_inv isOpenMap_invₓ'. -/
 @[to_additive]
 theorem isOpenMap_inv : IsOpenMap (Inv.inv : G → G) :=
   (Homeomorph.inv _).IsOpenMap
 #align is_open_map_inv isOpenMap_inv
 #align is_open_map_neg isOpenMap_neg
 
-/- warning: is_closed_map_inv -> isClosedMap_inv is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toHasInv.{u1} G _inst_2)], IsClosedMap.{u1, u1} G G _inst_1 _inst_1 (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)], IsClosedMap.{u1, u1} G G _inst_1 _inst_1 (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align is_closed_map_inv isClosedMap_invₓ'. -/
 @[to_additive]
 theorem isClosedMap_inv : IsClosedMap (Inv.inv : G → G) :=
   (Homeomorph.inv _).IsClosedMap
@@ -502,36 +376,18 @@ theorem isClosedMap_inv : IsClosedMap (Inv.inv : G → G) :=
 
 variable {G}
 
-/- warning: is_open.inv -> IsOpen.inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toHasInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsOpen.{u1} G _inst_1 s) -> (IsOpen.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2)) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsOpen.{u1} G _inst_1 s) -> (IsOpen.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2)) s))
-Case conversion may be inaccurate. Consider using '#align is_open.inv IsOpen.invₓ'. -/
 @[to_additive]
 theorem IsOpen.inv (hs : IsOpen s) : IsOpen s⁻¹ :=
   hs.Preimage continuous_inv
 #align is_open.inv IsOpen.inv
 #align is_open.neg IsOpen.neg
 
-/- warning: is_closed.inv -> IsClosed.inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toHasInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsClosed.{u1} G _inst_1 s) -> (IsClosed.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2)) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsClosed.{u1} G _inst_1 s) -> (IsClosed.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2)) s))
-Case conversion may be inaccurate. Consider using '#align is_closed.inv IsClosed.invₓ'. -/
 @[to_additive]
 theorem IsClosed.inv (hs : IsClosed s) : IsClosed s⁻¹ :=
   hs.Preimage continuous_inv
 #align is_closed.inv IsClosed.inv
 #align is_closed.neg IsClosed.neg
 
-/- warning: inv_closure -> inv_closure is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toHasInv.{u1} G _inst_2)] (s : Set.{u1} G), Eq.{succ u1} (Set.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2)) (closure.{u1} G _inst_1 s)) (closure.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_2)) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)] (s : Set.{u1} G), Eq.{succ u1} (Set.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2)) (closure.{u1} G _inst_1 s)) (closure.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2)) s))
-Case conversion may be inaccurate. Consider using '#align inv_closure inv_closureₓ'. -/
 @[to_additive]
 theorem inv_closure : ∀ s : Set G, (closure s)⁻¹ = closure s⁻¹ :=
   (Homeomorph.inv G).preimage_closure
@@ -544,12 +400,6 @@ section LatticeOps
 
 variable {ι' : Sort _} [Inv G]
 
-/- warning: has_continuous_inv_Inf -> continuousInv_sInf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.hasMem.{u1} (TopologicalSpace.{u1} G)) t ts) -> (ContinuousInv.{u1} G t _inst_1)) -> (ContinuousInv.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ts) _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} G)) t ts) -> (ContinuousInv.{u1} G t _inst_1)) -> (ContinuousInv.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G))) ts) _inst_1)
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv_Inf continuousInv_sInfₓ'. -/
 @[to_additive]
 theorem continuousInv_sInf {ts : Set (TopologicalSpace G)} (h : ∀ t ∈ ts, @ContinuousInv G t _) :
     @ContinuousInv G (sInf ts) _ :=
@@ -560,12 +410,6 @@ theorem continuousInv_sInf {ts : Set (TopologicalSpace G)} (h : ∀ t ∈ ts, @C
 #align has_continuous_inv_Inf continuousInv_sInf
 #align has_continuous_neg_Inf continuousNeg_sInf
 
-/- warning: has_continuous_inv_infi -> continuousInv_iInf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {ι' : Sort.{u2}} [_inst_1 : Inv.{u1} G] {ts' : ι' -> (TopologicalSpace.{u1} G)}, (forall (i : ι'), ContinuousInv.{u1} G (ts' i) _inst_1) -> (ContinuousInv.{u1} G (iInf.{u1, u2} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ι' (fun (i : ι') => ts' i)) _inst_1)
-but is expected to have type
-  forall {G : Type.{u2}} {ι' : Sort.{u1}} [_inst_1 : Inv.{u2} G] {ts' : ι' -> (TopologicalSpace.{u2} G)}, (forall (i : ι'), ContinuousInv.{u2} G (ts' i) _inst_1) -> (ContinuousInv.{u2} G (iInf.{u2, u1} (TopologicalSpace.{u2} G) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} G) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} G))) ι' (fun (i : ι') => ts' i)) _inst_1)
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv_infi continuousInv_iInfₓ'. -/
 @[to_additive]
 theorem continuousInv_iInf {ts' : ι' → TopologicalSpace G} (h' : ∀ i, @ContinuousInv G (ts' i) _) :
     @ContinuousInv G (⨅ i, ts' i) _ := by rw [← sInf_range];
@@ -573,12 +417,6 @@ theorem continuousInv_iInf {ts' : ι' → TopologicalSpace G} (h' : ∀ i, @Cont
 #align has_continuous_inv_infi continuousInv_iInf
 #align has_continuous_neg_infi continuousNeg_iInf
 
-/- warning: has_continuous_inv_inf -> continuousInv_inf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {t₁ : TopologicalSpace.{u1} G} {t₂ : TopologicalSpace.{u1} G}, (ContinuousInv.{u1} G t₁ _inst_1) -> (ContinuousInv.{u1} G t₂ _inst_1) -> (ContinuousInv.{u1} G (Inf.inf.{u1} (TopologicalSpace.{u1} G) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} G) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))))) t₁ t₂) _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {t₁ : TopologicalSpace.{u1} G} {t₂ : TopologicalSpace.{u1} G}, (ContinuousInv.{u1} G t₁ _inst_1) -> (ContinuousInv.{u1} G t₂ _inst_1) -> (ContinuousInv.{u1} G (Inf.inf.{u1} (TopologicalSpace.{u1} G) (Lattice.toInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G)))) t₁ t₂) _inst_1)
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv_inf continuousInv_infₓ'. -/
 @[to_additive]
 theorem continuousInv_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @ContinuousInv G t₁ _)
     (h₂ : @ContinuousInv G t₂ _) : @ContinuousInv G (t₁ ⊓ t₂) _ := by rw [inf_eq_iInf];
@@ -588,12 +426,6 @@ theorem continuousInv_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @ContinuousIn
 
 end LatticeOps
 
-/- warning: inducing.has_continuous_inv -> Inducing.continuousInv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Inv.{u1} G] [_inst_2 : Inv.{u2} H] [_inst_3 : TopologicalSpace.{u1} G] [_inst_4 : TopologicalSpace.{u2} H] [_inst_5 : ContinuousInv.{u2} H _inst_4 _inst_2] {f : G -> H}, (Inducing.{u1, u2} G H _inst_3 _inst_4 f) -> (forall (x : G), Eq.{succ u2} H (f (Inv.inv.{u1} G _inst_1 x)) (Inv.inv.{u2} H _inst_2 (f x))) -> (ContinuousInv.{u1} G _inst_3 _inst_1)
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Inv.{u2} G] [_inst_2 : Inv.{u1} H] [_inst_3 : TopologicalSpace.{u2} G] [_inst_4 : TopologicalSpace.{u1} H] [_inst_5 : ContinuousInv.{u1} H _inst_4 _inst_2] {f : G -> H}, (Inducing.{u2, u1} G H _inst_3 _inst_4 f) -> (forall (x : G), Eq.{succ u1} H (f (Inv.inv.{u2} G _inst_1 x)) (Inv.inv.{u1} H _inst_2 (f x))) -> (ContinuousInv.{u2} G _inst_3 _inst_1)
-Case conversion may be inaccurate. Consider using '#align inducing.has_continuous_inv Inducing.continuousInvₓ'. -/
 @[to_additive]
 theorem Inducing.continuousInv {G H : Type _} [Inv G] [Inv H] [TopologicalSpace G]
     [TopologicalSpace H] [ContinuousInv H] {f : G → H} (hf : Inducing f)
@@ -637,12 +469,6 @@ class TopologicalGroup (G : Type _) [TopologicalSpace G] [Group G] extends Conti
 
 section Conj
 
-/- warning: conj_act.units_has_continuous_const_smul -> ConjAct.units_continuousConstSMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ContinuousMul.{u1} M _inst_2 (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))], ContinuousConstSMul.{u1, u1} (ConjAct.{u1} (Units.{u1} M _inst_1)) M _inst_2 (ConjAct.unitsScalar.{u1} M _inst_1)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ContinuousMul.{u1} M _inst_2 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))], ContinuousConstSMul.{u1, u1} (ConjAct.{u1} (Units.{u1} M _inst_1)) M _inst_2 (ConjAct.unitsScalar.{u1} M _inst_1)
-Case conversion may be inaccurate. Consider using '#align conj_act.units_has_continuous_const_smul ConjAct.units_continuousConstSMulₓ'. -/
 instance ConjAct.units_continuousConstSMul {M} [Monoid M] [TopologicalSpace M] [ContinuousMul M] :
     ContinuousConstSMul (ConjAct Mˣ) M :=
   ⟨fun m => (continuous_const.mul continuous_id).mul continuous_const⟩
@@ -650,12 +476,6 @@ instance ConjAct.units_continuousConstSMul {M} [Monoid M] [TopologicalSpace M] [
 
 variable [TopologicalSpace G] [Inv G] [Mul G] [ContinuousMul G]
 
-/- warning: topological_group.continuous_conj_prod -> TopologicalGroup.continuous_conj_prod is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Inv.{u1} G] [_inst_3 : Mul.{u1} G] [_inst_4 : ContinuousMul.{u1} G _inst_1 _inst_3] [_inst_5 : ContinuousInv.{u1} G _inst_1 _inst_2], Continuous.{u1, u1} (Prod.{u1, u1} G G) G (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) _inst_1 (fun (g : Prod.{u1, u1} G G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G _inst_3) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G _inst_3) (Prod.fst.{u1, u1} G G g) (Prod.snd.{u1, u1} G G g)) (Inv.inv.{u1} G _inst_2 (Prod.fst.{u1, u1} G G g)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Inv.{u1} G] [_inst_3 : Mul.{u1} G] [_inst_4 : ContinuousMul.{u1} G _inst_1 _inst_3] [_inst_5 : ContinuousInv.{u1} G _inst_1 _inst_2], Continuous.{u1, u1} (Prod.{u1, u1} G G) G (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) _inst_1 (fun (g : Prod.{u1, u1} G G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G _inst_3) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G _inst_3) (Prod.fst.{u1, u1} G G g) (Prod.snd.{u1, u1} G G g)) (Inv.inv.{u1} G _inst_2 (Prod.fst.{u1, u1} G G g)))
-Case conversion may be inaccurate. Consider using '#align topological_group.continuous_conj_prod TopologicalGroup.continuous_conj_prodₓ'. -/
 /-- Conjugation is jointly continuous on `G × G` when both `mul` and `inv` are continuous. -/
 @[to_additive
       "Conjugation is jointly continuous on `G × G` when both `mul` and `inv` are\ncontinuous."]
@@ -709,12 +529,6 @@ instance AddGroup.continuousConstSMul_int {A} [AddGroup A] [TopologicalSpace A]
 #align add_group.has_continuous_const_smul_int AddGroup.continuousConstSMul_int
 -/
 
-/- warning: add_group.has_continuous_smul_int -> AddGroup.continuousSMul_int is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} [_inst_5 : AddGroup.{u1} A] [_inst_6 : TopologicalSpace.{u1} A] [_inst_7 : TopologicalAddGroup.{u1} A _inst_6 _inst_5], ContinuousSMul.{0, u1} Int A (SubNegMonoid.SMulInt.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_5)) Int.topologicalSpace _inst_6
-but is expected to have type
-  forall {A : Type.{u1}} [_inst_5 : AddGroup.{u1} A] [_inst_6 : TopologicalSpace.{u1} A] [_inst_7 : TopologicalAddGroup.{u1} A _inst_6 _inst_5], ContinuousSMul.{0, u1} Int A (SubNegMonoid.SMulInt.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_5)) instTopologicalSpaceInt _inst_6
-Case conversion may be inaccurate. Consider using '#align add_group.has_continuous_smul_int AddGroup.continuousSMul_intₓ'. -/
 instance AddGroup.continuousSMul_int {A} [AddGroup A] [TopologicalSpace A] [TopologicalAddGroup A] :
     ContinuousSMul ℤ A :=
   ⟨continuous_uncurry_of_discreteTopology continuous_zsmul⟩
@@ -744,12 +558,6 @@ theorem continuousAt_zpow (x : G) (z : ℤ) : ContinuousAt (fun x => x ^ z) x :=
 #align continuous_at_zsmul continuousAt_zsmul
 -/
 
-/- warning: filter.tendsto.zpow -> Filter.Tendsto.zpow is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {α : Type.{u2}} {l : Filter.{u2} α} {f : α -> G} {x : G}, (Filter.Tendsto.{u2, u1} α G f l (nhds.{u1} G _inst_1 x)) -> (forall (z : Int), Filter.Tendsto.{u2, u1} α G (fun (x : α) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (f x) z) l (nhds.{u1} G _inst_1 (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) x z)))
-but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} G] [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalGroup.{u2} G _inst_1 _inst_2] {α : Type.{u1}} {l : Filter.{u1} α} {f : α -> G} {x : G}, (Filter.Tendsto.{u1, u2} α G f l (nhds.{u2} G _inst_1 x)) -> (forall (z : Int), Filter.Tendsto.{u1, u2} α G (fun (x : α) => HPow.hPow.{u2, 0, u2} G Int G (instHPow.{u2, 0} G Int (DivInvMonoid.Pow.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) (f x) z) l (nhds.{u2} G _inst_1 (HPow.hPow.{u2, 0, u2} G Int G (instHPow.{u2, 0} G Int (DivInvMonoid.Pow.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) x z)))
-Case conversion may be inaccurate. Consider using '#align filter.tendsto.zpow Filter.Tendsto.zpowₓ'. -/
 @[to_additive]
 theorem Filter.Tendsto.zpow {α} {l : Filter α} {f : α → G} {x : G} (hf : Tendsto f l (𝓝 x))
     (z : ℤ) : Tendsto (fun x => f x ^ z) l (𝓝 (x ^ z)) :=
@@ -789,96 +597,48 @@ section OrderedCommGroup
 
 variable [TopologicalSpace H] [OrderedCommGroup H] [ContinuousInv H]
 
-/- warning: tendsto_inv_nhds_within_Ioi -> tendsto_inv_nhdsWithin_Ioi is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 a (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a)))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 a (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a)))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Ioi tendsto_inv_nhdsWithin_Ioiₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Ioi {a : H} : Tendsto Inv.inv (𝓝[>] a) (𝓝[<] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
 #align tendsto_inv_nhds_within_Ioi tendsto_inv_nhdsWithin_Ioi
 #align tendsto_neg_nhds_within_Ioi tendsto_neg_nhdsWithin_Ioi
 
-/- warning: tendsto_inv_nhds_within_Iio -> tendsto_inv_nhdsWithin_Iio is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 a (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a)))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 a (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a)))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Iio tendsto_inv_nhdsWithin_Iioₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Iio {a : H} : Tendsto Inv.inv (𝓝[<] a) (𝓝[>] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
 #align tendsto_inv_nhds_within_Iio tendsto_inv_nhdsWithin_Iio
 #align tendsto_neg_nhds_within_Iio tendsto_neg_nhdsWithin_Iio
 
-/- warning: tendsto_inv_nhds_within_Ioi_inv -> tendsto_inv_nhdsWithin_Ioi_inv is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Ioi_inv tendsto_inv_nhdsWithin_Ioi_invₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Ioi_inv {a : H} : Tendsto Inv.inv (𝓝[>] a⁻¹) (𝓝[<] a) := by
   simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Ioi _ _ _ _ a⁻¹
 #align tendsto_inv_nhds_within_Ioi_inv tendsto_inv_nhdsWithin_Ioi_inv
 #align tendsto_neg_nhds_within_Ioi_neg tendsto_neg_nhdsWithin_Ioi_neg
 
-/- warning: tendsto_inv_nhds_within_Iio_inv -> tendsto_inv_nhdsWithin_Iio_inv is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Iio.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Ioi.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Iio_inv tendsto_inv_nhdsWithin_Iio_invₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Iio_inv {a : H} : Tendsto Inv.inv (𝓝[<] a⁻¹) (𝓝[>] a) := by
   simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Iio _ _ _ _ a⁻¹
 #align tendsto_inv_nhds_within_Iio_inv tendsto_inv_nhdsWithin_Iio_inv
 #align tendsto_neg_nhds_within_Iio_neg tendsto_neg_nhdsWithin_Iio_neg
 
-/- warning: tendsto_inv_nhds_within_Ici -> tendsto_inv_nhdsWithin_Ici is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 a (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a)))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 a (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a)))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Ici tendsto_inv_nhdsWithin_Iciₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Ici {a : H} : Tendsto Inv.inv (𝓝[≥] a) (𝓝[≤] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
 #align tendsto_inv_nhds_within_Ici tendsto_inv_nhdsWithin_Ici
 #align tendsto_neg_nhds_within_Ici tendsto_neg_nhdsWithin_Ici
 
-/- warning: tendsto_inv_nhds_within_Iic -> tendsto_inv_nhdsWithin_Iic is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 a (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a)))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 a (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a)) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a)))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Iic tendsto_inv_nhdsWithin_Iicₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Iic {a : H} : Tendsto Inv.inv (𝓝[≤] a) (𝓝[≥] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
 #align tendsto_inv_nhds_within_Iic tendsto_inv_nhdsWithin_Iic
 #align tendsto_neg_nhds_within_Iic tendsto_neg_nhdsWithin_Iic
 
-/- warning: tendsto_inv_nhds_within_Ici_inv -> tendsto_inv_nhdsWithin_Ici_inv is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Ici_inv tendsto_inv_nhdsWithin_Ici_invₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Ici_inv {a : H} : Tendsto Inv.inv (𝓝[≥] a⁻¹) (𝓝[≤] a) := by
   simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Ici _ _ _ _ a⁻¹
 #align tendsto_inv_nhds_within_Ici_inv tendsto_inv_nhdsWithin_Ici_inv
 #align tendsto_neg_nhds_within_Ici_neg tendsto_neg_nhdsWithin_Ici_neg
 
-/- warning: tendsto_inv_nhds_within_Iic_inv -> tendsto_inv_nhdsWithin_Iic_inv is a dubious translation:
-lean 3 declaration is
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a) (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (DivInvMonoid.toHasInv.{u1} H (Group.toDivInvMonoid.{u1} H (CommGroup.toGroup.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-but is expected to have type
-  forall {H : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} H] [_inst_6 : OrderedCommGroup.{u1} H] [_inst_7 : ContinuousInv.{u1} H _inst_5 (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))] {a : H}, Filter.Tendsto.{u1, u1} H H (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6))))))) (nhdsWithin.{u1} H _inst_5 (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a) (Set.Iic.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) (Inv.inv.{u1} H (InvOneClass.toInv.{u1} H (DivInvOneMonoid.toInvOneClass.{u1} H (DivisionMonoid.toDivInvOneMonoid.{u1} H (DivisionCommMonoid.toDivisionMonoid.{u1} H (CommGroup.toDivisionCommMonoid.{u1} H (OrderedCommGroup.toCommGroup.{u1} H _inst_6)))))) a))) (nhdsWithin.{u1} H _inst_5 a (Set.Ici.{u1} H (PartialOrder.toPreorder.{u1} H (OrderedCommGroup.toPartialOrder.{u1} H _inst_6)) a))
-Case conversion may be inaccurate. Consider using '#align tendsto_inv_nhds_within_Iic_inv tendsto_inv_nhdsWithin_Iic_invₓ'. -/
 @[to_additive]
 theorem tendsto_inv_nhdsWithin_Iic_inv {a : H} : Tendsto Inv.inv (𝓝[≤] a⁻¹) (𝓝[≥] a) := by
   simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Iic _ _ _ _ a⁻¹
@@ -912,48 +672,24 @@ instance [Group α] [TopologicalGroup α] : TopologicalGroup αᵐᵒᵖ where
 
 variable (G)
 
-/- warning: nhds_one_symm -> nhds_one_symm is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} G) (Filter.comap.{u1, u1} G G (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} G) (Filter.comap.{u1, u1} G G (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2))))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align nhds_one_symm nhds_one_symmₓ'. -/
 @[to_additive]
 theorem nhds_one_symm : comap Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
   ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_arg nhds inv_one)
 #align nhds_one_symm nhds_one_symm
 #align nhds_zero_symm nhds_zero_symm
 
-/- warning: nhds_one_symm' -> nhds_one_symm' is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2))))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align nhds_one_symm' nhds_one_symm'ₓ'. -/
 @[to_additive]
 theorem nhds_one_symm' : map Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
   ((Homeomorph.inv G).map_nhds_eq _).trans (congr_arg nhds inv_one)
 #align nhds_one_symm' nhds_one_symm'
 #align nhds_zero_symm' nhds_zero_symm'
 
-/- warning: inv_mem_nhds_one -> inv_mem_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {S : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) S (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) -> (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) S) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))))))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {S : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) S (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) -> (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2))))) S) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2))))))))
-Case conversion may be inaccurate. Consider using '#align inv_mem_nhds_one inv_mem_nhds_oneₓ'. -/
 @[to_additive]
 theorem inv_mem_nhds_one {S : Set G} (hS : S ∈ (𝓝 1 : Filter G)) : S⁻¹ ∈ 𝓝 (1 : G) := by
   rwa [← nhds_one_symm'] at hS
 #align inv_mem_nhds_one inv_mem_nhds_one
 #align neg_mem_nhds_zero neg_mem_nhds_zero
 
-/- warning: homeomorph.shear_mul_right -> Homeomorph.shearMulRight is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)
-Case conversion may be inaccurate. Consider using '#align homeomorph.shear_mul_right Homeomorph.shearMulRightₓ'. -/
 /-- The map `(x, y) ↦ (x, xy)` as a homeomorphism. This is a shear mapping. -/
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a homeomorphism.\nThis is a shear mapping."]
 protected def Homeomorph.shearMulRight : G × G ≃ₜ G × G :=
@@ -965,12 +701,6 @@ protected def Homeomorph.shearMulRight : G × G ≃ₜ G × G :=
 #align homeomorph.shear_mul_right Homeomorph.shearMulRight
 #align homeomorph.shear_add_right Homeomorph.shearAddRight
 
-/- warning: homeomorph.shear_mul_right_coe -> Homeomorph.shearMulRight_coe is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} ((Prod.{u1, u1} G G) -> (Prod.{u1, u1} G G)) (coeFn.{succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)) (fun (_x : Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)) => (Prod.{u1, u1} G G) -> (Prod.{u1, u1} G G)) (Homeomorph.hasCoeToFun.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)) (Homeomorph.shearMulRight.{u1} G _inst_1 _inst_2 _inst_3)) (fun (z : Prod.{u1, u1} G G) => Prod.mk.{u1, u1} G G (Prod.fst.{u1, u1} G G z) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (Prod.fst.{u1, u1} G G z) (Prod.snd.{u1, u1} G G z)))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} ((Prod.{u1, u1} G G) -> (Prod.{u1, u1} G G)) (FunLike.coe.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)) (Prod.{u1, u1} G G) (fun (_x : Prod.{u1, u1} G G) => Prod.{u1, u1} G G) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)) (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)) (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Homeomorph.instEquivLikeHomeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)))) (Homeomorph.shearMulRight.{u1} G _inst_1 _inst_2 _inst_3)) (fun (z : Prod.{u1, u1} G G) => Prod.mk.{u1, u1} G G (Prod.fst.{u1, u1} G G z) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (Prod.fst.{u1, u1} G G z) (Prod.snd.{u1, u1} G G z)))
-Case conversion may be inaccurate. Consider using '#align homeomorph.shear_mul_right_coe Homeomorph.shearMulRight_coeₓ'. -/
 @[simp, to_additive]
 theorem Homeomorph.shearMulRight_coe :
     ⇑(Homeomorph.shearMulRight G) = fun z : G × G => (z.1, z.1 * z.2) :=
@@ -978,12 +708,6 @@ theorem Homeomorph.shearMulRight_coe :
 #align homeomorph.shear_mul_right_coe Homeomorph.shearMulRight_coe
 #align homeomorph.shear_add_right_coe Homeomorph.shearAddRight_coe
 
-/- warning: homeomorph.shear_mul_right_symm_coe -> Homeomorph.shearMulRight_symm_coe is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} ((Prod.{u1, u1} G G) -> (Prod.{u1, u1} G G)) (coeFn.{succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)) (fun (_x : Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)) => (Prod.{u1, u1} G G) -> (Prod.{u1, u1} G G)) (Homeomorph.hasCoeToFun.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1)) (Homeomorph.symm.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Prod.topologicalSpace.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.shearMulRight.{u1} G _inst_1 _inst_2 _inst_3))) (fun (z : Prod.{u1, u1} G G) => Prod.mk.{u1, u1} G G (Prod.fst.{u1, u1} G G z) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) (Prod.fst.{u1, u1} G G z)) (Prod.snd.{u1, u1} G G z)))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], Eq.{succ u1} ((Prod.{u1, u1} G G) -> (Prod.{u1, u1} G G)) (FunLike.coe.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)) (Prod.{u1, u1} G G) (fun (_x : Prod.{u1, u1} G G) => Prod.{u1, u1} G G) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)) (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Homeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)) (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (Homeomorph.instEquivLikeHomeomorph.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1)))) (Homeomorph.symm.{u1, u1} (Prod.{u1, u1} G G) (Prod.{u1, u1} G G) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (instTopologicalSpaceProd.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.shearMulRight.{u1} G _inst_1 _inst_2 _inst_3))) (fun (z : Prod.{u1, u1} G G) => Prod.mk.{u1, u1} G G (Prod.fst.{u1, u1} G G z) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))) (Prod.fst.{u1, u1} G G z)) (Prod.snd.{u1, u1} G G z)))
-Case conversion may be inaccurate. Consider using '#align homeomorph.shear_mul_right_symm_coe Homeomorph.shearMulRight_symm_coeₓ'. -/
 @[simp, to_additive]
 theorem Homeomorph.shearMulRight_symm_coe :
     ⇑(Homeomorph.shearMulRight G).symm = fun z : G × G => (z.1, z.1⁻¹ * z.2) :=
@@ -993,12 +717,6 @@ theorem Homeomorph.shearMulRight_symm_coe :
 
 variable {G}
 
-/- warning: inducing.topological_group -> Inducing.topologicalGroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {F : Type.{u3}} [_inst_5 : Group.{u2} H] [_inst_6 : TopologicalSpace.{u2} H] [_inst_7 : MonoidHomClass.{u3, u2, u1} F H G (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))] (f : F), (Inducing.{u2, u1} H G _inst_6 _inst_1 (coeFn.{succ u3, max (succ u2) (succ u1)} F (fun (_x : F) => H -> G) (FunLike.hasCoeToFun.{succ u3, succ u2, succ u1} F H (fun (_x : H) => G) (MulHomClass.toFunLike.{u3, u2, u1} F H G (MulOneClass.toHasMul.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u2, u1} F H G (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) _inst_7))) f)) -> (TopologicalGroup.{u2} H _inst_6 _inst_5)
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} G] [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalGroup.{u2} G _inst_1 _inst_2] {F : Type.{u1}} [_inst_5 : Group.{u3} H] [_inst_6 : TopologicalSpace.{u3} H] [_inst_7 : MonoidHomClass.{u1, u3, u2} F H G (Monoid.toMulOneClass.{u3} H (DivInvMonoid.toMonoid.{u3} H (Group.toDivInvMonoid.{u3} H _inst_5))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)))] (f : F), (Inducing.{u3, u2} H G _inst_6 _inst_1 (FunLike.coe.{succ u1, succ u3, succ u2} F H (fun (_x : H) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : H) => G) _x) (MulHomClass.toFunLike.{u1, u3, u2} F H G (MulOneClass.toMul.{u3} H (Monoid.toMulOneClass.{u3} H (DivInvMonoid.toMonoid.{u3} H (Group.toDivInvMonoid.{u3} H _inst_5)))) (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F H G (Monoid.toMulOneClass.{u3} H (DivInvMonoid.toMonoid.{u3} H (Group.toDivInvMonoid.{u3} H _inst_5))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) _inst_7)) f)) -> (TopologicalGroup.{u3} H _inst_6 _inst_5)
-Case conversion may be inaccurate. Consider using '#align inducing.topological_group Inducing.topologicalGroupₓ'. -/
 @[to_additive]
 protected theorem Inducing.topologicalGroup {F : Type _} [Group H] [TopologicalSpace H]
     [MonoidHomClass F H G] (f : F) (hf : Inducing f) : TopologicalGroup H :=
@@ -1007,12 +725,6 @@ protected theorem Inducing.topologicalGroup {F : Type _} [Group H] [TopologicalS
 #align inducing.topological_group Inducing.topologicalGroup
 #align inducing.topological_add_group Inducing.topologicalAddGroup
 
-/- warning: topological_group_induced -> topologicalGroup_induced is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {F : Type.{u3}} [_inst_5 : Group.{u2} H] [_inst_6 : MonoidHomClass.{u3, u2, u1} F H G (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))] (f : F), TopologicalGroup.{u2} H (TopologicalSpace.induced.{u2, u1} H G (coeFn.{succ u3, max (succ u2) (succ u1)} F (fun (_x : F) => H -> G) (FunLike.hasCoeToFun.{succ u3, succ u2, succ u1} F H (fun (_x : H) => G) (MulHomClass.toFunLike.{u3, u2, u1} F H G (MulOneClass.toHasMul.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u2, u1} F H G (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) _inst_6))) f) _inst_1) _inst_5
-but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} G] [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalGroup.{u2} G _inst_1 _inst_2] {F : Type.{u1}} [_inst_5 : Group.{u3} H] [_inst_6 : MonoidHomClass.{u1, u3, u2} F H G (Monoid.toMulOneClass.{u3} H (DivInvMonoid.toMonoid.{u3} H (Group.toDivInvMonoid.{u3} H _inst_5))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)))] (f : F), TopologicalGroup.{u3} H (TopologicalSpace.induced.{u3, u2} H G (FunLike.coe.{succ u1, succ u3, succ u2} F H (fun (_x : H) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : H) => G) _x) (MulHomClass.toFunLike.{u1, u3, u2} F H G (MulOneClass.toMul.{u3} H (Monoid.toMulOneClass.{u3} H (DivInvMonoid.toMonoid.{u3} H (Group.toDivInvMonoid.{u3} H _inst_5)))) (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F H G (Monoid.toMulOneClass.{u3} H (DivInvMonoid.toMonoid.{u3} H (Group.toDivInvMonoid.{u3} H _inst_5))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) _inst_6)) f) _inst_1) _inst_5
-Case conversion may be inaccurate. Consider using '#align topological_group_induced topologicalGroup_inducedₓ'. -/
 @[to_additive]
 protected theorem topologicalGroup_induced {F : Type _} [Group H] [MonoidHomClass F H G] (f : F) :
     @TopologicalGroup H (induced f ‹_›) _ :=
@@ -1043,12 +755,6 @@ def Subgroup.topologicalClosure (s : Subgroup G) : Subgroup G :=
 #align add_subgroup.topological_closure AddSubgroup.topologicalClosure
 -/
 
-/- warning: subgroup.topological_closure_coe -> Subgroup.topologicalClosure_coe is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {s : Subgroup.{u1} G _inst_2}, Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_2) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s)) (closure.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_2) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {s : Subgroup.{u1} G _inst_2}, Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s)) (closure.{u1} G _inst_1 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2) s))
-Case conversion may be inaccurate. Consider using '#align subgroup.topological_closure_coe Subgroup.topologicalClosure_coeₓ'. -/
 @[simp, to_additive]
 theorem Subgroup.topologicalClosure_coe {s : Subgroup G} :
     (s.topologicalClosure : Set G) = closure s :=
@@ -1056,36 +762,18 @@ theorem Subgroup.topologicalClosure_coe {s : Subgroup G} :
 #align subgroup.topological_closure_coe Subgroup.topologicalClosure_coe
 #align add_subgroup.topological_closure_coe AddSubgroup.topologicalClosure_coe
 
-/- warning: subgroup.le_topological_closure -> Subgroup.le_topologicalClosure is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (s : Subgroup.{u1} G _inst_2), LE.le.{u1} (Subgroup.{u1} G _inst_2) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_2) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) s (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (s : Subgroup.{u1} G _inst_2), LE.le.{u1} (Subgroup.{u1} G _inst_2) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_2) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_2))))) s (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s)
-Case conversion may be inaccurate. Consider using '#align subgroup.le_topological_closure Subgroup.le_topologicalClosureₓ'. -/
 @[to_additive]
 theorem Subgroup.le_topologicalClosure (s : Subgroup G) : s ≤ s.topologicalClosure :=
   subset_closure
 #align subgroup.le_topological_closure Subgroup.le_topologicalClosure
 #align add_subgroup.le_topological_closure AddSubgroup.le_topologicalClosure
 
-/- warning: subgroup.is_closed_topological_closure -> Subgroup.isClosed_topologicalClosure is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (s : Subgroup.{u1} G _inst_2), IsClosed.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_2) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (s : Subgroup.{u1} G _inst_2), IsClosed.{u1} G _inst_1 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s))
-Case conversion may be inaccurate. Consider using '#align subgroup.is_closed_topological_closure Subgroup.isClosed_topologicalClosureₓ'. -/
 @[to_additive]
 theorem Subgroup.isClosed_topologicalClosure (s : Subgroup G) :
     IsClosed (s.topologicalClosure : Set G) := by convert isClosed_closure
 #align subgroup.is_closed_topological_closure Subgroup.isClosed_topologicalClosure
 #align add_subgroup.is_closed_topological_closure AddSubgroup.isClosed_topologicalClosure
 
-/- warning: subgroup.topological_closure_minimal -> Subgroup.topologicalClosure_minimal is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (s : Subgroup.{u1} G _inst_2) {t : Subgroup.{u1} G _inst_2}, (LE.le.{u1} (Subgroup.{u1} G _inst_2) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_2) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) s t) -> (IsClosed.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_2) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) t)) -> (LE.le.{u1} (Subgroup.{u1} G _inst_2) (Preorder.toHasLe.{u1} (Subgroup.{u1} G _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_2) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s) t)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (s : Subgroup.{u1} G _inst_2) {t : Subgroup.{u1} G _inst_2}, (LE.le.{u1} (Subgroup.{u1} G _inst_2) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_2) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_2))))) s t) -> (IsClosed.{u1} G _inst_1 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2) t)) -> (LE.le.{u1} (Subgroup.{u1} G _inst_2) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_2) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_2))))) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s) t)
-Case conversion may be inaccurate. Consider using '#align subgroup.topological_closure_minimal Subgroup.topologicalClosure_minimalₓ'. -/
 @[to_additive]
 theorem Subgroup.topologicalClosure_minimal (s : Subgroup G) {t : Subgroup G} (h : s ≤ t)
     (ht : IsClosed (t : Set G)) : s.topologicalClosure ≤ t :=
@@ -1093,12 +781,6 @@ theorem Subgroup.topologicalClosure_minimal (s : Subgroup G) {t : Subgroup G} (h
 #align subgroup.topological_closure_minimal Subgroup.topologicalClosure_minimal
 #align add_subgroup.topological_closure_minimal AddSubgroup.topologicalClosure_minimal
 
-/- warning: dense_range.topological_closure_map_subgroup -> DenseRange.topologicalClosure_map_subgroup is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_5 : Group.{u2} H] [_inst_6 : TopologicalSpace.{u2} H] [_inst_7 : TopologicalGroup.{u2} H _inst_6 _inst_5] {f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))}, (Continuous.{u1, u2} G H _inst_1 _inst_6 (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) (fun (_x : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) => G -> H) (MonoidHom.hasCoeToFun.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) f)) -> (DenseRange.{u2, u1} H _inst_6 G (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) (fun (_x : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) => G -> H) (MonoidHom.hasCoeToFun.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) f)) -> (forall {s : Subgroup.{u1} G _inst_2}, (Eq.{succ u1} (Subgroup.{u1} G _inst_2) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s) (Top.top.{u1} (Subgroup.{u1} G _inst_2) (Subgroup.hasTop.{u1} G _inst_2))) -> (Eq.{succ u2} (Subgroup.{u2} H _inst_5) (Subgroup.topologicalClosure.{u2} H _inst_6 _inst_5 _inst_7 (Subgroup.map.{u1, u2} G _inst_2 H _inst_5 f s)) (Top.top.{u2} (Subgroup.{u2} H _inst_5) (Subgroup.hasTop.{u2} H _inst_5))))
-but is expected to have type
-  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_5 : Group.{u2} H] [_inst_6 : TopologicalSpace.{u2} H] [_inst_7 : TopologicalGroup.{u2} H _inst_6 _inst_5] {f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))}, (Continuous.{u1, u2} G H _inst_1 _inst_6 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => H) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) G H (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MulOneClass.toMul.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5))) (MonoidHom.monoidHomClass.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))))) f)) -> (DenseRange.{u2, u1} H _inst_6 G (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => H) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) G H (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MulOneClass.toMul.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))) G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5))) (MonoidHom.monoidHomClass.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_5)))))) f)) -> (forall {s : Subgroup.{u1} G _inst_2}, (Eq.{succ u1} (Subgroup.{u1} G _inst_2) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s) (Top.top.{u1} (Subgroup.{u1} G _inst_2) (Subgroup.instTopSubgroup.{u1} G _inst_2))) -> (Eq.{succ u2} (Subgroup.{u2} H _inst_5) (Subgroup.topologicalClosure.{u2} H _inst_6 _inst_5 _inst_7 (Subgroup.map.{u1, u2} G _inst_2 H _inst_5 f s)) (Top.top.{u2} (Subgroup.{u2} H _inst_5) (Subgroup.instTopSubgroup.{u2} H _inst_5))))
-Case conversion may be inaccurate. Consider using '#align dense_range.topological_closure_map_subgroup DenseRange.topologicalClosure_map_subgroupₓ'. -/
 @[to_additive]
 theorem DenseRange.topologicalClosure_map_subgroup [Group H] [TopologicalSpace H]
     [TopologicalGroup H] {f : G →* H} (hf : Continuous f) (hf' : DenseRange f) {s : Subgroup G}
@@ -1124,12 +806,6 @@ theorem Subgroup.is_normal_topologicalClosure {G : Type _} [TopologicalSpace G] 
 #align add_subgroup.is_normal_topological_closure AddSubgroup.is_normal_topologicalClosure
 -/
 
-/- warning: mul_mem_connected_component_one -> mul_mem_connectedComponent_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} G] [_inst_6 : MulOneClass.{u1} G] [_inst_7 : ContinuousMul.{u1} G _inst_5 (MulOneClass.toHasMul.{u1} G _inst_6)] {g : G} {h : G}, (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_6)))))) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) h (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_6)))))) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G _inst_6)) g h) (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_6))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} G] [_inst_6 : MulOneClass.{u1} G] [_inst_7 : ContinuousMul.{u1} G _inst_5 (MulOneClass.toMul.{u1} G _inst_6)] {g : G} {h : G}, (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (MulOneClass.toOne.{u1} G _inst_6))))) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) h (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (MulOneClass.toOne.{u1} G _inst_6))))) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G _inst_6)) g h) (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (MulOneClass.toOne.{u1} G _inst_6)))))
-Case conversion may be inaccurate. Consider using '#align mul_mem_connected_component_one mul_mem_connectedComponent_oneₓ'. -/
 @[to_additive]
 theorem mul_mem_connectedComponent_one {G : Type _} [TopologicalSpace G] [MulOneClass G]
     [ContinuousMul G] {g h : G} (hg : g ∈ connectedComponent (1 : G))
@@ -1145,12 +821,6 @@ theorem mul_mem_connectedComponent_one {G : Type _} [TopologicalSpace G] [MulOne
 #align mul_mem_connected_component_one mul_mem_connectedComponent_one
 #align add_mem_connected_component_zero add_mem_connectedComponent_zero
 
-/- warning: inv_mem_connected_component_one -> inv_mem_connectedComponent_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} G] [_inst_6 : Group.{u1} G] [_inst_7 : TopologicalGroup.{u1} G _inst_5 _inst_6] {g : G}, (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_6))))))))) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_6)) g) (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_6)))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} G] [_inst_6 : Group.{u1} G] [_inst_7 : TopologicalGroup.{u1} G _inst_5 _inst_6] {g : G}, (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_6)))))))) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_6)))) g) (connectedComponent.{u1} G _inst_5 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_6))))))))
-Case conversion may be inaccurate. Consider using '#align inv_mem_connected_component_one inv_mem_connectedComponent_oneₓ'. -/
 @[to_additive]
 theorem inv_mem_connectedComponent_one {G : Type _} [TopologicalSpace G] [Group G]
     [TopologicalGroup G] {g : G} (hg : g ∈ connectedComponent (1 : G)) :
@@ -1176,12 +846,6 @@ def Subgroup.connectedComponentOfOne (G : Type _) [TopologicalSpace G] [Group G]
 #align add_subgroup.connected_component_of_zero AddSubgroup.connectedComponentOfZero
 -/
 
-/- warning: subgroup.comm_group_topological_closure -> Subgroup.commGroupTopologicalClosure is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_5 : T2Space.{u1} G _inst_1] (s : Subgroup.{u1} G _inst_2), (forall (x : coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (y : coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s), Eq.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (HMul.hMul.{u1, u1, u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (instHMul.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (Subgroup.mul.{u1} G _inst_2 s)) x y) (HMul.hMul.{u1, u1, u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (instHMul.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) s) (Subgroup.mul.{u1} G _inst_2 s)) y x)) -> (CommGroup.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_2) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)) (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_5 : T2Space.{u1} G _inst_1] (s : Subgroup.{u1} G _inst_2), (forall (x : Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (y : Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)), Eq.{succ u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (HMul.hMul.{u1, u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (instHMul.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (Subgroup.mul.{u1} G _inst_2 s)) x y) (HMul.hMul.{u1, u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (instHMul.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x s)) (Subgroup.mul.{u1} G _inst_2 s)) y x)) -> (CommGroup.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2)) x (Subgroup.topologicalClosure.{u1} G _inst_1 _inst_2 _inst_3 s))))
-Case conversion may be inaccurate. Consider using '#align subgroup.comm_group_topological_closure Subgroup.commGroupTopologicalClosureₓ'. -/
 /-- If a subgroup of a topological group is commutative, then so is its topological closure. -/
 @[to_additive
       "If a subgroup of an additive topological group is commutative, then so is its\ntopological closure."]
@@ -1191,12 +855,6 @@ def Subgroup.commGroupTopologicalClosure [T2Space G] (s : Subgroup G)
 #align subgroup.comm_group_topological_closure Subgroup.commGroupTopologicalClosure
 #align add_subgroup.add_comm_group_topological_closure AddSubgroup.addCommGroupTopologicalClosure
 
-/- warning: exists_nhds_split_inv -> exists_nhds_split_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {s : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) s (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) => forall (v : G), (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) v V) -> (forall (w : G), (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) w V) -> (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) v w) s)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {s : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) s (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) (forall (v : G), (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) v V) -> (forall (w : G), (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) w V) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) v w) s)))))
-Case conversion may be inaccurate. Consider using '#align exists_nhds_split_inv exists_nhds_split_invₓ'. -/
 @[to_additive exists_nhds_half_neg]
 theorem exists_nhds_split_inv {s : Set G} (hs : s ∈ 𝓝 (1 : G)) :
     ∃ V ∈ 𝓝 (1 : G), ∀ v ∈ V, ∀ w ∈ V, v / w ∈ s :=
@@ -1208,70 +866,34 @@ theorem exists_nhds_split_inv {s : Set G} (hs : s ∈ 𝓝 (1 : G)) :
 #align exists_nhds_split_inv exists_nhds_split_inv
 #align exists_nhds_half_neg exists_nhds_half_neg
 
-/- warning: nhds_translation_mul_inv -> nhds_translation_mul_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.comap.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) y (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) x)) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) (nhds.{u1} G _inst_1 x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.comap.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) y (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))) x)) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) (nhds.{u1} G _inst_1 x)
-Case conversion may be inaccurate. Consider using '#align nhds_translation_mul_inv nhds_translation_mul_invₓ'. -/
 @[to_additive]
 theorem nhds_translation_mul_inv (x : G) : comap (fun y : G => y * x⁻¹) (𝓝 1) = 𝓝 x :=
   ((Homeomorph.mulRight x⁻¹).comap_nhds_eq 1).trans <| show 𝓝 (1 * x⁻¹⁻¹) = 𝓝 x by simp
 #align nhds_translation_mul_inv nhds_translation_mul_inv
 #align nhds_translation_add_neg nhds_translation_add_neg
 
-/- warning: map_mul_left_nhds -> map_mul_left_nhds is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G) (y : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x) (nhds.{u1} G _inst_1 y)) (nhds.{u1} G _inst_1 (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x y))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G) (y : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5924 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5926 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5924 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5926) x) (nhds.{u1} G _inst_1 y)) (nhds.{u1} G _inst_1 (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x y))
-Case conversion may be inaccurate. Consider using '#align map_mul_left_nhds map_mul_left_nhdsₓ'. -/
 @[simp, to_additive]
 theorem map_mul_left_nhds (x y : G) : map ((· * ·) x) (𝓝 y) = 𝓝 (x * y) :=
   (Homeomorph.mulLeft x).map_nhds_eq y
 #align map_mul_left_nhds map_mul_left_nhds
 #align map_add_left_nhds map_add_left_nhds
 
-/- warning: map_mul_left_nhds_one -> map_mul_left_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) (nhds.{u1} G _inst_1 x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5997 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5999 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5997 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.5999) x) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) (nhds.{u1} G _inst_1 x)
-Case conversion may be inaccurate. Consider using '#align map_mul_left_nhds_one map_mul_left_nhds_oneₓ'. -/
 @[to_additive]
 theorem map_mul_left_nhds_one (x : G) : map ((· * ·) x) (𝓝 1) = 𝓝 x := by simp
 #align map_mul_left_nhds_one map_mul_left_nhds_one
 #align map_add_left_nhds_zero map_add_left_nhds_zero
 
-/- warning: map_mul_right_nhds -> map_mul_right_nhds is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G) (y : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (fun (z : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) z x) (nhds.{u1} G _inst_1 y)) (nhds.{u1} G _inst_1 (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) y x))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G) (y : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (fun (z : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) z x) (nhds.{u1} G _inst_1 y)) (nhds.{u1} G _inst_1 (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) y x))
-Case conversion may be inaccurate. Consider using '#align map_mul_right_nhds map_mul_right_nhdsₓ'. -/
 @[simp, to_additive]
 theorem map_mul_right_nhds (x y : G) : map (fun z => z * x) (𝓝 y) = 𝓝 (y * x) :=
   (Homeomorph.mulRight x).map_nhds_eq y
 #align map_mul_right_nhds map_mul_right_nhds
 #align map_add_right_nhds map_add_right_nhds
 
-/- warning: map_mul_right_nhds_one -> map_mul_right_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) y x) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) (nhds.{u1} G _inst_1 x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.map.{u1, u1} G G (fun (y : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) y x) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) (nhds.{u1} G _inst_1 x)
-Case conversion may be inaccurate. Consider using '#align map_mul_right_nhds_one map_mul_right_nhds_oneₓ'. -/
 @[to_additive]
 theorem map_mul_right_nhds_one (x : G) : map (fun y => y * x) (𝓝 1) = 𝓝 x := by simp
 #align map_mul_right_nhds_one map_mul_right_nhds_one
 #align map_add_right_nhds_zero map_add_right_nhds_zero
 
-/- warning: filter.has_basis.nhds_of_one -> Filter.HasBasis.nhds_of_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} G)}, (Filter.HasBasis.{u1, u2} G ι (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))))) p s) -> (forall (x : G), Filter.HasBasis.{u1, u2} G ι (nhds.{u1} G _inst_1 x) p (fun (i : ι) => setOf.{u1} G (fun (y : G) => Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) y x) (s i))))
-but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} G] [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalGroup.{u2} G _inst_1 _inst_2] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} G)}, (Filter.HasBasis.{u2, u1} G ι (nhds.{u2} G _inst_1 (OfNat.ofNat.{u2} G 1 (One.toOfNat1.{u2} G (InvOneClass.toOne.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_2))))))) p s) -> (forall (x : G), Filter.HasBasis.{u2, u1} G ι (nhds.{u2} G _inst_1 x) p (fun (i : ι) => setOf.{u2} G (fun (y : G) => Membership.mem.{u2, u2} G (Set.{u2} G) (Set.instMembershipSet.{u2} G) (HDiv.hDiv.{u2, u2, u2} G G G (instHDiv.{u2} G (DivInvMonoid.toDiv.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) y x) (s i))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.nhds_of_one Filter.HasBasis.nhds_of_oneₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.nhds_of_one {ι : Sort _} {p : ι → Prop} {s : ι → Set G}
     (hb : HasBasis (𝓝 1 : Filter G) p s) (x : G) : HasBasis (𝓝 x) p fun i => { y | y / x ∈ s i } :=
@@ -1282,12 +904,6 @@ theorem Filter.HasBasis.nhds_of_one {ι : Sort _} {p : ι → Prop} {s : ι → 
 #align filter.has_basis.nhds_of_one Filter.HasBasis.nhds_of_one
 #align filter.has_basis.nhds_of_zero Filter.HasBasis.nhds_of_zero
 
-/- warning: mem_closure_iff_nhds_one -> mem_closure_iff_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {x : G} {s : Set.{u1} G}, Iff (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x (closure.{u1} G _inst_1 s)) (forall (U : Set.{u1} G), (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) U (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) -> (Exists.{succ u1} G (fun (y : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) y s) (fun (H : Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) y s) => Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) y x) U))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {x : G} {s : Set.{u1} G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x (closure.{u1} G _inst_1 s)) (forall (U : Set.{u1} G), (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) U (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) -> (Exists.{succ u1} G (fun (y : G) => And (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) y s) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) y x) U))))
-Case conversion may be inaccurate. Consider using '#align mem_closure_iff_nhds_one mem_closure_iff_nhds_oneₓ'. -/
 @[to_additive]
 theorem mem_closure_iff_nhds_one {x : G} {s : Set G} :
     x ∈ closure s ↔ ∀ U ∈ (𝓝 1 : Filter G), ∃ y ∈ s, y / x ∈ U :=
@@ -1297,12 +913,6 @@ theorem mem_closure_iff_nhds_one {x : G} {s : Set G} :
 #align mem_closure_iff_nhds_one mem_closure_iff_nhds_one
 #align mem_closure_iff_nhds_zero mem_closure_iff_nhds_zero
 
-/- warning: continuous_of_continuous_at_one -> continuous_of_continuousAt_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {M : Type.{u2}} {hom : Type.{u3}} [_inst_5 : MulOneClass.{u2} M] [_inst_6 : TopologicalSpace.{u2} M] [_inst_7 : ContinuousMul.{u2} M _inst_6 (MulOneClass.toHasMul.{u2} M _inst_5)] [_inst_8 : MonoidHomClass.{u3, u1, u2} hom G M (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) _inst_5] (f : hom), (ContinuousAt.{u1, u2} G M _inst_1 _inst_6 (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => G -> M) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom G (fun (_x : G) => M) (MulHomClass.toFunLike.{u3, u1, u2} hom G M (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MulOneClass.toHasMul.{u2} M _inst_5) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom G M (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) _inst_5 _inst_8))) f) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))))) -> (Continuous.{u1, u2} G M _inst_1 _inst_6 (coeFn.{succ u3, max (succ u1) (succ u2)} hom (fun (_x : hom) => G -> M) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} hom G (fun (_x : G) => M) (MulHomClass.toFunLike.{u3, u1, u2} hom G M (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (MulOneClass.toHasMul.{u2} M _inst_5) (MonoidHomClass.toMulHomClass.{u3, u1, u2} hom G M (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))) _inst_5 _inst_8))) f))
-but is expected to have type
-  forall {G : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} G] [_inst_2 : Group.{u3} G] [_inst_3 : TopologicalGroup.{u3} G _inst_1 _inst_2] {M : Type.{u2}} {hom : Type.{u1}} [_inst_5 : MulOneClass.{u2} M] [_inst_6 : TopologicalSpace.{u2} M] [_inst_7 : ContinuousMul.{u2} M _inst_6 (MulOneClass.toMul.{u2} M _inst_5)] [_inst_8 : MonoidHomClass.{u1, u3, u2} hom G M (Monoid.toMulOneClass.{u3} G (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_2))) _inst_5] (f : hom), (ContinuousAt.{u3, u2} G M _inst_1 _inst_6 (FunLike.coe.{succ u1, succ u3, succ u2} hom G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => M) _x) (MulHomClass.toFunLike.{u1, u3, u2} hom G M (MulOneClass.toMul.{u3} G (Monoid.toMulOneClass.{u3} G (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_2)))) (MulOneClass.toMul.{u2} M _inst_5) (MonoidHomClass.toMulHomClass.{u1, u3, u2} hom G M (Monoid.toMulOneClass.{u3} G (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_2))) _inst_5 _inst_8)) f) (OfNat.ofNat.{u3} G 1 (One.toOfNat1.{u3} G (InvOneClass.toOne.{u3} G (DivInvOneMonoid.toInvOneClass.{u3} G (DivisionMonoid.toDivInvOneMonoid.{u3} G (Group.toDivisionMonoid.{u3} G _inst_2))))))) -> (Continuous.{u3, u2} G M _inst_1 _inst_6 (FunLike.coe.{succ u1, succ u3, succ u2} hom G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => M) _x) (MulHomClass.toFunLike.{u1, u3, u2} hom G M (MulOneClass.toMul.{u3} G (Monoid.toMulOneClass.{u3} G (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_2)))) (MulOneClass.toMul.{u2} M _inst_5) (MonoidHomClass.toMulHomClass.{u1, u3, u2} hom G M (Monoid.toMulOneClass.{u3} G (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_2))) _inst_5 _inst_8)) f))
-Case conversion may be inaccurate. Consider using '#align continuous_of_continuous_at_one continuous_of_continuousAt_oneₓ'. -/
 /-- A monoid homomorphism (a bundled morphism of a type that implements `monoid_hom_class`) from a
 topological group to a topological monoid is continuous provided that it is continuous at one. See
 also `uniform_continuous_of_continuous_at_one`. -/
@@ -1316,12 +926,6 @@ theorem continuous_of_continuousAt_one {M hom : Type _} [MulOneClass M] [Topolog
 #align continuous_of_continuous_at_one continuous_of_continuousAt_one
 #align continuous_of_continuous_at_zero continuous_of_continuousAt_zero
 
-/- warning: topological_group.ext -> TopologicalGroup.ext is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] {t : TopologicalSpace.{u1} G} {t' : TopologicalSpace.{u1} G}, (TopologicalGroup.{u1} G t _inst_5) -> (TopologicalGroup.{u1} G t' _inst_5) -> (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G t (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G t' (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (Eq.{succ u1} (TopologicalSpace.{u1} G) t t')
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] {t : TopologicalSpace.{u1} G} {t' : TopologicalSpace.{u1} G}, (TopologicalGroup.{u1} G t _inst_5) -> (TopologicalGroup.{u1} G t' _inst_5) -> (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G t (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G t' (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (Eq.{succ u1} (TopologicalSpace.{u1} G) t t')
-Case conversion may be inaccurate. Consider using '#align topological_group.ext TopologicalGroup.extₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.ext {G : Type _} [Group G] {t t' : TopologicalSpace G}
     (tg : @TopologicalGroup G t _) (tg' : @TopologicalGroup G t' _)
@@ -1331,12 +935,6 @@ theorem TopologicalGroup.ext {G : Type _} [Group G] {t t' : TopologicalSpace G}
 #align topological_group.ext TopologicalGroup.ext
 #align topological_add_group.ext TopologicalAddGroup.ext
 
-/- warning: topological_group.ext_iff -> TopologicalGroup.ext_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] {t : TopologicalSpace.{u1} G} {t' : TopologicalSpace.{u1} G}, (TopologicalGroup.{u1} G t _inst_5) -> (TopologicalGroup.{u1} G t' _inst_5) -> (Iff (Eq.{succ u1} (TopologicalSpace.{u1} G) t t') (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G t (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G t' (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] {t : TopologicalSpace.{u1} G} {t' : TopologicalSpace.{u1} G}, (TopologicalGroup.{u1} G t _inst_5) -> (TopologicalGroup.{u1} G t' _inst_5) -> (Iff (Eq.{succ u1} (TopologicalSpace.{u1} G) t t') (Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G t (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G t' (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))))
-Case conversion may be inaccurate. Consider using '#align topological_group.ext_iff TopologicalGroup.ext_iffₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.ext_iff {G : Type _} [Group G] {t t' : TopologicalSpace G}
     (tg : @TopologicalGroup G t _) (tg' : @TopologicalGroup G t' _) :
@@ -1345,12 +943,6 @@ theorem TopologicalGroup.ext_iff {G : Type _} [Group G] {t t' : TopologicalSpace
 #align topological_group.ext_iff TopologicalGroup.ext_iff
 #align topological_add_group.ext_iff TopologicalAddGroup.ext_iff
 
-/- warning: has_continuous_inv.of_nhds_one -> ContinuousInv.of_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))))) -> (forall (x₀ : G), Filter.Tendsto.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)) x₀)) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (ContinuousInv.{u1} G _inst_6 (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Filter.Tendsto.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))) x₀)) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (ContinuousInv.{u1} G _inst_6 (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv.of_nhds_one ContinuousInv.of_nhds_oneₓ'. -/
 @[to_additive]
 theorem ContinuousInv.of_nhds_one {G : Type _} [Group G] [TopologicalSpace G]
     (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
@@ -1365,12 +957,6 @@ theorem ContinuousInv.of_nhds_one {G : Type _} [Group G] [TopologicalSpace G]
 #align has_continuous_inv.of_nhds_one ContinuousInv.of_nhds_one
 #align has_continuous_neg.of_nhds_zero ContinuousNeg.of_nhds_zero
 
-/- warning: topological_group.of_nhds_one' -> TopologicalGroup.of_nhds_one' is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} G G) G (Function.uncurry.{u1, u1, u1} G G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))) (Filter.prod.{u1, u1} G G (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x x₀) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))))) -> (TopologicalGroup.{u1} G _inst_6 _inst_5)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} G G) G (Function.uncurry.{u1, u1, u1} G G G (fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7130 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7132 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7130 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7132)) (Filter.prod.{u1, u1} G G (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x x₀) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))))) -> (TopologicalGroup.{u1} G _inst_6 _inst_5)
-Case conversion may be inaccurate. Consider using '#align topological_group.of_nhds_one' TopologicalGroup.of_nhds_one'ₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.of_nhds_one' {G : Type u} [Group G] [TopologicalSpace G]
     (hmul : Tendsto (uncurry ((· * ·) : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1))
@@ -1388,12 +974,6 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Group G] [TopologicalSpace G
 #align topological_group.of_nhds_one' TopologicalGroup.of_nhds_one'
 #align topological_add_group.of_nhds_zero' TopologicalAddGroup.of_nhds_zero'
 
-/- warning: topological_group.of_nhds_one -> TopologicalGroup.of_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} G G) G (Function.uncurry.{u1, u1, u1} G G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))) (Filter.prod.{u1, u1} G G (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))))) -> (forall (x₀ : G), Filter.Tendsto.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)) x₀)) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))))))) -> (TopologicalGroup.{u1} G _inst_6 _inst_5)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : Group.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} G G) G (Function.uncurry.{u1, u1, u1} G G G (fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7418 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7420 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7418 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7420)) (Filter.prod.{u1, u1} G G (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Filter.Tendsto.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_5))))) x₀ x) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))) x₀)) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_5)))))))) -> (TopologicalGroup.{u1} G _inst_6 _inst_5)
-Case conversion may be inaccurate. Consider using '#align topological_group.of_nhds_one TopologicalGroup.of_nhds_oneₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.of_nhds_one {G : Type u} [Group G] [TopologicalSpace G]
     (hmul : Tendsto (uncurry ((· * ·) : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1))
@@ -1410,12 +990,6 @@ theorem TopologicalGroup.of_nhds_one {G : Type u} [Group G] [TopologicalSpace G]
 #align topological_group.of_nhds_one TopologicalGroup.of_nhds_one
 #align topological_add_group.of_nhds_zero TopologicalAddGroup.of_nhds_zero
 
-/- warning: topological_group.of_comm_of_nhds_one -> TopologicalGroup.of_comm_of_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_5 : CommGroup.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} G G) G (Function.uncurry.{u1, u1, u1} G G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))))) (Filter.prod.{u1, u1} G G (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5))))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))))))) -> (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5))) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5))))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5))))))))))) -> (TopologicalGroup.{u1} G _inst_6 (CommGroup.toGroup.{u1} G _inst_5))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_5 : CommGroup.{u1} G] [_inst_6 : TopologicalSpace.{u1} G], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} G G) G (Function.uncurry.{u1, u1, u1} G G G (fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7736 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7738 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7736 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.7738)) (Filter.prod.{u1, u1} G G (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5))))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5))))))))) -> (Filter.Tendsto.{u1, u1} G G (fun (x : G) => Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5))))) x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5)))))))) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5))))))))) -> (forall (x₀ : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_6 x₀) (Filter.map.{u1, u1} G G (fun (x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_5)))))) x₀ x) (nhds.{u1} G _inst_6 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_5)))))))))) -> (TopologicalGroup.{u1} G _inst_6 (CommGroup.toGroup.{u1} G _inst_5))
-Case conversion may be inaccurate. Consider using '#align topological_group.of_comm_of_nhds_one TopologicalGroup.of_comm_of_nhds_oneₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.of_comm_of_nhds_one {G : Type u} [CommGroup G] [TopologicalSpace G]
     (hmul : Tendsto (uncurry ((· * ·) : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1))
@@ -1486,12 +1060,6 @@ theorem QuotientGroup.nhds_eq (x : G) : 𝓝 (x : G ⧸ N) = map coe (𝓝 x) :=
 
 variable (G) [FirstCountableTopology G]
 
-/- warning: topological_group.exists_antitone_basis_nhds_one -> TopologicalGroup.exists_antitone_basis_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_4 : TopologicalSpace.FirstCountableTopology.{u1} G _inst_1], Exists.{succ u1} (Nat -> (Set.{u1} G)) (fun (u : Nat -> (Set.{u1} G)) => And (Filter.HasAntitoneBasis.{u1, 0} G Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))))) u) (forall (n : Nat), HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) (u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (u n)))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_4 : TopologicalSpace.FirstCountableTopology.{u1} G _inst_1], Exists.{succ u1} (Nat -> (Set.{u1} G)) (fun (u : Nat -> (Set.{u1} G)) => And (Filter.HasAntitoneBasis.{u1, 0} G Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2))))))) u) (forall (n : Nat), HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) (u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (u n)))
-Case conversion may be inaccurate. Consider using '#align topological_group.exists_antitone_basis_nhds_one TopologicalGroup.exists_antitone_basis_nhds_oneₓ'. -/
 /-- Any first countable topological group has an antitone neighborhood basis `u : ℕ → set G` for
 which `(u (n + 1)) ^ 2 ⊆ u n`. The existence of such a neighborhood basis is a key tool for
 `quotient_group.complete_space` -/
@@ -1520,12 +1088,6 @@ theorem TopologicalGroup.exists_antitone_basis_nhds_one :
 
 include n
 
-/- warning: quotient_group.nhds_one_is_countably_generated -> QuotientGroup.nhds_one_isCountablyGenerated is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (N : Subgroup.{u1} G _inst_2) (n : Subgroup.Normal.{u1} G _inst_2 N) [_inst_4 : TopologicalSpace.FirstCountableTopology.{u1} G _inst_1], Filter.IsCountablyGenerated.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (nhds.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_2 _inst_1 N) (OfNat.ofNat.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) 1 (OfNat.mk.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) 1 (One.one.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (MulOneClass.toHasOne.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (Monoid.toMulOneClass.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (DivInvMonoid.toMonoid.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (Group.toDivInvMonoid.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) N) (QuotientGroup.Quotient.group.{u1} G _inst_2 N n)))))))))
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (N : Subgroup.{u1} G _inst_2) (n : Subgroup.Normal.{u1} G _inst_2 N) [_inst_4 : TopologicalSpace.FirstCountableTopology.{u1} G _inst_1], Filter.IsCountablyGenerated.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (nhds.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_2 _inst_1 N) (OfNat.ofNat.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) 1 (One.toOfNat1.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (InvOneClass.toOne.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (DivInvOneMonoid.toInvOneClass.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (DivisionMonoid.toDivInvOneMonoid.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (Group.toDivisionMonoid.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) N) (QuotientGroup.Quotient.group.{u1} G _inst_2 N n))))))))
-Case conversion may be inaccurate. Consider using '#align quotient_group.nhds_one_is_countably_generated QuotientGroup.nhds_one_isCountablyGeneratedₓ'. -/
 /-- In a first countable topological group `G` with normal subgroup `N`, `1 : G ⧸ N` has a
 countable neighborhood basis. -/
 @[to_additive
@@ -1556,12 +1118,6 @@ class ContinuousDiv (G : Type _) [TopologicalSpace G] [Div G] : Prop where
 #align has_continuous_sub ContinuousSub
 -/
 
-/- warning: topological_group.to_has_continuous_div -> TopologicalGroup.to_continuousDiv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], ContinuousDiv.{u1} G _inst_1 (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], ContinuousDiv.{u1} G _inst_1 (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))
-Case conversion may be inaccurate. Consider using '#align topological_group.to_has_continuous_div TopologicalGroup.to_continuousDivₓ'. -/
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) TopologicalGroup.to_continuousDiv [TopologicalSpace G] [Group G]
@@ -1675,24 +1231,12 @@ def Homeomorph.divLeft (x : G) : G ≃ₜ G :=
 #align homeomorph.sub_left Homeomorph.subLeft
 -/
 
-/- warning: is_open_map_div_left -> isOpenMap_div_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9549 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9551 : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9549 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9551) a)
-Case conversion may be inaccurate. Consider using '#align is_open_map_div_left isOpenMap_div_leftₓ'. -/
 @[to_additive]
 theorem isOpenMap_div_left (a : G) : IsOpenMap ((· / ·) a) :=
   (Homeomorph.divLeft _).IsOpenMap
 #align is_open_map_div_left isOpenMap_div_left
 #align is_open_map_sub_left isOpenMap_sub_left
 
-/- warning: is_closed_map_div_left -> isClosedMap_div_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9591 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9593 : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9591 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9593) a)
-Case conversion may be inaccurate. Consider using '#align is_closed_map_div_left isClosedMap_div_leftₓ'. -/
 @[to_additive]
 theorem isClosedMap_div_left (a : G) : IsClosedMap ((· / ·) a) :=
   (Homeomorph.divLeft _).IsClosedMap
@@ -1711,36 +1255,18 @@ def Homeomorph.divRight (x : G) : G ≃ₜ G :=
 #align homeomorph.sub_right Homeomorph.subRight
 -/
 
-/- warning: is_open_map_div_right -> isOpenMap_div_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 (fun (x : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 (fun (x : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x a)
-Case conversion may be inaccurate. Consider using '#align is_open_map_div_right isOpenMap_div_rightₓ'. -/
 @[to_additive]
 theorem isOpenMap_div_right (a : G) : IsOpenMap fun x => x / a :=
   (Homeomorph.divRight a).IsOpenMap
 #align is_open_map_div_right isOpenMap_div_right
 #align is_open_map_sub_right isOpenMap_sub_right
 
-/- warning: is_closed_map_div_right -> isClosedMap_div_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 (fun (x : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 (fun (x : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x a)
-Case conversion may be inaccurate. Consider using '#align is_closed_map_div_right isClosedMap_div_rightₓ'. -/
 @[to_additive]
 theorem isClosedMap_div_right (a : G) : IsClosedMap fun x => x / a :=
   (Homeomorph.divRight a).IsClosedMap
 #align is_closed_map_div_right isClosedMap_div_right
 #align is_closed_map_sub_right isClosedMap_sub_right
 
-/- warning: tendsto_div_nhds_one_iff -> tendsto_div_nhds_one_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] {α : Type.{u2}} {l : Filter.{u2} α} {x : G} {u : α -> G}, Iff (Filter.Tendsto.{u2, u1} α G (fun (n : α) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (u n) x) l (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))) (Filter.Tendsto.{u2, u1} α G u l (nhds.{u1} G _inst_2 x))
-but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] [_inst_2 : TopologicalSpace.{u2} G] [_inst_3 : TopologicalGroup.{u2} G _inst_2 _inst_1] {α : Type.{u1}} {l : Filter.{u1} α} {x : G} {u : α -> G}, Iff (Filter.Tendsto.{u1, u2} α G (fun (n : α) => HDiv.hDiv.{u2, u2, u2} G G G (instHDiv.{u2} G (DivInvMonoid.toDiv.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (u n) x) l (nhds.{u2} G _inst_2 (OfNat.ofNat.{u2} G 1 (One.toOfNat1.{u2} G (InvOneClass.toOne.{u2} G (DivInvOneMonoid.toInvOneClass.{u2} G (DivisionMonoid.toDivInvOneMonoid.{u2} G (Group.toDivisionMonoid.{u2} G _inst_1)))))))) (Filter.Tendsto.{u1, u2} α G u l (nhds.{u2} G _inst_2 x))
-Case conversion may be inaccurate. Consider using '#align tendsto_div_nhds_one_iff tendsto_div_nhds_one_iffₓ'. -/
 @[to_additive]
 theorem tendsto_div_nhds_one_iff {α : Type _} {l : Filter α} {x : G} {u : α → G} :
     Tendsto (fun n => u n / x) l (𝓝 1) ↔ Tendsto u l (𝓝 x) :=
@@ -1749,12 +1275,6 @@ theorem tendsto_div_nhds_one_iff {α : Type _} {l : Filter α} {x : G} {u : α �
 #align tendsto_div_nhds_one_iff tendsto_div_nhds_one_iff
 #align tendsto_sub_nhds_zero_iff tendsto_sub_nhds_zero_iff
 
-/- warning: nhds_translation_div -> nhds_translation_div is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.comap.{u1, u1} G G (fun (_x : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _x x) (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))) (nhds.{u1} G _inst_2 x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (x : G), Eq.{succ u1} (Filter.{u1} G) (Filter.comap.{u1, u1} G G (fun (_x : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _x x) (nhds.{u1} G _inst_2 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))) (nhds.{u1} G _inst_2 x)
-Case conversion may be inaccurate. Consider using '#align nhds_translation_div nhds_translation_divₓ'. -/
 @[to_additive]
 theorem nhds_translation_div (x : G) : comap (· / x) (𝓝 1) = 𝓝 x := by
   simpa only [div_eq_mul_inv] using nhds_translation_mul_inv x
@@ -1819,60 +1339,30 @@ section ContinuousConstSMul
 
 variable [TopologicalSpace α] [Group α] [ContinuousConstSMul α α] {s t : Set α}
 
-/- warning: is_open.mul_left -> IsOpen.mul_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (IsOpen.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (IsOpen.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.mul_left IsOpen.mul_leftₓ'. -/
 @[to_additive]
 theorem IsOpen.mul_left : IsOpen t → IsOpen (s * t) :=
   IsOpen.smul_left
 #align is_open.mul_left IsOpen.mul_left
 #align is_open.add_left IsOpen.add_left
 
-/- warning: subset_interior_mul_right -> subset_interior_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_mul_right subset_interior_mul_rightₓ'. -/
 @[to_additive]
 theorem subset_interior_mul_right : s * interior t ⊆ interior (s * t) :=
   subset_interior_smul_right
 #align subset_interior_mul_right subset_interior_mul_right
 #align subset_interior_add_right subset_interior_add_right
 
-/- warning: subset_interior_mul -> subset_interior_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (interior.{u1} α _inst_1 s) (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (interior.{u1} α _inst_1 s) (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_mul subset_interior_mulₓ'. -/
 @[to_additive]
 theorem subset_interior_mul : interior s * interior t ⊆ interior (s * t) :=
   subset_interior_smul
 #align subset_interior_mul subset_interior_mul
 #align subset_interior_add subset_interior_add
 
-/- warning: singleton_mul_mem_nhds -> singleton_mul_mem_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} (a : α) {b : α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 b)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) s) (nhds.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))] {s : Set.{u1} α} (a : α) {b : α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 b)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a) s) (nhds.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) a b)))
-Case conversion may be inaccurate. Consider using '#align singleton_mul_mem_nhds singleton_mul_mem_nhdsₓ'. -/
 @[to_additive]
 theorem singleton_mul_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : {a} * s ∈ 𝓝 (a * b) := by
   have := smul_mem_nhds a h; rwa [← singleton_smul] at this
 #align singleton_mul_mem_nhds singleton_mul_mem_nhds
 #align singleton_add_mem_nhds singleton_add_mem_nhds
 
-/- warning: singleton_mul_mem_nhds_of_nhds_one -> singleton_mul_mem_nhds_of_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} (a : α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) s) (nhds.{u1} α _inst_1 a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))] {s : Set.{u1} α} (a : α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a) s) (nhds.{u1} α _inst_1 a))
-Case conversion may be inaccurate. Consider using '#align singleton_mul_mem_nhds_of_nhds_one singleton_mul_mem_nhds_of_nhds_oneₓ'. -/
 @[to_additive]
 theorem singleton_mul_mem_nhds_of_nhds_one (a : α) (h : s ∈ 𝓝 (1 : α)) : {a} * s ∈ 𝓝 a := by
   simpa only [mul_one] using singleton_mul_mem_nhds a h
@@ -1885,48 +1375,24 @@ section HasContinuousConstSmulOp
 
 variable [TopologicalSpace α] [Group α] [ContinuousConstSMul αᵐᵒᵖ α] {s t : Set α}
 
-/- warning: is_open.mul_right -> IsOpen.mul_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.mul_right IsOpen.mul_rightₓ'. -/
 @[to_additive]
 theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) := by rw [← bUnion_op_smul_set];
   exact isOpen_biUnion fun a _ => hs.smul _
 #align is_open.mul_right IsOpen.mul_right
 #align is_open.add_right IsOpen.add_right
 
-/- warning: subset_interior_mul_left -> subset_interior_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (interior.{u1} α _inst_1 s) t) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (interior.{u1} α _inst_1 s) t) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_mul_left subset_interior_mul_leftₓ'. -/
 @[to_additive]
 theorem subset_interior_mul_left : interior s * t ⊆ interior (s * t) :=
   interior_maximal (Set.mul_subset_mul_right interior_subset) isOpen_interior.mulRight
 #align subset_interior_mul_left subset_interior_mul_left
 #align subset_interior_add_left subset_interior_add_left
 
-/- warning: subset_interior_mul' -> subset_interior_mul' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (interior.{u1} α _inst_1 s) (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (interior.{u1} α _inst_1 s) (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_mul' subset_interior_mul'ₓ'. -/
 @[to_additive]
 theorem subset_interior_mul' : interior s * interior t ⊆ interior (s * t) :=
   (Set.mul_subset_mul_left interior_subset).trans subset_interior_mul_left
 #align subset_interior_mul' subset_interior_mul'
 #align subset_interior_add' subset_interior_add'
 
-/- warning: mul_singleton_mem_nhds -> mul_singleton_mem_nhds is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} (a : α) {b : α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 b)) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)) (nhds.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) b a)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} (a : α) {b : α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 b)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)) (nhds.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) b a)))
-Case conversion may be inaccurate. Consider using '#align mul_singleton_mem_nhds mul_singleton_mem_nhdsₓ'. -/
 @[to_additive]
 theorem mul_singleton_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : s * {a} ∈ 𝓝 (b * a) :=
   by
@@ -1935,12 +1401,6 @@ theorem mul_singleton_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : s * {a} �
 #align mul_singleton_mem_nhds mul_singleton_mem_nhds
 #align add_singleton_mem_nhds add_singleton_mem_nhds
 
-/- warning: mul_singleton_mem_nhds_of_nhds_one -> mul_singleton_mem_nhds_of_nhds_one is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} (a : α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhds.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)) (nhds.{u1} α _inst_1 a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} (a : α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)) (nhds.{u1} α _inst_1 a))
-Case conversion may be inaccurate. Consider using '#align mul_singleton_mem_nhds_of_nhds_one mul_singleton_mem_nhds_of_nhds_oneₓ'. -/
 @[to_additive]
 theorem mul_singleton_mem_nhds_of_nhds_one (a : α) (h : s ∈ 𝓝 (1 : α)) : s * {a} ∈ 𝓝 a := by
   simpa only [one_mul] using mul_singleton_mem_nhds a h
@@ -1953,72 +1413,36 @@ section TopologicalGroup
 
 variable [TopologicalSpace α] [Group α] [TopologicalGroup α] {s t : Set α}
 
-/- warning: is_open.div_left -> IsOpen.div_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (IsOpen.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (IsOpen.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.div_left IsOpen.div_leftₓ'. -/
 @[to_additive]
 theorem IsOpen.div_left (ht : IsOpen t) : IsOpen (s / t) := by rw [← Union_div_left_image];
   exact isOpen_biUnion fun a ha => isOpenMap_div_left a t ht
 #align is_open.div_left IsOpen.div_left
 #align is_open.sub_left IsOpen.sub_left
 
-/- warning: is_open.div_right -> IsOpen.div_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.div_right IsOpen.div_rightₓ'. -/
 @[to_additive]
 theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) := by rw [← Union_div_right_image];
   exact isOpen_biUnion fun a ha => isOpenMap_div_right a s hs
 #align is_open.div_right IsOpen.div_right
 #align is_open.sub_right IsOpen.sub_right
 
-/- warning: subset_interior_div_left -> subset_interior_div_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (interior.{u1} α _inst_1 s) t) (interior.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (interior.{u1} α _inst_1 s) t) (interior.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_div_left subset_interior_div_leftₓ'. -/
 @[to_additive]
 theorem subset_interior_div_left : interior s / t ⊆ interior (s / t) :=
   interior_maximal (div_subset_div_right interior_subset) isOpen_interior.divRight
 #align subset_interior_div_left subset_interior_div_left
 #align subset_interior_sub_left subset_interior_sub_left
 
-/- warning: subset_interior_div_right -> subset_interior_div_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_div_right subset_interior_div_rightₓ'. -/
 @[to_additive]
 theorem subset_interior_div_right : s / interior t ⊆ interior (s / t) :=
   interior_maximal (div_subset_div_left interior_subset) isOpen_interior.divLeft
 #align subset_interior_div_right subset_interior_div_right
 #align subset_interior_sub_right subset_interior_sub_right
 
-/- warning: subset_interior_div -> subset_interior_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (interior.{u1} α _inst_1 s) (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (interior.{u1} α _inst_1 s) (interior.{u1} α _inst_1 t)) (interior.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align subset_interior_div subset_interior_divₓ'. -/
 @[to_additive]
 theorem subset_interior_div : interior s / interior t ⊆ interior (s / t) :=
   (div_subset_div_left interior_subset).trans subset_interior_div_left
 #align subset_interior_div subset_interior_div
 #align subset_interior_sub subset_interior_sub
 
-/- warning: is_open.mul_closure -> IsOpen.mul_closure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (forall (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (closure.{u1} α _inst_1 t)) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (forall (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s (closure.{u1} α _inst_1 t)) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.mul_closure IsOpen.mul_closureₓ'. -/
 @[to_additive]
 theorem IsOpen.mul_closure (hs : IsOpen s) (t : Set α) : s * closure t = s * t :=
   by
@@ -2030,12 +1454,6 @@ theorem IsOpen.mul_closure (hs : IsOpen s) (t : Set α) : s * closure t = s * t 
 #align is_open.mul_closure IsOpen.mul_closure
 #align is_open.add_closure IsOpen.add_closure
 
-/- warning: is_open.closure_mul -> IsOpen.closure_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (closure.{u1} α _inst_1 s) t) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (closure.{u1} α _inst_1 s) t) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.closure_mul IsOpen.closure_mulₓ'. -/
 @[to_additive]
 theorem IsOpen.closure_mul (ht : IsOpen t) (s : Set α) : closure s * t = s * t := by
   rw [← inv_inv (closure s * t), mul_inv_rev, inv_closure, ht.inv.mul_closure, mul_inv_rev, inv_inv,
@@ -2043,24 +1461,12 @@ theorem IsOpen.closure_mul (ht : IsOpen t) (s : Set α) : closure s * t = s * t 
 #align is_open.closure_mul IsOpen.closure_mul
 #align is_open.closure_add IsOpen.closure_add
 
-/- warning: is_open.div_closure -> IsOpen.div_closure is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (forall (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s (closure.{u1} α _inst_1 t)) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (forall (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s (closure.{u1} α _inst_1 t)) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.div_closure IsOpen.div_closureₓ'. -/
 @[to_additive]
 theorem IsOpen.div_closure (hs : IsOpen s) (t : Set α) : s / closure t = s / t := by
   simp_rw [div_eq_mul_inv, inv_closure, hs.mul_closure]
 #align is_open.div_closure IsOpen.div_closure
 #align is_open.sub_closure IsOpen.sub_closure
 
-/- warning: is_open.closure_div -> IsOpen.closure_div is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (closure.{u1} α _inst_1 s) t) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) (closure.{u1} α _inst_1 s) t) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
-Case conversion may be inaccurate. Consider using '#align is_open.closure_div IsOpen.closure_divₓ'. -/
 @[to_additive]
 theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : closure s / t = s / t := by
   simp_rw [div_eq_mul_inv, ht.inv.closure_mul]
@@ -2090,12 +1496,6 @@ section
 
 variable (G) [TopologicalSpace G] [Group G] [ContinuousMul G]
 
-/- warning: topological_group.t1_space -> TopologicalGroup.t1Space is a dubious translation:
-lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], (IsClosed.{u1} G _inst_1 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.hasSingleton.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) -> (T1Space.{u1} G _inst_1)
-but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))], (IsClosed.{u1} G _inst_1 (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.instSingletonSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) -> (T1Space.{u1} G _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_group.t1_space TopologicalGroup.t1Spaceₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.t1Space (h : @IsClosed G _ {1}) : T1Space G :=
   ⟨fun x => by convert isClosedMap_mul_right x _ h; simp⟩
@@ -2146,12 +1546,6 @@ theorem TopologicalGroup.t2Space [T0Space G] : T2Space G := by haveI := Topologi
 
 variable {G} (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)]
 
-/- warning: subgroup.t3_quotient_of_is_closed -> Subgroup.t3_quotient_of_isClosed is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (S : Subgroup.{u1} G _inst_2) [_inst_6 : Subgroup.Normal.{u1} G _inst_2 S] [hS : IsClosed.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_2) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_2) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.setLike.{u1} G _inst_2)))) S)], T3Space.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_2) S) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_2 _inst_1 S)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (S : Subgroup.{u1} G _inst_2) [_inst_6 : Subgroup.Normal.{u1} G _inst_2 S] [hS : IsClosed.{u1} G _inst_1 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_2) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_2) S)], T3Space.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_2) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_2) S) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_2 _inst_1 S)
-Case conversion may be inaccurate. Consider using '#align subgroup.t3_quotient_of_is_closed Subgroup.t3_quotient_of_isClosedₓ'. -/
 @[to_additive]
 instance Subgroup.t3_quotient_of_isClosed (S : Subgroup G) [Subgroup.Normal S]
     [hS : IsClosed (S : Set G)] : T3Space (G ⧸ S) :=
@@ -2162,9 +1556,6 @@ instance Subgroup.t3_quotient_of_isClosed (S : Subgroup G) [Subgroup.Normal S]
 #align subgroup.t3_quotient_of_is_closed Subgroup.t3_quotient_of_isClosed
 #align add_subgroup.t3_quotient_of_is_closed AddSubgroup.t3_quotient_of_isClosed
 
-/- warning: subgroup.properly_discontinuous_smul_of_tendsto_cofinite -> Subgroup.properlyDiscontinuousSMul_of_tendsto_cofinite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subgroup.properly_discontinuous_smul_of_tendsto_cofinite Subgroup.properlyDiscontinuousSMul_of_tendsto_cofiniteₓ'. -/
 /-- A subgroup `S` of a topological group `G` acts on `G` properly discontinuously on the left, if
 it is discrete in the sense that `S ∩ K` is finite for all compact `K`. (See also
 `discrete_topology`.) -/
@@ -2185,9 +1576,6 @@ theorem Subgroup.properlyDiscontinuousSMul_of_tendsto_cofinite (S : Subgroup G)
 
 attribute [local semireducible] MulOpposite
 
-/- warning: subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite -> Subgroup.properlyDiscontinuousSMul_opposite_of_tendsto_cofinite is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite Subgroup.properlyDiscontinuousSMul_opposite_of_tendsto_cofiniteₓ'. -/
 /-- A subgroup `S` of a topological group `G` acts on `G` properly discontinuously on the right, if
 it is discrete in the sense that `S ∩ K` is finite for all compact `K`. (See also
 `discrete_topology`.)
@@ -2220,12 +1608,6 @@ section
 
 variable [TopologicalSpace G] [MulOneClass G] [ContinuousMul G]
 
-/- warning: compact_open_separated_mul_right -> compact_open_separated_mul_right is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : MulOneClass.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G _inst_2)] {K : Set.{u1} G} {U : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (IsOpen.{u1} G _inst_1 U) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) K U) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_2)))))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_2)))))) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toHasMul.{u1} G _inst_2))) K V) U)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : MulOneClass.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G _inst_2)] {K : Set.{u1} G} {U : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (IsOpen.{u1} G _inst_1 U) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) K U) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (MulOneClass.toOne.{u1} G _inst_2))))) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toMul.{u1} G _inst_2))) K V) U)))
-Case conversion may be inaccurate. Consider using '#align compact_open_separated_mul_right compact_open_separated_mul_rightₓ'. -/
 /-- Given a compact set `K` inside an open set `U`, there is a open neighborhood `V` of `1`
   such that `K * V ⊆ U`. -/
 @[to_additive
@@ -2254,12 +1636,6 @@ theorem compact_open_separated_mul_right {K U : Set G} (hK : IsCompact K) (hU : 
 
 open MulOpposite
 
-/- warning: compact_open_separated_mul_left -> compact_open_separated_mul_left is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : MulOneClass.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toHasMul.{u1} G _inst_2)] {K : Set.{u1} G} {U : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (IsOpen.{u1} G _inst_1 U) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) K U) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_2)))))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G _inst_2)))))) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toHasMul.{u1} G _inst_2))) V K) U)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : MulOneClass.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G _inst_2)] {K : Set.{u1} G} {U : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (IsOpen.{u1} G _inst_1 U) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) K U) -> (Exists.{succ u1} (Set.{u1} G) (fun (V : Set.{u1} G) => And (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) V (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (MulOneClass.toOne.{u1} G _inst_2))))) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (HMul.hMul.{u1, u1, u1} (Set.{u1} G) (Set.{u1} G) (Set.{u1} G) (instHMul.{u1} (Set.{u1} G) (Set.mul.{u1} G (MulOneClass.toMul.{u1} G _inst_2))) V K) U)))
-Case conversion may be inaccurate. Consider using '#align compact_open_separated_mul_left compact_open_separated_mul_leftₓ'. -/
 /-- Given a compact set `K` inside an open set `U`, there is a open neighborhood `V` of `1`
   such that `V * K ⊆ U`. -/
 @[to_additive
@@ -2282,12 +1658,6 @@ section
 
 variable [TopologicalSpace G] [Group G] [TopologicalGroup G]
 
-/- warning: compact_covered_by_mul_left_translates -> compact_covered_by_mul_left_translates is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {K : Set.{u1} G} {V : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (Set.Nonempty.{u1} G (interior.{u1} G _inst_1 V)) -> (Exists.{succ u1} (Finset.{u1} G) (fun (t : Finset.{u1} G) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) K (Set.iUnion.{u1, succ u1} G G (fun (g : G) => Set.iUnion.{u1, 0} G (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g t) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g t) => Set.preimage.{u1, u1} G G (fun (h : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g h) V)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {K : Set.{u1} G} {V : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (Set.Nonempty.{u1} G (interior.{u1} G _inst_1 V)) -> (Exists.{succ u1} (Finset.{u1} G) (fun (t : Finset.{u1} G) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) K (Set.iUnion.{u1, succ u1} G G (fun (g : G) => Set.iUnion.{u1, 0} G (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) g t) (fun (H : Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) g t) => Set.preimage.{u1, u1} G G (fun (h : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g h) V)))))
-Case conversion may be inaccurate. Consider using '#align compact_covered_by_mul_left_translates compact_covered_by_mul_left_translatesₓ'. -/
 /-- A compact set is covered by finitely many left multiplicative translates of a set
   with non-empty interior. -/
 @[to_additive
@@ -2330,12 +1700,6 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigmaCompactSpace [Separ
 #align separable_locally_compact_add_group.sigma_compact_space SeparableLocallyCompactAddGroup.sigmaCompactSpace
 -/
 
-/- warning: exists_disjoint_smul_of_is_compact -> exists_disjoint_smul_of_isCompact is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_4 : NoncompactSpace.{u1} G _inst_1] {K : Set.{u1} G} {L : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (IsCompact.{u1} G _inst_1 L) -> (Exists.{succ u1} G (fun (g : G) => Disjoint.{u1} (Set.{u1} G) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} G) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} G) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} G) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} G) (Set.completeBooleanAlgebra.{u1} G)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} G) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} G) (Set.booleanAlgebra.{u1} G))) K (SMul.smul.{u1, u1} G (Set.{u1} G) (Set.smulSet.{u1, u1} G G (Mul.toSMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) g L)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_4 : NoncompactSpace.{u1} G _inst_1] {K : Set.{u1} G} {L : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (IsCompact.{u1} G _inst_1 L) -> (Exists.{succ u1} G (fun (g : G) => Disjoint.{u1} (Set.{u1} G) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} G) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} G) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} G) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} G) (Set.instCompleteBooleanAlgebraSet.{u1} G)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} G) (Preorder.toLE.{u1} (Set.{u1} G) (PartialOrder.toPreorder.{u1} (Set.{u1} G) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} G) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} G) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} G) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} G) (Set.instCompleteBooleanAlgebraSet.{u1} G)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} G) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} G) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} G) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} G) (Set.instCompleteBooleanAlgebraSet.{u1} G)))))) K (HSMul.hSMul.{u1, u1, u1} G (Set.{u1} G) (Set.{u1} G) (instHSMul.{u1, u1} G (Set.{u1} G) (Set.smulSet.{u1, u1} G G (MulAction.toSMul.{u1, u1} G G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) (Monoid.toMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) g L)))
-Case conversion may be inaccurate. Consider using '#align exists_disjoint_smul_of_is_compact exists_disjoint_smul_of_isCompactₓ'. -/
 /-- Given two compact sets in a noncompact topological group, there is a translate of the second
 one that is disjoint from the first one. -/
 @[to_additive
@@ -2353,12 +1717,6 @@ theorem exists_disjoint_smul_of_isCompact [NoncompactSpace G] {K L : Set G} (hK 
 #align exists_disjoint_smul_of_is_compact exists_disjoint_smul_of_isCompact
 #align exists_disjoint_vadd_of_is_compact exists_disjoint_vadd_of_isCompact
 
-/- warning: local_is_compact_is_closed_nhds_of_group -> local_isCompact_isClosed_nhds_of_group is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_4 : LocallyCompactSpace.{u1} G _inst_1] {U : Set.{u1} G}, (Membership.Mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (Filter.hasMem.{u1} G) U (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))))) -> (Exists.{succ u1} (Set.{u1} G) (fun (K : Set.{u1} G) => And (IsCompact.{u1} G _inst_1 K) (And (IsClosed.{u1} G _inst_1 K) (And (HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) K U) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))) (interior.{u1} G _inst_1 K))))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] [_inst_4 : LocallyCompactSpace.{u1} G _inst_1] {U : Set.{u1} G}, (Membership.mem.{u1, u1} (Set.{u1} G) (Filter.{u1} G) (instMembershipSetFilter.{u1} G) U (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))))) -> (Exists.{succ u1} (Set.{u1} G) (fun (K : Set.{u1} G) => And (IsCompact.{u1} G _inst_1 K) (And (IsClosed.{u1} G _inst_1 K) (And (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) K U) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))))) (interior.{u1} G _inst_1 K))))))
-Case conversion may be inaccurate. Consider using '#align local_is_compact_is_closed_nhds_of_group local_isCompact_isClosed_nhds_of_groupₓ'. -/
 /-- In a locally compact group, any neighborhood of the identity contains a compact closed
 neighborhood of the identity, even without separation assumptions on the space. -/
 @[to_additive
@@ -2397,12 +1755,6 @@ section
 
 variable [TopologicalSpace G] [Group G] [TopologicalGroup G]
 
-/- warning: nhds_mul -> nhds_mul is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G) (y : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_1 (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x y)) (HMul.hMul.{u1, u1, u1} (Filter.{u1} G) (Filter.{u1} G) (Filter.{u1} G) (instHMul.{u1} (Filter.{u1} G) (Filter.instMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) (nhds.{u1} G _inst_1 x) (nhds.{u1} G _inst_1 y))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] (x : G) (y : G), Eq.{succ u1} (Filter.{u1} G) (nhds.{u1} G _inst_1 (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x y)) (HMul.hMul.{u1, u1, u1} (Filter.{u1} G) (Filter.{u1} G) (Filter.{u1} G) (instHMul.{u1} (Filter.{u1} G) (Filter.instMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))) (nhds.{u1} G _inst_1 x) (nhds.{u1} G _inst_1 y))
-Case conversion may be inaccurate. Consider using '#align nhds_mul nhds_mulₓ'. -/
 @[to_additive]
 theorem nhds_mul (x y : G) : 𝓝 (x * y) = 𝓝 x * 𝓝 y :=
   calc
@@ -2416,12 +1768,6 @@ theorem nhds_mul (x y : G) : 𝓝 (x * y) = 𝓝 x * 𝓝 y :=
 #align nhds_mul nhds_mul
 #align nhds_add nhds_add
 
-/- warning: nhds_mul_hom -> nhdsMulHom is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], MulHom.{u1, u1} G (Filter.{u1} G) (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (Filter.instMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2], MulHom.{u1, u1} G (Filter.{u1} G) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (Filter.instMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))))
-Case conversion may be inaccurate. Consider using '#align nhds_mul_hom nhdsMulHomₓ'. -/
 /-- On a topological group, `𝓝 : G → filter G` can be promoted to a `mul_hom`. -/
 @[to_additive
       "On an additive topological group, `𝓝 : G → filter G` can be promoted to an\n`add_hom`.",
@@ -2446,12 +1792,6 @@ section Quotient
 
 variable [Group G] [TopologicalSpace G] [ContinuousMul G] {Γ : Subgroup G}
 
-/- warning: quotient_group.has_continuous_const_smul -> QuotientGroup.continuousConstSMul is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_2 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))] {Γ : Subgroup.{u1} G _inst_1}, ContinuousConstSMul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_1 _inst_2 Γ) (MulAction.toHasSmul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ) (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (MulAction.quotient.{u1, u1} G G _inst_1 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Monoid.toMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) Γ (MulAction.left_quotientAction.{u1} G _inst_1 Γ)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_2 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))] {Γ : Subgroup.{u1} G _inst_1}, ContinuousConstSMul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_1 _inst_2 Γ) (MulAction.toSMul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (MulAction.quotient.{u1, u1} G G _inst_1 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Monoid.toMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) Γ (MulAction.left_quotientAction.{u1} G _inst_1 Γ)))
-Case conversion may be inaccurate. Consider using '#align quotient_group.has_continuous_const_smul QuotientGroup.continuousConstSMulₓ'. -/
 @[to_additive]
 instance QuotientGroup.continuousConstSMul : ContinuousConstSMul G (G ⧸ Γ)
     where continuous_const_smul g := by
@@ -2459,12 +1799,6 @@ instance QuotientGroup.continuousConstSMul : ContinuousConstSMul G (G ⧸ Γ)
 #align quotient_group.has_continuous_const_smul QuotientGroup.continuousConstSMul
 #align quotient_add_group.has_continuous_const_vadd QuotientAddGroup.continuousConstVAdd
 
-/- warning: quotient_group.continuous_smul₁ -> QuotientGroup.continuous_smul₁ is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_2 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))] {Γ : Subgroup.{u1} G _inst_1} (x : HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ), Continuous.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ) _inst_2 (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_1 _inst_2 Γ) (fun (g : G) => SMul.smul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ) (MulAction.toHasSmul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ) (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (MulAction.quotient.{u1, u1} G G _inst_1 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Monoid.toMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) Γ (MulAction.left_quotientAction.{u1} G _inst_1 Γ))) g x)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_2 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))] {Γ : Subgroup.{u1} G _inst_1} (x : HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ), Continuous.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) _inst_2 (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_1 _inst_2 Γ) (fun (g : G) => HSMul.hSMul.{u1, u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (instHSMul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (MulAction.toSMul.{u1, u1} G (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (MulAction.quotient.{u1, u1} G G _inst_1 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Monoid.toMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) Γ (MulAction.left_quotientAction.{u1} G _inst_1 Γ)))) g x)
-Case conversion may be inaccurate. Consider using '#align quotient_group.continuous_smul₁ QuotientGroup.continuous_smul₁ₓ'. -/
 @[to_additive]
 theorem QuotientGroup.continuous_smul₁ (x : G ⧸ Γ) : Continuous fun g : G => g • x :=
   by
@@ -2473,12 +1807,6 @@ theorem QuotientGroup.continuous_smul₁ (x : G ⧸ Γ) : Continuous fun g : G =
 #align quotient_group.continuous_smul₁ QuotientGroup.continuous_smul₁
 #align quotient_add_group.continuous_smul₁ QuotientAddGroup.continuous_smul₁
 
-/- warning: quotient_group.second_countable_topology -> QuotientGroup.secondCountableTopology is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_2 (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))] {Γ : Subgroup.{u1} G _inst_1} [_inst_4 : TopologicalSpace.SecondCountableTopology.{u1} G _inst_2], TopologicalSpace.SecondCountableTopology.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) Γ) (Quotient.topologicalSpace.{u1} G (MulAction.orbitRel.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1)) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1)) (MulOpposite.{u1} G) (Subgroup.setLike.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (fun (_x : Equiv.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) => (Subgroup.{u1} G _inst_1) -> (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (Equiv.hasCoeToFun.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (Subgroup.opposite.{u1} G _inst_1) Γ)) G (Subgroup.toGroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (fun (_x : Equiv.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) => (Subgroup.{u1} G _inst_1) -> (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (Equiv.hasCoeToFun.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (Subgroup.opposite.{u1} G _inst_1) Γ)) (Subgroup.mulAction.{u1, u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1) G (Monoid.toOppositeMulAction.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (fun (_x : Equiv.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) => (Subgroup.{u1} G _inst_1) -> (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (Equiv.hasCoeToFun.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} (MulOpposite.{u1} G) (MulOpposite.group.{u1} G _inst_1))) (Subgroup.opposite.{u1} G _inst_1) Γ))) _inst_2)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_2 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))] {Γ : Subgroup.{u1} G _inst_1} [_inst_4 : TopologicalSpace.SecondCountableTopology.{u1} G _inst_2], TopologicalSpace.SecondCountableTopology.{u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) Γ) (QuotientGroup.Quotient.topologicalSpace.{u1} G _inst_1 _inst_2 Γ)
-Case conversion may be inaccurate. Consider using '#align quotient_group.second_countable_topology QuotientGroup.secondCountableTopologyₓ'. -/
 /-- The quotient of a second countable topological group by a subgroup is second countable. -/
 @[to_additive
       "The quotient of a second countable additive topological group by a subgroup is second\ncountable."]
@@ -2490,12 +1818,6 @@ instance QuotientGroup.secondCountableTopology [SecondCountableTopology G] :
 
 end Quotient
 
-/- warning: to_units_homeomorph -> toUnits_homeomorph is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_2 (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))], Homeomorph.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _inst_2 (Units.topologicalSpace.{u1} G _inst_2 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_2 (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))], Homeomorph.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _inst_2 (Units.instTopologicalSpaceUnits.{u1} G _inst_2 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))
-Case conversion may be inaccurate. Consider using '#align to_units_homeomorph toUnits_homeomorphₓ'. -/
 /-- If `G` is a group with topological `⁻¹`, then it is homeomorphic to its units. -/
 @[to_additive
       " If `G` is an additive group with topological negation, then it is homeomorphic to\nits additive units."]
@@ -2517,12 +1839,6 @@ variable [Monoid α] [TopologicalSpace α] [Monoid β] [TopologicalSpace β]
 instance [ContinuousMul α] : TopologicalGroup αˣ
     where continuous_inv := Units.continuous_iff.2 <| ⟨continuous_coe_inv, continuous_val⟩
 
-/- warning: units.homeomorph.prod_units -> Units.Homeomorph.prodUnits is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : Monoid.{u2} β] [_inst_4 : TopologicalSpace.{u2} β], Homeomorph.{max u1 u2, max u1 u2} (Units.{max u1 u2} (Prod.{u1, u2} α β) (Prod.monoid.{u1, u2} α β _inst_1 _inst_3)) (Prod.{u1, u2} (Units.{u1} α _inst_1) (Units.{u2} β _inst_3)) (Units.topologicalSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_2 _inst_4) (Prod.monoid.{u1, u2} α β _inst_1 _inst_3)) (Prod.topologicalSpace.{u1, u2} (Units.{u1} α _inst_1) (Units.{u2} β _inst_3) (Units.topologicalSpace.{u1} α _inst_2 _inst_1) (Units.topologicalSpace.{u2} β _inst_4 _inst_3))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : Monoid.{u2} β] [_inst_4 : TopologicalSpace.{u2} β], Homeomorph.{max u2 u1, max u2 u1} (Units.{max u2 u1} (Prod.{u1, u2} α β) (Prod.instMonoidProd.{u1, u2} α β _inst_1 _inst_3)) (Prod.{u1, u2} (Units.{u1} α _inst_1) (Units.{u2} β _inst_3)) (Units.instTopologicalSpaceUnits.{max u1 u2} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_2 _inst_4) (Prod.instMonoidProd.{u1, u2} α β _inst_1 _inst_3)) (instTopologicalSpaceProd.{u1, u2} (Units.{u1} α _inst_1) (Units.{u2} β _inst_3) (Units.instTopologicalSpaceUnits.{u1} α _inst_2 _inst_1) (Units.instTopologicalSpaceUnits.{u2} β _inst_4 _inst_3))
-Case conversion may be inaccurate. Consider using '#align units.homeomorph.prod_units Units.Homeomorph.prodUnitsₓ'. -/
 /-- The topological group isomorphism between the units of a product of two monoids, and the product
 of the units of each monoid. -/
 @[to_additive
@@ -2546,12 +1862,6 @@ section LatticeOps
 
 variable {ι : Sort _} [Group G]
 
-/- warning: topological_group_Inf -> topologicalGroup_sInf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.hasMem.{u1} (TopologicalSpace.{u1} G)) t ts) -> (TopologicalGroup.{u1} G t _inst_1)) -> (TopologicalGroup.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ts) _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} G)) t ts) -> (TopologicalGroup.{u1} G t _inst_1)) -> (TopologicalGroup.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G))) ts) _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_group_Inf topologicalGroup_sInfₓ'. -/
 @[to_additive]
 theorem topologicalGroup_sInf {ts : Set (TopologicalSpace G)}
     (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (sInf ts) _ :=
@@ -2562,12 +1872,6 @@ theorem topologicalGroup_sInf {ts : Set (TopologicalSpace G)}
 #align topological_group_Inf topologicalGroup_sInf
 #align topological_add_group_Inf topologicalAddGroup_sInf
 
-/- warning: topological_group_infi -> topologicalGroup_iInf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Group.{u1} G] {ts' : ι -> (TopologicalSpace.{u1} G)}, (forall (i : ι), TopologicalGroup.{u1} G (ts' i) _inst_1) -> (TopologicalGroup.{u1} G (iInf.{u1, u2} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ι (fun (i : ι) => ts' i)) _inst_1)
-but is expected to have type
-  forall {G : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Group.{u2} G] {ts' : ι -> (TopologicalSpace.{u2} G)}, (forall (i : ι), TopologicalGroup.{u2} G (ts' i) _inst_1) -> (TopologicalGroup.{u2} G (iInf.{u2, u1} (TopologicalSpace.{u2} G) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} G) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} G))) ι (fun (i : ι) => ts' i)) _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_group_infi topologicalGroup_iInfₓ'. -/
 @[to_additive]
 theorem topologicalGroup_iInf {ts' : ι → TopologicalSpace G}
     (h' : ∀ i, @TopologicalGroup G (ts' i) _) : @TopologicalGroup G (⨅ i, ts' i) _ := by
@@ -2575,12 +1879,6 @@ theorem topologicalGroup_iInf {ts' : ι → TopologicalSpace G}
 #align topological_group_infi topologicalGroup_iInf
 #align topological_add_group_infi topologicalAddGroup_iInf
 
-/- warning: topological_group_inf -> topologicalGroup_inf is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {t₁ : TopologicalSpace.{u1} G} {t₂ : TopologicalSpace.{u1} G}, (TopologicalGroup.{u1} G t₁ _inst_1) -> (TopologicalGroup.{u1} G t₂ _inst_1) -> (TopologicalGroup.{u1} G (Inf.inf.{u1} (TopologicalSpace.{u1} G) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} G) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))))) t₁ t₂) _inst_1)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {t₁ : TopologicalSpace.{u1} G} {t₂ : TopologicalSpace.{u1} G}, (TopologicalGroup.{u1} G t₁ _inst_1) -> (TopologicalGroup.{u1} G t₂ _inst_1) -> (TopologicalGroup.{u1} G (Inf.inf.{u1} (TopologicalSpace.{u1} G) (Lattice.toInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G)))) t₁ t₂) _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_group_inf topologicalGroup_infₓ'. -/
 @[to_additive]
 theorem topologicalGroup_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @TopologicalGroup G t₁ _)
     (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁ ⊓ t₂) _ := by rw [inf_eq_iInf];
@@ -2627,12 +1925,6 @@ namespace GroupTopology
 
 variable [Group α]
 
-/- warning: group_topology.continuous_mul' -> GroupTopology.continuous_mul' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (g : GroupTopology.{u1} α _inst_1), Continuous.{u1, u1} (Prod.{u1, u1} α α) α (Prod.topologicalSpace.{u1, u1} α α (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g)) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (fun (p : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (g : GroupTopology.{u1} α _inst_1), Continuous.{u1, u1} (Prod.{u1, u1} α α) α (instTopologicalSpaceProd.{u1, u1} α α (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g)) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (fun (p : Prod.{u1, u1} α α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Prod.fst.{u1, u1} α α p) (Prod.snd.{u1, u1} α α p))
-Case conversion may be inaccurate. Consider using '#align group_topology.continuous_mul' GroupTopology.continuous_mul'ₓ'. -/
 /-- A version of the global `continuous_mul` suitable for dot notation. -/
 @[to_additive "A version of the global `continuous_add` suitable for dot notation."]
 theorem continuous_mul' (g : GroupTopology α) :
@@ -2645,12 +1937,6 @@ theorem continuous_mul' (g : GroupTopology α) :
 #align group_topology.continuous_mul' GroupTopology.continuous_mul'
 #align add_group_topology.continuous_add' AddGroupTopology.continuous_add'
 
-/- warning: group_topology.continuous_inv' -> GroupTopology.continuous_inv' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (g : GroupTopology.{u1} α _inst_1), Continuous.{u1, u1} α α (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (g : GroupTopology.{u1} α _inst_1), Continuous.{u1, u1} α α (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 g) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align group_topology.continuous_inv' GroupTopology.continuous_inv'ₓ'. -/
 /-- A version of the global `continuous_inv` suitable for dot notation. -/
 @[to_additive "A version of the global `continuous_neg` suitable for dot notation."]
 theorem continuous_inv' (g : GroupTopology α) :
@@ -2687,12 +1973,6 @@ in `t` (`t` is finer than `s`). -/
 instance : PartialOrder (GroupTopology α) :=
   PartialOrder.lift toTopologicalSpace toTopologicalSpace_injective
 
-/- warning: group_topology.to_topological_space_le -> GroupTopology.toTopologicalSpace_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {x : GroupTopology.{u1} α _inst_1} {y : GroupTopology.{u1} α _inst_1}, Iff (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toHasLe.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.partialOrder.{u1} α))) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 x) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 y)) (LE.le.{u1} (GroupTopology.{u1} α _inst_1) (Preorder.toHasLe.{u1} (GroupTopology.{u1} α _inst_1) (PartialOrder.toPreorder.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.partialOrder.{u1} α _inst_1))) x y)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {x : GroupTopology.{u1} α _inst_1} {y : GroupTopology.{u1} α _inst_1}, Iff (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α))) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 x) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 y)) (LE.le.{u1} (GroupTopology.{u1} α _inst_1) (Preorder.toLE.{u1} (GroupTopology.{u1} α _inst_1) (PartialOrder.toPreorder.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instPartialOrderGroupTopology.{u1} α _inst_1))) x y)
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_le GroupTopology.toTopologicalSpace_leₓ'. -/
 @[simp, to_additive]
 theorem toTopologicalSpace_le {x y : GroupTopology α} :
     x.toTopologicalSpace ≤ y.toTopologicalSpace ↔ x ≤ y :=
@@ -2706,12 +1986,6 @@ instance : Top (GroupTopology α) :=
       continuous_mul := continuous_top
       continuous_inv := continuous_top }⟩
 
-/- warning: group_topology.to_topological_space_top -> GroupTopology.toTopologicalSpace_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (Top.top.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasTop.{u1} α _inst_1))) (Top.top.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toHasTop.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (Top.top.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instTopGroupTopology.{u1} α _inst_1))) (Top.top.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toTop.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_top GroupTopology.toTopologicalSpace_topₓ'. -/
 @[simp, to_additive]
 theorem toTopologicalSpace_top : (⊤ : GroupTopology α).toTopologicalSpace = ⊤ :=
   rfl
@@ -2725,12 +1999,6 @@ instance : Bot (GroupTopology α) :=
         continuity
       continuous_inv := continuous_bot }⟩
 
-/- warning: group_topology.to_topological_space_bot -> GroupTopology.toTopologicalSpace_bot is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (Bot.bot.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasBot.{u1} α _inst_1))) (Bot.bot.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toHasBot.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (Bot.bot.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instBotGroupTopology.{u1} α _inst_1))) (Bot.bot.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toBot.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_bot GroupTopology.toTopologicalSpace_botₓ'. -/
 @[simp, to_additive]
 theorem toTopologicalSpace_bot : (⊥ : GroupTopology α).toTopologicalSpace = ⊥ :=
   rfl
@@ -2747,12 +2015,6 @@ instance : BoundedOrder (GroupTopology α) where
 @[to_additive]
 instance : Inf (GroupTopology α) where inf x y := ⟨x.1 ⊓ y.1, topologicalGroup_inf x.2 y.2⟩
 
-/- warning: group_topology.to_topological_space_inf -> GroupTopology.toTopologicalSpace_inf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (x : GroupTopology.{u1} α _inst_1) (y : GroupTopology.{u1} α _inst_1), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (Inf.inf.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) x y)) (Inf.inf.{u1} (TopologicalSpace.{u1} α) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} α) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))))) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 x) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 y))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (x : GroupTopology.{u1} α _inst_1) (y : GroupTopology.{u1} α _inst_1), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (Inf.inf.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instInfGroupTopology.{u1} α _inst_1) x y)) (Inf.inf.{u1} (TopologicalSpace.{u1} α) (Lattice.toInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α)))) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 x) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 y))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_inf GroupTopology.toTopologicalSpace_infₓ'. -/
 @[simp, to_additive]
 theorem toTopologicalSpace_inf (x y : GroupTopology α) :
     (x ⊓ y).toTopologicalSpace = x.toTopologicalSpace ⊓ y.toTopologicalSpace :=
@@ -2777,12 +2039,6 @@ instance : InfSet (GroupTopology α)
     where sInf S :=
     ⟨sInf (toTopologicalSpace '' S), topologicalGroup_sInf <| ball_image_iff.2 fun t ht => t.2⟩
 
-/- warning: group_topology.to_topological_space_Inf -> GroupTopology.toTopologicalSpace_sInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Set.{u1} (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (InfSet.sInf.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) s)) (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Set.image.{u1, u1} (GroupTopology.{u1} α _inst_1) (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Set.{u1} (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (InfSet.sInf.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instInfSetGroupTopology.{u1} α _inst_1) s)) (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Set.image.{u1, u1} (GroupTopology.{u1} α _inst_1) (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_Inf GroupTopology.toTopologicalSpace_sInfₓ'. -/
 @[simp, to_additive]
 theorem toTopologicalSpace_sInf (s : Set (GroupTopology α)) :
     (sInf s).toTopologicalSpace = sInf (toTopologicalSpace '' s) :=
@@ -2790,12 +2046,6 @@ theorem toTopologicalSpace_sInf (s : Set (GroupTopology α)) :
 #align group_topology.to_topological_space_Inf GroupTopology.toTopologicalSpace_sInf
 #align add_group_topology.to_topological_space_Inf AddGroupTopology.toTopologicalSpace_sInf
 
-/- warning: group_topology.to_topological_space_infi -> GroupTopology.toTopologicalSpace_iInf is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {ι : Sort.{u2}} (s : ι -> (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (iInf.{u1, u2} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) ι (fun (i : ι) => s i))) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => GroupTopology.toTopologicalSpace.{u1} α _inst_1 (s i)))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Group.{u2} α] {ι : Sort.{u1}} (s : ι -> (GroupTopology.{u2} α _inst_1)), Eq.{succ u2} (TopologicalSpace.{u2} α) (GroupTopology.toTopologicalSpace.{u2} α _inst_1 (iInf.{u2, u1} (GroupTopology.{u2} α _inst_1) (GroupTopology.instInfSetGroupTopology.{u2} α _inst_1) ι (fun (i : ι) => s i))) (iInf.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => GroupTopology.toTopologicalSpace.{u2} α _inst_1 (s i)))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_infi GroupTopology.toTopologicalSpace_iInfₓ'. -/
 @[simp, to_additive]
 theorem toTopologicalSpace_iInf {ι} (s : ι → GroupTopology α) :
     (⨅ i, s i).toTopologicalSpace = ⨅ i, (s i).toTopologicalSpace :=
@@ -2843,12 +2093,6 @@ def coinduced {α β : Type _} [t : TopologicalSpace α] [Group β] (f : α → 
 #align add_group_topology.coinduced AddGroupTopology.coinduced
 -/
 
-/- warning: group_topology.coinduced_continuous -> GroupTopology.coinduced_continuous is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [t : TopologicalSpace.{u1} α] [_inst_2 : Group.{u2} β] (f : α -> β), Continuous.{u1, u2} α β t (GroupTopology.toTopologicalSpace.{u2} β _inst_2 (GroupTopology.coinduced.{u1, u2} α β t _inst_2 f)) f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [t : TopologicalSpace.{u2} α] [_inst_2 : Group.{u1} β] (f : α -> β), Continuous.{u2, u1} α β t (GroupTopology.toTopologicalSpace.{u1} β _inst_2 (GroupTopology.coinduced.{u2, u1} α β t _inst_2 f)) f
-Case conversion may be inaccurate. Consider using '#align group_topology.coinduced_continuous GroupTopology.coinduced_continuousₓ'. -/
 @[to_additive]
 theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Group β] (f : α → β) :
     cont t (coinduced f).toTopologicalSpace f :=

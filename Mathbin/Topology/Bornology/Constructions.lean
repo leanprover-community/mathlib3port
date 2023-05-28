@@ -60,12 +60,6 @@ namespace Bornology
 -/
 
 
-/- warning: bornology.cobounded_prod -> Bornology.cobounded_prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : Bornology.{u1} α] [_inst_3 : Bornology.{u2} β], Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Bornology.cobounded.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instBornology.{u1, u2} α β _inst_2 _inst_3)) (Filter.coprod.{u1, u2} α β (Bornology.cobounded.{u1} α _inst_2) (Bornology.cobounded.{u2} β _inst_3))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : Bornology.{u2} α] [_inst_3 : Bornology.{u1} β], Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Bornology.cobounded.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instBornology.{u2, u1} α β _inst_2 _inst_3)) (Filter.coprod.{u2, u1} α β (Bornology.cobounded.{u2} α _inst_2) (Bornology.cobounded.{u1} β _inst_3))
-Case conversion may be inaccurate. Consider using '#align bornology.cobounded_prod Bornology.cobounded_prodₓ'. -/
 theorem cobounded_prod : cobounded (α × β) = (cobounded α).coprod (cobounded β) :=
   rfl
 #align bornology.cobounded_prod Bornology.cobounded_prod
@@ -93,12 +87,6 @@ theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsB
 #align bornology.is_bounded.snd_of_prod Bornology.IsBounded.snd_of_prod
 -/
 
-/- warning: bornology.is_bounded.prod -> Bornology.IsBounded.prod is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : Bornology.{u1} α] [_inst_3 : Bornology.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (Bornology.IsBounded.{u1} α _inst_2 s) -> (Bornology.IsBounded.{u2} β _inst_3 t) -> (Bornology.IsBounded.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instBornology.{u1, u2} α β _inst_2 _inst_3) (Set.prod.{u1, u2} α β s t))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : Bornology.{u2} α] [_inst_3 : Bornology.{u1} β] {s : Set.{u2} α} {t : Set.{u1} β}, (Bornology.IsBounded.{u2} α _inst_2 s) -> (Bornology.IsBounded.{u1} β _inst_3 t) -> (Bornology.IsBounded.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instBornology.{u2, u1} α β _inst_2 _inst_3) (Set.prod.{u2, u1} α β s t))
-Case conversion may be inaccurate. Consider using '#align bornology.is_bounded.prod Bornology.IsBounded.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.prod (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ×ˢ t) :=
   isBounded_image_fst_and_snd.1
@@ -138,22 +126,10 @@ theorem isBounded_prod_self : IsBounded (s ×ˢ s) ↔ IsBounded s :=
 -/
 
 
-/- warning: bornology.cobounded_pi -> Bornology.cobounded_pi is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : Fintype.{u1} ι] [_inst_4 : forall (i : ι), Bornology.{u2} (π i)], Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (forall (i : ι), π i)) (Bornology.cobounded.{max u1 u2} (forall (i : ι), π i) (Pi.instBornology.{u1, u2} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i))) (Filter.coprodᵢ.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Bornology.cobounded.{u2} (π i) (_inst_4 i)))
-but is expected to have type
-  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_4 : forall (i : ι), Bornology.{u1} (π i)], Eq.{max (succ u2) (succ u1)} (Filter.{max u2 u1} (forall (i : ι), π i)) (Bornology.cobounded.{max u2 u1} (forall (i : ι), π i) (Pi.instBornology.{u2, u1} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i))) (Filter.coprodᵢ.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Bornology.cobounded.{u1} (π i) (_inst_4 i)))
-Case conversion may be inaccurate. Consider using '#align bornology.cobounded_pi Bornology.cobounded_piₓ'. -/
 theorem cobounded_pi : cobounded (∀ i, π i) = Filter.coprodᵢ fun i => cobounded (π i) :=
   rfl
 #align bornology.cobounded_pi Bornology.cobounded_pi
 
-/- warning: bornology.forall_is_bounded_image_eval_iff -> Bornology.forall_isBounded_image_eval_iff is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : Fintype.{u1} ι] [_inst_4 : forall (i : ι), Bornology.{u2} (π i)] {s : Set.{max u1 u2} (forall (i : ι), π i)}, Iff (forall (i : ι), Bornology.IsBounded.{u2} (π i) (_inst_4 i) (Set.image.{max u1 u2, u2} (forall (x : ι), π x) (π i) (Function.eval.{succ u1, succ u2} ι (fun (i : ι) => π i) i) s)) (Bornology.IsBounded.{max u1 u2} (forall (i : ι), π i) (Pi.instBornology.{u1, u2} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i)) s)
-but is expected to have type
-  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_4 : forall (i : ι), Bornology.{u1} (π i)] {s : Set.{max u2 u1} (forall (i : ι), π i)}, Iff (forall (i : ι), Bornology.IsBounded.{u1} (π i) (_inst_4 i) (Set.image.{max u2 u1, u1} (forall (x : ι), π x) (π i) (Function.eval.{succ u2, succ u1} ι (fun (i : ι) => π i) i) s)) (Bornology.IsBounded.{max u2 u1} (forall (i : ι), π i) (Pi.instBornology.{u2, u1} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i)) s)
-Case conversion may be inaccurate. Consider using '#align bornology.forall_is_bounded_image_eval_iff Bornology.forall_isBounded_image_eval_iffₓ'. -/
 theorem forall_isBounded_image_eval_iff {s : Set (∀ i, π i)} :
     (∀ i, IsBounded (eval i '' s)) ↔ IsBounded s :=
   compl_mem_coprodᵢ.symm
@@ -165,12 +141,6 @@ theorem IsBounded.pi (h : ∀ i, IsBounded (S i)) : IsBounded (pi univ S) :=
 #align bornology.is_bounded.pi Bornology.IsBounded.pi
 -/
 
-/- warning: bornology.is_bounded_pi_of_nonempty -> Bornology.isBounded_pi_of_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : Fintype.{u1} ι] [_inst_4 : forall (i : ι), Bornology.{u2} (π i)] {S : forall (i : ι), Set.{u2} (π i)}, (Set.Nonempty.{max u1 u2} (forall (i : ι), π i) (Set.pi.{u1, u2} ι (fun (i : ι) => π i) (Set.univ.{u1} ι) S)) -> (Iff (Bornology.IsBounded.{max u1 u2} (forall (i : ι), π i) (Pi.instBornology.{u1, u2} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i)) (Set.pi.{u1, u2} ι (fun (i : ι) => π i) (Set.univ.{u1} ι) S)) (forall (i : ι), Bornology.IsBounded.{u2} (π i) (_inst_4 i) (S i)))
-but is expected to have type
-  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_4 : forall (i : ι), Bornology.{u1} (π i)] {S : forall (i : ι), Set.{u1} (π i)}, (Set.Nonempty.{max u2 u1} (forall (i : ι), π i) (Set.pi.{u2, u1} ι (fun (i : ι) => π i) (Set.univ.{u2} ι) S)) -> (Iff (Bornology.IsBounded.{max u1 u2} (forall (i : ι), π i) (Pi.instBornology.{u2, u1} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i)) (Set.pi.{u2, u1} ι (fun (i : ι) => π i) (Set.univ.{u2} ι) S)) (forall (i : ι), Bornology.IsBounded.{u1} (π i) (_inst_4 i) (S i)))
-Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_pi_of_nonempty Bornology.isBounded_pi_of_nonemptyₓ'. -/
 theorem isBounded_pi_of_nonempty (hne : (pi univ S).Nonempty) :
     IsBounded (pi univ S) ↔ ∀ i, IsBounded (S i) :=
   ⟨fun H i => @eval_image_univ_pi _ _ _ i hne ▸ forall_isBounded_image_eval_iff.2 H i, IsBounded.pi⟩
@@ -192,12 +162,6 @@ theorem isBounded_pi : IsBounded (pi univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, I
 -/
 
 
-/- warning: bornology.is_bounded_induced -> Bornology.isBounded_induced is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_5 : Bornology.{u2} β] {f : α -> β} {s : Set.{u1} α}, Iff (Bornology.IsBounded.{u1} α (Bornology.induced.{u1, u2} α β _inst_5 f) s) (Bornology.IsBounded.{u2} β _inst_5 (Set.image.{u1, u2} α β f s))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_5 : Bornology.{u1} β] {f : α -> β} {s : Set.{u2} α}, Iff (Bornology.IsBounded.{u2} α (Bornology.induced.{u2, u1} α β _inst_5 f) s) (Bornology.IsBounded.{u1} β _inst_5 (Set.image.{u2, u1} α β f s))
-Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_induced Bornology.isBounded_inducedₓ'. -/
 theorem isBounded_induced {α β : Type _} [Bornology β] {f : α → β} {s : Set α} :
     @IsBounded α (Bornology.induced f) s ↔ IsBounded (f '' s) :=
   compl_mem_comap
@@ -225,12 +189,6 @@ instance [BoundedSpace α] [BoundedSpace β] : BoundedSpace (α × β) := by
 instance [∀ i, BoundedSpace (π i)] : BoundedSpace (∀ i, π i) := by
   simp [← cobounded_eq_bot_iff, cobounded_pi]
 
-/- warning: bounded_space_induced_iff -> boundedSpace_induced_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_5 : Bornology.{u2} β] {f : α -> β}, Iff (BoundedSpace.{u1} α (Bornology.induced.{u1, u2} α β _inst_5 f)) (Bornology.IsBounded.{u2} β _inst_5 (Set.range.{u2, succ u1} β α f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_5 : Bornology.{u1} β] {f : α -> β}, Iff (BoundedSpace.{u2} α (Bornology.induced.{u2, u1} α β _inst_5 f)) (Bornology.IsBounded.{u1} β _inst_5 (Set.range.{u1, succ u2} β α f))
-Case conversion may be inaccurate. Consider using '#align bounded_space_induced_iff boundedSpace_induced_iffₓ'. -/
 theorem boundedSpace_induced_iff {α β : Type _} [Bornology β] {f : α → β} :
     @BoundedSpace α (Bornology.induced f) ↔ IsBounded (range f) := by
   rw [← is_bounded_univ, is_bounded_induced, image_univ]

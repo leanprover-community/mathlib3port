@@ -100,9 +100,6 @@ end
 
 namespace InjectiveResolution
 
-/- warning: category_theory.InjectiveResolution.ι_f_succ -> CategoryTheory.InjectiveResolution.ι_f_succ is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolution.ι_f_succₓ'. -/
 @[simp]
 theorem ι_f_succ {Z : C} (I : InjectiveResolution Z) (n : ℕ) : I.ι.f (n + 1) = 0 :=
   by
@@ -110,9 +107,6 @@ theorem ι_f_succ {Z : C} (I : InjectiveResolution Z) (n : ℕ) : I.ι.f (n + 1)
   dsimp; rfl
 #align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolution.ι_f_succ
 
-/- warning: category_theory.InjectiveResolution.ι_f_zero_comp_complex_d -> CategoryTheory.InjectiveResolution.ι_f_zero_comp_complex_d is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align category_theory.InjectiveResolution.ι_f_zero_comp_complex_d CategoryTheory.InjectiveResolution.ι_f_zero_comp_complex_dₓ'. -/
 @[simp]
 theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolution Z) :
     I.ι.f 0 ≫ I.cocomplex.d 0 1 = 0 :=

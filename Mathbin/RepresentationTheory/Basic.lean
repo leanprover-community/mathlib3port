@@ -71,9 +71,6 @@ def trivial : Representation k G V :=
 #align representation.trivial Representation.trivial
 -/
 
-/- warning: representation.trivial_def -> Representation.trivial_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.trivial_def Representation.trivial_defₓ'. -/
 @[simp]
 theorem trivial_def (g : G) (v : V) : trivial k g v = v :=
   rfl
@@ -87,12 +84,6 @@ variable {k G V : Type _} [CommSemiring k] [Monoid G] [AddCommMonoid V] [Module 
 
 variable (ρ : Representation k G V)
 
-/- warning: representation.as_algebra_hom -> Representation.asAlgebraHom is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Monoid.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3], (Representation.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4) -> (AlgHom.{u1, max u1 u2, u3} k (MonoidAlgebra.{u1, u2} k G (CommSemiring.toSemiring.{u1} k _inst_1)) (Module.End.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4) _inst_1 (MonoidAlgebra.semiring.{u1, u2} k G (CommSemiring.toSemiring.{u1} k _inst_1) _inst_2) (Module.End.semiring.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4) (MonoidAlgebra.algebra.{u1, u2, u1} k G k _inst_1 (CommSemiring.toSemiring.{u1} k _inst_1) (Algebra.id.{u1} k _inst_1) _inst_2) (Module.End.algebra.{u1, u3} k V _inst_1 _inst_3 _inst_4))
-but is expected to have type
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Monoid.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3], (Representation.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4) -> (AlgHom.{u1, max u2 u1, u3} k (MonoidAlgebra.{u1, u2} k G (CommSemiring.toSemiring.{u1} k _inst_1)) (Module.End.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4) _inst_1 (MonoidAlgebra.semiring.{u1, u2} k G (CommSemiring.toSemiring.{u1} k _inst_1) _inst_2) (Module.End.semiring.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4) (MonoidAlgebra.algebra.{u1, u2, u1} k G k _inst_1 (CommSemiring.toSemiring.{u1} k _inst_1) (Algebra.id.{u1} k _inst_1) _inst_2) (Module.instAlgebraEndToSemiringSemiring.{u1, u3} k V _inst_1 _inst_3 _inst_4))
-Case conversion may be inaccurate. Consider using '#align representation.as_algebra_hom Representation.asAlgebraHomₓ'. -/
 /-- A `k`-linear representation of `G` on `V` can be thought of as
 an algebra map from `monoid_algebra k G` into the `k`-linear endomorphisms of `V`.
 -/
@@ -100,30 +91,18 @@ noncomputable def asAlgebraHom : MonoidAlgebra k G →ₐ[k] Module.End k V :=
   (lift k G _) ρ
 #align representation.as_algebra_hom Representation.asAlgebraHom
 
-/- warning: representation.as_algebra_hom_def -> Representation.asAlgebraHom_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_algebra_hom_def Representation.asAlgebraHom_defₓ'. -/
 theorem asAlgebraHom_def : asAlgebraHom ρ = (lift k G _) ρ :=
   rfl
 #align representation.as_algebra_hom_def Representation.asAlgebraHom_def
 
-/- warning: representation.as_algebra_hom_single -> Representation.asAlgebraHom_single is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_algebra_hom_single Representation.asAlgebraHom_singleₓ'. -/
 @[simp]
 theorem asAlgebraHom_single (g : G) (r : k) : asAlgebraHom ρ (Finsupp.single g r) = r • ρ g := by
   simp only [as_algebra_hom_def, MonoidAlgebra.lift_single]
 #align representation.as_algebra_hom_single Representation.asAlgebraHom_single
 
-/- warning: representation.as_algebra_hom_single_one -> Representation.asAlgebraHom_single_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_algebra_hom_single_one Representation.asAlgebraHom_single_oneₓ'. -/
 theorem asAlgebraHom_single_one (g : G) : asAlgebraHom ρ (Finsupp.single g 1) = ρ g := by simp
 #align representation.as_algebra_hom_single_one Representation.asAlgebraHom_single_one
 
-/- warning: representation.as_algebra_hom_of -> Representation.asAlgebraHom_of is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_algebra_hom_of Representation.asAlgebraHom_ofₓ'. -/
 theorem asAlgebraHom_of (g : G) : asAlgebraHom ρ (of k G g) = ρ g := by
   simp only [MonoidAlgebra.of_apply, as_algebra_hom_single, one_smul]
 #align representation.as_algebra_hom_of Representation.asAlgebraHom_of
@@ -154,12 +133,6 @@ noncomputable instance asModuleModule : Module (MonoidAlgebra k G) ρ.asModule :
 #align representation.as_module_module Representation.asModuleModule
 -/
 
-/- warning: representation.as_module_equiv -> Representation.asModuleEquiv is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Monoid.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3] (ρ : Representation.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4), AddEquiv.{u3, u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) V (AddZeroClass.toHasAdd.{u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) (AddMonoid.toAddZeroClass.{u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) (AddCommMonoid.toAddMonoid.{u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) (Representation.asModule.addCommMonoid.{u1, u3, u2} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ)))) (AddZeroClass.toHasAdd.{u3} V (AddMonoid.toAddZeroClass.{u3} V (AddCommMonoid.toAddMonoid.{u3} V _inst_3)))
-but is expected to have type
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Monoid.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3] (ρ : Representation.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4), AddEquiv.{u3, u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) V (AddZeroClass.toAdd.{u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) (AddMonoid.toAddZeroClass.{u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) (AddCommMonoid.toAddMonoid.{u3} (Representation.asModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ) (Representation.instAddCommMonoidAsModule.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4 ρ)))) (AddZeroClass.toAdd.{u3} V (AddMonoid.toAddZeroClass.{u3} V (AddCommMonoid.toAddMonoid.{u3} V _inst_3)))
-Case conversion may be inaccurate. Consider using '#align representation.as_module_equiv Representation.asModuleEquivₓ'. -/
 /-- The additive equivalence from the `module (monoid_algebra k G)` to the original vector space
 of the representative.
 
@@ -169,18 +142,12 @@ def asModuleEquiv : ρ.asModule ≃+ V :=
   AddEquiv.refl _
 #align representation.as_module_equiv Representation.asModuleEquiv
 
-/- warning: representation.as_module_equiv_map_smul -> Representation.asModuleEquiv_map_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_module_equiv_map_smul Representation.asModuleEquiv_map_smulₓ'. -/
 @[simp]
 theorem asModuleEquiv_map_smul (r : MonoidAlgebra k G) (x : ρ.asModule) :
     ρ.asModuleEquiv (r • x) = ρ.asAlgebraHom r (ρ.asModuleEquiv x) :=
   rfl
 #align representation.as_module_equiv_map_smul Representation.asModuleEquiv_map_smul
 
-/- warning: representation.as_module_equiv_symm_map_smul -> Representation.asModuleEquiv_symm_map_smul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_module_equiv_symm_map_smul Representation.asModuleEquiv_symm_map_smulₓ'. -/
 @[simp]
 theorem asModuleEquiv_symm_map_smul (r : k) (x : V) :
     ρ.asModuleEquiv.symm (r • x) = algebraMap k (MonoidAlgebra k G) r • ρ.asModuleEquiv.symm x :=
@@ -189,9 +156,6 @@ theorem asModuleEquiv_symm_map_smul (r : k) (x : V) :
   simp
 #align representation.as_module_equiv_symm_map_smul Representation.asModuleEquiv_symm_map_smul
 
-/- warning: representation.as_module_equiv_symm_map_rho -> Representation.asModuleEquiv_symm_map_rho is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_module_equiv_symm_map_rho Representation.asModuleEquiv_symm_map_rhoₓ'. -/
 @[simp]
 theorem asModuleEquiv_symm_map_rho (g : G) (x : V) :
     ρ.asModuleEquiv.symm (ρ g x) = MonoidAlgebra.of k G g • ρ.asModuleEquiv.symm x :=
@@ -252,9 +216,6 @@ we have `module (monoid_algebra k G) (restrict_scalars k (monoid_algebra k G) M)
 -/
 
 
-/- warning: representation.of_module_as_algebra_hom_apply_apply -> Representation.ofModule_asAlgebraHom_apply_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_module_as_algebra_hom_apply_apply Representation.ofModule_asAlgebraHom_apply_applyₓ'. -/
 @[simp]
 theorem ofModule_asAlgebraHom_apply_apply (r : MonoidAlgebra k G)
     (m : RestrictScalars k (MonoidAlgebra k G) M) :
@@ -273,9 +234,6 @@ theorem ofModule_asAlgebraHom_apply_apply (r : MonoidAlgebra k G)
       RestrictScalars.addEquiv_symm_map_smul_smul]
 #align representation.of_module_as_algebra_hom_apply_apply Representation.ofModule_asAlgebraHom_apply_apply
 
-/- warning: representation.of_module_as_module_act -> Representation.ofModule_asModule_act is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_module_as_module_act Representation.ofModule_asModule_actₓ'. -/
 @[simp]
 theorem ofModule_asModule_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G) ρ.asModule) :
     ofModule k G ρ.asModule g x =
@@ -288,9 +246,6 @@ theorem ofModule_asModule_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G)
   simp
 #align representation.of_module_as_module_act Representation.ofModule_asModule_act
 
-/- warning: representation.smul_of_module_as_module -> Representation.smul_ofModule_asModule is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.smul_of_module_as_module Representation.smul_ofModule_asModuleₓ'. -/
 theorem smul_ofModule_asModule (r : MonoidAlgebra k G) (m : (ofModule k G M).asModule) :
     (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv (r • m)) =
       r • (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv m) :=
@@ -316,12 +271,6 @@ section MulAction
 
 variable (k : Type _) [CommSemiring k] (G : Type _) [Monoid G] (H : Type _) [MulAction G H]
 
-/- warning: representation.of_mul_action -> Representation.ofMulAction is a dubious translation:
-lean 3 declaration is
-  forall (k : Type.{u1}) [_inst_1 : CommSemiring.{u1} k] (G : Type.{u2}) [_inst_2 : Monoid.{u2} G] (H : Type.{u3}) [_inst_3 : MulAction.{u2, u3} G H _inst_2], Representation.{u1, u2, max u3 u1} k G (Finsupp.{u3, u1} H k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1)))))) _inst_1 _inst_2 (Finsupp.addCommMonoid.{u3, u1} H k (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1))))) (Finsupp.module.{u3, u1, u1} H k k (CommSemiring.toSemiring.{u1} k _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1)))
-but is expected to have type
-  forall (k : Type.{u1}) [_inst_1 : CommSemiring.{u1} k] (G : Type.{u2}) [_inst_2 : Monoid.{u2} G] (H : Type.{u3}) [_inst_3 : MulAction.{u2, u3} G H _inst_2], Representation.{u1, u2, max u1 u3} k G (Finsupp.{u3, u1} H k (CommMonoidWithZero.toZero.{u1} k (CommSemiring.toCommMonoidWithZero.{u1} k _inst_1))) _inst_1 _inst_2 (Finsupp.addCommMonoid.{u3, u1} H k (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1))))) (Finsupp.module.{u3, u1, u1} H k k (CommSemiring.toSemiring.{u1} k _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1)))) (Semiring.toModule.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1)))
-Case conversion may be inaccurate. Consider using '#align representation.of_mul_action Representation.ofMulActionₓ'. -/
 /-- A `G`-action on `H` induces a representation `G →* End(k[H])` in the natural way. -/
 noncomputable def ofMulAction : Representation k G (H →₀ k)
     where
@@ -332,16 +281,10 @@ noncomputable def ofMulAction : Representation k G (H →₀ k)
 
 variable {k G H}
 
-/- warning: representation.of_mul_action_def -> Representation.ofMulAction_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_mul_action_def Representation.ofMulAction_defₓ'. -/
 theorem ofMulAction_def (g : G) : ofMulAction k G H g = Finsupp.lmapDomain k k ((· • ·) g) :=
   rfl
 #align representation.of_mul_action_def Representation.ofMulAction_def
 
-/- warning: representation.of_mul_action_single -> Representation.ofMulAction_single is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_mul_action_single Representation.ofMulAction_singleₓ'. -/
 theorem ofMulAction_single (g : G) (x : H) (r : k) :
     ofMulAction k G H g (Finsupp.single x r) = Finsupp.single (g • x) r :=
   Finsupp.mapDomain_single
@@ -355,9 +298,6 @@ variable {k G V : Type _} [CommSemiring k] [Group G] [AddCommMonoid V] [Module k
 
 variable (ρ : Representation k G V)
 
-/- warning: representation.of_mul_action_apply -> Representation.ofMulAction_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_mul_action_apply Representation.ofMulAction_applyₓ'. -/
 @[simp]
 theorem ofMulAction_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k) (h : H) :
     ofMulAction k G H g f h = f (g⁻¹ • h) :=
@@ -369,9 +309,6 @@ theorem ofMulAction_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k) 
   simp only [of_mul_action_def, Finsupp.lmapDomain_apply, Finsupp.mapDomain_apply, hg]
 #align representation.of_mul_action_apply Representation.ofMulAction_apply
 
-/- warning: representation.of_mul_action_self_smul_eq_mul -> Representation.ofMulAction_self_smul_eq_mul is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_mul_action_self_smul_eq_mul Representation.ofMulAction_self_smul_eq_mulₓ'. -/
 theorem ofMulAction_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction k G G).asModule) :
     x • y = (x * y : MonoidAlgebra k G) :=
   x.inductionOn (fun g => by show as_algebra_hom _ _ _ = _ <;> ext <;> simp)
@@ -379,9 +316,6 @@ theorem ofMulAction_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction k
     show as_algebra_hom _ _ _ = _ <;> simpa [← hx]
 #align representation.of_mul_action_self_smul_eq_mul Representation.ofMulAction_self_smul_eq_mul
 
-/- warning: representation.of_mul_action_self_as_module_equiv -> Representation.ofMulActionSelfAsModuleEquiv is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.of_mul_action_self_as_module_equiv Representation.ofMulActionSelfAsModuleEquivₓ'. -/
 /-- If we equip `k[G]` with the `k`-linear `G`-representation induced by the left regular action of
 `G` on itself, the resulting object is isomorphic as a `k[G]`-module to `k[G]` with its natural
 `k[G]`-module structure. -/
@@ -391,12 +325,6 @@ noncomputable def ofMulActionSelfAsModuleEquiv :
   { asModuleEquiv _ with map_smul' := ofMulAction_self_smul_eq_mul }
 #align representation.of_mul_action_self_as_module_equiv Representation.ofMulActionSelfAsModuleEquiv
 
-/- warning: representation.as_group_hom -> Representation.asGroupHom is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Group.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3], (Representation.{u1, u2, u3} k G V _inst_1 (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_3 _inst_4) -> (MonoidHom.{u2, u3} G (Units.{u3} (LinearMap.{u1, u1, u3, u3} k k (CommSemiring.toSemiring.{u1} k _inst_1) (CommSemiring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1))) V V _inst_3 _inst_3 _inst_4 _inst_4) (Module.End.monoid.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4)) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) (Units.mulOneClass.{u3} (LinearMap.{u1, u1, u3, u3} k k (CommSemiring.toSemiring.{u1} k _inst_1) (CommSemiring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1))) V V _inst_3 _inst_3 _inst_4 _inst_4) (Module.End.monoid.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4)))
-but is expected to have type
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Group.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3], (Representation.{u1, u2, u3} k G V _inst_1 (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_3 _inst_4) -> (MonoidHom.{u2, u3} G (Units.{u3} (LinearMap.{u1, u1, u3, u3} k k (CommSemiring.toSemiring.{u1} k _inst_1) (CommSemiring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1))) V V _inst_3 _inst_3 _inst_4 _inst_4) (Module.End.monoid.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4)) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))) (Units.instMulOneClassUnits.{u3} (LinearMap.{u1, u1, u3, u3} k k (CommSemiring.toSemiring.{u1} k _inst_1) (CommSemiring.toSemiring.{u1} k _inst_1) (RingHom.id.{u1} k (Semiring.toNonAssocSemiring.{u1} k (CommSemiring.toSemiring.{u1} k _inst_1))) V V _inst_3 _inst_3 _inst_4 _inst_4) (Module.End.monoid.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3 _inst_4)))
-Case conversion may be inaccurate. Consider using '#align representation.as_group_hom Representation.asGroupHomₓ'. -/
 /-- When `G` is a group, a `k`-linear representation of `G` on `V` can be thought of as
 a group homomorphism from `G` into the invertible `k`-linear endomorphisms of `V`.
 -/
@@ -404,9 +332,6 @@ def asGroupHom : G →* Units (V →ₗ[k] V) :=
   MonoidHom.toHomUnits ρ
 #align representation.as_group_hom Representation.asGroupHom
 
-/- warning: representation.as_group_hom_apply -> Representation.asGroupHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.as_group_hom_apply Representation.asGroupHom_applyₓ'. -/
 theorem asGroupHom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by
   simp only [as_group_hom, MonoidHom.coe_toHomUnits]
 #align representation.as_group_hom_apply Representation.asGroupHom_apply
@@ -423,12 +348,6 @@ variable (ρV : Representation k G V) (ρW : Representation k G W)
 
 open TensorProduct
 
-/- warning: representation.tprod -> Representation.tprod is a dubious translation:
-lean 3 declaration is
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} {W : Type.{u4}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Monoid.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3] [_inst_5 : AddCommMonoid.{u4} W] [_inst_6 : Module.{u1, u4} k W (CommSemiring.toSemiring.{u1} k _inst_1) _inst_5], (Representation.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4) -> (Representation.{u1, u2, u4} k G W _inst_1 _inst_2 _inst_5 _inst_6) -> (Representation.{u1, u2, max u3 u4} k G (TensorProduct.{u1, u3, u4} k _inst_1 V W _inst_3 _inst_5 _inst_4 _inst_6) _inst_1 _inst_2 (TensorProduct.addCommMonoid.{u1, u3, u4} k _inst_1 V W _inst_3 _inst_5 _inst_4 _inst_6) (TensorProduct.module.{u1, u3, u4} k _inst_1 V W _inst_3 _inst_5 _inst_4 _inst_6))
-but is expected to have type
-  forall {k : Type.{u1}} {G : Type.{u2}} {V : Type.{u3}} {W : Type.{u4}} [_inst_1 : CommSemiring.{u1} k] [_inst_2 : Monoid.{u2} G] [_inst_3 : AddCommMonoid.{u3} V] [_inst_4 : Module.{u1, u3} k V (CommSemiring.toSemiring.{u1} k _inst_1) _inst_3] [_inst_5 : AddCommMonoid.{u4} W] [_inst_6 : Module.{u1, u4} k W (CommSemiring.toSemiring.{u1} k _inst_1) _inst_5], (Representation.{u1, u2, u3} k G V _inst_1 _inst_2 _inst_3 _inst_4) -> (Representation.{u1, u2, u4} k G W _inst_1 _inst_2 _inst_5 _inst_6) -> (Representation.{u1, u2, max u4 u3} k G (TensorProduct.{u1, u3, u4} k _inst_1 V W _inst_3 _inst_5 _inst_4 _inst_6) _inst_1 _inst_2 (TensorProduct.addCommMonoid.{u1, u3, u4} k _inst_1 V W _inst_3 _inst_5 _inst_4 _inst_6) (TensorProduct.instModuleTensorProductToSemiringAddCommMonoid.{u1, u3, u4} k _inst_1 V W _inst_3 _inst_5 _inst_4 _inst_6))
-Case conversion may be inaccurate. Consider using '#align representation.tprod Representation.tprodₓ'. -/
 /-- Given representations of `G` on `V` and `W`, there is a natural representation of `G` on their
 tensor product `V ⊗[k] W`.
 -/
@@ -442,17 +361,11 @@ def tprod : Representation k G (V ⊗[k] W)
 -- mathport name: «expr ⊗ »
 local notation ρV " ⊗ " ρW => tprod ρV ρW
 
-/- warning: representation.tprod_apply -> Representation.tprod_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.tprod_apply Representation.tprod_applyₓ'. -/
 @[simp]
 theorem tprod_apply (g : G) : (ρV ⊗ ρW) g = TensorProduct.map (ρV g) (ρW g) :=
   rfl
 #align representation.tprod_apply Representation.tprod_apply
 
-/- warning: representation.smul_tprod_one_as_module -> Representation.smul_tprod_one_asModule is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.smul_tprod_one_as_module Representation.smul_tprod_one_asModuleₓ'. -/
 theorem smul_tprod_one_asModule (r : MonoidAlgebra k G) (x : V) (y : W) :
     (r • x ⊗ₜ y : (ρV.tprod 1).asModule) = (r • x : ρV.asModule) ⊗ₜ y :=
   by
@@ -463,9 +376,6 @@ theorem smul_tprod_one_asModule (r : MonoidAlgebra k G) (x : V) (y : W) :
   rfl
 #align representation.smul_tprod_one_as_module Representation.smul_tprod_one_asModule
 
-/- warning: representation.smul_one_tprod_as_module -> Representation.smul_one_tprod_asModule is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.smul_one_tprod_as_module Representation.smul_one_tprod_asModuleₓ'. -/
 theorem smul_one_tprod_asModule (r : MonoidAlgebra k G) (x : V) (y : W) :
     (r • x ⊗ₜ y : ((1 : Representation k G V).tprod ρW).asModule) = x ⊗ₜ (r • y : ρW.asModule) :=
   by
@@ -504,9 +414,6 @@ def linHom : Representation k G (V →ₗ[k] W)
 #align representation.lin_hom Representation.linHom
 -/
 
-/- warning: representation.lin_hom_apply -> Representation.linHom_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.lin_hom_apply Representation.linHom_applyₓ'. -/
 @[simp]
 theorem linHom_apply (g : G) (f : V →ₗ[k] W) : (linHom ρV ρW) g f = ρW g ∘ₗ f ∘ₗ ρV g⁻¹ :=
   rfl
@@ -529,17 +436,11 @@ def dual : Representation k G (Module.Dual k V)
 #align representation.dual Representation.dual
 -/
 
-/- warning: representation.dual_apply -> Representation.dual_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.dual_apply Representation.dual_applyₓ'. -/
 @[simp]
 theorem dual_apply (g : G) : (dual ρV) g = Module.Dual.transpose (ρV g⁻¹) :=
   rfl
 #align representation.dual_apply Representation.dual_apply
 
-/- warning: representation.dual_tensor_hom_comm -> Representation.dualTensorHom_comm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align representation.dual_tensor_hom_comm Representation.dualTensorHom_commₓ'. -/
 /-- Given $k$-modules $V, W$, there is a homomorphism $φ : V^* ⊗ W → Hom_k(V, W)$
 (implemented by `linear_algebra.contraction.dual_tensor_hom`).
 Given representations of $G$ on $V$ and $W$,there are representations of $G$ on  $V^* ⊗ W$ and on

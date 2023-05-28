@@ -64,18 +64,12 @@ def traceAux : (M →ₗ[R] M) →ₗ[R] R :=
 #align linear_map.trace_aux LinearMap.traceAux
 -/
 
-/- warning: linear_map.trace_aux_def -> LinearMap.traceAux_def is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_aux_def LinearMap.traceAux_defₓ'. -/
 -- Can't be `simp` because it would cause a loop.
 theorem traceAux_def (b : Basis ι R M) (f : M →ₗ[R] M) :
     traceAux R b f = Matrix.trace (LinearMap.toMatrix b b f) :=
   rfl
 #align linear_map.trace_aux_def LinearMap.traceAux_def
 
-/- warning: linear_map.trace_aux_eq -> LinearMap.traceAux_eq is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_aux_eq LinearMap.traceAux_eqₓ'. -/
 theorem traceAux_eq : traceAux R b = traceAux R c :=
   LinearMap.ext fun f =>
     calc
@@ -111,9 +105,6 @@ def trace : (M →ₗ[R] M) →ₗ[R] R :=
 
 variable (R) {M}
 
-/- warning: linear_map.trace_eq_matrix_trace_of_finset -> LinearMap.trace_eq_matrix_trace_of_finset is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_matrix_trace_of_finset LinearMap.trace_eq_matrix_trace_of_finsetₓ'. -/
 /-- Auxiliary lemma for `trace_eq_matrix_trace`. -/
 theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M →ₗ[R] M) :
     trace R M f = Matrix.trace (LinearMap.toMatrix b b f) :=
@@ -124,18 +115,12 @@ theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M 
   apply trace_aux_eq
 #align linear_map.trace_eq_matrix_trace_of_finset LinearMap.trace_eq_matrix_trace_of_finset
 
-/- warning: linear_map.trace_eq_matrix_trace -> LinearMap.trace_eq_matrix_trace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_matrix_trace LinearMap.trace_eq_matrix_traceₓ'. -/
 theorem trace_eq_matrix_trace (f : M →ₗ[R] M) :
     trace R M f = Matrix.trace (LinearMap.toMatrix b b f) := by
   rw [trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ← trace_aux_def, ← trace_aux_def,
     trace_aux_eq R b]
 #align linear_map.trace_eq_matrix_trace LinearMap.trace_eq_matrix_trace
 
-/- warning: linear_map.trace_mul_comm -> LinearMap.trace_mul_comm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_mul_comm LinearMap.trace_mul_commₓ'. -/
 theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f * g) = trace R M (g * f) :=
   if H : ∃ s : Finset M, Nonempty (Basis s R M) then
     by
@@ -144,9 +129,6 @@ theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f * g) = trace R M (g 
   else by rw [trace, dif_neg H, LinearMap.zero_apply, LinearMap.zero_apply]
 #align linear_map.trace_mul_comm LinearMap.trace_mul_comm
 
-/- warning: linear_map.trace_conj -> LinearMap.trace_conj is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_conj LinearMap.trace_conjₓ'. -/
 /-- The trace of an endomorphism is invariant under conjugation -/
 @[simp]
 theorem trace_conj (g : M →ₗ[R] M) (f : (M →ₗ[R] M)ˣ) : trace R M (↑f * g * ↑f⁻¹) = trace R M g :=
@@ -163,9 +145,6 @@ variable (N : Type _) [AddCommGroup N] [Module R N]
 
 variable {ι : Type _}
 
-/- warning: linear_map.trace_eq_contract_of_basis -> LinearMap.trace_eq_contract_of_basis is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_contract_of_basis LinearMap.trace_eq_contract_of_basisₓ'. -/
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
@@ -182,9 +161,6 @@ theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
     simp [Finsupp.single_eq_pi_single, hij]
 #align linear_map.trace_eq_contract_of_basis LinearMap.trace_eq_contract_of_basis
 
-/- warning: linear_map.trace_eq_contract_of_basis' -> LinearMap.trace_eq_contract_of_basis' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_contract_of_basis' LinearMap.trace_eq_contract_of_basis'ₓ'. -/
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract_of_basis' [Fintype ι] [DecidableEq ι] (b : Basis ι R M) :
@@ -196,9 +172,6 @@ variable (R M N)
 
 variable [Module.Free R M] [Module.Finite R M] [Module.Free R N] [Module.Finite R N] [Nontrivial R]
 
-/- warning: linear_map.trace_eq_contract -> LinearMap.trace_eq_contract is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_contract LinearMap.trace_eq_contractₓ'. -/
 /-- When `M` is finite free, the trace of a linear map correspond to the contraction pairing under
 the isomorphism `End(M) ≃ M* ⊗ M`-/
 @[simp]
@@ -206,9 +179,6 @@ theorem trace_eq_contract : LinearMap.trace R M ∘ₗ dualTensorHom R M M = con
   trace_eq_contract_of_basis (Module.Free.chooseBasis R M)
 #align linear_map.trace_eq_contract LinearMap.trace_eq_contract
 
-/- warning: linear_map.trace_eq_contract_apply -> LinearMap.trace_eq_contract_apply is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_contract_apply LinearMap.trace_eq_contract_applyₓ'. -/
 @[simp]
 theorem trace_eq_contract_apply (x : Module.Dual R M ⊗[R] M) :
     (LinearMap.trace R M) ((dualTensorHom R M M) x) = contractLeft R M x := by
@@ -217,9 +187,6 @@ theorem trace_eq_contract_apply (x : Module.Dual R M ⊗[R] M) :
 
 open Classical
 
-/- warning: linear_map.trace_eq_contract' -> LinearMap.trace_eq_contract' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_eq_contract' LinearMap.trace_eq_contract'ₓ'. -/
 /-- When `M` is finite free, the trace of a linear map correspond to the contraction pairing under
 the isomorphism `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract' :
@@ -227,9 +194,6 @@ theorem trace_eq_contract' :
   trace_eq_contract_of_basis' (Module.Free.chooseBasis R M)
 #align linear_map.trace_eq_contract' LinearMap.trace_eq_contract'
 
-/- warning: linear_map.trace_one -> LinearMap.trace_one is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_one LinearMap.trace_oneₓ'. -/
 /-- The trace of the identity endomorphism is the dimension of the free module -/
 @[simp]
 theorem trace_one : trace R M 1 = (finrank R M : R) :=
@@ -239,17 +203,11 @@ theorem trace_one : trace R M 1 = (finrank R M : R) :=
   simp
 #align linear_map.trace_one LinearMap.trace_one
 
-/- warning: linear_map.trace_id -> LinearMap.trace_id is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_id LinearMap.trace_idₓ'. -/
 /-- The trace of the identity endomorphism is the dimension of the free module -/
 @[simp]
 theorem trace_id : trace R M id = (finrank R M : R) := by rw [← one_eq_id, trace_one]
 #align linear_map.trace_id LinearMap.trace_id
 
-/- warning: linear_map.trace_transpose -> LinearMap.trace_transpose is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_transpose LinearMap.trace_transposeₓ'. -/
 @[simp]
 theorem trace_transpose : trace R (Module.Dual R M) ∘ₗ Module.Dual.transpose = trace R M :=
   by
@@ -259,9 +217,6 @@ theorem trace_transpose : trace R (Module.Dual R M) ∘ₗ Module.Dual.transpose
   ext (f m); simp [e]
 #align linear_map.trace_transpose LinearMap.trace_transpose
 
-/- warning: linear_map.trace_prod_map -> LinearMap.trace_prodMap is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_prod_map LinearMap.trace_prodMapₓ'. -/
 theorem trace_prodMap :
     trace R (M × N) ∘ₗ prodMapLinear R M N M N R =
       (coprod id id : R × R →ₗ[R] R) ∘ₗ prodMap (trace R M) (trace R N) :=
@@ -286,9 +241,6 @@ theorem trace_prodMap :
 
 variable {R M N}
 
-/- warning: linear_map.trace_prod_map' -> LinearMap.trace_prodMap' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_prod_map' LinearMap.trace_prodMap'ₓ'. -/
 theorem trace_prodMap' (f : M →ₗ[R] M) (g : N →ₗ[R] N) :
     trace R (M × N) (prodMap f g) = trace R M f + trace R N g :=
   by
@@ -302,9 +254,6 @@ variable (R M N)
 
 open TensorProduct Function
 
-/- warning: linear_map.trace_tensor_product -> LinearMap.trace_tensorProduct is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_tensor_product LinearMap.trace_tensorProductₓ'. -/
 theorem trace_tensorProduct :
     compr₂ (mapBilinear R M N M N) (trace R (M ⊗ N)) =
       compl₁₂ (lsmul R R : R →ₗ[R] R →ₗ[R] R) (trace R M) (trace R N) :=
@@ -319,9 +268,6 @@ theorem trace_tensorProduct :
     map_dualTensorHom, dual_distrib_apply]
 #align linear_map.trace_tensor_product LinearMap.trace_tensorProduct
 
-/- warning: linear_map.trace_comp_comm -> LinearMap.trace_comp_comm is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_comp_comm LinearMap.trace_comp_commₓ'. -/
 theorem trace_comp_comm :
     compr₂ (llcomp R M N M) (trace R M) = compr₂ (llcomp R N M N).flip (trace R N) :=
   by
@@ -337,17 +283,11 @@ theorem trace_comp_comm :
 
 variable {R M N}
 
-/- warning: linear_map.trace_transpose' -> LinearMap.trace_transpose' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_transpose' LinearMap.trace_transpose'ₓ'. -/
 @[simp]
 theorem trace_transpose' (f : M →ₗ[R] M) : trace R _ (Module.Dual.transpose f) = trace R M f := by
   rw [← comp_apply, trace_transpose]
 #align linear_map.trace_transpose' LinearMap.trace_transpose'
 
-/- warning: linear_map.trace_tensor_product' -> LinearMap.trace_tensorProduct' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_tensor_product' LinearMap.trace_tensorProduct'ₓ'. -/
 theorem trace_tensorProduct' (f : M →ₗ[R] M) (g : N →ₗ[R] N) :
     trace R (M ⊗ N) (map f g) = trace R M f * trace R N g :=
   by
@@ -357,9 +297,6 @@ theorem trace_tensorProduct' (f : M →ₗ[R] M) (g : N →ₗ[R] N) :
   exact h
 #align linear_map.trace_tensor_product' LinearMap.trace_tensorProduct'
 
-/- warning: linear_map.trace_comp_comm' -> LinearMap.trace_comp_comm' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_comp_comm' LinearMap.trace_comp_comm'ₓ'. -/
 theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) :
     trace R M (g ∘ₗ f) = trace R N (f ∘ₗ g) :=
   by
@@ -368,18 +305,12 @@ theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) :
   exact h
 #align linear_map.trace_comp_comm' LinearMap.trace_comp_comm'
 
-/- warning: linear_map.trace_conj' -> LinearMap.trace_conj' is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.trace_conj' LinearMap.trace_conj'ₓ'. -/
 @[simp]
 theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj f) = trace R M f := by
   rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe,
     LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap, id_comp]
 #align linear_map.trace_conj' LinearMap.trace_conj'
 
-/- warning: linear_map.is_proj.trace -> LinearMap.IsProj.trace is a dubious translation:
-<too large>
-Case conversion may be inaccurate. Consider using '#align linear_map.is_proj.trace LinearMap.IsProj.traceₓ'. -/
 theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p]
     [Module.Finite R p] [Module.Free R f.ker] [Module.Finite R f.ker] :
     trace R M f = (finrank R p : R) := by

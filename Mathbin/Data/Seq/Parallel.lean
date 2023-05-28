@@ -151,12 +151,6 @@ theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : T
 #align computation.terminates_parallel Computation.terminates_parallel
 -/
 
-/- warning: computation.exists_of_mem_parallel -> Computation.exists_of_mem_parallel is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {S : Stream'.WSeq.{u1} (Computation.{u1} α)} {a : α}, (Membership.Mem.{u1, u1} α (Computation.{u1} α) (Computation.hasMem.{u1} α) a (Computation.parallel.{u1} α S)) -> (Exists.{succ u1} (Computation.{u1} α) (fun (c : Computation.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Computation.{u1} α) (Stream'.WSeq.{u1} (Computation.{u1} α)) (Stream'.WSeq.membership.{u1} (Computation.{u1} α)) c S) (fun (H : Membership.Mem.{u1, u1} (Computation.{u1} α) (Stream'.WSeq.{u1} (Computation.{u1} α)) (Stream'.WSeq.membership.{u1} (Computation.{u1} α)) c S) => Membership.Mem.{u1, u1} α (Computation.{u1} α) (Computation.hasMem.{u1} α) a c)))
-but is expected to have type
-  forall {α : Type.{u1}} {S : Stream'.WSeq.{u1} (Computation.{u1} α)} {a : α}, (Membership.mem.{u1, u1} α (Computation.{u1} α) (Computation.instMembershipComputation.{u1} α) a (Computation.parallel.{u1} α S)) -> (Exists.{succ u1} (Computation.{u1} α) (fun (c : Computation.{u1} α) => And (Membership.mem.{u1, u1} (Computation.{u1} α) (Stream'.WSeq.{u1} (Computation.{u1} α)) (Stream'.WSeq.membership.{u1} (Computation.{u1} α)) c S) (Membership.mem.{u1, u1} α (Computation.{u1} α) (Computation.instMembershipComputation.{u1} α) a c)))
-Case conversion may be inaccurate. Consider using '#align computation.exists_of_mem_parallel Computation.exists_of_mem_parallelₓ'. -/
 theorem exists_of_mem_parallel {S : WSeq (Computation α)} {a} (h : a ∈ parallel S) :
     ∃ c ∈ S, a ∈ c :=
   by
